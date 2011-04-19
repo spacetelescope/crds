@@ -1,0 +1,15 @@
+#! /bin/tcsh
+
+# This script is intended to be run from an rmaps directory on a set
+# of rmap files.  It prints out the line matching "fits" in the rmap
+# and also in its corresponding .html files.  If the CRDS scraping is
+# working right, the .rmap and .html fits counts should be the same.
+# Differences should be investigated.
+#
+# fitslines weeds out a bunch of "false positive" matches to fits which
+# appear in comments fields in the html.
+
+foreach f ($*)
+    set root=`basename $f .rmap`
+    echo $f `grep fits $f | wc -l` `grep fits ../sources/${root}*.html | grep -iv renam | grep -iv replaces | grep -iv copy | grep -iv history | grep -v created | grep -iv copied | wc -l`
+end

@@ -1,0 +1,65 @@
+header = {
+    'observatory':'HST',
+    'instrument':'COS',
+    'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
+    'reftype':'CONTEXT',
+}
+
+data = {
+    # **Flat Field Files** Accounts for pixel-to-pixel variations. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSFlatImage'
+    'flatfile' : ('flat', 'cos_flatfile.rmap'),
+
+    # **Geometric Distortion Correction Images** Corrects for the intrinsic nonlinearity (INL) of the FUV detector. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSgeocorr'
+    'geofile' : ('geo', 'cos_geofile.rmap'),
+
+    # **Bad Time Interval Table** Lists the start and end times of known bad time intervals. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSbadTimeIntTable'
+    'badttab' : ('badt', 'cos_badttab.rmap'),
+
+    # **Baseline Reference Frame Table** Used when applying the thermal distortion correction. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSBRF'
+    'brftab' : ('brf', 'cos_brftab.rmap'),
+
+    # **Burst Parameters Table** Provides the parameters needed for deciding when the count rate in some time interval in FUV time-tag data is too high to be regarded as normal. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSburstParamTable'
+    'brsttab' : ('burst', 'cos_brsttab.rmap'),
+
+    # **1-D Extraction Parameters Table** Gives the location of the spectrum to be extracted from a 2-D image. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COS1dExtract'
+    'xtractab' : ('1dx', 'cos_xtractab.rmap'),
+
+    # **Bad Pixel Table** Gives the locations of rectangular regions that cover portions of the detector that are known to be less than optimal. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSDataQual'
+    'bpixtab' : ('bpix', 'cos_bpixtab.rmap'),
+
+    # **Deadtime Reference Table** Used to obtain the true number of events received compared to the number of events counted by the detector electronics. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSdeadtime'
+    'deadtab' : ('dead', 'cos_deadtab.rmap'),
+
+    # **Dispersion Coefficients Table** Gives a set of polynomial coefficients for computing wavelength from pixel number. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSDispRelation'
+    'disptab' : ('disp', 'cos_disptab.rmap'),
+
+    # **Calibration Lamp Spectra Table** Used to determine the pixel offset of the observed data. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COScalLamp'
+    'lamptab' : ('lamp', 'cos_lamptab.rmap'),
+
+    # **Pulse Height Parameters Table** Lists the lower and upper thresholds for valid individual pulse heights in TIME-TAG mode as well as the minimum and maximum values for the location of the mean value of the pulse height distribution used in ACCUM mode. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSpulseHeight'
+    'phatab' : ('pha', 'cos_phatab.rmap'),
+
+    # **Photometric Sensitivity Reference Table** Provides the information needed to convert from corrected detector counts to flux units. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSphotSensitivity'
+    'phottab' : ('phot', 'cos_phottab.rmap'),
+
+    # **Time Dependent Sensitivity Table** Gives information about the relative sensitivity as a function of time and wavelength. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSTDS'
+    'tdstab' : ('tds', 'cos_tdstab.rmap'),
+
+    # **Wavecal Parameters Table** Gives information about the relative sensitivity as a function of time and wavelength. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSwaveCal'
+    'wcptab' : ('wcp', 'cos_wcptab.rmap'),
+
+}

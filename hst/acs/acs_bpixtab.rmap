@@ -1,0 +1,21 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'ACS',
+    'reftype' : 'BPIXTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('HRC',) : {
+        '2002-03-01 00:00:00':'m8r09169j_bpx.fits',    # ACS/HRC bad pixel table, 11037, Aug 27 2002 01:22PM
+        '2004-10-08 09:05:00':'ob82155qj_bpx.fits',    # ACS reference file, 11511, Nov 08 2004 10:00PM
+    },
+     ('SBC',) : {
+        '1993-01-01 00:00:00':'u451251ej_bpx.fits',    # Bad pixel table for SBC--------------------------------------------, 12153, Apr 05 2010 12:54PM
+    },
+     ('WFC',) : {
+        '2002-03-02 00:00:00':'n9p09145j_bpx.fits',    # ACS/WFC bad pixel table, 11257, Sep 25 2003 01:55PM
+        '2004-10-08 09:05:00':'q860440tj_bpx.fits',    # New modes to cover all Chip, Amp, and Gain combinations wfc_bpx.fit, 11644, Aug 06 2006 04:44AM
+        '2008-01-01 00:00:00':'t3n1116nj_bpx.fits',    # New modes to cover all Chip, Amp, and Gain combinations for SM4 Ori, 12009, Mar 23 2009 11:22AM
+    },
+}

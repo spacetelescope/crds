@@ -1,0 +1,30 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    2
+NAXIS1              H        I         R    64,1024,64,128,256
+NAXIS2              H        I         R    64,1024,64,128,256
+GCOUNT              H        I         R    1
+PCOUNT              H        I         R    0
+INSTRUME            H        C         R    FOC
+FILETYPE            H        C         R    ITF
+HEADNAME            H        C         R
+DATANAME            H        C         R
+DATE                H        C         R
+OPTCRLY             H        C         R    F48,F96
+PXFORMT             H        C         R    NORMAL,ZOOM
+SAMPOFF             H        R         R    0.:1023.75
+LINEOFF             H        R         R    0.:1023.75
+SAMPPLN             H        I         R    64,512,64,128
+LINEPFM             H        I         R    64,1024,64,128,256
+SAMPBEG             H        I         R    0:512
+LINEBEG             H        I         R    0:1024
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R

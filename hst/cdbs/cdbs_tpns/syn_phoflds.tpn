@@ -1,0 +1,35 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DBTABLE             H        C         R    CRPHOFLDS
+FLD_NAME            H        C         R    
+OBSERVER	    H        C	       R
+SOURADEC	    H        C	       R
+EPOCH	    	    H        R	       R
+AIRMASS	    	    H        R         R
+RECOBSTM	    H        C	       R    &SYBDATE
+DELDATE	    	    H        C	       R    &SYBDATE
+SOURCE		    H        C	       R
+COMMENT             H        C         R
+HISTORY             H        C         R
+TARCHIVE	    H	     C         O
+TARGETID	    C        C         R
+RA2000  	    C        D         R
+E_RA    	    C        R         R
+DEC2000 	    C        D         R
+E_DEC   	    C        R         R
+OBSMODE  	    C        C         R
+DATUM    	    C        R         R
+ERROR    	    C        R         R
+FORM     	    C        C         R
+QUAL     	    C        C         R
+OUSEFLG  	    C        C         R
+IUSEFLG  	    C        C         R
+OBSTIME  	    C        C         R
+COMMENT  	    C        C         R

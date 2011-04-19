@@ -1,0 +1,408 @@
+/*------------------------------ config.h ------------------------------*/
+/* CONFIG.H -- CDBS configurable constants */
+
+#ifndef  CONFIG_H
+#define  CONFIG_H
+
+#ifdef   SZ_FNAME
+#undef   SZ_FNAME
+#endif
+
+#ifdef   SZ_LINE
+#undef   SZ_LINE
+#endif
+
+#define  EOS		'\0'	/* end of string marker */
+#define  ERR		(-1)	/* status indicating error return */
+#define  OK		0	/* status indicating no error */
+#define  NO		0	/* boolean return value */
+#define  YES		1	/* boolean return value */
+
+#define  MAXPARAM	511	/* max command line parameters */
+#define  SZ_STRING	63	/* max length typical string */
+#define  SZ_FNAME	127	/* max filename length */
+#define  SZ_LINE	255	/* max input line length */
+
+#endif
+
+/*------------------------------ cdbslib.h ------------------------------*/
+/* CDBSLIB.H -- Function templates for cdbs library routines */
+
+#ifndef  CDBSLIB_H
+#define  CDBSLIB_H
+
+extern void	breakfname (const char *, char *, char *, char *, int);
+extern void	lastfile (const char *, char *, int);
+extern int	patmatch (const char *, const char *);
+extern void	safecopy (char *, const char *, int);
+extern char *	strclone (const char *);
+extern void	strlcase (char *);
+eextern void	wild_expand (const char *, const int, int *, char **);
+
+#endif
+
+/*------------------------------ lastfile.c ------------------------------*/
+
+#include <stdlib.h>
+#include <string.h>
+#include "cdbslib.h"
+
+#define  MAXMATCH	100
+
+/* LASTFILE -- Return the last file in alphabetical order matching a pattern
+ *
+ * i: pattern	wildcard pattern to be matched
+ * o: fname	last file name matched
+ * i: maxch	max file name length
+ */
+
+void lastfile (const char *pattern, char *fname, int maxch)
+{
+    int		ilist, jlist, nlist;
+    char	*list[MAXMATCH];
+
+    /* Expand filename pattern */
+
+    nlist = 0;
+    wild_expand (pattern, MAXMATCH, &nlist, list);
+
+    /* Search for last match in alphabetical order */ 
+
+    jlist = 0;
+    for (ilist = 1; ilist < nlist; ilist ++) {
+	if (strcmp (list[ilist], list[jlist]) > 0)
+	    jlist = ilist;
+    }
+
+    safecopy (fname, list[jlist], maxch);
+    for (ilist = 0; ilist < nlist; ilist ++)
+	free (list[ilist]);
+
+}
+
+/*------------------------------ wildexpand.c ------------------------------*/
+
+#include <string.h>
+#include "config.h"
+#include "cdbslib.h"
+
+#ifdef __VMS
+#include <string.h>
+#include <ssdef.h>
+#include <stsdef.h>
+#include <rms.h>
+#include <starlet.h>
+
+#else
+#include <dirent.h>
+
+#endif
+
+static void	vms_fixname (char *, char *);
+
+/* WILD_EXPAND -- Expand an pattern containing filename wildcards
+ *
+ * The bulk of this routine is the VMS search function, which finds
+ * all filenames matching a pattern. The expansion on Unix machines 
+ * is a simple copy, as the Unix shell does the expansion for us.
+ *
+ * i: pattern	wildcard pattern to be expanded
+ * i: maxlist	maximum number if expanded pattern
+ * u: ilist	next slot in list of expanded patterns
+ * o: list	list of expanded patterns
+ */
+
+void wild_expand (const char *pattern, const int maxlist, 
+		  int *ilist, char ** list)
+{
+#ifdef __VMS
+    char	ibuf[SZ_FNAME+1];
+    char	obuf[SZ_FNAME+1];
+    char	fbuf[SZ_FNAME+1];
+    char	xbuf[SZ_FNAME+1];
+    
+    struct FAB 	filfab;    /* FAB for $PARSE and $SEARCH */
+    struct NAM 	filnam;    /* NAM for $PARSE and $SEARCH */
+
+#else    
+    DIR			*fd;
+    struct dirent	*entry;
+    char		*name;
+
+#endif
+
+    int		olist = *ilist;
+    char	dir[SZ_FNAME+1], root[SZ_FNAME+1], ext[SZ_FNAME+1];
+
+    /* No need for expansion if no wild cards in pattern */
+
+    if (strchr (pattern, '?') == NULL && strchr (pattern, '*') == NULL && 
+	*ilist < maxlist) {
+
+	list[(*ilist)++] = strclone (pattern);
+	return;
+    }
+
+    breakfname (pattern, dir, root, ext, SZ_FNAME);
+    strcat (root, ext);
+
+
+#ifdef __VMS
+
+    /* Set up the VMS i/o blocks */
+
+    filfab = cc$rms_fab;		/* Get a FAB */
+
+    filfab.fab$l_fna = ibuf;		/* Parse filename from IBUF */
+    filfab.fab$b_fac = FAB$M_GET; 	/* Only allow $GETs */
+    filfab.fab$l_fop = FAB$M_NAM; 	/* Use the NAM block for filename */
+    filfab.fab$l_nam = &filnam; 	/* -> NAM block */
+
+    filnam = cc$rms_nam;		/* Get a NAM block */
+    filnam.nam$l_esa = xbuf;		/* -> Expanded filespec buffer */
+    filnam.nam$b_ess = SZ_FNAME;	/* Expanded filespec buffer length */
+    filnam.nam$l_rsa = fbuf;		/* -> Resultant filespec buffer */
+    filnam.nam$b_rss = SZ_FNAME;	/* Resultant filespec buffer length */
+
+    /* Validate filename pattern */
+
+    strcpy (ibuf, pattern);
+    filfab.fab$b_fns = strlen(ibuf);
+
+    if (sys$parse(&filfab) & STS$M_SUCCESS) {
+
+	/* Look for filenames that match the pattern */
+
+	while (sys$search(&filfab) & STS$M_SUCCESS) {
+	    fbuf[filnam.nam$b_rsl] = EOS;
+
+	    if (*ilist < maxlist) {
+		vms_fixname (dir, fbuf);
+		list[(*ilist)++] = strclone (fbuf);
+	    }
+	}
+    }
+
+#else
+
+    if ((fd = opendir (dir)) != NULL) {
+	while (entry  = readdir (fd)) {
+	    name = entry->d_name;
+	    if (patmatch (root, name))
+		list [(*ilist)++] = strclone (name);
+	}
+
+	closedir (fd);
+    }
+
+#endif
+
+    /* Copy pattern if no expansions performed */
+
+    if (*ilist == olist && *ilist < maxlist)
+	list[(*ilist)++] = strclone (pattern);
+}
+
+/* VMS_FIXNAME -- Remove directory and change to lower case
+ *
+ * i: olddir	original directory
+ * u: fname	file name
+ */
+
+static void vms_fixname (char *olddir, char *fname)
+{
+    char	dir[SZ_FNAME+1], root[SZ_FNAME+1], ext[SZ_FNAME+1];
+
+    strlcase (fname);
+    breakfname (fname, dir, root, ext, SZ_FNAME);
+
+    strcpy (fname, olddir);
+    strcat (fname, root);
+    strcat (fname, ext);
+}
+
+/*------------------------------ strclone.c ------------------------------*/
+
+#include <stdlib.h>
+#include <string.h>
+#include "cdbslib.h"
+
+/* STRCLONE -- Duplicate a string on the heap
+ *
+ *  i: src	source string
+ */
+
+char * strclone (const char * src)
+{
+    char * 	buf;
+
+    buf = (char *) malloc (strlen (src) + 1);
+    return (strcpy (buf, src));
+}
+
+/*------------------------------ breakfname.c ------------------------------*/
+
+#include "config.h"
+#include "cdbslib.h"
+
+#define  _F		1	
+#define  _E		2	
+#define  _V		3	
+#define  _D		4	
+
+/* BREAKFNAME -- Break a filename into its component parts */
+
+void breakfname (const char *file, char *dir, char *root, char *ext, int maxch)
+{
+    static char chartype[] = {
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_F,	_D,	_D,	_F,	_E,	_D,
+	_F,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_D,	_V,	_D,	_D,	_D,	_F,
+	_D,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_D,	_D,	_D,	_D,	_F,
+	_D,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_F,	_F,	_F,	_F,	_F,
+	_F,	_F,	_F,	_D,	_D,	_D,	_D,	_D
+    };
+
+    int		rpos, epos, vpos, ic, nc;
+
+    /* Find characters which mark beginning of parts of filename */
+
+    rpos = 0;
+    epos = 0;
+    vpos = 0;
+
+    for (ic = 0; file[ic] != EOS; ic ++) {
+	switch (chartype[file[ic]]) {
+	case _F: 	/* Filename character (A-Z,a-z,0-9,_,-,?,*) */
+	    break;
+	case _E:	/* Start of extension character (.) */
+	    epos = ic;
+	    break;
+	case _V:	/* Start of version character (;) */
+	    vpos = ic;
+	    break;
+	case _D:	/* End of directory character (anything else) */
+	    rpos = ic;
+	    break;
+	}
+    }
+
+    /* Adjust so that position pointers point to first char in section 
+     * or the null byte at the end of the string
+     */
+
+    if (vpos < rpos || vpos < epos)
+	vpos = ic;
+
+    if (epos < rpos || (epos + 1) == vpos)
+	epos = ic;
+
+    if (rpos > 0)
+	rpos += 1;
+
+    /* Copy filename parts to output strings */
+
+    nc = rpos;
+    nc = nc < maxch ? nc : maxch;
+    safecopy (dir, file, nc);
+
+    nc = epos - rpos;
+    nc = nc < maxch ? nc : maxch;
+    safecopy (root, &file[rpos], nc);
+
+    nc = vpos - epos;
+    nc = nc < maxch ? nc : maxch;
+    safecopy (ext, &file[epos], nc);
+
+}
+
+/*------------------------------ patmatch.c ------------------------------*/
+
+#include "config.h"
+#include "cdbslib.h"
+
+/* PATMATCH -- Simple filename pattern matching */
+
+int patmatch (const char *pattern, const char *str)
+{
+    int		ic, jc;
+
+    ic = 0;
+    jc = 0;
+
+    for (;;) {
+	if (pattern[ic] == '*') {
+	    if (pattern[ic+1] == str[jc] || str[jc] == EOS) {
+		ic ++;
+	    } else {
+		jc ++;
+	    }
+
+	} else if (pattern[ic] == '?' && str[jc] != EOS) {
+	    ic ++;
+	    jc ++;
+
+	} else if (pattern[ic] == EOS) {
+	    return (str[jc] == EOS);
+
+	} else if (pattern[ic] == str[jc]) {
+	    ic ++;
+	    jc ++;
+
+	} else {
+	    return (0);
+	}
+    }
+}
+
+/*------------------------------ safecopy.c ------------------------------*/
+
+#include "config.h"
+#include "cdbslib.h"
+
+/* SAFECOPY -- String copy that stops at declared length of output
+ * 
+ * o: out	output string
+ * i: in	input string
+ * i: len	length of output string
+ */
+
+void safecopy (char * out, const char * in, int len)
+{
+    int		ic;
+
+    for (ic = 0; in[ic] != EOS && ic < len; ic ++)
+	out[ic] = in[ic];
+
+    out[ic] = EOS;
+}
+
+/*------------------------------ strlcase.c ------------------------------*/
+
+#include <ctype.h>
+#include "cdbslib.h"
+#include "config.h"
+
+/* STRLCASE -- Convert a string to lower case
+ *
+ * u: str	string
+ */
+void strlcase (char *str)
+{
+    int		ic;
+
+    for (ic = 0; str[ic] != EOS; ic ++)
+	str[ic] = tolower (str[ic]);
+
+}
+

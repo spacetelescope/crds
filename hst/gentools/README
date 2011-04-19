@@ -1,0 +1,49 @@
+This directory contains scripts for an HST implementation of CRDS.  Test rmaps
+were scraped from HTML tables which document them here:
+
+http://www.stsci.edu/hst/observatory/cdbs/
+
+Reference file indices bqy instrument are found in the sidebar topic "Reference Files".
+
+The current software is primarily concerned with the construction of rmaps rather than
+their use to generate bestref recommendations.   The semi-automatic work flow used to
+construct HST rmaps was as follows:
+
+1. For each instrument link in topic "Reference Files",  scrape the data table and
+store it as XML in <instrument>_index.xml.   This is done via the script *scrape_indices*
+and the fairly generic program *scrape.py* which reduces simple HTML pages to their tables
+and outputs XML.   scrape.py also throws away HTML presentation attributes and puts each table
+row on a single line.
+
+2. Manually edit <instr>_index.xml as needed to produce a correct table which maps
+filekinds onto URLs for tables of reference files.  Step 1 basically outputs the correct
+table but there are a few eccentric index rows which have to be hacked manually here.
+scrape_indices warns about these for particular instruments and contains examples of the
+manual hacks.
+
+3. For each file kind row listed in <instr>_index.xml,  visit the URLs for that kind,  scrape
+the selected data tables,  and store the results in <instr>_<filekind>_<number>.xml.   This step is
+performed by the script *scrape_files* which runs the program *convert_index.py*.  convert_index
+does two things:  (1) it creates <instr>.rmap to describe the instrument context mapping file kinds
+to rmaps  (2)  It scrapes the file mapping tables for each filekind.
+Note that the relationship between file kinds and file mapping data tables is deceptively
+complex:    file_kind  -->   URL+   -->  file mapping table+.   convert_index will scrape
+and store one file of XML for each URL of a file kind.   Each XML file can in turn contain
+multiple tables scraped from the same URL.    scrape_files runs the generic program
+tselect.py to cherry-pick tables from the NICMOS XML;  tselect un-nests and serializes
+nested tables, and permits outputting only specified table numbers.
+
+4. After scraping the XML file mapping tables for each file kind in step 3,  the last stage,
+rmap generation, is performed by the script *gen_rmaps* which runs the program *rmap.py*.
+rmap.py has an internal table which defines which table fields to use as mapping
+keys for each instrument and file kind.   It is this internal table,  rather than the presence
+of XML from step 3,  which determines whether or not an rmap will be created and what the primary
+lookup key will look like.   rmap.py also defines the header and overall output structure of the
+HST rmaps.   Since tables are sometimes used for page layout rather than data description,
+rmap.py has a dictionary of exceptions to the default behavior of using all tables in the file
+kind XML.   The manual process of constructing the rmap.py's internal table is aided by the
+program *tlist.py* which is used to dump the column headers of an XML table file;  the column
+headers are then cherry-picked to choose keys relevant to doing the final lookup.   Note that
+the column header keys used here are probably different namings of FITS header keywords which
+will ultimately supply the lookup parameters.
+

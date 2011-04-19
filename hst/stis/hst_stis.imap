@@ -1,0 +1,141 @@
+header = {
+    'observatory':'HST',
+    'instrument':'STIS',
+    'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex',
+    'reftype':'CONTEXT',
+}
+
+data = {
+    # **Bias Image File** Image of the additive stationary pattern in the electronic zero point of the UVIS CCDs. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISBias'
+    'biasfile' : ('bia', 'stis_biasfile.rmap'),
+
+    # **Dark Image File** Image of the signal detected in the absence of photons from the sky. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISDarks'
+    #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISDarksMAMA'
+    'darkfile' : ('drk', 'stis_darkfile.rmap'),
+
+    # **Pixel-to-pixel Flat Image File** Relative variations in pixel-to-pixel sensitivity of the detector. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISPFLflats'
+    'pfltfile' : ('pfl', 'stis_pfltfile.rmap'),
+
+    # **Delta Flat Image File** Changes to the small scale flat field contained in the PFLTFILE. 
+    # No URLs for {'header_keyword': 'DFLTFILE', 'detector': 'N/A', 'reference_file_type': '**Delta Flat Image File** Changes to the small scale flat field contained in the PFLTFILE. <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/description.html#dfl"> More... </a>', 'extension': 'dfl'} 
+
+    # **Low-order Flat Image File** A map of the large scale variations in the sensitivity across the detector. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISLFLflats'
+    'lfltfile' : ('lfl', 'stis_lfltfile.rmap'),
+
+    # **Shutter Shading Correction Image File** Correction for shading caused by the CCD shutter during very short exposures. 
+    # No URLs for {'header_keyword': 'SHADFILE', 'detector': 'N/A', 'reference_file_type': '**Shutter Shading Correction Image File** Correction for shading caused by the CCD shutter during very short exposures. <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/description.html#ssc"> More... </a>', 'extension': 'ssc'} 
+
+    # **Small Scale Distortion Image File** Correction deltas for small scale detector distortions. 
+    # No URLs for {'header_keyword': 'SDSTFILE', 'detector': 'N/A', 'reference_file_type': '**Small Scale Distortion Image File** Correction deltas for small scale detector distortions. <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/description.html#ssd"> More... </a>', 'extension': 'ssd'} 
+
+    # **Analog-to-Digital Correction Table** Corrections to assigned DN Values. 
+    # No URLs for {'header_keyword': 'ATODTAB', 'detector': 'N/A', 'reference_file_type': '**Analog-to-Digital Correction Table** Corrections to assigned DN Values. <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/description.html#a2d"> More... </a>', 'extension': 'a2d'} 
+
+    # **Aperture Description Table** Geometric description of the apertures and their offsets (in arcseconds) from a reference aperture. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISApOffset'
+    'apdstab' : ('apd', 'stis_apdstab.rmap'),
+
+    # **Aperture Throughput Table** Wavelength-dependent transmissions for each aperture with respect to a reference aperture. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISApThroughput'
+    'apertab' : ('apt', 'stis_apertab.rmap'),
+
+    # **Bad Pixel Table** Table of all known permanently bad pixels. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISBadPix'
+    'bpixtab' : ('bpx', 'stis_bpixtab.rmap'),
+
+    # **CCD Parameters Table** CCD operating parameters, indexed on the readout amplifier. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISCCDpar'
+    'ccdtab' : ('ccd', 'stis_ccdtab.rmap'),
+
+    # **Cosmic Ray Rejection Parameters Table** Parameters used in cosmic ray rejection algorithm. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STIScrreject'
+    'crrejtab' : ('crr', 'stis_crrejtab.rmap'),
+
+    # **Dispersion Coefficients Table** Coefficients to the nominal dispersion solution to be applied to extracted 1-D spectra. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISDispCoeff'
+    'disptab' : ('dsp', 'stis_disptab.rmap'),
+
+    # **Grating-Aperture Correction Table** Correction vectors for the 52X* and 52X*E1 apertures when used with the G230LB, G430L, and G750L gratings. 
+    # No URLs for {'header_keyword': 'GACTAB', 'detector': 'N/A', 'reference_file_type': '**Grating-Aperture Correction Table** Correction vectors for the 52X* and 52X*E1 apertures when used with the G230LB, G430L, and G750L gratings. <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/description.html#gac"> More... </a>', 'extension': 'gac'} 
+
+    # **Incidence Angle Correction Table** Coefficients to fits of the change in two dispersion coefficients as a function of angular offset from the reference position. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISAngCorr'
+    'inangtab' : ('iac', 'stis_inangtab.rmap'),
+
+    # **Image Distortion Correction Table** A set of world coordinate information and fits to a distortion function. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISDistCoeff'
+    'idctab' : ('idc', 'stis_idctab.rmap'),
+
+    # **MAMA Linearity Table** Global and local count rate limits in the nonlinearity correction. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISLinearity'
+    'mlintab' : ('lin', 'stis_mlintab.rmap'),
+
+    # **Calibration Lamp Table** Spectra of the calibration lamps obtained at each of the operating currents. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISCalLamp'
+    'lamptab' : ('lmp', 'stis_lamptab.rmap'),
+
+    # **MAMA Offset Correction Table** Coefficients to fits of the change in the dispersion coefficients as a function of commanded offset from the reference position. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISMAMAoffset'
+    'mofftab' : ('moc', 'stis_mofftab.rmap'),
+
+    # **Photometric Correction Table** Correction factors for PHT. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISPhotCorr'
+    'pctab' : ('pct', 'stis_pctab.rmap'),
+
+    # **Photometric Conversion Table** Throughput of the instrument configuration as a function of wavelength, assuming an infinite aperture. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISPhotConversion'
+    'phottab' : ('pht', 'stis_phottab.rmap'),
+
+    # **2-D Spectrum Distortion Correction** Set of world coordinate information used to construct rectified, linearized 2-D spectra. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISSpectCoeff'
+    'sdctab' : ('sdc', 'stis_sdctab.rmap'),
+
+    # **Cross-Disperser Scattering Table** Area-normalized scattering profiles. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISXDispScatter'
+    'cdstab' : ('cds', 'stis_cdstab.rmap'),
+
+    # **Echelle Scattering Table** Area-normalized scattering profiles for STIS echelle gratings, as a function of offset measured in low-resolution MAMA pixels. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISEchXDispScatter'
+    'echsctab' : ('ech', 'stis_echsctab.rmap'),
+
+    # **Echelle Cross-Dispersion Scattering Table** Area-normalized profiles describing smearing of echelle scattered light in the cross-dispersion direction. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISEchXDispScatter'
+    'exstab' : ('exs', 'stis_exstab.rmap'),
+
+    # **Detector Halo Table** Volume-normalized detector halo images at one or more reference wavelengths for each echelle grating. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISHalo'
+    'halotab' : ('hal', 'stis_halotab.rmap'),
+
+    # **Echelle Ripple Table** Peak-normalized ripple (or blaze) functions for echelle gratings. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISRipple'
+    'riptab' : ('rip', 'stis_riptab.rmap'),
+
+    # **Scattering Reference Wavelength Table** Halo reference wavelengths and PSF reference wavelengths used for correcting the two-dimensional effects of scattered light. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISHaloLambda'
+    'srwtab' : ('srw', 'stis_srwtab.rmap'),
+
+    # **NUV Dark Correction Table** Time- and temperature-dependent characterization of the global rate of dark counts. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISDarkCorr'
+    'tdctab' : ('tdc', 'stis_tdctab.rmap'),
+
+    # **Time Dependent Sensitivity Files** Measures the change in the sensitivity of the detectors with time. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISTimeSensitivity'
+    'tdstab' : ('tds', 'stis_tdstab.rmap'),
+
+    # **Wavecal Parmeters Table** Parameters which control the wavecal processing. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISWaveCalPar'
+    'wcptab' : ('wcp', 'stis_wcptab.rmap'),
+
+    # **1-D Spectrum Trace Table** Displacements of spectra along Axis2 for determining the location of a spectrum prior to extracting the 1-D spectrum. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISSpecTrace'
+    'sptrctab' : ('1dt', 'stis_sptrctab.rmap'),
+
+    # **1-D Extraction Parameters Table** The apertures (or "boxes") and methods used in the extraction of 1-D spectra. 
+    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISExtractParam'
+    'xtractab' : ('1dx', 'stis_xtractab.rmap'),
+
+}

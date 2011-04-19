@@ -1,0 +1,12 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'ACS',
+    'reftype' : 'MLINTAB',
+    'parkey' : ('*DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('SBC',) : {
+        '1991-01-01 00:00:00':'k9c13374j_lin.fits',    # Initial delivery of SBC linearity table., 10707, Sep 12 2000 06:04PM
+    },
+}

@@ -1,0 +1,9 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'PHOTTAB',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*CENWAVE', 'USEAFTER'),
+}
+
+data = {
+}

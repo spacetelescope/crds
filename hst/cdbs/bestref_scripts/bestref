@@ -1,0 +1,8 @@
+#! /bin/csh
+
+# This script runs on tufnel where the bestref software is installed and CDBS database access is available.
+
+source /home/jmiller/bestref_setup
+
+/info/tufnel/dsb/mswam/bestref_codes/bestref.py -d $1
+

@@ -1,0 +1,78 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+import sys
+import cProfile
+import pprint
+
+import pyfits
+
+import crds.hst.gentools.lookup as lookup
+import crds.log as log
+
+MISMATCHES = {}
+
+def test_references(fitsname):
+    refs = lookup.get_best_refs(fitsname)
+    header = lookup._get_header_union(fitsname)
+    # header = pyfits.getheader(fitsname)
+    mismatches = 0
+    for filekind in refs:
+        crds, hist = None, None
+        try:
+            crds = refs[filekind]
+            hist = header[filekind.upper()]
+            hist = hist.split("$")[-1]
+        except:
+            pass
+        if isinstance(hist, (str, unicode)):
+            hist = hist.strip().lower()
+        if hist not in [None, "", "n/a","*"]:
+            if crds != hist:
+                log.warning("Lookup MISMATCH for",  repr(fitsname), repr(filekind), repr(crds), repr(hist))
+                if filekind != "mdriztab":  # these are guaranteed to fail for archive files
+                    mismatches += 1
+                    if filekind not in MISMATCHES:
+                        MISMATCHES[filekind] = []
+                    MISMATCHES[filekind].append(fitsname)
+            else:
+                log.verbose("Lookup OK for", repr(filekind), repr(crds))
+        else:
+            log.verbose("Lookup N/A for", repr(filekind))
+    if mismatches > 0:
+        sys.exc_clear()
+        log.error("Total MISMATCHES for", repr(fitsname), "=", mismatches)
+        # log.verbose("\n\n" + str(header))
+    else:
+        log.info("All lookups for", repr(fitsname), "OK.")
+
+def main():
+    for f in sys.argv[1:]:
+        log.verbose("===> Processing", f)
+        try:
+            test_references(f)
+        except Exception, e:
+            raise
+            log.error("Lookups for", repr(f), "FAILED.")
+
+    log.write("MISMATCHES:")
+    log.write(pprint.pformat(MISMATCHES))
+    log.standard_status()
+
+
+if __name__ == "__main__":
+    SAVE = "--save" in sys.argv
+    if SAVE:
+        sys.argv.remove("--save")
+    lookup.load_header_cache()
+    if "--profile" in sys.argv:
+        sys.argv.remove("--profile")
+        cProfile.run("main()")
+    else:
+        if "--verbose" in sys.argv:
+            sys.argv.remove("--verbose")
+            log.set_verbose(True)
+        main()
+    if SAVE:
+        lookup.save_header_cache()
+

@@ -1,0 +1,2046 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'LFLTFILE',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*APERTURE', '*CENWAVE', 'USEAFTER'),
+}
+
+data = {
+     ('CCD', 'IMAGING', 'MIRVIS', '0.05X29', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.05X31NDA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.05X31NDB', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.09X29', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.1X0.03', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.1X0.06', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.1X0.09', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.1X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06FPA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06FPB', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06FPC', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06FPD', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.06FPE', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.09', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2FPA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2FPB', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2FPC', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2FPD', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.2FPE', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X0.5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.2X29', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.3X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.3X0.06', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.3X0.09', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.3X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '0.5X0.5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '1X0.06', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '1X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '2X2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '31X0.05NDA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '31X0.05NDB', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '31X0.05NDC', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '36X0.05N45', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '36X0.05P45', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '36X0.6N45', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '36X0.6P45', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '50CCD', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '50CORON', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.05', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.05F1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.05F2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1B0.5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1B1.0', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1B3.0', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1F1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.1F2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.2F1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.2F2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.5F1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X0.5F2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X2F1', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '52X2F2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '6X0.06', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '6X0.2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '6X0.5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', '6X6', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25CIII', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25CN182', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25CN270', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25LYA', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25MGII', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25NDQ2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25NDQ3', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25NDQ4', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F28X50LP', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F28X50OII', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'IMAGING', 'MIRVIS', 'F28X50OIII', '*') : {
+        '1996-10-01 00:00:00':'jaj1058ho_lfl.fits',    # CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM
+    },
+     ('CCD', 'SPECTROSCOPIC', 'G230LB', '*', '2375.0') : {
+        '1996-10-01 00:00:00':'pcc2026io_lfl.fits',    # CCD G230LB Low-Order Flat The low order flat for G230LB was primarily constructed by fitting, 11602, Dec 12 2005 08:32PM
+    },
+     ('CCD', 'SPECTROSCOPIC', 'G430L', '*', '4300.0') : {
+        '1996-10-01 00:00:00':'pcc2026jo_lfl.fits',    # CCD G430L Low-Order Flat e low orderflat for G430L was determined using observations the sta, 11602, Dec 12 2005 08:32PM
+    },
+     ('CCD', 'SPECTROSCOPIC', 'G750L', '*', '7751.0') : {
+        '1996-10-01 00:00:00':'pcc2026ko_lfl.fits',    # CCD G750L Low-Order Flat e low orderflat for G750L was determined using observations the sta, 11602, Dec 12 2005 08:32PM
+    },
+     ('CCD', 'SPECTROSCOPIC', 'G750L', '*', '8975.0') : {
+        '1996-10-01 00:00:00':'pcc2026ko_lfl.fits',    # CCD G750L Low-Order Flat e low orderflat for G750L was determined using observations the sta, 11602, Dec 12 2005 08:32PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRCUV', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRCUV', '2X2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRCUV', '6X6', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25LYA', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ1', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ4', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRFUV', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', '2X2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', '6X6', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CIII', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CN182', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CN270', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25MGII', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ1', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ4', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRNUV', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X29', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X31NDA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X31NDB', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.09X29', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.03', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.06', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.09', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPB', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPC', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPD', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPE', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.09', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPB', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPC', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPD', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPE', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.5', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X29', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.06', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.09', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '0.5X0.5', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '1X0.06', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '1X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '2X2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDB', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDC', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.05N45', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.05P45', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.6N45', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.6P45', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '50CCD', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '50CORON', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05F1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05F2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B0.5', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B1.0', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B3.0', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1F1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1F2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2F1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2F2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5F1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5F2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X2F1', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '52X2F2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.06', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.5', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', '6X6', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'BAR10', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CIII', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CN182', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CN270', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25LYA', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25MGII', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ1', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ2', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ3', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ4', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50LP', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50OII', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50OIII', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'iaf1723io_lfl.fits',    # In-flight low-order flat based on observations of NGC 6681 rst in-flight low-order flat. Determined fro, 10366, Oct 16 1998 12:33PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEA1.0', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEA1.8', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEA2.0', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEA2.5', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEA2.8', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEB1.0', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEB1.8', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEB2.0', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEB2.5', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'IMAGING', 'MIRVIS', 'WEDGEB2.8', '*') : {
+        '1996-10-01 00:00:00':'h2i13529o_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1234.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1271.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1307.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1343.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1380.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1416.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1453.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1489.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1526.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1562.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1598.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139lo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140M', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139mo_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1763.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1813.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1863.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1913.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1963.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2013.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2063.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2113.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2163.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2213.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2263.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2313.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2363.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2413.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2463.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2513.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2563.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2613.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2663.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2713.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2762.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2812.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2862.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2912.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2962.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '3012.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '1978.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2124.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2269.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2415.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2561.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2707.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140L', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139oo_lfl.fits',    # In-flight low-order flat based on observations of GD 71 First in-flight low-order flat. Determined from, 10908, Jan 14 2002 09:40PM
+        '1999-03-15 00:00:00':'o481727ao_lfl.fits',    # In-flight low-order flat based on observations of GD 71 rst in-flight low-order flat. Determined from f, 11393, Apr 12 2004 07:20PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140L', '*', '1575.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139oo_lfl.fits',    # In-flight low-order flat based on observations of GD 71 First in-flight low-order flat. Determined from, 10908, Jan 14 2002 09:40PM
+        '1999-03-15 00:00:00':'o481727ao_lfl.fits',    # In-flight low-order flat based on observations of GD 71 rst in-flight low-order flat. Determined from f, 11393, Apr 12 2004 07:20PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1173.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1218.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1222.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1272.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1321.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1371.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1387.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1400.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1420.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1470.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1518.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1540.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1550.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1567.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1616.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1640.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1665.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1714.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # *** Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+        '1996-10-01 00:00:00':'m1b2139no_lfl.fits',    # Dummy file created by M. Mcgrath. Modified by C Proffitt dummy file created on 02/10/97., 10908, Jan 14 2002 09:40PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230L', '*', '2376.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230LB', '*', '2375.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1687.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1769.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1851.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1884.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1933.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2014.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2095.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2176.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2257.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2338.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2419.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2499.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2579.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2600.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2659.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2739.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2800.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2818.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2828.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2898.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2977.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '3055.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1713.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1854.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1995.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2135.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2276.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2416.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2557.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2697.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2794.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2836.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2976.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '3115.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430L', '*', '4300.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3165.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3305.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3423.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3680.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3843.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3936.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4194.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4451.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4706.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4781.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4961.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5093.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5216.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5471.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750L', '*', '7751.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750L', '*', '8975.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '10363.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '5734.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6094.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6252.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6581.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6768.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '7283.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '7795.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8311.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8561.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8825.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9286.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9336.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9806.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9851.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'PRISM', '*', '1200.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'PRISM', '*', '2125.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1232.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1269.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1305.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1341.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1378.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1414.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1451.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1487.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1523.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1560.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1587.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X140M', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1760.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1810.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1860.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1910.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1960.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2010.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2060.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2110.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2160.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2210.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2261.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2310.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2360.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2410.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2460.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2511.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2560.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2610.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2660.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2710.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2760.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2810.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2860.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2910.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2960.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '3010.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '1975.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2112.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2268.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2414.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2560.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('FUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2703.0') : {
+        '1996-10-01 00:00:00':'h2i1352bo_lfl.fits',    # Dummy file created by M. Mcgrath. HISTORY Dummy file created on 02/10/97. HISTORY To be used until re, 10038, Feb 18 1997 08:47PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRCUV', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRCUV', '2X2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRCUV', '6X6', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25LYA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRFUV', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', '2X2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', '6X6', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CIII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CN182', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25CN270', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25MGII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRNUV', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X29', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X31NDA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.05X31NDB', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.09X29', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.03', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.06', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.09', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.1X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPB', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPC', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPD', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.06FPE', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.09', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPB', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPC', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPD', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.2FPE', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X0.5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.2X29', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.05ND', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.06', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.09', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.3X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '0.5X0.5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '1X0.06', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '1X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '25MAMA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '2X2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDB', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '31X0.05NDC', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.05N45', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.05P45', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.6N45', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '36X0.6P45', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '50CCD', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '50CORON', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05F1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.05F2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B0.5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B1.0', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1B3.0', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1F1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.1F2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2F1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.2F2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5F1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X0.5F2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X2F1', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '52X2F2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.06', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '6X0.5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', '6X6', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CIII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CN182', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25CN270', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25LYA', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25MGII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25ND3', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25ND5', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25NDQ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25QTZ', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F25SRF2', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50LP', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50OII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'IMAGING', 'MIRVIS', 'F28X50OIII', '*') : {
+        '1996-10-01 00:00:00':'h5s1140io_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1234.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1271.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1307.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1343.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1380.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1416.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1453.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1489.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1526.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1562.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140H', '*', '1598.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E140M', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1763.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1813.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1863.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1913.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '1963.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2013.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2063.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2113.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2163.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2213.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2263.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2313.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2363.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2413.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2463.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2513.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2563.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2613.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2663.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2713.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2762.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2812.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2862.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2912.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '2962.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H', '*', '3012.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '1978.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2124.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2269.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2415.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2561.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M', '*', '2707.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140L', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140L', '*', '1575.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1173.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1218.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1222.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1272.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1321.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1371.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1387.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1400.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1420.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1470.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1518.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1540.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1550.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1567.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1616.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1640.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1665.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G140M', '*', '1714.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230L', '*', '2376.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230LB', '*', '2375.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1687.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1769.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1851.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1884.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '1933.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2014.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2095.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2176.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2257.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2338.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2419.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2499.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2579.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2600.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2659.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2739.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2800.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2818.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2828.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2898.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '2977.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M', '*', '3055.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1713.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1854.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '1995.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2135.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2276.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2416.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2557.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2697.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2794.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2836.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '2976.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230MB', '*', '3115.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430L', '*', '4300.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3165.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3305.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3423.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3680.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3843.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '3936.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4194.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4451.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4706.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4781.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '4961.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5093.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5216.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G430M', '*', '5471.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750L', '*', '7751.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750L', '*', '8975.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '10363.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '5734.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6094.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6252.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6581.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '6768.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '7283.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '7795.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8311.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8561.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '8825.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9286.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9336.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9806.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'G750M', '*', '9851.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'PRISM', '*', '1200.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'PRISM', '*', '2125.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1232.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1269.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1305.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1341.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1378.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1414.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1451.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1487.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1523.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1560.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140H', '*', '1587.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X140M', '*', '1425.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1760.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1810.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1860.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1910.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '1960.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2010.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2060.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2110.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2160.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2210.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2261.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2310.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2360.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2410.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2460.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2511.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2560.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2610.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2660.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2710.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2760.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2810.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2860.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2910.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '2960.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230H', '*', '3010.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '1975.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2122.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2268.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2414.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2560.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+     ('NUV-MAMA', 'SPECTROSCOPIC', 'X230M', '*', '2703.0') : {
+        '1996-10-01 00:00:00':'h5s1140ko_lfl.fits',    # Dummy file created by R. Katsanis, 10116, May 29 1997 03:52PM
+    },
+}

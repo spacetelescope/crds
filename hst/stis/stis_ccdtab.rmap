@@ -1,0 +1,17 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'CCDTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('CCD',) : {
+        '1996-10-01 00:00:00':'q4a1311fo_ccd.fits',    # New parameters for improved CTE correction = 'core2_ccd.fits renamed to h1v1158do_ccd.fits on Jan 31 199, 11625, Apr 10 2006 02:26PM
+        '1999-12-26 00:00:00':'q4a1311bo_ccd.fits',    # New parameters for improved CTE correction Updates made using SMOV3A proposal 8502 data., 11625, Apr 10 2006 02:26PM
+        '1999-12-29 00:00:00':'q4a1311co_ccd.fits',    # New parameters for improved CTE correction Updates made using SMOV3A proposals 8502 and 8508 data., 11625, Apr 10 2006 02:26PM
+        '2000-01-09 00:00:00':'q4a1311do_ccd.fits',    # New parameters for improved CTE correction Updates made using SMOV3A proposals 8502 and, 11625, Apr 10 2006 02:26PM
+        '2001-07-10 00:00:00':'q4a1311eo_ccd.fits',    # New columns to support improved CTE correction Updates were made to CCDBIAS and READNSE for CCDGAIN = 1, 11625, Apr 10 2006 02:26PM
+        '2009-05-11 00:00:00':'t9a10044o_ccd.fits',    # New parameters for improved ccd reduction. core2_ccd.fits renamed to h1v1158do_ccd.fits on Jan 31 1997 1, 12083, Sep 10 2009 10:07AM
+    },
+}

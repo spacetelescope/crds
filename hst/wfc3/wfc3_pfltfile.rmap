@@ -1,0 +1,830 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
+    'reftype' : 'PFLTFILE',
+    'parkey' : ('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2', 'USEAFTER'),
+}
+
+data = {
+     ('IR', 'CLEAR', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908ni_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+    },
+     ('IR', 'F093W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919092i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+    },
+     ('IR', 'F098M', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919093i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113ni_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F105W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919094i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113oi_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F110W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919095i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113pi_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F125W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919096i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113qi_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F126N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919097i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113ri_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F127M', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919098i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113si_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F128N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919099i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc72113ti_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F130N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908oi_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721140i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F132N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908pi_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721141i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F139M', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908qi_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721142i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F140W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908ri_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721143i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F153M', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908si_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721144i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F160W', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc91908ti_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721145i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F164N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919090i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721146i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'F167N', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2001-01-01 00:00:00':'nc919091i_pfl.fits',    # Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM
+        '2008-02-20 00:00:00':'uc721147i_pfl.fits',    # Flat-field created from inflight observations (Aug 2009- Nov 2010)., 12234, Dec 07 2010 09:17PM
+    },
+     ('IR', 'G102', 'NOT PRESENT', 'NOT PRESENT') : {
+        '1990-01-01 00:00:00':'u4m1335li_pfl.fits',    # G102 gain conversion flat------------------------------------------, 12165, Apr 22 2010 04:21PM
+    },
+     ('IR', 'G141', 'NOT PRESENT', 'NOT PRESENT') : {
+        '1990-01-01 00:00:00':'u4m1335mi_pfl.fits',    # G141 gain conversion flat------------------------------------------, 12165, Apr 22 2010 04:21PM
+    },
+     ('UVIS', 'CLEAR', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+    },
+     ('UVIS', 'CLEAR', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'CLEAR', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F200LP', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ci_pfl.fits',    # *** F200LP flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t18325i_pfl.fits',    # F200LP flat created from WFC3/UVIS TV3 frames.---------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F200LP', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F200LP', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F218W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519di_pfl.fits',    # *** F218W flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t6b16346i_pfl.fits',    # F218W flat created from warm (-49 C) WFC3/UVIS TV3 frames.---------, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'F218W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F218W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F225W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ei_pfl.fits',    # *** F225W flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t6b16347i_pfl.fits',    # F225W flat created from warm (-49 C) WFC3/UVIS TV3 frames.---------, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'F225W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F225W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F275W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519fi_pfl.fits',    # *** F275W flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t6b16348i_pfl.fits',    # F275W flat created from warm (-49 C) WFC3/UVIS TV3 frames.---------, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'F275W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F275W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F280N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519gi_pfl.fits',    # *** F280N flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t6b16349i_pfl.fits',    # F280N flat created from warm (-49 C) WFC3/UVIS TV3 frames.---------, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'F280N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F280N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F300X', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142li_pfl.fits',    # *** F300X flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18326i_pfl.fits',    # F300X flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F300X', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F300X', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F336W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-19 00:00:00':'t6b1634ai_pfl.fits',    # F336W flat created from warm (-49 C) WFC3/UVIS TV3 frames.---------, 12044, Jun 11 2009 05:28PM
+        '2008-02-20 00:00:00':'s9t1142mi_pfl.fits',    # *** F336W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18327i_pfl.fits',    # F336W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F336W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F336W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F343N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142ni_pfl.fits',    # *** F343N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18328i_pfl.fits',    # F343N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F343N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F343N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F350LP', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142oi_pfl.fits',    # *** F350LP flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18329i_pfl.fits',    # F350LP flat created from WFC3/UVIS TV3 frames.---------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F350LP', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F350LP', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F373N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142pi_pfl.fits',    # *** F373N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832ai_pfl.fits',    # F373N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F373N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F373N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F390M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519hi_pfl.fits',    # *** F390M flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832ci_pfl.fits',    # F390M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F390M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F390M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F390W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142qi_pfl.fits',    # *** F390W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832bi_pfl.fits',    # F390W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F390W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F390W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F395N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142ri_pfl.fits',    # *** F395N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832di_pfl.fits',    # F395N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F395N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F395N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F410M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142si_pfl.fits',    # *** F410M flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832ei_pfl.fits',    # F410M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F410M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F410M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F438W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1142ti_pfl.fits',    # *** F438W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832fi_pfl.fits',    # F438W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F438W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F438W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F467M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ii_pfl.fits',    # *** F467M flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832gi_pfl.fits',    # F467M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F467M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F467M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F469N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11430i_pfl.fits',    # *** F469N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832hi_pfl.fits',    # F469N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F469N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F469N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F475W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11431i_pfl.fits',    # *** F475W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832ii_pfl.fits',    # F475W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F475W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F475W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F475X', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ji_pfl.fits',    # *** F475X flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832ji_pfl.fits',    # F475X flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F475X', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F475X', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F487N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ki_pfl.fits',    # *** F487N flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832ki_pfl.fits',    # F487N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F487N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F487N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F502N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11432i_pfl.fits',    # *** F502N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832li_pfl.fits',    # F502N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F502N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F502N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F547M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519li_pfl.fits',    # *** F547M flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832mi_pfl.fits',    # F547M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F547M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F547M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F555W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519mi_pfl.fits',    # *** F555W flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832ni_pfl.fits',    # F555W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F555W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F555W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F588N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+    },
+     ('UVIS', 'F588N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F588N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F600LP', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11433i_pfl.fits',    # *** F600LP flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832oi_pfl.fits',    # F600LP flat created from WFC3/UVIS TV3 frames.---------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F600LP', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F600LP', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F606W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11434i_pfl.fits',    # *** F606W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832pi_pfl.fits',    # F606W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F606W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F606W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F621M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11435i_pfl.fits',    # *** F621M flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832qi_pfl.fits',    # F621M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F621M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F621M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F625W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519ni_pfl.fits',    # *** F625W flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832ri_pfl.fits',    # F625W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F625W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F625W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F631N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'sat1519oi_pfl.fits',    # *** F631N flat created from WFC3/UVIS TV3 frames., 11942, Oct 29 2008 03:36PM
+        '2008-02-20 00:00:00':'t4t1832si_pfl.fits',    # F631N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F631N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F631N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F645N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11436i_pfl.fits',    # *** F645N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1832ti_pfl.fits',    # F645N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F645N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F645N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F656N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11437i_pfl.fits',    # *** F656N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18330i_pfl.fits',    # F656N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F656N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F656N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F657N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11438i_pfl.fits',    # *** F657N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18331i_pfl.fits',    # F657N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F657N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F657N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F658N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t11439i_pfl.fits',    # *** F658N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18332i_pfl.fits',    # F658N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F658N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F658N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F665N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143ai_pfl.fits',    # *** F665N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18333i_pfl.fits',    # F665N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F665N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F665N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F673N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143bi_pfl.fits',    # *** F673N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18334i_pfl.fits',    # F673N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F673N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F673N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F680N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143ci_pfl.fits',    # *** F680N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18335i_pfl.fits',    # F680N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F680N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F680N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F689M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143di_pfl.fits',    # *** F689M flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18336i_pfl.fits',    # F689M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F689M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F689M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F763M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143ei_pfl.fits',    # *** F763M flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18337i_pfl.fits',    # F763M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F763M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F763M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F775W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143fi_pfl.fits',    # *** F775W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18338i_pfl.fits',    # F775W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F775W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F775W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F814W', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143gi_pfl.fits',    # *** F814W flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t18339i_pfl.fits',    # F814W flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F814W', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F814W', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F845M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143hi_pfl.fits',    # *** F845M flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1833ai_pfl.fits',    # F845M flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F845M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F845M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F850LP', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143ii_pfl.fits',    # *** F850LP flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1833bi_pfl.fits',    # F850LP flat created from WFC3/UVIS TV3 frames.---------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F850LP', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F850LP', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F953N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'s9t1143ji_pfl.fits',    # *** F953N flat created from WFC3/UVIS TV3 frames., 11934, Sep 29 2008 11:55AM
+        '2008-02-20 00:00:00':'t4t1833ci_pfl.fits',    # F953N flat created from WFC3/UVIS TV3 frames.----------------------, 12024, Apr 29 2009 06:45PM
+    },
+     ('UVIS', 'F953N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'F953N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ232N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954gi_pfl.fits',    # FQ437N/FQ378N/FQ232N/FQ243N quad pflat created from TV3 data-------, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ232N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ232N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ243N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954hi_pfl.fits',    # FQ437N/FQ378N/FQ232N/FQ243N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ243N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ243N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ378N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ii_pfl.fits',    # FQ437N/FQ378N/FQ232N/FQ243N quad pflat created from TV3 data-------, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ378N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ378N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ387N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t6b1634di_pfl.fits',    # FQ387N/FQ492N/FQ422N/FQ436N quad pflat created from cold TV3 data--, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'FQ387N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ387N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ422M', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ji_pfl.fits',    # FQ387N/FQ492N/FQ422N/FQ436N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ422M', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ422M', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ436N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ki_pfl.fits',    # FQ387N/FQ492N/FQ422N/FQ436N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ436N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ436N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ437N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t6b1634ci_pfl.fits',    # FQ437N/FQ378N/FQ232N/FQ243N quad pflat created from TV3 data-------, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'FQ437N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ437N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ492N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954li_pfl.fits',    # FQ387N/FQ492N/FQ422N/FQ436N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ492N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ492N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ508N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t6b1634bi_pfl.fits',    # FQ508N/FQ674N/FQ575N/FQ672N quad pflat created from cold TV3 data--, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'FQ508N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ508N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ575N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954mi_pfl.fits',    # FQ508N/FQ674N/FQ575N/FQ672N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ575N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ575N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ619N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t6b1634fi_pfl.fits',    # FQ619N/FQ750N/FQ634N/FQ727N quad pflat created from cold TV3 data--, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'FQ619N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ619N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ634N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ni_pfl.fits',    # FQ619N/FQ750N/FQ634N/FQ727N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ634N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ634N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ672N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954oi_pfl.fits',    # FQ508N/FQ674N/FQ575N/FQ672N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ672N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ672N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ674N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954pi_pfl.fits',    # FQ508N/FQ674N/FQ575N/FQ672N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ674N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ674N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ727N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954qi_pfl.fits',    # FQ619N/FQ750N/FQ634N/FQ727N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ727N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ727N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ750N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ri_pfl.fits',    # FQ619N/FQ750N/FQ634N/FQ727N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ750N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ750N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ889N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t6b1634ei_pfl.fits',    # FQ889N/FQ937N/FQ906N/FQ924N quad pflat created from cold TV3 data--, 12044, Jun 11 2009 05:28PM
+    },
+     ('UVIS', 'FQ889N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ889N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ906N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954si_pfl.fits',    # FQ889N/FQ937N/FQ906N/FQ924N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ906N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ906N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ924N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f1954ti_pfl.fits',    # FQ889N/FQ937N/FQ906N/FQ924N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ924N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ924N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ937N', '1.0', '1.0') : {
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Reactivated by undo software Mar 16 2011 5:21PM. Test p-flat image, 1002, May 14 2008 06:20PM
+        '2001-01-01 00:00:00':'s5e1814si_pfl.fits',    # Test p-flat image, 11859, May 14 2008 06:20PM
+        '2008-02-20 00:00:00':'t7f19550i_pfl.fits',    # FQ889N/FQ937N/FQ906N/FQ924N quad pflat created from cold TV3 data--, 12061, Jul 15 2009 08:11PM
+    },
+     ('UVIS', 'FQ937N', '2.0', '2.0') : {
+        '1991-01-01 00:00:00':'s191848mi_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'FQ937N', '3.0', '3.0') : {
+        '1991-01-01 00:00:00':'s191848ni_pfl.fits',    # Null file for testing, 11812, Jan 09 2008 06:56PM
+    },
+     ('UVIS', 'G280', '1.0', '1.0') : {
+        '1990-01-01 00:00:00':'t1d16209i_pfl.fits',    # *** G280 UNITY flat., 11975, Jan 13 2009 04:24PM
+        '1990-01-01 00:00:00':'t8v14566i_pfl.fits',    # G280 UNIT flat for full-frame and subarray data--------------------, 12076, Aug 31 2009 03:00PM
+    },
+}

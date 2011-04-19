@@ -1,0 +1,10 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+% ./refhdr $1  >hdr1
+% ./refhdr $2  >hdr2
+
+% diff hdr1 hdr2
+
+% rm hdr1 hdr2
+

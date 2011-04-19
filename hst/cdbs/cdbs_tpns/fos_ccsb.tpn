@@ -1,0 +1,21 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CYCCSBR
+DETECTOR            C        C         R    AMBER,BLUE
+FGWA_ID             C        C         R    CAM,H13,H19,H27,H40,H57,H78,L15,L65,PRI,ANY
+APER_ID             C        C         R    A-1,A-2,A-3,A-4,B-1,B-2,B-3,B-4,C-1,C-2,C-3,C-4,ANY
+APER_POS            C        C         R    UPPER,LOWER,SINGLE
+REF_APER            C        C         R    
+WMIN                C        R         R    
+WMAX                C        R         R    
+C0                  C        R         R    
+C1                  C        R         R    
+C2                  C        R         R    
+NUM_AVG             C        I         R    

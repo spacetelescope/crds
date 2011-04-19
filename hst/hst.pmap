@@ -1,0 +1,12 @@
+header = {
+    'observatory':'HST',
+    'parkey' : ('INSTRUME'),
+    'class' : 'crds.PipelineContext',
+}
+
+data = {
+    'ACS':'hst_acs.imap',
+    'COS':'hst_cos.imap', 
+    'STIS':'hst_stis.imap',
+    'WFC3':'hst_wfc3.imap',
+}

@@ -1,0 +1,18 @@
+<document>
+    <url>
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSCCDTable
+    </url>
+    <table>
+        <tr><th>File</th><th>Detector</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Use Date</th><th>Comments</th></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=uc82140bj*">uc82140bj_ccd.fits</a></td><td>WFC</td><td>May 11 2009  12:00AM</td><td>INFLIGHT</td><td>12235</td><td>Dec 08 2010  09:42PM</td><td>Dec 08 2010  10:20PM</td><td>CCD table with updated values</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=t3n1116oj*">t3n1116oj_ccd.fits</a></td><td>WFC</td><td>Jan 01 2008  12:00AM</td><td>INFLIGHT</td><td>12009</td><td>Mar 23 2009  11:22AM</td><td>Mar 23 2009  02:09PM</td><td>CCD table Original file ORIGIN</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506fj*">o151506fj_ccd.fits</a></td><td>WFC</td><td>Oct 01 2003  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/WFC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506dj*">o151506dj_ccd.fits</a></td><td>WFC</td><td>Sep 01 2002  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/WFC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506cj*">o151506cj_ccd.fits</a></td><td>WFC</td><td>Apr 01 2003  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/WFC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o1515068j*">o1515068j_ccd.fits</a></td><td>WFC</td><td>Mar 01 2002  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/WFC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506ej*">o151506ej_ccd.fits</a></td><td>HRC</td><td>Oct 01 2003  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/HRC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506bj*">o151506bj_ccd.fits</a></td><td>HRC</td><td>Sep 01 2002  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/HRC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o151506aj*">o151506aj_ccd.fits</a></td><td>HRC</td><td>Apr 01 2003  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/HRC CCD table</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=o1515069j*">o1515069j_ccd.fits</a></td><td>HRC</td><td>Mar 01 2002  12:00AM</td><td>INFLIGHT</td><td>11316</td><td>Jan 06 2004  03:51PM</td><td>Jan 06 2004  12:00AM</td><td>ACS/HRC CCD table</td></tr>
+    </table>
+</document>

@@ -1,0 +1,12 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+if len(sys.argv) == 1:
+    INSTRUMENTS = ["acs","cos","stis","wfc3",]
+else:
+    INSTRUMENTS = sys.argv[1:]
+
+for instr in INSTRUMENTS:
+    % python convert_index.py ../${instr}/sources/${instr}_index.xml  --generate-context-rmap
+    % mv ${instr}.rmap ../${instr}/hst_${instr}.imap
+

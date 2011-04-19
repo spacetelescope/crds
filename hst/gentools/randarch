@@ -1,0 +1,51 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+import sys
+import cStringIO
+import urllib2
+
+from crds import log
+
+def get_dataset_index():
+    return urllib2.urlopen("http://archive.stsci.edu/cgi-bin/random_search").read()
+
+def find_random_datasets(instrument, N=10):
+    datasets = []
+    while len(datasets) < N:
+        datasets.extend(random_samples(instrument))
+    return datasets[:N]
+
+def random_samples(instrument, html_index=None):
+    if html_index is None:
+        html_index = get_dataset_index()
+    lines = cStringIO.StringIO(html_index).readlines()
+    samples = []
+    for line in lines:
+        line = line.strip()
+        if instrument.upper() in line.upper():
+            print line
+            samp = line[-len("94RA1BAQ</A>")-1:-4]
+            samples.append(samp)
+    return samples
+
+def retrieve_dataset(dataset, outpath, name=None):
+    if name is None:
+        name = dataset + ".fits"
+    outname = outpath + "/" + name
+    preview_url = "http://archive.stsci.edu/cgi-bin/mastpreview?mission=hst&dataid=" + dataset
+    % curl '${preview_url}' >/dev/null   # urllib2.urlopen(url).read()
+    fits_url = "http://archive.stsci.edu/cgi-bin/hst_preview_search?ne=on&imfmt=fits&name=" + dataset
+    % curl '${fits_url}' >${outname}   # urllib2.urlopen(url).read()
+    # open(outname, "w+").write(data)
+    log.write("saving",repr(outname))
+
+def main(instrument, count, outpath):
+    for dataset in find_random_datasets(instrument, count):
+        retrieve_dataset(dataset, outpath, name = instrument + "_" + dataset + ".fits")
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print >>sys.stderr, "randarch.py <instrument> <count> <outpath>"
+        sys.exit(-1)
+    main(sys.argv[1], int(sys.argv[2]), sys.argv[3])
+

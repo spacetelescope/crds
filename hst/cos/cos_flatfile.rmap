@@ -1,0 +1,20 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'COS',
+    'reftype' : 'FLATFILE',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
+}
+
+data = {
+     ('FUV', '*') : {
+        '1996-10-01 00:00:00':'v3n1816ml_flat.fits',    # *** This flat field was created to correct gridwire shadows------------, 12269, Mar 23 2011 06:21PM
+        '1996-10-01 00:00:00':'v3n1816nl_flat.fits',    # This flat field was created to correct gridwire shadows------------, 12269, Mar 23 2011 06:21PM
+    },
+     ('FUV', 'SPECTROSCOPIC') : {
+        '1996-10-01 00:00:00':'n9n20182l_flat.fits',    # dummy file, 11255, Sep 24 2003 02:46PM
+    },
+     ('NUV', '*') : {
+        '1996-10-01 00:00:00':'s7g1700tl_flat.fits',    # from TV2003 data, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00':'v2e20129l_flat.fits',    # Updated to remove vignetting correction----------------------------, 12250, Feb 14 2011 08:14PM
+    },
+}

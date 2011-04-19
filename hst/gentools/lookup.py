@@ -1,0 +1,119 @@
+"""This module defines lookup code tailored to the HST rmaps.
+"""
+import sys
+import cPickle
+import pprint
+
+import pyfits
+
+import crds.log as log
+import crds.timestamp as timestamp
+import crds.rmap as rmap
+
+import crds.hst.gentools.keyval as keyval
+
+# ===================================================================
+
+HEADER_CACHE = {}
+
+def _get_header_union(fname):
+    """Handle initial or cached fetch of unconditioned header values.
+    """
+    if fname in HEADER_CACHE:
+        log.verbose("Cache hit:",repr(fname))
+        return HEADER_CACHE[fname]
+    log.verbose("Cache miss:",repr(fname))
+    union = {}
+    for hdu in pyfits.open(fname):
+        for key in hdu.header:
+            newval = hdu.header[key]
+            if key not in union:
+                union[key] = newval
+            elif union[key] != newval:
+                log.verbose("*** WARNING: Header union collision on", repr(key), repr(union[key]), repr(hdu.header[key]))
+    HEADER_CACHE[fname] = union
+    return union
+
+def get_header_union(fname):
+    """Return the FITS header of `fname` as a dict,  successively
+    adding all extension headers to the dict.   Cache the combined
+    header in case this function is called more than once on the
+    same FITS file.
+
+    Each keyword value is "conditioned" into a
+    canonical form which smoothes over inconsistencies.
+    See rmap.condition_value() for details.
+    """
+    header = _get_header_union(fname)
+    for key, value in header.items():
+        header[key] = keyval.condition_value(value)
+    return header
+
+def load_header_cache():
+    """Load the global HEADER_CACHE which prevents pyfits header reads for calls
+    to get_header_union() when a file as already been visited.
+    """
+    global HEADER_CACHE
+    try:
+        HEADER_CACHE = eval(open("header_cache").read())
+        # HEADER_CACHE = cPickle.load(open("header_cache"))
+    except Exception, e:
+        log.info("header_cache failed to load:", str(e))
+
+def save_header_cache():
+    """Save the global HEADER_CACHE to store the FITS header unions of any newly visited files.
+    """
+    open("header_cache", "w+").write(pprint.pformat(HEADER_CACHE))
+    # cPickle.dump(HEADER_CACHE, open("header_cache","w+"))
+
+# ===================================================================
+
+def get_binding(fname):
+    """Given a dataset `fname`,  return the dictionary binding the
+    useful keys for doing reference file lookups for fname's instrument
+    to values from fname's header union.
+    """
+    header = get_header_union(fname)
+    instrument = header["INSTRUME"]
+    binding = get_finder(instrument).get_binding(header)
+    binding["INSTRUME"] = instrument
+    binding["DATE-OBS"] = header["DATE-OBS"]
+    binding["TIME-OBS"] = header["TIME-OBS"]
+    return binding
+
+# ===================================================================
+
+def setup_best_ref(header, date):
+    if isinstance(header, (str, unicode)):
+        header = get_header_union(header)  # pyfits.getheader(header)
+    instrument = header["INSTRUME"].lower()
+    header = dict(header.items())
+    if date == "now":
+        date = timestamp.now()
+    if date:
+        header["DATE"] = date
+    else:
+        header["DATE"] = header["DATE-OBS"] + " " + header["TIME-OBS"]
+    header["DATE"] = timestamp.reformat_date(header["DATE"])
+    return header
+
+def get_best_ref(header, date=None):
+    header = setup_best_ref(header, date)
+    context = rmap.get_pipeline_context("hst.rmap")
+    return context.get_best_ref(header)
+
+def get_best_refs(header, date=None):
+    header = setup_best_ref(header, date)
+    context = rmap.get_pipeline_context("hst")
+    return context.get_best_refs(header)
+
+# ===================================================================
+
+# initialize reference finder cache
+# for instr in ["acs","cos","stis","wfc3"]:
+#     get_finder(instr)
+
+if __name__ == "__main__":
+    load_header_cache()
+    print repr(get_binding(sys.argv[1]))
+

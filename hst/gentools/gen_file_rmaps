@@ -1,0 +1,24 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+if "--save" in sys.argv:
+    sys.argv.remove("--save")
+    save = "--save"
+else:
+    save = ""
+
+if len(sys.argv) == 1:
+    INSTRUMENTS = ["acs","cos","stis","wfc3",]
+else:
+    INSTRUMENTS = sys.argv[1:]
+
+print "Installing"
+% ../install >& /dev/null
+
+for instr in INSTRUMENTS:
+    % python gen_file_rmap.py ${save} ${instr} ../${instr}/sources
+    % mv ${instr}_*.rmap ../${instr}
+
+print "Installing"
+% ../install >& /dev/null
+

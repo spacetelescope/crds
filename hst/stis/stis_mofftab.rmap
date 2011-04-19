@@ -1,0 +1,15 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'MOFFTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('FUV-MAMA',) : {
+        '1996-10-01 00:00:00':'h4s1350io_moc.fits',    # Shift Correction only/No dispersion change The MAMA offsets table corrects for changes in the dispersi, 10083, Apr 28 1997 07:51PM
+    },
+     ('NUV-MAMA',) : {
+        '1996-10-01 00:00:00':'h4s1350ko_moc.fits',    # Shift Correction only/No dispersion change The MAMA offsets table corrects for changes in the dispersi, 10083, Apr 28 1997 07:51PM
+    },
+}

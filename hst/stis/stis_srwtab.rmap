@@ -1,0 +1,15 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'SRWTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('FUV-MAMA',) : {
+        '1996-10-01 00:00:00':'k8m09589o_srw.fits',    # Built from reference files provided by IDT This reference file was created on 21/08/2000 by Valenti., 10736, Jan 03 2001 02:32PM
+    },
+     ('NUV-MAMA',) : {
+        '1996-10-01 00:00:00':'k8m0958go_srw.fits',    # Built from reference files provided by IDT This reference file was created on 21/08/2000 by Valenti., 10736, Jan 03 2001 02:32PM
+    },
+}

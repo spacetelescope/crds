@@ -1,0 +1,20 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'SPTRCTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('CCD',) : {
+        '1996-10-01 00:00:00':'qa31608go_1dt.fits',    # New traces to account for angle ch, 11655, Oct 03 2006 04:35PM
+    },
+     ('FUV-MAMA',) : {
+        '1996-10-01 00:00:00':'q8l14503o_1dt.fits',    # New G140L traces and updated Echel, 11646, Aug 22 2006 02:50PM
+        '1999-03-14 00:00:00':'q8l14504o_1dt.fits',    # New G140L traces and updated Echel, 11646, Aug 22 2006 02:50PM
+    },
+     ('NUV-MAMA',) : {
+        '1996-10-01 00:00:00':'q8l14501o_1dt.fits',    # New G230L traces and updated Echel, 11646, Aug 22 2006 02:50PM
+        '2000-06-05 00:00:00':'q8l14502o_1dt.fits',    # New G230L traces and updated Echel, 11646, Aug 22 2006 02:50PM
+    },
+}

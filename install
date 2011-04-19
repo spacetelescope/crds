@@ -1,0 +1,11 @@
+#! /bin/sh
+
+cd `dirname $0`
+
+./clean
+
+(cd lib; python setup.py install --force)
+(cd hst; python setup.py install --force)
+(cd client; python setup.py install --force)
+
+./clean

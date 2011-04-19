@@ -1,0 +1,20 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'TDSTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('CCD',) : {
+        '1996-10-01 00:00:00':'t9a1003so_tds.fits',    # Revised sensitivities for L, M, and E modes This reference file was created on 2009-09-02 using the, 12083, Sep 10 2009 10:07AM
+    },
+     ('FUV-MAMA',) : {
+        '1996-10-01 00:00:00':'q9s1550ko_tds.fits',    # New sensitivities for G140L, G140M, E140M, and E140H modes. This reference file was created on 2006-09-2, 11654, Sep 28 2006 03:54PM
+        '2009-05-01 00:00:00':'u7c1846ho_tds.fits',    # Revised sensitivities for L, M, and E modes This reference file was created on 2010-07-09 using the, 12187, Jul 12 2010 07:10PM
+    },
+     ('NUV-MAMA',) : {
+        '1996-10-01 00:00:00':'q9s1550lo_tds.fits',    # New sensitivities for G230L, E230M, E230M, and E230H modes This reference file was created on 2006-09-2, 11654, Sep 28 2006 03:54PM
+        '2009-05-01 00:00:00':'ub920085o_tds.fits',    # Corrects errors in time arrays for g230m, e230m ,e230h,and mirnuv-- This reference file was created on 2, 12226, Nov 09 2010 08:41PM
+    },
+}

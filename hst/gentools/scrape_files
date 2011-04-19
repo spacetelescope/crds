@@ -1,0 +1,20 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+if len(sys.argv) == 1:
+    INSTRUMENTS = ["acs","cos","stis","wfc3",]
+else:
+    INSTRUMENTS = sys.argv[1:]
+
+for instr in INSTRUMENTS:
+    % python convert_index.py ../${instr}/sources/${instr}_index.xml --scrape-file-mappings
+
+    # Nicmos pages used data tables nested inside layout tables, fix here and just keep data
+    if instr == "nicmos":
+        for f in glob.glob("nicmos_*.xml"):
+            % python tselect.py $f 5 >$f.new
+            % mv $f.new $f
+
+    % mv ${instr}_*.{xml,html} ../${instr}/sources
+
+

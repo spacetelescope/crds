@@ -1,0 +1,24 @@
+<document>
+    <url>
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex
+    </url>
+    <table>
+        <tr><th>Reference File Type</th><th>Extension</th><th>Header Keyword</th><th>Camera</th></tr>
+        <tr><td>**ACS Bias Reference Images**  Superbias images for subtracting  bias structure.<a href="description.html#bia">More...</a></td><td>bia</td><td>BIASFILE</td><td><a href="WFCBiasReference">WFC</a><a href="HRCBiasReference">HRC</a></td></tr>
+        <tr><td>**ACS Cosmic Ray Rejection Tables**  Parameters for rejecting cosmic  rays from CR-SPLIT images.<a href="description.html#crr">More...</a></td><td>crr</td><td>CRREJTAB</td><td><a href="ACSCosmicRayRejection">WFC + HRC</a></td></tr>
+        <tr><td>**ACS CCD Tables**  Converts commanded properties to calibrated values for  each CCD amplifier.<a href="description.html#ccd">More...</a></td><td>ccd</td><td>CCDTAB</td><td><a href="ACSCCDTable">WFC + HRC</a></td></tr>
+        <tr><td>**ACS Distortion Correction Tables**  Parameters for geometric distortion  correction.<a href="description.html#idc">More...</a></td><td>idc</td><td>IDCTAB</td><td><a href="ACSDistortionCorrection">All</a></td></tr>
+        <tr><td>**SBC Linearity Table**  Parameters for determining linearity in MAMA images.<a href="description.html#lin">More...</a></td><td>lin</td><td>MLINTAB</td><td><a href="SBCLinearity">SBC</a></td></tr>
+        <tr><td>**Residual Geometric Distortion Images**  Correct geometric distortion residuals.<a href="description.html#dxy">More...</a></td><td>dxy</td><td>DGEOFILE</td><td><a href="ResidualGeomDistortion">All</a></td></tr>
+        <tr><td>**ACS Bad Pixel Table**  Flag "permanently" bad pixels in the data quality (DQ) arrays of ACS images.<a href="description.html#bpx">More...</a></td><td>bpx</td><td>BPIXTAB</td><td><a href="ACSBadPixelTable">All</a></td></tr>
+        <tr><td>**ACS MultiDrizzle Parameter Tables**  Parameters for combining and cleaning associated datasets.<a href="description.html#mdz">More...</a></td><td>mdz</td><td>MDRIZTAB</td><td><a href="MultiDrizzleParam">All</a></td></tr>
+        <tr><td>**ACS CCD Overscan Table**  Describes CCD overscan regions used to measure bias level.<a href="description.html#osc">More...</a></td><td>osc</td><td>OSCNTAB</td><td><a href="ACSCCDOverscan">WFC + HRC</a></td></tr>
+        <tr><td>**ACS A-to-D Tables**  Analog to Digital conversion information.<a href="description.html#a2d">More...</a></td><td>a2d</td><td>ATODTAB</td><td><a href="ACSa2d">WFC + HRC</a></td></tr>
+        <tr><td>**ACS Flat Field Files**  Pixel-to-pixel correction file containing small scale variations.<a href="description.html#pfl">More...</a></td><td>pfl</td><td>PFLTFILE</td><td><a href="WFCPolarizerFlat">WFC Polarizer</a><a href="WFCFlatImage">WFC Non-polarizer</a><a href="HRCCoronagraphFlats">HRC Coronagraph</a><a href="HRCPolarizerFlat">HRC Polarizer</a><a href="HRCotherFlats">HRC</a><a href="SBCFlatImage">SBC</a></td></tr>
+        <tr><td>**ACS HRC Coronagraphic Spot Table**  Position of the coronagraphic spot versus time.<a href="description.html#csp">More...</a></td><td>csp</td><td>SPOTTAB</td><td><a href="HRCCoronagraphSpotTable">HRC</a></td></tr>
+        <tr><td>**ACS HRC Coronagraphic Spot Flat Field Files**  Vignetting patterns of the occulting spots.<a href="description.html#cfl">More...</a></td><td>cfl</td><td>CFLTFILE</td><td><a href="HRCCoronagraphSpotFlat">HRC</a></td></tr>
+        <tr><td>**ACS Dark Files**  Reference images for dark current subtraction, including hot pixel correction and flagging.<a href="description.html#drk">More...</a></td><td>drk</td><td>DARKFILE</td><td><a href="WFCDarkReference">WFC</a><a href="HRCDarkReference">HRC</a><a href="SBCDarkReference">SBC</a></td></tr>
+        <tr><td>**HRC Earth Flat Reference Files**  Flats for large, diffuse objects.<a href="acs/analysis/reference_files/hrc_flats_earth.html">More...</a></td><td>---</td><td>---</td><td><a href="acs/analysis/reference_files/hrc_flats_earth.html">HRC</a></td></tr>
+        <tr><td>**Data Quality Flags**  Flags used to identify bad and corrected pixels in the data quality arrays of all ACS data.<a href="hst/acs/analysis/reference_files/data_quality_flags.html">More...</a></td><td>---</td><td>---</td><td><a href="hst/acs/analysis/reference_files/data_quality_flags.html">All</a></td></tr>
+    </table>
+</document>

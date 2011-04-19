@@ -1,0 +1,71 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+from crds import log
+
+if len(sys.argv) == 1:
+    INSTRUMENTS = ["acs","cos","stis","wfc3"]
+else:
+    INSTRUMENTS = sys.argv[1:]
+
+def handle_index(instr, url):
+    % echo "$instr <-- $url"
+    % python scrape.py ${url} ${instr}_index -t 4 5 6
+    % mv ${instr}_index.* ../${instr}/sources
+
+for instr in INSTRUMENTS:
+    if instr != "wfpc2":
+        url =  "http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/%s/reftablequeryindex" % (instr.upper(),)
+    else:
+        url = "http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2"
+    handle_index(instr, url)
+
+if "acs" in INSTRUMENTS:
+    # Hack HRCBiasPage intermediate page to HRCBiasReference terminal page
+    % sed -e 's/WFCBiasPage/WFCBiasReference/g' <../acs/sources/acs_index.xml >../acs/sources/acs_index.new
+    % mv ../acs/sources/acs_index.new ../acs/sources/acs_index.xml
+
+if "wfc3" in INSTRUMENTS:
+    log.warning("wfc3 Flat-field images must be manually hacked into 3 rows according to header_keyword.")
+# Must hand seperate wfc3 flat fields row into 3 rows according to differing header_keyword,  like this:
+"""
+-        <tr>
+-         <td>**Flat-Field Images**   Variations in the sensitivity of the detectors.<a href="description.html#flt">More...</a></td>
+-         <td>PFL</td><td >PFLTFILE</td><td >UVIS (bin<a href="WFC3PFLbin1UVIS?no_wrap=true">1</a><a href="WFC3PFLbin2UVIS?no_wrap=true">2</a><a href="WFC3PFLbin3UVIS?no_wrap=true">3</a>) <a href="WFC3PFLflatsIR?no_wrap=true">IR</a></td>
+-       </tr>
+-
+-        <tr>
+-         <td>**Flat-Field Images**   Variations in the sensitivity of the detectors.<a href="description.html#flt">More...</a></td>
+-         <td>DFL</td><td >DFLTFILE</td><td ><a href="WFC3DFLflatsUVIS?no_wrap=true">UVIS</a>   <a href="WFC3DFLflatsIR?no_wrap=true">IR</a></td>
+-       </tr>
+-
+-        <tr>
+-         <td>**Flat-Field Images**   Variations in the sensitivity of the detectors.<a href="description.html#flt">More...</a></td>
+-         <td>LFL</td>
+-         <td >LFLTFILE</td>
+-         <td ><a href="WFC3LFLflatsUVIS?no_wrap=true">UVIS</a>   <a href="WFC3LFLflatsIR?no_wrap=true">IR</a></td>
+-       </tr>
+-
+"""
+
+if "wfpc2" in INSTRUMENTS:
+    log.warning("wfpc2 darkfile images must be manually hacked to bypass secondary context page.")
+    """
+        <tr><td>**Dark Images**  Used to detect CCD counts caused by thermal processes at the interfaces between the silicon and oxide layers, as well as charged particle and secondary radiation events.<a href="description.html#drk">More...</a></td><td>.r3h/d</td><td>DARKFILE</td>
+    <td>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2006darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2005darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2004darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2003darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2002darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2001darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2000darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1999darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1998darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1997andPriordarks">BOTH</a>
+    </td>
+    </tr>
+"""
+
+log.standard_status()
+

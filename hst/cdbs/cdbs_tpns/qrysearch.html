@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>CDBS Database Search Page</title>
+</head>
+
+<body bgcolor="#ffffcc" link="#ff0033" vlink="#660000">
+
+<h1>Query the CDBS Database</h1>
+
+<p>
+To query the CDBS database, enter the database table name, the columns
+you wish to appear in the output, and a boolean expression used to
+select the output. Column names are separated by commas. The variables
+in the expression are column names in the database table. A row is
+retrieved from the database whenever the expression is true.
+
+<p>
+The radio buttons control the appearance of the output. You can choose
+to delete duplicate output rows, include the column names as titles,
+display the output in upper or lower case, or display the output as
+ascii text or HTML.
+
+<p> 
+For further information about the input to this task, <a href=#info> 
+see below.</a>
+
+<form method="post" action="<!-- $taskurl -->">
+
+<strong>Database Table Name</strong><br>
+<input type="text" name="table" size="64">
+
+<p>
+<strong>Database Table Columns</strong><br>
+<input type="text" name="columns" size="64">
+
+<p>
+<strong>Selection Criterion</strong><br>
+<textarea name="qual" rows=4 cols=64>
+</textarea>
+
+<p>
+<strong>Database Name</strong><br>
+<input type="text" name="dbase" size="64" value="cdbs_ops">
+
+<p>
+<strong>Delete duplicate rows?</strong><br>
+Yes <input type="radio" name="unique" value="yes">
+No <input type="radio" name="unique" value="no" checked>
+
+<p>
+<strong>Show column names as table title?</strong><br>
+Yes <input type="radio" name="title" value="yes" checked>
+No <input type="radio" name="title" value="no">
+
+<p>
+<strong>Convert strings to upper case?</strong><br>
+Yes <input type="radio" name="ucase" value="yes">
+No <input type="radio" name="ucase" value="no" checked>
+
+<p>
+<strong>HTML output or ascii text?</strong><br>
+Text <input type="radio" name="text" value="yes">
+HTML <input type="radio" name="text" value="no" checked>
+
+<p>
+<input type=submit value="Send Query">
+<input type=reset value="Clear">
+
+</form>
+
+<a name="info">
+<h1>How to Use Query</h1>
+</a>
+
+<p> 
+Operators in the expression can take one of two forms, a Fortran or
+SQL form. The two forms can be used interchangably. The possible
+operators are:
+
+<center>
+<table>
+<tr>
+<td>equal</td><td>.eq.</td><td>=</td><td>&nbsp</td>
+<td> &nbsp </td>
+<td>not equal</td><td>.ne.</td><td>!=</td>
+</tr>
+
+<tr>
+<td>less than</td><td>.lt.</td><td>&lt</td><td>&nbsp</td>
+<td> &nbsp </td>
+<td>greater than</td><td>.gt.</td><td>&gt</td>
+</tr>
+
+<tr>
+<td>less than or equal</td><td>.le.</td><td>&lt=</td><td>&nbsp</td>
+<td> &nbsp </td>
+<td>greater than or equal</td><td>.ge.</td><td>&gt=</td>
+</tr>
+
+<tr>
+<td>and</td><td>.and.</td><td>and</td><td>&nbsp</td>
+<td> &nbsp </td>
+<td>or</td><td>.or.</td><td>or</td>
+</tr>
+
+<tr>
+<td>negation</td><td>.not.</td><td>not</td><td>&nbsp</td>
+<td> &nbsp </td>
+<td>wildcard match</td><td>&nbsp</td><td>like</td>
+</tr>
+</table>
+</center>
+
+<p> 
+The wildcard match operator, 'like', has no corresponding Fortran
+form. It allows you to do pattern matching using the wildcard
+characters '*' and '?'. The '*' character matches any number of
+characters and the '?' character matches a single character. The like
+operator is asymmetric, the argument on the left must be the column
+name and the argument on the right must be a quoted string containing
+wildcard characters. Please note that you cannot use wildcard
+characters with the equality operator, .eq., they will be interpreted
+as ordinary characters.
+
+<p>
+The database table columns list can also contain the wildcard
+characters '*' and '?'. If the first character in the list is '~', the
+list is negated and all columns are listed in the output
+<em>except</em> those named in the list. If the column name list is
+left blank, all columns will be retrieved.
+
+<p>
+More than one data base table can be queried simultaneously by passing
+more than one name in the list of table names.  When more than one
+data base table is being queried, all combinations of rows in the
+tables are tested and those combinations for which the qualifier is
+true will be returned.  Column names in the expression must be
+preceded by the table alias followed by a period.  The table alias is
+a single character whose value depends on the position of the table
+name in 'params'.  For example, the second database table would have
+the alias 'b'.  If the expression mentioned the column 'version' from
+the second table, it would be referred to as 'b.version'.  Column
+names referred to in the list of names may optionally be preceded by
+the table alias followed by a period.  If a column name is not
+preceded by a table alias, then that column will be retrieved from all
+tables in which it is present, or excluded if the negation character
+precedes the list of column names.
+
+<hr>
+<p><address>Bernie Simon
+<a href="mailto:bsimon@stsci.edu">bsimon@stsci.edu</a><br></address>
+
+</body>
+</html>

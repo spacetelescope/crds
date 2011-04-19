@@ -1,0 +1,90 @@
+==============================================================================================================
+
+Properties that would be good for filetypes
+
+1. A single set of keywords is *always* present
+2. A single set of reference files is *always* matched
+3. Both reference and dataset key values are either numerical or fall within a finite set,  which includes "don't care" values
+4. Consistent numerical formatting between dataset key values and reference file keyvalues
+
+==============================================================================================================
+
+ACS rmap test results:   6 errors in 107 tests
+
+pfltfile:
+    Custom scraper for file restrictions based on FW*OFFST,  0 -> *
+
+    WARNING[556]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wlq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'
+    WARNING[563]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'
+
+    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy
+
+mdriztab:
+    CDBS/scraped tables have next to nothing in them.  real data has unknown files.
+
+biasfile:
+    custom selector not implemented
+
+    WARNING[375]: Lookup MISMATCH for '../../testdata/acs/warren/j8bt05nrq_raw.fits' 'biasfile' 'm4r1753rj_bia.fits' 'm991609sj_bia.fits'
+    WARNING[381]: Lookup MISMATCH for '../../testdata/acs/warren/j8bt05nsq_raw.fits' 'biasfile' 'm4r1753rj_bia.fits' 'm9916102j_bia.fits'
+    WARNING[831]: Lookup MISMATCH for '../../testdata/acs/warren/j8uq80jvq_raw.fits' 'biasfile' 'o6f0857ij_bia.fits' 'm991610mj_bia.fits'
+    WARNING[930]: Lookup MISMATCH for '../../testdata/acs/warren/j8uq80jwq_raw.fits' 'biasfile' 'o6f0857ij_bia.fits' 'm991610mj_bia.fits'
+
+    m991609sj_bia.fits	m991610mj_bia.fit  m9916102j_bia.fits	not found anywhere
+
+==============================================================================================================
+
+WFC3 rmap test results:    122 errors in 287 tests
+
+CRDS warnings for these unsupported (yet, according to Howard) filetypes are expected:
+
+WARNING[1]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_lfltfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_lfltfile.rmap'
+WARNING[2]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dgeofile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dgeofile.rmap'
+WARNING[3]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dfltfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dfltfile.rmap'
+WARNING[4]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_shadfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_shadfile.rmap'
+
+biasfile:
+    Custom rmap generator filter for (1) APERTURE substitutions  (2) G280-REF hack to capture bestref custom query logic
+    no remaining test failures
+
+darkfile:
+
+    122   't3420177i_drk.fits' 's9j15532i_drk.fits'    20177i seems to replace 15532i
+
+==============================================================================================================
+
+Value conditioning notes:
+
+85     WARNING[80]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ycq_raw.fits' 'atodtab' 'NOT FOUND "Key CCDGAIN=2.0 not in valid values (\'0\', \'1\', \'2\', \'4\', \'8\')"' 'kcb1734hj_a2d.fits' 
+
+17     WARNING[1106]: Lookup MISMATCH for '../../testdata/acs/warren/j9hn01vsq_raw.fits' 'dgeofile' 'NOT FOUND "Key FILTER2=* not in valid values (\'CLEAR2L\', \'CLEAR2S\', \'F220W\', \'F330W\', \'F435W\', \'F660N\', \'F814W\', \'N/A\')"' 's5f20000j_dxy.fits'
+
+
+Getting bestref for 'biasfile' 
+Binding 'DETECTOR' = 'UVIS' 
+Binding 'CCDAMP' = 'ABCD' 
+Binding 'CCDGAIN' = '1.5' 
+Binding 'BINAXIS1' = '1.0' 
+Binding 'BINAXIS2' = '1.0' 
+Binding 'APERTURE' = 'UVIS' 
+Binding 'SUBARRAY' = 'F' 
+Candidates [] 
+Match failed. 
+
+     ('UVIS', 'ABCD', '1.5', '1', '1', 'FULLFRAME_4AMP', 'F') : {
+
+
+Getting bestref for 'darkfile' 
+Binding 'DETECTOR' = 'UVIS' 
+Binding 'CCDAMP' = 'B' 
+Binding 'CCDGAIN' = '1.5' 
+Binding 'SAMP_SEQ' = 'undefined' 
+Binding 'SUBTYPE' = 'undefined' 
+Binding 'BINAXIS1' = '1.0' 
+Binding 'BINAXIS2' = '1.0' 
+Candidates [(-1,
+  (('UVIS', 'ABCD', '*', '*', '*', '3', '3'),
+   ('UVIS', 'ABCD', '*', '*', '*', '1', '1'),
+   ('UVIS', 'ABCD', '*', '*', '*', '2', '2')))] 
+Merging candidates -1 (('UVIS', 'ABCD', '*', '*', '*', '3', '3'), ('UVIS', 'ABCD', '*', '*', '*', '1', '1'), ('UVIS', 'ABCD', '*', '*', '*', '2', '2')) 
+

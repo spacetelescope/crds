@@ -1,0 +1,536 @@
+INFO:[1]: All lookups for '../../testdata/wfc3/howard/iaai01rqq_raw.fits' OK. 
+INFO:[2]: All lookups for '../../testdata/wfc3/howard/iaai01rrq_raw.fits' OK. 
+INFO:[3]: All lookups for '../../testdata/wfc3/howard/iaai01rtq_raw.fits' OK. 
+INFO:[4]: All lookups for '../../testdata/wfc3/howard/iaai01ruq_raw.fits' OK. 
+WARNING[1]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qgq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[1]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qgq_raw.fits' = 1 
+WARNING[2]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qhq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[2]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qhq_raw.fits' = 1 
+WARNING[3]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qiq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[3]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qiq_raw.fits' = 1 
+WARNING[4]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qjq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[4]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qjq_raw.fits' = 1 
+WARNING[5]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qkq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[5]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qkq_raw.fits' = 1 
+WARNING[6]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qlq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[6]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qlq_raw.fits' = 1 
+WARNING[7]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qmq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[7]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qmq_raw.fits' = 1 
+WARNING[8]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qnq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[8]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qnq_raw.fits' = 1 
+WARNING[9]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qoq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[9]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qoq_raw.fits' = 1 
+WARNING[10]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qpq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[10]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qpq_raw.fits' = 1 
+WARNING[11]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qqq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[11]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qqq_raw.fits' = 1 
+WARNING[12]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qrq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[12]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qrq_raw.fits' = 1 
+WARNING[13]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qsq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[13]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qsq_raw.fits' = 1 
+WARNING[14]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qtq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[14]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qtq_raw.fits' = 1 
+WARNING[15]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02quq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[15]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02quq_raw.fits' = 1 
+WARNING[16]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qvq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[16]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qvq_raw.fits' = 1 
+WARNING[17]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qwq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[17]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qwq_raw.fits' = 1 
+WARNING[18]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qxq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[18]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qxq_raw.fits' = 1 
+WARNING[19]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qyq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[19]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qyq_raw.fits' = 1 
+WARNING[20]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02qzq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[20]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02qzq_raw.fits' = 1 
+WARNING[21]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r0q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[21]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r0q_raw.fits' = 1 
+WARNING[22]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r1q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[22]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r1q_raw.fits' = 1 
+WARNING[23]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r2q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[23]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r2q_raw.fits' = 1 
+WARNING[24]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r3q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[24]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r3q_raw.fits' = 1 
+WARNING[25]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r4q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[25]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r4q_raw.fits' = 1 
+WARNING[26]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r5q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[26]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r5q_raw.fits' = 1 
+WARNING[27]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r6q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[27]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r6q_raw.fits' = 1 
+WARNING[28]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r7q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[28]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r7q_raw.fits' = 1 
+WARNING[29]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r8q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[29]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r8q_raw.fits' = 1 
+WARNING[30]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02r9q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[30]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02r9q_raw.fits' = 1 
+WARNING[31]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02raq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[31]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02raq_raw.fits' = 1 
+WARNING[32]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rbq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[32]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rbq_raw.fits' = 1 
+WARNING[33]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rcq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[33]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rcq_raw.fits' = 1 
+WARNING[34]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rdq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[34]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rdq_raw.fits' = 1 
+WARNING[35]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02req_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[35]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02req_raw.fits' = 1 
+WARNING[36]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rfq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[36]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rfq_raw.fits' = 1 
+WARNING[37]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rgq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[37]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rgq_raw.fits' = 1 
+WARNING[38]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rhq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[38]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rhq_raw.fits' = 1 
+WARNING[39]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02riq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[39]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02riq_raw.fits' = 1 
+WARNING[40]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rjq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[40]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rjq_raw.fits' = 1 
+WARNING[41]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rkq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[41]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rkq_raw.fits' = 1 
+WARNING[42]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rlq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[42]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rlq_raw.fits' = 1 
+WARNING[43]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rmq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[43]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rmq_raw.fits' = 1 
+WARNING[44]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02rnq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[44]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02rnq_raw.fits' = 1 
+WARNING[45]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaai02roq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[45]: Total MISMATCHES for '../../testdata/wfc3/howard/iaai02roq_raw.fits' = 1 
+INFO:[5]: All lookups for '../../testdata/wfc3/howard/iaal01hxq_raw.fits' OK. 
+INFO:[6]: All lookups for '../../testdata/wfc3/howard/iaal01hyq_raw.fits' OK. 
+INFO:[7]: All lookups for '../../testdata/wfc3/howard/iaao09l0q_raw.fits' OK. 
+INFO:[8]: All lookups for '../../testdata/wfc3/howard/iaao09l1q_raw.fits' OK. 
+INFO:[9]: All lookups for '../../testdata/wfc3/howard/iaao09l2q_raw.fits' OK. 
+INFO:[10]: All lookups for '../../testdata/wfc3/howard/iaao09l3q_raw.fits' OK. 
+INFO:[11]: All lookups for '../../testdata/wfc3/howard/iaao11odq_raw.fits' OK. 
+INFO:[12]: All lookups for '../../testdata/wfc3/howard/iaao11oeq_raw.fits' OK. 
+INFO:[13]: All lookups for '../../testdata/wfc3/howard/iaao11ofq_raw.fits' OK. 
+INFO:[14]: All lookups for '../../testdata/wfc3/howard/iaao11ogq_raw.fits' OK. 
+WARNING[46]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01k3q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[46]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01k3q_raw.fits' = 1 
+WARNING[47]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01k4q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[47]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01k4q_raw.fits' = 1 
+WARNING[48]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01k5q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[48]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01k5q_raw.fits' = 1 
+WARNING[49]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01k6q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[49]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01k6q_raw.fits' = 1 
+WARNING[50]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kcq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[50]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kcq_raw.fits' = 1 
+WARNING[51]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kdq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[51]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kdq_raw.fits' = 1 
+WARNING[52]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01keq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[52]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01keq_raw.fits' = 1 
+WARNING[53]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kfq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[53]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kfq_raw.fits' = 1 
+WARNING[54]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kgq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[54]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kgq_raw.fits' = 1 
+WARNING[55]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01khq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[55]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01khq_raw.fits' = 1 
+WARNING[56]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kiq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[56]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kiq_raw.fits' = 1 
+WARNING[57]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kjq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[57]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kjq_raw.fits' = 1 
+WARNING[58]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kkq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[58]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kkq_raw.fits' = 1 
+WARNING[59]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kmq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[59]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kmq_raw.fits' = 1 
+WARNING[60]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01knq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[60]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01knq_raw.fits' = 1 
+WARNING[61]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01koq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[61]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01koq_raw.fits' = 1 
+WARNING[62]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kpq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[62]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kpq_raw.fits' = 1 
+WARNING[63]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kqq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[63]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kqq_raw.fits' = 1 
+WARNING[64]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01krq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[64]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01krq_raw.fits' = 1 
+WARNING[65]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kxq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[65]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kxq_raw.fits' = 1 
+WARNING[66]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kyq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[66]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kyq_raw.fits' = 1 
+WARNING[67]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaau01kzq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[67]: Total MISMATCHES for '../../testdata/wfc3/howard/iaau01kzq_raw.fits' = 1 
+WARNING[68]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1ldq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[68]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1ldq_raw.fits' = 1 
+WARNING[69]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1leq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[69]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1leq_raw.fits' = 1 
+WARNING[70]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lfq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[70]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lfq_raw.fits' = 1 
+WARNING[71]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lgq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[71]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lgq_raw.fits' = 1 
+WARNING[72]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lhq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[72]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lhq_raw.fits' = 1 
+WARNING[73]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1liq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[73]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1liq_raw.fits' = 1 
+WARNING[74]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lkq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[74]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lkq_raw.fits' = 1 
+WARNING[75]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1llq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[75]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1llq_raw.fits' = 1 
+WARNING[76]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lsq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[76]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lsq_raw.fits' = 1 
+WARNING[77]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1ltq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[77]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1ltq_raw.fits' = 1 
+WARNING[78]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1luq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[78]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1luq_raw.fits' = 1 
+WARNING[79]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lvq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[79]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lvq_raw.fits' = 1 
+WARNING[80]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lwq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[80]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lwq_raw.fits' = 1 
+WARNING[81]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lxq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[81]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lxq_raw.fits' = 1 
+WARNING[82]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1lzq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[82]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1lzq_raw.fits' = 1 
+WARNING[83]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1m0q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[83]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1m0q_raw.fits' = 1 
+WARNING[84]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1m1q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[84]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1m1q_raw.fits' = 1 
+WARNING[85]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1m2q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[85]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1m2q_raw.fits' = 1 
+WARNING[86]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1m3q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[86]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1m3q_raw.fits' = 1 
+WARNING[87]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1mtq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[87]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1mtq_raw.fits' = 1 
+WARNING[88]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1muq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[88]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1muq_raw.fits' = 1 
+WARNING[89]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1mvq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[89]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1mvq_raw.fits' = 1 
+WARNING[90]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1mwq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[90]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1mwq_raw.fits' = 1 
+WARNING[91]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1mxq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[91]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1mxq_raw.fits' = 1 
+WARNING[92]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1myq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[92]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1myq_raw.fits' = 1 
+WARNING[93]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1mzq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[93]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1mzq_raw.fits' = 1 
+WARNING[94]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1n0q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[94]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1n0q_raw.fits' = 1 
+WARNING[95]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1n1q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[95]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1n1q_raw.fits' = 1 
+WARNING[96]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1n2q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[96]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1n2q_raw.fits' = 1 
+WARNING[97]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1n3q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[97]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1n3q_raw.fits' = 1 
+WARNING[98]: Lookup MISMATCH for '../../testdata/wfc3/howard/iaaua1n4q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[98]: Total MISMATCHES for '../../testdata/wfc3/howard/iaaua1n4q_raw.fits' = 1 
+INFO:[15]: All lookups for '../../testdata/wfc3/howard/iaaua1n5q_raw.fits' OK. 
+INFO:[16]: All lookups for '../../testdata/wfc3/howard/iabg21a1q_raw.fits' OK. 
+INFO:[17]: All lookups for '../../testdata/wfc3/howard/iabg21a2q_raw.fits' OK. 
+INFO:[18]: All lookups for '../../testdata/wfc3/howard/iabg21a3q_raw.fits' OK. 
+INFO:[19]: All lookups for '../../testdata/wfc3/howard/iabg21a4q_raw.fits' OK. 
+INFO:[20]: All lookups for '../../testdata/wfc3/howard/iabg21a5q_raw.fits' OK. 
+INFO:[21]: All lookups for '../../testdata/wfc3/howard/iabg21a6q_raw.fits' OK. 
+INFO:[22]: All lookups for '../../testdata/wfc3/howard/iabg21a7q_raw.fits' OK. 
+INFO:[23]: All lookups for '../../testdata/wfc3/howard/iabg21a8q_raw.fits' OK. 
+INFO:[24]: All lookups for '../../testdata/wfc3/howard/iabg21a9q_raw.fits' OK. 
+INFO:[25]: All lookups for '../../testdata/wfc3/howard/iabg21aaq_raw.fits' OK. 
+INFO:[26]: All lookups for '../../testdata/wfc3/howard/iabg21abq_raw.fits' OK. 
+INFO:[27]: All lookups for '../../testdata/wfc3/howard/iabg21acq_raw.fits' OK. 
+INFO:[28]: All lookups for '../../testdata/wfc3/howard/iabg21adq_raw.fits' OK. 
+INFO:[29]: All lookups for '../../testdata/wfc3/howard/iabg21aeq_raw.fits' OK. 
+INFO:[30]: All lookups for '../../testdata/wfc3/howard/iabg21afq_raw.fits' OK. 
+INFO:[31]: All lookups for '../../testdata/wfc3/howard/iabg21agq_raw.fits' OK. 
+INFO:[32]: All lookups for '../../testdata/wfc3/howard/iabg21aiq_raw.fits' OK. 
+INFO:[33]: All lookups for '../../testdata/wfc3/howard/iabg21ajq_raw.fits' OK. 
+INFO:[34]: All lookups for '../../testdata/wfc3/howard/iabg21akq_raw.fits' OK. 
+INFO:[35]: All lookups for '../../testdata/wfc3/howard/iabg21alq_raw.fits' OK. 
+INFO:[36]: All lookups for '../../testdata/wfc3/howard/iabg21amq_raw.fits' OK. 
+INFO:[37]: All lookups for '../../testdata/wfc3/howard/iabg21anq_raw.fits' OK. 
+INFO:[38]: All lookups for '../../testdata/wfc3/howard/iabg21aoq_raw.fits' OK. 
+INFO:[39]: All lookups for '../../testdata/wfc3/howard/iabg21apq_raw.fits' OK. 
+INFO:[40]: All lookups for '../../testdata/wfc3/howard/iabg21aqq_raw.fits' OK. 
+INFO:[41]: All lookups for '../../testdata/wfc3/howard/iabg21arq_raw.fits' OK. 
+INFO:[42]: All lookups for '../../testdata/wfc3/howard/iabg21asq_raw.fits' OK. 
+INFO:[43]: All lookups for '../../testdata/wfc3/howard/iabg21atq_raw.fits' OK. 
+INFO:[44]: All lookups for '../../testdata/wfc3/howard/iabg21auq_raw.fits' OK. 
+INFO:[45]: All lookups for '../../testdata/wfc3/howard/iabg21avq_raw.fits' OK. 
+INFO:[46]: All lookups for '../../testdata/wfc3/howard/iabg21awq_raw.fits' OK. 
+INFO:[47]: All lookups for '../../testdata/wfc3/howard/iabg21axq_raw.fits' OK. 
+INFO:[48]: All lookups for '../../testdata/wfc3/howard/iabg31eeq_raw.fits' OK. 
+INFO:[49]: All lookups for '../../testdata/wfc3/howard/iabg31efq_raw.fits' OK. 
+INFO:[50]: All lookups for '../../testdata/wfc3/howard/iabg31egq_raw.fits' OK. 
+INFO:[51]: All lookups for '../../testdata/wfc3/howard/iabg31ehq_raw.fits' OK. 
+INFO:[52]: All lookups for '../../testdata/wfc3/howard/iabg31eiq_raw.fits' OK. 
+INFO:[53]: All lookups for '../../testdata/wfc3/howard/iabg31ejq_raw.fits' OK. 
+INFO:[54]: All lookups for '../../testdata/wfc3/howard/iabg31esq_raw.fits' OK. 
+INFO:[55]: All lookups for '../../testdata/wfc3/howard/iabg31etq_raw.fits' OK. 
+INFO:[56]: All lookups for '../../testdata/wfc3/howard/iabg31euq_raw.fits' OK. 
+INFO:[57]: All lookups for '../../testdata/wfc3/howard/iabg31evq_raw.fits' OK. 
+INFO:[58]: All lookups for '../../testdata/wfc3/howard/iabg31ewq_raw.fits' OK. 
+INFO:[59]: All lookups for '../../testdata/wfc3/howard/iabg31exq_raw.fits' OK. 
+INFO:[60]: All lookups for '../../testdata/wfc3/howard/iabg31ezq_raw.fits' OK. 
+INFO:[61]: All lookups for '../../testdata/wfc3/howard/iacr51ohq_raw.fits' OK. 
+INFO:[62]: All lookups for '../../testdata/wfc3/howard/iacr51ojq_raw.fits' OK. 
+INFO:[63]: All lookups for '../../testdata/wfc3/howard/iacr51okq_raw.fits' OK. 
+INFO:[64]: All lookups for '../../testdata/wfc3/howard/iacr51omq_raw.fits' OK. 
+INFO:[65]: All lookups for '../../testdata/wfc3/howard/iacr61ivq_raw.fits' OK. 
+INFO:[66]: All lookups for '../../testdata/wfc3/howard/iacr61iwq_raw.fits' OK. 
+INFO:[67]: All lookups for '../../testdata/wfc3/howard/iacr61iyq_raw.fits' OK. 
+INFO:[68]: All lookups for '../../testdata/wfc3/howard/iacr61izq_raw.fits' OK. 
+INFO:[69]: All lookups for '../../testdata/wfc3/howard/iacs01t4q_raw.fits' OK. 
+INFO:[70]: All lookups for '../../testdata/wfc3/howard/iacs01t9q_raw.fits' OK. 
+INFO:[71]: All lookups for '../../testdata/wfc3/howard/iacs01tbq_raw.fits' OK. 
+INFO:[72]: All lookups for '../../testdata/wfc3/howard/iacs02tiq_raw.fits' OK. 
+INFO:[73]: All lookups for '../../testdata/wfc3/howard/iacs02tlq_raw.fits' OK. 
+INFO:[74]: All lookups for '../../testdata/wfc3/howard/iacs02toq_raw.fits' OK. 
+INFO:[75]: All lookups for '../../testdata/wfc3/howard/iacs02trq_raw.fits' OK. 
+WARNING[99]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0ko9q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[99]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0ko9q_raw.fits' = 1 
+WARNING[100]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0koaq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[100]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0koaq_raw.fits' = 1 
+WARNING[101]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0kobq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[101]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0kobq_raw.fits' = 1 
+WARNING[102]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0kocq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[102]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0kocq_raw.fits' = 1 
+WARNING[103]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0kodq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[103]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0kodq_raw.fits' = 1 
+WARNING[104]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0koeq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[104]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0koeq_raw.fits' = 1 
+WARNING[105]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib1b0kofq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[105]: Total MISMATCHES for '../../testdata/wfc3/howard/ib1b0kofq_raw.fits' = 1 
+INFO:[76]: All lookups for '../../testdata/wfc3/howard/ib1f23qhq_raw.fits' OK. 
+INFO:[77]: All lookups for '../../testdata/wfc3/howard/ib1f23qjq_raw.fits' OK. 
+INFO:[78]: All lookups for '../../testdata/wfc3/howard/ib1f23qlq_raw.fits' OK. 
+INFO:[79]: All lookups for '../../testdata/wfc3/howard/ib1f23qmq_raw.fits' OK. 
+INFO:[80]: All lookups for '../../testdata/wfc3/howard/ib1f23qoq_raw.fits' OK. 
+INFO:[81]: All lookups for '../../testdata/wfc3/howard/ib1f23qqq_raw.fits' OK. 
+INFO:[82]: All lookups for '../../testdata/wfc3/howard/ib1f23qvq_raw.fits' OK. 
+INFO:[83]: All lookups for '../../testdata/wfc3/howard/ib1f23qwq_raw.fits' OK. 
+INFO:[84]: All lookups for '../../testdata/wfc3/howard/ib1f23qyq_raw.fits' OK. 
+INFO:[85]: All lookups for '../../testdata/wfc3/howard/ib1f23r0q_raw.fits' OK. 
+INFO:[86]: All lookups for '../../testdata/wfc3/howard/ib2k03dhq_raw.fits' OK. 
+INFO:[87]: All lookups for '../../testdata/wfc3/howard/ib2k03diq_raw.fits' OK. 
+INFO:[88]: All lookups for '../../testdata/wfc3/howard/ib2k03djq_raw.fits' OK. 
+INFO:[89]: All lookups for '../../testdata/wfc3/howard/ib2k03dkq_raw.fits' OK. 
+INFO:[90]: All lookups for '../../testdata/wfc3/howard/ib2k03dlq_raw.fits' OK. 
+INFO:[91]: All lookups for '../../testdata/wfc3/howard/ib2s04jvq_raw.fits' OK. 
+INFO:[92]: All lookups for '../../testdata/wfc3/howard/ib2s04jwq_raw.fits' OK. 
+INFO:[93]: All lookups for '../../testdata/wfc3/howard/ib2s04jxq_raw.fits' OK. 
+INFO:[94]: All lookups for '../../testdata/wfc3/howard/ib2s04jyq_raw.fits' OK. 
+INFO:[95]: All lookups for '../../testdata/wfc3/howard/ib2s04jzq_raw.fits' OK. 
+INFO:[96]: All lookups for '../../testdata/wfc3/howard/ib2s04k1q_raw.fits' OK. 
+WARNING[106]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01cnq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[106]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01cnq_raw.fits' = 1 
+WARNING[107]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01coq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[107]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01coq_raw.fits' = 1 
+WARNING[108]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01csq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[108]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01csq_raw.fits' = 1 
+WARNING[109]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01ctq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[109]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01ctq_raw.fits' = 1 
+WARNING[110]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01cwq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[110]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01cwq_raw.fits' = 1 
+WARNING[111]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01cxq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[111]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01cxq_raw.fits' = 1 
+WARNING[112]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01d0q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[112]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01d0q_raw.fits' = 1 
+WARNING[113]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01d1q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[113]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01d1q_raw.fits' = 1 
+WARNING[114]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01d4q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[114]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01d4q_raw.fits' = 1 
+WARNING[115]: Lookup MISMATCH for '../../testdata/wfc3/howard/ib3w01d5q_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[115]: Total MISMATCHES for '../../testdata/wfc3/howard/ib3w01d5q_raw.fits' = 1 
+INFO:[97]: All lookups for '../../testdata/wfc3/howard/ib8t01htq_raw.fits' OK. 
+INFO:[98]: All lookups for '../../testdata/wfc3/howard/ib8t01hwq_raw.fits' OK. 
+INFO:[99]: All lookups for '../../testdata/wfc3/howard/ibbq01moq_raw.fits' OK. 
+INFO:[100]: All lookups for '../../testdata/wfc3/howard/ibbq01mpq_raw.fits' OK. 
+INFO:[101]: All lookups for '../../testdata/wfc3/howard/ibbq01mqq_raw.fits' OK. 
+INFO:[102]: All lookups for '../../testdata/wfc3/howard/ibbq01mrq_raw.fits' OK. 
+INFO:[103]: All lookups for '../../testdata/wfc3/howard/ibbq01msq_raw.fits' OK. 
+INFO:[104]: All lookups for '../../testdata/wfc3/howard/ibbq01mtq_raw.fits' OK. 
+INFO:[105]: All lookups for '../../testdata/wfc3/howard/ibbq01muq_raw.fits' OK. 
+INFO:[106]: All lookups for '../../testdata/wfc3/howard/ibbq01mvq_raw.fits' OK. 
+INFO:[107]: All lookups for '../../testdata/wfc3/howard/ibbq01mwq_raw.fits' OK. 
+INFO:[108]: All lookups for '../../testdata/wfc3/howard/ibbq01mxq_raw.fits' OK. 
+INFO:[109]: All lookups for '../../testdata/wfc3/howard/ibbq01myq_raw.fits' OK. 
+INFO:[110]: All lookups for '../../testdata/wfc3/howard/ibbq01n0q_raw.fits' OK. 
+INFO:[111]: All lookups for '../../testdata/wfc3/howard/ibbq01n1q_raw.fits' OK. 
+INFO:[112]: All lookups for '../../testdata/wfc3/howard/ibbq01n2q_raw.fits' OK. 
+INFO:[113]: All lookups for '../../testdata/wfc3/howard/ibbq01n3q_raw.fits' OK. 
+INFO:[114]: All lookups for '../../testdata/wfc3/howard/ibbq01n4q_raw.fits' OK. 
+INFO:[115]: All lookups for '../../testdata/wfc3/howard/ibbq01n5q_raw.fits' OK. 
+INFO:[116]: All lookups for '../../testdata/wfc3/howard/ibbr02buq_raw.fits' OK. 
+INFO:[117]: All lookups for '../../testdata/wfc3/howard/ibbr02bvq_raw.fits' OK. 
+INFO:[118]: All lookups for '../../testdata/wfc3/howard/ibbr02bwq_raw.fits' OK. 
+INFO:[119]: All lookups for '../../testdata/wfc3/howard/ibbr02bxq_raw.fits' OK. 
+INFO:[120]: All lookups for '../../testdata/wfc3/howard/ibbr02byq_raw.fits' OK. 
+INFO:[121]: All lookups for '../../testdata/wfc3/howard/ibbr02bzq_raw.fits' OK. 
+INFO:[122]: All lookups for '../../testdata/wfc3/howard/ibbr02c0q_raw.fits' OK. 
+INFO:[123]: All lookups for '../../testdata/wfc3/howard/ibbr02c1q_raw.fits' OK. 
+INFO:[124]: All lookups for '../../testdata/wfc3/howard/ibbr02c2q_raw.fits' OK. 
+INFO:[125]: All lookups for '../../testdata/wfc3/howard/ibbr02c3q_raw.fits' OK. 
+INFO:[126]: All lookups for '../../testdata/wfc3/howard/ibbr02c5q_raw.fits' OK. 
+INFO:[127]: All lookups for '../../testdata/wfc3/howard/ibbs05i6q_raw.fits' OK. 
+INFO:[128]: All lookups for '../../testdata/wfc3/howard/ibbs05i7q_raw.fits' OK. 
+INFO:[129]: All lookups for '../../testdata/wfc3/howard/ibbs05i8q_raw.fits' OK. 
+INFO:[130]: All lookups for '../../testdata/wfc3/howard/ibbs05i9q_raw.fits' OK. 
+INFO:[131]: All lookups for '../../testdata/wfc3/howard/ibbs05iaq_raw.fits' OK. 
+INFO:[132]: All lookups for '../../testdata/wfc3/howard/ibbs05ibq_raw.fits' OK. 
+INFO:[133]: All lookups for '../../testdata/wfc3/howard/ibbs05icq_raw.fits' OK. 
+INFO:[134]: All lookups for '../../testdata/wfc3/howard/ibbs05idq_raw.fits' OK. 
+INFO:[135]: All lookups for '../../testdata/wfc3/howard/ibbs05ieq_raw.fits' OK. 
+INFO:[136]: All lookups for '../../testdata/wfc3/howard/ibbs05ifq_raw.fits' OK. 
+INFO:[137]: All lookups for '../../testdata/wfc3/howard/ibbs05igq_raw.fits' OK. 
+INFO:[138]: All lookups for '../../testdata/wfc3/howard/ibbs05ihq_raw.fits' OK. 
+INFO:[139]: All lookups for '../../testdata/wfc3/howard/ibbs05iiq_raw.fits' OK. 
+INFO:[140]: All lookups for '../../testdata/wfc3/howard/ibbs05ijq_raw.fits' OK. 
+INFO:[141]: All lookups for '../../testdata/wfc3/howard/ibbs05ikq_raw.fits' OK. 
+INFO:[142]: All lookups for '../../testdata/wfc3/howard/ibbs05imq_raw.fits' OK. 
+INFO:[143]: All lookups for '../../testdata/wfc3/howard/ibbs05inq_raw.fits' OK. 
+INFO:[144]: All lookups for '../../testdata/wfc3/howard/ibbs05ioq_raw.fits' OK. 
+INFO:[145]: All lookups for '../../testdata/wfc3/howard/ibbsa5isq_raw.fits' OK. 
+INFO:[146]: All lookups for '../../testdata/wfc3/howard/ibbsa5itq_raw.fits' OK. 
+INFO:[147]: All lookups for '../../testdata/wfc3/howard/ibbsa5iuq_raw.fits' OK. 
+INFO:[148]: All lookups for '../../testdata/wfc3/howard/ibbsa5ivq_raw.fits' OK. 
+INFO:[149]: All lookups for '../../testdata/wfc3/howard/ibbsa5iwq_raw.fits' OK. 
+INFO:[150]: All lookups for '../../testdata/wfc3/howard/ibbsa5ixq_raw.fits' OK. 
+INFO:[151]: All lookups for '../../testdata/wfc3/howard/ibbsa5iyq_raw.fits' OK. 
+INFO:[152]: All lookups for '../../testdata/wfc3/howard/ibbsa5izq_raw.fits' OK. 
+INFO:[153]: All lookups for '../../testdata/wfc3/howard/ibbt02atq_raw.fits' OK. 
+INFO:[154]: All lookups for '../../testdata/wfc3/howard/ibbt02auq_raw.fits' OK. 
+INFO:[155]: All lookups for '../../testdata/wfc3/howard/ibbt02avq_raw.fits' OK. 
+INFO:[156]: All lookups for '../../testdata/wfc3/howard/ibbt02awq_raw.fits' OK. 
+INFO:[157]: All lookups for '../../testdata/wfc3/howard/ibbt02ayq_raw.fits' OK. 
+INFO:[158]: All lookups for '../../testdata/wfc3/howard/ibbt02azq_raw.fits' OK. 
+INFO:[159]: All lookups for '../../testdata/wfc3/howard/ibc302htq_raw.fits' OK. 
+INFO:[160]: All lookups for '../../testdata/wfc3/howard/ibc302hvq_raw.fits' OK. 
+INFO:[161]: All lookups for '../../testdata/wfc3/howard/ibc302hxq_raw.fits' OK. 
+INFO:[162]: All lookups for '../../testdata/wfc3/howard/ibc302iyq_raw.fits' OK. 
+INFO:[163]: All lookups for '../../testdata/wfc3/howard/ibc302j0q_raw.fits' OK. 
+INFO:[164]: All lookups for '../../testdata/wfc3/howard/ibc302j2q_raw.fits' OK. 
+INFO:[165]: All lookups for '../../testdata/wfc3/howard/ibc604b9q_raw.fits' OK. 
+WARNING[116]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21doq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[116]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21doq_raw.fits' = 1 
+WARNING[117]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21dpq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[117]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21dpq_raw.fits' = 1 
+WARNING[118]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21drq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[118]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21drq_raw.fits' = 1 
+WARNING[119]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21dsq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[119]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21dsq_raw.fits' = 1 
+WARNING[120]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21dtq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[120]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21dtq_raw.fits' = 1 
+WARNING[121]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21duq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[121]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21duq_raw.fits' = 1 
+WARNING[122]: Lookup MISMATCH for '../../testdata/wfc3/howard/ibcz21dvq_raw.fits' 'darkfile' 't3420177i_drk.fits' 's9j15532i_drk.fits' 
+ERROR[122]: Total MISMATCHES for '../../testdata/wfc3/howard/ibcz21dvq_raw.fits' = 1 
+MISMATCHES: 
+{'darkfile': ['../../testdata/wfc3/howard/iaai02qgq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qhq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qiq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qjq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qkq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qlq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qmq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qnq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qoq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qpq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qqq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qrq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qsq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qtq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02quq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qvq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qwq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qxq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qyq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02qzq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r0q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r1q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r2q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r3q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r4q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r5q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r6q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r7q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r8q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02r9q_raw.fits',
+              '../../testdata/wfc3/howard/iaai02raq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rbq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rcq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rdq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02req_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rfq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rgq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rhq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02riq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rjq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rkq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rlq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rmq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02rnq_raw.fits',
+              '../../testdata/wfc3/howard/iaai02roq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01k3q_raw.fits',
+              '../../testdata/wfc3/howard/iaau01k4q_raw.fits',
+              '../../testdata/wfc3/howard/iaau01k5q_raw.fits',
+              '../../testdata/wfc3/howard/iaau01k6q_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kcq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kdq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01keq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kfq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kgq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01khq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kiq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kjq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kkq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kmq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01knq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01koq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kpq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kqq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01krq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kxq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kyq_raw.fits',
+              '../../testdata/wfc3/howard/iaau01kzq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1ldq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1leq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lfq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lgq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lhq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1liq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lkq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1llq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lsq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1ltq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1luq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lvq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lwq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lxq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1lzq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1m0q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1m1q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1m2q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1m3q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1mtq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1muq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1mvq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1mwq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1mxq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1myq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1mzq_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1n0q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1n1q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1n2q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1n3q_raw.fits',
+              '../../testdata/wfc3/howard/iaaua1n4q_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0ko9q_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0koaq_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0kobq_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0kocq_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0kodq_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0koeq_raw.fits',
+              '../../testdata/wfc3/howard/ib1b0kofq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01cnq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01coq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01csq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01ctq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01cwq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01cxq_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01d0q_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01d1q_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01d4q_raw.fits',
+              '../../testdata/wfc3/howard/ib3w01d5q_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21doq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21dpq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21drq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21dsq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21dtq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21duq_raw.fits',
+              '../../testdata/wfc3/howard/ibcz21dvq_raw.fits']} 
+122 errors 
+122 warnings 
+165 infos 
+ 

@@ -1,0 +1,12 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+if len(sys.argv) == 1:
+    INSTRUMENTS = ["acs","cos","stis","wfc3",]
+else:
+    INSTRUMENTS = sys.argv[1:]
+
+for instr in INSTRUMENTS:
+    % python ../lib/validate.py ${instr}/${instr}.rmap
+
+

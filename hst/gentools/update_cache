@@ -1,0 +1,10 @@
+#! /bin/tcsh
+rm header_cache
+rm cdbs.paths
+../install
+./gen_file_rmaps --save |& tee gen_file_rmaps.out
+../install
+./tlookup ../../../testdata/acs/warren/*_raw.fits --save |& tee results.warren
+./tlookup ../../../testdata/wfc3/howard/*_raw.fits --save |& tee results.howard
+hg commit -m "Updated header_cache and cdbs.paths"
+../push_sources

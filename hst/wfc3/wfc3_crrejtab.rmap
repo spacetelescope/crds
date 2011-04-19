@@ -1,0 +1,17 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
+    'reftype' : 'CRREJTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('IR',) : {
+        '2001-01-01 00:00:00':'n9i1435ji_crr.fits',    # Test file for calwf3, 11249, Sep 18 2003 02:40PM
+        '2001-01-02 00:00:00':'tag1826ki_crr.fits',    # Modified CR rejection parameters-----------------------------------, 12108, Oct 16 2009 06:30PM
+        '2009-05-14 00:00:00':'u6a1748ri_crr.fits',    # CR rejection parameters--------------------------------------------, 12180, Jun 10 2010 06:00PM
+    },
+     ('UVIS',) : {
+        '2001-01-01 00:00:00':'n9i1435li_crr.fits',    # Test file for calwf3, 11249, Sep 18 2003 02:40PM
+    },
+}

@@ -1,0 +1,13 @@
+<document>
+    <url>
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISExtractParam
+    </url>
+    <table>
+        <tr><th>File</th><th>Detector</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Use Date</th><th>Comments</th></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=n7p1031qo*">n7p1031qo_1dx.fits</a></td><td>CCD</td><td>Oct 01 1996  12:00AM</td><td>INFLIGHT</td><td>11220</td><td>Jul 28 2003  12:07PM</td><td>Jul 28 2003  12:01AM</td><td>Analysis from prop. 7094 New measurements of extraction slit parameters for the                 first-or</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=n7p10323o*">n7p10323o_1dx.fits</a></td><td>FUV-MAMA</td><td>Oct 01 1996  12:00AM</td><td>GROUND</td><td>11220</td><td>Jul 28 2003  12:07PM</td><td>Jul 28 2003  12:01AM</td><td>Analysis from prop. 7064 and ground data This update corrections an error in the values for the backgrou</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=n7p10323o*">n7p10323o_1dx.fits</a></td><td>FUV-MAMA</td><td>Oct 01 1996  12:00AM</td><td>INFLIGHT</td><td>11220</td><td>Jul 28 2003  12:07PM</td><td>Jul 28 2003  12:01AM</td><td>Analysis from prop. 7064 and ground data This update corrections an error in the values for the backgrou</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=l3m1437to*">l3m1437to_1dx.fits</a></td><td>NUV-MAMA</td><td>Oct 01 1996  12:00AM</td><td>GROUND</td><td>10765</td><td>Mar 28 2001  09:07PM</td><td>Mar 28 2001  09:42PM</td><td>Analysis from prop. 7064 and ground data New measurements of extraction slit parameters for the</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=l3m1437to*">l3m1437to_1dx.fits</a></td><td>NUV-MAMA</td><td>Oct 01 1996  12:00AM</td><td>INFLIGHT</td><td>10765</td><td>Mar 28 2001  09:07PM</td><td>Mar 28 2001  09:42PM</td><td>Analysis from prop. 7064 and ground data New measurements of extraction slit parameters for the</td></tr>
+    </table>
+</document>

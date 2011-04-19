@@ -1,0 +1,29 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "MAMA OFFSET CORRECTION TABLE"
+DETECTOR            H        C         R    NUV-MAMA,FUV-MAMA
+OPT_ELEM            C        C         R    G140L,G140M,E140M,E140H,G230L,\
+          G230M,E230M,E230H,PRISM,G230LB,G230MB,G430L,G430M,G750L,G750M,\
+          X140H,X140M,X230H,X230M,ANY
+CENWAVE             C        I         R    1173,1200,1218,1222,1234,1271,1272,\
+          1307,1321,1343,1371,1380,1387,1400,1416,1420,1425,1453,1470,1489,\
+          1518,1526,1540,1550,1562,1567,1598,1616,1640,1665,1687,1713,1714,\
+          1763,1769,1813,1851,1854,1863,1884,1913,1933,1963,1978,1995,2013,\
+          2014,2063,2095,2113,2124,2125,2135,2163,2176,2213,2257,2263,2269,\
+          2276,2313,2338,2363,2375,2376,2413,2415,2416,2419,2463,2499,2513,\
+          2557,2561,2563,2579,2600,2613,2659,2663,2697,2707,2713,2739,2762,\
+          2794,2800,2812,2818,2828,2836,2862,2898,2912,2962,2976,2977,3012,\
+          3055,3115,3165,3305,3423,3680,3843,3936,4194,4300,4451,4706,4781,\
+          4961,5093,5216,5471,5734,6094,6252,6581,6768,7283,7751,7795,8311,\
+          8561,8825,8975,9286,9336,9806,9851,10363,-1
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            C        C         R    &PEDIGREE
+DESCRIP             C        C         R    

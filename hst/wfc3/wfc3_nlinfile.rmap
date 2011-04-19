@@ -1,0 +1,14 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
+    'reftype' : 'NLINFILE',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('IR',) : {
+        '2001-01-01 00:00:00':'s9c1542fi_lin.fits',    # Null file for calwf3 testing, 11915, Sep 12 2008 03:46PM
+        '2008-02-20 00:00:00':'sbi18555i_lin.fits',    # Non-linearity correction from WFC3 IR-4 MEB1 TV3 frames, 11953, Nov 18 2008 07:12PM
+        '2009-05-14 00:00:00':'u1k1727mi_lin.fits',    # Non-linearity correction from WFC3 MEB1 TV3 and on-orbit frames----, 12130, Jan 20 2010 05:32PM
+    },
+}

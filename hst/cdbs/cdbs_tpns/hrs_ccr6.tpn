@@ -1,0 +1,42 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CZCCR6R
+GRATING             C        C         R    G140M,G160M,G200M,G270M,G140L,ECH-A,ECH-B
+CARPOS              C        I         R    
+ZRIUTA              C        R         R    
+ZRIUTB              C        R         R    
+ZDETT1              C        R         R    
+ZDETT2              C        R         R    
+ZDEBTF              C        R         R    
+ZDEBTR              C        R         R    
+ZPABT1              C        R         R    
+ZPABT2              C        R         R    
+ZMEBT1              C        R         R    
+ZMEBT2              C        R         R    
+ZFIAT               C        R         R    
+ZFIBT               C        R         R    
+ZFICT               C        R         R    
+ZCST                C        R         R    
+ZSCT1               C        R         R    
+ZSCT2               C        R         R    
+ZHVPST1             C        R         R    
+ZHVPST2             C        R         R    
+ZDT11               C        R         R    
+ZDT12               C        R         R    
+ZDRT                C        R         R    
+ZOBBT               C        R         R    
+A0                  C        R         R    
+A1                  C        R         R    
+A2                  C        R         R    
+A3                  C        R         R    
+A4                  C        R         R    
+A5                  C        R         R    
+A6                  C        R         R    
+A7                  C        R         R    

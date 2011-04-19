@@ -1,0 +1,18 @@
+header = {
+    'observatory' : 'HST',
+    'instrument' : 'ACS',
+    'reftype' : 'MDRIZTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+}
+
+data = {
+     ('HRC',) : {
+        '1991-01-01 00:00:00':'ub215378j_mdz.fits',    # Exact copy of s940253nj with runfile column set to (blank)--------- acs_hrc_mdz.fits renamed to o781, 12223, Nov 02 2010 03:40PM
+    },
+     ('SBC',) : {
+        '1991-01-01 00:00:00':'ub215379j_mdz.fits',    # Exact copy of s940253oj with runfile column set to (blank)--------- acs_sbc_mdz.fits renamed to o781, 12223, Nov 02 2010 03:40PM
+    },
+     ('WFC',) : {
+        '1991-01-01 00:00:00':'ub21537aj_mdz.fits',    # Exact copy of s940253pj with runfile column set to (blank)--------- acs_wfc_mdz.fits renamed to o781, 12223, Nov 02 2010 03:40PM
+    },
+}
