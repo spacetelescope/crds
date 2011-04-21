@@ -51,7 +51,11 @@ setup(name="crds.hst",
             'wfc3/*.rmap',
             'wfc3/*.imap',
 
-            'cdbs/cdbs_tpns/*.tpn'
+            'cdbs/cdbs_tpns/*.tpn',
+
+             'gentools/header_cache',
+             'gentools/cdbs.paths',
+
             ],
         },
     )
