@@ -14,10 +14,15 @@ ACS rmap test results:   6 errors in 107 tests
 pfltfile:
     Custom scraper for file restrictions based on FW*OFFST,  0 -> *
 
-    WARNING[556]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wlq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'
-    WARNING[563]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'
-
     2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy
+
+WARNING[554]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wlq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
+WARNING[561]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
+
+    1 mismatch 'p4s15155j_pfl.fits' 'o841350jj_pfl.fits' appears to be a problem related to merging / rmap definition.
+
+WARNING[701]: Lookup MISMATCH for '../../testdata/acs/warren/j8mt11efq_raw.fits' 'pfltfile' 'p4s15155j_pfl.fits' 'o841350jj_pfl.fits' 
+
 
 mdriztab:
     CDBS/scraped tables have next to nothing in them.  real data has unknown files.

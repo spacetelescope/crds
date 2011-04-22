@@ -5,7 +5,7 @@ import os
 import os.path
 import collections
 
-from crds import log
+from crds import log, timestamp
 from crds.config import CRDS_ROOT
 
 # ===================================================================
@@ -77,9 +77,18 @@ class PipelineContext(Rmap):
             filepath = "/".join([CRDS_ROOT, self.observatory, instrument, context_file])
             self.selections[instrument] = InstrumentContext.from_file(filepath, observatory, instrument)
         
-    def get_best_refs(self, header):
+    def get_best_refs(self, header, date=None):
+        header = dict(header.items())
         instrument = header["INSTRUME"].lower()
+        if date == "now":
+            date = timestamp.now()
+        if date:
+            header["DATE"] = date
+        else:
+            header["DATE"] = header["DATE-OBS"] + " " + header["TIME-OBS"]
+        header["DATE"] = timestamp.reformat_date(header["DATE"])
         return self.selections[instrument].get_best_refs(header)
+
 
 # ===================================================================
 
@@ -173,15 +182,22 @@ def get_class(dotted_name):
 
 PIPELINE_CONTEXTS = {}
 
-def get_pipeline_context(observatory, filename=None, filepath=None):
-    if observatory in PIPELINE_CONTEXTS:
-        return PIPELINE_CONTEXTS[observatory]
-    if filename is None:
-        filename = observatory.lower() + ".pmap"
-    if filepath is None:
-        filepath = "/".join([CRDS_ROOT, observatory, filename])
-    PIPELINE_CONTEXTS[observatory] = PipelineContext.from_file(filepath, observatory)
-    return PIPELINE_CONTEXTS[observatory]
+def get_pipeline_context(observatory, context_file):
+    observatory = observatory.lower()
+    key = (observatory, context_file)
+    if key in PIPELINE_CONTEXTS:
+        return PIPELINE_CONTEXTS[key]
+    filepath = "/".join([CRDS_ROOT, observatory, context_file])
+    PIPELINE_CONTEXTS[key] = PipelineContext.from_file(filepath, observatory)
+    return PIPELINE_CONTEXTS[key]
+
+# ===================================================================
+
+def get_best_refs(header, observatory="hst", pcontext_file=None, date=None):
+    if pcontext_file is None:
+        pcontext_file = observatory + ".pmap"
+    context = get_pipeline_context(observatory, pcontext_file)
+    return context.get_best_refs(header, date)
 
 # ===================================================================
 

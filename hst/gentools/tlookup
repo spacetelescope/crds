@@ -9,12 +9,13 @@ import pyfits
 
 import crds.hst.gentools.lookup as lookup
 import crds.log as log
+import crds.rmap as rmap
 
 MISMATCHES = {}
 
 def test_references(fitsname):
-    refs = lookup.get_best_refs(fitsname)
     header = lookup._get_header_union(fitsname)
+    refs = rmap.get_best_refs(header, observatory="hst")
     # header = pyfits.getheader(fitsname)
     mismatches = 0
     for filekind in refs:
@@ -47,8 +48,12 @@ def test_references(fitsname):
         log.info("All lookups for", repr(fitsname), "OK.")
 
 def main():
-    for f in sys.argv[1:]:
+    files = sys.argv[1:]
+    for f in files:
         log.verbose("===> Processing", f)
+        if f.startswith("@"):
+            files.extend([l.strip() for l in open(f[1:])])
+            continue
         try:
             test_references(f)
         except Exception, e:
