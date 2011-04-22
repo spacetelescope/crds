@@ -384,7 +384,7 @@ def parkeys_to_fitskeys(instrument, all_parkeys):
     return tuple(fits_keys)
 
 def write_rmap(observatory, instrument, reftype, kind_map):
-    outname = instrument + "_" + reftype + ".rmap"
+    outname = "hst_" + instrument + "_" + reftype + ".rmap"
     outfile = open(outname, "w+")
     parkeys = KIND_KEYS[instrument][reftype]
     all_parkeys = parkeys + MAPKEYS[:-1]

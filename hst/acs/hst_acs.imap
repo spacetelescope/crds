@@ -9,43 +9,43 @@ data = {
     # **ACS Bias Reference Images** Superbias images for subtracting bias structure. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/WFCBiasReference'
     #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCBiasReference'
-    'biasfile' : ('bia', 'acs_biasfile.rmap'),
+    'biasfile' : ('bia', 'hst_acs_biasfile.rmap'),
 
     # **ACS Cosmic Ray Rejection Tables** Parameters for rejecting cosmic rays from CR-SPLIT images. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSCosmicRayRejection'
-    'crrejtab' : ('crr', 'acs_crrejtab.rmap'),
+    'crrejtab' : ('crr', 'hst_acs_crrejtab.rmap'),
 
     # **ACS CCD Tables** Converts commanded properties to calibrated values for each CCD amplifier. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSCCDTable'
-    'ccdtab' : ('ccd', 'acs_ccdtab.rmap'),
+    'ccdtab' : ('ccd', 'hst_acs_ccdtab.rmap'),
 
     # **ACS Distortion Correction Tables** Parameters for geometric distortion correction. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSDistortionCorrection'
-    'idctab' : ('idc', 'acs_idctab.rmap'),
+    'idctab' : ('idc', 'hst_acs_idctab.rmap'),
 
     # **SBC Linearity Table** Parameters for determining linearity in MAMA images. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/SBCLinearity'
-    'mlintab' : ('lin', 'acs_mlintab.rmap'),
+    'mlintab' : ('lin', 'hst_acs_mlintab.rmap'),
 
     # **Residual Geometric Distortion Images** Correct geometric distortion residuals. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ResidualGeomDistortion'
-    'dgeofile' : ('dxy', 'acs_dgeofile.rmap'),
+    'dgeofile' : ('dxy', 'hst_acs_dgeofile.rmap'),
 
     # **ACS Bad Pixel Table** Flag "permanently" bad pixels in the data quality (DQ) arrays of ACS images. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSBadPixelTable'
-    'bpixtab' : ('bpx', 'acs_bpixtab.rmap'),
+    'bpixtab' : ('bpx', 'hst_acs_bpixtab.rmap'),
 
     # **ACS MultiDrizzle Parameter Tables** Parameters for combining and cleaning associated datasets. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/MultiDrizzleParam'
-    'mdriztab' : ('mdz', 'acs_mdriztab.rmap'),
+    'mdriztab' : ('mdz', 'hst_acs_mdriztab.rmap'),
 
     # **ACS CCD Overscan Table** Describes CCD overscan regions used to measure bias level. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSCCDOverscan'
-    'oscntab' : ('osc', 'acs_oscntab.rmap'),
+    'oscntab' : ('osc', 'hst_acs_oscntab.rmap'),
 
     # **ACS A-to-D Tables** Analog to Digital conversion information. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/ACSa2d'
-    'atodtab' : ('a2d', 'acs_atodtab.rmap'),
+    'atodtab' : ('a2d', 'hst_acs_atodtab.rmap'),
 
     # **ACS Flat Field Files** Pixel-to-pixel correction file containing small scale variations. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/WFCPolarizerFlat'
@@ -54,20 +54,20 @@ data = {
     #  3 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCPolarizerFlat'
     #  4 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCotherFlats'
     #  5 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/SBCFlatImage'
-    'pfltfile' : ('pfl', 'acs_pfltfile.rmap'),
+    'pfltfile' : ('pfl', 'hst_acs_pfltfile.rmap'),
 
     # **ACS HRC Coronagraphic Spot Table** Position of the coronagraphic spot versus time. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCCoronagraphSpotTable'
-    'spottab' : ('csp', 'acs_spottab.rmap'),
+    'spottab' : ('csp', 'hst_acs_spottab.rmap'),
 
     # **ACS HRC Coronagraphic Spot Flat Field Files** Vignetting patterns of the occulting spots. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCCoronagraphSpotFlat'
-    'cfltfile' : ('cfl', 'acs_cfltfile.rmap'),
+    'cfltfile' : ('cfl', 'hst_acs_cfltfile.rmap'),
 
     # **ACS Dark Files** Reference images for dark current subtraction, including hot pixel correction and flagging. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/WFCDarkReference'
     #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCDarkReference'
     #  2 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/SBCDarkReference'
-    'darkfile' : ('drk', 'acs_darkfile.rmap'),
+    'darkfile' : ('drk', 'hst_acs_darkfile.rmap'),
 
 }

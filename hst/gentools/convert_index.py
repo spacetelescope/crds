@@ -22,9 +22,9 @@ import sys
 from cStringIO import StringIO
 import argparse
 
-import cdbs.hst.gentools.ezxml as ezxml
-import cdbs.hst.gentools.scrape as scrape
-import cdbs.hst.gentools.tlist as tlist
+import crds.hst.gentools.ezxml as ezxml
+import crds.hst.gentools.scrape as scrape
+import crds.hst.gentools.tlist as tlist
 
 from crds import log
 
@@ -82,7 +82,7 @@ def generate_context_rmap(fname):
         for i, url in enumerate(urls):
             print >>rmap_file, "    # ", i, "<--" , `url`
         if urls:
-            eventually_generated_rmap = instr + "_" + keyword + ".rmap"
+            eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
             print >>rmap_file, "   ", `keyword`, ":", repr((converted["ext"], eventually_generated_rmap)) + ",\n"
         else:
             log.warning("No URLs for", repr(pars))

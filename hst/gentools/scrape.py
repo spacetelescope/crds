@@ -11,7 +11,7 @@ import re
 
 from BeautifulSoup import BeautifulSoup, Comment
 
-import crds.hst.gentools.ezxml as ez
+import crds.hst.gentools.ezxml as ezxml
 from crds import log
 
 # URL = "http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex"
