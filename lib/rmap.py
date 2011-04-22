@@ -23,6 +23,9 @@ class RmapError(Exception):
 # ===================================================================
 
 class Rmap(object):
+    """An Rmap is the abstract baseclass for loading anything with the
+    general structure of a header followed by data.
+    """
     def __init__(self, filename, header, data):
         self.filename = filename
         self.header = header
@@ -68,6 +71,9 @@ data = {
 }
 """
 class PipelineContext(Rmap):
+    """A pipeline context describes the context mappings for each instrument
+    of a pipeline.
+    """
     def __init__(self, filename, header, data, observatory):
         Rmap.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
@@ -96,7 +102,16 @@ class PipelineContext(Rmap):
             for file in self.selections[instrument].reference_files():
                 files.add(file)
         return sorted(list(files))
-                
+    
+    def map_files(self):
+        """Return the list of pipeline, instrument, and reference map files associated with
+        this pipeline context.
+        """
+        files = set([os.path.basename(self.filename)])
+        for instrument in self.selections:
+            files.update(self.selections[instrument].map_files())
+        return sorted(list(files))
+        
 # ===================================================================
 
 """
@@ -121,6 +136,9 @@ data = {
 """
 
 class InstrumentContext(Rmap):
+    """An instrument context describes the rmaps associated with each filetype
+    of an instrument.
+    """
     def __init__(self, filename, header, data, observatory, instrument):
         Rmap.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
@@ -160,7 +178,13 @@ class InstrumentContext(Rmap):
             for file in selector.reference_files():
                 files.add(file)
         return sorted(list(files))
-
+    
+    def map_files(self):
+        files = [os.path.basename(self.filename)]
+        for selector in self._selectors.values():
+            files.append(os.path.basename(selector.filename))
+        return files
+    
 # ===================================================================
 
 class ReferenceRmap(Rmap):
