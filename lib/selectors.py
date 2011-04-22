@@ -162,6 +162,21 @@ class Selector(object):
             return choice.choose(header)
         else:
             return choice
+        
+    def reference_files(self):
+        """Return the list of reference files located by this selector.
+        Assume any choice that is a string is a reference file.  Recursively
+        search for reference files in nested selectors.
+        """ 
+        files = set()
+        for choice in self.choices():
+            if isinstance(choice, Selector):
+                new_files = choice.reference_files()
+            else:
+                new_files = [choice]
+            for file in new_files:
+                files.add(file)
+        return sorted(list(files))
 
 # ==============================================================================
 
@@ -220,6 +235,10 @@ class MatchingSelector(Selector):
         self._value_map = self.get_value_map()
 
     def setup_parameters(self, parameters):
+        """Strip off *=optional prefixes and store the status in the
+        _required mapping.  Save simple *-less var names in the 
+        _parameters list.
+        """
         for par in parameters:
             if par.startswith("*"):
                 par = par[1:]
@@ -471,7 +490,7 @@ class UseAfterSelector(Selector):
                     log.warning("Date collision during merge at", repr(key), repr(value), repr(selections[key]))
                 selections[key] = value
         return UseAfterSelector(self._parameters[0], selections)
-
+    
 # ==============================================================================
 
 class ClosestGeometricRatioSelector(Selector):
@@ -832,7 +851,13 @@ class ReferenceSelector(MatchingSelector):
             selections[mapping] = UseAfterSelector("DATE", data[mapping])
         substitutions = header.pop("substitutions", None)
         MatchingSelector.__init__(self, header["parkey"][:-1], selections, substitutions)
-
+        
+    def reference_files(self):
+        files = set()
+        for key, (re_key, useafter) in self._selections.items():
+            for f in useafter.reference_files():
+                files.add(f)
+        return sorted(list(files))
 # ==============================================================================
 
 def test():

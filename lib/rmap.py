@@ -88,8 +88,15 @@ class PipelineContext(Rmap):
             header["DATE"] = header["DATE-OBS"] + " " + header["TIME-OBS"]
         header["DATE"] = timestamp.reformat_date(header["DATE"])
         return self.selections[instrument].get_best_refs(header)
-
-
+    
+    def reference_files(self):
+        """Return the list of reference files associated with this pipeline context."""
+        files = set()
+        for instrument in self.selections:
+            for file in self.selections[instrument].reference_files():
+                files.add(file)
+        return sorted(list(files))
+                
 # ===================================================================
 
 """
@@ -147,9 +154,19 @@ class InstrumentContext(Rmap):
             binding.update(self._selectors[reftype].get_binding(header))
         return binding
     
+    def reference_files(self):
+        files = set()
+        for selector in self._selectors.values():
+            for file in selector.reference_files():
+                files.add(file)
+        return sorted(list(files))
+
 # ===================================================================
 
 class ReferenceRmap(Rmap):
+    """ReferenceRmap manages loading the rmap associated with a single reference
+    filetype and instantiating an appropriate selector from the rmap header and data.
+    """
     def __init__(self, filename, header, data, observatory, instrument, reftype):
         Rmap.__init__(self, filename, header, data)
         self.instrument = instrument.lower()
@@ -165,7 +182,10 @@ class ReferenceRmap(Rmap):
 
     def get_best_ref(self, header):
         return self._selector.choose(header)
-   
+    
+    def reference_files(self):
+        return self._selector.reference_files()
+    
 # ===================================================================
 
 def get_class(dotted_name):
