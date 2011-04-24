@@ -19,6 +19,7 @@ import crds.hst.gentools.lookup as lookup
 import crds.hst.gentools.keyval as keyval
 import crds.hst.gentools.cdbs_parkeys as cdbs_parkeys
 from   crds.hst.gentools.cdbs_parkeys import KIND_KEYS, MAPKEYS, COMMENTKEYS
+import crds.hst.locate_refs as locate_refs
 
 import crds.rmap as rmap
 import crds.log as log
@@ -298,9 +299,9 @@ def get_parkey_from_reffile(d, instr, var):
     """
     ref_filename = dict_to_filename(d)
     try:
-        ref_path = locate_file(ref_filename)
-    except Exception, e:
-        log.error("Can't find reference file", repr(ref_filename), str(e))
+        ref_path = locate_refs.locate_file(ref_filename)
+    except KeyError, e:
+        log.error("Can't find reference file", repr(ref_filename))
         return "%no reference%"
     
     fits_var = cdbs_parkeys.to_fitskey(instr, var)
@@ -316,28 +317,7 @@ def get_parkey_from_reffile(d, instr, var):
         value = "%reference error%"
     return value
 
-def locate_file(ref_filename, cdbs="/grp/hst/cdbs"):
-    """Effectively,  search the given  `cdbs` filetree for `ref_filename`
-    and return the absolute path.
-
-    This is implemented by dumping the tree into cache file 'cdbs.paths'
-    and then grepping `ref_filename` using a subprocess.   The cache takes
-    a while to compute so it is not routinely regenerated;  if the current
-    cache is deleted,  this routine will create a new one.
-    """
-    if not os.path.exists("cdbs.paths"):
-        log.info("Generating CDBS file path cache.")
-        pysh.sh("find  ${cdbs} >cdbs.paths", raise_on_error=True)
-        log.info("Done.")
-    lines = pysh.lines("grep ${ref_filename} cdbs.paths", raise_on_error=True)
-    if len(lines) < 1:
-        err = "Reference file " + repr(ref_filename) + " cannot be found."
-        log.error(err)
-        raise RuntimeError(err)
-    else:
-        if len(lines) > 1:
-            log.warning("Reference file " + repr(ref_filename) + " found more than once. Using first.")
-        return lines[0].strip()
+# =======================================================================
 
 def get_mapping(d):
     """Given a table data row dictionary, return an rmap mapping tuple.
