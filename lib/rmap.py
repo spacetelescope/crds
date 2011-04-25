@@ -96,11 +96,11 @@ class Rmap(object):
 
     @classmethod
     def _match_header_key(klass, key):
-        return re.match("^'\w+'$", key)
+        return klass._match_simple(key)
     
     @classmethod
     def _match_header_value(klass, value):
-        return klass._match_simple(value) or klass._match_string_tuple(value)
+        return (value == "{") or klass._match_simple(value) or klass._match_string_tuple(value)
     
     @classmethod
     def _check_data_syntax(klass, lines):
@@ -136,7 +136,7 @@ class Rmap(object):
 
     @classmethod
     def from_file(klass, fname, *args, **keys):
-        check_file_format(fname)
+        klass.check_file_format(fname)
         try:
             namespace = {}
             execfile(fname, namespace, namespace)
@@ -162,7 +162,7 @@ class Rmap(object):
         print >>f,  "data = ", pprint.pformat(self.data)
         f.close()
         
-    def validate_loaded_file(self):
+    def validate_file_load(self):
         """Validate assertions about the contents of this rmap."""
         pass
     
