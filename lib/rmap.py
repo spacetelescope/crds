@@ -4,6 +4,8 @@ a CRDS lookup table for an instrument.
 import os
 import os.path
 import collections
+import pprint
+import re
 
 from crds import log, timestamp
 from crds.config import CRDS_ROOT
@@ -19,6 +21,10 @@ class RmapError(Exception):
     """Exception in load_rmap."""
     def __init__(self, *args):
         Exception.__init__(self, " ".join([str(x) for x in args]))
+        
+class FormatError(RmapError):
+    "Something wrong with context or rmap file format."
+    pass
 
 # ===================================================================
 
@@ -32,7 +38,105 @@ class Rmap(object):
         self.data = data
     
     @classmethod
+    def check_file_format(klass, filename):
+        """Make sure the basic file format for `filename` is valid and safe."""
+        lines = open(filename).readlines()
+        clean = klass._clean_lines(lines)
+        remainder = klass._check_header_syntax(clean)
+        remainder = klass._check_data_syntax(remainder)
+        if remainder:
+            raise FormatError("Extraneous input following data.")
+    
+    @classmethod
+    def _clean_lines(klass, lines):
+        """Remove empty lines and comment lines"""
+        clean = []
+        for line in lines:
+            line = line.strip()
+            if (not line) or line.startswith("#"):
+                continue
+            clean.append(line.strip())
+        return clean
+
+    @classmethod
+    def _check_header_syntax(klass, lines):
+        """Verify the basic syntax of the header portion of the rmap file."""
+        if not re.match("^header\s*=\s*{$", lines[0]):
+            raise FormatError("Invalid header block opening.")
+        for lineno, line in enumerate(lines[1:]):
+            key, value = klass._key_value_split(line)
+            if key == "}" and value is None:
+                break
+            if not klass._match_header_key(key):
+                raise FormatError("Invalid header keyword " + repr(key))
+            if not klass._match_header_value(value):
+                raise FormatError("Invalid header value for " + key + " = " + repr(value))
+        return lines[1+lineno+1:]
+    
+    @classmethod
+    def _key_value_split(klass, line):
+        """Split line on first : not inside quoted string or tuple."""
+        inside_quote = False
+        inside_tuple = 0
+        for index, char in enumerate(line):
+            if char == "'":
+                inside_quote = not inside_quote
+            elif inside_quote:
+                continue
+            elif char == '(':
+                inside_tuple += 1
+            elif char == ')':
+                inside_tuple -= 1
+            elif char == ":" and (not inside_quote) and (not inside_tuple):
+                key = line[:index]
+                value = line[index+1:]
+                value = value.split("#")[0]
+                return key.strip(), value.strip()
+        return line, None
+
+    @classmethod
+    def _match_header_key(klass, key):
+        return re.match("^'\w+'$", key)
+    
+    @classmethod
+    def _match_header_value(klass, value):
+        return klass._match_simple(value) or klass._match_string_tuple(value)
+    
+    @classmethod
+    def _check_data_syntax(klass, lines):
+        if not re.match("^data\s*=\s*{$", lines[0]):
+            raise FormatError("Invalid data block opening.")        
+        for lineno, line in enumerate(lines[1:]):
+            key, value = klass._key_value_split(line)
+            if key == "}" and value is None:
+                break
+            elif key == "}," and value is None:
+                continue
+            elif not klass._match_data_key(key):
+                raise FormatError("Invalid data keyword " + repr(key))
+            elif not klass._match_data_value(value):
+                raise FormatError("Invalid data value for " + key + " = " + repr(value))
+        return lines[1+lineno+1:]  # should be no left-overs
+
+    @classmethod
+    def _match_data_key(klass, key):
+        return klass._match_simple(key) or klass._match_string_tuple(key)
+    
+    @classmethod
+    def _match_data_value(klass, value):
+        return (value == "{") or klass._match_simple(value) or klass._match_string_tuple(value)
+
+    @classmethod
+    def _match_simple(klass, value):
+        return re.match("^'[A-Za-z0-9_.:/ \*\%\-]*',?$", value)
+    
+    @classmethod
+    def _match_string_tuple(klass, value):
+        return re.match("^\((\s*'[A-Za-z0-9_.:/ \*\%\-]*',?\s*)*\),?$", value)
+
+    @classmethod
     def from_file(klass, fname, *args, **keys):
+        check_file_format(fname)
         try:
             namespace = {}
             execfile(fname, namespace, namespace)
@@ -50,7 +154,16 @@ class Rmap(object):
         rmap.validate_file_load()
         return rmap
     
-    def validate_file_load(self):
+    def to_file(self, filename):
+        """Write out an rmap in canonical form suitable for differencing.
+        """
+        f = open(filename, "w+")
+        print >>f,  "header = ", pprint.pformat(self.header)
+        print >>f,  "data = ", pprint.pformat(self.data)
+        f.close()
+        
+    def validate_loaded_file(self):
+        """Validate assertions about the contents of this rmap."""
         pass
     
 # ===================================================================
@@ -70,6 +183,9 @@ data = {
     'NICMOS':'icontext_hst_nicmos_00023.con',
 }
 """
+
+
+
 class PipelineContext(Rmap):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
@@ -82,7 +198,7 @@ class PipelineContext(Rmap):
             instrument = instrument.lower()
             filepath = "/".join([CRDS_ROOT, self.observatory, instrument, context_file])
             self.selections[instrument] = InstrumentContext.from_file(filepath, observatory, instrument)
-        
+
     def get_best_refs(self, header, date=None):
         header = dict(header.items())
         instrument = header["INSTRUME"].lower()
@@ -111,7 +227,23 @@ class PipelineContext(Rmap):
         for instrument in self.selections:
             files.update(self.selections[instrument].map_files())
         return sorted(list(files))
-        
+    
+    """
+header = {
+    'observatory':'HST',
+    'parkey' : ('INSTRUME'),
+    'class' : 'crds.PipelineContext',
+}
+
+data = {
+    'ACS':'icontext_hst_acs_00023.con',
+    'COS':'icontext_hst_cos_00023.con', 
+    'STIS':'icontext_hst_stis_00023.con',
+    'WFC3':'icontext_hst_wfc3_00023.con',
+    'NICMOS':'icontext_hst_nicmos_00023.con',
+}
+"""
+
 # ===================================================================
 
 """
