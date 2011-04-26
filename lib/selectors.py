@@ -849,7 +849,7 @@ class ReferenceSelector(MatchingSelector):
         selections = {}
         for mapping in data:
             selections[mapping] = UseAfterSelector("DATE", data[mapping])
-        substitutions = header.pop("substitutions", None)
+        substitutions = header.get("substitutions", None)
         MatchingSelector.__init__(self, header["parkey"][:-1], selections, substitutions)
         
     def reference_files(self):
