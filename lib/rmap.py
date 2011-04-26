@@ -43,8 +43,8 @@ class Rmap(object):
         """Make sure the basic file format for `filename` is valid and safe."""
         lines = open(filename).readlines()
         clean = klass._clean_lines(lines)
-        remainder = klass._check_header_syntax(clean)
-        remainder = klass._check_data_syntax(remainder)
+        remainder = klass._check_syntax("header", clean)
+        remainder = klass._check_syntax("data", remainder)
         if remainder:
             raise FormatError("Extraneous input following data.")
     
@@ -59,23 +59,6 @@ class Rmap(object):
             clean.append(line.strip())
         return clean
 
-    @classmethod
-    def _check_header_syntax(klass, lines):
-        """Verify the basic syntax of the header portion of the rmap file."""
-        if not re.match("^header\s*=\s*{$", lines[0]):
-            raise FormatError("Invalid header block opening.")
-        for lineno, line in enumerate(lines[1:]):
-            key, value = klass._key_value_split(line)
-            if key == "}" and value is None:
-                break
-            elif key == "}," and value is None:
-                continue
-            if not klass._match_header_key(key):
-                raise FormatError("Invalid header keyword " + repr(key))
-            if not klass._match_header_value(value):
-                raise FormatError("Invalid header value for " + key + " = " + repr(value))
-        return lines[1+lineno+1:]
-    
     @classmethod
     def _key_value_split(klass, line):
         """Split line on first : not inside quoted string or tuple."""
@@ -98,35 +81,27 @@ class Rmap(object):
         return line, None
 
     @classmethod
-    def _match_header_key(klass, key):
-        return klass._match_simple(key)
-    
-    @classmethod
-    def _match_header_value(klass, value):
-        return (value == "{") or klass._match_simple(value) or klass._match_string_tuple(value)
-    
-    @classmethod
-    def _check_data_syntax(klass, lines):
-        if not re.match("^data\s*=\s*{$", lines[0]):
-            raise FormatError("Invalid data block opening.")        
+    def _check_syntax(klass, name, lines):
+        if not re.match("^%s\s*=\s*{$" % name, lines[0]):
+            raise FormatError("Invalid %s block opening." % (name,))        
         for lineno, line in enumerate(lines[1:]):
             key, value = klass._key_value_split(line)
             if key == "}" and value is None:
                 break
             elif key == "}," and value is None:
                 continue
-            elif not klass._match_data_key(key):
-                raise FormatError("Invalid data keyword " + repr(key))
-            elif not klass._match_data_value(value):
-                raise FormatError("Invalid data value for " + key + " = " + repr(value))
+            elif not klass._match_key(key):
+                raise FormatError("Invalid %s keyword " % name + repr(key))
+            elif not klass._match_value(value):
+                raise FormatError("Invalid %s value for " % name + key + " = " + repr(value))
         return lines[1+lineno+1:]  # should be no left-overs
 
     @classmethod
-    def _match_data_key(klass, key):
+    def _match_key(klass, key):
         return klass._match_simple(key) or klass._match_string_tuple(key)
     
     @classmethod
-    def _match_data_value(klass, value):
+    def _match_value(klass, value):
         return (value == "{") or klass._match_simple(value) or klass._match_string_tuple(value)
 
     @classmethod
