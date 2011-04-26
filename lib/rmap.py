@@ -43,10 +43,11 @@ class Rmap(object):
         """Make sure the basic file format for `filename` is valid and safe."""
         lines = open(filename).readlines()
         clean = klass._clean_lines(lines)
-        remainder = klass._check_syntax("header", clean)
-        remainder = klass._check_syntax("data", remainder)
+        basename = os.path.basename(filename)
+        remainder = klass._check_syntax(basename, "header", clean)
+        remainder = klass._check_syntax(basename, "data", remainder)
         if remainder:
-            raise FormatError("Extraneous input following data.")
+            raise FormatError("Extraneous input following data in " + repr(basename))
     
     @classmethod
     def _clean_lines(klass, lines):
@@ -81,9 +82,9 @@ class Rmap(object):
         return line, None
 
     @classmethod
-    def _check_syntax(klass, name, lines):
-        if not re.match("^%s\s*=\s*{$" % name, lines[0]):
-            raise FormatError("Invalid %s block opening." % (name,))        
+    def _check_syntax(klass, filename, section, lines):
+        if not re.match("^%s\s*=\s*{$" % section, lines[0]):
+            raise FormatError("Invalid %s block opening in " % (section,) + repr(filename))        
         for lineno, line in enumerate(lines[1:]):
             key, value = klass._key_value_split(line)
             if key == "}" and value is None:
@@ -91,9 +92,9 @@ class Rmap(object):
             elif key == "}," and value is None:
                 continue
             elif not klass._match_key(key):
-                raise FormatError("Invalid %s keyword " % name + repr(key))
+                raise FormatError("Invalid %s keyword " % section + repr(key) + " in " + repr(filename))
             elif not klass._match_value(value):
-                raise FormatError("Invalid %s value for " % name + key + " = " + repr(value))
+                raise FormatError("Invalid %s value for " % section + key + " = " + repr(value) + " in " + repr(filename))
         return lines[1+lineno+1:]  # should be no left-overs
 
     @classmethod
