@@ -1,15 +1,15 @@
 header = {
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'IDCTAB',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
-    'reftype' : 'IDCTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
 }
 
 data = {
-     ('IR',) : {
-        '2009-05-11 00:00:00':'uab1537ci_idc.fits',    # Geometric Distortion Coefficients, unique solutions for 5 filters-- This IDCTAB is created from vera020710_ir_idc.m.fits file. This file contains the distortion of the WFC3 IR channel from, 12216, Oct 11 2010 03:43PM
+    ('IR',) : {
+        '2009-05-11 00:00:00' : 'uab1537ci_idc.fits', # Geometric Distortion Coefficients, unique solutions for 5 filters-- This IDCTAB is created from vera020710_ir_idc.m.fits file. This file contains the distortion of the WFC3 IR channel from, 12216, Oct 11 2010 03:43PM
     },
-     ('UVIS',) : {
-        '2009-05-11 00:00:00':'uab1537bi_idc.fits',    # Geometric Distortion Coefficients, unique solutions for 10 filters- This IDCTAB is created from vera010710_uvis_idc.all.fits file. This file contains the distortion of the WFC3 UVIS channel, 12216, Oct 11 2010 03:43PM
+    ('UVIS',) : {
+        '2009-05-11 00:00:00' : 'uab1537bi_idc.fits', # Geometric Distortion Coefficients, unique solutions for 10 filters- This IDCTAB is created from vera010710_uvis_idc.all.fits file. This file contains the distortion of the WFC3 UVIS channel, 12216, Oct 11 2010 03:43PM
     },
 }

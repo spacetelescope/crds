@@ -1,12 +1,12 @@
 header = {
+    'parkey' : ('DETECTOR', 'OBSMODE', 'USEAFTER'),
+    'reftype' : 'BRSTTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
-    'reftype' : 'BRSTTAB',
-    'parkey' : ('DETECTOR', 'OBSMODE', 'USEAFTER'),
 }
 
 data = {
-     ('FUV', 'TIME-TAG') : {
-        '1996-10-01 00:00:00':'s7g1700fl_burst.fits',    # initial version for testing VERSION keyword renamed to VCALCOS, 11876, Jul 16 2008 05:09PM
+    ('FUV', 'TIME-TAG') : {
+        '1996-10-01 00:00:00' : 's7g1700fl_burst.fits', # initial version for testing VERSION keyword renamed to VCALCOS, 11876, Jul 16 2008 05:09PM
     },
 }

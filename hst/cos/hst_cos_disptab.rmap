@@ -1,20 +1,20 @@
 header = {
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
+    'reftype' : 'DISPTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
-    'reftype' : 'DISPTAB',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }
 
 data = {
-     ('FUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00':'t2k1224el_disp.fits',    # from TV2003 data Modified to account for change of coordinates. fuv_080715, 11996, Feb 20 2009 12:29PM
-        '2006-10-01 00:00:00':'t9e1307kl_disp.fits',    # File created from data obtained in tv03 and adjusted for tv06 data The dispersions were obtained fro, 12086, Sep 14 2009 01:32PM
-        '2009-06-08 00:00:00':'u6s1320ql_disp.fits',    # Use for data prior to OSM1 adjustment for G130M 1291 and 1300------ This file should only be used to, 12186, Jun 28 2010 02:07PM
-        '2009-08-17 00:00:00':'v3g18194l_disp.fits',    # Dispersion relation reference file updated for new offsets.-------- Jan 21 2011, 12267, Mar 16 2011 06:22PM
+    ('FUV', 'SPECTROSCOPIC') : {
+        '1996-10-01 00:00:00' : 't2k1224el_disp.fits', # from TV2003 data Modified to account for change of coordinates. fuv_080715, 11996, Feb 20 2009 12:29PM
+        '2006-10-01 00:00:00' : 't9e1307kl_disp.fits', # File created from data obtained in tv03 and adjusted for tv06 data The dispersions were obtained fro, 12086, Sep 14 2009 01:32PM
+        '2009-06-08 00:00:00' : 'u6s1320ql_disp.fits', # Use for data prior to OSM1 adjustment for G130M 1291 and 1300------ This file should only be used to, 12186, Jun 28 2010 02:07PM
+        '2009-08-17 00:00:00' : 'v3g18194l_disp.fits', # Dispersion relation reference file updated for new offsets.-------- Jan 21 2011, 12267, Mar 16 2011 06:22PM
     },
-     ('NUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00':'s7g17013l_disp.fits',    # from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
-        '2006-10-01 00:00:00':'t9e1307ll_disp.fits',    # File created from data obtained in tv03 and adjusted for tv06 data The dispersions were obtained fro, 12086, Sep 14 2009 01:32PM
-        '2009-07-28 00:00:00':'u1t1616pl_disp.fits',    # NUV Dispersion relation reference file from on-orbit data---------- See COS ISR 2010-05 for info on, 12133, Jan 29 2010 04:21PM
+    ('NUV', 'SPECTROSCOPIC') : {
+        '1996-10-01 00:00:00' : 's7g17013l_disp.fits', # from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
+        '2006-10-01 00:00:00' : 't9e1307ll_disp.fits', # File created from data obtained in tv03 and adjusted for tv06 data The dispersions were obtained fro, 12086, Sep 14 2009 01:32PM
+        '2009-07-28 00:00:00' : 'u1t1616pl_disp.fits', # NUV Dispersion relation reference file from on-orbit data---------- See COS ISR 2010-05 for info on, 12133, Jan 29 2010 04:21PM
     },
 }

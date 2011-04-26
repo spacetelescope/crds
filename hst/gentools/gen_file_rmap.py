@@ -12,6 +12,7 @@ import argparse
 import re
 import StringIO
 import pprint as pp
+from collections import OrderedDict
 
 import crds.hst.gentools.tlist as tlist
 import crds.hst.gentools.ezxml as ezxml
@@ -219,7 +220,7 @@ def dicts_to_kind_map(instr, kind, dicts):
                 if mapping.file != existing.file:
                     log.error("Overlap in key", repr(key), repr(mapping))
                     if "***" not in mapping.comment:
-                        mapping = filemap(date=mapping.date, file=mapping.file, comment = "# *** " + mapping.comment[2:])
+                        mapping = rmap.Filemap(date=mapping.date, file=mapping.file, comment = "# *** " + mapping.comment[2:])
 
                 else:
                     if not warned:
@@ -291,7 +292,6 @@ def get_key(d, instr, kind):
         lkey.append(value)
     return tuple(lkey)
 
-filemap = collections.namedtuple("filemap","date,file,comment")
 
 def get_parkey_from_reffile(d, instr, var):
     """Attempt to resolve undefined lookup keys for a reference file by looking
@@ -329,10 +329,10 @@ def get_mapping(d):
                 comments.append(d[cvar])
             except KeyError:
                 pass
-        comments_str = "# " + ", ".join(comments)
+        comments_str = ", ".join(comments)
     else:
         comments_str = ""
-    return filemap(timestamp.format_date(timestamp.parse_date(d[MAPKEYS[0]])), dict_to_filename(d), comments_str)
+    return rmap.Filemap(timestamp.format_date(timestamp.parse_date(d[MAPKEYS[0]])), dict_to_filename(d), comments_str)
 
 def dict_to_filename(d):
     """Given the XHTML <a> corresponding to the 'file' field,  ignore the href and
@@ -364,46 +364,37 @@ def parkeys_to_fitskeys(instrument, all_parkeys):
     return tuple(fits_keys)
 
 def write_rmap(observatory, instrument, reftype, kind_map):
-    outname = "hst_" + instrument + "_" + reftype + ".rmap"
-    outfile = open(outname, "w+")
+    """Constructs rmap's header and data out of the kind_map and
+    outputs an rmap file
+    """
     parkeys = KIND_KEYS[instrument][reftype]
     all_parkeys = parkeys + MAPKEYS[:-1]
     fitskeys = parkeys_to_fitskeys(instrument, all_parkeys)
-    # selector_class = cdbs_parkeys.get_selector_class(instrument, reftype)
-    print >>outfile, """header = {
-    'observatory' : '%s',
-    'instrument' : '%s',
-    'reftype' : '%s',
-    'parkey' : %s,""" % (
-       observatory.upper(),
-       instrument.upper(),
-       reftype.upper(),
-       repr(fitskeys),
-       )
-
-    additions = HEADER_ADDITIONS.pop((instrument, reftype), None)
-    if additions:
-        for key, value in additions:
-            print >>outfile, "   ", repr(key), ":",
-            for line in StringIO.StringIO(pp.pformat(value)):
-                outfile.write("\n        " + line.rstrip())
-            print >>outfile, ","
-    print >>outfile, "}\n"
-
-    print >>outfile, "data = {"
+    rmap_header = OrderedDict(
+                       observatory=observatory.upper(),
+                       instrument=instrument.upper(),
+                       reftype=reftype.upper(),
+                       parkey=fitskeys)
+    selector_class = cdbs_parkeys.get_selector_class(instrument, reftype)
+    if selector_class:
+        rmap_header["class"] = selector_class
+    additions = HEADER_ADDITIONS.get((instrument, reftype), {})
+    rmap_header.update(additions)
+    
+    rmap_data = OrderedDict()
     for key in sorted(kind_map):
         mappings = kind_map[key]
-        print >>outfile, "    ", repr(key), ": {"
-        for mapping in mappings:
-                print >>outfile, " "*7, format_mapping(mapping)
-        print >>outfile, "    },"
-    print >>outfile, "}"
+        rmap_data[key] = OrderedDict()
+        for m in sorted(mappings):
+            if m.date in rmap_data[key]:
+                existing_file = rmap_data[key][m.date].file
+                if m.file != existing_file:
+                    log.warning("Useafter date collision in", repr(instrument), repr(reftype), repr(key),"at",repr(m.date),
+                                repr(m.file), "replaces", repr(existing_file))
+            rmap_data[key][m.date] = m
 
-# =======================================================================
-
-def format_mapping(m):
-    date, file, comments = m
-    return repr(date) + ":" + repr(file) + ",    " + comments
+    outname = observatory + "_" + instrument + "_" + reftype + ".rmap"
+    rmap.write_rmap(outname, rmap_header, rmap_data)
 
 # ==========================================================================================
 

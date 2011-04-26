@@ -1,23 +1,23 @@
 header = {
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'IDCTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
-    'reftype' : 'IDCTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
 }
 
 data = {
-     ('HRC',) : {
-        '2002-03-01 00:00:00':'p7d1548qj_idc.fits',    # Parameters for geometric distortion correction ehrcpre_idc.fits renamed to n3b10470j_idc.fits on Mar, 11582, Jul 13 2005 03:53PM
-        '2002-10-21 00:00:00':'q692007bj_idc.fits',    # Created using texpand File created June 9th by Colin Cox Expande, 11633, Jun 09 2006 08:12PM
+    ('HRC',) : {
+        '2002-03-01 00:00:00' : 'p7d1548qj_idc.fits', # Parameters for geometric distortion correction ehrcpre_idc.fits renamed to n3b10470j_idc.fits on Mar, 11582, Jul 13 2005 03:53PM
+        '2002-10-21 00:00:00' : 'q692007bj_idc.fits', # Created using texpand File created June 9th by Colin Cox Expande, 11633, Jun 09 2006 08:12PM
     },
-     ('SBC',) : {
-        '2002-03-01 00:00:00':'o911150jj_idc.fits',    # Filter-dependent distortion coefficients, 11476, Sep 01 2004 05:17PM
-        '2002-10-21 00:00:00':'s5d1409dj_idc.fits',    # Distortion coefficients derived from NGC 604 reference field First created on 25 July 2007, 11855, May 13 2008 02:12PM
-        '2007-07-17 00:00:00':'s5f1959lj_idc.fits',    # Distortion coefficients derived from NGC 604 reference field First created on 25 July 2007, 11861, May 15 2008 08:03PM
+    ('SBC',) : {
+        '2002-03-01 00:00:00' : 'o911150jj_idc.fits', # Filter-dependent distortion coefficients, 11476, Sep 01 2004 05:17PM
+        '2002-10-21 00:00:00' : 's5d1409dj_idc.fits', # Distortion coefficients derived from NGC 604 reference field First created on 25 July 2007, 11855, May 13 2008 02:12PM
+        '2007-07-17 00:00:00' : 's5f1959lj_idc.fits', # Distortion coefficients derived from NGC 604 reference field First created on 25 July 2007, 11861, May 15 2008 08:03PM
     },
-     ('WFC',) : {
-        '2002-03-01 00:00:00':'q2h2010pj_idc.fits',    # Rows added for filter F814 with F502N or F658N fcpre_idc.fits renamed to n361344lj_idc.fits on Mar 6, 11611, Feb 17 2006 08:14PM
-        '2002-10-21 00:00:00':'u7n18502j_idc.fits',    # Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
-        '2009-01-01 00:00:00':'u7n18501j_idc.fits',    # Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
+    ('WFC',) : {
+        '2002-03-01 00:00:00' : 'q2h2010pj_idc.fits', # Rows added for filter F814 with F502N or F658N fcpre_idc.fits renamed to n361344lj_idc.fits on Mar 6, 11611, Feb 17 2006 08:14PM
+        '2002-10-21 00:00:00' : 'u7n18502j_idc.fits', # Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
+        '2009-01-01 00:00:00' : 'u7n18501j_idc.fits', # Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
     },
 }

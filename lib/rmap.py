@@ -14,6 +14,7 @@ from crds.config import CRDS_ROOT
 
 Filetype = collections.namedtuple("Filetype","header_keyword,extension,rmap")
 Failure = collections.namedtuple("Failure","header_keyword,message")
+Filemap = collections.namedtuple("filemap","date,file,comment")
 
 # ===================================================================
 
@@ -67,6 +68,8 @@ class Rmap(object):
             key, value = klass._key_value_split(line)
             if key == "}" and value is None:
                 break
+            elif key == "}," and value is None:
+                continue
             if not klass._match_header_key(key):
                 raise FormatError("Invalid header keyword " + repr(key))
             if not klass._match_header_value(value):
@@ -367,6 +370,35 @@ def get_pipeline_context(observatory, context_file):
     PIPELINE_CONTEXTS[key] = PipelineContext.from_file(filepath, observatory)
     return PIPELINE_CONTEXTS[key]
 
+# ===================================================================
+
+def write_rmap(filename, header, data):
+    """Write out the specified `header` and `data` to `filename` in rmap format."""
+    file = open(filename,"w+")
+    file.write("header = ")
+    write_rmap_dict(file, header)
+    file.write("\n")
+    file.write("data = ")
+    write_rmap_dict(file, data)
+
+def write_rmap_dict(file, the_dict, indent_level=1):
+    """Write out a (nested) dictionary in a simple format amenable to validation."""
+    indent = " "*4*indent_level
+    print >>file, "{"
+    for key, value in the_dict.items():
+        print >>file, indent + repr(key), ":",
+        if isinstance(value, dict):
+            write_rmap_dict(file, value, indent_level+1)
+        elif isinstance(value, Filemap):
+            print >>file, repr(value.file)+",", "#", value.comment
+        else:
+            print >>file, repr(value) + ","
+    indent_level -= 1
+    if indent_level > 0:
+        print >>file, indent_level*" "*4 + "},"
+    else:
+        print >>file, "}"
+        
 # ===================================================================
 
 def get_best_refs(header, observatory="hst", pcontext_file=None, date=None):

@@ -1,24 +1,13 @@
 header = {
+    'parkey' : ('USEAFTER',),
+    'reftype' : 'APDSTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
-    'reftype' : 'APDSTAB',
-    'parkey' : ('USEAFTER',),
 }
 
 data = {
-     () : {
-        '1996-10-01 00:00:00':'h1v1126no_apd.fits',    # *** 7/99 PR 39445 This file is invalid. The original aperture name was ANY and is invalid. The current value, 10016, Jan 31 1997 04:36PM
-        '1996-10-01 00:00:00':'hbp11488o_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 10213, Nov 25 1997 07:49PM
-        '1996-10-01 00:00:00':'j1c1746no_apd.fits',    # *** Microscope Meas./Hartig Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 1997 11:26 -, 10399, Jan 13 1999 03:37PM
-        '1996-10-01 00:00:00':'j1p1328ao_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 10410, Jan 27 1999 08:58PM
-        '1996-10-01 00:00:00':'j8j1559jo_apd.fits',    # *** July 1999 revision by P. Hodge and R. Downes The OFFSET1 values for F25NDQ2, F25NDQ3 and F25NDQ4 were mo, 10510, Aug 19 1999 08:40PM
-        '1996-10-01 00:00:00':'laf13362o_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 10846, Oct 15 2001 08:21PM
-        '1996-10-01 00:00:00':'m9a16593o_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 11051, Sep 12 2002 04:58PM
-        '1996-10-01 00:00:00':'o2o1431ko_apd.fits',    # Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 11352, Feb 25 2004 06:09PM
-        '1997-12-08 00:00:00':'j1c1746mo_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 10399, Jan 13 1999 03:37PM
-        '1997-12-08 00:00:00':'j1p13289o_apd.fits',    # *** March 15, 2000 : File was rejected because it contained an error in the useafter date., 10410, Jan 27 1999 08:58PM
-        '1997-12-08 00:00:00':'m9a16591o_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 11051, Sep 12 2002 04:58PM
-        '1997-12-08 00:00:00':'n7p10329o_apd.fits',    # *** Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 11220, Jul 28 2003 12:07PM
-        '1997-12-08 00:00:00':'o2o1431lo_apd.fits',    # Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 11352, Feb 25 2004 06:09PM
+    () : {
+        '1996-10-01 00:00:00' : 'o2o1431ko_apd.fits', # Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 11352, Feb 25 2004 06:09PM
+        '1997-12-08 00:00:00' : 'o2o1431lo_apd.fits', # Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 11352, Feb 25 2004 06:09PM
     },
 }

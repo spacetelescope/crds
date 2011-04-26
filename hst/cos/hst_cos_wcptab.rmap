@@ -1,17 +1,17 @@
 header = {
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
+    'reftype' : 'WCPTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
-    'reftype' : 'WCPTAB',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }
 
 data = {
-     ('FUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00':'t2314311l_wcp.fits',    # from TV2003 data See section 13 of Generating the COS Reference Files, July 19, 2007., 11982, Feb 03 2009 02:34PM
-        '2009-05-12 00:00:00':'t9b18112l_wcp.fits',    # Revised wcp params table for use with ground lamp table See section 13 of Generating the COS Referen, 12085, Sep 11 2009 06:14PM
-        '2009-08-17 00:00:00':'u1t1616ql_wcp.fits',    # FUV Wavecal parameters reference table from TV2003 data------------ This file is the same as t231431, 12133, Jan 29 2010 04:21PM
+    ('FUV', 'SPECTROSCOPIC') : {
+        '1996-10-01 00:00:00' : 't2314311l_wcp.fits', # from TV2003 data See section 13 of Generating the COS Reference Files, July 19, 2007., 11982, Feb 03 2009 02:34PM
+        '2009-05-12 00:00:00' : 't9b18112l_wcp.fits', # Revised wcp params table for use with ground lamp table See section 13 of Generating the COS Referen, 12085, Sep 11 2009 06:14PM
+        '2009-08-17 00:00:00' : 'u1t1616ql_wcp.fits', # FUV Wavecal parameters reference table from TV2003 data------------ This file is the same as t231431, 12133, Jan 29 2010 04:21PM
     },
-     ('NUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00':'t2314313l_wcp.fits',    # from TV2003 data See section 13 of Generating the COS Reference Files, July 19, 2007., 11982, Feb 03 2009 02:34PM
+    ('NUV', 'SPECTROSCOPIC') : {
+        '1996-10-01 00:00:00' : 't2314313l_wcp.fits', # from TV2003 data See section 13 of Generating the COS Reference Files, July 19, 2007., 11982, Feb 03 2009 02:34PM
     },
 }

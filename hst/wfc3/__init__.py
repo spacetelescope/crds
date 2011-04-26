@@ -1,6 +1,5 @@
-import collections
-
 import crds.log as log
+import crds.rmap as rmap
 
 # =======================================================================
 
@@ -53,19 +52,19 @@ header_substitutions = {
             "UVIS-CENTER", "UVIS-QUAD", "UVIS-QUAD-FIX", "G280-REF"
         ),
     },
+    'CCDAMP' : {
+        'G280_AMPS' : ('ABCD','A','B','C','D','AC','AD','BC','BD'), 
+    },
 }
 
 header_additions = [
     ("substitutions", header_substitutions),
 ]
 
-# Putting (a copy of) this here is a nested hack...
-filemap = collections.namedtuple("filemap","date,file,comment")
-
 def wfc3_biasfile_filter(kmap):
     log.write("Hacking WFC3 Biasfile  APERTURE macros.   Adding t6i1733ei_bia.fits special case.")
-    kmap[('UVIS', ('ABCD','A','B','C','D','AC','AD','BC','BD'), '1.5', '1.0', '1.0', 'G280-REF', 'T')] = \
-      [filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
-              comment='# Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
+    kmap[('UVIS', 'G280_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T')] = \
+      [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
+              comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
     return kmap, header_additions
 

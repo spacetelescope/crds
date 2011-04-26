@@ -1,12 +1,12 @@
 header = {
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'SPOTTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
-    'reftype' : 'SPOTTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
 }
 
 data = {
-     ('HRC',) : {
-        '2002-03-01 00:00:00':'r3301467j_csp.fits',    # Spot positions derived from F330W, see ISR ACS 04-14 File written 07/02/2007 at 16:51 Includes flat, 11693
+    ('HRC',) : {
+        '2002-03-01 00:00:00' : 'r3301467j_csp.fits', # Spot positions derived from F330W, see ISR ACS 04-14 File written 07/02/2007 at 16:51 Includes flat, 11693
     },
 }

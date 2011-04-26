@@ -1,17 +1,17 @@
 header = {
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'TDSTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
-    'reftype' : 'TDSTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
 }
 
 data = {
-     ('FUV',) : {
-        '1996-10-01 00:00:00':'t2314312l_tds.fits',    # no change with time This table is not based on observations; all rows are dummy. FITS (Fle, 11982, Feb 03 2009 02:34PM
-        '2009-05-11 00:00:00':'v3i16155l_tds.fits',    # Updated for break point in 03/2010 and processed with min PHA = 2-- FITS (Flexible Image Transp, 12268, Mar 18 2011 04:17PM
+    ('FUV',) : {
+        '1996-10-01 00:00:00' : 't2314312l_tds.fits', # no change with time This table is not based on observations; all rows are dummy. FITS (Fle, 11982, Feb 03 2009 02:34PM
+        '2009-05-11 00:00:00' : 'v3i16155l_tds.fits', # Updated for break point in 03/2010 and processed with min PHA = 2-- FITS (Flexible Image Transp, 12268, Mar 18 2011 04:17PM
     },
-     ('NUV',) : {
-        '1996-10-01 00:00:00':'t2314314l_tds.fits',    # no change with time This table is not based on observations; all rows are dummy. FITS (Fle, 11982, Feb 03 2009 02:34PM
-        '2009-05-11 00:00:00':'u7d20378l_tds.fits',    # Reference file created from TDS 11897 monitoring obs. This table is not based on observations; all r, 12188, Jul 13 2010 08:40PM
+    ('NUV',) : {
+        '1996-10-01 00:00:00' : 't2314314l_tds.fits', # no change with time This table is not based on observations; all rows are dummy. FITS (Fle, 11982, Feb 03 2009 02:34PM
+        '2009-05-11 00:00:00' : 'u7d20378l_tds.fits', # Reference file created from TDS 11897 monitoring obs. This table is not based on observations; all r, 12188, Jul 13 2010 08:40PM
     },
 }

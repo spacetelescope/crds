@@ -1,108 +1,108 @@
 header = {
+    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
+    'reftype' : 'DGEOFILE',
     'observatory' : 'HST',
     'instrument' : 'ACS',
-    'reftype' : 'DGEOFILE',
-    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
 }
 
 data = {
-     ('HRC', 'CLEAR1S', 'F220W') : {
-        '2002-03-01 00:00:00':'o8u2214fj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'CLEAR1S', 'F220W') : {
+        '2002-03-01 00:00:00' : 'o8u2214fj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'CLEAR1S', 'F330W') : {
-        '2002-03-01 00:00:00':'o8u2214gj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'CLEAR1S', 'F330W') : {
+        '2002-03-01 00:00:00' : 'o8u2214gj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'CLEAR1S', 'F435W') : {
-        '2002-03-01 00:00:00':'o8u2214ij_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'CLEAR1S', 'F435W') : {
+        '2002-03-01 00:00:00' : 'o8u2214ij_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'CLEAR1S', 'F814W') : {
-        '2002-03-01 00:00:00':'o8u2214rj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'CLEAR1S', 'F814W') : {
+        '2002-03-01 00:00:00' : 'o8u2214rj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F475W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214jj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F475W', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214jj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F555W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214mj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F555W', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214mj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F606W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214nj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F606W', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214nj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F625W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214oj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F625W', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214oj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F775W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214qj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F775W', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214qj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('HRC', 'F850LP', 'CLEAR2S') : {
-        '2002-03-01 00:00:00':'o8u2214sj_dxy.fits',    # Residual geometric distortion correction image, 11473
+    ('HRC', 'F850LP', 'CLEAR2S') : {
+        '2002-03-01 00:00:00' : 'o8u2214sj_dxy.fits', # Residual geometric distortion correction image, 11473
     },
-     ('SBC', '*', '*') : {
-        '2002-10-21 00:00:00':'s5d1409ej_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11855
+    ('SBC', '*', '*') : {
+        '2002-10-21 00:00:00' : 's5d1409ej_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11855
     },
-     ('SBC', 'BLOCK1', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'BLOCK1', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'BLOCK2', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'BLOCK2', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'BLOCK3', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'BLOCK3', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'BLOCK4', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'BLOCK4', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F115LP', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F115LP', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F122M', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F122M', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F125LP', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F125LP', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F140LP', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F140LP', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F150LP', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F150LP', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('SBC', 'F165LP', '*') : {
-        '2002-10-21 00:00:00':'s5f20000j_dxy.fits',    # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
+    ('SBC', 'F165LP', '*') : {
+        '2002-10-21 00:00:00' : 's5f20000j_dxy.fits', # Fine scale correction derived from NGC 604 reference field First created on 7 August 2007, 11861
     },
-     ('WFC', 'CLEAR1L', 'F435W') : {
-        '2002-03-01 00:00:00':'qbu1641tj_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'CLEAR1L', 'F435W') : {
+        '2002-03-01 00:00:00' : 'qbu1641tj_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'CLEAR1L', 'F660N') : {
-        '2002-03-01 00:00:00':'qbu16427j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'CLEAR1L', 'F660N') : {
+        '2002-03-01 00:00:00' : 'qbu16427j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'CLEAR1L', 'F814W') : {
-        '2002-03-01 00:00:00':'qbu16429j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'CLEAR1L', 'F814W') : {
+        '2002-03-01 00:00:00' : 'qbu16429j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F475W', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16420j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F475W', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16420j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F502N', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16421j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F502N', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16421j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F550M', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16422j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F550M', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16422j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F555W', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16423j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F555W', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16423j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F606W', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16424j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F606W', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16424j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F625W', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16425j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F625W', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16425j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F658N', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16426j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F658N', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16426j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F775W', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu16428j_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F775W', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu16428j_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
-     ('WFC', 'F850LP', 'CLEAR2L') : {
-        '2002-03-01 00:00:00':'qbu1642aj_dxy.fits',    # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
+    ('WFC', 'F850LP', 'CLEAR2L') : {
+        '2002-03-01 00:00:00' : 'qbu1642aj_dxy.fits', # Improved distortion solution wfc_f606w_dxy.fits renamed to o7f1140rj_dxy.fits on Jul 15 2004, 11675
     },
 }

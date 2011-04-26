@@ -354,7 +354,6 @@ of the selectors by instrument and reftype.
 """
 
 SELECTOR_CLASSES = {
-    "default" : "crds.hst.lookup.HstRmapSelector",
 #    "acs" : {
 #        "biasfile" : "crds.hst.acs.AcsBiasfileSelector",
 #        "pfltfile" : "crds.hst.acs.AcsPfltfileSelector",
@@ -368,7 +367,7 @@ def get_selector_class(instrument, reftype):
     try:
         return SELECTOR_CLASSES[instrument][reftype]
     except KeyError:
-        return SELECTOR_CLASSES["default"]
+        return None
 
 
 # =======================================================================

@@ -1,15 +1,15 @@
 header = {
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'CRREJTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
-    'reftype' : 'CRREJTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
 }
 
 data = {
-     ('HRC',) : {
-        '2002-03-01 00:00:00':'n4e12510j_crr.fits',    # ACS/HRC cosmic ray rejection table, 11181, Apr 17 2003 03:06PM
+    ('HRC',) : {
+        '2002-03-01 00:00:00' : 'n4e12510j_crr.fits', # ACS/HRC cosmic ray rejection table, 11181, Apr 17 2003 03:06PM
     },
-     ('WFC',) : {
-        '2002-03-01 00:00:00':'n4e12511j_crr.fits',    # ACS/WFC cosmic ray rejection table, 11181, Apr 17 2003 03:06PM
+    ('WFC',) : {
+        '2002-03-01 00:00:00' : 'n4e12511j_crr.fits', # ACS/WFC cosmic ray rejection table, 11181, Apr 17 2003 03:06PM
     },
 }
