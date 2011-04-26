@@ -1,70 +1,68 @@
-header = {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'USEAFTER'),
-    'reftype' : 'PCTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'USEAFTER'),
+    'reftype' :  'PCTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     ('CCD', 'SPECTROSCOPIC', 'G230LB') : {
-        '1997-01-01 00:00:00' : 'q541740lo_pct.fits', # Sensitivity for diff. extractions heights UPDATED 99Dec to add 52X0.5 aperture for G230LB, 11628, May 04 2006 05:55PM
+        '1997-01-01 00:00:00' :  'q541740lo_pct.fits', # Sensitivity for diff. extractions heights UPDATED 99Dec to add 52X0.5 aperture for G230LB, 11628, May 04 2006 05:55PM
     },
     ('CCD', 'SPECTROSCOPIC', 'G230MB') : {
-        '1996-10-01 00:00:00' : 'j1p13244o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
-        '1997-01-01 00:00:00' : 'q541740mo_pct.fits', # Sensitivity for diff. extractions heights UPDATED 99Dec to add 52X0.5 aperture for G230LB, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'j1p13244o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
+        '1997-01-01 00:00:00' :  'q541740mo_pct.fits', # Sensitivity for diff. extractions heights UPDATED 99Dec to add 52X0.5 aperture for G230LB, 11628, May 04 2006 05:55PM
     },
     ('CCD', 'SPECTROSCOPIC', 'G430L') : {
-        '1997-01-01 00:00:00' : 'q541740no_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1997-01-01 00:00:00' :  'q541740no_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('CCD', 'SPECTROSCOPIC', 'G430M') : {
-        '1996-10-01 00:00:00' : 'j1p13246o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
-        '1997-01-01 00:00:00' : 'q541740oo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'j1p13246o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
+        '1997-01-01 00:00:00' :  'q541740oo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('CCD', 'SPECTROSCOPIC', 'G750L') : {
-        '1997-01-01 00:00:00' : 'q541740po_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1997-01-01 00:00:00' :  'q541740po_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('CCD', 'SPECTROSCOPIC', 'G750M') : {
-        '1996-10-01 00:00:00' : 'j1p13248o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
-        '1997-01-01 00:00:00' : 'q541740qo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'j1p13248o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10410, Jan 27 1999 08:58PM
+        '1997-01-01 00:00:00' :  'q541740qo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140H') : {
-        '1996-10-01 00:00:00' : 'ica12517o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
-        '1997-01-01 00:00:00' : 'q541740ro_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'ica12517o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
+        '1997-01-01 00:00:00' :  'q541740ro_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'E140M') : {
-        '1996-10-01 00:00:00' : 'i561639lo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
-        '1996-10-10 00:00:00' : 'ica12518o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
-        '1997-01-01 00:00:00' : 'q541740so_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'i561639lo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
+        '1996-10-10 00:00:00' :  'ica12518o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
+        '1997-01-01 00:00:00' :  'q541740so_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230H') : {
-        '1996-10-10 00:00:00' : 'ica12519o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
+        '1996-10-10 00:00:00' :  'ica12519o_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'E230M') : {
-        '1996-10-10 00:00:00' : 'ica1251ao_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
+        '1996-10-10 00:00:00' :  'ica1251ao_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10386, Dec 10 1998 07:23PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140L') : {
-        '1997-01-01 00:00:00' : 'q541740to_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1997-01-01 00:00:00' :  'q541740to_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('FUV-MAMA', 'SPECTROSCOPIC', 'G140M') : {
-        '1996-10-01 00:00:00' : 'i561639po_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
-        '1997-01-01 00:00:00' : 'q5417410o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'i561639po_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
+        '1997-01-01 00:00:00' :  'q5417410o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230H') : {
-        '1996-10-01 00:00:00' : 'i561639mo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
-        '1997-01-01 00:00:00' : 'q5417411o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'i561639mo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
+        '1997-01-01 00:00:00' :  'q5417411o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('NUV-MAMA', 'SPECTROSCOPIC', 'E230M') : {
-        '1996-10-01 00:00:00' : 'i561639no_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
-        '1997-01-01 00:00:00' : 'q5417412o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1996-10-01 00:00:00' :  'i561639no_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
+        '1997-01-01 00:00:00' :  'q5417412o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230L') : {
-        '1997-01-01 00:00:00' : 'q5417413o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
+        '1997-01-01 00:00:00' :  'q5417413o_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11628, May 04 2006 05:55PM
     },
     ('NUV-MAMA', 'SPECTROSCOPIC', 'G230M') : {
-        '1996-10-01 00:00:00' : 'i561639qo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
-        '1997-01-01 00:00:00' : 'n2o1817fo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11153, Feb 24 2003 11:23PM
+        '1996-10-01 00:00:00' :  'i561639qo_pct.fits', # Sensitivity for diff. extractions heights The analysis is described in ISR STIS 98-01:, 10291, May 07 1998 08:12PM
+        '1997-01-01 00:00:00' :  'n2o1817fo_pct.fits', # Sensitivity for diff. extractions heights A discussion of the previous submission can be found in STIS I, 11153, Feb 24 2003 11:23PM
     },
     ('NUV-MAMA', 'SPECTROSCOPIC', 'PRISM') : {
-        '1997-01-01 00:00:00' : 'p441909so_pct.fits', # Sensitivity for diff. extractions heights The PCT curve was based on observations of the DO white dwarf, 11560, Apr 04 2005 07:39PM
+        '1997-01-01 00:00:00' :  'p441909so_pct.fits', # Sensitivity for diff. extractions heights The PCT curve was based on observations of the DO white dwarf, 11560, Apr 04 2005 07:39PM
     },
-}
+}, 

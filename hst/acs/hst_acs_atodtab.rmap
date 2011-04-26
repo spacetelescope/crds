@@ -1,250 +1,248 @@
-header = {
-    'parkey' : ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'USEAFTER'),
-    'reftype' : 'ATODTAB',
-    'observatory' : 'HST',
-    'instrument' : 'ACS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'USEAFTER'),
+    'reftype' :  'ATODTAB',
+    'observatory' :  'HST',
+    'instrument' :  'ACS',
+}, {
     ('HRC', '1.0', 'A') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'ABCD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'AD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'B') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'BC') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'C') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '1.0', 'D') : {
-        '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'A') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'ABCD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'AD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'B') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'BC') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'C') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '2.0', 'D') : {
-        '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'A') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'ABCD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'AD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'B') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'BC') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'C') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '4.0', 'D') : {
-        '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'A') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'ABCD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'AD') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'B') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'BC') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'C') : {
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('HRC', '8.0', 'D') : {
-        '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
-        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'j4d1435hj_a2d.fits', # Test reference file for integrated, 10466, Apr 14 1999 08:17PM
+        '1992-01-01 00:00:00' :  'kcb1734ij_a2d.fits', # Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '0.0', 'A') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'ABCD') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'AC') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'AD') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'B') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'BC') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'BD') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'C') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '0.0', 'D') : {
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'A') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'ABCD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'AC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'AD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'B') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'BC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'BD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'C') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '1.0', 'D') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'A') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'ABCD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'AC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'AD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'B') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'BC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'BD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'C') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '2.0', 'D') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
-        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '2008-01-01 00:00:00' :  't3n1116mj_a2d.fits', # WFC A2D file FITS (Flexible Image, 12009, Mar 23 2009 11:22AM
     },
     ('WFC', '4.0', 'A') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'ABCD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'AC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'AD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'B') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'BC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'BD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'C') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '4.0', 'D') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'A') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'ABCD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'AC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'AD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'B') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'BC') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'BD') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'C') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
     ('WFC', '8.0', 'D') : {
-        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
+        '1991-01-01 00:00:00' :  'kcb1734hj_a2d.fits', # Initial delivery of WFC A2D table, 10730, Dec 13 2000 01:34PM
     },
-}
+}, 

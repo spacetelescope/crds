@@ -70,7 +70,7 @@ def generate_context_rmap(fname):
     rmap_file = open(instr + ".rmap", "w+")
     source_url = scrape.get_url(open(fname).read())
     write_rmap_header(rmap_file, "HST", instr, source_url)
-    print >>rmap_file, "data = {"
+    print >>rmap_file, "{"
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
@@ -87,17 +87,16 @@ def generate_context_rmap(fname):
         else:
             log.warning("No URLs for", repr(pars))
             print >>rmap_file, "    #", "No URLs for", repr(pars), "\n"
-    print >>rmap_file, "}"
+    print >>rmap_file, "},"
     rmap_file.close()
 
 def write_rmap_header(rmap_file, observatory, instrument, source_url):
-    print >>rmap_file, """header = {
+    rmap_file.write("""{
     'observatory':'%s',
     'instrument':'%s',
     'source_url':'%s',
     'reftype':'CONTEXT',
-}
-""" % (observatory.upper(), instrument.upper(), source_url)
+}, """ % (observatory.upper(), instrument.upper(), source_url))
 
 
 def get_value_from_keys(d, keylist):

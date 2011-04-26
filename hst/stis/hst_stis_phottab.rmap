@@ -1,9 +1,7 @@
-header = {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*CENWAVE', 'USEAFTER'),
-    'reftype' : 'PHOTTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
-}
+{
+    'parkey' :  ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*CENWAVE', 'USEAFTER'),
+    'reftype' :  'PHOTTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
+}, 

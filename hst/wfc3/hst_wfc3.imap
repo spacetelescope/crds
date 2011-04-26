@@ -1,11 +1,9 @@
-header = {
+{
     'observatory':'HST',
     'instrument':'WFC3',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
     'reftype':'CONTEXT',
-}
-
-data = {
+}, {
     # **Bias Images ** Additive stationary pattern in the electronic zero point of the CCDs. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3BiasReference?no_wrap=true'
     'biasfile' : ('BIA', 'hst_wfc3_biasfile.rmap'),
@@ -21,20 +19,6 @@ data = {
     #  2 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLbin3UVIS?no_wrap=true'
     #  3 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLflatsIR?no_wrap=true'
     'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
-
-    # **Flat-Field Images** Variations in the sensitivity of the detectors. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3DFLflatsUVIS?no_wrap=true'
-    #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3DFLflatsIR?no_wrap=true'
-    # 'dfltfile' : ('DFL', 'hst_wfc3_dfltfile.rmap'),
-
-    # **Flat-Field Images** Variations in the sensitivity of the detectors. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3LFLflatsUVIS?no_wrap=true'
-    #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3LFLflatsIR?no_wrap=true'
-    # 'lfltfile' : ('LFL', 'hst_wfc3_lfltfile.rmap'),
-
-    # **Shutter Shading Images ** Shutter travel time differences in images. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3ShutterShading?no_wrap=true'
-    # 'shadfile' : ('SHD', 'hst_wfc3_shadfile.rmap'),
 
     # **Linearity Correction Files ** Non-linearity effects in the IR detector. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3Linearity?no_wrap=true'
@@ -64,14 +48,10 @@ data = {
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3distcoeff?no_wrap=true'
     'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
 
-    # **Geometric Delta Image** Residual geometric distortion correction. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3dxy?no_wrap=true'
-    # 'dgeofile' : ('DXY', 'hst_wfc3_dgeofile.rmap'),
-
     # **Analog-to-Digital Tables** 
     # No URLs for {'file_suffix': 'A2D', 'detector': 'N/A', 'reference_file_type': '**Analog-to-Digital Tables** <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/description.html#a2d"> Currently disabled </a>', 'header_keyword': 'ATODTAB'} 
 
     # **Post-Flash Image File** 
     # No URLs for {'file_suffix': 'FLS', 'detector': 'N/A', 'reference_file_type': '**Post-Flash Image File** <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/description.html#fls"> Currently disabled </a>', 'header_keyword': 'FLSFILE'} 
 
-}
+},

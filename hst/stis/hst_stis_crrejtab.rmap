@@ -1,14 +1,12 @@
-header = {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'CRREJTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'USEAFTER'),
+    'reftype' :  'CRREJTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     ('CCD',) : {
-        '1996-12-03 00:00:00' : 'h1v12041o_crr.fits', # , 10020, Jan 31 1997 05:07PM
-        '1997-03-01 00:00:00' : 'ica12303o_crr.fits', # 18-Jun-98 CR rejection parameters from ISR 98-22 by D.Shaw & P.Hodge These CR rejection paramters are, 10386, Dec 10 1998 07:23PM
-        '1997-04-18 00:00:00' : 'j3m1403io_crr.fits', # 18-Jun-98 CR rejection parameters from ISR 98-22 by D.Shaw & P.Hodge These CR rejection paramters are fr, 10450, Mar 22 1999 07:16PM
+        '1996-12-03 00:00:00' :  'h1v12041o_crr.fits', # , 10020, Jan 31 1997 05:07PM
+        '1997-03-01 00:00:00' :  'ica12303o_crr.fits', # 18-Jun-98 CR rejection parameters from ISR 98-22 by D.Shaw & P.Hodge These CR rejection paramters are, 10386, Dec 10 1998 07:23PM
+        '1997-04-18 00:00:00' :  'j3m1403io_crr.fits', # 18-Jun-98 CR rejection parameters from ISR 98-22 by D.Shaw & P.Hodge These CR rejection paramters are fr, 10450, Mar 22 1999 07:16PM
     },
-}
+}, 

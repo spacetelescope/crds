@@ -6,6 +6,7 @@ import os.path
 import collections
 import pprint
 import re
+import ast
 
 from crds import log, timestamp
 from crds.config import CRDS_ROOT
@@ -14,7 +15,7 @@ from crds.config import CRDS_ROOT
 
 Filetype = collections.namedtuple("Filetype","header_keyword,extension,rmap")
 Failure = collections.namedtuple("Failure","header_keyword,message")
-Filemap = collections.namedtuple("filemap","date,file,comment")
+Filemap = collections.namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
@@ -46,7 +47,7 @@ class Rmap(object):
         basename = os.path.basename(filename)
         remainder = klass._check_syntax(basename, "header", clean)
         remainder = klass._check_syntax(basename, "data", remainder)
-        if remainder:
+        if remainder != ["},"]:
             raise FormatError("Extraneous input following data in " + repr(basename))
     
     @classmethod
@@ -83,11 +84,11 @@ class Rmap(object):
 
     @classmethod
     def _check_syntax(klass, filename, section, lines):
-        if not re.match("^%s\s*=\s*{$" % section, lines[0]):
+        if not re.match("^(}, )?{$", lines[0]):
             raise FormatError("Invalid %s block opening in " % (section,) + repr(filename))        
         for lineno, line in enumerate(lines[1:]):
             key, value = klass._key_value_split(line)
-            if key == "}" and value is None:
+            if key in ["}", "}, {"] and value is None:
                 break
             elif key == "}," and value is None:
                 continue
@@ -95,7 +96,7 @@ class Rmap(object):
                 raise FormatError("Invalid %s keyword " % section + repr(key) + " in " + repr(filename))
             elif not klass._match_value(value):
                 raise FormatError("Invalid %s value for " % section + key + " = " + repr(value) + " in " + repr(filename))
-        return lines[1+lineno+1:]  # should be no left-overs
+        return lines[lineno+1:]  # should be no left-overs
 
     @classmethod
     def _match_key(klass, key):
@@ -118,29 +119,13 @@ class Rmap(object):
         klass.check_file_format(fname)
         try:
             namespace = {}
-            execfile(fname, namespace, namespace)
-        except:
-            raise RmapError("Can't load", klass.__name__, "file:", repr(fname))
-        try:
-            header = namespace["header"]
-        except:
-            raise RmapError("Can't find 'header' in", klass.__name__, "file:", repr(fname))
-        try:
-            data = namespace["data"]
-        except:
-            raise RmapError("Can't find 'data' in", klass.__name__, "file:", repr(fname))
+            header, data = ast.literal_eval(open(fname).read())
+        except Exception, e:
+            raise RmapError("Can't load", klass.__name__, "file:", repr(os.path.basename(fname)), str(e))
         rmap = klass(fname, header, data, *args, **keys)
         rmap.validate_file_load()
         return rmap
     
-    def to_file(self, filename):
-        """Write out an rmap in canonical form suitable for differencing.
-        """
-        f = open(filename, "w+")
-        print >>f,  "header = ", pprint.pformat(self.header)
-        print >>f,  "data = ", pprint.pformat(self.data)
-        f.close()
-        
     def validate_file_load(self):
         """Validate assertions about the contents of this rmap."""
         pass
@@ -206,15 +191,14 @@ class PipelineContext(Rmap):
         for instrument in self.selections:
             files.update(self.selections[instrument].map_files())
         return sorted(list(files))
-    
-    """
-header = {
+
+
+"""
+{
     'observatory':'HST',
     'parkey' : ('INSTRUME'),
     'class' : 'crds.PipelineContext',
-}
-
-data = {
+}, {
     'ACS':'icontext_hst_acs_00023.con',
     'COS':'icontext_hst_cos_00023.con', 
     'STIS':'icontext_hst_stis_00023.con',
@@ -226,14 +210,12 @@ data = {
 # ===================================================================
 
 """
-header = {
+{
     'observatory':'HST',
     'instrument': 'ACS',
     'parkey' : ('REFTYPE',),
     'class' : 'crds.InstrumentContext',
-}
-
-data = {
+}, {
     'BIAS':  'rmap_hst_acs_bias_0021.rmap',
     'CRREJ': 'rmap_hst_acs_crrej_0003.rmap',
     'CCD':   'rmap_hst_acs_ccd_0002.rmap',
@@ -351,18 +333,16 @@ def get_pipeline_context(observatory, context_file):
 def write_rmap(filename, header, data):
     """Write out the specified `header` and `data` to `filename` in rmap format."""
     file = open(filename,"w+")
-    file.write("header = ")
     write_rmap_dict(file, header)
-    file.write("\n")
-    file.write("data = ")
     write_rmap_dict(file, data)
+    file.write("\n")
 
 def write_rmap_dict(file, the_dict, indent_level=1):
     """Write out a (nested) dictionary in a simple format amenable to validation."""
     indent = " "*4*indent_level
-    print >>file, "{"
+    file.write("{\n")
     for key, value in the_dict.items():
-        print >>file, indent + repr(key), ":",
+        print >>file, indent + repr(key), ": ",
         if isinstance(value, dict):
             write_rmap_dict(file, value, indent_level+1)
         elif isinstance(value, Filemap):
@@ -373,7 +353,7 @@ def write_rmap_dict(file, the_dict, indent_level=1):
     if indent_level > 0:
         print >>file, indent_level*" "*4 + "},"
     else:
-        print >>file, "}"
+        file.write("}, ")
         
 # ===================================================================
 

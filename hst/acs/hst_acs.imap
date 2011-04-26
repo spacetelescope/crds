@@ -1,11 +1,9 @@
-header = {
+{
     'observatory':'HST',
     'instrument':'ACS',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
     'reftype':'CONTEXT',
-}
-
-data = {
+}, {
     # **ACS Bias Reference Images** Superbias images for subtracting bias structure. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/WFCBiasReference'
     #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/HRCBiasReference'
@@ -70,4 +68,4 @@ data = {
     #  2 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex/SBCDarkReference'
     'darkfile' : ('drk', 'hst_acs_darkfile.rmap'),
 
-}
+},

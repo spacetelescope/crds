@@ -1,12 +1,10 @@
-header = {
-    'parkey' : ('USEAFTER',),
-    'reftype' : 'WCPTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('USEAFTER',),
+    'reftype' :  'WCPTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     () : {
-        '1997-02-12 00:00:00' : 'lag1815lo_wcp.fits', # Parameters used by calstis4 (wavecal processing) This is an initial wavecal parameters table, based larg, 10847, Oct 17 2001 03:22PM
+        '1997-02-12 00:00:00' :  'lag1815lo_wcp.fits', # Parameters used by calstis4 (wavecal processing) This is an initial wavecal parameters table, based larg, 10847, Oct 17 2001 03:22PM
     },
-}
+}, 

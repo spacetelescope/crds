@@ -1,19 +1,17 @@
-header = {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'BPIXTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'USEAFTER'),
+    'reftype' :  'BPIXTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     ('CCD',) : {
-        '1996-10-01 00:00:00' : 'h1v11475o_bpx.fits', # Prel. Ground Calib HISTORY ccd_drk.fits dark rate gt 0.02 c/s/p fla, 10018, Jan 31 1997 04:51PM
+        '1996-10-01 00:00:00' :  'h1v11475o_bpx.fits', # Prel. Ground Calib HISTORY ccd_drk.fits dark rate gt 0.02 c/s/p fla, 10018, Jan 31 1997 04:51PM
     },
     ('FUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'uce15153o_bpx.fits', # New BPIXTAB with opt_elem column and correct repeller wire flag----, 12236, Dec 14 2010 03:17PM
+        '1996-10-01 00:00:00' :  'uce15153o_bpx.fits', # New BPIXTAB with opt_elem column and correct repeller wire flag----, 12236, Dec 14 2010 03:17PM
     },
     ('NUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'hcm14407o_bpx.fits', # The BPX files for the MAMA detectors are used to flag permanent bl, 10227, Dec 23 1997 02:04PM
-        '1997-02-11 00:00:00' : 'v2s21472o_bpx.fits', # bpixtab updated with vignetted corners. opt_elem column added.-----, 12253, Mar 01 2011 03:16PM
+        '1996-10-01 00:00:00' :  'hcm14407o_bpx.fits', # The BPX files for the MAMA detectors are used to flag permanent bl, 10227, Dec 23 1997 02:04PM
+        '1997-02-11 00:00:00' :  'v2s21472o_bpx.fits', # bpixtab updated with vignetted corners. opt_elem column added.-----, 12253, Mar 01 2011 03:16PM
     },
-}
+}, 

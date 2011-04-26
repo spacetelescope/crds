@@ -1,20 +1,18 @@
-header = {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'SDCTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'USEAFTER'),
+    'reftype' :  'SDCTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     ('CCD',) : {
-        '1996-10-01 00:00:00' : 'obm1723lo_sdc.fits', # New cross disp. plate scales for first order modes Copy of previous ccd sdc with corrected value for CDE, 11513, Nov 22 2004 09:52PM
+        '1996-10-01 00:00:00' :  'obm1723lo_sdc.fits', # New cross disp. plate scales for first order modes Copy of previous ccd sdc with corrected value for CDE, 11513, Nov 22 2004 09:52PM
     },
     ('FUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'obm1723mo_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
-        '1997-07-20 00:00:00' : 'obm1723no_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
-        '1999-03-15 00:00:00' : 'obm1723oo_sdc.fits', # New cross disp. plate scales for first order modes New reference file to compenstate for MSM offset, 11513, Nov 22 2004 09:52PM
+        '1996-10-01 00:00:00' :  'obm1723mo_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
+        '1997-07-20 00:00:00' :  'obm1723no_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
+        '1999-03-15 00:00:00' :  'obm1723oo_sdc.fits', # New cross disp. plate scales for first order modes New reference file to compenstate for MSM offset, 11513, Nov 22 2004 09:52PM
     },
     ('NUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'obm1723po_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
+        '1996-10-01 00:00:00' :  'obm1723po_sdc.fits', # New cross disp. plate scales for first order modes File redelivered due to bug in CDBS load file, 11513, Nov 22 2004 09:52PM
     },
-}
+}, 

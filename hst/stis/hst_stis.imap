@@ -1,11 +1,9 @@
-header = {
+{
     'observatory':'HST',
     'instrument':'STIS',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex',
     'reftype':'CONTEXT',
-}
-
-data = {
+}, {
     # **Bias Image File** Image of the additive stationary pattern in the electronic zero point of the UVIS CCDs. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISBias'
     'biasfile' : ('bia', 'hst_stis_biasfile.rmap'),
@@ -138,4 +136,4 @@ data = {
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISExtractParam'
     'xtractab' : ('1dx', 'hst_stis_xtractab.rmap'),
 
-}
+},

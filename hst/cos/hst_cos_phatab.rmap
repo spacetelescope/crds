@@ -1,13 +1,11 @@
-header = {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'PHATAB',
-    'observatory' : 'HST',
-    'instrument' : 'COS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'USEAFTER'),
+    'reftype' :  'PHATAB',
+    'observatory' :  'HST',
+    'instrument' :  'COS',
+}, {
     ('FUV',) : {
-        '1996-10-01 00:00:00' : 's7g1700jl_pha.fits', # from TV2003 data Modified to account for chamge of coordinates, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 'ucl1623gl_pha.fits', # OPT_ELEM column added; lower PHA threshold set to 2 for all rows. -, 12237, Dec 21 2010 04:26PM
+        '1996-10-01 00:00:00' :  's7g1700jl_pha.fits', # from TV2003 data Modified to account for chamge of coordinates, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00' :  'ucl1623gl_pha.fits', # OPT_ELEM column added; lower PHA threshold set to 2 for all rows. -, 12237, Dec 21 2010 04:26PM
     },
-}
+}, 

@@ -1,19 +1,17 @@
-header = {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-    'reftype' : 'XTRACTAB',
-    'observatory' : 'HST',
-    'instrument' : 'COS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
+    'reftype' :  'XTRACTAB',
+    'observatory' :  'HST',
+    'instrument' :  'COS',
+}, {
     ('FUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00' : 's7g17006l_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
-        '2006-10-01 00:00:00' : 's7g17007l_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 'u8k1433nl_1dx.fits', # SMOV based; added entries for G140L/1280.-------------------------, 12204, Aug 20 2010 02:37PM
+        '1996-10-01 00:00:00' :  's7g17006l_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
+        '2006-10-01 00:00:00' :  's7g17007l_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00' :  'u8k1433nl_1dx.fits', # SMOV based; added entries for G140L/1280.-------------------------, 12204, Aug 20 2010 02:37PM
     },
     ('NUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00' : 's7g1700nl_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
-        '2006-10-01 00:00:00' : 's7g1700ol_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 'u4d1930tl_1dx.fits', # From SMOV data; values updated for BOA and some G285M cenwaves.----, 12159, Apr 14 2010 06:08PM
+        '1996-10-01 00:00:00' :  's7g1700nl_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
+        '2006-10-01 00:00:00' :  's7g1700ol_1dx.fits', # Version of file with coordinate change Modified to account for chan, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00' :  'u4d1930tl_1dx.fits', # From SMOV data; values updated for BOA and some G285M cenwaves.----, 12159, Apr 14 2010 06:08PM
     },
-}
+}, 

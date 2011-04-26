@@ -1,12 +1,10 @@
-header = {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'TDCTAB',
-    'observatory' : 'HST',
-    'instrument' : 'STIS',
-}
-
-data = {
+{
+    'parkey' :  ('DETECTOR', 'USEAFTER'),
+    'reftype' :  'TDCTAB',
+    'observatory' :  'HST',
+    'instrument' :  'STIS',
+}, {
     ('NUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'v2a1955fo_tdc.fits', # Added TDC information for data taken between MJD55270 and 56000---- Built from data obtained from dark m, 12248, Feb 10 2011 07:58PM
+        '1996-10-01 00:00:00' :  'v2a1955fo_tdc.fits', # Added TDC information for data taken between MJD55270 and 56000---- Built from data obtained from dark m, 12248, Feb 10 2011 07:58PM
     },
-}
+}, 

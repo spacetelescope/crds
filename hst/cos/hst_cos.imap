@@ -1,11 +1,9 @@
-header = {
+{
     'observatory':'HST',
     'instrument':'COS',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
     'reftype':'CONTEXT',
-}
-
-data = {
+}, {
     # **Flat Field Files** Accounts for pixel-to-pixel variations. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSFlatImage'
     'flatfile' : ('flat', 'hst_cos_flatfile.rmap'),
@@ -62,4 +60,4 @@ data = {
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSwaveCal'
     'wcptab' : ('wcp', 'hst_cos_wcptab.rmap'),
 
-}
+},
