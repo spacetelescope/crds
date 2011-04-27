@@ -37,7 +37,10 @@ setup(name="crds.hst",
 
       package_data = {
 
-        '': ['*.pmap',
+        '': [
+
+            '*.pmap',
+            'cdbs.paths',
 
             'acs/*.rmap',
             'acs/*.imap',

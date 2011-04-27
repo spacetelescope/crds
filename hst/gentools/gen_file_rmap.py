@@ -20,7 +20,7 @@ import crds.hst.gentools.lookup as lookup
 import crds.hst.gentools.keyval as keyval
 import crds.hst.gentools.cdbs_parkeys as cdbs_parkeys
 from   crds.hst.gentools.cdbs_parkeys import KIND_KEYS, MAPKEYS, COMMENTKEYS
-import crds.hst.locate_refs as locate_refs
+import crds.hst.locate as locate
 
 import crds.rmap as rmap
 import crds.log as log
@@ -299,7 +299,7 @@ def get_parkey_from_reffile(d, instr, var):
     """
     ref_filename = dict_to_filename(d)
     try:
-        ref_path = locate_refs.locate_file(ref_filename)
+        ref_path = locate.locate_server_reference(ref_filename)
     except KeyError, e:
         log.error("Can't find reference file", repr(ref_filename))
         return "%no reference%"

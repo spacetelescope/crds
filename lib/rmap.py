@@ -325,7 +325,7 @@ class ReferenceRmap(Rmap):
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
-        cls = get_class(header.get("class", "crds.selectors.ReferenceSelector"))
+        cls = get_object(header.get("class", "crds.selectors.ReferenceSelector"))
         self._selector = cls(header, data)
 
     def validate_file_load(self):
@@ -341,8 +341,8 @@ class ReferenceRmap(Rmap):
     
 # ===================================================================
 
-def get_class(dotted_name):
-    """Import the given `dotted_name` and return the module object."""
+def get_object(dotted_name):
+    """Import the given `dotted_name` and return the object."""
     parts = dotted_name.split(".")
     pkgpath = ".".join(parts[:-1])
     cls = parts[-1]
