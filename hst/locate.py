@@ -51,6 +51,8 @@ def locate_reference(reference):
 
 # =======================================================================
 
+CRDS_MAPPATH = os.environ.get("CRDS_MAPPATH", HERE)
+
 def locate_mapping(mapping):
     """Given basename `mapping`,  return the absolute path of the CRDS
     mapping file.
@@ -58,10 +60,10 @@ def locate_mapping(mapping):
     if "/" in mapping:
         raise ValueError("Mapping should specify the basename only,  not the path.")
     if mapping.endswith(".pmap"):
-        return os.path.join(HERE, mapping)
+        return os.path.join(CRDS_MAPPATH, mapping)
     elif mapping.endswith(".imap") or mapping.endswith(".rmap"):
         instr = mapping.split("_")[1].split(".")[0]
-        return os.path.join(HERE, instr, mapping)
+        return os.path.join(CRDS_MAPPATH, instr, mapping)
     else:
         raise ValueError("Unknown mapping type for " + repr(mapping))
     

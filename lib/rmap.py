@@ -140,6 +140,14 @@ class Rmap(object):
         data = rmap["data"]
         return cls("<json>", header, data, **header)
     
+    def locate_mapping(self, basename):
+        locate = get_object("crds." + self.observatory + ".locate.locate_mapping")
+        return locate(basename)
+    
+    def locate_reference(self, basename):
+        locate = get_object("crds." + self.observatory + ".locate.locate_reference")
+        return locate(basename)
+    
 # ===================================================================
 
 def keys_to_strings(d):
@@ -384,22 +392,23 @@ def write_rmap_dict(file, the_dict, indent_level=1):
 
 PIPELINE_CONTEXTS = {}
 
-def get_pipeline_context(observatory, context_file):
+def context_to_observatory(context_file):
+    return context_file.split("_")[0].split(".")[0]
+
+def get_pipeline_context(context_file):
     """Recursively load the specified `context_file` and add it to
     the global pipeline cache.
     """
-    observatory = observatory.lower()
     if context_file not in PIPELINE_CONTEXTS:
+        observatory = context_to_observatory(context_file)
         filepath = "/".join([CRDS_ROOT, observatory, context_file])
         PIPELINE_CONTEXTS[context_file] = PipelineContext.from_file(filepath, observatory)
     return PIPELINE_CONTEXTS[context_file]
 
 # ===================================================================
 
-def get_best_refs(header, observatory="hst", pcontext_file=None, date=None):
-    if pcontext_file is None:
-        pcontext_file = observatory + ".pmap"
-    context = get_pipeline_context(observatory, pcontext_file)
+def get_best_refs(header, pcontext_file="hst.pmap", date=None):
+    context = get_pipeline_context(pcontext_file)
     return context.get_best_refs(header, date)
 
 # ===================================================================

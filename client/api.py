@@ -5,6 +5,7 @@ import os.path
 
 import crds.rmap as rmap
 import crds.log as log
+import crds.utils as utils
 
 # ==============================================================================
 
@@ -29,15 +30,15 @@ def get_crds_server():
 
 # ==============================================================================
 
-def get_mapping_data(mapping):
+def get_mapping_data(context, mapping):
     """Returns the contents of the specified pmap, imap, or rmap file
     as a string.
     """
     S = ServiceProxy(URL)
-    data = S.get_mapping_data(mapping)
+    data = S.get_mapping_data(context, mapping)
     return data["result"]
     
-def get_mapping_names(context="hst"):
+def get_mapping_names(context="hst.pmap"):
     """Get the complete set of pmap, imap, and rmap basenames required
     for the specified context.   context can be an observatory, pipeline,
     or instrument context.
@@ -46,14 +47,14 @@ def get_mapping_names(context="hst"):
     resp = S.get_mapping_names(context)
     return resp["result"]
 
-def get_reference_data(mapping):
+def get_reference_data(context, reference):
     """Returns the contents of the specified reference file as a string.
     """
     S = ServiceProxy(URL)
-    data = S.get_reference_data(mapping)
+    data = S.get_reference_data(context, reference)
     return data["result"]
     
-def get_reference_names(context="hst"):
+def get_reference_names(context="hst.pmap"):
     """Get the complete set of reference file basenames required
     for the specified context.
     """
@@ -61,7 +62,7 @@ def get_reference_names(context="hst"):
     resp = S.get_reference_names(context)
     return resp["result"]
 
-def get_best_refs(header, observatory="hst"):
+def get_best_refs(header, context="hst.pmap"):
     """Return the dictionary mapping { filetype : reference_basename ... }
     corresponding to the given `header`
     """
@@ -72,18 +73,21 @@ def get_best_refs(header, observatory="hst"):
 
 # ==============================================================================
 
-def retrieve_mappings(observatory, mapping_names):
+def retrieve_mappings(context, mapping_names):
+    observatory = rmap.context_to_observatory(context)
     locator = rmap.get_object("crds." + observatory + ".locate.locate_mapping")
     for name in mapping_names:
         localpath = locator(name)
         if not os.path.exists(localpath):
             log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
-            # mapping_contents = get_mapping_data(name)
-            # open(localpath,"w+").write(mapping_contents)
+            mapping_contents = get_mapping_data(context, name)
+            utils.ensure_dir_exists(localpath)
+            open(localpath,"w+").write(mapping_contents)
         else:
             log.verbose("Cache hit ", repr(name), "at", repr(localpath))
             
-def retrieve_references(observatory, reference_names):
+def retrieve_references(context, reference_names):
+    observatory = rmap.context_to_observatory(context)
     if isinstance(reference_names, dict):
         reference_names = reference_names.values()
     locator = rmap.get_object("crds." + observatory + ".locate.locate_reference")
@@ -91,7 +95,8 @@ def retrieve_references(observatory, reference_names):
         localpath = locator(name)
         if not os.path.exists(localpath):
             log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
-            # mapping_contents = get_mapping_data(name)
-            # open(localpath,"w+").write(mapping_contents)
+            reference_contents = get_reference_data(context, name)
+            utils.ensure_dir_exists(localpath)
+            open(localpath,"w+").write(reference_contents)
         else:
             log.verbose("Cache hit ", repr(name), "at", repr(localpath))
