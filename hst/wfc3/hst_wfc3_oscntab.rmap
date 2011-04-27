@@ -1,14 +1,14 @@
 {
-    'parkey' :  ('DETECTOR', 'USEAFTER'),
-    'reftype' :  'OSCNTAB',
-    'observatory' :  'HST',
-    'instrument' :  'WFC3',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'OSCNTAB',
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
 }, {
     ('IR',) : {
-        '1991-01-02 00:00:00' :  'r5b17012i_osc.fits', # Initial values for ground test data processing, 11710, May 11 2007 05:19PM
-        '2001-01-01 00:00:00' :  'q911321mi_osc.fits', # Initial values for ground test data processing, 11647, Sep 01 2006 01:26PM
+        '1991-01-02 00:00:00' : 'r5b17012i_osc.fits', #Initial values for ground test data processing, 11710, May 11 2007 05:19PM
+        '2001-01-01 00:00:00' : 'q911321mi_osc.fits', #Initial values for ground test data processing, 11647, Sep 01 2006 01:26PM
     },
     ('UVIS',) : {
-        '1991-01-01 00:00:00' :  'q911321oi_osc.fits', # WFC3 normal overscan CCD data compatible, 11647, Sep 01 2006 01:26PM
+        '1991-01-01 00:00:00' : 'q911321oi_osc.fits', #WFC3 normal overscan CCD data compatible, 11647, Sep 01 2006 01:26PM
     },
 }, 

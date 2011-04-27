@@ -1,10 +1,10 @@
 {
-    'parkey' :  ('DETECTOR', 'OBSMODE', 'USEAFTER'),
-    'reftype' :  'BADTTAB',
-    'observatory' :  'HST',
-    'instrument' :  'COS',
+    'parkey' : ('DETECTOR', 'OBSMODE', 'USEAFTER'),
+    'reftype' : 'BADTTAB',
+    'observatory' : 'HST',
+    'instrument' : 'COS',
 }, {
     ('FUV', 'TIME-TAG') : {
-        '1996-10-01 00:00:00' :  's7o1739kl_badt.fits', # time intervals before launch fuv_badt.fits renamed to n9n2017rl_badt.fits on Sep 23 2003, 11878, Jul 24 2008 05:44PM
+        '1996-10-01 00:00:00' : 's7o1739kl_badt.fits', #time intervals before launch fuv_badt.fits renamed to n9n2017rl_badt.fits on Sep 23 2003, 11878, Jul 24 2008 05:44PM
     },
 }, 

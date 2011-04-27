@@ -1,7 +1,7 @@
 {
-    'parkey' :  ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*CENWAVE', 'USEAFTER'),
-    'reftype' :  'PHOTTAB',
-    'observatory' :  'HST',
-    'instrument' :  'STIS',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*CENWAVE', 'USEAFTER'),
+    'reftype' : 'PHOTTAB',
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
 }, {
 }, 

@@ -1,13 +1,13 @@
 {
-    'parkey' :  ('DETECTOR', 'USEAFTER'),
-    'reftype' :  'GEOFILE',
-    'observatory' :  'HST',
-    'instrument' :  'COS',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'GEOFILE',
+    'observatory' : 'HST',
+    'instrument' : 'COS',
 }, {
     ('FUV',) : {
-        '2003-10-10 00:00:00' :  's7g1700cl_geo.fits', # Created using data taken in early October, 2003. fuv_geo.fits renam, 11876, Jul 16 2008 05:09PM
+        '2003-10-10 00:00:00' : 's7g1700cl_geo.fits', #Created using data taken in early October, 2003. fuv_geo.fits renam, 11876, Jul 16 2008 05:09PM
     },
     ('NONE',) : {
-        '1996-10-01 00:00:00' :  'r7p1113nl_geo.fits', # initial version for testing fuv_oct16_geo.fits renamed to nan1523ol, 11750, Aug 15 2007 10:42PM
+        '1996-10-01 00:00:00' : 'r7p1113nl_geo.fits', #initial version for testing fuv_oct16_geo.fits renamed to nan1523ol, 11750, Aug 15 2007 10:42PM
     },
 }, 

@@ -163,7 +163,7 @@ class Selector(object):
         else:
             return choice
         
-    def reference_files(self):
+    def reference_names(self):
         """Return the list of reference files located by this selector.
         Assume any choice that is a string is a reference file.  Recursively
         search for reference files in nested selectors.
@@ -854,10 +854,10 @@ class ReferenceSelector(MatchingSelector):
         substitutions = header.get("substitutions", None)
         MatchingSelector.__init__(self, header["parkey"][:-1], selections, substitutions)
         
-    def reference_files(self):
+    def reference_names(self):
         files = set()
         for key, (re_key, useafter) in self._selections.items():
-            for f in useafter.reference_files():
+            for f in useafter.reference_names():
                 files.add(f)
         return sorted(list(files))
 # ==============================================================================

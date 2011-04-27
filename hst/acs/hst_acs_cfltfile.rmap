@@ -1,22 +1,22 @@
 {
-    'parkey' :  ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
-    'reftype' :  'CFLTFILE',
-    'observatory' :  'HST',
-    'instrument' :  'ACS',
+    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
+    'reftype' : 'CFLTFILE',
+    'observatory' : 'HST',
+    'instrument' : 'ACS',
 }, {
     ('HRC', 'CLEAR1S', 'F330W') : {
-        '2002-03-01 00:00:00' :  'oai16327j_cfl.fits', # ACS reference file, 11503, Oct 18 2004 04:34PM
+        '2002-03-01 00:00:00' : 'oai16327j_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM
     },
     ('HRC', 'CLEAR1S', 'F435W') : {
-        '2002-03-01 00:00:00' :  'oai16328j_cfl.fits', # ACS reference file, 11503, Oct 18 2004 04:34PM
+        '2002-03-01 00:00:00' : 'oai16328j_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM
     },
     ('HRC', 'CLEAR1S', 'F814W') : {
-        '2002-03-01 00:00:00' :  'oai1632bj_cfl.fits', # ACS reference file, 11503, Oct 18 2004 04:34PM
+        '2002-03-01 00:00:00' : 'oai1632bj_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM
     },
     ('HRC', 'F475W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00' :  'oai16329j_cfl.fits', # ACS reference file, 11503, Oct 18 2004 04:34PM
+        '2002-03-01 00:00:00' : 'oai16329j_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM
     },
     ('HRC', 'F606W', 'CLEAR2S') : {
-        '2002-03-01 00:00:00' :  'oai1632aj_cfl.fits', # ACS reference file, 11503, Oct 18 2004 04:34PM
+        '2002-03-01 00:00:00' : 'oai1632aj_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM
     },
 }, 

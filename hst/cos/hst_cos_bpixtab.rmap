@@ -1,15 +1,15 @@
 {
-    'parkey' :  ('DETECTOR', 'USEAFTER'),
-    'reftype' :  'BPIXTAB',
-    'observatory' :  'HST',
-    'instrument' :  'COS',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'BPIXTAB',
+    'observatory' : 'HST',
+    'instrument' : 'COS',
 }, {
     ('FUV',) : {
-        '1996-10-01 00:00:00' :  's7g1700dl_bpix.fits', # from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' :  'u381724gl_bpix.fits', # In-flight table, from SMOV/COS 11491 external flat field----------- Data from the FUV external flat, 12142, Mar 10 2010 02:21PM
+        '1996-10-01 00:00:00' : 's7g1700dl_bpix.fits', #from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00' : 'u381724gl_bpix.fits', #In-flight table, from SMOV/COS 11491 external flat field----------- Data from the FUV external flat, 12142, Mar 10 2010 02:21PM
     },
     ('NUV',) : {
-        '1996-10-01 00:00:00' :  's7g1700pl_bpix.fits', # from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' :  'uas19356l_bpix.fits', # Coord. transformation corrected; flags changed; vignetting added -- Generated on October 22 2009 to, 12222, Oct 28 2010 08:00PM
+        '1996-10-01 00:00:00' : 's7g1700pl_bpix.fits', #from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
+        '2009-05-11 00:00:00' : 'uas19356l_bpix.fits', #Coord. transformation corrected; flags changed; vignetting added -- Generated on October 22 2009 to, 12222, Oct 28 2010 08:00PM
     },
 }, 

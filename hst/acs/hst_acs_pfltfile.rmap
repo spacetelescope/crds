@@ -1,663 +1,663 @@
 {
-    'parkey' :  ('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'USEAFTER'),
-    'reftype' :  'PFLTFILE',
-    'observatory' :  'HST',
-    'instrument' :  'ACS',
+    'parkey' : ('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'USEAFTER'),
+    'reftype' : 'PFLTFILE',
+    'observatory' : 'HST',
+    'instrument' : 'ACS',
 }, {
     ('HRC', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '1997-01-01 00:00:00' :  'n4t1530aj_pfl.fits', # # *** S/HRC f250w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-03-01 00:00:00' :  'oba1758ej_pfl.fits', # HRC flat for coronagraph with clear filters, 11512
+        '1997-01-01 00:00:00' : 'n4t1530aj_pfl.fits', ## *** S/HRC f250w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-03-01 00:00:00' : 'oba1758ej_pfl.fits', #HRC flat for coronagraph with clear filters, 11512
     },
     ('HRC', '*', 'CLEAR1S', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n2d1344mj_pfl.fits', # ACS/HRC PFLAT for CLEAR1S/CLEAR2S, 11147, Feb 13 2003 06:54PM
+        '2002-03-01 00:00:00' : 'n2d1344mj_pfl.fits', #ACS/HRC PFLAT for CLEAR1S/CLEAR2S, 11147, Feb 13 2003 06:54PM
     },
     ('HRC', '*', 'CLEAR1S', 'F220W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t15304j_pfl.fits', # ACS/HRC f220w coron flat without dust mote, 11187
-        '2002-08-13 00:00:00' :  'n4t15303j_pfl.fits', # ACS/HRC f220w coron flat with dust mote, 11187
+        '1997-01-01 00:00:00' : 'n4t15304j_pfl.fits', #ACS/HRC f220w coron flat without dust mote, 11187
+        '2002-08-13 00:00:00' : 'n4t15303j_pfl.fits', #ACS/HRC f220w coron flat with dust mote, 11187
     },
     ('HRC', '*', 'CLEAR1S', 'F220W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1449fj_pfl.fits', # ACS/HRC F220W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1449ej_pfl.fits', # ACS/HRC F220W flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1449fj_pfl.fits', #ACS/HRC F220W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1449ej_pfl.fits', #ACS/HRC F220W flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'CLEAR1S', 'F250W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t15306j_pfl.fits', # ACS/HRC f250w coron flat without dust mote, 11187
-        '2002-08-13 00:00:00' :  'n4t15305j_pfl.fits', # ACS/HRC f250w coron flat with dust mote, 11187
+        '1997-01-01 00:00:00' : 'n4t15306j_pfl.fits', #ACS/HRC f250w coron flat without dust mote, 11187
+        '2002-08-13 00:00:00' : 'n4t15305j_pfl.fits', #ACS/HRC f250w coron flat with dust mote, 11187
     },
     ('HRC', '*', 'CLEAR1S', 'F250W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1449hj_pfl.fits', # ACS/HRC F220W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1449gj_pfl.fits', # ACS/HRC F220W flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1449hj_pfl.fits', #ACS/HRC F220W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1449gj_pfl.fits', #ACS/HRC F220W flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'CLEAR1S', 'F330W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-01-01 00:00:00' :  'oai1632dj_pfl.fits', # ACS reference file, 11503
-        '2002-08-13 00:00:00' :  'oai1632ej_pfl.fits', # ACS reference file, 11503
+        '2002-01-01 00:00:00' : 'oai1632dj_pfl.fits', #ACS reference file, 11503
+        '2002-08-13 00:00:00' : 'oai1632ej_pfl.fits', #ACS reference file, 11503
     },
     ('HRC', '*', 'CLEAR1S', 'F330W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530bj_pfl.fits', # ACS/HRC f330w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530hj_pfl.fits', # ACS/HRC f330w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530bj_pfl.fits', #ACS/HRC f330w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530hj_pfl.fits', #ACS/HRC f330w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'CLEAR1S', 'F344N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530cj_pfl.fits', # ACS/HRC f344n flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530gj_pfl.fits', # ACS/HRC f344n flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530cj_pfl.fits', #ACS/HRC f344n flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530gj_pfl.fits', #ACS/HRC f344n flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'CLEAR1S', 'F435W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'o3a1121hj_pfl.fits', # ACS/HRC F435W coronagraphic flat, 11362
+        '1997-01-01 00:00:00' : 'o3a1121hj_pfl.fits', #ACS/HRC F435W coronagraphic flat, 11362
     },
     ('HRC', '*', 'CLEAR1S', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o451214aj_pfl.fits', # # *** S/HRC FR388N flat for before dust mote, 11386, Apr 06 2004 12:39PM
-        '2002-08-13 00:00:00' :  'o4512148j_pfl.fits', # # *** S/HRC FR388N flat for after dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-03-01 00:00:00' : 'o451214aj_pfl.fits', ## *** S/HRC FR388N flat for before dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-08-13 00:00:00' : 'o4512148j_pfl.fits', ## *** S/HRC FR388N flat for after dust mote, 11386, Apr 06 2004 12:39PM
     },
     ('HRC', '*', 'CLEAR1S', 'F660N', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820cj_pfl.fits', # ACS/HRC F660N coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820cj_pfl.fits', #ACS/HRC F660N coron flat, 11398
     },
     ('HRC', '*', 'CLEAR1S', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u14493j_pfl.fits', # ACS/HRC F660N flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u14492j_pfl.fits', # ACS/HRC F660N flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u14493j_pfl.fits', #ACS/HRC F660N flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u14492j_pfl.fits', #ACS/HRC F660N flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'CLEAR1S', 'F814W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'ncf14195j_pfl.fits', # ACS/HRC F814W coron flat field, 11301
-        '2002-08-13 00:00:00' :  'o4d0820hj_pfl.fits', # ACS/HRC F814W coron flat with dust mote, 11398
+        '1997-01-01 00:00:00' : 'ncf14195j_pfl.fits', #ACS/HRC F814W coron flat field, 11301
+        '2002-08-13 00:00:00' : 'o4d0820hj_pfl.fits', #ACS/HRC F814W coron flat with dust mote, 11398
     },
     ('HRC', '*', 'CLEAR1S', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u14497j_pfl.fits', # ACS/HRC F814W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u14496j_pfl.fits', # ACS/HRC F814W flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u14497j_pfl.fits', #ACS/HRC F814W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u14496j_pfl.fits', #ACS/HRC F814W flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'CLEAR1S', 'PR200L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm211212fj_pfl.fits', # ACS/HRC ground flat for PR200L., 10928, Feb 1 2002 7:37PM
+        '1997-01-01 00:00:00' : 'm211212fj_pfl.fits', #ACS/HRC ground flat for PR200L., 10928, Feb 1 2002 7:37PM
     },
     ('HRC', '*', 'F475W', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'o3a1121kj_pfl.fits', # ACS/HRC F475W coronagraphic flat, 11362
+        '1997-01-01 00:00:00' : 'o3a1121kj_pfl.fits', #ACS/HRC F475W coronagraphic flat, 11362
     },
     ('HRC', '*', 'F475W', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o451214ej_pfl.fits', # ACS/HRC FR459M or FR505N flat for before dust mote, 11386, Apr 06 2004 12:39PM
-        '2002-08-13 00:00:00' :  'o451214cj_pfl.fits', # ACS/HRC FR459M or FR505N flat for after dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-03-01 00:00:00' : 'o451214ej_pfl.fits', #ACS/HRC FR459M or FR505N flat for before dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-08-13 00:00:00' : 'o451214cj_pfl.fits', #ACS/HRC FR459M or FR505N flat for after dust mote, 11386, Apr 06 2004 12:39PM
     },
     ('HRC', '*', 'F475W', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111ij_pfl.fits', # ACS/HRC coronagraph f475w pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111ij_pfl.fits', #ACS/HRC coronagraph f475w pol0v ground flat., 10935
     },
     ('HRC', '*', 'F475W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1231gj_pfl.fits', # ACS/HRC F475W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan1231fj_pfl.fits', # ACS/HRC F475W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits', #ACS/HRC F475W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits', #ACS/HRC F475W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F475W', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111jj_pfl.fits', # ACS/HRC coronagraph f475w pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111jj_pfl.fits', #ACS/HRC coronagraph f475w pol120v ground flat., 10935
     },
     ('HRC', '*', 'F475W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305nj_pfl.fits', # ACS/HRC f475w pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305nj_pfl.fits', #ACS/HRC f475w pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F475W', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111kj_pfl.fits', # ACS/HRC coronagraph f475w pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111kj_pfl.fits', #ACS/HRC coronagraph f475w pol60v ground flat., 10935
     },
     ('HRC', '*', 'F475W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1232oj_pfl.fits', # ACS/HRC F475W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan1232nj_pfl.fits', # ACS/HRC F475W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits', #ACS/HRC F475W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits', #ACS/HRC F475W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F502N', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d08207j_pfl.fits', # ACS/HRC F502N coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d08207j_pfl.fits', #ACS/HRC F502N coron flat, 11398
     },
     ('HRC', '*', 'F502N', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1448nj_pfl.fits', # ACS/HRC F502N flat for before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1448mj_pfl.fits', # ACS/HRC F502N flat for after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1448nj_pfl.fits', #ACS/HRC F502N flat for before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1448mj_pfl.fits', #ACS/HRC F502N flat for after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F502N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305pj_pfl.fits', # ACS/HRC f502n pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305pj_pfl.fits', #ACS/HRC f502n pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F502N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305qj_pfl.fits', # ACS/HRC f502n pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305qj_pfl.fits', #ACS/HRC f502n pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F502N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305rj_pfl.fits', # ACS/HRC f502n pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305rj_pfl.fits', #ACS/HRC f502n pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F550M', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d08208j_pfl.fits', # ACS/HRC F550M coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d08208j_pfl.fits', #ACS/HRC F550M coron flat, 11398
     },
     ('HRC', '*', 'F550M', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1448pj_pfl.fits', # ACS/HRC F550M flat for before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1448oj_pfl.fits', # ACS/HRC F550M flat for after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1448pj_pfl.fits', #ACS/HRC F550M flat for before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1448oj_pfl.fits', #ACS/HRC F550M flat for after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F550M', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305sj_pfl.fits', # ACS/HRC f550m pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305sj_pfl.fits', #ACS/HRC f550m pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F550M', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305tj_pfl.fits', # ACS/HRC f550m pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305tj_pfl.fits', #ACS/HRC f550m pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F550M', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13060j_pfl.fits', # ACS/HRC f550m pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13060j_pfl.fits', #ACS/HRC f550m pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F555W', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d08209j_pfl.fits', # ACS/HRC F555W coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d08209j_pfl.fits', #ACS/HRC F555W coron flat, 11398
     },
     ('HRC', '*', 'F555W', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1448rj_pfl.fits', # ACS/HRC F555W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1448qj_pfl.fits', # ACS/HRC F555W flat for after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1448rj_pfl.fits', #ACS/HRC F555W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1448qj_pfl.fits', #ACS/HRC F555W flat for after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F555W', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111lj_pfl.fits', # ACS/HRC coronagraph f555w pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111lj_pfl.fits', #ACS/HRC coronagraph f555w pol0v ground flat., 10935
     },
     ('HRC', '*', 'F555W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13061j_pfl.fits', # ACS/HRC f555w pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13061j_pfl.fits', #ACS/HRC f555w pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F555W', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111mj_pfl.fits', # ACS/HRC coronagraph f555w pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111mj_pfl.fits', #ACS/HRC coronagraph f555w pol120v ground flat., 10935
     },
     ('HRC', '*', 'F555W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13062j_pfl.fits', # ACS/HRC f555w pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13062j_pfl.fits', #ACS/HRC f555w pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F555W', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111nj_pfl.fits', # ACS/HRC coronagraph f555w pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111nj_pfl.fits', #ACS/HRC coronagraph f555w pol60v ground flat., 10935
     },
     ('HRC', '*', 'F555W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13063j_pfl.fits', # ACS/HRC f555w pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13063j_pfl.fits', #ACS/HRC f555w pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F606W', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'o3a1121nj_pfl.fits', # ACS/HRC F606W coronagraphic flat, 11362
-        '2002-08-13 00:00:00' :  'o4d0820gj_pfl.fits', # ACS/HRC F606W coron flat with dust mote, 11398
+        '1997-01-01 00:00:00' : 'o3a1121nj_pfl.fits', #ACS/HRC F606W coronagraphic flat, 11362
+        '2002-08-13 00:00:00' : 'o4d0820gj_pfl.fits', #ACS/HRC F606W coron flat with dust mote, 11398
     },
     ('HRC', '*', 'F606W', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1449dj_pfl.fits', # ACS/HRC F606W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1449cj_pfl.fits', # ACS/HRC F606W flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1449dj_pfl.fits', #ACS/HRC F606W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1449cj_pfl.fits', #ACS/HRC F606W flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F606W', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1112cj_pfl.fits', # ACS/HRC coronagraph f606w pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1112cj_pfl.fits', #ACS/HRC coronagraph f606w pol0v ground flat., 10935
     },
     ('HRC', '*', 'F606W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan12342j_pfl.fits', # ACS/HRC F606W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan12341j_pfl.fits', # ACS/HRC F606W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan12342j_pfl.fits', #ACS/HRC F606W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan12341j_pfl.fits', #ACS/HRC F606W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F606W', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1112dj_pfl.fits', # ACS/HRC coronagraph f606w pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1112dj_pfl.fits', #ACS/HRC coronagraph f606w pol120v ground flat., 10935
     },
     ('HRC', '*', 'F606W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13065j_pfl.fits', # ACS/HRC f606w pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13065j_pfl.fits', #ACS/HRC f606w pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F606W', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1112ej_pfl.fits', # ACS/HRC coronagraph f606w pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1112ej_pfl.fits', #ACS/HRC coronagraph f606w pol60v ground flat., 10935
     },
     ('HRC', '*', 'F606W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan12359j_pfl.fits', # ACS/HRC F606W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan12358j_pfl.fits', # ACS/HRC F606W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan12359j_pfl.fits', #ACS/HRC F606W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan12358j_pfl.fits', #ACS/HRC F606W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F625W', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820aj_pfl.fits', # ACS/HRC F625W coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820aj_pfl.fits', #ACS/HRC F625W coron flat, 11398
     },
     ('HRC', '*', 'F625W', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o451214ij_pfl.fits', # ACS/HRC FR656N flat before dust mote, 11386, Apr 06 2004 12:39PM
-        '2002-08-13 00:00:00' :  'o451214gj_pfl.fits', # ACS/HRC FR656N flat after dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-03-01 00:00:00' : 'o451214ij_pfl.fits', #ACS/HRC FR656N flat before dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-08-13 00:00:00' : 'o451214gj_pfl.fits', #ACS/HRC FR656N flat after dust mote, 11386, Apr 06 2004 12:39PM
     },
     ('HRC', '*', 'F625W', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111oj_pfl.fits', # ACS/HRC coronagraph f625w pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111oj_pfl.fits', #ACS/HRC coronagraph f625w pol0v ground flat., 10935
     },
     ('HRC', '*', 'F625W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13067j_pfl.fits', # ACS/HRC f625w pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13067j_pfl.fits', #ACS/HRC f625w pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F625W', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111pj_pfl.fits', # ACS/HRC coronagraph f625w pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111pj_pfl.fits', #ACS/HRC coronagraph f625w pol120v ground flat., 10935
     },
     ('HRC', '*', 'F625W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13068j_pfl.fits', # ACS/HRC f625w pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13068j_pfl.fits', #ACS/HRC f625w pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F625W', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111qj_pfl.fits', # ACS/HRC coronagraph f625w pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111qj_pfl.fits', #ACS/HRC coronagraph f625w pol60v ground flat., 10935
     },
     ('HRC', '*', 'F625W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r13069j_pfl.fits', # ACS/HRC f625w pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r13069j_pfl.fits', #ACS/HRC f625w pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F658N', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820bj_pfl.fits', # ACS/HRC F658N coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820bj_pfl.fits', #ACS/HRC F658N coron flat, 11398
     },
     ('HRC', '*', 'F658N', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u14491j_pfl.fits', # ACS/HRC F658N flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u14490j_pfl.fits', # ACS/HRC F658N flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u14491j_pfl.fits', #ACS/HRC F658N flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u14490j_pfl.fits', #ACS/HRC F658N flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F658N', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111rj_pfl.fits', # ACS/HRC coronagraph f658n pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111rj_pfl.fits', #ACS/HRC coronagraph f658n pol0v ground flat., 10935
     },
     ('HRC', '*', 'F658N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306aj_pfl.fits', # ACS/HRC f658n pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306aj_pfl.fits', #ACS/HRC f658n pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F658N', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111sj_pfl.fits', # ACS/HRC coronagraph f658n pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111sj_pfl.fits', #ACS/HRC coronagraph f658n pol120v ground flat., 10935
     },
     ('HRC', '*', 'F658N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306bj_pfl.fits', # ACS/HRC f658n pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306bj_pfl.fits', #ACS/HRC f658n pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F658N', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l1111tj_pfl.fits', # ACS/HRC coronagraph f658n pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l1111tj_pfl.fits', #ACS/HRC coronagraph f658n pol60v ground flat., 10935
     },
     ('HRC', '*', 'F658N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306cj_pfl.fits', # ACS/HRC f658n pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306cj_pfl.fits', #ACS/HRC f658n pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F775W', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820dj_pfl.fits', # ACS/HRC F775W coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820dj_pfl.fits', #ACS/HRC F775W coron flat, 11398
     },
     ('HRC', '*', 'F775W', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u14495j_pfl.fits', # ACS/HRC F775W flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u14494j_pfl.fits', # ACS/HRC F775W flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u14495j_pfl.fits', #ACS/HRC F775W flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u14494j_pfl.fits', #ACS/HRC F775W flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F775W', 'POL0V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11120j_pfl.fits', # ACS/HRC coronagraph f775w pol0v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11120j_pfl.fits', #ACS/HRC coronagraph f775w pol0v ground flat., 10935
     },
     ('HRC', '*', 'F775W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1236hj_pfl.fits', # ACS/HRC F775W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan1236gj_pfl.fits', # ACS/HRC F775W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits', #ACS/HRC F775W pol0v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits', #ACS/HRC F775W pol0v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F775W', 'POL120V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11121j_pfl.fits', # ACS/HRC coronagraph f775w pol120v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11121j_pfl.fits', #ACS/HRC coronagraph f775w pol120v ground flat., 10935
     },
     ('HRC', '*', 'F775W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306hj_pfl.fits', # ACS/HRC f775w pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306hj_pfl.fits', #ACS/HRC f775w pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F775W', 'POL60V', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11122j_pfl.fits', # ACS/HRC coronagraph f775w pol60v ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11122j_pfl.fits', #ACS/HRC coronagraph f775w pol60v ground flat., 10935
     },
     ('HRC', '*', 'F775W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1237pj_pfl.fits', # ACS/HRC F775W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
-        '2002-08-13 00:00:00' :  'nan1237oj_pfl.fits', # ACS/HRC F775W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
+        '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits', #ACS/HRC F775W pol60v plus flat without mote, 11273, Oct 23 2003 07:00PM
+        '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits', #ACS/HRC F775W pol60v plus flat with mote, 11273, Oct 23 2003 07:00PM
     },
     ('HRC', '*', 'F850LP', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820ej_pfl.fits', # ACS/HRC F850LP coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820ej_pfl.fits', #ACS/HRC F850LP coron flat, 11398
     },
     ('HRC', '*', 'F850LP', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o451214mj_pfl.fits', # ACS/HRC FR914M flat before dust mote, 11386, Apr 06 2004 12:39PM
-        '2002-08-13 00:00:00' :  'o451214kj_pfl.fits', # ACS/HRC FR914M flat after dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-03-01 00:00:00' : 'o451214mj_pfl.fits', #ACS/HRC FR914M flat before dust mote, 11386, Apr 06 2004 12:39PM
+        '2002-08-13 00:00:00' : 'o451214kj_pfl.fits', #ACS/HRC FR914M flat after dust mote, 11386, Apr 06 2004 12:39PM
     },
     ('HRC', '*', 'F850LP', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306mj_pfl.fits', # ACS/HRC f850lp pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306mj_pfl.fits', #ACS/HRC f850lp pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F850LP', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306nj_pfl.fits', # ACS/HRC f850lp pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306nj_pfl.fits', #ACS/HRC f850lp pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F850LP', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306oj_pfl.fits', # ACS/HRC f850lp pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306oj_pfl.fits', #ACS/HRC f850lp pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F892N', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o4d0820fj_pfl.fits', # ACS/HRC F892N coron flat, 11398
+        '2002-03-01 00:00:00' : 'o4d0820fj_pfl.fits', #ACS/HRC F892N coron flat, 11398
     },
     ('HRC', '*', 'F892N', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o3u1449bj_pfl.fits', # ACS/HRC F892N flat before dust mote, 11385, Apr 05 2004 02:20PM
-        '2002-08-13 00:00:00' :  'o3u1449aj_pfl.fits', # ACS/HRC F892N flat after dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-03-01 00:00:00' : 'o3u1449bj_pfl.fits', #ACS/HRC F892N flat before dust mote, 11385, Apr 05 2004 02:20PM
+        '2002-08-13 00:00:00' : 'o3u1449aj_pfl.fits', #ACS/HRC F892N flat after dust mote, 11385, Apr 05 2004 02:20PM
     },
     ('HRC', '*', 'F892N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306pj_pfl.fits', # ACS/HRC f892n pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306pj_pfl.fits', #ACS/HRC f892n pol0v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F892N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306qj_pfl.fits', # ACS/HRC f892n pol120v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306qj_pfl.fits', #ACS/HRC f892n pol120v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'F892N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306rj_pfl.fits', # ACS/HRC f892n pol60v lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306rj_pfl.fits', #ACS/HRC f892n pol60v lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'G800L', 'CLEAR2S', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'p4s15155j_pfl.fits', # UNITY FLAT for ACS/HRC grism observations hrc_griz_pfl.fits renamed to n6b1529aj_pfl.fits on Jun 11, 11561
+        '2002-03-01 00:00:00' : 'p4s15155j_pfl.fits', #UNITY FLAT for ACS/HRC grism observations hrc_griz_pfl.fits renamed to n6b1529aj_pfl.fits on Jun 11, 11561
     },
     ('HRC', '*', 'G800L', 'CLEAR2S', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o841350jj_pfl.fits', # G800L grism flat for ACS/HRC, 11469, Aug 04 2004 05:58PM
+        '2002-03-01 00:00:00' : 'o841350jj_pfl.fits', #G800L grism flat for ACS/HRC, 11469, Aug 04 2004 05:58PM
     },
     ('HRC', '*', 'POL0UV', 'F220W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530mj_pfl.fits', # ACS/HRC pol0uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530lj_pfl.fits', # ACS/HRC pol0uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530mj_pfl.fits', #ACS/HRC pol0uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530lj_pfl.fits', #ACS/HRC pol0uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL0UV', 'F250W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530sj_pfl.fits', # ACS/HRC pol0uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530rj_pfl.fits', # ACS/HRC pol0uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530sj_pfl.fits', #ACS/HRC pol0uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530rj_pfl.fits', #ACS/HRC pol0uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL0UV', 'F330W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530dj_pfl.fits', # ACS/HRC pol0uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530ij_pfl.fits', # ACS/HRC pol0uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530dj_pfl.fits', #ACS/HRC pol0uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530ij_pfl.fits', #ACS/HRC pol0uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL0UV', 'F435W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11123j_pfl.fits', # ACS/HRC coronagraph f435w pol0uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11123j_pfl.fits', #ACS/HRC coronagraph f435w pol0uv ground flat., 10935
     },
     ('HRC', '*', 'POL0UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305jj_pfl.fits', # ACS/HRC f435w pol0uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305jj_pfl.fits', #ACS/HRC f435w pol0uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL0UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306dj_pfl.fits', # ACS/HRC f660n pol0uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306dj_pfl.fits', #ACS/HRC f660n pol0uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL0UV', 'F814W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11124j_pfl.fits', # ACS/HRC coronagraph f814w pol0uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11124j_pfl.fits', #ACS/HRC coronagraph f814w pol0uv ground flat., 10935
     },
     ('HRC', '*', 'POL0UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306jj_pfl.fits', # ACS/WFC f814w pol0uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306jj_pfl.fits', #ACS/WFC f814w pol0uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL120UV', 'F220W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530oj_pfl.fits', # ACS/HRC pol120uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530nj_pfl.fits', # ACS/HRC pol120uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530oj_pfl.fits', #ACS/HRC pol120uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530nj_pfl.fits', #ACS/HRC pol120uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL120UV', 'F250W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t15310j_pfl.fits', # ACS/HRC pol120uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530tj_pfl.fits', # ACS/HRC pol120uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t15310j_pfl.fits', #ACS/HRC pol120uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530tj_pfl.fits', #ACS/HRC pol120uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL120UV', 'F330W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530ej_pfl.fits', # ACS/HRC pol120uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530jj_pfl.fits', # ACS/HRC pol120uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530ej_pfl.fits', #ACS/HRC pol120uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530jj_pfl.fits', #ACS/HRC pol120uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL120UV', 'F435W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11125j_pfl.fits', # ACS/HRC coronagraph f435w pol120uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11125j_pfl.fits', #ACS/HRC coronagraph f435w pol120uv ground flat., 10935
     },
     ('HRC', '*', 'POL120UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305kj_pfl.fits', # ACS/HRC f435w pol120uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305kj_pfl.fits', #ACS/HRC f435w pol120uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL120UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306ej_pfl.fits', # ACS/HRC f660n pol120uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306ej_pfl.fits', #ACS/HRC f660n pol120uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL120UV', 'F814W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11126j_pfl.fits', # ACS/HRC coronagraph f814w pol120uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11126j_pfl.fits', #ACS/HRC coronagraph f814w pol120uv ground flat., 10935
     },
     ('HRC', '*', 'POL120UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306kj_pfl.fits', # ACS/HRC f814w pol120uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306kj_pfl.fits', #ACS/HRC f814w pol120uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL60UV', 'F220W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530qj_pfl.fits', # ACS/HRC pol60uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530pj_pfl.fits', # ACS/HRC pol60uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530qj_pfl.fits', #ACS/HRC pol60uv/f220w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530pj_pfl.fits', #ACS/HRC pol60uv/f220w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL60UV', 'F250W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t15312j_pfl.fits', # ACS/HRC pol60uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t15311j_pfl.fits', # ACS/HRC pol60uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t15312j_pfl.fits', #ACS/HRC pol60uv/f250w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t15311j_pfl.fits', #ACS/HRC pol60uv/f250w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL60UV', 'F330W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'n4t1530fj_pfl.fits', # ACS/HRC pol60uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
-        '2002-08-13 00:00:00' :  'n4t1530kj_pfl.fits', # ACS/HRC pol60uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
+        '1997-01-01 00:00:00' : 'n4t1530fj_pfl.fits', #ACS/HRC pol60uv/f330w flat without dust mote, 11187, May 01 2003 12:30PM
+        '2002-08-13 00:00:00' : 'n4t1530kj_pfl.fits', #ACS/HRC pol60uv/f330w flat with dust mote, 11187, May 01 2003 12:30PM
     },
     ('HRC', '*', 'POL60UV', 'F435W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11127j_pfl.fits', # ACS/HRC coronagraph f435w pol60uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11127j_pfl.fits', #ACS/HRC coronagraph f435w pol60uv ground flat., 10935
     },
     ('HRC', '*', 'POL60UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1305lj_pfl.fits', # ACS/HRC f435w pol60uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1305lj_pfl.fits', #ACS/HRC f435w pol60uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL60UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306fj_pfl.fits', # ACS/HRC f660n pol60uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306fj_pfl.fits', #ACS/HRC f660n pol60uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('HRC', '*', 'POL60UV', 'F814W', 'CORONAGRAPHIC', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm2l11128j_pfl.fits', # ACS/HRC coronagraph f814w pol60uv ground flat., 10935
+        '1997-01-01 00:00:00' : 'm2l11128j_pfl.fits', #ACS/HRC coronagraph f814w pol60uv ground flat., 10935
     },
     ('HRC', '*', 'POL60UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9r1306lj_pfl.fits', # ACS/HRC f814w pol60uv lp flat, 11065, Sep 30 2002 04:40PM
+        '2002-03-01 00:00:00' : 'm9r1306lj_pfl.fits', #ACS/HRC f814w pol60uv lp flat, 11065, Sep 30 2002 04:40PM
     },
     ('SBC', '*', '*', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2001-01-01 00:00:00' :  'm5t12222j_pfl.fits', # ACS/SBC flat for prism SBC filters, 10978, Jun 03 2002 01:35PM
-        '2002-03-01 00:00:00' :  'p9r2010lj_pfl.fits', # Flight MAMA P-flat from Internal Deut. Lamp LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04, 11594, Sep 27 2005 08:13PM
+        '2001-01-01 00:00:00' : 'm5t12222j_pfl.fits', #ACS/SBC flat for prism SBC filters, 10978, Jun 03 2002 01:35PM
+        '2002-03-01 00:00:00' : 'p9r2010lj_pfl.fits', #Flight MAMA P-flat from Internal Deut. Lamp LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04, 11594, Sep 27 2005 08:13PM
     },
     ('SBC', '*', '*', '*', 'SPECTROSCOPIC', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'qce19052j_pfl.fits', # Flight MAMA P-flat from Internal Deut. Lamp The SBC prism flats were created from multiple inflight, 11682, Dec 14 2006 07:07PM
+        '2002-03-01 00:00:00' : 'qce19052j_pfl.fits', #Flight MAMA P-flat from Internal Deut. Lamp The SBC prism flats were created from multiple inflight, 11682, Dec 14 2006 07:07PM
     },
     ('SBC', '*', 'F115LP', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450ij_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450ij_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('SBC', '*', 'F122M', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450jj_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450jj_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('SBC', '*', 'F125LP', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450kj_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450kj_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('SBC', '*', 'F140LP', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450lj_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450lj_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('SBC', '*', 'F150LP', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450mj_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450mj_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('SBC', '*', 'F165LP', '*', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'pbg1450nj_pfl.fits', # Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
+        '2002-03-01 00:00:00' : 'pbg1450nj_pfl.fits', #Inflight MAMA LP-flat LL DOCUMENTATION IN ACS ISR99-02 & ISR05-04 at Writ, 11600, Nov 16 2005 02:57PM
     },
     ('WFC', '*', 'CLEAR1L', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n3v0946oj_pfl.fits', # ACS/WFC PFLAT for CLEAR1L/CLEAR2L, 11173, Mar 31 2003 04:02PM
+        '2002-03-01 00:00:00' : 'n3v0946oj_pfl.fits', #ACS/WFC PFLAT for CLEAR1L/CLEAR2L, 11173, Mar 31 2003 04:02PM
     },
     ('WFC', '*', 'CLEAR1L', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258nj_pfl.fits', # ACS/WFC F435W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257gj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258nj_pfl.fits', #ACS/WFC F435W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257gj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'CLEAR1L', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u12590j_pfl.fits', # ACS/WFC F660N flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257nj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u12590j_pfl.fits', #ACS/WFC F660N flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257nj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'CLEAR1L', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u12592j_pfl.fits', # ACS/WFC F814W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257pj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u12592j_pfl.fits', #ACS/WFC F814W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257pj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'CLEAR1L', 'FR388N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm3q0838ij_pfl.fits', # latest pedigree=ground flat for ACS/WFC FR459M, FR647M and FR1016N ramps., 10949, 03/25/02
+        '1997-01-01 00:00:00' : 'm3q0838ij_pfl.fits', #latest pedigree=ground flat for ACS/WFC FR459M, FR647M and FR1016N ramps., 10949, 03/25/02
     },
     ('WFC', '*', 'CLEAR1L', 'FR459M', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm3q0838jj_pfl.fits', # , 10949, 03/25/02
+        '1997-01-01 00:00:00' : 'm3q0838jj_pfl.fits', #, 10949, 03/25/02
     },
     ('WFC', '*', 'CLEAR1L', 'FR505N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm3q0838kj_pfl.fits', # , 10949, 03/25/02
+        '1997-01-01 00:00:00' : 'm3q0838kj_pfl.fits', #, 10949, 03/25/02
     },
     ('WFC', '*', 'CLEAR1L', 'FR656N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm3q0838lj_pfl.fits', # , 10949, 03/25/02
+        '1997-01-01 00:00:00' : 'm3q0838lj_pfl.fits', #, 10949, 03/25/02
     },
     ('WFC', '*', 'CLEAR1L', 'FR914M', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '1997-01-01 00:00:00' :  'm3q0838mj_pfl.fits', # , 10949, 03/25/02
+        '1997-01-01 00:00:00' : 'm3q0838mj_pfl.fits', #, 10949, 03/25/02
     },
     ('WFC', '*', 'F475W', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258oj_pfl.fits', # ACS/WFC F475W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257hj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258oj_pfl.fits', #ACS/WFC F475W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257hj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F475W', 'POL0V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914ej_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan12443j_pfl.fits', # ACS/WFC F475W pol0v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914dj_pfl.fits', # Copy of F475W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan12443j_pfl.fits', #ACS/WFC F475W pol0v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits', #Copy of F475W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL0V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914fj_pfl.fits', # Copy of F475W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits', #Copy of F475W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17452j_pfl.fits', # ACS/WFC f475w pol120v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr1913gj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17452j_pfl.fits', #ACS/WFC f475w pol120v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr1913gj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL60V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914hj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1252pj_pfl.fits', # ACS/WFC F475W pol60v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914gj_pfl.fits', # Copy of F475W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits', #ACS/WFC F475W pol60v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits', #Copy of F475W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F475W', 'POL60V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914ij_pfl.fits', # Copy of F475W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits', #Copy of F475W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F502N', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258pj_pfl.fits', # ACS/WFC F502N flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257ij_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258pj_pfl.fits', #ACS/WFC F502N flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257ij_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F502N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17454j_pfl.fits', # ACS/WFC f502n pol0v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19143j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17454j_pfl.fits', #ACS/WFC f502n pol0v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19143j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F502N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17455j_pfl.fits', # ACS/WFC f502n pol120v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19144j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17455j_pfl.fits', #ACS/WFC f502n pol120v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19144j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F502N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17456j_pfl.fits', # ACS/WFC f502n pol60v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19145j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17456j_pfl.fits', #ACS/WFC f502n pol60v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19145j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F550M', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258qj_pfl.fits', # ACS/WFC F550M flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257jj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258qj_pfl.fits', #ACS/WFC F550M flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257jj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F550M', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17457j_pfl.fits', # ACS/WFC f550m pol0v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19146j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17457j_pfl.fits', #ACS/WFC f550m pol0v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19146j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F550M', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17458j_pfl.fits', # ACS/WFC f550m pol120v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19147j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17458j_pfl.fits', #ACS/WFC f550m pol120v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19147j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F550M', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17459j_pfl.fits', # ACS/WFC f550m pol60v lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19148j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17459j_pfl.fits', #ACS/WFC f550m pol60v lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19148j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F555W', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258rj_pfl.fits', # ACS/WFC F555W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257kj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258rj_pfl.fits', #ACS/WFC F555W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257kj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F555W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745aj_pfl.fits', # ACS/WFC f555w pol0v lp flat, 11065, Sep 30 2002 04:40PM
-        '2006-07-04 00:00:00' :  'qbr1913hj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745aj_pfl.fits', #ACS/WFC f555w pol0v lp flat, 11065, Sep 30 2002 04:40PM
+        '2006-07-04 00:00:00' : 'qbr1913hj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F555W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745bj_pfl.fits', # ACS/WFC f555w pol120v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913ij_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745bj_pfl.fits', #ACS/WFC f555w pol120v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913ij_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F555W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745cj_pfl.fits', # ACS/WFC f555w pol60v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913jj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745cj_pfl.fits', #ACS/WFC f555w pol60v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913jj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '0.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qb12257sj_pfl.fits', # F606W step +1 flat w/ mote shifted to -1 step Flat made by mak606mot.pro 24-Oct-2006 12:37:28.00, 11665, Nov 02 2006 02:46PM
+        '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits', #F606W step +1 flat w/ mote shifted to -1 step Flat made by mak606mot.pro 24-Oct-2006 12:37:28.00, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F606W', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nar1136pj_pfl.fits', # ACS/WFC F606W flat, 11275, Oct 27 2003 07:14PM
-        '2006-07-04 00:00:00' :  'qb12257rj_pfl.fits', # F606W step +1 flat w/ mote shifted to 0 step Flat made by mak606mot.pro 24-Oct-2006 12:33:00.00, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits', #ACS/WFC F606W flat, 11275, Oct 27 2003 07:14PM
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits', #F606W step +1 flat w/ mote shifted to 0 step Flat made by mak606mot.pro 24-Oct-2006 12:33:00.00, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '0.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qb12257qj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11665, Nov 02 2006 02:46PM
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F606W', 'POL0V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914kj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1301ij_pfl.fits', # ACS/WFC F606W pol0v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914jj_pfl.fits', # Copy of F606W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits', #ACS/WFC F606W pol0v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits', #Copy of F606W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL0V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914lj_pfl.fits', # Copy of F606W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits', #Copy of F606W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745ej_pfl.fits', # ACS/WFC f606w pol120v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr19149j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745ej_pfl.fits', #ACS/WFC f606w pol120v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr19149j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL60V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914nj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1310cj_pfl.fits', # ACS/WFC F606W pol60v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914mj_pfl.fits', # Copy of F606W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits', #ACS/WFC F606W pol60v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits', #Copy of F606W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F606W', 'POL60V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914oj_pfl.fits', # Copy of F606W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits', #Copy of F606W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F625W', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258sj_pfl.fits', # ACS/WFC F625W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257lj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258sj_pfl.fits', #ACS/WFC F625W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257lj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F625W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745gj_pfl.fits', # ACS/WFC f625w pol0v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913kj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745gj_pfl.fits', #ACS/WFC f625w pol0v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913kj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F625W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745hj_pfl.fits', # ACS/WFC f625w pol120v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913lj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745hj_pfl.fits', #ACS/WFC f625w pol120v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913lj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F625W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745ij_pfl.fits', # ACS/WFC f625w pol60v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913mj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745ij_pfl.fits', #ACS/WFC f625w pol60v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913mj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F658N', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u1258tj_pfl.fits', # ACS/WFC F658N flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257mj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u1258tj_pfl.fits', #ACS/WFC F658N flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257mj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F658N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745jj_pfl.fits', # ACS/WFC f658n pol0v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913nj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745jj_pfl.fits', #ACS/WFC f658n pol0v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913nj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F658N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745kj_pfl.fits', # ACS/WFC f658n pol120v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913oj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745kj_pfl.fits', #ACS/WFC f658n pol120v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913oj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F658N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745lj_pfl.fits', # ACS/WFC f658n pol60v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913pj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745lj_pfl.fits', #ACS/WFC f658n pol60v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913pj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u12591j_pfl.fits', # ACS/WFC F775W flat, 11209, Jun 30 2003 07:09PM
-        '2006-07-04 00:00:00' :  'qb12257oj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
+        '2002-03-01 00:00:00' : 'n6u12591j_pfl.fits', #ACS/WFC F775W flat, 11209, Jun 30 2003 07:09PM
+        '2006-07-04 00:00:00' : 'qb12257oj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11665, Nov 02 2006 02:46PM
     },
     ('WFC', '*', 'F775W', 'POL0V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914qj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan1319pj_pfl.fits', # ACS/WFC F775W pol0v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914pj_pfl.fits', # Copy of F775W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits', #ACS/WFC F775W pol0v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits', #Copy of F775W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL0V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914rj_pfl.fits', # Copy of F775W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits', #Copy of F775W+Pol0V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745qj_pfl.fits', # ACS/WFC f775w pol120v lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913qj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745qj_pfl.fits', #ACS/WFC f775w pol120v lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913qj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL60V', 'IMAGING', '0.0', '-1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr1914tj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). CONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs 2, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'nan13290j_pfl.fits', # ACS/WFC F775W pol60v plus flat, 11273, Oct 23 2003 07:00PM
-        '2006-07-04 00:00:00' :  'qbr1914sj_pfl.fits', # Copy of F775W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'nan13290j_pfl.fits', #ACS/WFC F775W pol60v plus flat, 11273, Oct 23 2003 07:00PM
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits', #Copy of F775W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F775W', 'POL60V', 'IMAGING', '0.0', '1.0', '0.0') : {
-        '2006-07-04 00:00:00' :  'qbr19150j_pfl.fits', # Copy of F775W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
+        '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits', #Copy of F775W+Pol60V FWOFFSET -1 flat FULL DOCUMENTATION is IN ACS ISRs 2001-11, 2003-11, 2006-06, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'F850LP', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u12593j_pfl.fits', # ACS/WFC F850LP flat, 11209, Jun 30 2003 07:09PM
+        '2002-03-01 00:00:00' : 'n6u12593j_pfl.fits', #ACS/WFC F850LP flat, 11209, Jun 30 2003 07:09PM
     },
     ('WFC', '*', 'F850LP', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17461j_pfl.fits', # ACS/WFC f850lp pol0v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17461j_pfl.fits', #ACS/WFC f850lp pol0v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'F850LP', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17462j_pfl.fits', # ACS/WFC f850lp pol120v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17462j_pfl.fits', #ACS/WFC f850lp pol120v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'F850LP', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17463j_pfl.fits', # ACS/WFC f850lp pol60v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17463j_pfl.fits', #ACS/WFC f850lp pol60v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'F892N', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'n6u12594j_pfl.fits', # ACS/WFC F892N flat, 11209, Jun 30 2003 07:09PM
+        '2002-03-01 00:00:00' : 'n6u12594j_pfl.fits', #ACS/WFC F892N flat, 11209, Jun 30 2003 07:09PM
     },
     ('WFC', '*', 'F892N', 'POL0V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17464j_pfl.fits', # ACS/WFC f892n pol0v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17464j_pfl.fits', #ACS/WFC f892n pol0v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'F892N', 'POL120V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17465j_pfl.fits', # ACS/WFC f892n pol120v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17465j_pfl.fits', #ACS/WFC f892n pol120v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'F892N', 'POL60V', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17466j_pfl.fits', # ACS/WFC f892n pol60v lp flat, 11063, Sep 26 2002 10:32PM
+        '2002-03-01 00:00:00' : 'm9q17466j_pfl.fits', #ACS/WFC f892n pol60v lp flat, 11063, Sep 26 2002 10:32PM
     },
     ('WFC', '*', 'G800L', 'CLEAR2L', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'o841350mj_pfl.fits', # G800L grism flat for ACS/WFC, 11469, Aug 04 2004 05:58PM
+        '2002-03-01 00:00:00' : 'o841350mj_pfl.fits', #G800L grism flat for ACS/WFC, 11469, Aug 04 2004 05:58PM
     },
     ('WFC', '*', 'POL0UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1744sj_pfl.fits', # ACS/WFC f435w pol0uv lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr1913rj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1744sj_pfl.fits', #ACS/WFC f435w pol0uv lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr1913rj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL0UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745mj_pfl.fits', # ACS/WFC f660n pol0uv lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1914aj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745mj_pfl.fits', #ACS/WFC f660n pol0uv lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1914aj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL0UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745sj_pfl.fits', # ACS/WFC f814w pol0uv lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1913sj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745sj_pfl.fits', #ACS/WFC f814w pol0uv lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1913sj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL120UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1744tj_pfl.fits', # ACS/WFC f435w pol120uv lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr1913tj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1744tj_pfl.fits', #ACS/WFC f435w pol120uv lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr1913tj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL120UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745nj_pfl.fits', # ACS/WFC f660n pol120uv lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1914bj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745nj_pfl.fits', #ACS/WFC f660n pol120uv lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1914bj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL120UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745tj_pfl.fits', # ACS/WFC f814w pol120uv lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr19140j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745tj_pfl.fits', #ACS/WFC f814w pol120uv lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr19140j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL60UV', 'F435W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17450j_pfl.fits', # ACS/WFC f435w pol60uv lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19141j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17450j_pfl.fits', #ACS/WFC f435w pol60uv lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19141j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL60UV', 'F660N', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q1745oj_pfl.fits', # ACS/WFC f660n pol60uv lp flat, 11064, Sep 27 2002 05:59PM
-        '2006-07-04 00:00:00' :  'qbr1914cj_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q1745oj_pfl.fits', #ACS/WFC f660n pol60uv lp flat, 11064, Sep 27 2002 05:59PM
+        '2006-07-04 00:00:00' : 'qbr1914cj_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
     ('WFC', '*', 'POL60UV', 'F814W', 'IMAGING', '0.0', '0.0', '0.0') : {
-        '2002-03-01 00:00:00' :  'm9q17460j_pfl.fits', # ACS/WFC f814w pol60uv lp flat, 11063, Sep 26 2002 10:32PM
-        '2006-07-04 00:00:00' :  'qbr19142j_pfl.fits', # Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
+        '2002-03-01 00:00:00' : 'm9q17460j_pfl.fits', #ACS/WFC f814w pol60uv lp flat, 11063, Sep 26 2002 10:32PM
+        '2006-07-04 00:00:00' : 'qbr19142j_pfl.fits', #Flats: P(Lab)*L(Flight)*delta(-81K,ISR06-06). UNCONFIRMED FWOFFSET FULL DOCUMENTATION is IN ACS ISRs, 11674, Nov 27 2006 10:28PM
     },
 }, 

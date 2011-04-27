@@ -70,6 +70,7 @@ if __name__ == "__main__":
     if SAVE:
         sys.argv.remove("--save")
     lookup.load_header_cache()
+    rmap.get_pipeline_context("hst","hst.pmap")   # pre-cache the bestref stuff
     if "--profile" in sys.argv:
         sys.argv.remove("--profile")
         cProfile.run("main()")

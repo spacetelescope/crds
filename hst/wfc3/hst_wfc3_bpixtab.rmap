@@ -1,18 +1,18 @@
 {
-    'parkey' :  ('DETECTOR', 'USEAFTER'),
-    'reftype' :  'BPIXTAB',
-    'observatory' :  'HST',
-    'instrument' :  'WFC3',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'BPIXTAB',
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
 }, {
     ('IR',) : {
-        '1991-01-01 00:00:00' :  'q911321ki_bpx.fits', # Reference file created for ground testing, 11647, Sep 01 2006 01:26PM
-        '2008-02-20 00:00:00' :  't291659ni_bpx.fits', # Bad Pixel Table created from WFC3 IR-4 MEB1 TV3 frames, 11991, Feb 10 2009 06:43PM
-        '2009-05-14 00:00:00' :  'u4c1709ri_bpx.fits', # Bad Pixel Table created from SMOV flats (11433) and darks (11447)--, 12157, Apr 12 2010 05:13PM
+        '1991-01-01 00:00:00' : 'q911321ki_bpx.fits', #Reference file created for ground testing, 11647, Sep 01 2006 01:26PM
+        '2008-02-20 00:00:00' : 't291659ni_bpx.fits', #Bad Pixel Table created from WFC3 IR-4 MEB1 TV3 frames, 11991, Feb 10 2009 06:43PM
+        '2009-05-14 00:00:00' : 'u4c1709ri_bpx.fits', #Bad Pixel Table created from SMOV flats (11433) and darks (11447)--, 12157, Apr 12 2010 05:13PM
     },
     ('UVIS',) : {
-        '1991-01-02 00:00:00' :  'r5b17013i_bpx.fits', # Based on Thermal-Vac #1 flatfields, 11710, May 11 2007 05:19PM
-        '2001-01-01 00:00:00' :  'q911401ji_bpx.fits', # Based on Thermal-Vac #1 flatfields, 11648, Sep 01 2006 02:06PM
-        '2008-02-20 00:00:00' :  't2c1533si_bpx.fits', # UVIS-1 bad columns from TV3 biases and flats, 11992, Feb 12 2009 03:39PM
-        '2009-06-11 00:00:00' :  'u5d2012li_bpx.fits', # Based on SMOV and Cycle 17 data.-----------------------------------, 12168, May 13 2010 08:17PM
+        '1991-01-02 00:00:00' : 'r5b17013i_bpx.fits', #Based on Thermal-Vac #1 flatfields, 11710, May 11 2007 05:19PM
+        '2001-01-01 00:00:00' : 'q911401ji_bpx.fits', #Based on Thermal-Vac #1 flatfields, 11648, Sep 01 2006 02:06PM
+        '2008-02-20 00:00:00' : 't2c1533si_bpx.fits', #UVIS-1 bad columns from TV3 biases and flats, 11992, Feb 12 2009 03:39PM
+        '2009-06-11 00:00:00' : 'u5d2012li_bpx.fits', #Based on SMOV and Cycle 17 data.-----------------------------------, 12168, May 13 2010 08:17PM
     },
 }, 

@@ -4,7 +4,6 @@ a CRDS lookup table for an instrument.
 import os
 import os.path
 import collections
-import pprint
 import re
 import ast
 import json
@@ -41,18 +40,18 @@ class Rmap(object):
         self.data = data
     
     @classmethod
-    def check_file_format(klass, filename):
+    def check_file_format(cls, filename):
         """Make sure the basic file format for `filename` is valid and safe."""
         lines = open(filename).readlines()
-        clean = klass._clean_lines(lines)
+        clean = cls._clean_lines(lines)
         basename = os.path.basename(filename)
-        remainder = klass._check_syntax(basename, "header", clean)
-        remainder = klass._check_syntax(basename, "data", remainder)
+        remainder = cls._check_syntax(basename, "header", clean)
+        remainder = cls._check_syntax(basename, "data", remainder)
         if remainder != ["},"]:
             raise FormatError("Extraneous input following data in " + repr(basename))
     
     @classmethod
-    def _clean_lines(klass, lines):
+    def _clean_lines(cls, lines):
         """Remove empty lines and comment lines"""
         clean = []
         for line in lines:
@@ -63,7 +62,7 @@ class Rmap(object):
         return clean
 
     @classmethod
-    def _key_value_split(klass, line):
+    def _key_value_split(cls, line):
         """Split line on first : not inside quoted string or tuple."""
         inside_quote = False
         inside_tuple = 0
@@ -84,46 +83,45 @@ class Rmap(object):
         return line, None
 
     @classmethod
-    def _check_syntax(klass, filename, section, lines):
+    def _check_syntax(cls, filename, section, lines):
         if not re.match("^(}, )?{$", lines[0]):
             raise FormatError("Invalid %s block opening in " % (section,) + repr(filename))        
         for lineno, line in enumerate(lines[1:]):
-            key, value = klass._key_value_split(line)
+            key, value = cls._key_value_split(line)
             if key in ["}", "}, {"] and value is None:
                 break
             elif key == "}," and value is None:
                 continue
-            elif not klass._match_key(key):
+            elif not cls._match_key(key):
                 raise FormatError("Invalid %s keyword " % section + repr(key) + " in " + repr(filename))
-            elif not klass._match_value(value):
+            elif not cls._match_value(value):
                 raise FormatError("Invalid %s value for " % section + key + " = " + repr(value) + " in " + repr(filename))
         return lines[lineno+1:]  # should be no left-overs
 
     @classmethod
-    def _match_key(klass, key):
-        return klass._match_simple(key) or klass._match_string_tuple(key)
+    def _match_key(cls, key):
+        return cls._match_simple(key) or cls._match_string_tuple(key)
     
     @classmethod
-    def _match_value(klass, value):
-        return (value == "{") or klass._match_simple(value) or klass._match_string_tuple(value)
+    def _match_value(cls, value):
+        return (value == "{") or cls._match_simple(value) or cls._match_string_tuple(value)
 
     @classmethod
-    def _match_simple(klass, value):
+    def _match_simple(cls, value):
         return re.match("^'[A-Za-z0-9_.:/ \*\%\-]*',?$", value)
     
     @classmethod
-    def _match_string_tuple(klass, value):
+    def _match_string_tuple(cls, value):
         return re.match("^\((\s*'[A-Za-z0-9_.:/ \*\%\-]*',?\s*)*\),?$", value)
 
     @classmethod
-    def from_file(klass, fname, *args, **keys):
-        klass.check_file_format(fname)
+    def from_file(cls, fname, *args, **keys):
+        cls.check_file_format(fname)
         try:
-            namespace = {}
             header, data = ast.literal_eval(open(fname).read())
-        except Exception, e:
-            raise RmapError("Can't load", klass.__name__, "file:", repr(os.path.basename(fname)), str(e))
-        rmap = klass(fname, header, data, *args, **keys)
+        except Exception, exc:
+            raise RmapError("Can't load", cls.__name__, "file:", repr(os.path.basename(fname)), str(exc))
+        rmap = cls(fname, header, data, *args, **keys)
         rmap.validate_file_load()
         return rmap
     
@@ -132,20 +130,20 @@ class Rmap(object):
         pass
     
     def to_json(self):
-        all = dict(header=self.header, data=self.data)
-        return json.dumps(keys_to_strings(all))
+        rmap = dict(header=self.header, data=self.data)
+        return json.dumps(keys_to_strings(rmap))
     
     @classmethod
-    def from_json(klass, json_str):
-        all = json.loads(json_str)
-        header = all["header"]
-        data = strings_to_keys(all["data"])
-        return klass("<json>", header, data, **header)
+    def from_json(cls, json_str):
+        rmap = strings_to_keys(json.loads(json_str))
+        header = rmap["header"]
+        data = rmap["data"]
+        return cls("<json>", header, data, **header)
     
 # ===================================================================
 
 def keys_to_strings(d):
-    """Convert non-string keys of `d` (basically tuples) into strings for json encoding."""
+    """Convert non-string keys of `d` into strings for json encoding."""
     if not isinstance(d, dict):
         return d
     results = {}
@@ -173,13 +171,11 @@ def strings_to_keys(d):
 # ===================================================================
 
 """
-header = {
+{
     'observatory':'HST',
     'parkey' : ('INSTRUME'),
     'class' : 'crds.PipelineContext',
-}
-
-data = {
+}, {
     'ACS':'icontext_hst_acs_00023.con',
     'COS':'icontext_hst_cos_00023.con', 
     'STIS':'icontext_hst_stis_00023.con',
@@ -198,9 +194,9 @@ class PipelineContext(Rmap):
         Rmap.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.selections = {}
-        for instrument, context_file in data.items():
+        for instrument, imap in data.items():
             instrument = instrument.lower()
-            filepath = "/".join([CRDS_ROOT, self.observatory, instrument, context_file])
+            filepath = "/".join([CRDS_ROOT, self.observatory, instrument, imap])
             self.selections[instrument] = InstrumentContext.from_file(filepath, observatory, instrument)
 
     def get_best_refs(self, header, date=None):
@@ -215,21 +211,21 @@ class PipelineContext(Rmap):
         header["DATE"] = timestamp.reformat_date(header["DATE"])
         return self.selections[instrument].get_best_refs(header)
     
-    def reference_files(self):
+    def reference_names(self):
         """Return the list of reference files associated with this pipeline context."""
         files = set()
         for instrument in self.selections:
-            for file in self.selections[instrument].reference_files():
+            for file in self.selections[instrument].reference_names():
                 files.add(file)
         return sorted(list(files))
     
-    def mapping_files(self):
+    def mapping_names(self):
         """Return the list of pipeline, instrument, and reference map files associated with
         this pipeline context.
         """
         files = set([os.path.basename(self.filename)])
         for instrument in self.selections:
-            files.update(self.selections[instrument].mapping_files())
+            files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
 
 
@@ -305,14 +301,14 @@ class InstrumentContext(Rmap):
             binding.update(self._selectors[reftype].get_binding(header))
         return binding
     
-    def reference_files(self):
+    def reference_names(self):
         files = set()
         for selector in self._selectors.values():
-            for file in selector.reference_files():
+            for file in selector.reference_names():
                 files.add(file)
         return sorted(list(files))
     
-    def mapping_files(self):
+    def mapping_names(self):
         files = [os.path.basename(self.filename)]
         for selector in self._selectors.values():
             files.append(os.path.basename(selector.filename))
@@ -329,8 +325,8 @@ class ReferenceRmap(Rmap):
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
-        klass = get_class(header.get("class", "crds.selectors.ReferenceSelector"))
-        self._selector = klass(header, data)
+        cls = get_class(header.get("class", "crds.selectors.ReferenceSelector"))
+        self._selector = cls(header, data)
 
     def validate_file_load(self):
         got = self.header["reftype"].lower()
@@ -340,8 +336,8 @@ class ReferenceRmap(Rmap):
     def get_best_ref(self, header):
         return self._selector.choose(header)
     
-    def reference_files(self):
-        return self._selector.reference_files()
+    def reference_names(self):
+        return self._selector.reference_names()
     
 # ===================================================================
 
@@ -349,24 +345,11 @@ def get_class(dotted_name):
     """Import the given `dotted_name` and return the module object."""
     parts = dotted_name.split(".")
     pkgpath = ".".join(parts[:-1])
-    klass = parts[-1]
+    cls = parts[-1]
     namespace = {}
-    exec "from " + pkgpath + " import " + klass in namespace, namespace
-    return namespace[klass]
+    exec "from " + pkgpath + " import " + cls in namespace, namespace
+    return namespace[cls]
 
-
-# ===================================================================
-
-PIPELINE_CONTEXTS = {}
-
-def get_pipeline_context(observatory, context_file):
-    observatory = observatory.lower()
-    key = (observatory, context_file)
-    if key in PIPELINE_CONTEXTS:
-        return PIPELINE_CONTEXTS[key]
-    filepath = "/".join([CRDS_ROOT, observatory, context_file])
-    PIPELINE_CONTEXTS[key] = PipelineContext.from_file(filepath, observatory)
-    return PIPELINE_CONTEXTS[key]
 
 # ===================================================================
 
@@ -378,23 +361,39 @@ def write_rmap(filename, header, data):
     file.write("\n")
 
 def write_rmap_dict(file, the_dict, indent_level=1):
-    """Write out a (nested) dictionary in a simple format amenable to validation."""
+    """Write out a (nested) dictionary in a simple format amenable to validation
+    and differencing.
+    """
     indent = " "*4*indent_level
     file.write("{\n")
     for key, value in the_dict.items():
-        print >>file, indent + repr(key), ": ",
+        file.write(indent + repr(key) + " : ")
         if isinstance(value, dict):
             write_rmap_dict(file, value, indent_level+1)
         elif isinstance(value, Filemap):
-            print >>file, repr(value.file)+",", "#", value.comment
+            file.write(repr(value.file) + ", #" + value.comment + "\n")
         else:
-            print >>file, repr(value) + ","
+            file.write(repr(value) + ",\n")
     indent_level -= 1
     if indent_level > 0:
-        print >>file, indent_level*" "*4 + "},"
+        file.write(indent_level*" "*4 + "},\n")
     else:
         file.write("}, ")
         
+# ===================================================================
+
+PIPELINE_CONTEXTS = {}
+
+def get_pipeline_context(observatory, context_file):
+    """Recursively load the specified `context_file` and add it to
+    the global pipeline cache.
+    """
+    observatory = observatory.lower()
+    if context_file not in PIPELINE_CONTEXTS:
+        filepath = "/".join([CRDS_ROOT, observatory, context_file])
+        PIPELINE_CONTEXTS[context_file] = PipelineContext.from_file(filepath, observatory)
+    return PIPELINE_CONTEXTS[context_file]
+
 # ===================================================================
 
 def get_best_refs(header, observatory="hst", pcontext_file=None, date=None):

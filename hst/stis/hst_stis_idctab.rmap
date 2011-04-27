@@ -1,16 +1,16 @@
 {
-    'parkey' :  ('DETECTOR', 'USEAFTER'),
-    'reftype' :  'IDCTAB',
-    'observatory' :  'HST',
-    'instrument' :  'STIS',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
+    'reftype' : 'IDCTAB',
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
 }, {
     ('CCD',) : {
-        '1997-02-27 00:00:00' :  'o8g1508do_idc.fits', # for correcting geometric distortion of image mode data Created on July 27, 2001 using Phil Hodge's Pytho, 11470, Aug 16 2004 07:15PM
+        '1997-02-27 00:00:00' : 'o8g1508do_idc.fits', #for correcting geometric distortion of image mode data Created on July 27, 2001 using Phil Hodge's Pytho, 11470, Aug 16 2004 07:15PM
     },
     ('FUV-MAMA',) : {
-        '1997-02-27 00:00:00' :  'o8g1508eo_idc.fits', # for correcting geometric distortion of image mode data eated on 25 March 2004 using custom-crafted IDL, 11470, Aug 16 2004 07:15PM
+        '1997-02-27 00:00:00' : 'o8g1508eo_idc.fits', #for correcting geometric distortion of image mode data eated on 25 March 2004 using custom-crafted IDL, 11470, Aug 16 2004 07:15PM
     },
     ('NUV-MAMA',) : {
-        '1997-02-27 00:00:00' :  'o8g1508fo_idc.fits', # for correcting geometric distortion of image mode data eated on 30 September 2003 using the custom-craft, 11470, Aug 16 2004 07:15PM
+        '1997-02-27 00:00:00' : 'o8g1508fo_idc.fits', #for correcting geometric distortion of image mode data eated on 30 September 2003 using the custom-craft, 11470, Aug 16 2004 07:15PM
     },
 }, 
