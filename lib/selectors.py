@@ -274,6 +274,8 @@ class MatchingSelector(Selector):
                 old_parvalue = match[which]
                 if old_parvalue in substitutions[parkey]:
                     replacement = substitutions[parkey][old_parvalue]
+                    if isinstance(replacement, list):
+                        replacement = tuple(replacement)
                     new_match = list(match)
                     new_match[which] = replacement
                     new_match = tuple(new_match)

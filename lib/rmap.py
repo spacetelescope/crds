@@ -7,6 +7,7 @@ import collections
 import pprint
 import re
 import ast
+import json
 
 from crds import log, timestamp
 from crds.config import CRDS_ROOT
@@ -34,7 +35,7 @@ class Rmap(object):
     """An Rmap is the abstract baseclass for loading anything with the
     general structure of a header followed by data.
     """
-    def __init__(self, filename, header, data):
+    def __init__(self, filename, header, data, **keys):
         self.filename = filename
         self.header = header
         self.data = data
@@ -130,6 +131,45 @@ class Rmap(object):
         """Validate assertions about the contents of this rmap."""
         pass
     
+    def to_json(self):
+        all = dict(header=self.header, data=self.data)
+        return json.dumps(keys_to_strings(all))
+    
+    @classmethod
+    def from_json(klass, json_str):
+        all = json.loads(json_str)
+        header = all["header"]
+        data = strings_to_keys(all["data"])
+        return klass("<json>", header, data, **header)
+    
+# ===================================================================
+
+def keys_to_strings(d):
+    """Convert non-string keys of `d` (basically tuples) into strings for json encoding."""
+    if not isinstance(d, dict):
+        return d
+    results = {}
+    for key, value in d.items():
+        converted = keys_to_strings(value)
+        if not isinstance(key, (str, unicode)):
+            results[repr(key)] = converted
+        else:
+            results[key] = converted
+    return results
+    
+def strings_to_keys(d):
+    """Convert string keys of `d` which contain tuple reprs back into tuples.""" 
+    if not isinstance(d, dict):
+        return d
+    results = {}
+    for key, value in d.items():
+        converted = strings_to_keys(value)
+        if isinstance(key, (str, unicode)) and "(" in key:
+            results[ast.literal_eval(key)] = converted
+        else:
+            results[key] = converted
+    return results
+
 # ===================================================================
 
 """
@@ -183,13 +223,13 @@ class PipelineContext(Rmap):
                 files.add(file)
         return sorted(list(files))
     
-    def map_files(self):
+    def mapping_files(self):
         """Return the list of pipeline, instrument, and reference map files associated with
         this pipeline context.
         """
         files = set([os.path.basename(self.filename)])
         for instrument in self.selections:
-            files.update(self.selections[instrument].map_files())
+            files.update(self.selections[instrument].mapping_files())
         return sorted(list(files))
 
 
@@ -272,7 +312,7 @@ class InstrumentContext(Rmap):
                 files.add(file)
         return sorted(list(files))
     
-    def map_files(self):
+    def mapping_files(self):
         files = [os.path.basename(self.filename)]
         for selector in self._selectors.values():
             files.append(os.path.basename(selector.filename))
@@ -284,7 +324,7 @@ class ReferenceRmap(Rmap):
     """ReferenceRmap manages loading the rmap associated with a single reference
     filetype and instantiating an appropriate selector from the rmap header and data.
     """
-    def __init__(self, filename, header, data, observatory, instrument, reftype):
+    def __init__(self, filename, header, data, observatory, instrument, reftype, **keys):
         Rmap.__init__(self, filename, header, data)
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
