@@ -1,7 +1,7 @@
 {
     'observatory':'HST',
     'parkey' : ('INSTRUME'),
-    'reftype': "pipeline",
+    'reftype': 'pipeline',
 }, {
     'ACS':'hst_acs.imap',
     'COS':'hst_cos.imap', 
