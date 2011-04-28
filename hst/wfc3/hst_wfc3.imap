@@ -2,7 +2,7 @@
     'observatory':'HST',
     'instrument':'WFC3',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
-    'reftype':'CONTEXT',
+    'reftype':'instrument',
 }, {
     # **Bias Images ** Additive stationary pattern in the electronic zero point of the CCDs. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3BiasReference?no_wrap=true'

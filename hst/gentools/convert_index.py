@@ -95,7 +95,7 @@ def write_rmap_header(rmap_file, observatory, instrument, source_url):
     'observatory':'%s',
     'instrument':'%s',
     'source_url':'%s',
-    'reftype':'CONTEXT',
+    'reftype':'instrument',
 }, """ % (observatory.upper(), instrument.upper(), source_url))
 
 

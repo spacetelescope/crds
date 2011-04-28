@@ -2,7 +2,7 @@
     'observatory':'HST',
     'instrument':'COS',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
-    'reftype':'CONTEXT',
+    'reftype':'instrument',
 }, {
     # **Flat Field Files** Accounts for pixel-to-pixel variations. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSFlatImage'

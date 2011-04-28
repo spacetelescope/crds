@@ -2,7 +2,7 @@
     'observatory':'HST',
     'instrument':'STIS',
     'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex',
-    'reftype':'CONTEXT',
+    'reftype':'instrument',
 }, {
     # **Bias Image File** Image of the additive stationary pattern in the electronic zero point of the UVIS CCDs. 
     #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex/STISBias'
