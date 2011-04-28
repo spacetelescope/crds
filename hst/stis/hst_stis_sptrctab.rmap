@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'SPTRCTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'SPTRCTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1996-10-01 00:00:00' : 'qa31608go_1dt.fits', #New traces to account for angle ch, 11655, Oct 03 2006 04:35PM

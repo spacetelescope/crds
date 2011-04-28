@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
-    'reftype' : 'CFLTFILE',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'CFLTFILE',
+    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
 }, {
     ('HRC', 'CLEAR1S', 'F330W') : {
         '2002-03-01 00:00:00' : 'oai16327j_cfl.fits', #ACS reference file, 11503, Oct 18 2004 04:34PM

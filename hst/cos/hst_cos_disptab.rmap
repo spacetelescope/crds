@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-    'reftype' : 'DISPTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'DISPTAB',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }, {
     ('FUV', 'SPECTROSCOPIC') : {
         '1996-10-01 00:00:00' : 't2k1224el_disp.fits', #from TV2003 data Modified to account for change of coordinates. fuv_080715, 11996, Feb 20 2009 12:29PM

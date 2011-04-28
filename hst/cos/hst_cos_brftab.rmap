@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'BRFTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'BRFTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('FUV',) : {
         '1996-10-01 00:00:00' : 's7g1700el_brf.fits', #initial version for testing ref_brf.fits renamed to r7p11141l_brf.fits on Jul 25 2007, 11876, Jul 16 2008 05:09PM

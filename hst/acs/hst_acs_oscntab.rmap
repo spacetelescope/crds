@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'OSCNTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'OSCNTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('HRC',) : {
         '2001-03-01 00:00:00' : 'm2j1057pj_osc.fits', #ACS/HRC pedigree=ground overscan table., 10932, Feb 19 2002 05:02PM

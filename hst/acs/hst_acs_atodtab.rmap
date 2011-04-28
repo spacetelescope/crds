@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'USEAFTER'),
-    'reftype' : 'ATODTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'ATODTAB',
+    'parkey' : ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'USEAFTER'),
 }, {
     ('HRC', '1.0', 'A') : {
         '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits', #Initial delivery of HRC A2D table, 10730, Dec 13 2000 01:34PM

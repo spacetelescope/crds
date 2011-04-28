@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'IDCTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'IDCTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1997-02-27 00:00:00' : 'o8g1508do_idc.fits', #for correcting geometric distortion of image mode data Created on July 27, 2001 using Phil Hodge's Pytho, 11470, Aug 16 2004 07:15PM

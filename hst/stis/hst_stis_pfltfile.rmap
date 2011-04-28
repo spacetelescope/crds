@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'APERTURE', '*CENWAVE', 'USEAFTER'),
-    'reftype' : 'PFLTFILE',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'PFLTFILE',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'APERTURE', '*CENWAVE', 'USEAFTER'),
 }, {
     ('CCD', 'SPECTROSCOPIC', 'G230LB', '*', '2375.0') : {
         '1996-10-01 00:00:00' : 'i4g1725do_pfl.fits', #Revised Prelaunch flats This file replaces an earlier delivered pfl reference file (h23, 10280, Apr 17 1998 06:08PM

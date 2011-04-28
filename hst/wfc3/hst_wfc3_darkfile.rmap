@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2', 'USEAFTER'),
-    'reftype' : 'DARKFILE',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'DARKFILE',
+    'parkey' : ('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2', 'USEAFTER'),
 }, {
     ('IR', 'ABCD', '2.5', 'MIF1200', 'FULLIMAG', '1.0', '1.0') : {
         '1991-01-02 00:00:00' : 's190404ei_drk.fits', #TV2 dark image, 11810, Jan 09 2008 04:14AM

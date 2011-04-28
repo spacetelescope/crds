@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'TDSTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'TDSTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('FUV',) : {
         '1996-10-01 00:00:00' : 't2314312l_tds.fits', #no change with time This table is not based on observations; all rows are dummy. FITS (Fle, 11982, Feb 03 2009 02:34PM

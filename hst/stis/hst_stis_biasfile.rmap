@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2', 'USEAFTER'),
-    'reftype' : 'BIASFILE',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'BIASFILE',
+    'parkey' : ('DETECTOR', 'CCDGAIN', 'CCDAMP', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2', 'USEAFTER'),
 }, {
     ('CCD', '1.0', 'D', '3.0', '1.0', '1.0') : {
         '1996-10-01 00:00:00' : 'r3u1425ho_bia.fits', #T. Beck using Oct 96 observations Average of 21 biases from 13-OCT-1996, 11700, Mar 30 2007 02:28PM

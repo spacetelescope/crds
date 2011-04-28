@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'BPIXTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'BPIXTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('FUV',) : {
         '1996-10-01 00:00:00' : 's7g1700dl_bpix.fits', #from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM

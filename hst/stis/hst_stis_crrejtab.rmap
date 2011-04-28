@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'CRREJTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'CRREJTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1996-12-03 00:00:00' : 'h1v12041o_crr.fits', #, 10020, Jan 31 1997 05:07PM

@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'CCDTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'CCDTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('HRC',) : {
         '2002-03-01 00:00:00' : 'o1515069j_ccd.fits', #ACS/HRC CCD table, 11316, Jan 06 2004 03:51PM

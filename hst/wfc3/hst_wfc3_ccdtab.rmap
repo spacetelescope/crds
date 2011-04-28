@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'CCDTAB',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'CCDTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('IR',) : {
         '1991-01-01 00:00:00' : 'q911321li_ccd.fits', #Reference data based on Thermal-Vac #1 results for FPA64, 11647, Sep 01 2006 01:26PM

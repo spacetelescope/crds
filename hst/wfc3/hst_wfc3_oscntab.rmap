@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'OSCNTAB',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'OSCNTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('IR',) : {
         '1991-01-02 00:00:00' : 'r5b17012i_osc.fits', #Initial values for ground test data processing, 11710, May 11 2007 05:19PM

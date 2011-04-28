@@ -370,11 +370,12 @@ def write_rmap(observatory, instrument, reftype, kind_map):
     parkeys = KIND_KEYS[instrument][reftype]
     all_parkeys = parkeys + MAPKEYS[:-1]
     fitskeys = parkeys_to_fitskeys(instrument, all_parkeys)
-    rmap_header = OrderedDict(
-                       observatory=observatory.upper(),
-                       instrument=instrument.upper(),
-                       reftype=reftype.upper(),
-                       parkey=fitskeys)
+    rmap_header = OrderedDict([
+        ("observatory", observatory.upper()),
+        ("instrument", instrument.upper()),
+        ("reftype", reftype.upper()),
+        ("parkey", fitskeys)
+    ])
     selector_class = cdbs_parkeys.get_selector_class(instrument, reftype)
     if selector_class:
         rmap_header["class"] = selector_class

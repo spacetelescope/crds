@@ -1,8 +1,8 @@
 {
-    'parkey' : ('APERTURE', 'USEAFTER'),
-    'reftype' : 'APERTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'APERTAB',
+    'parkey' : ('APERTURE', 'USEAFTER'),
 }, {
     ('0.05X29',) : {
         '1996-10-01 00:00:00' : 'n7p1032ao_apt.fits', #Aperture transmission curves aperture_apt.fits renamed to h1v1141oo_apt.fits on Jan 31 1997 11:41 :: H, 11220, Jul 28 2003 12:07PM

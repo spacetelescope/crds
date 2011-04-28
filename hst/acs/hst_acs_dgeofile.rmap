@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
-    'reftype' : 'DGEOFILE',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'DGEOFILE',
+    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'USEAFTER'),
 }, {
     ('HRC', 'CLEAR1S', 'F220W') : {
         '2002-03-01 00:00:00' : 'o8u2214fj_dxy.fits', #Residual geometric distortion correction image, 11473

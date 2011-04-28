@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'IDCTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'IDCTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('HRC',) : {
         '2002-03-01 00:00:00' : 'p7d1548qj_idc.fits', #Parameters for geometric distortion correction ehrcpre_idc.fits renamed to n3b10470j_idc.fits on Mar, 11582, Jul 13 2005 03:53PM

@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'USEAFTER'),
-    'reftype' : 'PCTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'PCTAB',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'USEAFTER'),
 }, {
     ('CCD', 'SPECTROSCOPIC', 'G230LB') : {
         '1997-01-01 00:00:00' : 'q541740lo_pct.fits', #Sensitivity for diff. extractions heights UPDATED 99Dec to add 52X0.5 aperture for G230LB, 11628, May 04 2006 05:55PM

@@ -1,8 +1,8 @@
 {
-    'parkey' : ('USEAFTER',),
-    'reftype' : 'APDSTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'APDSTAB',
+    'parkey' : ('USEAFTER',),
 }, {
     () : {
         '1996-10-01 00:00:00' : 'o2o1431ko_apd.fits', #Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 11352, Feb 25 2004 06:09PM

@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'GEOFILE',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'GEOFILE',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('FUV',) : {
         '2003-10-10 00:00:00' : 's7g1700cl_geo.fits', #Created using data taken in early October, 2003. fuv_geo.fits renam, 11876, Jul 16 2008 05:09PM

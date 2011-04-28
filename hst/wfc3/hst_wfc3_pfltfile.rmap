@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2', 'USEAFTER'),
-    'reftype' : 'PFLTFILE',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'PFLTFILE',
+    'parkey' : ('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2', 'USEAFTER'),
 }, {
     ('IR', 'CLEAR', 'NOT PRESENT', 'NOT PRESENT') : {
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits', #Unity PFLT for calwf3 test, 11317, Jan 09 2004 06:21PM

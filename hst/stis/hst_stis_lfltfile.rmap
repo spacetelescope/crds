@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*APERTURE', '*CENWAVE', 'USEAFTER'),
-    'reftype' : 'LFLTFILE',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'LFLTFILE',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*APERTURE', '*CENWAVE', 'USEAFTER'),
 }, {
     ('CCD', 'IMAGING', 'MIRVIS', '0.05X29', '*') : {
         '1996-10-01 00:00:00' : 'jaj1058ho_lfl.fits', #CCD MIRVIS Clear Aperture Low-Order Flat This CCD low-order flat was created from the, 10531, Oct 19 1999 03:15PM

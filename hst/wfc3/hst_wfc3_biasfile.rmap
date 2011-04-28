@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY', 'USEAFTER'),
-    'reftype' : 'BIASFILE',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'BIASFILE',
+    'parkey' : ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY', 'USEAFTER'),
     'substitutions' : {
         'APERTURE' : {
             'FULLFRAME_2AMP' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER'),

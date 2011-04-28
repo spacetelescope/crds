@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'MDRIZTAB',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'MDRIZTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('HRC',) : {
         '1991-01-01 00:00:00' : 'ub215378j_mdz.fits', #Exact copy of s940253nj with runfile column set to (blank)--------- acs_hrc_mdz.fits renamed to o781, 12223, Nov 02 2010 03:40PM

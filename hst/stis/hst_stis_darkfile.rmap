@@ -1,8 +1,8 @@
 {
-    'parkey' : ('*DETECTOR', '*CCDAMP', '*CCDGAIN', 'USEAFTER'),
-    'reftype' : 'DARKFILE',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'DARKFILE',
+    'parkey' : ('*DETECTOR', '*CCDAMP', '*CCDGAIN', 'USEAFTER'),
 }, {
     ('CCD', 'A', '1.0') : {
         '2009-12-02 00:00:00' : 'tcg1733ko_drk.fits', #superdark created from proposal 11844------------------------------ Created on December 15, 2009 using t, 12123, Dec 16 2009 05:39PM

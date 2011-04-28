@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'SDCTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'SDCTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1996-10-01 00:00:00' : 'obm1723lo_sdc.fits', #New cross disp. plate scales for first order modes Copy of previous ccd sdc with corrected value for CDE, 11513, Nov 22 2004 09:52PM

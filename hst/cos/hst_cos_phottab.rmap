@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-    'reftype' : 'PHOTTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'PHOTTAB',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }, {
     ('FUV', 'SPECTROSCOPIC') : {
         '1996-10-01 00:00:00' : 's7g1700kl_phot.fits', #from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM

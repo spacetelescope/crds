@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'PHATAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'PHATAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('FUV',) : {
         '1996-10-01 00:00:00' : 's7g1700jl_pha.fits', #from TV2003 data Modified to account for chamge of coordinates, 11876, Jul 16 2008 05:09PM

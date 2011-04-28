@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'CRREJTAB',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'CRREJTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('IR',) : {
         '2001-01-01 00:00:00' : 'n9i1435ji_crr.fits', #Test file for calwf3, 11249, Sep 18 2003 02:40PM

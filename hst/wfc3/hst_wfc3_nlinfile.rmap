@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'NLINFILE',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
+    'reftype' : 'NLINFILE',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('IR',) : {
         '2001-01-01 00:00:00' : 's9c1542fi_lin.fits', #Null file for calwf3 testing, 11915, Sep 12 2008 03:46PM

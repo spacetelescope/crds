@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'XTRACTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'XTRACTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1996-10-01 00:00:00' : 'n7p1031qo_1dx.fits', #Analysis from prop. 7094 New measurements of extraction slit parameters for the first-or, 11220, Jul 28 2003 12:07PM

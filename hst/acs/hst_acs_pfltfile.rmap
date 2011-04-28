@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'USEAFTER'),
-    'reftype' : 'PFLTFILE',
     'observatory' : 'HST',
     'instrument' : 'ACS',
+    'reftype' : 'PFLTFILE',
+    'parkey' : ('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'USEAFTER'),
 }, {
     ('HRC', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%') : {
         '1997-01-01 00:00:00' : 'n4t1530aj_pfl.fits', ## *** S/HRC f250w flat without dust mote, 11187, May 01 2003 12:30PM

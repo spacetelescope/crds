@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-    'reftype' : 'WCPTAB',
     'observatory' : 'HST',
     'instrument' : 'COS',
+    'reftype' : 'WCPTAB',
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }, {
     ('FUV', 'SPECTROSCOPIC') : {
         '1996-10-01 00:00:00' : 't2314311l_wcp.fits', #from TV2003 data See section 13 of Generating the COS Reference Files, July 19, 2007., 11982, Feb 03 2009 02:34PM

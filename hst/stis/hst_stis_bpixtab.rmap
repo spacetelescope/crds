@@ -1,8 +1,8 @@
 {
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-    'reftype' : 'BPIXTAB',
     'observatory' : 'HST',
     'instrument' : 'STIS',
+    'reftype' : 'BPIXTAB',
+    'parkey' : ('DETECTOR', 'USEAFTER'),
 }, {
     ('CCD',) : {
         '1996-10-01 00:00:00' : 'h1v11475o_bpx.fits', #Prel. Ground Calib HISTORY ccd_drk.fits dark rate gt 0.02 c/s/p fla, 10018, Jan 31 1997 04:51PM
