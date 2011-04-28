@@ -2,6 +2,7 @@ import sys
 import os
 import StringIO
 import os.path
+import base64
 
 import crds.rmap as rmap
 import crds.log as log
@@ -52,7 +53,9 @@ def get_reference_data(context, reference):
     """
     S = ServiceProxy(URL)
     data = S.get_reference_data(context, reference)
-    return data["result"]
+    if data["error"]:
+        raise RuntimeError("Service failure: " + repr(data["error"]))
+    return base64.b64decode(data["result"])
     
 def get_reference_names(context="hst.pmap"):
     """Get the complete set of reference file basenames required
@@ -73,12 +76,12 @@ def get_best_refs(header, context="hst.pmap"):
 
 # ==============================================================================
 
-def retrieve_mappings(context, mapping_names):
+def retrieve_mappings(context, mapping_names, ignore_cache=False):
     observatory = rmap.context_to_observatory(context)
     locator = rmap.get_object("crds." + observatory + ".locate.locate_mapping")
     for name in mapping_names:
         localpath = locator(name)
-        if not os.path.exists(localpath):
+        if (not os.path.exists(localpath)) or ignore_cache:
             log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
             mapping_contents = get_mapping_data(context, name)
             utils.ensure_dir_exists(localpath)
@@ -86,14 +89,14 @@ def retrieve_mappings(context, mapping_names):
         else:
             log.verbose("Cache hit ", repr(name), "at", repr(localpath))
             
-def retrieve_references(context, reference_names):
+def retrieve_references(context, reference_names, ignore_cache=False):
     observatory = rmap.context_to_observatory(context)
     if isinstance(reference_names, dict):
         reference_names = reference_names.values()
     locator = rmap.get_object("crds." + observatory + ".locate.locate_reference")
     for name in reference_names:
         localpath = locator(name)
-        if not os.path.exists(localpath):
+        if (not os.path.exists(localpath)) or ignore_cache:
             log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
             reference_contents = get_reference_data(context, name)
             utils.ensure_dir_exists(localpath)

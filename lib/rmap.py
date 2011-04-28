@@ -393,6 +393,10 @@ def write_rmap_dict(file, the_dict, indent_level=1):
 PIPELINE_CONTEXTS = {}
 
 def context_to_observatory(context_file):
+    """
+    >>> context_to_observatory('hst_acs_biasfile.rmap')
+    'hst'
+    """
     return context_file.split("_")[0].split(".")[0]
 
 def get_pipeline_context(context_file):
