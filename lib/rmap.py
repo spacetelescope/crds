@@ -8,7 +8,7 @@ import re
 import ast
 import json
 
-from crds import log, timestamp
+from crds import log, timestamp, utils
 from crds.config import CRDS_ROOT
 
 # ===================================================================
@@ -141,11 +141,11 @@ class Rmap(object):
         return cls("<json>", header, data, **header)
     
     def locate_mapping(self, basename):
-        locate = get_object("crds." + self.observatory + ".locate.locate_mapping")
+        locate = utils.get_object("crds." + self.observatory + ".locate.locate_mapping")
         return locate(basename)
     
     def locate_reference(self, basename):
-        locate = get_object("crds." + self.observatory + ".locate.locate_reference")
+        locate = utils.get_object("crds." + self.observatory + ".locate.locate_reference")
         return locate(basename)
     
 # ===================================================================
@@ -333,7 +333,7 @@ class ReferenceRmap(Rmap):
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
-        cls = get_object(header.get("class", "crds.selectors.ReferenceSelector"))
+        cls = utils.get_object(header.get("class", "crds.selectors.ReferenceSelector"))
         self._selector = cls(header, data)
 
     def validate_file_load(self):
@@ -347,18 +347,6 @@ class ReferenceRmap(Rmap):
     def reference_names(self):
         return self._selector.reference_names()
     
-# ===================================================================
-
-def get_object(dotted_name):
-    """Import the given `dotted_name` and return the object."""
-    parts = dotted_name.split(".")
-    pkgpath = ".".join(parts[:-1])
-    cls = parts[-1]
-    namespace = {}
-    exec "from " + pkgpath + " import " + cls in namespace, namespace
-    return namespace[cls]
-
-
 # ===================================================================
 
 def write_rmap(filename, header, data):
@@ -392,19 +380,12 @@ def write_rmap_dict(file, the_dict, indent_level=1):
 
 PIPELINE_CONTEXTS = {}
 
-def context_to_observatory(context_file):
-    """
-    >>> context_to_observatory('hst_acs_biasfile.rmap')
-    'hst'
-    """
-    return context_file.split("_")[0].split(".")[0]
-
 def get_pipeline_context(context_file):
     """Recursively load the specified `context_file` and add it to
     the global pipeline cache.
     """
     if context_file not in PIPELINE_CONTEXTS:
-        observatory = context_to_observatory(context_file)
+        observatory = utils.context_to_observatory(context_file)
         filepath = "/".join([CRDS_ROOT, observatory, context_file])
         PIPELINE_CONTEXTS[context_file] = PipelineContext.from_file(filepath, observatory)
     return PIPELINE_CONTEXTS[context_file]

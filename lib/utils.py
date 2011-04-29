@@ -25,3 +25,24 @@ def ensure_dir_exists(fullpath):
     """
     create_path(os.path.dirname(fullpath))
 
+
+# ===================================================================
+
+def context_to_observatory(context_file):
+    """
+    >>> context_to_observatory('hst_acs_biasfile.rmap')
+    'hst'
+    """
+    return context_file.split("_")[0].split(".")[0]
+
+
+# ===================================================================
+
+def get_object(dotted_name):
+    """Import the given `dotted_name` and return the object."""
+    parts = dotted_name.split(".")
+    pkgpath = ".".join(parts[:-1])
+    cls = parts[-1]
+    namespace = {}
+    exec "from " + pkgpath + " import " + cls in namespace, namespace
+    return namespace[cls]
