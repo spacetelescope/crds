@@ -49,6 +49,12 @@ def locate_reference(reference):
     sref = locate_server_reference(reference)
     return sref.replace(CDBS, CRDS_REFPATH)
 
+def reference_url(crds_server_url, reference):
+    """Return a file URL which can be used to retrieve the specified `reference`.
+    """
+    path = locate_server_reference(reference)
+    return path.replace(CDBS, crds_server_url + "/static/references/hst")
+
 # =======================================================================
 
 CRDS_MAPPATH = os.environ.get("CRDS_MAPPATH", HERE)
@@ -67,3 +73,9 @@ def locate_mapping(mapping):
     else:
         raise ValueError("Unknown mapping type for " + repr(mapping))
     
+def mapping_url(crds_server_url, mapping):
+    """Return a file URL which can be used to retrieve the specified `mapping`.
+    """
+    path = locate_mapping(mapping)
+    return path.replace(CRDS_MAPPATH, crds_server_url + "/static/mappings/hst")
+

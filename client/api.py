@@ -7,6 +7,7 @@ import os
 import os.path
 import base64
 import re
+import urllib2
 
 import crds.log as log
 import crds.utils as utils
@@ -34,6 +35,11 @@ set_crds_server(URL)
 
 # ==============================================================================
 
+def get_mapping_url(pipeline_context, mapping):
+    """Returns a URL for the specified pmap, imap, or rmap file.
+    """
+    return S.get_mapping_url(pipeline_context, mapping)
+    
 def get_mapping_data(pipeline_context, mapping):
     """Returns the contents of the specified pmap, imap, or rmap file
     as a string.
@@ -47,6 +53,11 @@ def get_mapping_names(pipeline_context):
     """
     return S.get_mapping_names(pipeline_context)
 
+def get_reference_url(pipeline_context, reference):
+    """Returns a URL for the specified reference file.
+    """
+    return S.get_reference_url(pipeline_context, reference)
+    
 def get_reference_data(pipeline_context, reference):
     """Returns the contents of the specified reference file as a string.
     """
@@ -70,9 +81,15 @@ class FileCacher(object):
     """FileCacher is an abstract base class which gets remote files
     with simple names into a local cache.
     """
-    def _transfer_to_local_file(self, pipeline_context, name, localpath):   
+    def _transfer_to_local_file_rpc(self, pipeline_context, name, localpath):   
         utils.ensure_dir_exists(localpath)
         contents = self._get_data(pipeline_context, name)
+        open(localpath,"w+").write(contents)
+
+    def _transfer_to_local_file_http(self, pipeline_context, name, localpath):   
+        utils.ensure_dir_exists(localpath)
+        url = self._get_url(pipeline_context, name)
+        contents = urllib2.urlopen(url).read()
         open(localpath,"w+").write(contents)
 
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
@@ -82,37 +99,35 @@ class FileCacher(object):
         """
         if isinstance(names, dict):
             names = names.values()
-        locator = self._get_locator(utils.context_to_observatory(pipeline_context))
         localpaths = {}
         for name in names:
-            localpath = locator(name)
+            localpath = self._locate(pipeline_context, name)
             if (not os.path.exists(localpath)) or ignore_cache:
                 log.verbose("Cache miss. Fetching", repr(name), "to", repr(localpath))
-                self._transfer_to_local_file(pipeline_context, name, localpath)
+                self._transfer_to_local_file_rpc(pipeline_context, name, localpath)
             else:
                 log.verbose("Cache hit", repr(name), "at", repr(localpath))
             localpaths[name] = localpath
         return localpaths
 
+    def _locate(self, pipeline_context, name):
+        return utils.get_object("crds." + utils.context_to_observatory(pipeline_context) + ".locate." + self._locator)(name)
+    
 # ==============================================================================
 
 class MappingCacher(FileCacher):
-    def _get_data(self, pipeline_context, name):
-        return get_mapping_data(pipeline_context, name)
+    _get_data = staticmethod(get_mapping_data)
+    _get_url = staticmethod(get_mapping_url)
+    _locator = "locate_mapping"
     
-    def _get_locator(self, observatory):
-        return utils.get_object("crds." + observatory + ".locate.locate_mapping")
-
 MAPPING_CACHER = MappingCacher()
 
 # ==============================================================================
 
 class ReferenceCacher(FileCacher):
-    def _get_data(self, pipeline_context, name):
-        return get_reference_data(pipeline_context, name)
-    
-    def _get_locator(self, observatory):
-        return utils.get_object("crds." + observatory + ".locate.locate_reference")
+    _get_data = staticmethod(get_reference_data)
+    _get_url = staticmethod(get_reference_url)
+    _locator = "locate_reference"
 
 REFERENCE_CACHER = ReferenceCacher()
 

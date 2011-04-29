@@ -140,13 +140,11 @@ class Rmap(object):
         data = rmap["data"]
         return cls("<json>", header, data, **header)
     
-    def locate_mapping(self, basename):
-        locate = utils.get_object("crds." + self.observatory + ".locate.locate_mapping")
-        return locate(basename)
-    
-    def locate_reference(self, basename):
-        locate = utils.get_object("crds." + self.observatory + ".locate.locate_reference")
-        return locate(basename)
+    @property
+    def locate(self):
+        if not hasattr(self, "_locate"):
+            self._locate = utils.get_object("crds." + self.observatory + ".locate")
+        return self._locate
     
 # ===================================================================
 
