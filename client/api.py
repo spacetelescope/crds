@@ -74,69 +74,70 @@ def get_best_refs(header, context="hst.pmap"):
 
 # ==============================================================================
 
-def _transfer_mapping_to_local_file(mapping,  localpath):
-    utils.ensure_dir_exists(localpath)
-    mapping_contents = get_mapping_data(context, name)
-    open(localpath,"w+").write(mapping_contents)
+class FileCacher(object):
+    def _transfer_to_local_file(name,  localpath):   
+        utils.ensure_dir_exists(localpath)
+        contents = self._get_data(context, name)
+        open(localpath,"w+").write(mapping_contents)
 
-def retrieve_mappings(context, mapping_names, ignore_cache=False):
-    """Given a list of basename `mapping_names` which are pertinent to the given
-    pipeline `context`,   cache the mappings locally where they can be used
-    by CRDS.
-    """
-    observatory = rmap.context_to_observatory(context)
-    locator = rmap.get_object("crds." + observatory + ".locate.locate_mapping")
-    localpaths = {}
-    for name in mapping_names:
-        localpath = locator(name)
-        if (not os.path.exists(localpath)) or ignore_cache:
-            log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
-            _transfer_mapping_to_local_file(name, localpath)
-        else:
-            log.verbose("Cache hit ", repr(name), "at", repr(localpath))
+    def get_local_files(self, context, names, ignore_cache=False):
+        """Given a list of basename `mapping_names` which are pertinent to the given
+        pipeline `context`,   cache the mappings locally where they can be used
+        by CRDS.
+        """
+        if isinstance(names, dict):
+            names = names.values()
+        locator = self._get_locator(rmap.context_to_observatory(context))
+        localpaths = {}
+        for name in names:
+            localpath = locator(name)
+            if (not os.path.exists(localpath)) or ignore_cache:
+                log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
+                self._transfer_to_local_file(name, localpath)
+            else:
+                log.verbose("Cache hit ", repr(name), "at", repr(localpath))
         localpaths[name] = localpath
-    return localpaths
+        return localpaths
 
-def _transfer_reference_to_local_file(mapping,  localpath):
-    utils.ensure_dir_exists(localpath)
-    mapping_contents = get_reference_data(context, name)
-    open(localpath,"w+").write(mapping_contents)
+# ==============================================================================
 
-def retrieve_references(context, reference_names, ignore_cache=False):
-    """Given a list of basename `reference_names` which are pertinent to the given
-    pipeline `context`,   cache the references locally where they can be used
-    by applications.
-    """
-    observatory = rmap.context_to_observatory(context)
-    if isinstance(reference_names, dict):
-        reference_names = reference_names.values()
-    locator = rmap.get_object("crds." + observatory + ".locate.locate_reference")
-    localpaths = {}
-    for name in reference_names:
-        localpath = locator(name)
-        if (not os.path.exists(localpath)) or ignore_cache:
-            log.verbose("Cache miss. Fetching ", repr(name), "to", repr(localpath))
-            _transfer_reference_to_local_file(name, localpath)
-        else:
-            log.verbose("Cache hit ", repr(name), "at", repr(localpath))
-        localpaths[name] = localpath
-    return localpaths
- 
-def determine_and_cache_mappings(context, ignore_cache=False):
+class MappingCacher(FileCacher):
+    def _get_data(self, context, name):
+        return get_mapping_data(context, name)
+    
+    def _get_locator(self, observatory):
+        return rmap.get_object("crds." + observatory + ".locate.locate_mapping")
+
+MAPPING_CACHER = MappingCacher()
+
+# ==============================================================================
+
+class ReferenceCacher(FileCacher):
+    def _get_data(self, context, name):
+        return get_reference_data(context, name)
+    
+    def _get_locator(self, observatory):
+        return rmap.get_object("crds." + observatory + ".locate.locate_reference")
+
+REFERENCE_CACHER = ReferenceCacher()
+
+# ==============================================================================
+
+def cache_mappings(context, ignore_cache=False):
     """Given a pipeline `context`, determine the closure of CRDS mappings and cache them
     on the local file system.
     
     Returns:   { mapping_basename :   mapping_local_filepath ... }   
     """
     mappings = get_mapping_names(context)
-    return retrieve_mappings(mappings, ignore_cache=ignore_cache)
+    return MAPPING_CACHER.get_local_files(context, mappings, ignore_cache=ignore_cache)
     
-def determine_and_cache_references(context, header, ignore_cache=False:
+def cache_references(context, header, ignore_cache=False):
     """Given a pipeline `context` and dataset `header` union, determine the appropriate
     set of reference files and cache them on the local file system.   
     
     Returns:   { reference_keyword :   reference_local_filepath ... }   
     """
     bestrefs = get_best_refs(context, header)
-    return retrieve_references(context, bestrefs, ignore_cache=ignore_cache)
+    return REFRENCE_CACHER.get_local_files(context, bestrefs, ignore_cache=ignore_cache)
     
