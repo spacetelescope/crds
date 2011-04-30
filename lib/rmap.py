@@ -390,11 +390,13 @@ def get_pipeline_context(context_file):
 
 # ===================================================================
 
-def get_best_refs(header, pcontext_file="hst.pmap", date=None):
-    context = get_pipeline_context(pcontext_file)
-    return context.get_best_refs(header, date)
+def get_best_refs(context_file, header):
+    """Compute the best references for `header` for the given CRDS `context_file`.   This
+    is a local computation using local rmaps and CPU resources.
+    """
+    ctx = get_pipeline_context("hst.pmap")
+    return ctx.get_best_refs(header)
 
-# ===================================================================
 
 def test():
     """Run module doctests."""

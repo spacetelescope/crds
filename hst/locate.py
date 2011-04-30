@@ -1,4 +1,7 @@
-"""This provides functions which determine and manage the location of reference files.
+"""This module provides functions which determine and manage the location of reference files
+and mappings.   Generally files are referred to by their basename but must be cached
+or loaded from some fully specified path.   This module determines those paths in a
+project specific way for HST.
 """
 import os.path
 import crds.pysh as pysh

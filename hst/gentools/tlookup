@@ -10,13 +10,20 @@ import pyfits
 import crds.hst.gentools.lookup as lookup
 import crds.log as log
 import crds.rmap as rmap
+import crds.client.api as api
 
 MISMATCHES = {}
 
 def test_references(fitsname):
+    """Compute best references for `fitsname` and compare to the reference
+    selections aready recorded in its header.   If there is no comparison value
+    in the header,  consider that reference "not applicable" and ignore any
+    failures attempting to compute it.
+    """
     header = lookup._get_header_union(fitsname)
-    refs = rmap.get_best_refs(header, observatory="hst")
-    # header = pyfits.getheader(fitsname)
+
+    refs = rmap.get_best_refs("hst.pmap", header)
+
     mismatches = 0
     for filekind in refs:
         crds, hist = None, None
@@ -70,7 +77,7 @@ if __name__ == "__main__":
     if SAVE:
         sys.argv.remove("--save")
     lookup.load_header_cache()
-    rmap.get_pipeline_context("hst","hst.pmap")   # pre-cache the bestref stuff
+    rmap.get_pipeline_context("hst.pmap")   # pre-cache the bestref stuff
     if "--profile" in sys.argv:
         sys.argv.remove("--profile")
         cProfile.run("main()")

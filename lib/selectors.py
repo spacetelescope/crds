@@ -306,7 +306,7 @@ class MatchingSelector(Selector):
         return [x[1][1] for x in sorted(self._selections.items())]
 
     def get_choice(self, selection, header):
-        raise NotImplemented("MatchingSelector isn't a uniform subclass.")
+        raise NotImplementedError("MatchingSelector isn't a uniform subclass.")
 
     def choose(self, header):
         """Match the specified `header` to this selector's selections and
@@ -375,15 +375,11 @@ class MatchingSelector(Selector):
             log.verbose("Matched", repr(group),"returning",repr(selector))
             yield selector
 
-    def get_value_map(self, header=None):
+    def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
         """
-        if header is None:
-            parameters = self._parameters
-        else:
-            parameters = self.get_parameters(header)
         map = {}
-        for i, fitsvar in enumerate(parameters):
+        for i, fitsvar in enumerate(self._parameters):
             map[fitsvar] = set()
             for key in self.keys():
                 values = key[i]
@@ -466,8 +462,8 @@ class UseAfterSelector(Selector):
         if len(selections) == 0:
             raise UseAfterError("No selection with time < " + repr(date))
         elif len(selections) > 1:
-            left = selections[:len(selections)/2]
-            right = selections[len(selections)/2:]
+            left = selections[:len(selections)//2]
+            right = selections[len(selections)//2:]
             compared = right[0][0]
             log.verbose("...against", compared, eol="")
             if date >= compared:
