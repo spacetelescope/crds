@@ -33,8 +33,7 @@ def context_to_observatory(context_file):
     >>> context_to_observatory('hst_acs_biasfile.rmap')
     'hst'
     """
-    return context_file.split("_")[0].split(".")[0]
-
+    return os.path.basename(context_file).split("_")[0].split(".")[0]
 
 # ===================================================================
 
@@ -46,3 +45,4 @@ def get_object(dotted_name):
     namespace = {}
     exec "from " + pkgpath + " import " + cls in namespace, namespace
     return namespace[cls]
+

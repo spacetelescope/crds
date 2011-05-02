@@ -1,7 +1,7 @@
 #! /usr/bin/env pysh
 #-*-python-*-
 
-from crds.hst.gentools.gen_file_rmap import locate_file
+from crds.hst.locate import locate_reference
 
-path1 = locate_file(sys.argv[1])
+path1 = locate_reference(sys.argv[1])
 % fhdr -a ${path1}

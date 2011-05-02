@@ -115,20 +115,52 @@ class Rmap(object):
         return re.match("^\((\s*'[A-Za-z0-9_.:/ \*\%\-]*',?\s*)*\),?$", value)
 
     @classmethod
-    def from_file(cls, fname, *args, **keys):
-        cls.check_file_format(fname)
+    def from_file(cls, basename, *args, **keys):
+        """Load a mapping file `basename` and do syntax and basic validation.
+        """
+        # Convert the mapping basename into an absolute path by first looking
+        # up the "locate" module for the observatory and then calling locate_mapping().
+        observatory = utils.context_to_observatory(basename)
+        locate = utils.get_object("crds." + observatory + ".locate")
+        where = locate.locate_mapping(basename)
+        
+        cls.check_file_format(where)
         try:
-            header, data = ast.literal_eval(open(fname).read())
+            header, data = ast.literal_eval(open(where).read())
         except Exception, exc:
-            raise RmapError("Can't load", cls.__name__, "file:", repr(os.path.basename(fname)), str(exc))
-        rmap = cls(fname, header, data, *args, **keys)
+            raise RmapError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
+        rmap = cls(basename, header, data, *args, **keys)
         rmap.validate_file_load()
         return rmap
     
     def validate_file_load(self):
         """Validate assertions about the contents of this rmap."""
-        pass
+        for name in self.check_attrs:
+            self.check_header_attr(name)
+#        if "parkey" not in self.header:
+#            raise RmapError("Missing header keyword: 'parkey'.")
     
+    def missing_references(self):
+        """Get the references mentioned by the closure of this mapping but not known to CRDS."""
+        return [ ref for ref in self.reference_names() if not self.locate.reference_exists(ref)]
+
+    def missing_mappings(self):
+        """Get the references mentioned by the closure of this mapping but not known to CRDS."""
+        return [ mapping for mapping in self.mapping_names() if not self.locate.mapping_exists(mapping)]
+
+    def check_header_attr(self, name):
+        """Verify that the mapping header keyword `name` exists and matches self's attribute value.
+        """
+        attr = getattr(self, name)
+        if not attr:   # skip empty-strings as don't care
+            return
+        try:
+            hdr = self.header[name].lower()
+        except KeyError:
+            raise RmapError("Missing header keyword:", repr(name))
+        if hdr != attr:
+            raise RmapError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
+            
     def to_json(self):
         rmap = dict(header=self.header, data=self.data)
         return json.dumps(keys_to_strings(rmap))
@@ -180,13 +212,12 @@ def strings_to_keys(d):
 {
     'observatory':'HST',
     'parkey' : ('INSTRUME'),
-    'class' : 'crds.PipelineContext',
 }, {
-    'ACS':'icontext_hst_acs_00023.con',
-    'COS':'icontext_hst_cos_00023.con', 
-    'STIS':'icontext_hst_stis_00023.con',
-    'WFC3':'icontext_hst_wfc3_00023.con',
-    'NICMOS':'icontext_hst_nicmos_00023.con',
+    'ACS': 'hst_acs_00023.imap',
+    'COS':'hst_cos_00023.imap', 
+    'STIS':'hst_stis_00023.imap',
+    'WFC3':'hst_wfc3_00023.imap',
+    'NICMOS':'hst_nicmos_00023.imap',
 }
 """
 
@@ -196,14 +227,15 @@ class PipelineContext(Rmap):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
-    def __init__(self, filename, header, data, observatory):
+    check_attrs = ["observatory"]
+
+    def __init__(self, filename, header, data, observatory=""):
         Rmap.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.selections = {}
         for instrument, imap in data.items():
             instrument = instrument.lower()
-            filepath = "/".join([CRDS_ROOT, self.observatory, instrument, imap])
-            self.selections[instrument] = InstrumentContext.from_file(filepath, observatory, instrument)
+            self.selections[instrument] = InstrumentContext.from_file(imap, observatory, instrument)
 
     def get_best_refs(self, header, date=None):
         header = dict(header.items())
@@ -234,21 +266,6 @@ class PipelineContext(Rmap):
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
 
-
-"""
-{
-    'observatory':'HST',
-    'parkey' : ('INSTRUME'),
-    'class' : 'crds.PipelineContext',
-}, {
-    'ACS':'icontext_hst_acs_00023.con',
-    'COS':'icontext_hst_cos_00023.con', 
-    'STIS':'icontext_hst_stis_00023.con',
-    'WFC3':'icontext_hst_wfc3_00023.con',
-    'NICMOS':'icontext_hst_nicmos_00023.con',
-}
-"""
-
 # ===================================================================
 
 """
@@ -256,16 +273,15 @@ class PipelineContext(Rmap):
     'observatory':'HST',
     'instrument': 'ACS',
     'parkey' : ('REFTYPE',),
-    'class' : 'crds.InstrumentContext',
 }, {
-    'BIAS':  'rmap_hst_acs_bias_0021.rmap',
-    'CRREJ': 'rmap_hst_acs_crrej_0003.rmap',
-    'CCD':   'rmap_hst_acs_ccd_0002.rmap',
-    'IDC':   'rmap_hst_acs_idc_0005.rmap',
-    'LIN':   'rmap_hst_acs_lin_0002.rmap',
-    'DISTXY':'rmap_hst_acs_distxy_0004.rmap',
-    'BPIX':  'rmap_hst_acs_bpic_0056.rmap',
-    'MDRIZ': 'rmap_hst_acs_mdriz_0001.rmap',
+    'BIAS':  'hst_acs_bias_0021.rmap',
+    'CRREJ': 'hst_acs_crrej_0003.rmap',
+    'CCD':   'hst_acs_ccd_0002.rmap',
+    'IDC':   'hst_acs_idc_0005.rmap',
+    'LIN':   'hst_acs_lin_0002.rmap',
+    'DISTXY':'hst_acs_distxy_0004.rmap',
+    'BPIX':  'hst_acs_bpic_0056.rmap',
+    'MDRIZ': 'hst_acs_mdriz_0001.rmap',
     ...
 }
 """
@@ -274,16 +290,17 @@ class InstrumentContext(Rmap):
     """An instrument context describes the rmaps associated with each filetype
     of an instrument.
     """
-    def __init__(self, filename, header, data, observatory, instrument):
+    check_attrs = ["observatory","instrument"]
+
+    def __init__(self, filename, header, data, observatory="", instrument=""):
         Rmap.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.instrument = instrument.lower()
         self._selectors = {}
         for reftype, rmap_info in data.items():
-            rmap_ext, rmap_name = rmap_info
-            filepath = "/".join([CRDS_ROOT, self.observatory, self.instrument, rmap_name])
+            _rmap_ext, rmap_name = rmap_info
             self._selectors[reftype] = ReferenceRmap.from_file(
-                filepath, self.observatory, self.instrument, reftype)
+                rmap_name, self.observatory, self.instrument, reftype)
 
     def get_best_ref(self, reftype, header):
         return self._selectors[reftype.lower()].get_best_ref(header)
@@ -326,19 +343,16 @@ class ReferenceRmap(Rmap):
     """ReferenceRmap manages loading the rmap associated with a single reference
     filetype and instantiating an appropriate selector from the rmap header and data.
     """
-    def __init__(self, filename, header, data, observatory, instrument, reftype, **keys):
+    check_attrs = ["observatory","instrument","reftype"]
+    
+    def __init__(self, filename, header, data, observatory="", instrument="", reftype="", **keys):
         Rmap.__init__(self, filename, header, data)
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
         cls = utils.get_object(header.get("class", "crds.selectors.ReferenceSelector"))
         self._selector = cls(header, data)
-
-    def validate_file_load(self):
-        got = self.header["reftype"].lower()
-        if got != self.reftype:
-            raise RmapError("Expected reftype=" + repr(self.reftype), "but got reftype=", repr(got))
-
+        
     def get_best_ref(self, header):
         return self._selector.choose(header)
     
@@ -383,10 +397,22 @@ def get_pipeline_context(context_file):
     the global pipeline cache.
     """
     if context_file not in PIPELINE_CONTEXTS:
-        observatory = utils.context_to_observatory(context_file)
-        filepath = "/".join([CRDS_ROOT, observatory, context_file])
-        PIPELINE_CONTEXTS[context_file] = PipelineContext.from_file(filepath, observatory)
+        PIPELINE_CONTEXTS[context_file] = _load_context(context_file)
     return PIPELINE_CONTEXTS[context_file]
+
+def _load_context(mapping):
+    """Load any of the pipeline, instrument, or reftype `mapping`s
+    from the file system.
+    """
+    observatory = utils.context_to_observatory(mapping)
+    if mapping.endswith(".pmap"):
+        return PipelineContext.from_file(mapping, observatory)
+    elif mapping.endswith(".imap"):
+        return InstrumentContext.from_file(mapping, observatory)
+    elif mapping.endswith(".rmap"):
+        return ReferenceRmap.from_file(mapping, observatory)
+    else:
+        raise ValueError("Unknown mapping extension for " + repr(mapping))
 
 # ===================================================================
 
@@ -394,7 +420,7 @@ def get_best_refs(context_file, header):
     """Compute the best references for `header` for the given CRDS `context_file`.   This
     is a local computation using local rmaps and CPU resources.
     """
-    ctx = get_pipeline_context("hst.pmap")
+    ctx = get_pipeline_context(context_file)
     return ctx.get_best_refs(header)
 
 

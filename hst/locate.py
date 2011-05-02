@@ -20,7 +20,7 @@ def locate_server_reference(ref_filename, cdbs="/grp/hst/cdbs"):
     """
     global CDBS
     CDBS = cdbs
-    if not REFNAME_TO_PATH.keys():
+    if not REFNAME_TO_PATH:
         setup_path_map(cdbs)
     return REFNAME_TO_PATH[ref_filename]
     
@@ -58,6 +58,15 @@ def reference_url(crds_server_url, reference):
     path = locate_server_reference(reference)
     return path.replace(CDBS, crds_server_url + "/static/references/hst")
 
+def reference_exists(reference):
+    """Return True iff basename `reference` is known/exists in CRDS.
+    """
+    try:
+        where = locate_server_reference(reference)
+    except KeyError:
+        return False
+    return os.path.exists(where)
+
 # =======================================================================
 
 CRDS_MAPPATH = os.environ.get("CRDS_MAPPATH", HERE)
@@ -76,6 +85,20 @@ def locate_mapping(mapping):
     else:
         raise ValueError("Unknown mapping type for " + repr(mapping))
     
+def locate_server_mapping(mapping):
+    """Given basename `mapping`,  return the absolute path of the CRDS mapping 
+    file on the CRDS server.
+    """
+    return locate_mapping(mapping)
+    
+def mapping_exists(mapping):
+    """Return True iff the basename `mapping` is known as a mapping to CRDS."""
+    try:
+        where = locate_server_mapping(mapping)
+    except KeyError:
+        return False
+    return os.path.exists(where)
+
 def mapping_url(crds_server_url, mapping):
     """Return a file URL which can be used to retrieve the specified `mapping`.
     """
