@@ -19,19 +19,19 @@ Filemap = collections.namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
-class RmapError(Exception):
+class MappingError(Exception):
     """Exception in load_rmap."""
     def __init__(self, *args):
         Exception.__init__(self, " ".join([str(x) for x in args]))
         
-class FormatError(RmapError):
+class FormatError(MappingError):
     "Something wrong with context or rmap file format."
     pass
 
 # ===================================================================
 
-class Rmap(object):
-    """An Rmap is the abstract baseclass for loading anything with the
+class Mapping(object):
+    """An Mapping is the abstract baseclass for loading anything with the
     general structure of a header followed by data.
     """
     def __init__(self, filename, header, data, **keys):
@@ -128,7 +128,7 @@ class Rmap(object):
         try:
             header, data = ast.literal_eval(open(where).read())
         except Exception, exc:
-            raise RmapError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
+            raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
         rmap = cls(basename, header, data, *args, **keys)
         rmap.validate_file_load()
         return rmap
@@ -138,7 +138,7 @@ class Rmap(object):
         for name in self.check_attrs:
             self.check_header_attr(name)
 #        if "parkey" not in self.header:
-#            raise RmapError("Missing header keyword: 'parkey'.")
+#            raise MappingError("Missing header keyword: 'parkey'.")
     
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
@@ -157,9 +157,9 @@ class Rmap(object):
         try:
             hdr = self.header[name].lower()
         except KeyError:
-            raise RmapError("Missing header keyword:", repr(name))
+            raise MappingError("Missing header keyword:", repr(name))
         if hdr != attr:
-            raise RmapError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
+            raise MappingError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
             
     def to_json(self):
         rmap = dict(header=self.header, data=self.data)
@@ -223,14 +223,14 @@ def strings_to_keys(d):
 
 
 
-class PipelineContext(Rmap):
+class PipelineContext(Mapping):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
     check_attrs = ["observatory"]
 
     def __init__(self, filename, header, data, observatory=""):
-        Rmap.__init__(self, filename, header, data)
+        Mapping.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.selections = {}
         for instrument, imap in data.items():
@@ -286,20 +286,20 @@ class PipelineContext(Rmap):
 }
 """
 
-class InstrumentContext(Rmap):
+class InstrumentContext(Mapping):
     """An instrument context describes the rmaps associated with each filetype
     of an instrument.
     """
     check_attrs = ["observatory","instrument"]
 
     def __init__(self, filename, header, data, observatory="", instrument=""):
-        Rmap.__init__(self, filename, header, data)
+        Mapping.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.instrument = instrument.lower()
         self._selectors = {}
         for reftype, rmap_info in data.items():
             _rmap_ext, rmap_name = rmap_info
-            self._selectors[reftype] = ReferenceRmap.from_file(
+            self._selectors[reftype] = ReferenceMapping.from_file(
                 rmap_name, self.observatory, self.instrument, reftype)
 
     def get_best_ref(self, reftype, header):
@@ -339,14 +339,14 @@ class InstrumentContext(Rmap):
     
 # ===================================================================
 
-class ReferenceRmap(Rmap):
-    """ReferenceRmap manages loading the rmap associated with a single reference
+class ReferenceMapping(Mapping):
+    """ReferenceMapping manages loading the rmap associated with a single reference
     filetype and instantiating an appropriate selector from the rmap header and data.
     """
     check_attrs = ["observatory","instrument","reftype"]
     
     def __init__(self, filename, header, data, observatory="", instrument="", reftype="", **keys):
-        Rmap.__init__(self, filename, header, data)
+        Mapping.__init__(self, filename, header, data)
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
@@ -410,7 +410,7 @@ def _load_context(mapping):
     elif mapping.endswith(".imap"):
         return InstrumentContext.from_file(mapping, observatory)
     elif mapping.endswith(".rmap"):
-        return ReferenceRmap.from_file(mapping, observatory)
+        return ReferenceMapping.from_file(mapping, observatory)
     else:
         raise ValueError("Unknown mapping extension for " + repr(mapping))
 

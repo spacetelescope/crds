@@ -4,13 +4,13 @@ import sys
 import os.path
 import log
 
-import rmap
+import crds.rmap as rmap
 
 def validate_context(fname):
     log.info("Validating context:", repr(fname))
     try:
         header, data = rmap.load_rmap(fname, "CONTEXT")
-    except rmap.RmapError, e:
+    except rmap.MappingError, e:
         log.error()
         return
 
@@ -19,7 +19,7 @@ def validate_context(fname):
     for reftype, (ext, mapname) in data.items():
         try:
             validate_mapping_file(filepath +"/" + mapname, reftype)
-        except rmap.RmapError, e:
+        except rmap.MappingError, e:
             log.error(repr(reftype))
 
 def validate_mapping_file(fname, reftype=None):
