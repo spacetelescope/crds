@@ -1,7 +1,8 @@
 """This module provides functions which determine and manage the location of reference files
-and mappings.   Generally files are referred to by their basename but must be cached
+and mappings for HST.   Generally files are referred to by their basename but must be cached
 or loaded from some fully specified path.   This module determines those paths in a
-project specific way for HST.
+project specific way for HST.   Additionally,  this module provides functions for determining
+URLs from which references and mappings can be downloaded.
 """
 import os.path
 import crds.pysh as pysh
@@ -11,15 +12,19 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
 
-CDBS = None
+# CDBS_REFPATH is the location of the master server-side copy of the reference
+# file directory tree.
+CDBS_REFPATH = "/grp/hst/cdbs"
+
+# REFNAM_TO_PATH is a mapping from { reference_basename : reference_absolute_path }
 REFNAME_TO_PATH = {}
 
-def locate_server_reference(ref_filename, cdbs="/grp/hst/cdbs"):
+def locate_server_reference(ref_filename, cdbs=CDBS_REFPATH):
     """Effectively,  search the given  `cdbs` filetree for `ref_filename`
     and return the absolute path.
     """
-    global CDBS
-    CDBS = cdbs
+    global CDBS_REFPATH
+    CDBS_REFPATH = cdbs
     if not REFNAME_TO_PATH:
         setup_path_map(cdbs)
     return REFNAME_TO_PATH[ref_filename]
@@ -44,19 +49,20 @@ def setup_path_map(cdbs="/grp/hst/cdbs", rebuild_cache=False):
 
 # =======================================================================
 
+# CRDS_REFPATH is the path to the local/client copy of reference files.
 CRDS_REFPATH = os.environ.get("CRDS_REFPATH", os.path.join(HERE, "references"))
 
 def locate_reference(reference):
     """Return the absolute path for the client-side copy of a reference file.
     """
     sref = locate_server_reference(reference)
-    return sref.replace(CDBS, CRDS_REFPATH)
+    return sref.replace(CDBS_REFPATH, CRDS_REFPATH)
 
 def reference_url(crds_server_url, reference):
     """Return a file URL which can be used to retrieve the specified `reference`.
     """
     path = locate_server_reference(reference)
-    return path.replace(CDBS, crds_server_url + "/static/references/hst")
+    return path.replace(CDBS_REFPATH, crds_server_url + "/static/references/hst")
 
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.
@@ -69,6 +75,8 @@ def reference_exists(reference):
 
 # =======================================================================
 
+# CRDS_MAPPATH is the location of the client or sever side mapping directory
+# tree,  nominally the package location of crds.<observatory>,  .e.g. crds.hst
 CRDS_MAPPATH = os.environ.get("CRDS_MAPPATH", HERE)
 
 def locate_mapping(mapping):
