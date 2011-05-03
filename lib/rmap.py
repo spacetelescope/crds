@@ -1,5 +1,53 @@
 """This module supports loading all the data components required to make
 a CRDS lookup table for an instrument.
+
+get_pipeline_context loads the closure of the given context file from the
+local CRDS store,  caching the result.
+
+>>> p = get_pipeline_context("hst.pmap")
+
+Mappings round-trip through json OK:
+
+>>> _ = p.to_json()
+>>> p = PipelineContext.from_json(_)
+
+The initial HST pipeline mappings are self-consistent and there are none
+missing:
+
+>>> p.missing_mappings()
+[]
+
+The available HST reference data seems to have a number of ACS 
+references missing relative to the CDBS HTML table dump:
+
+>>> len(p.missing_references())
+88
+
+There are 72 pmap, imap, and rmap files in the entire HST pipeline:
+
+>>> len(p.mapping_names())
+72
+
+There are 5719 reference files known to the initial CRDS mappings scraped
+from the CDBS HTML table dump:
+
+>>> len(p.reference_names())
+5719
+
+>>> i = InstrumentContext.from_file("hst_acs.imap", "hst", "acs")
+>>> _ = i.to_json()
+>>> i = InstrumentContext.from_json(_)
+>>> len(i.mapping_names())
+15
+>>> len(i.reference_names())
+3983
+
+>>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap", "hst", "acs", "biasfile")
+>>> _ = r.to_json()
+>>> r = ReferenceMapping.from_json(_)
+>>> len(r.reference_names())
+729
+
 """
 import os
 import os.path
@@ -129,9 +177,9 @@ class Mapping(object):
             header, data = ast.literal_eval(open(where).read())
         except Exception, exc:
             raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
-        rmap = cls(basename, header, data, *args, **keys)
-        rmap.validate_file_load()
-        return rmap
+        mapping = cls(basename, header, data, *args, **keys)
+        mapping.validate_file_load()
+        return mapping
     
     def validate_file_load(self):
         """Validate assertions about the contents of this rmap."""
@@ -162,7 +210,7 @@ class Mapping(object):
             raise MappingError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
             
     def to_json(self):
-        rmap = dict(header=self.header, data=self.data)
+        rmap = dict(header=self.header, data=self.data, filename=self.filename)
         return json.dumps(keys_to_strings(rmap))
     
     @classmethod
@@ -170,7 +218,8 @@ class Mapping(object):
         rmap = strings_to_keys(json.loads(json_str))
         header = rmap["header"]
         data = rmap["data"]
-        return cls("<json>", header, data, **header)
+        filename = rmap["filename"]
+        return cls(filename, header, data, **header)
     
     @property
     def locate(self):
@@ -229,7 +278,7 @@ class PipelineContext(Mapping):
     """
     check_attrs = ["observatory"]
 
-    def __init__(self, filename, header, data, observatory=""):
+    def __init__(self, filename, header, data, observatory="", **keys):
         Mapping.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.selections = {}
@@ -292,7 +341,7 @@ class InstrumentContext(Mapping):
     """
     check_attrs = ["observatory","instrument"]
 
-    def __init__(self, filename, header, data, observatory="", instrument=""):
+    def __init__(self, filename, header, data, observatory="", instrument="", **keys):
         Mapping.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.instrument = instrument.lower()
