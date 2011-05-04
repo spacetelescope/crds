@@ -1,7 +1,7 @@
 #! /usr/bin/env pysh
 #-*-python-*-
 
-from crds.hst.locate import locate_reference
+import crds.hst.locate as locate
 
-path1 = locate_reference(sys.argv[1])
+path1 = locate.locate_server_reference(sys.argv[1])
 % fhdr -a ${path1}

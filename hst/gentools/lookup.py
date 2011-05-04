@@ -8,7 +8,7 @@ import os.path
 import pyfits
 
 import crds.log as log
-
+import crds.utils as utils
 import crds.hst.gentools.keyval as keyval
 
 # ===================================================================
@@ -22,15 +22,7 @@ def _get_header_union(fname):
         log.verbose("Cache hit:",repr(fname))
         return HEADER_CACHE[fname]
     log.verbose("Cache miss:",repr(fname))
-    union = {}
-    for hdu in pyfits.open(fname):
-        for key in hdu.header:
-            newval = hdu.header[key]
-            if key not in union:
-                union[key] = newval
-            elif union[key] != newval:
-                log.verbose("*** WARNING: Header union collision on", repr(key), repr(union[key]), repr(hdu.header[key]))
-    HEADER_CACHE[fname] = union
+    HEADER_CACHE[fname] = utils.get_header_union(fname)
     return union
 
 def get_header_union(fname):

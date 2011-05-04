@@ -150,7 +150,8 @@ def explode_dictionary(d):
     others, this is a potentially exponential expansion.
 
     >>> explode_dictionary({"foo":"1", "bar":"FR388N, FR423N AND FR462N"})
-    [{'foo': '1', 'bar': 'FR388N'}, {'foo': '1', 'bar': 'FR423N'}, {'foo': '1', 'bar': 'FR462N'}, ]
+    [{'foo': '1', 'bar': 'FR388N'}, {'foo': '1', 'bar': 'FR423N'}, {'foo': '1', 'bar': 'FR462N'}]
+
     """
     return [x for x in _explode_dictionary_items(d.items())]
 

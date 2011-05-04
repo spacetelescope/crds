@@ -46,3 +46,20 @@ def get_object(dotted_name):
     exec "from " + pkgpath + " import " + cls in namespace, namespace
     return namespace[cls]
 
+# ===================================================================
+
+def get_header_union(fname):
+    """Get the union of keywords from all header extensions of `fname`.  In
+    the case of collisions,  keep the first value found as extensions are loaded
+    in numerical order.
+    """
+    import pyfits
+    union = {}
+    for hdu in pyfits.open(fname):
+        for key in hdu.header:
+            newval = hdu.header[key]
+            if key not in union:
+                union[key] = newval
+            elif union[key] != newval:
+                log.verbose("*** WARNING: Header union collision on", repr(key), repr(union[key]), repr(hdu.header[key]))
+    return union

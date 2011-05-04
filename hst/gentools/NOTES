@@ -14,7 +14,9 @@ ACS rmap test results:   6 errors in 107 tests
 pfltfile:
     Custom scraper for file restrictions based on FW*OFFST,  0 -> *
 
-    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy
+    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy based on HISTORY
+    
+    HISTORY   o3u1448lj_pfl.fits renamed to o451214ej_pfl.fits on Apr 5 2004
 
 WARNING[554]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wlq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
 WARNING[561]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
