@@ -180,6 +180,93 @@ class Selector(object):
 
 # ==============================================================================
 
+class Matcher(object):
+    """Matches a single key of a matching tuple to a dataset value.  Every
+    key of a MatchingSelector will have a tuple of corresponding Matchers.
+    """
+    def __init__(self, key):
+        self._key = key
+        
+    def match(self, value):
+        """Return 1 (match),  0 (don't care), or -1 (no match).
+        """
+        pass
+
+    def __repr__(self):
+        return self.__class__.name + "(%s)" % self._key
+        
+class RegexMatcher(Matcher):
+    """
+    >>> m = RegexMatcher("foo")
+    >>> m.match("bar")
+    -1
+    >>> m.match("foo")
+    1
+    """
+    def __init__(self, key):
+        Matcher.__init__(self, key)
+        if key == "*":
+            key = "^.*$"
+        elif isinstance(key, tuple):
+            key = "|".join(["^" + k + "$" for k in key])
+        else:
+            key = "^" + key + "$"
+        self._regex = re.compile(key)
+        
+    def match(self, value):
+        return 1 if self._regex.match(value) else -1
+        
+class InequalityMatcher(Matcher):
+    """
+    >>> m = InequalityMatcher(">1.2")
+    >>> m.match("1.3")
+    1
+    >>> m.match("1.2")
+    -1
+    >>> m.match("-100")
+    -1
+
+    >>> m = InequalityMatcher("<1.2")
+    >>> m.match("1.3")
+    -1
+    >>> m.match("1.2")
+    -1
+    >>> m.match("-100")
+    1
+    """
+    def __init__(self, key):
+        Matcher.__init__(self, key)
+        parts = re.match("^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
+        self._operator = parts.group(1)
+        self._value =  float(parts.group(2))
+        
+    def match(self, value):
+        return { 
+            ">" : lambda m, n :  1 if m > n else -1,
+            "<" : lambda m, n :  1 if m < n else -1,
+            ">=" : lambda m, n :  1 if m >= n else -1,
+            "<=" : lambda m, n :  1 if m <= n else -1,
+         }[self._operator](float(value), self._value)
+
+class WildcardMatcher(Matcher):
+    def __init__(self, key="*"):
+        Matcher.__init__(self, key)
+        
+    def match(self, value):
+        """Always match with "don't care" status."""
+        return 0   
+
+def matcher(key):
+    """Factory for different matchers based on key types."""
+    if isinstance(key, tuple):
+        return RegexMatcher(key)
+    elif key == "*":
+        return WildcardMatcher(key)
+    elif key.startswith((">","<")):
+        return InequalityMatcher(key)
+    else:
+        return RegexMatcher(key)
+
 class MatchingSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching the runtime
     (header) parameters specified as choose() header to the .   MatchingSelector
@@ -231,7 +318,7 @@ class MatchingSelector(Selector):
         selections = self.fix_simple_keys(selections)
         selections = self.do_substitutions(
             selections, substitutions)
-        self._selections = self.get_re_selections(selections)
+        self._selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
 
     def setup_parameters(self, parameters):
@@ -283,20 +370,13 @@ class MatchingSelector(Selector):
         return selections
 
 
-    def get_re_selections(self, mapping):
+    def get_matcher_selections(self, mapping):
         selections = {}
         for keytuple, choice in mapping.items():
-            re_keytuple = []
+            matchers = []
             for key in keytuple:
-                if key == "*":
-                    key = ".*"
-                elif isinstance(key, tuple):
-                    key = "|".join(["^" + k + "$" for k in key])
-                else:
-                    key = "^" + key + "$"
-                re_keytuple.append(re.compile(key))
-            re_keytuple = tuple(re_keytuple)
-            selections[keytuple] = (re_keytuple, choice)
+                matchers.append(matcher(key))
+            selections[keytuple] = (tuple(matchers), choice)
         return selections
 
     def keys(self):
@@ -336,20 +416,21 @@ class MatchingSelector(Selector):
         remaining = dict(self._selections)   # copy
         matches = {}
 
+        for key in remaining.keys():
+            matches[key] = 0
+                
         for i, var in enumerate(self._parameters):
             value = header.get(var, "NOT PRESENT")
             log.verbose("Binding", repr(var), "=", repr(value))
             items = remaining.items()
             required = self._required[var]
-            for key, (re_key, subselectors) in items:
-                if key not in matches:
-                    matches[key] = 0
-                if re_key[i].match(value) and key[i] != "*":  # exact match to non-* is best.
-                    matches[key] -= 1  # Lower weights are better matches
-                elif not required or key[i] == "*":
-                    matches[key] -= 0   # doesn't hurt,  doesn't help
-                else:
-                    del remaining[key]  # doesn't match and required,  deal breaker.
+            for key, (mkey, subselectors) in items:
+                m = mkey[i].match(value)
+                # returns 1 (match), 0 (don't care), or -1 (no match)
+                if m != -1:
+                    matches[key] -= m
+                elif required:
+                    del remaining[key]
 
         candidates = {}
         for key, _junk in remaining.items():
@@ -365,6 +446,8 @@ class MatchingSelector(Selector):
             selectors = [remaining[x][1] for x in group]
             selector = selectors[0]
             if len(group) > 1:
+                log.verbose("Ambigious match error.")
+                raise AmbiguousMatchError("ambiguous match.")
                 if isinstance(selector, Selector):
                     raise AmbiguousMatchError("ambiguous match.")
 #                    log.verbose("Merging candidates", nmatch, repr(group))
