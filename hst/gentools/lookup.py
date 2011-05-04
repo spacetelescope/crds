@@ -22,7 +22,7 @@ def _get_header_union(fname):
         log.verbose("Cache hit:",repr(fname))
         return HEADER_CACHE[fname]
     log.verbose("Cache miss:",repr(fname))
-    HEADER_CACHE[fname] = utils.get_header_union(fname)
+    union = HEADER_CACHE[fname] = utils.get_header_union(fname)
     return union
 
 def get_header_union(fname):

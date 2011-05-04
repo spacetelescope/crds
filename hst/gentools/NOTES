@@ -14,7 +14,7 @@ ACS rmap test results:   6 errors in 107 tests
 pfltfile:
     Custom scraper for file restrictions based on FW*OFFST,  0 -> *
 
-    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy based on HISTORY
+    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy based on HISTORY:
     
     HISTORY   o3u1448lj_pfl.fits renamed to o451214ej_pfl.fits on Apr 5 2004
 
@@ -57,41 +57,4 @@ biasfile:
 darkfile:
 
     122   't3420177i_drk.fits' 's9j15532i_drk.fits'    20177i seems to replace 15532i
-
-==============================================================================================================
-
-Value conditioning notes:
-
-85     WARNING[80]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ycq_raw.fits' 'atodtab' 'NOT FOUND "Key CCDGAIN=2.0 not in valid values (\'0\', \'1\', \'2\', \'4\', \'8\')"' 'kcb1734hj_a2d.fits' 
-
-17     WARNING[1106]: Lookup MISMATCH for '../../testdata/acs/warren/j9hn01vsq_raw.fits' 'dgeofile' 'NOT FOUND "Key FILTER2=* not in valid values (\'CLEAR2L\', \'CLEAR2S\', \'F220W\', \'F330W\', \'F435W\', \'F660N\', \'F814W\', \'N/A\')"' 's5f20000j_dxy.fits'
-
-
-Getting bestref for 'biasfile' 
-Binding 'DETECTOR' = 'UVIS' 
-Binding 'CCDAMP' = 'ABCD' 
-Binding 'CCDGAIN' = '1.5' 
-Binding 'BINAXIS1' = '1.0' 
-Binding 'BINAXIS2' = '1.0' 
-Binding 'APERTURE' = 'UVIS' 
-Binding 'SUBARRAY' = 'F' 
-Candidates [] 
-Match failed. 
-
-     ('UVIS', 'ABCD', '1.5', '1', '1', 'FULLFRAME_4AMP', 'F') : {
-
-
-Getting bestref for 'darkfile' 
-Binding 'DETECTOR' = 'UVIS' 
-Binding 'CCDAMP' = 'B' 
-Binding 'CCDGAIN' = '1.5' 
-Binding 'SAMP_SEQ' = 'undefined' 
-Binding 'SUBTYPE' = 'undefined' 
-Binding 'BINAXIS1' = '1.0' 
-Binding 'BINAXIS2' = '1.0' 
-Candidates [(-1,
-  (('UVIS', 'ABCD', '*', '*', '*', '3', '3'),
-   ('UVIS', 'ABCD', '*', '*', '*', '1', '1'),
-   ('UVIS', 'ABCD', '*', '*', '*', '2', '2')))] 
-Merging candidates -1 (('UVIS', 'ABCD', '*', '*', '*', '3', '3'), ('UVIS', 'ABCD', '*', '*', '*', '1', '1'), ('UVIS', 'ABCD', '*', '*', '*', '2', '2')) 
 

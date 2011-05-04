@@ -56,7 +56,7 @@ KIND_KEYS = {
 #../hst/acs/sources/acs_pfltfile_5.xml --> ('comments', 'delivery_#', 'delivery_date', 'detector', 'file', 'filter_1', 'otfr_start_use_date', 'pedigree', 'use_after')
 #../hst/acs/sources/acs_spottab_0.xml --> ('availability', 'comments', 'delivery_#', 'detector', 'file', 'otfr_start_use_date', 'pedigree', 'use_after')
    "acs" : {
-             "biasfile" : ('detector','*ccd_gain','*amp','*x_size','*y_size',), # "%ltv1","%ltv2"),   #
+             "biasfile" : ('detector','*ccd_gain','*amp','*x_size','*y_size',"%ltv1","%ltv2"),   #
              "atodtab" : ('detector','ccd_gain','amp'),
              "bpixtab" : ('detector',),
              "ccdtab" :  ('detector',),

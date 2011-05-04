@@ -1,8 +1,14 @@
-#! /bin/sh
+#! /bin/csh
 
 cd `dirname $0`
-find . -name '*.orig' | xargs rm -rf 
-find . -name '*.pyc' | xargs rm -rf 
-find . -name 'build' | xargs rm -rf 
-find . -name 'svn_version.py*' | xargs rm -f
+
+set dirs="."
+
+if (-e ../CRDS_server) then
+	set dirs="$dirs ../CRDS_server"
+endif
+
+foreach pat ('*.orig' '*.pyc' 'build' 'svn_version.py*')
+	find ${dirs} -name "${pat}" | xargs rm -rf
+end
 

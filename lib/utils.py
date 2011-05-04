@@ -1,4 +1,5 @@
 import os.path
+import crds.log as log
 
 def create_path(path):
     """Recursively traverses directory path creating directories as

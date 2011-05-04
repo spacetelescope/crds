@@ -2,24 +2,29 @@
     'observatory' : 'HST',
     'instrument' : 'ACS',
     'reftype' : 'BIASFILE',
-    'parkey' : ('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', 'USEAFTER'),
+    'parkey' : ('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2', 'USEAFTER'),
 }, {
-    ('HRC', '1.0', 'C', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '1.0', 'C', 'NOT PRESENT', 'NOT PRESENT', '19.0', '0.0') : {
         '2006-07-07 08:52:00' : 'q9e1206gj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '2.0', 'A', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '2.0', 'A', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
         '2006-07-04 11:29:00' : 'q9e1206hj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e1206sj_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '2.0', 'B', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '2.0', 'B', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
         '2006-07-04 11:29:00' : 'q9e1206ij_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e1206tj_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '2.0', 'D', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '2.0', 'D', 'NOT PRESENT', 'NOT PRESENT', '19.0', '0.0') : {
         '2006-07-04 11:29:00' : 'q9e1206jj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12070j_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2004-06-18 04:36:00' : 'o9s16388j_bia.fits', #HRC superbias reference file, 11490, Sep 28 2004 04:55PM
+        '2004-07-02 08:09:00' : 'o9t1525sj_bia.fits', #ACS/HRC superbias reference file, 11495, Sep 30 2004 12:04PM
+        '2004-07-30 00:18:00' : 'o9t1553tj_bia.fits', #HRC reference file, 11497, Sep 30 2004 07:04PM
+    },
+    ('HRC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '19.0', '0.0') : {
         '2002-03-18 00:00:00' : 'm3t1633rj_bia.fits', #ACS/HRC pedigree='inflight 18/03/2, 10951, Mar 29 2002 09:59PM
         '2002-03-30 16:00:00' : 'm4m0925ij_bia.fits', #ACS/HRC superbias for Mar 30 2002, 10959, Apr 22 2002 04:47PM
         '2002-04-13 07:41:00' : 'm4r1753rj_bia.fits', #ACS/HRC superbias for week startin, 10963, Apr 29 2002 07:43PM
@@ -71,7 +76,6 @@
         '2003-08-14 12:48:00' : 'n941050pj_bia.fits', #ACS/HRC superbias for Aug 14 - 28, 11243, Sep 08 2003 07:32PM
         '2003-08-29 01:02:00' : 'n9m1414aj_bia.fits', #ACS/HRC superbias for Aug 29 - Sep, 11252, Sep 22 2003 09:28PM
         '2003-09-09 08:34:00' : 'na11130cj_bia.fits', #ACS/HRC superbias for Sep 09-25 20, 11261, Oct 01 2003 07:09PM
-        '2003-09-26 01:28:00' : 'nal1503ij_bia.fits', #ACS/HRC superbias for Sep 26 - Oct, 11270, Oct 21 2003 09:33PM
         '2003-10-12 07:09:00' : 'nb31202gj_bia.fits', #ACS/HRC superbias for Oct 12 - 25, 11285, Nov 04 2003 06:16PM
         '2003-10-25 01:12:00' : 'nb61600tj_bia.fits', #ACS/HRC superbias for Oct 25 - Nov, 11291, Nov 10 2003 07:57PM
         '2003-11-06 15:11:00' : 'nc11233ij_bia.fits', #ACS/HRC superbias for Nov 6 - 20,, 11296, Dec 03 2003 11:08PM
@@ -90,10 +94,7 @@
         '2004-05-09 00:24:00' : 'o5o1426bj_bia.fits', #ACS/HRC superbias for May 9 - 21,, 11444, Jun 10 2004 06:31PM
         '2004-05-22 07:34:00' : 'o6h1357dj_bia.fits', #ACS/HRC superbias for May 22 - Jun, 11449, Jun 18 2004 11:53AM
         '2004-06-05 02:16:00' : 'o6m1545bj_bia.fits', #ACS/HRC superdark for Jun 05 - 17, 11453, Jun 24 2004 10:51AM
-        '2004-06-18 04:36:00' : 'o9s16388j_bia.fits', #HRC superbias reference file, 11490, Sep 28 2004 04:55PM
-        '2004-07-02 08:09:00' : 'o9t1525sj_bia.fits', #ACS/HRC superbias reference file, 11495, Sep 30 2004 12:04PM
         '2004-07-14 16:52:00' : 'o9f15549j_bia.fits', #ACS/HRC superbias reference file, 11488, Sep 15 2004 08:49PM
-        '2004-07-30 00:18:00' : 'o9t1553tj_bia.fits', #HRC reference file, 11497, Sep 30 2004 07:04PM
         '2004-08-10 04:42:00' : 'oa818583j_bia.fits', #ACS/HRC reference file, 11500, Oct 08 2004 07:05PM
         '2004-08-25 01:03:00' : 'o9d1141jj_bia.fits', #ACS/HRC superbias reference file, 11484, Sep 13 2004 03:47PM
         '2004-09-08 06:01:00' : 'oae1944oj_bia.fits', #ACS/HRC reference file, 11501, Oct 14 2004 07:52PM
@@ -158,19 +159,31 @@
         '2007-01-02 15:47:00' : 'r1n0339sj_bia.fits', #CCD anneal Jan 02 2007 15:47:44UT, 11689, Jan 23 2007 03:47AM
         '2007-01-17 03:28:00' : 'r1u1415aj_bia.fits', #CCD anneal Jan 02 2007 15:47:44UT, 11690, Jan 30 2007 02:21PM
     },
-    ('HRC', '4.0', 'A', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
+        '2006-07-04 11:29:00' : 'q9e1206ij_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
+        '2006-07-15 04:42:00' : 'q9e1206tj_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
+    },
+    ('HRC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+        '2003-09-26 01:28:00' : 'nal1503ij_bia.fits', #ACS/HRC superbias for Sep 26 - Oct, 11270, Oct 21 2003 09:33PM
+    },
+    ('HRC', '4.0', 'A', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
         '2006-07-04 11:32:00' : 'q9e1206kj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12071j_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '4.0', 'B', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '4.0', 'B', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
         '2006-07-04 11:32:00' : 'q9e1206lj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12072j_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '4.0', 'D', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '4.0', 'D', 'NOT PRESENT', 'NOT PRESENT', '19.0', '0.0') : {
         '2006-07-04 11:32:00' : 'q9e1206mj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12073j_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
     },
-    ('HRC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2004-06-18 04:36:00' : 'o9s16389j_bia.fits', #HRC superbias reference file, 11490, Sep 28 2004 04:55PM
+        '2004-07-02 04:33:00' : 'o9t1525tj_bia.fits', #ACS/HRC superbias reference file, 11495, Sep 30 2004 12:04PM
+        '2004-07-30 01:54:00' : 'o9t15540j_bia.fits', #HRC reference file, 11497, Sep 30 2004 07:04PM
+    },
+    ('HRC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '19.0', '0.0') : {
         '2003-03-29 11:24:00' : 'n4m1343nj_bia.fits', #ACS/HRC gain 4 superbias for Mar 2, 11182, Apr 22 2003 06:13PM
         '2003-04-12 07:10:00' : 'n4t09451j_bia.fits', #ACS/HRC gain 4 superbias for Apr 1, 11186, Apr 29 2003 04:39PM
         '2003-04-24 22:03:00' : 'n5d10499j_bia.fits', #ACS/HRC gain4 superbias for Apr 24, 11191, May 13 2003 06:24PM
@@ -203,10 +216,7 @@
         '2004-05-09 02:07:00' : 'o5o1426cj_bia.fits', #ACS/HRC gain4 superbias for May 9, 11444, Jun 10 2004 06:31PM
         '2004-05-22 07:34:00' : 'o6h1357ej_bia.fits', #ACS/HRC gain4 superbias for May 22, 11449, Jun 18 2004 11:53AM
         '2004-06-05 02:04:00' : 'o6m1545cj_bia.fits', #ACS/HRC gain4 superdark for Jun 05, 11453, Jun 24 2004 10:51AM
-        '2004-06-18 04:36:00' : 'o9s16389j_bia.fits', #HRC superbias reference file, 11490, Sep 28 2004 04:55PM
-        '2004-07-02 04:33:00' : 'o9t1525tj_bia.fits', #ACS/HRC superbias reference file, 11495, Sep 30 2004 12:04PM
         '2004-07-14 16:52:00' : 'o9f1554aj_bia.fits', #ACS/HRC superbias reference file, 11488, Sep 15 2004 08:49PM
-        '2004-07-30 01:54:00' : 'o9t15540j_bia.fits', #HRC reference file, 11497, Sep 30 2004 07:04PM
         '2004-08-10 04:42:00' : 'oa818584j_bia.fits', #ACS/HRC reference file, 11500, Oct 08 2004 07:05PM
         '2004-08-25 02:39:00' : 'o9d1141lj_bia.fits', #ACS/HRC superbias reference file, 11484, Sep 13 2004 03:47PM
         '2004-09-08 06:01:00' : 'oae1944pj_bia.fits', #ACS/HRC reference file, 11501, Oct 14 2004 07:52PM
@@ -271,26 +281,38 @@
         '2007-01-02 15:47:00' : 'r1n03400j_bia.fits', #CCD anneal Jan 02 2007 15:47:44UT, 11689, Jan 23 2007 03:47AM
         '2007-01-17 08:55:00' : 'r1u1415cj_bia.fits', #CCD anneal Jan 02 2007 15:47:44UT, 11690, Jan 30 2007 02:21PM
     },
-    ('WFC', '0.5', 'AD', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('HRC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '19.0', '20.0') : {
+        '2006-07-04 11:32:00' : 'q9e1206lj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
+        '2006-07-15 04:42:00' : 'q9e12072j_bia.fits', #First side-2 (copy to cover 2nd us, 11652, Sep 14 2006 12:14PM
+    },
+    ('WFC', '0.5', 'AD', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454cj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '0.5', 'BC', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '0.5', 'BC', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454dj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '0.5', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '0.5', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454bj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '1.0', 'AD', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.0', 'AD', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2006-07-04 10:36:00' : 'q9e1206nj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12074j_bia.fits', #First side-2 (copy to cover 2nd useafter date) CCD parameters table, 11652, Sep 14 2006 12:14PM
         '2008-01-01 00:00:00' : 't4o1454gj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '1.0', 'BC', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.0', 'BC', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2006-07-04 10:36:00' : 'q9e1206oj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12075j_bia.fits', #First side-2 (copy to cover 2nd useafter date) CCD parameters table, 11652, Sep 14 2006 12:14PM
         '2008-01-01 00:00:00' : 't4o1454hj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '1.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2004-06-18 04:36:00' : 'o9t1500cj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
+        '2004-06-24 00:14:00' : 'o9t1500dj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
+        '2004-07-02 08:03:00' : 'o9t1544oj_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
+        '2004-07-09 03:32:00' : 'o9t1544sj_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
+        '2004-07-30 00:11:00' : 'o9t15584j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
+        '2004-08-04 07:32:00' : 'o9t15587j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
+    },
+    ('WFC', '1.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2002-03-01 00:00:00' : 'n3c1315kj_bia.fits', #ACS/WFC superbias for Mar 01 - 18 2002, 11164, Mar 13 2003 06:31PM
         '2002-03-18 00:00:00' : 'm3t1633sj_bia.fits', #ACS/WFC pedigree='inflight 25/03/02 25/03/02' superbias, 10951, Mar 29 2002 09:59PM
         '2002-03-18 16:00:00' : 'n3c1315ij_bia.fits', #ACS/WFC superbias for Mar 18 - 23 2002, 11164, Mar 13 2003 06:31PM
@@ -409,14 +431,8 @@
         '2004-05-28 02:48:00' : 'o6f0857gj_bia.fits', #ACS/WFC superbias for May 28 - Jun 4 2004, 11446, Jun 15 2004 01:02PM
         '2004-06-05 02:10:00' : 'o6m09222j_bia.fits', #ACS/WFC superbias for Jun 05 - Jun 10 2004, 11452, Jun 23 2004 11:51AM
         '2004-06-11 00:20:00' : 'o6m09491j_bia.fits', #ACS/WFC superbias for Jun 11 - 17 2004, 11452, Jun 23 2004 11:51AM
-        '2004-06-18 04:36:00' : 'o9t1500cj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
-        '2004-06-24 00:14:00' : 'o9t1500dj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
-        '2004-07-02 08:03:00' : 'o9t1544oj_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
-        '2004-07-09 03:32:00' : 'o9t1544sj_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
         '2004-07-14 16:52:00' : 'o9d1734jj_bia.fits', #ACS/WFC superbias reference file, 11487, Sep 13 2004 10:29PM
         '2004-07-21 03:09:00' : 'o9d1734lj_bia.fits', #ACS/WFC superbias reference file, 11487, Sep 13 2004 10:29PM
-        '2004-07-30 00:11:00' : 'o9t15584j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
-        '2004-08-04 07:32:00' : 'o9t15587j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
         '2004-08-10 04:42:00' : 'o9t16044j_bia.fits', #WFC reference file, 11499, Oct 01 2004 05:01PM
         '2004-08-17 01:09:00' : 'o9t16045j_bia.fits', #WFC reference file, 11499, Oct 01 2004 05:01PM
         '2004-08-25 00:57:00' : 'o9a12495j_bia.fits', #ACS/WFC superbias reference file, 11482, Sep 10 2004 04:56PM
@@ -490,16 +506,16 @@
         '2009-08-05 13:00:00' : 'ua61347mj_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12214, Oct 06 2010 02:51PM
         '2009-10-02 08:21:00' : 'ua61347nj_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12214, Oct 06 2010 02:51PM
     },
-    ('WFC', '1.4', 'AD', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.4', 'AD', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454jj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '1.4', 'BC', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.4', 'BC', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454kj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '1.4', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '1.4', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2008-01-01 00:00:00' : 't4o1454ij_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
     },
-    ('WFC', '2.0', 'A', '2070.0', '2046.0') : {
+    ('WFC', '2.0', 'A', '2070.0', '2046.0', '22.0', '-1.0') : {
         '2009-10-28 12:13:00' : 'u8j19106j_bia.fits', #CCD anneal Oct 28 2009 06:13:58UT, 12203, Aug 19 2010 07:16PM
         '2009-11-25 14:40:00' : 'u8j19107j_bia.fits', #CCD anneal Nov 25 2009 08:40:37UT, 12203, Aug 19 2010 07:16PM
         '2009-12-21 18:27:00' : 'u8j19108j_bia.fits', #CCD anneal Dec 21 2009 12:27:19UT, 12203, Aug 19 2010 07:16PM
@@ -514,7 +530,7 @@
         '2010-09-04 07:02:00' : 'uc215176j_bia.fits', #CCD anneal Sep 04 2010 01:02:28UT, 12233, Dec 02 2010 03:36PM
         '2010-09-28 11:49:00' : 'uc215177j_bia.fits', #CCD anneal Sep 28 2010 05:49:05UT, 12233, Dec 02 2010 03:36PM
     },
-    ('WFC', '2.0', 'AD', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '2.0', 'AD', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2006-07-04 10:54:00' : 'q9e1206pj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12076j_bia.fits', #First side-2 (copy to cover 2nd useafter date) CCD parameters table, 11652, Sep 14 2006 12:14PM
         '2008-01-01 00:00:00' : 't4o1454mj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
@@ -525,7 +541,7 @@
         '2009-08-05 07:00:00' : 'u151608fj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12128, Jan 05 2010 04:18PM
         '2009-08-20 18:08:00' : 'u151608gj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12128, Jan 05 2010 04:18PM
     },
-    ('WFC', '2.0', 'B', '1046.0', '1024.0') : {
+    ('WFC', '2.0', 'B', '1046.0', '1024.0', '-3072.0', '-1023.0') : {
         '2009-05-16 00:00:00' : 'u1c1152tj_bia.fits', #CCD anneal Oct 2 2009 02:21:32UT A, 12129, Jan 12 2010 11:58AM
         '2009-10-02 08:21:00' : 'u8h13015j_bia.fits', #CCD anneal Oct 2 2009 02:21:32UT A, 12202, Aug 17 2010 01:13PM
         '2009-10-18 00:05:00' : 'u8h13016j_bia.fits', #CCD anneal Oct 2 2009 02:21:32UT A, 12202, Aug 17 2010 01:13PM
@@ -546,7 +562,7 @@
         '2011-02-01 00:00:00' : 'v3b1432tj_bia.fits', #Exact copy of v382219aj_bia.fits w, 12257, Mar 11 2011 02:50PM
         '2011-02-15 23:29:00' : 'v382219aj_bia.fits', #Rejected by undo software Mar 16 2, 12256, Mar 08 2011 10:21PM
     },
-    ('WFC', '2.0', 'B', '2070.0', '2046.0') : {
+    ('WFC', '2.0', 'B', '2070.0', '2046.0', '-2048.0', '-1.0') : {
         '2009-10-02 08:21:00' : 'u8a16042j_bia.fits', #CCD anneal Oct 2 2009 02:21:32UT A, 12201, Aug 10 2010 05:16PM
         '2009-10-18 00:35:00' : 'u8a16043j_bia.fits', #CCD anneal Oct 2 2009 02:21:32UT A, 12201, Aug 10 2010 05:16PM
         '2009-10-28 12:13:00' : 'u8a16044j_bia.fits', #CCD anneal Oct 28 2009 06:13:58UT, 12201, Aug 10 2010 05:16PM
@@ -566,7 +582,7 @@
         '2011-02-01 00:00:00' : 'v3b14330j_bia.fits', #Exact copy of v382219bj_bia.fits w, 12257, Mar 11 2011 02:50PM
         '2011-02-15 23:29:00' : 'v382219bj_bia.fits', #CCD anneal Feb 15 2011 17:29:16UT, 12256, Mar 08 2011 10:21PM
     },
-    ('WFC', '2.0', 'BC', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '2.0', 'BC', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2006-07-04 10:54:00' : 'q9e1206qj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
         '2006-07-15 04:42:00' : 'q9e12077j_bia.fits', #First side-2 (copy to cover 2nd useafter date) CCD parameters table, 11652, Sep 14 2006 12:14PM
         '2008-01-01 00:00:00' : 't4o1454nj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12021, Apr 24 2009 02:59PM
@@ -577,7 +593,7 @@
         '2009-08-05 07:00:00' : 'u151608mj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12128, Jan 05 2010 04:18PM
         '2009-08-20 18:08:00' : 'u151608nj_bia.fits', #No CCD Anneal (Dummy bias from Side-2 for first ACS-R observations), 12128, Jan 05 2010 04:18PM
     },
-    ('WFC', '2.0', 'D', '2070.0', '2046.0') : {
+    ('WFC', '2.0', 'D', '2070.0', '2046.0', '-2048.0', '-1.0') : {
         '2009-10-28 12:13:00' : 'u8j1910gj_bia.fits', #CCD anneal Oct 28 2009 06:13:58UT, 12203, Aug 19 2010 07:16PM
         '2009-11-25 14:40:00' : 'u8j1910hj_bia.fits', #CCD anneal Nov 25 2009 08:40:37UT, 12203, Aug 19 2010 07:16PM
         '2009-12-21 18:27:00' : 'u8j1910ij_bia.fits', #CCD anneal Dec 21 2009 12:27:19UT, 12203, Aug 19 2010 07:16PM
@@ -592,7 +608,15 @@
         '2010-09-04 07:02:00' : 'uc215179j_bia.fits', #CCD anneal Sep 04 2010 01:02:28UT, 12233, Dec 02 2010 03:36PM
         '2010-09-28 11:49:00' : 'uc21517aj_bia.fits', #CCD anneal Sep 28 2010 05:49:05UT, 12233, Dec 02 2010 03:36PM
     },
-    ('WFC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2004-06-18 04:36:00' : 'o9t1500ej_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
+        '2004-06-25 02:00:00' : 'o9t1500fj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
+        '2004-07-02 04:27:00' : 'o9t15451j_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
+        '2004-07-09 03:43:00' : 'o9t15454j_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
+        '2004-07-30 01:47:00' : 'o9t15588j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
+        '2004-08-04 13:01:00' : 'o9t1558cj_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
+    },
+    ('WFC', '2.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2002-04-27 00:00:00' : 'm991609nj_bia.fits', #ACS/WFC amp ABCD gain 2 inflight bias, 11045, Sep 09 2002 09:56PM
         '2002-08-01 00:00:00' : 'n1k1257dj_bia.fits', #ACS/WFC gain=2 superbias for after Aug 01 2002, 11129, Jan 20 2003 07:57PM
         '2003-01-25 11:31:00' : 'n2c1402sj_bia.fits', #ACS/WFC gain2 superbias for Jan 25-Feb 09 2003, 11145, Feb 12 2003 07:20PM
@@ -661,14 +685,8 @@
         '2004-05-29 07:03:00' : 'o6f0857ij_bia.fits', #ACS/WFC gain2 superbias for May 29 - Jun 4 2004, 11446, Jun 15 2004 01:02PM
         '2004-06-05 01:58:00' : 'o6m09492j_bia.fits', #ACS/WFC superbias for Jun 05 - 10 2004, 11452, Jun 23 2004 11:51AM
         '2004-06-11 03:34:00' : 'o6m10175j_bia.fits', #ACS/WFC superbias for Jun 11 - 17 2004, 11452, Jun 23 2004 11:51AM
-        '2004-06-18 04:36:00' : 'o9t1500ej_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
-        '2004-06-25 02:00:00' : 'o9t1500fj_bia.fits', #ACS/WFC superbias reference file, 11492, Sep 29 2004 03:03PM
-        '2004-07-02 04:27:00' : 'o9t15451j_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
-        '2004-07-09 03:43:00' : 'o9t15454j_bia.fits', #WFC reference file, 11496, Sep 30 2004 02:42PM
         '2004-07-14 16:52:00' : 'o9d1734mj_bia.fits', #ACS/WFC superbias reference file, 11487, Sep 13 2004 10:29PM
         '2004-07-22 02:01:00' : 'o9d1734oj_bia.fits', #ACS/WFC superbias reference file, 11487, Sep 13 2004 10:29PM
-        '2004-07-30 01:47:00' : 'o9t15588j_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
-        '2004-08-04 13:01:00' : 'o9t1558cj_bia.fits', #WFC reference file, 11498, Oct 01 2004 11:50AM
         '2004-08-10 04:42:00' : 'o9t16046j_bia.fits', #WFC reference file, 11499, Oct 01 2004 05:01PM
         '2004-08-17 04:34:00' : 'o9t16047j_bia.fits', #WFC reference file, 11499, Oct 01 2004 05:01PM
         '2004-08-25 02:33:00' : 'o9a12497j_bia.fits', #ACS/WFC superbias reference file, 11482, Sep 10 2004 04:56PM
@@ -786,7 +804,7 @@
         '2011-02-02 00:40:00' : 'v2o1907mj_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12252, Feb 24 2011 07:27PM
         '2011-02-15 23:29:00' : 'v3315558j_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12254, Mar 03 2011 03:59PM
     },
-    ('WFC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT') : {
+    ('WFC', '4.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : {
         '2006-07-07 07:46:00' : 'q9e1206rj_bia.fits', #First Side-2 CCD parameters table:, 11652, Sep 14 2006 12:14PM
     },
 }, 

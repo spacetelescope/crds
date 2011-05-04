@@ -1,11 +1,17 @@
-#! /bin/sh
+#! /bin/tcsh
 
 cd `dirname $0`
 
 ./clean
 
-(cd lib; python setup.py install --force)
-(cd hst; python setup.py install --force)
-(cd client; python setup.py install --force)
+foreach dir (lib hst client ../CRDS_server)
+    if (-e $dir) then
+    	echo "Installing $dir"
+		(cd $dir;  python setup.py install --force)  > /dev/null
+    else
+		echo "Skipping $dir"
+    endif
+end
 
 ./clean
+

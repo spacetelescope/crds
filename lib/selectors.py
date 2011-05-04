@@ -366,10 +366,11 @@ class MatchingSelector(Selector):
             selector = selectors[0]
             if len(group) > 1:
                 if isinstance(selector, Selector):
-                    log.verbose("Merging candidates", nmatch, repr(group))
-                    selector = selectors[0].merge(selectors[1:])
+                    raise AmbiguousMatchError("ambiguous match.")
+#                    log.verbose("Merging candidates", nmatch, repr(group))
+#                    selector = selectors[0].merge(selectors[1:])
                 else:
-                    raise AmbiguousMatchError("choices " + repr(selectors))
+                    raise AmbiguousMatchError("ambiguous match.")
             else:
                 selector = selectors[0]
             log.verbose("Matched", repr(group),"returning",repr(selector))
