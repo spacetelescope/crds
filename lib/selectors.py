@@ -321,6 +321,12 @@ class MatchingSelector(Selector):
         self._selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
 
+    def keys(self):
+        return sorted(self._selections.keys())
+
+    def choices(self):
+        return [x[1] for x in sorted(self._selections.values())]
+
     def setup_parameters(self, parameters):
         """Strip off *=optional prefixes and store the status in the
         _required mapping.  Save simple *-less var names in the 
@@ -329,10 +335,9 @@ class MatchingSelector(Selector):
         for par in parameters:
             if par.startswith("*"):
                 par = par[1:]
-                required = False
+                self._required[par] = False
             else:
-                required = True
-            self._required[par] = required
+                self._required[par] = True
             self._parameters.append(par)
             
     def fix_simple_keys(self, selections):
@@ -370,29 +375,35 @@ class MatchingSelector(Selector):
         return selections
 
 
-    def get_matcher_selections(self, mapping):
+    def get_matcher_selections(self, mappings):
+        """Expand the selections from the spec file to include a tuple
+        of Matcher objects for each selection key.   Return new selections
+        of the form:
+               { spec_key_tuple :  (Matcher_tuple, choice) }
+        """
         selections = {}
-        for keytuple, choice in mapping.items():
+        for keytuple, choice in mappings.items():
             matchers = []
-            for key in keytuple:
-                matchers.append(matcher(key))
+            for parkey in keytuple:
+                matchers.append(matcher(parkey))
             selections[keytuple] = (tuple(matchers), choice)
         return selections
-
-    def keys(self):
-        return [x[0] for x in sorted(self._selections.items())]
-
-    def choices(self):
-        return [x[1][1] for x in sorted(self._selections.items())]
 
     def get_choice(self, selection, header):
         raise NotImplementedError("MatchingSelector isn't a uniform subclass.")
 
     def choose(self, header):
         """Match the specified `header` to this selector's selections and
-        return the best matching choice.
+        return the best matching choice.    This is the top-level entry point
+        for runtime selection making.
         """
         self.validate_query(header)
+        
+        # Iterate through ranked choices from best to worst,  stopping at the
+        # first/best overall nested selection.  For HST, multiple tries may be
+        # needed because there is no guarantee that the nested UseAfter selector
+        # will also match;  in that case,  the next best match where the
+        # UseAfter selector does produce a result is desired.
         for choice in self._winnowing_match(header):
             if isinstance(choice, Selector):
                 try:
@@ -402,6 +413,7 @@ class MatchingSelector(Selector):
                     continue
             else:
                 return choice
+            
         log.verbose("Match failed.")
         raise MatchingError("No match found.")
 
@@ -413,9 +425,8 @@ class MatchingSelector(Selector):
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
         """
-        remaining = dict(self._selections)   # copy
         matches = {}
-
+        remaining = dict(self._selections)   # copy
         for key in remaining.keys():
             matches[key] = 0
                 
@@ -425,12 +436,14 @@ class MatchingSelector(Selector):
             items = remaining.items()
             required = self._required[var]
             for key, (mkey, subselectors) in items:
+                # Match the key to the current header vaue
                 m = mkey[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
-                if m != -1:
+                if m == -1:
+                    if required:
+                        del remaining[key]
+                else:
                     matches[key] -= m
-                elif required:
-                    del remaining[key]
 
         candidates = {}
         for key, _junk in remaining.items():
@@ -442,22 +455,16 @@ class MatchingSelector(Selector):
         if log.get_verbose():
             log.verbose("Candidates", pp.pformat(candidates))
 
+        # Yield successive candidates in order from best match to worst, failing
+        # if any candidate group has more than one equivalently weighted match.
         for nmatch, group in candidates:
             selectors = [remaining[x][1] for x in group]
-            selector = selectors[0]
             if len(group) > 1:
                 log.verbose("Ambigious match error.")
                 raise AmbiguousMatchError("ambiguous match.")
-                if isinstance(selector, Selector):
-                    raise AmbiguousMatchError("ambiguous match.")
-#                    log.verbose("Merging candidates", nmatch, repr(group))
-#                    selector = selectors[0].merge(selectors[1:])
-                else:
-                    raise AmbiguousMatchError("ambiguous match.")
             else:
-                selector = selectors[0]
-            log.verbose("Matched", repr(group),"returning",repr(selector))
-            yield selector
+                log.verbose("Matched", repr(group),"returning",repr(selectors[0]))
+                yield selectors[0]
 
     def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
