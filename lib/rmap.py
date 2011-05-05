@@ -33,6 +33,8 @@ from the CDBS HTML table dump:
 
 >>> len(p.reference_names())
 5719
+>>> sorted(p.reference_name_map().keys())
+['acs', 'cos', 'stis', 'wfc3']
 
 >>> i = InstrumentContext.from_file("hst_acs.imap", "hst", "acs")
 >>> _ = i.to_json()
@@ -41,6 +43,12 @@ from the CDBS HTML table dump:
 15
 >>> len(i.reference_names())
 3983
+
+>>> sorted(i.reference_name_map().keys())
+['atodtab', 'biasfile', 'bpixtab', 'ccdtab', 'cfltfile', 'crrejtab', 'darkfile', 'dgeofile', 'idctab', 'mdriztab', 'mlintab', 'oscntab', 'pfltfile', 'spottab']
+
+>>> sorted(i.reference_name_map()["crrejtab"])
+['n4e12510j_crr.fits', 'n4e12511j_crr.fits']
 
 >>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap", "hst", "acs", "biasfile")
 >>> _ = r.to_json()
@@ -301,10 +309,18 @@ class PipelineContext(Mapping):
     def reference_names(self):
         """Return the list of reference files associated with this pipeline context."""
         files = set()
+        for instrument_files in self.reference_name_map().values():
+            files.update(instrument_files)
+        return sorted(files)
+
+    def reference_name_map(self):
+        """Returns { instrument : [ref_file_name...] ... }"""
+        files = {}
         for instrument in self.selections:
-            for file in self.selections[instrument].reference_names():
-                files.add(file)
-        return sorted(list(files))
+            files[instrument] = set() 
+            for reftype_files in self.selections[instrument].reference_name_map().values():
+                files[instrument].update(set(reftype_files))
+        return files
     
     def mapping_names(self):
         """Return the list of pipeline, instrument, and reference map files associated with
@@ -374,11 +390,20 @@ class InstrumentContext(Mapping):
         return binding
     
     def reference_names(self):
+        """Returns [ref_file_name...]
+        """
         files = set()
-        for selector in self._selectors.values():
-            for file in selector.reference_names():
-                files.add(file)
-        return sorted(list(files))
+        for reftype_files in self.reference_name_map().values():
+            files.update(set(reftype_files))
+        return sorted(files)
+
+    def reference_name_map(self):
+        """Returns { reftype : set( ref_file_name... ) }
+        """
+        files = {}
+        for reftype, selector in self._selectors.items():
+            files[reftype] = sorted(selector.reference_names())
+        return files
     
     def mapping_names(self):
         files = [os.path.basename(self.filename)]
