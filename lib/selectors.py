@@ -190,7 +190,7 @@ class Matcher(object):
     def match(self, value):
         """Return 1 (match),  0 (don't care), or -1 (no match).
         """
-        pass
+        return 1 if self._key == value else -1
 
     def __repr__(self):
         return self.__class__.name + "(%s)" % self._key
@@ -265,7 +265,7 @@ def matcher(key):
     elif key.startswith((">","<")):
         return InequalityMatcher(key)
     else:
-        return RegexMatcher(key)
+        return Matcher(key)
 
 class MatchingSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching the runtime
@@ -424,45 +424,14 @@ class MatchingSelector(Selector):
         keys which cannot match based on the value of the current fitskey.
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
-        """
+        """        
+        weights, remaining = self._winnow(header, dict(self._selections))
+
+        sorted_candidates = self._rank_candidates(weights, remaining)
         
-        # matches counts the # of parkey value matches, establishing a
-        # goodness-of-match weighting.
-        matches = {}
-        remaining = dict(self._selections)   # copy
-        for match_tuple in remaining.keys():
-            matches[match_tuple] = 0
-                
-        for i, parkey in enumerate(self._parameters):
-            value = header.get(parkey, "NOT PRESENT")
-            log.verbose("Binding", repr(parkey), "=", repr(value))
-            items = remaining.items()
-            for match_tuple, (matchers, subselectors) in items:
-                # Match the key to the current header vaue
-                m = matchers[i].match(value)
-                # returns 1 (match), 0 (don't care), or -1 (no match)
-                if m == -1:
-                    if self._required[parkey]:
-                        del remaining[match_tuple]
-                else:
-                    matches[match_tuple] -= m
-
-        # Create a mapping of candidate matches: { weight : [ match_tuples...] }
-        candidates = {}
-        for match_tuple, _junk in remaining.items():
-            if matches[match_tuple] not in candidates:
-                candidates[matches[match_tuple]] = []
-            candidates[matches[match_tuple]].append(match_tuple)
-
-        # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
-        # Lowest weight is best match
-        candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
-        if log.get_verbose():
-            log.verbose("Candidates", pp.pformat(candidates))
-
         # Yield successive candidates in order from best match to worst, failing
         # if any candidate group has more than one equivalently weighted match.
-        for _weight, group in candidates:
+        for _weight, group in sorted_candidates:
             if len(group) > 1:
                 log.verbose("Ambigious match error.")
                 raise AmbiguousMatchError("ambiguous match.")
@@ -470,6 +439,54 @@ class MatchingSelector(Selector):
                 selector = remaining[group[0]][1]
                 log.verbose("Matched", repr(group),"returning",repr(selector))
                 yield selector
+    
+    def _winnow(self, header, remaining):
+        """Based on the parkey values in `header`, winnow out selections
+        from `remaining` which cannot possibly match.  For each surviving
+        selection,  weight each parkey which matches exactly as -1 and 
+        "don't care" matches as 0.
+        
+        returns   ( {match_tuple:weight ...},   remaining_selections
+        """
+        # weights counts the # of parkey value matches, establishing a
+        # goodness-of-match weighting.  negative weights are better matches
+        weights = {}
+        for match_tuple in remaining.keys():
+            weights[match_tuple] = 0
+
+        for i, parkey in enumerate(self._parameters):
+            value = header.get(parkey, "NOT PRESENT")
+            log.verbose("Binding", repr(parkey), "=", repr(value))
+            for match_tuple, (matchers, _subselectors) in remaining.items():
+                # Match the key to the current header vaue
+                m = matchers[i].match(value)
+                # returns 1 (match), 0 (don't care), or -1 (no match)
+                if m == -1:
+                    if self._required[parkey]:
+                        del remaining[match_tuple]
+                else:
+                    weights[match_tuple] -= m
+        return weights, remaining
+
+    def _rank_candidates(self, weights, remaining):
+        """Rank the possible matches in `remaining` according to
+        their corresponding `weights`,  with lowest values indicating
+        best matches.
+        
+        Return  sorted( [(weight, [match_tuples...])...]
+        """        
+        # Create a mapping of candidate matches: { weight : [ match_tuples...] }
+        candidates = {}
+        for match_tuple, _junk in remaining.items():
+            if weights[match_tuple] not in candidates:
+                candidates[weights[match_tuple]] = []
+            candidates[weights[match_tuple]].append(match_tuple)
+        # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
+        # Lowest weight is best match
+        candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
+        if log.get_verbose():
+            log.verbose("Candidates", pp.pformat(candidates))
+        return candidates
 
     def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
