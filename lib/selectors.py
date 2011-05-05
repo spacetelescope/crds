@@ -425,46 +425,51 @@ class MatchingSelector(Selector):
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
         """
+        
+        # matches counts the # of parkey value matches, establishing a
+        # goodness-of-match weighting.
         matches = {}
         remaining = dict(self._selections)   # copy
-        for key in remaining.keys():
-            matches[key] = 0
+        for match_tuple in remaining.keys():
+            matches[match_tuple] = 0
                 
-        for i, var in enumerate(self._parameters):
-            value = header.get(var, "NOT PRESENT")
-            log.verbose("Binding", repr(var), "=", repr(value))
+        for i, parkey in enumerate(self._parameters):
+            value = header.get(parkey, "NOT PRESENT")
+            log.verbose("Binding", repr(parkey), "=", repr(value))
             items = remaining.items()
-            required = self._required[var]
-            for key, (mkey, subselectors) in items:
+            for match_tuple, (matchers, subselectors) in items:
                 # Match the key to the current header vaue
-                m = mkey[i].match(value)
+                m = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if m == -1:
-                    if required:
-                        del remaining[key]
+                    if self._required[parkey]:
+                        del remaining[match_tuple]
                 else:
-                    matches[key] -= m
+                    matches[match_tuple] -= m
 
+        # Create a mapping of candidate matches: { weight : [ match_tuples...] }
         candidates = {}
-        for key, _junk in remaining.items():
-            if matches[key] not in candidates:
-                candidates[matches[key]] = []
-            candidates[matches[key]].append(key)
+        for match_tuple, _junk in remaining.items():
+            if matches[match_tuple] not in candidates:
+                candidates[matches[match_tuple]] = []
+            candidates[matches[match_tuple]].append(match_tuple)
 
+        # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
+        # Lowest weight is best match
         candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
         if log.get_verbose():
             log.verbose("Candidates", pp.pformat(candidates))
 
         # Yield successive candidates in order from best match to worst, failing
         # if any candidate group has more than one equivalently weighted match.
-        for nmatch, group in candidates:
-            selectors = [remaining[x][1] for x in group]
+        for _weight, group in candidates:
             if len(group) > 1:
                 log.verbose("Ambigious match error.")
                 raise AmbiguousMatchError("ambiguous match.")
             else:
-                log.verbose("Matched", repr(group),"returning",repr(selectors[0]))
-                yield selectors[0]
+                selector = remaining[group[0]][1]
+                log.verbose("Matched", repr(group),"returning",repr(selector))
+                yield selector
 
     def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
