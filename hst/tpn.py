@@ -74,10 +74,12 @@ INSTRUMENT_TO_TPN = {
     "nicmos" : "nic",
 }
 
+HERE = os.path.dirname(__file__) or "./"
+
 def tpn_filepath(instrument, extension):
     """Return the full path for the .tpn file corresponding to `instrument` and `extension`."""
-    return os.path.join(config.CRDS_ROOT, "hst", "cdbs", "cdbs_tpns",
-                        INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
+    return os.path.join(HERE, "cdbs", "cdbs_tpns",
+            INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
 
 def get_tpn(instrument, extension):
     """Load the TPN tuple corresponding to `instrument` and `extension` from it's .tpn file."""

@@ -1,6 +1,6 @@
 import collections
 
-import crds.hst.gentools.tpn as tpn
+import crds.hst.tpn as tpn
 
 import crds.rmap as rmap
 import crds.log as log
@@ -378,7 +378,7 @@ def get_parameters(instrument):
     so that a correspondence can be defined between FITS header keywords and CDBS HTML table
     column names.
     """
-    header, data = rmap.get_context(instrument)
+    header, data = rmap.load_mapping(instrument)
     components = []
     for reftype, (extension, map) in data.items():
         try:
