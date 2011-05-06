@@ -15,7 +15,7 @@ import crds.hst.gentools.keyval as keyval
 
 HEADER_CACHE = {}
 
-def _get_header_union(fname):
+def get_unconditioned_header_union(fname):
     """Handle initial or cached fetch of unconditioned header values.
     """
     if fname in HEADER_CACHE:
@@ -35,7 +35,7 @@ def get_header_union(fname):
     canonical form which smoothes over inconsistencies.
     See rmap.condition_value() for details.
     """
-    header = _get_header_union(fname)
+    header = get_unconditioned_header_union(fname)
     for key, value in header.items():
         header[key] = keyval.condition_value(value)
     return header
@@ -56,7 +56,7 @@ def load_header_cache():
 def save_header_cache():
     """Save the global HEADER_CACHE to store the FITS header unions of any newly visited files.
     """
-    open("header_cache", "w+").write(pprint.pformat(HEADER_CACHE))
+    open(HERE + "/header_cache", "w+").write(pprint.pformat(HEADER_CACHE))
     # cPickle.dump(HEADER_CACHE, open("header_cache","w+"))
 
 

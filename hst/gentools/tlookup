@@ -20,7 +20,9 @@ def test_references(fitsname):
     in the header,  consider that reference "not applicable" and ignore any
     failures attempting to compute it.
     """
-    header = lookup._get_header_union(fitsname)
+    
+    # Just want header for bestrefs,  so conditioning irrelevant + expensive
+    header = lookup.get_unconditioned_header_union(fitsname)
 
     refs = rmap.get_best_refs("hst.pmap", header)
 
