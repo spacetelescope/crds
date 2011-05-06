@@ -1,10 +1,10 @@
 """This module supports loading all the data components required to make
 a CRDS lookup table for an instrument.
 
-get_pipeline_context loads the closure of the given context file from the
+get_cached_mapping loads the closure of the given context file from the
 local CRDS store,  caching the result.
 
->>> p = get_pipeline_context("hst.pmap")
+>>> p = get_cached_mapping("hst.pmap")
 
 Mappings round-trip through json OK:
 
@@ -33,19 +33,27 @@ from the CDBS HTML table dump:
 
 >>> len(p.reference_names())
 5719
+
+Pipeline reference files are also broken down by instrument:
+
 >>> sorted(p.reference_name_map().keys())
 ['acs', 'cos', 'stis', 'wfc3']
 
 >>> i = InstrumentContext.from_file("hst_acs.imap", "hst", "acs")
 >>> _ = i.to_json()
 >>> i = InstrumentContext.from_json(_)
+
+The ACS instrument has 15 associated mappings,  including the instrument context:
+
 >>> len(i.mapping_names())
 15
+
+The ACS instrument has 3983 associated reference files in the hst_acs.imap context:
+
 >>> len(i.reference_names())
 3983
 
->>> sorted(i.reference_name_map().keys())
-['atodtab', 'biasfile', 'bpixtab', 'ccdtab', 'cfltfile', 'crrejtab', 'darkfile', 'dgeofile', 'idctab', 'mdriztab', 'mlintab', 'oscntab', 'pfltfile', 'spottab']
+Active instrument references are also broken down by filetype:
 
 >>> sorted(i.reference_name_map()["crrejtab"])
 ['n4e12510j_crr.fits', 'n4e12511j_crr.fits']
@@ -55,7 +63,6 @@ from the CDBS HTML table dump:
 >>> r = ReferenceMapping.from_json(_)
 >>> len(r.reference_names())
 729
-
 """
 import os
 import os.path
@@ -464,17 +471,20 @@ def write_rmap_dict(file, the_dict, indent_level=1):
         
 # ===================================================================
 
-PIPELINE_CONTEXTS = {}
+CACHED_MAPPINGS = {}
 
-def get_pipeline_context(context_file):
-    """Recursively load the specified `context_file` and add it to
-    the global pipeline cache.
+def get_cached_mapping(mapping_basename):
+    """Retrieve the Mapping corresponding to the specified 
+    `mapping_basename` from the global mapping cache,  recursively
+    loading and caching it if it has not already been cached.
+    
+    Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
-    if context_file not in PIPELINE_CONTEXTS:
-        PIPELINE_CONTEXTS[context_file] = _load_context(context_file)
-    return PIPELINE_CONTEXTS[context_file]
+    if mapping_basename not in CACHED_MAPPINGS:
+        CACHED_MAPPINGS[mapping_basename] = load_mapping(mapping_basename)
+    return CACHED_MAPPINGS[mapping_basename]
 
-def _load_context(mapping):
+def load_mapping(mapping):
     """Load any of the pipeline, instrument, or reftype `mapping`s
     from the file system.
     """
@@ -494,7 +504,7 @@ def get_best_refs(context_file, header):
     """Compute the best references for `header` for the given CRDS `context_file`.   This
     is a local computation using local rmaps and CPU resources.
     """
-    ctx = get_pipeline_context(context_file)
+    ctx = get_cached_mapping(context_file)
     return ctx.get_best_refs(header)
 
 
