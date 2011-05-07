@@ -101,7 +101,14 @@ class Mapping(object):
         self.filename = filename
         self.header = header
         self.data = data
-    
+        
+    def __repr__(self):
+        r = self.__class__.__name__ + "("
+        for attr in self.check_attrs:
+            r += attr + "=" + repr(getattr(self, attr)) + ", "
+        r = r[:-2] + ")"
+        return r
+            
     @classmethod
     def check_file_format(cls, filename):
         """Make sure the basic file format for `filename` is valid and safe."""
@@ -338,6 +345,18 @@ class PipelineContext(Mapping):
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
 
+    def tpn_map(self):
+        """Return the map of 3 character tpn extensions used by CDBS:  
+        
+        { instrument : { reftype : extension } }
+        """
+        tpns = {}
+        for instrument, instr_sel in self.selections.items():
+            tpns[instrument] = {}
+            for reftype, reftype_sel in instr_sel.selections.items():
+                tpns[instrument][reftype] = reftype_sel.extension
+        return tpns
+
 # ===================================================================
 
 """
@@ -368,18 +387,18 @@ class InstrumentContext(Mapping):
         Mapping.__init__(self, filename, header, data)
         self.observatory = observatory.lower()
         self.instrument = instrument.lower()
-        self._selectors = {}
+        self.selections = {}
         for reftype, rmap_info in data.items():
-            _rmap_ext, rmap_name = rmap_info
-            self._selectors[reftype] = ReferenceMapping.from_file(
-                rmap_name, self.observatory, self.instrument, reftype)
+            rmap_ext, rmap_name = rmap_info
+            self.selections[reftype] = ReferenceMapping.from_file(
+                rmap_name, self.observatory, self.instrument, reftype, rmap_ext)
 
     def get_best_ref(self, reftype, header):
-        return self._selectors[reftype.lower()].get_best_ref(header)
+        return self.selections[reftype.lower()].get_best_ref(header)
 
     def get_best_refs(self, header):
         refs = {}
-        for reftype in self._selectors:
+        for reftype in self.selections:
             log.verbose("\nGetting bestref for", repr(reftype))
             try:
                 refs[reftype] = self.get_best_ref(reftype, header)
@@ -392,8 +411,8 @@ class InstrumentContext(Mapping):
         for this instrument.
         """
         binding = {}
-        for reftype in self._selectors:
-            binding.update(self._selectors[reftype].get_binding(header))
+        for reftype in self.selections:
+            binding.update(self.selections[reftype].get_binding(header))
         return binding
     
     def reference_names(self):
@@ -408,13 +427,13 @@ class InstrumentContext(Mapping):
         """Returns { reftype : set( ref_file_name... ) }
         """
         files = {}
-        for reftype, selector in self._selectors.items():
+        for reftype, selector in self.selections.items():
             files[reftype] = sorted(selector.reference_names())
         return files
     
     def mapping_names(self):
         files = [os.path.basename(self.filename)]
-        for selector in self._selectors.values():
+        for selector in self.selections.values():
             files.append(os.path.basename(selector.filename))
         return files
     
@@ -426,11 +445,12 @@ class ReferenceMapping(Mapping):
     """
     check_attrs = ["observatory","instrument","reftype"]
     
-    def __init__(self, filename, header, data, observatory="", instrument="", reftype="", **keys):
+    def __init__(self, filename, header, data, observatory="", instrument="", reftype="", extension="", **keys):
         Mapping.__init__(self, filename, header, data)
         self.instrument = instrument.lower()
         self.observatory = observatory.lower()
         self.reftype = reftype.lower()
+        self.extension = extension.lower()
         cls = utils.get_object(header.get("class", "crds.selectors.ReferenceSelector"))
         self._selector = cls(header, data)
         
@@ -492,9 +512,12 @@ def load_mapping(mapping):
     if mapping.endswith(".pmap"):
         return PipelineContext.from_file(mapping, observatory)
     elif mapping.endswith(".imap"):
-        return InstrumentContext.from_file(mapping, observatory)
+        instrument = utils.context_to_instrument(mapping)
+        return InstrumentContext.from_file(mapping, observatory, instrument)
     elif mapping.endswith(".rmap"):
-        return ReferenceMapping.from_file(mapping, observatory)
+        instrument = utils.context_to_instrument(mapping)
+        reftype = utils.context_to_reftype(mapping)
+        return ReferenceMapping.from_file(mapping, observatory, instrument, reftype)
     else:
         raise ValueError("Unknown mapping extension for " + repr(mapping))
 

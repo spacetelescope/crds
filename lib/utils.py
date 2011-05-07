@@ -36,6 +36,20 @@ def context_to_observatory(context_file):
     """
     return os.path.basename(context_file).split("_")[0].split(".")[0]
 
+def context_to_instrument(context_file):
+    """
+    >>> context_to_instrument('hst_acs_biasfile.rmap')
+    'acs'
+    """
+    return os.path.basename(context_file).split("_")[1].split(".")[0]
+
+def context_to_reftype(context_file):
+    """
+    >>> context_to_reftype('hst_acs_biasfile.rmap')
+    'biasfile'
+    """
+    return os.path.basename(context_file).split("_")[2].split(".")[0]
+
 # ===================================================================
 
 def get_object(dotted_name):

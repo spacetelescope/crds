@@ -4,6 +4,7 @@ import crds.hst.tpn as tpn
 
 import crds.rmap as rmap
 import crds.log as log
+import crds.utils as utils
 
 # =======================================================================
 
@@ -373,25 +374,31 @@ def get_selector_class(instrument, reftype):
 # =======================================================================
 keymatch = collections.namedtuple("keymatch","header_keyword,extension,rmap_keys,tpn_keys")
 
-def get_parameters(instrument):
+def get_parameters(instrument_mapping_name):
     """Given an `instrument`,  get_parameters() will dump the rmap and tpn parameter lists
     so that a correspondence can be defined between FITS header keywords and CDBS HTML table
     column names.
     """
-    header, data = rmap.load_mapping(instrument)
+    import crds.rmap as rmap
+    
+    instr_mapping = rmap.load_mapping(instrument_mapping_name)
+    instrument = utils.context_to_instrument(instrument_mapping_name)
     components = []
-    for reftype, (extension, map) in data.items():
+
+    for reftype, rmap in instr_mapping.selections.items():
         try:
-            rmap_keys = rmap.get_rmap(instrument, reftype).header["parkey"]
+            rmap_keys = rmap.header["parkey"]
         except Exception, e:
             rmap_keys = str(e)
             log.warning("Can't get rmap for:", repr((instrument, reftype)), str(e))
         try:
-            tpn_keys = tuple(sorted(tpn.get_tpn(instrument, extension).keys()))
+            tpn_keys = tuple(sorted(tpn.get_tpn(instrument, reftype).keys()))
         except Exception, e:
+            raise
             tpn_keys = str(e)
-            log.warning("Can't get tpn for:", repr((instrument, reftype)), str(e))
-        comp = keymatch(reftype, extension, rmap_keys, tpn_keys)
-        components.append(comp)
+            log.warning("Can't get tpn for:", repr((instrument, reftype)), repr(e))
+
+        components.append( keymatch(reftype, rmap.extension, rmap_keys, tpn_keys) )
+
     return components
 
