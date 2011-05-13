@@ -100,13 +100,13 @@ class FileCacher(object):
         if isinstance(names, dict):
             names = names.values()
         localpaths = {}
-        for name in names:
+        for i, name in enumerate(names):
             localpath = self._locate(pipeline_context, name)
             if (not os.path.exists(localpath)) or ignore_cache:
-                log.verbose("Cache miss. Fetching", repr(name), "to", repr(localpath))
+                log.verbose("Cache miss. Fetching[%d]" % i, repr(name), "to", repr(localpath))
                 self._transfer_to_local_file_rpc(pipeline_context, name, localpath)
             else:
-                log.verbose("Cache hit", repr(name), "at", repr(localpath))
+                log.verbose("Cache hit[%d]" % i, repr(name), "at", repr(localpath))
             localpaths[name] = localpath
         return localpaths
 
@@ -143,6 +143,14 @@ def cache_mappings(pipeline_context, ignore_cache=False):
     mappings = get_mapping_names(pipeline_context)
     return MAPPING_CACHER.get_local_files(pipeline_context, mappings, ignore_cache=ignore_cache)
     
+def dump_references(pipeline_context, baserefs, ignore_cache=False):
+    """Given a pipeline `pipeline_context` and list of `baserefs` basenames,  obtain the
+    set of reference files and cache them on the local file system.   
+    
+    Returns:   { ref_basename :   reference_local_filepath ... }   
+    """
+    return REFERENCE_CACHER.get_local_files(pipeline_context, baserefs, ignore_cache=ignore_cache)
+
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
     set of reference files and cache them on the local file system.   
