@@ -41,6 +41,7 @@ setup(name="crds.hst",
 
             '*.pmap',
             'cdbs.paths',
+            'cdbs.paths.gz',
 
             'acs/*.rmap',
             'acs/*.imap',
@@ -57,7 +58,6 @@ setup(name="crds.hst",
             'cdbs/cdbs_tpns/*.tpn',
 
              'gentools/header_cache',
-             'gentools/cdbs.paths',
 
             ],
         },

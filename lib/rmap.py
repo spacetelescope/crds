@@ -66,19 +66,31 @@ Active instrument references are also broken down by filetype:
 """
 import os
 import os.path
-import collections
 import re
-import ast
-import json
+
+try:
+    from collections import namedtuple
+except:
+    from crds.collections2 import namedtuple
+
+try:
+    from ast import literal_eval
+except:
+    literal_eval = lambda expr: eval(expr, {}, {})
+
+try:
+    import json
+except:
+    import simplejson as json
 
 from crds import log, timestamp, utils
 from crds.config import CRDS_ROOT
 
 # ===================================================================
 
-Filetype = collections.namedtuple("Filetype","header_keyword,extension,rmap")
-Failure = collections.namedtuple("Failure","header_keyword,message")
-Filemap = collections.namedtuple("Filemap","date,file,comment")
+Filetype = namedtuple("Filetype","header_keyword,extension,rmap")
+Failure = namedtuple("Failure","header_keyword,message")
+Filemap = namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
@@ -196,7 +208,7 @@ class Mapping(object):
         
         cls.check_file_format(where)
         try:
-            header, data = ast.literal_eval(open(where).read())
+            header, data = literal_eval(open(where).read())
         except Exception, exc:
             raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
         mapping = cls(basename, header, data, *args, **keys)
@@ -272,7 +284,7 @@ def strings_to_keys(d):
     for key, value in d.items():
         converted = strings_to_keys(value)
         if isinstance(key, (str, unicode)) and "(" in key:
-            results[ast.literal_eval(key)] = converted
+            results[literal_eval(key)] = converted
         else:
             results[key] = converted
     return results

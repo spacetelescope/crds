@@ -5,7 +5,10 @@ file kind must define.
 """
 import sys
 import os
-import collections
+try:
+    from collections import namedtuple
+except:
+    from crds.collections2 import namedtuple
 
 import crds.config as config
 
@@ -115,7 +118,7 @@ def fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
-tpn_info = collections.namedtuple("tpn_info", "keytype,datatype,presence,values")
+tpn_info = namedtuple("tpn_info", "keytype,datatype,presence,values")
 
 def load_tpn(fname):
     """Load a TPN file and return it as a dictionary mapping header

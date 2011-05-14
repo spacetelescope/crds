@@ -5,7 +5,9 @@ project specific way for HST.   Additionally,  this module provides functions fo
 URLs from which references and mappings can be downloaded.
 """
 import os.path
-import crds.pysh as pysh
+import gzip
+
+# import crds.pysh as pysh
 import crds.log as log
 
 HERE = os.path.dirname(__file__) or "./"
@@ -33,12 +35,14 @@ def setup_path_map(cdbs="/grp/hst/cdbs", rebuild_cache=False):
     """Dump the directory tree `cdbs` into a file and read the results
     into a global map from file basename to absolute path.
     """
-    cachepath = HERE + "/cdbs.paths"
+    cachepath = HERE + "/cdbs.paths.gz"
     if not os.path.exists(cachepath) or rebuild_cache:
+        import crds.pysh as pysh
         log.info("Generating CDBS file path cache.")
         pysh.sh("find  ${cdbs} >${cachepath}", raise_on_error=True)
+        pysh.sh("gzip ${cachepath}", raise_on_error=True)
         log.info("Done.")
-    for line in open(cachepath):
+    for line in gzip.open(cachepath):
         line = line.strip()
         if not line:
             continue
