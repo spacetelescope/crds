@@ -88,7 +88,7 @@ import timestamp
 import re
 import pprint as pp
 
-import numpy as np
+# import numpy as np
 
 import log
 
@@ -644,6 +644,7 @@ class ClosestGeometricRatioSelector(Selector):
         Selector.__init__(self, [keyname], *selections)
 
     def choose(self, header):
+        import numpy as np
         keyval = float(header[self._parameters[0]])
         nkeys = np.array(self.keys(), dtype='f')
         diff = np.abs(nkeys - keyval)
@@ -927,6 +928,7 @@ class ClosestTimeSelector(Selector):
         self._selections.sort()
 
     def choose(self, header):
+        import numpy as np
         time = header[self._parameters[0]]
         diff = np.array([abs_time_delta(time, key) for key in self.keys()], 'f')
         index = np.argmin(diff)
