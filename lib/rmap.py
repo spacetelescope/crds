@@ -244,11 +244,15 @@ class Mapping(object):
             raise MappingError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
             
     def to_json(self):
+        """Encode this Mapping as a string of JSON.
+        """
         rmap = dict(header=self.header, data=self.data, filename=self.filename)
         return json.dumps(keys_to_strings(rmap))
     
     @classmethod
     def from_json(cls, json_str):
+        """Decode a string of JSON from to_json() into a Mapping.
+        """
         rmap = strings_to_keys(json.loads(json_str))
         header = rmap["header"]
         data = rmap["data"]
@@ -257,6 +261,8 @@ class Mapping(object):
     
     @property
     def locate(self):
+        """Return the "locate" module associated with self.observatory.
+        """
         if not hasattr(self, "_locate"):
             self._locate = utils.get_object("crds." + self.observatory + ".locate")
         return self._locate
@@ -321,6 +327,8 @@ class PipelineContext(Mapping):
             self.selections[instrument] = InstrumentContext.from_file(imap, observatory, instrument)
 
     def get_best_refs(self, header, date=None):
+        """Return the best references for keyword map `header`.
+        """
         header = dict(header.items())
         instrument = header["INSTRUME"].lower()
         if date == "now":
@@ -406,9 +414,15 @@ class InstrumentContext(Mapping):
                 rmap_name, self.observatory, self.instrument, reftype, rmap_ext)
 
     def get_best_ref(self, reftype, header):
+        """Returns the single reference file basename appropriate for `header`
+        corresponding to `reftype`.
+        """
         return self.selections[reftype.lower()].get_best_ref(header)
 
     def get_best_refs(self, header):
+        """Returns a map of best references { reftype : reffile_basename } 
+        appropriate for this `header`.
+        """
         refs = {}
         for reftype in self.selections:
             log.verbose("\nGetting bestref for", repr(reftype))
@@ -444,6 +458,7 @@ class InstrumentContext(Mapping):
         return files
     
     def mapping_names(self):
+        """Returns a list of mapping files associated with this InstrumentContext."""
         files = [os.path.basename(self.filename)]
         for selector in self.selections.values():
             files.append(os.path.basename(selector.filename))
@@ -467,9 +482,14 @@ class ReferenceMapping(Mapping):
         self._selector = cls(header, data)
         
     def get_best_ref(self, header):
+        """Return the single reference file basename appropriate for `header` selected
+        by this ReferenceMapping.
+        """
         return self._selector.choose(header)
     
     def reference_names(self):
+        """Return the list of reference file basenames associated with this ReferenceMapping.
+        """
         return self._selector.reference_names()
     
 # ===================================================================
