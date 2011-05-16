@@ -142,13 +142,18 @@ def cache_mappings(pipeline_context, ignore_cache=False):
     assert isinstance(ignore_cache, bool)
     mappings = get_mapping_names(pipeline_context)
     return MAPPING_CACHER.get_local_files(pipeline_context, mappings, ignore_cache=ignore_cache)
-    
+  
 def dump_references(pipeline_context, baserefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and list of `baserefs` basenames,  obtain the
     set of reference files and cache them on the local file system.   
     
     Returns:   { ref_basename :   reference_local_filepath ... }   
     """
+    baserefs = list(baserefs)
+    for refname in baserefs:
+        if "NOT FOUND" in refname:
+            log.verbose("Skipping " + repr(refname))
+            baserefs.remove(refname)
     return REFERENCE_CACHER.get_local_files(pipeline_context, baserefs, ignore_cache=ignore_cache)
 
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
@@ -157,6 +162,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     
     Returns:   { reference_keyword :   reference_local_filepath ... }   
     """
+    bestrefs = dict(bestrefs)
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
             log.verbose("Reference type", repr(filetype),"NOT FOUND.  Ignoring.")
