@@ -326,7 +326,7 @@ class PipelineContext(Mapping):
             instrument = instrument.lower()
             self.selections[instrument] = InstrumentContext.from_file(imap, observatory, instrument)
 
-    def get_best_refs(self, header, date=None):
+    def get_best_references(self, header, date=None):
         """Return the best references for keyword map `header`.
         """
         header = dict(header.items())
@@ -338,7 +338,7 @@ class PipelineContext(Mapping):
         else:
             header["DATE"] = header["DATE-OBS"] + " " + header["TIME-OBS"]
         header["DATE"] = timestamp.reformat_date(header["DATE"])
-        return self.selections[instrument].get_best_refs(header)
+        return self.selections[instrument].get_best_references(header)
     
     def reference_names(self):
         """Return the list of reference files associated with this pipeline context."""
@@ -419,7 +419,7 @@ class InstrumentContext(Mapping):
         """
         return self.selections[reftype.lower()].get_best_ref(header)
 
-    def get_best_refs(self, header):
+    def get_best_references(self, header):
         """Returns a map of best references { reftype : reffile_basename } 
         appropriate for this `header`.
         """
@@ -555,12 +555,12 @@ def load_mapping(mapping):
 
 # ===================================================================
 
-def get_best_refs(context_file, header):
+def get_best_references(context_file, header):
     """Compute the best references for `header` for the given CRDS `context_file`.   This
     is a local computation using local rmaps and CPU resources.
     """
     ctx = get_cached_mapping(context_file)
-    return ctx.get_best_refs(header)
+    return ctx.get_best_references(header)
 
 
 def test():

@@ -69,11 +69,11 @@ def get_reference_names(pipeline_context):
     """
     return S.get_reference_names(pipeline_context)
 
-def get_best_refs(pipeline_context, header):
+def get_best_references(pipeline_context, header):
     """Return the dictionary mapping { filetype : reference_basename ... }
     corresponding to the given `header`
     """
-    return S.get_best_refs(pipeline_context, dict(header))
+    return S.get_best_references(pipeline_context, dict(header))
 
 # ==============================================================================
 
@@ -172,3 +172,12 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     for filetype, refname in bestrefs.items():
         refs[filetype] = localrefs[refname]
     return refs
+
+def determine_and_cache_best_references(pipeline_context, header, ignore_cache=False):
+    """Given the FITS `header` of a dataset and a `pipeline_context`,  determine the 
+    best set of reference files for processing the dataset,  cache them locally,  and
+    return the mapping  { reftype : local_file_path }.
+    """
+    best_refs = get_best_references(pipeline_context, header)
+    local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
+    return local_paths

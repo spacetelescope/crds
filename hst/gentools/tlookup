@@ -24,7 +24,7 @@ def test_references(fitsname):
     # Just want header for bestrefs,  so conditioning irrelevant + expensive
     header = lookup.get_unconditioned_header_union(fitsname)
 
-    refs = rmap.get_best_refs("hst.pmap", header)
+    refs = rmap.get_best_references("hst.pmap", header)
 
     mismatches = 0
     for filekind in refs:
