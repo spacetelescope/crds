@@ -552,6 +552,11 @@ def load_mapping(mapping):
         return ReferenceMapping.from_file(mapping, observatory, instrument, reftype)
     else:
         raise ValueError("Unknown mapping extension for " + repr(mapping))
+    
+def is_mapping(mapping):
+    """Return True IFF `mapping` has an extension indicating a CRDS mapping file.
+    """
+    return mapping.endswith((".pmap",".imap",".rmap"))
 
 # ===================================================================
 
