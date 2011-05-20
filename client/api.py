@@ -16,10 +16,11 @@ from crds.client.proxy import CheckingProxy
 
 # ==============================================================================
 
+# Server for CRDS services and mappings
+
 URL_SUFFIX = "/json/"
 URL = os.environ.get("CRDS_URL", 'http://localhost:8000')
 
-# ==============================================================================
 def set_crds_server(url):
     if not re.match("http://(\w+\.?)*\w(:\d+)?", url):
         raise ValueError("Invalid URL " + repr(url))
@@ -61,7 +62,7 @@ def get_reference_url(pipeline_context, reference):
 def get_reference_data(pipeline_context, reference):
     """Returns the contents of the specified reference file as a string.
     """
-    return S.get_reference_data(pipeline_context, reference)
+    return base64.b64decode(S.get_reference_data(pipeline_context, reference))
     
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
@@ -81,16 +82,17 @@ class FileCacher(object):
     """FileCacher is an abstract base class which gets remote files
     with simple names into a local cache.
     """
-    def _transfer_to_local_file_rpc(self, pipeline_context, name, localpath):   
-        utils.ensure_dir_exists(localpath)
-        contents = self._get_data(pipeline_context, name)
-        open(localpath,"w+").write(contents)
+    def _rpc_get_data(self, pipeline_context, name):
+        """Fetch the data for `name` via CRDS service and return it.
+        """
+        return self._get_data(pipeline_context, name)  # Get via jsonrpc
 
-    def _transfer_to_local_file_http(self, pipeline_context, name, localpath):   
-        utils.ensure_dir_exists(localpath)
+    def _http_get_data(self, pipeline_context, name):
+        """Fetch the data for `name` as a URL and return it.
+        """
         url = self._get_url(pipeline_context, name)
-        contents = urllib2.urlopen(url).read()
-        open(localpath,"w+").write(contents)
+        log.verbose("Fetching URL ", repr(url))
+        return urllib2.urlopen(url).read()
 
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
         """Given a list of basename `mapping_names` which are pertinent to the given
@@ -104,7 +106,9 @@ class FileCacher(object):
             localpath = self._locate(pipeline_context, name)
             if (not os.path.exists(localpath)) or ignore_cache:
                 log.verbose("Cache miss. Fetching[%d]" % i, repr(name), "to", repr(localpath))
-                self._transfer_to_local_file_rpc(pipeline_context, name, localpath)
+                utils.ensure_dir_exists(localpath)
+                contents = self._rpc_get_data(pipeline_context, name)
+                open(localpath,"w+").write(contents)
             else:
                 log.verbose("Cache hit[%d]" % i, repr(name), "at", repr(localpath))
             localpaths[name] = localpath
