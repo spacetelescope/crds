@@ -18,6 +18,9 @@
         },
     },
 }, {
+    ('UVIS', 'A', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
+    },
     ('UVIS', 'A', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
         '1990-01-01 00:00:00' : 't3k1347li_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
     },
@@ -41,6 +44,9 @@
         '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
         '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
         '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
+    },
+    ('UVIS', 'ABCD', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2010-12-10 00:00:00' : 'v5j1716ei_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12279, May 19 2011 05:19PM
     },
     ('UVIS', 'ABCD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
         '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
@@ -89,6 +95,9 @@
     ('UVIS', 'AD', '1.5', '3.0', '3.0', '*', 'F') : {
         '1990-01-01 00:00:00' : 't3k1347si_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
     },
+    ('UVIS', 'B', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
+    },
     ('UVIS', 'B', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
         '1990-01-01 00:00:00' : 't3k1347pi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
     },
@@ -131,6 +140,9 @@
     ('UVIS', 'BD', '1.5', '3.0', '3.0', '*', 'F') : {
         '1990-01-01 00:00:00' : 't3k13480i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
     },
+    ('UVIS', 'C', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
+    },
     ('UVIS', 'C', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
         '1990-01-01 00:00:00' : 't3k1347oi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
     },
@@ -157,6 +169,9 @@
         '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
         '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
         '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
+    },
+    ('UVIS', 'D', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
     },
     ('UVIS', 'D', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
         '1990-01-01 00:00:00' : 't3k1347qi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM

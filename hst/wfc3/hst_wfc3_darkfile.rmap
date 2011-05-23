@@ -460,6 +460,21 @@
         '2010-10-06 00:17:00' : 'v2o1559fi_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12251, Feb 24 2011 04:08PM
         '2010-10-09 07:09:00' : 'v2o1559gi_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12251, Feb 24 2011 04:08PM
         '2010-10-13 02:49:00' : 'v2o1559hi_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12251, Feb 24 2011 04:08PM
+        '2010-10-15 13:38:00' : 'v4d17230i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-10-20 02:32:00' : 'v4d17231i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-10-24 05:41:00' : 'v4d17232i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-10-28 02:08:00' : 'v4d17233i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-11-01 05:14:00' : 'v4d17234i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-11-05 05:16:00' : 'v4d17235i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-11-09 02:08:00' : 'v4d17236i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-11-12 23:47:00' : 'v4d17237i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12274, Apr 13 2011 05:42PM
+        '2010-11-14 09:37:00' : 'v5j1945qi_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-11-19 03:34:00' : 'v5j1945ri_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-11-23 00:19:00' : 'v5j1945si_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-11-27 00:16:00' : 'v5j1945ti_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-12-01 00:19:00' : 'v5j19460i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-12-05 01:35:00' : 'v5j19461i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
+        '2010-12-08 18:48:00' : 'v5j19462i_drk.fits', #Dark created from in-flight WFC3/UVIS frames.----------------------, 12280, May 19 2011 07:56PM
     },
     ('UVIS', 'ABCD', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '2.0', '2.0') : {
         '1991-01-01 00:00:00' : 's191848ii_drk.fits', #Null file for testing, 11812, Jan 09 2008 06:56PM

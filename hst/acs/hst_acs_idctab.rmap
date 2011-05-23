@@ -14,7 +14,7 @@
         '2007-07-17 00:00:00' : 's5f1959lj_idc.fits', #Distortion coefficients derived from NGC 604 reference field First created on 25 July 2007, 11861, May 15 2008 08:03PM
     },
     ('WFC',) : {
-        '2002-03-01 00:00:00' : 'q2h2010pj_idc.fits', #Rows added for filter F814 with F502N or F658N fcpre_idc.fits renamed to n361344lj_idc.fits on Mar 6, 11611, Feb 17 2006 08:14PM
+        '2002-03-01 00:00:00' : 'v4115408j_idc.fits', #Exact copy of u7n18502j; incorrect V2/V3 axis in q2h2010pj--------- File created June 9th by Co, 12270, Apr 01 2011 03:49PM
         '2002-10-21 00:00:00' : 'u7n18502j_idc.fits', #Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
         '2009-01-01 00:00:00' : 'u7n18501j_idc.fits', #Exact copy of qbu1641sj; header updated for new version of MDrizzle File created June 9th by Colin C, 12189, Jul 23 2010 08:17PM
     },

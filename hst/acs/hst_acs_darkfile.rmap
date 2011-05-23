@@ -1337,8 +1337,6 @@
         '2002-03-27 03:08:00' : 'n3i09382j_drk.fits', #ACS/WFC superdark for Mar 27 2002, 11167, Mar 18 2003 08:11PM
         '2002-03-28 00:11:00' : 'n3i09384j_drk.fits', #ACS/WFC superdark for Mar 28 2002, 11167, Mar 18 2003 08:11PM
         '2002-03-30 12:30:00' : 'n3k1026pj_drk.fits', #ACS/WFC superdark for Mar 30 2002, 11170, Mar 20 2003 03:38PM
-        '2002-03-30 16:00:00' : 'm4315563j_drk.fits', #ACS/WFC pedigree=inflight 30/03/2002 30/03/2002 superdark, 10953, Apr 03 2002 09:36PM
-        '2002-03-30 16:21:00' : 'm4m0925sj_drk.fits', #ACS/WFC superdark for Mar 30 2002, 10959, Apr 22 2002 04:47PM
         '2002-03-31 00:11:00' : 'n3k1026qj_drk.fits', #ACS/WFC superdark for Mar 31 2002, 11170, Mar 20 2003 03:38PM
         '2002-04-01 15:52:00' : 'n3k1026rj_drk.fits', #ACS/WFC superdark for Apr 01 2002, 11170, Mar 20 2003 03:38PM
         '2002-04-02 01:59:00' : 'n3k1026sj_drk.fits', #ACS/WFC superdark for Apr 02 2003, 11170, Mar 20 2003 03:38PM
@@ -1372,7 +1370,6 @@
         '2002-05-08 04:24:00' : 'n3a1230fj_drk.fits', #ACS/WFC superdark for May 08 2002, 11161, Mar 10 2003 06:45PM
         '2002-05-09 01:36:00' : 'n3a1230gj_drk.fits', #ACS/WFC superdark for May 09 2002, 11161, Mar 10 2003 06:45PM
         '2002-05-10 00:00:00' : 'n3c11591j_drk.fits', #ACS/WFC superdark for May 10 2002, 11164, Mar 13 2003 06:31PM
-        '2002-05-11 00:00:00' : 'm5r2208pj_drk.fits', #ACS/WFC superdark for May 11 2002, 10977, May 28 2002 07:47PM
         '2002-05-11 01:35:00' : 'n3c11592j_drk.fits', #ACS/WFC superdark for May 11 2002, 11164, Mar 13 2003 06:31PM
         '2002-05-12 00:00:00' : 'n3c11593j_drk.fits', #ACS/WFC superdark for May 12 2002, 11164, Mar 13 2003 06:31PM
         '2002-05-13 02:18:00' : 'n3c11594j_drk.fits', #ACS/WFC superdark for May 13 2002, 11164, Mar 13 2003 06:31PM
@@ -1436,7 +1433,6 @@
         '2002-07-13 11:10:00' : 'n2o07335j_drk.fits', #ACS/WFC superdark for Jul 13 2002, 11151, Feb 24 2003 12:59PM
         '2002-07-14 01:43:00' : 'n2o07336j_drk.fits', #ACS/WFC superdark for Jul 14 2002, 11151, Feb 24 2003 12:59PM
         '2002-07-15 00:30:00' : 'n2o07337j_drk.fits', #ACS/WFC superdark for Jul 15 2002, 11151, Feb 24 2003 12:59PM
-        '2002-07-16 11:00:00' : 'm7i1602lj_drk.fits', #ACS/WFC superdark for Jul 16 2002, 11001, Jul 19 2002 05:28PM
         '2002-07-16 11:22:00' : 'n261314lj_drk.fits', #ACS/WFC superdark for Jul 16 2002, 11142, Feb 06 2003 07:43PM
         '2002-07-17 08:07:00' : 'n261314nj_drk.fits', #ACS/WFC superdark for Jul 17 2002, 11142, Feb 06 2003 07:43PM
         '2002-07-18 11:16:00' : 'n261314pj_drk.fits', #ACS/WFC superdark for Jul 18 2002, 11142, Feb 06 2003 07:43PM
@@ -1476,8 +1472,6 @@
         '2002-08-26 09:06:00' : 'n1s1519mj_drk.fits', #ACS/WFC superdark for Aug 26 2002, 11137, Jan 29 2003 10:18PM
         '2002-08-27 02:42:00' : 'n1s1519nj_drk.fits', #ACS/WFC superdark for Aug 27 2002, 11137, Jan 29 2003 10:18PM
         '2002-08-28 02:42:00' : 'n1s1519oj_drk.fits', #ACS/WFC superdark for Aug 28 2002, 11137, Jan 29 2003 10:18PM
-        '2002-08-28 08:46:00' : 'm941411ej_drk.fits', #ACS/WFC superdark for Aug 28 2002, 11045, Sep 09 2002 09:56PM
-        '2002-08-29 07:37:00' : 'm9916115j_drk.fits', #ACS/WFC superdark for Aug 29 2002, 11045, Sep 09 2002 09:56PM
         '2002-08-29 08:46:00' : 'n1s1519pj_drk.fits', #ACS/WFC superdark for Aug 29 2002, 11137, Jan 29 2003 10:18PM
         '2002-08-30 07:37:00' : 'n1s1519qj_drk.fits', #ACS/WFC superdark for Aug 30 2002, 11137, Jan 29 2003 10:18PM
         '2002-08-30 08:48:00' : 'm9916116j_drk.fits', #ACS/WFC superdark for Aug 30 2002, 11045, Sep 09 2002 09:56PM
@@ -2923,5 +2917,13 @@
         '2011-02-23 00:04:00' : 'v3b1842lj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12258, Mar 11 2011 06:58PM
         '2011-02-25 00:10:00' : 'v3b1842mj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12258, Mar 11 2011 06:58PM
         '2011-02-28 08:34:00' : 'v3b1842nj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12258, Mar 11 2011 06:58PM
+        '2011-03-02 00:09:00' : 'v4414347j_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-04 00:04:00' : 'v4414348j_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-07 01:44:00' : 'v4414349j_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-09 00:09:00' : 'v441434aj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-11 04:33:00' : 'v441434bj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-14 01:03:00' : 'v441434cj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-16 00:04:00' : 'v441434dj_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
+        '2011-03-16 23:34:00' : 'v441434ej_drk.fits', #CCD anneal Feb 15 2011 23:29:16UT ACS-R----------------------------, 12271, Apr 04 2011 03:33PM
     },
 }, 

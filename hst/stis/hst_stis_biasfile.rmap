@@ -314,10 +314,18 @@
         '2011-01-06 00:29:00' : 'v232037go_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 13, 2011 using the py, 12246, Feb 03 2011 08:43PM
         '2011-01-13 00:00:00' : 'v232037ho_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 19, 2011 using the py, 12246, Feb 03 2011 08:43PM
         '2011-01-19 00:00:00' : 'v232037io_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 24, 2011 using the py, 12246, Feb 03 2011 08:43PM
-        '2011-01-24 16:57:00' : 'v372106oo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the py, 12255, Mar 08 2011 12:54PM
-        '2011-02-01 00:37:00' : 'v372106po_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the py, 12255, Mar 08 2011 12:54PM
-        '2011-02-08 14:10:00' : 'v372106qo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the py, 12255, Mar 08 2011 12:54PM
-        '2011-02-15 07:30:00' : 'v372106ro_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 03, 2011 using the py, 12255, Mar 08 2011 12:54PM
+        '2011-01-24 16:57:00' : 'v471332ho_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-01 00:37:00' : 'v471332io_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-08 14:10:00' : 'v471332jo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-15 07:30:00' : 'v471332ko_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 03, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-21 15:42:00' : 'v4c00576o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-01 00:00:00' : 'v4c00577o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-08 00:03:00' : 'v4c00578o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-15 01:28:00' : 'v4c00579o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-22 05:51:00' : 'v5b12166o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 31, 2011 using the, 12278, May 11 2011 12:24PM
+        '2011-03-30 05:04:00' : 'v5b12167o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Apr 06, 2011 using the, 12278, May 11 2011 12:24PM
+        '2011-04-05 05:52:00' : 'v5b12168o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Apr 14, 2011 using the, 12278, May 11 2011 12:24PM
+        '2011-04-13 00:00:00' : 'v5b12169o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Apr 19, 2011 using the, 12278, May 11 2011 12:24PM
     },
     ('CCD', '1.0', 'D', '3.0', '1.0', '2.0') : {
         '1997-02-27 00:00:00' : 'k4k1503no_bia.fits', #Superbias created by R. Diaz-Miller Created on April 19, 2000, using the, 10638, Apr 20 2000 08:09PM
@@ -328,14 +336,6 @@
         '1998-11-22 00:00:00' : 'k4k1503so_bia.fits', #Superbias created by R. Diaz-Miller Created on April 19, 2000, using the, 10638, Apr 20 2000 08:09PM
         '1999-02-15 00:00:00' : 'k4k1503to_bia.fits', #Superbias created by R. Diaz-Miller Created on April 19, 2000, using the, 10638, Apr 20 2000 08:09PM
         '1999-05-01 00:00:00' : 'k4k15040o_bia.fits', #Superbias created by R. Diaz-Miller Created on April 19, 2000, using the, 10638, Apr 20 2000 08:09PM
-        '1999-09-25 00:00:00' : 'k4713350o_bia.fits', #Superbias created by R. Diaz-Miller Created on March 23, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '1999-10-09 00:00:00' : 'k4713351o_bia.fits', #Superbias created by R. Diaz-Miller Created on March 23, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '1999-10-24 00:00:00' : 'k4713352o_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '1999-12-28 00:00:00' : 'k471339no_bia.fits', #Superbias created by R. Diaz-Miller Ceated on March 30, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '2000-01-11 00:00:00' : 'k471339jo_bia.fits', #Superbias created by R. Diaz-Miller Created on March 30, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '2000-01-26 00:00:00' : 'k471339ko_bia.fits', #Superbias created by R. Diaz-Miller Created on March 30, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '2000-02-12 00:00:00' : 'k471339lo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10611, Apr 10 2000 12:59PM
-        '2000-02-24 00:00:00' : 'k471339mo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10611, Apr 10 2000 12:59PM
         '2000-03-09 00:00:00' : 'k5q11160o_bia.fits', #Superbias created by R. Diaz-Miller Created on May 25, 2000 using the cl scripts, 10677, May 30 2000 04:14PM
         '2000-03-23 00:00:00' : 'k5q11163o_bia.fits', #Superbias created by R. Diaz-Miller Created on May 25, 2000 using the cl scripts, 10677, May 30 2000 04:14PM
         '2000-04-07 00:00:00' : 'k5q11166o_bia.fits', #Superbias created by R. Diaz-Miller Created on May 25, 2000 using the cl scripts, 10677, May 30 2000 04:14PM
@@ -489,10 +489,6 @@
         '1999-05-01 00:00:00' : 'k4o1609oo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 21, 2000, using the, 10640, Apr 25 2000 12:21PM
         '1999-07-01 00:00:00' : 'ncc1840lo_bia.fits', #Reference file created by STIS bias pipeline Created on Dec 12, 2003 using the pyraf script 'weekbias'., 11310, Dec 16 2003 05:20PM
         '1999-07-01 00:33:00' : 'ncc16134o_bia.fits', #Reference file created by STIS bias pipeline Created on Dec 12, 2003 using the pyraf script 'weekbias'., 11304, Dec 15 2003 09:09PM
-        '1999-07-14 00:00:00' : 'k4b0828mo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
-        '1999-07-28 00:00:00' : 'k4b0828no_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
-        '1999-08-10 00:00:00' : 'k4b0828oo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
-        '1999-08-23 00:00:00' : 'k4b0828po_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
         '1999-09-07 00:00:00' : 'k4b0828qo_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
         '1999-09-25 00:00:00' : 'k4b0828ro_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
         '1999-10-09 00:00:00' : 'k4b0828so_bia.fits', #Superbias created by R. Diaz-Miller Created on April 4, 2000, using the, 10612, Apr 11 2000 12:41PM
@@ -1015,7 +1011,11 @@
         '2010-12-16 01:46:00' : 'v1514371o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 04, 2011 using the py, 12240, Jan 05 2011 02:40PM
         '2010-12-29 04:50:00' : 'v232037do_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 13, 2011 using the py, 12246, Feb 03 2011 08:43PM
         '2011-01-13 00:16:00' : 'v232037eo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Jan 24, 2011 using the py, 12246, Feb 03 2011 08:43PM
-        '2011-01-24 16:57:00' : 'v372106mo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Feb 08, 2011 using the py, 12255, Mar 08 2011 12:54PM
-        '2011-02-08 18:27:00' : 'v372106no_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the py, 12255, Mar 08 2011 12:54PM
+        '2011-01-24 16:57:00' : 'v471332fo_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Feb 08, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-08 18:27:00' : 'v471332go_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 02, 2011 using the, 12272, Apr 07 2011 01:36PM
+        '2011-02-21 15:42:00' : 'v4c00574o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-08 00:20:00' : 'v4c00575o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Mar 23, 2011 using the, 12273, Apr 12 2011 01:02AM
+        '2011-03-22 05:51:00' : 'v5b12164o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Apr 06, 2011 using the, 12278, May 11 2011 12:24PM
+        '2011-04-05 06:40:00' : 'v5b12165o_bia.fits', #Reference file created by STIS bias pipeline----------------------- Created on Apr 19, 2011 using the, 12278, May 11 2011 12:24PM
     },
 }, 

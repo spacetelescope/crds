@@ -5,7 +5,7 @@
     'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
 }, {
     ('FUV', '*') : {
-        '1996-10-01 00:00:00' : 'v3n1816nl_flat.fits', #This flat field was created to correct gridwire shadows------------, 12269, Mar 23 2011 06:21PM
+        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits', ## *** dated gridwire shadow correction---------------------------------, 12276, Apr 28 2011 05:25PM
     },
     ('FUV', 'SPECTROSCOPIC') : {
         '1996-10-01 00:00:00' : 'n9n20182l_flat.fits', #dummy file, 11255, Sep 24 2003 02:46PM
