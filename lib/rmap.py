@@ -21,7 +21,7 @@ The available HST reference data seems to have a number of ACS
 references missing relative to the CDBS HTML table dump:
 
 >>> len(p.missing_references())
-88
+90
 
 There are 72 pmap, imap, and rmap files in the entire HST pipeline:
 
@@ -32,7 +32,7 @@ There are 5719 reference files known to the initial CRDS mappings scraped
 from the CDBS HTML table dump:
 
 >>> len(p.reference_names())
-5719
+5744
 
 Pipeline reference files are also broken down by instrument:
 
@@ -51,7 +51,7 @@ The ACS instrument has 15 associated mappings,  including the instrument context
 The ACS instrument has 3983 associated reference files in the hst_acs.imap context:
 
 >>> len(i.reference_names())
-3983
+3991
 
 Active instrument references are also broken down by filetype:
 
@@ -62,7 +62,7 @@ Active instrument references are also broken down by filetype:
 >>> _ = r.to_json()
 >>> r = ReferenceMapping.from_json(_)
 >>> len(r.reference_names())
-729
+735
 """
 import os
 import os.path
@@ -113,7 +113,7 @@ class Mapping(object):
         self.filename = filename
         self.header = header
         self.data = data
-        
+    
     def __repr__(self):
         r = self.__class__.__name__ + "("
         for attr in self.check_attrs:
@@ -218,7 +218,7 @@ class Mapping(object):
     def validate_file_load(self):
         """Validate assertions about the contents of this rmap."""
         for name in self.check_attrs:
-            self.check_header_attr(name)
+            self._check_header_attr(name)
 #        if "parkey" not in self.header:
 #            raise MappingError("Missing header keyword: 'parkey'.")
     
@@ -230,7 +230,7 @@ class Mapping(object):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
         return [ mapping for mapping in self.mapping_names() if not self.locate.mapping_exists(mapping)]
 
-    def check_header_attr(self, name):
+    def _check_header_attr(self, name):
         """Verify that the mapping header keyword `name` exists and matches self's attribute value.
         """
         attr = getattr(self, name)
@@ -364,18 +364,6 @@ class PipelineContext(Mapping):
         for instrument in self.selections:
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
-
-    def tpn_map(self):
-        """Return the map of 3 character tpn extensions used by CDBS:  
-        
-        { instrument : { reftype : extension } }
-        """
-        tpns = {}
-        for instrument, instr_sel in self.selections.items():
-            tpns[instrument] = {}
-            for reftype, reftype_sel in instr_sel.selections.items():
-                tpns[instrument][reftype] = reftype_sel.extension
-        return tpns
 
 # ===================================================================
 
