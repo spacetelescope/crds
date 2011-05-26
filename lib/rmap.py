@@ -537,7 +537,10 @@ def locate_mapping(mappath):
     # Convert the mapping basename into an absolute path by first looking
     # up the "locate" module for the observatory and then calling locate_mapping().
     observatory = utils.context_to_observatory(mappath)
-    locate = utils.get_object("crds." + observatory + ".locate")
+    try:
+        locate = utils.get_object("crds." + observatory + ".locate")
+    except ImportError:
+        raise ValueError("No observatory associated with mapping file " + repr(mappath))
     where = locate.locate_mapping(mappath)
     return where
 
