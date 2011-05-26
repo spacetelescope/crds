@@ -1,10 +1,13 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'WCPTAB',
-    'parkey' : ('USEAFTER',),
-}, {
-    () : {
-        '1997-02-12 00:00:00' : 'lag1815lo_wcp.fits', #Parameters used by calstis4 (wavecal processing) This is an initial wavecal parameters table, based larg, 10847, Oct 17 2001 03:22PM
-    },
-}, 
+    'parkey' : ('DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    () : UseAfter({
+        '1997-02-12 00:00:00' : 'lag1815lo_wcp.fits',
+    }),
+})

@@ -27,7 +27,5 @@
     </table>
     <table>
         <tr><th>Reference File Type</th><th>File Suffix</th><th>Header Keyword</th><th>Detector</th></tr>
-        <tr><td>**Analog-to-Digital Tables**<a href="description.html#a2d">Currently disabled</a></td><td>A2D</td><td>ATODTAB</td><td>N/A</td></tr>
-        <tr><td>**Post-Flash Image File**<a href="description.html#fls">Currently disabled</a></td><td>FLS</td><td>FLSFILE</td><td >            N/A            </td></tr>
     </table>
 </document>

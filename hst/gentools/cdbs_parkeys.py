@@ -9,7 +9,7 @@ import crds.utils as utils
 # =======================================================================
 
 # MAPKEYS defines the key values which are added to the secondary lookup list.
-MAPKEYS     = ('use_after','file')
+MAPKEYS     = ('date-obs','time-obs','file')
 
 # COMMENTKEYS defines the row items which are appended as a comment to each rmap mapping.
 COMMENTKEYS = ('comments', 'delivery_#', 'delivery_date')
@@ -146,6 +146,7 @@ KIND_KEYS = {
             "disptab"  : ('detector',),
             "echsctab" : ('detector',),
             "exstab"   : ('detector',),
+            "gactab"   : ('detector', 'optical_element', ),
             "halotab"  : ('detector',),
             "idctab"   : ('detector',),
             "inangtab" : ('detector',),
@@ -155,7 +156,7 @@ KIND_KEYS = {
             "mofftab"  : ('detector',),
             "pctab"    : ('detector','obstype','opt._element',),
             "pfltfile" : ('detector','obstype','opt._element','aperture','*cen._wave.'),
-            "phottab"  : ('detector','obstype','opt._element','*cen._wave.'),
+            "phottab"  : ('detector','obstype',),
             "riptab"   : ('detector',),
             "sdctab"   : ('detector',),
             "sptrctab" : ('detector',),
@@ -325,6 +326,7 @@ CDBS_PARKEYS_TO_FITS = {
     },
 
     "stis" : {
+        "optical_element" : "OPT_ELEM",
         "opt._element" : "OPT_ELEM",
         "cen._wave." : "CENWAVE",
         "gain"     : "CCDGAIN",
@@ -345,31 +347,6 @@ def to_fitskey(instrument, var):
         except KeyError:
             fits_key = var.upper()
     return fits_key
-
-# =======================================================================
-
-"""
-The following classes are emitted at rmap generation time to define the
-code which will operate on the rmap at runtime,  enabling customization
-of the selectors by instrument and reftype.
-"""
-
-SELECTOR_CLASSES = {
-#    "acs" : {
-#        "biasfile" : "crds.hst.acs.AcsBiasfileSelector",
-#        "pfltfile" : "crds.hst.acs.AcsPfltfileSelector",
-#    },
-#    "wfc3" : {
-#        "biasfile" : "crds.hst.wfc3.Wfc3BiasfileSelector",
-#    },
-}
-
-def get_selector_class(instrument, reftype):
-    try:
-        return SELECTOR_CLASSES[instrument][reftype]
-    except KeyError:
-        return None
-
 
 # =======================================================================
 keymatch = collections.namedtuple("keymatch","header_keyword,extension,rmap_keys,tpn_keys")

@@ -1,14 +1,17 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'OSCNTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('IR',) : {
-        '1991-01-02 00:00:00' : 'r5b17012i_osc.fits', #Initial values for ground test data processing, 11710, May 11 2007 05:19PM
-        '2001-01-01 00:00:00' : 'q911321mi_osc.fits', #Initial values for ground test data processing, 11647, Sep 01 2006 01:26PM
-    },
-    ('UVIS',) : {
-        '1991-01-01 00:00:00' : 'q911321oi_osc.fits', #WFC3 normal overscan CCD data compatible, 11647, Sep 01 2006 01:26PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b17012i_osc.fits',
+        '2001-01-01 00:00:00' : 'q911321mi_osc.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '1991-01-01 00:00:00' : 'q911321oi_osc.fits',
+    }),
+})

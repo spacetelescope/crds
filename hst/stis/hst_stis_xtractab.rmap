@@ -1,16 +1,19 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'XTRACTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('CCD',) : {
-        '1996-10-01 00:00:00' : 'n7p1031qo_1dx.fits', #Analysis from prop. 7094 New measurements of extraction slit parameters for the first-or, 11220, Jul 28 2003 12:07PM
-    },
-    ('FUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'n7p10323o_1dx.fits', #Analysis from prop. 7064 and ground data This update corrections an error in the values for the backgrou, 11220, Jul 28 2003 12:07PM
-    },
-    ('NUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'l3m1437to_1dx.fits', #Analysis from prop. 7064 and ground data New measurements of extraction slit parameters for the, 10765, Mar 28 2001 09:07PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('CCD',) : UseAfter({
+        '1996-10-01 00:00:00' : 'n7p1031qo_1dx.fits',
+    }),
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'n7p10323o_1dx.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'l3m1437to_1dx.fits',
+    }),
+})

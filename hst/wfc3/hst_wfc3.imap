@@ -1,57 +1,20 @@
-{
-    'observatory':'HST',
-    'instrument':'WFC3',
-    'source_url':'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
-    'reftype':'instrument',
-}, {
-    # **Bias Images ** Additive stationary pattern in the electronic zero point of the CCDs. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3BiasReference?no_wrap=true'
-    'biasfile' : ('BIA', 'hst_wfc3_biasfile.rmap'),
+header = {
+    'mapping' : 'instrument',
+    'observatory' : 'HST',
+    'instrument' : 'WFC3',
+    'parkey' : ('INSTRUME',),
+    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
+}
 
-    # **Dark Images** Additive noise due to thermal effects. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3UVISdarks?no_wrap=true'
-    #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3IRdarks?no_wrap=true'
-    'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
-
-    # **Flat-Field Images** Variations in the sensitivity of the detectors. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLbin1UVIS?no_wrap=true'
-    #  1 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLbin2UVIS?no_wrap=true'
-    #  2 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLbin3UVIS?no_wrap=true'
-    #  3 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3PFLflatsIR?no_wrap=true'
-    'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
-
-    # **Linearity Correction Files ** Non-linearity effects in the IR detector. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3Linearity?no_wrap=true'
+selector = {
     'nlinfile' : ('LIN', 'hst_wfc3_nlinfile.rmap'),
-
-    # **Bad Pixel Tables ** All known permanently bad pixels. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3BadPix?no_wrap=true'
-    'bpixtab' : ('BPX', 'hst_wfc3_bpixtab.rmap'),
-
-    # **Detector Characteristics Tables** Detector parameters such as readnoise, gain, and bias levels. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3CCDchar?no_wrap=true'
-    'ccdtab' : ('CCD', 'hst_wfc3_ccdtab.rmap'),
-
-    # **Overscan Region Tables ** Overscan (UVIS) or reference pixel (IR) areas. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3Overscan?no_wrap=true'
-    'oscntab' : ('OSC', 'hst_wfc3_oscntab.rmap'),
-
-    # **Cosmic Ray Rejection Tables ** Parameters for performing image stacking. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3crreject?no_wrap=true'
-    'crrejtab' : ('CRR', 'hst_wfc3_crrejtab.rmap'),
-
-    # **MultiDrizzle Parameter Table** Input parameters for combining associated exposures. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3multidrizzle?no_wrap=true'
-    'mdriztab' : ('MDZ', 'hst_wfc3_mdriztab.rmap'),
-
-    # **Image Distortion Coefficient Tables ** Geometric distortion models. 
-    #  0 <-- 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/WFC3distcoeff?no_wrap=true'
     'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
-
-    # **Analog-to-Digital Tables** 
-    # No URLs for {'file_suffix': 'A2D', 'detector': 'N/A', 'reference_file_type': '**Analog-to-Digital Tables** <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/description.html#a2d"> Currently disabled </a>', 'header_keyword': 'ATODTAB'} 
-
-    # **Post-Flash Image File** 
-    # No URLs for {'file_suffix': 'FLS', 'detector': 'N/A', 'reference_file_type': '**Post-Flash Image File** <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex/description.html#fls"> Currently disabled </a>', 'header_keyword': 'FLSFILE'} 
-
-},
+    'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
+    'biasfile' : ('BIA', 'hst_wfc3_biasfile.rmap'),
+    'bpixtab' : ('BPX', 'hst_wfc3_bpixtab.rmap'),
+    'oscntab' : ('OSC', 'hst_wfc3_oscntab.rmap'),
+    'ccdtab' : ('CCD', 'hst_wfc3_ccdtab.rmap'),
+    'crrejtab' : ('CRR', 'hst_wfc3_crrejtab.rmap'),
+    'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
+    'mdriztab' : ('MDZ', 'hst_wfc3_mdriztab.rmap'),
+}

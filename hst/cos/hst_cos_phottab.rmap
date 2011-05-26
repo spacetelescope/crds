@@ -1,15 +1,18 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'COS',
     'reftype' : 'PHOTTAB',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-}, {
-    ('FUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00' : 's7g1700kl_phot.fits', #from TV2003 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 'u8k1433ql_phot.fits', #Added entries for G140L/1280.------------------------------------- 08/09/2010, 12204, Aug 20 2010 02:37PM
-    },
-    ('NUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00' : 's7g17011l_phot.fits', #from TV2006 data Modified to account for change of coordinates. Modified t, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 't9h1220sl_phot.fits', #Reference file from SMOV 11479 standard star observations Modified to account for change of coordina, 12087, Sep 17 2009 12:25PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('FUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700kl_phot.fits',
+        '2009-05-11 00:00:00' : 'u8k1433ql_phot.fits',
+    }),
+    ('NUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g17011l_phot.fits',
+        '2009-05-11 00:00:00' : 't9h1220sl_phot.fits',
+    }),
+})

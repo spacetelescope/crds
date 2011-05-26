@@ -1,10 +1,13 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'COS',
     'reftype' : 'BADTTAB',
-    'parkey' : ('DETECTOR', 'OBSMODE', 'USEAFTER'),
-}, {
-    ('FUV', 'TIME-TAG') : {
-        '1996-10-01 00:00:00' : 's7o1739kl_badt.fits', #time intervals before launch fuv_badt.fits renamed to n9n2017rl_badt.fits on Sep 23 2003, 11878, Jul 24 2008 05:44PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'OBSMODE', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('FUV', 'TIME-TAG') : UseAfter({
+        '1996-10-01 00:00:00' : 's7o1739kl_badt.fits',
+    }),
+})

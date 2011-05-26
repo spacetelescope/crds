@@ -1,15 +1,18 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'CCDTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('IR',) : {
-        '1991-01-01 00:00:00' : 'q911321li_ccd.fits', #Reference data based on Thermal-Vac #1 results for FPA64, 11647, Sep 01 2006 01:26PM
-        '2008-02-20 00:00:00' : 't2c16200i_ccd.fits', #Reference data based on Thermal-Vac #3, gain=2.5 results for IR-4, 11993, Feb 12 2009 04:23PM
-    },
-    ('UVIS',) : {
-        '1991-01-01 00:00:00' : 'r6p1618ci_ccd.fits', #TV data processing, 11730, Jun 25 2007 04:25PM
-        '1991-01-02 00:00:00' : 't291659mi_ccd.fits', #UVIS-1 CCD characteristics from TV3 data, 11995, Feb 16 2009 02:43PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '1991-01-01 00:00:00' : 'q911321li_ccd.fits',
+        '2008-02-20 00:00:00' : 't2c16200i_ccd.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '1991-01-01 00:00:00' : 'r6p1618ci_ccd.fits',
+        '1991-01-02 00:00:00' : 't291659mi_ccd.fits',
+    }),
+})

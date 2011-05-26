@@ -1,15 +1,18 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'MDRIZTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('IR',) : {
-        '2008-01-01 00:00:00' : 'sau19319i_mdz.fits', #mdriztab created using WFC3/TV3 frames, 11943, Oct 30 2008 07:33PM
-        '2009-05-14 00:00:00' : 'ubi1853pi_mdz.fits', #Multidrizzle parameter table from Cy17 images w/o runfile entry----, 12229, Nov 18 2010 06:56PM
-    },
-    ('UVIS',) : {
-        '2008-01-01 00:00:00' : 'sau1931ai_mdz.fits', #mdriztab created using WFC3/TV3 frames, 11943, Oct 30 2008 07:33PM
-        '2009-05-14 00:00:00' : 'ubi1853qi_mdz.fits', #Multidrizzle parameter table from Cy17 images w/o runfile entry----, 12229, Nov 18 2010 06:56PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '2008-01-01 00:00:00' : 'sau19319i_mdz.fits',
+        '2009-05-14 00:00:00' : 'ubi1853pi_mdz.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '2008-01-01 00:00:00' : 'sau1931ai_mdz.fits',
+        '2009-05-14 00:00:00' : 'ubi1853qi_mdz.fits',
+    }),
+})

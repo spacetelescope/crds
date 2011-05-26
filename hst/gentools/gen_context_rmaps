@@ -8,5 +8,5 @@ else:
 
 for instr in INSTRUMENTS:
     % python convert_index.py ../${instr}/sources/${instr}_index.xml  --generate-context-rmap
-    % mv ${instr}.rmap ../${instr}/hst_${instr}.imap
+    % mv ${instr}.imap ../${instr}/hst_${instr}.imap
 

@@ -1,7 +1,7 @@
 header = {
+    'mapping': 'pipeline',
     'observatory':'HST',
-    'parkey' : ('INSTRUME'),
-    'reftype': 'pipeline',
+    'parkey' : ('INSTRUME',),
 }
 
 selector = {

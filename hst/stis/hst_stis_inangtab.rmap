@@ -1,16 +1,19 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'INANGTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('CCD',) : {
-        '1996-10-01 00:00:00' : 'h5s11397o_iac.fits', #Model/C. Bowers May 6, 1997, 10116, May 29 1997 03:52PM
-    },
-    ('FUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'h1v1541eo_iac.fits', #Prelaunch Calibration/Lindler and Models, 10023, Jan 31 1997 08:49PM
-    },
-    ('NUV-MAMA',) : {
-        '1996-10-01 00:00:00' : 'l3m1437ro_iac.fits', #Prelaunch Calibration/Lindler and Models 'mama2_iac.fits renamed to h1v1541fo_iac.fits on Jan 31 1997 03, 10765, Mar 28 2001 09:07PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('CCD',) : UseAfter({
+        '1996-10-01 00:00:00' : 'h5s11397o_iac.fits',
+    }),
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'h1v1541eo_iac.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'l3m1437ro_iac.fits',
+    }),
+})

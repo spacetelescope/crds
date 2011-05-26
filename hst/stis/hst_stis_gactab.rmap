@@ -1,0 +1,22 @@
+header = {
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'instrument' : 'STIS',
+    'reftype' : 'GACTAB',
+    'parkey' : ('DETECTOR', 'OPT_ELEM', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('CCD', '*') : UseAfter({
+        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
+    }),
+    ('CCD', 'G230LB') : UseAfter({
+        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
+    }),
+    ('CCD', 'G430L') : UseAfter({
+        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
+    }),
+    ('CCD', 'G750L') : UseAfter({
+        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
+    }),
+})

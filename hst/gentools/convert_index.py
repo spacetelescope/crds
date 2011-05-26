@@ -21,12 +21,11 @@ the instrument index are implicit:
 import sys
 from cStringIO import StringIO
 import argparse
+from collections import OrderedDict
 
-import crds.hst.gentools.ezxml as ezxml
-import crds.hst.gentools.scrape as scrape
-import crds.hst.gentools.tlist as tlist
+from crds.hst.gentools import ezxml, scrape, tlist
 
-from crds import log
+from crds import log, rmap
 
 # ==========================================================================================
 
@@ -64,40 +63,28 @@ def get_filelist_xml(fname):
             scrape.dump_tables(url, sourcename)
 
 def generate_context_rmap(fname):
-    """Based on XML index file `fname`,  return a context rmap as a string.
+    """Based on XML index file `fname`,  write out an imap.
     """
     instr = get_instrument(fname)
-    rmap_file = open(instr + ".rmap", "w+")
     source_url = scrape.get_url(open(fname).read())
-    write_rmap_header(rmap_file, "HST", instr, source_url)
-    print >>rmap_file, "{"
+    header = OrderedDict([
+      ("mapping", "instrument"),
+      ("observatory" , "HST"),
+      ("instrument", instr.upper()),
+      ('parkey', ('INSTRUME',)),
+      ("source_url", source_url),      
+    ])
+    selector = {}
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
         if "---" in keyword:
             log.warning("Skipping", repr(pars))
             continue
-        print >>rmap_file, "    #", converted["comment"]
-        urls = converted["urls"]
-        for i, url in enumerate(urls):
-            print >>rmap_file, "    # ", i, "<--" , `url`
-        if urls:
-            eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
-            print >>rmap_file, "   ", `keyword`, ":", repr((converted["ext"], eventually_generated_rmap)) + ",\n"
-        else:
-            log.warning("No URLs for", repr(pars))
-            print >>rmap_file, "    #", "No URLs for", repr(pars), "\n"
-    print >>rmap_file, "},"
-    rmap_file.close()
-
-def write_rmap_header(rmap_file, observatory, instrument, source_url):
-    rmap_file.write("""{
-    'observatory':'%s',
-    'instrument':'%s',
-    'source_url':'%s',
-    'reftype':'instrument',
-}, """ % (observatory.upper(), instrument.upper(), source_url))
-
+        eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
+        selector[keyword] = (converted["ext"], eventually_generated_rmap)
+    imap = rmap.Mapping(instr + ".imap", header, selector)
+    open(instr + ".imap", "w+").write(imap.format())
 
 def get_value_from_keys(d, keylist):
     for key in keylist:

@@ -1,206 +1,195 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'BIASFILE',
-    'parkey' : ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY', 'USEAFTER'),
-    'substitutions' : {
-        'APERTURE' : {
-            'FULLFRAME_2AMP' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER'),
-            '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),
-            'CUSTOM_SUBARRAYS' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),
-            'FULLFRAME_4AMP' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),
-            'QUAD_CORNER_SUBARRAYS' : ('UVIS-QUAD-SUB', 'UVIS1-C512A-SUB', 'UVIS1-C512B-SUB', 'UVIS2-C512C-SUB', 'UVIS2-C512D-SUB'),
-            'CHIP2_SUB_NOCORNERS' : ('UVIS2-2K4-SUB', 'UVIS2-M512-SUB'),
-            'CHIP1_SUB_NOCORNERS' : ('UVIS1-2K4-SUB', 'UVIS1-M512-SUB'),
-        },
-        'CCDAMP' : {
-            'G280_AMPS' : ('ABCD', 'A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD'),
-        },
-    },
-}, {
-    ('UVIS', 'A', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
-    },
-    ('UVIS', 'A', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't3k1347li_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'A', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'A', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : {
-        '2008-02-17 00:00:00' : 't4o1622li_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
-        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
-        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
-    },
-    ('UVIS', 'ABCD', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '2010-12-10 00:00:00' : 'v5j1716ei_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12279, May 19 2011 05:19PM
-    },
-    ('UVIS', 'ABCD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-        '2008-02-17 00:00:00' : 't4o1622pi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-18 00:00:00' : 't4o1622ri_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-19 00:00:00' : 't4o1622qi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-20 00:00:00' : 't4o1622si_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2009-05-14 00:00:00' : 'u1r1346ri_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12131, Jan 27 2010 02:02PM
-        '2009-08-21 00:00:00' : 'u1r1346ti_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12131, Jan 27 2010 02:02PM
-        '2009-09-27 00:00:00' : 'u1r13471i_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12131, Jan 27 2010 02:02PM
-        '2009-11-08 00:00:00' : 'u6n1741hi_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12184, Jun 23 2010 06:50PM
-        '2009-12-15 00:00:00' : 'u6n1741ji_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12184, Jun 23 2010 06:50PM
-        '2010-01-26 00:00:00' : 'u6n1741li_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12184, Jun 23 2010 06:50PM
-        '2010-03-06 00:00:00' : 'u6n1741ni_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12184, Jun 23 2010 06:50PM
-        '2010-04-22 00:00:00' : 'u8a1254ti_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12200, Aug 10 2010 02:01PM
-        '2010-05-31 00:00:00' : 'u8a12551i_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12200, Aug 10 2010 02:01PM
-        '2010-07-12 00:00:00' : 'ua11436ti_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12213, Oct 01 2010 03:16PM
-        '2010-08-21 00:00:00' : 'ubt1715ji_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12232, Nov 29 2010 05:21PM
-        '2010-10-03 00:00:00' : 'v1k21345i_bia.fits', #Bias intended for use with full-frame four amp readouts.-----------, 12242, Jan 20 2011 09:44PM
-    },
-    ('UVIS', 'ABCD', '1.5', '2.0', '2.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't4d1321ki_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12017, Apr 13 2009 01:25PM
-        '2008-02-19 00:00:00' : 't3h2007fi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1., 12005, Mar 17 2009 08:45PM
-        '2008-02-20 00:00:00' : 't3h2007gi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2., 12005, Mar 17 2009 08:45PM
-    },
-    ('UVIS', 'ABCD', '1.5', '3.0', '3.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't4d1321li_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12017, Apr 13 2009 01:25PM
-        '2008-02-19 00:00:00' : 't3h2007hi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1., 12005, Mar 17 2009 08:45PM
-        '2008-02-20 00:00:00' : 't3h2007ii_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2., 12005, Mar 17 2009 08:45PM
-    },
-    ('UVIS', 'AC', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'AC', '1.5', '2.0', '2.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k13486i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'AC', '1.5', '3.0', '3.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k1347ri_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'AD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'AD', '1.5', '2.0', '2.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k13485i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'AD', '1.5', '3.0', '3.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k1347si_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'B', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
-    },
-    ('UVIS', 'B', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't3k1347pi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'B', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'B', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : {
-        '2008-02-17 00:00:00' : 't4o1622li_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
-        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
-        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
-    },
-    ('UVIS', 'BC', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'BC', '1.5', '2.0', '2.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k13484i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'BC', '1.5', '3.0', '3.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k1347ti_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'BD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'BD', '1.5', '2.0', '2.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k13483i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'BD', '1.5', '3.0', '3.0', '*', 'F') : {
-        '1990-01-01 00:00:00' : 't3k13480i_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'C', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
-    },
-    ('UVIS', 'C', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't3k1347oi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'C', '1.5', '1.0', '1.0', 'CHIP2_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't4h1609ii_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12019, Apr 17 2009 04:12PM
-    },
-    ('UVIS', 'C', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'C', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : {
-        '2008-02-17 00:00:00' : 't4o1622li_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
-        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
-        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
-    },
-    ('UVIS', 'D', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : {
-        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12279, May 19 2011 05:19PM
-    },
-    ('UVIS', 'D', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't3k1347qi_bia.fits', #Placeholder file. All values set to zero., 12008, Mar 20 2009 03:59PM
-    },
-    ('UVIS', 'D', '1.5', '1.0', '1.0', 'CHIP2_SUB_NOCORNERS', 'T') : {
-        '1990-01-01 00:00:00' : 't4h1609ji_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12019, Apr 17 2009 04:12PM
-    },
-    ('UVIS', 'D', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-    ('UVIS', 'D', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : {
-        '2008-02-17 00:00:00' : 't4o1622li_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -49C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB1.-------------, 12023, Apr 24 2009 06:24PM
-        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits', #Bias created from WFC3/UVIS TV3 frames for -82C, MEB2.-------------, 12023, Apr 24 2009 06:24PM
-        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12131, Jan 27 2010 02:02PM
-        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12184, Jun 23 2010 06:50PM
-        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12200, Aug 10 2010 02:01PM
-        '2010-07-12 00:00:00' : 'ua114370i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12213, Oct 01 2010 03:16PM
-        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12232, Nov 29 2010 05:21PM
-        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits', #Bias intended for use with quad filter and corner subarrays.-------, 12242, Jan 20 2011 09:44PM
-    },
-    ('UVIS', 'G280_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T') : {
-        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits', #Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('UVIS', 'A', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : UseAfter({
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits',
+    }),
+    ('UVIS', 'A', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347li_bia.fits',
+    }),
+    ('UVIS', 'A', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'A', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622li_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits',
+        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua114370i_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : UseAfter({
+        '2010-12-10 00:00:00' : 'v5j1716ei_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+        '2008-02-17 00:00:00' : 't4o1622pi_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622ri_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622qi_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622si_bia.fits',
+        '2009-05-14 00:00:00' : 'u1r1346ri_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r1346ti_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13471i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741hi_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ji_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741li_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741ni_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a1254ti_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12551i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua11436ti_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ji_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21345i_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.5', '2.0', '2.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't4d1321ki_bia.fits',
+        '2008-02-19 00:00:00' : 't3h2007fi_bia.fits',
+        '2008-02-20 00:00:00' : 't3h2007gi_bia.fits',
+    }),
+    ('UVIS', 'ABCD', '1.5', '3.0', '3.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't4d1321li_bia.fits',
+        '2008-02-19 00:00:00' : 't3h2007hi_bia.fits',
+        '2008-02-20 00:00:00' : 't3h2007ii_bia.fits',
+    }),
+    ('UVIS', 'AC', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'AC', '1.5', '2.0', '2.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13486i_bia.fits',
+    }),
+    ('UVIS', 'AC', '1.5', '3.0', '3.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347ri_bia.fits',
+    }),
+    ('UVIS', 'AD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'AD', '1.5', '2.0', '2.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13485i_bia.fits',
+    }),
+    ('UVIS', 'AD', '1.5', '3.0', '3.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347si_bia.fits',
+    }),
+    ('UVIS', 'B', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : UseAfter({
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits',
+    }),
+    ('UVIS', 'B', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347pi_bia.fits',
+    }),
+    ('UVIS', 'B', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'B', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622li_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits',
+        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua114370i_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits',
+    }),
+    ('UVIS', 'BC', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'BC', '1.5', '2.0', '2.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13484i_bia.fits',
+    }),
+    ('UVIS', 'BC', '1.5', '3.0', '3.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347ti_bia.fits',
+    }),
+    ('UVIS', 'BD', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'BD', '1.5', '2.0', '2.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13483i_bia.fits',
+    }),
+    ('UVIS', 'BD', '1.5', '3.0', '3.0', '*', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k13480i_bia.fits',
+    }),
+    ('UVIS', 'C', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : UseAfter({
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits',
+    }),
+    ('UVIS', 'C', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347oi_bia.fits',
+    }),
+    ('UVIS', 'C', '1.5', '1.0', '1.0', 'CHIP2_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't4h1609ii_bia.fits',
+    }),
+    ('UVIS', 'C', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'C', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622li_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits',
+        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua114370i_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits',
+    }),
+    ('UVIS', 'D', '1.5', '1.0', '1.0', '%NO REFERENCE%', '%NO REFERENCE%') : UseAfter({
+        '2010-12-10 00:00:00' : 'v5j1716fi_bia.fits',
+    }),
+    ('UVIS', 'D', '1.5', '1.0', '1.0', 'CHIP1_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't3k1347qi_bia.fits',
+    }),
+    ('UVIS', 'D', '1.5', '1.0', '1.0', 'CHIP2_SUB_NOCORNERS', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't4h1609ji_bia.fits',
+    }),
+    ('UVIS', 'D', '1.5', '1.0', '1.0', 'FULLFRAME_4AMP', 'F') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+    ('UVIS', 'D', '1.5', '1.0', '1.0', 'QUAD_CORNER_SUBARRAYS', 'F') : UseAfter({
+        '2008-02-17 00:00:00' : 't4o1622li_bia.fits',
+        '2008-02-18 00:00:00' : 't4o1622mi_bia.fits',
+        '2008-02-19 00:00:00' : 't4o1622ni_bia.fits',
+        '2008-02-20 00:00:00' : 't4o1622oi_bia.fits',
+        '2009-05-14 00:00:00' : 'u1r1346si_bia.fits',
+        '2009-08-21 00:00:00' : 'u1r13470i_bia.fits',
+        '2009-09-27 00:00:00' : 'u1r13472i_bia.fits',
+        '2009-11-08 00:00:00' : 'u6n1741ii_bia.fits',
+        '2009-12-15 00:00:00' : 'u6n1741ki_bia.fits',
+        '2010-01-26 00:00:00' : 'u6n1741mi_bia.fits',
+        '2010-03-06 00:00:00' : 'u6n1741oi_bia.fits',
+        '2010-04-22 00:00:00' : 'u8a12550i_bia.fits',
+        '2010-05-31 00:00:00' : 'u8a12552i_bia.fits',
+        '2010-07-12 00:00:00' : 'ua114370i_bia.fits',
+        '2010-08-21 00:00:00' : 'ubt1715ki_bia.fits',
+        '2010-10-03 00:00:00' : 'v1k21346i_bia.fits',
+    }),
+    ('UVIS', 'G280_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T') : UseAfter({
+        '1990-01-01 00:00:00' : 't6i1733ei_bia.fits',
+    }),
+})

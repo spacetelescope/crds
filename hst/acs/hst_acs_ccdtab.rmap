@@ -1,21 +1,24 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'ACS',
     'reftype' : 'CCDTAB',
-    'parkey' : ('DETECTOR', 'USEAFTER'),
-}, {
-    ('HRC',) : {
-        '2002-03-01 00:00:00' : 'o1515069j_ccd.fits', #ACS/HRC CCD table, 11316, Jan 06 2004 03:51PM
-        '2002-09-01 00:00:00' : 'o151506bj_ccd.fits', #ACS/HRC CCD table, 11316, Jan 06 2004 03:51PM
-        '2003-04-01 00:00:00' : 'o151506aj_ccd.fits', #ACS/HRC CCD table, 11316, Jan 06 2004 03:51PM
-        '2003-10-01 00:00:00' : 'o151506ej_ccd.fits', #ACS/HRC CCD table, 11316, Jan 06 2004 03:51PM
-    },
-    ('WFC',) : {
-        '2002-03-01 00:00:00' : 'o1515068j_ccd.fits', #ACS/WFC CCD table, 11316, Jan 06 2004 03:51PM
-        '2002-09-01 00:00:00' : 'o151506dj_ccd.fits', #ACS/WFC CCD table, 11316, Jan 06 2004 03:51PM
-        '2003-04-01 00:00:00' : 'o151506cj_ccd.fits', #ACS/WFC CCD table, 11316, Jan 06 2004 03:51PM
-        '2003-10-01 00:00:00' : 'o151506fj_ccd.fits', #ACS/WFC CCD table, 11316, Jan 06 2004 03:51PM
-        '2008-01-01 00:00:00' : 't3n1116oj_ccd.fits', #CCD table Original file ORIGIN, 12009, Mar 23 2009 11:22AM
-        '2009-05-11 00:00:00' : 'uc82140bj_ccd.fits', #CCD table with updated values, 12235, Dec 08 2010 09:42PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('HRC',) : UseAfter({
+        '2002-03-01 00:00:00' : 'o1515069j_ccd.fits',
+        '2002-09-01 00:00:00' : 'o151506bj_ccd.fits',
+        '2003-04-01 00:00:00' : 'o151506aj_ccd.fits',
+        '2003-10-01 00:00:00' : 'o151506ej_ccd.fits',
+    }),
+    ('WFC',) : UseAfter({
+        '2002-03-01 00:00:00' : 'o1515068j_ccd.fits',
+        '2002-09-01 00:00:00' : 'o151506dj_ccd.fits',
+        '2003-04-01 00:00:00' : 'o151506cj_ccd.fits',
+        '2003-10-01 00:00:00' : 'o151506fj_ccd.fits',
+        '2008-01-01 00:00:00' : 't3n1116oj_ccd.fits',
+        '2009-05-11 00:00:00' : 'uc82140bj_ccd.fits',
+    }),
+})

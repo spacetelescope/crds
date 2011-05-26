@@ -1,10 +1,13 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'LAMPTAB',
-    'parkey' : ('USEAFTER',),
-}, {
-    () : {
-        '1996-10-01 00:00:00' : 'l421050oo_lmp.fits', #Ground+Inflight Cal PT lamp, 3.8 & 10 mA These lamp template spectra were generated with a combination o, 10768, Apr 02 2001 06:49PM
-    },
-}, 
+    'parkey' : ('DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    () : UseAfter({
+        '1996-10-01 00:00:00' : 'l421050oo_lmp.fits',
+    }),
+})

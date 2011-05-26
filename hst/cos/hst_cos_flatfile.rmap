@@ -1,17 +1,20 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'COS',
     'reftype' : 'FLATFILE',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'USEAFTER'),
-}, {
-    ('FUV', '*') : {
-        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits', ## *** dated gridwire shadow correction---------------------------------, 12276, Apr 28 2011 05:25PM
-    },
-    ('FUV', 'SPECTROSCOPIC') : {
-        '1996-10-01 00:00:00' : 'n9n20182l_flat.fits', #dummy file, 11255, Sep 24 2003 02:46PM
-    },
-    ('NUV', '*') : {
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits', #from TV2003 data, 11876, Jul 16 2008 05:09PM
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits', #Updated to remove vignetting correction----------------------------, 12250, Feb 14 2011 08:14PM
-    },
-}, 
+    'parkey' : ('DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    ('FUV', '*') : UseAfter({
+        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
+    }),
+    ('FUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 'n9n20182l_flat.fits',
+    }),
+    ('NUV', '*') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+})

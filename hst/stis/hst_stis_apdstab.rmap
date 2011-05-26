@@ -1,11 +1,14 @@
-{
+header = {
+    'mapping' : 'reference',
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'APDSTAB',
-    'parkey' : ('USEAFTER',),
-}, {
-    () : {
-        '1996-10-01 00:00:00' : 'o2o1431ko_apd.fits', #Microscope Meas./Hartig Postlaunch Offsets 'aperture_apd.fits renamed to h1v1126no_apd.fits on Jan 31 19, 11352, Feb 25 2004 06:09PM
-        '1997-12-08 00:00:00' : 'o2o1431lo_apd.fits', #Microscope Meas./Hartig Postlaunch Offsets Updated aperture description parameters are included in this, 11352, Feb 25 2004 06:09PM
-    },
-}, 
+    'parkey' : ('DATE-OBS', 'TIME-OBS'),
+}
+
+selector = Match({
+    () : UseAfter({
+        '1996-10-01 00:00:00' : 'o2o1431ko_apd.fits',
+        '1997-12-08 00:00:00' : 'o2o1431lo_apd.fits',
+    }),
+})

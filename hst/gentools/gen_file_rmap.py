@@ -26,6 +26,7 @@ import crds.rmap as rmap
 import crds.log as log
 import crds.timestamp as timestamp
 import crds.pysh as pysh
+import crds.selectors as selectors
 
 import crds.hst.acs
 import crds.hst.cos
@@ -333,7 +334,7 @@ def get_mapping(d):
         comments_str = ", ".join(comments)
     else:
         comments_str = ""
-    return rmap.Filemap(timestamp.format_date(timestamp.parse_date(d[MAPKEYS[0]])), dict_to_filename(d), comments_str)
+    return rmap.Filemap(timestamp.format_date(timestamp.parse_date(d["use_after"])), dict_to_filename(d), comments_str)
 
 def dict_to_filename(d):
     """Given the XHTML <a> corresponding to the 'file' field,  ignore the href and
@@ -372,31 +373,29 @@ def write_rmap(observatory, instrument, reftype, kind_map):
     all_parkeys = parkeys + MAPKEYS[:-1]
     fitskeys = parkeys_to_fitskeys(instrument, all_parkeys)
     rmap_header = OrderedDict([
+        ("mapping", "reference"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
         ("reftype", reftype.upper()),
         ("parkey", fitskeys)
     ])
-    selector_class = cdbs_parkeys.get_selector_class(instrument, reftype)
-    if selector_class:
-        rmap_header["class"] = selector_class
-    additions = HEADER_ADDITIONS.get((instrument, reftype), {})
-    rmap_header.update(additions)
     
-    rmap_data = OrderedDict()
+    matching_selections = dict()
     for key in sorted(kind_map):
         mappings = kind_map[key]
-        rmap_data[key] = OrderedDict()
+        useafter_selections = OrderedDict()
         for m in sorted(mappings):
-            if m.date in rmap_data[key]:
-                existing_file = rmap_data[key][m.date].file
+            if m.date in useafter_selections:
+                existing_file = useafter_selections[m.date]
                 if m.file != existing_file:
                     log.warning("Useafter date collision in", repr(instrument), repr(reftype), repr(key),"at",repr(m.date),
                                 repr(m.file), "replaces", repr(existing_file))
-            rmap_data[key][m.date] = m
-
+            useafter_selections[m.date] = m.file
+        matching_selections[key] = selectors.UseAfterSelector(("DATE-OBS", "TIME-OBS"), useafter_selections)
+    rmap_selector = selectors.MatchingSelector(fitskeys[:-2], matching_selections)
     outname = observatory + "_" + instrument + "_" + reftype + ".rmap"
-    rmap.write_rmap(outname, rmap_header, rmap_data)
+    r = rmap.ReferenceMapping(outname, rmap_header, rmap_selector)
+    r.write()
 
 # ==========================================================================================
 

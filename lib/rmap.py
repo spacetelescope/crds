@@ -68,6 +68,7 @@ import os
 import os.path
 import re
 import ast
+import pprint
 
 try:
     from collections import namedtuple
@@ -98,7 +99,7 @@ class FormatError(MappingError):
     "Something wrong with context or rmap file format."
     pass
 
-class MissingParkey(MappingError):
+class MissingHeaderKeyError(MappingError):
     """A required parkey was not in the mapping header."""
 
 class AstDumper(ast.NodeVisitor):
@@ -188,16 +189,17 @@ class Mapping(object):
     def __repr__(self):
         r = self.__class__.__name__ + "("
         r += repr(self.filename)+ ", "
-        for attr in self.required_attrs:
+        for attr in set(self.required_attrs)-set(["mapping"]):
             r += attr + "=" + repr(getattr(self, attr)) + ", "
         r = r[:-2] + ")"
         return r
             
     def __getattr__(self, attr):
         if attr in self.required_attrs:
-            return self.header[attr].lower()
+            val = self.header[attr]
+            return val.lower() if isinstance(val, str) else val
         else:
-            raise AttributeError("Invalid or missing parkey " + repr(attr))
+            raise AttributeError("Invalid or missing header field " + repr(attr))
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
@@ -218,7 +220,8 @@ class Mapping(object):
         try:
             header, selector = cls._compile_and_exec(node)
         except Exception, exc:
-            raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
+            raise
+            raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(filepath)), str(exc))
         return header, selector
     
     @classmethod
@@ -230,15 +233,18 @@ class Mapping(object):
         exec compile(node,"<ast>","exec") in namespace
         header = namespace["header"]
         selector = namespace["selector"]
-        return header, selector.instantiate(header["parkey"])
-
+        if isinstance(selector, selectors.Parameters):
+            return header, selector.instantiate(header["parkey"])
+        elif isinstance(selector, dict):
+            return header, selector
+        else:
+            raise FormatError("selector must be a dict or a Selector.")
+            
     def _validate_file_load(self):
         """Validate assertions about the contents of this rmap after it's built."""
         for name in self.required_attrs:
-            try:
-                getattr(self, name)
-            except AttributeError:
-                raise MissingParkeyError("Required parkey " + repr(name) + " is missing.")
+            if name not in self.header:
+                raise HeaderKeyError("Required header key " + repr(name) + " is missing.")
 
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
@@ -273,13 +279,33 @@ class Mapping(object):
         return self._locate
 
     def format(self):
+        """Return the string representation of this mapping, i.e. pretty serialization.
+        """
         return "header = %s\n\nselector = %s\n" % (self._format_header(), self._format_selector())
         
+    def _format_dict(self, dict_):
+        s = "{\n"
+        for key, val in dict_.items():
+            s += "    " + repr(key) + " : " + repr(val) + ",\n"
+        s += "}"
+        return s
+    
     def _format_header(self):
-        return pp.pformat(self.header)
+        return self._format_dict(self.header)
     
     def _format_selector(self):
-        return pp.pformat(self.selector)
+        return self._format_dict(self.selector)
+    
+    def write(self, filename=None):
+        """Write out this mapping to the specified `filename`,  or else self.filename.
+        """
+        if filename is None:
+            filename = self.filename
+        if isinstance(filename, str):
+            file = open(filename, "w+")
+        else:
+            file = filename
+        file.write(self.format())
 
 # ===================================================================
 
@@ -338,7 +364,7 @@ class PipelineContext(Mapping):
         self.selections = {}
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            self.selections[instrument] = ictx = InstrumentContext.from_file(imap)
+            self.selections[instrument] = ictx = InstrumentContext.from_file(imapname)
             assert self.mapping == "pipeline", \
                 "PipelineContext 'mapping' format is not 'pipeline' in header."
             assert self.observatory == ictx.observatory, \
@@ -486,15 +512,15 @@ class ReferenceMapping(Mapping):
         """Return the single reference file basename appropriate for `header` selected
         by this ReferenceMapping.
         """
-        return self._selector.choose(header)
+        return self.selector.choose(header)
     
     def reference_names(self):
         """Return the list of reference file basenames associated with this ReferenceMapping.
         """
-        return self._selector.reference_names()
+        return self.selector.reference_names()
     
-    def format_selector(self):
-        return self._selector.pformat()
+    def _format_selector(self):
+        return self.selector.format()
 
 # ===================================================================
 
@@ -540,9 +566,9 @@ def locate_mapping(mappath):
         return mappath
     # Convert the mapping basename into an absolute path by first looking
     # up the "locate" module for the observatory and then calling locate_mapping().
-    observatory = utils.context_to_observatory(basename)
+    observatory = utils.context_to_observatory(mappath)
     locate = utils.get_object("crds." + observatory + ".locate")
-    where = locate.locate_mapping(basename)
+    where = locate.locate_mapping(mappath)
     return where
 
 # ===================================================================

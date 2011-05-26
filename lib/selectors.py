@@ -178,18 +178,19 @@ class Selector(object):
                 files.add(file)
         return sorted(list(files))
     
-    def pformat(self, indent=0):
+    def format(self, indent=0):
         """Recursively pretty-format the Selector tree rooted in `self` indenting
         each line with 4*`indent` spaces.   Return the resulting string.
         """
-        l = [self.__class__.__name__[:-len("Selector")] + "({"]
-        for key, sel in self.selections:
+        rmap_name = getattr(self, "rmap_name",  self.__class__.__name__[:-len("Selector")])
+        l = [rmap_name + "({"]
+        for key, sel in self._selections:  # requires dictionary form of selections!
             if isinstance(sel, Selector):
-                pf_sel = sel.pformat(indent+1)
+                pf_sel = sel.format(indent+1)
             else:
                 pf_sel = pp.pformat(sel)
             l.append((indent+1)*" "*4 + pp.pformat(key) + " : " + pf_sel + ",")
-        l.append("})")
+        l.append(indent*4*" " + "})")
         return "\n".join(l)
 
 # ==============================================================================
@@ -322,26 +323,26 @@ class MatchingSelector(Selector):
     ...
     MissingParameterError: "The required parameter 'bar' is missing."
     
-    >>> m.pformat()
-
+    >>> print m.format()
+    Match({
+        ('*', '*') : '300',
+        ('1.0', '*') : '100',
+        ('1.0', '2.0') : '200',
+    })
     """
+    rmap_name = "Match"
+    
     def __init__(self, parameters, selections, substitutions=None):
         self._parameters = []
         self._required = {}
-        self._selections = {}
+        self._selections = sorted(selections.items())
         self._value_map = {}
         self.setup_parameters(parameters)
         selections = self.fix_simple_keys(selections)
         selections = self.do_substitutions(
             selections, substitutions)
-        self._selections = self.get_matcher_selections(selections)
+        self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
-
-    def keys(self):
-        return sorted(self._selections.keys())
-
-    def choices(self):
-        return [x[1] for x in sorted(self._selections.values())]
 
     def setup_parameters(self, parameters):
         """Strip off *=optional prefixes and store the status in the
@@ -376,8 +377,7 @@ class MatchingSelector(Selector):
             return selections
         for parkey in substitutions:
             which = self._parameters.index(parkey)
-            matches = selections.keys()
-            for match in matches:
+            for match in selections.keys():
                 which = self._parameters.index(parkey)
                 old_parvalue = match[which]
                 if old_parvalue in substitutions[parkey]:
@@ -441,7 +441,7 @@ class MatchingSelector(Selector):
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
         """        
-        weights, remaining = self._winnow(header, dict(self._selections))
+        weights, remaining = self._winnow(header, dict(self._match_selections))
 
         sorted_candidates = self._rank_candidates(weights, remaining)
         
@@ -983,7 +983,7 @@ class ReferenceSelector(MatchingSelector):
         for mapping in data:
             selections[mapping] = UseAfterSelector("DATE", data[mapping])
         substitutions = header.get("substitutions", None)
-        MatchingSelector.__init__(self, header["parkey"][:-1], selections, substitutions)
+        MatchingSelector.__init__(self, header["parkey"][:-2], selections, substitutions)
         
     def reference_names(self):
         files = set()
