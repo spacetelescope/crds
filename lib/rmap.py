@@ -67,6 +67,7 @@ Active instrument references are also broken down by filetype:
 import os
 import os.path
 import re
+import ast
 
 try:
     from collections import namedtuple
@@ -74,17 +75,11 @@ except:
     from crds.collections2 import namedtuple
 
 try:
-    from ast import literal_eval
-except:
-    literal_eval = lambda expr: eval(expr, {}, {})
-
-try:
     import json
 except:
     import simplejson as json
 
-from crds import log, timestamp, utils
-from crds.config import CRDS_ROOT
+from . import (log, timestamp, utils, selectors)
 
 # ===================================================================
 
@@ -103,125 +98,148 @@ class FormatError(MappingError):
     "Something wrong with context or rmap file format."
     pass
 
-# ===================================================================
+class MissingParkey(MappingError):
+    """A required parkey was not in the mapping header."""
+
+class AstDumper(ast.NodeVisitor):
+    """Debug class for dumping out rmap ASTs."""
+    def visit(self, node):
+        print ast.dump(node), "\n"
+        ast.NodeVisitor.visit(self, node)
+
+    def dump(self, node):
+        print ast.dump(node), "\n"
+        self.generic_visit(node)
+
+    visit_Assign = dump
+    visit_Call = dump
+
+class MappingValidator(ast.NodeVisitor):
+    def parse_and_check(self, filepath):
+        """Parse the file at `filepath`,  verify that it's a legal mapping,
+        and return the parsed AST node.
+        """
+        node = ast.parse(open(filepath).read())
+        self.visit(node)
+        return node
+    
+    illegal_nodes = [
+        "FunctionDef","ClassDef", "Return", "Delete", "AugAssign", "Print",
+        "For", "While", "If", "With", "Raise", "TryExcept", "TryFinally",
+        "Assert", "Import", "ImportFrom", "Exec","Global","Pass",
+        ]
+    
+    def visit_Illegal(self, node):
+        self.assert_(False, node, "Illegal statement or expression in mapping")
+    
+    def __getattr__(self, attr):
+        if attr.startswith("visit_"):
+            if attr[len("visit_"):] in self.illegal_nodes:
+                return visit_Illegal
+            else:
+                return self.generic_visit
+        else:
+            return ast.NodeVisitor.__getattribute__(self, attr)
+        
+    def assert_(self, node, flag, message):
+        if not flag:
+            if hasattr(node, "lineno"):
+                raise FormatError(message + " at line " + str(node.lineno))
+            else:
+                raise FormatError(message)
+                
+    def visit_Module(self, node):
+        self.assert_(node, len(node.body) == 2, 
+                     "define only 'header' and 'selector' sections")
+        self.generic_visit(node)
+
+    def visit_Assign(self, node):
+        self.assert_(node, len(node.targets) == 1, 
+                     "Invalid 'header' or 'selector' definition")
+        self.assert_(node, isinstance(node.targets[0], ast.Name),
+                     "Invalid 'header' or 'selector' definition")                     
+        self.assert_(node, node.targets[0].id in ["header","selector"],
+                     "Only define 'header' or 'selector' sections")
+        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict)),
+                    "Section must be a selector call or dictionary")
+        self.generic_visit(node)
+
+    def visit_Call(self, node):
+        self.assert_(node, node.func.id in selectors.SELECTORS,
+            "Selector " + repr(node.func.id) + " is not one of " + 
+                     repr(sorted(selectors.SELECTORS.keys())))
+        self.generic_visit(node)
+
+MAPPING_VALIDATOR = MappingValidator()
+
+# =============================================================================        
 
 class Mapping(object):
     """An Mapping is the abstract baseclass for loading anything with the
     general structure of a header followed by data.
     """
-    def __init__(self, filename, header, data, **keys):
+    required_attrs = []
+    
+    def __init__(self, filename, header, selector):
         self.filename = filename
         self.header = header
-        self.data = data
+        self.selector = selector
     
     def __repr__(self):
         r = self.__class__.__name__ + "("
-        for attr in self.check_attrs:
+        r += repr(self.filename)+ ", "
+        for attr in self.required_attrs:
             r += attr + "=" + repr(getattr(self, attr)) + ", "
         r = r[:-2] + ")"
         return r
             
-    @classmethod
-    def check_file_format(cls, filename):
-        """Make sure the basic file format for `filename` is valid and safe."""
-        lines = open(filename).readlines()
-        clean = cls._clean_lines(lines)
-        basename = os.path.basename(filename)
-        remainder = cls._check_syntax(basename, "header", clean)
-        remainder = cls._check_syntax(basename, "data", remainder)
-        if remainder != ["},"]:
-            raise FormatError("Extraneous input following data in " + repr(basename))
-    
-    @classmethod
-    def _clean_lines(cls, lines):
-        """Remove empty lines and comment lines"""
-        clean = []
-        for line in lines:
-            line = line.strip()
-            if (not line) or line.startswith("#"):
-                continue
-            clean.append(line.strip())
-        return clean
-
-    @classmethod
-    def _key_value_split(cls, line):
-        """Split line on first : not inside quoted string or tuple."""
-        inside_quote = False
-        inside_tuple = 0
-        for index, char in enumerate(line):
-            if char == "'":
-                inside_quote = not inside_quote
-            elif inside_quote:
-                continue
-            elif char == '(':
-                inside_tuple += 1
-            elif char == ')':
-                inside_tuple -= 1
-            elif char == ":" and (not inside_quote) and (not inside_tuple):
-                key = line[:index]
-                value = line[index+1:]
-                value = value.split("#")[0]
-                return key.strip(), value.strip()
-        return line, None
-
-    @classmethod
-    def _check_syntax(cls, filename, section, lines):
-        if not re.match("^(}, )?{$", lines[0]):
-            raise FormatError("Invalid %s block opening in " % (section,) + repr(filename))        
-        for lineno, line in enumerate(lines[1:]):
-            key, value = cls._key_value_split(line)
-            if key in ["}", "}, {"] and value is None:
-                break
-            elif key == "}," and value is None:
-                continue
-            elif not cls._match_key(key):
-                raise FormatError("Invalid %s keyword " % section + repr(key) + " in " + repr(filename))
-            elif not cls._match_value(value):
-                raise FormatError("Invalid %s value for " % section + key + " = " + repr(value) + " in " + repr(filename))
-        return lines[lineno+1:]  # should be no left-overs
-
-    @classmethod
-    def _match_key(cls, key):
-        return cls._match_simple(key) or cls._match_string_tuple(key)
-    
-    @classmethod
-    def _match_value(cls, value):
-        return (value == "{") or cls._match_simple(value) or cls._match_string_tuple(value)
-
-    @classmethod
-    def _match_simple(cls, value):
-        return re.match("^'[A-Za-z0-9_.:/ \*\%\-]*',?$", value)
-    
-    @classmethod
-    def _match_string_tuple(cls, value):
-        return re.match("^\((\s*'[A-Za-z0-9_.:/ \*\%\-]*',?\s*)*\),?$", value)
+    def __getattr__(self, attr):
+        if attr in self.required_attrs:
+            return self.header[attr].lower()
+        else:
+            raise AttributeError("Invalid or missing parkey " + repr(attr))
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation.
         """
-        # Convert the mapping basename into an absolute path by first looking
-        # up the "locate" module for the observatory and then calling locate_mapping().
-        observatory = utils.context_to_observatory(basename)
-        locate = utils.get_object("crds." + observatory + ".locate")
-        where = locate.locate_mapping(basename)
-        
-        cls.check_file_format(where)
-        try:
-            header, data = literal_eval(open(where).read())
-        except Exception, exc:
-            raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
-        mapping = cls(basename, header, data, *args, **keys)
-        mapping.validate_file_load()
+        where = locate_mapping(basename)
+        header, selector = cls.parse_header_selector(where)
+        mapping = cls(basename, header, selector, *args, **keys)
+        mapping._validate_file_load()
         return mapping
     
-    def validate_file_load(self):
-        """Validate assertions about the contents of this rmap."""
-        for name in self.check_attrs:
-            self._check_header_attr(name)
-#        if "parkey" not in self.header:
-#            raise MappingError("Missing header keyword: 'parkey'.")
+    @classmethod
+    def parse_header_selector(cls, filepath):
+        """Given a mapping at `filepath`,  validate it and return a fully
+        instantiated (header, selector) tuple.
+        """
+        node = MAPPING_VALIDATOR.parse_and_check(filepath)
+        try:
+            header, selector = cls._compile_and_exec(node)
+        except Exception, exc:
+            raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(where)), str(exc))
+        return header, selector
     
+    @classmethod
+    def _compile_and_exec(self, node):
+        """Interpret a valid rmap AST `node` and return it's header and selector.
+        """
+        namespace = {}
+        namespace.update(selectors.SELECTORS)
+        exec compile(node,"<ast>","exec") in namespace
+        header = namespace["header"]
+        selector = namespace["selector"]
+        return header, selector.instantiate(header["parkey"])
+
+    def _validate_file_load(self):
+        """Validate assertions about the contents of this rmap after it's built."""
+        for name in self.required_attrs:
+            try:
+                getattr(self, name)
+            except AttributeError:
+                raise MissingParkeyError("Required parkey " + repr(name) + " is missing.")
+
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
         return [ ref for ref in self.reference_names() if not self.locate.reference_exists(ref)]
@@ -230,19 +248,6 @@ class Mapping(object):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
         return [ mapping for mapping in self.mapping_names() if not self.locate.mapping_exists(mapping)]
 
-    def _check_header_attr(self, name):
-        """Verify that the mapping header keyword `name` exists and matches self's attribute value.
-        """
-        attr = getattr(self, name)
-        if not attr:   # skip empty-strings as don't care
-            return
-        try:
-            hdr = self.header[name].lower()
-        except KeyError:
-            raise MappingError("Missing header keyword:", repr(name))
-        if hdr != attr:
-            raise MappingError("Header mismatch. Expected",repr(name),"=",repr(attr),"but got",name,"=",repr(hdr))
-            
     def to_json(self):
         """Encode this Mapping as a string of JSON.
         """
@@ -266,7 +271,16 @@ class Mapping(object):
         if not hasattr(self, "_locate"):
             self._locate = utils.get_object("crds." + self.observatory + ".locate")
         return self._locate
+
+    def format(self):
+        return "header = %s\n\nselector = %s\n" % (self._format_header(), self._format_selector())
+        
+    def _format_header(self):
+        return pp.pformat(self.header)
     
+    def _format_selector(self):
+        return pp.pformat(self.selector)
+
 # ===================================================================
 
 def keys_to_strings(d):
@@ -298,46 +312,45 @@ def strings_to_keys(d):
 # ===================================================================
 
 """
-{
+header = {
     'observatory':'HST',
     'parkey' : ('INSTRUME'),
-}, {
+    'mapping': 'pipeline',
+}
+
+selector = {
     'ACS': 'hst_acs_00023.imap',
     'COS':'hst_cos_00023.imap', 
     'STIS':'hst_stis_00023.imap',
     'WFC3':'hst_wfc3_00023.imap',
     'NICMOS':'hst_nicmos_00023.imap',
-}
+})
 """
-
-
 
 class PipelineContext(Mapping):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
-    check_attrs = ["observatory"]
+    required_attrs = ["observatory", "mapping", "parkey"]
 
-    def __init__(self, filename, header, data, observatory="", **keys):
-        Mapping.__init__(self, filename, header, data)
-        self.observatory = observatory.lower()
+    def __init__(self, filename, header, selector):
+        Mapping.__init__(self, filename, header, selector)
         self.selections = {}
-        for instrument, imap in data.items():
+        for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            self.selections[instrument] = InstrumentContext.from_file(imap, observatory, instrument)
-
+            self.selections[instrument] = ictx = InstrumentContext.from_file(imap)
+            assert self.mapping == "pipeline", \
+                "PipelineContext 'mapping' format is not 'pipeline' in header."
+            assert self.observatory == ictx.observatory, \
+                "Nested 'observatory' doesn't match in " + repr(filename)
+            assert instrument == ictx.instrument, \
+                "Nested 'instrument' doesn't match in " + repr(filename)
+    
     def get_best_references(self, header, date=None):
         """Return the best references for keyword map `header`.
         """
         header = dict(header.items())
         instrument = header["INSTRUME"].lower()
-        if date == "now":
-            date = timestamp.now()
-        if date:
-            header["DATE"] = date
-        else:
-            header["DATE"] = header["DATE-OBS"] + " " + header["TIME-OBS"]
-        header["DATE"] = timestamp.reformat_date(header["DATE"])
         return self.selections[instrument].get_best_references(header)
     
     def reference_names(self):
@@ -368,11 +381,14 @@ class PipelineContext(Mapping):
 # ===================================================================
 
 """
-{
+header = {
     'observatory':'HST',
     'instrument': 'ACS',
+    'mapping':'instrument',
     'parkey' : ('REFTYPE',),
-}, {
+}
+
+selector = Match({
     'BIAS':  'hst_acs_bias_0021.rmap',
     'CRREJ': 'hst_acs_crrej_0003.rmap',
     'CCD':   'hst_acs_ccd_0002.rmap',
@@ -382,24 +398,30 @@ class PipelineContext(Mapping):
     'BPIX':  'hst_acs_bpic_0056.rmap',
     'MDRIZ': 'hst_acs_mdriz_0001.rmap',
     ...
-}
+})
+
 """
 
 class InstrumentContext(Mapping):
     """An instrument context describes the rmaps associated with each filetype
     of an instrument.
     """
-    check_attrs = ["observatory","instrument"]
+    required_attrs = PipelineContext.required_attrs + ["instrument"]
 
-    def __init__(self, filename, header, data, observatory="", instrument="", **keys):
-        Mapping.__init__(self, filename, header, data)
-        self.observatory = observatory.lower()
-        self.instrument = instrument.lower()
+    def __init__(self, filename, header, selector):
+        Mapping.__init__(self, filename, header, selector)
         self.selections = {}
-        for reftype, rmap_info in data.items():
-            rmap_ext, rmap_name = rmap_info
-            self.selections[reftype] = ReferenceMapping.from_file(
-                rmap_name, self.observatory, self.instrument, reftype, rmap_ext)
+        for reftype, (rmap_ext, rmap_name) in selector.items():
+            reftype = reftype.lower()
+            self.selections[reftype] = refmap = ReferenceMapping.from_file(rmap_name)
+            assert self.mapping == "instrument", \
+                "InstrumentContext 'mapping' format is not 'instrument'."
+            assert self.observatory == refmap.observatory, \
+                "Nested 'observatory' doesn't match for " + repr(reftype) + " in " + repr(filename)
+            assert self.instrument == refmap.instrument, \
+                "Nested 'instrument' doesn't match for " + repr(reftype) + " in " + repr(filename)
+            assert refmap.reftype == reftype, \
+                "Nested 'reftype' doesn't match for " + repr(reftype) + " in " + repr(filename)
 
     def get_best_ref(self, reftype, header):
         """Returns the single reference file basename appropriate for `header`
@@ -456,19 +478,10 @@ class InstrumentContext(Mapping):
 
 class ReferenceMapping(Mapping):
     """ReferenceMapping manages loading the rmap associated with a single reference
-    filetype and instantiating an appropriate selector from the rmap header and data.
+    filetype and instantiate an appropriate selector tree from the rmap header and data.
     """
-    check_attrs = ["observatory","instrument","reftype"]
-    
-    def __init__(self, filename, header, data, observatory="", instrument="", reftype="", extension="", **keys):
-        Mapping.__init__(self, filename, header, data)
-        self.instrument = instrument.lower()
-        self.observatory = observatory.lower()
-        self.reftype = reftype.lower()
-        self.extension = extension.lower()
-        cls = utils.get_object(header.get("class", "crds.selectors.ReferenceSelector"))
-        self._selector = cls(header, data)
-        
+    required_attrs = InstrumentContext.required_attrs + ["reftype"]
+            
     def get_best_ref(self, header):
         """Return the single reference file basename appropriate for `header` selected
         by this ReferenceMapping.
@@ -480,35 +493,9 @@ class ReferenceMapping(Mapping):
         """
         return self._selector.reference_names()
     
-# ===================================================================
+    def format_selector(self):
+        return self._selector.pformat()
 
-def write_rmap(filename, header, data):
-    """Write out the specified `header` and `data` to `filename` in rmap format."""
-    file = open(filename,"w+")
-    write_rmap_dict(file, header)
-    write_rmap_dict(file, data)
-    file.write("\n")
-
-def write_rmap_dict(file, the_dict, indent_level=1):
-    """Write out a (nested) dictionary in a simple format amenable to validation
-    and differencing.
-    """
-    indent = " "*4*indent_level
-    file.write("{\n")
-    for key, value in the_dict.items():
-        file.write(indent + repr(key) + " : ")
-        if isinstance(value, dict):
-            write_rmap_dict(file, value, indent_level+1)
-        elif isinstance(value, Filemap):
-            file.write(repr(value.file) + ", #" + value.comment + "\n")
-        else:
-            file.write(repr(value) + ",\n")
-    indent_level -= 1
-    if indent_level > 0:
-        file.write(indent_level*" "*4 + "},\n")
-    else:
-        file.write("}, ")
-        
 # ===================================================================
 
 CACHED_MAPPINGS = {}
@@ -528,16 +515,12 @@ def load_mapping(mapping):
     """Load any of the pipeline, instrument, or reftype `mapping`s
     from the file system.
     """
-    observatory = utils.context_to_observatory(mapping)
     if mapping.endswith(".pmap"):
-        return PipelineContext.from_file(mapping, observatory)
+        return PipelineContext.from_file(mapping)
     elif mapping.endswith(".imap"):
-        instrument = utils.context_to_instrument(mapping)
-        return InstrumentContext.from_file(mapping, observatory, instrument)
+        return InstrumentContext.from_file(mapping)
     elif mapping.endswith(".rmap"):
-        instrument = utils.context_to_instrument(mapping)
-        reftype = utils.context_to_reftype(mapping)
-        return ReferenceMapping.from_file(mapping, observatory, instrument, reftype)
+        return ReferenceMapping.from_file(mapping)
     else:
         raise ValueError("Unknown mapping extension for " + repr(mapping))
     
@@ -545,6 +528,22 @@ def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file.
     """
     return mapping.endswith((".pmap",".imap",".rmap"))
+
+def locate_mapping(mappath):
+    """Based on a possibly incomplete name,  figure out the absolute
+    pathname for the mapping specified by `mappath`.   If `mappath` 
+    already has a directory path or is present the CWD,  use it as is.   
+    Otherwise infer the project from the mappath's and name and use the
+    project's locator to determine where the mapping should be.
+    """
+    if os.path.dirname(mappath):
+        return mappath
+    # Convert the mapping basename into an absolute path by first looking
+    # up the "locate" module for the observatory and then calling locate_mapping().
+    observatory = utils.context_to_observatory(basename)
+    locate = utils.get_object("crds." + observatory + ".locate")
+    where = locate.locate_mapping(basename)
+    return where
 
 # ===================================================================
 

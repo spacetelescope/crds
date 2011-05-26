@@ -177,6 +177,20 @@ class Selector(object):
             for file in new_files:
                 files.add(file)
         return sorted(list(files))
+    
+    def pformat(self, indent=0):
+        """Recursively pretty-format the Selector tree rooted in `self` indenting
+        each line with 4*`indent` spaces.   Return the resulting string.
+        """
+        l = [self.__class__.__name__[:-len("Selector")] + "({"]
+        for key, sel in self.selections:
+            if isinstance(sel, Selector):
+                pf_sel = sel.pformat(indent+1)
+            else:
+                pf_sel = pp.pformat(sel)
+            l.append((indent+1)*" "*4 + pp.pformat(key) + " : " + pf_sel + ",")
+        l.append("})")
+        return "\n".join(l)
 
 # ==============================================================================
 
@@ -307,6 +321,8 @@ class MatchingSelector(Selector):
     Traceback (most recent call last):
     ...
     MissingParameterError: "The required parameter 'bar' is missing."
+    
+    >>> m.pformat()
 
     """
     def __init__(self, parameters, selections, substitutions=None):
@@ -532,11 +548,13 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
+# ==============================================================================
+
 class UseAfterSelector(Selector):
     """A UseAfter selector chooses the greatest time which is less than
     the "date" condition and returns the corresponding item.
 
-    >>> u = UseAfterSelector("DATE", {
+    >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-26 01:28:00':'nal1503ij_bia.fits',    # ACS/HRC superbias for Sep 26 - Oct, 11270, Oct 21 2003 09:33PM
     ...        '2004-02-14 00:00:00':'o3913216j_bia.fits',    # ACS/HRC superbias for Feb 14 - Ma, 11368, Mar 18 2004 02:39PM
     ...        '2004-04-25 21:31:00':'o5d10135j_bia.fits',    # ACS/HRC superbias for Apr 25 - May, 11429, May 17 2004 12:34PM
@@ -546,26 +564,26 @@ class UseAfterSelector(Selector):
     ...        '2004-07-30 00:18:00':'o9t1553tj_bia.fits',    # HRC reference file, 11497, Sep 30 2004 07:04PM
     ... })
 
-    >>> u.choose({'DATE': '2004-07-02 08:09:00'})   # exact match
+    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:09:00'})   # exact match
     'o9t1525sj_bia.fits'
 
-    >>> u.choose({'DATE': '2004-07-02 08:08:59'})   # just before, in between
+    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:08:59'})   # just before, in between
     'o9s16388j_bia.fits'
 
-    >>> u.choose({'DATE': '2005-07-02 08:08:59'})   # later than all entries
+    >>> u.choose({'DATE-OBS': '2005-07-02', 'TIME-OBS': '08:08:59'})   # later than all entries
     'o9t1553tj_bia.fits'
 
-    >>> u.choose({'DATE': '2000-07-02 08:08:59'})   # earlier than all entries
+    >>> u.choose({'DATE-OBS': '2000-07-02', 'TIME-OBS': '08:08:59'})   # earlier than all entries
     Traceback (most recent call last):
     ...
     UseAfterError: "No selection with time < '2000-07-02 08:08:00'"
     """
-    def __init__(self, datename, datemapping):
+    def __init__(self, parameters, datemapping):
         selections = sorted(datemapping.items())
-        Selector.__init__(self, [datename], *selections)
+        Selector.__init__(self, parameters, *selections)
 
     def choose(self, header):
-        date = timestamp.reformat_date(header[self._parameters[0]])
+        date = timestamp.reformat_date(" ".join([header[x] for x in self._parameters]))
         log.verbose("Matching date", date, " ")
         selection = self.bsearch(date, self._selections)
         return self.get_choice(selection, header)
@@ -650,6 +668,8 @@ class ClosestGeometricRatioSelector(Selector):
         diff = np.abs(nkeys - keyval)
         index = np.argmin(diff)
         return self.get_choice(self._selections[index], header)
+
+# ==============================================================================
 
 class LinearInterpolationSelector(Selector):
     """LinearInterpolation selects the the bracketing values of the
@@ -971,6 +991,48 @@ class ReferenceSelector(MatchingSelector):
             for f in useafter.reference_names():
                 files.add(f)
         return sorted(list(files))
+
+# ==============================================================================
+
+class Parameters(object):
+    """Parameters are a place to stash selector parameters while an entire rmap
+    is being read so that the header can be used to help instantiate the selectors.
+    """
+    def __init__(self, selections):
+        self.selections = selections
+        
+    def instantiate(self, parkeys):
+        nkeys = self.nkeys()
+        mykeys = parkeys[:nkeys]
+        otherkeys = parkeys[nkeys:]
+        selections = {}
+        for key, selpars in self.selections.items():
+            if isinstance(selpars, Parameters):
+                selections[key] = selpars.instantiate(otherkeys)
+            else:
+                selections[key] = selpars
+        return self.selector(mykeys, selections)
+
+class MatchingParameters(Parameters):
+    selector = MatchingSelector
+    def nkeys(self):
+        return len(self.selections.keys()[0])
+
+class UseAfterParameters(Parameters):
+    selector = UseAfterSelector
+    
+    def instantiate(self, parkeys):
+        assert tuple(parkeys[:2]) == ("DATE-OBS","TIME-OBS")
+        return Parameters.instantiate(self, parkeys)
+
+    def nkeys(self):
+        return 2
+
+SELECTORS = {
+    "Match"  : MatchingParameters,
+    "UseAfter" : UseAfterParameters,
+}
+
 # ==============================================================================
 
 def test():
