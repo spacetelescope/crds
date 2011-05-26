@@ -6,11 +6,6 @@ local CRDS store,  caching the result.
 
 >>> p = get_cached_mapping("hst.pmap")
 
-Mappings round-trip through json OK:
-
->>> _ = p.to_json()
->>> p = PipelineContext.from_json(_)
-
 The initial HST pipeline mappings are self-consistent and there are none
 missing:
 
@@ -26,22 +21,20 @@ references missing relative to the CDBS HTML table dump:
 There are 72 pmap, imap, and rmap files in the entire HST pipeline:
 
 >>> len(p.mapping_names())
-72
+73
 
 There are 5719 reference files known to the initial CRDS mappings scraped
 from the CDBS HTML table dump:
 
 >>> len(p.reference_names())
-5744
+5754
 
 Pipeline reference files are also broken down by instrument:
 
 >>> sorted(p.reference_name_map().keys())
 ['acs', 'cos', 'stis', 'wfc3']
 
->>> i = InstrumentContext.from_file("hst_acs.imap", "hst", "acs")
->>> _ = i.to_json()
->>> i = InstrumentContext.from_json(_)
+>>> i = InstrumentContext.from_file("hst_acs.imap")
 
 The ACS instrument has 15 associated mappings,  including the instrument context:
 
@@ -58,9 +51,7 @@ Active instrument references are also broken down by filetype:
 >>> sorted(i.reference_name_map()["crrejtab"])
 ['n4e12510j_crr.fits', 'n4e12511j_crr.fits']
 
->>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap", "hst", "acs", "biasfile")
->>> _ = r.to_json()
->>> r = ReferenceMapping.from_json(_)
+>>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap")
 >>> len(r.reference_names())
 735
 """
@@ -74,11 +65,6 @@ try:
     from collections import namedtuple
 except:
     from crds.collections2 import namedtuple
-
-try:
-    import json
-except:
-    import simplejson as json
 
 from . import (log, timestamp, utils, selectors)
 
@@ -254,22 +240,6 @@ class Mapping(object):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
         return [ mapping for mapping in self.mapping_names() if not self.locate.mapping_exists(mapping)]
 
-    def to_json(self):
-        """Encode this Mapping as a string of JSON.
-        """
-        rmap = dict(header=self.header, data=self.data, filename=self.filename)
-        return json.dumps(keys_to_strings(rmap))
-    
-    @classmethod
-    def from_json(cls, json_str):
-        """Decode a string of JSON from to_json() into a Mapping.
-        """
-        rmap = strings_to_keys(json.loads(json_str))
-        header = rmap["header"]
-        data = rmap["data"]
-        filename = rmap["filename"]
-        return cls(filename, header, data, **header)
-    
     @property
     def locate(self):
         """Return the "locate" module associated with self.observatory.

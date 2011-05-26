@@ -171,7 +171,7 @@ class Selector(object):
         files = set()
         for choice in self.choices():
             if isinstance(choice, Selector):
-                new_files = choice.reference_files()
+                new_files = choice.reference_names()
             else:
                 new_files = [choice]
             for file in new_files:
@@ -965,35 +965,6 @@ def abs_time_delta(s, t):
 
 # ==============================================================================
 
-class ReferenceSelector(MatchingSelector):
-    """ReferenceSelector builds a Selector tree from an rmap header,data tuple.
-
-    A ReferenceSelector lookup is a two stage process:
-
-    1.  First, the rmap fitskeys are bound to a dataset header and used to
-    match a UseAfterSelector.
-
-    2.  Next, the UseAfterSelector is called with a parcitular date to choose
-    an appropriate reference file.
-    
-    This is the standard top-level selector for HST.
-    """
-    def __init__(self, header, data):
-        selections = {}
-        for mapping in data:
-            selections[mapping] = UseAfterSelector("DATE", data[mapping])
-        substitutions = header.get("substitutions", None)
-        MatchingSelector.__init__(self, header["parkey"][:-2], selections, substitutions)
-        
-    def reference_names(self):
-        files = set()
-        for key, (re_key, useafter) in self._selections.items():
-            for f in useafter.reference_names():
-                files.add(f)
-        return sorted(list(files))
-
-# ==============================================================================
-
 class Parameters(object):
     """Parameters are a place to stash selector parameters while an entire rmap
     is being read so that the header can be used to help instantiate the selectors.
@@ -1035,3 +1006,6 @@ def test():
 
 if __name__ == "__main__":
     print test()
+
+
+
