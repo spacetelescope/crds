@@ -1002,9 +1002,8 @@ class Parameters(object):
         self.selections = selections
         
     def instantiate(self, parkeys):
-        nkeys = self.nkeys()
-        mykeys = parkeys[:nkeys]
-        otherkeys = parkeys[nkeys:]
+        mykeys = parkeys[0]
+        otherkeys = parkeys[1:]
         selections = {}
         for key, selpars in self.selections.items():
             if isinstance(selpars, Parameters):
@@ -1015,18 +1014,13 @@ class Parameters(object):
 
 class MatchingParameters(Parameters):
     selector = MatchingSelector
-    def nkeys(self):
-        return len(self.selections.keys()[0])
 
 class UseAfterParameters(Parameters):
     selector = UseAfterSelector
     
     def instantiate(self, parkeys):
-        assert tuple(parkeys[:2]) == ("DATE-OBS","TIME-OBS")
+        assert tuple(parkeys[0]) == ("DATE-OBS","TIME-OBS")
         return Parameters.instantiate(self, parkeys)
-
-    def nkeys(self):
-        return 2
 
 SELECTORS = {
     "Match"  : MatchingParameters,

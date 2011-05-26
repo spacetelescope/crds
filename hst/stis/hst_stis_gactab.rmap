@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'GACTAB',
-    'parkey' : ('DETECTOR', 'OPT_ELEM', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

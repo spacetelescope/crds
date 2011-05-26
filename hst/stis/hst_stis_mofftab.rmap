@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'MOFFTAB',
-    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

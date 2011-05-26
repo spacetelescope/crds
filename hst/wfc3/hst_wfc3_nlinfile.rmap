@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'NLINFILE',
-    'parkey' : ('DETECTOR', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

@@ -370,14 +370,14 @@ def write_rmap(observatory, instrument, reftype, kind_map):
     outputs an rmap file
     """
     parkeys = KIND_KEYS[instrument][reftype]
-    all_parkeys = parkeys + MAPKEYS[:-1]
-    fitskeys = parkeys_to_fitskeys(instrument, all_parkeys)
+    fitskeys = parkeys_to_fitskeys(instrument, parkeys)
+    mapkeys = parkeys_to_fitskeys(instrument, MAPKEYS[:-1])
     rmap_header = OrderedDict([
         ("mapping", "reference"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
         ("reftype", reftype.upper()),
-        ("parkey", fitskeys)
+        ("parkey", (fitskeys, mapkeys))
     ])
     
     matching_selections = dict()

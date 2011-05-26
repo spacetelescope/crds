@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'STIS',
     'reftype' : 'PFLTFILE',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'APERTURE', '*CENWAVE', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'APERTURE', '*CENWAVE'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'DARKFILE',
-    'parkey' : ('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

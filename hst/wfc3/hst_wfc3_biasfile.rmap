@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'WFC3',
     'reftype' : 'BIASFILE',
-    'parkey' : ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

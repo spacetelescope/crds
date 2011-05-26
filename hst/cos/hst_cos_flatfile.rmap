@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'COS',
     'reftype' : 'FLATFILE',
-    'parkey' : ('DETECTOR', 'OBSTYPE', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

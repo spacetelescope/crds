@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'ACS',
     'reftype' : 'BIASFILE',
-    'parkey' : ('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({

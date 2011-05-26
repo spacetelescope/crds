@@ -3,7 +3,7 @@ header = {
     'observatory' : 'HST',
     'instrument' : 'ACS',
     'reftype' : 'CFLTFILE',
-    'parkey' : ('DETECTOR', 'FILTER1', 'FILTER2', 'DATE-OBS', 'TIME-OBS'),
+    'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
 }
 
 selector = Match({
