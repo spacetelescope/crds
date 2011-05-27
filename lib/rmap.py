@@ -258,11 +258,16 @@ class Mapping(object):
         """
         return "header = %s\n\nselector = %s\n" % (self._format_header(), self._format_selector())
         
-    def _format_dict(self, dict_):
+    def _format_dict(self, dict_, indent=0):
+        prefix = indent*" "*4
         s = "{\n"
         for key, val in dict_.items():
-            s += "    " + repr(key) + " : " + repr(val) + ",\n"
-        s += "}"
+            if isinstance(val, dict):
+                rval = self._format_dict(val, indent+1)
+            else:
+                rval = repr(val)
+            s += prefix + " "*4 + repr(key) + " : " + rval + ",\n"
+        s += prefix + "}"
         return s
     
     def _format_header(self):
