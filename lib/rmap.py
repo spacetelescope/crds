@@ -86,7 +86,7 @@ class FormatError(MappingError):
     pass
 
 class MissingHeaderKeyError(MappingError):
-    """A required parkey was not in the mapping header."""
+    """A required key was not in the mapping header."""
 
 class AstDumper(ast.NodeVisitor):
     """Debug class for dumping out rmap ASTs."""
@@ -114,6 +114,7 @@ class MappingValidator(ast.NodeVisitor):
         "FunctionDef","ClassDef", "Return", "Delete", "AugAssign", "Print",
         "For", "While", "If", "With", "Raise", "TryExcept", "TryFinally",
         "Assert", "Import", "ImportFrom", "Exec","Global","Pass",
+        "Repr", "Yield","Lambda","Attribute","Subscript"
         ]
     
     def visit_Illegal(self, node):
@@ -148,12 +149,12 @@ class MappingValidator(ast.NodeVisitor):
         self.assert_(node, node.targets[0].id in ["header","selector"],
                      "Only define 'header' or 'selector' sections")
         self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict)),
-                    "Section must be a selector call or dictionary")
+                    "Section value must be a selector call or dictionary")
         self.generic_visit(node)
 
     def visit_Call(self, node):
         self.assert_(node, node.func.id in selectors.SELECTORS,
-            "Selector " + repr(node.func.id) + " is not one of " + 
+            "Selector " + repr(node.func.id) + " is not one of supported Selectors: " + 
                      repr(sorted(selectors.SELECTORS.keys())))
         self.generic_visit(node)
 
@@ -162,8 +163,8 @@ MAPPING_VALIDATOR = MappingValidator()
 # =============================================================================        
 
 class Mapping(object):
-    """An Mapping is the abstract baseclass for loading anything with the
-    general structure of a header followed by data.
+    """An Mapping is the abstract baseclass for PipelineContext,
+    InstrumentContext, and ReferenceMapping.
     """
     required_attrs = []
     
@@ -173,6 +174,9 @@ class Mapping(object):
         self.selector = selector
     
     def __repr__(self):
+        """A subclass-safe repr which includes required parameters except for
+        'mapping' which is implied by the classname. 
+        """
         r = self.__class__.__name__ + "("
         r += repr(self.filename)+ ", "
         for attr in set(self.required_attrs)-set(["mapping"]):
@@ -181,6 +185,7 @@ class Mapping(object):
         return r
             
     def __getattr__(self, attr):
+        """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.required_attrs:
             val = self.header[attr]
             return val.lower() if isinstance(val, str) else val
@@ -192,13 +197,13 @@ class Mapping(object):
         """Load a mapping file `basename` and do syntax and basic validation.
         """
         where = locate_mapping(basename)
-        header, selector = cls.parse_header_selector(where)
+        header, selector = cls._parse_header_selector(where)
         mapping = cls(basename, header, selector, *args, **keys)
         mapping._validate_file_load()
         return mapping
     
     @classmethod
-    def parse_header_selector(cls, filepath):
+    def _parse_header_selector(cls, filepath):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
@@ -279,34 +284,6 @@ class Mapping(object):
 
 # ===================================================================
 
-def keys_to_strings(d):
-    """Convert non-string keys of `d` into strings for json encoding."""
-    if not isinstance(d, dict):
-        return d
-    results = {}
-    for key, value in d.items():
-        converted = keys_to_strings(value)
-        if not isinstance(key, (str, unicode)):
-            results[repr(key)] = converted
-        else:
-            results[key] = converted
-    return results
-    
-def strings_to_keys(d):
-    """Convert string keys of `d` which contain tuple reprs back into tuples.""" 
-    if not isinstance(d, dict):
-        return d
-    results = {}
-    for key, value in d.items():
-        converted = strings_to_keys(value)
-        if isinstance(key, (str, unicode)) and "(" in key:
-            results[literal_eval(key)] = converted
-        else:
-            results[key] = converted
-    return results
-
-# ===================================================================
-
 """
 header = {
     'observatory':'HST',
@@ -345,7 +322,7 @@ class PipelineContext(Mapping):
     def get_best_references(self, header, date=None):
         """Return the best references for keyword map `header`.
         """
-        header = dict(header.items())
+        header = dict(header)   # make a copy
         instrument = header["INSTRUME"].lower()
         return self.selections[instrument].get_best_references(header)
     
@@ -504,12 +481,12 @@ def get_cached_mapping(mapping_basename):
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     if mapping_basename not in CACHED_MAPPINGS:
-        CACHED_MAPPINGS[mapping_basename] = load_mapping(mapping_basename)
+        CACHED_MAPPINGS[mapping_basename] = _load_mapping(mapping_basename)
     return CACHED_MAPPINGS[mapping_basename]
 
-def load_mapping(mapping):
+def _load_mapping(mapping):
     """Load any of the pipeline, instrument, or reftype `mapping`s
-    from the file system.
+    from the file system.   Not cached.
     """
     if mapping.endswith(".pmap"):
         return PipelineContext.from_file(mapping)
@@ -528,8 +505,8 @@ def is_mapping(mapping):
 def locate_mapping(mappath):
     """Based on a possibly incomplete name,  figure out the absolute
     pathname for the mapping specified by `mappath`.   If `mappath` 
-    already has a directory path or is present the CWD,  use it as is.   
-    Otherwise infer the project from the mappath's and name and use the
+    already has a directory path or is present in the CWD,  use it as is.   
+    Otherwise infer the project from the mappath's name and use the
     project's locator to determine where the mapping should be.
     """
     if os.path.dirname(mappath):
