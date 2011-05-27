@@ -225,7 +225,7 @@ class Mapping(object):
         header = namespace["header"]
         selector = namespace["selector"]
         if isinstance(selector, selectors.Parameters):
-            return header, selector.instantiate(header["parkey"])
+            return header, selector.instantiate(header["parkey"], header)
         elif isinstance(selector, dict):
             return header, selector
         else:

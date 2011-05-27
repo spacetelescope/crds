@@ -332,15 +332,19 @@ class MatchingSelector(Selector):
     """
     rmap_name = "Match"
     
-    def __init__(self, parameters, selections, substitutions=None):
+    def __init__(self, parameters, selections, rmap_header={}):
         self._parameters = []
         self._required = {}
         self._selections = sorted(selections.items())
         self._value_map = {}
+
         self.setup_parameters(parameters)
+        
         selections = self.fix_simple_keys(selections)
-        selections = self.do_substitutions(
-            selections, substitutions)
+                
+        substitutions = rmap_header.get("substitutions", {})
+        selections = self.do_substitutions(selections, substitutions)
+        
         self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
 
@@ -479,6 +483,7 @@ class MatchingSelector(Selector):
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if m == -1:
                     if self._required[parkey]:
+                        # log.verbose("Winnowing ", match_tuple,"based on",repr(parkey))
                         del remaining[match_tuple]
                 else:
                     weights[match_tuple] -= m
@@ -578,7 +583,7 @@ class UseAfterSelector(Selector):
     ...
     UseAfterError: "No selection with time < '2000-07-02 08:08:00'"
     """
-    def __init__(self, parameters, datemapping):
+    def __init__(self, parameters, datemapping, rmap_header={}):
         selections = sorted(datemapping.items())
         Selector.__init__(self, parameters, *selections)
 
@@ -966,32 +971,36 @@ def abs_time_delta(s, t):
 # ==============================================================================
 
 class Parameters(object):
-    """Parameters are a place to stash selector parameters while an entire rmap
+    """Parameters are a place to stash Selector parameters while an entire rmap
     is being read so that the header can be used to help instantiate the selectors.
+    
+    When the rmap is compiled,  the selectors are compiled into Parameter objects.
+    Later,  when both the full header and stubbed selectors are availble,  the
+    Parameter objects are converted into Selectors by instantiate().
     """
     def __init__(self, selections):
         self.selections = selections
         
-    def instantiate(self, parkeys):
+    def instantiate(self, parkeys, rmap_header):
         mykeys = parkeys[0]
         otherkeys = parkeys[1:]
         selections = {}
         for key, selpars in self.selections.items():
             if isinstance(selpars, Parameters):
-                selections[key] = selpars.instantiate(otherkeys)
+                selections[key] = selpars.instantiate(otherkeys, rmap_header)
             else:
                 selections[key] = selpars
-        return self.selector(mykeys, selections)
+        return self.selector(mykeys, selections, rmap_header)
 
 class MatchingParameters(Parameters):
     selector = MatchingSelector
-
+    
 class UseAfterParameters(Parameters):
     selector = UseAfterSelector
     
-    def instantiate(self, parkeys):
-        assert tuple(parkeys[0]) == ("DATE-OBS","TIME-OBS")
-        return Parameters.instantiate(self, parkeys)
+    def instantiate(self, parkey, header):
+        assert tuple(parkey[0]) == ("DATE-OBS","TIME-OBS")
+        return Parameters.instantiate(self, parkey, header)
 
 SELECTORS = {
     "Match"  : MatchingParameters,

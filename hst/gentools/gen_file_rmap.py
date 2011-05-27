@@ -379,6 +379,9 @@ def write_rmap(observatory, instrument, reftype, kind_map):
         ("reftype", reftype.upper()),
         ("parkey", (fitskeys, mapkeys))
     ])
+
+    # Execute reftype specific customizations on header    
+    rmap_header.update(HEADER_ADDITIONS.get((instrument, reftype), {}))
     
     matching_selections = dict()
     for key in sorted(kind_map):

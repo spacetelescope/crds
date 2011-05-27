@@ -9,9 +9,9 @@ Properties that would be good for filetypes
 
 ==============================================================================================================
 
-ACS rmap test results:   6 errors in 107 tests
+ACS rmap test results:   85 errors, 91 warnings in 107 tests
 
-pfltfile:
+pfltfile:  3
     Custom scraper for file restrictions based on FW*OFFST,  0 -> *
 
     2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy based on HISTORY:
@@ -26,22 +26,24 @@ WARNING[561]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits'
 WARNING[701]: Lookup MISMATCH for '../../testdata/acs/warren/j8mt11efq_raw.fits' 'pfltfile' 'p4s15155j_pfl.fits' 'o841350jj_pfl.fits' 
 
 
-mdriztab:
+mdriztab:  not counted
     CDBS/scraped tables have next to nothing in them.  real data has unknown files.
 
-biasfile:
-    custom selector not implemented
+biasfile:  85
+	mostly broken with no attempt to fix since complicated and ill defined.
 
-    WARNING[375]: Lookup MISMATCH for '../../testdata/acs/warren/j8bt05nrq_raw.fits' 'biasfile' 'm4r1753rj_bia.fits' 'm991609sj_bia.fits'
-    WARNING[381]: Lookup MISMATCH for '../../testdata/acs/warren/j8bt05nsq_raw.fits' 'biasfile' 'm4r1753rj_bia.fits' 'm9916102j_bia.fits'
-    WARNING[831]: Lookup MISMATCH for '../../testdata/acs/warren/j8uq80jvq_raw.fits' 'biasfile' 'o6f0857ij_bia.fits' 'm991610mj_bia.fits'
-    WARNING[930]: Lookup MISMATCH for '../../testdata/acs/warren/j8uq80jwq_raw.fits' 'biasfile' 'o6f0857ij_bia.fits' 'm991610mj_bia.fits'
+idctab:   3
+	WARNING[1]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ycq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
+	WARNING[3]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ygq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
+	WARNING[5]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ykq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
 
-    m991609sj_bia.fits	m991610mj_bia.fit  m9916102j_bia.fits	not found anywhere
+	v4115408j is new apparently replacing 'q2h2010pj_idc.fits' based on CDBS HTML comment for v114408j:
+	
+	Exact copy of u7n18502j; incorrect V2/V3 axis in q2h2010pj--------- File created June 9th by Co
 
 ==============================================================================================================
 
-WFC3 rmap test results:    122 errors in 287 tests
+WFC3 rmap test results:    122 errors, 122 warnings in 287 tests
 
 CRDS warnings for these unsupported (yet, according to Howard) filetypes are expected:
 
