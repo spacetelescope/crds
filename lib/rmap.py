@@ -55,18 +55,24 @@ Active instrument references are also broken down by filetype:
 >>> len(r.reference_names())
 735
 """
+import sys
 import os
 import os.path
-import re
-import ast
-import pprint
 
 try:
     from collections import namedtuple
-except:
+except ImportError:
     from crds.collections2 import namedtuple
 
 from . import (log, timestamp, utils, selectors)
+
+try:
+    import ast
+except ImportError:
+    class ast(object):
+        """Fake ast NodeVisitor class for Python2.5."""
+        class NodeVisitor(object):
+            pass    
 
 # ===================================================================
 
@@ -102,14 +108,15 @@ class AstDumper(ast.NodeVisitor):
     visit_Call = dump
 
 class MappingValidator(ast.NodeVisitor):
-    def parse_and_check(self, filepath):
+    def compile_and_check(self, filepath):
         """Parse the file at `filepath`,  verify that it's a legal mapping,
-        and return the parsed AST node.
+        and return a compiled code object.
         """
-        node = ast.parse(open(filepath).read())
-        self.visit(node)
-        return node
-    
+        text = open(filepath).read()
+        if sys.version_info >= (2,7,0):
+            self.visit(ast.parse(text))
+        return compile(text, "<ast>", "exec")
+
     illegal_nodes = [
         "FunctionDef","ClassDef", "Return", "Delete", "AugAssign", "Print",
         "For", "While", "If", "With", "Raise", "TryExcept", "TryFinally",
@@ -207,21 +214,20 @@ class Mapping(object):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        node = MAPPING_VALIDATOR.parse_and_check(filepath)
+        code = MAPPING_VALIDATOR.compile_and_check(filepath)
         try:
-            header, selector = cls._compile_and_exec(node)
+            header, selector = cls._interpret(code)
         except Exception, exc:
-            raise
             raise MappingError("Can't load", cls.__name__, "file:", repr(os.path.basename(filepath)), str(exc))
         return header, selector
     
     @classmethod
-    def _compile_and_exec(self, node):
-        """Interpret a valid rmap AST `node` and return it's header and selector.
+    def _interpret(self, code):
+        """Interpret a valid rmap code object and return it's header and selector.
         """
         namespace = {}
         namespace.update(selectors.SELECTORS)
-        exec compile(node,"<ast>","exec") in namespace
+        exec code in namespace
         header = namespace["header"]
         selector = namespace["selector"]
         if isinstance(selector, selectors.Parameters):
