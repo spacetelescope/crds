@@ -27,6 +27,7 @@ import crds.log as log
 import crds.timestamp as timestamp
 import crds.pysh as pysh
 import crds.selectors as selectors
+import crds.utils as utils
 
 import crds.hst.acs
 import crds.hst.cos
@@ -290,7 +291,7 @@ def get_key(d, instr, kind):
                 return False  # Ew.
         if default is not None and value == "*":
             value = default
-        value = keyval.condition_value(value)
+        value = utils.condition_value(value)
         lkey.append(value)
     return tuple(lkey)
 

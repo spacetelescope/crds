@@ -9,7 +9,6 @@ import pyfits
 
 import crds.log as log
 import crds.utils as utils
-import crds.hst.gentools.keyval as keyval
 
 # ===================================================================
 
@@ -37,7 +36,7 @@ def get_header_union(fname):
     """
     header = get_unconditioned_header_union(fname)
     for key, value in header.items():
-        header[key] = keyval.condition_value(value)
+        header[key] = utils.condition_value(value)
     return header
 
 HERE = os.path.dirname(__file__) or "./"

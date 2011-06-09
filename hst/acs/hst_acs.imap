@@ -2,7 +2,7 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'instrument' : 'ACS',
-    'parkey' : ('INSTRUME',),
+    'parkey' : ('REFTYPE',),
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
 }
 

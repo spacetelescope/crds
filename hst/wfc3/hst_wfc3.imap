@@ -2,7 +2,7 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'instrument' : 'WFC3',
-    'parkey' : ('INSTRUME',),
+    'parkey' : ('REFTYPE',),
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
 }
 

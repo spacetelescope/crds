@@ -71,7 +71,7 @@ def generate_context_rmap(fname):
       ("mapping", "instrument"),
       ("observatory" , "HST"),
       ("instrument", instr.upper()),
-      ('parkey', ('INSTRUME',)),
+      ('parkey', ('REFTYPE',)),
       ("source_url", source_url),      
     ])
     selector = {}
