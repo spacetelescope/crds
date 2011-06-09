@@ -11,6 +11,7 @@ import urllib2
 
 import crds.log as log
 import crds.utils as utils
+import crds.rmap as rmap
 
 from crds.client.proxy import CheckingProxy
 
@@ -191,5 +192,8 @@ def cache_best_references_for_dataset(pipeline_context, dataset, ignore_cache=Fa
     from the `dataset`,  determine the best set of reference files,  cache the references
     locally,  and return the mapping  { reftype : local_file_path }.
     """
-    header = utils.get_header_union(dataset)
+    cache_mappings(pipeline_context, ignore_cache)
+    ctx = rmap.get_cached_mapping(pipeline_context)
+    needed_keys = ctx.get_required_parkeys()
+    header = utils.get_header_union(dataset, needed_keys)
     return cache_best_references(pipeline_context, header, ignore_cache)

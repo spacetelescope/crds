@@ -293,6 +293,17 @@ class Mapping(object):
             file = filename
         file.write(self.format())
 
+    def get_required_parkeys(self):
+        """Determine the set of parkeys required for this mapping
+        and all the selected by it.
+        """
+        parkeys = set(self.parkey)
+        if hasattr(self, "selections"):
+            for selection in self.selections.values():
+                key = selection.get_required_parkeys()
+                parkeys = parkeys.union(set(key))
+        return tuple(sorted(parkeys))
+
 # ===================================================================
 
 """
@@ -361,7 +372,7 @@ class PipelineContext(Mapping):
         for instrument in self.selections:
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
-
+    
 # ===================================================================
 
 """
@@ -479,6 +490,15 @@ class ReferenceMapping(Mapping):
     
     def _format_selector(self):
         return self.selector.format()
+
+    def get_required_parkeys(self):
+        parkeys = set()
+        for key in self.parkey:
+            if isinstance(key, tuple):
+                parkeys = parkeys.union(set(key))
+            else:
+                parkeys.add(key)
+        return parkeys
 
 # ===================================================================
 

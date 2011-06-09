@@ -65,7 +65,7 @@ def get_object(dotted_name):
 
 # ===================================================================
 
-def get_header_union(fname):
+def get_header_union(fname, needed_keys=[]):
     """Get the union of keywords from all header extensions of `fname`.  In
     the case of collisions,  keep the first value found as extensions are loaded
     in numerical order.
@@ -76,7 +76,8 @@ def get_header_union(fname):
         for key in hdu.header:
             newval = condition_value(hdu.header[key])
             if key not in union:
-                union[key] = newval
+                if key in needed_keys or ("*"+key in needed_keys):
+                    union[key] = newval
             elif union[key] != newval:
                 log.verbose("*** WARNING: Header union collision on", repr(key), repr(union[key]), repr(hdu.header[key]))
     return union
