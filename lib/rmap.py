@@ -58,6 +58,7 @@ Active instrument references are also broken down by filetype:
 import sys
 import os
 import os.path
+import hashlib
 
 try:
     from collections import namedtuple
@@ -89,7 +90,9 @@ class MappingError(Exception):
         
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
-    pass
+
+class ChecksumError(MappingError):
+    "There's a problem with the mapping's checksum."
 
 class MissingHeaderKeyError(MappingError):
     """A required key was not in the mapping header."""
@@ -175,7 +178,7 @@ class Mapping(object):
     """
     required_attrs = []
     
-    def __init__(self, filename, header, selector):
+    def __init__(self, filename, header, selector, **keys):
         self.filename = filename
         self.header = header
         self.selector = selector
@@ -205,8 +208,8 @@ class Mapping(object):
         """
         where = locate_mapping(basename)
         header, selector = cls._parse_header_selector(where)
-        mapping = cls(basename, header, selector, *args, **keys)
-        mapping._validate_file_load()
+        mapping = cls(basename, header, selector, **keys)
+        mapping._validate_file_load(keys)
         return mapping
     
     @classmethod
@@ -237,11 +240,13 @@ class Mapping(object):
         else:
             raise FormatError("selector must be a dict or a Selector.")
             
-    def _validate_file_load(self):
+    def _validate_file_load(self, keys):
         """Validate assertions about the contents of this rmap after it's built."""
         for name in self.required_attrs:
             if name not in self.header:
                 raise HeaderKeyError("Required header key " + repr(name) + " is missing.")
+        if not keys.get("ignore_hash", False):
+            self._check_hash()
 
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not known to CRDS."""
@@ -291,7 +296,24 @@ class Mapping(object):
             file = open(filename, "w+")
         else:
             file = filename
+        self._add_hash()
         file.write(self.format())
+        
+    def _check_hash(self):
+        old = self.header.pop("sha1sum", None)
+        if old is None:
+            raise ChecksumError("sha1sum is missing.")
+        nosum = self.format()
+        self.header["sha1sum"] = old
+        new = hashlib.sha1(nosum).hexdigest()
+        if old != new:
+            raise ChecksumError("sha1sum mismatch.")
+
+    def _add_hash(self):
+        old = self.header.pop("sha1sum", None)
+        nosum = self.format()
+        new = hashlib.sha1(nosum).hexdigest()
+        self.header["sha1sum"] = new
 
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
@@ -328,12 +350,12 @@ class PipelineContext(Mapping):
     """
     required_attrs = ["observatory", "mapping", "parkey"]
 
-    def __init__(self, filename, header, selector):
-        Mapping.__init__(self, filename, header, selector)
+    def __init__(self, filename, header, selector, **keys):
+        Mapping.__init__(self, filename, header, selector, **keys)
         self.selections = {}
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            self.selections[instrument] = ictx = InstrumentContext.from_file(imapname)
+            self.selections[instrument] = ictx = InstrumentContext.from_file(imapname, **keys)
             assert self.mapping == "pipeline", \
                 "PipelineContext 'mapping' format is not 'pipeline' in header."
             assert self.observatory == ictx.observatory, \
@@ -403,12 +425,12 @@ class InstrumentContext(Mapping):
     """
     required_attrs = PipelineContext.required_attrs + ["instrument"]
 
-    def __init__(self, filename, header, selector):
+    def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector)
         self.selections = {}
         for reftype, (rmap_ext, rmap_name) in selector.items():
             reftype = reftype.lower()
-            self.selections[reftype] = refmap = ReferenceMapping.from_file(rmap_name)
+            self.selections[reftype] = refmap = ReferenceMapping.from_file(rmap_name, **keys)
             assert self.mapping == "instrument", \
                 "InstrumentContext 'mapping' format is not 'instrument'."
             assert self.observatory == refmap.observatory, \
@@ -504,7 +526,7 @@ class ReferenceMapping(Mapping):
 
 CACHED_MAPPINGS = {}
 
-def get_cached_mapping(mapping_basename):
+def get_cached_mapping(mapping_basename, **keys):
     """Retrieve the Mapping corresponding to the specified 
     `mapping_basename` from the global mapping cache,  recursively
     loading and caching it if it has not already been cached.
@@ -512,19 +534,19 @@ def get_cached_mapping(mapping_basename):
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     if mapping_basename not in CACHED_MAPPINGS:
-        CACHED_MAPPINGS[mapping_basename] = _load_mapping(mapping_basename)
+        CACHED_MAPPINGS[mapping_basename] = _load_mapping(mapping_basename, **keys)
     return CACHED_MAPPINGS[mapping_basename]
 
-def _load_mapping(mapping):
+def _load_mapping(mapping, **keys):
     """Load any of the pipeline, instrument, or reftype `mapping`s
     from the file system.   Not cached.
     """
     if mapping.endswith(".pmap"):
-        return PipelineContext.from_file(mapping)
+        return PipelineContext.from_file(mapping, **keys)
     elif mapping.endswith(".imap"):
-        return InstrumentContext.from_file(mapping)
+        return InstrumentContext.from_file(mapping, **keys)
     elif mapping.endswith(".rmap"):
-        return ReferenceMapping.from_file(mapping)
+        return ReferenceMapping.from_file(mapping, **keys)
     else:
         raise ValueError("Unknown mapping extension for " + repr(mapping))
     
