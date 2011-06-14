@@ -272,7 +272,7 @@ class Mapping(object):
     def _format_dict(self, dict_, indent=0):
         prefix = indent*" "*4
         s = "{\n"
-        for key, val in dict_.items():
+        for key, val in sorted(dict_.items()):
             if isinstance(val, dict):
                 rval = self._format_dict(val, indent+1)
             else:
