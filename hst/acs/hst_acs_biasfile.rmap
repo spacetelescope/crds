@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'BIASFILE',
     'parkey' : (('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'BIASFILE',
+    'sha1sum' : 'cdabeceaa9dda5213da463700692551ffe0a9c7a',
 }
 
 selector = Match({

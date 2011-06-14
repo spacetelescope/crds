@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
-    'reftype' : 'DARKFILE',
     'parkey' : (('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'DARKFILE',
+    'sha1sum' : '76461b53a11a20d9eb865011685b301750d86cb0',
 }
 
 selector = Match({

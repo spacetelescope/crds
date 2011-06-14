@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'DGEOFILE',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'DGEOFILE',
+    'sha1sum' : '83ba41685faee501275520717b8517fccb8bd4c9',
 }
 
 selector = Match({

@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'DARKFILE',
     'parkey' : (('*DETECTOR', '*CCDAMP', '*CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'DARKFILE',
+    'sha1sum' : '8bcc771a3b57c3d55fe7c06991e146efb56a4bb4',
 }
 
 selector = Match({

@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'DARKFILE',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'DARKFILE',
+    'sha1sum' : 'ace8ee1bf3fceb52e59d421eec6774c205c72728',
 }
 
 selector = Match({

@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'LFLTFILE',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM', '*APERTURE', '*CENWAVE'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'LFLTFILE',
+    'sha1sum' : 'bcb7d46ea3676cefab8b07799a2ff751751b3975',
 }
 
 selector = Match({

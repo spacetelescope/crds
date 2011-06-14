@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'GACTAB',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'GACTAB',
+    'sha1sum' : '566bdcf9025987957aefe4e013321cdfe40381a5',
 }
 
 selector = Match({

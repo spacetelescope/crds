@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'PFLTFILE',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'APERTURE', '*CENWAVE'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PFLTFILE',
+    'sha1sum' : '6602c25a05cf7c16493b2c5020cba01414613865',
 }
 
 selector = Match({

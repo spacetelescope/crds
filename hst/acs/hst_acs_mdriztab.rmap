@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'MDRIZTAB',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'MDRIZTAB',
+    'sha1sum' : '871afaa765ebbc996ebfe7fc70a47f72489232e9',
 }
 
 selector = Match({

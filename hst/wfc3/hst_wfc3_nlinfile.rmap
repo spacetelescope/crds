@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
-    'reftype' : 'NLINFILE',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'NLINFILE',
+    'sha1sum' : '1b9456fb184502dbb9b2dd63ecbad197c3144190',
 }
 
 selector = Match({

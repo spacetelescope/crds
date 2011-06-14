@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
-    'reftype' : 'BPIXTAB',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'BPIXTAB',
+    'sha1sum' : '01174617141ee61f94540867b6b08012c5ef79b0',
 }
 
 selector = Match({

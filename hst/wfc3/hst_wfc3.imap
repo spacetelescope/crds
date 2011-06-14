@@ -1,21 +1,21 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'instrument',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
     'parkey' : ('REFTYPE',),
+    'sha1sum' : 'f69002ec629a0ca1523217f12ab1a6462e19f7e2',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
-    'sha1sum' : '039e160b0c32ce0241f027f3f47611ebcaebae57',
 }
 
 selector = {
-    'nlinfile' : ('LIN', 'hst_wfc3_nlinfile.rmap'),
-    'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
-    'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
     'biasfile' : ('BIA', 'hst_wfc3_biasfile.rmap'),
     'bpixtab' : ('BPX', 'hst_wfc3_bpixtab.rmap'),
-    'oscntab' : ('OSC', 'hst_wfc3_oscntab.rmap'),
     'ccdtab' : ('CCD', 'hst_wfc3_ccdtab.rmap'),
     'crrejtab' : ('CRR', 'hst_wfc3_crrejtab.rmap'),
-    'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
+    'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
+    'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
     'mdriztab' : ('MDZ', 'hst_wfc3_mdriztab.rmap'),
+    'nlinfile' : ('LIN', 'hst_wfc3_nlinfile.rmap'),
+    'oscntab' : ('OSC', 'hst_wfc3_oscntab.rmap'),
+    'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
 }

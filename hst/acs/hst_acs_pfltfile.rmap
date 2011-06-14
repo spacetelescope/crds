@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'PFLTFILE',
     'parkey' : (('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PFLTFILE',
+    'sha1sum' : '1800878e7c97a1e6b21879bfa76cccac721278ac',
 }
 
 selector = Match({

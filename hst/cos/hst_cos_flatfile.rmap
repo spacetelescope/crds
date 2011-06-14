@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'COS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'COS',
-    'reftype' : 'FLATFILE',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'FLATFILE',
+    'sha1sum' : '63ad1994f166aaa27b6e63a0d7b8dceda8aafdb0',
 }
 
 selector = Match({

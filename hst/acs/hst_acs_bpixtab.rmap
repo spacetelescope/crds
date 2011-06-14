@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'ACS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'ACS',
-    'reftype' : 'BPIXTAB',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'BPIXTAB',
+    'sha1sum' : '74cfb353dc04660d20f6758325aaa1a27abc15de',
 }
 
 selector = Match({

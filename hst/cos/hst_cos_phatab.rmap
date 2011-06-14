@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'COS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'COS',
-    'reftype' : 'PHATAB',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PHATAB',
+    'sha1sum' : 'd80571916d47a24f73008c4d93e81683aacb4edd',
 }
 
 selector = Match({

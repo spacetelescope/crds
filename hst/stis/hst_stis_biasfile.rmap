@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'BIASFILE',
     'parkey' : (('DETECTOR', 'CCDGAIN', 'CCDAMP', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'BIASFILE',
+    'sha1sum' : '4a5cc77a4d370b5c6c307faf07f145611a99caf1',
 }
 
 selector = Match({

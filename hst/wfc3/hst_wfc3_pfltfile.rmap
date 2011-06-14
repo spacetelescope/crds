@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
-    'reftype' : 'PFLTFILE',
     'parkey' : (('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PFLTFILE',
+    'sha1sum' : '50f5614d1979fe0d89ca3a20c5f50b54831cbb3a',
 }
 
 selector = Match({

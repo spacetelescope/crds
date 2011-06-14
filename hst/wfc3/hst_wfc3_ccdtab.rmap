@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'WFC3',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'WFC3',
-    'reftype' : 'CCDTAB',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'CCDTAB',
+    'sha1sum' : '1eb32c5131e2fb092142c4ece4254691a8fe6922',
 }
 
 selector = Match({

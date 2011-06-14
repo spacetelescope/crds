@@ -1,9 +1,10 @@
 header = {
+    'instrument' : 'STIS',
     'mapping' : 'reference',
     'observatory' : 'HST',
-    'instrument' : 'STIS',
-    'reftype' : 'LAMPTAB',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'LAMPTAB',
+    'sha1sum' : '791c1828b5c2ba1b204c000c58f890f74dafaf96',
 }
 
 selector = Match({
