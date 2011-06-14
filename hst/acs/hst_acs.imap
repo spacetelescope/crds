@@ -4,6 +4,7 @@ header = {
     'instrument' : 'ACS',
     'parkey' : ('REFTYPE',),
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
+    'sha1sum' : 'a20cedd45f8f0a694e54f193b30220d765cce02c',
 }
 
 selector = {

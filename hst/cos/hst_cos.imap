@@ -4,6 +4,7 @@ header = {
     'instrument' : 'COS',
     'parkey' : ('REFTYPE',),
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
+    'sha1sum' : '7dccd98779b91836ab1372bcdb63436851a5bcf1',
 }
 
 selector = {

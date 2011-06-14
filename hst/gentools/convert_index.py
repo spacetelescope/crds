@@ -84,7 +84,7 @@ def generate_context_rmap(fname):
         eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
         selector[keyword] = (converted["ext"], eventually_generated_rmap)
     imap = rmap.Mapping(instr + ".imap", header, selector)
-    open(instr + ".imap", "w+").write(imap.format())
+    imap.write()
 
 def get_value_from_keys(d, keylist):
     for key in keylist:

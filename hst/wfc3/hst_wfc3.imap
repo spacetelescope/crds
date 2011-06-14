@@ -4,6 +4,7 @@ header = {
     'instrument' : 'WFC3',
     'parkey' : ('REFTYPE',),
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
+    'sha1sum' : '039e160b0c32ce0241f027f3f47611ebcaebae57',
 }
 
 selector = {

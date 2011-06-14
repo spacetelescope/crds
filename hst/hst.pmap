@@ -1,13 +1,13 @@
 header = {
-    'mapping': 'pipeline',
-    'observatory':'HST',
     'parkey' : ('INSTRUME',),
+    'observatory' : 'HST',
+    'mapping' : 'pipeline',
+    'sha1sum' : '3bb9b2b0d6f31a4822a986958b0b341717d708c8',
 }
 
 selector = {
-    'ACS':'hst_acs.imap',
-    'COS':'hst_cos.imap', 
-    'STIS':'hst_stis.imap',
-    'WFC3':'hst_wfc3.imap',
+    'ACS' : 'hst_acs.imap',
+    'WFC3' : 'hst_wfc3.imap',
+    'COS' : 'hst_cos.imap',
+    'STIS' : 'hst_stis.imap',
 }
-
