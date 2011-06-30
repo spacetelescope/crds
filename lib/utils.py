@@ -31,6 +31,18 @@ def ensure_dir_exists(fullpath):
 
 # ===================================================================
 
+def get_locator_module(observatory):
+     exec("import crds."+observatory+".locate as locate", locals(), locals())
+     return locate
+ 
+def get_crds_mappath(observatory):
+    locate = get_locator_module(observatory)
+    return locate.get_crds_mappath()
+
+def get_crds_refpath(observatory):
+    locate = get_locator_module(observatory)
+    return locate.get_crds_refpath()
+
 def context_to_observatory(context_file):
     """
     >>> context_to_observatory('hst_acs_biasfile.rmap')
