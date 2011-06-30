@@ -21,20 +21,20 @@ essentially done by a tree walk through a set of nested Selectors.
 A concrete example should make things clearer.   Here,  we describe which files
 to use for a particular wavelength and software version:
 
->>> r = ClosestGeometricRatioSelector('effective_wavelength',
-...        (1.2, SWVersionDepSelector(
-...                ('<5','cref_XXX_flatfield_73.fits'),
-...                ('default', 'cref_XXX_flatfield_123.fits'),
-...        )),
-...        (1.5, SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_74.fits'),
-...                ('default', 'cref_XXX_flatfield_124.fits'),
-...        )),
-...        (5.0, SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_87.fits'),
-...                ('default', 'cref_XXX_flatfield_137.fits'),
-...        )),
-... )
+>>> r = ClosestGeometricRatioSelector('effective_wavelength', {
+...  1.2 : SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_73.fits',
+...                'default': 'cref_XXX_flatfield_123.fits',
+...          }),
+...  1.5 : SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_74.fits',
+...                'default': 'cref_XXX_flatfield_124.fits',
+...         }),
+...  5.0 : SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_87.fits',
+...                'default': 'cref_XXX_flatfield_137.fits',
+...        }),
+... })
 
 ClosestGeometricRatioSelector and SWVersionDepSelector are both Selector
 subclasses.  At calibration time,  we choose from among the possible reference
@@ -46,36 +46,36 @@ files based on our rules and the known context:
 Selectors are designed to be nestable and can describe rules of arbitrary type
 and complexity.   Here we add time to the selection criteria:
 
->>> r = ClosestGeometricRatioSelector('effective_wavelength',
-...        (1.2, ClosestTimeSelector("time",
-...            ('2017-4-24', SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_73.fits'),
-...                ('default', 'cref_XXX_flatfield_123.fits'),
-...            )),
-...            ('2018-2-1', SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_223.fits'),
-...                ('default', 'cref_XXX_flatfield_222.fits'),
-...            )),
-...            ('2019-4-15', SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_518.fits'),
-...                ('default', 'cref_XXX_flatfield_517.fits'),
-...            )),
-...        )),
-...        (1.5, ClosestTimeSelector("time",
-...            ('2017-4-24', SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_74.fits'),
-...                ('default', 'cref_XXX_flatfield_124.fits'),
-...            )),
-...            ('2019-1-1', SWVersionDepSelector(
-...                ('<5', 'cref_XXX_flatfield_490.fits'),
-...                ('default', 'cref_XXX_flatfield_489.fits'),
-...            )),
-...        )),
-...        (5.0, SWVersionDepSelector(
-...            ('<5', 'cref_XXX_flatfield_87.fits'),
-...            ('default','cref_XXX_flatfield_137.fits'),
-...        )),
-... )
+>>> r = ClosestGeometricRatioSelector('effective_wavelength', {
+...   1.2: ClosestTimeSelector("time", {
+...            '2017-4-24': SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_73.fits',
+...                'default': 'cref_XXX_flatfield_123.fits',
+...            }),
+...            '2018-2-1': SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_223.fits',
+...                'default': 'cref_XXX_flatfield_222.fits',
+...            }),
+...            '2019-4-15': SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_518.fits',
+...                'default': 'cref_XXX_flatfield_517.fits',
+...            }),
+...        }),
+...  1.5: ClosestTimeSelector("time", {
+...            '2017-4-24': SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_74.fits',
+...                'default': 'cref_XXX_flatfield_124.fits',
+...            }),
+...            '2019-1-1': SWVersionDepSelector({
+...                '<5': 'cref_XXX_flatfield_490.fits',
+...                'default': 'cref_XXX_flatfield_489.fits',
+...            }),
+...        }),
+...  5.0: SWVersionDepSelector({
+...            '<5': 'cref_XXX_flatfield_87.fits',
+...            'default': 'cref_XXX_flatfield_137.fits',
+...        }),
+... })
 
 >>> r.choose({"effective_wavelength":1.6, "time":"2019-1-2", "sw_version":1.4})
 'cref_XXX_flatfield_490.fits'
@@ -140,9 +140,11 @@ class Selector(object):
     complete set of nested choices.   Each nested Selector only uses those portions
     of the overall context that it requires.
     """
-    def __init__(self, parameters, *selections):
+    def __init__(self, parameters, selections):
+        assert isinstance(parameters, (list, tuple)), "First parameter should be a list or tuple of header keys"
+        assert isinstance(selections, dict),  "Second parameter should be a dictionary mapping selector keys to selections."
         self._parameters = list(parameters)
-        self._selections = list(selections)
+        self._selections = sorted(selections.items())
 
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._parameters) + ")"
@@ -584,8 +586,7 @@ class UseAfterSelector(Selector):
     UseAfterError: "No selection with time < '2000-07-02 08:08:00'"
     """
     def __init__(self, parameters, datemapping, rmap_header={}):
-        selections = sorted(datemapping.items())
-        Selector.__init__(self, parameters, *selections)
+        Selector.__init__(self, parameters, datemapping)
 
     def choose(self, header):
         date = timestamp.reformat_date(" ".join([header[x] for x in self._parameters]))
@@ -631,11 +632,11 @@ class ClosestGeometricRatioSelector(Selector):
     """ClosestGeometricRatio selects the choice whose key is at the smallest
     distance from the specified condition value.
 
-    >>> r = ClosestGeometricRatioSelector("effective_wavelength",
-    ...          (1.2, "cref_XXX_flatfield_120.fits"),
-    ...          (1.5, "cref_XXX_flatfield_124.fits"),
-    ...          (5.0, "cref_XXX_flatfield_137.fits")
-    ... )
+    >>> r = ClosestGeometricRatioSelector("effective_wavelength", {
+    ...  1.2 : "cref_XXX_flatfield_120.fits",
+    ...  1.5 : "cref_XXX_flatfield_124.fits",
+    ...  5.0 : "cref_XXX_flatfield_137.fits",
+    ... })
 
     >>> r.choose({"effective_wavelength":1.0})
     'cref_XXX_flatfield_120.fits'
@@ -661,10 +662,10 @@ class ClosestGeometricRatioSelector(Selector):
     >>> r.choose({"effective_wavelength":5.1})
     'cref_XXX_flatfield_137.fits'
     """
-    def __init__(self, keyname, *selections):
+    def __init__(self, keyname, selections):
         if not isinstance(keyname, str):
             raise TypeError("First parameter of ClosestGeometricRatio should be the name of a variable to check,  i.e. an str.")
-        Selector.__init__(self, [keyname], *selections)
+        Selector.__init__(self, [keyname], selections)
 
     def choose(self, header):
         import numpy as np
@@ -680,11 +681,11 @@ class LinearInterpolationSelector(Selector):
     """LinearInterpolation selects the the bracketing values of the
     given context variable,  returning a two-tuple.
 
-    >>> r = LinearInterpolationSelector("effective_wavelength",
-    ...          (1.2, "cref_XXX_flatfield_120.fits"),
-    ...          (1.5, "cref_XXX_flatfield_124.fits"),
-    ...          (5.0, "cref_XXX_flatfield_137.fits"),
-    ... )
+    >>> r = LinearInterpolationSelector("effective_wavelength", {
+    ...   1.2: "cref_XXX_flatfield_120.fits",
+    ...   1.5: "cref_XXX_flatfield_124.fits",
+    ...   5.0: "cref_XXX_flatfield_137.fits",
+    ... })
 
     >>> r.choose({"effective_wavelength":1.25})
     ('cref_XXX_flatfield_120.fits', 'cref_XXX_flatfield_124.fits')
@@ -708,10 +709,10 @@ class LinearInterpolationSelector(Selector):
     >>> r.choose({"effective_wavelength":6.0})
     ('cref_XXX_flatfield_137.fits', 'cref_XXX_flatfield_137.fits')
     """
-    def __init__(self, keyname, *selections):
+    def __init__(self, keyname, selections):
         if not isinstance(keyname, str):
             raise TypeError("First parameter of ClosestGeometricRatio should be the name of a variable to check,  i.e. an str.")
-        Selector.__init__(self, [keyname], *selections)
+        Selector.__init__(self, [keyname], selections)
 
     def choose(self, header):
         keyval = header[self._parameters[0]]
@@ -810,7 +811,7 @@ class VersionRelation(object):
                 raise ValueError("Illegal version expression " + repr(version))
             self._version = "default"
             self._relation = "default"
-
+            
     def __repr__(self):
         if self._version == "default":
             return "VersionRelation('default')"
@@ -876,15 +877,11 @@ class VersionDepSelector(Selector):
     """
     versionvar = "header variable name for this version kind"
 
-    def __init__(self, *selections):
-        parsed_selections = self.parse_selections(selections)
-        Selector.__init__(self, [], *parsed_selections)
+    def __init__(self, selections):
+        Selector.__init__(self, [], self.parse_selections(selections))
 
     def parse_selections(self, selections):
-        parsed = [(VersionRelation(x[0]), x[1]) for x in selections]
-        if parsed != sorted(parsed):
-            raise ValueError("VersionDep not specified in sorted order.")
-        return parsed
+        return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
 
     def choose(self, header):
         version = header[self.versionvar]
@@ -898,11 +895,11 @@ class SWVersionDepSelector(VersionDepSelector):
     selection criteria.  SWVersionDep implicitly uses the choose() method
     keyword parameter 'sw_version'.
 
-    >>> r = SWVersionDepSelector(
-    ...     ('<3.1',    'cref_XXX_flatfield_65.fits'),
-    ...     ('<5',      'cref_XXX_flatfield_73.fits'),
-    ...     ('default', 'cref_XXX_flatfield_123.fits'),
-    ... )
+    >>> r = SWVersionDepSelector({
+    ...  '<3.1':    'cref_XXX_flatfield_65.fits',
+    ...  '<5':      'cref_XXX_flatfield_73.fits',
+    ...  'default': 'cref_XXX_flatfield_123.fits',
+    ... })
 
     >>> r.choose({"sw_version":4.5})
     'cref_XXX_flatfield_73.fits'
@@ -924,11 +921,11 @@ class ClosestTimeSelector(Selector):
     """ClosestTime chooses the selection whose time most closely matches the choose()
     method "time" keyword parameter
 
-    >>> t = ClosestTimeSelector("time",
-    ...    ('2017-4-24', "cref_XXX_flatfield_123.fits"),
-    ...    ('2018-2-1',  "cref_XXX_flatfield_222.fits"),
-    ...    ('2019-4-15', "cref_XXX_flatfield_123.fits"),
-    ... )
+    >>> t = ClosestTimeSelector("time", {
+    ...  '2017-4-24': "cref_XXX_flatfield_123.fits",
+    ...  '2018-2-1':  "cref_XXX_flatfield_222.fits",
+    ...  '2019-4-15': "cref_XXX_flatfield_123.fits",
+    ... })
 
     >>> t.choose({"time":"2016-5-5"})
     'cref_XXX_flatfield_123.fits'
@@ -948,9 +945,8 @@ class ClosestTimeSelector(Selector):
     >>> t.choose({"time":"2019-4-16"})
     'cref_XXX_flatfield_123.fits'
     """
-    def __init__(self, timevar, *selections):
-        Selector.__init__(self, [timevar], *selections)
-        self._selections.sort()
+    def __init__(self, timevar, selections):
+        Selector.__init__(self, [timevar], selections)
 
     def choose(self, header):
         import numpy as np
