@@ -165,6 +165,25 @@ class Selector(object):
         else:
             return choice
         
+    def get_parkey_map(self):
+        """Return a mapping from parkeys to values for them."""
+        map = {}
+        for i, par in enumerate(self._parameters):
+            wild = par.startswith("*")
+            if wild:
+                par = par[1:]
+            if par not in map:
+                map[par] = set()
+            if wild:
+                map[par].add("*")
+            for choice in self.keys():
+                val = choice[i]
+                map[par].add(val)
+        for par, val in map.items():
+            val = val.difference(set(["%NO REFERENCE%"]))
+            map[par] = sorted(list(val))
+        return map
+
     def reference_names(self):
         """Return the list of reference files located by this selector.
         Assume any choice that is a string is a reference file.  Recursively

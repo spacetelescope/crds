@@ -491,6 +491,17 @@ class InstrumentContext(Mapping):
             files.append(os.path.basename(selector.filename))
         return files
     
+    def get_parkey_map(self):
+        map = {}
+        for reftype, selector in self.selections.items():
+            for parkey, choices in selector.get_parkey_map().items():
+                if parkey not in map:
+                    map[parkey] = set()
+                map[parkey] = map[parkey].union(choices)
+        for parkey, choices in map.items():
+            map[parkey] = sorted(list(map[parkey]))
+        return map
+    
 # ===================================================================
 
 class ReferenceMapping(Mapping):
@@ -521,6 +532,9 @@ class ReferenceMapping(Mapping):
             else:
                 parkeys.add(key)
         return parkeys
+    
+    def get_parkey_map(self):
+        return self.selector.get_parkey_map()
 
 # ===================================================================
 
