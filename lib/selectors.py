@@ -178,6 +178,8 @@ class Selector(object):
                 map[par].add("*")
             for choice in self.keys():
                 val = choice[i]
+                if val == "NOT PRESENT":
+                    val = "*"
                 map[par].add(val)
         for par, val in map.items():
             val = val.difference(set(["%NO REFERENCE%"]))
