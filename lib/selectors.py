@@ -458,7 +458,7 @@ class MatchingSelector(Selector):
                 return choice
             
         log.verbose("Match failed.")
-        raise MatchingError("No match found.")
+        raise MatchingError("No match.")
 
     def _winnowing_match(self, header):
         """Iterate through each of the parameters in `fitskeys`, binding
@@ -477,7 +477,7 @@ class MatchingSelector(Selector):
         for _weight, group in sorted_candidates:
             if len(group) > 1:
                 log.verbose("Ambigious match error.")
-                raise AmbiguousMatchError("ambiguous match.")
+                raise AmbiguousMatchError("Ambiguous match.")
             else:
                 selector = remaining[group[0]][1]
                 log.verbose("Matched", repr(group),"returning",repr(selector))
