@@ -9,7 +9,7 @@ import crds.rmap as rmap
 def validate_context(fname):
     log.info("Validating context:", repr(fname))
     
-    mapping = rmap.load_mapping(fname)
+    mapping = rmap.get_cached_mapping(fname)
     
     for reference in mapping.reference_names():
         try:
@@ -17,6 +17,8 @@ def validate_context(fname):
         except KeyError, e:
             sys.exc_clear()
             log.error("Unknown reference file", str(e))
+        else:
+            log.info("OK reference", repr(where))
         # if not os.path.exists(where):
         #     log.error("Missing reference file", repr(where))
 
