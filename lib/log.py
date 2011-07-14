@@ -3,6 +3,7 @@ errors, warnings, and info.  Also error exception raising and
 tracebacks.
 """
 import sys
+import optparse
 import traceback
 import StringIO
 import profile
@@ -249,10 +250,15 @@ def increment_failures():
 def status():
     return WARNINGS, ERRORS
 
-def handle_standard_options(parser, args, show_info=True, default_outpath=None):
+def handle_standard_options(
+        args, parser=None, usage="usage: %prog [options] <inpaths...>",
+        show_info=True, default_outpath=None):
     '''Set some standard options on an optparser object,  many
     of which interplay with the log module itself.
     '''
+    if parser is None:
+        parser = optparse.OptionParser(usage)
+    
     parser.add_option("-o","--outpath",dest="output_dir",
                       help="Path to write tests to.",
                       metavar="OUTPATH", default=default_outpath)

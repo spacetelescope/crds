@@ -18,6 +18,7 @@ def rmap_to_tpn(context, rmap_name):
 INSTRUMENTS = ["acs","cos","stis","wfc3"]
 
 def get_filetype_map(context):
+    """Generate the FILETYPE_TO_EXTENSION map below."""
     pipeline = rmap.get_cached_mapping(context)
     map = {}
     for instr in INSTRUMENTS:
@@ -131,30 +132,49 @@ def certify(fitsname):
     for keyname, validator in the_tpn.items():
         validator.check(fitsname, keyname, header)
 
-def main(files):
-    """Run certify() on a list of `files` logging an error for the first failure
-    in each file,  but continuing.
+def certify_fits(files):
+    """Run certify() on a list of FITS `files` logging an error for the first failure
+    in each file,  but continuing.   Returns the count of errors.
     """
     for fname in files:
         log.info("Certifying", repr(fname))
+        if not fname.endswith(".fits"):
+            log.error("Expected extension .fits.",repr(fname),"does not end with .fits.")
+            continue
         try:
             certify(fname)
-        except Exception:
-            raise
+        except Exception, exc:
+            # raise
             log.error("Validation failed for", repr(fname))
-    log.standard_status()
+    return log.errors()
+
+def certify_context(context):
+    """Run certify() on all the reference files belonging to mapping `context`.
+    Returns the count of errors.
+    """
+    return certify_fits(reference_files(context))
     
 def reference_files(context):
-    """Returns the list of server reference file paths for `context`"""
+    """Returns the list of server reference file paths for `context`."""
     ctx = rmap.get_cached_mapping(context)
     paths = []
     for ref in ctx.reference_names():
         try:
             paths.append(ctx.locate.locate_server_reference(ref))
         except KeyError:
-            log.warning("Missing reference file", repr(ref))
+            log.error("Missing reference file", repr(ref))
     return paths
 
+def main(files):
+    errors = 0
+    for file in files:
+        if file.endswith((".pmap",".imap",".rmap")):
+            errors += certify_context(file)
+        else:
+            errors += certify_fits([file])
+    log.standard_status()
+
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    options, args = log.handle_standard_options(sys.argv)
+    log.standard_run("main(sys.argv[1:])", options, globals(), globals())
 

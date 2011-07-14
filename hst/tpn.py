@@ -12,9 +12,8 @@ try:
     from collections import namedtuple
 except ImportError:
     from crds.collections2 import namedtuple
-
-import crds.config as config
-import crds.rmap as rmap
+    
+from crds import config, rmap, log, timestamp
 
 def get_tpn_map(pipeline_context_name):
     """
@@ -217,11 +216,11 @@ class KeywordValidator(object):
         else:
             raise ConfigError("Unknown TPN keytype " + repr(self._info.keytype) + " for " + repr(self._info.name))
         
-    def check_header(self):
+    def check_header(self, value):
         raise NotImplementedError("")
-    def check_column(self):
+    def check_column(self, value):
         raise NotImplementedError("")
-    def check_group(self):
+    def check_group(self, value):
         raise NotImplementedError("")
 
     def _get_value(self, fitsname, keyname, header):
@@ -239,12 +238,16 @@ class KeywordValidator(object):
     
 
 class StringValidator(KeywordValidator):
+    def __init__(self, info):
+        KeywordValidator.__init__(self, info)
+        self._values = [s.upper() for s in self._info.values]
+
     def check_header(self, value):
-        value = str(value)
+        value = str(value).upper()
         if " " in value:
             value = '"' + "_".join(value.split()) + '"'
-        if self._info.values != [''] and value not in self._info.values:
-            raise ValueError("Value for " + repr(self._name) + " of " + repr(value) + " is not one of " + repr(self._info.values))
+        if self._values != [] and value not in self._values:
+            raise ValueError("String value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
         
 class FloatValidator(KeywordValidator):
     def __init__(self, info):
@@ -253,7 +256,7 @@ class FloatValidator(KeywordValidator):
         
     def check_header(self, value):
         if float(value) not in self._floats:
-            raise ValueError("Value for " + repr(self._name) + " of " + repr(value) + " is not one of " + repr(self._floats))
+            raise ValueError("Float value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._floats))
 
 class IntValidator(KeywordValidator):
     def __init__(self, info):
@@ -262,15 +265,23 @@ class IntValidator(KeywordValidator):
         
     def check_header(self, value):
         if int(value) not in self._ints:
-            raise ValueError("Value for " + repr(self._name) + " of " + repr(value) + " is not one of " + repr(self._ints))
+            raise ValueError("Int value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._ints))
 
 class PedigreeValidator(KeywordValidator):
     def check_header(self, value):
-        pedigree, start, stop = value.split()
+        try:
+            pedigree, start, stop = value.split()
+        except ValueError:
+            log.verbose("Pedigree value for" + repr(self._info.name) + " of " + repr(value) + " does not unpack into (pedigree, start_date, stop_date).")
+            pedigree = value
+            start = stop = None
+        pedigree = pedigree.upper()
         if pedigree not in ["INFLIGHT","GROUND","MODEL","DUMMY"]:
             raise ValueError("Illegal PEDIGREE " + repr(value))
-        timestamp.Slashdate.get_datetime(start)
-        timestamp.Slashdate.get_datetime(stop)
+        if start is not None:
+            timestamp.Slashdate.get_datetime(start)
+        if stop is not None:
+            timestamp.Slashdate.get_datetime(stop)
         
 class SybdateValidator(KeywordValidator):
     def check_header(self, value):
@@ -296,9 +307,9 @@ def validator(info):
         else:
             return StringValidator(info)
     elif info.datatype == "R":
-        return StringValidator(info)
+        return FloatValidator(info)
     elif info.datatype == "I":
-        return StringValidator(info)
+        return IntValidator(info)
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
 
