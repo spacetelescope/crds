@@ -8,6 +8,8 @@ import os
 import os.path
 import re
 
+import pyfits
+
 try:
     from collections import namedtuple
 except ImportError:
@@ -193,123 +195,160 @@ class KeywordValidator(object):
         self._info = info
         if self._info.presence not in ["R","P","E","O"]:
             raise ValueError("Bad TPN presence field " + repr(self._info.presence))
-        
+        if self.condition is not None:
+            self._values = [self.condition(value) for value in info.values]
+
+    def condition(self, value):
+        """Condition `value` to standard format for this Validator."""
+        return value
+            
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._info) + ")"
 
-    def check(self, fitsname, keyname, header=None):
-        
-        if header is None:
-            header = pyfits.getheader(fitsname)
-
-        value = self._get_value(fitsname, keyname, header)
-        log.verbose("Checking ", repr(fitsname), "keyword", repr(keyname), "=", repr(value))
-        if value is None: # missing optional or excluded keyword
-            return
-
+    def check(self, filename, keyname, header=None):
         if self._info.keytype == "H":
-            self.check_header(value)
+            self.check_header(filename, keyname, header)
         elif self._info.keytype == "C":
-            self.check_column(value)
+            self.check_column(filename, keyname)
         elif self._info.keytype == "G":
-            self.check_group(value)
+            self.check_group(filename, keyname)
         else:
             raise ConfigError("Unknown TPN keytype " + repr(self._info.keytype) + " for " + repr(self._info.name))
         
-    def check_header(self, value):
-        raise NotImplementedError("")
-    def check_column(self, value):
-        raise NotImplementedError("")
-    def check_group(self, value):
-        raise NotImplementedError("")
+    def check_value(self, filename, keyname, value):
+        log.verbose("Checking ", repr(filename), "keyword", repr(keyname), "=", repr(value))
+        if value is None: # missing optional or excluded keyword
+            return
+        if self.condition is not None:
+            value = self.condition(value)
+        if self._values != [] and value not in self._values:
+            raise ValueError(self._type + " value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
+        
+    def check_header(self, filename, keyname, header=None):
+        if header is None:
+            header = pyfits.getheader(filename)
+        value = self._get_header_value(filename, keyname, header)
+        self.check_value(filename, keyname, value)
+        
+    def check_column(self, filename, keyname):
+        values = self._get_column_values(filename, keyname)
+        for i, value in enumerate(values):
+            self.check_value(filename, keyname + "[" + str(i) +"]", value)
 
-    def _get_value(self, fitsname, keyname, header):
+    def check_group(self, filename, keyname):
+        raise NotImplementedError("group checking " + repr(self._info.name))
+
+    def _get_header_value(self, filename, keyname, header):
         try:
             value = header[keyname]
         except KeyError:
-            if self._info.presence in ["R","P"]:
-                raise MissingKeywordError("File " + repr(fitsname) + " is missing required keyword " + repr(keyname))
-            else:
-                sys.exc_clear()
-                return None
-        if self._info.presence == "E":
-            raise IllegalKeywordError("File " + repr(fitsname) + " should *not define* keyword " + repr(keyname))
-        return value
+            return self.__handle_missing(filename, keyname)
+        return self.__handle_excluded(filename, keyname, value)
     
+    def _get_column_values(self, filename, keyname):
+        f = pyfits.open(filename) 
+        tbdata = f[1].data
+        try:
+            values = tbdata.field(keyname)
+        except KeyError:
+            return self.__handle_missing(filename, keyname)
+        return self.__handle_excluded(filename, keyname, values)
+    
+    def __handle_missing(self, filename, keyname):
+        if self._info.presence in ["R","P"]:
+            raise MissingKeywordError("File " + repr(filename) + " is missing required keyword " + repr(keyname))
+        else:
+            sys.exc_clear()
+            return None
+
+    def __handle_excluded(self, filename, keyname, value):
+        if self._info.presence == "E":
+            raise IllegalKeywordError("File " + repr(filename) + " *must not define* keyword " + repr(keyname))
+        return value
+
+    @property
+    def _type(self):
+        return self.__class__.__name__[:-len("Validator")]
 
 class StringValidator(KeywordValidator):
-    def __init__(self, info):
-        KeywordValidator.__init__(self, info)
-        self._values = [s.upper() for s in self._info.values]
-
-    def check_header(self, value):
-        value = str(value).upper()
-        if " " in value:
-            value = '"' + "_".join(value.split()) + '"'
-        if self._values != [] and value not in self._values:
-            raise ValueError("String value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
-        
-class FloatValidator(KeywordValidator):
-    def __init__(self, info):
-        KeywordValidator.__init__(self, info)
-        self._floats = [float(x) for x in self._info.values]
-        
-    def check_header(self, value):
-        if float(value) not in self._floats:
-            raise ValueError("Float value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._floats))
+    def condition(self, value):
+        s = str(value).strip().upper()
+        if " " in s:
+            s = '"' + "_".join(s.split()) + '"'
+        return s
 
 class IntValidator(KeywordValidator):
-    def __init__(self, info):
-        KeywordValidator.__init__(self, info)
-        self._ints = [int(x) for x in self._info.values]
-        
-    def check_header(self, value):
-        if int(value) not in self._ints:
-            raise ValueError("Int value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._ints))
+    condition = int
 
+class LogicalValidator(KeywordValidator):
+    """Validate booleans."""
+    _values = ["T","F"]
+
+class FloatValidator(KeywordValidator):
+    condition = float
+        
+class RealValidator(FloatValidator):
+    """Validate 32-bit floats."""
+    
+class DoubleValidator(FloatValidator):
+    """Validate 64-bit floats."""
+    
 class PedigreeValidator(KeywordValidator):
-    def check_header(self, value):
+    _values = ["INFLIGHT","GROUND","MODEL","DUMMY"]
+    condition = None
+    def check_header(self, filename, keyname, header=None):
+        if header is None:
+            header = pyfits.getheader(filename)
+        value = self._get_header_value(filename, keyname, header)
         try:
             pedigree, start, stop = value.split()
         except ValueError:
             log.verbose("Pedigree value for" + repr(self._info.name) + " of " + repr(value) + " does not unpack into (pedigree, start_date, stop_date).")
             pedigree = value
             start = stop = None
-        pedigree = pedigree.upper()
-        if pedigree not in ["INFLIGHT","GROUND","MODEL","DUMMY"]:
-            raise ValueError("Illegal PEDIGREE " + repr(value))
+        self.check_value(filename, keyname, pedigree)
         if start is not None:
             timestamp.Slashdate.get_datetime(start)
         if stop is not None:
             timestamp.Slashdate.get_datetime(stop)
         
 class SybdateValidator(KeywordValidator):
-    def check_header(self, value):
+    condition = None
+    def check_value(self, filename, keyname, value):
         timestamp.Sybdate.get_datetime(value)
         
 class SlashdateValidator(KeywordValidator):
-    def check_header(self, value):
+    condition = None
+    def check_value(self, filename, keyname, value):
         timestamp.Slashdate.get_datetime(value)
 
 class AnydateValidator(KeywordValidator):
-    def check_header(self, value):
+    condition = None
+    def check_value(self, filename, keyname, value):
         timestamp.Anydate.get_datetime(value)
         
 class FilenameValidator(KeywordValidator):
-    def check_header(self, value):
+    condition = None
+    def check_value(self, filename, keyname, value):
         return (value == "(initial)") or not os.path.dirname(value)
 
 def validator(info):
+    """Given a TpnInfo object `info`,  construct and return a Validator for it."""
     if info.datatype == "C":
         if len(info.values) == 1 and len(info.values[0]) and info.values[0][0] == "&":
+            """This block handles &-types like &PEDIGREE and &SYBDATE"""
             func = eval(info.values[0][1:].capitalize() + "Validator")
             return func(info)
         else:
             return StringValidator(info)
     elif info.datatype == "R":
-        return FloatValidator(info)
+        return RealValidator(info)
+    elif info.datatype == "D":
+        return DoubleValidator(info)
     elif info.datatype == "I":
         return IntValidator(info)
+    elif info.datatype == "L":
+        return LogicalValidator(info)
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
 

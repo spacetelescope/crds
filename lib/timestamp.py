@@ -31,14 +31,17 @@ def now():
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        
+
+def month_num(month):
+    return  MONTHS.index(month[:3].capitalize()) + 1
+
 def parse_alphabetical_date(d):
     try:
         month, day, year, time = d.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
         month, day, year = d.split()          # 'Feb 08 2006'
         time = "00:00AM"
-    imonth = MONTHS.index(month.capitalize()) + 1
+    imonth = month_num(month)
     iday = int(day)
     iyear = int(year)
     hour, minute = time.split(":")
@@ -93,7 +96,7 @@ class Sybdate(DateParser):
     def _get_date_dict(cls, match):
         items = match.groupdict()
         try:
-            items["month"] = MONTHS.index(match.group("month").capitalize()) + 1
+            items["month"] = month_num(match.group("month"))
         except IndexError:
             raise ValueError("Illegal month " + repr(match.group("month")))
         return dict([(name, int(x)) for (name, x) in items.items() if x])
