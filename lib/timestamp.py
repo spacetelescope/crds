@@ -73,7 +73,7 @@ class DateParser(object):
         return datetime.datetime(**cls._get_date_dict(match))
 
 class Slashdate(DateParser):
-    _format = re.compile("(?P<month>\d+)\s*/\s*(?P<day>\d+)\s*/\s*(?P<year>\d+)")
+    _format = re.compile("(?P<day>\d+)\s*/\s*(?P<month>\d+)\s*/\s*(?P<year>\d+)")
     @classmethod
     def _get_date_dict(cls, match):    
         return dict(month=int(match.group("month")),
