@@ -195,7 +195,7 @@ def error(*args, **keys):
     write(*(("ERROR[%d]%s%s:" % (ERRORS, ROOTFILE, logtime(),),) + args), **keys)
 
     if exc[0]:
-        write(":", exc[0], exc[1])
+        write(":", exc[1])
     else:
         write()
 

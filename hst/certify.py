@@ -165,7 +165,7 @@ def reference_files(context):
             log.error("Missing reference file", repr(ref))
     return paths
 
-def main(files):
+def main(files, options):
     errors = 0
     for file in files:
         if file.endswith((".pmap",".imap",".rmap")):
@@ -176,5 +176,5 @@ def main(files):
 
 if __name__ == "__main__":
     options, args = log.handle_standard_options(sys.argv)
-    log.standard_run("main(sys.argv[1:])", options, globals(), globals())
+    log.standard_run("main(args[1:], options)", options, globals(), globals())
 

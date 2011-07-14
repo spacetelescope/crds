@@ -222,7 +222,7 @@ class KeywordValidator(object):
         if self.condition is not None:
             value = self.condition(value)
         if self._values != [] and value not in self._values:
-            raise ValueError(self._type + " value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
+            raise ValueError("Value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
         
     def check_header(self, filename, keyname, header=None):
         if header is None:
@@ -242,8 +242,8 @@ class KeywordValidator(object):
         try:
             value = header[keyname]
         except KeyError:
-            return self.__handle_missing(filename, keyname)
-        return self.__handle_excluded(filename, keyname, value)
+            return self.__handle_missing(keyname)
+        return self.__handle_excluded(keyname, value)
     
     def _get_column_values(self, filename, keyname):
         f = pyfits.open(filename) 
@@ -251,19 +251,19 @@ class KeywordValidator(object):
         try:
             values = tbdata.field(keyname)
         except KeyError:
-            return self.__handle_missing(filename, keyname)
-        return self.__handle_excluded(filename, keyname, values)
+            return self.__handle_missing(keyname)
+        return self.__handle_excluded(keyname, values)
     
-    def __handle_missing(self, filename, keyname):
+    def __handle_missing(self, keyname):
         if self._info.presence in ["R","P"]:
-            raise MissingKeywordError("File " + repr(filename) + " is missing required keyword " + repr(keyname))
+            raise MissingKeywordError("Missing required keyword " + repr(keyname))
         else:
             sys.exc_clear()
             return None
 
-    def __handle_excluded(self, filename, keyname, value):
+    def __handle_excluded(self, keyname, value):
         if self._info.presence == "E":
-            raise IllegalKeywordError("File " + repr(filename) + " *must not define* keyword " + repr(keyname))
+            raise IllegalKeywordError("*Must not define* keyword " + repr(keyname))
         return value
 
     @property
@@ -296,22 +296,26 @@ class DoubleValidator(FloatValidator):
 class PedigreeValidator(KeywordValidator):
     _values = ["INFLIGHT","GROUND","MODEL","DUMMY"]
     condition = None
-    def check_header(self, filename, keyname, header=None):
-        if header is None:
-            header = pyfits.getheader(filename)
-        value = self._get_header_value(filename, keyname, header)
+    
+    def _get_header_value(self, filename, keyname, header):
+        value = KeywordValidator._get_header_value(filename, keyname, header)
+        
+    
         try:
             pedigree, start, stop = value.split()
         except ValueError:
-            log.verbose("Pedigree value for" + repr(self._info.name) + " of " + repr(value) + " does not unpack into (pedigree, start_date, stop_date).")
-            pedigree = value
-            start = stop = None
-        self.check_value(filename, keyname, pedigree)
+            try:
+                pedigree, start, _dash, stop = value.split()
+            except ValueError:
+                pedigree = value
+                start = stop = None
+        pedigree = pedigree.upper()
         if start is not None:
             timestamp.Slashdate.get_datetime(start)
         if stop is not None:
             timestamp.Slashdate.get_datetime(stop)
-        
+        return pedigree
+
 class SybdateValidator(KeywordValidator):
     condition = None
     def check_value(self, filename, keyname, value):
