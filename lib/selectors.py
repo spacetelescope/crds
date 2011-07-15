@@ -23,16 +23,16 @@ to use for a particular wavelength and software version:
 
 >>> r = ClosestGeometricRatioSelector('effective_wavelength', {
 ...  1.2 : SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_73.fits',
-...                'default': 'cref_XXX_flatfield_123.fits',
+...                '<5': 'cref_flatfield_73.fits',
+...                'default': 'cref_flatfield_123.fits',
 ...          }),
 ...  1.5 : SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_74.fits',
-...                'default': 'cref_XXX_flatfield_124.fits',
+...                '<5': 'cref_flatfield_74.fits',
+...                'default': 'cref_flatfield_124.fits',
 ...         }),
 ...  5.0 : SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_87.fits',
-...                'default': 'cref_XXX_flatfield_137.fits',
+...                '<5': 'cref_flatfield_87.fits',
+...                'default': 'cref_flatfield_137.fits',
 ...        }),
 ... })
 
@@ -41,7 +41,7 @@ subclasses.  At calibration time,  we choose from among the possible reference
 files based on our rules and the known context:
 
 >>> r.choose({"effective_wavelength":1.4, "sw_version":6.0})
-'cref_XXX_flatfield_124.fits'
+'cref_flatfield_124.fits'
 
 Selectors are designed to be nestable and can describe rules of arbitrary type
 and complexity.   Here we add time to the selection criteria:
@@ -49,36 +49,36 @@ and complexity.   Here we add time to the selection criteria:
 >>> r = ClosestGeometricRatioSelector('effective_wavelength', {
 ...   1.2: ClosestTimeSelector("time", {
 ...            '2017-4-24': SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_73.fits',
-...                'default': 'cref_XXX_flatfield_123.fits',
+...                '<5': 'cref_flatfield_73.fits',
+...                'default': 'cref_flatfield_123.fits',
 ...            }),
 ...            '2018-2-1': SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_223.fits',
-...                'default': 'cref_XXX_flatfield_222.fits',
+...                '<5': 'cref_flatfield_223.fits',
+...                'default': 'cref_flatfield_222.fits',
 ...            }),
 ...            '2019-4-15': SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_518.fits',
-...                'default': 'cref_XXX_flatfield_517.fits',
+...                '<5': 'cref_flatfield_518.fits',
+...                'default': 'cref_flatfield_517.fits',
 ...            }),
 ...        }),
 ...  1.5: ClosestTimeSelector("time", {
 ...            '2017-4-24': SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_74.fits',
-...                'default': 'cref_XXX_flatfield_124.fits',
+...                '<5': 'cref_flatfield_74.fits',
+...                'default': 'cref_flatfield_124.fits',
 ...            }),
 ...            '2019-1-1': SWVersionDepSelector({
-...                '<5': 'cref_XXX_flatfield_490.fits',
-...                'default': 'cref_XXX_flatfield_489.fits',
+...                '<5': 'cref_flatfield_490.fits',
+...                'default': 'cref_flatfield_489.fits',
 ...            }),
 ...        }),
 ...  5.0: SWVersionDepSelector({
-...            '<5': 'cref_XXX_flatfield_87.fits',
-...            'default': 'cref_XXX_flatfield_137.fits',
+...            '<5': 'cref_flatfield_87.fits',
+...            'default': 'cref_flatfield_137.fits',
 ...        }),
 ... })
 
 >>> r.choose({"effective_wavelength":1.6, "time":"2019-1-2", "sw_version":1.4})
-'cref_XXX_flatfield_490.fits'
+'cref_flatfield_490.fits'
 
 Note that the context variables used by some Selector's are implicit,
 with ClosestTime utilizing "time" and SWVersionDep utilizing "sw_version".
@@ -94,24 +94,21 @@ import log
 
 # ==============================================================================
 
-class LookupError(KeyError):
-    """Represents a Selector lookup which failed.
-    """
-
 class MatchingError(LookupError):
     """Represents a MatchingSelector lookup which failed.
     """
 
 class AmbiguousMatchError(LookupError):
-    """Represents a MatchingSelector which matched more than one equivalent choice.
+    """Represents a MatchingSelector which matched more than one equivalent 
+    choice.
     """
 
-class MissingParameterError(KeyError):
+class MissingParameterError(LookupError):
     """A required parameter for a matching selector did not appear
     in the parameter dictionary.
     """
 
-class BadValueError(KeyError):
+class BadValueError(LookupError):
     """A required parameter for a matching selector did not have
     any of the valid values.
     """
@@ -137,12 +134,14 @@ class Selector(object):
     choose() method of a nested selector.
 
     2. The choose() method is called with keyword parameters needed to make the
-    complete set of nested choices.   Each nested Selector only uses those portions
-    of the overall context that it requires.
+    complete set of nested choices.   Each nested Selector only uses those 
+    portions of the overall context that it requires.
     """
     def __init__(self, parameters, selections):
-        assert isinstance(parameters, (list, tuple)), "First parameter should be a list or tuple of header keys"
-        assert isinstance(selections, dict),  "Second parameter should be a dictionary mapping selector keys to selections."
+        assert isinstance(parameters, (list, tuple)), \
+            "First parameter should be a list or tuple of header keys"
+        assert isinstance(selections, dict),  \
+            "Second parameter should be a dictionary { key: selection, ... }."
         self._parameters = list(parameters)
         self._selections = sorted(selections.items())
 
@@ -150,15 +149,22 @@ class Selector(object):
         return self.__class__.__name__ + "(" + repr(self._parameters) + ")"
 
     def keys(self):
+        """Return the list of keys used to make selections."""
         return [s[0] for s in self._selections]
 
     def choices(self):
+        """Return the list of items which can be selected."""
         return [s[1] for s in self._selections]
 
     def choose(self, header):
-        raise NotImplementedError("Selector is an abstract class.   A subclass must re-define choose().")
+        """Given `header`,  operate on self.keys() to choose one of
+        self.selections(). 
+        """
+        raise NotImplementedError("Selector is an abstract class."
+                                  " A subclass must re-define choose().")
 
     def get_choice(self, selection, header):
+        """Provide boiler-plate code to extract a choice or recurse."""
         choice = selection[1]
         if isinstance(choice, Selector):
             return choice.choose(header)
@@ -167,24 +173,24 @@ class Selector(object):
         
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
-        map = {}
+        pmap = {}
         for i, par in enumerate(self._parameters):
             wild = par.startswith("*")
             if wild:
                 par = par[1:]
-            if par not in map:
-                map[par] = set()
+            if par not in pmap:
+                pmap[par] = set()
             if wild:
-                map[par].add("*")
+                pmap[par].add("*")
             for choice in self.keys():
                 val = choice[i]
                 if val == "NOT PRESENT":
                     val = "*"
-                map[par].add(val)
-        for par, val in map.items():
+                pmap[par].add(val)
+        for par, val in pmap.items():
             val = val.difference(set(["%NO REFERENCE%"]))
-            map[par] = sorted(list(val))
-        return map
+            pmap[par] = sorted(list(val))
+        return pmap
 
     def reference_names(self):
         """Return the list of reference files located by this selector.
@@ -197,24 +203,27 @@ class Selector(object):
                 new_files = choice.reference_names()
             else:
                 new_files = [choice]
-            for file in new_files:
-                files.add(file)
+            for reffile in new_files:
+                files.add(reffile)
         return sorted(list(files))
     
     def format(self, indent=0):
-        """Recursively pretty-format the Selector tree rooted in `self` indenting
-        each line with 4*`indent` spaces.   Return the resulting string.
+        """Recursively pretty-format the Selector tree rooted in `self` 
+        indenting each line with 4*`indent` spaces.   Return the resulting
+        string.
         """
-        rmap_name = getattr(self, "rmap_name",  self.__class__.__name__[:-len("Selector")])
-        l = [rmap_name + "({"]
-        for key, sel in self._selections:  # requires dictionary form of selections!
+        rmap_name = getattr(self, "rmap_name",  
+                            self.__class__.__name__[:-len("Selector")])
+        lines = [rmap_name + "({"]
+        for key, sel in self._selections:  
             if isinstance(sel, Selector):
                 pf_sel = sel.format(indent+1)
             else:
                 pf_sel = pp.pformat(sel)
-            l.append((indent+1)*" "*4 + pp.pformat(key) + " : " + pf_sel + ",")
-        l.append(indent*4*" " + "})")
-        return "\n".join(l)
+            lines.append((indent+1)*" "*4 + pp.pformat(key) + 
+                         " : " + pf_sel + ",")
+        lines.append(indent*4*" " + "})")
+        return "\n".join(lines)
 
 # ==============================================================================
 
@@ -231,7 +240,7 @@ class Matcher(object):
         return 1 if self._key == value else -1
 
     def __repr__(self):
-        return self.__class__.name + "(%s)" % self._key
+        return self.__class__.__name__ + "(%s)" % self._key
         
 class RegexMatcher(Matcher):
     """
@@ -274,7 +283,8 @@ class InequalityMatcher(Matcher):
     """
     def __init__(self, key):
         Matcher.__init__(self, key)
-        parts = re.match("^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
+        parts = re.match(
+            "^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
         self._operator = parts.group(1)
         self._value =  float(parts.group(2))
         
@@ -287,6 +297,7 @@ class InequalityMatcher(Matcher):
          }[self._operator](float(value), self._value)
 
 class WildcardMatcher(Matcher):
+    """Matcher that always matches,  simplifies/speeds code elsewhere."""
     def __init__(self, key="*"):
         Matcher.__init__(self, key)
         
@@ -306,21 +317,23 @@ def matcher(key):
         return Matcher(key)
 
 class MatchingSelector(Selector):
-    """Matching selector does a modified dictionary lookup by directly matching the runtime
-    (header) parameters specified as choose() header to the .   MatchingSelector
-    differs from a simple dictionary in that some of the Selector parameters may begin with
-    '*'.   '*' means that the parameter was considered optional by the HTML CDBS tables and
-    not all selections supply it.   Explicit values for *-parameters presently
-    come from one of two places:  from the CDBS table row,  or from the
-    reference file header.   Literal *-values mean the parameter was not
-    specified in the table and was not specified in the reference file,  or was
-    specified in the reference file as ANY.
+    """Matching selector does a modified dictionary lookup by directly matching
+    the runtime (header) parameters specified as choose() header to the .   
+    MatchingSelector differs from a simple dictionary in that some of the 
+    Selector parameters may begin with '*'.   '*' means that the parameter was 
+    considered optional by the HTML CDBS tables and not all selections supply 
+    it.   Explicit values for *-parameters presently come from one of two 
+    places:  from the CDBS table row,  or from the reference file header.   
+    Literal *-values mean the parameter was not specified in the table and was 
+    not specified in the reference file,  or was specified in the reference 
+    file as ANY.
 
-    What's hard is that for some selections,  the same parameter will be a "do care".   This
-    complexity arises because different usages of the same instrument are parameterized differently,
-    whereas there is only a single header keyword for all usages.   In essence,  within a single
-    instrument, the same header keyword (file kind) maps onto different tables,  .e.g. for a
-    different detector.
+    What's hard is that for some selections,  the same parameter will be a 
+    "do care".   This complexity arises because different usages of the same 
+    instrument are parameterized differently, whereas there is only a single 
+    header keyword for all usages.   In essence,  within a single instrument, 
+    the same header keyword (file kind) maps onto different tables,  .e.g. for
+    a different detector.
 
     >>> m = MatchingSelector(("*foo","bar"), {
     ...    ('1.0', '*') : "100",
@@ -344,7 +357,7 @@ class MatchingSelector(Selector):
     >>> m.choose({})
     Traceback (most recent call last):
     ...
-    MissingParameterError: "The required parameter 'bar' is missing."
+    MissingParameterError: Required parameter 'bar' is missing.
     
     >>> print m.format()
     Match({
@@ -355,16 +368,19 @@ class MatchingSelector(Selector):
     """
     rmap_name = "Match"
     
-    def __init__(self, parameters, selections, rmap_header={}):
+    def __init__(self, parameters, selections, rmap_header=None):
+        Selector.__init__(self, parameters, selections)  # largely overridden
         self._parameters = []
         self._required = {}
-        self._selections = sorted(selections.items())
         self._value_map = {}
+        self._selections = sorted(selections.items())
 
         self.setup_parameters(parameters)
         
         selections = self.fix_simple_keys(selections)
-                
+        
+        if rmap_header is None:
+            rmap_header = {}
         substitutions = rmap_header.get("substitutions", {})
         selections = self.do_substitutions(selections, substitutions)
         
@@ -372,9 +388,8 @@ class MatchingSelector(Selector):
         self._value_map = self.get_value_map()
 
     def setup_parameters(self, parameters):
-        """Strip off *=optional prefixes and store the status in the
-        _required mapping.  Save simple *-less var names in the 
-        _parameters list.
+        """Strip off *=optional prefixes and store the status in the _required
+        mapping.  Save simple *-less var names in the _parameters list.
         """
         for par in parameters:
             if par.startswith("*"):
@@ -385,7 +400,8 @@ class MatchingSelector(Selector):
             self._parameters.append(par)
             
     def fix_simple_keys(self, selections):
-        """ Enable simple mappings like:  "ACS":"filename" rather than ("ACS",):"filename"
+        """ Enable simple mappings like:  "ACS":"filename" rather than 
+        ("ACS",):"filename"
         """
         if len(self._parameters) != 1:
             return selections
@@ -451,8 +467,8 @@ class MatchingSelector(Selector):
             if isinstance(choice, Selector):
                 try:
                     return choice.choose(header)
-                except Exception, e:
-                    log.verbose("Nested selector failed", str(e))
+                except LookupError, exc:
+                    log.verbose("Nested selector failed", str(exc))
                     continue
             else:
                 return choice
@@ -480,7 +496,7 @@ class MatchingSelector(Selector):
                 raise AmbiguousMatchError("Ambiguous match.")
             else:
                 selector = remaining[group[0]][1]
-                log.verbose("Matched", repr(group),"returning",repr(selector))
+                log.verbose("Matched", repr(group), "returning", repr(selector))
                 yield selector
     
     def _winnow(self, header, remaining):
@@ -502,14 +518,13 @@ class MatchingSelector(Selector):
             log.verbose("Binding", repr(parkey), "=", repr(value))
             for match_tuple, (matchers, _subselectors) in remaining.items():
                 # Match the key to the current header vaue
-                m = matchers[i].match(value)
+                match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
-                if m == -1:
+                if match_status == -1:
                     if self._required[parkey]:
-                        # log.verbose("Winnowing ", match_tuple,"based on",repr(parkey))
-                        del remaining[match_tuple]
-                else:
-                    weights[match_tuple] -= m
+                        del remaining[match_tuple]   # winnow!
+                else: # matched or don't care,  set weights accordingly
+                    weights[match_tuple] -= match_status   
         return weights, remaining
 
     def _rank_candidates(self, weights, remaining):
@@ -535,18 +550,18 @@ class MatchingSelector(Selector):
     def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
         """
-        map = {}
+        vmap = {}
         for i, fitsvar in enumerate(self._parameters):
-            map[fitsvar] = set()
+            vmap[fitsvar] = set()
             for key in self.keys():
                 values = key[i]
                 if not isinstance(values, tuple):
                     values = [values]
                 for value in values:
-                    map[fitsvar].add(value)
-        for fitsvar in map:
-            map[fitsvar] = tuple(sorted(map[fitsvar]))
-        return map
+                    vmap[fitsvar].add(value)
+        for fitsvar in vmap:
+            vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
+        return vmap
 
     def validate_query(self, header):
         """Raise exceptions if `header` does not contain a required
@@ -557,14 +572,19 @@ class MatchingSelector(Selector):
             if fitsvar in header:
                 value = header[fitsvar]
                 valid_values = self._value_map[fitsvar]
-                if self._required[fitsvar] and value not in valid_values and '*' not in valid_values:
+                if self._required[fitsvar] and value not in valid_values and \
+                    '*' not in valid_values:
                     raise BadValueError("Key " + fitsvar + "=" + value +
-                                        " not in valid values " + repr(valid_values))
+                                " not in valid values " + repr(valid_values))
             else:
                 if self._required[fitsvar]:
-                    raise MissingParameterError("The required parameter " + repr(fitsvar) + " is missing.")
+                    raise MissingParameterError(
+                        "Required parameter " + repr(fitsvar) + " is missing.")
 
     def get_binding(self, header):
+        """Return the assignment of `header` values to the parkeys of this
+        Selector.
+        """
         # get the parameter names that matter,  based on *dataset*
         binding = {}
         for fitsvar in self._parameters:
@@ -583,34 +603,40 @@ class UseAfterSelector(Selector):
     the "date" condition and returns the corresponding item.
 
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
-    ...        '2003-09-26 01:28:00':'nal1503ij_bia.fits',    # ACS/HRC superbias for Sep 26 - Oct, 11270, Oct 21 2003 09:33PM
-    ...        '2004-02-14 00:00:00':'o3913216j_bia.fits',    # ACS/HRC superbias for Feb 14 - Ma, 11368, Mar 18 2004 02:39PM
-    ...        '2004-04-25 21:31:00':'o5d10135j_bia.fits',    # ACS/HRC superbias for Apr 25 - May, 11429, May 17 2004 12:34PM
-    ...        '2004-06-18 04:36:00':'o9s16388j_bia.fits',    # HRC superbias reference file, 11490, Sep 28 2004 04:55PM
-    ...        '2004-07-02 08:09:00':'o9t1525sj_bia.fits',    # ACS/HRC superbias reference file, 11495, Sep 30 2004 12:04PM
-    ...        '2004-07-14 16:52:00':'o9f15549j_bia.fits',    # ACS/HRC superbias reference file, 11488, Sep 15 2004 08:49PM
-    ...        '2004-07-30 00:18:00':'o9t1553tj_bia.fits',    # HRC reference file, 11497, Sep 30 2004 07:04PM
+    ...        '2003-09-26 01:28:00':'nal1503ij_bia.fits',
+    ...        '2004-02-14 00:00:00':'o3913216j_bia.fits',
+    ...        '2004-04-25 21:31:00':'o5d10135j_bia.fits',
+    ...        '2004-06-18 04:36:00':'o9s16388j_bia.fits', 
+    ...        '2004-07-02 08:09:00':'o9t1525sj_bia.fits',
+    ...        '2004-07-14 16:52:00':'o9f15549j_bia.fits',
+    ...        '2004-07-30 00:18:00':'o9t1553tj_bia.fits',
     ... })
 
-    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:09:00'})   # exact match
+
+    # exact match
+    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:09:00'})   
     'o9t1525sj_bia.fits'
 
-    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:08:59'})   # just before, in between
+    # just before, in between
+    >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:08:59'})   
     'o9s16388j_bia.fits'
 
-    >>> u.choose({'DATE-OBS': '2005-07-02', 'TIME-OBS': '08:08:59'})   # later than all entries
+    # later than all entries
+    >>> u.choose({'DATE-OBS': '2005-07-02', 'TIME-OBS': '08:08:59'}) 
     'o9t1553tj_bia.fits'
 
-    >>> u.choose({'DATE-OBS': '2000-07-02', 'TIME-OBS': '08:08:59'})   # earlier than all entries
+    # earlier than all entries
+    >>> u.choose({'DATE-OBS': '2000-07-02', 'TIME-OBS': '08:08:59'})   
     Traceback (most recent call last):
     ...
-    UseAfterError: "No selection with time < '2000-07-02 08:08:00'"
+    UseAfterError: No selection with time < '2000-07-02 08:08:00'
     """
-    def __init__(self, parameters, datemapping, rmap_header={}):
+    def __init__(self, parameters, datemapping, rmap_header=None):
         Selector.__init__(self, parameters, datemapping)
 
     def choose(self, header):
-        date = timestamp.reformat_date(" ".join([header[x] for x in self._parameters]))
+        date = timestamp.reformat_date(
+            " ".join([header[x] for x in self._parameters]))
         log.verbose("Matching date", date, " ")
         selection = self.bsearch(date, self._selections)
         return self.get_choice(selection, header)
@@ -635,18 +661,6 @@ class UseAfterSelector(Selector):
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
 
-    def merge(self, others):
-        """Merge a list of UseAfterSelectors in to a common UseAfterSelector.
-        """
-        selections = dict(self._selections)
-        for more in others:
-            assert isinstance(more, UseAfterSelector)
-            for key, value in dict(more._selections).items():
-                if (key in selections) and (selections[key] != value):
-                    log.warning("Date collision during merge at", repr(key), repr(value), repr(selections[key]))
-                selections[key] = value
-        return UseAfterSelector(self._parameters[0], selections)
-    
 # ==============================================================================
 
 class ClosestGeometricRatioSelector(Selector):
@@ -654,38 +668,39 @@ class ClosestGeometricRatioSelector(Selector):
     distance from the specified condition value.
 
     >>> r = ClosestGeometricRatioSelector("effective_wavelength", {
-    ...  1.2 : "cref_XXX_flatfield_120.fits",
-    ...  1.5 : "cref_XXX_flatfield_124.fits",
-    ...  5.0 : "cref_XXX_flatfield_137.fits",
+    ...  1.2 : "cref_flatfield_120.fits",
+    ...  1.5 : "cref_flatfield_124.fits",
+    ...  5.0 : "cref_flatfield_137.fits",
     ... })
 
     >>> r.choose({"effective_wavelength":1.0})
-    'cref_XXX_flatfield_120.fits'
+    'cref_flatfield_120.fits'
 
     >>> r.choose({"effective_wavelength":1.2})
-    'cref_XXX_flatfield_120.fits'
+    'cref_flatfield_120.fits'
 
     >>> r.choose({"effective_wavelength":1.25})
-    'cref_XXX_flatfield_120.fits'
+    'cref_flatfield_120.fits'
 
     >>> r.choose({"effective_wavelength":1.4})
-    'cref_XXX_flatfield_124.fits'
+    'cref_flatfield_124.fits'
 
     >>> r.choose({"effective_wavelength":3.25})
-    'cref_XXX_flatfield_124.fits'
+    'cref_flatfield_124.fits'
 
     >>> r.choose({"effective_wavelength":3.26})
-    'cref_XXX_flatfield_137.fits'
+    'cref_flatfield_137.fits'
 
     >>> r.choose({"effective_wavelength":5.0})
-    'cref_XXX_flatfield_137.fits'
+    'cref_flatfield_137.fits'
 
     >>> r.choose({"effective_wavelength":5.1})
-    'cref_XXX_flatfield_137.fits'
+    'cref_flatfield_137.fits'
     """
     def __init__(self, keyname, selections):
         if not isinstance(keyname, str):
-            raise TypeError("First parameter of ClosestGeometricRatio should be the name of a variable to check,  i.e. an str.")
+            raise TypeError("First parameter of ClosestGeometricRatio should be"
+                            " the name of a variable to check,  i.e. an str.")
         Selector.__init__(self, [keyname], selections)
 
     def choose(self, header):
@@ -703,47 +718,50 @@ class LinearInterpolationSelector(Selector):
     given context variable,  returning a two-tuple.
 
     >>> r = LinearInterpolationSelector("effective_wavelength", {
-    ...   1.2: "cref_XXX_flatfield_120.fits",
-    ...   1.5: "cref_XXX_flatfield_124.fits",
-    ...   5.0: "cref_XXX_flatfield_137.fits",
+    ...   1.2: "cref_flatfield_120.fits",
+    ...   1.5: "cref_flatfield_124.fits",
+    ...   5.0: "cref_flatfield_137.fits",
     ... })
 
     >>> r.choose({"effective_wavelength":1.25})
-    ('cref_XXX_flatfield_120.fits', 'cref_XXX_flatfield_124.fits')
+    ('cref_flatfield_120.fits', 'cref_flatfield_124.fits')
 
     Note that an exact match still produces a two-tuple.
 
     >>> r.choose({"effective_wavelength":1.2})
-    ('cref_XXX_flatfield_120.fits', 'cref_XXX_flatfield_120.fits')
+    ('cref_flatfield_120.fits', 'cref_flatfield_120.fits')
 
     >>> r.choose({"effective_wavelength":1.5})
-    ('cref_XXX_flatfield_124.fits', 'cref_XXX_flatfield_124.fits')
+    ('cref_flatfield_124.fits', 'cref_flatfield_124.fits')
 
     >>> r.choose({"effective_wavelength":5.0})
-    ('cref_XXX_flatfield_137.fits', 'cref_XXX_flatfield_137.fits')
+    ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
 
     Selections off either end choose the boundary value:
 
     >>> r.choose({"effective_wavelength":1.0})
-    ('cref_XXX_flatfield_120.fits', 'cref_XXX_flatfield_120.fits')
+    ('cref_flatfield_120.fits', 'cref_flatfield_120.fits')
 
     >>> r.choose({"effective_wavelength":6.0})
-    ('cref_XXX_flatfield_137.fits', 'cref_XXX_flatfield_137.fits')
+    ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
     """
     def __init__(self, keyname, selections):
         if not isinstance(keyname, str):
-            raise TypeError("First parameter of ClosestGeometricRatio should be the name of a variable to check,  i.e. an str.")
+            raise TypeError("First parameter should be variable name.")
         Selector.__init__(self, [keyname], selections)
 
     def choose(self, header):
         keyval = header[self._parameters[0]]
         index = 0
-        while index < len(self._selections) and keyval > self._selections[index][0]:
+        while index < len(self._selections) and \
+                keyval > self._selections[index][0]:
             index += 1
         if index == len(self._selections):
-            choice1 = choice2 = self.get_choice(self._selections[index-1], header)
+            choice1 = choice2 = self.get_choice(
+                    self._selections[index-1], header)
         elif index == 0 or keyval == self._selections[index][0]:
-            choice1 = choice2 = self.get_choice(self._selections[index], header)
+            choice1 = choice2 = self.get_choice(
+                    self._selections[index], header)
         else:
             choice1 = self.get_choice(self._selections[index-1], header)
             choice2 = self.get_choice(self._selections[index], header)
@@ -754,9 +772,9 @@ class LinearInterpolationSelector(Selector):
 RELATION_RE = re.compile('^([<=][=]?|default)(.*)$')
 
 class VersionRelation(object):
-    """A version relation consists of a relation operator <,=,== and an expression
-    representing a version.   VersionRelations can be compared to themselves to support
-    generating a sorted list:
+    """A version relation consists of a relation operator <,=,== and an 
+    expression representing a version.   VersionRelations can be compared to 
+    themselves to support generating a sorted list:
 
     >>> s = VersionRelation('< 5')
     >>> t = VersionRelation('< 6')
@@ -769,7 +787,8 @@ class VersionRelation(object):
     >>> VersionRelation("= 4.5") < VersionRelation("= 5.0")
     True
 
-    VersionRelations can be compared to versions to support choosing from a sorted list:
+    VersionRelations can be compared to versions to support choosing from a 
+    sorted list:
 
     >>> 5 < s
     False
@@ -814,52 +833,61 @@ class VersionRelation(object):
 
     """
     def __init__(self, relation_str):
-        m = RELATION_RE.match(relation_str)
-        if not m:
-            raise ValueError("RelationRelation " + repr(relation_str) + " does not begin with one of >,<,>=,<=,=,==")
-        relation = m.group(1)
+        match = RELATION_RE.match(relation_str)
+        if not match:
+            raise ValueError("RelationRelation " + repr(relation_str) + 
+                             " does not begin with one of >,<,>=,<=,=,==")
+        relation = match.group(1)
         if relation == "==":
             relation = "="
-        self._relation = relation
-        version = m.group(2).strip()
-        if self._relation != "default":
+        self.relation = relation
+        version = match.group(2).strip()
+        if self.relation != "default":
             try:
-                self._version = eval(version)
-            except ValueError, e:
-                raise ValueError("Invalid version expression.  Expression must evaluate to a comparable object.")
+                self.version = eval(version)
+            except ValueError:
+                raise ValueError("Invalid version expression.  Expression must"
+                                 " evaluate to a comparable object.")
         else:
             if version:
                 raise ValueError("Illegal version expression " + repr(version))
-            self._version = "default"
-            self._relation = "default"
+            self.version = "default"
+            self.relation = "default"
             
     def __repr__(self):
-        if self._version == "default":
+        if self.version == "default":
             return "VersionRelation('default')"
         else:
-            return 'VersionRelation(%s)' % (repr(self._relation + " " + repr(self._version)))
+            return 'VersionRelation(%s)' % \
+                (repr(self.relation + " " + repr(self.version)))
 
     def compatible_types(self, other):
-        if type(self._version) == type(other):
+        """`other` is "compatible" if it is the same type as self.version,  or
+        if both self.version and other are numerical.  Otherwise incompatible.
+        """
+        if type(self.version) == type(other):
             return True
-        elif isinstance(other, (int,float,long)) and isinstance(self._version, (int,float,long)):
+        elif isinstance(other, (int, float, long)) and \
+            isinstance(self.version, (int, float, long)):
             return True
         else:
             return False
 
     def __cmp__(self, other):
-        if self._version == "default":
+        if self.version == "default":
             result = 1
         elif isinstance(other, VersionRelation):
-            if self._relation != other._relation and self._version == other._version:
-                result = cmp(self._relation, other._relation)  # '<' < '=',  '<' < '=='
+            if self.relation != other.relation and \
+               self.version == other.version: # '<' < '=',  '<' < '=='
+                result = cmp(self.relation, other.relation)  
             else:
-                result = cmp(self._version, other._version)
+                result = cmp(self.version, other.version)
         else:
             if self.compatible_types(other):
                 result = cmp(self, VersionRelation("= " + str(other)))
             else:
-                raise ValueError("Incompatible version expression types: " + repr(self._version) + " and " + repr(other))
+                raise ValueError("Incompatible version expression types: " + 
+                                 repr(self.version) + " and " + repr(other))
         return result
 
 class VersionDepSelector(Selector):
@@ -867,12 +895,12 @@ class VersionDepSelector(Selector):
     version relations. Each selection of a VersionDep consists of a version
     relation and a filename or nested Selector:
 
-    ('< 5', 'cref_XXX_flatfield_518.fits')
+    ('< 5', 'cref_flatfield_518.fits')
 
     A special relation,  'default', is selected when none of the other relations
     applies:
 
-    ('default', 'cref_XXX_flatfield_500.fits')
+    ('default', 'cref_flatfield_500.fits')
 
     Version relations are expressed as strings which consist of a relation
     symbol followed by an expression,  as in:
@@ -882,19 +910,20 @@ class VersionDepSelector(Selector):
     '== 6.66'
 
     Version relations consist of two parts,  the relation symbol (=,==,<) and
-    the version expression.  The simplest version expression consists of a string which
-    represents a number.   However,  the requirement on the version expression (the
-    remainder of the string following the relation) is simply that it be eval()'able
-    and that the result of the eval() supports comparison operators.  Hence,  a more
-    elaborate version selector might look like:
+    the version expression.  The simplest version expression consists of a 
+    string which represents a number.   However,  the requirement on the 
+    version expression (the remainder of the string following the relation) is 
+    simply that it be eval()'able and that the result of the eval() supports 
+    comparison operators.  Hence,  a more elaborate version selector might 
+    look like:
 
-    ('= (5,0,1)', 'cref_XXX_flatfield_501.fits')
+    ('= (5,0,1)', 'cref_flatfield_501.fits')
 
-    In this case the tuple (5,0,1) directly represents the common representation of
-    versions as major, minor, and point releases.   Note that for non-numerical version
-    expressions,  the type of the eval'ed expression must exactly match the type of the
-    choose()-time parameter,  i.e. in the previous example the choose()-time parameter
-    must be a tuple.
+    In this case the tuple (5,0,1) directly represents the common 
+    representation of versions as major, minor, and point releases.   Note that
+    for non-numerical version expressions,  the type of the eval'ed expression
+    must exactly match the type of the choose()-time parameter,  i.e. in the 
+    previous example the choose()-time parameter must be a tuple.
     """
     versionvar = "header variable name for this version kind"
 
@@ -902,6 +931,7 @@ class VersionDepSelector(Selector):
         Selector.__init__(self, [], self.parse_selections(selections))
 
     def parse_selections(self, selections):
+        """Convert relation string keys into runtime comparator objects."""
         return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
 
     def choose(self, header):
@@ -917,54 +947,54 @@ class SWVersionDepSelector(VersionDepSelector):
     keyword parameter 'sw_version'.
 
     >>> r = SWVersionDepSelector({
-    ...  '<3.1':    'cref_XXX_flatfield_65.fits',
-    ...  '<5':      'cref_XXX_flatfield_73.fits',
-    ...  'default': 'cref_XXX_flatfield_123.fits',
+    ...  '<3.1':    'cref_flatfield_65.fits',
+    ...  '<5':      'cref_flatfield_73.fits',
+    ...  'default': 'cref_flatfield_123.fits',
     ... })
 
     >>> r.choose({"sw_version":4.5})
-    'cref_XXX_flatfield_73.fits'
+    'cref_flatfield_73.fits'
 
     >>> r.choose({"sw_version":5})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> r.choose({"sw_version":6})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> r.choose({"sw_version":2.0})
-    'cref_XXX_flatfield_65.fits'
+    'cref_flatfield_65.fits'
     """
     versionvar = "sw_version"
 
 # ==============================================================================
 
 class ClosestTimeSelector(Selector):
-    """ClosestTime chooses the selection whose time most closely matches the choose()
-    method "time" keyword parameter
+    """ClosestTime chooses the selection whose time most closely matches the
+    choose() method "time" keyword parameter
 
     >>> t = ClosestTimeSelector("time", {
-    ...  '2017-4-24': "cref_XXX_flatfield_123.fits",
-    ...  '2018-2-1':  "cref_XXX_flatfield_222.fits",
-    ...  '2019-4-15': "cref_XXX_flatfield_123.fits",
+    ...  '2017-4-24': "cref_flatfield_123.fits",
+    ...  '2018-2-1':  "cref_flatfield_222.fits",
+    ...  '2019-4-15': "cref_flatfield_123.fits",
     ... })
 
     >>> t.choose({"time":"2016-5-5"})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> t.choose({"time":"2016-4-24"})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> t.choose({"time":"2018-2-2"})
-    'cref_XXX_flatfield_222.fits'
+    'cref_flatfield_222.fits'
 
     >>> t.choose({"time":"2019-3-1"})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> t.choose({"time":"2019-4-15"})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
 
     >>> t.choose({"time":"2019-4-16"})
-    'cref_XXX_flatfield_123.fits'
+    'cref_flatfield_123.fits'
     """
     def __init__(self, timevar, selections):
         Selector.__init__(self, [timevar], selections)
@@ -976,29 +1006,35 @@ class ClosestTimeSelector(Selector):
         index = np.argmin(diff)
         return self.get_choice(self._selections[index], header)
 
-def str_to_datetime(s):
-    return datetime.datetime(*[int(x) for x in s.split("-")])
+def str_to_datetime(string):
+    """Convert a date string into a datetime object."""
+    return datetime.datetime(*[int(x) for x in string.split("-")])
 
-def abs_time_delta(s, t):
-    ds = str_to_datetime(s)
-    dt = str_to_datetime(t)
-    return abs((ds-dt).total_seconds())
+def abs_time_delta(time1, time2):
+    """Return abs(time1 - time2) in total seconds."""
+    date1 = str_to_datetime(time1)
+    date2 = str_to_datetime(time2)
+    return abs((date1-date2).total_seconds())
 
 
 # ==============================================================================
 
 class Parameters(object):
     """Parameters are a place to stash Selector parameters while an entire rmap
-    is being read so that the header can be used to help instantiate the selectors.
+    is being read so that the header can be used to help instantiate the 
+    selectors.
     
-    When the rmap is compiled,  the selectors are compiled into Parameter objects.
-    Later,  when both the full header and stubbed selectors are availble,  the
-    Parameter objects are converted into Selectors by instantiate().
+    When the rmap is compiled,  the selectors are compiled into Parameter 
+    objects.  Later,  when both the full header and stubbed selectors are 
+    available,  the Parameter objects are converted into Selectors by 
+    instantiate().
     """
+    selector = Selector   # Parameters is abstract class
     def __init__(self, selections):
         self.selections = selections
         
     def instantiate(self, parkeys, rmap_header):
+        """Recursively construct Selector tree with `rmap_header` available."""
         mykeys = parkeys[0]
         otherkeys = parkeys[1:]
         selections = {}
@@ -1010,9 +1046,11 @@ class Parameters(object):
         return self.selector(mykeys, selections, rmap_header)
 
 class MatchingParameters(Parameters):
+    """Parameters for MatchingSelector"""
     selector = MatchingSelector
     
 class UseAfterParameters(Parameters):
+    """Parameters for UseAfterSelector"""
     selector = UseAfterSelector
     
     def instantiate(self, parkey, header):
@@ -1027,11 +1065,9 @@ SELECTORS = {
 # ==============================================================================
 
 def test():
+    """Run module doctest."""
     import doctest, selectors
     return doctest.testmod(selectors)
 
 if __name__ == "__main__":
     print test()
-
-
-
