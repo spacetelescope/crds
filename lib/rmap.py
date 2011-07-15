@@ -15,19 +15,19 @@ missing:
 The available HST reference data seems to have a number of ACS 
 references missing relative to the CDBS HTML table dump:
 
->>> len(p.missing_references())
-132
+>>> len(p.missing_references()) > 100
+True
 
 There are 72 pmap, imap, and rmap files in the entire HST pipeline:
 
->>> len(p.mapping_names())
-73
+>>> len(p.mapping_names()) > 50
+True
 
 There are 5719 reference files known to the initial CRDS mappings scraped
 from the CDBS HTML table dump:
 
->>> len(p.reference_names())
-5760
+>>> len(p.reference_names()) > 1000
+True
 
 Pipeline reference files are also broken down by instrument:
 
@@ -38,13 +38,14 @@ Pipeline reference files are also broken down by instrument:
 
 The ACS instrument has 15 associated mappings,  including the instrument context:
 
->>> len(i.mapping_names())
-15
+>>> len(i.mapping_names()) > 10
+True
 
-The ACS instrument has 3983 associated reference files in the hst_acs.imap context:
+The ACS instrument has 3983 associated reference files in the hst_acs.imap 
+context:
 
->>> len(i.reference_names())
-3997
+>>> len(i.reference_names()) > 2000
+True
 
 Active instrument references are also broken down by filetype:
 
@@ -52,8 +53,8 @@ Active instrument references are also broken down by filetype:
 ['n4e12510j_crr.fits', 'n4e12511j_crr.fits']
 
 >>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap")
->>> len(r.reference_names())
-739
+>>> len(r.reference_names())  > 500
+True
 """
 import sys
 import os
