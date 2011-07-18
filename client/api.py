@@ -23,6 +23,9 @@ URL_SUFFIX = "/json/"
 URL = os.environ.get("CRDS_URL", 'http://localhost:8000')
 
 def set_crds_server(url):
+    """Configure the CRDS JSON services server to `url`,  
+    e.g. 'http://localhost:8000'
+    """
     if not re.match("http://(\w+\.?)*\w(:\d+)?", url):
         raise ValueError("Invalid URL " + repr(url))
     global URL, S
@@ -31,6 +34,8 @@ def set_crds_server(url):
 
     
 def get_crds_server():
+    """Return the base URL for the CRDS JSON RPC server.
+    """
     return URL[:-len(URL_SUFFIX)]
 
 set_crds_server(URL)
