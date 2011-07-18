@@ -6,7 +6,6 @@ file kind must define.
 import sys
 import os
 import os.path
-import re
 
 import pyfits
 
@@ -15,7 +14,7 @@ try:
 except ImportError:
     from crds.collections2 import namedtuple
     
-from crds import config, rmap, log, timestamp
+from crds import rmap, log, timestamp
 
 def get_tpn_map(pipeline_context_name):
     """
@@ -124,19 +123,22 @@ def load_tpn_lines(fname):
 
 
 def fix_quoted_whitespace(line):
+    """Replace spaces and tabs which appear inside quotes in `line` with
+    underscores,  and return it.
+    """
     i = 0
     while i < len(line):
-        c = line[i]
+        char = line[i]
         i += 1
-        if c != '"':
+        if char != '"':
             continue
-        quote = c
+        quote = char
         while i < len(line):
-            c = line[i]
+            char = line[i]
             i += 1
-            if c == quote:
+            if char == quote:
                 break
-            if c in " \t":
+            if char in " \t":
                 line = line[:i-1] + "_" + line[i:]
     return line
 
@@ -179,7 +181,9 @@ def tpn_filepath(instrument, extension):
             INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
 
 def get_tpn(instrument, extension):
-    """Load the map of TPN_info tuples corresponding to `instrument` and `extension` from it's .tpn file."""
+    """Load the map of TPN_info tuples corresponding to `instrument` and 
+    `extension` from it's .tpn file.
+    """
     return load_tpn(tpn_filepath(instrument, extension))
 
 # ===========================================================================================================
@@ -191,10 +195,14 @@ class IllegalKeywordError(Exception):
     """A keyword which should not be defined was present."""
 
 class KeywordValidator(object):
+    """Validates one field described in a .tpn file,  initialized with
+    a TpnInfo object.
+    """
     def __init__(self, info):
         self._info = info
-        if self._info.presence not in ["R","P","E","O"]:
-            raise ValueError("Bad TPN presence field " + repr(self._info.presence))
+        if self._info.presence not in ["R", "P", "E", "O"]:
+            raise ValueError("Bad TPN presence field " + 
+                             repr(self._info.presence))
         if self.condition is not None:
             self._values = [self.condition(value) for value in info.values]
 
@@ -205,79 +213,110 @@ class KeywordValidator(object):
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._info) + ")"
 
-    def check(self, filename, keyname, header=None):
+    def check(self, filename, header=None):
+        """Pull the value(s) corresponding to this Validator out of it's 
+        `header` or the contents of the file.   Check them against the
+        requirements defined by this Validator.
+        """
         if self._info.keytype == "H":
-            self.check_header(filename, keyname, header)
+            self.check_header(filename, header)
         elif self._info.keytype == "C":
-            self.check_column(filename, keyname)
+            self.check_column(filename)
         elif self._info.keytype == "G":
-            self.check_group(filename, keyname)
+            self.check_group(filename)
         else:
-            raise ConfigError("Unknown TPN keytype " + repr(self._info.keytype) + " for " + repr(self._info.name))
+            raise ValueError(
+                "Unknown TPN keytype " + repr(self._info.keytype) + " for " + 
+                repr(self._info.name))
         
-    def check_value(self, filename, keyname, value):
-        log.verbose("Checking ", repr(filename), "keyword", repr(keyname), "=", repr(value))
+    def check_value(self, filename, value):
+        """Check a single header or column value against the legal values
+        for this Validator.
+        """
+        log.verbose("Checking ", repr(filename), "keyword", 
+                    repr(self._info.name), "=", repr(value))
         if value is None: # missing optional or excluded keyword
             return
         if self.condition is not None:
             value = self.condition(value)
         if self._values != [] and value not in self._values:
-            raise ValueError("Value for " + repr(self._info.name) + " of " + repr(value) + " is not one of " + repr(self._values))
+            raise ValueError("Value for " + repr(self._info.name) + " of " + 
+                             repr(value) + " is not one of " + 
+                             repr(self._values))
         
-    def check_header(self, filename, keyname, header=None):
+    def check_header(self, filename, header=None):
+        """Extract the value for this Validator's keyname,  either from `header`
+        or from `filename`'s header if header is None.   Check the value.
+        """
         if header is None:
             header = pyfits.getheader(filename)
-        value = self._get_header_value(filename, keyname, header)
-        self.check_value(filename, keyname, value)
+        value = self._get_header_value(header)
+        self.check_value(filename, value)
         
-    def check_column(self, filename, keyname):
-        values = self._get_column_values(filename, keyname)
+    def check_column(self, filename):
+        """Extract a column of values from `filename` and check them all against
+        the legal values for this Validator.
+        """
+        values = self._get_column_values(filename)
         for i, value in enumerate(values):
-            self.check_value(filename, keyname + "[" + str(i) +"]", value)
+            self.check_value(filename + "[" + str(i) +"]", value)
 
-    def check_group(self, filename, keyname):
-        raise NotImplementedError("group checking " + repr(self._info.name))
+    def check_group(self, filename):
+        """Probably related to pre-FITS HST GEIS files,  not implemented."""
+        assert False,  "Group keys were not expected and not implemented."
 
-    def _get_header_value(self, filename, keyname, header):
+    def _get_header_value(self, header):
+        """Pull this Validator's value out of `header` and return it.
+        Handle the cases where the value is missing or excluded.
+        """
         try:
-            value = header[keyname]
+            value = header[self._info.name]
         except KeyError:
-            return self.__handle_missing(keyname)
-        return self.__handle_excluded(keyname, value)
+            return self.__handle_missing()
+        return self.__handle_excluded(value)
     
-    def _get_column_values(self, filename, keyname):
-        f = pyfits.open(filename) 
-        tbdata = f[1].data
+    def _get_column_values(self, filename):
+        """Pull the column of values corresponding to this Validator out of
+        `filename` and return it.   Handle missing and excluded cases.
+        """
+        hdu = pyfits.open(filename) 
+        # XXX assume tables are in extension #1.
+        tbdata = hdu[1].data
         try:
-            values = tbdata.field(keyname)
+            values = tbdata.field(self._info.name)
         except KeyError:
-            return self.__handle_missing(keyname)
-        return self.__handle_excluded(keyname, values)
+            return self.__handle_missing()
+        return self.__handle_excluded(values)
     
-    def __handle_missing(self, keyname):
+    def __handle_missing(self):
+        """This Validator's key is missing.   Either raise an exception or
+        ignore it depending on whether this Validator's key is required.
+        """
         if self._info.presence in ["R","P"]:
-            raise MissingKeywordError("Missing required keyword " + repr(keyname))
+            raise MissingKeywordError(
+                "Missing required keyword " + repr(self._info.name))
         else:
             sys.exc_clear()
-            return None
 
-    def __handle_excluded(self, keyname, value):
+    def __handle_excluded(self, value):
+        """If this Validator's key is excluded,  raise an exception.  Otherwise
+        return `value`.
+        """
         if self._info.presence == "E":
-            raise IllegalKeywordError("*Must not define* keyword " + repr(keyname))
+            raise IllegalKeywordError(
+                "*Must not define* keyword " + repr(self._info.name))
         return value
 
-    @property
-    def _type(self):
-        return self.__class__.__name__[:-len("Validator")]
-
-class StringValidator(KeywordValidator):
+class CharacterValidator(KeywordValidator):
+    """Validates values of type Character."""
     def condition(self, value):
-        s = str(value).strip().upper()
-        if " " in s:
-            s = '"' + "_".join(s.split()) + '"'
-        return s
+        chars = str(value).strip().upper()
+        if " " in chars:
+            chars = '"' + "_".join(chars.split()) + '"'
+        return chars
 
 class IntValidator(KeywordValidator):
+    """Validates integer values."""
     condition = int
 
 class LogicalValidator(KeywordValidator):
@@ -285,6 +324,7 @@ class LogicalValidator(KeywordValidator):
     _values = ["T","F"]
 
 class FloatValidator(KeywordValidator):
+    """Validates floats of any precision."""
     condition = float
         
 class RealValidator(FloatValidator):
@@ -294,13 +334,17 @@ class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
     
 class PedigreeValidator(KeywordValidator):
-    _values = ["INFLIGHT","GROUND","MODEL","DUMMY"]
+    """Validates &PREDIGREE fields.
+    """
+    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
     condition = None
     
-    def _get_header_value(self, filename, keyname, header):
-        value = KeywordValidator._get_header_value(filename, keyname, header)
-        
-    
+    def _get_header_value(self, header):
+        """Extract the PEDIGREE value from header,  checking any 
+        start/stop dates.   Return only the PEDIGREE classification.
+        Ignore missing start/stop dates.
+        """
+        value = KeywordValidator._get_header_value(self, header)
         try:
             pedigree, start, stop = value.split()
         except ValueError:
@@ -317,34 +361,39 @@ class PedigreeValidator(KeywordValidator):
         return pedigree
 
 class SybdateValidator(KeywordValidator):
+    """Check &SYBDATE Sybase date fields."""
     condition = None
-    def check_value(self, filename, keyname, value):
+    def check_value(self, filename, value):
         timestamp.Sybdate.get_datetime(value)
         
 class SlashdateValidator(KeywordValidator):
+    """Validates &SLASHDATE fields."""
     condition = None
-    def check_value(self, filename, keyname, value):
+    def check_value(self, filename, value):
         timestamp.Slashdate.get_datetime(value)
 
 class AnydateValidator(KeywordValidator):
+    """Validates &ANYDATE fields."""
     condition = None
-    def check_value(self, filename, keyname, value):
+    def check_value(self, filename, value):
         timestamp.Anydate.get_datetime(value)
         
 class FilenameValidator(KeywordValidator):
+    """Validates &FILENAME fields."""
     condition = None
-    def check_value(self, filename, keyname, value):
+    def check_value(self, filename, value):
         return (value == "(initial)") or not os.path.dirname(value)
 
 def validator(info):
-    """Given a TpnInfo object `info`,  construct and return a Validator for it."""
+    """Given TpnInfo object `info`, construct and return a Validator for it."""
     if info.datatype == "C":
-        if len(info.values) == 1 and len(info.values[0]) and info.values[0][0] == "&":
-            """This block handles &-types like &PEDIGREE and &SYBDATE"""
+        if len(info.values) == 1 and len(info.values[0]) and \
+            info.values[0][0] == "&":
+            # This block handles &-types like &PEDIGREE and &SYBDATE
             func = eval(info.values[0][1:].capitalize() + "Validator")
             return func(info)
         else:
-            return StringValidator(info)
+            return CharacterValidator(info)
     elif info.datatype == "R":
         return RealValidator(info)
     elif info.datatype == "D":

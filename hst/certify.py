@@ -1,7 +1,7 @@
-"""This module defines replacement functionality for the CDBS "certify" program which
-is used to check parameter values in .fits reference files and .lod files.  certify.py
-loads expressions of legal values from CDBS .tpn files and applies them to reference
-files to look for discrepancies.
+"""This module defines replacement functionality for the CDBS "certify" program
+which is used to check parameter values in .fits reference files and .lod files.
+certify.py loads expressions of legal values from CDBS .tpn files and applies 
+them to reference files to look for discrepancies.
 """
 import sys
 
@@ -11,18 +11,14 @@ import crds.hst.tpn as tpn
 
 from crds import rmap, log
 
-def rmap_to_tpn(context, rmap_name):
-    rmap_ = rmap.get_cached_mapping(rmap_name)
-    return tpn.get_tpn(rmap_.instrument, rmap_.reftype)
-
-INSTRUMENTS = ["acs","cos","stis","wfc3"]
+INSTRUMENTS = ["acs", "cos", "stis", "wfc3"]
 
 def get_filetype_map(context):
     """Generate the FILETYPE_TO_EXTENSION map below."""
     pipeline = rmap.get_cached_mapping(context)
-    map = {}
+    fmap = {}
     for instr in INSTRUMENTS:
-        map[instr] = {}
+        fmap[instr] = {}
     for i, name in enumerate(pipeline.reference_names()):
         ext = name.split("_")[1].split(".")[0].lower()
         hst = rmap.get_cached_mapping("hst.pmap")
@@ -36,16 +32,18 @@ def get_filetype_map(context):
             header = pyfits.getheader(where)
             filetype = header["FILETYPE"].lower()
             instrument = header["INSTRUME"].lower()
-        except IOError, e: 
+        except IOError: 
             log.error("Error getting FILETYPE for", repr(where))
-        current = map.get(filetype, None)
+        current = fmap.get(filetype, None)
         if current and current != ext:
-            log.error("Multiple extensions for", repr(filetype), repr(current), repr(ext))
+            log.error("Multiple extensions for", repr(filetype), 
+                      repr(current), repr(ext))
             continue
-        if filetype not in map[instrument]:
-            map[instrument][filetype] = ext
-            log.info("Setting",repr(instrument), repr(filetype),"to extension",repr(ext))
-    return map
+        if filetype not in fmap[instrument]:
+            fmap[instrument][filetype] = ext
+            log.info("Setting", repr(instrument), repr(filetype),
+                     "to extension", repr(ext))
+    return fmap
 
 # FILETYPE_TO_EXT = get_filetype_map("hst.pmap")
 
@@ -121,29 +119,30 @@ class MissingKeywordError(Exception):
     """Reference file is missing a required keyword."""
 
 def certify(fitsname):
-    """Given reference filepath `fitsname`,  load the appropriate TPN and validate all
-    of the header keywords listed in it.
+    """Given reference filepath `fitsname`,  load the appropriate TPN and 
+    validate all of the header keywords listed in it.
     """
     header = pyfits.getheader(fitsname)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]
     the_tpn = tpn.get_tpn(instrument, extension)
-    for keyname, validator in the_tpn.items():
-        validator.check(fitsname, keyname, header)
+    for _keyname, validator in the_tpn.items():
+        validator.check(fitsname, header)
 
 def certify_fits(files):
-    """Run certify() on a list of FITS `files` logging an error for the first failure
-    in each file,  but continuing.   Returns the count of errors.
+    """Run certify() on a list of FITS `files` logging an error for the first 
+    failure in each file,  but continuing.   Returns the count of errors.
     """
     for fname in files:
         log.info("Certifying", repr(fname))
         if not fname.endswith(".fits"):
-            log.error("Expected extension .fits.",repr(fname),"does not end with .fits.")
+            log.error("Expected extension .fits.", repr(fname), 
+                      "does not end with .fits.")
             continue
         try:
             certify(fname)
-        except Exception, exc:
+        except Exception:
             # raise
             log.error("Validation failed for", repr(fname))
     return log.errors()
@@ -165,16 +164,17 @@ def reference_files(context):
             log.error("Missing reference file", repr(ref))
     return paths
 
-def main(files, options):
-    errors = 0
-    for file in files:
-        if file.endswith((".pmap",".imap",".rmap")):
-            errors += certify_context(file)
+def main(files):
+    """Perform checks on each of `files`.   Print status."""
+    for file_ in files:
+        if file_.endswith((".pmap", ".imap", ".rmap")):
+            certify_context(file_)
         else:
-            errors += certify_fits([file])
+            certify_fits([file_])
     log.standard_status()
+    return log.errors()
 
 if __name__ == "__main__":
-    options, args = log.handle_standard_options(sys.argv)
-    log.standard_run("main(args[1:], options)", options, globals(), globals())
+    OPTIONS, ARGS = log.handle_standard_options(sys.argv)
+    log.standard_run("main(ARGS[1:])", OPTIONS, globals(), globals())
 
