@@ -17,7 +17,6 @@ def create_path(path):
             current.append("/")
             continue
         current.append(str(c))
-        # log.write("Creating", current)
         d = os.path.join(*current)
         d.replace("//","/")
         if not os.path.exists(d):

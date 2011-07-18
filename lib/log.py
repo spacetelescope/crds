@@ -9,19 +9,20 @@ import StringIO
 import profile
 import pdb
 import datetime
-import os.path
 
-def format(*args, **keys):
+# import crds.utilz as utils,   deferred to runtime due to import cycle
+
+def log_format(*args, **keys):
     """Format a string from log-output-function parameters.
     """
     eol = keys.get("eol", "\n")
     sep = keys.get("sep", " ")
-    file = StringIO.StringIO()
+    sio = StringIO.StringIO()
     for arg in args:
-        file.write(str(arg) + sep)
-    file.write(eol)
-    file.seek(0)
-    return file.read()
+        sio.write(str(arg) + sep)
+    sio.write(eol)
+    sio.seek(0)
+    return sio.read()
 
 # A partial line has been written out.  Force an EOL before ERROR or WARNING.
 EOL_PENDING = False
@@ -31,24 +32,13 @@ def write(*args, **keys):
     as a string.
     """
     global EOL_PENDING
-    s = format(*args, **keys)
-    EOL_PENDING = not s.endswith("\n")
-    sys.stdout.write(s)
+    output = log_format(*args, **keys)
+    EOL_PENDING = not output.endswith("\n")
+    sys.stdout.write(output)
     sys.stdout.flush()
     if LOG:
-        LOG.write(s)
+        LOG.write(output)
         LOG.flush()
-    if TEST_ERR:
-        TEST_ERR.write(s)
-        TEST_ERR.flush()
-
-def exception(*args, **keys):
-    """Format an exception message and raise an exception.
-    """
-    exception = keys.get("exception", Exception)
-    s = format(*args, **keys)
-    raise exception(s)
-
 
 LOG = None
 LOG_TIMESTAMPS = False
@@ -58,61 +48,21 @@ def set_log(filename, append=False, timestamps=False):
     global LOG, LOG_TIMESTAMPS
     LOG_TIMESTAMPS = timestamps
     if filename:
-        ensure_dir_exists(filename)
-        LOG = open(filename, append and "a+" or "w+")
+        import crds.utils as utils
+        utils.ensure_dir_exists(filename)
+        LOG = open(filename, "a+" if append else "w+")
     elif LOG:
         LOG.close()
         LOG = None
 
-TEST_ERR = None
-ROOTFILE = ""
-def set_test_err(filename):
-    """Open/close a third per-test log file."""
-    global TEST_ERR, ROOTFILE
-    if TEST_ERR is not None:
-        TEST_ERR.close()
-        TEST_ERR = None
-    if filename is None:
-        TEST_ERR = None
-        ROOTFILE = ""
-        return
-    else:
-        ensure_dir_exists(filename)
-        TEST_ERR = open(filename, "a+")
-        ROOTFILE = "[" + os.path.basename(os.path.splitext(filename)[0]) + "]"
-
-def create_path(path):
-    """Recursively traverses directory path creating directories as
-    needed so that the entire path exists.
-    """
-    if path.startswith("./"):
-        path = path[2:]
-    if os.path.exists(path):
-        return
-    current = []
-    for c in path.split("/"):
-        if not c:
-            current.append("/")
-            continue
-        current.append(str(c))
-        # log.write("Creating", current)
-        d = os.path.join(*current)
-        d.replace("//","/")
-        if not os.path.exists(d):
-            os.mkdir(d)
-
-def ensure_dir_exists(fullpath):
-    """Creates dirs from `fullpath` if they don't already exist.
-    """
-    create_path(os.path.dirname(fullpath))
-
-
 VERBOSE_FLAG = False
 def set_verbose(flag):
+    """If `flag` is True,  verbose() messages should be output."""
     global VERBOSE_FLAG
     VERBOSE_FLAG = flag
 
 def get_verbose():
+    """Return the verbosity flag."""
     return VERBOSE_FLAG
 
 def verbose(*args, **keys):
@@ -126,6 +76,9 @@ def quiet(*args, **keys):
         write(*args, **keys)
 
 def logtime():
+    """Return an appropriate timestamp string,  or the empty string,  based on
+    the global configuration of message timestamping.
+    """
     if LOG_TIMESTAMPS:
         return "[" + str(datetime.datetime.now())[:-4] + "]"
     else:
@@ -134,9 +87,10 @@ def logtime():
 INFOS = 0
 def info(*args, **keys):
     """logs and count an info message."""
-    global INFOS, EOL_PENDING
+    global INFOS
     INFOS += 1
-    if EOL_PENDING: write()
+    if EOL_PENDING: 
+        write()
     write(*(("INFO:[%d]%s:" % (INFOS, logtime()),) + args), **keys)
 
 def infos():
@@ -146,10 +100,11 @@ def infos():
 WARNINGS = 0
 def warning(*args):
     """logs and count a warning message."""
-    global WARNINGS, EOL_PENDING
+    global WARNINGS
     WARNINGS += 1
-    if EOL_PENDING: write()
-    write(*(("WARNING[%d]%s%s:" % (WARNINGS, ROOTFILE, logtime()),) + args))
+    if EOL_PENDING: 
+        write()
+    write(*(("WARNING[%d]%s:" % (WARNINGS, logtime()),) + args))
 
 def verbose_warning(*args):
     """Issue a warning message only in verbose mode."""
@@ -166,13 +121,15 @@ DEBUG_ERRNO = -1
 SHOW_TRACEBACKS = False
 
 class DebugBreak(Exception):
-    pass
+    """The exception raised for a call to ERROR which did not itself follow
+    a "real" exception,  when ERROR debugging is turned on.
+    """
 
 def error(*args, **keys):
     """logs and counts and error message.  In general, presumes a
     caught exception.
     """
-    global ERRORS, EOL_PENDING, ROOTFILE
+    global ERRORS
 
     exc = sys.exc_info()
     if (DEBUG_ERRORS or DEBUG_ERRNO == ERRORS+1) and not exc[2]:
@@ -183,7 +140,7 @@ def error(*args, **keys):
         # Hopefully the way this works will be intuitive even if the
         # implementation is not.  This will create a stack trace
         # starting at the original error call.
-        write(*(("ERROR[%d]%s%s:" % (ERRORS+1, ROOTFILE, logtime(),),) + args), **keys)
+        write(*(("ERROR[%d]%s:" % (ERRORS+1, logtime(),),) + args), **keys)
         raise DebugBreak("Forced debug exception.")
 
     ERRORS += 1
@@ -191,8 +148,10 @@ def error(*args, **keys):
     keys.update({ "eol": "" })
     no_traceback = keys.pop("no_traceback", False)
 
-    if EOL_PENDING: write()
-    write(*(("ERROR[%d]%s%s:" % (ERRORS, ROOTFILE, logtime(),),) + args), **keys)
+    if EOL_PENDING: 
+        write()
+
+    write(*(("ERROR[%d]%s:" % (ERRORS, logtime(),),) + args), **keys)
 
     if exc[0]:
         write(":", exc[1])
@@ -201,7 +160,6 @@ def error(*args, **keys):
 
     if (DEBUG_ERRORS or DEBUG_ERRNO == ERRORS):
         if exc[2]:
-            import pdb
             pdb.post_mortem(exc[2])
         else:
             write("No exception for specified error no.")
@@ -210,8 +168,8 @@ def error(*args, **keys):
         if exc[2]:
             write("Log TRACEBACK:")
             tb_list = traceback.extract_tb(exc[2])
-            for l in traceback.format_list(tb_list):
-                write(l)
+            for line in traceback.format_list(tb_list):
+                write(line)
     sys.exc_clear()
 
 def errors():
@@ -228,31 +186,19 @@ def set_debug_errors(flag=True, errno=None):
     DEBUG_ERRNO = errno and int(errno)
 
 def set_show_tracebacks(flag=True):
+    """If `flag` is true,  display an exception traceback along with any
+    ERROR message when error() is called after an exception.
+    """
     global SHOW_TRACEBACKS
     SHOW_TRACEBACKS = flag
 
-FAILS = 0
-def fail(*args, **keys):
-    """logs and counts and failure messages, a test which ran but failed."""
-    global FAILS, EOL_PENDING
-    FAILS += 1
-    if EOL_PENDING: write()
-    write(*(("FAILED:[%d]%s: " % (FAILS, logtime()),) + args), **keys)
-
-def failures():
-    """Returns count of logged warnings."""
-    return FAILS
-
-def increment_failures():
-    global FAILS
-    FAILS += 1
-
 def status():
+    """Return (warnings, errors)."""
     return WARNINGS, ERRORS
 
 def handle_standard_options(
         args, parser=None, usage="usage: %prog [options] <inpaths...>",
-        show_info=True, default_outpath=None):
+        default_outpath=None):
     '''Set some standard options on an optparser object,  many
     of which interplay with the log module itself.
     '''
@@ -324,6 +270,7 @@ def standard_run(run_str, options, globals_dict, locals_dict, show_info=True):
         info("[%s] done." % (str(datetime.datetime.now())[:-7],), eol="")
 
 def standard_status():
+    """Print out errors, warnings, and infos."""
     write(errors(), "errors")
     write(warnings(), "warnings")
     write(infos(), "infos")
