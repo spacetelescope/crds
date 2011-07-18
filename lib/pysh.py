@@ -51,8 +51,6 @@ import glob
 import os.path
 import cStringIO
 
-import select
-import subprocess
 from subprocess import PIPE, STDOUT, Popen
 
 # =========================================================================
@@ -71,13 +69,18 @@ __all__ = [
 
 
 class SubprocessFailure(RuntimeError):
-    pass
+    """A subprocess of this shell failed by returning a non-zero exit status."""
 
 # =========================================================================
 
 class Shell:
+    """Shell performs sh-like variable substitutions and returns a callable
+    object which runs `args` as a subprocess when called.   The shell object
+    records the final command line and manages program I/O,  capturing output
+    and error status as attributes which can be inspected later.
+    """
     def __init__(self, args, **keys):
-
+        self.status = None  # overridden by __call__
         self._context = keys.pop("context", None)
         self._input = keys.pop("input", None)
         capture_output = keys.pop("capture_output", False)
@@ -112,15 +115,21 @@ class Shell:
         self.err  = ""   
 
     def _handle_args(self, args):
+        """Expand the shell syntax for strings in `args` relative to this
+        Shell's context.
+        """
         if isinstance(args, str):
             args = [args]
         else:
             args = list(args)
-        for i,a in enumerate(args):
-            args[i] = expand_vars(a, self._context)
+        for i, arg in enumerate(args):
+            args[i] = expand_vars(arg, self._context)
         return args
 
     def __call__(self, raise_on_error):
+        """Execute the commands in this Shell expression and either raise
+        an Exception or return the subprocess error status.
+        """
         self.out, self.err = self._popen.communicate(self._input)
         self.status = self._popen.returncode
         if raise_on_error and self._popen.returncode:
@@ -129,7 +138,7 @@ class Shell:
             return self._popen.returncode
 
     def __repr__(self):
-        return "Shell(%s, %s)" % (repr(self._args, self._keys),)
+        return "Shell(%s, %s)" % (repr(self._args), repr(self._keys),)
 
 # =========================================================================
 
@@ -137,18 +146,18 @@ class Shell:
 # caller variable names can be substituted using ${} notation.  Also handle
 # command line parameters using $* and $1, etc.
 
-def _context(n):
+def _context(backup):
     """Peek back up the call tree into the namespace of the caller.  Return
-    a namespace dictionary combining his globals and locals.  `n` is the number
-    of stack frames to back up relative to the caller of _context().
+    a namespace dictionary combining his globals and locals.  `backup` is the
+    number of stack frames to back up relative to the caller of _context().
     """
-    frame = sys._getframe(n+1)
-    c = dict()
-    c.update(os.environ)
+    frame = sys._getframe(backup+1)
+    context = dict()
+    context.update(os.environ)
     # c.update(frame.f_builtins)
-    c.update(frame.f_globals)
-    c.update(frame.f_locals)
-    return c
+    context.update(frame.f_globals)
+    context.update(frame.f_locals)
+    return context
 
 # This could also be made to handle simple $N sys.argv
 ENV_VAR = re.compile("[$]([a-zA-Z_0-9]+)")
@@ -157,21 +166,32 @@ ENV_VAR_CURLY = re.compile("[$]{([a-zA-Z_0-9]+)}")
 ENV_VAR_STAR = re.compile("([$][*])")
 
 def _replace_dollar(match):
+    """Return the substituion for a local, global, or environment variable."""
     return "%(" + match.group(1) + ")s"
 
 def _replace_sysarg(match):
+    """Return the substitution for the $<n> syntax,  .e.g. $1 for the 
+    first command line parameter.
+    """
     return sys.argv[int(match.group(1))]
 
-def _replace_star(match):
+def _replace_star(_match):
+    """Return the substitution for $*,  i.e. all of the command line
+    words except for the program name.
+    """
     return " ".join(sys.argv[1:])
 
-def _env_to_percent_var(s):
-    s = ENV_VAR_NUM.sub(_replace_sysarg, s)
-    s = ENV_VAR_STAR.sub(_replace_star, s)
-    s = ENV_VAR.sub(_replace_dollar, s)
-    return ENV_VAR_CURLY.sub(_replace_dollar, s)
+def _env_to_percent_var(cmd):
+    """Do all the shell syntax substitutions to cmd."""
+    cmd = ENV_VAR_NUM.sub(_replace_sysarg, cmd)
+    cmd = ENV_VAR_STAR.sub(_replace_star, cmd)
+    cmd = ENV_VAR.sub(_replace_dollar, cmd)
+    return ENV_VAR_CURLY.sub(_replace_dollar, cmd)
 
 def expand_vars(string, context=None):
+    """Expand the shell expressions in `string`,  backing up `context` stack
+    frames to find the local/global substitution context.
+    """
     if context is None:
         context = _context(2)
     return _env_to_percent_var(string) % context
@@ -183,15 +203,19 @@ def sh(command, **keys):
     return the program exit status.  Output is not captured.
     If raise_on_error is True,  raise an exception on non-zero program exit.
     """
-    s = Shell(command, context=_context(1), capture_output=False)
-    s(keys.pop("raise_on_error", False))
-    return s.status
+    shell = Shell(command, context=_context(1), capture_output=False)
+    shell(keys.pop("raise_on_error", False))
+    return shell.status
 
 def _captured_output(command, **keys):
-    s = Shell(command, context=_context(2), capture_output=True, 
+    """Make a Shell out of `command` and `**keys` and execute it, capturing
+    the output.   Execute the Shell and return it so that various output
+    strings or error status can be fetched from attributes as needed.
+    """
+    shell = Shell(command, context=_context(2), capture_output=True, 
               independent_error=keys.pop("independent_error", True))
-    s(keys.pop("raise_on_error", False))
-    return s
+    shell(keys.pop("raise_on_error", False))
+    return shell
 
 def status(command, **keys):
     """Run a subprogram capturing it's output and return the exit status."""
@@ -228,13 +252,14 @@ def lines(command, **keys):
 # Convenience routines not related to subprocesses here.
 
 def cd(directory):
+    """change directory to `directory`"""
     os.chdir(directory)
 
 def fail(*args, **keys):
     """Quit the program,  issuing a message which is the join of *args.
     Use keyword `status` as the program exit code or -1 if unspecified.
     """
-    print >>sys.stderr, " ".join(args)
+    print >> sys.stderr, " ".join(args)
     sys.exit(keys.pop("status", -1))
 
 def usage(description, min_args, max_args=sys.maxint):
@@ -252,30 +277,32 @@ def usage(description, min_args, max_args=sys.maxint):
 # Code for rewriting a file of pysh-script as an ordinary python module.
 
 def __rewrite_shell_statement(match):
+    """Return the substitution for re-writing a line of pysh-script as
+    Python.
+    """
     return match.group(1) + "sh('''" + match.group(2) + "''')"
 
 SHELL_STATEMENT = re.compile("^(\s*)% (.*)$")
 
 def _rewrite_shell_statement(line):
+    """Re-write `line` as Python code and return it."""
     return SHELL_STATEMENT.sub(__rewrite_shell_statement, line)
 
 def pysh_execfile(fname, globals=None, locals=None):
-    """Handle special pysh-notations
-    """
+    """Re-write pysh-script `fname` as Python and execute it."""
     import tempfile
     lines =  open(fname).readlines()
-    for i, l in enumerate(lines):
-        lines[i] = _rewrite_shell_statement(l)
+    for i, line in enumerate(lines):
+        lines[i] = _rewrite_shell_statement(line)
     (handle, fname) = tempfile.mkstemp()
-    for l in lines:
-        os.write(handle, l)
+    for line in lines:
+        os.write(handle, line)
     try:
         execfile(fname, globals, locals)
     finally:
         os.remove(fname)
 
 # =========================================================================
-
 # The execution sequence for when pysh is used as a program shell.
 
 if __name__ == "__main__":
@@ -283,4 +310,4 @@ if __name__ == "__main__":
         sys.argv = sys.argv[1:]
         pysh_execfile(sys.argv[0], globals(), locals())
     else:
-        print >>sys.stderr, "usage: pysh <pysh-scriptname>"
+        print >> sys.stderr, "usage: pysh <pysh-scriptname>"
