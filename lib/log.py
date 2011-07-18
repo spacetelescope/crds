@@ -45,7 +45,7 @@ def write(*args, **keys):
 def exception(*args, **keys):
     """Format an exception message and raise an exception.
     """
-    exception = keys.get("exception",Exception)
+    exception = keys.get("exception", Exception)
     s = format(*args, **keys)
     raise exception(s)
 
@@ -64,8 +64,8 @@ def set_log(filename, append=False, timestamps=False):
         LOG.close()
         LOG = None
 
-TEST_ERR=None
-ROOTFILE=""
+TEST_ERR = None
+ROOTFILE = ""
 def set_test_err(filename):
     """Open/close a third per-test log file."""
     global TEST_ERR, ROOTFILE
@@ -259,42 +259,42 @@ def handle_standard_options(
     if parser is None:
         parser = optparse.OptionParser(usage)
     
-    parser.add_option("-o","--outpath",dest="output_dir",
+    parser.add_option("-o", "--outpath", dest="output_dir",
                       help="Path to write tests to.",
                       metavar="OUTPATH", default=default_outpath)
 
-    parser.add_option("-v","--verbose",dest="verbose",
+    parser.add_option("-v", "--verbose", dest="verbose",
                       help="Set verbose output mode.", action="store_true")
 
-    parser.add_option("-X","--profile",dest="profile",
+    parser.add_option("-X", "--profile", dest="profile",
                       help="Run under the python profiler.",
                       action="store_true", default=False)
 
-    parser.add_option("-Z","--debug-all",dest="debug_all",
+    parser.add_option("-Z", "--debug-all", dest="debug_all",
                       help="Run under pdb, for stepping everything.",
                       action="store_true", default=False)
 
-    parser.add_option("-d","--debug",dest="debug_errors",
+    parser.add_option("-d", "--debug", dest="debug_errors",
                       help="Debug first logged error in pdb.",
                       action="store_true", default=False)
 
-    parser.add_option("-e","--debug-errno",dest="debug_errno",
+    parser.add_option("-e", "--debug-errno", dest="debug_errno",
                       help="Debug a specific logged error number in pdb.",
                       metavar="ERRNO", default=-1)
 
-    parser.add_option("-t","--show-tracebacks",dest="show_tracebacks",
+    parser.add_option("-t", "--show-tracebacks", dest="show_tracebacks",
                       help="Cause error messages to print an exception traceback.",
                       action="store_true", default=False)
 
-    parser.add_option("-l","--log-file",dest="log_file",
+    parser.add_option("-l", "--log-file", dest="log_file",
                       help="Log output to this file.  Default off.",
                       metavar="LOG_FILE", default="")
 
-    parser.add_option("-a","--log-append",dest="log_append",
+    parser.add_option("-a", "--log-append", dest="log_append",
                       help="Append to any logfile if it exists already.  Requires -l.  Defaults off.",
                       action="store_true", default=False)
 
-    parser.add_option("-T","--timestamp-log",dest="log_timestamp",
+    parser.add_option("-T", "--timestamp-log", dest="log_timestamp",
                       help="Add timestamps to log messages.",
                       action="store_true", default=False)
 
@@ -318,7 +318,6 @@ def standard_run(run_str, options, globals_dict, locals_dict, show_info=True):
             exec run_str in globals_dict, locals_dict
         except DebugBreak:
             exc = sys.exc_info()
-            import pdb
             pdb.post_mortem(exc[2])
             
     if show_info:
