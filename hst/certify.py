@@ -1,134 +1,246 @@
 """This module defines replacement functionality for the CDBS "certify" program
-which is used to check parameter values in .fits reference files and .lod files.
-certify.py loads expressions of legal values from CDBS .tpn files and applies 
-them to reference files to look for discrepancies.
+used to check parameter values in .fits reference files.   It verifies that FITS
+files define required parameters and that they have legal values.
 """
 import sys
+import os
 
 import pyfits 
 
 import crds.hst.tpn as tpn
 
-from crds import rmap, log
+from crds import rmap, log, timestamp
 
-INSTRUMENTS = ["acs", "cos", "stis", "wfc3"]
-
-def get_filetype_map(context):
-    """Generate the FILETYPE_TO_EXTENSION map below."""
-    pipeline = rmap.get_cached_mapping(context)
-    fmap = {}
-    for instr in INSTRUMENTS:
-        fmap[instr] = {}
-    for i, name in enumerate(pipeline.reference_names()):
-        ext = name.split("_")[1].split(".")[0].lower()
-        hst = rmap.get_cached_mapping("hst.pmap")
-        print "Scanning", i, name
-        try:
-            where = hst.locate.locate_server_reference(name)
-        except KeyError:
-            log.error("Missing reference file", repr(name))
-            continue
-        try:
-            header = pyfits.getheader(where)
-            filetype = header["FILETYPE"].lower()
-            instrument = header["INSTRUME"].lower()
-        except IOError: 
-            log.error("Error getting FILETYPE for", repr(where))
-        current = fmap.get(filetype, None)
-        if current and current != ext:
-            log.error("Multiple extensions for", repr(filetype), 
-                      repr(current), repr(ext))
-            continue
-        if filetype not in fmap[instrument]:
-            fmap[instrument][filetype] = ext
-            log.info("Setting", repr(instrument), repr(filetype),
-                     "to extension", repr(ext))
-    return fmap
-
-# FILETYPE_TO_EXT = get_filetype_map("hst.pmap")
-
-FILETYPE_TO_EXTENSION = {
- 'acs': {'analog-to-digital': 'a2d',
-         'bad pixels': 'bpx',
-         'bias': 'bia',
-         'ccd parameters': 'ccd',
-         'cosmic ray rejection': 'crr',
-         'dark': 'drk',
-         'distortion coefficients': 'idc',
-         'distortion correction': 'dxy',
-         'linearity': 'lin',
-         'multidrizzle parameters': 'mdz',
-         'overscan': 'osc',
-         'pixel-to-pixel flat': 'pfl',
-         'spot flat': 'cfl',
-         'spot position table': 'csp'},
- 'cos': {'1-d extraction parameters table': '1dx',
-         'bad time intervals table': 'badt',
-         'baseline reference frame table': 'brf',
-         'burst parameters table': 'burst',
-         'data quality initialization table': 'bpix',
-         'deadtime reference table': 'dead',
-         'dispersion relation reference table': 'disp',
-         'flat field reference image': 'flat',
-         'geometric distortion reference image': 'geo',
-         'photometric sensitivity reference table': 'phot',
-         'pulse height parameters reference table': 'pha',
-         'template cal lamp spectra table': 'lamp',
-         'time dependent sensitivity table': 'tds',
-         'wavecal parameters reference table': 'wcp'},
- 'stis': {'1-d extraction parameter table': '1dx',
-          '1-d spectrum trace table': '1dt',
-          '2-d spectrum distortion correction table': 'sdc',
-          'aperture description table': 'apd',
-          'aperture throughput table': 'apt',
-          'bad pixel table': 'bpx',
-          'ccd bias image': 'bia',
-          'ccd parameters table': 'ccd',
-          'cosmic ray rejection table': 'crr',
-          'cross-disperser scattering table': 'cds',
-          'dark correction table': 'tdc',
-          'dark image': 'drk',
-          'detector halo table': 'hal',
-          'dispersion coefficients table': 'dsp',
-          'echelle cross-dispersion scattering table': 'exs',
-          'echelle ripple table': 'rip',
-          'image distortion correction table': 'idc',
-          'incidence angle correction table': 'iac',
-          'low-order flatfield image': 'lfl',
-          'mama linearity table': 'lin',
-          'mama offset correction table': 'moc',
-          'photometric correction table': 'pct',
-          'pixel-to-pixel flatfield image': 'pfl',
-          'scattering reference wavelengths table': 'srw',
-          'template cal lamp spectra table': 'lmp',
-          'time dependent sensitivity table': 'tds',
-          'wavecal parameters table': 'wcp'},
- 'wfc3': {'bad pixels': 'bpx',
-          'bias': 'bia',
-          'ccd parameters': 'ccd',
-          'cosmic ray rejection': 'crr',
-          'dark': 'drk',
-          'distortion coefficients': 'idc',
-          'linearity coefficients': 'lin',
-          'multidrizzle parameters': 'mdz',
-          'overscan': 'osc',
-          'pixel-to-pixel flat': 'pfl'}
-}
+# ============================================================================
 
 class MissingKeywordError(Exception):
-    """Reference file is missing a required keyword."""
+    """A required keyword was not defined."""
+    
+class IllegalKeywordError(Exception):
+    """A keyword which should not be defined was present."""
+
+class KeywordValidator(object):
+    """Validates one field described in a .tpn file,  initialized with
+    a TpnInfo object.
+    """
+    def __init__(self, info):
+        self._info = info
+        if self._info.presence not in ["R", "P", "E", "O"]:
+            raise ValueError("Bad TPN presence field " + 
+                             repr(self._info.presence))
+        if self.condition is not None:
+            self._values = [self.condition(value) for value in info.values]
+
+    def condition(self, value):
+        """Condition `value` to standard format for this Validator."""
+        return value
+            
+    def __repr__(self):
+        return self.__class__.__name__ + "(" + repr(self._info) + ")"
+
+    def check(self, filename, header=None):
+        """Pull the value(s) corresponding to this Validator out of it's 
+        `header` or the contents of the file.   Check them against the
+        requirements defined by this Validator.
+        """
+        if self._info.keytype == "H":
+            self.check_header(filename, header)
+        elif self._info.keytype == "C":
+            self.check_column(filename)
+        elif self._info.keytype == "G":
+            self.check_group(filename)
+        else:
+            raise ValueError(
+                "Unknown TPN keytype " + repr(self._info.keytype) + " for " + 
+                repr(self._info.name))
+        
+    def check_value(self, filename, value):
+        """Check a single header or column value against the legal values
+        for this Validator.
+        """
+        log.verbose("Checking ", repr(filename), "keyword", 
+                    repr(self._info.name), "=", repr(value))
+        if value is None: # missing optional or excluded keyword
+            return
+        if self.condition is not None:
+            value = self.condition(value)
+        if self._values != [] and value not in self._values:
+            raise ValueError("Value for " + repr(self._info.name) + " of " + 
+                             repr(value) + " is not one of " + 
+                             repr(self._values))
+        
+    def check_header(self, filename, header=None):
+        """Extract the value for this Validator's keyname,  either from `header`
+        or from `filename`'s header if header is None.   Check the value.
+        """
+        if header is None:
+            header = pyfits.getheader(filename)
+        value = self._get_header_value(header)
+        self.check_value(filename, value)
+        
+    def check_column(self, filename):
+        """Extract a column of values from `filename` and check them all against
+        the legal values for this Validator.
+        """
+        values = self._get_column_values(filename)
+        for i, value in enumerate(values):
+            self.check_value(filename + "[" + str(i) +"]", value)
+
+    def check_group(self, filename):
+        """Probably related to pre-FITS HST GEIS files,  not implemented."""
+        assert False, "Group keys were not expected and not implemented."
+
+    def _get_header_value(self, header):
+        """Pull this Validator's value out of `header` and return it.
+        Handle the cases where the value is missing or excluded.
+        """
+        try:
+            value = header[self._info.name]
+        except KeyError:
+            return self.__handle_missing()
+        return self.__handle_excluded(value)
+    
+    def _get_column_values(self, filename):
+        """Pull the column of values corresponding to this Validator out of
+        `filename` and return it.   Handle missing and excluded cases.
+        """
+        hdu = pyfits.open(filename) 
+        # XXX assume tables are in extension #1.
+        tbdata = hdu[1].data
+        try:
+            values = tbdata.field(self._info.name)
+        except KeyError:
+            return self.__handle_missing()
+        return self.__handle_excluded(values)
+    
+    def __handle_missing(self):
+        """This Validator's key is missing.   Either raise an exception or
+        ignore it depending on whether this Validator's key is required.
+        """
+        if self._info.presence in ["R","P"]:
+            raise MissingKeywordError(
+                "Missing required keyword " + repr(self._info.name))
+        else:
+            sys.exc_clear()
+
+    def __handle_excluded(self, value):
+        """If this Validator's key is excluded,  raise an exception.  Otherwise
+        return `value`.
+        """
+        if self._info.presence == "E":
+            raise IllegalKeywordError(
+                "*Must not define* keyword " + repr(self._info.name))
+        return value
+
+class CharacterValidator(KeywordValidator):
+    """Validates values of type Character."""
+    def condition(self, value):
+        chars = str(value).strip().upper()
+        if " " in chars:
+            chars = '"' + "_".join(chars.split()) + '"'
+        return chars
+
+class IntValidator(KeywordValidator):
+    """Validates integer values."""
+    condition = int
+
+class LogicalValidator(KeywordValidator):
+    """Validate booleans."""
+    _values = ["T","F"]
+
+class FloatValidator(KeywordValidator):
+    """Validates floats of any precision."""
+    condition = float
+        
+class RealValidator(FloatValidator):
+    """Validate 32-bit floats."""
+    
+class DoubleValidator(FloatValidator):
+    """Validate 64-bit floats."""
+    
+class PedigreeValidator(KeywordValidator):
+    """Validates &PREDIGREE fields.
+    """
+    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
+    condition = None
+    
+    def _get_header_value(self, header):
+        """Extract the PEDIGREE value from header,  checking any 
+        start/stop dates.   Return only the PEDIGREE classification.
+        Ignore missing start/stop dates.
+        """
+        value = KeywordValidator._get_header_value(self, header)
+        try:
+            pedigree, start, stop = value.split()
+        except ValueError:
+            try:
+                pedigree, start, _dash, stop = value.split()
+            except ValueError:
+                pedigree = value
+                start = stop = None
+        pedigree = pedigree.upper()
+        if start is not None:
+            timestamp.Slashdate.get_datetime(start)
+        if stop is not None:
+            timestamp.Slashdate.get_datetime(stop)
+        return pedigree
+
+class SybdateValidator(KeywordValidator):
+    """Check &SYBDATE Sybase date fields."""
+    condition = None
+    def check_value(self, filename, value):
+        timestamp.Sybdate.get_datetime(value)
+        
+class SlashdateValidator(KeywordValidator):
+    """Validates &SLASHDATE fields."""
+    condition = None
+    def check_value(self, filename, value):
+        timestamp.Slashdate.get_datetime(value)
+
+class AnydateValidator(KeywordValidator):
+    """Validates &ANYDATE fields."""
+    condition = None
+    def check_value(self, filename, value):
+        timestamp.Anydate.get_datetime(value)
+        
+class FilenameValidator(KeywordValidator):
+    """Validates &FILENAME fields."""
+    condition = None
+    def check_value(self, filename, value):
+        return (value == "(initial)") or not os.path.dirname(value)
+
+def validator(info):
+    """Given TpnInfo object `info`, construct and return a Validator for it."""
+    if info.datatype == "C":
+        if len(info.values) == 1 and len(info.values[0]) and \
+            info.values[0][0] == "&":
+            # This block handles &-types like &PEDIGREE and &SYBDATE
+            func = eval(info.values[0][1:].capitalize() + "Validator")
+            return func(info)
+        else:
+            return CharacterValidator(info)
+    elif info.datatype == "R":
+        return RealValidator(info)
+    elif info.datatype == "D":
+        return DoubleValidator(info)
+    elif info.datatype == "I":
+        return IntValidator(info)
+    elif info.datatype == "L":
+        return LogicalValidator(info)
+    else:
+        raise ValueError("Unimplemented datatype " + repr(info.datatype))
+
+# ============================================================================
 
 def certify(fitsname):
     """Given reference filepath `fitsname`,  load the appropriate TPN and 
     validate all of the header keywords listed in it.
     """
+    tpn_info_map = tpn.reference_name_to_tpninfo(fitsname)
     header = pyfits.getheader(fitsname)
-    instrument = header["INSTRUME"].lower()
-    filetype = header["FILETYPE"].lower()
-    extension = FILETYPE_TO_EXTENSION[instrument][filetype]
-    the_tpn = tpn.get_tpn(instrument, extension)
-    for _keyname, validator in the_tpn.items():
-        validator.check(fitsname, header)
+    for _keyname, info in tpn_info_map.items():
+        checker = validator(info)
+        checker.check(fitsname, header)
 
 def certify_fits(files):
     """Run certify() on a list of FITS `files` logging an error for the first 
@@ -173,6 +285,8 @@ def main(files):
             certify_fits([file_])
     log.standard_status()
     return log.errors()
+
+# ============================================================================
 
 if __name__ == "__main__":
     OPTIONS, ARGS = log.handle_standard_options(sys.argv)
