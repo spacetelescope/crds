@@ -1,7 +1,14 @@
+"""Generic utility routines used by a variety of modules.
+"""
+
 import os.path
 import re
 
+# import pyfits,  import deferred until required
+
 import crds.log as log
+
+# ===================================================================
 
 def create_path(path):
     """Recursively traverses directory path creating directories as
@@ -31,8 +38,9 @@ def ensure_dir_exists(fullpath):
 # ===================================================================
 
 def get_locator_module(observatory):
-     exec("import crds."+observatory+".locate as locate", locals(), locals())
-     return locate
+    """Return the project specific policy module for `observatory`."""
+    exec("import crds."+observatory+".locate as locate", locals(), locals())
+    return locate
  
 def get_crds_mappath(observatory):
     locate = get_locator_module(observatory)
@@ -78,8 +86,8 @@ def get_object(dotted_name):
 
 def get_header_union(fname, needed_keys=[]):
     """Get the union of keywords from all header extensions of `fname`.  In
-    the case of collisions,  keep the first value found as extensions are loaded
-    in numerical order.
+    the case of collisions,  keep the first value found as extensions are 
+    loaded in numerical order.
     """
     import pyfits
     union = {}
@@ -90,13 +98,15 @@ def get_header_union(fname, needed_keys=[]):
                 if key in needed_keys or ("*"+key in needed_keys):
                     union[key] = newval
             elif union[key] != newval:
-                log.verbose("*** WARNING: Header union collision on", repr(key), repr(union[key]), repr(hdu.header[key]))
+                log.verbose("*** WARNING: Header union collision on", repr(key),
+                             repr(union[key]), repr(hdu.header[key]))
     return union
 
 
 # ==============================================================================
 
-DONT_CARE_RE = re.compile("^" + "|".join(["ANY","-999","-999\.0","N/A","\(\)"]) + "$|^$")
+DONT_CARE_RE = re.compile("^" + "|".join([
+    "ANY","-999","-999\.0","N/A","\(\)"]) + "$|^$")
 
 NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
 
@@ -141,3 +151,29 @@ def condition_value(value):
         value = "F"
     return value
 
+# ===================================================================
+
+def instrument_to_observatory(instrument):
+    """Given the name of an instrument,  return the associated observatory."""
+    instrument = instrument.lower()
+    if instrument in ["acs", "cos", "wfc3", "stis"]:
+        return "hst"
+    elif instrument in ["miri", "nircam", "nirspec", "tfi"]:
+        return "jwst"
+    else:
+        raise ValueError("Unknown instrument " + repr(instrument))
+    
+def instrument_to_locator(instrument):
+    """Given an instrument,  return the locator module associated with the
+    observatory associated with the instrument.
+    """
+    return get_locator_module(instrument_to_observatory(instrument))
+
+def reference_to_locator(filename):
+    """Given reference file `filename`,  return the associated observatory 
+    locator module.
+    """
+    import pyfits
+    header = pyfits.getheader(filename)
+    instrument = header["INSTRUME"].lower()
+    return instrument_to_locator(instrument)

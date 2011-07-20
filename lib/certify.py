@@ -7,9 +7,21 @@ import os
 
 import pyfits 
 
-import crds.hst.tpn as tpn
+from crds import rmap, log, timestamp, utils
+from crds.collections2 import namedtuple
+    
+# ============================================================================
 
-from crds import rmap, log, timestamp
+#
+# Only the first character of the field is stored, i.e. Header == H
+#
+# name = field identifier
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+# values = [...]
+#
+TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 
 # ============================================================================
 
@@ -230,17 +242,34 @@ def validator(info):
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
 
+VALIDATOR_CACHE = {}
+def get_validators(filename):
+    """Given a reference file `filename`,  return the observatory specific 
+    list of Validators used to check that reference file type.
+    """
+    # Find the observatory's locator module based on the reference file.
+    locator = utils.reference_to_locator(filename)
+    
+    # Get the cache key for this filetype.
+    key = locator.reference_name_to_validator_key(filename)
+
+    if key not in VALIDATOR_CACHE:
+        # Get tpninfos in an observatory specific way, a sequence of tuples.
+        tpninfos = tuple(locator.reference_name_to_tpninfos(filename, key))
+        # Make and cache Validators for `filename`s reference file type.
+        VALIDATOR_CACHE[key] = [validator(x) for x in tpninfos]
+
+    # Return a list of Validator's for `filename`
+    return VALIDATOR_CACHE[key]
+
 # ============================================================================
 
 def certify(fitsname):
-    """Given reference filepath `fitsname`,  load the appropriate TPN and 
-    validate all of the header keywords listed in it.
+    """Given reference file path `fitsname`,  fetch the appropriate Validators
+    and check `fitsname` against them.
     """
-    tpn_info_map = tpn.reference_name_to_tpninfo(fitsname)
-    header = pyfits.getheader(fitsname)
-    for _keyname, info in tpn_info_map.items():
-        checker = validator(info)
-        checker.check(fitsname, header)
+    for checker in get_validators(fitsname):
+        checker.check(fitsname)
 
 def certify_fits(files):
     """Run certify() on a list of FITS `files` logging an error for the first 
@@ -277,9 +306,13 @@ def reference_files(context):
     return paths
 
 def main(files):
-    """Perform checks on each of `files`.   Print status."""
+    """Perform checks on each of `files`.   Print status.   If file is a
+    context/mapping file,  it is used to define associated reference files which
+    are located on the CRDS server.  If file is a .fits file,  it should include
+    a relative or absolute filepath.
+    """
     for file_ in files:
-        if file_.endswith((".pmap", ".imap", ".rmap")):
+        if rmap.is_mapping(file_):
             certify_context(file_)
         else:
             certify_fits([file_])

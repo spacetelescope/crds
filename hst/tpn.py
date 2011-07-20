@@ -3,17 +3,13 @@ describe reference parameters and their values.   The .tpn files are used to
 validate headers or tables in the original CDBS system and list the parameters 
 each file kind must define.
 """
-import sys
 import os.path
 
 import pyfits
 
-try:
-    from collections import namedtuple
-except ImportError:
-    from crds.collections2 import namedtuple
-    
 from crds import rmap, log
+
+from crds.certify import TpnInfo
 
 # =============================================================================
 
@@ -251,22 +247,11 @@ def fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
-#
-# Only the first character of the field is stored, i.e. Header == H
-#
-# name = field identifier
-# keytype = (Header|Group|Column)
-# datatype = (Integer|Real|Logical|Double|Character)
-# presence = (Optional|Required)
-# values = [...]
-#
-TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
-
 def load_tpn(fname):
-    """Load a TPN file and return it as a dictionary mapping header
-    keywords onto their properties, including acceptable values.
+    """Load a TPN file and return it as a list of TpnInfo objects
+    describing keyword requirements including acceptable values.
     """
-    tpn = {}
+    tpn = []
     for line in load_tpn_lines(fname):
         line = fix_quoted_whitespace(line)
         items = line.split()
@@ -276,7 +261,7 @@ def load_tpn(fname):
         else:
             name, keytype, datatype, presence, values = items
             values = values.split(",")
-        tpn[name] = TpnInfo(name, keytype, datatype, presence, values)
+        tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
 
@@ -299,20 +284,29 @@ def tpn_filepath(instrument, extension):
     return os.path.join(HERE, "cdbs", "cdbs_tpns",
             INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
 
-def get_tpn(instrument, extension):
+def get_tpninfos(instrument, extension):
     """Load the map of TPN_info tuples corresponding to `instrument` and 
     `extension` from it's .tpn file.
     """
     return load_tpn(tpn_filepath(instrument, extension))
 
-def reference_name_to_tpninfo(fitsname):
-    """Given a reference filename `fitsname`,  return the TpnInfo object
-    which describes the requirements for that reference file's type.
+# =============================================================================
+
+def reference_name_to_validator_key(fitsname):
+    """Given a reference filename `fitsname`,  return a dictionary key
+    suitable for caching the reference type's Validator.
     """
     header = pyfits.getheader(fitsname)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]
-    tpn_info_map = get_tpn(instrument, extension)
-    return tpn_info_map
+    return (instrument, extension)
 
+def reference_name_to_tpninfos(fitsname, key):
+    """Given a reference filename `fitsname` and the associated cache `key`
+    for the reference's Validator,  return the TpnInfo object which can be
+    used to construct the Validator.
+    """
+    if key is None:
+        key = reference_name_to_validator_key(fitsname)
+    return get_tpninfos(*key)

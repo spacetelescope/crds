@@ -6,7 +6,7 @@ import sys
 import optparse
 import traceback
 import StringIO
-import profile
+import cProfile
 import pdb
 import datetime
 
@@ -258,7 +258,7 @@ def standard_run(run_str, options, globals_dict, locals_dict, show_info=True):
     if options.debug_all:
         pdb.runctx(run_str, globals_dict, locals_dict)
     elif options.profile:
-        profile.runctx(run_str, globals_dict, locals_dict)
+        cProfile.runctx(run_str, globals_dict, locals_dict)
     else:
         try:
             exec run_str in globals_dict, locals_dict

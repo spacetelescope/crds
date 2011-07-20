@@ -1,8 +1,15 @@
-"""This module provides functions which determine and manage the location of reference files
-and mappings for HST.   Generally files are referred to by their basename but must be cached
-or loaded from some fully specified path.   This module determines those paths in a
-project specific way for HST.   Additionally,  this module provides functions for determining
-URLs from which references and mappings can be downloaded.
+"""This module provides functions which determine various observatory
+specific policies for HST:
+
+1. How to convert reference file basenames to fully specified paths.
+
+2. How to convert a reference or mapping basename to a download URL.
+
+3. How to manage parameters for reference file Validator objects used
+in the certification of reference files. 
+
+The intentions is that a similar module with different policies could
+be implemented for JWST.
 """
 import os.path
 import gzip
@@ -118,3 +125,10 @@ def mapping_url(crds_server_url, mapping):
     path = locate_mapping(mapping)
     return path.replace(get_crds_mappath(), crds_server_url + "/static/mappings/hst")
 
+# =======================================================================
+
+# These two functions decouple the generic reference file certifier program 
+# from observatory-unique ways of specifying and caching Validator parameters.
+
+from .tpn import reference_name_to_validator_key
+from .tpn import reference_name_to_tpninfos
