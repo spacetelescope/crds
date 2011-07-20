@@ -1,5 +1,5 @@
-"""Hastily hacked down version of Python-2.7 collections.py for supporting
-namedtuple on Python-2.5 and hacking around OrderedDict().
+"""This module contains backward compatibility hacks to make new Python
+features run on earlier Pythons, currently Python-2.7 on Python-2.5
 """
 
 from operator import itemgetter as _itemgetter, eq as _eq
@@ -9,12 +9,8 @@ import heapq as _heapq
 from itertools import repeat as _repeat, chain as _chain, starmap as _starmap, \
                       ifilter as _ifilter, imap as _imap
 
-################################################################################
-### OrderedDict
-################################################################################
-
-class OrderedDict(dict):
-    pass
+# More imports (far) below to override compatibility code if the real routines
+# are available.
 
 ################################################################################
 ### namedtuple
@@ -133,4 +129,31 @@ def namedtuple(typename, field_names, verbose=False, rename=False):
 
     return result
 
+
+# =======================================================================
+
+# Here we get the real things if they're available:
+
+from .log import warning
+
+def tell_fake(s):
+    warning("Using fake", repr(s))
+
+try:
+    from collections import namedtuple
+except ImportError:
+    tell_fake("namedtuple.  should work except for esoterica.")
+
+try:
+    from ast import literal_eval
+except ImportError:
+    literal_eval = eval
+    tell_fake("literal_eval.   security risk.")
+
+try:
+    from collections import OrderedDict
+except:
+    class OrderedDict(dict):
+        """Fake ordered dictionary."""
+    tell_fake("OrderedDict.  OrderedDict's will be unordered.")
 

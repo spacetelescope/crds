@@ -4,7 +4,6 @@ instrument.
 """
 import sys
 import os
-import collections
 import cProfile
 
 import glob
@@ -12,7 +11,6 @@ import argparse
 import re
 import StringIO
 import pprint as pp
-from collections import OrderedDict
 
 import crds.hst.gentools.tlist as tlist
 import crds.hst.gentools.ezxml as ezxml
@@ -28,6 +26,7 @@ import crds.timestamp as timestamp
 import crds.pysh as pysh
 import crds.selectors as selectors
 import crds.utils as utils
+from crds.compat import OrderedDict
 
 import crds.hst.acs
 import crds.hst.cos

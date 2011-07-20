@@ -1,10 +1,10 @@
-import collections
-
 import crds.hst.tpn as tpn
 
 import crds.rmap as rmap
 import crds.log as log
 import crds.utils as utils
+
+from crds.compat import namedtuple
 
 # =======================================================================
 
@@ -349,7 +349,7 @@ def to_fitskey(instrument, var):
     return fits_key
 
 # =======================================================================
-keymatch = collections.namedtuple("keymatch","header_keyword,extension,rmap_keys,tpn_keys")
+keymatch = namedtuple("keymatch","header_keyword,extension,rmap_keys,tpn_keys")
 
 def get_parameters(instrument_mapping_name):
     """Given an `instrument`,  get_parameters() will dump the rmap and tpn parameter lists

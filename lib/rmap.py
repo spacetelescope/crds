@@ -62,10 +62,7 @@ import os
 import os.path
 import hashlib
 
-try:
-    from collections import namedtuple
-except ImportError:
-    from crds.collections2 import namedtuple
+from .compat import namedtuple
 
 from . import (log, utils, selectors)
 

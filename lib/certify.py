@@ -8,7 +8,7 @@ import os
 import pyfits 
 
 from crds import rmap, log, timestamp, utils
-from crds.collections2 import namedtuple
+from crds.compat import namedtuple
     
 # ============================================================================
 

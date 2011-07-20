@@ -21,7 +21,7 @@ the instrument index are implicit:
 import sys
 from cStringIO import StringIO
 import argparse
-from collections import OrderedDict
+from crds.compat import OrderedDict
 
 from crds.hst.gentools import ezxml, scrape, tlist
 
