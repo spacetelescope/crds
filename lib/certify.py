@@ -264,35 +264,18 @@ def get_validators(filename):
 
 # ============================================================================
 
-def certify(fitsname):
+def certify_fits(fitsname):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
     for checker in get_validators(fitsname):
         checker.check(fitsname)
 
-def certify_fits(files):
-    """Run certify() on a list of FITS `files` logging an error for the first 
-    failure in each file,  but continuing.   Returns the count of errors.
-    """
-    for fname in files:
-        log.info("Certifying", repr(fname))
-        if not fname.endswith(".fits"):
-            log.error("Expected extension .fits.", repr(fname), 
-                      "does not end with .fits.")
-            continue
-        try:
-            certify(fname)
-        except Exception:
-            # raise
-            log.error("Validation failed for", repr(fname))
-    return log.errors()
-
 def certify_context(context):
     """Run certify() on all the reference files belonging to mapping `context`.
     Returns the count of errors.
     """
-    return certify_fits(reference_files(context))
+    return certify(reference_files(context))
     
 def reference_files(context):
     """Returns the list of server reference file paths for `context`."""
@@ -305,6 +288,42 @@ def reference_files(context):
             log.error("Missing reference file", repr(ref))
     return paths
 
+class MissingReferenceError(RuntimeError):
+    """A reference file mentioned by a mapping isn't in CRDS yet."""
+
+def certify_mapping(context):
+    """Verify that a mapping will load and that all its reference files 
+    exist within CRDS.   Otherwise raise an exception.
+    """
+    ctx = rmap.get_cached_mapping(context)
+    paths = []
+    for ref in ctx.reference_names():
+        try:
+            paths.append(ctx.locate.locate_server_reference(ref))
+        except:
+            raise MissingReferenceError("Reference file " + repr(ref) + 
+                                        " is not known to CRDS." )
+    return paths
+
+
+def certify(files):
+    """Run certify() on a list of FITS `files` logging an error for the first 
+    failure in each file,  but continuing.   Returns the count of errors.
+    """
+    for fname in files:
+        log.info("Certifying", repr(fname))
+        if not fname.endswith(".fits"):
+            log.error("Expected extension .fits.", repr(fname), 
+                      "does not end with .fits.")
+            continue
+        try:
+            certify_fits(fname)
+        except Exception:
+            # raise
+            log.error("Validation failed for", repr(fname))
+    return log.errors()
+
+
 def main(files):
     """Perform checks on each of `files`.   Print status.   If file is a
     context/mapping file,  it is used to define associated reference files which
@@ -315,7 +334,7 @@ def main(files):
         if rmap.is_mapping(file_):
             certify_context(file_)
         else:
-            certify_fits([file_])
+            certify([file_])
     log.standard_status()
     return log.errors()
 

@@ -310,8 +310,11 @@ class Mapping(object):
     
     def _format_selector(self):
         """Return the code string for the mapping body/selector."""
-        return self._format_dict(self.selector)
-    
+        if isinstance(self.selector, dict):
+            return self._format_dict(self.selector)
+        else:
+            return self.selector.format()
+
     def write(self, filename=None):
         """Write out this mapping to the specified `filename`,  
         or else self.filename.
@@ -565,9 +568,6 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.reference_names()
     
-    def _format_selector(self):
-        return self.selector.format()
-
     def get_required_parkeys(self):
         parkeys = set()
         for key in self.parkey:
@@ -603,13 +603,22 @@ def _load_mapping(mapping, **keys):
     from the file system.   Not cached.
     """
     if mapping.endswith(".pmap"):
-        return PipelineContext.from_file(mapping, **keys)
+        cls = PipelineContext
     elif mapping.endswith(".imap"):
-        return InstrumentContext.from_file(mapping, **keys)
+        cls = InstrumentContext
     elif mapping.endswith(".rmap"):
-        return ReferenceMapping.from_file(mapping, **keys)
+        cls = ReferenceMapping
     else:
-        raise ValueError("Unknown mapping extension for " + repr(mapping))
+        m = Mapping.from_file(mapping)
+        if m.header["mapping"] == "pipeline":
+            cls = PipelineContext
+        elif m.header["mapping"] == "instrument":
+            cls = InstrumentContext
+        elif m.header["mapping"] == "reference":
+            cls = ReferenceMapping
+        else:
+            raise ValueError("Unknown mapping type for " + repr(mapping))
+    return cls.from_file(mapping, **keys)
     
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 
