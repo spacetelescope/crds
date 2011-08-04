@@ -67,17 +67,20 @@ def test():
     import doctest, uses
     return doctest.testmod(uses)
 
-def uses(files):
+def uses(files, observatory="hst"):
     """Return the list of mappings which use any of `files`.
     """
     mappings = []
     for file_ in files:
         if file_.endswith(".fits"):
-            mappings.extend(findall_mappings_using_reference(file_))
+            mappings.extend(
+                findall_mappings_using_reference(file_, observatory))
         elif file_.endswith(".rmap"):
-            mappings.extend(findall_mappings_using_rmap(file_))
+            mappings.extend(
+                findall_mappings_using_rmap(file_, observatory))
         elif file_.endswith(".imap"):
-            mappings.extend(findall_pmaps_using_imap(file_))
+            mappings.extend(
+                findall_pmaps_using_imap(file_, observatory))
     return sorted(list(set(mappings)))
 
 def main(files):
