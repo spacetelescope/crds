@@ -4,6 +4,7 @@ files define required parameters and that they have legal values.
 """
 import sys
 import os
+import optparse
 
 import pyfits 
 
@@ -271,19 +272,26 @@ def certify_fits(fitsname):
     for checker in get_validators(fitsname):
         checker.check(fitsname)
 
-def certify_context(context):
-    """Run certify() on all the reference files belonging to mapping `context`.
+def certify_context(context, check_references=False):
+    """Ceritfy `context`.  Unless `shallow` is True,  recursively certify all
+    referenced files as well.
     Returns the count of errors.
     """
-    return certify(reference_files(context))
+    try:
+        ctx = rmap.get_cached_mapping(context)
+    except Exception:
+        log.error("Couldn't load mapping", repr(context))
+        return []
+    if not check_references:
+        return 0
+    return certify(reference_files(ctx))
     
-def reference_files(context):
+def reference_files(mapping):
     """Returns the list of server reference file paths for `context`."""
-    ctx = rmap.get_cached_mapping(context)
     paths = []
-    for ref in ctx.reference_names():
+    for ref in mapping.reference_names():
         try:
-            paths.append(ctx.locate.locate_server_reference(ref))
+            paths.append(mapping.locate.locate_server_reference(ref))
         except KeyError:
             log.error("Missing reference file", repr(ref))
     return paths
@@ -323,7 +331,7 @@ def certify(files):
     return log.errors()
 
 
-def main(files):
+def main(files, shallow):
     """Perform checks on each of `files`.   Print status.   If file is a
     context/mapping file,  it is used to define associated reference files which
     are located on the CRDS server.  If file is a .fits file,  it should include
@@ -331,7 +339,7 @@ def main(files):
     """
     for file_ in files:
         if rmap.is_mapping(file_):
-            certify_context(file_)
+            certify_context(file_, check_references=(not shallow))
         else:
             certify([file_])
     log.standard_status()
@@ -340,6 +348,10 @@ def main(files):
 # ============================================================================
 
 if __name__ == "__main__":
-    OPTIONS, ARGS = log.handle_standard_options(sys.argv)
-    log.standard_run("main(ARGS[1:])", OPTIONS, globals(), globals())
+    parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
+    parser.add_option("-s", "--shallow", dest="shallow",
+                      help="Don't certify referenced files", action="store_true")
+    OPTIONS, ARGS = log.handle_standard_options(sys.argv, parser=parser)
+    log.standard_run("main(ARGS[1:], OPTIONS.shallow)", OPTIONS, 
+                     globals(), globals())
 
