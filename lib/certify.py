@@ -291,20 +291,19 @@ def reference_files(context):
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
-def certify_mapping(context):
+def certify_mapping(context, check_references=True):
     """Verify that a mapping will load and that all its reference files 
     exist within CRDS.   Otherwise raise an exception.
     """
     ctx = rmap.get_cached_mapping(context)
-    paths = []
+    if not check_references:
+        return
     for ref in ctx.reference_names():
         try:
-            paths.append(ctx.locate.locate_server_reference(ref))
-        except:
+            ctx.locate.locate_server_reference(ref)
+        except KeyError:
             raise MissingReferenceError("Reference file " + repr(ref) + 
                                         " is not known to CRDS." )
-    return paths
-
 
 def certify(files):
     """Run certify() on a list of FITS `files` logging an error for the first 
