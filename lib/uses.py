@@ -67,9 +67,8 @@ def test():
     import doctest, uses
     return doctest.testmod(uses)
 
-def main(files):
-    """Print the "anscestor" mappings which mention each reference file,
-    rmap, or imap in `files`.
+def uses(files):
+    """Return the list of mappings which use any of `files`.
     """
     mappings = []
     for file_ in files:
@@ -79,7 +78,14 @@ def main(files):
             mappings.extend(findall_mappings_using_rmap(file_))
         elif file_.endswith(".imap"):
             mappings.extend(findall_pmaps_using_imap(file_))
-    for mapping in sorted(list(set(mappings))):
+    return sorted(list(set(mappings)))
+
+def main(files):
+    """Print the "anscestor" mappings which mention each reference file,
+    rmap, or imap in `files`.
+    """
+    mappings = uses(files)
+    for mapping in mappings:
         print mapping
 
 if __name__ == "__main__":
