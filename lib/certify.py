@@ -314,15 +314,11 @@ def certify_mapping(context, check_references=True):
                                         " is not known to CRDS." )
 
 def certify(files):
-    """Run certify() on a list of FITS `files` logging an error for the first 
-    failure in each file,  but continuing.   Returns the count of errors.
+    """Run certify_fits() on a list of FITS `files` logging an error for the 
+    first failure in each file,  but continuing.   Returns the count of errors.
     """
     for fname in files:
-        log.info("Certifying", repr(fname))
-        if not fname.endswith(".fits"):
-            log.error("Expected extension .fits.", repr(fname), 
-                      "does not end with .fits.")
-            continue
+        log.info("Certifying", repr(os.path.basename(fname)))
         try:
             certify_fits(fname)
         except Exception:
@@ -331,15 +327,15 @@ def certify(files):
     return log.errors()
 
 
-def main(files, shallow):
+def main(files, options):
     """Perform checks on each of `files`.   Print status.   If file is a
     context/mapping file,  it is used to define associated reference files which
     are located on the CRDS server.  If file is a .fits file,  it should include
     a relative or absolute filepath.
     """
     for file_ in files:
-        if rmap.is_mapping(file_):
-            certify_context(file_, check_references=(not shallow))
+        if rmap.is_mapping(file_) or options.mapping:
+            certify_context(file_, check_references=(not options.shallow))
         else:
             certify([file_])
     log.standard_status()
@@ -350,8 +346,12 @@ def main(files, shallow):
 if __name__ == "__main__":
     parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
     parser.add_option("-s", "--shallow", dest="shallow",
-                      help="Don't certify referenced files", action="store_true")
+        help="Don't certify referenced files", 
+        action="store_true")
+    parser.add_option("-m", "--mapping", dest="mapping",
+        help="Ignore extensions, the files being certified are mappings.", 
+        action="store_true")
     OPTIONS, ARGS = log.handle_standard_options(sys.argv, parser=parser)
-    log.standard_run("main(ARGS[1:], OPTIONS.shallow)", OPTIONS, 
+    log.standard_run("main(ARGS[1:], OPTIONS)", OPTIONS, 
                      globals(), globals())
 

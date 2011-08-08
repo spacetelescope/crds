@@ -253,7 +253,7 @@ def handle_standard_options(
 
     return options, args
 
-def standard_run(run_str, options, globals_dict, locals_dict, show_info=True):
+def standard_run(run_str, options, globals_dict, locals_dict):
     """Use options to step run_str, profile run_str,  or just run it."""
     if options.debug_all:
         pdb.runctx(run_str, globals_dict, locals_dict)
@@ -265,9 +265,6 @@ def standard_run(run_str, options, globals_dict, locals_dict, show_info=True):
         except DebugBreak:
             exc = sys.exc_info()
             pdb.post_mortem(exc[2])
-            
-    if show_info:
-        info("[%s] done." % (str(datetime.datetime.now())[:-7],), eol="")
 
 def standard_status():
     """Print out errors, warnings, and infos."""
