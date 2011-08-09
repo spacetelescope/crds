@@ -39,6 +39,8 @@ def ensure_dir_exists(fullpath):
 
 def get_locator_module(observatory):
     """Return the project specific policy module for `observatory`."""
+    assert re.match("[A-Za-z0-9]+", observatory), "Bad observatory " + \
+        repr(observatory)
     exec("import crds."+observatory+".locate as locate", locals(), locals())
     return locate
  
@@ -51,7 +53,7 @@ def get_crds_refpath(observatory):
     return locate.get_crds_refpath()
 
 def get_file_properties(observatory, filename):
-    """Return instrument,filetype,id fields associated with filename.
+    """Return instrument,filekind,id fields associated with filename.
     """
     locator = get_locator_module(observatory)
     return locator.get_file_properties(filename)        
