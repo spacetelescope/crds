@@ -101,6 +101,22 @@ TPN_EXTENSIONS = {
           'pfltfile': 'pfl'}
  }
 
+EXTENSION_TO_FILEKIND = {}
+for instrument in TPN_EXTENSIONS:
+    if instrument not in EXTENSION_TO_FILEKIND:
+        EXTENSION_TO_FILEKIND[instrument] = {}
+    EXTENSION_TO_FILEKIND[instrument] = dict( \
+        [(val,key) for (key,val) in TPN_EXTENSIONS[instrument].items()])
+
+def filetype_to_filekind(instrument, filetype):
+    """Map the value of a FILETYPE keyword onto it's associated
+    keyword name,  i.e.  'dark image' --> 'darkfile'
+    """
+    instrument = instrument.lower()
+    filetype = filetype.lower()
+    ext = FILETYPE_TO_EXTENSION[instrument][filetype]
+    return EXTENSION_TO_FILEKIND[instrument][ext]
+
 # =============================================================================
 
 INSTRUMENTS = ["acs", "cos", "stis", "wfc3"]

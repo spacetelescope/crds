@@ -15,7 +15,8 @@ import os.path
 import gzip
 
 # import crds.pysh as pysh
-import crds.log as log
+from crds import (log, rmap)
+import crds.hst.tpn as tpn
 
 HERE = os.path.dirname(__file__) or "./"
 
@@ -132,3 +133,30 @@ def mapping_url(crds_server_url, mapping):
 
 from .tpn import reference_name_to_validator_key
 from .tpn import reference_name_to_tpninfos
+
+# =======================================================================
+
+def get_file_properties(filename):
+    """Given a `filename`, either infer or lookup the associated instrument,
+    filekind,  and serial number.   Return them.   If a particular property
+    does not exist,  return "" for it.
+    """
+    import pyfits
+    name = os.path.basename(filename)
+    name = os.path.splitext(name)[0]
+    if rmap.is_mapping(filename):
+        fields = name.split("_")
+        observatory = "" if len(fields) < 1 else fields[0]  # should be 'hst'
+        instrument = "" if len(fields) < 2 else fields[1]
+        filekind = "" if len(fields) < 3 else fields[2]
+        serial = "" if len(fields) < 4 else fields[3]
+    elif filename.endswith(".fits"):
+        location = locate_server_reference(filename)
+        instrument = pyfits.getval(location, "INSTRUME")
+        filekind = tpn.filetype_to_filekind(
+                instrument, pyfits.getval(location, "FILETYPE"))
+        serial = name
+    else:
+        raise ValueError("Filename implies neither a mapping nor .fits file.")
+    return str(instrument), str(filekind), str(serial)
+

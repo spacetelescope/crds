@@ -50,6 +50,12 @@ def get_crds_refpath(observatory):
     locate = get_locator_module(observatory)
     return locate.get_crds_refpath()
 
+def get_file_properties(observatory, filename):
+    """Return instrument,filetype,id fields associated with filename.
+    """
+    locator = get_locator_module(observatory)
+    return locator.get_file_properties(filename)        
+
 def context_to_observatory(context_file):
     """
     >>> context_to_observatory('hst_acs_biasfile.rmap')
