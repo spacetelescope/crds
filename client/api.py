@@ -180,7 +180,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     localrefs = REFERENCE_CACHER.get_local_files(pipeline_context, bestrefs, ignore_cache=ignore_cache)
     refs = {}
     for filetype, refname in bestrefs.items():
-        refs[filetype] = localrefs[refname]
+        refs[str(filetype)] = str(localrefs[refname])
     return refs
 
 def cache_best_references(pipeline_context, header, ignore_cache=False):
@@ -202,3 +202,4 @@ def cache_best_references_for_dataset(pipeline_context, dataset, ignore_cache=Fa
     needed_keys = ctx.get_required_parkeys()
     header = utils.get_header_union(dataset, needed_keys)
     return cache_best_references(pipeline_context, header, ignore_cache)
+
