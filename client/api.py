@@ -20,14 +20,14 @@ from crds.client.proxy import CheckingProxy
 # Server for CRDS services and mappings
 
 URL_SUFFIX = "/json/"
-URL = os.environ.get("CRDS_URL", 'http://localhost:8000')
+URL = os.environ.get("CRDS_SERVER_URL", 'http://etcbrady.stsci.edu:4997')
 
 def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
     e.g. 'http://localhost:8000'
     """
-    if not re.match("http://(\w+\.?)*\w(:\d+)?", url):
-        raise ValueError("Invalid URL " + repr(url))
+    if not re.match("http://(\w+\.?)*\w(:\d+)?$", url):
+        raise ValueError("Invalid URL " + repr(url) + " , don't use trailing /")
     global URL, S
     URL = url + URL_SUFFIX
     S = CheckingProxy(URL, version="1.0")

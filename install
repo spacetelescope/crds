@@ -4,7 +4,7 @@ cd `dirname $0`
 
 ./clean
 
-foreach dir (lib hst client ../CRDS_server)
+foreach dir (lib hst client)
     if (-e $dir) then
     	echo "Installing $dir"
 		(cd $dir;  python setup.py install --force)  > /dev/null
@@ -12,6 +12,14 @@ foreach dir (lib hst client ../CRDS_server)
 		echo "Skipping $dir"
     endif
 end
+
+echo "Installing django-json-rpc"
+tar zxf third_party/django-json-rpc-0.6.1.pygz
+cd django-json-rpc*
+python setup.py install $* --force >/dev/null
+cd ..
+rm -rf django-json-rpc*
+
 
 ./clean
 
