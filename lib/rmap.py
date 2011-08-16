@@ -635,17 +635,32 @@ def locate_mapping(mappath):
     """
     if os.path.dirname(mappath):
         return mappath
-    # Convert the mapping basename into an absolute path by first looking
-    # up the "locate" module for the observatory and then calling 
-    # locate_mapping().
     observatory = utils.context_to_observatory(mappath)
-    try:
-        locate = utils.get_object("crds." + observatory + ".locate")
-    except ImportError:
-        raise ValueError(
-            "No observatory associated with mapping file " + repr(mappath))
+    locate = utils.get_locator_module(observatory)
     where = locate.locate_mapping(mappath)
     return where
+
+def locate_file(observatory, filepath, mode="client"):
+    """Figure out the absolute pathname for the a file specified by 
+    `filepath`.   If `filepath` already has a directory path, use it as is.  
+    Otherwise use the observatory's locator to determine where the file 
+    should be.
+    """
+    if os.path.dirname(filepath):
+        return filepath
+    locate = utils.get_locator_module(observatory)
+    if is_mapping(filepath):
+        if mode == "client":
+            where = locate.locate_mapping(filepath)
+        else:
+            where = locate.locate_server_mapping(filepath)
+    else:
+        if mode == "client":
+            where = locate.locate_reference(filepath)
+        else:
+            where = locate.locate_server_reference(filepath)
+    return where
+
 
 # ===================================================================
 
