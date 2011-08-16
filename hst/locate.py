@@ -151,8 +151,8 @@ def get_file_properties(filename):
         filekind = "" if len(fields) < 3 else fields[2]
         serial = "" if len(fields) < 4 else fields[3]
     elif filename.endswith(".fits"):
-        location = locate_server_reference(filename)
-        instrument = pyfits.getval(location, "INSTRUME")
+        location = locate_server_reference(os.path.basename(filename))
+        instrument = pyfits.getval(location, "INSTRUME").lower()
         filekind = tpn.filetype_to_filekind(
                 instrument, pyfits.getval(location, "FILETYPE"))
         serial = name

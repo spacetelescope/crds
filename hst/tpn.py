@@ -115,7 +115,7 @@ def filetype_to_filekind(instrument, filetype):
     instrument = instrument.lower()
     filetype = filetype.lower()
     ext = FILETYPE_TO_EXTENSION[instrument][filetype]
-    return EXTENSION_TO_FILEKIND[instrument][ext]
+    return EXTENSION_TO_FILEKIND[instrument][ext].lower()
 
 # =============================================================================
 
