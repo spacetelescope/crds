@@ -193,13 +193,17 @@ def cache_best_references(pipeline_context, header, ignore_cache=False):
     return local_paths
 
 def cache_best_references_for_dataset(pipeline_context, dataset, ignore_cache=False):
-    """Given a `dataset` and a `pipeline_context`,  extract relevant header information
-    from the `dataset`,  determine the best set of reference files,  cache the references
+    """
+    determine the best set of reference files,  cache the references
     locally,  and return the mapping  { reftype : local_file_path }.
     """
-    cache_mappings(pipeline_context, ignore_cache)
-    ctx = rmap.get_cached_mapping(pipeline_context)
-    needed_keys = ctx.get_required_parkeys()
-    header = utils.get_header_union(dataset, needed_keys)
+    header = get_minimum_header(pipeline_context, dataset, ignore_cache)
     return cache_best_references(pipeline_context, header, ignore_cache)
 
+def get_minimum_header(context, dataset, ignore_cache=False):
+    """Given a `dataset` and a `context`,  extract relevant header 
+    information from the `dataset`.
+    """
+    # cache_mappings(context, ignore_cache)
+    ctx = rmap.get_cached_mapping(context)
+    return ctx.get_minimum_header(dataset)

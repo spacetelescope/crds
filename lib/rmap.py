@@ -350,7 +350,7 @@ class Mapping(object):
 
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
-        and all the selected by it.
+        and all the mappings selected by it.
         """
         parkeys = set(self.parkey)
         if hasattr(self, "selections"):
@@ -358,6 +358,13 @@ class Mapping(object):
                 key = selection.get_required_parkeys()
                 parkeys = parkeys.union(set(key))
         return tuple(sorted(parkeys))
+    
+    def get_minimum_header(self, dataset):
+        """Return the names and values of `dataset`s header parameters which 
+        are required to compute best references for it.
+        """
+        return utils.get_header_union(
+                dataset, needed_keys=self.get_required_parkeys())
 
 # ===================================================================
 

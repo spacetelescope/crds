@@ -7,7 +7,7 @@ cd `dirname $0`
 foreach dir (lib hst client)
     if (-e $dir) then
     	echo "Installing $dir"
-		(cd $dir;  python setup.py install --force)  > /dev/null
+		(cd $dir;  python setup.py install $* --force)  > /dev/null
     else
 		echo "Skipping $dir"
     endif

@@ -11,6 +11,9 @@ CRDS User Manual
    
    user_guide.rst
    release_notes.rst
+   installation.rst
+   client_use.rst
+   web_site_use.rst
 
 .. comment
   Indices and tables
