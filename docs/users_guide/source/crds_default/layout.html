@@ -1,0 +1,57 @@
+{#
+    default/layout.html
+    ~~~~~~~~~~~~~~~~~~~
+
+    Sphinx layout template for the default theme.
+
+    :copyright: Copyright 2007-2010 by the Sphinx team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+#}
+{% extends "../crds_basic/layout.html" %}
+
+{% if theme_collapsiblesidebar|tobool %}
+{% set script_files = script_files + ['_static/sidebar.js'] %}
+{% endif %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{{ pathto('_static/style.css', 1) }}"  type="text/css">
+{% endblock %}
+
+{% block relbar1 %}
+<div id="header" class="related">
+  <a href="/"><img ALT="Hubble Space Telescope" SRC="{{ pathto('_static/HSTBlackTitle.jpg',1) }}" style="border-style: none"></a>
+    <h2>Calibration and Reference Data System (CRDS)</h2>
+</div>
+{% endblock %}
+
+{% block relbar2 %}
+{% endblock %}
+
+{% block sidebartoc %}
+   <a href="{{ pathto('index.html', 1) }}"><h2>Top</h2></a>
+   <br/>
+   {{ super() }}
+{% endblock %}
+
+{% block sidebarsearch %}
+   {{ super() }}
+   <br>
+   <a href="/"><h2>Return to CRDS</h2></a>
+{% endblock %}
+
+{% block sidebarsourcelink %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer" >
+  <p align="left">
+    If you have any questions regarding CRDS, please contact the
+    STScI Help Desk <a HREF="mailto:help@stsci.edu">(help@stsci.edu)</a>.
+  </p>
+  
+  <p align="left"> <a HREF="http://www.stsci.edu/institute/Copyright">Copyright Notice</a> </p>
+  
+  <p align="left"> <img BORDER="0" ALT="STScI" SRC="{{ pathto('_static/HSTBanner.gif', 1) }}"/> </p>
+</div>
+{% endblock %}
+
