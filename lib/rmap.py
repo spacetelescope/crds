@@ -601,11 +601,11 @@ def get_cached_mapping(mapping_basename, **keys):
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     if mapping_basename not in CACHED_MAPPINGS:
-        CACHED_MAPPINGS[mapping_basename] = _load_mapping(
+        CACHED_MAPPINGS[mapping_basename] = load_mapping(
             mapping_basename, **keys)
     return CACHED_MAPPINGS[mapping_basename]
 
-def _load_mapping(mapping, **keys):
+def load_mapping(mapping, **keys):
     """Load any of the pipeline, instrument, or reftype `mapping`s
     from the file system.   Not cached.
     """
