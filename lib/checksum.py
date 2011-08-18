@@ -1,7 +1,7 @@
 """This script updates the checksums of all the mapping files passed in as 
 command line parameters:
 
-% python -m crds.rewrite_hash  hst.pmap
+% python -m crds.checksum  hst.pmap
 
 will rewrite the sha1sum of hst.pmap.   
 
