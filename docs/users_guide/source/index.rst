@@ -13,6 +13,7 @@ CRDS User Manual
    release_notes.rst
    installation.rst
    client_use.rst
+   non_networked_use.rst
    web_site_use.rst
 
 .. comment
