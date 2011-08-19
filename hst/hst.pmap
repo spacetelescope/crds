@@ -1,16 +1,13 @@
-#
-# This file defines the best references context for all instruments of HST
-#
 header = {
     'mapping' : 'pipeline',
     'observatory' : 'HST',
     'parkey' : ('INSTRUME',),
-    'sha1sum' : 'b8df789ef6e779db2a116c179cfbdc83e33deae8',
+    'sha1sum' : '2391f4f14c0e1d49fbe118c0b15e9954dc9c42a6',
 }
 
 selector = {
     'ACS' : 'hst_acs.imap',
-    'COS' : 'hst_cos.imap',   
+    'COS' : 'hst_cos.imap',
     'STIS' : 'hst_stis.imap',
     'WFC3' : 'hst_wfc3.imap',
 }
