@@ -5,9 +5,7 @@ command line parameters:
 
 will rewrite the sha1sum of hst.pmap.   
 
-NOTE: Since the module loads mappings using Mapping.from_file() and then
-rewrites them,  it silently drops mapping comments,  and hence should be used
-with discretion.
+This version of crds.checksum fully preserves comments.
 """
 
 import sys
@@ -24,7 +22,7 @@ def main(files):
             mapping = rmap.ReferenceMapping.from_file(file_, ignore_checksum=True)
         else:
             raise ValueError("Bad file extension in file " + repr(file_))
-        mapping.write(file_)
+        mapping.rewrite_checksum(file_)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

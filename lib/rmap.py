@@ -61,6 +61,9 @@ import sys
 import os
 import os.path
 import hashlib
+import re
+import tempfile
+import shutil
 
 from .compat import namedtuple
 
@@ -284,8 +287,10 @@ class Mapping(object):
         return self._locate
 
     def format(self):
-        """Return the string representation of this mapping, 
-        i.e. pretty serialization.
+        """Return the string representation of this mapping, i.e. pretty 
+        serialization.   This is currently limited to initially creating rmaps,
+        not rewriting them since it is based on internal representations and
+        therefore loses comments.
         """
         return "header = %s\n\nselector = %s\n" % \
             (self._format_header(), self._format_selector())
@@ -317,37 +322,71 @@ class Mapping(object):
 
     def write(self, filename=None):
         """Write out this mapping to the specified `filename`,  
-        or else self.filename.
+        or else self.filename. DOES NOT PRESERVE COMMENTS.
         """
         if filename is None:
             filename = self.filename
-        if isinstance(filename, str):
-            file_ = open(filename, "w+")
         else:
-            file_ = filename
-        self._add_hash()
-        file_.write(self.format())
-        
+            self.filename = filename
+        file = open(filename, "w+")
+        file.write(self.format())
+        file.close()
+        self.rewrite_checksum()  # inefficient, but rare and consistent
+
     def _check_hash(self):
         """Verify that the mapping header has a checksum and that it is
         correct,  else raise an appropriate exception.
         """
-        old = self.header.pop("sha1sum", None)
+        old = self.header.get("sha1sum", None)
         if old is None:
             raise ChecksumError("sha1sum is missing.")
-        nosum = self.format()
-        self.header["sha1sum"] = old
-        new = hashlib.sha1(nosum).hexdigest()
-        if old != new:
+        if self._get_checksum() != self.header["sha1sum"]:
             raise ChecksumError("sha1sum mismatch.")
 
-    def _add_hash(self):
-        """Add a checksum to the mapping header,  replacing any old checksum."""
-        _old = self.header.pop("sha1sum", None)
-        nosum = self.format()
-        new = hashlib.sha1(nosum).hexdigest()
-        self.header["sha1sum"] = new
-
+    def _get_checksum(self):
+        """Compute the rmap checksum over the original file contents.
+        Skip over the sha1sum line.   Preserves comments.
+        """
+        where = locate_mapping(self.filename)
+        # Compute the new checksum over everything but the sha1sum line.
+        # This will fail if sha1sum appears for some other reason.  It won't ;-)
+        lines = [line for line in open(where).readlines() \
+                 if "sha1sum" not in line]
+        text = "".join(lines)
+        return hashlib.sha1(text).hexdigest()
+        
+    def rewrite_checksum(self, filename=None):
+        """Re-write checksum updates the checksum for a Mapping which must
+        have been loaded from a file.  Preserves comments.   Outputs results
+        to `filename` or the original file.
+        """
+        if self.filename is None:
+            raise ValueError("rewrite_checksums() only works on rmaps"
+                             " that were read from a file.")
+            
+        _handle, tmpname = tempfile.mkstemp()
+        
+        xsum = self._get_checksum()
+        
+        # re-write the file we loaded from,  inserting the new checksum,
+        # outputting to a temporary file.
+        file = open(tmpname, "w+")
+        for line in open(self.filename).readlines():
+            line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
+                          r"\1" + repr(str(xsum)), 
+                          line)
+            file.write(line)
+        file.close()
+        
+        # If user specified a filename,  copy the new file to that.
+        # Otherwise,  overwrite the original mapping file.
+        if filename is not None:
+            where = filename
+        
+        # rename might fail if `tmp` is not on same file system as `where`
+        shutil.copyfile(tmpname, where)
+        os.remove(tmpname)
+      
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
         and all the mappings selected by it.
