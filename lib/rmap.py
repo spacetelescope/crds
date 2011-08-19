@@ -257,7 +257,7 @@ class Mapping(object):
             if name not in self.header:
                 raise MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        if not keys.get("ignore_hash", False):
+        if not keys.get("ignore_checksum", False):
             self._check_hash()
 
     def missing_references(self):

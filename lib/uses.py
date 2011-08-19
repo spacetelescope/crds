@@ -83,13 +83,13 @@ def uses(files, observatory="hst"):
                 findall_pmaps_using_imap(file_, observatory))
     return sorted(list(set(mappings)))
 
-def main(files):
+def main(observatory, files):
     """Print the "anscestor" mappings which mention each reference file,
     rmap, or imap in `files`.
     """
-    mappings = uses(files)
+    mappings = uses(files, observatory)
     for mapping in mappings:
         print mapping
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main(observatory, sys.argv[2:])

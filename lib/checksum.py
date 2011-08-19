@@ -19,9 +19,9 @@ def main(files):
     for file_ in files:
         print file_
         if file_.endswith((".pmap",".imap")):
-            mapping = rmap.Mapping.from_file(file_, ignore_hash=True)
+            mapping = rmap.Mapping.from_file(file_, ignore_checksum=True)
         elif file_.endswith(".rmap"):
-            mapping = rmap.ReferenceMapping.from_file(file_, ignore_hash=True)
+            mapping = rmap.ReferenceMapping.from_file(file_, ignore_checksum=True)
         else:
             raise ValueError("Bad file extension in file " + repr(file_))
         mapping.write(file_)
