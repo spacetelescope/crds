@@ -221,14 +221,6 @@ You can check the validity of your mapping or reference file like this::
 By default, running certify on a mapping *does not* verify that the required
 reference files are valid,  only that they exist.
 
-It is possible to certify *only* the mapping(s) specified on the command line,
-ignoring descendent mappings and required references::
-
-  % python -m crds.certify --shallow /where/it/is/hst_acs_my_masterpiece.rmap
-  0 errors 
-  0 warnings 
-  0 infos 
-
 Later versions of CRDS may have additional semantic checks on the correctness of
 Mappings but these are not yet implemented and hence fall to the developer to
 verify in some other fashion.
