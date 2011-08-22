@@ -92,3 +92,9 @@ tarhtml: clean html
 	mv $(BUILDDIR)/html  users_guide
 	tar zcf users_guide.tar.gz users_guide
 	rm -rf users_guide
+
+serverhtml: tarhtml
+	mv users_guide.tar.gz ../../../CRDS_server/sources/interactive/static
+	cd ../../../CRDS_server/sources/interactive/static; \
+	tar zxf users_guide.tar.gz; \
+	rm users_guide.tar.gz
