@@ -193,40 +193,66 @@ def get_rmap_properties(filename):
 CDBS_DIRS_TO_INSTR = {
    "/jref/":"acs",
    "/oref/":"stis",
-   "/iref/":"cos",
-   "/lref/":"wfc3",
+   "/iref/":"wfc3",
+   "/lref/":"cos",
 }
 
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
-    fields = _get_fields(filename)
-    try:   # Hopefully it's a nice new standard filename
-        assert len(fields) == 4, "filename is not in standard format"
-        observatory, instrument, filekind, serial = fields
-        assert observatory == "hst",  "unknown observatory"
-        assert instrument in ["acs","cos","stis","wfc3"], "unknown instrument"
-        assert re.match("\d+", serial), "serial number field has non-digits"
-        return instrument, filekind, serial
+    try:   # Hopefully it's a nice new standard filename, easy
+        return ref_properties_from_new_path(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
-        # For legacy files,  just use the root filename as the unique id
-        serial = os.path.basename(os.path.split(filename)[0])
-        # First try to figure everything out by decoding filename. fast
-        instrument = None
-        for idir in CDBS_DIRS_TO_INSTR:
-            if idir in filename:
-                instrument = CDBS_DIRS_TO_INSTR[idir]
-                break
-        if instrument:
-            ext = fields[-1]
-            try:
-                filekind = tpn.extension_to_filekind(instrument, ext)
-                return instrument, filekind, serial
-            except KeyError:
-                pass
-        # Look inside the file to figure out instrument, filekind.  slow
-        import pyfits
-        location = locate_server_reference(os.path.basename(filename))
-        instrument = pyfits.getval(location, "INSTRUME").lower()
-        filetype = pyfits.getval(location, "FILETYPE")
-        filekind = tpn.filetype_to_filekind(instrument, filetype)
-        return instrument, filekind, serial
+        pass
+    try:   # or maybe a recognizable HST legacy path/filename, fast
+        return ref_properties_from_cdbs_path(filename)
+    except AssertionError:
+        pass
+    # If not, dig inside the FITS file, slow
+    return ref_properties_from_header(filename)
+
+def ref_properties_from_new_path(filename):
+    """Based on a CRDS `filename`,  return (instrument, filekind, serial).
+    Raise AssertionError if it's not a good filename.
+    """
+    fields = _get_fields(filename)
+    assert len(fields) == 4, "filename is not in standard format"
+    observatory, instrument, filekind, serial = fields
+    assert observatory == "hst",  "unknown observatory"
+    assert instrument in ["acs","cos","stis","wfc3"], "unknown instrument"
+    assert re.match("\d+", serial), "serial number field has non-digits"
+    return instrument, filekind, serial
+
+def ref_properties_from_cdbs_path(filename):
+    """Based on a HST CDBS `filename`,  return (instrument, filekind, serial). 
+    Raise AssertionError if it's not a good filename.
+    """
+    fields = _get_fields(filename)
+    # For legacy files,  just use the root filename as the unique id
+    serial = os.path.basename(os.path.splitext(filename)[0])
+    # First try to figure everything out by decoding filename. fast
+    for idir in CDBS_DIRS_TO_INSTR:
+        if idir in filename:
+            instrument = CDBS_DIRS_TO_INSTR[idir]
+            break
+    else:
+        assert False, "CDBS instrument directory not found in filepath"
+    ext = fields[-1]
+    try:
+        filekind = tpn.extension_to_filekind(instrument, ext)
+    except KeyError:
+        assert False, "Couldn't map extension " + repr(ext) + " to filekind."
+    return instrument, filekind, serial
+
+def ref_properties_from_header(filename):
+    """Look inside FITS `filename` header to determine instrument, filekind.
+    """
+    import pyfits
+    # For legacy files,  just use the root filename as the unique id
+    serial = os.path.basename(os.path.splitext(filename)[0])
+    location = locate_server_reference(os.path.basename(filename))
+    instrument = pyfits.getval(location, "INSTRUME").lower()
+    filetype = pyfits.getval(location, "FILETYPE")
+    filekind = tpn.filetype_to_filekind(instrument, filetype)
+    return instrument, filekind, serial
+
+    
