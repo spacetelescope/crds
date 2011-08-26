@@ -12,7 +12,7 @@ import sys
 
 import crds.rmap as rmap
 
-def main(files):
+def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
     for file_ in files:
         print file_
@@ -25,4 +25,4 @@ def main(files):
         mapping.rewrite_checksum(file_)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    update_checksums(sys.argv[1:])

@@ -13,6 +13,7 @@ be implemented for JWST.
 """
 import os.path
 import gzip
+import re
 
 # import crds.pysh as pysh
 from crds import (log, rmap)
@@ -137,26 +138,95 @@ from .tpn import reference_name_to_tpninfos
 # =======================================================================
 
 def get_file_properties(filename):
-    """Given a `filename`, either infer or lookup the associated instrument,
-    filekind,  and serial number.   Return them.   If a particular property
-    does not exist,  return "" for it.
+    """Figure out (instrument, filekind, serial) based on `filename` which
+    should be a mapping or FITS reference file.
     """
-    import pyfits
+    if filename.endswith(".pmap"):
+        result = get_pmap_properties(filename)
+    elif filename.endswith(".imap"):
+        result = get_imap_properties(filename)
+    elif filename.endswith(".rmap"):
+        result = get_rmap_properties(filename)
+    elif filename.endswith(".fits"):
+        result = get_reference_properties(filename)
+    else:
+        raise ValueError("Filename implies neither a mapping nor FITS file.")
+    return result
+
+def _get_fields(filename):
     name = os.path.basename(filename)
     name = os.path.splitext(name)[0]
-    if rmap.is_mapping(filename):
-        fields = name.split("_")
-        observatory = "" if len(fields) < 1 else fields[0]  # should be 'hst'
-        instrument = "" if len(fields) < 2 else fields[1]
-        filekind = "" if len(fields) < 3 else fields[2]
-        serial = "" if len(fields) < 4 else fields[3]
-    elif filename.endswith(".fits"):
+    return name.split("_")
+
+def get_pmap_properties(filename):
+    fields = _get_fields(filename)
+    if len(fields) == 2:
+        observatory, serial = fields
+    elif len(fields) == 1:
+        observatory, serial = fields + [""]
+    else:
+        raise ValueError("Invalid .pmap filename " + repr(filename))
+    instrument, filekind = "", ""
+    return instrument, filekind, serial
+
+def get_imap_properties(filename):
+    fields = _get_fields(filename)
+    if len(fields) == 3:
+        observatory, instrument, serial = fields
+    elif len(fields) == 2:
+        observatory, instrument, serial = fields + [""]
+    else:
+        raise ValueError("Invalid .imap filename " + repr(filename))
+    filekind = ""
+    return instrument, filekind, serial
+
+def get_rmap_properties(filename):
+    fields = _get_fields(filename)
+    if len(fields) == 4:
+        observatory, instrument, filekind, serial = fields
+    elif len(fields) == 3:
+        observatory, instrument, filekind, serial = fields + [""]
+    else:
+        raise ValueError("Invalid .imap filename " + repr(filename))
+    return instrument, filekind, serial
+
+CDBS_DIRS_TO_INSTR = {
+   "/jref/":"acs",
+   "/oref/":"stis",
+   "/iref/":"cos",
+   "/lref/":"wfc3",
+}
+
+def get_reference_properties(filename):
+    """Figure out FITS (instrument, filekind, serial) based on `filename`."""
+    fields = _get_fields(filename)
+    try:   # Hopefully it's a nice new standard filename
+        assert len(fields) == 4, "filename is not in standard format"
+        observatory, instrument, filekind, serial = fields
+        assert observatory == "hst",  "unknown observatory"
+        assert instrument in ["acs","cos","stis","wfc3"], "unknown instrument"
+        assert re.match("\d+", serial), "serial number field has non-digits"
+        return instrument, filekind, serial
+    except AssertionError:  # cryptic legacy paths & names, i.e. reality
+        # For legacy files,  just use the root filename as the unique id
+        serial = os.path.basename(os.path.split(filename)[0])
+        # First try to figure everything out by decoding filename. fast
+        instrument = None
+        for idir in CDBS_DIRS_TO_INSTR:
+            if idir in filename:
+                instrument = CDBS_DIRS_TO_INSTR[idir]
+                break
+        if instrument:
+            ext = fields[-1]
+            try:
+                filekind = tpn.extension_to_filekind(instrument, ext)
+                return instrument, filekind, serial
+            except KeyError:
+                pass
+        # Look inside the file to figure out instrument, filekind.  slow
+        import pyfits
         location = locate_server_reference(os.path.basename(filename))
         instrument = pyfits.getval(location, "INSTRUME").lower()
-        filekind = tpn.filetype_to_filekind(
-                instrument, pyfits.getval(location, "FILETYPE"))
-        serial = name
-    else:
-        raise ValueError("Filename implies neither a mapping nor .fits file.")
-    return str(instrument), str(filekind), str(serial)
-
+        filetype = pyfits.getval(location, "FILETYPE")
+        filekind = tpn.filetype_to_filekind(instrument, filetype)
+        return instrument, filekind, serial

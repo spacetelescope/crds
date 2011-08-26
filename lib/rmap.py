@@ -478,6 +478,10 @@ class PipelineContext(Mapping):
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
     
+    def get_imap(self, instrument):
+        """Return the InstrumentMapping corresponding to `instrument`."""
+        return self.selections[instrument]
+
 # ===================================================================
 
 """
@@ -526,6 +530,11 @@ class InstrumentContext(Mapping):
             assert refmap.reftype == reftype, \
                 "Nested 'reftype' doesn't match for " + \
                 repr(reftype) + " in " + repr(filename)
+                
+    def get_rmap(self, filekind):
+        """Given `filekind`,  return the corresponding ReferenceMapping.
+        """
+        return self.selections[filekind]
 
     def get_best_ref(self, reftype, header):
         """Returns the single reference file basename appropriate for `header`
