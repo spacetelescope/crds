@@ -63,7 +63,9 @@ def generate_new_contexts(old_pipeline, updates, new_names):
     new_pipeline = new_names.pop(old_pipeline)
     new_imaps = new_names.values()
     hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
-    checksum.update_checksums([new_pipeline] + new_imaps)
+    where = [ rmap.locate_mapping(m) for m in [new_pipeline] + new_imaps]
+    checksum.update_checksums(where)
+    return [new_pipeline] + new_imaps
     
 def generate_fake_names(old_pipeline, updates):
     """Generate a map from old pipeline and instrument context names to new
