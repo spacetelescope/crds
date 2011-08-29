@@ -623,6 +623,10 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.reference_names()
     
+    def mapping_names(self):
+        """Return name of this ReferenceMapping as degenerate list of 1 item."""
+        return [os.path.basename(self.filename)]
+    
     def get_required_parkeys(self):
         parkeys = set()
         for key in self.parkey:

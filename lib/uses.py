@@ -92,4 +92,4 @@ def main(observatory, files):
         print mapping
 
 if __name__ == "__main__":
-    main(observatory, sys.argv[2:])
+    main(sys.argv[1], sys.argv[2:])
