@@ -15,7 +15,6 @@ import crds.rmap as rmap
 def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
     for file_ in files:
-        print file_
         if file_.endswith((".pmap",".imap")):
             mapping = rmap.Mapping.from_file(file_, ignore_checksum=True)
         elif file_.endswith(".rmap"):
