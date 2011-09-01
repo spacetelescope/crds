@@ -629,7 +629,7 @@ class UseAfterSelector(Selector):
     >>> u.choose({'DATE-OBS': '2000-07-02', 'TIME-OBS': '08:08:59'})   
     Traceback (most recent call last):
     ...
-    UseAfterError: No selection with time < '2000-07-02 08:08:00'
+    UseAfterError: No selection with time < '2000-07-02 08:08:59'
     """
     def __init__(self, parameters, datemapping, rmap_header=None):
         Selector.__init__(self, parameters, datemapping)

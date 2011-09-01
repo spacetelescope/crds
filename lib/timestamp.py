@@ -65,7 +65,7 @@ def parse_numerical_date(d):
     imonth, iday, iyear, = int(month), int(day), int(year)
     hour, minute, second = time.split(":")
     ihour, iminute, isecond = int(hour), int(minute), int(round(float(second)))
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute)
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond)
 
 class DateParser(object):
     @classmethod
