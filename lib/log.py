@@ -205,9 +205,9 @@ def handle_standard_options(
     if parser is None:
         parser = optparse.OptionParser(usage)
     
-    parser.add_option("-o", "--outpath", dest="output_dir",
-                      help="Path to write tests to.",
-                      metavar="OUTPATH", default=default_outpath)
+#    parser.add_option("-o", "--outpath", dest="output_dir",
+#                      help="Path to write tests to.",
+#                      metavar="OUTPATH", default=default_outpath)
 
     parser.add_option("-v", "--verbose", dest="verbose",
                       help="Set verbose output mode.", action="store_true")
@@ -228,28 +228,10 @@ def handle_standard_options(
                       help="Debug a specific logged error number in pdb.",
                       metavar="ERRNO", default=-1)
 
-    parser.add_option("-t", "--show-tracebacks", dest="show_tracebacks",
-                      help="Cause error messages to print an exception traceback.",
-                      action="store_true", default=False)
-
-    parser.add_option("-l", "--log-file", dest="log_file",
-                      help="Log output to this file.  Default off.",
-                      metavar="LOG_FILE", default="")
-
-    parser.add_option("-a", "--log-append", dest="log_append",
-                      help="Append to any logfile if it exists already.  Requires -l.  Defaults off.",
-                      action="store_true", default=False)
-
-    parser.add_option("-T", "--timestamp-log", dest="log_timestamp",
-                      help="Add timestamps to log messages.",
-                      action="store_true", default=False)
-
     options, args = parser.parse_args(args)
 
     set_verbose(options.verbose)
     set_debug_errors(options.debug_errors, options.debug_errno)
-    set_show_tracebacks(options.show_tracebacks)
-    set_log(options.log_file, options.log_append, options.log_timestamp)
 
     return options, args
 
