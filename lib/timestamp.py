@@ -84,13 +84,31 @@ class Slashdate(DateParser):
                     year=int(match.group("year")))
         
 class Sybdate(DateParser):
+    """
+    >>> Sybdate.get_datetime("Mar 21 2001")
+    datetime.datetime(2001, 3, 21, 0, 0)
+
+    >>> Sybdate.get_datetime("Mar 21 2001 12:00:00")
+    datetime.datetime(2001, 3, 21, 12, 0)
+    
+    >>> Sybdate.get_datetime("Mar 21 2001 12:00:00 am")
+    datetime.datetime(2001, 3, 21, 0, 0)
+    
+    >>> Sybdate.get_datetime("Mar 21 2001 12:00:00 PM")
+    datetime.datetime(2001, 3, 21, 12, 0)
+
+    >>> Sybdate.get_datetime("Mar 21 2001 01:00:00 PM")
+    datetime.datetime(2001, 3, 21, 13, 0)
+    """
     _format = re.compile(
                 "(?P<month>[A-Za-z]+)\s+" + \
                 "(?P<day>\d+)\s+" + \
                 "(?P<year>\d+)" + \
                 "(\s+(?P<hour>\d+):" + \
-                "(?P<minute>\d+):" + \
-                "(?P<second>\d+))?")
+                    "(?P<minute>\d+):" + \
+                    "(?P<second>\d+)\s*" + \
+                    "(?P<meridian>am|pm|AM|PM)?" + \
+                ")?")
 
     @classmethod
     def _get_date_dict(cls, match):
@@ -99,6 +117,16 @@ class Sybdate(DateParser):
             items["month"] = month_num(match.group("month"))
         except IndexError:
             raise ValueError("Illegal month " + repr(match.group("month")))
+        if items["meridian"]:
+            hour = int(items["hour"])
+            if items["meridian"].lower() == "pm":
+                if hour < 12:
+                    hour += 12
+            else:
+                if hour == 12:
+                    hour -= 12
+            items["hour"] = str(hour)
+            del items["meridian"]
         return dict([(name, int(x)) for (name, x) in items.items() if x])
     
 class Anydate(DateParser):
@@ -122,4 +150,10 @@ class DashDate(DateParser):
 class CdbsDate(DateParser):
     pass
 
+def test():
+    import doctest, timestamp
+    return doctest.testmod(timestamp)
+
+if __name__ == "__main__":
+    print test()
 
