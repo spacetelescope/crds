@@ -16,7 +16,7 @@ import gzip
 import re
 
 # import crds.pysh as pysh
-from crds import (log, rmap)
+from crds import (log, rmap, pysh)
 import crds.hst.tpn as tpn
 
 HERE = os.path.dirname(__file__) or "./"
@@ -33,6 +33,10 @@ REFNAME_TO_PATH = {}
 def locate_server_reference(ref_filename, cdbs=CDBS_REFPATH):
     """Effectively,  search the given  `cdbs` filetree for `ref_filename`
     and return the absolute path.
+    
+    This translates a name like 'v4q2144qj_bia.fits' into an absolute path
+    which most likely depends on instrument.
+    
     """
     global CDBS_REFPATH
     CDBS_REFPATH = cdbs
@@ -46,9 +50,8 @@ def setup_path_map(cdbs=CDBS_REFPATH, rebuild_cache=False):
     """
     cachepath = HERE + "/cdbs.paths.gz"
     if not os.path.exists(cachepath) or rebuild_cache:
-        import crds.pysh as pysh
         log.info("Generating CDBS file path cache.")
-        pysh.sh("find  ${cdbs} | gzip -c >${cachepath}")  # , raise_on_error=True) sometimes permission is denied
+        pysh.sh("find  ${cdbs} | gzip -c >cdbs.paths.gz")  # , raise_on_error=True) sometimes permission is denied
         log.info("Done.")
     for line in gzip.open(cachepath):
         line = line.strip()
@@ -58,6 +61,9 @@ def setup_path_map(cdbs=CDBS_REFPATH, rebuild_cache=False):
 #        if filename in REFNAME_TO_PATH:
 #            log.warning("Reference file " + repr(filename) + " found more than once. Using first.")
         REFNAME_TO_PATH[filename] = line        
+
+def main():
+    setup_path_map(rebuild_cache=True)
 
 # =======================================================================
 
@@ -254,5 +260,10 @@ def ref_properties_from_header(filename):
     filetype = pyfits.getval(location, "FILETYPE")
     filekind = tpn.filetype_to_filekind(instrument, filetype)
     return instrument, filekind, serial
+
+# ============================================================================
+
+if __name__ == "__main__":
+    main()
 
     
