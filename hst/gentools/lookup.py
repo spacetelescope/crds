@@ -14,14 +14,15 @@ import crds.utils as utils
 
 HEADER_CACHE = {}
 
-def get_unconditioned_header_union(fname):
+def get_unconditioned_header_union(fpath):
     """Handle initial or cached fetch of unconditioned header values.
     """
+    fname = os.path.basename(fpath)
     if fname in HEADER_CACHE:
         log.verbose("Cache hit:",repr(fname))
         return HEADER_CACHE[fname]
     log.verbose("Cache miss:",repr(fname))
-    union = HEADER_CACHE[fname] = utils.get_header_union(fname)
+    union = HEADER_CACHE[fname] = utils.get_header_union(fpath)
     return union
 
 def get_header_union(fname):
