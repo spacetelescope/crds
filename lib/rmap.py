@@ -328,6 +328,7 @@ class Mapping(object):
             filename = self.filename
         else:
             self.filename = filename
+        self.header["sha1sum"] = "99999"
         file = open(filename, "w+")
         file.write(self.format())
         file.close()
@@ -382,7 +383,9 @@ class Mapping(object):
         # Otherwise,  overwrite the original mapping file.
         if filename is not None:
             where = filename
-        
+        else:
+            where = self.filename
+
         # rename might fail if `tmp` is not on same file system as `where`
         shutil.copyfile(tmpname, where)
         os.remove(tmpname)

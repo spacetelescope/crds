@@ -16,7 +16,15 @@ print "Installing"
 % ../install >& /dev/null
 
 for instr in INSTRUMENTS:
+
     % python gen_file_rmap.py ${save} ${instr} ../${instr}/sources
+    
+    # In principle gen_file_rmap.py is supposed to create correct checksums.
+    # In practice,  this was faster to get working.   Note that ./ is 
+    # different than the empty path,  where the latter means infer the path.
+    for map in glob.glob("hst_"+instr+"_*.rmap"):
+        % python -m crds.checksum ./${map}
+
     % mv hst_${instr}_*.rmap ../${instr}
 
 print "Installing"
