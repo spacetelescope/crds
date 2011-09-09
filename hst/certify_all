@@ -1,0 +1,6 @@
+#! /bin/csh
+
+python -m crds.certify hst_acs.imap |& tee certify_acs.log
+python -m crds.certify hst_cos.imap |& tee certify_cos.log
+python -m crds.certify hst_stis.imap |& tee certify_stis.log
+python -m crds.certify hst_wfc3.imap |& tee certify_wfc3.log
