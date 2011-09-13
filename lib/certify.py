@@ -265,11 +265,11 @@ def get_validators(filename):
 
 # ============================================================================
 
-def certify_fits(fitsname):
+def certify_fits(fitsname, dump_provenance=False):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
-    if OPTIONS.provenance:
+    if dump_provenance:
         dump_multi_key(fitsname, ["DESCRIP","COMMENT","PEDIGREE","USEAFTER",
                                   "HISTORY",])
     for checker in get_validators(fitsname):
@@ -326,14 +326,14 @@ def certify_mapping(context, check_references=True):
             raise MissingReferenceError("Reference file " + repr(ref) + 
                                         " is not known to CRDS." )
 
-def certify(files):
+def certify(files, dump_provenance=False):
     """Run certify_fits() on a list of FITS `files` logging an error for the 
     first failure in each file,  but continuing.   Returns the count of errors.
     """
     for fname in files:
         log.info("Certifying", repr(os.path.basename(fname)))
         try:
-            certify_fits(fname)
+            certify_fits(fname, dump_provenance=dump_provenance)
         except Exception:
             # raise
             log.error("Validation failed for", repr(fname))
@@ -350,7 +350,7 @@ def main(files, options):
         if rmap.is_mapping(file_) or options.mapping:
             certify_context(file_, check_references=(not options.shallow))
         else:
-            certify([file_])
+            certify([file_], dump_provenance=options.provenance)
     log.standard_status()
     return log.errors()
 
