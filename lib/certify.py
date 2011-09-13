@@ -269,11 +269,24 @@ def certify_fits(fitsname):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
+    if OPTIONS.provenance:
+        dump_multi_key(fitsname, ["DESCRIP","COMMENT","PEDIGREE","USEAFTER",
+                                  "HISTORY",])
     for checker in get_validators(fitsname):
         checker.check(fitsname)
 
+def dump_multi_key(fitsname, keys):
+    """Dump out all header values for `keys` in all extensions of `fitsname`."""
+    hdulist = pyfits.open(fitsname)
+    for i, hdu in enumerate(hdulist):
+        cards = hdu.header.ascardlist()
+        for key in keys:
+            for card in cards:
+                if card.key == key:
+                    log.write("["+str(i)+"]", key, card.value, card.comment)
+
 def certify_context(context, check_references=False):
-    """Ceritfy `context`.  Unless `shallow` is True,  recursively certify all
+    """Certify `context`.  Unless `shallow` is True,  recursively certify all
     referenced files as well.
     Returns the count of errors.
     """
@@ -351,6 +364,8 @@ if __name__ == "__main__":
     parser.add_option("-m", "--mapping", dest="mapping",
         help="Ignore extensions, the files being certified are mappings.", 
         action="store_true")
+    parser.add_option("-P", "--dump-provenance", dest="provenance",
+        help="Dump provenance keywords.", action="store_true")
     OPTIONS, ARGS = log.handle_standard_options(sys.argv, parser=parser)
     log.standard_run("main(ARGS[1:], OPTIONS)", OPTIONS, 
                      globals(), globals())
