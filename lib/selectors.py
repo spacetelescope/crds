@@ -224,6 +224,29 @@ class Selector(object):
                          " : " + pf_sel + ",")
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
+    
+    def validate_keys(self, valid_values_map):
+        """Iterate over this Selector's keys checking each field
+        of each key against `valid_values_map`.
+        
+        valid_values_map:    { parkey : [ legal values... ], ... }
+        
+        Raise a ValueError if there are any problems with
+        """
+        for name in self._parameters:
+            if name not in valid_values_map:
+                raise ValueError("Unknown parameter " + repr(name))
+        for key in self.keys():
+            self.validate_key(key, valid_values_map)
+        for choice in self.choices():
+            if isinstance(choice, Selector):
+                choice.validate_keys(valid_values_map)
+            
+    def validate_key(self, key, valid_values_map):
+        """Validate a single `key` against the possible field values
+        in `valid_values_map`.   ABSTRACT STUB always passes.
+        """
+        pass
 
 # ==============================================================================
 
@@ -365,6 +388,31 @@ class MatchingSelector(Selector):
         ('1.0', '*') : '100',
         ('1.0', '2.0') : '200',
     })
+    
+    
+    All parameters should appear in the valid_values_map,  here give
+    a bad valid_values_map to simulate a bad parkey:
+    
+    >>> m.validate_keys({ "foo" : [ "1.0","*"], "baz":["3.0","*"] })
+    Traceback (most recent call last):
+    ...
+    ValueError: Unknown parameter 'bar'
+
+    All match tuple fields should appear on a valid values list:
+
+    >>> m.validate_keys({ "foo" : [ "1.0","*"], "bar":["3.0","*"] })
+    Traceback (most recent call last):
+    ...
+    ValueError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ['3.0', '*']
+    
+    Match tuples should have the same length as the parameter list:
+    
+    >>> m = MatchingSelector(("*foo","bar"), { ('1.0',) : "100", })
+    Traceback (most recent call last):
+    ...
+    ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
+
+    
     """
     rmap_name = "Match"
     
@@ -554,7 +602,12 @@ class MatchingSelector(Selector):
         for i, fitsvar in enumerate(self._parameters):
             vmap[fitsvar] = set()
             for key in self.keys():
-                values = key[i]
+                try:
+                    values = key[i]
+                except IndexError:
+                    raise ValueError("Match tuple " + repr(key) +
+                                     " wrong length for parameter list " + 
+                                     repr(tuple(self._parameters)))
                 if not isinstance(values, tuple):
                     values = [values]
                 for value in values:
@@ -596,6 +649,23 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
+
+    def validate_key(self, key, valid_values_map):
+        """Validate a single selections `key` against the possible field values
+        in `valid_values_map`.   Note that each selections `key` is 
+        (nominally) a tuple with values for multiple parkeys.
+        """
+        if len(key) != len(self._parameters):
+            raise ValueError("Key " + repr(key) + 
+                             " has wrong length for parameter list " + 
+                             repr(self._parameters))
+        for i, name in enumerate(self._parameters):
+            valid = valid_values_map[name]
+            if key[i] not in valid:
+                raise ValueError("Field " + repr(name) + "=" + repr(key[i]) + 
+                    " of key " + repr(key) +  
+                    " is not in " + repr(valid))
+
 # ==============================================================================
 
 class UseAfterSelector(Selector):
@@ -630,6 +700,26 @@ class UseAfterSelector(Selector):
     Traceback (most recent call last):
     ...
     UseAfterError: No selection with time < '2000-07-02 08:08:59'
+    
+    UseAfter dates should look like YYYY-MM-DD HH:MM:SS or:
+    
+    >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
+    ...        '2003-09-26 foo 01:28:00':'nal1503ij_bia.fits',
+    ... })
+    >>> u.validate_keys({"DATE-OBS":"*", "TIME-OBS":"*"})
+    Traceback (most recent call last):
+    ...
+    ValueError: UseAfter date '2003-09-26 foo 01:28:00' has invalid format.
+
+    A more subtle error in the date or time should still be detected:
+
+    >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
+    ...        '2003-09-35 01:28:00':'nal1503ij_bia.fits',
+    ... })
+    >>> u.validate_keys({"DATE-OBS":"*", "TIME-OBS":"*"})
+    Traceback (most recent call last):
+    ...
+    ValueError: UseAfter date '2003-09-35 01:28:00' has invalid format.
     """
     def __init__(self, parameters, datemapping, rmap_header=None):
         Selector.__init__(self, parameters, datemapping)
@@ -660,7 +750,14 @@ class UseAfterSelector(Selector):
                 return selections[0]
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
-
+            
+    def validate_key(self, key, valid_values_map):
+        try:
+            timestamp.parse_numerical_date(key)
+        except ValueError:
+            raise ValueError("UseAfter date " + repr(key) + " has invalid format.")
+        
+        
 # ==============================================================================
 
 class ClosestGeometricRatioSelector(Selector):
