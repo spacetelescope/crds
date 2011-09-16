@@ -307,10 +307,11 @@ def tpn_filepath(instrument, extension):
     return os.path.join(HERE, "cdbs", "cdbs_tpns",
             INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
 
-def get_tpninfos(instrument, extension):
+def get_tpninfos(instrument, filekind):
     """Load the map of TPN_info tuples corresponding to `instrument` and 
     `extension` from it's .tpn file.
     """
+    extension = TPN_EXTENSIONS[instrument][filekind]
     return load_tpn(tpn_filepath(instrument, extension))
 
 # =============================================================================
@@ -323,13 +324,12 @@ def reference_name_to_validator_key(fitsname):
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]
-    return (instrument, extension)
+    filekind = EXTENSION_TO_FILEKIND[instrument][extension]
+    return (instrument, filekind)
 
-def reference_name_to_tpninfos(fitsname, key):
-    """Given a reference filename `fitsname` and the associated cache `key`
-    for the reference's Validator,  return the TpnInfo object which can be
-    used to construct the Validator.
+
+def reference_name_to_tpninfos(key):
+    """Given a reference cache `key` for a reference's Validator,  return the 
+    TpnInfo object which can be used to construct a Validator.
     """
-    if key is None:
-        key = reference_name_to_validator_key(fitsname)
     return get_tpninfos(*key)

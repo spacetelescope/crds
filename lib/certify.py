@@ -243,6 +243,8 @@ def validator(info):
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
 
+# ============================================================================
+
 VALIDATOR_CACHE = {}
 def get_validators(filename):
     """Given a reference file `filename`,  return the observatory specific 
@@ -256,7 +258,7 @@ def get_validators(filename):
 
     if key not in VALIDATOR_CACHE:
         # Get tpninfos in an observatory specific way, a sequence of tuples.
-        tpninfos = tuple(locator.reference_name_to_tpninfos(filename, key))
+        tpninfos = tuple(locator.get_tpninfos(*key))
         # Make and cache Validators for `filename`s reference file type.
         VALIDATOR_CACHE[key] = [validator(x) for x in tpninfos]
 
@@ -295,6 +297,7 @@ def certify_context(context, check_references=False):
     except Exception:
         log.error("Couldn't load mapping", repr(context))
         return []
+    ctx.validate()
     if not check_references:
         return 0
     return certify(reference_files(ctx))
@@ -317,6 +320,7 @@ def certify_mapping(context, check_references=True):
     exist within CRDS.   Otherwise raise an exception.
     """
     ctx = rmap.get_cached_mapping(context)
+    ctx.validate()
     if not check_references:
         return
     for ref in ctx.reference_names():

@@ -119,6 +119,10 @@ class UseAfterError(LookupError):
 
 # ==============================================================================
 
+class ValidationError(ValueError):
+    """Some Selector key did not match the set of legal values.
+    """
+
 class Selector(object):
     """Baseclass for CRDS file selectors defining the basic protocol
     of a Selector:
@@ -225,7 +229,7 @@ class Selector(object):
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
     
-    def validate_keys(self, valid_values_map):
+    def validate(self, valid_values_map):
         """Iterate over this Selector's keys checking each field
         of each key against `valid_values_map`.
         
@@ -233,14 +237,11 @@ class Selector(object):
         
         Raise a ValueError if there are any problems with
         """
-        for name in self._parameters:
-            if name not in valid_values_map:
-                raise ValueError("Unknown parameter " + repr(name))
         for key in self.keys():
             self.validate_key(key, valid_values_map)
         for choice in self.choices():
             if isinstance(choice, Selector):
-                choice.validate_keys(valid_values_map)
+                choice.validate(valid_values_map)
             
     def validate_key(self, key, valid_values_map):
         """Validate a single `key` against the possible field values
@@ -393,17 +394,17 @@ class MatchingSelector(Selector):
     All parameters should appear in the valid_values_map,  here give
     a bad valid_values_map to simulate a bad parkey:
     
-    >>> m.validate_keys({ "foo" : [ "1.0","*"], "baz":["3.0","*"] })
+    >>> m.validate({ "foo" : ("1.0",), "baz":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValueError: Unknown parameter 'bar'
+    ValidationError: Unknown parameter 'bar'
 
     All match tuple fields should appear on a valid values list:
 
-    >>> m.validate_keys({ "foo" : [ "1.0","*"], "bar":["3.0","*"] })
+    >>> m.validate({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValueError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ['3.0', '*']
+    ValidationError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ('3.0', '*')
     
     Match tuples should have the same length as the parameter list:
     
@@ -649,7 +650,6 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
-
     def validate_key(self, key, valid_values_map):
         """Validate a single selections `key` against the possible field values
         in `valid_values_map`.   Note that each selections `key` is 
@@ -660,9 +660,14 @@ class MatchingSelector(Selector):
                              " has wrong length for parameter list " + 
                              repr(self._parameters))
         for i, name in enumerate(self._parameters):
-            valid = valid_values_map[name]
-            if key[i] not in valid:
-                raise ValueError("Field " + repr(name) + "=" + repr(key[i]) + 
+            if name.startswith("*"):
+                name = name[1:]
+            if name not in valid_values_map:
+                raise ValidationError("Unknown parameter " + repr(name))
+            valid = valid_values_map[name] + ("*",)
+            value = key[i]
+            if value not in valid and value.replace(".0","") not in valid:
+                raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
                     " of key " + repr(key) +  
                     " is not in " + repr(valid))
 
@@ -706,20 +711,21 @@ class UseAfterSelector(Selector):
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-26 foo 01:28:00':'nal1503ij_bia.fits',
     ... })
-    >>> u.validate_keys({"DATE-OBS":"*", "TIME-OBS":"*"})
+    
+    >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValueError: UseAfter date '2003-09-26 foo 01:28:00' has invalid format.
+    ValidationError: UseAfter date '2003-09-26 foo 01:28:00' has invalid format.
 
     A more subtle error in the date or time should still be detected:
 
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-35 01:28:00':'nal1503ij_bia.fits',
     ... })
-    >>> u.validate_keys({"DATE-OBS":"*", "TIME-OBS":"*"})
+    >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValueError: UseAfter date '2003-09-35 01:28:00' has invalid format.
+    ValidationError: UseAfter date '2003-09-35 01:28:00' has invalid format.
     """
     def __init__(self, parameters, datemapping, rmap_header=None):
         Selector.__init__(self, parameters, datemapping)
@@ -755,7 +761,7 @@ class UseAfterSelector(Selector):
         try:
             timestamp.parse_numerical_date(key)
         except ValueError:
-            raise ValueError("UseAfter date " + repr(key) + " has invalid format.")
+            raise ValidationError("UseAfter date " + repr(key) + " has invalid format.")
         
         
 # ==============================================================================

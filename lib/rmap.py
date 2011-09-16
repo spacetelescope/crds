@@ -115,7 +115,8 @@ class AstDumper(ast.NodeVisitor):
 
 class MappingValidator(ast.NodeVisitor):
     """MappingValidator visits the parse tree of a CRDS mapping file and
-    raises exceptions for invalid constructs.
+    raises exceptions for invalid constructs.   MappingValidator is concerned
+    with limiting rmaps to safe code,  not deep semantic checks.
     """
     def compile_and_check(self, filepath):
         """Parse the file at `filepath`,  verify that it's a legal mapping,
@@ -198,9 +199,10 @@ class Mapping(object):
         'mapping' which is implied by the classname. 
         """
         rep = self.__class__.__name__ + "("
-        rep += repr(self.filename)+ ", "
-        for attr in set(self.required_attrs)-set(["mapping"]):
-            rep += attr + "=" + repr(getattr(self, attr)) + ", "
+        rep += repr(self.filename)
+        rep += ", "
+#        for attr in set(self.required_attrs)-set(["mapping"]):
+#            rep += attr + "=" + repr(getattr(self, attr)) + ", "
         rep = rep[:-2] + ")"
         return rep
             
@@ -407,6 +409,14 @@ class Mapping(object):
         """
         return utils.get_header_union(
                 dataset, needed_keys=self.get_required_parkeys())
+        
+    def validate(self):
+        for key, sel in self.selections.items():
+            try:
+                sel.validate()
+            except Exception, exc:
+                log.error("Exception validating",repr(key),"in", 
+                          repr(self), ":",str(exc))
 
 # ===================================================================
 
@@ -593,7 +603,10 @@ class InstrumentContext(Mapping):
         return files
     
     def get_parkey_map(self):
-        """Return { parkey : [legal values...], ... }
+        """Infers the legal values of each parkey from the rmap itself.
+        This is a potentially different answer than that defined by the TPNs,
+        the latter being considered definitive.
+        Return { parkey : [legal values...], ... }
         """
         pmap = {}
         for selector in self.selections.values():
@@ -631,18 +644,48 @@ class ReferenceMapping(Mapping):
         return [os.path.basename(self.filename)]
     
     def get_required_parkeys(self):
-        parkeys = set()
+        """Return the list of parkey names needed to select from this rmap.
+        """
+        parkeys = []
         for key in self.parkey:
             if isinstance(key, tuple):
-                parkeys = parkeys.union(set(key))
+                parkeys += list(key)
             else:
-                parkeys.add(key)
-        return parkeys
+                parkeys.append(key)
+        keys = []
+        for key in parkeys:
+            if key.startswith("*"):
+                key = key[1:]
+            keys.append(key)
+        return keys
     
     def get_parkey_map(self):
         """Return { parkey : [legal values, ...], ... }
         """
         return self.selector.get_parkey_map()
+    
+    def get_valid_values(self):
+        """Based on the TPNs,  return a mapping from each of the required
+        parkeys to its valid values:   { parkey : [ valid values ] }
+        """
+        tpninfos = self.locate.get_tpninfos(self.instrument, self.reftype)
+        valid_values = {}
+        required_keys = self.get_required_parkeys()
+        for info in tpninfos:
+            if info.name in required_keys:
+                valid_values[info.name] = info.values
+        return valid_values
+    
+    def validate(self):
+        """Validate the contents of this rmap against the TPN for this
+        filekind / reftype.   Each field of each Match tuple must have a value
+        OK'ed by the TPN.  UseAfter dates must be correctly formatted.
+        """
+        valid_values = self.get_valid_values()
+        try:
+            self.selector.validate(valid_values)
+        except selectors.ValidationError:
+            log.error("Validation error in", repr(self))
 
 # ===================================================================
 

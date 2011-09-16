@@ -139,7 +139,7 @@ def mapping_url(crds_server_url, mapping):
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from .tpn import reference_name_to_validator_key
-from .tpn import reference_name_to_tpninfos
+from .tpn import get_tpninfos
 
 # =======================================================================
 
