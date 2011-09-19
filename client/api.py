@@ -65,7 +65,7 @@ def get_mapping_names(pipeline_context):
     for the specified pipeline_context.   context can be an observatory, pipeline,
     or instrument context.
     """
-    return S.get_mapping_names(pipeline_context)
+    return [str(x) for x in S.get_mapping_names(pipeline_context)]
 
 def get_reference_url(pipeline_context, reference):
     """Returns a URL for the specified reference file.
@@ -81,7 +81,7 @@ def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
     for the specified pipeline_context.
     """
-    return S.get_reference_names(pipeline_context)
+    return [str(x) for x in S.get_reference_names(pipeline_context)]
 
 def get_best_references(pipeline_context, header):
     """Return the dictionary mapping { filetype : reference_basename ... }
@@ -123,7 +123,7 @@ class FileCacher(object):
                 contents = self._rpc_get_data(pipeline_context, name)
                 open(localpath,"w+").write(contents)
             else:
-                log.verbose("Cache hit[%d]" % i, repr(name), "at", repr(localpath))
+                log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), "at", repr(localpath))
             localpaths[name] = localpath
         return localpaths
 
