@@ -135,6 +135,16 @@ def mapping_url(crds_server_url, mapping):
 
 # =======================================================================
 
+def locate_file(file):
+    """Return the fully specified path for reference or mapping `file`.
+    """
+    if rmap.is_mapping(file):
+        return locate_mapping(file)
+    else:
+        return locate_reference(file)
+
+# =======================================================================
+
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 

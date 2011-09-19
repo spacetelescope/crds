@@ -46,6 +46,13 @@ def get_mapping_url(pipeline_context, mapping):
     """Returns a URL for the specified pmap, imap, or rmap file.
     """
     return S.get_mapping_url(pipeline_context, mapping)
+
+def is_known_mapping(mapping):
+    """Return True iff `mapping` is a known/official CRDS mapping file."""
+    try:
+        return len(get_mapping_url(mapping, mapping)) > 0
+    except Exception, exc:
+        return False
     
 def get_mapping_data(pipeline_context, mapping):
     """Returns the contents of the specified pmap, imap, or rmap file
@@ -122,6 +129,9 @@ class FileCacher(object):
 
     def _locate(self, pipeline_context, name):
         return utils.get_object("crds." + utils.context_to_observatory(pipeline_context) + ".locate." + self._locator)(name)
+
+        # might be cleaner as:
+        # getattr(rmap.get_cached_mapping(pipeline_context).locate, self._locator)(name)
     
 # ==============================================================================
 
@@ -143,28 +153,32 @@ REFERENCE_CACHER = ReferenceCacher()
 
 # ==============================================================================
 
-def cache_mappings(pipeline_context, ignore_cache=False):
-    """Given a `pipeline_context`, determine the closure of CRDS mappings and cache them
-    on the local file system.
+def dump_mappings(pipeline_context, ignore_cache=False):
+    """Given a `pipeline_context`, determine the closure of CRDS mappings and 
+    cache them on the local file system.
     
     Returns:   { mapping_basename :   mapping_local_filepath ... }   
     """
     assert isinstance(ignore_cache, bool)
     mappings = get_mapping_names(pipeline_context)
-    return MAPPING_CACHER.get_local_files(pipeline_context, mappings, ignore_cache=ignore_cache)
+    return MAPPING_CACHER.get_local_files(
+        pipeline_context, mappings, ignore_cache=ignore_cache)
   
-def dump_references(pipeline_context, baserefs, ignore_cache=False):
-    """Given a pipeline `pipeline_context` and list of `baserefs` basenames,  obtain the
-    set of reference files and cache them on the local file system.   
+def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
+    """Given a pipeline `pipeline_context` and list of `baserefs` basenames,  
+    obtain the set of reference files and cache them on the local file system.   
     
-    Returns:   { ref_basename :   reference_local_filepath ... }   
+    Returns:   { ref_basename :   reference_local_filepath ... }
     """
+    if baserefs is None:
+        baserefs = get_reference_names(pipeline_context)
     baserefs = list(baserefs)
     for refname in baserefs:
         if "NOT FOUND" in refname:
             log.verbose("Skipping " + repr(refname))
             baserefs.remove(refname)
-    return REFERENCE_CACHER.get_local_files(pipeline_context, baserefs, ignore_cache=ignore_cache)
+    return REFERENCE_CACHER.get_local_files(
+        pipeline_context, baserefs, ignore_cache=ignore_cache)
 
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
