@@ -342,7 +342,7 @@ class Mapping(object):
         """
         old = self.header.get("sha1sum", None)
         if old is None:
-            raise ChecksumError("sha1sum is missing.")
+            raise ChecksumError("sha1sum is missing in " + repr(self.filename))
         if self._get_checksum() != self.header["sha1sum"]:
             raise ChecksumError("sha1sum mismatch.")
 
@@ -373,6 +373,8 @@ class Mapping(object):
         
         # re-write the file we loaded from,  inserting the new checksum,
         # outputting to a temporary file.
+        assert "sha1sum" in open(self.filename).read(), \
+            "no sha1sum field in " + repr(self.filename)
         file = open(tmpname, "w+")
         for line in open(self.filename).readlines():
             line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
@@ -411,6 +413,7 @@ class Mapping(object):
                 dataset, needed_keys=self.get_required_parkeys())
         
     def validate(self):
+        log.info("Validating", self.filename)
         for key, sel in self.selections.items():
             try:
                 sel.validate()
@@ -660,13 +663,24 @@ class ReferenceMapping(Mapping):
         return keys
     
     def get_parkey_map(self):
-        """Return { parkey : [legal values, ...], ... }
+        """Based on the rmap,  return the mapping from parkeys to their
+        handled values,  i.e. what this rmap says it matches against.
+        Note that these are the values seen in the rmap prior to any 
+        substitutions which are defined in the header.
+        
+        Return { parkey : [match values, ...], ... }
         """
         return self.selector.get_parkey_map()
     
     def get_valid_values(self):
         """Based on the TPNs,  return a mapping from each of the required
-        parkeys to its valid values:   { parkey : [ valid values ] }
+        parkeys to its valid values, i.e. the definitive source for what is
+        legal for this filekind.
+   
+
+        i.e. the definitive source for what is legal for this filekind.
+        
+        return { parkey : [ valid values ] }
         """
         tpninfos = self.locate.get_tpninfos(self.instrument, self.reftype)
         valid_values = {}
@@ -681,6 +695,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
+        log.info("Validating", self.filename)
         valid_values = self.get_valid_values()
         try:
             self.selector.validate(valid_values)

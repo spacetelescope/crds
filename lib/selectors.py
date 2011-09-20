@@ -237,13 +237,14 @@ class Selector(object):
         
         Raise a ValueError if there are any problems with
         """
+        warned = []
         for key in self.keys():
-            self.validate_key(key, valid_values_map)
+            self.validate_key(key, valid_values_map, warned)
         for choice in self.choices():
             if isinstance(choice, Selector):
                 choice.validate(valid_values_map)
             
-    def validate_key(self, key, valid_values_map):
+    def validate_key(self, key, valid_values_map, warned):
         """Validate a single `key` against the possible field values
         in `valid_values_map`.   ABSTRACT STUB always passes.
         """
@@ -430,12 +431,12 @@ class MatchingSelector(Selector):
         
         if rmap_header is None:
             rmap_header = {}
-        substitutions = rmap_header.get("substitutions", {})
-        selections = self.do_substitutions(selections, substitutions)
+        self._substitutions = rmap_header.get("substitutions", {})
+        selections = self.do_substitutions(selections, self._substitutions)
         
         self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
-
+    
     def setup_parameters(self, parameters):
         """Strip off *=optional prefixes and store the status in the _required
         mapping.  Save simple *-less var names in the _parameters list.
@@ -650,7 +651,7 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
-    def validate_key(self, key, valid_values_map):
+    def validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values
         in `valid_values_map`.   Note that each selections `key` is 
         (nominally) a tuple with values for multiple parkeys.
@@ -663,14 +664,30 @@ class MatchingSelector(Selector):
             if name.startswith("*"):
                 name = name[1:]
             if name not in valid_values_map:
-                raise ValidationError("Unknown parameter " + repr(name))
-            valid = valid_values_map[name] + ("*",)
+                if name not in warned:
+                    warned.append(name)
+                    log.warning("Parameter", repr(name), "is unchecked.")
+                continue
+                # raise ValidationError("Unknown parameter " + repr(name))
+            valid = valid_values_map[name]
             value = key[i]
-            if value not in valid and value.replace(".0","") not in valid:
-                raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                    " of key " + repr(key) +  
-                    " is not in " + repr(valid))
+            if value in ["NOT PRESENT"] or value == "*":
+                continue
+            if value in valid:
+                continue
+            if value.replace(".0","") in valid:
+                continue
+            if not valid:  # some TPNs are type-only
+                continue
+            if name in self._substitutions and \
+                value in self._substitutions[name]:
+                continue
+            raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
+                                  " of key " + repr(key) +  
+                                  " is not in " + repr(valid))
 
+    def _is_substitution(self, name, value):
+        """Return True iff `value` is a valid substitution in `name`."""
 # ==============================================================================
 
 class UseAfterSelector(Selector):
@@ -757,7 +774,7 @@ class UseAfterSelector(Selector):
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
             
-    def validate_key(self, key, valid_values_map):
+    def validate_key(self, key, valid_values_map, warned):
         try:
             timestamp.parse_numerical_date(key)
         except ValueError:

@@ -5,6 +5,7 @@ files define required parameters and that they have legal values.
 import sys
 import os
 import optparse
+import re
 
 import pyfits 
 
@@ -82,7 +83,11 @@ class KeywordValidator(object):
         self._check_value(value)
         
     def _check_value(self, value):
-        if value not in self._values:
+        if value not in self._values and self._values != ('*',):
+            if isinstance(value, str):
+                for pat in self._values:
+                    if re.match(pat, value):
+                        return
             raise ValueError("Value for " + repr(self._info.name) + " of " + 
                              repr(value) + " is not one of " + 
                              repr(self._values))
@@ -172,7 +177,9 @@ class FloatValidator(KeywordValidator):
     epsilon = 1e-7
 
     def _check_value(self, value):
-        if value not in self._values:
+        try:
+            KeywordValidator._check_value(self, value)
+        except ValueError:
             for possible in self._values:
                 if possible:
                     err = (value-possible)/possible
@@ -183,10 +190,8 @@ class FloatValidator(KeywordValidator):
                 # print "considering", possible, value, err
                 if abs(err) < self.epsilon:
                     return
-            raise ValueError("Value for " + repr(self._info.name) + " of " + 
-                             repr(value) + " is not one of " + 
-                             repr(self._values))
-        
+            raise
+
 class RealValidator(FloatValidator):
     """Validate 32-bit floats."""
     

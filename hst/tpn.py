@@ -284,6 +284,7 @@ def load_tpn(fname):
         else:
             name, keytype, datatype, presence, values = items
             values = values.split(",")
+            values = [v.upper() for v in values]
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
