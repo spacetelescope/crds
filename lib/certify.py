@@ -77,7 +77,12 @@ class KeywordValidator(object):
             return
         if self.condition is not None:
             value = self.condition(value)
-        if self._values != [] and value not in self._values:
+        if not self._values:
+            return
+        self._check_value(value)
+        
+    def _check_value(self, value):
+        if value not in self._values:
             raise ValueError("Value for " + repr(self._info.name) + " of " + 
                              repr(value) + " is not one of " + 
                              repr(self._values))
@@ -164,12 +169,30 @@ class LogicalValidator(KeywordValidator):
 class FloatValidator(KeywordValidator):
     """Validates floats of any precision."""
     condition = float
+    epsilon = 1e-7
+
+    def _check_value(self, value):
+        if value not in self._values:
+            for possible in self._values:
+                if possible:
+                    err = (value-possible)/possible
+                elif value:
+                    err = (value-possible)/value
+                else:
+                    continue
+                # print "considering", possible, value, err
+                if abs(err) < self.epsilon:
+                    return
+            raise ValueError("Value for " + repr(self._info.name) + " of " + 
+                             repr(value) + " is not one of " + 
+                             repr(self._values))
         
 class RealValidator(FloatValidator):
     """Validate 32-bit floats."""
     
 class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
+    epsilon = 1e-14
     
 class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields.
