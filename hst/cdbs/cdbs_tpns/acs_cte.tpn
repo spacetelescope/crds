@@ -5,16 +5,19 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
-# 12/22/2009  64177  MSwam  remove WAVELENGTH,PARITY; add FILTER
+# 08/31/06 56455 MSwam    add ABCDALL (but NOT for .lod file)
+# 09/15/08 60769 MSwam    new CCDGAIN values
 #
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
-INSTRUME	H	C	R   	WFC3
-FILETYPE	H	C	R    	"DISTORTION COEFFICIENTS"
-DETECTOR	H	C	R	UVIS,IR
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	PIXCTE
+DETECTOR	H	C	R	WFC
+SIM_NIT         H       I       R
+SHFT_NIT        H       I       R
+RN_CLIP         H       R       R
+DTDE            C       R       R
+Q               C       R       R
 USEAFTER  	H	C	R	&SYBDATE
 PEDIGREE  	H	C	R	&PEDIGREE
-NORDER          H       I       R
-DETCHIP		C	I	R	1,2,-999    
-DIRECTION	C	C	R	FORWARD,INVERSE
-FILTER    	C	C	R
+

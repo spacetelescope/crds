@@ -5,6 +5,9 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
+# NOTE: FILTER1 and FILTER2 are ALLOWED to have COLUMN values of ANY
+#       because they are NOT FILE SELECTION FIELDS.
+#
 # NAME	   KEYTYPE  DATATYPE  PRESENCE	VALUES
 #--------------------------------------------------------------------------
 USEAFTER_DATE	H	C	R	&SYBDATE

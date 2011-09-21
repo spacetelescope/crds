@@ -9,5 +9,6 @@
 #----------------------------------------------------------
 INSTRUME	H	C	R   	WFPC2
 FILETYPE	H	C	R    	"DISTORTION CORRECTION"
+MODE            H       C       R       FULL,AREA
 USEAFTER  	H	C	R	&SYBDATE
 PEDIGREE  	H	C	R	&PEDIGREE

@@ -5,10 +5,14 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
+# 11/03/08 61090 MSwam   add TFB_LOW, TFB_HIGH
+#
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
 INSTRUME            H        C         R    NICMOS
 FILETYPE            H        C         R    PHT
+TFBLOW              H        R         R
+TFBHIGH             H        R         R
 PEDIGREE            C        C         R    &PEDIGREE
 DESCRIP             C        C         R
 USEAFTER            H        C         R    &SYBDATE

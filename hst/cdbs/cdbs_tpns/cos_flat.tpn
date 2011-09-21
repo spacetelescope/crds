@@ -5,6 +5,9 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
+# History:
+# 10/21/09 63765 MSwam    add OPT_ELEM
+#
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #----------------------------------------------------------
 INSTRUME            H        C         R    COS
@@ -14,3 +17,6 @@ VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R    
+OPT_ELEM            H        C         R    G130M,G160M,G140L,\
+                                            G185M,G225M,G285M,G230L, \
+                                            MIRRORA,MIRRORB,ANY
