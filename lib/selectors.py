@@ -250,6 +250,22 @@ class Selector(object):
         """
         pass
 
+    def file_matches(self, filename, sofar=None):
+        """Return the nested match keys leading to selections of `filename`.
+        Assume the deepest value in the Selector tree must be a filename.
+        """
+        if sofar is None:
+            sofar = []
+        matches = []
+        for key, value in self._selections:
+            here = sofar + [key]
+            if isinstance(value, Selector):
+                matches += value.file_matches(filename, here)
+            else:
+                if filename == value:
+                    matches += [here]
+        return sorted(matches)
+
 # ==============================================================================
 
 class Matcher(object):
@@ -392,20 +408,12 @@ class MatchingSelector(Selector):
     })
     
     
-    All parameters should appear in the valid_values_map,  here give
-    a bad valid_values_map to simulate a bad parkey:
-    
-    >>> m.validate({ "foo" : ("1.0",), "baz":("3.0",) })
-    Traceback (most recent call last):
-    ...
-    ValidationError: Unknown parameter 'bar'
-
     All match tuple fields should appear on a valid values list:
 
     >>> m.validate({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ('3.0', '*')
+    ValidationError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ('3.0',)
     
     Match tuples should have the same length as the parameter list:
     
@@ -414,6 +422,24 @@ class MatchingSelector(Selector):
     ...
     ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
 
+    
+    The last thing matched in a selector tree is assumed to be a file:
+    
+    >>> m = MatchingSelector(("*foo","bar"), {
+    ...    ('1.0', '*') : "100",
+    ...    ('1.0', '2.0') : "200",
+    ...    ('*', '*') : "300",
+    ...    ('5.0', '3.0') : "200",
+    ... })
+    
+    file_matches() returns a list of recursive trails/lists of keys which lead 
+    to a given file:
+    
+    >>> m.file_matches("200")
+    [[('1.0', '2.0')], [('5.0', '3.0')]]
+    
+    The result of file_matches() is a list of lists of keys because it is
+    used recursively on trees of mappings and selectors.
     
     """
     rmap_name = "Match"

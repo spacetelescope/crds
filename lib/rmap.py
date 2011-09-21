@@ -413,6 +413,9 @@ class Mapping(object):
                 dataset, needed_keys=self.get_required_parkeys())
         
     def validate(self):
+        """Recursively validate this mapping,  performing the checks
+        required by crds.certify.
+        """
         log.info("Validating", self.filename)
         for key, sel in self.selections.items():
             try:
@@ -420,6 +423,15 @@ class Mapping(object):
             except Exception, exc:
                 log.error("Exception validating",repr(key),"in", 
                           repr(self), ":",str(exc))
+
+    def file_matches(self, filename):
+        """Return the "extended match tuples" which can be followed to 
+        arrive at `filename`.
+        """
+        more = []
+        for key, value in self.selections.items():
+            more += value.file_matches(filename)
+        return sorted(more)
 
 # ===================================================================
 
@@ -704,6 +716,10 @@ class ReferenceMapping(Mapping):
             self.selector.validate(valid_values)
         except selectors.ValidationError:
             log.error("Validation error in", repr(self))
+            
+    def file_matches(self, filename):
+        sofar = [(self.observatory, self.instrument, self.reftype)]
+        return sorted(self.selector.file_matches(filename, sofar))
 
 # ===================================================================
 

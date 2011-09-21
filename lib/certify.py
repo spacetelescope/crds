@@ -129,6 +129,8 @@ class KeywordValidator(object):
         """
         hdu = pyfits.open(filename) 
         # XXX assume tables are in extension #1.
+        assert len(hdu) >1, "table file with only primary extension: " + repr(filename)
+        assert len(hdu) <3, "table file with more than one extension: " + repr(filename)
         tbdata = hdu[1].data
         try:
             values = tbdata.field(self._info.name)
@@ -353,7 +355,7 @@ def certify_mapping(context, check_references=True):
         return
     for ref in ctx.reference_names():
         try:
-            ctx.locate.locate_server_reference(ref)
+            ctx.locate.reference_exists(ref)
         except KeyError:
             raise MissingReferenceError("Reference file " + repr(ref) + 
                                         " is not known to CRDS." )
