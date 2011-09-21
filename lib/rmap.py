@@ -531,8 +531,11 @@ class InstrumentContext(Mapping):
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector)
         self.selections = {}
-        for reftype, (_rmap_ext, rmap_name) in selector.items():
+        self.extensions = {}
+        for reftype, (rmap_ext, rmap_name) in selector.items():
+            self.extensions[reftype] = rmap_ext.lower()
             reftype = reftype.lower()
+            keys['extension'] = rmap_ext
             self.selections[reftype] = refmap = ReferenceMapping.from_file(
                 rmap_name, **keys)            
             assert self.mapping == "instrument", \

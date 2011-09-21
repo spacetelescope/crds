@@ -3,103 +3,108 @@ describe reference parameters and their values.   The .tpn files are used to
 validate headers or tables in the original CDBS system and list the parameters 
 each file kind must define.
 """
+import sys
 import os.path
+import pprint
 
 import pyfits
 
-from crds import rmap, log
-
+from crds import rmap, log, utils
 from crds.certify import TpnInfo
 
 # =============================================================================
 
-def get_tpn_map(pipeline_context_name):
+def update_tpn_data(pipeline_context):
+    """Update the data files which relate reftypes, filekinds, and tpn
+    extensions,  all somewhat redundant ways of saying the same thing,
+    but the way HST is.
+    """
+    log.info("Computing TPN extension map")
+    tpn_extensions = get_tpn_map(pipeline_context)
+    open("tpn_extensions.dat", "w+").write(pprint.pformat(tpn_extensions))
+    log.info("Computing TPN filetype map")    
+    tpn_filetypes = get_filetype_map(pipeline_context)
+    open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
+    log.standard_status()
+    
+# =============================================================================
+
+HERE = os.path.dirname(__file__) or "./"
+
+def get_tpn_map(pipeline_context):
     """
     Return the map of 3 character tpn extensions used by CDBS:  
         
-    { instrument : { reftype : extension } }
+    { instrument : { filekind : extension } }
     """
-    context = rmap.get_cached_mapping(pipeline_context_name)
+    context = rmap.get_cached_mapping(pipeline_context)
     tpns = {}
     for instrument, instr_sel in context.selections.items():
         tpns[instrument] = {}
-        for reftype, reftype_sel in instr_sel.selections.items():
-            current = tpns.get(reftype, None)
-            if current and reftype_sel.extension != current:
-                log.error("Conflicting extensions for reftype", 
-                          repr(current), "and", repr(reftype_sel.extension))
-            tpns[instrument][reftype] = reftype_sel.extension
+        for filekind, filekind_sel in instr_sel.selections.items():
+            current = tpns.get(filekind, None)
+            if current and filekind_sel.extension != current:
+                log.error("Conflicting extensions for filekind", 
+                          repr(current), "and", repr(filekind_sel.extension))
+            tpns[instrument][filekind] = instr_sel.extensions[filekind]
     return tpns
 
-TPN_EXTENSIONS = {                 
- 'acs': {'atodtab': 'a2d',
-         'biasfile': 'bia',
-         'bpixtab': 'bpx',
-         'ccdtab': 'ccd',
-         'cfltfile': 'cfl',
-         'crrejtab': 'crr',
-         'darkfile': 'drk',
-         'dgeofile': 'dxy',
-         'idctab': 'idc',
-         'mdriztab': 'mdz',
-         'mlintab': 'lin',
-         'oscntab': 'osc',
-         'pfltfile': 'pfl',
-         'spottab': 'csp'},
- 'cos': {'badttab': 'badt',
-         'bpixtab': 'bpix',
-         'brftab': 'brf',
-         'brsttab': 'burst',
-         'deadtab': 'dead',
-         'disptab': 'disp',
-         'flatfile': 'flat',
-         'geofile': 'geo',
-         'lamptab': 'lamp',
-         'phatab': 'pha',
-         'phottab': 'phot',
-         'tdstab': 'tds',
-         'wcptab': 'wcp',
-         'xtractab': '1dx'},
- 'stis': {'apdstab': 'apd',
-          'apertab': 'apt',
-          'biasfile': 'bia',
-          'bpixtab': 'bpx',
-          'ccdtab': 'ccd',
-          'cdstab': 'cds',
-          'crrejtab': 'crr',
-          'darkfile': 'drk',
-          'disptab': 'dsp',
-          'echsctab': 'ech',
-          'exstab': 'exs',
-          'halotab': 'hal',
-          'idctab': 'idc',
-          'inangtab': 'iac',
-          'lamptab': 'lmp',
-          'lfltfile': 'lfl',
-          'mlintab': 'lin',
-          'mofftab': 'moc',
-          'pctab': 'pct',
-          'pfltfile': 'pfl',
-          'phottab': 'pht',
-          'riptab': 'rip',
-          'sdctab': 'sdc',
-          'sptrctab': '1dt',
-          'srwtab': 'srw',
-          'tdctab': 'tdc',
-          'tdstab': 'tds',
-          'wcptab': 'wcp',
-          'xtractab': '1dx'},
- 'wfc3': {'biasfile': 'bia',
-          'bpixtab': 'bpx',
-          'ccdtab': 'ccd',
-          'crrejtab': 'crr',
-          'darkfile': 'drk',
-          'idctab': 'idc',
-          'mdriztab': 'mdz',
-          'nlinfile': 'lin',
-          'oscntab': 'osc',
-          'pfltfile': 'pfl'}
- }
+# .e.g. TPN_EXTENSIONS = {                 
+# 'acs': {'atodtab': 'a2d',
+#         'biasfile': 'bia',
+
+try:
+    TPN_EXTENSIONS = utils.evalfile(HERE + "/tpn_extensions.dat")
+except Exception:
+    log.error("Couldn't load tpn_extensions.dat")
+    TPN_EXTENSIONS = {}
+
+# =============================================================================
+
+def get_filetype_map(context):
+    """Generate the FILETYPE_TO_EXTENSION map below."""
+    pipeline = rmap.get_cached_mapping(context)
+    fmap = {}
+    for instrument, imapping in pipeline.selections.items():
+        fmap[instrument] = {}
+        for filekind, rmapping in imapping.selections.items():
+            for name in rmapping.reference_names():
+                log.info("Scanning", instrument, filekind, name)
+                try:
+                    where = pipeline.locate.locate_server_reference(name)
+                except KeyError:
+                    log.error("Missing reference file", repr(name))
+                    continue
+                try:
+                    header = pyfits.getheader(where)
+                except IOError:
+                    log.error("Error getting header/FILETYPE for", repr(where))
+                    continue    
+                filetype = header["FILETYPE"].lower()
+                ext = name.split("_")[1].split(".")[0].lower()
+                break
+            current = fmap.get(filetype, None)
+            if current and current != ext:
+                log.error("Multiple extensions for", repr(filetype), 
+                          repr(current), repr(ext))
+                continue
+            if filetype not in fmap[instrument]:
+                fmap[instrument][filetype] = ext
+                log.info("Setting", repr(instrument), repr(filetype),
+                         "to extension", repr(ext))
+    return fmap
+
+#.e.g. FILETYPE_TO_EXTENSION = {
+# 'acs': {'analog-to-digital': 'a2d',
+#         'bad pixels': 'bpx',
+
+try:
+    FILETYPE_TO_EXTENSION = utils.evalfile(HERE + "/tpn_filetypes.dat")
+except Exception:
+    log.error("Couldn't load tpn_filetypes.dat")
+    FILETYPE_TO_EXTENSION = {}
+
+# =============================================================================
 
 EXTENSION_TO_FILEKIND = {}
 for instrument in TPN_EXTENSIONS:
@@ -126,112 +131,6 @@ def extension_to_filekind(instrument, extension):
 
 # =============================================================================
 
-INSTRUMENTS = ["acs", "cos", "stis", "wfc3"]
-
-def get_filetype_map(context):
-    """Generate the FILETYPE_TO_EXTENSION map below."""
-    pipeline = rmap.get_cached_mapping(context)
-    fmap = {}
-    for instr in INSTRUMENTS:
-        fmap[instr] = {}
-    for i, name in enumerate(pipeline.reference_names()):
-        ext = name.split("_")[1].split(".")[0].lower()
-        hst = rmap.get_cached_mapping("hst.pmap")
-        print "Scanning", i, name
-        try:
-            where = hst.locate.locate_server_reference(name)
-        except KeyError:
-            log.error("Missing reference file", repr(name))
-            continue
-        try:
-            header = pyfits.getheader(where)
-            filetype = header["FILETYPE"].lower()
-            instrument = header["INSTRUME"].lower()
-        except IOError: 
-            log.error("Error getting FILETYPE for", repr(where))
-        current = fmap.get(filetype, None)
-        if current and current != ext:
-            log.error("Multiple extensions for", repr(filetype), 
-                      repr(current), repr(ext))
-            continue
-        if filetype not in fmap[instrument]:
-            fmap[instrument][filetype] = ext
-            log.info("Setting", repr(instrument), repr(filetype),
-                     "to extension", repr(ext))
-    return fmap
-
-# FILETYPE_TO_EXT = get_filetype_map("hst.pmap")
-
-FILETYPE_TO_EXTENSION = {
- 'acs': {'analog-to-digital': 'a2d',
-         'bad pixels': 'bpx',
-         'bias': 'bia',
-         'ccd parameters': 'ccd',
-         'cosmic ray rejection': 'crr',
-         'dark': 'drk',
-         'distortion coefficients': 'idc',
-         'distortion correction': 'dxy',
-         'linearity': 'lin',
-         'multidrizzle parameters': 'mdz',
-         'overscan': 'osc',
-         'pixel-to-pixel flat': 'pfl',
-         'spot flat': 'cfl',
-         'spot position table': 'csp'},
- 'cos': {'1-d extraction parameters table': '1dx',
-         'bad time intervals table': 'badt',
-         'baseline reference frame table': 'brf',
-         'burst parameters table': 'burst',
-         'data quality initialization table': 'bpix',
-         'deadtime reference table': 'dead',
-         'dispersion relation reference table': 'disp',
-         'flat field reference image': 'flat',
-         'geometric distortion reference image': 'geo',
-         'photometric sensitivity reference table': 'phot',
-         'pulse height parameters reference table': 'pha',
-         'template cal lamp spectra table': 'lamp',
-         'time dependent sensitivity table': 'tds',
-         'wavecal parameters reference table': 'wcp'},
- 'stis': {'1-d extraction parameter table': '1dx',
-          '1-d spectrum trace table': '1dt',
-          '2-d spectrum distortion correction table': 'sdc',
-          'aperture description table': 'apd',
-          'aperture throughput table': 'apt',
-          'bad pixel table': 'bpx',
-          'ccd bias image': 'bia',
-          'ccd parameters table': 'ccd',
-          'cosmic ray rejection table': 'crr',
-          'cross-disperser scattering table': 'cds',
-          'dark correction table': 'tdc',
-          'dark image': 'drk',
-          'detector halo table': 'hal',
-          'dispersion coefficients table': 'dsp',
-          'echelle cross-dispersion scattering table': 'exs',
-          'echelle ripple table': 'rip',
-          'image distortion correction table': 'idc',
-          'incidence angle correction table': 'iac',
-          'low-order flatfield image': 'lfl',
-          'mama linearity table': 'lin',
-          'mama offset correction table': 'moc',
-          'photometric correction table': 'pct',
-          'pixel-to-pixel flatfield image': 'pfl',
-          'scattering reference wavelengths table': 'srw',
-          'template cal lamp spectra table': 'lmp',
-          'time dependent sensitivity table': 'tds',
-          'wavecal parameters table': 'wcp'},
- 'wfc3': {'bad pixels': 'bpx',
-          'bias': 'bia',
-          'ccd parameters': 'ccd',
-          'cosmic ray rejection': 'crr',
-          'dark': 'drk',
-          'distortion coefficients': 'idc',
-          'linearity coefficients': 'lin',
-          'multidrizzle parameters': 'mdz',
-          'overscan': 'osc',
-          'pixel-to-pixel flat': 'pfl'}
-}
-
-# =============================================================================
-
 def load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.
@@ -243,7 +142,7 @@ def load_tpn_lines(fname):
         if line.startswith("#") or not line:
             continue
         if append:
-            lines[-1] = lines[-1][:-1] + line
+            lines[-1] = lines[-1][:-1].strip() + line
         else:
             lines.append(line)
         append = line.endswith("\\")
@@ -299,8 +198,6 @@ INSTRUMENT_TO_TPN = {
     "nicmos" : "nic",
 }
 
-HERE = os.path.dirname(__file__) or "./"
-
 def tpn_filepath(instrument, extension):
     """Return the full path for the .tpn file corresponding to `instrument` and 
     CDBS filetype `extension`.
@@ -328,9 +225,17 @@ def reference_name_to_validator_key(fitsname):
     filekind = EXTENSION_TO_FILEKIND[instrument][extension]
     return (instrument, filekind)
 
+# =============================================================================
 
 def reference_name_to_tpninfos(key):
     """Given a reference cache `key` for a reference's Validator,  return the 
     TpnInfo object which can be used to construct a Validator.
     """
     return get_tpninfos(*key)
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        update_tpn_data(sys.argv[1])
+    else:
+        print "usage: python tpn.py <pipeline_context,  e.g. hst.pmap>"
+

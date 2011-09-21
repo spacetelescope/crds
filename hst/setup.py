@@ -50,6 +50,8 @@ setup(name="crds.hst",
             'wfc3/*.imap',
 
             'cdbs/cdbs_tpns/*.tpn',
+            'tpn_extensions.dat',
+            'tpn_filetypes.dat',
 
              'gentools/header_cache',
 

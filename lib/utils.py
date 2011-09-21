@@ -6,7 +6,16 @@ import re
 
 # import pyfits,  import deferred until required
 
-import crds.log as log
+from crds import (log, compat)
+
+# ===================================================================
+
+def evalfile(fname):
+    """Evaluate and return the contents of file `fname`,  restricting
+    expressions to data literals. 
+    """
+    contents = open(fname).read()
+    return compat.literal_eval(contents)
 
 # ===================================================================
 
