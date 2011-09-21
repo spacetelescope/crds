@@ -382,7 +382,7 @@ def main(files, options):
     """
     for file_ in files:
         if rmap.is_mapping(file_) or options.mapping:
-            certify_context(file_, check_references=(not options.shallow))
+            certify_context(file_, check_references=options.deep)
         else:
             certify([file_], dump_provenance=options.provenance)
     log.standard_status()
@@ -392,8 +392,8 @@ def main(files, options):
 
 if __name__ == "__main__":
     parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
-    parser.add_option("-s", "--shallow", dest="shallow",
-        help="Don't certify referenced files", 
+    parser.add_option("-D", "--deep", dest="deep",
+        help="Certify reference files referred to by mappings.", 
         action="store_true")
     parser.add_option("-m", "--mapping", dest="mapping",
         help="Ignore extensions, the files being certified are mappings.", 
