@@ -43,7 +43,7 @@ def test_references(fitsname):
     """
     
     # Just want header for bestrefs,  so conditioning irrelevant + expensive
-    header = lookup.get_unconditioned_header_union(fitsname)
+    header = get_unconditioned_header_union(fitsname)
 
     refs = rmap.get_best_references("hst.pmap", header)
 
@@ -138,25 +138,26 @@ def get_header_union(fname):
 
 HERE = os.path.dirname(__file__) or "./"
 
-def load_header_cache():
+def load_cache():
     """Load the global HEADER_CACHE which prevents pyfits header reads for calls
     to get_header_union() when a file as already been visited.
     """
     global HEADER_CACHE
     try:
-        HEADER_CACHE = eval(open(HERE + "/header_cache").read())
-        # HEADER_CACHE = cPickle.load(open("header_cache"))
+        # HEADER_CACHE = eval(open(HERE + "/recalibrate.cache").read())
+        HEADER_CACHE = cPickle.load(open(HERE + "/recalibrate.cache"))
     except Exception, e:
-        log.info("header_cache failed to load:", str(e))
+        log.info("cache failed to load:", str(e))
 
-def save_header_cache():
-    """Save the global HEADER_CACHE to store the FITS header unions of any newly visited files.
+def save_cache():
+    """Save the global HEADER_CACHE to store the FITS header unions of any newly
+     visited files.
     """
-    open(HERE + "/header_cache", "w+").write(pprint.pformat(HEADER_CACHE))
-    # cPickle.dump(HEADER_CACHE, open("header_cache","w+"))
+    # open(HERE + "/recalibrate.cache", "w+").write(pprint.pformat(HEADER_CACHE))
+    cPickle.dump(HEADER_CACHE, open(HERE + "/recalibrate.cache","w+"))
 
 if __name__ == "__main__":
-    lookup.load_header_cache()
+    lookup.load_cache()
     rmap.get_cached_mapping("hst.pmap")   # pre-cache the bestref stuff
     if "--profile" in sys.argv:
         sys.argv.remove("--profile")
@@ -167,5 +168,55 @@ if __name__ == "__main__":
             log.set_verbose(True)
         main()
     if SAVE:
-        lookup.save_header_cache()
+        lookup.save_cache()
 
+def _main(args, options):
+    context1, datasets = args[0], args[1:]
+    
+    ctx1 = rmap.get_cached_mapping(context1)
+    if options.context2:
+        ctx2 = rmap.get_cached_mapping(options.context2)
+
+    for dataset in datasets:
+
+        if options.cache_headers:
+            header = get_required_header(options, dataset)
+
+        bestrefs1 = ctx1.get_best_references(header)
+        if options.context2:
+            bestrefs2 = ctx2.get_best_references(header)
+        else:
+            bestrefs2 = utils.get_header_union(dataset, bestrefs1.keys())
+
+def main(args, options):
+    parser = optparse.OptionParser(
+        "usage: %prog [options] <context1> <datasets...>")
+    parser.add_option("-W", "--write-datasets", dest="write_bestrefs",
+        help="Update dataset headers with new best reference recommendations.", 
+        action="store_true")
+    parser.add_option("-U", "--update-bestrefs", dest="write_bestrefs",
+        help="Update dataset headers with new best reference recommendations.", 
+        action="store_true")
+    parser.add_option("-C", "--cache-headers", dest="cache_headers",
+        help="Use and/or remember critical header parameters in a cache file.", 
+        action="store_true")
+    parser.add_option("-2", "--context2", dest="context2",
+        help="Compare best refs recommendations from two contexts.", 
+        metavar="CONTEXT2", defalut=None)
+    options, args = log.handle_standard_options(sys.argv, parser=parser)
+
+    if options.use_cache:
+        load_cache()
+    
+    # get through one time startup outside profiler.
+    rmap.get_cached_mapping(context1)  
+    if options.context2:
+        rmap.get_cached_mapping(options.context2)
+        
+    log.standard_run("_main(args, options)", options, globals(), globals())
+
+    if options.use_cache:
+        save_cache()
+
+if __name__ == "__main__":
+    main()
