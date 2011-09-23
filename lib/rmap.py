@@ -65,6 +65,8 @@ import re
 import tempfile
 import shutil
 
+import pyfits
+
 from .compat import namedtuple
 
 from . import (log, utils, selectors)
@@ -516,7 +518,7 @@ class PipelineContext(Mapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
-        instrument = pyfits.getval(dataset, "INSTRUME")
+        instrument = pyfits.getval(dataset, "INSTRUME").lower()
         return self.get_imap(instrument).get_filekinds(dataset)
 
 # ===================================================================
@@ -650,7 +652,7 @@ class InstrumentContext(Mapping):
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.
         """
-        return self.selections.keys()
+        return [key.upper() for key in self.selections.keys()]
     
 # ===================================================================
 

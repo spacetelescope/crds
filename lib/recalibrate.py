@@ -8,104 +8,60 @@ Prior recommendations can really come in two forms:
 2. Recommendations extracted from the FITS header.
 
 To make new recommendations more quickly, recalibrate can store information
-about prior recommendations in a data store,  including both the recommendations
+about prior recommendations in a cache file,  including both the recommendations
 themselves and as well as critical parameters required to find them.
+
+To support one possible use case of CRDS,  recalibrate can write new best
+reference recommendations into the dataset file headers.
 """
 
 import sys
 import cPickle
 import os.path
 import pprint
+import optparse
 
 import pyfits
 
 from crds import (log, rmap, utils)
-import crds.client.api as api
+
+# ===================================================================
 
 MISMATCHES = {}
-
-def test_references(fitsname):
-    """Compute best references for `fitsname` and compare to the reference
-    selections aready recorded in its header.   If there is no comparison value
-    in the header,  consider that reference "not applicable" and ignore any
-    failures attempting to compute it.
-    """
-    
-    # Just want header for bestrefs,  so conditioning irrelevant + expensive
-    header = get_unconditioned_header_union(fitsname)
-
-    refs = rmap.get_best_references("hst.pmap", header)
-
-    mismatches = 0
-    for filekind in refs:
-        crds, hist = None, None
-        try:
-            crds = refs[filekind]
-            hist = header[filekind.upper()]
-            hist = hist.split("$")[-1]
-        except:
-            pass
-        if isinstance(hist, (str, unicode)):
-            hist = hist.strip().lower()
-        if hist not in [None, "", "n/a","*"]:
-            if crds != hist:
-                log.warning("Lookup MISMATCH for",  repr(fitsname), repr(filekind), repr(crds), repr(hist))
-                if filekind != "mdriztab":  # these are guaranteed to fail for archive files
-                    mismatches += 1
-                    if filekind not in MISMATCHES:
-                        MISMATCHES[filekind] = []
-                    MISMATCHES[filekind].append(fitsname)
-            else:
-                log.verbose("Lookup OK for", repr(filekind), repr(crds))
-        else:
-            log.verbose("Lookup N/A for", repr(filekind))
-    if mismatches > 0:
-        sys.exc_clear()
-        log.error("Total MISMATCHES for", repr(fitsname), "=", mismatches)
-        # log.verbose("\n\n" + str(header))
-    else:
-        log.info("All lookups for", repr(fitsname), "OK.")
-
-def main():
-    files = sys.argv[1:]
-    for f in files:
-        if f.startswith("@"):
-            files.extend([l.strip() for l in open(f[1:])])
-            continue
-        try:
-            test_references(f)
-        except Exception, e:
-            raise
-            log.error("Lookups for", repr(f), "FAILED.")
-
-    log.write("MISMATCHES:")
-    log.write(pprint.pformat(MISMATCHES))
-    log.standard_status()
 
 # ===================================================================
 
 class Cache(object):
+    """A mapping which is kept in a file."""
     def __init__(self, filename, compute_value):
+        """Load/save a mapping from `filename`,  calling `compute_value`
+        whenever a key is sought which is not in the cache.
+        """
         self.filename = filename
         self._compute_value = compute_value
         self._cache = {}
     
     def load(self):
+        """Load the cache from it's file."""
         try:
-            self._cache = cPickle.load(self.filename)
-        except Exception, e:
-            log.verbose("Cache load failed:", str(e))
+            self._cache = cPickle.load(open(self.filename))
+        except Exception, exc:
+            log.verbose("Cache load failed:", str(exc))
             self._cache = {}
 
     def save(self):
+        """Save the cache to it's file."""
         cPickle.dump(self._cache, open(self.filename,"w+"))
 
     def get(self, key, args):
+        """Get the cache value of `key`, calling the `compute_value`
+        function with `args` if `key` is not in the cache.
+        """
         if key in self._cache:
-            log.verbose("Cache hit:",repr(key))
+            log.verbose("Cache hit:", repr(key))
         else:
-            log.verbose("Cache miss:",repr(key))
-            self._cache[key] = self._compute_value(args)
+            log.verbose("Cache miss:", repr(key))
+            self._cache[key] = self._compute_value(*args)
         return self._cache[key]
     
 def get_recalibrate_info(context, dataset):
@@ -121,76 +77,167 @@ def get_recalibrate_info(context, dataset):
     filekinds = context.get_filekinds(dataset)
     parkey_values = utils.get_header_union(dataset, required_parkeys)
     old_bestrefs = utils.get_header_union(dataset, filekinds)
+    old_bestrefs = { key.lower(): val.lower() \
+                    for key, val in old_bestrefs.items()}
     return (parkey_values, old_bestrefs)
     
 HEADER_CACHE = Cache("recalibrate.cache", get_recalibrate_info)
 
 # ============================================================================
 
-def recalibrate(new_context, datasets, options):
-
-    newctx = rmap.get_cached_mapping(new_context)
-
+def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
+    """Compute best references for `dataset`s with respect to pipeline
+    mapping `new_context`.  Either compare `new_context` results to 
+    references from an `old_context` or compare to prior results recorded 
+    in `dataset`s headers.   Optionally write new best reference
+    recommendations to dataset headers.
+    """
     for dataset in datasets:
         log.verbose("===> Processing", dataset)
 
         basename = os.path.basename(dataset)
         
-        header, old_bestrefs = HEADER_CACHE.get(basename, (newctx, dataset))
+        header, old_bestrefs = HEADER_CACHE.get(
+            basename, (new_context, dataset))
 
-        bestrefs1 = trapped_bestrefs(newctx, header)
+        bestrefs1 = trapped_bestrefs(new_context, header)
 
-        if options.old_context:
-            oldctx = rmap.get_cached_mapping(options.old_context)
-            bestrefs2 = trapped_bestrefs(olctx, header)
+        if old_context:
+            bestrefs2 = trapped_bestrefs(old_context, header)
+            old_fname = old_context.filename
         else:
             bestrefs2 = old_bestrefs
+            old_fname = "<dataset prior results>"
             
         if not bestrefs1 or not bestrefs2:
+            log.error("Skipping comparison for", repr(dataset))
             continue
         
-        compare_bestrefs(bestrefs1, bestrefs2)
+        compare_bestrefs(new_context.filename, old_fname, dataset, 
+                         bestrefs1, bestrefs2)
         
-        if options.update_datasets:
+        if update_datasets:
             write_bestrefs(dataset, bestrefs1)
             
+    log.write("Reference Changes:")
+    log.write(pprint.pformat(MISMATCHES))
+
 def trapped_bestrefs(ctx, header):
+    """Compute and return bestrefs or convert exceptions to ERROR messages
+    and return None.
+    """
     try:
         return ctx.get_best_references(header)
-    except Exception, e :
+    except Exception:
         log.error("Best references FAILED for ", repr(ctx))
 
-def main(args, options):
+def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
+    """Compare two sets of best references for `dataset` taken from
+    contexts named `ctx1` and `ctx2`.
+    """
+    ctx1 = os.path.basename(ctx1)
+    ctx2 = os.path.basename(ctx2)
+    mismatches = 0
+    
+    # Warn about mismatched filekinds
+    check_same_filekinds(ctx1, ctx2, bestrefs1, bestrefs2)
+    check_same_filekinds(ctx2, ctx1, bestrefs2, bestrefs1)
+
+    for filekind in bestrefs1:
+        if filekind not in bestrefs2:
+            continue
+        new = remove_irafpath(bestrefs1[filekind])
+        old = remove_irafpath(bestrefs2[filekind])
+        if isinstance(old, (str, unicode)):
+            old = str(old).strip().lower()
+        if old not in [None, "", "n/a","*"]:
+            if new != old:
+                log.info("New Reference for",  repr(dataset), repr(filekind), 
+                            "is", repr(new), "was", repr(old))
+                if filekind != "mdriztab":  
+                    # these are guaranteed to fail for archive files
+                    mismatches += 1
+                    if filekind not in MISMATCHES:
+                        MISMATCHES[filekind] = []
+                    MISMATCHES[filekind].append(dataset)
+            else:
+                log.verbose("Lookup OK for", repr(filekind), repr(new))
+        else:
+            log.verbose("Lookup N/A for", repr(filekind), repr(new))
+    if mismatches > 0:
+        sys.exc_clear()
+        log.info("Total New References for", repr(dataset), "=", mismatches)
+    else:
+        log.info("All lookups for", repr(dataset), "OK.")
+
+def check_same_filekinds(ctx1, ctx2, bestrefs1, bestrefs2):
+    """Verify all the filekinds in `bestrefs1` also exist in `bestrefs2`."""
+    for filekind in bestrefs1:
+        if filekind not in bestrefs2:
+            log.warning("Filekind", repr(filekind), "recommended by", 
+                        repr(ctx1), "but not", repr(ctx2))
+    
+def remove_irafpath(name):
+    """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
+    return name.split("$")[-1]
+
+def write_bestrefs(dataset, bestrefs):
+    """Update the header of `dataset` with best reference recommendations
+    `bestrefs`.
+    """
+    for key, value in bestrefs.items():
+#        XXX what to do here for failed lookups?
+#        if value.startswith("NOT FOUND"):
+#            value = value + ", prior " + pyfits.getval(dataset, key)
+        pyfits.setval(dataset, key, value)
+
+# =============================================================================
+
+def main():
+    """Process command line parameters and run recalibrate."""
     parser = optparse.OptionParser(
         "usage: %prog [options] <new_context> <datasets...>")
+    parser.add_option("-C", "--cache-headers", dest="use_cache",
+        help="Use and/or remember critical header parameters in a cache file.", 
+        action="store_true")
+    parser.add_option("-F", "--files", dest="files",
+        help="Read datasets from FILELIST, one dataset per line.", 
+        metavar="FILELIST", default=None)
+    parser.add_option("-O", "--old-context", dest="old_context",
+        help="Compare best refs recommendations from two contexts.", 
+        metavar="OLD_CONTEXT", default=None)
     parser.add_option("-U", "--update-datasets", dest="update_datasets",
         help="Update dataset headers with new best reference recommendations.", 
         action="store_true")
-    parser.add_option("-C", "--cache-headers", dest="cache_headers",
-        help="Use and/or remember critical header parameters in a cache file.", 
-        action="store_true")
-    parser.add_option("-O", "--old-context", dest="old_context",
-        help="Compare best refs recommendations from two contexts.", 
-        metavar="OLD_CONTEXT", defalut=None)
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
-    new_context, datasets = args[0], args[1:]
+    if len(args) < 2:
+        log.write("usage: recalibrate.py <pmap>  <dataset>... [options]")
+        sys.exit(-1)
+
+    newctx_fname, datasets = args[1], args[2:]
     
     if options.files:
-        datasets += [file.strip() for file in open(options.files).readlines()]
+        datasets += [file_.strip() for file_ in open(options.files).readlines()]
     
+    # do one time startup outside profiler.
+    newctx = rmap.get_cached_mapping(newctx_fname)
+    if options.old_context:
+        oldctx = rmap.get_cached_mapping(options.old_context)
+    else:
+        oldctx = None
+        
     if options.use_cache:
         HEADER_CACHE.load()
     
-    # do one time startup outside profiler.
-    rmap.get_cached_mapping(new_context)  
-    if options.context2:
-        rmap.get_cached_mapping(options.context2)
-        
-    log.standard_run("_main(args, options)", options, globals(), globals())
+    log.standard_run(
+        "recalibrate(newctx, datasets, oldctx, options.update_datasets)", 
+        options, globals(), locals())
 
     if options.use_cache:
         HEADER_CACHE.save()
+
+    log.standard_status()
 
 if __name__ == "__main__":
     main()
