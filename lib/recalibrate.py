@@ -13,25 +13,14 @@ themselves and as well as critical parameters required to find them.
 """
 
 import sys
-import cProfile
-import pprint
-
-import pyfits
-
-import crds.hst.gentools.lookup as lookup
-import crds.log as log
-import crds.rmap as rmap
-import crds.client.api as api
-
-import sys
 import cPickle
-import pprint
 import os.path
+import pprint
 
 import pyfits
 
-import crds.log as log
-import crds.utils as utils
+from crds import (log, rmap, utils)
+import crds.client.api as api
 
 MISMATCHES = {}
 
@@ -80,7 +69,6 @@ def test_references(fitsname):
 def main():
     files = sys.argv[1:]
     for f in files:
-        log.verbose("===> Processing", f)
         if f.startswith("@"):
             files.extend([l.strip() for l in open(f[1:])])
             continue
@@ -94,129 +82,115 @@ def main():
     log.write(pprint.pformat(MISMATCHES))
     log.standard_status()
 
-"""This module defines lookup code tailored to the HST rmaps.
-"""
-import sys
-import cPickle
-import pprint
-import os.path
-
-import pyfits
-
-import crds.log as log
-import crds.utils as utils
-
 # ===================================================================
 
-HEADER_CACHE = {}
-
-def get_unconditioned_header_union(fpath):
-    """Handle initial or cached fetch of unconditioned header values.
-    """
-    fname = os.path.basename(fpath)
-    if fname in HEADER_CACHE:
-        log.verbose("Cache hit:",repr(fname))
-        return HEADER_CACHE[fname]
-    log.verbose("Cache miss:",repr(fname))
-    union = HEADER_CACHE[fname] = utils.get_header_union(fpath)
-    return union
-
-def get_header_union(fname):
-    """Return the FITS header of `fname` as a dict,  successively
-    adding all extension headers to the dict.   Cache the combined
-    header in case this function is called more than once on the
-    same FITS file.
-
-    Each keyword value is "conditioned" into a
-    canonical form which smoothes over inconsistencies.
-    See rmap.condition_value() for details.
-    """
-    header = get_unconditioned_header_union(fname)
-    for key, value in header.items():
-        header[key] = utils.condition_value(value)
-    return header
-
-HERE = os.path.dirname(__file__) or "./"
-
-def load_cache():
-    """Load the global HEADER_CACHE which prevents pyfits header reads for calls
-    to get_header_union() when a file as already been visited.
-    """
-    global HEADER_CACHE
-    try:
-        # HEADER_CACHE = eval(open(HERE + "/recalibrate.cache").read())
-        HEADER_CACHE = cPickle.load(open(HERE + "/recalibrate.cache"))
-    except Exception, e:
-        log.info("cache failed to load:", str(e))
-
-def save_cache():
-    """Save the global HEADER_CACHE to store the FITS header unions of any newly
-     visited files.
-    """
-    # open(HERE + "/recalibrate.cache", "w+").write(pprint.pformat(HEADER_CACHE))
-    cPickle.dump(HEADER_CACHE, open(HERE + "/recalibrate.cache","w+"))
-
-if __name__ == "__main__":
-    lookup.load_cache()
-    rmap.get_cached_mapping("hst.pmap")   # pre-cache the bestref stuff
-    if "--profile" in sys.argv:
-        sys.argv.remove("--profile")
-        cProfile.run("main()")
-    else:
-        if "--verbose" in sys.argv:
-            sys.argv.remove("--verbose")
-            log.set_verbose(True)
-        main()
-    if SAVE:
-        lookup.save_cache()
-
-def _main(args, options):
-    context1, datasets = args[0], args[1:]
+class Cache(object):
+    def __init__(self, filename, compute_value):
+        self.filename = filename
+        self._compute_value = compute_value
+        self._cache = {}
     
-    ctx1 = rmap.get_cached_mapping(context1)
-    if options.context2:
-        ctx2 = rmap.get_cached_mapping(options.context2)
+    def load(self):
+        try:
+            self._cache = cPickle.load(self.filename)
+        except Exception, e:
+            log.verbose("Cache load failed:", str(e))
+            self._cache = {}
+
+    def save(self):
+        cPickle.dump(self._cache, open(self.filename,"w+"))
+
+    def get(self, key, args):
+        if key in self._cache:
+            log.verbose("Cache hit:",repr(key))
+        else:
+            log.verbose("Cache miss:",repr(key))
+            self._cache[key] = self._compute_value(args)
+        return self._cache[key]
+    
+def get_recalibrate_info(context, dataset):
+    """Fetch best reference parameters and results from `dataset`.
+    
+    `context` is only used as a helper to determine parkeys and
+    filekinds,   not to determine bestref values.  All values
+    are extracted from `dataset`s header.
+    
+    Return  ( {parkey: value, ...},  {filekind: bestref, ...} )
+    """
+    required_parkeys = context.get_minimum_header(dataset)
+    filekinds = context.get_filekinds(dataset)
+    parkey_values = utils.get_header_union(dataset, required_parkeys)
+    old_bestrefs = utils.get_header_union(dataset, filekinds)
+    return (parkey_values, old_bestrefs)
+    
+HEADER_CACHE = Cache("recalibrate.cache", get_recalibrate_info)
+
+# ============================================================================
+
+def recalibrate(new_context, datasets, options):
+
+    newctx = rmap.get_cached_mapping(new_context)
 
     for dataset in datasets:
+        log.verbose("===> Processing", dataset)
 
-        if options.cache_headers:
-            header = get_required_header(options, dataset)
+        basename = os.path.basename(dataset)
+        
+        header, old_bestrefs = HEADER_CACHE.get(basename, (newctx, dataset))
 
-        bestrefs1 = ctx1.get_best_references(header)
-        if options.context2:
-            bestrefs2 = ctx2.get_best_references(header)
+        bestrefs1 = trapped_bestrefs(newctx, header)
+
+        if options.old_context:
+            oldctx = rmap.get_cached_mapping(options.old_context)
+            bestrefs2 = trapped_bestrefs(olctx, header)
         else:
-            bestrefs2 = utils.get_header_union(dataset, bestrefs1.keys())
+            bestrefs2 = old_bestrefs
+            
+        if not bestrefs1 or not bestrefs2:
+            continue
+        
+        compare_bestrefs(bestrefs1, bestrefs2)
+        
+        if options.update_datasets:
+            write_bestrefs(dataset, bestrefs1)
+            
+def trapped_bestrefs(ctx, header):
+    try:
+        return ctx.get_best_references(header)
+    except Exception, e :
+        log.error("Best references FAILED for ", repr(ctx))
 
 def main(args, options):
     parser = optparse.OptionParser(
-        "usage: %prog [options] <context1> <datasets...>")
-    parser.add_option("-W", "--write-datasets", dest="write_bestrefs",
-        help="Update dataset headers with new best reference recommendations.", 
-        action="store_true")
-    parser.add_option("-U", "--update-bestrefs", dest="write_bestrefs",
+        "usage: %prog [options] <new_context> <datasets...>")
+    parser.add_option("-U", "--update-datasets", dest="update_datasets",
         help="Update dataset headers with new best reference recommendations.", 
         action="store_true")
     parser.add_option("-C", "--cache-headers", dest="cache_headers",
         help="Use and/or remember critical header parameters in a cache file.", 
         action="store_true")
-    parser.add_option("-2", "--context2", dest="context2",
+    parser.add_option("-O", "--old-context", dest="old_context",
         help="Compare best refs recommendations from two contexts.", 
-        metavar="CONTEXT2", defalut=None)
+        metavar="OLD_CONTEXT", defalut=None)
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
-    if options.use_cache:
-        load_cache()
+    new_context, datasets = args[0], args[1:]
     
-    # get through one time startup outside profiler.
-    rmap.get_cached_mapping(context1)  
+    if options.files:
+        datasets += [file.strip() for file in open(options.files).readlines()]
+    
+    if options.use_cache:
+        HEADER_CACHE.load()
+    
+    # do one time startup outside profiler.
+    rmap.get_cached_mapping(new_context)  
     if options.context2:
         rmap.get_cached_mapping(options.context2)
         
     log.standard_run("_main(args, options)", options, globals(), globals())
 
     if options.use_cache:
-        save_cache()
+        HEADER_CACHE.save()
 
 if __name__ == "__main__":
     main()

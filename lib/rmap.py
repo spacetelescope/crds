@@ -509,6 +509,15 @@ class PipelineContext(Mapping):
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
         return self.selections[instrument]
+    
+    def get_filekinds(self, dataset):
+        """Return the filekinds associated with `dataset` by examining
+        it's parameters.  Currently returns ALL filekinds for 
+        `dataset`s instrument.   Not all are necessarily appropriate for
+        the current mode.
+        """
+        instrument = pyfits.getval(dataset, "INSTRUME")
+        return self.get_imap(instrument).get_filekinds(dataset)
 
 # ===================================================================
 
@@ -635,6 +644,13 @@ class InstrumentContext(Mapping):
         for parkey, choices in pmap.items():
             pmap[parkey] = sorted(list(pmap[parkey]))
         return pmap
+    
+    def get_filekinds(self, dataset):
+        """Return the filekinds associated with this dataset,  ideally
+        the minimum set associated with `dataset`,  but initially all
+        for dataset's instrument,  assumed to be self.instrument.
+        """
+        return self.selections.keys()
     
 # ===================================================================
 
