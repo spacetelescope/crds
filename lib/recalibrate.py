@@ -46,7 +46,7 @@ class Cache(object):
         try:
             self._cache = cPickle.load(open(self.filename))
         except Exception, exc:
-            log.verbose("Cache load failed:", str(exc))
+            log.verbose("Cache load failed:", str(exc), verbosity=25)
             self._cache = {}
 
     def save(self):
@@ -58,9 +58,9 @@ class Cache(object):
         function with `args` if `key` is not in the cache.
         """
         if key in self._cache:
-            log.verbose("Cache hit:", repr(key))
+            log.verbose("Cache hit:", repr(key), verbosity=45)
         else:
-            log.verbose("Cache miss:", repr(key))
+            log.verbose("Cache miss:", repr(key), verbosity=45)
             self._cache[key] = self._compute_value(*args)
         return self._cache[key]
     
@@ -93,7 +93,7 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
     recommendations to dataset headers.
     """
     for dataset in datasets:
-        log.verbose("===> Processing", dataset)
+        log.verbose("===> Processing", dataset, verbosity=25)
 
         basename = os.path.basename(dataset)
         
@@ -113,11 +113,12 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
             log.error("Skipping comparison for", repr(dataset))
             continue
         
-        compare_bestrefs(new_context.filename, old_fname, dataset, 
-                         bestrefs1, bestrefs2)
+        new_fname = os.path.basename(new_context.filename)
+        
+        compare_bestrefs(new_fname, old_fname, dataset, bestrefs1, bestrefs2)
         
         if update_datasets:
-            write_bestrefs(dataset, bestrefs1)
+            write_bestrefs(new_fname, dataset, bestrefs1)
             
     log.write("Reference Changes:")
     log.write(pprint.pformat(MISMATCHES))
@@ -135,8 +136,6 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
     """Compare two sets of best references for `dataset` taken from
     contexts named `ctx1` and `ctx2`.
     """
-    ctx1 = os.path.basename(ctx1)
-    ctx2 = os.path.basename(ctx2)
     mismatches = 0
     
     # Warn about mismatched filekinds
@@ -161,14 +160,17 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
                         MISMATCHES[filekind] = []
                     MISMATCHES[filekind].append(dataset)
             else:
-                log.verbose("Lookup OK for", repr(filekind), repr(new))
+                log.verbose("Lookup MATCHES for", repr(filekind), repr(new), 
+                            verbosity=30)
         else:
-            log.verbose("Lookup N/A for", repr(filekind), repr(new))
+            log.verbose("Lookup N/A for", repr(filekind), repr(new),
+                        verbosity=30)
     if mismatches > 0:
         sys.exc_clear()
-        log.info("Total New References for", repr(dataset), "=", mismatches)
+        log.verbose("Total New References for", repr(dataset), "=", mismatches,
+                 verbosity=25)
     else:
-        log.info("All lookups for", repr(dataset), "OK.")
+        log.verbose("All lookups for", repr(dataset), "MATCH.", verbosity=25)
 
 def check_same_filekinds(ctx1, ctx2, bestrefs1, bestrefs2):
     """Verify all the filekinds in `bestrefs1` also exist in `bestrefs2`."""
@@ -181,10 +183,11 @@ def remove_irafpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
     return name.split("$")[-1]
 
-def write_bestrefs(dataset, bestrefs):
+def write_bestrefs(new_fname, dataset, bestrefs):
     """Update the header of `dataset` with best reference recommendations
-    `bestrefs`.
+    `bestrefs` determined by context named `new_fname`.
     """
+    pyfits.setval(dataset, "CRDS_CTX", new_fname)
     for key, value in bestrefs.items():
 #        XXX what to do here for failed lookups?
 #        if value.startswith("NOT FOUND"):

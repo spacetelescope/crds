@@ -32,6 +32,9 @@ def write(*args, **keys):
     as a string.
     """
     global EOL_PENDING
+    verbosity = keys.get("verbosity", 0)
+    if VERBOSE_LEVEL < verbosity:
+        return
     output = log_format(*args, **keys)
     EOL_PENDING = not output.endswith("\n")
     sys.stdout.write(output)
@@ -55,24 +58,33 @@ def set_log(filename, append=False, timestamps=False):
         LOG.close()
         LOG = None
 
-VERBOSE_FLAG = False
-def set_verbose(flag):
-    """If `flag` is True,  verbose() messages should be output."""
-    global VERBOSE_FLAG
-    VERBOSE_FLAG = flag
+VERBOSE_LEVEL = 0
+DEFAULT_VERBOSE_LEVEL = 50
+
+def set_verbose(level=DEFAULT_VERBOSE_LEVEL):
+    """Set the overall verbosity level,   suppressing messages which have
+    a verbosity= keyword above that level.
+    
+    log.verbose() defaults to verbosity=50
+    log.error(), log.info(), log.warning() default to verbosity=0.
+    """
+    global VERBOSE_LEVEL
+    assert 0 <= level < 100,  "verbosity level must be in range 0..100"
+    VERBOSE_LEVEL = level
 
 def get_verbose():
-    """Return the verbosity flag."""
-    return VERBOSE_FLAG
+    """Return the verbosity level."""
+    return VERBOSE_LEVEL
 
 def verbose(*args, **keys):
-    """Print out the args if in verbose mode."""
-    if VERBOSE_FLAG:
-        write(*args, **keys)
+    """Print out the args if in verbose mode, defaulting to verbosity=50"""
+    if "verbosity" not in keys:
+        keys["verbosity"] = DEFAULT_VERBOSE_LEVEL
+    write(*args, **keys)
 
 def quiet(*args, **keys):
     """Print out the args if NOT in verbose mode."""
-    if not VERBOSE_FLAG:
+    if not VERBOSE_LEVEL:
         write(*args, **keys)
 
 def logtime():
@@ -108,7 +120,7 @@ def warning(*args):
 
 def verbose_warning(*args):
     """Issue a warning message only in verbose mode."""
-    if VERBOSE_FLAG:
+    if VERBOSE_LEVEL:
         warning(*args)
 
 def warnings():
@@ -210,7 +222,8 @@ def handle_standard_options(
 #                      metavar="OUTPATH", default=default_outpath)
 
     parser.add_option("-v", "--verbose", dest="verbose",
-                      help="Set verbose output mode.", action="store_true")
+                      help="Set verbosity level.", 
+                      metavar="VERBOSITY", default=0)
 
     parser.add_option("-X", "--profile", dest="profile",
                       help="Run under the python profiler.",
@@ -230,7 +243,7 @@ def handle_standard_options(
 
     options, args = parser.parse_args(args)
 
-    set_verbose(options.verbose)
+    set_verbose(int(options.verbose))
     set_debug_errors(options.debug_errors, options.debug_errno)
 
     return options, args
