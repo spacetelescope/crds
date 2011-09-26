@@ -97,8 +97,12 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
 
         basename = os.path.basename(dataset)
         
-        header, old_bestrefs = HEADER_CACHE.get(
-            basename, (new_context, dataset))
+        try:
+            header, old_bestrefs = HEADER_CACHE.get(
+                basename, (new_context, dataset))
+        except Exception:
+            log.error("Can't get header info for " + repr(dataset))
+            continue 
 
         bestrefs1 = trapped_bestrefs(new_context, header)
 
