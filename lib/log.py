@@ -157,7 +157,7 @@ def error(*args, **keys):
 
     ERRORS += 1
 
-    keys.update({ "eol": "" })
+    keys["eol"] = ""
     no_traceback = keys.pop("no_traceback", False)
 
     if EOL_PENDING: 

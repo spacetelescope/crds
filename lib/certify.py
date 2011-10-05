@@ -324,6 +324,9 @@ def certify_context(context, check_references=False):
     """
     try:
         ctx = rmap.get_cached_mapping(context)
+    except rmap.MappingError: # already includes message in exception repr
+        log.error()
+        return []
     except Exception:
         log.error("Couldn't load mapping", repr(context))
         return []
