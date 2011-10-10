@@ -359,7 +359,7 @@ def get_parameters(instrument_mapping_name):
     import crds.rmap as rmap
     
     instr_mapping = rmap.load_mapping(instrument_mapping_name)
-    instrument = utils.context_to_instrument(instrument_mapping_name)
+    instrument = utils.mapping_to_instrument(instrument_mapping_name)
     components = []
 
     for reftype, rmap in instr_mapping.selections.items():

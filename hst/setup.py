@@ -14,47 +14,44 @@ setup(name="crds.hst",
         'crds.hst.wfc3',
         'crds.hst.cos',
         'crds.hst.stis',
-
+        
         'crds.hst.gentools',
+
+        'crds.mappings',
+        'crds.mappings.hst',
+        'crds.references',
+        'crds.references.hst',
+        
         ],
 
       package_dir = {
         'crds.hst':'.',
 
-        'crds.hst.acs':'acs',
-        'crds.hst.cos':'cos',
-        'crds.hst.stis':'stis',
-        'crds.hst.wfc3':'wfc3',
+         'crds.hst.acs':'acs',
+         'crds.hst.cos':'cos',
+         'crds.hst.stis':'stis',
+         'crds.hst.wfc3':'wfc3',
 
         'crds.hst.gentools' : 'gentools',
+        
+        'crds.mappings' : 'mappings',
+        'crds.mappings.hst' : 'mappings/hst',
+        'crds.references' : 'references',
+        'crds.references.hst' : 'references/hst',
         },
 
       package_data = {
 
         '': [
-
-            '*.pmap',
             'cdbs.paths',
             'cdbs.paths.gz',
-
-            'acs/*.rmap',
-            'acs/*.imap',
-
-            'cos/*.rmap',
-            'cos/*.imap',
-
-            'stis/*.rmap',
-            'stis/*.imap',
-
-            'wfc3/*.rmap',
-            'wfc3/*.imap',
-
             'cdbs/cdbs_tpns/*.tpn',
             'tpn_extensions.dat',
             'tpn_filetypes.dat',
-
-             'gentools/header_cache',
-
             ],
+
+        'crds.mappings.hst' : [
+            '*.*map',
+             ],
         },
     )

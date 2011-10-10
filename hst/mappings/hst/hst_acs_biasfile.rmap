@@ -4,7 +4,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'BIASFILE',
-    'sha1sum' : 'cdabeceaa9dda5213da463700692551ffe0a9c7a',
+    'sha1sum' : 'c28a21ad1ae668ebaaef3c0154fad17fc0471f8c',
 }
 
 selector = Match({
@@ -337,7 +337,6 @@ selector = Match({
         '2004-06-24 00:14:00' : 'o9t1500dj_bia.fits',
         '2004-07-02 08:03:00' : 'o9t1544oj_bia.fits',
         '2004-07-09 03:32:00' : 'o9t1544sj_bia.fits',
-        '2004-07-30 00:11:00' : 'o9t15584j_bia.fits',
         '2004-08-04 07:32:00' : 'o9t15587j_bia.fits',
     }),
     ('WFC', '1.0', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '24.0', '0.0') : UseAfter({
@@ -461,6 +460,7 @@ selector = Match({
         '2004-06-11 00:20:00' : 'o6m09491j_bia.fits',
         '2004-07-14 16:52:00' : 'o9d1734jj_bia.fits',
         '2004-07-21 03:09:00' : 'o9d1734lj_bia.fits',
+        '2004-07-30 00:11:00' : 'o9t15584j_bia.fits',
         '2004-08-10 04:42:00' : 'o9t16044j_bia.fits',
         '2004-08-17 01:09:00' : 'o9t16045j_bia.fits',
         '2004-08-25 00:57:00' : 'o9a12495j_bia.fits',

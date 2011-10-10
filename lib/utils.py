@@ -53,40 +53,11 @@ def get_locator_module(observatory):
     exec("import crds."+observatory+".locate as locate", locals(), locals())
     return locate
  
-def get_crds_mappath(observatory):
-    locate = get_locator_module(observatory)
-    return locate.get_crds_mappath()
-
-def get_crds_refpath(observatory):
-    locate = get_locator_module(observatory)
-    return locate.get_crds_refpath()
-
 def get_file_properties(observatory, filename):
     """Return instrument,filekind,id fields associated with filename.
     """
     locator = get_locator_module(observatory)
     return locator.get_file_properties(filename)        
-
-def context_to_observatory(context_file):
-    """
-    >>> context_to_observatory('hst_acs_biasfile.rmap')
-    'hst'
-    """
-    return os.path.basename(context_file).split("_")[0].split(".")[0]
-
-def context_to_instrument(context_file):
-    """
-    >>> context_to_instrument('hst_acs_biasfile.rmap')
-    'acs'
-    """
-    return os.path.basename(context_file).split("_")[1].split(".")[0]
-
-def context_to_reftype(context_file):
-    """
-    >>> context_to_reftype('hst_acs_biasfile.rmap')
-    'biasfile'
-    """
-    return os.path.basename(context_file).split("_")[2].split(".")[0]
 
 # ===================================================================
 
@@ -187,11 +158,22 @@ def instrument_to_locator(instrument):
     """
     return get_locator_module(instrument_to_observatory(instrument))
 
+def reference_to_instrument(filename):
+    """Given reference file `filename`,  return the associated instrument.
+    """
+    import pyfits
+    header = pyfits.getheader(filename)
+    return header["INSTRUME"].lower()
+
 def reference_to_locator(filename):
     """Given reference file `filename`,  return the associated observatory 
     locator module.
     """
-    import pyfits
-    header = pyfits.getheader(filename)
-    instrument = header["INSTRUME"].lower()
-    return instrument_to_locator(instrument)
+    return instrument_to_locator(reference_to_instrument(filename))
+
+def reference_to_observatory(filename):
+    """Return the name of the observatory corresponding to reference
+    `filename`.
+    """
+    return instrument_to_observatory(reference_to_instrument(filename))
+

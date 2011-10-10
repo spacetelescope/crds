@@ -279,7 +279,7 @@ class Mapping(object):
         known to CRDS.
         """
         return [ mapping for mapping in self.mapping_names() \
-                if not self.locate.mapping_exists(mapping) ]
+                if not mapping_exists(mapping) ]
 
     @property
     def locate(self):
@@ -777,47 +777,89 @@ def load_mapping(mapping, **keys):
             raise ValueError("Unknown mapping type for " + repr(mapping))
     return cls.from_file(mapping, **keys)
     
+# =============================================================================
+
+HERE = os.path.dirname(__file__) or "./"
+
+# CRDS_MAPPATH is the location of the client or sever side mapping directory
+# tree,  nominally the package location of crds.<observatory>,  .e.g. crds.hst
+def get_crds_mappath():
+    default = os.path.dirname(utils.get_object("crds.mappings").__file__)
+    return os.environ.get("CRDS_MAPPATH", default)
+
+# CRDS_REFPATH is the path to the local/client copy of reference files.
+def get_crds_refpath():
+    default = os.path.dirname(utils.get_object("crds.references").__file__)
+    return os.environ.get("CRDS_REFPATH", default)
+
+# =============================================================================
+
+def locate_file(filepath, observatory="hst"):
+    """Figure out the absolute pathname where CRDS will stash a reference
+    or mapping file.  If filepath already has a directory,  return filepath
+    as-is.   Otherwise,  return the *client* path for a file.
+    """
+    if os.path.dirname(filepath):
+        return filepath
+    if is_mapping(filepath):
+        return locate_mapping(filepath, observatory)
+    else:
+        return locate_reference(filepath, observatory)
+    return where
+
+def locate_reference(ref, observatory="hst"):
+    """Return the absolute path where reference `ref` should be located."""
+    if os.path.dirname(ref):
+        return ref
+    return os.path.join(get_crds_refpath(), observatory, ref)
+
+
+# =============================================================================
+
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 
     file.
     """
     return mapping.endswith((".pmap", ".imap", ".rmap"))
 
-def locate_mapping(mappath):
-    """Based on a possibly incomplete name,  figure out the absolute
-    pathname for the mapping specified by `mappath`.   If `mappath` 
-    already has a directory path or is present in the CWD,  use it as is.   
-    Otherwise infer the project from the mappath's name and use the
-    project's locator to determine where the mapping should be.
-    """
+def locate_mapping(mappath, observatory=None):
+    """Return the absolute path where CRDS mapping `mappath` should be."""
     if os.path.dirname(mappath):
         return mappath
-    observatory = utils.context_to_observatory(mappath)
-    locate = utils.get_locator_module(observatory)
-    where = locate.locate_mapping(mappath)
-    return where
+    if observatory is None:
+        observatory = mapping_to_observatory(mappath)
+    return os.path.join(get_crds_mappath(), observatory, mappath)
 
-def locate_file(observatory, filepath, mode="client"):
-    """Figure out the absolute pathname for the a file specified by 
-    `filepath`.   If `filepath` already has a directory path, use it as is.  
-    Otherwise use the observatory's locator to determine where the file 
-    should be.
+def mapping_exists(mapping):
+    """Return True IFF `mapping` exists on the local file system."""
+    return os.path.exists(locate_mapping(mapping))
+
+def mapping_url(crds_server_url, mapping):
+    """Return a file URL which can be used to retrieve the specified `mapping`.
     """
-    if os.path.dirname(filepath):
-        return filepath
-    locate = utils.get_locator_module(observatory)
-    if is_mapping(filepath):
-        if mode == "client":
-            where = locate.locate_mapping(filepath)
-        else:
-            where = locate.locate_server_mapping(filepath)
-    else:
-        if mode == "client":
-            where = locate.locate_reference(filepath)
-        else:
-            where = locate.locate_server_reference(filepath)
-    return where
+    path = locate_mapping(mapping)
+    return path.replace(get_crds_mappath(), crds_server_url)
 
+def mapping_to_observatory(context_file):
+    """
+    >>> mapping_to_observatory('hst_acs_biasfile.rmap')
+    'hst'
+    """
+    return os.path.basename(context_file).split("_")[0].split(".")[0]
+
+def mapping_to_instrument(context_file):
+    """
+    >>> mapping_to_instrument('hst_acs_biasfile.rmap')
+    'acs'
+    """
+    return os.path.basename(context_file).split("_")[1].split(".")[0]
+
+def mapping_to_reftype(context_file):
+    """
+    >>> mapping_to_reftype('hst_acs_biasfile.rmap')
+    'biasfile'
+    """
+    return os.path.basename(context_file).split("_")[2].split(".")[0]
 
 # ===================================================================
 

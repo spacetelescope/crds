@@ -128,7 +128,8 @@ class FileCacher(object):
         return localpaths
 
     def _locate(self, pipeline_context, name):
-        return utils.get_object("crds." + utils.context_to_observatory(pipeline_context) + ".locate." + self._locator)(name)
+        return rmap.locate_file(name)
+        return utils.get_object("crds." + utils.mapping_to_observatory(pipeline_context) + ".locate." + self._locator)(name)
 
         # might be cleaner as:
         # getattr(rmap.get_cached_mapping(pipeline_context).locate, self._locator)(name)

@@ -67,15 +67,10 @@ def main():
 
 # =======================================================================
 
-# CRDS_REFPATH is the path to the local/client copy of reference files.
-def get_crds_refpath():
-    return os.environ.get("CRDS_REFPATH", os.path.join(HERE, "references"))
-
 def locate_reference(reference):
     """Return the absolute path for the client-side copy of a reference file.
     """
-    sref = locate_server_reference(reference)
-    return sref.replace(CDBS_REFPATH, get_crds_refpath())
+    return os.path.join([get_crds_refpath(), reference])
 
 def reference_url(crds_server_url, reference):
     """Return a file URL which can be used to retrieve the specified `reference`.
@@ -91,57 +86,6 @@ def reference_exists(reference):
     except KeyError:
         return False
     return os.path.exists(where)
-
-# =======================================================================
-
-# CRDS_MAPPATH is the location of the client or sever side mapping directory
-# tree,  nominally the package location of crds.<observatory>,  .e.g. crds.hst
-def get_crds_mappath():
-    return os.environ.get("CRDS_MAPPATH", HERE)
-
-def locate_mapping(mapping):
-    """Given basename `mapping`,  return the absolute path of the CRDS
-    mapping file.
-    """
-    if "/" in mapping:
-        raise ValueError("Mapping should specify the basename only,  not the path.")
-    if mapping.endswith(".pmap"):
-        return os.path.join(get_crds_mappath(), mapping)
-    elif mapping.endswith(".imap") or mapping.endswith(".rmap"):
-        instr = mapping.split("_")[1].split(".")[0]
-        return os.path.join(get_crds_mappath(), instr, mapping)
-    else:
-        raise ValueError("Unknown mapping type for " + repr(mapping))
-    
-def locate_server_mapping(mapping):
-    """Given basename `mapping`,  return the absolute path of the CRDS mapping 
-    file on the CRDS server.
-    """
-    return locate_mapping(mapping)
-    
-def mapping_exists(mapping):
-    """Return True iff the basename `mapping` is known as a mapping to CRDS."""
-    try:
-        where = locate_server_mapping(mapping)
-    except KeyError:
-        return False
-    return os.path.exists(where)
-
-def mapping_url(crds_server_url, mapping):
-    """Return a file URL which can be used to retrieve the specified `mapping`.
-    """
-    path = locate_mapping(mapping)
-    return path.replace(get_crds_mappath(), crds_server_url + "/static/mappings/hst")
-
-# =======================================================================
-
-def locate_file(file):
-    """Return the fully specified path for reference or mapping `file`.
-    """
-    if rmap.is_mapping(file):
-        return locate_mapping(file)
-    else:
-        return locate_reference(file)
 
 # =======================================================================
 

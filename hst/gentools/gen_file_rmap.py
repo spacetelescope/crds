@@ -396,7 +396,7 @@ def write_rmap(observatory, instrument, reftype, kind_map):
             useafter_selections[m.date] = m.file
         matching_selections[key] = selectors.UseAfterSelector(("DATE-OBS", "TIME-OBS"), useafter_selections)
     rmap_selector = selectors.MatchingSelector(fitskeys[:-2], matching_selections)
-    outname = observatory + "_" + instrument + "_" + reftype + ".rmap"
+    outname = "./" + observatory + "_" + instrument + "_" + reftype + ".rmap"
     r = rmap.ReferenceMapping(outname, rmap_header, rmap_selector)
     r.write()
 
