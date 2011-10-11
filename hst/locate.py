@@ -125,7 +125,7 @@ def get_file_properties(filename):
     else:
         try:
             result = properties_inside_mapping(filename)
-        except Exception:
+        except Exception, exc:
             result = get_reference_properties(filename)[2:4]
     assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)
@@ -199,7 +199,7 @@ def properties_inside_mapping(filename):
     elif map.reftype == "instrument":
         result = map.instrument, ""
     else:
-        result = map.instrument, map.filekind
+        result = map.instrument, map.reftype
     return result
 
 def _get_fields(filename):
