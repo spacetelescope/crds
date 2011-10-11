@@ -813,6 +813,7 @@ def locate_reference(ref, observatory="hst"):
         return ref
     return os.path.join(get_crds_refpath(), observatory, ref)
 
+
 # =============================================================================
 
 def is_mapping(mapping):
@@ -832,12 +833,6 @@ def locate_mapping(mappath, observatory=None):
 def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""
     return os.path.exists(locate_mapping(mapping))
-
-def mapping_url(crds_server_url, mapping):
-    """Return a file URL which can be used to retrieve the specified `mapping`.
-    """
-    path = locate_mapping(mapping)
-    return path.replace(get_crds_mappath(), crds_server_url)
 
 def mapping_to_observatory(context_file):
     """

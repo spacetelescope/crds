@@ -78,12 +78,6 @@ def locate_reference(reference):
     """
     return os.path.join([get_crds_refpath(), reference])
 
-def reference_url(crds_server_url, reference):
-    """Return a file URL which can be used to retrieve the specified `reference`.
-    """
-    path = locate_server_reference(reference)
-    return path.replace(CDBS_REFPATH, crds_server_url)
-
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.
     """
