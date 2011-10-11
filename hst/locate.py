@@ -114,7 +114,7 @@ def get_file_properties(filename):
     >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
     Traceback (most recent call last):
     ...
-    AssertionError: Non-empty instrument for .pmap
+    AssertionError: Invalid .pmap filename './hst_acs_biasfile_0001.pmap'
 
     >> get_file_properties("test_data/s7g1700gl_dead.fits")
     """
@@ -138,20 +138,46 @@ def decompose_newstyle_name(filename):
     >>> decompose_newstyle_name("./hst.pmap")
     ('.', 'hst', '', '', '', '.pmap')
 
+    >>> decompose_newstyle_name("./hst_0001.pmap")
+    ('.', 'hst', '', '', '0001', '.pmap')
+
     >>> decompose_newstyle_name("./hst_acs.imap")
     ('.', 'hst', 'acs', '', '', '.imap')
 
+    >>> decompose_newstyle_name("./hst_acs_0001.imap")
+    ('.', 'hst', 'acs', '', '0001', '.imap')
+
+    >>> decompose_newstyle_name("./hst_acs_biasfile.rmap")
+    ('.', 'hst', 'acs', 'biasfile', '', '.rmap')
+
     >>> decompose_newstyle_name("./hst_acs_biasfile_0001.rmap")
     ('.', 'hst', 'acs', 'biasfile', '0001', '.rmap')
+
+    >>> decompose_newstyle_name("./hst_acs_biasfile.fits")
+    ('.', 'hst', 'acs', 'biasfile', '', '.fits')
 
     >>> decompose_newstyle_name("./hst_acs_biasfile_0001.fits")
     ('.', 'hst', 'acs', 'biasfile', '0001', '.fits')
     """
     path, parts, ext = _get_fields(filename)
     observatory = parts[0]
-    instrument = list_get(parts, 1, "")
-    filekind = list_get(parts, 2, "")
     serial = list_get(parts, 3, "")
+
+    if ext == ".pmap":
+        assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
+        instrument, filekind = "", ""
+        serial = list_get(parts, 1, "")
+    elif ext == ".imap":
+        assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
+        instrument = parts[1]
+        filekind = ""
+        serial = list_get(parts, 2, "")
+    else:
+        assert len(parts) in [3,4], "Invalid filename " + repr(filename)
+        instrument = parts[1]
+        filekind = parts[2]
+        serial = list_get(parts, 3, "")
+
     assert observatory == "hst"
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + \
         repr(instrument) + " in name " + repr(filename)
@@ -159,16 +185,8 @@ def decompose_newstyle_name(filename):
         repr(filekind) + " in name " + repr(filename)
     assert re.match("\d*", serial), "Invalid id field " + \
         repr(id) + " in name " + repr(filename)
-    if ext == ".pmap":
-        assert instrument == "", "Non-empty instrument for .pmap"
-        assert filekind == "", "Non-empty filekind for .pmap"
-    elif ext == ".imap":
-        assert instrument != "", "Empty instrument for .imap"
-        assert filekind == "", "Non-empty filekind for .imap"
-    else:
-        assert instrument != "", "Empty instrument for .rmap or .fits"
-        assert filekind != "", "Empty filekind for .rmap or .fits"
     # extension may vary for upload temporary files.
+
     return path, observatory, instrument, filekind, serial, ext
 
 def properties_inside_mapping(filename):
