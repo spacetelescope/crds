@@ -129,7 +129,7 @@ def get_file_properties(filename):
             result = get_reference_properties(filename)[2:4]
     assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)
-    assert result[1] in FILEKIND+[""], "Bad filekind " + \
+    assert result[1] in FILEKINDS+[""], "Bad filekind " + \
         repr(result[1]) + " in filename " + repr(filename)
     return result
 
