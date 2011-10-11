@@ -233,9 +233,18 @@ def reference_name_to_tpninfos(key):
     """
     return get_tpninfos(*key)
 
+INSTRUMENTS = TPN_EXTENSIONS.keys()
+
+FILEKINDS = set()
+for instr in TPN_EXTENSIONS:
+    FILEKINDS.update(TPN_EXTENSIONS[instr].keys())
+FILEKINDS = list(FILEKINDS)
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         update_tpn_data(sys.argv[1])
     else:
         print "usage: python tpn.py <pipeline_context,  e.g. hst.pmap>"
+
 

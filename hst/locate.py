@@ -63,7 +63,13 @@ def setup_path_map(cdbs=CDBS_REFPATH, rebuild_cache=False):
         REFNAME_TO_PATH[filename] = line        
 
 def main():
+    """Regenerate the CDBS path cache."""
     setup_path_map(rebuild_cache=True)
+
+def test():
+    """Run the module doctests."""
+    import doctest, locate
+    return doctest.testmod(locate)
 
 # =======================================================================
 
@@ -94,61 +100,102 @@ def reference_exists(reference):
 
 from .tpn import reference_name_to_validator_key
 from .tpn import get_tpninfos
+from .tpn import INSTRUMENTS, FILEKINDS
 
 # =======================================================================
 
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or FITS reference file.
+
+    >>> get_file_properties("./hst_acs_biasfile_0001.rmap")
+    ('acs', 'biasfile')
+
+    >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Non-empty instrument for .pmap
+
+    >> get_file_properties("test_data/s7g1700gl_dead.fits")
     """
-    if filename.endswith(".pmap"):
-        result = get_pmap_properties(filename)
-    elif filename.endswith(".imap"):
-        result = get_imap_properties(filename)
-    elif filename.endswith(".rmap"):
-        result = get_rmap_properties(filename)
+    if rmap.is_mapping(filename):
+        return decompose_newstyle_name(filename)[2:4]
     elif filename.endswith(".fits"):
-        result = get_reference_properties(filename)
+        result = get_reference_properties(filename)[2:4]
     else:
-        raise ValueError("Filename implies neither a mapping nor FITS file.")
+        try:
+            result = properties_inside_mapping(filename)
+        except Exception:
+            result = get_reference_properties(filename)[2:4]
+    assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
+        repr(result[0]) + " in filename " + repr(filename)
+    assert result[1] in FILEKIND+[""], "Bad filekind " + \
+        repr(result[1]) + " in filename " + repr(filename)
+    return result
+
+def decompose_newstyle_name(filename):
+    """
+    >>> decompose_newstyle_name("./hst.pmap")
+    ('.', 'hst', '', '', '', '.pmap')
+
+    >>> decompose_newstyle_name("./hst_acs.imap")
+    ('.', 'hst', 'acs', '', '', '.imap')
+
+    >>> decompose_newstyle_name("./hst_acs_biasfile_0001.rmap")
+    ('.', 'hst', 'acs', 'biasfile', '0001', '.rmap')
+
+    >>> decompose_newstyle_name("./hst_acs_biasfile_0001.fits")
+    ('.', 'hst', 'acs', 'biasfile', '0001', '.fits')
+    """
+    path, parts, ext = _get_fields(filename)
+    observatory = parts[0]
+    instrument = list_get(parts, 1, "")
+    filekind = list_get(parts, 2, "")
+    serial = list_get(parts, 3, "")
+    assert observatory == "hst"
+    assert instrument in INSTRUMENTS+[""], "Invalid instrument " + \
+        repr(instrument) + " in name " + repr(filename)
+    assert filekind in FILEKINDS+[""], "Invalid filekind " + \
+        repr(filekind) + " in name " + repr(filename)
+    assert re.match("\d*", serial), "Invalid id field " + \
+        repr(id) + " in name " + repr(filename)
+    if ext == ".pmap":
+        assert instrument == "", "Non-empty instrument for .pmap"
+        assert filekind == "", "Non-empty filekind for .pmap"
+    elif ext == ".imap":
+        assert instrument != "", "Empty instrument for .imap"
+        assert filekind == "", "Non-empty filekind for .imap"
+    else:
+        assert instrument != "", "Empty instrument for .rmap or .fits"
+        assert filekind != "", "Empty filekind for .rmap or .fits"
+    # extension may vary for upload temporary files.
+    return path, observatory, instrument, filekind, serial, ext
+
+def properties_inside_mapping(filename):
+    """Load `filename`s mapping header to discover and 
+    return (instrument, filekind).
+    """
+    map = rmap.load_mapping(filename)
+    if map.reftype == "pipeline":
+        result = "", ""
+    elif map.reftype == "instrument":
+        result = map.instrument, ""
+    else:
+        result = map.instrument, map.filekind
     return result
 
 def _get_fields(filename):
+    path = os.path.dirname(filename)
     name = os.path.basename(filename)
-    name = os.path.splitext(name)[0]
-    return name.split("_")
+    name, ext = os.path.splitext(name)
+    parts = name.split("_")
+    return path, parts, ext
 
-def get_pmap_properties(filename):
-    fields = _get_fields(filename)
-    if len(fields) == 2:
-        observatory, serial = fields
-    elif len(fields) == 1:
-        observatory, serial = fields + [""]
-    else:
-        raise ValueError("Invalid .pmap filename " + repr(filename))
-    instrument, filekind = "", ""
-    return instrument, filekind, serial
-
-def get_imap_properties(filename):
-    fields = _get_fields(filename)
-    if len(fields) == 3:
-        observatory, instrument, serial = fields
-    elif len(fields) == 2:
-        observatory, instrument, serial = fields + [""]
-    else:
-        raise ValueError("Invalid .imap filename " + repr(filename))
-    filekind = ""
-    return instrument, filekind, serial
-
-def get_rmap_properties(filename):
-    fields = _get_fields(filename)
-    if len(fields) == 4:
-        observatory, instrument, filekind, serial = fields
-    elif len(fields) == 3:
-        observatory, instrument, filekind, serial = fields + [""]
-    else:
-        raise ValueError("Invalid .imap filename " + repr(filename))
-    return instrument, filekind, serial
+def list_get(l, index, default):
+    try:
+        return l[index]
+    except IndexError:
+        return default
 
 CDBS_DIRS_TO_INSTR = {
    "/jref/":"acs",
@@ -158,9 +205,10 @@ CDBS_DIRS_TO_INSTR = {
 }
 
 def get_reference_properties(filename):
-    """Figure out FITS (instrument, filekind, serial) based on `filename`."""
+    """Figure out FITS (instrument, filekind, serial) based on `filename`.
+    """
     try:   # Hopefully it's a nice new standard filename, easy
-        return ref_properties_from_new_path(filename)
+        return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
         pass
     try:   # or maybe a recognizable HST legacy path/filename, fast
@@ -170,23 +218,11 @@ def get_reference_properties(filename):
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
-def ref_properties_from_new_path(filename):
-    """Based on a CRDS `filename`,  return (instrument, filekind, serial).
-    Raise AssertionError if it's not a good filename.
-    """
-    fields = _get_fields(filename)
-    assert len(fields) == 4, "filename is not in standard format"
-    observatory, instrument, filekind, serial = fields
-    assert observatory == "hst",  "unknown observatory"
-    assert instrument in ["acs","cos","stis","wfc3"], "unknown instrument"
-    assert re.match("\d+", serial), "serial number field has non-digits"
-    return instrument, filekind, serial
-
 def ref_properties_from_cdbs_path(filename):
     """Based on a HST CDBS `filename`,  return (instrument, filekind, serial). 
     Raise AssertionError if it's not a good filename.
     """
-    fields = _get_fields(filename)
+    path, fields, ext = _get_fields(filename)
     # For legacy files,  just use the root filename as the unique id
     serial = os.path.basename(os.path.splitext(filename)[0])
     # First try to figure everything out by decoding filename. fast
@@ -201,19 +237,19 @@ def ref_properties_from_cdbs_path(filename):
         filekind = tpn.extension_to_filekind(instrument, ext)
     except KeyError:
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
-    return instrument, filekind, serial
+    return path, "hst", instrument, filekind, serial, ext
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
     import pyfits
     # For legacy files,  just use the root filename as the unique id
+    path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    location = locate_server_reference(os.path.basename(filename))
-    instrument = pyfits.getval(location, "INSTRUME").lower()
-    filetype = pyfits.getval(location, "FILETYPE")
+    instrument = pyfits.getval(filename, "INSTRUME").lower()
+    filetype = pyfits.getval(filename, "FILETYPE").lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)
-    return instrument, filekind, serial
+    return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================
 

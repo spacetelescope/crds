@@ -813,7 +813,6 @@ def locate_reference(ref, observatory="hst"):
         return ref
     return os.path.join(get_crds_refpath(), observatory, ref)
 
-
 # =============================================================================
 
 def is_mapping(mapping):

@@ -29,7 +29,7 @@ def get_update_map(old_pipeline, updated_rmaps):
     pctx = rmap.get_cached_mapping(old_pipeline)
     updates = {}
     for update in updated_rmaps:
-        instrument, filekind, _serial = utils.get_file_properties(
+        instrument, filekind = utils.get_file_properties(
                 pctx.observatory, update)
         imap_name = pctx.get_imap(instrument).filename
         if imap_name not in updates:
