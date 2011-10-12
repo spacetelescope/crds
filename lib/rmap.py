@@ -736,7 +736,10 @@ class ReferenceMapping(Mapping):
             log.error("Validation error in", repr(self))
             
     def file_matches(self, filename):
-        sofar = [(self.observatory, self.instrument, self.reftype)]
+        """Return a list of the match tuples which refer to `filename`."""
+        sofar = (("observatory", self.observatory), 
+                 ("INSTRUME",self.instrument), 
+                 ("filekind", self.reftype))
         return sorted(self.selector.file_matches(filename, sofar))
 
 # ===================================================================

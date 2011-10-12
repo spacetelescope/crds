@@ -250,21 +250,22 @@ class Selector(object):
         """
         pass
 
-    def file_matches(self, filename, sofar=None):
+    def file_matches(self, filename, sofar=()):
         """Return the nested match keys leading to selections of `filename`.
         Assume the deepest value in the Selector tree must be a filename.
         """
-        if sofar is None:
-            sofar = []
         matches = []
         for key, value in self._selections:
-            here = sofar + [key]
+            here = tuple(sofar + self.match_item(key))
             if isinstance(value, Selector):
                 matches += value.file_matches(filename, here)
             else:
                 if filename == value:
-                    matches += [here]
+                    matches.append(here)
         return sorted(matches)
+    
+    def match_item(self, key):
+        return tuple(zip(self._parameters, key))
 
 # ==============================================================================
 
@@ -436,7 +437,7 @@ class MatchingSelector(Selector):
     to a given file:
     
     >>> m.file_matches("200")
-    [[('1.0', '2.0')], [('5.0', '3.0')]]
+    [(('foo', '1.0'), ('bar', '2.0')), (('foo', '5.0'), ('bar', '3.0'))]
     
     The result of file_matches() is a list of lists of keys because it is
     used recursively on trees of mappings and selectors.
@@ -804,9 +805,13 @@ class UseAfterSelector(Selector):
         try:
             timestamp.parse_numerical_date(key)
         except ValueError:
-            raise ValidationError("UseAfter date " + repr(key) + " has invalid format.")
+            raise ValidationError("UseAfter date " + repr(key) + 
+                                  " has invalid format.")
         
-        
+    def match_item(self, key):
+        """Account for the slightly weird UseAfter syntax."""
+        return tuple(zip(self._parameters, key.split()))
+    
 # ==============================================================================
 
 class ClosestGeometricRatioSelector(Selector):
