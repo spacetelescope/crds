@@ -1,0 +1,25 @@
+<document>
+    <url>
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/NICMOS/reftablequeryindex
+    </url>
+    <table>
+        <tr><th>Reference File Type</th><th>Extension</th><th>Header Keyword</th><th>Camera</th></tr>
+        <tr><td>**Bad Pixel Masks**  Masks for grot and bad pixels.<a href="description.html#msk">More...</a></td><td>msk</td><td>MASKFILE</td><td><a href="NICBadPixMask">All</a></td></tr>
+        <tr><td>**Read Noise Files**  Readout noise for each pixel as the 1 standard  deviation noise level in electrons.<a href="description.html#noi">More...</a></td><td>noi</td><td>NOISFILE</td><td><a href="NICNoise">All</a></td></tr>
+        <tr><td>**Dark Files**  Signal detected in the absence of photons from the sky.<a href="description.html#drk">More...</a></td><td>drk</td><td>DARKFILE</td><td><a href="NICDark">All</a></td></tr>
+        <tr><td>**Temperature Dependent Darks**  Temperature dependent signal detected in  the absence of photons from the sky.<a href="description.html#tdd">More...</a></td><td>tdd</td><td>TEMPFILE</td><td><a href="NICDarkTemp">All</a></td></tr>
+        <tr><td>**Linearity Correction Files**  Corrects for the non-linear response of the detectors  and contains the saturation for each pixel.<a href="description.html#lin">More...</a></td><td>lin</td><td>NLINFILE</td><td><a href="NICLinearity">All</a></td></tr>
+        <tr><td>**Flat Field Files**  Static flatfield reference files.<a href="description.html#flt">More...</a></td><td>flt</td><td>FLATFILE</td><td><a href="NICFlatReference">All</a></td></tr>
+        <tr><td>**Temperature Dependent Flat Fields**  Temperature dependent flatfields.<a href="description.html#tdf">More...</a></td><td>tdf</td><td>TDFFILE</td><td><a href="NICFlatReferenceTemp">All</a></td></tr>
+        <tr><td>**Background Illumination Pattern Files**  Dummy files, needed for CALNICB.<a href="description.html#ilm">More...</a></td><td>ilm</td><td>ILLMFILE</td><td><a href="NICBackground">All</a></td></tr>
+        <tr><td>**Photometric Calibration Tables**  Contain the photometry parameters for all  observation modes.<a href="description.html#pht">More...</a></td><td>pht</td><td>PHOTTAB</td><td><a href="NICPhot">All</a></td></tr>
+        <tr><td>**Geometric Distortion Coefficients Table**  Used in correcting geometric distortion of  image mode data.<a href="description.html#idc">More...</a></td><td>idc</td><td>IDCTAB</td><td><a href="NICDistCoeff">All</a></td></tr>
+        <tr><td>**Persistence Model Files**  Ring median of the BEP (Bright earth persistence) image.<a href="description.html#pmd">More...</a></td><td>pmd</td><td>PMODFILE</td><td><a href="NICPersistenceModel">NIC2</a></td></tr>
+        <tr><td>**Persistence Mask Files**  Combination of the bad pixel list with the 35x35 in the corners.<a href="description.html#pmk">More...</a></td><td>pmk</td><td>PMSKFILE</td><td><a href="NICPersistenceMask">NIC2</a></td></tr>
+        <tr><td>**Nonlincor Zeropoint Scaling Table**  Ratio, for each filter, in zero point count rate before  and after applying rnlincor.<a href="description.html#zpr">More...</a></td><td>zpr</td><td>ZPRATAB</td><td><a href="NICnonlinZeropt">All</a></td></tr>
+        <tr><td>**Nonlinearity Power Law Tables**  The power law slope of count rate non-linearity  at a number of wavelengths.<a href="description.html#nlc">More...</a></td><td>nlc</td><td>RNLCORTB</td><td><a href="NICnonlinZeropt">All</a></td></tr>
+        <tr><td>**Special Darks for SAACLEAN**  Darks used by saaclean.<a href="description.html#sdk">More...</a></td><td>sdk</td><td>SAADFILE</td><td><a href="NICdarkSAA">All</a></td></tr>
+        <tr><td>**SAA Darks**  Special darks taken after SAA passage.<a href="http://www.stsci.edu/hst/nicmos/calibration/reffiles/post_saa.html">More...</a></td><td>---</td><td>---</td><td>N/A</td></tr>
+        <tr><td>**ST-ECF Grism Calibration Files**  Inverse sensitivity and  wavelength calibration data for grisms.<a href="http://www.stsci.edu/hst/nicmos/calibration/reffiles/grism_list.html">More...</a></td><td>---</td><td>---</td><td><a href="http://stecf.org/instruments/NICMOSgrism/calibration/nic3_calib/index.html">NIC3</a></td></tr>
+    </table>
+</document>

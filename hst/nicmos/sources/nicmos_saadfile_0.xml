@@ -1,0 +1,11 @@
+<document>
+    <url>
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/NICMOS/reftablequeryindex/NICdarkSAA
+    </url>
+    <table>
+        <tr><th>File</th><th>Camera</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Date</th><th>Comments</th></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=qb31722sn*">qb31722sn_sdk.fits</a></td><td>1</td><td>Jan 01 2000  12:00AM</td><td>INFLIGHT</td><td>11667</td><td>Nov 03 2006  05:27PM</td><td>2006/11/03 17:57:00 US/Eastern</td><td>Model NIC1 FAST nreads=25 dark nic1nr01f_drk.fits renamed to h1s1026en_drk.fits on Jan 28 1997</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=qb31722tn*">qb31722tn_sdk.fits</a></td><td>2</td><td>Jan 01 2000  12:00AM</td><td>INFLIGHT</td><td>11667</td><td>Nov 03 2006  05:27PM</td><td>2006/11/03 17:57:00 US/Eastern</td><td>Model NIC2 FAST nreads=25 dark nic2nr01f_drk.fits renamed to h1s1026mn_drk.fits on Jan 28 1997</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=qb317230n*">qb317230n_sdk.fits</a></td><td>3</td><td>Jan 01 2000  12:00AM</td><td>INFLIGHT</td><td>11667</td><td>Nov 03 2006  05:27PM</td><td>2006/11/03 17:57:00 US/Eastern</td><td>Model NIC3 FAST nreads=25 dark nic3nr01f_drk.fits renamed to h1s10270n_drk.fits on Jan 28 1997</td></tr>
+    </table>
+</document>

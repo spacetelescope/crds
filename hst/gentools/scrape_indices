@@ -4,7 +4,7 @@
 from crds import log
 
 if len(sys.argv) == 1:
-    INSTRUMENTS = ["acs","cos","stis","wfc3"]
+    from crds.hst import INSTRUMENTS
 else:
     INSTRUMENTS = sys.argv[1:]
 

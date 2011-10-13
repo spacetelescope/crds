@@ -202,6 +202,28 @@ KIND_KEYS = {
                 "oscntab" : ('detector',),
                 "pfltfile" : ('detector', 'filter', '*binaxis1', '*binaxis2',),  # , "amp"),
     },
+
+# ../nicmos/sources/nicmos_darkfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'nread', 'otfr_start_date', 'pedigree', 'readout', 'samp_seq', 'use_after')
+# ../nicmos/sources/nicmos_flatfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'filter', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_idctab_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_illmfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'filter', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_index.xml --> ('camera', 'extension', 'header_keyword', 'reference_file_type')
+# ../nicmos/sources/nicmos_maskfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_nlinfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_noisfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'nread', 'otfr_start_date', 'pedigree', 'readout', 'use_after')
+# ../nicmos/sources/nicmos_phottab_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_pmodfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_pmskfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_rnlcortb_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_saadfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_tdffile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'filter', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_tempfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+# ../nicmos/sources/nicmos_zpratab_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+   
+   "nicmos" : {
+        "darkfile" : ('camera', ),
+        "flatfile" : ('camera', ),
+   },
 }
 
 # ===================================================================

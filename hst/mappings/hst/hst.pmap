@@ -10,4 +10,5 @@ selector = {
     'COS' : 'hst_cos.imap',
     'STIS' : 'hst_stis.imap',
     'WFC3' : 'hst_wfc3.imap',
+    'NICMOS' : 'hst_nicmos.imap',
 }
