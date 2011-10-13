@@ -737,9 +737,9 @@ class ReferenceMapping(Mapping):
             
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
-        sofar = (("observatory", self.observatory), 
-                 ("INSTRUME",self.instrument), 
-                 ("filekind", self.reftype))
+        sofar = ((("observatory", self.observatory), 
+                  ("INSTRUME",self.instrument), 
+                  ("filekind", self.reftype),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
 # ===================================================================

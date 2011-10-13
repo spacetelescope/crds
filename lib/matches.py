@@ -9,7 +9,7 @@ The core function find_match_tuples() returns a list of "match paths",  lists of
 parkey value assignment tuples:
 
 >>> find_match_tuples("hst.pmap", "u451251ej_bpx.fits")
-[(('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab'), ('DETECTOR', 'SBC'), ('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00'))]
+[((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
 
 observatory and filekind are really pseudo-parkeys because they are not
 directly present in dataset file headers,  whereas the other parkeys all 

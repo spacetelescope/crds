@@ -256,7 +256,7 @@ class Selector(object):
         """
         matches = []
         for key, value in self._selections:
-            here = tuple(sofar + self.match_item(key))
+            here = tuple(sofar + (self.match_item(key),))
             if isinstance(value, Selector):
                 matches += value.file_matches(filename, here)
             else:
@@ -437,7 +437,7 @@ class MatchingSelector(Selector):
     to a given file:
     
     >>> m.file_matches("200")
-    [(('foo', '1.0'), ('bar', '2.0')), (('foo', '5.0'), ('bar', '3.0'))]
+    [((('foo', '1.0'), ('bar', '2.0')),), ((('foo', '5.0'), ('bar', '3.0')),)]
     
     The result of file_matches() is a list of lists of keys because it is
     used recursively on trees of mappings and selectors.
