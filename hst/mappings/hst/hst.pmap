@@ -2,7 +2,7 @@ header = {
     'mapping' : 'pipeline',
     'observatory' : 'HST',
     'parkey' : ('INSTRUME',),
-    'sha1sum' : '2391f4f14c0e1d49fbe118c0b15e9954dc9c42a6',
+    'sha1sum' : 'b68c3d40a2a943ecd901d60175b074007567c85d',
 }
 
 selector = {
