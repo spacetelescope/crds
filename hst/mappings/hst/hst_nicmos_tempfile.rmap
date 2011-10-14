@@ -1,0 +1,26 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'TEMPFILE',
+    'sha1sum' : '4581571219e1b2403423ad7db6d09ab2fc435fa2',
+}
+
+selector = Match({
+    ('1.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 't160440tn_tdd.fits',
+        '1997-08-21 00:00:00' : 'sc31741bn_tdd.fits',
+        '2002-01-01 00:00:00' : 'sc31741ln_tdd.fits',
+    }),
+    ('2.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 't160441hn_tdd.fits',
+        '1997-08-21 00:00:00' : 'sc31741cn_tdd.fits',
+        '2002-01-01 00:00:00' : 't7a2001en_tdd.fits',
+    }),
+    ('3.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 't160441nn_tdd.fits',
+        '1997-08-21 00:00:00' : 'sc31741dn_tdd.fits',
+        '2002-01-01 00:00:00' : 'sc31741nn_tdd.fits',
+    }),
+})

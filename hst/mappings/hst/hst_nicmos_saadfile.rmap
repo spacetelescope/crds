@@ -1,0 +1,20 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'SAADFILE',
+    'sha1sum' : '1fea7298a1320836af8d30e56962a3101086b70d',
+}
+
+selector = Match({
+    ('1.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb31722sn_sdk.fits',
+    }),
+    ('2.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb31722tn_sdk.fits',
+    }),
+    ('3.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb317230n_sdk.fits',
+    }),
+})

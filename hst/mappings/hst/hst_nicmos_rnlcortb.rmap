@@ -1,0 +1,15 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'RNLCORTB',
+    'sha1sum' : '9f3210af3221476c532e6f8d2a573fad01800fcf',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1997-01-01 00:00:00' : 'r5o0317en_zpr.fits',
+        '2002-01-01 00:00:00' : 'r5o0317fn_zpr.fits',
+    }),
+})

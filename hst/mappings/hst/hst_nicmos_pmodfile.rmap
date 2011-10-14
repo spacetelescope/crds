@@ -1,0 +1,14 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PMODFILE',
+    'sha1sum' : 'e3895aa72555208bc0b9ccdef84a519213e1ea1a',
+}
+
+selector = Match({
+    ('2.0',) : UseAfter({
+        '2002-03-01 00:00:00' : 'sct17335n_pmd.fits',
+    }),
+})

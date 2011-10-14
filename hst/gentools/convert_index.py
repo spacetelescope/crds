@@ -29,7 +29,8 @@ from crds import log, rmap
 
 # ==========================================================================================
 
-INSTRUMENTS = ["acs", "cos", "wfc3", "stis", "nicmos", "wfpc2"]
+# INSTRUMENTS = ["acs", "cos", "wfc3", "stis", "nicmos", "wfpc2"]
+from crds.hst import INSTRUMENTS
 
 def get_instrument(fname):
     for instr in INSTRUMENTS:
@@ -83,7 +84,7 @@ def generate_context_rmap(fname):
             continue
         eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
         selector[keyword] = (converted["ext"], eventually_generated_rmap)
-    imap = rmap.Mapping(instr + ".imap", header, selector)
+    imap = rmap.Mapping("./"  + instr + ".imap", header, selector)
     imap.write()
 
 def get_value_from_keys(d, keylist):

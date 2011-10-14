@@ -1,0 +1,19 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PHOTTAB',
+    'sha1sum' : '690a3e2d86e64eb8c9396ad881334a4ab9f833a0',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1997-01-01 00:00:00' : 't6423130n_pht.fits',
+        '1997-01-04 00:00:00' : 't6423131n_pht.fits',
+        '1997-01-06 00:00:00' : 't6423132n_pht.fits',
+        '1997-01-07 00:00:00' : 't6423133n_pht.fits',
+        '1997-07-01 00:00:00' : 't6423134n_pht.fits',
+        '2002-01-01 00:00:00' : 't621822qn_pht.fits',
+    }),
+})

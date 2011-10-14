@@ -1,0 +1,26 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'instrument',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '9e4083e5b0a53113dd5d910c193305e3610de1da',
+    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/NICMOS/reftablequeryindex',
+}
+
+selector = {
+    'darkfile' : ('drk', 'hst_nicmos_darkfile.rmap'),
+    'flatfile' : ('flt', 'hst_nicmos_flatfile.rmap'),
+    'idctab' : ('idc', 'hst_nicmos_idctab.rmap'),
+    'illmfile' : ('ilm', 'hst_nicmos_illmfile.rmap'),
+    'maskfile' : ('msk', 'hst_nicmos_maskfile.rmap'),
+    'nlinfile' : ('lin', 'hst_nicmos_nlinfile.rmap'),
+    'noisfile' : ('noi', 'hst_nicmos_noisfile.rmap'),
+    'phottab' : ('pht', 'hst_nicmos_phottab.rmap'),
+    'pmodfile' : ('pmd', 'hst_nicmos_pmodfile.rmap'),
+    'pmskfile' : ('pmk', 'hst_nicmos_pmskfile.rmap'),
+    'rnlcortb' : ('nlc', 'hst_nicmos_rnlcortb.rmap'),
+    'saadfile' : ('sdk', 'hst_nicmos_saadfile.rmap'),
+    'tdffile' : ('tdf', 'hst_nicmos_tdffile.rmap'),
+    'tempfile' : ('tdd', 'hst_nicmos_tempfile.rmap'),
+    'zpratab' : ('zpr', 'hst_nicmos_zpratab.rmap'),
+}

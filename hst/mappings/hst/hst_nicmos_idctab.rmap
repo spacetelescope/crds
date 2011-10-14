@@ -1,0 +1,20 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'IDCTAB',
+    'sha1sum' : '35bae176703dba970f29a3f4cab3739e882216d1',
+}
+
+selector = Match({
+    ('1.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d1954tn_idc.fits',
+    }),
+    ('2.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d19550n_idc.fits',
+    }),
+    ('3.0',) : UseAfter({
+        '2000-01-01 00:00:00' : 's8d19551n_idc.fits',
+    }),
+})

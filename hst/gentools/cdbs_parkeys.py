@@ -221,8 +221,22 @@ KIND_KEYS = {
 # ../nicmos/sources/nicmos_zpratab_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
    
    "nicmos" : {
-        "darkfile" : ('camera', ),
-        "flatfile" : ('camera', ),
+        "darkfile" : ('camera', 'readout', 'nread', 'samp_seq'),
+        "flatfile" : ('camera', 'filter'),
+        "idctab" : ('camera',),
+        "illmfile" : ('camera', 'filter', ),
+        "maskfile" : ('camera',),
+        "nlinfile" : ('camera',),
+        "noisfile" : ('camera', 'readout', 'nread',),
+        "phottab" :  (),
+        "pmodfile" : ('camera',),
+        "pmskfile" : ('camera',),
+        "rnlcortb" : (),
+        "saadfile" : ('camera',),
+        "tdffile" : ('camera', 'filter',),
+        "tempfile" : ('camera',),
+        "zpratab" : (),
+        
    },
 }
 

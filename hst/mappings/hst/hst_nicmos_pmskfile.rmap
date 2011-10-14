@@ -1,0 +1,14 @@
+header = {
+    'instrument' : 'NICMOS',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'PMSKFILE',
+    'sha1sum' : 'a9abddfb4c2a3ead1902269e8a72085225778feb',
+}
+
+selector = Match({
+    ('2.0',) : UseAfter({
+        '2002-03-01 00:00:00' : 'saf02498n_pmk.fits',
+    }),
+})
