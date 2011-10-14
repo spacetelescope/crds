@@ -21,6 +21,7 @@ import crds.hst.cos
 import crds.hst.nicmos
 import crds.hst.stis
 import crds.hst.wfc3
+import crds.hst.wfpc2
 
 # =======================================================================
 

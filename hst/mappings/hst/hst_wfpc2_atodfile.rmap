@@ -1,0 +1,23 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('MODE', 'GAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'ATODFILE',
+    'sha1sum' : 'ce1c0214bf1374939d25e41f92878a66c550b425',
+}
+
+selector = Match({
+    ('AREA', '15.0') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b09593u.r1h',
+    }),
+    ('AREA', '7.0') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b09594u.r1h',
+    }),
+    ('FULL', '15.0') : UseAfter({
+        '1993-12-01 00:00:00' : 'dbu1405fu.r1h',
+    }),
+    ('FULL', '7.0') : UseAfter({
+        '1993-12-01 00:00:00' : 'dbu1405iu.r1h',
+    }),
+})

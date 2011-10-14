@@ -14,6 +14,22 @@
         <tr><td>**Distortion Correction Table**  Used in drizzling WFPC2 images. Contains  the best distortion models for all four chips.<a href="description.html#idc">More...</a></td><td>idc</td><td>IDCTAB</td><td><a href="WFPC2IDC">FULL</a></td></tr>
         <tr><td>**Inter-chip Offsets Table**  Used in conjunction with the IDC table; contains  the secular relative orientations and positions of the chips.<a href="description.html#off">More...</a></td><td>off</td><td>OFFTAB</td><td><a href="WFPC2OFF">FULL</a></td></tr>
         <tr><td>**34 Row Displacement Correction File**  Corrects for the reduced sensitivity  seen in approximately every 34th row in the detectors.<a href="description.html#dxy">More...</a></td><td>dxy</td><td>DGEOFILE</td><td><a href="WFPC2DGEOCorr">BOTH</a></td></tr>
+
+        <tr><td>**Dark Images**  Used to detect CCD counts caused by thermal processes at the interfaces between the silicon and oxide layers, as well as charged particle and secondary radiation events.<a href="description.html#drk">More...</a></td><td>.r3h/d</td><td>DARKFILE</td>
+    <td>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2006darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2005darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2004darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2003darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2002darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2001darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/2000darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1999darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1998darks">BOTH</a>
+    <a href="http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/1997andPriordarks">BOTH</a>
+    </td>
+    </tr>
+
     </table>
     <table>
         <tr><th>Non-pipeline Reference Files</th><th>Extension</th><th>Header Keyword</th><th>Mode</th></tr>

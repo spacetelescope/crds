@@ -1,0 +1,15 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'OFFTAB',
+    'sha1sum' : '14a1d40824e0280c42bda824e309ea27b5d1e79c',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1993-12-01 00:00:00' : 's9m1329lu_off.fits',
+        '1994-01-01 00:00:00' : 's9518396u_off.fits',
+    }),
+})

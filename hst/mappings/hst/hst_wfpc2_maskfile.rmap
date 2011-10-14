@@ -1,0 +1,17 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'MASKFILE',
+    'sha1sum' : '219eff65582a3bca60bc58233470b0f5214ab1d4',
+}
+
+selector = Match({
+    ('AREA',) : UseAfter({
+        '1993-12-01 00:00:00' : 'fan15478u.r0h',
+    }),
+    ('FULL',) : UseAfter({
+        '1993-12-01 00:00:00' : 'f8213081u.r0h',
+    }),
+})

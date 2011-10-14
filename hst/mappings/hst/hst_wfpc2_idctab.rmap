@@ -1,0 +1,16 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'IDCTAB',
+    'sha1sum' : '051e377a15679eda7a40a8ba2a81237fb01dc56b',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1992-01-01 00:00:00' : 'o8v14029u_idc.fits',
+        '1993-12-01 00:00:00' : 'ta81040ku_idc.fits',
+        '1994-01-01 00:00:00' : 'ta81040lu_idc.fits',
+    }),
+})

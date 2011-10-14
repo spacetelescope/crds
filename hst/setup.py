@@ -15,6 +15,7 @@ setup(name="crds.hst",
         'crds.hst.nicmos',
         'crds.hst.stis',
         'crds.hst.wfc3',
+        'crds.hst.wfpc2',
         
         'crds.hst.gentools',
 
@@ -33,6 +34,7 @@ setup(name="crds.hst",
          'crds.hst.nicmos':'nicmos',
          'crds.hst.stis':'stis',
          'crds.hst.wfc3':'wfc3',
+         'crds.hst.wfpc2':'wfpc2',
 
         'crds.hst.gentools' : 'gentools',
         

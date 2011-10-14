@@ -1,0 +1,25 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('MODE', 'SHUTTER'), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'SHADFILE',
+    'sha1sum' : 'd46026aee4067e10721c9296ba9a2473de9aed11',
+}
+
+selector = Match({
+    ('AREA', 'A') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b10013u.r5h',
+        '1994-04-23 00:00:00' : 'e6o09402u.r5h',
+    }),
+    ('AREA', 'B') : UseAfter({
+        '1993-12-01 00:00:00' : 'e1b10014u.r5h',
+        '1994-04-23 00:00:00' : 'e6o09405u.r5h',
+    }),
+    ('FULL', 'A') : UseAfter({
+        '1993-12-01 00:00:00' : 'e371355eu.r5h',
+    }),
+    ('FULL', 'B') : UseAfter({
+        '1993-12-01 00:00:00' : 'e371355iu.r5h',
+    }),
+})

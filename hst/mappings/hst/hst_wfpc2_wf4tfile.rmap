@@ -1,0 +1,17 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('GAIN',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'WF4TFILE',
+    'sha1sum' : '61f32c27a7931b70e6960587a4f1771efe0de7f7',
+}
+
+selector = Match({
+    ('15.0',) : UseAfter({
+        '2002-03-01 00:00:00' : 't8i1146au.r7h',
+    }),
+    ('7.0',) : UseAfter({
+        '2002-03-01 00:00:00' : 't8i1146bu.r7h',
+    }),
+})

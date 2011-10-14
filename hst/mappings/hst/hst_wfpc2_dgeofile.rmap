@@ -1,0 +1,19 @@
+header = {
+    'instrument' : 'WFPC2',
+    'mapping' : 'reference',
+    'observatory' : 'HST',
+    'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'DGEOFILE',
+    'sha1sum' : '52c764eac7487f6b3075c6a0c74e2048ebf8ff7a',
+}
+
+selector = Match({
+    ('AREA',) : UseAfter({
+        '1993-12-01 00:00:00' : 'sbd1351nu_dxy.fits',
+        '1994-01-01 00:00:00' : 'sbh1653tu_dxy.fits',
+    }),
+    ('FULL',) : UseAfter({
+        '1993-12-01 00:00:00' : 'sa119437u_dxy.fits',
+        '1994-01-01 00:00:00' : 's8f1222cu_dxy.fits',
+    }),
+})

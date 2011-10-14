@@ -1,8 +1,9 @@
+import sys
+import pprint
+
 import crds.hst.tpn as tpn
 
-import crds.rmap as rmap
-import crds.log as log
-import crds.utils as utils
+from crds import (rmap, log, utils)
 
 from crds.compat import namedtuple
 
@@ -238,6 +239,43 @@ KIND_KEYS = {
         "zpratab" : (),
         
    },
+
+#../wfpc2/sources/wfpc2_atodfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_biasfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_1.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_2.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_3.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_4.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_5.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_6.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_7.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_8.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_darkfile_9.xml --> ('clock', 'comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_deltadark_0.xml --> ('clock', 'comments', 'file', 'gain', 'mode', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_dgeofile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_flatfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'filter1', 'filter2', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_idctab_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_index.xml --> ('extension', 'header_keyword', 'mode', 'pipeline_reference_files')
+#../wfpc2/sources/wfpc2_index.xml --> ('extension', 'header_keyword', 'mode', 'non-pipeline_reference_files')
+#../wfpc2/sources/wfpc2_maskfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'mode', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_offtab_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_date', 'pedigree', 'use_after')
+#../wfpc2/sources/wfpc2_shadfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'mode', 'otfr_start_date', 'pedigree', 'shutter', 'use_after')
+#../wfpc2/sources/wfpc2_wf4tfile_0.xml --> ('comments', 'delivery_#', 'delivery_date', 'file', 'gain', 'otfr_start_date', 'pedigree', 'use_after')
+
+   "wfpc2" : { 
+        "atodfile" : ('mode', 'gain',),
+        "biasfile" : ('mode', 'gain',),
+        "darkfile" : ('mode', 'clock', 'gain',),
+        "deltadark" :  ('mode', 'clock', 'gain',),
+        "dgeofile" : ('mode',),
+        "flatfile" : ('mode','filter_1','filter_2',),
+        "idctab" : (),
+        "maskfile": ('mode',),
+        "offtab" : (),
+        "shadfile": ('mode', 'shutter',),
+        "wf4tfile": ('gain',),
+   },
+
 }
 
 # ===================================================================
