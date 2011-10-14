@@ -80,4 +80,15 @@
           'mdriztab': 'mdz',
           'nlinfile': 'lin',
           'oscntab': 'osc',
-          'pfltfile': 'pfl'}}
+          'pfltfile': 'pfl'},
+ 'wfpc2': {'atodfile': '.r1h/d',
+           'biasfile': '.r2h/d',
+           'darkfile': '.r3h/d',
+           'deltadark': '.r6h/d',
+           'dgeofile': 'dxy',
+           'flatfile': '.r4h/d',
+           'idctab': 'idc',
+           'maskfile': '.r0h/d',
+           'offtab': 'off',
+           'shadfile': '.r5h/d',
+           'wf4tfile': '.r7h/d'}}

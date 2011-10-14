@@ -9,8 +9,21 @@ import pprint
 
 import pyfits
 
+
 from crds import rmap, log, utils
 from crds.certify import TpnInfo
+import geis
+
+# =============================================================================
+
+def get_header(name):
+    """Return the header dictionary of a geis or fits file."""
+    if geis.is_geis_header(name):
+        print "processing as geis"
+        return geis.get_header(name)
+    else:
+        print "processing as fits"
+        return pyfits.getheader(name)
 
 # =============================================================================
 
@@ -76,7 +89,7 @@ def get_filetype_map(context):
                     log.error("Missing reference file", repr(name))
                     continue
                 try:
-                    header = pyfits.getheader(where)
+                    header = get_header(where)
                 except IOError:
                     log.error("Error getting header/FILETYPE for", repr(where))
                     continue    
@@ -218,7 +231,7 @@ def reference_name_to_validator_key(fitsname):
     """Given a reference filename `fitsname`,  return a dictionary key
     suitable for caching the reference type's Validator.
     """
-    header = pyfits.getheader(fitsname)
+    header = get_header(fitsname)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]
