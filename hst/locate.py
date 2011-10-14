@@ -214,6 +214,7 @@ CDBS_DIRS_TO_INSTR = {
    "/oref/":"stis",
    "/iref/":"wfc3",
    "/lref/":"cos",
+   "/nref/":"nicmos",
 }
 
 def get_reference_properties(filename):
