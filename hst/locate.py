@@ -94,7 +94,7 @@ def reference_exists(reference):
 
 from .tpn import reference_name_to_validator_key
 from .tpn import get_tpninfos
-from .tpn import INSTRUMENTS, FILEKINDS
+from .__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
 
