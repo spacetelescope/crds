@@ -299,3 +299,37 @@ The CRDS web site has a link for running crds.uses over all known "official"
 mappings.   crds.uses is especially applicable for understanding the implications
 of blacklisting a particular file;  when a file is blacklisted,   all files
 indicated by crds.uses are also blacklisted.
+
+Finding Matches for a Reference in a Context
+--------------------------------------------
+
+Given a particular context and reference file name,  CRDS can also determine all
+possible matches for the reference within that context::
+
+  % python -m crds.matches hst.pmap kcb1734ij_a2d.fits
+
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'A')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'ABCD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'AD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'B')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'BC')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'C')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'D')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'A')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'ABCD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'AD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'B')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'BC')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'C')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'D')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
+  ...
+   
+What is printed out is a sequence of match tuples,  with each tuple nominally
+consisting of three parts::
+
+  (pmap_imap_rmap_path, match, use_after)
+  
+Each part in turn consists of nested tuples of the form::
+
+  (parkey, value)
+  
