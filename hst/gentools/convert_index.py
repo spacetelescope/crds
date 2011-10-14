@@ -29,7 +29,6 @@ from crds import log, rmap
 
 # ==========================================================================================
 
-# INSTRUMENTS = ["acs", "cos", "wfc3", "stis", "nicmos", "wfpc2"]
 from crds.hst import INSTRUMENTS
 
 def get_instrument(fname):

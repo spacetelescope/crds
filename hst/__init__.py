@@ -1,4 +1,4 @@
-INSTRUMENTS = ["acs","cos","stis","wfc3","nicmos"]
+INSTRUMENTS = ["acs","cos","nicmos","stis","wfc3","wfpc2"]
 
 from .tpn import FILEKINDS
 

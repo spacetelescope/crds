@@ -8,7 +8,8 @@ header = {
 selector = {
     'ACS' : 'hst_acs.imap',
     'COS' : 'hst_cos.imap',
+    'NICMOS' : 'hst_nicmos.imap',
     'STIS' : 'hst_stis.imap',
     'WFC3' : 'hst_wfc3.imap',
-    'NICMOS' : 'hst_nicmos.imap',
+    'WFCPC2' : 'hst_wfpc2.imap',
 }
