@@ -100,7 +100,7 @@ def convert_pars(pars):
         "non-pipeline_reference_files"])
     comment = comment.split("<")[0]
     try:
-        ext = pars["extension"]
+        ext = pars["extension"].replace("/d","") # change GEIS h/d to simply h
     except:
         ext = pars["file_suffix"]
     keyword = pars["header_keyword"]
