@@ -10,7 +10,7 @@ from crds.compat import namedtuple
 # =======================================================================
 
 # MAPKEYS defines the key values which are added to the secondary lookup list.
-MAPKEYS     = ('date-obs','time-obs','file')
+MAPKEYS     = ('date-obs', 'time-obs', 'file')
 
 # COMMENTKEYS defines the row items which are appended as a comment to each rmap mapping.
 COMMENTKEYS = ('comments', 'delivery_#', 'delivery_date')
@@ -423,33 +423,32 @@ def to_fitskey(instrument, var):
     return fits_key
 
 # =======================================================================
-keymatch = namedtuple("keymatch","header_keyword,extension,rmap_keys,tpn_keys")
+keymatch = namedtuple("keymatch","filekind,rmap_keys,tpn_keys")
 
-def get_parameters(instrument_mapping_name):
+def get_parameters(imap):
     """Given an `instrument`,  get_parameters() will dump the rmap and tpn parameter lists
     so that a correspondence can be defined between FITS header keywords and CDBS HTML table
     column names.
-    """
-    import crds.rmap as rmap
-    
-    instr_mapping = rmap.load_mapping(instrument_mapping_name)
-    instrument = utils.mapping_to_instrument(instrument_mapping_name)
+    """    
+    instr_mapping = rmap.load_mapping(imap)
+    instrument, filekind = utils.get_file_properties("hst", imap)
     components = []
 
-    for reftype, rmap in instr_mapping.selections.items():
+    for filekind, mapping in instr_mapping.selections.items():
         try:
-            rmap_keys = rmap.header["parkey"]
+            rmap_keys = mapping.header["parkey"]
         except Exception, e:
             rmap_keys = str(e)
-            log.warning("Can't get rmap for:", repr((instrument, reftype)), str(e))
+            log.warning("Can't get rmap for:", repr((instrument, filekind)), str(e))
         try:
-            tpn_keys = tuple(sorted(tpn.get_tpn(instrument, reftype).keys()))
+            infos = tpn.get_tpninfos(instrument, filekind)
+            tpn_keys = tuple(sorted([info.name for info in infos]))
         except Exception, e:
             raise
             tpn_keys = str(e)
-            log.warning("Can't get tpn for:", repr((instrument, reftype)), repr(e))
+            log.warning("Can't get tpn for:", repr((instrument, filekind)), repr(e))
 
-        components.append( keymatch(reftype, rmap.extension, rmap_keys, tpn_keys) )
+        components.append( keymatch(filekind, rmap_keys, tpn_keys) )
 
     return components
 
