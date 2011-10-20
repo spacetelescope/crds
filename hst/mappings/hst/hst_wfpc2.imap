@@ -3,20 +3,19 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'c349edfadf94964374b92cfc105470997875a098',
+    'sha1sum' : 'd5d96d90e3e8317f8fb327217b041a6167e23981',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2',
 }
 
 selector = {
-    'atodfile' : ('.r1h/d', 'hst_wfpc2_atodfile.rmap'),
-    'biasfile' : ('.r2h/d', 'hst_wfpc2_biasfile.rmap'),
-    'darkfile' : ('.r3h/d', 'hst_wfpc2_darkfile.rmap'),
-    'deltadark' : ('.r6h/d', 'hst_wfpc2_deltadark.rmap'),
+    'atodfile' : ('.r1h', 'hst_wfpc2_atodfile.rmap'),
+    'biasfile' : ('.r2h', 'hst_wfpc2_biasfile.rmap'),
+    'darkfile' : ('.r3h', 'hst_wfpc2_darkfile.rmap'),
     'dgeofile' : ('dxy', 'hst_wfpc2_dgeofile.rmap'),
-    'flatfile' : ('.r4h/d', 'hst_wfpc2_flatfile.rmap'),
+    'flatfile' : ('.r4h', 'hst_wfpc2_flatfile.rmap'),
     'idctab' : ('idc', 'hst_wfpc2_idctab.rmap'),
-    'maskfile' : ('.r0h/d', 'hst_wfpc2_maskfile.rmap'),
+    'maskfile' : ('.r0h', 'hst_wfpc2_maskfile.rmap'),
     'offtab' : ('off', 'hst_wfpc2_offtab.rmap'),
-    'shadfile' : ('.r5h/d', 'hst_wfpc2_shadfile.rmap'),
-    'wf4tfile' : ('.r7h/d', 'hst_wfpc2_wf4tfile.rmap'),
+    'shadfile' : ('.r5h', 'hst_wfpc2_shadfile.rmap'),
+    'wf4tfile' : ('.r7h', 'hst_wfpc2_wf4tfile.rmap'),
 }

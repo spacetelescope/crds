@@ -10,15 +10,19 @@ def get_header(name):
            "File " + repr(name) + " is not a geis filename."
     header = {}
     for line in open(name):
-        words = line.split()
-        if len(words) < 3:
-            continue
-        if words[1] != "=":
+        words = [x.strip() for x in line.split("=")]
+        if len(words) < 2:
             continue
         key = words[0]
         if key == "HISTORY":
             continue
-        value = words[2]
+        
+        if not words[1]:
+            header[key] = ''
+        elif words[1][0] == "'":
+            value = words[1].split("'")[1].strip()
+        else:
+            value = words[1].split("/")[0].strip()
         header[key] = value
     return header
 

@@ -32,7 +32,7 @@ True
 Pipeline reference files are also broken down by instrument:
 
 >>> sorted(p.reference_name_map().keys())
-['acs', 'cos', 'stis', 'wfc3']
+['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
 
 >>> i = InstrumentContext.from_file("hst_acs.imap")
 

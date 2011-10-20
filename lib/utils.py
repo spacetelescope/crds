@@ -10,6 +10,76 @@ from crds import (log, compat)
 
 # ===================================================================
 
+def cached(func):
+    """The cached decorator embeds a dictionary in a function wrapper to
+    capture prior results.   The wrapped function works like the original,
+    except it's faster because it fetches results for prior calls from the
+    cache.   The wrapped function has two extra attributes
+    
+    .cache         -- { parameters: old_result } dictionary
+    .uncached      -- original unwrapped function
+        
+    >>> @cached
+    ... def sum(x,y):
+    ...   print "really doing it."
+    ...   return x+y
+    
+    The first call should actually call the unwrapped sum():
+
+    >>> sum(1,2)
+    really doing it.
+    3
+    
+    The second call will return the prior result found in the cache:
+    
+    >>> sum(1,2)
+    3
+    
+    Dump or operate on the cache like this, it's just a dict:
+    
+    >>> sum.cache
+    {(1, 2): 3}
+    
+    By-pass the cache and call the undecorated function like this:
+    
+    >>> sum.uncached(1,2)
+    really doing it.
+    3
+    
+    Clear the cache like this:
+    
+    >>> sum.cache.clear()
+    >>> sum(1,2)
+    really doing it.
+    3
+    """
+    cache = dict()
+    def cacher(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    cacher.func_name = func.func_name
+    cacher.__dict__["cache"] = cache
+    cacher.__dict__["uncached"] = func
+    return cacher
+
+# ===================================================================
+
+def invert_dict(d):
+    """Return the functional inverse of a dictionary,  raising an exception
+    for values in `d` which map to more than one key producing an undefined
+    inverse.
+    """
+    inverse = {}
+    for key, value in d.items():
+        if value in inverse:
+            raise ValueError("Undefined inverse because of duplicate value " + \
+                             repr(value))
+        inverse[value] = key
+    return inverse
+    
+# ===================================================================
+
 def evalfile(fname):
     """Evaluate and return the contents of file `fname`,  restricting
     expressions to data literals. 

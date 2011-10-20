@@ -1,6 +1,6 @@
 <document>
     <url>
-        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2/WFPC2IDTSBias
+        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2/WFPC2Bias
     </url>
     <table>
         <tr><th>File</th><th>Mode</th><th>Gain</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Date</th><th>Comments</th></tr>

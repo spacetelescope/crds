@@ -50,8 +50,8 @@ setup(name="crds.hst",
             'cdbs.paths',
             'cdbs.paths.gz',
             'cdbs/cdbs_tpns/*.tpn',
-            'tpn_extensions.dat',
-            'tpn_filetypes.dat',
+            'cdbs/cdbs_tpns/cdbscatalog.dat',
+            '*.dat',
             ],
 
         'crds.mappings.hst' : [

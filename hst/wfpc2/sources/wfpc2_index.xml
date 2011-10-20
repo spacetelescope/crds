@@ -31,13 +31,4 @@
     </tr>
 
     </table>
-    <table>
-        <tr><th>Non-pipeline Reference Files</th><th>Extension</th><th>Header Keyword</th><th>Mode</th></tr>
-        <a name="idt"/>
-        <tr><td>**IDT Superbias Files**  Early bias files created by the IDT to remove any  position-dependent bias pattern remaining after the pedestal level is removed.<a href="description.html#idtsb">More...</a></td><td>.r2h/d</td><td>BIASFILE</td><td><a href="WFPC2IDTSBias">FULL</a></td></tr>
-        <tr><td>**IDT Superdark Files**  Early dark files created by the IDT; behave like regular pipeline  darks, may have better noise characteristics.<a href="description.html#idtsd">More...</a></td><td>.r3h/d</td><td>DARKFILE</td><td><a href="WFPC2IDTSDarks">FULL</a></td></tr>
-        <tr><td>**IDT Deltadark Files**  Used with IDT Superdark and Superbias files to remove hot pixels in early WFPC2 data.<a href="description.html#idtdd">More...</a></td><td>.r6h/d</td><td>DELTADARK</td><td><a href="WFPC2IDTDDarks">FULL</a></td></tr>
-        <tr><td>**Correction Flats from Erich Karkoschka**  Correction flat to be multiplied by the 'previous' flatfield to produce a less noisy revised flatfield.<a href="description.html#corfl">More...</a></td><td>.r6h/d</td><td>---</td><td><a href="WFPC2CorrFlats">FULL</a></td></tr>
-        <tr><td>**Pixel Area Correction File**  Used to restore the proper total counts of the target.<a href="description.html#pix">More...</a></td><td>.r9h/d</td><td>---</td><td><a href="WFPC2PixCorr">FULL</a></td></tr>
-    </table>
 </document>

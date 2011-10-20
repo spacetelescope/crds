@@ -1,7 +1,32 @@
 """This module defines functions for loading HST's CDBS .tpn files which
 describe reference parameters and their values.   The .tpn files are used to
 validate headers or tables in the original CDBS system and list the parameters 
-each file kind must define.
+each filekind must define.   This module also loads the file cdbscatalog.dat
+which defines naming relationships for each filekind with respect to TPNs.
+Whereas filekinds tend to be 7-8 character header keywords,  TPNs refer to the 
+same thing,  essentially a type of reference file,  using a 3-or-so character 
+filename suffix or extension.
+
+There's a lot of entropy here given HST's 20 year history and changes in 
+convention and file formatting.   Originally file extensions conveyed both format
+and purpose.   Later with the switch to .fits filenames convey only format and
+a TPN suffix conveys purpose.  This suffix generally but not always seems to be
+named "reftype" in cdbscatalog.dat.
+
+CRDS terminology is derived from the CDBS web site instrument indices.  Those
+pages display an "extension" column which is included in CRDS imaps and called,
+not surprisingly, "extension".   That "extension" column seems to correspond 
+to cdbscatalog.dat column "ext" and "reftype" combined, depending on file format.
+For .fits,  CRDS extension == catalog reftype.  For supported non-FITS,  CRDS
+extension == catalog ext.
+
+The importance of sorting all this out is being able to map 
+{ filekind : tpn_file } by combining info from the CDBS web pages with info
+in cdbscatalog.dat.
+
+Another somewhat difficult mapping is going from a reference file's description
+of it's purpose to the corresponding TPN.   Reference file's identify their
+purpose using the FILETYPE keyword.
 """
 import sys
 import os.path
@@ -9,20 +34,21 @@ import pprint
 
 import pyfits
 
-
 from crds import rmap, log, utils
 from crds.certify import TpnInfo
 import geis
 
 # =============================================================================
 
+HERE = os.path.dirname(__file__) or "./"
+
+# =============================================================================
+
 def get_header(name):
-    """Return the header dictionary of a geis or fits file."""
+    """Return the unconditioned header dictionary of a geis or fits file."""
     if geis.is_geis_header(name):
-        print "processing as geis"
         return geis.get_header(name)
     else:
-        print "processing as fits"
         return pyfits.getheader(name)
 
 # =============================================================================
@@ -33,20 +59,112 @@ def update_tpn_data(pipeline_context):
     but the way HST is.
     """
     log.info("Computing TPN extension map")
-    tpn_extensions = get_tpn_map(pipeline_context)
-    open("tpn_extensions.dat", "w+").write(pprint.pformat(tpn_extensions))
+    tpn_filekinds = get_filekind_to_extension(pipeline_context)
+    open("tpn_filekinds.dat", "w+").write(pprint.pformat(tpn_filekinds))
     log.info("Computing TPN filetype map")    
-    tpn_filetypes = get_filetype_map(pipeline_context)
+    tpn_filetypes = get_filetype_to_extension(pipeline_context)
     open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
     log.standard_status()
     
 # =============================================================================
 
-HERE = os.path.dirname(__file__) or "./"
-
-def get_tpn_map(pipeline_context):
+def evalfile_with_fail(filename):
+    """Evaluate and return a dictionary file,  returning {} if the file
+    cannot be found.
     """
-    Return the map of 3 character tpn extensions used by CDBS:  
+    if os.path.exists(filename):
+        result = utils.evalfile(filename)
+    else:
+        result = {}
+    return result
+
+def invert_instr_dict(map):
+    """Invert a set of nested dictionaries of the form {instr: {key: val}}
+    to create a dict of the form {instr: {val: key}}.
+    """
+    inverted = {}
+    for instr in map:
+        inverted[instr] = utils.invert_dict(map[instr])
+    return inverted
+
+# .e.g. FILEKIND_TO_EXTENSION = {                 
+# 'acs': {'atodtab': 'a2d',
+#         'biasfile': 'bia',
+FILEKIND_TO_EXTENSION = evalfile_with_fail(HERE + "/tpn_filekinds.dat")
+EXTENSION_TO_FILEKIND = invert_instr_dict(FILEKIND_TO_EXTENSION)
+
+#.e.g. FILETYPE_TO_EXTENSION = {
+# 'acs': {'analog-to-digital': 'a2d',
+#         'bad pixels': 'bpx',
+FILETYPE_TO_EXTENSION = evalfile_with_fail(HERE + "/tpn_filetypes.dat")
+EXTENSION_TO_FILETYPE = invert_instr_dict(FILETYPE_TO_EXTENSION)
+
+
+# =============================================================================
+
+class CdbsCat(object):
+    """Represents one record from cdbscatalog.dat,  i.e. one filekind."""
+    def __init__(self, inst, reftype, ftype, template, ext, *args):
+        self.inst = inst
+        self.reftype = reftype
+        self.ftype = ftype
+        self.template = template
+        self.ext = ext
+        self.header = self.parse_header(args)
+    
+    def parse_header(self, args):
+        """In general the last parameter in a catalog looks like this:
+
+        "key=value,key=value".   
+        
+        parse_header() is called with the split() of the trailing parameters of
+        the catalog record.  parse_header() recombines them separated by a single
+        space and converts the result into a dictionary:
+        
+        { key: value, key: value }.
+
+        The splitting and recombination is lossy with respect to whitespace but
+        works for existing records.
+        """
+        header_keywords = " ".join(args)
+        if header_keywords.startswith('"'):
+            header_keywords = header_keywords[1:-1]
+        header_keywords = header_keywords.split(",")
+        header = {}
+        for assgn in header_keywords:
+            if not assgn:
+                continue
+            key, val = [x.strip() for x in assgn.split("=")]
+            header[key] = val  
+        return header
+
+    def __repr__(self):
+        rep = "CdbsCat("
+        for name in "inst,reftype,ftype,template,ext,header".split(","):
+            rep += name + "=" + repr(getattr(self, name)) + ", "
+        return rep[:-2] + ")"
+
+def load_cdbs_catalog():
+    """Return a list of CdbsCat objects read from cdbscatalog.dat"""
+    catpath = os.path.join(HERE, "cdbs", "cdbs_tpns","cdbscatalog.dat")
+    catalog = []
+    for line in open(catpath):
+        line = line.strip()
+        if line.startswith("#") or "_ld.tpn" in line:
+            continue
+        words = line.split()
+        catalog.append(CdbsCat(*words))
+    return catalog
+
+CDBS_CATALOG = load_cdbs_catalog()
+
+# =============================================================================
+
+def get_filekind_to_extension(pipeline_context):
+    """
+    Return the map of 3 character tpn extensions used by CDBS by following
+    a pipeline context and reading the instrument mappings.   This is really
+    just another spelling of the info in the imaps:  
         
     { instrument : { filekind : extension } }
     """
@@ -62,69 +180,29 @@ def get_tpn_map(pipeline_context):
             tpns[instrument][filekind] = instr_sel.extensions[filekind]
     return tpns
 
-# .e.g. TPN_EXTENSIONS = {                 
-# 'acs': {'atodtab': 'a2d',
-#         'biasfile': 'bia',
-
-try:
-    TPN_EXTENSIONS = utils.evalfile(HERE + "/tpn_extensions.dat")
-except Exception:
-    log.error("Couldn't load tpn_extensions.dat")
-    TPN_EXTENSIONS = {}
 
 # =============================================================================
 
-def get_filetype_map(context):
-    """Generate the FILETYPE_TO_EXTENSION map below."""
-    pipeline = rmap.get_cached_mapping(context)
-    fmap = {}
-    for instrument, imapping in pipeline.selections.items():
-        fmap[instrument] = {}
-        for filekind, rmapping in imapping.selections.items():
-            for name in rmapping.reference_names():
-                log.info("Scanning", instrument, filekind, name)
-                try:
-                    where = pipeline.locate.locate_server_reference(name)
-                except KeyError:
-                    log.error("Missing reference file", repr(name))
-                    continue
-                try:
-                    header = get_header(where)
-                except IOError:
-                    log.error("Error getting header/FILETYPE for", repr(where))
-                    continue    
-                filetype = header["FILETYPE"].lower()
-                ext = name.split("_")[1].split(".")[0].lower()
-                break
-            current = fmap.get(filetype, None)
-            if current and current != ext:
-                log.error("Multiple extensions for", repr(filetype), 
-                          repr(current), repr(ext))
-                continue
-            if filetype not in fmap[instrument]:
-                fmap[instrument][filetype] = ext
-                log.info("Setting", repr(instrument), repr(filetype),
-                         "to extension", repr(ext))
-    return fmap
-
-#.e.g. FILETYPE_TO_EXTENSION = {
-# 'acs': {'analog-to-digital': 'a2d',
-#         'bad pixels': 'bpx',
-
-try:
-    FILETYPE_TO_EXTENSION = utils.evalfile(HERE + "/tpn_filetypes.dat")
-except Exception:
-    log.error("Couldn't load tpn_filetypes.dat")
-    FILETYPE_TO_EXTENSION = {}
+def get_filetype_to_extension(context):
+    """Generate a map  { instrument : { filetype : suffix_ext }}
+    
+    This function is only known to work for acs, cos, nicmos, stis, wfc3, wfpc, 
+    wfpc2.
+    """
+    map = {}
+    for cat in CDBS_CATALOG:
+        instr = cat.header.get("instrument", cat.inst)
+        if instr not in map:
+            map[instr] = {}
+        filetype = cat.header.get("filetype", cat.reftype).lower()
+        if cat.ext == ".fits":
+            suffix_ext = cat.reftype
+        else:
+            suffix_ext = cat.ext
+        map[instr][filetype] = suffix_ext
+    return map
 
 # =============================================================================
-
-EXTENSION_TO_FILEKIND = {}
-for instrument in TPN_EXTENSIONS:
-    if instrument not in EXTENSION_TO_FILEKIND:
-        EXTENSION_TO_FILEKIND[instrument] = {}
-    EXTENSION_TO_FILEKIND[instrument] = dict( \
-        [(val,key) for (key,val) in TPN_EXTENSIONS[instrument].items()])
 
 def filetype_to_filekind(instrument, filetype):
     """Map the value of a FILETYPE keyword onto it's associated
@@ -140,7 +218,6 @@ def extension_to_filekind(instrument, extension):
     associated filekind keyword name,  i.e. drk --> darkfile
     """
     return EXTENSION_TO_FILEKIND[instrument][extension]
-    
 
 # =============================================================================
 
@@ -211,25 +288,34 @@ INSTRUMENT_TO_TPN = {
     "nicmos" : "nic",
 }
 
-def tpn_filepath(instrument, extension):
+def tpn_filepath(instrument, filekind):
     """Return the full path for the .tpn file corresponding to `instrument` and 
-    CDBS filetype `extension`.
+    `filekind`,  the CRDS name for the header keyword which refers to this 
+    reference.
     """
-    return os.path.join(HERE, "cdbs", "cdbs_tpns",
-            INSTRUMENT_TO_TPN[instrument] + "_" + extension + ".tpn")
+    rootpath = os.path.join(
+        HERE, "cdbs", "cdbs_tpns", INSTRUMENT_TO_TPN[instrument])
+    if instrument in ["wfpc2"]:
+        extension = FILEKIND_TO_EXTENSION[instrument][filekind]
+        path = rootpath + "_" + filetype + ".tpn"
+    else:
+        file_suffix = FILEKIND_TO_EXTENSION[instrument][filekind]
+        path = rootpath + "_" + file_suffix + ".tpn"
+    return path
 
 def get_tpninfos(instrument, filekind):
     """Load the map of TPN_info tuples corresponding to `instrument` and 
     `extension` from it's .tpn file.
     """
-    extension = TPN_EXTENSIONS[instrument][filekind]
-    return load_tpn(tpn_filepath(instrument, extension))
+    return load_tpn(tpn_filepath(instrument, filekind))
 
 # =============================================================================
 
 def reference_name_to_validator_key(fitsname):
     """Given a reference filename `fitsname`,  return a dictionary key
     suitable for caching the reference type's Validator.
+    
+    Return (instrument, filekind)
     """
     header = get_header(fitsname)
     instrument = header["INSTRUME"].lower()
@@ -246,13 +332,16 @@ def reference_name_to_tpninfos(key):
     """
     return get_tpninfos(*key)
 
-INSTRUMENTS = TPN_EXTENSIONS.keys()
+# =============================================================================
+
+INSTRUMENTS = FILEKIND_TO_EXTENSION.keys()
 
 FILEKINDS = set()
-for instr in TPN_EXTENSIONS:
-    FILEKINDS.update(TPN_EXTENSIONS[instr].keys())
+for instr in FILEKIND_TO_EXTENSION:
+    FILEKINDS.update(FILEKIND_TO_EXTENSION[instr].keys())
 FILEKINDS = list(FILEKINDS)
 
+# =============================================================================
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:

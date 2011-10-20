@@ -17,7 +17,7 @@ import re
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh)
-import crds.hst.tpn as tpn
+from crds.hst import (tpn)
 
 HERE = os.path.dirname(__file__) or "./"
 
@@ -76,7 +76,7 @@ def test():
 def locate_reference(reference):
     """Return the absolute path for the client-side copy of a reference file.
     """
-    return os.path.join([get_crds_refpath(), reference])
+    return os.path.join([rmap.get_crds_refpath(), reference])
 
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.
@@ -215,6 +215,14 @@ CDBS_DIRS_TO_INSTR = {
    "/iref/":"wfc3",
    "/lref/":"cos",
    "/nref/":"nicmos",
+   
+   "/upsf/":"wfpc2",
+   "/uref/":"wfpc2",
+   "/uref_linux/":"wfpc2",
+   
+   "/yref/" : "fos",
+   "/zref/" : "hrs",
+   
 }
 
 def get_reference_properties(filename):
@@ -259,8 +267,9 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    instrument = pyfits.getval(filename, "INSTRUME").lower()
-    filetype = pyfits.getval(filename, "FILETYPE").lower()
+    header = tpn.get_header(filename)
+    instrument = header["INSTRUME"].lower()
+    filetype = header["FILETYPE"].lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext
 
