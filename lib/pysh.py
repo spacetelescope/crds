@@ -50,6 +50,7 @@ import re
 import glob
 import os.path
 import cStringIO
+import inspect
 
 from subprocess import PIPE, STDOUT, Popen
 
@@ -151,12 +152,13 @@ def _context(backup):
     a namespace dictionary combining his globals and locals.  `backup` is the
     number of stack frames to back up relative to the caller of _context().
     """
-    frame = sys._getframe(backup+1)
+    frame = sys._getframe(backup+2)
     context = dict()
     context.update(os.environ)
-    # c.update(frame.f_builtins)
     context.update(frame.f_globals)
     context.update(frame.f_locals)
+    args = inspect.getargvalues(frame)[3]
+    context.update(args)
     return context
 
 # This could also be made to handle simple $N sys.argv
