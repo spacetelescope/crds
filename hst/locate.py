@@ -92,9 +92,8 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from .tpn import reference_name_to_validator_key
-from .tpn import get_tpninfos
-from .__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
+from crds.hst.tpn import reference_name_to_validator_key, get_tpninfos
+from crds.hst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
 
@@ -263,7 +262,6 @@ def ref_properties_from_cdbs_path(filename):
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
-    import pyfits
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
