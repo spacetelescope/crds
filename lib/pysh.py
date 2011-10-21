@@ -152,7 +152,7 @@ def _context(backup):
     a namespace dictionary combining his globals and locals.  `backup` is the
     number of stack frames to back up relative to the caller of _context().
     """
-    frame = sys._getframe(backup+2)
+    frame = sys._getframe(backup+1)
     context = dict()
     context.update(os.environ)
     context.update(frame.f_globals)
@@ -240,7 +240,7 @@ def words(command, **keys):
     """Return the standard output of `command` split into a sequence
     of words.
     """
-    return out(command, **keys).split()
+    return _captured_output(command, **keys).out.split()
 
 def lines(command, **keys):
     """Return the standard output of `command` split into a sequence
