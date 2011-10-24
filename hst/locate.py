@@ -97,6 +97,8 @@ from crds.hst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
 
+REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
+
 def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or FITS reference file.
@@ -113,7 +115,7 @@ def get_file_properties(filename):
     """
     if rmap.is_mapping(filename):
         return decompose_newstyle_name(filename)[2:4]
-    elif filename.endswith(".fits"):
+    elif REF_EXT_RE.search(filename):
         result = get_reference_properties(filename)[2:4]
     else:
         try:
