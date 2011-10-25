@@ -223,8 +223,8 @@ class Selector(object):
             if isinstance(sel, Selector):
                 pf_sel = sel.format(indent+1)
             else:
-                pf_sel = pp.pformat(sel)
-            lines.append((indent+1)*" "*4 + pp.pformat(key) + 
+                pf_sel = repr(sel)
+            lines.append((indent+1)*" "*4 + repr(key) + 
                          " : " + pf_sel + ",")
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
