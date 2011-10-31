@@ -164,24 +164,43 @@ class CharacterValidator(KeywordValidator):
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
-
-class IntValidator(KeywordValidator):
-    """Validates integer values."""
-    condition = int
-
+    
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
 
-class FloatValidator(KeywordValidator):
+class NumericalValidator(KeywordValidator):
+    def __init__(self, info):
+        KeywordValidator.__init__(self, info)
+        self.is_range = len(info.values) == 1 and ":" in info.values[0]
+        if self.is_range:
+            smin, smax = info.values[0].split(":")
+            self.min, self.max = self.condition(smin), self.condition(smax)
+
+    def _check_value(self, value):
+        if self.is_range:
+            if value < min or value > max:
+                raise ValueError("Value for " + repr(self._info.name) + " of " + 
+                    repr(value) + " is outside acceptable range " + 
+                    self.infos.values[0])
+        else:   # First try a simple exact string match check
+            KeywordValidator._check_value(self, value)
+
+class IntValidator(NumericalValidator):
+    """Validates integer values."""
+    condition = int
+
+class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
     condition = float
     epsilon = 1e-7
-
+    
     def _check_value(self, value):
         try:
-            KeywordValidator._check_value(self, value)
-        except ValueError:
+            NumericalValidator._check_value(self, value)
+        except ValueError:   # not a range or exact match,  handle fp fuzz
+            if self.is_range: # XXX bug: boundary values don't handle fuzz
+                raise
             for possible in self._values:
                 if possible:
                     err = (value-possible)/possible

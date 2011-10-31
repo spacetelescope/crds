@@ -729,6 +729,15 @@ class MatchingSelector(Selector):
                 continue
             if not valid:  # some TPNs are type-only
                 continue
+            if len(valid) ==1 and ":" in valid[0]:   # handle ranges
+                min, max = [float(x) for x in valid[0].split(":")]
+                if min <= float(value) <= max:
+                    continue
+                else:
+                    raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
+                                  " of key " + repr(key) +  
+                                  " is not in range [" + str(min) + " .. " + 
+                                  str(max) + "]")     
             if name in self._substitutions and \
                 value in self._substitutions[name]:
                 continue
