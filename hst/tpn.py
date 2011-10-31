@@ -296,8 +296,9 @@ def tpn_filepath(instrument, filekind):
     rootpath = os.path.join(
         HERE, "cdbs", "cdbs_tpns", INSTRUMENT_TO_TPN[instrument])
     if instrument in ["wfpc2"]:
-        extension = FILEKIND_TO_EXTENSION[instrument][filekind]
-        path = rootpath + "_" + filetype + ".tpn"
+        ext = FILEKIND_TO_EXTENSION[instrument][filekind]
+        suffix = EXTENSION_TO_FILETYPE[instrument][ext]
+        path = rootpath + "_" + suffix + ".tpn"
     else:
         file_suffix = FILEKIND_TO_EXTENSION[instrument][filekind]
         path = rootpath + "_" + file_suffix + ".tpn"
