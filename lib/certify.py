@@ -316,7 +316,7 @@ def get_validators(filename):
 
 # ============================================================================
 
-def certify_fits(fitsname, dump_provenance=False):
+def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
@@ -336,93 +336,87 @@ def dump_multi_key(fitsname, keys):
                 if card.key == key:
                     log.write("["+str(i)+"]", key, card.value, card.comment)
 
-def certify_context(context, check_references=False):
+def certify_context(context, check_references=None, trap_exceptions=False):
     """Certify `context`.  Unless `shallow` is True,  recursively certify all
     referenced files as well.
-    Returns the count of errors.
     """
-    try:
-        ctx = rmap.get_cached_mapping(context)
-    except rmap.MappingError: # already includes message in exception repr
-        log.error()
-        return []
-    except Exception:
-        log.error("Couldn't load mapping", repr(context))
-        return []
-    ctx.validate()
-    if not check_references:
-        return 0
-    return certify(reference_files(ctx))
+    ctx = rmap.get_cached_mapping(context)
+    ctx.validate(trap_exceptions=trap_exceptions)
+    if check_references is None:
+        return
+    assert check_references in ["exist", "contents"], \
+        "invalid check_references parameter"
+    references = []
+    for ref in ctx.reference_names():
+        where = rmap.locate_file(ref)
+        if os.path.exists(where):
+            references.append(where)
+        else:
+            if trap_exceptions:
+                log.error("Can't find reference file " + repr(where))
+            else:
+                raise ValidationError("Missing reference file " + repr(ref) + 
+                                      " : " + str(exc))
+    if check_references == "check_contents":
+        certify_files(references, check_references=check_references, 
+                      trap_exceptions=trap_exceptions)
     
-def reference_files(mapping):
-    """Returns the list of server reference file paths for `context`."""
-    paths = []
-    for ref in mapping.reference_names():
-        try:
-            paths.append(mapping.locate.locate_server_reference(ref))
-        except KeyError:
-            log.error("Missing reference file", repr(ref))
-    return paths
-
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
-def certify_mapping(context, check_references=True):
-    """Verify that a mapping will load and that all its reference files 
-    exist within CRDS.   Otherwise raise an exception.
-    """
-    ctx = rmap.get_cached_mapping(context)
-    ctx.validate()
-    if not check_references:
-        return
-    for ref in ctx.reference_names():
+def certify_files(files, dump_provenance=False, check_references=None,  
+                  is_mapping=False, trap_exceptions=True):
+    for filename in files:
+        bname = os.path.basename(filename)
+        log.info("Certifying", repr(bname))
         try:
-            ctx.locate.reference_exists(ref)
-        except KeyError:
-            raise MissingReferenceError("Reference file " + repr(ref) + 
-                                        " is not known to CRDS." )
-
-def certify(files, dump_provenance=False):
-    """Run certify_fits() on a list of FITS `files` logging an error for the 
-    first failure in each file,  but continuing.   Returns the count of errors.
-    """
-    for fname in files:
-        log.info("Certifying", repr(os.path.basename(fname)))
-        try:
-            certify_fits(fname, dump_provenance=dump_provenance)
+            if is_mapping or rmap.is_mapping(filename):
+                certify_context(filename, check_references=check_references,
+                                trap_exceptions=trap_exceptions)
+            else:
+                certify_reference(filename, dump_provenance=dump_provenance,
+                                  trap_exceptions=trap_exceptions)
         except Exception:
-            # raise
-            log.error("Validation failed for", repr(fname))
-    return log.errors()
+            if trap_exceptions:
+                log.error("Validation error in " + repr(bname))
+            else:
+                raise
 
-
-def main(files, options):
+def main():
     """Perform checks on each of `files`.   Print status.   If file is a
     context/mapping file,  it is used to define associated reference files which
     are located on the CRDS server.  If file is a .fits file,  it should include
     a relative or absolute filepath.
     """
-    for file_ in files:
-        if rmap.is_mapping(file_) or options.mapping:
-            certify_context(file_, check_references=options.deep)
-        else:
-            certify([file_], dump_provenance=options.provenance)
+    parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
+    parser.add_option("-d", "--deep", dest="deep",
+        help="Certify reference files referred to by mappings have valid contents.", 
+        action="store_true")
+    parser.add_option("-e", "--exist", dest="exist",
+        help="Certify reference files referred to by mappings exist.", 
+        action="store_true")
+    parser.add_option("-m", "--mapping", dest="mapping",
+        help="Ignore extensions, the files being certified are mappings.", 
+        action="store_true")
+    parser.add_option("-p", "--dump-provenance", dest="provenance",
+        help="Dump provenance keywords.", action="store_true")
+    
+    options, args = log.handle_standard_options(sys.argv, parser=parser)
+
+    if options.deep:
+        check_references = "contents"
+    elif options.exist:
+        check_references = "exist"
+    else:
+        check_references = None
+        
+    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping)", 
+                     options, globals(), locals())
     log.standard_status()
     return log.errors()
 
 # ============================================================================
 
 if __name__ == "__main__":
-    parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
-    parser.add_option("-D", "--deep", dest="deep",
-        help="Certify reference files referred to by mappings.", 
-        action="store_true")
-    parser.add_option("-m", "--mapping", dest="mapping",
-        help="Ignore extensions, the files being certified are mappings.", 
-        action="store_true")
-    parser.add_option("-P", "--dump-provenance", dest="provenance",
-        help="Dump provenance keywords.", action="store_true")
-    OPTIONS, ARGS = log.handle_standard_options(sys.argv, parser=parser)
-    log.standard_run("main(ARGS[1:], OPTIONS)", OPTIONS, 
-                     globals(), globals())
+    main()
 

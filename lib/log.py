@@ -217,11 +217,11 @@ def handle_standard_options(
     if parser is None:
         parser = optparse.OptionParser(usage)
     
-#    parser.add_option("-o", "--outpath", dest="output_dir",
+#    parser.add_option("-O", "--outpath", dest="output_dir",
 #                      help="Path to write tests to.",
 #                      metavar="OUTPATH", default=default_outpath)
 
-    parser.add_option("-v", "--verbose", dest="verbose",
+    parser.add_option("-V", "--verbose", dest="verbose",
                       help="Set verbosity level.", 
                       metavar="VERBOSITY", default=0)
 
@@ -233,11 +233,11 @@ def handle_standard_options(
                       help="Run under pdb, for stepping everything.",
                       action="store_true", default=False)
 
-    parser.add_option("-d", "--debug", dest="debug_errors",
+    parser.add_option("-D", "--debug", dest="debug_errors",
                       help="Debug first logged error in pdb.",
                       action="store_true", default=False)
 
-    parser.add_option("-e", "--debug-errno", dest="debug_errno",
+    parser.add_option("-E", "--debug-errno", dest="debug_errno",
                       help="Debug a specific logged error number in pdb.",
                       metavar="ERRNO", default=-1)
 

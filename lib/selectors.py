@@ -252,7 +252,7 @@ class Selector(object):
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
     
-    def validate(self, valid_values_map):
+    def validate(self, valid_values_map, trap_exceptions=False, context=""):
         """Iterate over this Selector's keys checking each field
         of each key against `valid_values_map`.
         
@@ -262,15 +262,27 @@ class Selector(object):
         """
         warned = []
         for key in self.keys():
-            self.validate_key(key, valid_values_map, warned)
+            self.validate_key(key, valid_values_map, warned, trap_exceptions, context)
         for choice in self.choices():
             if isinstance(choice, Selector):
-                choice.validate(valid_values_map)
+                choice.validate(valid_values_map, trap_exceptions, context)
             
-    def validate_key(self, key, valid_values_map, warned):
+    def validate_key(self, key, valid_values_map, warned, trap_exceptions, context):
         """Validate a single `key` against the possible field values
         in `valid_values_map`.   ABSTRACT STUB always passes.
         """
+        if context:
+            context += " : "
+        try:
+            self._validate_key(key, valid_values_map, warned)
+        except ValidationError, exc:
+            if trap_exceptions:
+                log.error(context + repr(key))
+            else:
+                raise ValidationError(repr(key) + " " + str(exc))
+
+    def _validate_key(self, key, valid_values_map, warned):
+        """Abstract method validates a single key or raises exception."""
         pass
 
     def file_matches(self, filename, sofar=()):
@@ -701,15 +713,14 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
-    def validate_key(self, key, valid_values_map, warned):
+    def _validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values
         in `valid_values_map`.   Note that each selections `key` is 
         (nominally) a tuple with values for multiple parkeys.
         """
         if len(key) != len(self._parameters):
-            raise ValueError("Key " + repr(key) + 
-                             " has wrong length for parameter list " + 
-                             repr(self._parameters))
+            raise ValidationError("wrong length for parameter list " + 
+                                  repr(self._parameters))
         for i, name in enumerate(self._parameters):
             if name.startswith("*"):
                 name = name[1:]
@@ -735,16 +746,14 @@ class MatchingSelector(Selector):
                     continue
                 else:
                     raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                  " of key " + repr(key) +  
                                   " is not in range [" + str(min) + " .. " + 
                                   str(max) + "]")     
             if name in self._substitutions and \
                 value in self._substitutions[name]:
                 continue
             raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                  " of key " + repr(key) +  
                                   " is not in " + repr(valid))
-
+            
     def _is_substitution(self, name, value):
         """Return True iff `value` is a valid substitution in `name`."""
 # ==============================================================================
@@ -833,12 +842,11 @@ class UseAfterSelector(Selector):
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
             
-    def validate_key(self, key, valid_values_map, warned):
+    def _validate_key(self, key, valid_values_map, warned):
         try:
             timestamp.parse_numerical_date(key)
         except ValueError:
-            raise ValidationError("UseAfter date " + repr(key) + 
-                                  " has invalid format.")
+            raise ValidationError("date has invalid format.")
         
     def match_item(self, key):
         """Account for the slightly weird UseAfter syntax."""

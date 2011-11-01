@@ -70,6 +70,7 @@ import pyfits
 from .compat import namedtuple
 
 from . import (log, utils, selectors)
+from crds.selectors import ValidationError
 
 try:
     import ast
@@ -414,17 +415,17 @@ class Mapping(object):
         return utils.get_header_union(
                 dataset, needed_keys=self.get_required_parkeys())
         
-    def validate(self):
+    def validate(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
         """
         log.info("Validating", self.filename)
         for key, sel in self.selections.items():
             try:
-                sel.validate()
+                sel.validate(trap_exceptions)
             except Exception, exc:
-                log.error("Exception validating",repr(key),"in", 
-                          repr(self), ":",str(exc))
+                if not trap_exceptions:
+                    raise ValidationError(repr(self) + " : " + str(exc))
 
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to 
@@ -723,7 +724,7 @@ class ReferenceMapping(Mapping):
                 valid_values[info.name] = info.values
         return valid_values
     
-    def validate(self):
+    def validate(self, trap_exceptions=False):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
@@ -731,10 +732,12 @@ class ReferenceMapping(Mapping):
         log.info("Validating", self.filename)
         valid_values = self.get_valid_values()
         try:
-            self.selector.validate(valid_values)
-        except selectors.ValidationError:
-            log.error("Validation error in", repr(self))
-            
+            self.selector.validate(valid_values, trap_exceptions, 
+                                   context=repr(self))
+        except Exception, exc:
+            if not trap_exceptions:
+                raise ValidationError(repr(self) + " : " + str(exc))
+
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
         sofar = ((("observatory", self.observatory), 

@@ -204,16 +204,16 @@ def main():
     """Process command line parameters and run recalibrate."""
     parser = optparse.OptionParser(
         "usage: %prog [options] <new_context> <datasets...>")
-    parser.add_option("-C", "--cache-headers", dest="use_cache",
+    parser.add_option("-c", "--cache-headers", dest="use_cache",
         help="Use and/or remember critical header parameters in a cache file.", 
         action="store_true")
-    parser.add_option("-F", "--files", dest="files",
+    parser.add_option("-f", "--files", dest="files",
         help="Read datasets from FILELIST, one dataset per line.", 
         metavar="FILELIST", default=None)
-    parser.add_option("-O", "--old-context", dest="old_context",
+    parser.add_option("-o", "--old-context", dest="old_context",
         help="Compare best refs recommendations from two contexts.", 
         metavar="OLD_CONTEXT", default=None)
-    parser.add_option("-U", "--update-datasets", dest="update_datasets",
+    parser.add_option("-u", "--update-datasets", dest="update_datasets",
         help="Update dataset headers with new best reference recommendations.", 
         action="store_true")
     options, args = log.handle_standard_options(sys.argv, parser=parser)
