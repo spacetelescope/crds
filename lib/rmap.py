@@ -236,8 +236,8 @@ class Mapping(object):
         try:
             header, selector = cls._interpret(code)
         except Exception, exc:
-            raise MappingError("Can't load", cls.__name__, "file:", 
-                               repr(os.path.basename(filepath)), str(exc))
+            raise MappingError("Can't load file ", 
+                               repr(os.path.basename(filepath)) +" : ", str(exc))
         return header, selector
     
     @classmethod

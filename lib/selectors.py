@@ -449,7 +449,7 @@ class MatchingSelector(Selector):
     >>> m.validate({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError: Field 'bar'='2.0' of key ('1.0', '2.0') is not in ('3.0',)
+    ValidationError: ('1.0', '2.0') Field 'bar'='2.0' is not in ('3.0',)
     
     Match tuples should have the same length as the parameter list:
     
@@ -800,7 +800,7 @@ class UseAfterSelector(Selector):
     >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValidationError: UseAfter date '2003-09-26 foo 01:28:00' has invalid format.
+    ValidationError: '2003-09-26 foo 01:28:00' date has invalid format.
 
     A more subtle error in the date or time should still be detected:
 
@@ -810,7 +810,7 @@ class UseAfterSelector(Selector):
     >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValidationError: UseAfter date '2003-09-35 01:28:00' has invalid format.
+    ValidationError: '2003-09-35 01:28:00' date has invalid format.
     """
     def __init__(self, parameters, datemapping, rmap_header=None):
         Selector.__init__(self, parameters, datemapping)
