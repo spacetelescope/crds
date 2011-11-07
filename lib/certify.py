@@ -11,6 +11,7 @@ import pyfits
 
 from crds import rmap, log, timestamp, utils
 from crds.compat import namedtuple
+from crds.rmap import ValidationError
     
 # ============================================================================
 
@@ -355,8 +356,7 @@ def certify_context(context, check_references=None, trap_exceptions=False):
             if trap_exceptions:
                 log.error("Can't find reference file " + repr(where))
             else:
-                raise ValidationError("Missing reference file " + repr(ref) + 
-                                      " : " + str(exc))
+                raise ValidationError("Missing reference file " + repr(ref))
     if check_references == "check_contents":
         certify_files(references, check_references=check_references, 
                       trap_exceptions=trap_exceptions)
