@@ -13,7 +13,27 @@ import crds.log as log
 import crds.utils as utils
 import crds.rmap as rmap
 
+# ==============================================================================
+
 from crds.client.proxy import CheckingProxy
+
+__all__ = ["set_crds_server", 
+           "get_crds_server",
+           
+           "get_mapping_names",
+           "get_mapping_url", 
+
+           "get_reference_names",
+           "get_reference_url",
+           
+           "dump_references",
+           "dump_mappings",
+
+           "get_best_references",
+           "cache_best_references",
+           "cache_best_references_for_dataset",
+           
+           "get_minimum_header"]
 
 # ==============================================================================
 
@@ -166,8 +186,9 @@ def dump_mappings(pipeline_context, ignore_cache=False):
         pipeline_context, mappings, ignore_cache=ignore_cache)
   
 def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
-    """Given a pipeline `pipeline_context` and list of `baserefs` basenames,  
-    obtain the set of reference files and cache them on the local file system.   
+    """Given a pipeline `pipeline_context` and list of `baserefs` reference 
+    file basenames,  obtain the set of reference files and cache them on the
+    local file system.   
     
     Returns:   { ref_basename :   reference_local_filepath ... }
     """
