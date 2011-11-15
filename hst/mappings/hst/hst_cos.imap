@@ -3,7 +3,7 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '0ac6599b0eba914f76e2f6071557d240332c2ca8',
+    'sha1sum' : '10fc88799415a0355c04139c27bed97917abec23',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
 }
 
@@ -15,10 +15,11 @@ selector = {
     'deadtab' : ('dead', 'hst_cos_deadtab.rmap'),
     'disptab' : ('disp', 'hst_cos_disptab.rmap'),
     'flatfile' : ('flat', 'hst_cos_flatfile.rmap'),
+    'fluxtab' : ('phot', 'hst_cos_fluxtab.rmap'),
     'geofile' : ('geo', 'hst_cos_geofile.rmap'),
     'lamptab' : ('lamp', 'hst_cos_lamptab.rmap'),
     'phatab' : ('pha', 'hst_cos_phatab.rmap'),
-    'phottab' : ('phot', 'hst_cos_phottab.rmap'),
+    'spwcstab' : ('SPWCS', 'hst_cos_spwcstab.rmap'),
     'tdstab' : ('tds', 'hst_cos_tdstab.rmap'),
     'wcptab' : ('wcp', 'hst_cos_wcptab.rmap'),
     'xtractab' : ('1dx', 'hst_cos_xtractab.rmap'),

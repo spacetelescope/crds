@@ -3,19 +3,24 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'f69002ec629a0ca1523217f12ab1a6462e19f7e2',
+    'sha1sum' : 'f0a5be2cc40e9a5fca6f916a40cb72a102c203c6',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
 }
 
 selector = {
+    '-' : ('-', 'hst_wfc3_-.rmap'),
+    'atodtab' : ('A2D', 'hst_wfc3_atodtab.rmap'),
     'biasfile' : ('BIA', 'hst_wfc3_biasfile.rmap'),
     'bpixtab' : ('BPX', 'hst_wfc3_bpixtab.rmap'),
     'ccdtab' : ('CCD', 'hst_wfc3_ccdtab.rmap'),
     'crrejtab' : ('CRR', 'hst_wfc3_crrejtab.rmap'),
     'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
+    'dgeofile' : ('DXY', 'hst_wfc3_dgeofile.rmap'),
+    'flsfile' : ('FLS', 'hst_wfc3_flsfile.rmap'),
     'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
     'mdriztab' : ('MDZ', 'hst_wfc3_mdriztab.rmap'),
     'nlinfile' : ('LIN', 'hst_wfc3_nlinfile.rmap'),
     'oscntab' : ('OSC', 'hst_wfc3_oscntab.rmap'),
-    'pfltfile' : ('PFL', 'hst_wfc3_pfltfile.rmap'),
+    'pfltfile dfltfile lfltfile' : ('PFL DFL LFL', 'hst_wfc3_pfltfile dfltfile lfltfile.rmap'),
+    'shadfile' : ('SHD', 'hst_wfc3_shadfile.rmap'),
 }

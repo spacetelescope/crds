@@ -3,7 +3,7 @@ header = {
     'mapping' : 'instrument',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'ab7d1befe7cba50c9338721d6dd6fa7e6e51b2ff',
+    'sha1sum' : 'd26ed165332faa40153e86471b87cd3917eaeaf0',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
 }
 
@@ -17,6 +17,7 @@ selector = {
     'darkfile' : ('drk', 'hst_acs_darkfile.rmap'),
     'dgeofile' : ('dxy', 'hst_acs_dgeofile.rmap'),
     'idctab' : ('idc', 'hst_acs_idctab.rmap'),
+    'imphttab' : ('imp', 'hst_acs_imphttab.rmap'),
     'mdriztab' : ('mdz', 'hst_acs_mdriztab.rmap'),
     'mlintab' : ('lin', 'hst_acs_mlintab.rmap'),
     'oscntab' : ('osc', 'hst_acs_oscntab.rmap'),

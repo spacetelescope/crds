@@ -10,8 +10,7 @@ else:
 
 def handle_index(instr, url):
     % echo "$instr <-- $url"
-    % python scrape.py ${url} ${instr}_index -t 4 5 6
-    % mv ${instr}_index.* ../${instr}/sources
+    % python scrape.py ${url} ../${instr}/sources/${instr}_index -t 4 5 6
 
 for instr in INSTRUMENTS:
     if instr != "wfpc2":
