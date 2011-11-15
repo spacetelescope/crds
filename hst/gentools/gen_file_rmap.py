@@ -388,11 +388,12 @@ def write_rmap(observatory, instrument, reftype, kind_map):
     fitskeys = parkeys_to_fitskeys(instrument, parkeys, outname)
     mapkeys = parkeys_to_fitskeys(instrument, MAPKEYS[:-1], outname)
     rmap_header = OrderedDict([
-        ("mapping", "reference"),
+        ("mapping", "REFERENCE"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
         ("reftype", reftype.upper()),
-        ("parkey", (fitskeys, mapkeys))
+        ("parkey", (fitskeys, mapkeys)),
+        ("description", ("Scraped from CDBS website on " + timestamp.now())),
     ])
 
     # Execute reftype specific customizations on header    
