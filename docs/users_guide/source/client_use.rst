@@ -3,7 +3,7 @@ Client Usage
 
 This section describes using the crds.client package to access remote
 web services on the central CRDS server.  Remote services support the
-determination of the best reference files for a dataset.  Remove
+determination of the best reference files for a dataset.  Remote
 services support transparently downloading CRDS mappings and reference
 files and caching them locally for use in development or dataset
 processing.
@@ -15,8 +15,8 @@ After installing CRDS,  the simplest usage of CRDS is as follows::
 
   % source env.csh
   % python
-  >>> import crds.client.api as api
-  >>> bestrefs = api.cache_best_references_for_dataset("hst.pmap", "j8is01j0q_raw.fits")
+  >>> import crds.client as client
+  >>> bestrefs = client.cache_best_references_for_dataset("hst.pmap", "j8is01j0q_raw.fits")
   >>> bestrefs  
   {'atodtab': '.../site-packages/crds/hst/references/jtab/kcb1734ij_a2d.fits',
    'bpixtab': '.../site-packages/crds/hst/references/jref/m8r09169j_bpx.fits',
@@ -61,7 +61,7 @@ from the dataset FITS header, but in principle the *header* can be a
 dictionary which comes from anywhere::
 
   >>> header = { ... what matters ... }
-  >>> bestrefs = api.get_best_references("hst.pmap", header)
+  >>> bestrefs = client.get_best_references("hst.pmap", header)
   >>> bestrefs
   {'atodtab': 'kcb1734ij_a2d.fits',
    'bpixtab': 'm8r09169j_bpx.fits',
@@ -87,7 +87,7 @@ OK,  Now Cache My Files
 Once you've decided you're happy with your reference file choices,  you can
 ask CRDS to cache them locally like this::
 
-  >>> cache_references("hst.pmap", bestrefs)
+  >>> client.cache_references("hst.pmap", bestrefs)
   {'atodtab': '.../site-packages/crds/hst/references/jtab/kcb1734ij_a2d.fits',
    'bpixtab': '.../site-packages/crds/hst/references/jref/m8r09169j_bpx.fits',
    'ccdtab': '.../site-packages/crds/hst/references/jref/o151506bj_ccd.fits',
@@ -108,7 +108,7 @@ matters* and how to format it after all.  In that case, call
 get_minimum_header() on an instrument or reference mapping file and dataset
 to determine the header parameters that matter::
 
-  >>> api.get_minimum_header("hst_acs.imap", "test_data/j8bt05njq_raw.fits")
+  >>> client.get_minimum_header("hst_acs.imap", "test_data/j8bt05njq_raw.fits")
   {'CCDAMP': 'C',
    'CCDGAIN': '2.0',
    'DATE-OBS': '2002-04-13',
