@@ -19,7 +19,9 @@ def install():
 install()
 
 for instr in INSTRUMENTS:
-    % python gen_file_rmap.py ${save} ${instr} ../${instr}/sources
+    % python gen_rmap.py ${save} ${instr} ../${instr}/sources
     % mv hst_${instr}_*.rmap ../mappings/hst
+
+print "Consider running ../tpn.py to update tpn_filekinds.dat"
 
 install()
