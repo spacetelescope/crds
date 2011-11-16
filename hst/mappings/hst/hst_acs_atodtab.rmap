@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:00',
     'instrument' : 'ACS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDGAIN', 'CCDAMP'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'ATODTAB',
-    'sha1sum' : '815714570447ca2855778c2cfd2d7ed5ba61eef1',
+    'sha1sum' : '078f7f1b0c9239c7c681e8c7687ace4f7ead1ca8',
 }
 
 selector = Match({
@@ -96,31 +97,31 @@ selector = Match({
         '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits',
         '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits',
     }),
-    ('WFC', '0.0', 'A') : UseAfter({
+    ('WFC', '0.5', 'A') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'ABCD') : UseAfter({
+    ('WFC', '0.5', 'ABCD') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'AC') : UseAfter({
+    ('WFC', '0.5', 'AC') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'AD') : UseAfter({
+    ('WFC', '0.5', 'AD') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'B') : UseAfter({
+    ('WFC', '0.5', 'B') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'BC') : UseAfter({
+    ('WFC', '0.5', 'BC') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'BD') : UseAfter({
+    ('WFC', '0.5', 'BD') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'C') : UseAfter({
+    ('WFC', '0.5', 'C') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
-    ('WFC', '0.0', 'D') : UseAfter({
+    ('WFC', '0.5', 'D') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
     ('WFC', '1.0', 'A') : UseAfter({
@@ -157,6 +158,33 @@ selector = Match({
     }),
     ('WFC', '1.0', 'D') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits',
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'A') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'ABCD') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'AC') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'AD') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'B') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'BC') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'BD') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'C') : UseAfter({
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+    ('WFC', '1.4', 'D') : UseAfter({
         '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
     }),
     ('WFC', '2.0', 'A') : UseAfter({

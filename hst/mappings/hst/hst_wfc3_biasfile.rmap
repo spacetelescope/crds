@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:11',
     'instrument' : 'WFC3',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', '*SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'BIASFILE',
-    'sha1sum' : 'efc93dfdbfc3aaba0cce5ca440675108f818c5cf',
+    'sha1sum' : '80effc775f7f136629c7daacbfb829d4ae8dfb2a',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),

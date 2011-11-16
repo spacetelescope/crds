@@ -4,17 +4,17 @@ header = {
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'WCPTAB',
-    'sha1sum' : 'bebd0071e06962d08ceac35e269501bdef84e743',
+    'reftype' : 'FLUXTAB',
+    'sha1sum' : '840f651acda0849cc2dbd6448db3b3b1d2fa7b78',
 }
 
 selector = Match({
     ('FUV', 'SPECTROSCOPIC') : UseAfter({
-        '1996-10-01 00:00:00' : 't2314311l_wcp.fits',
-        '2009-05-12 00:00:00' : 't9b18112l_wcp.fits',
-        '2009-08-17 00:00:00' : 'u1t1616ql_wcp.fits',
+        '1996-10-01 00:00:00' : 's7g1700kl_phot.fits',
+        '2009-05-11 00:00:00' : 'u8k1433ql_phot.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
-        '1996-10-01 00:00:00' : 't2314313l_wcp.fits',
+        '1996-10-01 00:00:00' : 's7g17011l_phot.fits',
+        '2009-05-11 00:00:00' : 't9h1220sl_phot.fits',
     }),
 })

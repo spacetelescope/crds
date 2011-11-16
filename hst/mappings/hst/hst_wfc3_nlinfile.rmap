@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:06',
     'instrument' : 'WFC3',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'NLINFILE',
-    'sha1sum' : '1b9456fb184502dbb9b2dd63ecbad197c3144190',
+    'sha1sum' : 'd5e4b234cfba91d2df7ee1fbb00087538c67724c',
 }
 
 selector = Match({

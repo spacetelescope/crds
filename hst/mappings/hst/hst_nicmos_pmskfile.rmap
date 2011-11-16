@@ -1,14 +1,12 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:26.003103',
     'instrument' : 'NICMOS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'PMSKFILE',
-    'sha1sum' : 'a9abddfb4c2a3ead1902269e8a72085225778feb',
+    'sha1sum' : '57b674a190f3cfc65bb30552db1b0a523a5bdd70',
 }
 
 selector = Match({
-    ('2.0',) : UseAfter({
-        '2002-03-01 00:00:00' : 'saf02498n_pmk.fits',
-    }),
 })

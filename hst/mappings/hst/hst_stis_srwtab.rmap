@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:25',
     'instrument' : 'STIS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'SRWTAB',
-    'sha1sum' : 'cc66667c975973350785caafc204017c2c7c4929',
+    'sha1sum' : '79de496b795f2a672a47a4fc891742a797d66c7a',
 }
 
 selector = Match({

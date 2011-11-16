@@ -1,17 +1,20 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:25',
     'instrument' : 'STIS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'RIPTAB',
-    'sha1sum' : 'a66114ffd4b4a0dfe9a0acc65eeb4fbf7c2ebdb6',
+    'sha1sum' : '1c5da1f44ece19965eb701ac44da0e975a9fb4c9',
 }
 
 selector = Match({
     ('FUV-MAMA',) : UseAfter({
         '1996-10-01 00:00:00' : 'k8m09588o_rip.fits',
+        '2009-05-11 00:00:00' : 'vb816446o_rip.fits',
     }),
     ('NUV-MAMA',) : UseAfter({
         '1996-10-01 00:00:00' : 'k8m0958fo_rip.fits',
+        '2009-05-11 00:00:00' : 'vb816447o_rip.fits',
     }),
 })

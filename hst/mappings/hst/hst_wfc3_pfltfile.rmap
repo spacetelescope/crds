@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:06',
     'instrument' : 'WFC3',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'PFLTFILE',
-    'sha1sum' : '50f5614d1979fe0d89ca3a20c5f50b54831cbb3a',
+    'sha1sum' : 'bda738121176202f97428f5afb0f503e96c3bb8c',
 }
 
 selector = Match({
@@ -153,6 +154,7 @@ selector = Match({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-19 00:00:00' : 't6b1634ai_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18327i_pfl.fits',
+        '2009-05-14 00:00:00' : 'v8816165i_pfl.fits',
     }),
     ('UVIS', 'F336W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -203,6 +205,7 @@ selector = Match({
     ('UVIS', 'F390W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832bi_pfl.fits',
+        '2009-05-14 00:00:00' : 'v8816166i_pfl.fits',
     }),
     ('UVIS', 'F390W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -233,6 +236,7 @@ selector = Match({
     ('UVIS', 'F438W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832fi_pfl.fits',
+        '2009-05-14 00:00:00' : 'v8816167i_pfl.fits',
     }),
     ('UVIS', 'F438W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -313,6 +317,7 @@ selector = Match({
     ('UVIS', 'F555W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ni_pfl.fits',
+        '2009-05-14 00:00:00' : 'v8816168i_pfl.fits',
     }),
     ('UVIS', 'F555W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -342,6 +347,7 @@ selector = Match({
     ('UVIS', 'F606W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832pi_pfl.fits',
+        '2009-05-14 00:00:00' : 'v8816169i_pfl.fits',
     }),
     ('UVIS', 'F606W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -472,6 +478,7 @@ selector = Match({
     ('UVIS', 'F775W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18338i_pfl.fits',
+        '2009-05-14 00:00:00' : 'v881616ai_pfl.fits',
     }),
     ('UVIS', 'F775W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
@@ -482,6 +489,7 @@ selector = Match({
     ('UVIS', 'F814W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18339i_pfl.fits',
+        '2009-05-14 00:00:00' : 'v881616bi_pfl.fits',
     }),
     ('UVIS', 'F814W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',

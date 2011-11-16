@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:32',
     'instrument' : 'ACS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'IDCTAB',
-    'sha1sum' : '6084f8d2399dab07bbcc9df998cee67f510982e4',
+    'sha1sum' : 'e3298d5348bd52b68b185401269442a1bf481e25',
 }
 
 selector = Match({
@@ -16,10 +17,12 @@ selector = Match({
         '2002-03-01 00:00:00' : 'o911150jj_idc.fits',
         '2002-10-21 00:00:00' : 's5d1409dj_idc.fits',
         '2007-07-17 00:00:00' : 's5f1959lj_idc.fits',
+        '2011-06-21 21:00:00' : 'v6m2008mj_idc.fits',
     }),
     ('WFC',) : UseAfter({
-        '2002-03-01 00:00:00' : 'v4115408j_idc.fits',
-        '2002-10-21 00:00:00' : 'u7n18502j_idc.fits',
-        '2009-01-01 00:00:00' : 'u7n18501j_idc.fits',
+        '2002-03-01 00:00:00' : 'v8q14450j_idc.fits',
+        '2002-10-21 00:00:00' : 'v8q14451j_idc.fits',
+        '2009-01-01 00:00:00' : 'v8q1444sj_idc.fits',
+        '2011-06-21 21:00:00' : 'v8q1444tj_idc.fits',
     }),
 })

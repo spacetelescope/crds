@@ -67,6 +67,7 @@ KIND_KEYS = {
              "darkfile" :  ('detector',),
              "dgeofile": ('detector','filter_1','filter_2'),
              "idctab" :  ('detector',),
+             "imphttab" :  ('detector',),
              "mdriztab" :  ('detector',),
              "mlintab" :  ('%detector',),
              "oscntab" :  ('detector',),
@@ -96,14 +97,17 @@ KIND_KEYS = {
             "deadtab" : ('detector',),
             "disptab" : ('detector', 'obstype'),
             "flatfile" : ('detector', 'obstype'),
+            "fluxtab" : ('detector', 'obstype'),
             "geofile" : ('detector',),
             "lamptab" : ('detector', 'obstype'),
             "phatab" : ('detector',),
             "phottab" : ('detector', 'obstype'),
+            "spwcstab" : ('detector', 'observation_type'),
             "tdstab" : ('detector',),
             "wcptab" : ('detector', 'obstype'),
             "xtractab" : ('detector', 'obstype'),
     },
+             
 
 #../hst/stis/sources/stis_apdstab_0.xml  --> ('comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_use_date', 'pedigree', 'use_after')
 #../hst/stis/sources/stis_apertab_0.xml  --> ('aperture', 'comments', 'delivery_#', 'delivery_date', 'file', 'otfr_start_use_date', 'pedigree', 'use_after')
@@ -156,7 +160,7 @@ KIND_KEYS = {
             "mlintab"  : ('detector',),
             "mofftab"  : ('detector',),
             "pctab"    : ('detector','obstype','opt._element',),
-            "pfltfile" : ('detector','obstype','opt._element','aperture','*cen._wave.'),
+            "pfltfile" : ('detector','obstype','aperture','*cen._wave.'),
             "phottab"  : ('detector','obstype',),
             "riptab"   : ('detector',),
             "sdctab"   : ('detector',),
@@ -197,11 +201,13 @@ KIND_KEYS = {
                 "ccdtab" : ('detector',),
                 "crrejtab" : ('detector',),
                 "darkfile" : ('detector', '*amp', '*ccd_gain', '*samp-seq', '*subtype', '*binaxis1=1.0', '*binaxis2=1.0',),
+                "dgeofile" : ('detector', 'filter'),
                 "idctab" : ('detector',),
                 "mdriztab" : ('detector',),
                 "nlinfile" : ('detector',),
                 "oscntab" : ('detector',),
                 "pfltfile" : ('detector', 'filter', '*binaxis1', '*binaxis2',),  # , "amp"),
+                "shadfile" : ('detector',),
     },
 
 # ../nicmos/sources/nicmos_darkfile_0.xml --> ('camera', 'comments', 'delivery_#', 'delivery_date', 'file', 'nread', 'otfr_start_date', 'pedigree', 'readout', 'samp_seq', 'use_after')
@@ -397,6 +403,7 @@ CDBS_PARKEYS_TO_FITS = {
     },
 
     "cos" : {
+             "observation_type" : "OBSTYPE"
     },
 
     "stis" : {

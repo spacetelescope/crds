@@ -1,0 +1,12 @@
+header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:12',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reftype' : 'SHADFILE',
+    'sha1sum' : 'b3f6112ef5bab343ad59ef30a52794a1b7f283a9',
+}
+
+selector = Match({
+})

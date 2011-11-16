@@ -56,7 +56,7 @@ def generate_all_rmaps(instrument, source_path):
     <instrument> _ <reftype> _ <serialno> .xml where serialno
     corresponds to the CDBS HTML URL from which the XML was scraped.
     """
-    for kind in KIND_KEYS[instrument]:
+    for kind in sorted(KIND_KEYS[instrument]):
         pattern = source_path + "/" + instrument + "_" + kind + "_*.xml"
         kind_files = sorted(glob.glob(pattern))
         if kind_files:
@@ -387,13 +387,14 @@ def write_rmap(observatory, instrument, reftype, kind_map):
     parkeys = KIND_KEYS[instrument][reftype]
     fitskeys = parkeys_to_fitskeys(instrument, parkeys, outname)
     mapkeys = parkeys_to_fitskeys(instrument, MAPKEYS[:-1], outname)
+    now = timestamp.now().split('.')[0]
     rmap_header = OrderedDict([
         ("mapping", "REFERENCE"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
         ("reftype", reftype.upper()),
         ("parkey", (fitskeys, mapkeys)),
-        ("description", ("Scraped from CDBS website on " + timestamp.now())),
+        ("description", ("Scraped from CDBS website on " + now)),
     ])
 
     # Execute reftype specific customizations on header    

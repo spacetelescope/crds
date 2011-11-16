@@ -1,14 +1,12 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.994767',
     'instrument' : 'NICMOS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'PMODFILE',
-    'sha1sum' : 'e3895aa72555208bc0b9ccdef84a519213e1ea1a',
+    'sha1sum' : '519681e58565e608b017c97ccc6fab01148ee4bf',
 }
 
 selector = Match({
-    ('2.0',) : UseAfter({
-        '2002-03-01 00:00:00' : 'sct17335n_pmd.fits',
-    }),
 })

@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:23',
     'instrument' : 'STIS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'CCDTAB',
-    'sha1sum' : 'ed1d07bb9808ebff88e4276904ddcee7e60d7278',
+    'sha1sum' : 'e2220e305d78bc0ddcdb7bbbdb5ee4878a834d21',
 }
 
 selector = Match({
@@ -14,6 +15,6 @@ selector = Match({
         '1999-12-29 00:00:00' : 'q4a1311co_ccd.fits',
         '2000-01-09 00:00:00' : 'q4a1311do_ccd.fits',
         '2001-07-10 00:00:00' : 'q4a1311eo_ccd.fits',
-        '2009-05-11 00:00:00' : 't9a10044o_ccd.fits',
+        '2009-05-11 00:00:00' : 'v6n13233o_ccd.fits',
     }),
 })

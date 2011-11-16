@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:30',
     'instrument' : 'ACS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'CFLTFILE',
-    'sha1sum' : '18bd388c0f9232f4eead04f5abff9657a645f259',
+    'sha1sum' : '51045d369fb8365ae97c75d6ac4e3197e96729b0',
 }
 
 selector = Match({

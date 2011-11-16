@@ -1,15 +1,12 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.996214',
     'instrument' : 'NICMOS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'ZPRATAB',
-    'sha1sum' : 'ed7ce6c495c7410abb5fad160a23e7ef0698dda2',
+    'sha1sum' : '8dab406a8dff7791409f4798e52bb15a54e268da',
 }
 
 selector = Match({
-    () : UseAfter({
-        '1997-01-01 00:00:00' : 'r5o0317en_zpr.fits',
-        '2002-01-01 00:00:00' : 'r5o0317fn_zpr.fits',
-    }),
 })

@@ -1,38 +1,12 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.985648',
     'instrument' : 'NICMOS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'NLINFILE',
-    'sha1sum' : '15afcbfa62bcfae5efb1add00d44c7396681bd6a',
+    'sha1sum' : 'aad2e4309af4a5a1e7adcbc6792e1422bc4f9da5',
 }
 
 selector = Match({
-    ('1.0',) : UseAfter({
-        '1997-01-01 00:00:00' : 'l131328rn_lin.fits',
-        '1997-01-10 00:00:00' : 'h1t1543nn_lin.fits',
-        '1997-02-01 00:00:00' : 'h2k1100dn_lin.fits',
-        '1997-02-02 00:00:00' : 'h3v1404mn_lin.fits',
-        '1997-02-04 00:00:00' : 'l1i1216an_lin.fits',
-        '1997-04-02 00:00:00' : 'l1i1225dn_lin.fits',
-        '2002-01-01 00:00:00' : 'sav0410on_lin.fits',
-    }),
-    ('2.0',) : UseAfter({
-        '1997-01-01 00:00:00' : 'l131328sn_lin.fits',
-        '1997-01-10 00:00:00' : 'h1t1543on_lin.fits',
-        '1997-02-01 00:00:00' : 'h2k1100en_lin.fits',
-        '1997-02-02 00:00:00' : 'h3v1404nn_lin.fits',
-        '1997-02-04 00:00:00' : 'l1i1216bn_lin.fits',
-        '1997-04-02 00:00:00' : 'l1i1225en_lin.fits',
-        '2002-01-01 00:00:00' : 'sav04114n_lin.fits',
-    }),
-    ('3.0',) : UseAfter({
-        '1997-01-01 00:00:00' : 'l131328tn_lin.fits',
-        '1997-01-10 00:00:00' : 'h1t1543pn_lin.fits',
-        '1997-02-01 00:00:00' : 'h2k1100fn_lin.fits',
-        '1997-02-02 00:00:00' : 'h3v1404on_lin.fits',
-        '1997-02-04 00:00:00' : 'l1i1216cn_lin.fits',
-        '1997-04-02 00:00:00' : 'l1i1225fn_lin.fits',
-        '2002-01-01 00:00:00' : 'sav0411gn_lin.fits',
-    }),
 })

@@ -1,17 +1,16 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 08:48:54',
     'instrument' : 'COS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'GEOFILE',
-    'sha1sum' : 'd1fea33e69d01b7061ce9cacd70b2af2ccb55246',
+    'sha1sum' : 'a74022fe3ee2d3ec99b725afd0d976b7f794d06b',
 }
 
 selector = Match({
     ('FUV',) : UseAfter({
-        '2003-10-10 00:00:00' : 's7g1700cl_geo.fits',
-    }),
-    ('NONE',) : UseAfter({
         '1996-10-01 00:00:00' : 'r7p1113nl_geo.fits',
+        '2003-10-10 00:00:00' : 's7g1700cl_geo.fits',
     }),
 })

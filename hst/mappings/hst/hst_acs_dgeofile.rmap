@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:32',
     'instrument' : 'ACS',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'DGEOFILE',
-    'sha1sum' : '83ba41685faee501275520717b8517fccb8bd4c9',
+    'sha1sum' : 'e3d16f8b3010071cf2ba21355da39c6e21104847',
 }
 
 selector = Match({
@@ -42,33 +43,43 @@ selector = Match({
         '2002-10-21 00:00:00' : 's5d1409ej_dxy.fits',
     }),
     ('SBC', 'BLOCK1', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'BLOCK2', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'BLOCK3', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'BLOCK4', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F115LP', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F122M', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F125LP', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F140LP', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F150LP', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('SBC', 'F165LP', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
     ('WFC', 'CLEAR1L', 'F435W') : UseAfter({

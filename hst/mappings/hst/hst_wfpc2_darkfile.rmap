@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:44.270692',
     'instrument' : 'WFPC2',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'CLOCK', 'GAIN'), ('DATE-OBS', 'TIME-OBS')),
     'reftype' : 'DARKFILE',
-    'sha1sum' : '8edc484ba0d9313c1a663a9469e8f7f88f123301',
+    'sha1sum' : '64a3d37c5fdedf4e5c1b838ae60cf3b2246876e5',
 }
 
 selector = Match({

@@ -52,8 +52,7 @@ def get_filelist_xml(fname):
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
-        if "---" in keyword:
-            log.warning("Skipping", repr(pars))
+        if skip_index_dict(pars):
             continue
         print `keyword`, converted["comment"]
         urls = converted["urls"]
@@ -62,7 +61,7 @@ def get_filelist_xml(fname):
             sourcename = instr + "_" + keyword + "_" + str(i)
             scrape.dump_tables(url, sourcename)
 
-def generate_context_rmap(fname):
+def generate_imap(fname):
     """Based on XML index file `fname`,  write out an imap.
     """
     instr = get_instrument(fname)
@@ -78,13 +77,28 @@ def generate_context_rmap(fname):
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
-        if "---" in keyword:
-            log.warning("Skipping", repr(pars))
+        if skip_index_dict(converted):
             continue
         eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
         selector[keyword] = (converted["ext"], eventually_generated_rmap)
     imap = rmap.Mapping("./"  + instr + ".imap", header, selector)
     imap.write()
+    
+def skip_index_dict(converted):
+    """Returns True IFF `converted` should be processed as a reference type, False
+    if it should be skipped.
+    """
+    keyword = converted["keyword"].lower()
+    anywhere = repr(converted).lower()
+    if "---" in keyword or \
+        keyword == "-" or \
+        converted["urls"] == [] or \
+        "n/a" in anywhere or \
+        "disabled" in anywhere:
+        log.warning("Skipping", repr(converted))
+        return True
+    log.info("Processing", repr(converted))
+    return False
 
 def get_value_from_keys(d, keylist):
     for key in keylist:
@@ -138,7 +152,7 @@ def main():
         help='Fetch the HTML URLs associated with each file kind in the index and convert to XML.')
     args = parser.parse_args()
     if args.generate_context:
-        generate_context_rmap(args.index_file)
+        generate_imap(args.index_file)
 
     if args.scrape_file_mappings:
         get_filelist_xml(args.index_file)
