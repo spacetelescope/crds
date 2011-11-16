@@ -1,9 +1,10 @@
 header = {
+    'description' : 'Initially generated on 2011-11-16 10:11:53',
     'instrument' : 'WFC3',
-    'mapping' : 'instrument',
+    'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'ba5191e1cc80e8ff06c50d73b5949eef7fd13ba2',
+    'sha1sum' : '454a4ab36a6ce70e399e96a43eb8053be5c292ce',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
 }
 

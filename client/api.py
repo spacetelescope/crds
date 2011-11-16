@@ -222,7 +222,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
 def cache_best_references(pipeline_context, header, ignore_cache=False):
     """Given the FITS `header` of a dataset and a `pipeline_context`,  determine the 
     best set of reference files for processing the dataset,  cache them locally,  and
-    return the mapping  { reftype : local_file_path }.
+    return the mapping  { filekind : local_file_path }.
     """
     best_refs = get_best_references(pipeline_context, header)
     local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
@@ -231,7 +231,7 @@ def cache_best_references(pipeline_context, header, ignore_cache=False):
 def cache_best_references_for_dataset(pipeline_context, dataset, ignore_cache=False):
     """
     determine the best set of reference files,  cache the references
-    locally,  and return the mapping  { reftype : local_file_path }.
+    locally,  and return the mapping  { filekind : local_file_path }.
     """
     header = get_minimum_header(pipeline_context, dataset, ignore_cache)
     return cache_best_references(pipeline_context, header, ignore_cache)

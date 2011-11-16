@@ -496,8 +496,8 @@ class PipelineContext(Mapping):
         for instrument in self.selections:
             files[instrument] = set()
             irefs = self.selections[instrument].reference_name_map()
-            for reftype_files in irefs.values():
-                files[instrument].update(set(reftype_files))
+            for filekind_files in irefs.values():
+                files[instrument].update(set(filekind_files))
         return files
     
     def mapping_names(self):
@@ -556,71 +556,71 @@ class InstrumentContext(Mapping):
         Mapping.__init__(self, filename, header, selector)
         self.selections = {}
         self.extensions = {}
-        for reftype, (rmap_ext, rmap_name) in selector.items():
-            self.extensions[reftype] = rmap_ext.lower()
-            reftype = reftype.lower()
+        for filekind, (rmap_ext, rmap_name) in selector.items():
+            self.extensions[filekind] = rmap_ext.lower()
+            filekind = filekind.lower()
             keys['extension'] = rmap_ext
-            self.selections[reftype] = refmap = ReferenceMapping.from_file(
+            self.selections[filekind] = refmap = ReferenceMapping.from_file(
                 rmap_name, **keys)            
             assert self.mapping == "instrument", \
                 "InstrumentContext 'mapping' format is not 'instrument'."
             assert self.observatory == refmap.observatory, \
                 "Nested 'observatory' doesn't match for " +  \
-                repr(reftype) + " in " + repr(filename)
+                repr(filekind) + " in " + repr(filename)
             assert self.instrument == refmap.instrument, \
                 "Nested 'instrument' doesn't match for " + \
-                repr(reftype) + " in " + repr(filename)
-            assert refmap.reftype == reftype, \
-                "Nested 'reftype' doesn't match for " + \
-                repr(reftype) + " in " + repr(filename)
+                repr(filekind) + " in " + repr(filename)
+            assert refmap.filekind == filekind, \
+                "Nested 'filekind' doesn't match for " + \
+                repr(filekind) + " in " + repr(filename)
                 
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping.
         """
         return self.selections[filekind]
 
-    def get_best_ref(self, reftype, header):
+    def get_best_ref(self, filekind, header):
         """Returns the single reference file basename appropriate for `header`
-        corresponding to `reftype`.
+        corresponding to `filekind`.
         """
-        return self.selections[reftype.lower()].get_best_ref(header)
+        return self.selections[filekind.lower()].get_best_ref(header)
 
     def get_best_references(self, header):
-        """Returns a map of best references { reftype : reffile_basename } 
+        """Returns a map of best references { filekind : reffile_basename } 
         appropriate for this `header`.
         """
         refs = {}
-        for reftype in self.selections:
-            log.verbose("\nGetting bestref for", repr(reftype))
+        for filekind in self.selections:
+            log.verbose("\nGetting bestref for", repr(filekind))
             try:
-                refs[reftype] = self.get_best_ref(reftype, header)
+                refs[filekind] = self.get_best_ref(filekind, header)
             except Exception, exc:
-                refs[reftype] = "NOT FOUND " + str(exc)
+                refs[filekind] = "NOT FOUND " + str(exc)
         return refs
 
     def get_binding(self, header):
         """Given a header,  return the binding of all keywords pertinent to all
-        reftypes for this instrument.
+        filekinds for this instrument.
         """
         binding = {}
-        for reftype in self.selections:
-            binding.update(self.selections[reftype].get_binding(header))
+        for filekind in self.selections:
+            binding.update(self.selections[filekind].get_binding(header))
         return binding
     
     def reference_names(self):
         """Returns [ref_file_name...]
         """
         files = set()
-        for reftype_files in self.reference_name_map().values():
-            files.update(set(reftype_files))
+        for filekind_files in self.reference_name_map().values():
+            files.update(set(filekind_files))
         return sorted(files)
 
     def reference_name_map(self):
-        """Returns { reftype : set( ref_file_name... ) }
+        """Returns { filekind : set( ref_file_name... ) }
         """
         files = {}
-        for reftype, selector in self.selections.items():
-            files[reftype] = sorted(selector.reference_names())
+        for filekind, selector in self.selections.items():
+            files[filekind] = sorted(selector.reference_names())
         return files
     
     def mapping_names(self):
@@ -662,7 +662,7 @@ class ReferenceMapping(Mapping):
     reference filetype and instantiate an appropriate selector tree from the 
     rmap header and data.
     """
-    required_attrs = InstrumentContext.required_attrs + ["reftype"]
+    required_attrs = InstrumentContext.required_attrs + ["filekind"]
             
     def get_best_ref(self, header):
         """Return the single reference file basename appropriate for `header` 
@@ -716,7 +716,7 @@ class ReferenceMapping(Mapping):
         
         return { parkey : [ valid values ] }
         """
-        tpninfos = self.locate.get_tpninfos(self.instrument, self.reftype)
+        tpninfos = self.locate.get_tpninfos(self.instrument, self.filekind)
         valid_values = {}
         required_keys = self.get_required_parkeys()
         for info in tpninfos:
@@ -742,7 +742,7 @@ class ReferenceMapping(Mapping):
         """Return a list of the match tuples which refer to `filename`."""
         sofar = ((("observatory", self.observatory), 
                   ("INSTRUME",self.instrument), 
-                  ("filekind", self.reftype),),)
+                  ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
 # ===================================================================
@@ -762,7 +762,7 @@ def get_cached_mapping(mapping_basename, **keys):
     return CACHED_MAPPINGS[mapping_basename]
 
 def load_mapping(mapping, **keys):
-    """Load any of the pipeline, instrument, or reftype `mapping`s
+    """Load any of the pipeline, instrument, or filekind `mapping`s
     from the file system.   Not cached.
     """
     if mapping.endswith(".pmap"):
@@ -854,9 +854,9 @@ def mapping_to_instrument(context_file):
     """
     return os.path.basename(context_file).split("_")[1].split(".")[0]
 
-def mapping_to_reftype(context_file):
+def mapping_to_filekind(context_file):
     """
-    >>> mapping_to_reftype('hst_acs_biasfile.rmap')
+    >>> mapping_to_filekind('hst_acs_biasfile.rmap')
     'biasfile'
     """
     return os.path.basename(context_file).split("_")[2].split(".")[0]

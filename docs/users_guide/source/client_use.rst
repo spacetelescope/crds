@@ -29,6 +29,9 @@ After installing CRDS,  the simplest usage of CRDS is as follows::
    'oscntab': '.../site-packages/crds/hst/references/jtab/m2j1057pj_osc.fits',
    'pfltfile': '.../site-packages/crds/hst/references/jref/n2d1344mj_pfl.fits',
    'spottab': '.../site-packages/crds/hst/references/jref/r3301467j_csp.fits'}
+   
+The first parameter is the name of the pipeline context file which should be used
+to determine best references for the second parameter,  a dataset file.
 
 Based on this single function call,  the client environment now has all the
 information and system state required to process the dataset:  a mapping from

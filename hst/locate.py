@@ -189,12 +189,12 @@ def properties_inside_mapping(filename):
     return (instrument, filekind).
     """
     map = rmap.load_mapping(filename)
-    if map.reftype == "pipeline":
+    if map.filekind == "PIPELINE":
         result = "", ""
-    elif map.reftype == "instrument":
+    elif map.filekind == "INSTRUMENT":
         result = map.instrument, ""
     else:
-        result = map.instrument, map.reftype
+        result = map.instrument, map.filekind
     return result
 
 def _get_fields(filename):

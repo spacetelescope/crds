@@ -1,5 +1,5 @@
 """Given an instrument and the path to it's CDBS XML table files,  this
-script will generate an rmap file for each reftype associated with the
+script will generate an rmap file for each filekind associated with the
 instrument.
 """
 import sys
@@ -51,9 +51,9 @@ def get_selected_tables(instr, kind):
 
 def generate_all_rmaps(instrument, source_path):
     """Given an `instrument`, this function will generate a .rmap file
-    for each reftype known for the instrument.  The XML table sources
+    for each filekind known for the instrument.  The XML table sources
     for the rmap are found along path `source_path` and must be named:
-    <instrument> _ <reftype> _ <serialno> .xml where serialno
+    <instrument> _ <filekind> _ <serialno> .xml where serialno
     corresponds to the CDBS HTML URL from which the XML was scraped.
     """
     for kind in sorted(KIND_KEYS[instrument]):
@@ -379,12 +379,12 @@ def parkeys_to_fitskeys(instrument, all_parkeys, outname):
                   repr(all_parkeys), "headerkeys = ", repr(header_keys))
     return tuple(header_keys)
 
-def write_rmap(observatory, instrument, reftype, kind_map):
+def write_rmap(observatory, instrument, filekind, kind_map):
     """Constructs rmap's header and data out of the kind_map and
     outputs an rmap file
     """
-    outname = "./" + observatory + "_" + instrument + "_" + reftype + ".rmap"
-    parkeys = KIND_KEYS[instrument][reftype]
+    outname = "./" + observatory + "_" + instrument + "_" + filekind + ".rmap"
+    parkeys = KIND_KEYS[instrument][filekind]
     fitskeys = parkeys_to_fitskeys(instrument, parkeys, outname)
     mapkeys = parkeys_to_fitskeys(instrument, MAPKEYS[:-1], outname)
     now = timestamp.now().split('.')[0]
@@ -392,13 +392,13 @@ def write_rmap(observatory, instrument, reftype, kind_map):
         ("mapping", "REFERENCE"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
-        ("reftype", reftype.upper()),
+        ("filekind", filekind.upper()),
         ("parkey", (fitskeys, mapkeys)),
-        ("description", ("Scraped from CDBS website on " + now)),
+        ("description", ("Initially generated on " + now)),
     ])
 
-    # Execute reftype specific customizations on header    
-    rmap_header.update(HEADER_ADDITIONS.get((instrument, reftype), {}))
+    # Execute filekind specific customizations on header    
+    rmap_header.update(HEADER_ADDITIONS.get((instrument, filekind), {}))
     
     matching_selections = dict()
     for match_tuple in sorted(kind_map):
@@ -409,7 +409,7 @@ def write_rmap(observatory, instrument, reftype, kind_map):
                 existing_file = useafter_selections[fmap.date]
                 if fmap.file != existing_file:
                     log.warning("Useafter date collision in", repr(instrument), 
-                                repr(reftype), repr(match_tuple), "at", 
+                                repr(filekind), repr(match_tuple), "at", 
                                 repr(fmap.date), repr(fmap.file), "replaces", 
                                 repr(existing_file))
             useafter_selections[fmap.date] = fmap.file

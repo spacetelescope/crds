@@ -3,8 +3,8 @@ instrument index,  a map from file kinds to URLs of file mapping tables.  For
 each file kind,  all URLs are retrieved and stored as raw HTML,  and the
 corresponding simplified XML is also stored.   Files are named:
 
-<instrument> _ <reftype> _ <url_number> . html
-<instrument> _ <reftype> _ <url_number> . xml
+<instrument> _ <filekind> _ <url_number> . html
+<instrument> _ <filekind> _ <url_number> . xml
 
 All of the .xml files for a file kind can then be reduced to a single file mapping rmap.
 
@@ -12,10 +12,10 @@ Ignoring serial numbers,  the instrument index rmap can be named something like:
 
 <instrument> . rmap
 
-Ignoring reftype serial numbers,  the second tier map file names which make up the bulk of
+Ignoring filekind serial numbers,  the second tier map file names which make up the bulk of
 the instrument index are implicit:
 
-<instrument> _ <reftype> . rmap
+<instrument> _ <filekind> . rmap
 """
 
 import sys
@@ -25,7 +25,7 @@ from crds.compat import OrderedDict
 
 from crds.hst.gentools import ezxml, scrape, tlist
 
-from crds import log, rmap
+from crds import log, rmap, timestamp
 
 # ==========================================================================================
 
@@ -66,12 +66,14 @@ def generate_imap(fname):
     """
     instr = get_instrument(fname)
     source_url = scrape.get_url(open(fname).read())
+    now = timestamp.now().split('.')[0]
     header = OrderedDict([
-      ("mapping", "instrument"),
+      ("mapping", "INSTRUMENT"),
       ("observatory" , "HST"),
       ("instrument", instr.upper()),
       ('parkey', ('REFTYPE',)),
-      ("source_url", source_url),      
+      ("source_url", source_url),
+      ("description", ("Initially generated on " + now)),
     ])
     selector = {}
     for pars in tlist.xmlfile_tables_to_dicts(fname):
@@ -97,7 +99,7 @@ def skip_index_dict(converted):
         "disabled" in anywhere:
         log.warning("Skipping", repr(converted))
         return True
-    log.info("Processing", repr(converted))
+    # log.info("Processing", repr(converted))
     return False
 
 def get_value_from_keys(d, keylist):

@@ -1,9 +1,10 @@
 header = {
+    'description' : 'Initially generated on 2011-11-16 10:11:53',
     'instrument' : 'WFPC2',
-    'mapping' : 'instrument',
+    'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'b0c59084c16deb9bef53b77e1ac3748ffc8737e9',
+    'sha1sum' : 'f3bba1df8119c7d9a81a4d54563683c4317c4f6e',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2',
 }
 
