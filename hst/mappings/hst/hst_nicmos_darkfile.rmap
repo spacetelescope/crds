@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.988870',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'DARKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'DARKFILE',
-    'sha1sum' : 'cd1f5783a12c38b2b2a8446ae5978abbed11237a',
+    'sha1sum' : 'c368c91f53f7f783e40d9301af034cdbe73e1118',
 }
 
 selector = Match({

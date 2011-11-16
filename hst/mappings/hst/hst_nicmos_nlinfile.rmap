@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.985648',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'NLINFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'NLINFILE',
-    'sha1sum' : 'aad2e4309af4a5a1e7adcbc6792e1422bc4f9da5',
+    'sha1sum' : 'de59b513119d98ec743f9407a87935c0e8470f5e',
 }
 
 selector = Match({

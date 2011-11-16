@@ -1,10 +1,11 @@
 header = {
+    'description' : 'Initially generated on 2011-11-16 11:31:03',
+    'filekind' : 'DELTADARK',
     'instrument' : 'WFPC2',
-    'mapping' : 'reference',
+    'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'CLOCK', 'GAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'DELTADARK',
-    'sha1sum' : '9c2a7a674d9978afdc203fa868b65c50c771c6d0',
+    'sha1sum' : '029d10e27cc691bd3fcb88d8cd9e6decbf0603d4',
 }
 
 selector = Match({

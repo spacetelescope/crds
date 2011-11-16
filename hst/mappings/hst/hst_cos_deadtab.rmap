@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 08:48:54',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'DEADTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'DEADTAB',
-    'sha1sum' : '61cb19e59956c8376dcc11da0bbf101dfdd6ac7b',
+    'sha1sum' : 'db6fa667abf9a44d056c8aca9ee880ac9a31a33b',
 }
 
 selector = Match({

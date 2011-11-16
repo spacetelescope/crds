@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:32',
+    'description' : 'Initially generated on 2011-11-16 11:30:21',
+    'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'DARKFILE',
-    'sha1sum' : '588b00c863ded3c80a7b78ef15f7b2547f620fa7',
+    'sha1sum' : 'ecc6177c4b515d946372e352ec64b66cad691301',
 }
 
 selector = Match({

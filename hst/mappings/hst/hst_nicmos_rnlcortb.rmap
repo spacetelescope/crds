@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.992959',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'RNLCORTB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'RNLCORTB',
-    'sha1sum' : 'a73bc6c208d3f960a8ebd358ab154437c1ccee81',
+    'sha1sum' : '193544f4e55fd556c63ff8808b85b01aecac077a',
 }
 
 selector = Match({

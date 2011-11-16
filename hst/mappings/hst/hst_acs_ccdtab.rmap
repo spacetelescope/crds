@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:30',
+    'description' : 'Initially generated on 2011-11-16 11:30:18',
+    'filekind' : 'CCDTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'CCDTAB',
-    'sha1sum' : '9c78acd388c9287809f4b54b508d5cbea35e95c6',
+    'sha1sum' : '3e042ac74d7306276f96222f1fe7938455f1d3ae',
 }
 
 selector = Match({

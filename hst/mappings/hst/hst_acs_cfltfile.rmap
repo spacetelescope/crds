@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:30',
+    'description' : 'Initially generated on 2011-11-16 11:30:18',
+    'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'CFLTFILE',
-    'sha1sum' : '51045d369fb8365ae97c75d6ac4e3197e96729b0',
+    'sha1sum' : '6bf97f9a831544e74922d5cd17f9bcca0a87e962',
 }
 
 selector = Match({

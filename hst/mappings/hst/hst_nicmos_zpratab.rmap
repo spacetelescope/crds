@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.996214',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'ZPRATAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'ZPRATAB',
-    'sha1sum' : '8dab406a8dff7791409f4798e52bb15a54e268da',
+    'sha1sum' : '647516367b988bbce7071f2bcf2b905107fa57b7',
 }
 
 selector = Match({

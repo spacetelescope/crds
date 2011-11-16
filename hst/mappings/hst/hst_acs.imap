@@ -1,10 +1,10 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 10:11:51',
+    'description' : 'Initially generated on 2011-11-16 11:07:50',
     'instrument' : 'ACS',
     'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '5a221eb7571110938bdc6d9a5e80bd087d6c9aba',
+    'sha1sum' : '6e7d049674b8ae9597c67b9554f2d5f7847efe83',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
 }
 

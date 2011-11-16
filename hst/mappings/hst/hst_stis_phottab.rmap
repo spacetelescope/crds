@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:25',
+    'description' : 'Initially generated on 2011-11-16 11:30:52',
+    'filekind' : 'PHOTTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'PHOTTAB',
-    'sha1sum' : 'db2806bd7717b1596ff16ba6b51969aa86f0e427',
+    'sha1sum' : 'c7e5a1b4ca5e05bce078413619e2a81e07f7ea42',
 }
 
 selector = Match({

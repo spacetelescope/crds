@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 08:48:54',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'FLUXTAB',
-    'sha1sum' : '840f651acda0849cc2dbd6448db3b3b1d2fa7b78',
+    'sha1sum' : '9ab266cf9357b84c48c5a4d8af4d236200eca789',
 }
 
 selector = Match({

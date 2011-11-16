@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:26.003103',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'PMSKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'PMSKFILE',
-    'sha1sum' : '57b674a190f3cfc65bb30552db1b0a523a5bdd70',
+    'sha1sum' : 'b7bb973f4f93e7e74bb02e7480e61885cd5b1de3',
 }
 
 selector = Match({

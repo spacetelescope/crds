@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:25',
+    'description' : 'Initially generated on 2011-11-16 11:30:52',
+    'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'APERTURE', '*CENWAVE'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'PFLTFILE',
-    'sha1sum' : 'ec5251ed4daf97c9062113471be570c8ec13f71a',
+    'sha1sum' : '293fd87b10e8b1483b7596d94fe467caf2fd208b',
 }
 
 selector = Match({

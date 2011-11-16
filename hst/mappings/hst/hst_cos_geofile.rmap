@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 08:48:54',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'GEOFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'GEOFILE',
-    'sha1sum' : 'a74022fe3ee2d3ec99b725afd0d976b7f794d06b',
+    'sha1sum' : '0d5938750c73f2f88bbe18ad0d334e49926207ce',
 }
 
 selector = Match({

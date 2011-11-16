@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.998215',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'MASKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'MASKFILE',
-    'sha1sum' : '44de770fa11f0b7046f07eff3d322dbd287f9442',
+    'sha1sum' : '6e4214d1056ddbffe46e1631daebb7998a532357',
 }
 
 selector = Match({

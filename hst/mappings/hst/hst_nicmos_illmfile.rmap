@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:25.979477',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'ILLMFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'ILLMFILE',
-    'sha1sum' : '5f7b5f71b3707cdc4c7f7160b87e6fa41e56d23f',
+    'sha1sum' : 'f9c2b9bd0cdfbc57ce7d171ddc8e9d4862c6bbdd',
 }
 
 selector = Match({

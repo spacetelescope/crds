@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:41.771814',
+    'description' : 'Initially generated on 2011-11-16 11:31:03',
+    'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'DGEOFILE',
-    'sha1sum' : 'e9bbe802811bdcb9d414040d42ff1c1d8c33933d',
+    'sha1sum' : '62a8e531fe35eaf6d4ecda76128676aa449e2a16',
 }
 
 selector = Match({

@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:24',
+    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'MLINTAB',
-    'sha1sum' : '5c970392d406df96bfc2249ea5d5518f012849e8',
+    'sha1sum' : 'e82a1b344514998937e091393af106ba59a482e5',
 }
 
 selector = Match({

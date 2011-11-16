@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:41.762884',
+    'description' : 'Initially generated on 2011-11-16 11:31:04',
+    'filekind' : 'OFFTAB',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'OFFTAB',
-    'sha1sum' : '3d3cf67c4886061a42145d43af659b6e173a50a7',
+    'sha1sum' : '136ea453a4f2bc90d30e8f7005d3493797498cb7',
 }
 
 selector = Match({

@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:12',
+    'description' : 'Initially generated on 2011-11-16 11:31:01',
+    'filekind' : 'SHADFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'SHADFILE',
-    'sha1sum' : 'b3f6112ef5bab343ad59ef30a52794a1b7f283a9',
+    'sha1sum' : '7671c4111a0107bc11b9ceb08a48039c3e916c7d',
 }
 
 selector = Match({

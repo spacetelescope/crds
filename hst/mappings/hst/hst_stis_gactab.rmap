@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:23',
+    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'filekind' : 'GACTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'GACTAB',
-    'sha1sum' : '78e370ff8d17aae57af45f1dfd24ace631daa34c',
+    'sha1sum' : 'c13f96c06c15cc64a283386a2040375eb7a8030c',
 }
 
 selector = Match({

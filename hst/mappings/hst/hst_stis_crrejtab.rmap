@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:23',
+    'description' : 'Initially generated on 2011-11-16 11:30:50',
+    'filekind' : 'CRREJTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'CRREJTAB',
-    'sha1sum' : '7522effaf405ab44c9adf0abef8845d27dae44de',
+    'sha1sum' : 'afbf421244bc78d9a5d7ba30a3ab1e77de20c09e',
 }
 
 selector = Match({

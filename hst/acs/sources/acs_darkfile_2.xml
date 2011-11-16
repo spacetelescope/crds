@@ -13,10 +13,10 @@
         <p><b><h3>The dark files listed below are for ACS SBC Data taken after SM4 (May 16, 2009)</h3></b></p>
         <p/>
         <tr><th>File</th><th>Detector</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Use Date</th><th>Comments</th></tr>
-        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=u3o19558j*">u3o19558j_drk.fits</a></td><td>SBC</td><td>May 16 2009  12:00AM</td><td>INFLIGHT</td><td>12149</td><td>Mar 24 2010  08:02PM</td><td>Mar 24 2010  09:27PM</td><td>SBC dark for period within 2 hours of turn-on---------------------- This SBC dark is a summed and sm</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=u3o19558j*">u3o19558j_drk.fits</a></td><td>SBC</td><td>May 16 2009  12:00AM</td><td>INFLIGHT</td><td>12149</td><td>Mar 24 2010  08:02PM</td><td>Mar 24 2010  09:27PM</td><td>SBC dark for period within 2 hours of turn-on----------------------</td></tr>
     </table>
     <table>
         <tr><th>File</th><th>Detector</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Use Date</th><th>Comments</th></tr>
-        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=u3o19557j*">u3o19557j_drk.fits</a></td><td>SBC</td><td>Mar 01 2002  12:00AM</td><td>INFLIGHT</td><td>12149</td><td>Mar 24 2010  08:02PM</td><td>Mar 24 2010  09:27PM</td><td>SBC dark for period within 2 hours of turn-on---------------------- This SBC dark is a summed and sm</td></tr>
+        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=u3o19557j*">u3o19557j_drk.fits</a></td><td>SBC</td><td>Mar 01 2002  12:00AM</td><td>INFLIGHT</td><td>12149</td><td>Mar 24 2010  08:02PM</td><td>Mar 24 2010  09:27PM</td><td>SBC dark for period within 2 hours of turn-on----------------------</td></tr>
     </table>
 </document>

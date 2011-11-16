@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 08:48:54',
+    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'FLATFILE',
-    'sha1sum' : 'c70650aa3c06ef1c189dc960c82dc5f7b2000b12',
+    'sha1sum' : '97e6ecc608852d8c48f325c799a029c77db69a0a',
 }
 
 selector = Match({

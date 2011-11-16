@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:54:23',
+    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'INANGTAB',
-    'sha1sum' : '7cd455e2e960a339901246bbf32287b97199e60a',
+    'sha1sum' : 'd4bd7db0052b336499751e97fa8c6ad64b0fdfef',
 }
 
 selector = Match({

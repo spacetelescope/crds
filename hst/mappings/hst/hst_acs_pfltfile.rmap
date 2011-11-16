@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:31:39',
+    'description' : 'Initially generated on 2011-11-16 11:30:47',
+    'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'PFLTFILE',
-    'sha1sum' : '06419a878110ec3884a1417dc245ab07ad38e7a7',
+    'sha1sum' : '4212a43dd8669752e212187f78cf3415545b5811',
 }
 
 selector = Match({

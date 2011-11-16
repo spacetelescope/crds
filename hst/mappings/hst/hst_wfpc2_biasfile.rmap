@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:44.338529',
+    'description' : 'Initially generated on 2011-11-16 11:31:01',
+    'filekind' : 'BIASFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'GAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'BIASFILE',
-    'sha1sum' : '7d1b5ae65df07e3baceaf2184b2b92fe85849669',
+    'sha1sum' : 'a161c38b4dfb752b967f8841ad5e9c437918726d',
 }
 
 selector = Match({

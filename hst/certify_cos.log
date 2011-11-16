@@ -1,71 +1,22 @@
-INFO:[1]: Validating hst_cos.imap 
-INFO:[2]: Validating hst_cos_phatab.rmap 
-INFO:[3]: Validating hst_cos_wcptab.rmap 
-INFO:[4]: Validating hst_cos_badttab.rmap 
-INFO:[5]: Validating hst_cos_xtractab.rmap 
-INFO:[6]: Validating hst_cos_phottab.rmap 
-INFO:[7]: Validating hst_cos_lamptab.rmap 
-INFO:[8]: Validating hst_cos_geofile.rmap 
-ERROR[1]: Validation error in ReferenceMapping('hst_cos_geofile.rmap') : Field 'DETECTOR'='NONE' of key ('NONE',) is not in ('FUV',) 
-INFO:[9]: Validating hst_cos_bpixtab.rmap 
-INFO:[10]: Validating hst_cos_flatfile.rmap 
+INFO:[1]: Certifying 'hst_cos.imap' 
+INFO:[2]: Validating hst_cos.imap 
+INFO:[3]: Validating hst_cos_phatab.rmap 
+INFO:[4]: Validating hst_cos_wcptab.rmap 
+INFO:[5]: Validating hst_cos_badttab.rmap 
+INFO:[6]: Validating hst_cos_fluxtab.rmap 
+INFO:[7]: Validating hst_cos_xtractab.rmap 
+INFO:[8]: Validating hst_cos_brftab.rmap 
+INFO:[9]: Validating hst_cos_spwcstab.rmap 
+INFO:[10]: Validating hst_cos_lamptab.rmap 
+INFO:[11]: Validating hst_cos_geofile.rmap 
+INFO:[12]: Validating hst_cos_bpixtab.rmap 
+INFO:[13]: Validating hst_cos_flatfile.rmap 
 WARNING[1]: Parameter 'OBSTYPE' is unchecked. 
-INFO:[11]: Validating hst_cos_tdstab.rmap 
-INFO:[12]: Validating hst_cos_brftab.rmap 
-INFO:[13]: Validating hst_cos_deadtab.rmap 
-INFO:[14]: Validating hst_cos_disptab.rmap 
-INFO:[15]: Validating hst_cos_brsttab.rmap 
-INFO:[16]: Certifying 'n9n20182l_flat.fits' 
-ERROR[2]: Validation failed for '/grp/hst/cdbs/lref/n9n20182l_flat.fits' : Missing required keyword 'VCALCOS' 
-INFO:[17]: Certifying 'r7p1113nl_geo.fits' 
-INFO:[18]: Certifying 's7g17006l_1dx.fits' 
-INFO:[19]: Certifying 's7g17007l_1dx.fits' 
-INFO:[20]: Certifying 's7g1700cl_geo.fits' 
-INFO:[21]: Certifying 's7g1700dl_bpix.fits' 
-INFO:[22]: Certifying 's7g1700el_brf.fits' 
-INFO:[23]: Certifying 's7g1700fl_burst.fits' 
-INFO:[24]: Certifying 's7g1700gl_dead.fits' 
-INFO:[25]: Certifying 's7g1700il_lamp.fits' 
-INFO:[26]: Certifying 's7g1700jl_pha.fits' 
-ERROR[3]: Validation failed for '/grp/hst/cdbs/lref/s7g1700jl_pha.fits' : Missing required keyword 'OPT_ELEM' 
-INFO:[27]: Certifying 's7g1700kl_phot.fits' 
-INFO:[28]: Certifying 's7g1700nl_1dx.fits' 
-INFO:[29]: Certifying 's7g1700ol_1dx.fits' 
-INFO:[30]: Certifying 's7g1700pl_bpix.fits' 
-INFO:[31]: Certifying 's7g1700ql_dead.fits' 
-INFO:[32]: Certifying 's7g1700tl_flat.fits' 
-ERROR[4]: Validation failed for '/grp/hst/cdbs/lref/s7g1700tl_flat.fits' : Missing required keyword 'OPT_ELEM' 
-INFO:[33]: Certifying 's7g17010l_lamp.fits' 
-INFO:[34]: Certifying 's7g17011l_phot.fits' 
-INFO:[35]: Certifying 's7g17013l_disp.fits' 
-INFO:[36]: Certifying 's7o1739kl_badt.fits' 
-INFO:[37]: Certifying 't2314311l_wcp.fits' 
-INFO:[38]: Certifying 't2314312l_tds.fits' 
-INFO:[39]: Certifying 't2314313l_wcp.fits' 
-INFO:[40]: Certifying 't2314314l_tds.fits' 
-INFO:[41]: Certifying 't2k1224el_disp.fits' 
-INFO:[42]: Certifying 't9b18112l_wcp.fits' 
-INFO:[43]: Certifying 't9e1307kl_disp.fits' 
-INFO:[44]: Certifying 't9e1307ll_disp.fits' 
-INFO:[45]: Certifying 't9h1220sl_phot.fits' 
-INFO:[46]: Certifying 'u1t1616ol_lamp.fits' 
-INFO:[47]: Certifying 'u1t1616pl_disp.fits' 
-INFO:[48]: Certifying 'u1t1616ql_wcp.fits' 
-INFO:[49]: Certifying 'u381724gl_bpix.fits' 
-INFO:[50]: Certifying 'u4d1930tl_1dx.fits' 
-INFO:[51]: Certifying 'u6s1320ql_disp.fits' 
-INFO:[52]: Certifying 'u6s1320rl_lamp.fits' 
-INFO:[53]: Certifying 'u7d20378l_tds.fits' 
-INFO:[54]: Certifying 'u8k1433nl_1dx.fits' 
-INFO:[55]: Certifying 'u8k1433ql_phot.fits' 
-INFO:[56]: Certifying 'uas19356l_bpix.fits' 
-INFO:[57]: Certifying 'ucl1623gl_pha.fits' 
-INFO:[58]: Certifying 'v2e20129l_flat.fits' 
-INFO:[59]: Certifying 'v3g18194l_disp.fits' 
-INFO:[60]: Certifying 'v3g18195l_lamp.fits' 
-INFO:[61]: Certifying 'v3i16155l_tds.fits' 
-INFO:[62]: Certifying 'v4s17227l_flat.fits' 
-4 errors 
+INFO:[14]: Validating hst_cos_tdstab.rmap 
+INFO:[15]: Validating hst_cos_deadtab.rmap 
+INFO:[16]: Validating hst_cos_disptab.rmap 
+INFO:[17]: Validating hst_cos_brsttab.rmap 
+0 errors 
 1 warnings 
-62 infos 
+17 infos 
  

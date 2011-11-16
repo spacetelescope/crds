@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-16 09:20:06',
+    'description' : 'Initially generated on 2011-11-16 11:31:01',
+    'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'PFLTFILE',
-    'sha1sum' : 'bda738121176202f97428f5afb0f503e96c3bb8c',
+    'sha1sum' : '6a6f2bc4c0d737018333e34fcd91e8e4d1aaa745',
 }
 
 selector = Match({
@@ -87,18 +87,12 @@ selector = Match({
     ('UVIS', 'CLEAR', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'CLEAR', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F200LP', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18325i_pfl.fits',
     }),
     ('UVIS', 'F200LP', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F200LP', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F218W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -107,18 +101,12 @@ selector = Match({
     ('UVIS', 'F218W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F218W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F225W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't6b16347i_pfl.fits',
     }),
     ('UVIS', 'F225W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F225W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F275W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -127,9 +115,6 @@ selector = Match({
     ('UVIS', 'F275W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F275W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F280N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't6b16349i_pfl.fits',
@@ -137,18 +122,12 @@ selector = Match({
     ('UVIS', 'F280N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F280N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F300X', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18326i_pfl.fits',
     }),
     ('UVIS', 'F300X', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F300X', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F336W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -159,18 +138,12 @@ selector = Match({
     ('UVIS', 'F336W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F336W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F343N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18328i_pfl.fits',
     }),
     ('UVIS', 'F343N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F343N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F350LP', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -179,9 +152,6 @@ selector = Match({
     ('UVIS', 'F350LP', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F350LP', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F373N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ai_pfl.fits',
@@ -189,18 +159,12 @@ selector = Match({
     ('UVIS', 'F373N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F373N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F390M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ci_pfl.fits',
     }),
     ('UVIS', 'F390M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F390M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F390W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -210,9 +174,6 @@ selector = Match({
     ('UVIS', 'F390W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F390W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F395N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832di_pfl.fits',
@@ -220,18 +181,12 @@ selector = Match({
     ('UVIS', 'F395N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F395N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F410M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ei_pfl.fits',
     }),
     ('UVIS', 'F410M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F410M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F438W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -241,18 +196,12 @@ selector = Match({
     ('UVIS', 'F438W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F438W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F467M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832gi_pfl.fits',
     }),
     ('UVIS', 'F467M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F467M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F469N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -261,18 +210,12 @@ selector = Match({
     ('UVIS', 'F469N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F469N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F475W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ii_pfl.fits',
     }),
     ('UVIS', 'F475W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F475W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F475X', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -281,18 +224,12 @@ selector = Match({
     ('UVIS', 'F475X', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F475X', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F487N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832ki_pfl.fits',
     }),
     ('UVIS', 'F487N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F487N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F502N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -301,18 +238,12 @@ selector = Match({
     ('UVIS', 'F502N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F502N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F547M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832mi_pfl.fits',
     }),
     ('UVIS', 'F547M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F547M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F555W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -322,17 +253,11 @@ selector = Match({
     ('UVIS', 'F555W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F555W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F588N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
     }),
     ('UVIS', 'F588N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F588N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F600LP', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -340,9 +265,6 @@ selector = Match({
     }),
     ('UVIS', 'F600LP', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F600LP', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F606W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -352,18 +274,12 @@ selector = Match({
     ('UVIS', 'F606W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F606W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F621M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832qi_pfl.fits',
     }),
     ('UVIS', 'F621M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F621M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F625W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -372,18 +288,12 @@ selector = Match({
     ('UVIS', 'F625W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F625W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F631N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1832si_pfl.fits',
     }),
     ('UVIS', 'F631N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F631N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F645N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -392,18 +302,12 @@ selector = Match({
     ('UVIS', 'F645N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F645N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F656N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18330i_pfl.fits',
     }),
     ('UVIS', 'F656N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F656N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F657N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -412,18 +316,12 @@ selector = Match({
     ('UVIS', 'F657N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F657N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F658N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18332i_pfl.fits',
     }),
     ('UVIS', 'F658N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F658N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F665N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -432,18 +330,12 @@ selector = Match({
     ('UVIS', 'F665N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F665N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F673N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18334i_pfl.fits',
     }),
     ('UVIS', 'F673N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F673N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F680N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -452,9 +344,6 @@ selector = Match({
     ('UVIS', 'F680N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F680N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F689M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18336i_pfl.fits',
@@ -462,18 +351,12 @@ selector = Match({
     ('UVIS', 'F689M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F689M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F763M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18337i_pfl.fits',
     }),
     ('UVIS', 'F763M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F763M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F775W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -483,9 +366,6 @@ selector = Match({
     ('UVIS', 'F775W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F775W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F814W', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t18339i_pfl.fits',
@@ -494,18 +374,12 @@ selector = Match({
     ('UVIS', 'F814W', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F814W', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F845M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1833ai_pfl.fits',
     }),
     ('UVIS', 'F845M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F845M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'F850LP', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -514,18 +388,12 @@ selector = Match({
     ('UVIS', 'F850LP', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'F850LP', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'F953N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't4t1833ci_pfl.fits',
     }),
     ('UVIS', 'F953N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'F953N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ232N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -534,18 +402,12 @@ selector = Match({
     ('UVIS', 'FQ232N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ232N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ243N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954hi_pfl.fits',
     }),
     ('UVIS', 'FQ243N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ243N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ378N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -554,18 +416,12 @@ selector = Match({
     ('UVIS', 'FQ378N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ378N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ387N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't6b1634di_pfl.fits',
     }),
     ('UVIS', 'FQ387N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ387N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ422M', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -574,18 +430,12 @@ selector = Match({
     ('UVIS', 'FQ422M', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ422M', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ436N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954ki_pfl.fits',
     }),
     ('UVIS', 'FQ436N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ436N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ437N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -594,18 +444,12 @@ selector = Match({
     ('UVIS', 'FQ437N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ437N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ492N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954li_pfl.fits',
     }),
     ('UVIS', 'FQ492N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ492N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ508N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -614,18 +458,12 @@ selector = Match({
     ('UVIS', 'FQ508N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ508N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ575N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954mi_pfl.fits',
     }),
     ('UVIS', 'FQ575N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ575N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ619N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -634,18 +472,12 @@ selector = Match({
     ('UVIS', 'FQ619N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ619N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ634N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954ni_pfl.fits',
     }),
     ('UVIS', 'FQ634N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ634N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ672N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -654,18 +486,12 @@ selector = Match({
     ('UVIS', 'FQ672N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ672N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ674N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954pi_pfl.fits',
     }),
     ('UVIS', 'FQ674N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ674N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ727N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -674,18 +500,12 @@ selector = Match({
     ('UVIS', 'FQ727N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ727N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ750N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954ri_pfl.fits',
     }),
     ('UVIS', 'FQ750N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ750N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ889N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -694,18 +514,12 @@ selector = Match({
     ('UVIS', 'FQ889N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ889N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ906N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f1954si_pfl.fits',
     }),
     ('UVIS', 'FQ906N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ906N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'FQ924N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
@@ -714,18 +528,12 @@ selector = Match({
     ('UVIS', 'FQ924N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
     }),
-    ('UVIS', 'FQ924N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
-    }),
     ('UVIS', 'FQ937N', '1.0', '1.0') : UseAfter({
         '2001-01-01 00:00:00' : 's5e1814si_pfl.fits',
         '2008-02-20 00:00:00' : 't7f19550i_pfl.fits',
     }),
     ('UVIS', 'FQ937N', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848mi_pfl.fits',
-    }),
-    ('UVIS', 'FQ937N', '3.0', '3.0') : UseAfter({
-        '1991-01-01 00:00:00' : 's191848ni_pfl.fits',
     }),
     ('UVIS', 'G280', '1.0', '1.0') : UseAfter({
         '1990-01-01 00:00:00' : 't8v14566i_pfl.fits',

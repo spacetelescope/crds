@@ -1,10 +1,10 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 10:11:52',
+    'description' : 'Initially generated on 2011-11-16 11:07:50',
     'instrument' : 'NICMOS',
     'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '732df0d28b7459250e71514a3d4d9611d2d2de88',
+    'sha1sum' : '1d8574627e76a5ce19a89e4fc3ec13ed813dc40a',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/NICMOS/reftablequeryindex',
 }
 

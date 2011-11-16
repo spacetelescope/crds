@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Scraped from CDBS website on 2011-11-15 16:56:44.346982',
+    'description' : 'Initially generated on 2011-11-16 11:31:01',
+    'filekind' : 'ATODFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'GAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'reftype' : 'ATODFILE',
-    'sha1sum' : '4f00a48b32208dc913b20d96775c7672aaea7d80',
+    'sha1sum' : '5383b23e527c37516f0fc3860886290c94f0843c',
 }
 
 selector = Match({

@@ -52,7 +52,7 @@ def get_filelist_xml(fname):
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
-        if skip_index_dict(pars):
+        if skip_index_dict(converted):
             continue
         print `keyword`, converted["comment"]
         urls = converted["urls"]
