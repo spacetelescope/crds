@@ -773,11 +773,12 @@ def load_mapping(mapping, **keys):
         cls = ReferenceMapping
     else:
         m = Mapping.from_file(mapping)
-        if m.header["mapping"] == "pipeline":
+        mapping_type = m.header["mapping"].lower()
+        if  mapping_type == "pipeline":
             cls = PipelineContext
-        elif m.header["mapping"] == "instrument":
+        elif mapping_type == "instrument":
             cls = InstrumentContext
-        elif m.header["mapping"] == "reference":
+        elif mapping_type == "reference":
             cls = ReferenceMapping
         else:
             raise ValueError("Unknown mapping type for " + repr(mapping))
