@@ -20,7 +20,6 @@
     <table>
         <tr><th>Reference File Type</th><th>File Suffix</th><th>Header Keyword</th><th>Detector</th></tr>
         <tr><td>**Image Distortion Coefficient Tables **   Geometric distortion models.<a href="description.html#idc">More...</a></td><td>IDC</td><td>IDCTAB</td><td><a href="WFC3distcoeff?no_wrap=true">Both detectors</a></td></tr>
-        <tr><td>**Geometric Delta Image**   Residual geometric distortion correction.<a href="description.html#dxy">More...</a></td><td>DXY</td><td>DGEOFILE</td><td><a href="WFC3dxy?no_wrap=true">Both detectors</a></td></tr>
     </table>
     <table>
         <tr><th>Reference File Type</th><th>File Suffix</th><th>Header Keyword</th><th>Detector</th></tr>

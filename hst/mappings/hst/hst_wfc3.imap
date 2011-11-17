@@ -1,10 +1,10 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:07:51',
+    'description' : 'Initially generated on 2011-11-17 12:37:33',
     'instrument' : 'WFC3',
     'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '8bbeb78f41e10126d073f0e6008c399a87361971',
+    'sha1sum' : 'c5e256afff5b2642b13673cfac7573a2f1914b01',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
 }
 
@@ -14,7 +14,6 @@ selector = {
     'ccdtab' : ('CCD', 'hst_wfc3_ccdtab.rmap'),
     'crrejtab' : ('CRR', 'hst_wfc3_crrejtab.rmap'),
     'darkfile' : ('DRK', 'hst_wfc3_darkfile.rmap'),
-    'dgeofile' : ('DXY', 'hst_wfc3_dgeofile.rmap'),
     'idctab' : ('IDC', 'hst_wfc3_idctab.rmap'),
     'mdriztab' : ('MDZ', 'hst_wfc3_mdriztab.rmap'),
     'nlinfile' : ('LIN', 'hst_wfc3_nlinfile.rmap'),

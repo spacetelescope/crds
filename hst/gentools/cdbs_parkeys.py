@@ -201,7 +201,7 @@ KIND_KEYS = {
                 "ccdtab" : ('detector',),
                 "crrejtab" : ('detector',),
                 "darkfile" : ('detector', '*amp', '*ccd_gain', '*samp-seq', '*subtype', '*binaxis1=1.0', '*binaxis2=1.0',),
-                "dgeofile" : ('detector', 'filter'),
+                # "dgeofile" : ('detector', 'filter'),
                 "idctab" : ('detector',),
                 "mdriztab" : ('detector',),
                 "nlinfile" : ('detector',),
