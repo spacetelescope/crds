@@ -69,7 +69,11 @@ def set_verbose(level=DEFAULT_VERBOSE_LEVEL):
     log.error(), log.info(), log.warning() default to verbosity=0.
     """
     global VERBOSE_LEVEL
-    assert 0 <= level < 100,  "verbosity level must be in range 0..100"
+    assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
+    if level == True:
+        level = DEFAULT_VERBOSE_LEVEL
+    elif level == False:
+        level = 0
     VERBOSE_LEVEL = level
 
 def get_verbose():

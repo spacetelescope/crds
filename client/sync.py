@@ -35,9 +35,9 @@ def sync_context_mappings(only_contexts):
         return
     add_context_mappings(only_contexts)
     master_context = only_contexts[0]
-    locator = rmap.get_cached_mapping(master_context).locate
-    purge_dir = locator.get_crds_mappath()
-    purge_maps = pysh.lines("find ${purge_dir} -name '*map'")
+    # locator = rmap.get_cached_mapping(master_context).locate
+    purge_dir = rmap.get_crds_mappath()
+    purge_maps = pysh.lines("find ${purge_dir} -name '*.[pir]map'")
     purge_maps = set([os.path.basename(x.strip()) for x in purge_maps])
     keep = get_context_mappings(only_contexts)
     remove_files(master_context, purge_maps-keep, "mapping")
@@ -65,9 +65,12 @@ def sync_context_references(only_contexts):
         return
     add_context_references(only_contexts)
     master_context = only_contexts[0]
-    locator = rmap.get_cached_mapping(master_context).locate
-    purge_dir = locator.get_crds_refpath()
-    purge_refs = pysh.lines("find ${purge_dir} -name '*.fits'")
+    # locator = rmap.get_cached_mapping(master_context).locate
+    purge_dir = rmap.get_crds_refpath()
+    purge_refs = pysh.lines("find ${purge_dir} "
+                            "-name '*.fits' ")
+                            # "-o -name '*.r*h' "
+                            # "-o -name '*.r*d'")
     purge_refs = set([os.path.basename(x.strip()) for x in purge_refs])
     keep = get_context_references(only_contexts)
     remove = purge_refs - keep
@@ -84,9 +87,9 @@ def remove_files(context, files, kind):
     """
     if not files:
         log.verbose("No " + kind + "s to remove.")
-    locator = rmap.get_cached_mapping(context).locate
+    # locator = rmap.get_cached_mapping(context).locate
     for file in files:
-        where = locator.locate_file(file)
+        where = rmap.locate_file(file)
         log.verbose("removing", file, "from", where)
         try:
             os.remove(where)
