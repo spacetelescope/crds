@@ -272,7 +272,7 @@ KIND_KEYS = {
         "atodfile" : ('mode', 'gain',),
         "biasfile" : ('mode', 'gain',),
         "darkfile" : ('mode', 'clock', 'gain',),
-        "deltadark" :  ('mode', 'clock', 'gain',),
+        # "deltadark" :  ('mode', 'clock', 'gain',),
         "dgeofile" : ('mode',),
         "flatfile" : ('mode','filter_1','filter_2',),
         "idctab" : (),
@@ -415,6 +415,12 @@ CDBS_PARKEYS_TO_FITS = {
 
     "wfc3" : {
         "samp-seq" : "SAMP_SEQ"
+    },
+    
+    "wfpc2" : {
+        "filter_1"  : "FILTNAME1",
+        "filter_2"  : "FILTNAME2",
+        "gain" : "ATODGAIN"
     },
 }
 

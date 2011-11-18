@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:21',
+    'description' : 'Initially generated on 2011-11-17 15:51:58',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '2ef3f675cdefcfa461f11057a31d83de0a202e33',
+    'sha1sum' : '0b0c1e8c5ddcb6433ad6e6b10a37ee370c8d5878',
 }
 
 selector = Match({

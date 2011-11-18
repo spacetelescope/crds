@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:29:30',
+    'description' : 'Initially generated on 2011-11-17 15:50:25',
     'filekind' : 'ATODTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDGAIN', 'CCDAMP'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'f052cd56504d316782cd423189b89d06a79f229c',
+    'sha1sum' : 'bd79b3c26a12a04455abfa1f37384688fb319cd2',
 }
 
 selector = Match({

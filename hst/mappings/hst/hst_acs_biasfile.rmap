@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:18',
+    'description' : 'Initially generated on 2011-11-17 15:51:55',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDGAIN', '*CCDAMP', '*NAXIS1', '*NAXIS2', '*LTV1', '*LTV2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '82037ee77c4a10745eb946802603388ef35ada93',
+    'sha1sum' : '67735aef4ea4e58c71d2e72a6e7972101341ffd3',
 }
 
 selector = Match({

@@ -1,10 +1,10 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:07:52',
+    'description' : 'Initially generated on 2011-11-17 13:05:55',
     'instrument' : 'WFPC2',
     'mapping' : 'INSTRUMENT',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '1a67e5e73123aa61ef5ea0d0c95ac3cdf15529ff',
+    'sha1sum' : 'c09c443787c4f9406cc57bbdaad31490fbabc35b',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFPC2/reftablequeryindex_wfpc2',
 }
 
@@ -12,7 +12,6 @@ selector = {
     'atodfile' : ('.r1h', 'hst_wfpc2_atodfile.rmap'),
     'biasfile' : ('.r2h', 'hst_wfpc2_biasfile.rmap'),
     'darkfile' : ('.r3h', 'hst_wfpc2_darkfile.rmap'),
-    'deltadark' : ('.r6h', 'hst_wfpc2_deltadark.rmap'),
     'dgeofile' : ('dxy', 'hst_wfpc2_dgeofile.rmap'),
     'flatfile' : ('.r4h', 'hst_wfpc2_flatfile.rmap'),
     'idctab' : ('idc', 'hst_wfpc2_idctab.rmap'),

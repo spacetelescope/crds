@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:18',
+    'description' : 'Initially generated on 2011-11-17 15:51:56',
     'filekind' : 'CRREJTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'b6442fa929c9334c39d413389e9b6ca17ea02139',
+    'sha1sum' : 'a9ed1025c0be9e837e2d6640f1c9e526f764ce24',
 }
 
 selector = Match({

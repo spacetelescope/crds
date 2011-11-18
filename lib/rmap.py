@@ -663,7 +663,12 @@ class ReferenceMapping(Mapping):
     rmap header and data.
     """
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
-            
+    
+    def __init__(self, *args, **keys):
+        Mapping.__init__(self, *args, **keys)
+        self._valid_values = self.get_valid_values()
+
+        
     def get_best_ref(self, header):
         """Return the single reference file basename appropriate for `header` 
         selected by this ReferenceMapping.
@@ -730,9 +735,8 @@ class ReferenceMapping(Mapping):
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.info("Validating", self.filename)
-        valid_values = self.get_valid_values()
         try:
-            self.selector.validate(valid_values, trap_exceptions, 
+            self.selector.validate(self._valid_values, trap_exceptions, 
                                    context=repr(self))
         except Exception, exc:
             if not trap_exceptions:

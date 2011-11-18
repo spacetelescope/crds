@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:47',
+    'description' : 'Initially generated on 2011-11-17 15:52:27',
     'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '4212a43dd8669752e212187f78cf3415545b5811',
+    'sha1sum' : 'c12d5d54f718f19f5281b26529aca64fcc6b25ec',
 }
 
 selector = Match({

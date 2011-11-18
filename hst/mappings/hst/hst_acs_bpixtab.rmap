@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:18',
+    'description' : 'Initially generated on 2011-11-17 15:51:55',
     'filekind' : 'BPIXTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e4163e07c324f64b0eed2ee4126967daa3bbc7b5',
+    'sha1sum' : '7b2aacdc155397070455e0e65b3c94854a73f85a',
 }
 
 selector = Match({

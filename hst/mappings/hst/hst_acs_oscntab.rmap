@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:21',
+    'description' : 'Initially generated on 2011-11-17 15:51:58',
     'filekind' : 'OSCNTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '2b8507eb305bb38253a21325ea69b0202f898269',
+    'sha1sum' : '7a8438ce7b79c874435b226bf529c8724e9b5312',
 }
 
 selector = Match({
