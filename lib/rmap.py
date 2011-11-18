@@ -196,7 +196,11 @@ class Mapping(object):
         self.filename = filename
         self.header = header
         self.selector = selector
-    
+        
+    @property
+    def basename(self):
+        return os.path.basename(self.filename)
+
     def __repr__(self):
         """A subclass-safe repr which includes required parameters except for
         'mapping' which is implied by the classname. 
@@ -443,15 +447,15 @@ class Mapping(object):
         differences = []
         for key in self.selections:
             if key not in other.selections:
-                msg = repr(other.filename) + " deleted " + repr(key)
+                msg = repr(other.basename) + " deleted " + repr(key)
                 differences.append(msg)
             else:
                 differences.extend(self.selections[key].difference(
                     other.selections[key], 
-                    path + ((self.filename, other.filename),))                                                 )
+                    path + ((self.basename, other.basename),))                                                 )
         for key in other.selections:
             if key not in self.selections:
-                msg = repr(other.filename) + " added " + repr(key)
+                msg = repr(other.basename) + " added " + repr(key)
                 differences.append(msg)
         return differences
                 
@@ -770,12 +774,12 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
     
-    def difference(self, other, path):
+    def difference(self, other, path=()):
         """Return the list of difference tuples between `self` and `other`,
         prefixing each tuple with context `path`.
         """
         return self.selector.difference(other.selector, path + 
-                ((self.filename, other.filename),))
+                ((self.basename, other.basename),))
 # ===================================================================
 
 CACHED_MAPPINGS = {}
