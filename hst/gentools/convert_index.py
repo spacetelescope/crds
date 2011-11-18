@@ -82,10 +82,10 @@ def generate_imap(fname):
         if skip_index_dict(converted):
             continue
         eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
-        selector[keyword] = (converted["ext"], eventually_generated_rmap)
+        selector[keyword] = eventually_generated_rmap
     imap = rmap.Mapping("./"  + instr + ".imap", header, selector)
     imap.write()
-    
+
 def skip_index_dict(converted):
     """Returns True IFF `converted` should be processed as a reference type, False
     if it should be skipped.

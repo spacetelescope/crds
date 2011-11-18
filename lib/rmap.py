@@ -15,15 +15,15 @@ missing:
 The available HST reference data seems to have a number of ACS 
 references missing relative to the CDBS HTML table dump:
 
->>> len(p.missing_references()) > 100
-False
+>>> len(p.missing_references()) > 0
+True
 
 There are 72 pmap, imap, and rmap files in the entire HST pipeline:
 
 >>> len(p.mapping_names()) > 50
 True
 
-There are 5719 reference files known to the initial CRDS mappings scraped
+There are over 9000 reference files known to the initial CRDS mappings scraped
 from the CDBS HTML table dump:
 
 >>> len(p.reference_names()) > 1000
@@ -580,11 +580,8 @@ class InstrumentContext(Mapping):
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector)
         self.selections = {}
-        self.extensions = {}
-        for filekind, (rmap_ext, rmap_name) in selector.items():
-            self.extensions[filekind] = rmap_ext.lower()
+        for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
-            keys['extension'] = rmap_ext
             self.selections[filekind] = refmap = ReferenceMapping.from_file(
                 rmap_name, **keys)            
             assert self.mapping == "instrument", \
