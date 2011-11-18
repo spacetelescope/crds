@@ -26,7 +26,7 @@ def get_context_mappings(contexts):
         files = files.union(api.get_mapping_names(context))
     return files
 
-def sync_context_mappings(only_contexts):
+def sync_context_mappings(only_contexts, purge=False):
     """Gets all mappings required to support `only_contexts`.  Removes
     all mappings from the CRDS mapping cache which are not required for
     `only_contexts`.
@@ -40,7 +40,8 @@ def sync_context_mappings(only_contexts):
     purge_maps = pysh.lines("find ${purge_dir} -name '*.[pir]map'")
     purge_maps = set([os.path.basename(x.strip()) for x in purge_maps])
     keep = get_context_mappings(only_contexts)
-    remove_files(master_context, purge_maps-keep, "mapping")
+    if purge:
+        remove_files(master_context, purge_maps-keep, "mapping")
     
 def add_context_mappings(contexts):
     """Gets all the mappings required to support `contexts`."""
@@ -56,7 +57,7 @@ def get_context_references(contexts):
         files = files.union(api.get_reference_names(context))
     return files
 
-def sync_context_references(only_contexts):
+def sync_context_references(only_contexts, purge=False):
     """Gets all mappings required to support `only_contexts`.  Removes
     all mappings from the CRDS mapping cache which are not required for
     `only_contexts`.
@@ -73,8 +74,9 @@ def sync_context_references(only_contexts):
                             # "-o -name '*.r*d'")
     purge_refs = set([os.path.basename(x.strip()) for x in purge_refs])
     keep = get_context_references(only_contexts)
-    remove = purge_refs - keep
-    remove_files(master_context, remove, "reference")
+    if purge:
+        remove = purge_refs - keep
+        remove_files(master_context, remove, "reference")
     
 def add_context_references(contexts):
     """Gets all the mappings required to support `contexts`."""
@@ -111,9 +113,11 @@ def main():
     parser.add_argument(
         'contexts', metavar='CONTEXT', type=mapping, nargs='+',
         help='a context determining a set of references and mappings.')
+    parser.add_argument('--purge', action='store_true',
+        help='remove reference files and mappings not referred to by CONTEXT')
     args = parser.parse_args()
-    sync_context_mappings(args.contexts)
-    sync_context_references(args.contexts)
+    sync_context_mappings(args.contexts, args.purge)
+    sync_context_references(args.contexts, args.purge)
 
 if __name__ == "__main__":
     main()
