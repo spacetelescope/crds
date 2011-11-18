@@ -436,6 +436,25 @@ class Mapping(object):
             more += value.file_matches(filename)
         return sorted(more)
 
+    def difference(self, other, path=()):
+        """Compare `self` with `other` and return a list of difference
+        tuples,  prefixing each tuple with context `path`.
+        """
+        differences = []
+        for key in self.selections:
+            if key not in other.selections:
+                msg = repr(other.filename) + " deleted " + repr(key)
+                differences.append(msg)
+            else:
+                differences.extend(self.selections[key].difference(
+                    other.selections[key], 
+                    path + ((self.filename, other.filename),))                                                 )
+        for key in other.selections:
+            if key not in self.selections:
+                msg = repr(other.filename) + " added " + repr(key)
+                differences.append(msg)
+        return differences
+                
 # ===================================================================
 
 """
@@ -458,8 +477,9 @@ class PipelineContext(Mapping):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
-    required_attrs = ["observatory", "mapping", "parkey"]
-
+    # Last required attribute is "difference type".
+    required_attrs = ["observatory", "mapping", "parkey", ]
+    
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector, **keys)
         self.selections = {}
@@ -551,6 +571,7 @@ class InstrumentContext(Mapping):
     of an instrument.
     """
     required_attrs = PipelineContext.required_attrs + ["instrument"]
+    type = "instrument"
 
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector)
@@ -663,7 +684,7 @@ class ReferenceMapping(Mapping):
     rmap header and data.
     """
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
-    
+
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
         self._valid_values = self.get_valid_values()
@@ -748,7 +769,13 @@ class ReferenceMapping(Mapping):
                   ("INSTRUME",self.instrument), 
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
-
+    
+    def difference(self, other, path):
+        """Return the list of difference tuples between `self` and `other`,
+        prefixing each tuple with context `path`.
+        """
+        return self.selector.difference(other.selector, path + 
+                ((self.filename, other.filename),))
 # ===================================================================
 
 CACHED_MAPPINGS = {}

@@ -301,6 +301,43 @@ class Selector(object):
     
     def match_item(self, key):
         return tuple(zip(self._parameters, key))
+    
+    def difference(self, other, path):
+        """Return the list of differences between `self` and `other` where 
+        `path` names the
+        """
+        def msg(key, *args):
+            p2 = path
+            if key:
+                p2 = p2 + (key,)
+            return p2 + (" ".join(args),)
+        if self.__class__ != other.__class__:
+            return [msg(None, "different classes", 
+                    repr(self.__class__.__name__), ":",
+                    repr(other.__class__.__name__))]
+        if self._parameters != other._parameters:
+            return [msg(None, "different parameter lists ", 
+                    repr(self._parameters), ":", 
+                    repr(other._parameters))]
+        differences = []
+        other_keys = other.keys()
+        other_map = dict(other._selections)
+        for key, choice in self._selections:
+            if key not in other_keys:
+                differences.append(msg(key, "deleted"))
+            else:
+                other_choice = other_map[key]
+                if isinstance(choice, Selector):
+                    differences.extend(choice.difference(
+                        other_choice, path + (key,)))
+                elif choice != other_choice:
+                    differences.append(msg(key, "replaced", repr(choice), 
+                                           "with", repr(other_choice)))
+        self_keys = self.keys()
+        for key in other_keys:
+            if key not in self_keys:
+                differences.append(msg(key, "added"))
+        return differences
 
 # ==============================================================================
 
