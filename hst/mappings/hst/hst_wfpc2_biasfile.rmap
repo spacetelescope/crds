@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 16:30:10',
+    'description' : 'Initially generated on 2011-11-18 09:19:03',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '68be23b409bc6e260c7ee7b72c4649f3f2e34566',
+    'sha1sum' : '94d02dc447c5f87970ece357b0d10ae53d3bddb8',
 }
 
 selector = Match({

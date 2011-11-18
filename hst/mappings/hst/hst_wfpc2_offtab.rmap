@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 16:30:10',
+    'description' : 'Initially generated on 2011-11-18 09:19:04',
     'filekind' : 'OFFTAB',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '78a55ec12a38f9ea7826811f250be42ab5a85994',
+    'sha1sum' : 'f28511d20d625e3179fe17aeaeb5151df2bd99ad',
 }
 
 selector = Match({

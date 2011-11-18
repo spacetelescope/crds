@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 16:30:10',
+    'description' : 'Initially generated on 2011-11-18 09:19:03',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'CLOCK', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '9b512db38476de40506cabd45878a7af0456fa78',
+    'sha1sum' : '2a2f45c7abcc0256120244095159e8a9cd841cfa',
 }
 
 selector = Match({

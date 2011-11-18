@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 16:30:10',
+    'description' : 'Initially generated on 2011-11-18 09:19:03',
     'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '404973f26cd01ee16215c4f93fed6b8d8c64f4e0',
+    'sha1sum' : 'c2eb0bd6f61599a6fd814d307b01dae6665cb098',
 }
 
 selector = Match({

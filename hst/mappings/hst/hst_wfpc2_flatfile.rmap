@@ -1,11 +1,11 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 16:30:10',
+    'description' : 'Initially generated on 2011-11-18 09:19:04',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'observatory' : 'HST',
-    'parkey' : (('MODE', 'FILTNAME1', 'FILTNAME2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '08d37b809a6d4564fa577fa61f5d14594e8079ee',
+    'parkey' : (('MODE', 'FILTNAM1', 'FILTNAM2'), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : 'a691af8308b37a25b425e71e21225d82bf915dfd',
 }
 
 selector = Match({
