@@ -47,6 +47,11 @@ FLOAT := [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 
 BOOL := True
 BOOL := False
+
+WHITESPACE := \s+
+WHITESPACE := # [^\\n]* \n
+WHITESPACE := \n
+
 """
 
 class Parser(object):
@@ -57,6 +62,7 @@ class Parser(object):
             if not line.strip():
                 continue
             words = line.split()
+            assert words[1] == ":=", "error in grammar"
             self.add_rule(words[0], words[2:])
     
     def add_rule(self, name, expansion):
@@ -87,27 +93,32 @@ class Parser(object):
         for expansion in self.rules[rule]:
             result = self.match_expansion(expansion, input)
             if result:
-                print "matched", rule, result[0]
+                # print "matched", rule, result[0]
                 return (rule, result[0]), result[1]
 
     def match_expansion(self, expansion, input):
         self.trace("expansion", expansion, input)
         parsed = []
+        
         for term in expansion:
             if term in self.rules:
                 result = self.match_rule(term, input)
             else:
                 result = self.match_re(term, input)
+
             if not result:
                 return None
-            parsed.append(result[0])
-            input = result[1]
-            result = self.match_re("\s*", input)
+            if result[0]:
+                parsed.append(result[0])
+                input = result[1]
+
+            result = self.match_rule("WHITESPACE", input)
             if result and result[0]:
                 parsed.append(result[0])
-                input = result[1]            
+                input = result[1]
+                         
         return parsed, input
-        
+
     def match_re(self, regex, input):
         self.trace("regex", regex, input)
         m = re.match(regex, input)
@@ -127,7 +138,9 @@ def test():
     for f in files:
         where = rmap.locate_file(f)
         print "parsing:", where
-        print "parsed:", pprint.pformat(PARSER.parse_file(where))
+        parsing = PARSER.parse_file(where)
+        print "parsed."
+        # print "parsed:", pprint.pformat(parsing)
     
 if __name__ == "__main__":
     test()
