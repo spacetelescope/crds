@@ -1,7 +1,8 @@
 """This module defines a parser for rmaps."""
-
+import sys
 import cStringIO
 import re
+import pprint
 
 import crds.rmap as rmap
 
@@ -9,15 +10,8 @@ import crds.rmap as rmap
 GRAMMAR = """
 MAPPING  :=  HEADER SELECTOR
 
-HEADER  := header = DICT
-SELECTOR := selector = CALL
-
-DICT := \{ KEYVALS \}
-
-KEYVALS := KEYVAL , KEYVALS
-KEYVALS := 
-
-KEYVAL :=  STRING : EXPR 
+HEADER  := header = EXPR
+SELECTOR := selector = EXPR
 
 EXPR := CALL
 EXPR := DATA
@@ -32,17 +26,22 @@ DATA := INT
 DATA := FLOAT
 DATA := BOOL
 
-STRING := '.*'
-STRING := ".*"
+STRING := " [^"]* "
+STRING := ' [^']* '
 
-TUPLE := \( \)
+DICT := \{ KEYVALS \}
+KEYVALS := KEYVAL , KEYVALS
+KEYVALS := KEYVAL
+KEYVALS := 
+KEYVAL :=  STRING : EXPR 
+KEYVAL :=  TUPLE : EXPR 
+
 TUPLE := \( TUPLE_ITEMS \)
-
-TUPLE_ITEMS := DATA , TUPLE_ITEM
-TUPLE_ITEMS := DATA ,?
+TUPLE_ITEMS := EXPR , TUPLE_ITEMS
+TUPLE_ITEMS := EXPR
 TUPLE_ITEMS :=
 
-INT := \d+
+INT := [-]?\d+
 
 FLOAT := [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 
@@ -81,13 +80,14 @@ class Parser(object):
     def trace(self, kind, name, input):
         pure = input[:min(10,len(input))]
         pure = pure.replace("\n","\\n")
-        print "matching", kind, name, pure
+        # print "matching", kind, name, pure
     
     def match_rule(self, rule, input):
         self.trace("rule", rule, input)
         for expansion in self.rules[rule]:
             result = self.match_expansion(expansion, input)
             if result:
+                print "matched", rule, result[0]
                 return (rule, result[0]), result[1]
 
     def match_expansion(self, expansion, input):
@@ -120,8 +120,14 @@ class Parser(object):
 PARSER = Parser(GRAMMAR, "MAPPING") 
 
 def test():
-    print open(rmap.locate_file("hst.pmap")).read()
-    PARSER.parse_file("hst.pmap")
+    if len(sys.argv) == 1:
+        files = ["hst.pmap"]
+    else:
+        files = sys.argv[1:]
+    for f in files:
+        where = rmap.locate_file(f)
+        print "parsing:", where
+        print "parsed:", pprint.pformat(PARSER.parse_file(where))
     
 if __name__ == "__main__":
     test()
