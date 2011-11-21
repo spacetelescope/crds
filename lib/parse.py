@@ -12,21 +12,18 @@ MAPPING  :=  WHITESPACES HEADER SELECTOR
 HEADER  := header = EXPR
 SELECTOR := selector = EXPR
 
-EXPR := CALL
-EXPR := DATA
-
-CALL := IDENT \( DICT \)
+EXPR := IDENT \( DICT \)
 IDENT := [A-Za-z_]+[A-Za-z0-9_]*
 
-DATA := STRING
-DATA := TUPLE
-DATA := DICT
-DATA := INT
-DATA := FLOAT
-DATA := BOOL
+EXPR := STRING
+EXPR := TUPLE
+EXPR := DICT
+EXPR := INT
+EXPR := FLOAT
+EXPR := BOOL
 
-STRING := " [^"]* "
-STRING := ' [^']* '
+STRING := "[^"]*"
+STRING := '[^']*'
 
 DICT := \{ KEYVALS \}
 KEYVALS := KEYVAL , KEYVALS
@@ -133,14 +130,26 @@ class Parser(object):
             return None
         
 def collapse_plurals(parsing):
-    rule, value = parsing
-    if rule.endswith("S"):
-        values = [value]
-        nested = collapse_plurals(parsing)
-        values.extend(nested[1])
-        return rule, values
+    if isinstance(parsing, list):
+        return [collapse_plurals(exp) for exp in parsing]
+    elif isinstance(parsing, tuple):
+        rule, value = parsing
+        if rule.endswith("S"):
+            nested = collapse_plurals(value)
+            if nested[0] == rule:
+                values = [value].extend(nested[1])
+                if len(values) > 1:
+                    return rule, values
+                else:
+                    return nested
+            else:
+                return rule, nested
+        else:
+            return rule, collapse_plurals(value)
+    elif isinstance(parsing, str):
+        return parsing
     else:
-        return collapse_plurals(parsing)
+        raise ValueError("Unexpected type collapsing plurlals.")
 
 PARSER = Parser(GRAMMAR, "MAPPING") 
 
@@ -152,7 +161,7 @@ def test():
     for f in files:
         where = rmap.locate_file(f)
         print "parsing:", where
-        parsing = PARSER.parse_file(where)
+        parsing = collapse_plurals(PARSER.parse_file(where))
         print "parsed."
         print "parsed:", pprint.pformat(parsing)
     
