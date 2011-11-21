@@ -6,7 +6,6 @@ import pprint
 
 import crds.rmap as rmap
 
-
 GRAMMAR = """
 MAPPING  :=  WHITESPACES HEADER SELECTOR
 
@@ -54,7 +53,6 @@ WHITESPACES :=
 WHITESPACE := COMMENT
 WHITESPACE := \s+
 COMMENT := #.*$
-
 """
 
 class ParseError(ValueError):
@@ -96,8 +94,6 @@ class Parser(object):
     
     def match_rule(self, rule, input):
         self.trace("rule", rule, input)
-        if not input:
-            return ("END",'')
         for expansion in self.rules[rule]:
             result = self.match_expansion(expansion, input)
             if result:
@@ -116,12 +112,12 @@ class Parser(object):
 
             if not result:
                 return None
-            if result[0]:
+            if result[0][1]:
                 parsed.append(result[0])
                 input = result[1]
 
             result = self.match_rule("WHITESPACES", input)
-            if result and result[0]:
+            if result and result[0][1]:
                 parsed.append(result[0])
                 input = result[1]
                          
@@ -132,9 +128,19 @@ class Parser(object):
         m = re.match(regex, input, re.MULTILINE)
         if m:
             parsed = input[:m.end()]
-            return input[:m.end()], input[m.end():]
+            return (regex, input[:m.end()]), input[m.end():]
         else:
             return None
+        
+def collapse_plurals(parsing):
+    rule, value = parsing
+    if rule.endswith("S"):
+        values = [value]
+        nested = collapse_plurals(parsing)
+        values.extend(nested[1])
+        return rule, values
+    else:
+        return collapse_plurals(parsing)
 
 PARSER = Parser(GRAMMAR, "MAPPING") 
 
@@ -148,7 +154,7 @@ def test():
         print "parsing:", where
         parsing = PARSER.parse_file(where)
         print "parsed."
-        # print "parsed:", pprint.pformat(parsing)
+        print "parsed:", pprint.pformat(parsing)
     
 if __name__ == "__main__":
     test()
