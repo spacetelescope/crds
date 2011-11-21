@@ -8,7 +8,7 @@ import crds.rmap as rmap
 
 
 GRAMMAR = """
-MAPPING  :=  HEADER SELECTOR
+MAPPING  :=  WHITESPACES HEADER SELECTOR
 
 HEADER  := header = EXPR
 SELECTOR := selector = EXPR
@@ -48,12 +48,18 @@ FLOAT := [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 BOOL := True
 BOOL := False
 
+WHITESPACES := WHITESPACE WHITESPACES
+WHITESPACES := WHITESPACE
+WHITESPACES :=
+WHITESPACE := COMMENT
 WHITESPACE := \s+
-WHITESPACE := # [^\\n]* \n
-WHITESPACE := \n
+COMMENT := #.*$
 
 """
 
+class ParseError(ValueError):
+    """Input could not be parsed."""
+    
 class Parser(object):
     def __init__(self, grammar, start):
         self.rules = {}
@@ -74,10 +80,10 @@ class Parser(object):
         result = self.match_rule(self.start, input)
         if result:
             if result[1].strip():
-                raise RuntimeError("unparsed input remaining")
+                raise ParseError("unparsed input remaining")
             return result[0]
         else:
-            raise RuntimeError("parse failed")
+            raise ParseError("parse failed")
         
     def parse_file(self, filename):
         mapping = rmap.locate_mapping(filename)
@@ -90,6 +96,8 @@ class Parser(object):
     
     def match_rule(self, rule, input):
         self.trace("rule", rule, input)
+        if not input:
+            return ("END",'')
         for expansion in self.rules[rule]:
             result = self.match_expansion(expansion, input)
             if result:
@@ -112,7 +120,7 @@ class Parser(object):
                 parsed.append(result[0])
                 input = result[1]
 
-            result = self.match_rule("WHITESPACE", input)
+            result = self.match_rule("WHITESPACES", input)
             if result and result[0]:
                 parsed.append(result[0])
                 input = result[1]
@@ -121,7 +129,7 @@ class Parser(object):
 
     def match_re(self, regex, input):
         self.trace("regex", regex, input)
-        m = re.match(regex, input)
+        m = re.match(regex, input, re.MULTILINE)
         if m:
             parsed = input[:m.end()]
             return input[:m.end()], input[m.end():]
