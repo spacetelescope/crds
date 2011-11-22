@@ -771,6 +771,9 @@ class MatchingSelector(Selector):
             value = key[i]
             if value in ["NOT PRESENT"] or value == "*":
                 continue
+            if value in ["%NO REFERENCE%"]:
+                log.warning("Missing references in key",repr(key))
+                break
             if value in valid:
                 continue
             if value.replace(".0","") in valid:
