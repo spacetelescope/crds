@@ -2,6 +2,27 @@
 # 10/31/03   MSwam   add CLEAR to filter expansion
 # 03/01/07   MSwam   PR 57628
 # 11/08/07   MSwam   remove CCDAMP values with 3amps (can't happen)
+# 03/05/09   MSwam   PR 62082, add APERTURE and adjust other rules
+# 04/17/09   MSwam   PR 62478  Replace SINGLE_OR_ALL with SINGLE_AMP, and add
+#                              QUAD_CORNER_SUBARRAYS
+# 06/02/10   MSwam   PR 65281  add more APERTUREs to QUAD_CORNER_SUBARRAYS and
+#                              UVIS FULLFRAME_4AMP cases
+#
+# DON'T FORGET THAT the "expload tags" (e.g. ABCDALL) MUST NOT APPEAR
+#   in the LD file TPN for the affected reference file type FOR ANY
+#   FILE SELECTION FIELDS.  It is this
+#   omission that will allow certify to detect an "expload tag", and
+#   to indicate to the operator that action is needed (i.e. expload should
+#   be run).  These expload tag values ARE ALLOWED for ROW SELECTION FIELDS.
+#
+# ALSO if you ADD A NEW EXPLOAD TAG, you must also put it into the
+# cdbs/inc/config.h file so that certify and mkload can be built to know
+# about it.
+#
+# AND to use a keyword value in an expansion rule, the keyword MUST
+# be either a "file select" or "row select" keyword in cdbs_mode for this
+# reference file type.  If not, the expansion rule won't have access to
+# the keyword value when evaluating the rule, and the rule will not trigger.
 #
 # from conv_discrete
 CCDAMP = ANY =>
@@ -9,10 +30,17 @@ CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D ||
 CCDAMP = AC || CCDAMP = BC || CCDAMP = AD || CCDAMP = BD ||
 CCDAMP = ABCD;
 
-# from Howard Bushouse
+CCDAMP = SINGLE_AMP =>
+CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D;
+
+# handle both -1. and -1 forms
+DETECTOR = UVIS && CCDGAIN = -1. =>
+CCDGAIN = 1.0 || CCDGAIN = 1.5 || CCDGAIN = 2.0 || CCDGAIN = 4.0 ;
 DETECTOR = UVIS && CCDGAIN = -1 =>
 CCDGAIN = 1.0 || CCDGAIN = 1.5 || CCDGAIN = 2.0 || CCDGAIN = 4.0 ;
 
+DETECTOR = IR && CCDGAIN = -1. =>
+CCDGAIN = 2.0 || CCDGAIN = 2.5 || CCDGAIN = 3.0 || CCDGAIN = 4.0 ;
 DETECTOR = IR && CCDGAIN = -1 =>
 CCDGAIN = 2.0 || CCDGAIN = 2.5 || CCDGAIN = 3.0 || CCDGAIN = 4.0 ;
 
@@ -59,3 +87,58 @@ SAMP_SEQ = SPARS10 || SAMP_SEQ = SPARS100 ||
 SAMP_SEQ = SPARS200 || SAMP_SEQ = SPARS25 || SAMP_SEQ = SPARS350 ||
 SAMP_SEQ = SPARS50 || SAMP_SEQ = STEP100 || SAMP_SEQ = STEP200 ||
 SAMP_SEQ = STEP25 || SAMP_SEQ = STEP400 || SAMP_SEQ = STEP50;
+
+# from WFC3 UVIS BIAS ISR 2009-xx
+#
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 && 
+APERTURE = FULLFRAME_4AMP =>
+APERTURE = UVIS || APERTURE = UVIS-FIX || APERTURE = UVIS-CENTER ||
+APERTURE = UVIS1 || APERTURE = UVIS1-FIX || APERTURE = UVIS2 ||
+APERTURE = UVIS2-FIX || APERTURE = UVIS-QUAD || APERTURE = UVIS-QUAD-FIX ||
+APERTURE = G280-REF || APERTURE = UVIS-IR-FIX;
+
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 &&
+APERTURE = QUAD_CORNER_SUBARRAYS =>
+APERTURE = UVIS-QUAD-SUB ||
+APERTURE = UVIS1-C512A-SUB || APERTURE = UVIS1-C512B-SUB ||
+APERTURE = UVIS2-C512C-SUB || APERTURE = UVIS2-C512D-SUB ||
+APERTURE = UVIS2-M1K1C-SUB || APERTURE = UVIS2-C1K1C-SUB ||
+APERTURE = UVIS2-M512C-SUB || 
+APERTURE = UVIS2-2K2C-SUB || APERTURE = UVIS1-2K2A-SUB ||
+APERTURE = UVIS1-2K2B-SUB || APERTURE = UVIS2-2K2D-SUB;
+
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 && 
+APERTURE = CHIP1_SUB_NOCORNERS =>
+APERTURE = UVIS1-2K4-SUB || APERTURE = UVIS1-M512-SUB;
+
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 && 
+APERTURE = CHIP2_SUB_NOCORNERS =>
+APERTURE = UVIS2-2K4-SUB || APERTURE = UVIS2-M512-SUB;
+
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 && 
+APERTURE = FULLFRAME_2AMP =>
+APERTURE = UVIS || APERTURE = UVIS-FIX || APERTURE = UVIS-CENTER ||
+APERTURE = UVIS1 || APERTURE = UVIS1-FIX || APERTURE = UVIS2 ||
+APERTURE = UVIS2-FIX;
+
+DETECTOR = UVIS && BINAXIS1 = 1 && BINAXIS2 = 1 && 
+APERTURE = CUSTOM_SUBARRAYS =>
+APERTURE = UVIS || APERTURE = UVIS-FIX || APERTURE = UVIS-CENTER ||
+APERTURE = UVIS1 || APERTURE = UVIS1-FIX || APERTURE = UVIS2 ||
+APERTURE = UVIS2-FIX || APERTURE = UVIS-QUAD || APERTURE = UVIS-QUAD-FIX ||
+APERTURE = G280-REF;
+
+DETECTOR = UVIS && BINAXIS1 = 2 && BINAXIS2 = 2 && 
+APERTURE = ANY =>
+APERTURE = UVIS || APERTURE = UVIS-FIX || APERTURE = UVIS-CENTER ||
+APERTURE = UVIS1 || APERTURE = UVIS1-FIX || APERTURE = UVIS2 ||
+APERTURE = UVIS2-FIX || APERTURE = UVIS-QUAD || APERTURE = UVIS-QUAD-FIX ||
+APERTURE = G280-REF ;
+
+DETECTOR = UVIS && BINAXIS1 = 3 && BINAXIS2 = 3 && 
+APERTURE = ANY =>
+APERTURE = UVIS || APERTURE = UVIS-FIX || APERTURE = UVIS-CENTER ||
+APERTURE = UVIS1 || APERTURE = UVIS1-FIX || APERTURE = UVIS2 ||
+APERTURE = UVIS2-FIX || APERTURE = UVIS-QUAD || APERTURE = UVIS-QUAD-FIX ||
+APERTURE = G280-REF ;
+

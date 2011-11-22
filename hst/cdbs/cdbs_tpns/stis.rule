@@ -1,3 +1,20 @@
+# DON'T FORGET THAT the "expload tags" (e.g. ABCDALL) MUST NOT APPEAR
+#   in the LD file TPN for the affected reference file type FOR ANY
+#   FILE SELECTION FIELDS.  It is this
+#   omission that will allow certify to detect an "expload tag", and
+#   to indicate to the operator that action is needed (i.e. expload should
+#   be run).  Such expload tags ARE allowed to appear for ROW SELECTION
+#   FIELDS.  
+#
+# ALSO if you ADD A NEW EXPLOAD TAG, you must also put it into the
+# cdbs/inc/config.h file so that certify and mkload can be built to know
+# about it.
+#
+# AND to use a keyword value in an expansion rule, the keyword MUST
+# be either a "file select" or "row select" keyword in cdbs_mode for this
+# reference file type.  If not, the expansion rule won't have access to
+# the keyword value when evaluating the rule, and the rule will not trigger.
+#
 OBSTYPE = ANY =>
 OBSTYPE=IMAGING || OBSTYPE=SPECTROSCOPIC ;
 

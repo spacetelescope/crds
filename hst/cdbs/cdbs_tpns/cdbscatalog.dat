@@ -7,7 +7,7 @@
 # Date     OPR    Who         Reason
 # -------- -----  ----------  ---------------------------------------------
 # ??/??/?? ?????  ?????       Initial version
-# 03/07/02 ?????  MSwam       Add nicmos tdd
+# 03/07/02 xxxxx  MSwam       Add nicmos tdd
 # 06/12/02 45993  MSwam       Add thermtab, thermal
 # 07/30/02 46235  MSwam       Add wfc3
 # 09/17/03 49436  MSwam       Add cos
@@ -24,6 +24,13 @@
 # 05/28/08 59404  MSwam       Add WFC3:mdz
 # 08/14/08 60643  MSwam       Add WFPC2:dxy
 # 09/18/08 60848  MSwam       Add NIC:pmd,pmk
+# 11/07/08 61066  MSwam       Add NIC:tdf
+# 02/02/09 58375  MSwam       Add COS:tds
+# 10/07/10 66259  MSwam       Add COS:spwcs
+# 05/12/11 68310  MSwam       Add ACS:cte,dkc
+# 06/27/11 68306  MSwam       Add ACS:imp
+# 08/26/11 68293  MSwam       Add COS:walk
+# 09/01/11 69084  MSwam       Add ACS:d2i,npl
 #
 #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT	HEADER KEYWORDS
 #----------------------------------------------------------------------
@@ -246,6 +253,7 @@ nic     scn     table   nic_scn.tpn     .fits   filetype=scn,instrume=nicmos
 nic     psb     table   nic_psb.tpn     .fits   filetype=psb,instrume=nicmos
 nic     pmd     image   nic_pmd.tpn     .fits   filetype=pmd,instrume=nicmos
 nic     pmk     image   nic_pmk.tpn     .fits   filetype=pmk,instrume=nicmos
+nic     tdf     image   nic_tdf.tpn     .fits   filetype=tdf,instrume=nicmos
 #----------------------------------------------------------------------
 nic     msk     load    nic_msk_ld.tpn  .lod    reference_file_type=msk,instrument=nic   
 nic     noi     load    nic_noi_ld.tpn  .lod    reference_file_type=noi,instrument=nic   
@@ -264,6 +272,7 @@ nic     scn     load    nic_scn_ld.tpn  .lod    reference_file_type=scn,instrume
 nic     psb     load    nic_psb_ld.tpn  .lod    reference_file_type=psb,instrument=nic
 nic     pmd     load    nic_pmd_ld.tpn  .lod    reference_file_type=pmd,instrument=nic   
 nic     pmk     load    nic_pmk_ld.tpn  .lod    reference_file_type=pmk,instrument=nic   
+nic     tdf     load    nic_tdf_ld.tpn  .lod    reference_file_type=tdf,instrument=nic   
 #----------------------------------------------------------------------
 stis    bia     image   stis_bia.tpn    .fits   "instrume=stis,filetype=CCD BIAS IMAGE"
 stis    drk     image   stis_drk.tpn    .fits   "instrume=stis,filetype=DARK IMAGE"
@@ -340,45 +349,55 @@ stis	tds	load	stis_tds_ld.tpn	   .lod    instrument=stis,reference_file_type=tds
 stis    gac     load    stis_gac_ld.tpn    .lod    instrument=stis,reference_file_type=gac  
 #----------------------------------------------------------------------
 acs    	bia     image   acs_bia.tpn    	   .fits   "instrume=acs,filetype=BIAS"
-acs    	drk     image   acs_drk.tpn    	   .fits   "instrume=acs,filetype=DARK"
-acs    	pfl     image   acs_pfl.tpn    	   .fits   "instrume=acs,filetype=PIXEL-TO-PIXEL FLAT"
-acs    	lfl     image   acs_lfl.tpn    	   .fits   "instrume=acs,filetype=LARGE SCALE FLAT"
-acs    	dfl     image   acs_dfl.tpn    	   .fits   "instrume=acs,filetype=DELTA FLAT"
-acs    	shd     image   acs_shd.tpn    	   .fits   "instrume=acs,filetype=SHUTTER SHADING"
-acs     fls     image   acs_fls.tpn        .fits   "instrume=acs,filetype=POST FLASH"
-acs     dxy     image   acs_dxy.tpn        .fits   "instrume=acs,filetype=DISTORTION CORRECTION"
 acs    	cfl     image   acs_cfl.tpn    	   .fits   "instrume=acs,filetype=SPOT FLAT"
+acs    	d2i     image   acs_d2i.tpn    	   .fits   "instrume=acs,filetype=WFC D2I FILE"
+acs    	dfl     image   acs_dfl.tpn    	   .fits   "instrume=acs,filetype=DELTA FLAT"
+acs    	dkc     image   acs_dkc.tpn    	   .fits   "instrume=acs,filetype=DKC"
+acs    	drk     image   acs_drk.tpn    	   .fits   "instrume=acs,filetype=DARK"
+acs     dxy     image   acs_dxy.tpn        .fits   "instrume=acs,filetype=DISTORTION CORRECTION"
+acs     fls     image   acs_fls.tpn        .fits   "instrume=acs,filetype=POST FLASH"
+acs    	lfl     image   acs_lfl.tpn    	   .fits   "instrume=acs,filetype=LARGE SCALE FLAT"
+acs    	npl     image   acs_npl.tpn    	   .fits   "instrume=acs,filetype=DXY GRID"
+acs    	pfl     image   acs_pfl.tpn    	   .fits   "instrume=acs,filetype=PIXEL-TO-PIXEL FLAT"
+acs    	shd     image   acs_shd.tpn    	   .fits   "instrume=acs,filetype=SHUTTER SHADING"
 #----------------------------------------------------------------------
-acs	bpx     table   acs_bpx.tpn        .fits   "instrume=acs,filetype=BAD PIXELS"
-acs	ccd     table   acs_ccd.tpn        .fits   "instrume=acs,filetype=CCD PARAMETERS"
-acs	lin     table   acs_lin.tpn        .fits   "instrume=acs,filetype=LINEARITY"
 acs	a2d     table   acs_a2d.tpn        .fits   "instrume=acs,filetype=ANALOG-TO-DIGITAL"
-acs	pht     table   acs_pht.tpn        .fits   "instrume=acs,filetype=PHOTOMETRY"
-acs	crr     table   acs_crr.tpn        .fits   "instrume=acs,filetype=COSMIC RAY REJECTION"
-acs	osc     table   acs_osc.tpn        .fits   "instrume=acs,filetype=OVERSCAN"
+acs	bpx     table   acs_bpx.tpn        .fits   "instrume=acs,filetype=BAD PIXELS"
 acs	idc	table	acs_idc.tpn	   .fits   "instrume=acs,filetype=DISTORTION COEFFICIENTS"
-acs	mdz	table	acs_mdz.tpn	   .fits   "instrume=acs,filetype=MULTIDRIZZLE PARAMETERS"
+acs	ccd     table   acs_ccd.tpn        .fits   "instrume=acs,filetype=CCD PARAMETERS"
+acs	crr     table   acs_crr.tpn        .fits   "instrume=acs,filetype=COSMIC RAY REJECTION"
 acs	csp	table	acs_csp.tpn	   .fits   "instrume=acs,filetype=SPOT POSITION TABLE"
+acs    	cte     table   acs_cte.tpn    	   .fits   "instrume=acs,filetype=PIXCTE"
+acs    	imp     table   acs_imp.tpn    	   .fits   "instrume=acs,filetype=IMAGE PHOTOMETRY TABLE"
+acs	lin     table   acs_lin.tpn        .fits   "instrume=acs,filetype=LINEARITY"
+acs	mdz	table	acs_mdz.tpn	   .fits   "instrume=acs,filetype=MULTIDRIZZLE PARAMETERS"
+acs	osc     table   acs_osc.tpn        .fits   "instrume=acs,filetype=OVERSCAN"
+acs	pht     table   acs_pht.tpn        .fits   "instrume=acs,filetype=PHOTOMETRY"
 #----------------------------------------------------------------------
+acs	a2d	load	acs_a2d_ld.tpn     .lod    instrument=acs,reference_file_type=a2d
 acs	bia	load	acs_bia_ld.tpn     .lod    instrument=acs,reference_file_type=bia
-acs	drk	load	acs_drk_ld.tpn     .lod    instrument=acs,reference_file_type=drk
-acs	pfl	load	acs_pfl_ld.tpn     .lod    instrument=acs,reference_file_type=pfl
-acs	lfl	load	acs_lfl_ld.tpn     .lod    instrument=acs,reference_file_type=lfl
-acs	dfl	load	acs_dfl_ld.tpn     .lod    instrument=acs,reference_file_type=dfl
-acs	shd	load	acs_shd_ld.tpn     .lod    instrument=acs,reference_file_type=shd
 acs	bpx	load	acs_bpx_ld.tpn     .lod    instrument=acs,reference_file_type=bpx
 acs	ccd	load	acs_ccd_ld.tpn     .lod    instrument=acs,reference_file_type=ccd
-acs	lin	load	acs_lin_ld.tpn     .lod    instrument=acs,reference_file_type=lin
-acs	a2d	load	acs_a2d_ld.tpn     .lod    instrument=acs,reference_file_type=a2d
-acs	pht	load	acs_pht_ld.tpn     .lod    instrument=acs,reference_file_type=pht
+acs	cfl	load	acs_cfl_ld.tpn     .lod    instrument=acs,reference_file_type=cfl
 acs	crr	load	acs_crr_ld.tpn     .lod    instrument=acs,reference_file_type=crr
-acs	osc	load	acs_osc_ld.tpn     .lod    instrument=acs,reference_file_type=osc
+acs     csp     load    acs_csp_ld.tpn     .lod    instrument=acs,reference_file_type=csp
+acs	cte	load	acs_cte_ld.tpn     .lod    instrument=acs,reference_file_type=cte
+acs	d2i	load	acs_d2i_ld.tpn     .lod    instrument=acs,reference_file_type=d2i
+acs	dfl	load	acs_dfl_ld.tpn     .lod    instrument=acs,reference_file_type=dfl
+acs	dkc	load	acs_dkc_ld.tpn     .lod    instrument=acs,reference_file_type=dkc
+acs	drk	load	acs_drk_ld.tpn     .lod    instrument=acs,reference_file_type=drk
+acs     dxy     load    acs_dxy_ld.tpn     .lod    instrument=acs,reference_file_type=dxy
 acs     fls     load    acs_fls_ld.tpn     .lod    instrument=acs,reference_file_type=fls
 acs     idc     load    acs_idc_ld.tpn     .lod    instrument=acs,reference_file_type=idc
+acs     imp     load    acs_imp_ld.tpn     .lod    instrument=acs,reference_file_type=imp
+acs	lfl	load	acs_lfl_ld.tpn     .lod    instrument=acs,reference_file_type=lfl
+acs	lin	load	acs_lin_ld.tpn     .lod    instrument=acs,reference_file_type=lin
 acs     mdz     load    acs_mdz_ld.tpn     .lod    instrument=acs,reference_file_type=mdz
-acs     dxy     load    acs_dxy_ld.tpn     .lod    instrument=acs,reference_file_type=dxy
-acs	cfl	load	acs_cfl_ld.tpn     .lod    instrument=acs,reference_file_type=cfl
-acs     csp     load    acs_csp_ld.tpn     .lod    instrument=acs,reference_file_type=csp
+acs     npl     load    acs_npl_ld.tpn     .lod    instrument=acs,reference_file_type=npl
+acs	osc	load	acs_osc_ld.tpn     .lod    instrument=acs,reference_file_type=osc
+acs	pfl	load	acs_pfl_ld.tpn     .lod    instrument=acs,reference_file_type=pfl
+acs	pht	load	acs_pht_ld.tpn     .lod    instrument=acs,reference_file_type=pht
+acs	shd	load	acs_shd_ld.tpn     .lod    instrument=acs,reference_file_type=shd
 #-----------------------------------------------------------------------------
 wfc3   	bia     image   wfc3_bia.tpn   	   .fits   "instrume=wfc3,filetype=BIAS"
 wfc3   	drk     image   wfc3_drk.tpn   	   .fits   "instrume=wfc3,filetype=DARK"
@@ -427,6 +446,9 @@ cos	pha 	table	cos_pha.tpn	   .fits   "instrume=cos,filetype=PULSE HEIGHT PARAME
 cos	phot	table	cos_phot.tpn	   .fits   "instrume=cos,filetype=PHOTOMETRIC SENSITIVITY REFERENCE TABLE"
 cos	wcp 	table	cos_wcp.tpn	   .fits   "instrume=cos,filetype=WAVECAL PARAMETERS REFERENCE TABLE"
 cos	burst	table	cos_burst.tpn      .fits   "instrume=cos,filetype=BURST PARAMETERS TABLE"
+cos	tds	table	cos_tds.tpn        .fits   "instrume=cos,filetype=TIME DEPENDENT SENSITIVITY TABLE"
+cos	spwcs	table	cos_spwcs.tpn        .fits   "instrume=cos,filetype=SPECTROSCOPIC WCS PARAMETERS TABLE"
+cos	walk 	table	cos_walk.tpn        .fits   "instrume=cos,filetype=WALK CORRECTION TABLE"
 #--------------------------------------------------------------------
 cos	flat	load	cos_flat_ld.tpn     .lod    instrument=cos,reference_file_type=flat
 cos	geo	load	cos_geo_ld.tpn     .lod    instrument=cos,reference_file_type=geo
@@ -441,4 +463,7 @@ cos	pha	load	cos_pha_ld.tpn     .lod    instrument=cos,reference_file_type=pha
 cos	phot	load	cos_phot_ld.tpn     .lod    instrument=cos,reference_file_type=phot
 cos	wcp	load	cos_wcp_ld.tpn     .lod    instrument=cos,reference_file_type=wcp
 cos	burst	load	cos_burst_ld.tpn   .lod    instrument=cos,reference_file_type=burst
+cos     tds     load    cos_tds_ld.tpn     .lod    instrument=cos,reference_file_type=tds
+cos     spwcs   load    cos_spwcs_ld.tpn   .lod    instrument=cos,reference_file_type=spwcs
+cos     walk    load    cos_walk_ld.tpn   .lod    instrument=cos,reference_file_type=walk
 #-----------------------------------------------------------------------------

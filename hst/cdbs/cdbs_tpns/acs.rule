@@ -1,3 +1,19 @@
+# DON'T FORGET THAT the "expload tags" (e.g. ABCDALL) MUST NOT APPEAR
+#   in the LD file TPN for the affected reference file type FOR ANY 
+#   FILE SELECTION FIELDS.  It is this
+#   omission that will allow certify to detect an "expload tag", and
+#   to indicate to the operator that action is needed (i.e. expload should
+#   be run).  These expload tag values are ALLOWED for ROW SELECTION FIELDS.
+#
+# ALSO if you ADD A NEW EXPLOAD TAG, you must also put it into the 
+# cdbs/inc/config.h file so that certify and mkload can be built to know 
+# about it.
+#
+# AND to use a keyword value in an expansion rule, the keyword MUST
+# be either a "file select" or "row select" keyword in cdbs_mode for this
+# reference file type.  If not, the expansion rule won't have access to
+# the keyword value when evaluating the rule, and the rule will not trigger.
+#
 DETECTOR = WFC && CCDAMP = ABCDALL =>
 CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D || CCDAMP = ABCD ;
 
@@ -10,7 +26,7 @@ CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D ||
 CCDAMP = AD || CCDAMP = BC || CCDAMP = ABCD ; 
 
 DETECTOR = WFC && CCDGAIN = -1 =>
-CDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 0.5 || CCDGAIN = 1.4 ;
+CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 0.5 || CCDGAIN = 1.4 ;
 
 DETECTOR = HRC && CCDGAIN = -1 =>
 CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;

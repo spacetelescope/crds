@@ -12,6 +12,7 @@
 #                           (i.e. we want expload run on these values, so
 #                                 they do NOT belong here)
 # 06/28/10  RDiaz  65281  Add more WFC3 apertures
+# 10/14/11  MSwam  69530  Add CHINJECT file selection field
 #
 # NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
 #--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ APERTURE	C	C	R       G280-REF,UVIS,UVIS-CENTER,UVIS-FIX,UVIS-QUAD,UVIS-QUAD-FIX,
 DETECTOR	C	C	R	UVIS
 CCDAMP		C	C	R	A,B,C,D,AB,AC,AD,BC,BD,CD,ABC,ABD,ACD,BCD,ABCD
 CCDGAIN		C	R	R	1.0,1.5,2.0,4.0
+CHINJECT        C       C       O       CONT,NONE,LINE10,LINE17,LINE25
 CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
 PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
 OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE
