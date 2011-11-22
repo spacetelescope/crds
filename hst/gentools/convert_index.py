@@ -21,11 +21,12 @@ the instrument index are implicit:
 import sys
 from cStringIO import StringIO
 import argparse
+import pprint
 from crds.compat import OrderedDict
 
 from crds.hst.gentools import ezxml, scrape, tlist
 
-from crds import log, rmap, timestamp
+from crds import log, rmap, timestamp, utils
 
 # ==========================================================================================
 
@@ -76,6 +77,7 @@ def generate_imap(fname):
       ("description", ("Initially generated on " + now)),
     ])
     selector = {}
+    filekind_ext = {}
     for pars in tlist.xmlfile_tables_to_dicts(fname):
         converted = convert_pars(pars)
         keyword = converted["keyword"].lower()
@@ -83,8 +85,16 @@ def generate_imap(fname):
             continue
         eventually_generated_rmap = "hst_" + instr + "_" + keyword + ".rmap"
         selector[keyword] = eventually_generated_rmap
+        filekind_ext[keyword] = converted["ext"]
     imap = rmap.Mapping("./"  + instr + ".imap", header, selector)
     imap.write()
+    try:
+        big_map = utils.evalfile("../filekind_ext.dat")
+    except:
+        big_map = {}
+    big_map[instr] = filekind_ext
+    open("../filekind_ext.dat","w+").write(pprint.pformat(big_map) + "\n")
+
 
 def skip_index_dict(converted):
     """Returns True IFF `converted` should be processed as a reference type, False
@@ -116,9 +126,9 @@ def convert_pars(pars):
         "non-pipeline_reference_files"])
     comment = comment.split("<")[0]
     try:
-        ext = pars["extension"].replace("/d","") # change GEIS h/d to simply h
+        ext = pars["extension"].replace("/d","").lower() # change GEIS h/d to simply h
     except:
-        ext = pars["file_suffix"]
+        ext = pars["file_suffix"].lower()
     keyword = pars["header_keyword"]
     urls = get_urls(get_value_from_keys(pars, ["camera", "detector", "mode"]))
     d = dict(locals())

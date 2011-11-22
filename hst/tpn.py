@@ -58,9 +58,6 @@ def update_tpn_data(pipeline_context):
     extensions,  all somewhat redundant ways of saying the same thing,
     but the way HST is.
     """
-    log.info("Computing TPN extension map")
-    tpn_filekinds = get_filekind_to_extension(pipeline_context)
-    open("tpn_filekinds.dat", "w+").write(pprint.pformat(tpn_filekinds))
     log.info("Computing TPN filetype map")    
     tpn_filetypes = get_filetype_to_extension(pipeline_context)
     open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
@@ -90,7 +87,7 @@ def invert_instr_dict(map):
 # .e.g. FILEKIND_TO_EXTENSION = {                 
 # 'acs': {'atodtab': 'a2d',
 #         'biasfile': 'bia',
-FILEKIND_TO_EXTENSION = evalfile_with_fail(HERE + "/tpn_filekinds.dat")
+FILEKIND_TO_EXTENSION = evalfile_with_fail(HERE + "/filekind_ext.dat")
 EXTENSION_TO_FILEKIND = invert_instr_dict(FILEKIND_TO_EXTENSION)
 
 #.e.g. FILETYPE_TO_EXTENSION = {
@@ -157,29 +154,6 @@ def load_cdbs_catalog():
     return catalog
 
 CDBS_CATALOG = load_cdbs_catalog()
-
-# =============================================================================
-
-def get_filekind_to_extension(pipeline_context):
-    """
-    Return the map of 3 character tpn extensions used by CDBS by following
-    a pipeline context and reading the instrument mappings.   This is really
-    just another spelling of the info in the imaps:  
-        
-    { instrument : { filekind : extension } }
-    """
-    context = rmap.get_cached_mapping(pipeline_context)
-    tpns = {}
-    for instrument, instr_sel in context.selections.items():
-        tpns[instrument] = {}
-        for filekind, filekind_sel in instr_sel.selections.items():
-            current = tpns.get(filekind, None)
-            if current and filekind_sel.extension != current:
-                log.error("Conflicting extensions for filekind", 
-                          repr(current), "and", repr(filekind_sel.extension))
-            tpns[instrument][filekind] = instr_sel.extensions[filekind]
-    return tpns
-
 
 # =============================================================================
 

@@ -357,7 +357,7 @@ def certify_context(context, check_references=None, trap_exceptions=False):
                 log.error("Can't find reference file " + repr(where))
             else:
                 raise ValidationError("Missing reference file " + repr(ref))
-    if check_references == "check_contents":
+    if check_references == "contents":
         certify_files(references, check_references=check_references, 
                       trap_exceptions=trap_exceptions)
     
