@@ -14,11 +14,11 @@ foreach dir (lib hst client)
 end
 
 echo "Installing django-json-rpc"
-tar zxf third_party/django-json-rpc-0.6.1.pygz
-cd django-json-rpc*
+tar zxf third_party/django-json-rpc-git-0.0.pygz
+cd django-json-rpc-git-0.0
 python setup.py install $* --force >/dev/null
 cd ..
-rm -rf django-json-rpc*
+rm -rf django-json-rpc-git-0.0
 
 
 ./clean
