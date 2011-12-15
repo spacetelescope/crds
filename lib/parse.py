@@ -76,7 +76,7 @@ class Parser(object):
         if result:
             if result[1].strip():
                 raise ParseError("unparsed input remaining")
-            return result[0]
+            return [result[0]]
         else:
             raise ParseError("parse failed")
         
@@ -129,27 +129,93 @@ class Parser(object):
         else:
             return None
         
-def collapse_plurals(parsing):
-    if isinstance(parsing, list):
-        return [collapse_plurals(exp) for exp in parsing]
-    elif isinstance(parsing, tuple):
-        rule, value = parsing
-        if rule.endswith("S"):
-            nested = collapse_plurals(value)
-            if nested[0] == rule:
-                values = [value].extend(nested[1])
-                if len(values) > 1:
-                    return rule, values
-                else:
-                    return nested
-            else:
-                return rule, nested
-        else:
-            return rule, collapse_plurals(value)
-    elif isinstance(parsing, str):
+def simplify(parsing):
+    if isinstance(parsing, str):
         return parsing
-    else:
-        raise ValueError("Unexpected type collapsing plurlals.")
+    simpler = []
+    for node in parsing:
+        name, value = node
+        if "simplify_" + name in globals():
+            simpleval = simplify(value)
+            result = globals()["simplify_"+name](simpleval)
+        elif name == value or isinstance(value, str) and name == "\\" + value:
+            result = value
+        else:
+            if isinstance(value, str):
+                nested = value
+            else:
+                nested = simplify(value)
+            if nested is not None:
+                result = (name, nested)
+            else:
+                result = None  
+        if result is not None:
+            simpler.append(result)
+    if len(simpler) == 1  and isinstance(simpler[0], (str, tuple)):
+        simpler = simpler[0]
+    return simpler
+
+def simplify_EXPR(value):
+    return value
+
+def simplify_WHITESPACES(value):
+    return None
+
+def simplify_STRING(value):
+    regex, strval = value
+    if len(strval) >= 2 and strval[0] == "'" and strval[-1] == "'":
+        strval = strval[1:-1]
+    return strval
+
+def simplify_KEYVAL(value):
+    key, colon, val = value
+    return (key, val)
+
+def simplify_KEYVALS(value):
+    vals = collapse_plurals("KEYVALS",  value)
+    result = []
+    for val in vals:
+        if val != ",":
+            result.append(val)
+    return result
+
+def simplify_TUPLE_ITEMS(value):
+    vals = collapse_plurals("TUPLE_ITEMS", value)
+    result = []
+    for val in vals:
+        if val != ",":
+            result.append(val)
+    return result
+
+def simplify_DICT(value):
+    return ("DICT", [tuple(x) for x in value[1:-1][0]])
+
+def simplify_HEADER(value):
+    return ("HEADER", value[-1][1])
+
+def simplify_SELECTOR(value):
+    return ("SELECTOR", value[-1][1])
+
+def simplify_TUPLE(value):
+    return ("TUPLE", tuple(value[1]))
+
+def collapse_plurals(name, value, i=0):
+    """Collapses grammar tail recursion into a list."""
+    if isinstance(value, str):
+        return value
+    result = []
+    for node in value:
+        if isinstance(node, str):
+            nested = node
+        elif node[0] == name:
+            nested = collapse_plurals(name, node[1], i+1)
+        else:
+            nested = collapse_plurals(name, node, i+1)
+        if isinstance(nested, list) and nested and isinstance(nested[0], list):
+            result.extend(nested)
+        else:
+            result.append(nested)
+    return result
 
 PARSER = Parser(GRAMMAR, "MAPPING") 
 
@@ -161,9 +227,11 @@ def test():
     for f in files:
         where = rmap.locate_file(f)
         print "parsing:", where
-        parsing = collapse_plurals(PARSER.parse_file(where))
+        parsing = PARSER.parse_file(where)
         print "parsed."
         print "parsed:", pprint.pformat(parsing)
+        simplified = simplify(parsing)
+        print "simplified:", pprint.pformat(simplified)
     
 if __name__ == "__main__":
     test()
