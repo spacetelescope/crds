@@ -3,6 +3,7 @@ import sys
 import cStringIO
 import re
 import pprint
+import cProfile
 
 import crds.rmap as rmap
 
@@ -12,15 +13,16 @@ MAPPING  :=  WHITESPACES HEADER SELECTOR
 HEADER  := header = EXPR
 SELECTOR := selector = EXPR
 
-EXPR := IDENT \( DICT \)
-IDENT := [A-Za-z_]+[A-Za-z0-9_]*
-
+EXPR := CALL
 EXPR := STRING
 EXPR := TUPLE
 EXPR := DICT
 EXPR := INT
 EXPR := FLOAT
 EXPR := BOOL
+
+CALL := IDENT \( DICT \)
+IDENT := [A-Za-z_]+[A-Za-z0-9_]*
 
 STRING := "[^"]*"
 STRING := '[^']*'
@@ -168,6 +170,7 @@ def simplify_STRING(value):
     return strval
 
 def simplify_KEYVAL(value):
+    return value
     key, colon, val = value
     return (key, val)
 
@@ -187,16 +190,20 @@ def simplify_TUPLE_ITEMS(value):
             result.append(val)
     return result
 
-def simplify_DICT(value):
-    return ("DICT", [tuple(x) for x in value[1:-1][0]])
+def simplify_CALL(value):
+    return ("CALL", value[0][1][1], tuple(value[2]))
 
-def simplify_HEADER(value):
-    return ("HEADER", value[-1][1])
+#def simplify_HEADER(value):
+#    return ("HEADER", value[-1][1])
 
 def simplify_SELECTOR(value):
-    return ("SELECTOR", value[-1][1])
+    return ("SELECTOR", value[2])
+
+def simplify_DICT(value):
+    return ("DICT", [tuple(x) for x in value[1:-1]])
 
 def simplify_TUPLE(value):
+    return tuple(value[1])
     return ("TUPLE", tuple(value[1]))
 
 def collapse_plurals(name, value, i=0):
@@ -229,10 +236,10 @@ def test():
         print "parsing:", where
         parsing = PARSER.parse_file(where)
         print "parsed."
-        print "parsed:", pprint.pformat(parsing)
+#        print "parsed:", pprint.pformat(parsing)
         simplified = simplify(parsing)
         print "simplified:", pprint.pformat(simplified)
     
 if __name__ == "__main__":
+    # cProfile.run("test()")
     test()
-
