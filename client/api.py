@@ -96,7 +96,7 @@ def get_reference_data(pipeline_context, reference):
     """Returns the contents of the specified reference file as a string.
     """
     return base64.b64decode(S.get_reference_data(pipeline_context, reference))
-    
+
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
     for the specified pipeline_context.
@@ -140,7 +140,7 @@ class FileCacher(object):
             if (not os.path.exists(localpath)) or ignore_cache:
                 log.verbose("Cache miss. Fetching[%d]" % i, repr(name), "to", repr(localpath))
                 utils.ensure_dir_exists(localpath)
-                contents = self._rpc_get_data(pipeline_context, name)
+                contents = self._http_get_data(pipeline_context, name)
                 open(localpath,"w+").write(contents)
             else:
                 log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), "at", repr(localpath))
@@ -149,7 +149,6 @@ class FileCacher(object):
 
     def _locate(self, pipeline_context, name):
         return rmap.locate_file(name)
-        return utils.get_object("crds." + utils.mapping_to_observatory(pipeline_context) + ".locate." + self._locator)(name)
 
         # might be cleaner as:
         # getattr(rmap.get_cached_mapping(pipeline_context).locate, self._locator)(name)
@@ -159,7 +158,6 @@ class FileCacher(object):
 class MappingCacher(FileCacher):
     _get_data = staticmethod(get_mapping_data)
     _get_url = staticmethod(get_mapping_url)
-    _locator = "locate_mapping"
     
 MAPPING_CACHER = MappingCacher()
 
@@ -168,7 +166,6 @@ MAPPING_CACHER = MappingCacher()
 class ReferenceCacher(FileCacher):
     _get_data = staticmethod(get_reference_data)
     _get_url = staticmethod(get_reference_url)
-    _locator = "locate_reference"
 
 REFERENCE_CACHER = ReferenceCacher()
 

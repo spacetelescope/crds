@@ -2,16 +2,21 @@
 Converts service errors into ServiceError exceptions,  otherwise call returns the
 jsonrpc "result" field.
 """
-
 import sys
 import urllib
 import uuid
 import StringIO
 
+"""
 sys.stdout = StringIO.StringIO()
 from jsonrpc._json import loads, dumps
 from jsonrpc.types import *
 sys.stdout = sys.__stdout__
+"""
+
+from json import loads, dumps
+# from jsonrpc.types import *
+
 
 class ServiceError(RuntimeError):
     """The service call failed for some reason."""
