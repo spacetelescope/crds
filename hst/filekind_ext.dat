@@ -87,7 +87,6 @@
  'wfpc2': {'atodfile': '.r1h',
            'biasfile': '.r2h',
            'darkfile': '.r3h',
-           'deltadark': '.r6h',
            'dgeofile': 'dxy',
            'flatfile': '.r4h',
            'idctab': 'idc',

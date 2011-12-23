@@ -272,7 +272,7 @@ KIND_KEYS = {
         "atodfile" : ('mode', 'gain',),
         "biasfile" : ('mode', 'gain',),
         "darkfile" : ('mode', 'clock', 'gain',),
-        # "deltadark" :  ('mode', 'clock', 'gain',),
+        # "deltadark" :  ('mode', 'clock', 'gain',),    This is a non-pipeline reference filekind
         "dgeofile" : ('mode',),
         "flatfile" : ('mode','filter_1','filter_2',),
         "idctab" : (),

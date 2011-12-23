@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:11:11',
-    'description' : 'Initially generated on 2011-12-23 09:11:11',
+    'derived_from' : 'scraped 2011-12-23 13:22:05',
+    'description' : 'Initially generated on 2011-12-23 13:22:05',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTNAM1', 'FILTNAM2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'c94d992959e150b23e3ab8233a0426c9bc9f5609',
+    'sha1sum' : '03414ec6ca3c9c34676940c011ea6b5e313760b4',
 }
 
 selector = Match({
@@ -667,7 +667,8 @@ selector = Match({
         '1994-01-01 00:00:00' : 'ta21117qu.r4h',
     }),
     ('FULL', 'F814W', 'POLQN18') : UseAfter({
-        '1995-11-01 00:00:00' : 'tat09498u.r4h',
+        '1995-11-01 00:00:00' : 'ta21117ru.r4h',
+        '1995-11-01 00:00:01' : 'tat09498u.r4h',
     }),
     ('FULL', 'F814W', 'POLQN33') : UseAfter({
         '1994-01-01 00:00:00' : 'ta21117su.r4h',
