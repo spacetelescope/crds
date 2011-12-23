@@ -215,7 +215,7 @@ class Mapping(object):
             
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
-        if attr in self.required_attrs:
+        if attr in self.header:
             val = self.header[attr]
             return val.lower() if isinstance(val, str) else val
         else:
@@ -349,7 +349,7 @@ class Mapping(object):
         """
         old = self.header.get("sha1sum", None)
         if old is None:
-            raise ChecksumError("sha1sum is missing in " + repr(self.filename))
+            raise ChecksumError("sha1sum is missing in " + repr(self.basename))
         if self._get_checksum() != self.header["sha1sum"]:
             raise ChecksumError("sha1sum mismatch.")
 
@@ -423,7 +423,7 @@ class Mapping(object):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
         """
-        log.info("Validating", self.filename)
+        log.info("Validating", self.basename)
         for key, sel in self.selections.items():
             try:
                 sel.validate(trap_exceptions)
@@ -482,7 +482,8 @@ class PipelineContext(Mapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey", ]
+    required_attrs = ["observatory", "mapping", "parkey", 
+                      "name", "derived_from"]
     
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector, **keys)
@@ -528,7 +529,7 @@ class PipelineContext(Mapping):
         """Return the list of pipeline, instrument, and reference map files 
         associated with this pipeline context.
         """
-        files = set([os.path.basename(self.filename)])
+        files = set([self.basename])
         for instrument in self.selections:
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
@@ -649,9 +650,9 @@ class InstrumentContext(Mapping):
         """Returns a list of mapping files associated with this 
         InstrumentContext.
         """
-        files = [os.path.basename(self.filename)]
+        files = [self.basename]
         for selector in self.selections.values():
-            files.append(os.path.basename(selector.filename))
+            files.append(selector.basename)
         return files
     
     def get_parkey_map(self):
@@ -705,7 +706,7 @@ class ReferenceMapping(Mapping):
     
     def mapping_names(self):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
-        return [os.path.basename(self.filename)]
+        return [self.basename]
     
     def get_required_parkeys(self):
         """Return the list of parkey names needed to select from this rmap.
@@ -756,7 +757,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        log.info("Validating", self.filename)
+        log.info("Validating", self.basename)
         try:
             self.selector.validate(self._valid_values, trap_exceptions, 
                                    context=repr(self))

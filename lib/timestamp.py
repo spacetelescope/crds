@@ -14,6 +14,8 @@ def format_date(d):
     return d.isoformat(" ")
 
 def parse_date(d):
+    if d.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
+        d = d[:-3]
     if "T" in d:    # '2010-08-17T17:25:47'
         d = d.replace("T", " ")
     if re.match("[A-Za-z]", d):
@@ -36,24 +38,40 @@ def month_num(month):
     return  MONTHS.index(month[:3].capitalize()) + 1
 
 def parse_alphabetical_date(d):
+
     try:
         month, day, year, time = d.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
         month, day, year = d.split()          # 'Feb 08 2006'
         time = "00:00AM"
+
     imonth = month_num(month)
     iday = int(day)
     iyear = int(year)
-    hour, minute = time.split(":")
+
+    ampm = "AM"
+    if time[-2:] in ["AM","am","PM","pm"]:
+        ampm = time[-2:].upper()
+        time = time[:-2]
+
+    try:
+        hour, minute = time.split(":")
+        second = "00"
+    except ValueError:
+        hour, minute, second = time.split(":")
+
     ihour = int(hour)
-    iminute = int(minute[:-2])
-    if "PM" in minute.upper():
+    iminute = int(minute)
+    isecond = int(second)
+
+    if ampm == "PM":
         if ihour != 12:
             ihour += 12
     else:
         if ihour == 12:
             ihour -= 12
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute)
+
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond)
 
 
 def parse_numerical_date(d):
