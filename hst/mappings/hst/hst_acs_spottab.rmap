@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:52:27',
+    'derived_from' : 'scraped 2011-12-23 09:10:53',
+    'description' : 'Initially generated on 2011-12-23 09:10:53',
     'filekind' : 'SPOTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_spottab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '6c2d132bf54e38a5f20bb88f3141731df3134264',
+    'sha1sum' : 'f97370f51e23a1e5ae2cc1a625aded29e19215d1',
 }
 
 selector = Match({

@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-18 09:19:04',
+    'derived_from' : 'scraped 2011-12-23 09:11:11',
+    'description' : 'Initially generated on 2011-12-23 09:11:11',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTNAM1', 'FILTNAM2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'a691af8308b37a25b425e71e21225d82bf915dfd',
+    'sha1sum' : 'c94d992959e150b23e3ab8233a0426c9bc9f5609',
 }
 
 selector = Match({

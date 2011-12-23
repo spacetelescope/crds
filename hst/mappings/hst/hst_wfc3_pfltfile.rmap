@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:31:01',
+    'derived_from' : 'scraped 2011-12-23 09:11:10',
+    'description' : 'Initially generated on 2011-12-23 09:11:10',
     'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_pfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '6a6f2bc4c0d737018333e34fcd91e8e4d1aaa745',
+    'sha1sum' : '23c7a10b4e7d186d9fbee0c76731b51626edd8a0',
 }
 
 selector = Match({

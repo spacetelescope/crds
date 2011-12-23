@@ -389,6 +389,8 @@ def write_rmap(observatory, instrument, filekind, kind_map):
     mapkeys = parkeys_to_fitskeys(instrument, MAPKEYS[:-1], outname)
     now = timestamp.now().split('.')[0]
     rmap_header = OrderedDict([
+        ("name", outname[2:]),
+        ("derived_from", "scraped " + now),
         ("mapping", "REFERENCE"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),

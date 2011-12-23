@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:52',
+    'derived_from' : 'scraped 2011-12-23 09:10:58',
+    'description' : 'Initially generated on 2011-12-23 09:10:58',
     'filekind' : 'PHOTTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_phottab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'c7e5a1b4ca5e05bce078413619e2a81e07f7ea42',
+    'sha1sum' : '5c692c77c35ad18aad7b9c87afe289fcf8318069',
 }
 
 selector = Match({

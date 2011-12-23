@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:54',
+    'description' : 'Initially generated on 2011-12-23 09:10:54',
     'filekind' : 'BADTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_badttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '6991eab2f05364f81444d3234b1040016497a4dd',
+    'sha1sum' : '19429dc467c02d090ff9f0344638d5bcab8b6ebf',
 }
 
 selector = Match({

@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:54',
+    'description' : 'Initially generated on 2011-12-23 09:10:54',
     'filekind' : 'DEADTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_deadtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'db6fa667abf9a44d056c8aca9ee880ac9a31a33b',
+    'sha1sum' : '76f42e7c63a68294d8f97197ada7ef94b7d7906e',
 }
 
 selector = Match({

@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'derived_from' : 'scraped 2011-12-23 09:10:57',
+    'description' : 'Initially generated on 2011-12-23 09:10:57',
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_inangtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'd4bd7db0052b336499751e97fa8c6ad64b0fdfef',
+    'sha1sum' : '934a0cf9e90b95e2201603a0fc213c39638f71d5',
 }
 
 selector = Match({

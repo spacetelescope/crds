@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:31:00',
+    'derived_from' : 'scraped 2011-12-23 09:11:09',
+    'description' : 'Initially generated on 2011-12-23 09:11:09',
     'filekind' : 'CRREJTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_crrejtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'f6bab83ce28f3030ae1efde18dab34dea3b26a7a',
+    'sha1sum' : 'a8cac474844aec83595ae397c4a3294b7af79ad5',
 }
 
 selector = Match({

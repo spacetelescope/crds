@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:51:58',
+    'derived_from' : 'scraped 2011-12-23 09:10:19',
+    'description' : 'Initially generated on 2011-12-23 09:10:19',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_imphttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '0b0c1e8c5ddcb6433ad6e6b10a37ee370c8d5878',
+    'sha1sum' : '643cce91c0c50e8add8dc93c8e8534d09aafac9d',
 }
 
 selector = Match({

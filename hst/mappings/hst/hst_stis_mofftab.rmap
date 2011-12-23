@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'derived_from' : 'scraped 2011-12-23 09:10:58',
+    'description' : 'Initially generated on 2011-12-23 09:10:58',
     'filekind' : 'MOFFTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_mofftab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '58660f1329751e7d442ee116e93c323b931a2a40',
+    'sha1sum' : 'f45d888bea66236367af9df12296dd688b08487b',
 }
 
 selector = Match({

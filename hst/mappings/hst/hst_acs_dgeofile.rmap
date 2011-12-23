@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:51:58',
+    'derived_from' : 'scraped 2011-12-23 09:10:19',
+    'description' : 'Initially generated on 2011-12-23 09:10:19',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_dgeofile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '60ce8f17f6a50e5acaa3035fde27e130adffed7c',
+    'sha1sum' : '225d2c90703485e063c2707551fe1817ab7abc31',
 }
 
 selector = Match({

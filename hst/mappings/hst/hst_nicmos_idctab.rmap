@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:54',
+    'description' : 'Initially generated on 2011-12-23 09:10:54',
     'filekind' : 'IDCTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '71235b44cb565b53703fb7210d0ca0106f41fd77',
+    'sha1sum' : '6dfeb35084b254263d918578d3dda7db3d8d3e90',
 }
 
 selector = Match({

@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:51:56',
+    'derived_from' : 'scraped 2011-12-23 09:10:17',
+    'description' : 'Initially generated on 2011-12-23 09:10:17',
     'filekind' : 'CCDTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_ccdtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'bead3e27617ffc0fc6271ca0cbc5c9b5572abf6c',
+    'sha1sum' : '5e647d0908866deebfa65de87526591df26dac26',
 }
 
 selector = Match({

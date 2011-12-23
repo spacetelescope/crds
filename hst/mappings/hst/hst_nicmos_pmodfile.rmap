@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:54',
+    'description' : 'Initially generated on 2011-12-23 09:10:54',
     'filekind' : 'PMODFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_pmodfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '85210564ad4ae9ed338ce460c90eb25e243d8fdd',
+    'sha1sum' : '3660886d042706c90dcacbaff8e7bf521ffffa2e',
 }
 
 selector = Match({

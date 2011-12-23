@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:54',
+    'description' : 'Initially generated on 2011-12-23 09:10:54',
     'filekind' : 'TDFFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_tdffile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '8dee3f030ab0da9e4be6fa771c872bfae827c5ee',
+    'sha1sum' : '8d4d938a05ee57d8e1cd8f513e270acae1cb6a17',
 }
 
 selector = Match({

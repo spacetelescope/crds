@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:51',
+    'derived_from' : 'scraped 2011-12-23 09:10:58',
+    'description' : 'Initially generated on 2011-12-23 09:10:58',
     'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_mlintab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e82a1b344514998937e091393af106ba59a482e5',
+    'sha1sum' : '4422537ac39faf614d58db1b71bf7e8f3a0b3f2e',
 }
 
 selector = Match({

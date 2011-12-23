@@ -1,10 +1,12 @@
 header = {
-    'description' : 'Initially generated on 2011-11-18 14:41:17',
+    'derived_from' : 'scraped 2011-12-23 09:04:39',
+    'description' : 'Initially generated on 2011-12-23 09:04:39',
     'instrument' : 'STIS',
     'mapping' : 'INSTRUMENT',
+    'name' : 'hst_stis.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'd6bc96e5e8c0ca29e2240896f7daf5aa33198d72',
+    'sha1sum' : '109c48a04509bcf5fe20c4973083a5aadf9d8b9b',
     'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/STIS/reftablequeryindex',
 }
 

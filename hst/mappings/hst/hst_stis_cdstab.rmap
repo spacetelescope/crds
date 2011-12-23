@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:50',
+    'derived_from' : 'scraped 2011-12-23 09:10:56',
+    'description' : 'Initially generated on 2011-12-23 09:10:56',
     'filekind' : 'CDSTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_cdstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '82d214574823d6b498b3dae6060fd5d0c097085b',
+    'sha1sum' : '957f46e1c83b6cf61012603ef3aa058e8d689c75',
 }
 
 selector = Match({

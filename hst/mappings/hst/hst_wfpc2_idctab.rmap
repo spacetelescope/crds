@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-18 09:19:04',
+    'derived_from' : 'scraped 2011-12-23 09:11:11',
+    'description' : 'Initially generated on 2011-12-23 09:11:11',
     'filekind' : 'IDCTAB',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '9ba04ef6eb109deadd486a9f425e0670f567223e',
+    'sha1sum' : 'cc3e68cfd4beafcde2462d197efedb397391fe1c',
 }
 
 selector = Match({

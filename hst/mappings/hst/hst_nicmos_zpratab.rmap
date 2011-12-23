@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 09:10:55',
+    'description' : 'Initially generated on 2011-12-23 09:10:55',
     'filekind' : 'ZPRATAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_zpratab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '647516367b988bbce7071f2bcf2b905107fa57b7',
+    'sha1sum' : '8bf87842a8f8d2ab61a6de0578bbac38aa62f400',
 }
 
 selector = Match({

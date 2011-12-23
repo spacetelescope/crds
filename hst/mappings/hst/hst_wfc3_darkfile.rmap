@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:31:00',
+    'derived_from' : 'scraped 2011-12-23 09:11:10',
+    'description' : 'Initially generated on 2011-12-23 09:11:10',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'c4217fedb236806647097f6910fae13a4dcc1b2d',
+    'sha1sum' : '4520fd341877751fa280910a423e84ea2ba41720',
 }
 
 selector = Match({

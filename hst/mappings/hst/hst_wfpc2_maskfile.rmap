@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-18 09:19:04',
+    'derived_from' : 'scraped 2011-12-23 09:11:11',
+    'description' : 'Initially generated on 2011-12-23 09:11:11',
     'filekind' : 'MASKFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_maskfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '3bf9740ef8e7c145cd89556e42982602431029ef',
+    'sha1sum' : '8c2711cf4f15f9cc74951394166b0718d78f00e9',
 }
 
 selector = Match({

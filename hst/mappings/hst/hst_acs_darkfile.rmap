@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:51:58',
+    'derived_from' : 'scraped 2011-12-23 09:10:19',
+    'description' : 'Initially generated on 2011-12-23 09:10:19',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '12077dcfef2e86a45dc39b339dd88b1665c25e4b',
+    'sha1sum' : '591b728cdba166f140328273de4979962a9c46e1',
 }
 
 selector = Match({

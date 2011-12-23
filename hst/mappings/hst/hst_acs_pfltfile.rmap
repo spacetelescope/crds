@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:52:27',
+    'derived_from' : 'scraped 2011-12-23 09:10:53',
+    'description' : 'Initially generated on 2011-12-23 09:10:53',
     'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_pfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDAMP', 'FILTER1', '*FILTER2', '*OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'c12d5d54f718f19f5281b26529aca64fcc6b25ec',
+    'sha1sum' : '0c08a3d80b0caab08f49d0f2329a5e76e081cf33',
 }
 
 selector = Match({

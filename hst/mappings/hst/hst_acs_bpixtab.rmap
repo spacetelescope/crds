@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:51:55',
+    'derived_from' : 'scraped 2011-12-23 09:10:17',
+    'description' : 'Initially generated on 2011-12-23 09:10:17',
     'filekind' : 'BPIXTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '7b2aacdc155397070455e0e65b3c94854a73f85a',
+    'sha1sum' : 'a0d8b5c8c337fdcbc1714cf4e1eee2338718166f',
 }
 
 selector = Match({

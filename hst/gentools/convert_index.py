@@ -68,7 +68,10 @@ def generate_imap(fname):
     instr = get_instrument(fname)
     source_url = scrape.get_url(open(fname).read())
     now = timestamp.now().split('.')[0]
+    name = "hst_" + instr + ".imap"
     header = OrderedDict([
+      ("name", name),
+      ("derived_from", "scraped " + now),
       ("mapping", "INSTRUMENT"),
       ("observatory" , "HST"),
       ("instrument", instr.upper()),

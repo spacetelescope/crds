@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-17 15:50:25',
+    'derived_from' : 'scraped 2011-12-23 09:08:25',
+    'description' : 'Initially generated on 2011-12-23 09:08:25',
     'filekind' : 'ATODTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_atodtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDGAIN', 'CCDAMP'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'bd79b3c26a12a04455abfa1f37384688fb319cd2',
+    'sha1sum' : '6121cd22ebc8a850743e54aaa80f4d1c3d34c9e5',
 }
 
 selector = Match({

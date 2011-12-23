@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:49',
+    'derived_from' : 'scraped 2011-12-23 09:10:55',
+    'description' : 'Initially generated on 2011-12-23 09:10:55',
     'filekind' : 'APERTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_apertab.rmap',
     'observatory' : 'HST',
     'parkey' : (('APERTURE',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '8ae3a0db3d1776b4b858f1ca240c91a191c41bfe',
+    'sha1sum' : '0609ca1b76920b3c5f82ac965d2f4bffa9a9387f',
 }
 
 selector = Match({

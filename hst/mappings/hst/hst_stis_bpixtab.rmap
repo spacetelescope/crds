@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:50',
+    'derived_from' : 'scraped 2011-12-23 09:10:56',
+    'description' : 'Initially generated on 2011-12-23 09:10:56',
     'filekind' : 'BPIXTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'cd41bf6e61c1df095b8f0d8c4d204ab35fef0eaa',
+    'sha1sum' : '44885adc604f43a95e1529265069ac1db5ed5173',
 }
 
 selector = Match({

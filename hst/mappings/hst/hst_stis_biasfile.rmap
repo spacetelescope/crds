@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:50',
+    'derived_from' : 'scraped 2011-12-23 09:10:56',
+    'description' : 'Initially generated on 2011-12-23 09:10:56',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDGAIN', 'CCDAMP', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'd5acabe0ff7c31a63af8b57e5f16d89ecbc71121',
+    'sha1sum' : '0a1602503cf6ef44397b51ed1363ca52331a6abe',
 }
 
 selector = Match({
