@@ -1,9 +1,11 @@
 header = {
+    'name' : 'hst.pmap',
+    'derived_from' : 'created by hand 12-23-2011',
     'mapping' : 'PIPELINE',
     'observatory' : 'HST',
     'parkey' : ('INSTRUME',),
     'description' : 'Initially generated on 2011-11-16 10:23:00',
-    'sha1sum' : 'c1dda2eb81d18846a1c458f75fe2fc20446976b0',
+    'sha1sum' : 'e2c6392fd2731df1e8d933bd990f3fd313a813db',
 }
 
 selector = {
