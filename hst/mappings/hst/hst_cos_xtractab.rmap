@@ -1,11 +1,13 @@
 header = {
-    'description' : 'Initially generated on 2011-11-16 11:30:48',
+    'derived_from' : 'scraped 2011-12-23 11:54:56',
+    'description' : 'Initially generated on 2011-12-23 11:54:56',
     'filekind' : 'XTRACTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_xtractab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '574899038259be77e61e36a0132ca92ae27269e5',
+    'sha1sum' : '179cc281bc795c121747c7b060fb749b35edc277',
 }
 
 selector = Match({
