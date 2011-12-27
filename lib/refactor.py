@@ -7,7 +7,7 @@ import cStringIO
 KEY_RE = r"(\s*')(.*)('\s*:\s*')(.*)('\s*,.*)"
 
 def replace_header_value(filename, key, new_value):
-    print "refactoring", repr(filename), ":", key, "=", repr(new_value)
+    # print "refactoring", repr(filename), ":", key, "=", repr(new_value)
     newfile = cStringIO.StringIO()
     openfile = open(filename)
     for line in openfile:
