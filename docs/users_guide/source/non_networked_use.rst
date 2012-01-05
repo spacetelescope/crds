@@ -250,7 +250,7 @@ with the exception of the checksum itself.   When a CRDS Mapping of any kind is
 loaded,  the checksum is transparently verified to ensure that the Mapping
 contents are intact.   
 
-Igoring Checksums!
+Ignoring Checksums!
 ~~~~~~~~~~~~~~~~~~
 
 Ordinarily,  during pipeline operations,  ignoring checksums should not be done.

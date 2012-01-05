@@ -15,6 +15,7 @@ CRDS User Manual
    client_use.rst
    non_networked_use.rst
    web_site_use.rst
+   rmap_syntax.rst
 
 .. comment
   Indices and tables
