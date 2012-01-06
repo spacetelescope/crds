@@ -1,8 +1,31 @@
 Mapping Syntax
 ==============
 
-CRDS reference mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
-instrument (.imap), and reference type (.rmap).   
+CRDS mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
+instrument (.imap), and reference (.rmap).   Based on dataset parameters,
+the pipeline context is used to select an instrument mapping,  the instrument 
+mapping is used to select a reference mapping,  and finally the reference 
+mapping is used to select a reference file.   
+
+CRDS mappings are written in a subset of Python and given the proper global
+definitions can be parsed directly by the Python interpreter.   Nothing 
+precludes writing a parser for CRDS mappings in some other language.
+
+Naming
+======
+
+The CRDS HST mapping prototypes which are generated from information scraped from 
+the CDBS web site are named with the forms::
+
+  <observatory> .pmap                               .e.g. hst.pmap
+  <observatory> _ <instrument> .imap                .e.g. hst_acs.imap 
+  <observatory> _ <instrument> _ <filekind> .rmap   .e.g. hst_acs_darkfile.rmap
+  
+The names of subsequent derived mappings include a version number::
+
+  <observatory> _ <version> .pmap                               .e.g. hst_00001.pmap
+  <observatory> _ <instrument> _ <version> .imap                .e.g. hst_acs_00047.imap 
+  <observatory> _ <instrument> _ <verrsion> _ <filekind> .rmap  .e.g. hst_acs_darkfile_00012.rmap
 
 Basic Structure
 ---------------
@@ -11,8 +34,8 @@ All mappings have the same basic structure consisting of a "header" section
 followed by a "selector" section.   The header provides meta data describing
 the mapping,  while the selector provides matching rules used to look up
 the results of the mapping.   A critical field in the mapping header is the
-"parkey" field which is a tuple naming the dataset header parameters which are 
-used by the selector to do its lookup.
+"parkey" field which names the dataset header parameters which are used by 
+the selector to do its lookup.
 
 Pipeline Mappings (.pmap)
 -------------------------
@@ -78,7 +101,7 @@ A sample instrument mapping for HST's COS instrument looks like::
 
 Instrument mappings match the desired reference file type against the 
 reference mapping which can be used to determine a best reference recommendation 
-for a paricular dataset.  An instrument mapping lists all possible reference 
+for a particular dataset.  An instrument mapping lists all possible reference 
 types for all modes of the instrument,  some of which may not be appropriate 
 for a particular mode.   The selector key of an instrument mapping is the
 value of a reference file header keyword "REFTYPE",  and is the name of the
@@ -117,18 +140,22 @@ For reference mappings,  the header "parkey" field is a tuple of tuples.  Each
 stage of the nested selector consumes the next tuple of header keys.  For the 
 example above,   the Match operator matches against the value of the dataset 
 keyword "DETECTOR".   Based on that match, the selected UseAfter operator
-matches against the data set's "DATE-OBS" and "TIME-OBS" keywords to lookup
+matches against the dataset's "DATE-OBS" and "TIME-OBS" keywords to lookup
 the name of a reference file.
 
 HST Selectors
 -------------
+
 For HST,  all reference mapping selectors are defined as a two tiered hierarchy 
 with one general matching step (Match) and one date-time match step (UseAfter).   
+All the CRDS selector operators are written to select either a filename *or*
+a nested operator.   In the case of HST,  the Match operator locates a nested
+UseAfter operator which in turn locates the reference file.
 
 Match
 .....
 
-Conceptually,  the Match selector does a dictionary lookup based on the header
+Conceptually,  the Match operator does a dictionary lookup based on the header
 keyword values listed in the first tuple of rmap header field "parkey".   In
 actuality however,  CRDS does a winnowing search based on each successive 
 parkey value,  eliminating impossible matches and returning the best matching
@@ -215,7 +242,7 @@ then a match tuple line like the following could be written::
     ('UVIS', 'G280_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T') : UseAfter({
 
 Here the value of G280_AMPS works like this:  first,   reference files listed
-under that match tuple define CCDAMP=G280_AMPS.   Second, data sets which should
+under that match tuple define CCDAMP=G280_AMPS.   Second, datasets which should
 use those references define CCDAMP to a particular amplifier configuration,
 .e.g.  ABCD.   Hence,  the reference file specifies a set of applicable
 amplifier configurations,  while the dataset specifies a particular
