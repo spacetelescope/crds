@@ -10,9 +10,11 @@ contexts will be locally present.
 WARNING:  All .pmap .imap .rmap and .fits files not referenced from the 
 sync'ed contexts will be deleted from CRDS_REFPATH and CRDS_MAPPATH.
 """
+import sys
 import os
 import os.path
 import argparse
+import re
 
 import crds.client.api as api
 from crds import (rmap, pysh, log)
@@ -103,7 +105,45 @@ def mapping(string):
         return string
     else:
         raise ValueError("Parameter " + repr(string) + 
-                         " is not a known CRDS mapping.")
+                         " is not a known CRDS mapping.")        
+def observatory(string):
+    string = string.lower()
+    assert string in ["hst","jwst"], "Unknown observatory " + repr(string)
+    return string
+
+def nrange(string):
+    assert re.match("\d+:\d+", string), \
+        "Invalid context range specification " + repr(string)
+    rmin, rmax = [int(x) for x in string.split(":")]
+    assert 0 <= rmin <= rmax, "Invalid range values"
+    return rmin, rmax
+
+def determine_contexts(args):
+    """Support explicit specification of contexts, context id range, or all."""
+    all_contexts = api.list_mappings(args.observatory, "*.pmap")
+    if args.contexts:
+       assert not args.range, 'Cannot specify explicit contexts and --range'
+       assert not args.all, 'Cannot specify explicit contexts and --all'
+       # permit instrument and reference mappings,  not just pipelines:
+       all_contexts = api.list_mappings(args.observatory, "*.*map")
+       for context in args.contexts:
+           assert context in all_contexts, "Unknown context " + repr(context)
+       contexts = args.contexts
+    elif args.all:
+        assert not args.range, "Cannot specify --all and --range"
+        contexts = all_contexts
+    elif args.range:
+        rmin, rmax = args.range
+        contexts = []
+        for context in all_contexts:
+            match = re.match("\w+_(\d+).pmap", context)
+            if match:
+                id = int(match.group(1))
+                if rmin <= id <= rmax:
+                    contexts.append(context)
+    else:
+        raise ValueError("Must explicitly list contexts, a context id --range, or --all.") 
+    return contexts
 
 def main():
     log.set_verbose(True)
@@ -111,13 +151,25 @@ def main():
         description='Synchronize local mapping and reference caches to ' + 
                     'the given contexts, removing files not referenced.')
     parser.add_argument(
-        'contexts', metavar='CONTEXT', type=mapping, nargs='+',
-        help='a context determining a set of references and mappings.')
+        'contexts', metavar='CONTEXT', type=mapping, nargs='*',
+        help='a list of contexts determining files to sync.')
     parser.add_argument('--purge', action='store_true',
         help='remove reference files and mappings not referred to by CONTEXT')
+    parser.add_argument('--all', action='store_true',
+        help='fetch files for all known contexts.')
+    parser.add_argument(
+        "--observatory", dest="observatory", metavar="OBSERVATORY", 
+        type=observatory, default="hst",
+        help='observatory to sync files for,  "hst" or "jwst".')
+    parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
+        dest="range", default=None,
+        help='fetch files for context ids between <MIN> and <MAX>.')
     args = parser.parse_args()
-    sync_context_mappings(args.contexts, args.purge)
-    sync_context_references(args.contexts, args.purge)
+    
+    contexts = determine_contexts(args)
+    
+    sync_context_mappings(contexts, args.purge)
+    sync_context_references(contexts, args.purge)
 
 if __name__ == "__main__":
     main()

@@ -20,6 +20,7 @@ from crds.client.proxy import CheckingProxy
 __all__ = ["set_crds_server", 
            "get_crds_server",
            
+           "list_mappings",
            "get_mapping_names",
            "get_mapping_url", 
 
@@ -61,6 +62,11 @@ def get_crds_server():
 set_crds_server(URL)
 
 # ==============================================================================
+def list_mappings(observatory="hst", glob_pattern=".*"):
+    """Return the list of mappings associated with `observatory`
+    which match `glob_pattern`.
+    """
+    return [str(x) for x in S.list_mappings(observatory, glob_pattern)]
 
 def get_mapping_url(pipeline_context, mapping):
     """Returns a URL for the specified pmap, imap, or rmap file.

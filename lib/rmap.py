@@ -64,6 +64,7 @@ import hashlib
 import re
 import tempfile
 import shutil
+import glob
 
 import pyfits
 
@@ -869,6 +870,12 @@ def locate_mapping(mappath, observatory=None):
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
     return os.path.join(get_crds_mappath(), observatory, mappath)
+
+def list_mappings(glob_pattern, observatory="hst"):
+    """Return the list of mappings for `observatory` which match `glob_pattern`.
+    """    
+    path = os.path.join(get_crds_mappath(), observatory, glob_pattern)
+    return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
 def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""
