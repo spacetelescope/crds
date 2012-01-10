@@ -145,6 +145,20 @@ def determine_contexts(args):
         raise ValueError("Must explicitly list contexts, a context id --range, or --all.") 
     return contexts
 
+def list_references(contexts):
+    refs = set()
+    for context in contexts:
+        refs = refs.union(api.get_reference_names(context))
+    for ref in sorted(list(refs)):
+        log.write(ref)
+
+def list_mappings(contexts):
+    mappings = set()
+    for context in contexts:
+        mappings = mappings.union(api.get_mapping_names(context))
+    for mapping in sorted(list(mappings)):
+        log.write(mapping)
+
 def main():
     log.set_verbose(True)
     parser = argparse.ArgumentParser(
@@ -154,7 +168,13 @@ def main():
         'contexts', metavar='CONTEXT', type=mapping, nargs='*',
         help='a list of contexts determining files to sync.')
     parser.add_argument('--purge', action='store_true',
-        help='remove reference files and mappings not referred to by CONTEXT')
+        help='remove reference files and mappings not referred to by contexts')
+    parser.add_argument('--list-references', action='store_true',
+        dest="list_references",
+        help='print names of reference files referred to by contexts')
+    parser.add_argument('--list-mappings', action='store_true',
+        dest="list_mappings",
+        help='print names of mapping files referred to by contexts')
     parser.add_argument('--all', action='store_true',
         help='fetch files for all known contexts.')
     parser.add_argument(
@@ -168,8 +188,14 @@ def main():
     
     contexts = determine_contexts(args)
     
-    sync_context_mappings(contexts, args.purge)
-    sync_context_references(contexts, args.purge)
+    if args.list_references:
+        list_references(contexts)
+    if args.list_mappings:
+        list_mappings(contexts)
+
+    if not args.list_references and not args.list_mappings:
+        sync_context_mappings(contexts, args.purge)
+        sync_context_references(contexts, args.purge)
 
 if __name__ == "__main__":
     main()
