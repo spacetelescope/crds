@@ -1,14 +1,29 @@
-"""This module is a command line script which synchronizes the local reference and
-mapping caches to the CRDS server for a set of contexts.   Sync-ing requires
-network access to the CRDS server.
+"""This module is a command line script which dowloads the references and mappings
+required to support a set of contexts from the CRDS server:
 
-% python -m crds.client.sync  hst_0001.pmap hst_0004.pmap
+Mappings and references are downloaded to either a standard location in
+the Python package structure for CRDS (e.g. crds.hst.mappings or crds.hst.references)
+or to locations specified by CRDS_REFPATH and CRDS_MAPPATH environment variables.
 
-will update the caches so that the mappings and references required for those
-contexts will be locally present.   
+Synced contexts can be explicitly listed:
 
-WARNING:  All .pmap .imap .rmap and .fits files not referenced from the 
-sync'ed contexts will be deleted from CRDS_REFPATH and CRDS_MAPPATH.
+% python -m crds.client.sync  hst_0001.pmap hst_0002.pmap
+
+Synced contexts can be specified as a range:
+
+% python -m crds.client.sync --observatory hst --range 1:2
+
+Synced contexts can be specified as --all contexts:
+
+% python -m crds.client.sync --observatory hst --all
+
+Old references and mappings which are no longer needed can be automatically
+removed by specifying --purge:
+
+% python -m crds.client.sync --observatory hst --range 1:2 --purge
+
+will remove references or mappings not required by hst_0001.pmap or 
+hst_0002.pmap in addition to downloading the required files.
 """
 import sys
 import os
@@ -26,7 +41,7 @@ def get_context_mappings(contexts):
     files = set()
     for context in contexts:
         files = files.union(api.get_mapping_names(context))
-    return files
+    return sorted(list(files))
 
 def sync_context_mappings(only_contexts, purge=False):
     """Gets all mappings required to support `only_contexts`.  Removes
@@ -41,7 +56,7 @@ def sync_context_mappings(only_contexts, purge=False):
     purge_dir = rmap.get_crds_mappath()
     purge_maps = pysh.lines("find ${purge_dir} -name '*.[pir]map'")
     purge_maps = set([os.path.basename(x.strip()) for x in purge_maps])
-    keep = get_context_mappings(only_contexts)
+    keep = set(get_context_mappings(only_contexts))
     if purge:
         remove_files(master_context, purge_maps-keep, "mapping")
     
@@ -57,7 +72,7 @@ def get_context_references(contexts):
     files = set()
     for context in contexts:
         files = files.union(api.get_reference_names(context))
-    return files
+    return sorted(list(files))
 
 def sync_context_references(only_contexts, purge=False):
     """Gets all mappings required to support `only_contexts`.  Removes
@@ -75,7 +90,7 @@ def sync_context_references(only_contexts, purge=False):
                             # "-o -name '*.r*h' "
                             # "-o -name '*.r*d'")
     purge_refs = set([os.path.basename(x.strip()) for x in purge_refs])
-    keep = get_context_references(only_contexts)
+    keep = set(get_context_references(only_contexts))
     if purge:
         remove = purge_refs - keep
         remove_files(master_context, remove, "reference")
@@ -94,7 +109,7 @@ def remove_files(context, files, kind):
     # locator = rmap.get_cached_mapping(context).locate
     for file in files:
         where = rmap.locate_file(file)
-        log.verbose("removing", file, "from", where)
+        log.verbose("Removing", file, "from", where)
         try:
             os.remove(where)
         except Exception, exc:
@@ -145,20 +160,6 @@ def determine_contexts(args):
         raise ValueError("Must explicitly list contexts, a context id --range, or --all.") 
     return contexts
 
-def list_references(contexts):
-    refs = set()
-    for context in contexts:
-        refs = refs.union(api.get_reference_names(context))
-    for ref in sorted(list(refs)):
-        log.write(ref)
-
-def list_mappings(contexts):
-    mappings = set()
-    for context in contexts:
-        mappings = mappings.union(api.get_mapping_names(context))
-    for mapping in sorted(list(mappings)):
-        log.write(mapping)
-
 def main():
     log.set_verbose(True)
     parser = argparse.ArgumentParser(
@@ -167,35 +168,23 @@ def main():
     parser.add_argument(
         'contexts', metavar='CONTEXT', type=mapping, nargs='*',
         help='a list of contexts determining files to sync.')
-    parser.add_argument('--purge', action='store_true',
-        help='remove reference files and mappings not referred to by contexts')
-    parser.add_argument('--list-references', action='store_true',
-        dest="list_references",
-        help='print names of reference files referred to by contexts')
-    parser.add_argument('--list-mappings', action='store_true',
-        dest="list_mappings",
-        help='print names of mapping files referred to by contexts')
-    parser.add_argument('--all', action='store_true',
-        help='fetch files for all known contexts.')
     parser.add_argument(
         "--observatory", dest="observatory", metavar="OBSERVATORY", 
         type=observatory, default="hst",
         help='observatory to sync files for,  "hst" or "jwst".')
+    parser.add_argument('--all', action='store_true',
+        help='fetch files for all known contexts.')
     parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
         dest="range", default=None,
         help='fetch files for context ids between <MIN> and <MAX>.')
+    parser.add_argument('--purge', action='store_true',
+        help='remove reference files and mappings not referred to by contexts')
     args = parser.parse_args()
     
     contexts = determine_contexts(args)
     
-    if args.list_references:
-        list_references(contexts)
-    if args.list_mappings:
-        list_mappings(contexts)
-
-    if not args.list_references and not args.list_mappings:
-        sync_context_mappings(contexts, args.purge)
-        sync_context_references(contexts, args.purge)
+    sync_context_mappings(contexts, args.purge)
+    sync_context_references(contexts, args.purge)
 
 if __name__ == "__main__":
     main()
