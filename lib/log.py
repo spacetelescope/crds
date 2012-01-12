@@ -271,3 +271,9 @@ def standard_status():
     write(warnings(), "warnings")
     write(infos(), "infos")
     write("")
+
+def reset():
+    """Reset the log status counters."""
+    global ERRORS, WARNINGS, INFOS
+    ERRORS = WARNINGS = INFOS = 0
+
