@@ -62,7 +62,9 @@ def parse_alphabetical_date(d):
 
     ihour = int(hour)
     iminute = int(minute)
-    isecond = int(second)
+    second = float(second)
+    isecond = int(second)   # int rejects float strs
+    imicrosecond = int((second-isecond) * 10**6)
 
     if ampm == "PM":
         if ihour != 12:
@@ -71,7 +73,8 @@ def parse_alphabetical_date(d):
         if ihour == 12:
             ihour -= 12
 
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond)
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
+                                imicrosecond)
 
 
 def parse_numerical_date(d):
@@ -82,8 +85,11 @@ def parse_numerical_date(d):
         month, day, year = date.split("-")
     imonth, iday, iyear, = int(month), int(day), int(year)
     hour, minute, second = time.split(":")
-    ihour, iminute, isecond = int(hour), int(minute), int(round(float(second)))
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond)
+    second = float(second)
+    ihour, iminute, isecond = int(hour), int(minute), int(second)
+    imicrosecond = int((second-isecond) * 10**6)
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
+                                imicrosecond)
 
 class DateParser(object):
     @classmethod
