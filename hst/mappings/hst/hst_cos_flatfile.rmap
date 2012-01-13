@@ -1,23 +1,46 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 11:54:56',
-    'description' : 'Initially generated on 2011-12-23 11:54:56',
+    'derived_from' : 'scraped 2012-01-13 16:31:26',
+    'description' : 'Initially generated on 2012-01-13 16:31:26',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_flatfile.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '19fe93cb6dd0a23a27ad5bc6763726cdcd52f337',
+    'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '5067d6747c2cc332bc2a295bd4db3b3c9e5cb2c5',
 }
 
 selector = Match({
-    ('FUV', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
+    ('FUV', 'G130M') : UseAfter({
+        '1996-10-01 00:00:00' : 'v3n1816ml_flat.fits',
     }),
-    ('FUV', 'SPECTROSCOPIC') : UseAfter({
+    ('FUV', 'G140L') : UseAfter({
         '1996-10-01 00:00:00' : 'n9n20182l_flat.fits',
     }),
-    ('NUV', '*') : UseAfter({
+    ('FUV', 'G160M') : UseAfter({
+        '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
+    }),
+    ('NUV', 'G185M') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+    ('NUV', 'G225M') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+    ('NUV', 'G230L') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+    ('NUV', 'G285M') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+    ('NUV', 'MIRRORA') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
+    }),
+    ('NUV', 'MIRRORB') : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
         '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
     }),

@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:11:09',
-    'description' : 'Initially generated on 2011-12-23 09:11:09',
+    'derived_from' : 'scraped 2012-01-13 15:28:51',
+    'description' : 'Initially generated on 2012-01-13 15:28:51',
     'filekind' : 'CCDTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_ccdtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '6b97895c6f30ff2badb50aa754abd0b709cc2663',
+    'sha1sum' : '6b796ff87aec0ba10c7e90d3ba53dd1965954b75',
 }
 
 selector = Match({

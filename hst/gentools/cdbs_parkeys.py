@@ -96,7 +96,7 @@ KIND_KEYS = {
             "brsttab" : ('detector', 'obsmode'),
             "deadtab" : ('detector',),
             "disptab" : ('detector', 'obstype'),
-            "flatfile" : ('detector', 'obstype'),
+            "flatfile" : ('detector', 'optical_element'),
             "fluxtab" : ('detector', 'obstype'),
             "geofile" : ('detector',),
             "lamptab" : ('detector', 'obstype'),
@@ -403,7 +403,8 @@ CDBS_PARKEYS_TO_FITS = {
     },
 
     "cos" : {
-             "observation_type" : "OBSTYPE"
+        "observation_type" : "OBSTYPE",
+        "optical_element" : "OPT_ELEM",
     },
 
     "stis" : {
@@ -414,7 +415,7 @@ CDBS_PARKEYS_TO_FITS = {
     },
 
     "wfc3" : {
-        "samp-seq" : "SAMP_SEQ"
+        "samp-seq" : "SAMP_SEQ",
     },
     
     "wfpc2" : {
