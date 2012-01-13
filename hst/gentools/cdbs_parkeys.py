@@ -420,7 +420,8 @@ CDBS_PARKEYS_TO_FITS = {
     "wfpc2" : {
         "filter_1"  : "FILTNAM1",
         "filter_2"  : "FILTNAM2",
-        "gain" : "ATODGAIN"
+        "gain" : "ATODGAIN",
+        "clock" : "SERIALS",
     },
 }
 
