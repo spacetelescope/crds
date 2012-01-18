@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-13 15:28:51',
-    'description' : 'Initially generated on 2012-01-13 15:28:51',
+    'derived_from' : 'scraped 2012-01-18 14:01:34',
+    'description' : 'Initially generated on 2012-01-18 14:01:34',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', '*CCDAMP', '*CCDGAIN', '*SAMP_SEQ', '*SUBTYPE', '*BINAXIS1', '*BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '63000c3fd51b97b5d76d4d47d160ff857ecc6b7b',
+    'sha1sum' : '41da12d6510b671520ff2289d65acc15c33905d4',
 }
 
 selector = Match({
@@ -572,6 +572,13 @@ selector = Match({
         '2011-10-05 03:04:13' : 'vbe1525li_drk.fits',
         '2011-10-09 00:12:16' : 'vbe1525mi_drk.fits',
         '2011-10-13 00:13:19' : 'vbe1525ni_drk.fits',
+        '2011-10-15 06:15:19' : 'w1h22000i_drk.fits',
+        '2011-10-20 13:12:35' : 'w1h22001i_drk.fits',
+        '2011-10-24 08:37:11' : 'w1h22002i_drk.fits',
+        '2011-10-29 07:25:07' : 'w1h22003i_drk.fits',
+        '2011-10-31 15:21:20' : 'w1h22004i_drk.fits',
+        '2011-11-05 10:37:35' : 'w1h22005i_drk.fits',
+        '2011-11-09 00:34:44' : 'w1h22006i_drk.fits',
     }),
     ('UVIS', 'ABCD', 'NOT PRESENT', 'NOT PRESENT', 'NOT PRESENT', '2.0', '2.0') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',

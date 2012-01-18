@@ -219,8 +219,8 @@ def dicts_to_kind_map(instr, kind, row_dicts):
         for existing in kmap[match_tuple]:
             if mapping.date == existing.date:
                 if mapping.file != existing.file:
-                    # log.error("Overlap in match_tuple", 
-                    #           repr(match_tuple), repr(mapping))
+                    log.error("Overlap in match_tuple", 
+                              repr(match_tuple), repr(mapping))
                     if "***" not in mapping.comment:
                         mapping = rmap.Filemap(
                             date=mapping.date, 
@@ -284,9 +284,9 @@ def get_match_tuple(row, instr, kind):
         if special == "*":  # optional and embedded keywords fail to *.
             value = row.get(var, default or "not present")
         elif special in ["%","!"]:
-            value = get_parkey_from_reffile(row, instr, var)
+            value = row.get(var, default or "not present")
             if value == "not present":
-                value = row.get(var, default or "not present")
+                value = get_parkey_from_reffile(row, instr, var)
         else:
             try:   # Mandatory keywords must be there or fail.
                 value = row[var]
@@ -432,6 +432,7 @@ def test():
 # ==========================================================================
 
 if __name__ == "__main__":
+    # log.set_debug_errors(False, errno=17)
     SAVE = "--save" in sys.argv
     if SAVE:
         sys.argv.remove("--save")
