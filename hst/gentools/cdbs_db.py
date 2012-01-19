@@ -1,6 +1,7 @@
 import pprint
 import cPickle
 import random
+import getpass
 from collections import OrderedDict
 
 import pyodbc
@@ -10,41 +11,54 @@ import crds.hst
 
 log.set_verbose(False)
 
-# CONNECTION = pyodbc.connect("DSN=DadsopsDsn;Uid=jmiller;Pwd=")
-# CURSOR = CONNECTION.cursor()
+try:
+    PASSWORD = open("password").read()
+except:
+    PASSWORD = getpass.getpass("password: ")
 
-CONNECTION = pyodbc.connect("DSN=ReffileOpsDsn;Uid=jmiller;Pwd=")
-CURSOR = CONNECTION.cursor()
+class DB(object):
+    def __init__(self, dsn, user, password=None):
+        self.dsn = dsn
+        self.user = user
+        if password is None:
+            password = getpass.getpass("password: ")
+        self.connection = pyodbc.connect(
+            "DSN=%s;Uid=%s;Pwd=%s" % (dsn, user, password))
+        self.cursor = self.connection.cursor()
 
-def get_tables():
-    return [row.table_name for row in CURSOR.tables()]
+    def __repr__(self):
+        return self.__class__.__name__ + "(%s, %s)" % (self.dsn, self.user)
 
-def get_columns(table):
-    return [col.column_name for col in CURSOR.columns(table=table)]
+    def execute(self, sql):
+        return self.cursor.execute(sql)
 
-def get_db_info(instr):
-    info = {}
-    for table in get_tables():
-        if instr in table:
-            info[table] = get_columns(table)
-    return info
+    def get_tables(self):
+        return [row.table_name for row in self.cursor.tables()]
 
-def make_dicts(table, col_list=None, ordered=False, where="", dataset=None,
-               lowercase=True):
-    if dataset is not None:
-        all_cols = get_columns(table)
-        for col in all_cols:
-            if "data_set_name" in col:
-                dsname = col
-                break
-        where += "where %s='%s'" % (dsname, dataset)
-    if col_list is None:
-        col_list = get_columns(table)
-    col_names = ", ".join(col_list)
-    for row in CURSOR.execute("select %s from %s %s" % (col_names, table, where)):
-        items = zip(col_list, [str(x).lower() for x in row] if lowercase else row)
-        kind = OrderedDict if ordered else dict
-        yield kind(items)
+    def get_columns(self, table):
+        return [col.column_name for col in self.cursor.columns(table=table)]
+
+    def make_dicts(self, table, col_list=None, ordered=False, 
+                   where="", dataset=None, lowercase=True):
+        if dataset is not None:
+            all_cols = self.get_columns(table)
+            for col in all_cols:
+                if "data_set_name" in col:
+                    dsname = col
+                    break
+            where += "where %s='%s'" % (dsname, dataset)
+
+        if col_list is None:
+            col_list = self.get_columns(table)
+        col_names = ", ".join(col_list)
+
+        for row in self.cursor.execute("select %s from %s %s" % (col_names, table, where)):
+            items = zip(col_list, [str(x).lower() for x in row] if lowercase else row)
+            kind = OrderedDict if ordered else dict
+            yield kind(items)
+
+DADSOPS = DB("DadsopsDsn", "jmiller", PASSWORD)
+REFFILE_OPS = DB("ReffileOpsRepDsn", "jmiller", PASSWORD)
 
 def required_keys(instr):
     imap = rmap.get_cached_mapping("hst_%s.imap" % instr)
@@ -61,11 +75,11 @@ def required_keys(instr):
 def scan_tables(instr):
     pars = required_keys(instr)
     columns = {}
-    for table in get_tables():
+    for table in DADSOPS.get_tables():
         if instr not in table:
             continue
         for par in pars:
-            for col in get_columns(table):
+            for col in DADSOPS.get_columns(table):
                 if par in col:
                     if par not in columns:
                         columns[par] = []
@@ -74,7 +88,7 @@ def scan_tables(instr):
 
 
 def clean_scan(instr):
-    columns, remainder = scan_tables(instr)
+    columns, remainder = DADSOPS.scan_tables(instr)
     if remainder:
         log.warning("For", repr(instr), "can't locate", sorted(list(remainder)))
     else:
@@ -155,7 +169,7 @@ class HeaderGenerator(object):
     def join_expr(self):
         all_cols = []
         for table in self.db_tables:
-            all_cols += [table + "." + col for col in get_columns(table)]
+            all_cols += [table + "." + col for col in DADSOPS.get_columns(table)]
         clauses = []
         for suffix in ["program_id", "obset_id", "obsnum"]:
             joined = []
@@ -169,7 +183,7 @@ class HeaderGenerator(object):
 
     def get_headers(self):
         sql = self.getter_sql()
-        for dataset in CURSOR.execute(sql):
+        for dataset in DADSOPS.execute(sql):
             hdr = dict(zip(self.header_keys, [utils.condition_value(x) for x in dataset]))
             self.fix_time(hdr)
             hdr["INSTRUME"] = self.instrument
