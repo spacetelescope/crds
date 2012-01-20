@@ -1,0 +1,15 @@
+INFO:[1]: Certifying 'hst_wfpc2.imap' 
+INFO:[2]: Validating hst_wfpc2.imap 
+INFO:[3]: Validating hst_wfpc2_offtab.rmap 
+INFO:[4]: Validating hst_wfpc2_idctab.rmap 
+INFO:[5]: Validating hst_wfpc2_darkfile.rmap 
+INFO:[6]: Validating hst_wfpc2_biasfile.rmap 
+INFO:[7]: Validating hst_wfpc2_dgeofile.rmap 
+INFO:[8]: Validating hst_wfpc2_wf4tfile.rmap 
+INFO:[9]: Validating hst_wfpc2_atodfile.rmap 
+INFO:[10]: Validating hst_wfpc2_maskfile.rmap 
+INFO:[11]: Validating hst_wfpc2_shadfile.rmap 
+0 errors 
+0 warnings 
+11 infos 
+ 
