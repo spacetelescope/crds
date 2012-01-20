@@ -1,20 +1,20 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:57',
-    'description' : 'Initially generated on 2011-12-23 09:10:57',
+    'derived_from' : 'scraped 2012-01-20 15:28:39',
+    'description' : 'Initially generated on 2012-01-20 15:28:39',
     'filekind' : 'ECHSCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_echsctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'a2232afeb31a1ca8687d20f1899a294b699a1013',
+    'sha1sum' : '5b02d86765b91d031cb436f0aff17007dee83a15',
 }
 
 selector = Match({
     ('FUV-MAMA',) : UseAfter({
-        '1996-10-01 00:00:00' : 'k8m09586o_exs.fits',
+        '1996-10-01 00:00:00' : 'k8m09585o_ech.fits',
     }),
     ('NUV-MAMA',) : UseAfter({
-        '1996-10-01 00:00:00' : 'k8m0958do_exs.fits',
+        '1996-10-01 00:00:00' : 'k8m0958co_ech.fits',
     }),
 })

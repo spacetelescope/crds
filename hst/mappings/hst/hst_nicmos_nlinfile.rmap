@@ -1,14 +1,41 @@
 header = {
-    'derived_from' : 'scraped 2012-01-18 14:01:22',
-    'description' : 'Initially generated on 2012-01-18 14:01:22',
+    'derived_from' : 'scraped 2012-01-20 15:17:36',
+    'description' : 'Initially generated on 2012-01-20 15:17:36',
     'filekind' : 'NLINFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_nlinfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '948aa751bb1588fa0bfd90f64c3a036251e65cd6',
+    'sha1sum' : '5152caf00babbbe9a0b3d3c813fb41f06da123a0',
 }
 
 selector = Match({
+    ('1.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 'l131328rn_lin.fits',
+        '1997-01-10 00:00:00' : 'h1t1543nn_lin.fits',
+        '1997-02-01 00:00:00' : 'h2k1100dn_lin.fits',
+        '1997-02-02 00:00:00' : 'h3v1404mn_lin.fits',
+        '1997-02-04 00:00:00' : 'l1i1216an_lin.fits',
+        '1997-04-02 00:00:00' : 'l1i1225dn_lin.fits',
+        '2002-01-01 00:00:00' : 'sav0410on_lin.fits',
+    }),
+    ('2.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 'l131328sn_lin.fits',
+        '1997-01-10 00:00:00' : 'h1t1543on_lin.fits',
+        '1997-02-01 00:00:00' : 'h2k1100en_lin.fits',
+        '1997-02-02 00:00:00' : 'h3v1404nn_lin.fits',
+        '1997-02-04 00:00:00' : 'l1i1216bn_lin.fits',
+        '1997-04-02 00:00:00' : 'l1i1225en_lin.fits',
+        '2002-01-01 00:00:00' : 'sav04114n_lin.fits',
+    }),
+    ('3.0',) : UseAfter({
+        '1997-01-01 00:00:00' : 'l131328tn_lin.fits',
+        '1997-01-10 00:00:00' : 'h1t1543pn_lin.fits',
+        '1997-02-01 00:00:00' : 'h2k1100fn_lin.fits',
+        '1997-02-02 00:00:00' : 'h3v1404on_lin.fits',
+        '1997-02-04 00:00:00' : 'l1i1216cn_lin.fits',
+        '1997-04-02 00:00:00' : 'l1i1225fn_lin.fits',
+        '2002-01-01 00:00:00' : 'sav0411gn_lin.fits',
+    }),
 })

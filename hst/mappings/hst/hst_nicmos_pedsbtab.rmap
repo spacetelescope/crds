@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'scraped 2012-01-20 15:17:36',
+    'description' : 'Initially generated on 2012-01-20 15:17:36',
+    'filekind' : 'PEDSBTAB',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_pedsbtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '0fee5fd5f675cb04587bb8b9d0136ab0c8bedfe3',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1999-07-27 00:00:00' : 's2d1302mn_psb.fits',
+    }),
+})

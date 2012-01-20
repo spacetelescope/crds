@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'scraped 2012-01-20 15:32:22',
+    'description' : 'Initially generated on 2012-01-20 15:32:22',
+    'filekind' : 'ATODTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_atodtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '066e662323240fd2c686c72d722ff90ca212027f',
+}
+
+selector = Match({
+    ('UVIS',) : UseAfter({
+        '2001-01-01 00:00:00' : 'n9n16196i_a2d.fits',
+    }),
+})

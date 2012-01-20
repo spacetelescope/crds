@@ -1,17 +1,17 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:56',
-    'description' : 'Initially generated on 2011-12-23 09:10:56',
+    'derived_from' : 'scraped 2012-01-20 15:28:37',
+    'description' : 'Initially generated on 2012-01-20 15:28:37',
     'filekind' : 'CCDTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_ccdtab.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'a1bed1d7803c86bf9c26743086cf2c0ba9b4dc6f',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : 'c80731b5c67dc82959201d8ac5e888812618dd3d',
 }
 
 selector = Match({
-    ('CCD',) : UseAfter({
+    () : UseAfter({
         '1996-10-01 00:00:00' : 'q4a1311fo_ccd.fits',
         '1999-12-26 00:00:00' : 'q4a1311bo_ccd.fits',
         '1999-12-29 00:00:00' : 'q4a1311co_ccd.fits',

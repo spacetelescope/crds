@@ -1,13 +1,12 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:04:38',
-    'description' : 'Initially generated on 2011-12-23 09:04:38',
+    'derived_from' : 'scraped 2012-01-20 11:32:10',
+    'description' : 'Initially generated on 2012-01-20 11:32:10',
     'instrument' : 'NICMOS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_nicmos.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'e12cad2800fd6024bf871c0a811eca59b166461f',
-    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/NICMOS/reftablequeryindex',
+    'sha1sum' : '3cdea6d8927a31add93239eb4b8e6cde57ce71ac',
 }
 
 selector = {
@@ -18,12 +17,14 @@ selector = {
     'maskfile' : 'hst_nicmos_maskfile.rmap',
     'nlinfile' : 'hst_nicmos_nlinfile.rmap',
     'noisfile' : 'hst_nicmos_noisfile.rmap',
+    'pedsbtab' : 'hst_nicmos_pedsbtab.rmap',
     'phottab' : 'hst_nicmos_phottab.rmap',
     'pmodfile' : 'hst_nicmos_pmodfile.rmap',
     'pmskfile' : 'hst_nicmos_pmskfile.rmap',
     'rnlcortb' : 'hst_nicmos_rnlcortb.rmap',
+    'saacntab' : 'hst_nicmos_saacntab.rmap',
     'saadfile' : 'hst_nicmos_saadfile.rmap',
     'tdffile' : 'hst_nicmos_tdffile.rmap',
     'tempfile' : 'hst_nicmos_tempfile.rmap',
-    'zpratab' : 'hst_nicmos_zpratab.rmap',
+    'zprattab' : 'hst_nicmos_zprattab.rmap',
 }

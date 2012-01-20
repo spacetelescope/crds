@@ -1,12 +1,3 @@
-# 2012012181059-D-DIAG-using source ('acs_ref_data', 'acr_flashcur')
-# 2012012181059-D-DIAG-using source ('acs_ref_data', 'acr_shutrpos')
-# 2012012181059-D-DIAG-using source ('acs_a_data', 'aca_xcorner')
-# 2012012181059-D-DIAG-using source ('acs_a_data', 'aca_ycorner')
-# 2012012181059-D-DIAG-using source ('acs_a_data', 'aca_numcols')
-# 2012012181059-D-DIAG-using source ('acs_a_data', 'aca_numrows')
-# 2012012181059-D-DIAG-using source ('acs_ref_data', 'acr_ccdchip')
-# 2012012181059-D-DIAG-using source ('science', 'sci_targname')
-
 {'acs': {'atodtab': 'acs_ref_data.acr_best_atodtab',
          'biasfile': 'acs_ref_data.acr_best_biasfile',
          'bpixtab': 'acs_ref_data.acr_best_bpixtab',
@@ -22,6 +13,8 @@
          'expstart': 'acs_ref_data.acr_expstart',
          'filter1': 'acs_ref_data.acr_filter1',
          'filter2': 'acs_ref_data.acr_filter2',
+         'flashcur': 'acs_ref_data.acr_flashcur',
+         'flshfile': 'acs_ref_data.acr_best_flshfile',
          'fw1offst': 'acs_ref_data.acr_fw1offst',
          'fw2offst': 'acs_ref_data.acr_fw2offst',
          'fwsoffst': 'acs_ref_data.acr_fwsoffst',
@@ -31,19 +24,14 @@
          'ltv2': 'acs_chip.acc_ltv2',
          'mdriztab': 'acs_ref_data.acr_best_mdriztab',
          'mlintab': 'acs_ref_data.acr_best_mlintab',
-         'naxis1': 'acs_chip.acc_binaxis1',
-         'naxis2': 'acs_chip.acc_binaxis2',
+         'numcols': 'acs_a_data.aca_numcols',
+         'numrows': 'acs_a_data.aca_numrows',
          'obstype': 'acs_ref_data.acr_obstype',
          'oscntab': 'acs_ref_data.acr_best_oscntab',
          'pfltfile': 'acs_ref_data.acr_best_pfltfile',
-         'spottab': 'acs_ref_data.acr_best_spottab',
-		 'targname' : 'science.sci_targname',
-},
-
-# 2012012181133-D-DIAG-using source ('cos_ref_data', 'csr_opt_elem')
-# 2012012181133-D-DIAG-using source ('cos_a_data', 'csa_exptype')
-# 2012012181133-D-DIAG-using source ('science', 'sci_targname')
-
+         'shadfile': 'acs_ref_data.acr_best_shadfile',
+         'shutrpos': 'acs_ref_data.acr_shutrpos',
+         'spottab': 'acs_ref_data.acr_best_spottab'},
  'cos': {'badttab': 'cos_ref_data.csr_best_badttab',
          'bpixtab': 'cos_ref_data.csr_best_bpixtab',
          'brftab': 'cos_ref_data.csr_best_brftab',
@@ -59,17 +47,12 @@
          'lamptab': 'cos_ref_data.csr_best_lamptab',
          'obsmode': 'cos_ref_data.csr_obsmode',
          'obstype': 'cos_ref_data.csr_obstype',
-		 'opt_elem': 'cos_ref_data.csr_opt_elem',
+         'opt_elem': 'cos_ref_data.csr_opt_elem',
          'phatab': 'cos_ref_data.csr_best_phatab',
          'spwcstab': 'cos_ref_data.csr_best_spwcstab',
          'tdstab': 'cos_ref_data.csr_best_tdstab',
          'wcptab': 'cos_ref_data.csr_best_wcptab',
          'xtractab': 'cos_ref_data.csr_best_xtractab'},
-
-# 2012012181026-D-DIAG-using source ('nicmos_ref_data', 'nsr_readout')
-# 2012012181026-D-DIAG-using source ('nicmos_science', 'nss_obsmode')
-# 2012012181026-D-DIAG-using source ('science', 'sci_targname')
-
  'nicmos': {'camera': 'nicmos_ref_data.nsr_camera',
             'darkfile': 'nicmos_ref_data.nsr_best_darkfile',
             'data_set': 'nicmos_ref_data.nsr_data_set_name',
@@ -82,19 +65,21 @@
             'nlinfile': 'nicmos_ref_data.nsr_best_nlinfile',
             'noisfile': 'nicmos_ref_data.nsr_best_noisfile',
             'nread': 'nicmos_ref_data.nsr_nread',
+            'obsmode': 'nicmos_science.nss_obsmode',
+            'pedsbtab': 'nicmos_ref_data.nsr_best_pedsbtab',
             'phottab': 'nicmos_ref_data.nsr_best_phottab',
             'pmodfile': 'nicmos_ref_data.nsr_best_pmodfile',
             'pmskfile': 'nicmos_ref_data.nsr_best_pmskfile',
             'readout': 'nicmos_ref_data.nsr_readout',
             'rnlcortb': 'nicmos_ref_data.nsr_best_rnlcortb',
+            'saacntab': 'nicmos_ref_data.nsr_best_saacntab',
             'saadfile': 'nicmos_ref_data.nsr_best_saadfile',
             'samp_seq': 'nicmos_ref_data.nsr_samp_seq',
             'tdffile': 'nicmos_ref_data.nsr_best_tdffile',
-            'tempfile': 'nicmos_ref_data.nsr_best_tempfile'},
-
-# 2012012180414-D-DIAG-using source ('science', 'sci_targname')
-
- 'stis': {'apertab': 'stis_ref_data.ssr_best_apertab',
+            'tempfile': 'nicmos_ref_data.nsr_best_tempfile',
+            'zprattab': 'nicmos_ref_data.nsr_best_zprattab'},
+ 'stis': {'apdestab': 'stis_ref_data.ssr_best_apdestab',
+          'apertab': 'stis_ref_data.ssr_best_apertab',
           'aperture': 'stis_ref_data.ssr_aperture',
           'biasfile': 'stis_ref_data.ssr_best_biasfile',
           'binaxis1': 'stis_ref_data.ssr_binaxis1',
@@ -132,16 +117,11 @@
           'srwtab': 'stis_ref_data.ssr_best_srwtab',
           'tdctab': 'stis_ref_data.ssr_best_tdctab',
           'tdstab': 'stis_ref_data.ssr_best_tdstab',
+          'teltab': 'stis_ref_data.ssr_best_teltab',
           'texpstrt': 'stis_ref_data.ssr_texpstrt',
           'wcptab': 'stis_ref_data.ssr_best_wcptab',
           'xtractab': 'stis_ref_data.ssr_best_xtractab'},
-
-# 2012012180337-D-DIAG-using source ('science', 'sci_aper_1234')
-# 2012012180337-D-DIAG-using source ('wfc3_science', 'w3s_chinject')
-# 2012012180337-D-DIAG-using source ('science', 'sci_targname')
-
- 'wfc3': {'aperture': 'wfc3_science.w3s_aperture',
-          'biasfile': 'wfc3_ref_data.w3r_best_biasfile',
+ 'wfc3': {'atodtab': 'wfc3_ref_data.w3r_best_atodtab',
           'binaxis1': 'wfc3_ref_data.w3r_binaxis1',
           'binaxis2': 'wfc3_ref_data.w3r_binaxis2',
           'bpixtab': 'wfc3_ref_data.w3r_best_bpixtab',
@@ -160,17 +140,8 @@
           'oscntab': 'wfc3_ref_data.w3r_best_oscntab',
           'pfltfile': 'wfc3_ref_data.w3r_best_pfltfile',
           'samp_seq': 'wfc3_ref_data.w3r_samp_seq',
-          'shadfile': 'wfc3_ref_data.w3r_best_shadfile',
-          'subarray': 'wfc3_science.w3s_subarray',
-          'subtype': 'wfc3_ref_data.w3r_subtype'},
-
-# 2012012180515-D-DIAG-using source ('wfpc2_ref_data', 'w2r_serials')
-# 2012012180515-D-DIAG-using source ('wfpc2_ref_data', 'w2r_filter1')
-# 2012012180515-D-DIAG-using source ('wfpc2_ref_data', 'w2r_filter2')
-# 2012012180515-D-DIAG-using source ('wfpc2_ref_data', 'w2r_imagetyp')
-# 2012012180515-D-DIAG-using source ('wfpc2_primary_data', 'wp2_lrfwave')
-# 2012012180515-D-DIAG-using source ('science', 'sci_targname')
-
+          'subtype': 'wfc3_ref_data.w3r_subtype',
+          'targname': 'wfc3_science.w3s_targname'},
  'wfpc2': {'atodfile': 'wfpc2_ref_data.w2r_best_atodfile',
            'atodgain': 'wfpc2_ref_data.w2r_atodgain',
            'biasfile': 'wfpc2_ref_data.w2r_best_biasfile',
@@ -178,14 +149,11 @@
            'data_set': 'wfpc2_ref_data.w2r_data_set_name',
            'dgeofile': 'wfpc2_ref_data.w2r_best_dgeofile',
            'expstart': 'wfpc2_ref_data.w2r_expstart',
-           'filtnam1': 'wfpc2_ref_data.w2r_filtnam1',
-           'filtnam2': 'wfpc2_ref_data.w2r_filtnam2',
-           'flatfile': 'wfpc2_ref_data.w2r_best_flatfile',
            'idctab': 'wfpc2_ref_data.w2r_best_idctab',
            'maskfile': 'wfpc2_ref_data.w2r_best_maskfile',
            'mode': 'wfpc2_ref_data.w2r_mode',
            'offtab': 'wfpc2_ref_data.w2r_best_offtab',
-		   'serials': 'wfpc2_ref_data.w2r_serials',
+           'serials': 'wfpc2_ref_data.w2r_serials',
            'shadfile': 'wfpc2_ref_data.w2r_best_shadfile',
            'shutter': 'wfpc2_ref_data.w2r_shutter',
            'wf4tfile': 'wfpc2_ref_data.w2r_best_wf4tfile'}}

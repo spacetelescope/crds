@@ -1,17 +1,17 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:56',
-    'description' : 'Initially generated on 2011-12-23 09:10:56',
+    'derived_from' : 'scraped 2012-01-20 15:28:37',
+    'description' : 'Initially generated on 2012-01-20 15:28:37',
     'filekind' : 'CRREJTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_crrejtab.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'fc7035f6c0bcc1b4b1075c02af2cd18506c6021f',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '1b3420398e1093d512f73177b9273a0e225bc38c',
 }
 
 selector = Match({
-    ('CCD',) : UseAfter({
+    () : UseAfter({
         '1996-12-03 00:00:00' : 'h1v12041o_crr.fits',
         '1997-03-01 00:00:00' : 'ica12303o_crr.fits',
         '1997-04-18 00:00:00' : 'j3m1403io_crr.fits',

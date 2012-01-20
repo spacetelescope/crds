@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:57',
-    'description' : 'Initially generated on 2011-12-23 09:10:57',
+    'derived_from' : 'scraped 2012-01-20 15:28:39',
+    'description' : 'Initially generated on 2012-01-20 15:28:39',
     'filekind' : 'HALOTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_halotab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'cbf2b64bd55bf49b4e967c5d4e0120ec56f9b67d',
+    'sha1sum' : 'f578d1be14e3be9c36c38ecb8f7e834d4c51ed65',
 }
 
 selector = Match({

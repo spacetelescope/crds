@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:57',
-    'description' : 'Initially generated on 2011-12-23 09:10:57',
+    'derived_from' : 'scraped 2012-01-20 15:28:39',
+    'description' : 'Initially generated on 2012-01-20 15:28:39',
     'filekind' : 'DISPTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_disptab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '8db36fb87b3f9e36562c3eac96fda0f91e082cba',
+    'sha1sum' : '06dc320f1a4eb2b712a2db9f982b7267b8d913c2',
 }
 
 selector = Match({

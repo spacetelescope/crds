@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'scraped 2012-01-20 15:17:33',
+    'description' : 'Initially generated on 2012-01-20 15:17:33',
+    'filekind' : 'SHADFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_shadfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : 'ca49e8f8fbc7542cd9f59aa8954755c407c1ab4c',
+}
+
+selector = Match({
+    ('HRC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'j4d1435rj_shd.fits',
+        '1992-01-01 00:00:00' : 'kcb1734pj_shd.fits',
+    }),
+    ('WFC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'kcb17349j_shd.fits',
+    }),
+})

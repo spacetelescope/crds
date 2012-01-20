@@ -9,8 +9,6 @@ import glob
 import re
 import pprint
 
-from BeautifulSoup import BeautifulStoneSoup
-
 import cdbs_db
 
 from crds import (rmap, log, timestamp, utils, selectors)
@@ -23,53 +21,16 @@ import crds.hst.stis
 import crds.hst.wfc3
 import crds.hst.wfpc2
 
+import crds.hst.parkeys as parkeys
+
 # =======================================================================
-
-def ccontents(n): 
-    """Return the lowercase stripped contents of a single values XML node"""
-    return str(n.contents[0].strip().lower())
-
-def process_reference_file_defs(instrument):
-    """Given an `instrument` name, process the CDBS config file
-    reference_file_defs.xml and return a dictionary mapping
-
-    { filekind :  (reftype, parkeys) }
-
-    where filekind is the name of a FITS header keyword which names
-    a reference file,  reftype is the 3-or-so character suffix which
-    reference filenames typically end with (xxx_<reftype>.fits),
-    parkeys is a list of dataset header keywords used to select the
-    reference file.
-    """
-    xml = BeautifulStoneSoup(open("../cdbs/cdbs_bestref/reference_file_defs.xml").read())
-    rdefs = {}
-    for node in xml.findAll("instrument"):
-        instr = ccontents(node.instrument_name)
-        if instr != instrument:
-            continue
-        for inode in node:
-            if not hasattr(inode, "name"):
-                continue
-            if inode.name == "reffile":
-                parkeys = []
-                rtype = ccontents(inode.reffile_type)
-                keyword = ccontents(inode.reffile_keyword)
-                for rnode in inode:
-                    if not hasattr(rnode, "name"):
-                        continue
-                    if rnode.name == "file_selection":
-                        parkeys.append(ccontents(rnode.file_selection_field))
-                rdefs[keyword] = (rtype, parkeys)
-    return rdefs
 
 def generate_all_rmaps(instrument):
     """Given an `instrument`, this function will generate a .rmap file
     for each filekind known for the instrument.
     """
-    rdefs = process_reference_file_defs(instrument)
-    for kind in sorted(rdefs):
-        reftype, parkeys = rdefs[kind]
-        generate_rmap(instrument, kind, reftype, parkeys)
+    for kind in parkeys.get_filekinds(instrument):
+        generate_rmap(instrument, kind)
     log.standard_status()
 
 # =======================================================================
@@ -82,51 +43,62 @@ FILE_TABLES = {
    "nicmos"  : "nic_file",
 }
 
-def generate_rmap(instrument, kind, reftype, parkeys):
-    log.info("Processing", instrument, kind, parkeys)
+def generate_rmap(instrument, kind):
+    log.info("Processing", instrument, kind)
+    row_dicts = get_row_dicts(instrument, kind)
+    if not row_dicts:
+        log.warning("No rows for",instrument,kind)
+        return
+    kind_map = dicts_to_kind_map(instrument, kind, row_dicts) 
+    write_rmap("hst", instrument, kind, kind_map)
+
+def get_row_dicts(instrument, kind):
+    db_parkeys = list(parkeys.get_db_parkeys(instrument, kind))
+    reftype = parkeys.get_reftype(instrument, kind)
     row_table = ROW_TABLES.get(instrument, instrument + "_row")
     file_table = FILE_TABLES.get(instrument, instrument + "_file")
-    columns = [ row_table + "." + key for key in parkeys + ["file_name"]]
+    columns = [ row_table + "." + key for key in db_parkeys + ["file_name", "comment"]]
     columns += [ file_table + "." + "useafter_date" ]
     tables = [row_table, file_table]
-    sql = "select %s from %s where %s.file_name=%s.file_name" % \
-        (", ".join(columns), ", ".join(tables), row_table, file_table)
-    print "executing", sql
-    fields = parkeys + ["file_name", "useafter_date"]
-    generator = cdbs_db.REFFILE_OPS.execute(sql)
+    sql = """select {columns} from {tables} where {row_table}.file_name={file_table}.file_name
+and {row_table}.expansion_number={file_table}.expansion_number
+and {file_table}.opus_load_date is not null
+and {file_table}.archive_date is not null
+and {file_table}.opus_flag = 'Y'
+and {file_table}.reject_flag = 'N'
+and {file_table}.reference_file_type = '{reference_file_type}'
+""".format(columns = ", ".join(columns),
+           tables = ", ".join(tables), 
+           row_table = row_table,
+           file_table = file_table,
+           reference_file_type = reftype.upper())
+    log.verbose("executing", sql)
+    fits_parkeys = parkeys.get_fits_parkeys(instrument, kind)
+    fields = list(db_parkeys) + ["file_name", "comment", "useafter_date"]
+    try:
+        generator = cdbs_db.REFFILE_OPS.execute(sql)
+    except:
+        log.error("Database error")
+        return
     row_dicts = []
     for row in generator:
         rowd = dict(zip(fields, row))
         for key, val in rowd.items():
             rowd[key] = utils.condition_value(val)
+        rowd["file_name"] = rowd["file_name"].lower()
         row_dicts.append(rowd)
-    pprint.pprint(row_dicts)
-    return
-
-    map_contrib = dicts_to_kind_map(instr, kind, contrib) 
-    kind_map = {}
-    for key in map_contrib:
-        if key not in kind_map:
-                kind_map[key] = []
-        for filemap in map_contrib[key]:
-            if filemap not in kind_map[key]:
-                kind_map[key].append(filemap)
-    write_rmap("hst", instr, kind, kind_map)
+    return row_dicts
 
 # =======================================================================
 
-def dicts_to_kind_map(instr, kind, parkeys, row_dicts):
-    """Given a list of dictionaries `row_dicts`, return an rmap dictionary
-    mapping parkey bindings onto lists of date,file tuples.  `instr`ument
-    and file`kind` are used to choose parkeys from the KIND_KEYS map.
-    KIND_KEYS defines which parkeys of all the columns in each row are used 
-    in the rmap for a particular kind.   Strictly speaking,  a table column
-    name is not a parkey but may only correspond to header keyword.
+def dicts_to_kind_map(instr, kind, row_dicts):
+    """Given a list of dictionaries `row_dicts`, return an rmap
+    dictionary mapping parkey bindings onto lists of date,file tuples.
     """
     kmap = {}
-
+    db_parkeys = parkeys.get_db_parkeys(instr, kind)
     for row in row_dicts:
-        match_tuple = get_match_tuple(row, instr, kind)
+        match_tuple = get_match_tuple(row, db_parkeys)
         if match_tuple is False:
             continue
         if match_tuple not in kmap:
@@ -136,17 +108,16 @@ def dicts_to_kind_map(instr, kind, parkeys, row_dicts):
         for existing in kmap[match_tuple]:
             if mapping.date == existing.date:
                 if mapping.file != existing.file:
-                    log.error("Overlap in match_tuple", 
-                              repr(match_tuple), repr(mapping))
+                    # log.error("Overlap in match_tuple", 
+                    #          repr(match_tuple), repr(mapping), repr(existing))
                     if "***" not in mapping.comment:
                         mapping = rmap.Filemap(
                             date=mapping.date, 
                             file=mapping.file, 
                             comment = "# *** " + mapping.comment[2:])
-
                 else:
                     if not warned:
-                        log.warning("Duplicate", repr(mapping))
+                        # log.warning("Duplicate", repr(mapping))
                         warned = True
                     continue
         kmap[match_tuple].append(mapping)
@@ -183,13 +154,12 @@ def expand_kmap(instr, kind, kmap):
 
 # =======================================================================
 
-def get_match_tuple(row, parkeys):
-    lkey = []
-    for pkey in parkeys:
-        value = row.get(var, "not present")
-        value = utils.condition_value(value)
-        lkey.append(value)
-    return tuple(lkey)
+def get_match_tuple(row, db_parkeys):
+    """Format a row dictionary into a tuple of parkeys in the proper order."""
+    match = []
+    for pkey in db_parkeys:
+        match.append(row.get(pkey, "not present"))
+    return tuple(match)
 
 
 # =======================================================================
@@ -197,28 +167,19 @@ def get_match_tuple(row, parkeys):
 def get_mapping(row):
     """Given a table data row dictionary, return an rmap mapping tuple.
     """
-    if COMMENTKEYS:
-        comments = []
-        for cvar in COMMENTKEYS:
-            try:
-                comments.append(row[cvar])
-            except KeyError:
-                pass
-        comments_str = ", ".join(comments)
-    else:
-        comments_str = ""
     return rmap.Filemap(timestamp.format_date(timestamp.parse_date(
-                row["use_after"])), dict_to_filename(row), comments_str)
+                row["useafter_date"])), row["file_name"], row["comment"])
 
 # =======================================================================
 
-def write_rmap(observatory, instrument, filekind, parkeys, kind_map):
+def write_rmap(observatory, instrument, filekind, kind_map):
     """Constructs rmap's header and data out of the kind_map and
     outputs an rmap file
     """
     outname  = "./" + observatory + "_" + instrument + "_" + filekind + ".rmap"
-    fitskeys = tuple([key.upper() for key in parkeys])
-    MAPKEYS  = ('DATE-OBS', 'TIME-OBS',)
+    fitskeys = tuple([key.upper() for key in 
+                    parkeys.get_fits_parkeys(instrument, filekind)])
+    mapkeys  = ('DATE-OBS', 'TIME-OBS',)
     now = timestamp.now().split('.')[0]
     rmap_header = OrderedDict([
         ("name", outname[2:]),

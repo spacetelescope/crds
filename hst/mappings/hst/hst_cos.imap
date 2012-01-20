@@ -1,13 +1,12 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 11:57:10',
-    'description' : 'Initially generated on 2011-12-23 11:57:10',
+    'derived_from' : 'scraped 2012-01-20 11:32:10',
+    'description' : 'Initially generated on 2012-01-20 11:32:10',
     'instrument' : 'COS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_cos.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '800fb1567cb5bed4031402c7396aeb86c5e1db61',
-    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex',
+    'sha1sum' : '81141c698c3486db15b234539f5f323ba8dd3549',
 }
 
 selector = {

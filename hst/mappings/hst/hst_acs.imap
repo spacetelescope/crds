@@ -1,13 +1,12 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:04:37',
-    'description' : 'Initially generated on 2011-12-23 09:04:37',
+    'derived_from' : 'scraped 2012-01-20 11:32:10',
+    'description' : 'Initially generated on 2012-01-20 11:32:10',
     'instrument' : 'ACS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '394c8ce6a2af9fc66ba9de2485da5a431319ca13',
-    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/ACS/reftablequeryindex',
+    'sha1sum' : 'cc3d8760094c3a0dfce135e7b38932d884084d11',
 }
 
 selector = {
@@ -19,11 +18,13 @@ selector = {
     'crrejtab' : 'hst_acs_crrejtab.rmap',
     'darkfile' : 'hst_acs_darkfile.rmap',
     'dgeofile' : 'hst_acs_dgeofile.rmap',
+    'flshfile' : 'hst_acs_flshfile.rmap',
     'idctab' : 'hst_acs_idctab.rmap',
     'imphttab' : 'hst_acs_imphttab.rmap',
     'mdriztab' : 'hst_acs_mdriztab.rmap',
     'mlintab' : 'hst_acs_mlintab.rmap',
     'oscntab' : 'hst_acs_oscntab.rmap',
     'pfltfile' : 'hst_acs_pfltfile.rmap',
+    'shadfile' : 'hst_acs_shadfile.rmap',
     'spottab' : 'hst_acs_spottab.rmap',
 }

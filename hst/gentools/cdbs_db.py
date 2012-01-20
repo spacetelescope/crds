@@ -8,6 +8,7 @@ import pyodbc
 
 from crds import rmap, log, utils, timestamp
 import crds.hst
+import crds.hst.parkeys as parkeys
 
 log.set_verbose(False)
 
@@ -60,15 +61,23 @@ class DB(object):
 DADSOPS = DB("DadsopsDsn", "jmiller", PASSWORD)
 REFFILE_OPS = DB("ReffileOpsRepDsn", "jmiller", PASSWORD)
 
+def get_instrument_db_parkeys(instrument):
+    """Return the union of the database versions of all parkeys for all
+    filekinds of instrument.
+    """
+    dbkeys = set()
+    for kind in parkeys.get_filekinds(instrument):
+        dbkeys = dbkeys.union(set(parkeys.get_db_parkeys(instrument, filekind)))
+    return list(dbkeys)
+
 def required_keys(instr):
-    imap = rmap.get_cached_mapping("hst_%s.imap" % instr)
-    pars = [key.lower() for key in imap.get_required_parkeys()]
-    pars.remove("reftype")
-    pars.remove("date-obs")
-    pars.remove("time-obs")
+    """Get both the input parkeys and expected results keywords for
+    all filekinds of `instr`ument`.
+    """
+    pars = get_instrument_db_parkeys(instr)
     pars.append("expstart" if instr != "stis" else "texpstrt")
     pars.append("data_set")
-    pars.append("targname")
+    imap = rmap.get_cached_mapping("hst_%s.imap" % instr)
     pars.extend(imap.selections.keys())
     return pars
 
@@ -88,7 +97,7 @@ def scan_tables(instr):
 
 
 def clean_scan(instr):
-    columns, remainder = DADSOPS.scan_tables(instr)
+    columns, remainder = scan_tables(instr)
     if remainder:
         log.warning("For", repr(instr), "can't locate", sorted(list(remainder)))
     else:
@@ -195,7 +204,6 @@ class HeaderGenerator(object):
             hdr["DATE-OBS"], hdr["TIME-OBS"] = timestamp.format_date(expstart).split()
         except:
             log.warning("Bad database EXPSTART", expstart)
-
 
 try:
     HEADER_MAP = eval(open("header_tables.dat").read())

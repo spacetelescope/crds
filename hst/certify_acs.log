@@ -4,23 +4,24 @@ INFO:[3]: Validating hst_acs_crrejtab.rmap
 INFO:[4]: Validating hst_acs_idctab.rmap 
 INFO:[5]: Validating hst_acs_darkfile.rmap 
 INFO:[6]: Validating hst_acs_atodtab.rmap 
-INFO:[7]: Validating hst_acs_cfltfile.rmap 
+INFO:[7]: Validating hst_acs_biasfile.rmap 
+WARNING[1]: Parameter 'NUMCOLS' is unchecked. 
+WARNING[2]: Parameter 'NUMROWS' is unchecked. 
+WARNING[3]: Parameter 'LTV1' is unchecked. 
+WARNING[4]: Parameter 'LTV2' is unchecked. 
 INFO:[8]: Validating hst_acs_spottab.rmap 
 INFO:[9]: Validating hst_acs_mlintab.rmap 
 INFO:[10]: Validating hst_acs_dgeofile.rmap 
 INFO:[11]: Validating hst_acs_bpixtab.rmap 
 INFO:[12]: Validating hst_acs_oscntab.rmap 
 INFO:[13]: Validating hst_acs_ccdtab.rmap 
-INFO:[14]: Validating hst_acs_imphttab.rmap 
-INFO:[15]: Validating hst_acs_pfltfile.rmap 
-ERROR[1]: ReferenceMapping('hst_acs_pfltfile.rmap') : ('HRC', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%', '%NO REFERENCE%') : Field 'CCDAMP'='%NO REFERENCE%' is not in ('A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD', 'ABCD', 'N/A', 'ANY') 
-INFO:[16]: Validating hst_acs_biasfile.rmap 
-WARNING[1]: Parameter 'NAXIS1' is unchecked. 
-WARNING[2]: Parameter 'NAXIS2' is unchecked. 
-WARNING[3]: Parameter 'LTV1' is unchecked. 
-WARNING[4]: Parameter 'LTV2' is unchecked. 
-INFO:[17]: Validating hst_acs_mdriztab.rmap 
-1 errors 
+INFO:[14]: Validating hst_acs_shadfile.rmap 
+INFO:[15]: Validating hst_acs_imphttab.rmap 
+INFO:[16]: Validating hst_acs_pfltfile.rmap 
+INFO:[17]: Validating hst_acs_flshfile.rmap 
+INFO:[18]: Validating hst_acs_cfltfile.rmap 
+INFO:[19]: Validating hst_acs_mdriztab.rmap 
+0 errors 
 4 warnings 
-17 infos 
+19 infos 
  

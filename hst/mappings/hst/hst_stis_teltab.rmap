@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'scraped 2012-01-20 15:28:41',
+    'description' : 'Initially generated on 2012-01-20 15:28:41',
+    'filekind' : 'TELTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_teltab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '89d0a372d1a7d6c7de07642ff776322f691965e8',
+}
+
+selector = Match({
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m0958ao_tel.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'k8m0958ho_tel.fits',
+    }),
+})

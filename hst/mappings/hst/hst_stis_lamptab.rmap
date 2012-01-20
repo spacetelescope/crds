@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:57',
-    'description' : 'Initially generated on 2011-12-23 09:10:57',
+    'derived_from' : 'scraped 2012-01-20 15:28:40',
+    'description' : 'Initially generated on 2012-01-20 15:28:40',
     'filekind' : 'LAMPTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_lamptab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e4a82b41d4139597971728703a408ec22decd8f7',
+    'sha1sum' : '2b71a130dafa6fa25ed866f356abbc470bb3a674',
 }
 
 selector = Match({

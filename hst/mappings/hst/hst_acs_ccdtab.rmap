@@ -1,23 +1,28 @@
 header = {
-    'derived_from' : 'scraped 2012-01-18 14:01:08',
-    'description' : 'Initially generated on 2012-01-18 14:01:08',
+    'derived_from' : 'scraped 2012-01-20 15:16:51',
+    'description' : 'Initially generated on 2012-01-20 15:16:51',
     'filekind' : 'CCDTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_ccdtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '7583238faefeb29f362bb3b64f4c1a4909272a53',
+    'sha1sum' : '1e3f592816e93e017a44aa68b8d6e33421e6c41d',
 }
 
 selector = Match({
     ('HRC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'j4d1435kj_ccd.fits',
+        '1992-01-01 00:00:00' : 'm711125gj_ccd.fits',
         '2002-03-01 00:00:00' : 'o1515069j_ccd.fits',
         '2002-09-01 00:00:00' : 'o151506bj_ccd.fits',
         '2003-04-01 00:00:00' : 'o151506aj_ccd.fits',
         '2003-10-01 00:00:00' : 'o151506ej_ccd.fits',
     }),
     ('WFC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'lch1556bj_ccd.fits',
+        '1992-01-01 00:00:00' : 'm1e1043gj_ccd.fits',
+        '2001-03-01 00:00:00' : 'm2j1057qj_ccd.fits',
         '2002-03-01 00:00:00' : 'o1515068j_ccd.fits',
         '2002-09-01 00:00:00' : 'o151506dj_ccd.fits',
         '2003-04-01 00:00:00' : 'o151506cj_ccd.fits',

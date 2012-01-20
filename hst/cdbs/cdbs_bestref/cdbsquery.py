@@ -425,6 +425,7 @@ History:
 10/01/02 xxxxx MSwam     Initial version
 09/21/06 56495 MSwam     add amp conversions for single-amp multi-chip reads
 03/15/11 67806 MSwam     only do amp conversion for pre-SM4 data
+03/29/11 67806 MSwam     change in algorithm from ACS team 
 =======================================================================
   """
   def acs_bias_file_selection(self, querynum, thereffile, aSource, beyond_SM4):
@@ -462,18 +463,20 @@ History:
       # only apply this case for exposures before SM4
       elif k._field == 'CCDAMP' and not beyond_SM4:
         #
-        # convert amp A reads to AD if size is more than half a chip
-        if (aSource._keywords["CCDAMP"][0] == "A" and
+        # convert amp A or D reads to AD if size is more than half a chip
+        if ((aSource._keywords["CCDAMP"][0] == "A" or
+             aSource._keywords["CCDAMP"][0] == "D") and
             aSource._keywords["NUMCOLS"][0] > ACS_HALF_CHIP_COLS):
-            opusutil.PrintMsg("I","acs_bias_file_selection: exposure is pre-SM4, converting amp A "+
+            opusutil.PrintMsg("I","acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
                                   "to AD for NUMCOLS = "+
                                   str(aSource._keywords["NUMCOLS"][0]))
             aSource._keywords["CCDAMP"][0] = "AD"
         #
         # convert amp B reads to BC if size is more than half a chip
-        elif (aSource._keywords["CCDAMP"][0] == "B" and
+        elif ((aSource._keywords["CCDAMP"][0] == "B" or
+               aSource._keywords["CCDAMP"][0] == "C") and
               aSource._keywords["NUMCOLS"][0] > ACS_HALF_CHIP_COLS):
-            opusutil.PrintMsg("I","acs_bias_file_selection: exposure is pre-SM4, converting amp B "+
+            opusutil.PrintMsg("I","acs_bias_file_selection: exposure is pre-SM4, converting amp B or C"+
                                   "to BC for NUMCOLS = "+
                                   str(aSource._keywords["NUMCOLS"][0]))
             aSource._keywords["CCDAMP"][0] = "BC"
@@ -1030,6 +1033,7 @@ newfiles - list of filenames and expansion numbers for the new ref files
 History:
 --------
 10/01/02 xxxxx MSwam     Initial version
+07/27/11 68982 MSwam     replace !=NULL with IS NOT NULL
 =======================================================================
   """
   def get_new_cal_files(self):
@@ -1054,7 +1058,7 @@ History:
       #
       # build the db query
       querytxt = ("SELECT COUNT(*) FROM "+cdbs_prefix+"_file WHERE "+
-                  "file_name = '"+result[i][0]+"' and opus_load_date != NULL")
+                  "file_name = '"+result[i][0]+"' and opus_load_date is not NULL")
       #
       # get count in a list of lists
       count = [[]]

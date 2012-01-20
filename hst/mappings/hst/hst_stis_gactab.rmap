@@ -1,26 +1,17 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:57',
-    'description' : 'Initially generated on 2011-12-23 09:10:57',
+    'derived_from' : 'scraped 2012-01-20 15:28:39',
+    'description' : 'Initially generated on 2012-01-20 15:28:39',
     'filekind' : 'GACTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_gactab.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '427814a639d29bfee9932745a31063aca8735179',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '3d972697a9771177ac175c5488e887bab5a7b580',
 }
 
 selector = Match({
-    ('CCD', '*') : UseAfter({
-        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
-    }),
-    ('CCD', 'G230LB') : UseAfter({
-        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
-    }),
-    ('CCD', 'G430L') : UseAfter({
-        '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
-    }),
-    ('CCD', 'G750L') : UseAfter({
+    ('CCD',) : UseAfter({
         '1997-01-01 00:00:00' : 'p9r19203o_gac.fits',
     }),
 })

@@ -11,12 +11,11 @@ INFO:[10]: Validating hst_cos_lamptab.rmap
 INFO:[11]: Validating hst_cos_geofile.rmap 
 INFO:[12]: Validating hst_cos_bpixtab.rmap 
 INFO:[13]: Validating hst_cos_flatfile.rmap 
-WARNING[1]: Parameter 'OBSTYPE' is unchecked. 
 INFO:[14]: Validating hst_cos_tdstab.rmap 
 INFO:[15]: Validating hst_cos_deadtab.rmap 
 INFO:[16]: Validating hst_cos_disptab.rmap 
 INFO:[17]: Validating hst_cos_brsttab.rmap 
 0 errors 
-1 warnings 
+0 warnings 
 17 infos 
  

@@ -47,6 +47,8 @@
 <!-- 08/27/09 63386    MSwam   remove ACS PFL CCDGAIN file selection -->
 <!-- 10/21/09 63766    MSwam   add COS FLAT OPT_ELEM -->
 <!-- 10/18/10 66275    MSwam   add COS SPWCSTAB -->
+<!-- 05/23/11 66778    MSwam   make COS FLATFILE required -->
+<!-- 06/30/11 68298    MSwam   add ACS IMPHTTAB           -->
 <!--==============================================================-->
 <REFERENCE_FILES>
 <INSTRUMENT>
@@ -438,6 +440,17 @@
     <RESTRICTION>
       <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'HRC' and aSource._keywords['OBSTYPE'][0] == 'CORONAGRAPHIC') </RESTRICTION_TEST>
     </RESTRICTION>
+  </REFFILE>
+<!--====================================-->
+  <REFFILE>
+    <REFFILE_TYPE> IMP </REFFILE_TYPE>
+    <REFFILE_KEYWORD> IMPHTTAB </REFFILE_KEYWORD>
+    <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
+    <REFFILE_SWITCH> PHOTCORR </REFFILE_SWITCH>
+    <REFFILE_REQUIRED> YES </REFFILE_REQUIRED>
+    <FILE_SELECTION> 
+      <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
+    </FILE_SELECTION> 
   </REFFILE>
 <!--====================================-->
 </INSTRUMENT>
@@ -1755,6 +1768,7 @@
     <REFFILE_KEYWORD> FLATFILE </REFFILE_KEYWORD>
     <REFFILE_SWITCH> FLATCORR </REFFILE_SWITCH>
     <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
+    <REFFILE_REQUIRED> YES </REFFILE_REQUIRED>
     <FILE_SELECTION>
         <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
     </FILE_SELECTION>

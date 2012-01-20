@@ -1,20 +1,17 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:58',
-    'description' : 'Initially generated on 2011-12-23 09:10:58',
+    'derived_from' : 'scraped 2012-01-20 15:28:40',
+    'description' : 'Initially generated on 2012-01-20 15:28:40',
     'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_mlintab.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '4422537ac39faf614d58db1b71bf7e8f3a0b3f2e',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : 'e43c266cbb8e182a0cd1d2e69e79148e9dce42be',
 }
 
 selector = Match({
-    ('FUV-MAMA',) : UseAfter({
-        '1996-10-01 00:00:00' : 'j9r16559o_lin.fits',
-    }),
-    ('NUV-MAMA',) : UseAfter({
+    () : UseAfter({
         '1996-10-01 00:00:00' : 'j9r16559o_lin.fits',
     }),
 })

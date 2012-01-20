@@ -184,6 +184,8 @@ def condition_value(value):
     '*'
     >>> condition_value('')
     '*'
+    >>> condition_value('4294967295')
+    '*'
     >>> condition_value(False)
     'F'
     >>> condition_value(True)
@@ -208,6 +210,8 @@ def condition_value(value):
         value = "T"
     elif value in ["F", "FALSE"]:
         value = "F"
+    if value in ["4294967295.0","4294966297.0",]:
+        value = "*"
     return value
 
 # ===================================================================

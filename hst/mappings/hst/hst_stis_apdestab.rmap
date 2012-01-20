@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'scraped 2012-01-20 15:28:35',
+    'description' : 'Initially generated on 2012-01-20 15:28:35',
+    'filekind' : 'APDESTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_apdestab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'sha1sum' : '488138d6bf1cf49693b7b5d3e2a9038d1dceb64d',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1996-10-01 00:00:00' : 'obm1723qo_apd.fits',
+        '1997-12-08 00:00:00' : 'obm1723ro_apd.fits',
+    }),
+})

@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:10:58',
-    'description' : 'Initially generated on 2011-12-23 09:10:58',
+    'derived_from' : 'scraped 2012-01-20 15:28:41',
+    'description' : 'Initially generated on 2012-01-20 15:28:41',
     'filekind' : 'SRWTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_srwtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e4cf78396e078079ae36302433da3f0559d79e56',
+    'sha1sum' : 'cb303c5ebcbe0c67548e62b71f7abd441397a7ea',
 }
 
 selector = Match({

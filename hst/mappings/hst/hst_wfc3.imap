@@ -1,17 +1,16 @@
 header = {
-    'derived_from' : 'scraped 2011-12-23 09:04:39',
-    'description' : 'Initially generated on 2011-12-23 09:04:39',
+    'derived_from' : 'scraped 2012-01-20 11:32:10',
+    'description' : 'Initially generated on 2012-01-20 11:32:10',
     'instrument' : 'WFC3',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_wfc3.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '8516692a5406856bbbeb7cd79ae6158c0497d858',
-    'source_url' : 'http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/WFC3/reftablequeryindex',
+    'sha1sum' : '233d575331e002183dc01b08581d3724c1a98603',
 }
 
 selector = {
-    'biasfile' : 'hst_wfc3_biasfile.rmap',
+    'atodtab' : 'hst_wfc3_atodtab.rmap',
     'bpixtab' : 'hst_wfc3_bpixtab.rmap',
     'ccdtab' : 'hst_wfc3_ccdtab.rmap',
     'crrejtab' : 'hst_wfc3_crrejtab.rmap',
@@ -21,5 +20,4 @@ selector = {
     'nlinfile' : 'hst_wfc3_nlinfile.rmap',
     'oscntab' : 'hst_wfc3_oscntab.rmap',
     'pfltfile' : 'hst_wfc3_pfltfile.rmap',
-    'shadfile' : 'hst_wfc3_shadfile.rmap',
 }

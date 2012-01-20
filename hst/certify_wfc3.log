@@ -3,22 +3,19 @@ INFO:[2]: Validating hst_wfc3.imap
 INFO:[3]: Validating hst_wfc3_nlinfile.rmap 
 INFO:[4]: Validating hst_wfc3_idctab.rmap 
 INFO:[5]: Validating hst_wfc3_darkfile.rmap 
-WARNING[1]: Parameter 'SAMP_SEQ' is unchecked. 
-WARNING[2]: Parameter 'BINAXIS1' is unchecked. 
-WARNING[3]: Parameter 'BINAXIS2' is unchecked. 
-INFO:[6]: Validating hst_wfc3_ccdtab.rmap 
-INFO:[7]: Validating hst_wfc3_dgeofile.rmap 
+WARNING[1]: Parameter 'BINAXIS1' is unchecked. 
+WARNING[2]: Parameter 'BINAXIS2' is unchecked. 
+WARNING[3]: Parameter 'SAMP_SEQ' is unchecked. 
+INFO:[6]: Validating hst_wfc3_atodtab.rmap 
+INFO:[7]: Validating hst_wfc3_ccdtab.rmap 
 INFO:[8]: Validating hst_wfc3_bpixtab.rmap 
 INFO:[9]: Validating hst_wfc3_oscntab.rmap 
-INFO:[10]: Validating hst_wfc3_biasfile.rmap 
-WARNING[4]: Parameter 'SUBARRAY' is unchecked. 
-INFO:[11]: Validating hst_wfc3_shadfile.rmap 
-INFO:[12]: Validating hst_wfc3_crrejtab.rmap 
-INFO:[13]: Validating hst_wfc3_pfltfile.rmap 
-WARNING[5]: Parameter 'BINAXIS1' is unchecked. 
-WARNING[6]: Parameter 'BINAXIS2' is unchecked. 
-INFO:[14]: Validating hst_wfc3_mdriztab.rmap 
+INFO:[10]: Validating hst_wfc3_crrejtab.rmap 
+INFO:[11]: Validating hst_wfc3_pfltfile.rmap 
+WARNING[4]: Parameter 'BINAXIS1' is unchecked. 
+WARNING[5]: Parameter 'BINAXIS2' is unchecked. 
+INFO:[12]: Validating hst_wfc3_mdriztab.rmap 
 0 errors 
-6 warnings 
-14 infos 
+5 warnings 
+12 infos 
  
