@@ -1,9 +1,0 @@
-<document>
-    <url>
-        http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex/COSburstParamTable
-    </url>
-    <table>
-        <tr><th>File</th><th>Detector</th><th>ObsMode</th><th>Use After</th><th>Pedigree</th><th>Delivery #</th><th>Delivery Date</th><th>OTFR Start Use Date</th><th>Comments</th></tr>
-        <tr><td><a href="http://archive.stsci.edu/cgi-bin/dataset_lookup?dataset_input_list=s7g1700fl*">s7g1700fl_burst.fits</a></td><td>FUV</td><td>TIME-TAG</td><td>Oct 01 1996  00:00:00 UT</td><td>GROUND</td><td>11876</td><td>Jul 16 2008  17:09:14 GMT</td><td>Jul 16 2008  17:58:26 GMT</td><td>initial version for testing VERSION keyword renamed to VCALCOS</td></tr>
-    </table>
-</document>
