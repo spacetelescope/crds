@@ -13,7 +13,7 @@ def install():
 install()
 
 for instr in INSTRUMENTS:
-    % python gen_rmap2.py ${instr}
+    % python gen_rmap.py ${instr}
     % mv hst_${instr}_*.rmap ../mappings/hst
 
 install()
