@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:14',
-    'description' : 'Initially generated on 2012-01-20 15:28:14',
+    'derived_from' : 'scraped 2012-01-24 16:57:58',
+    'description' : 'Initially generated on 2012-01-24 16:57:58',
     'filekind' : 'SHADFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_shadfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'SHUTTER'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '234843b80a1a87497a7a8ebaf12b552fff2e1d7d',
+    'sha1sum' : 'f8fc376debbd7cf8ffe00fc81387c78f44166641',
 }
 
 selector = Match({

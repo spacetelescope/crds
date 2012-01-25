@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:27',
-    'description' : 'Initially generated on 2012-01-20 15:17:27',
+    'derived_from' : 'scraped 2012-01-24 16:57:21',
+    'description' : 'Initially generated on 2012-01-24 16:57:21',
     'filekind' : 'IDCTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'f392c48e955d38470fbfa812447b8f7260a6eb34',
+    'sha1sum' : 'bead0f4fe787fed75262d6438301bf5c6d520dd1',
 }
 
 selector = Match({

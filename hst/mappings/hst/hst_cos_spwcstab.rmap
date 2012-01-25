@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:26',
-    'description' : 'Initially generated on 2012-01-20 15:28:26',
+    'derived_from' : 'scraped 2012-01-24 16:57:41',
+    'description' : 'Initially generated on 2012-01-24 16:57:41',
     'filekind' : 'SPWCSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_spwcstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e030e80f15f039237a3d7459f97ee43d96bd8c99',
+    'sha1sum' : 'f488598bb6064972ebebf1ab3e0cbab0d572fad8',
 }
 
 selector = Match({

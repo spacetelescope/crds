@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:39',
-    'description' : 'Initially generated on 2012-01-20 15:28:39',
+    'derived_from' : 'scraped 2012-01-24 16:57:48',
+    'description' : 'Initially generated on 2012-01-24 16:57:48',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '7894ba75950a286b16cf301125ef5825fdea5bf3',
+    'sha1sum' : '2f08a0913e4d29aff704f3139e0d8af11b6fe965',
 }
 
 selector = Match({

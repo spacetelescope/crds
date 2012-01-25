@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:36',
-    'description' : 'Initially generated on 2012-01-20 15:17:36',
+    'derived_from' : 'scraped 2012-01-24 16:57:43',
+    'description' : 'Initially generated on 2012-01-24 16:57:43',
     'filekind' : 'NOISFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_noisfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'READOUT', 'NREAD'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'cc5ec7af184db5f030f3c35ae67b7a5643f3b597',
+    'sha1sum' : 'b74c47715a5176858008022fb53fbb186a2ceeab',
 }
 
 selector = Match({

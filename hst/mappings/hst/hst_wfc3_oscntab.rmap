@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:32:26',
-    'description' : 'Initially generated on 2012-01-20 15:32:26',
+    'derived_from' : 'scraped 2012-01-24 16:57:55',
+    'description' : 'Initially generated on 2012-01-24 16:57:55',
     'filekind' : 'OSCNTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_oscntab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '46ebc8aaf4fad7be2a41c57a6fc60a08e0666cbc',
+    'sha1sum' : 'bbdfa9e770792366fa080981cf8c94bb198af0ad',
 }
 
 selector = Match({

@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:32:26',
-    'description' : 'Initially generated on 2012-01-20 15:32:26',
+    'derived_from' : 'scraped 2012-01-24 16:57:55',
+    'description' : 'Initially generated on 2012-01-24 16:57:55',
     'filekind' : 'NLINFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_nlinfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '92af9ffdfb956f2c4c99ed7505a1bdbc5a3c771e',
+    'sha1sum' : 'e6519cec1a15f8c1e5ef11e8a80d4b6199adee91',
 }
 
 selector = Match({

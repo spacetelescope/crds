@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:36',
-    'description' : 'Initially generated on 2012-01-20 15:17:36',
+    'derived_from' : 'scraped 2012-01-24 16:57:43',
+    'description' : 'Initially generated on 2012-01-24 16:57:43',
     'filekind' : 'MASKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_maskfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '259b1060aa3a8ef4ede09001d71c606a9a174a40',
+    'sha1sum' : 'd60edd8c56803964b1a90f701be134fdd8a1ea8b',
 }
 
 selector = Match({

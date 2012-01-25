@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:33',
-    'description' : 'Initially generated on 2012-01-20 15:17:33',
+    'derived_from' : 'scraped 2012-01-24 16:57:37',
+    'description' : 'Initially generated on 2012-01-24 16:57:37',
     'filekind' : 'SHADFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_shadfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'ca49e8f8fbc7542cd9f59aa8954755c407c1ab4c',
+    'sha1sum' : '150f3e93a695f5e08caf51a570f4372b97a1829e',
 }
 
 selector = Match({

@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:16:51',
-    'description' : 'Initially generated on 2012-01-20 15:16:51',
+    'derived_from' : 'scraped 2012-01-24 16:56:31',
+    'description' : 'Initially generated on 2012-01-24 16:56:31',
     'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_cfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e78d428c06c1fc4c662bd5c8dd0a104bcc6b9c5a',
+    'sha1sum' : '3224a741a7c74c9abf9d7ab5dd0819ea1a4106a5',
 }
 
 selector = Match({

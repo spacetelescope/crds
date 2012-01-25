@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:41',
-    'description' : 'Initially generated on 2012-01-20 15:28:41',
+    'derived_from' : 'scraped 2012-01-24 16:57:50',
+    'description' : 'Initially generated on 2012-01-24 16:57:50',
     'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_pfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '9dcb34c0fced5cb976684d6315a12a1f62b37a82',
+    'sha1sum' : '5cb31ded68cb34de5ddef967d1444b18740e51a3',
 }
 
 selector = Match({

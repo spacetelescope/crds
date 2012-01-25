@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:36',
-    'description' : 'Initially generated on 2012-01-20 15:17:36',
+    'derived_from' : 'scraped 2012-01-24 16:57:43',
+    'description' : 'Initially generated on 2012-01-24 16:57:43',
     'filekind' : 'PHOTTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_phottab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'bee70af418ac897a9933ffa7c5840b279e175983',
+    'sha1sum' : 'b53063016495070beeaaf167104815ab2c58a8ed',
 }
 
 selector = Match({

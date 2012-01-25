@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:13',
-    'description' : 'Initially generated on 2012-01-20 15:28:13',
+    'derived_from' : 'scraped 2012-01-24 16:57:57',
+    'description' : 'Initially generated on 2012-01-24 16:57:57',
     'filekind' : 'ATODFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_atodfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'a7b577a71f45b2d21249151d22287ce57b319d96',
+    'sha1sum' : 'e29cc6c92f36ad13a245bf8ef1d04f3cfe90779e',
 }
 
 selector = Match({

@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:32:22',
-    'description' : 'Initially generated on 2012-01-20 15:32:22',
+    'derived_from' : 'scraped 2012-01-24 16:57:52',
+    'description' : 'Initially generated on 2012-01-24 16:57:52',
     'filekind' : 'ATODTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_atodtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '066e662323240fd2c686c72d722ff90ca212027f',
+    'sha1sum' : '3d68142e11b70ca432178065ec9d774710a8f188',
 }
 
 selector = Match({

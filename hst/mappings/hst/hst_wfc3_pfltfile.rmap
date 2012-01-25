@@ -1,800 +1,800 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:32:26',
-    'description' : 'Initially generated on 2012-01-20 15:32:26',
+    'derived_from' : 'scraped 2012-01-24 16:57:56',
+    'description' : 'Initially generated on 2012-01-24 16:57:56',
     'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_pfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'FILTER', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'edeba3809b7c76c19310150a1c123304009dd9ce',
+    'sha1sum' : 'dd383c4bc4d70835d93513a0e3b476e312c321f6',
 }
 
 selector = Match({
-    ('IR', 'A', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'A', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'A', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'A', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'A', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'A', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'A', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'A', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'A', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'A', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'A', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'A', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'A', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'A', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'A', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'A', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'A', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'A', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'AB', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'AB', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'AB', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'AB', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'AB', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'AB', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'AB', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'AB', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'AB', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'AB', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'AB', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'AB', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'AB', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'AB', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'AB', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'AB', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'AB', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AB', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'ABC', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'ABC', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'ABC', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'ABC', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'ABC', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'ABC', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'ABC', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'ABC', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'ABC', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABC', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113ni_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113oi_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113pi_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113qi_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113ri_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113si_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc72113ti_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721140i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721141i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721142i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721143i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721144i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721145i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721146i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
         '2008-02-20 00:00:00' : 'uc721147i_pfl.fits',
     }),
-    ('IR', 'ABCD', 'G102', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'G102', '*', '*') : UseAfter({
         '1990-01-01 00:00:00' : 'u4m1335li_pfl.fits',
     }),
-    ('IR', 'ABCD', 'G141', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABCD', 'G141', '*', '*') : UseAfter({
         '1990-01-01 00:00:00' : 'u4m1335mi_pfl.fits',
     }),
-    ('IR', 'ABD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'ABD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'ABD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'ABD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'ABD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'ABD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'ABD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'ABD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'ABD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ABD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'AC', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'AC', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'AC', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'AC', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'AC', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'AC', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'AC', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'AC', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'AC', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'AC', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'AC', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'AC', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'AC', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'AC', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'AC', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'AC', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'AC', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AC', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'ACD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'ACD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'ACD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'ACD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'ACD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'ACD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'ACD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'ACD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'ACD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'ACD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'AD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'AD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'AD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'AD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'AD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'AD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'AD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'AD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'AD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'AD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'AD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'AD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'AD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'AD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'AD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'AD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'AD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'AD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'B', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'B', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'B', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'B', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'B', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'B', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'B', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'B', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'B', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'B', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'B', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'B', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'B', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'B', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'B', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'B', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'B', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'B', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'BC', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'BC', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'BC', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'BC', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'BC', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'BC', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'BC', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'BC', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'BC', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'BC', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'BC', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'BC', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'BC', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'BC', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'BC', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'BC', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'BC', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BC', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'BCD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'BCD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'BCD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'BCD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'BCD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'BCD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'BCD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'BCD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'BCD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BCD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'BD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'BD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'BD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'BD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'BD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'BD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'BD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'BD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'BD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'BD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'BD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'BD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'BD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'BD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'BD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'BD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'BD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'BD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'C', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'C', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'C', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'C', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'C', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'C', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'C', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'C', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'C', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'C', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'C', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'C', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'C', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'C', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'C', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'C', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'C', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'C', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'CD', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'CD', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'CD', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'CD', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'CD', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'CD', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'CD', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'CD', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'CD', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'CD', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'CD', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'CD', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'CD', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'CD', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'CD', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'CD', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'CD', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'CD', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
-    ('IR', 'D', 'CLEAR', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'CLEAR', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ni_pfl.fits',
     }),
-    ('IR', 'D', 'F093W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F093W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919092i_pfl.fits',
     }),
-    ('IR', 'D', 'F098M', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F098M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919093i_pfl.fits',
     }),
-    ('IR', 'D', 'F105W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F105W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919094i_pfl.fits',
     }),
-    ('IR', 'D', 'F110W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F110W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919095i_pfl.fits',
     }),
-    ('IR', 'D', 'F125W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F125W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919096i_pfl.fits',
     }),
-    ('IR', 'D', 'F126N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F126N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919097i_pfl.fits',
     }),
-    ('IR', 'D', 'F127M', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F127M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919098i_pfl.fits',
     }),
-    ('IR', 'D', 'F128N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F128N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919099i_pfl.fits',
     }),
-    ('IR', 'D', 'F130N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F130N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908oi_pfl.fits',
     }),
-    ('IR', 'D', 'F132N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F132N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908pi_pfl.fits',
     }),
-    ('IR', 'D', 'F139M', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F139M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908qi_pfl.fits',
     }),
-    ('IR', 'D', 'F140W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F140W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ri_pfl.fits',
     }),
-    ('IR', 'D', 'F153M', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F153M', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908si_pfl.fits',
     }),
-    ('IR', 'D', 'F160W', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F160W', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc91908ti_pfl.fits',
     }),
-    ('IR', 'D', 'F164N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F164N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919090i_pfl.fits',
     }),
-    ('IR', 'D', 'F167N', '1.0', '1.0') : UseAfter({
+    ('IR', 'D', 'F167N', '*', '*') : UseAfter({
         '2001-01-01 00:00:00' : 'nc919091i_pfl.fits',
     }),
     ('UVIS', 'A', 'CLEAR', '1.0', '1.0') : UseAfter({

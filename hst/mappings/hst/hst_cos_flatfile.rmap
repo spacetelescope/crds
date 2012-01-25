@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:26',
-    'description' : 'Initially generated on 2012-01-20 15:28:26',
+    'derived_from' : 'scraped 2012-01-24 16:57:40',
+    'description' : 'Initially generated on 2012-01-24 16:57:40',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '27b1e017788b7cf40489e0686c3d54f27270f743',
+    'sha1sum' : '8bec61b4bb221119079c296620738d48295b4533',
 }
 
 selector = Match({

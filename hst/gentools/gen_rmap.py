@@ -96,9 +96,8 @@ def dicts_to_kind_map(instr, kind, row_dicts):
     dictionary mapping parkey bindings onto lists of date,file tuples.
     """
     kmap = {}
-    db_parkeys = parkeys.get_db_parkeys(instr, kind)
     for row in row_dicts:
-        match_tuple = get_match_tuple(row, db_parkeys)
+        match_tuple = get_match_tuple(row, instr, kind)
         if match_tuple is False:
             continue
         if match_tuple not in kmap:
@@ -154,13 +153,41 @@ def expand_kmap(instr, kind, kmap):
 
 # =======================================================================
 
-def get_match_tuple(row, db_parkeys):
-    """Format a row dictionary into a tuple of parkeys in the proper order."""
+def get_match_tuple(row, instrument, filekind):
+    """Format a row dictionary into a tuple of parkeys in the proper order.
+    Apply parameter restrictions to reduce irrelevant match parameters to *.
+    Return a tuple of match parameters.
+    """
+    db_parkeys = parkeys.get_db_parkeys(instrument, filekind)     # ordered
+    restrictions = parkeys.get_restrictions(instrument, filekind)
+    # Construct a raw parkey dictionary for this match tuple
+    raw = {}
+    for pkey in db_parkeys:
+        raw[pkey] = row.get(pkey, "not present")
+    # Mutate irrelevant parameters to *
+    restricted = apply_restrictions(restrictions, raw)
+    # Construct a simple match tuple (no names) in the right order.
     match = []
     for pkey in db_parkeys:
-        match.append(row.get(pkey, "not present"))
+        match.append(restricted.get(pkey, "not present"))
     return tuple(match)
 
+def apply_restrictions(restrictions, raw):
+    """Apply CDBS parameter restrictions to a raw match tuple dictionary,
+    mutating irrelevant parameters to "*".
+    """
+    # Define the value "header" in the restriction expressions in parkeys.dat 
+    header = {}
+    for key,value in raw.items():
+        header[key.lower()] = value.lower()
+    result = {}
+    # Mutate irrelavant parameters to "*".
+    for key, value in raw.items():
+        if key in restrictions:
+            if not eval(restrictions[key], locals(), locals()):
+                value = "*"
+        result[key] = value
+    return result
 
 # =======================================================================
 

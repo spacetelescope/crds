@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:27',
-    'description' : 'Initially generated on 2012-01-20 15:28:27',
+    'derived_from' : 'scraped 2012-01-24 16:57:41',
+    'description' : 'Initially generated on 2012-01-24 16:57:41',
     'filekind' : 'WCPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_wcptab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'da1d214775ad2e94e72c04fff40b17e17f75ac3d',
+    'sha1sum' : '4adc106b91e9a1c76f0bb4279572d51cccb0abc6',
 }
 
 selector = Match({

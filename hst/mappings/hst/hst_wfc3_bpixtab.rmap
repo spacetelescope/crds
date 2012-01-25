@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:32:23',
-    'description' : 'Initially generated on 2012-01-20 15:32:23',
+    'derived_from' : 'scraped 2012-01-24 16:57:53',
+    'description' : 'Initially generated on 2012-01-24 16:57:53',
     'filekind' : 'BPIXTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '6ce038da52aa479d4b5443f61e4a683772ca12c8',
+    'sha1sum' : 'bd8885b1f7c30100dad61b07bce5975079ca2132',
 }
 
 selector = Match({

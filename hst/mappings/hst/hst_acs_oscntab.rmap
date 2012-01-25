@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:28',
-    'description' : 'Initially generated on 2012-01-20 15:17:28',
+    'derived_from' : 'scraped 2012-01-24 16:57:22',
+    'description' : 'Initially generated on 2012-01-24 16:57:22',
     'filekind' : 'OSCNTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_oscntab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '364c8ff390dae2e364513f7b378e4a3d6cb180ef',
+    'sha1sum' : '5f3441185b478c9cbff17434ad44035d1d042712',
 }
 
 selector = Match({

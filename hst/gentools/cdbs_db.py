@@ -215,7 +215,8 @@ except:
     log.error("Failed loading 'header_tables.dat'")
 
 
-def test(header_generator, ncases=None, context="hst.pmap", dataset=None, ignore=None):
+def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
+         ignore=None, dump_header=False):
     """Evaluate the first `ncases` best references cases from 
     `header_generator` against similar results attained from CRDS running
     on pipeline `context`.
@@ -234,15 +235,18 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None, ignore
     mismatched = {}
     oldv = log.get_verbose()
     for header in headers:
+        if ncases is not None and count >= ncases:
+            break
+        count += 1
         if dataset is not None:
             if dataset != header["DATA_SET"]:
                 continue
             log.set_verbose(True)
+        if dump_header:
+            pprint.pprint(header)
+            continue
         crds_refs = rmap.get_best_references(context, header)
         compare_results(header, crds_refs, mismatched, ignore)
-        count += 1
-        if ncases is not None and count >= ncases:
-            break
     log.write()
     log.write()
     for filekind in mismatched:

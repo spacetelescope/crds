@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:28:14',
-    'description' : 'Initially generated on 2012-01-20 15:28:14',
+    'derived_from' : 'scraped 2012-01-24 16:57:58',
+    'description' : 'Initially generated on 2012-01-24 16:57:58',
     'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_dgeofile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '5d004cce17be84ca52e596b593750e99c03f77b0',
+    'sha1sum' : 'd1c5c9bc811d557f477aa83a770e66cbc056f5b7',
 }
 
 selector = Match({

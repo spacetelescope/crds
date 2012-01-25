@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:36',
-    'description' : 'Initially generated on 2012-01-20 15:17:36',
+    'derived_from' : 'scraped 2012-01-24 16:57:43',
+    'description' : 'Initially generated on 2012-01-24 16:57:43',
     'filekind' : 'FLATFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'fa33be8a8be09d15e35a89f33d6531663c01f384',
+    'sha1sum' : '682b153b760a38ed9b48eaa87794cca295d4d32c',
 }
 
 selector = Match({

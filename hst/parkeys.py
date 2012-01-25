@@ -1,5 +1,6 @@
 import pprint
 import os.path
+import re
 
 from BeautifulSoup import BeautifulStoneSoup
 
@@ -84,17 +85,22 @@ def process_reference_file_defs():
                 continue
             if inode.name == "reffile":
                 parkeys = []
+                restrictions = {}
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
                 for rnode in inode:
                     if not hasattr(rnode, "name"):
                         continue
                     if rnode.name == "file_selection":
-                        parkeys.append(ccontents(rnode.file_selection_field))
+                        parkey = ccontents(rnode.file_selection_field)
+                        parkeys.append(parkey)
+                        if rnode.file_selection_test is not None:
+                            restrictions[parkey] = get_file_selection_test(
+                                ccontents(rnode.file_selection_test))
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
                 rdefs[instr][filekind] = \
-                    (reftype, tuple(fits_parkeys), tuple(db_parkeys))
+                    (reftype, tuple(fits_parkeys), tuple(db_parkeys), restrictions)
     return rdefs
 
 HERE = os.path.dirname(__file__)
@@ -103,7 +109,26 @@ try:
 except:
     PARKEYS = {}
 
+# (aSource._keywords['DETECTOR'][0] != 'SBC')
+
+def replace_asource(match):
+    return match.group(1) + "header" + match.group(2) + match.group(3)
+
+def _get_file_selection_test(restriction_text):
+    return re.sub(r"(.*)asource._keywords(.*)\[0\](.*)", 
+                  r"\1header\2\3",
+                  restriction_text)
+
+def get_file_selection_test(restriction_text):
+    test = restriction_text
+    for i in range(10):
+        test = _get_file_selection_test(test)
+    return test
+
 # note:  fits_parkeys and db_parkeys need to be in the same order.
+
+def get_reftype(instrument, filekind):
+    return PARKEYS[instrument][filekind][0]
 
 def get_fits_parkeys(instrument, filekind):
     return PARKEYS[instrument][filekind][1]
@@ -111,8 +136,8 @@ def get_fits_parkeys(instrument, filekind):
 def get_db_parkeys(instrument, filekind):
     return PARKEYS[instrument][filekind][2]
 
-def get_reftype(instrument, filekind):
-    return PARKEYS[instrument][filekind][0]
+def get_restrictions(instrument, filekind):
+    return PARKEYS[instrument][filekind][3]
 
 def get_instruments():
     return sorted(PARKEYS.keys())

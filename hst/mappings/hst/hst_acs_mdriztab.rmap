@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 15:17:27',
-    'description' : 'Initially generated on 2012-01-20 15:17:27',
+    'derived_from' : 'scraped 2012-01-24 16:57:22',
+    'description' : 'Initially generated on 2012-01-24 16:57:22',
     'filekind' : 'MDRIZTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_mdriztab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'a0dfa3b45fb660a632ef61c834a713f2c4941534',
+    'sha1sum' : '97c9afb3273685a034e5e37380e16cb7eb718ae6',
 }
 
 selector = Match({
