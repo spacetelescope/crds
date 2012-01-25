@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:17',
-    'description' : 'Initially generated on 2012-01-25 05:42:17',
+    'derived_from' : 'scraped 2012-01-25 12:51:34',
+    'description' : 'Initially generated on 2012-01-25 12:51:34',
     'filekind' : 'TELTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_teltab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "ccd" and header["obstype"] == "spectroscopic")',
-    'sha1sum' : '61244abb9761e9d57f9a0dca272f13b58ea4c16f',
+    'relevance' : 'detector != "ccd" and obstype == "spectroscopic"',
+    'sha1sum' : '1adb046429ac8f931d7ac6329401c06cb69a0fee',
 }
 
 selector = Match({

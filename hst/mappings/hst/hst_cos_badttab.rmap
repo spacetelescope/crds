@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:06',
-    'description' : 'Initially generated on 2012-01-25 05:42:06',
+    'derived_from' : 'scraped 2012-01-25 12:51:27',
+    'description' : 'Initially generated on 2012-01-25 12:51:27',
     'filekind' : 'BADTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_badttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] == "fuv" and header["obsmode"] == "time-tag")',
-    'sha1sum' : 'dc00ff2c80d3f108ff6c56ffbbc09fe146b07780',
+    'relevance' : 'detector == "fuv" and obsmode == "time-tag"',
+    'sha1sum' : 'e0bcaaae24fa77f36aac5cb69aa71e1fc8727525',
 }
 
 selector = Match({

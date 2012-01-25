@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:08',
-    'description' : 'Initially generated on 2012-01-25 05:42:08',
+    'derived_from' : 'scraped 2012-01-25 12:51:28',
+    'description' : 'Initially generated on 2012-01-25 12:51:28',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '93f09b2c2e2d6ef38b32d678b90dae7d08f44093',
+    'sha1sum' : '85b823c59b69dddca0974d35cd6c94ad5f22bb5f',
 }
 
 selector = Match({

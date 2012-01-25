@@ -618,6 +618,10 @@ class InstrumentContext(Mapping):
             log.verbose("\nGetting bestref for", repr(filekind))
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
+            except selectors.IrrelevantReferenceTypeError:
+                refs[filekind] = "NOT FOUND n/a"
+#                log.verbose("Reference type",repr(filekind),
+#                            "is irrelevant for this dataset.")
             except Exception, exc:
                 refs[filekind] = "NOT FOUND " + str(exc)
         return refs

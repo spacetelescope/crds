@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:10',
-    'description' : 'Initially generated on 2012-01-25 05:42:10',
+    'derived_from' : 'scraped 2012-01-25 12:51:30',
+    'description' : 'Initially generated on 2012-01-25 12:51:30',
     'filekind' : 'ZPRATTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '38ada5b8fe9a6dabfaed3c6cbe65dd0514f881d0',
+    'sha1sum' : 'b0abd3a4178e39087ffd398541083773f61e25c7',
 }
 
 selector = Match({

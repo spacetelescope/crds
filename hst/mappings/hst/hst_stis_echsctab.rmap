@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:15',
-    'description' : 'Initially generated on 2012-01-25 05:42:15',
+    'derived_from' : 'scraped 2012-01-25 12:51:32',
+    'description' : 'Initially generated on 2012-01-25 12:51:32',
     'filekind' : 'ECHSCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_echsctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "ccd" and header["obstype"] == "spectroscopic")',
-    'sha1sum' : '24f5e5a240c398a135ff51a43a920e3ff2d8a53c',
+    'relevance' : 'detector != "ccd" and obstype == "spectroscopic"',
+    'sha1sum' : '78505d3458bf03a9b26d8532d4d535efa291bac1',
 }
 
 selector = Match({

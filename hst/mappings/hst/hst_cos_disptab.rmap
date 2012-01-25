@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:08',
-    'description' : 'Initially generated on 2012-01-25 05:42:08',
+    'derived_from' : 'scraped 2012-01-25 12:51:28',
+    'description' : 'Initially generated on 2012-01-25 12:51:28',
     'filekind' : 'DISPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_disptab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["obstype"] == "spectroscopic")',
-    'sha1sum' : '37368397538713b99f24d23f3eaa2f11b2f6a70c',
+    'relevance' : 'obstype == "spectroscopic"',
+    'sha1sum' : 'aad4830483c8df97324611cd07bdebb835898fea',
 }
 
 selector = Match({

@@ -181,10 +181,10 @@ def apply_restrictions(restrictions, raw):
     for key,value in raw.items():
         header[key.lower()] = value.lower()
     result = {}
-    # Mutate irrelavant parameters to "*".
+    # Mutate irrelevant parameters to "*".
     for key, value in raw.items():
         if key in restrictions:
-            if not eval(restrictions[key], locals(), locals()):
+            if not eval(restrictions[key], header, header):
                 value = "*"
         result[key] = value
     return result

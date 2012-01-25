@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:41:15',
-    'description' : 'Initially generated on 2012-01-25 05:41:15',
+    'derived_from' : 'scraped 2012-01-25 12:50:38',
+    'description' : 'Initially generated on 2012-01-25 12:50:38',
     'filekind' : 'CRREJTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_crrejtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "sbc")',
-    'sha1sum' : '596085c666a91913bff2e83c174a685fbd97041c',
+    'relevance' : 'detector != "sbc"',
+    'sha1sum' : '5effba131e6478d930fac69574df7fc8fed193dd',
 }
 
 selector = Match({

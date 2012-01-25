@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:16',
-    'description' : 'Initially generated on 2012-01-25 05:42:16',
+    'derived_from' : 'scraped 2012-01-25 12:51:33',
+    'description' : 'Initially generated on 2012-01-25 12:51:33',
     'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_mlintab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "ccd")',
-    'sha1sum' : '9c70cd18afb49ea70383078792679df9b5399045',
+    'relevance' : 'detector != "ccd"',
+    'sha1sum' : 'fc8ef031fadbca32bbc9938deba74ab4c590b953',
 }
 
 selector = Match({

@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:41:14',
-    'description' : 'Initially generated on 2012-01-25 05:41:14',
+    'derived_from' : 'scraped 2012-01-25 12:50:37',
+    'description' : 'Initially generated on 2012-01-25 12:50:37',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "sbc")',
-    'sha1sum' : '778c1d16140d3bca13547404b44d759339af2f21',
+    'relevance' : 'detector != "sbc"',
+    'sha1sum' : 'e21412411068383aaabfaf473c1af6ffbac762d2',
 }
 
 selector = Match({

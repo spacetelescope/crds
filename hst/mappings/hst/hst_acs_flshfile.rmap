@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:41:53',
-    'description' : 'Initially generated on 2012-01-25 05:41:53',
+    'derived_from' : 'scraped 2012-01-25 12:51:15',
+    'description' : 'Initially generated on 2012-01-25 12:51:15',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_flshfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] != "sbc" and header["flashcur"] != "off")',
-    'sha1sum' : '12b10b79460c5093d55294f0684edacb195a6fd9',
+    'relevance' : 'detector != "sbc" and flashcur != "off"',
+    'sha1sum' : 'e0f55c772f150fb221e32a11e337f1f6a9029ee9',
 }
 
 selector = Match({

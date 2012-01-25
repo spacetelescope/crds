@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:27',
-    'description' : 'Initially generated on 2012-01-25 05:42:27',
+    'derived_from' : 'scraped 2012-01-25 12:51:39',
+    'description' : 'Initially generated on 2012-01-25 12:51:39',
     'filekind' : 'WF4TFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('ATODGAIN',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '032b9376f785c844b5e8e8b4099a76e832ad3def',
+    'sha1sum' : 'eaea4a1866e0312f6fe18572909d24c9a11e390d',
 }
 
 selector = Match({

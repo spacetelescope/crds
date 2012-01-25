@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:06',
-    'description' : 'Initially generated on 2012-01-25 05:42:06',
+    'derived_from' : 'scraped 2012-01-25 12:51:27',
+    'description' : 'Initially generated on 2012-01-25 12:51:27',
     'filekind' : 'DEADTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'c3b7262b7aa3463419e3b030fd992204115efbac',
+    'sha1sum' : '09d1f0c59b153c0731e3d969a36104e430a3485a',
 }
 
 selector = Match({

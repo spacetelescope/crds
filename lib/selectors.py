@@ -118,6 +118,10 @@ class UseAfterError(LookupError):
     """None of the dates in the RMAP precedes the processing date.
     """
 
+class IrrelevantReferenceTypeError(LookupError):
+    """The reference determined by this rmap does not apply to the instrument
+    mode specified by the dataset header.
+    """
 # ==============================================================================
 
 class ValidationError(ValueError):
@@ -531,7 +535,12 @@ class MatchingSelector(Selector):
         if rmap_header is None:
             rmap_header = {}
         self._substitutions = rmap_header.get("substitutions", {})
+        
         selections = self.do_substitutions(selections, self._substitutions)
+        
+        self._relevance_expr = rmap_header.get("relevance","True")
+        if self._relevance_expr == "ALWAYS":
+            self._relevance_expr = "True"
         
         self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
@@ -722,6 +731,8 @@ class MatchingSelector(Selector):
         key,  or if the value of any key is not one of the possible
         values.
         """
+        self.check_relevance(header)
+        
         for fitsvar in self._parameters:
             if fitsvar in header:
                 value = header[fitsvar]
@@ -734,6 +745,23 @@ class MatchingSelector(Selector):
                 if self._required[fitsvar]:
                     raise MissingParameterError(
                         "Required parameter " + repr(fitsvar) + " is missing.")
+                    
+    def check_relevance(self, header):
+        """Raise an exception if this rmap doesn't apply to the instrument
+        mode defined in `header`.
+        """
+        # relevance expressions are in all lower case.
+        lc_header = {}
+        for key in header:
+            lc_header[key.lower()] = header[key].lower()
+        try:
+            relevant = eval(self._relevance_expr, lc_header, lc_header)
+        except Exception, exc:
+            log.verbose("Relevance check failed: " + str(exc))
+        else:
+            if not relevant:
+                raise IrrelevantReferenceTypeError(
+                    "Rmap does not apply to the given parameter set.")
 
     def get_binding(self, header):
         """Return the assignment of `header` values to the parkeys of this

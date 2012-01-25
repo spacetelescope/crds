@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:23',
-    'description' : 'Initially generated on 2012-01-25 05:42:23',
+    'derived_from' : 'scraped 2012-01-25 12:51:37',
+    'description' : 'Initially generated on 2012-01-25 12:51:37',
     'filekind' : 'OSCNTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'a5e77d8bc7a0e2ec17440ff5239acb68f980b8ee',
+    'sha1sum' : '50ed4a076e3a72e9c6fe0265a554f231cb363a0b',
 }
 
 selector = Match({

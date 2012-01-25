@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:41:53',
-    'description' : 'Initially generated on 2012-01-25 05:41:53',
+    'derived_from' : 'scraped 2012-01-25 12:51:15',
+    'description' : 'Initially generated on 2012-01-25 12:51:15',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '1540691dff35994a4166bd64affc85cdc8732af4',
+    'sha1sum' : '520224a76e85b1da485ffa2930941c6415accd07',
 }
 
 selector = Match({

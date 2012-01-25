@@ -124,8 +124,8 @@ def replace_asource(match):
     return match.group(1) + "header" + match.group(2) + match.group(3)
 
 def _simplify_restriction(restriction_text):
-    return re.sub(r"(.*)asource._keywords(.*)\[0\](.*)", 
-                  r"\1header\2\3",
+    return re.sub(r"(.*)asource._keywords\['(.*)'\]\[0\](.*)", 
+                  r"\1\2\3",
                   restriction_text)
 
 def simplify_restriction(restriction_text):
@@ -135,7 +135,10 @@ def simplify_restriction(restriction_text):
     test = restriction_text
     for i in range(10):
         test = _simplify_restriction(test)
-    return test.replace("'", '"')
+    val = test.replace("'", '"')
+    if val[0] == "(" and val[-1] == ")":
+        val = val[1:-1]
+    return val
 
 # note:  fits_parkeys and db_parkeys need to be in the same order.
 

@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:16',
-    'description' : 'Initially generated on 2012-01-25 05:42:16',
+    'derived_from' : 'scraped 2012-01-25 12:51:33',
+    'description' : 'Initially generated on 2012-01-25 12:51:33',
     'filekind' : 'PCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_pctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["obstype"] == "spectroscopic")',
-    'sha1sum' : '64147892e097732be0e7eb652f1672c422b5bddb',
+    'relevance' : 'obstype == "spectroscopic"',
+    'sha1sum' : 'a7c707f7e0c563ca5f88a96896fe2dbdf6dc00d9',
 }
 
 selector = Match({

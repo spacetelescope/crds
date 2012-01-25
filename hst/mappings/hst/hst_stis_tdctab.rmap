@@ -1,14 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 05:42:17',
-    'description' : 'Initially generated on 2012-01-25 05:42:17',
+    'derived_from' : 'scraped 2012-01-25 12:51:34',
+    'description' : 'Initially generated on 2012-01-25 12:51:34',
     'filekind' : 'TDCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_tdctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(header["detector"] == "nuv-mama")',
-    'sha1sum' : '85839aac322ee224a6659cc46d10fc553edb7c82',
+    'relevance' : 'detector == "nuv-mama"',
+    'sha1sum' : 'c85b956bc08ad1ede2cd2682a6a412e318687ba3',
 }
 
 selector = Match({
