@@ -159,7 +159,7 @@ def get_match_tuple(row, instrument, filekind):
     Return a tuple of match parameters.
     """
     db_parkeys = parkeys.get_db_parkeys(instrument, filekind)     # ordered
-    restrictions = parkeys.get_restrictions(instrument, filekind)
+    restrictions = parkeys.get_parkey_restrictions(instrument, filekind)
     # Construct a raw parkey dictionary for this match tuple
     raw = {}
     for pkey in db_parkeys:
@@ -216,6 +216,7 @@ def write_rmap(observatory, instrument, filekind, kind_map):
         ("instrument", instrument.upper()),
         ("filekind", filekind.upper()),
         ("parkey", (fitskeys, mapkeys)),
+        ("relevance", parkeys.get_relevance(instrument, filekind)),
         ("description", ("Initially generated on " + now)),
     ])
 

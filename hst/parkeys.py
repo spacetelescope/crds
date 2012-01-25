@@ -85,7 +85,8 @@ def process_reference_file_defs():
                 continue
             if inode.name == "reffile":
                 parkeys = []
-                restrictions = {}
+                parkey_restrictions = {}
+                relevant = "ALWAYS"
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
                 for rnode in inode:
@@ -95,12 +96,16 @@ def process_reference_file_defs():
                         parkey = ccontents(rnode.file_selection_field)
                         parkeys.append(parkey)
                         if rnode.file_selection_test is not None:
-                            restrictions[parkey] = get_file_selection_test(
+                            parkey_restrictions[parkey] = simplify_restriction(
                                 ccontents(rnode.file_selection_test))
+                    elif rnode.name == "restriction":
+                        relevant = simplify_restriction(
+                            ccontents(rnode.restriction_test))
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
                 rdefs[instr][filekind] = \
-                    (reftype, tuple(fits_parkeys), tuple(db_parkeys), restrictions)
+                    (reftype, tuple(fits_parkeys), tuple(db_parkeys), relevant, 
+                     parkey_restrictions)
     return rdefs
 
 HERE = os.path.dirname(__file__)
@@ -114,15 +119,18 @@ except:
 def replace_asource(match):
     return match.group(1) + "header" + match.group(2) + match.group(3)
 
-def _get_file_selection_test(restriction_text):
+def _simplify_restriction(restriction_text):
     return re.sub(r"(.*)asource._keywords(.*)\[0\](.*)", 
                   r"\1header\2\3",
                   restriction_text)
 
-def get_file_selection_test(restriction_text):
+def simplify_restriction(restriction_text):
+    """Transform file_selection_tests and restrictions to simple expressions of
+    'header' values.
+    """
     test = restriction_text
     for i in range(10):
-        test = _get_file_selection_test(test)
+        test = _simplify_restriction(test)
     return test
 
 # note:  fits_parkeys and db_parkeys need to be in the same order.
@@ -136,8 +144,11 @@ def get_fits_parkeys(instrument, filekind):
 def get_db_parkeys(instrument, filekind):
     return PARKEYS[instrument][filekind][2]
 
-def get_restrictions(instrument, filekind):
+def get_relevance(instrument, filekind):
     return PARKEYS[instrument][filekind][3]
+
+def get_parkey_restrictions(instrument, filekind):
+    return PARKEYS[instrument][filekind][4]
 
 def get_instruments():
     return sorted(PARKEYS.keys())
