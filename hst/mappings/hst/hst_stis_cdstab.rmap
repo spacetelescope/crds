@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:45',
-    'description' : 'Initially generated on 2012-01-24 16:57:45',
+    'derived_from' : 'scraped 2012-01-25 05:42:12',
+    'description' : 'Initially generated on 2012-01-25 05:42:12',
     'filekind' : 'CDSTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_cdstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '20ea30c1c676c76b6059103b434cae1fd04829d0',
+    'relevance' : '(header["detector"] != "ccd" and header["obstype"] == "spectroscopic")',
+    'sha1sum' : 'bcbb15a38811845998cb66fea0fda5e2c681390d',
 }
 
 selector = Match({

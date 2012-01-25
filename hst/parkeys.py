@@ -1,3 +1,7 @@
+"""This module extracts information about instruments, filekinds, filekind
+relevance, and parkey relevance out of the CDBS configuration file
+reference_file_defs.xml.
+"""
 import pprint
 import os.path
 import re
@@ -131,7 +135,7 @@ def simplify_restriction(restriction_text):
     test = restriction_text
     for i in range(10):
         test = _simplify_restriction(test)
-    return test
+    return test.replace("'", '"')
 
 # note:  fits_parkeys and db_parkeys need to be in the same order.
 

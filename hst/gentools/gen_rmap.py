@@ -76,7 +76,7 @@ and {file_table}.reference_file_type = '{reference_file_type}'
     fits_parkeys = parkeys.get_fits_parkeys(instrument, kind)
     fields = list(db_parkeys) + ["file_name", "comment", "useafter_date"]
     try:
-        generator = cdbs_db.REFFILE_OPS.execute(sql)
+        generator = cdbs_db.get_reffile_ops().execute(sql)
     except:
         log.error("Database error")
         return

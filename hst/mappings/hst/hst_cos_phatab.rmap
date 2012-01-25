@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:40',
-    'description' : 'Initially generated on 2012-01-24 16:57:40',
+    'derived_from' : 'scraped 2012-01-25 05:42:08',
+    'description' : 'Initially generated on 2012-01-25 05:42:08',
     'filekind' : 'PHATAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_phatab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '75ce6d54799dc038ba9d03fbf96cd1835f900e3d',
+    'relevance' : '(header["detector"] == "fuv")',
+    'sha1sum' : '907aac611daefdbcdc3141829d1cce056fb94727',
 }
 
 selector = Match({

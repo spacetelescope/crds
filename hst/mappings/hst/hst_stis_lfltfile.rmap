@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:50',
-    'description' : 'Initially generated on 2012-01-24 16:57:50',
+    'derived_from' : 'scraped 2012-01-25 05:42:16',
+    'description' : 'Initially generated on 2012-01-25 05:42:16',
     'filekind' : 'LFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_lfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '784f6523fca9eeff2b85d8f009606b7f10eed1c7',
+    'relevance' : 'ALWAYS',
+    'sha1sum' : '899fd5e8054cb17c5435e388a0735e6446dffdf1',
 }
 
 selector = Match({

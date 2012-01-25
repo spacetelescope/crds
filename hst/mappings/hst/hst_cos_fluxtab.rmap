@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:40',
-    'description' : 'Initially generated on 2012-01-24 16:57:40',
+    'derived_from' : 'scraped 2012-01-25 05:42:08',
+    'description' : 'Initially generated on 2012-01-25 05:42:08',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_fluxtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '986de843d0a1cc5efc02e17a0f1e0096c835a744',
+    'relevance' : '(header["obstype"] == "spectroscopic")',
+    'sha1sum' : 'ee59c824dc5933eaebf96a338253cb14e9dbfd03',
 }
 
 selector = Match({

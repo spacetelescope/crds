@@ -51,7 +51,7 @@ True
 Active instrument references are also broken down by filetype:
 
 >>> sorted(i.reference_name_map()["crrejtab"])
-['n4e12510j_crr.fits', 'n4e12511j_crr.fits']
+['j4d1435lj_crr.fits', 'lci1518ej_crr.fits', 'lci1518fj_crr.fits', 'n4e12510j_crr.fits', 'n4e12511j_crr.fits']
 
 >>> r = ReferenceMapping.from_file("hst_acs_biasfile.rmap")
 >>> len(r.reference_names())  > 500

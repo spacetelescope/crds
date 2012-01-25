@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:43',
-    'description' : 'Initially generated on 2012-01-24 16:57:43',
+    'derived_from' : 'scraped 2012-01-25 05:42:10',
+    'description' : 'Initially generated on 2012-01-25 05:42:10',
     'filekind' : 'PEDSBTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_pedsbtab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'eaa433894dd8f3e4de76d1b5aef62f74dd8aec40',
+    'relevance' : 'ALWAYS',
+    'sha1sum' : 'b8f3e12c524dfb2e5eeed4304f57852feca53b71',
 }
 
 selector = Match({

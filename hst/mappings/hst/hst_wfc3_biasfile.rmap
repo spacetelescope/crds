@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:53',
-    'description' : 'Initially generated on 2012-01-24 16:57:53',
+    'derived_from' : 'scraped 2012-01-25 05:42:20',
+    'description' : 'Initially generated on 2012-01-25 05:42:20',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'ff89567be1ec7b8ccff3b3ea1d3e8a0c050a8e22',
+    'relevance' : '(header["detector"] == "uvis")',
+    'sha1sum' : '763338c20f85852cc63c4eed65717ad9f1dda560',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),

@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:57',
-    'description' : 'Initially generated on 2012-01-24 16:57:57',
+    'derived_from' : 'scraped 2012-01-25 05:42:25',
+    'description' : 'Initially generated on 2012-01-25 05:42:25',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '7e5fc4ad7aef64997f7566b4c333ebbede32391f',
+    'relevance' : 'ALWAYS',
+    'sha1sum' : 'b04b97c4f694ec6ac976fd2f697d02579426b2ec',
 }
 
 selector = Match({

@@ -4,8 +4,6 @@ import os.path
 
 from BeautifulSoup import BeautifulStoneSoup
 
-import gen_rmap2
-
 from crds import (rmap, log, timestamp)
 from crds.compat import OrderedDict
 

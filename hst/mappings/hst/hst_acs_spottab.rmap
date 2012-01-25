@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:38',
-    'description' : 'Initially generated on 2012-01-24 16:57:38',
+    'derived_from' : 'scraped 2012-01-25 05:42:06',
+    'description' : 'Initially generated on 2012-01-25 05:42:06',
     'filekind' : 'SPOTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_spottab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : 'e5c6758f9793b07031f51af6afd897fb34370df6',
+    'relevance' : '(header["detector"] == "hrc" and header["obstype"] == "coronagraphic")',
+    'sha1sum' : '4b69c8e056249fa87accf9693ab051b1d1477f0a',
 }
 
 selector = Match({

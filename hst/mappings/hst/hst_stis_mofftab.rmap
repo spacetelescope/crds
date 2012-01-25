@@ -1,13 +1,14 @@
 header = {
-    'derived_from' : 'scraped 2012-01-24 16:57:50',
-    'description' : 'Initially generated on 2012-01-24 16:57:50',
+    'derived_from' : 'scraped 2012-01-25 05:42:16',
+    'description' : 'Initially generated on 2012-01-25 05:42:16',
     'filekind' : 'MOFFTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_mofftab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'sha1sum' : '7c62874fe36a7754d480e09b5d57a159eacf5627',
+    'relevance' : '(header["detector"] != "ccd" and header["obstype"] == "spectroscopic")',
+    'sha1sum' : '70521bbe38941800cdaab471a86a09ee3f0c84d5',
 }
 
 selector = Match({

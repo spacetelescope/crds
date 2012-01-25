@@ -1,8 +1,13 @@
+"""Supports accessing CDBS reference and archive catalogs for the purposes
+of generating rmaps and comparing CRDS best refs to CDBS best refs.
+"""
+
 import pprint
 import cPickle
 import random
 import getpass
 from collections import OrderedDict
+import os.path
 
 import pyodbc
 
@@ -11,11 +16,6 @@ import crds.hst
 import crds.hst.parkeys as parkeys
 
 log.set_verbose(False)
-
-try:
-    PASSWORD = open("password").read()
-except:
-    PASSWORD = getpass.getpass("password: ")
 
 class DB(object):
     def __init__(self, dsn, user, password=None):
@@ -28,7 +28,7 @@ class DB(object):
         self.cursor = self.connection.cursor()
 
     def __repr__(self):
-        return self.__class__.__name__ + "(%s, %s)" % (self.dsn, self.user)
+        return self.__class__.__name__ + "(%s, %s)" % (repr(self.dsn), repr(self.user))
 
     def execute(self, sql):
         return self.cursor.execute(sql)
@@ -58,8 +58,25 @@ class DB(object):
             kind = OrderedDict if ordered else dict
             yield kind(items)
 
-DADSOPS = DB("DadsopsDsn", "jmiller", PASSWORD)
-REFFILE_OPS = DB("ReffileOpsRepDsn", "jmiller", PASSWORD)
+HERE = os.path.dirname(__file__) or "."
+
+def get_password():
+    if not hasattr(get_password, "_password"):
+        try:
+            get_password._password = open(HERE + "/password").read()
+        except:
+            get_password._password = getpass.getpass("password: ")
+    return get_password._password
+
+def get_dadsops():
+    if not hasattr(get_dadsops, "_dadsops"):
+        get_dadsops._dadsops = DB("DadsopsDsn", "jmiller", get_password())
+    return get_dadsops._dadsops
+
+def get_reffile_ops():
+    if not hasattr(get_reffile_ops, "_reffile_ops"):
+        get_reffile_ops._reffile_ops = DB("ReffileOpsRepDsn", "jmiller", get_password())
+    return get_reffile_ops._reffile_ops
 
 def get_instrument_db_parkeys(instrument):
     """Return the union of the database versions of all parkeys for all
@@ -82,13 +99,14 @@ def required_keys(instr):
     return pars
 
 def scan_tables(instr):
+    dadsops = get_dadsops()
     pars = required_keys(instr)
     columns = {}
-    for table in DADSOPS.get_tables():
+    for table in dadsops.get_tables():
         if instr not in table:
             continue
         for par in pars:
-            for col in DADSOPS.get_columns(table):
+            for col in dadsops.get_columns(table):
                 if par in col:
                     if par not in columns:
                         columns[par] = []
@@ -176,9 +194,10 @@ class HeaderGenerator(object):
         return sql
 
     def join_expr(self):
+        dadsops = get_dadsops()
         all_cols = []
         for table in self.db_tables:
-            all_cols += [table + "." + col for col in DADSOPS.get_columns(table)]
+            all_cols += [table + "." + col for col in dadsops.get_columns(table)]
         clauses = []
         for suffix in ["program_id", "obset_id", "obsnum"]:
             joined = []
@@ -191,8 +210,9 @@ class HeaderGenerator(object):
         return (" and ").join(clauses)
 
     def get_headers(self):
+        dadsops = get_dadsops()
         sql = self.getter_sql()
-        for dataset in DADSOPS.execute(sql):
+        for dataset in dadsops.execute(sql):
             hdr = dict(zip(self.header_keys, [utils.condition_value(x) for x in dataset]))
             self.fix_time(hdr)
             hdr["INSTRUME"] = self.instrument
