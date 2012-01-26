@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:15',
-    'description' : 'Initially generated on 2012-01-25 12:51:15',
+    'derived_from' : 'scraped 2012-01-26 10:24:11',
+    'description' : 'Initially generated on 2012-01-26 10:24:11',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '520224a76e85b1da485ffa2930941c6415accd07',
+    'sha1sum' : '6130ba23ad11542961ad2d6ecf4e0c785a5aadf8',
 }
 
 selector = Match({
@@ -42,46 +42,46 @@ selector = Match({
     ('HRC', 'F850LP', 'CLEAR2S') : UseAfter({
         '2002-03-01 00:00:00' : 'o8u2214sj_dxy.fits',
     }),
-    ('SBC', '*', '*') : UseAfter({
+    ('SBC', '*', 'N/A') : UseAfter({
         '2002-10-21 00:00:00' : 's5d1409ej_dxy.fits',
     }),
-    ('SBC', 'BLOCK1', '*') : UseAfter({
+    ('SBC', 'BLOCK1', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'BLOCK2', '*') : UseAfter({
+    ('SBC', 'BLOCK2', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'BLOCK3', '*') : UseAfter({
+    ('SBC', 'BLOCK3', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'BLOCK4', '*') : UseAfter({
+    ('SBC', 'BLOCK4', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F115LP', '*') : UseAfter({
+    ('SBC', 'F115LP', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F122M', '*') : UseAfter({
+    ('SBC', 'F122M', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F125LP', '*') : UseAfter({
+    ('SBC', 'F125LP', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F140LP', '*') : UseAfter({
+    ('SBC', 'F140LP', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F150LP', '*') : UseAfter({
+    ('SBC', 'F150LP', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),
-    ('SBC', 'F165LP', '*') : UseAfter({
+    ('SBC', 'F165LP', 'N/A') : UseAfter({
         '2002-03-01 00:00:00' : 'v921637gj_dxy.fits',
         '2002-10-21 00:00:00' : 's5f20000j_dxy.fits',
     }),

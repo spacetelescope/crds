@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:30',
-    'description' : 'Initially generated on 2012-01-25 12:51:30',
+    'derived_from' : 'scraped 2012-01-26 10:24:25',
+    'description' : 'Initially generated on 2012-01-26 10:24:25',
     'filekind' : 'SAACNTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'a57c56648afbf728e5afb11e3e331a51374dfb19',
+    'sha1sum' : '0ce907afaad0a2bba5f78534da83e3555317d57e',
 }
 
 selector = Match({

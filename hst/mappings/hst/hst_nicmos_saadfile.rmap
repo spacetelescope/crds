@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:30',
-    'description' : 'Initially generated on 2012-01-25 12:51:30',
+    'derived_from' : 'scraped 2012-01-26 10:24:25',
+    'description' : 'Initially generated on 2012-01-26 10:24:25',
     'filekind' : 'SAADFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '596431d2b5538160575f02699119a829313f9d12',
+    'sha1sum' : '42610248d41d01480aa7054c4c18ce3bb6e0f24f',
 }
 
 selector = Match({

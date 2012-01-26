@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:37',
-    'description' : 'Initially generated on 2012-01-25 12:51:37',
+    'derived_from' : 'scraped 2012-01-26 10:24:34',
+    'description' : 'Initially generated on 2012-01-26 10:24:34',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '93c70ad4d50c2d9a8739571a8c6ad766116b37de',
+    'sha1sum' : 'fa19dee72a83df78f7b6b9c7cf92561628703a4e',
 }
 
 selector = Match({

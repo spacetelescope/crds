@@ -87,7 +87,7 @@ and {file_table}.reference_file_type = '{reference_file_type}'
             rowd[key] = utils.condition_value(val)
         rowd["file_name"] = rowd["file_name"].lower()
         row_dicts.append(rowd)
-    return row_dicts
+    return row_dicts    
 
 # =======================================================================
 
@@ -121,11 +121,92 @@ def dicts_to_kind_map(instr, kind, row_dicts):
                     continue
         kmap[match_tuple].append(mapping)
 
-    kmap = expand_kmap(instr, kind, kmap)
+    kmap = instrument_specific_hacks(instr, kind, kmap)
+
+    # kmap = unexplode_kmap(kmap)
 
     for val in kmap.values():
         val.sort()
 
+    return kmap
+
+# =======================================================================
+
+def unexplode_kmap(kmap):
+    useafters = {}
+    for match_tuple, useafter_files in kmap.items():
+        for use in useafter_files:
+            use = rmap.Filemap(use.date, use.file, "")
+            if use not in useafters:
+                useafters[use] = []
+            useafters[use].append(match_tuple)
+    matches_view = {}
+    for use, matches in useafters.items():
+        cluster_key = tuple(sorted(matches))
+        collapsed = collapse_cluster_key(cluster_key)
+        for key in collapsed:
+            if key not in matches_view:
+                matches_view[key] = []
+            matches_view[key].append(use)           
+    return factor_out_overlaps(matches_view)
+
+def collapse_cluster_key(key):
+    parsets = []
+    for i in range(len(key[0])):
+        parset = set()
+        for match in key:
+            parset.add(match[i])
+        parsets.append(parset)
+    expanded = expand_parsets(parsets)
+    if expanded == key:
+        return [folded(parsets)]
+    else:
+        return key
+
+def _expand_parsets(parsets):
+    if not parsets:
+        yield ()
+    else:
+        expanded = []
+        for par in parsets[0]:
+            for sub in expand_parsets(parsets[1:]):
+                yield (par,) + sub
+
+def expand_parsets(parsets):
+    expanded = list(_expand_parsets(parsets))
+    expanded.sort()
+    return tuple(expanded)
+       
+def folded(parsets):
+    combined = []
+    for par in parsets:
+        combined.append("|".join(sorted(par)))
+    return tuple(combined)
+
+def overlaps(match_t1, match_t2):
+    for par1, par2 in zip(match_t1, match_t2):
+        if "*" in [par1, par2]:
+            continue
+        if par1 == par2 or match_any(par1, par2) or match_any(par2, par1):
+            continue
+        return False
+    return True
+
+def match_any(par1, par2_all):
+    matches = []
+    for par2 in par2_all.split("|"):
+        if re.match(fixre(par1), par2):
+            matches.append(par2)
+    return matches
+
+def fixre(regex):
+    return "|".join(["^" + par + "$" for par in regex.split("|")])
+
+def factor_out_overlaps(kmap):
+    for i, ikey in enumerate(kmap.keys()):
+        for jkey in kmap.keys()[i+1:]:
+            if ikey != jkey and overlaps(ikey, jkey):
+                log.info("Overlap",repr(ikey),"<->", repr(jkey))
     return kmap
 
 # =======================================================================
@@ -137,7 +218,7 @@ REFTYPE_FILTER = {
 
 HEADER_ADDITIONS = {}
 
-def expand_kmap(instr, kind, kmap):
+def instrument_specific_hacks(instr, kind, kmap):
     """Execute a (instr, filetype) specific filter to modify the kmap
     and return any required header additions for this case.
 

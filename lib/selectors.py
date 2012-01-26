@@ -367,6 +367,8 @@ class RegexMatcher(Matcher):
     -1
     >>> m.match("foo")
     1
+    >>> m.match("fo")
+    -1
     """
     def __init__(self, key):
         Matcher.__init__(self, key)
@@ -425,7 +427,7 @@ class WildcardMatcher(Matcher):
 
 def matcher(key):
     """Factory for different matchers based on key types."""
-    if isinstance(key, tuple):
+    if isinstance(key, tuple) or "|" in key:
         return RegexMatcher(key)
     elif key == "*":
         return WildcardMatcher(key)

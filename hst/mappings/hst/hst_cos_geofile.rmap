@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:28',
-    'description' : 'Initially generated on 2012-01-25 12:51:28',
+    'derived_from' : 'scraped 2012-01-26 10:24:23',
+    'description' : 'Initially generated on 2012-01-26 10:24:23',
     'filekind' : 'GEOFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector == "fuv"',
-    'sha1sum' : 'b5982778148d3b5bc889ea9bba12e0803aaa1a90',
+    'sha1sum' : 'dd123a9ef8e40feb4fe02b2f3d2222bf9a4280f3',
 }
 
 selector = Match({

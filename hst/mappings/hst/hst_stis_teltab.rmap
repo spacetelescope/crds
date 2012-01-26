@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:34',
-    'description' : 'Initially generated on 2012-01-25 12:51:34',
+    'derived_from' : 'scraped 2012-01-26 10:24:30',
+    'description' : 'Initially generated on 2012-01-26 10:24:30',
     'filekind' : 'TELTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector != "ccd" and obstype == "spectroscopic"',
-    'sha1sum' : '1adb046429ac8f931d7ac6329401c06cb69a0fee',
+    'sha1sum' : '3d94cb724d570a1034e059932c948cdcd928a2d8',
 }
 
 selector = Match({

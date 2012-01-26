@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:50:38',
-    'description' : 'Initially generated on 2012-01-25 12:50:38',
+    'derived_from' : 'scraped 2012-01-26 10:23:33',
+    'description' : 'Initially generated on 2012-01-26 10:23:33',
     'filekind' : 'BPIXTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'c343cd6efb4c731b8161c40fc9bd0c38bc69493a',
+    'sha1sum' : '8ac03e35dd3f483acfed150f828d03982f515d6d',
 }
 
 selector = Match({

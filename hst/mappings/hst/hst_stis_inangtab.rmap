@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:33',
-    'description' : 'Initially generated on 2012-01-25 12:51:33',
+    'derived_from' : 'scraped 2012-01-26 10:24:29',
+    'description' : 'Initially generated on 2012-01-26 10:24:29',
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'obstype == "spectroscopic"',
-    'sha1sum' : '83a10489137034b863fe8a6d5c3043a641cb2c21',
+    'sha1sum' : '373128eb5e23c404420caeb7cc15db86aea0e018',
 }
 
 selector = Match({

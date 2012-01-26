@@ -165,7 +165,7 @@ def get_header_union(fname, needed_keys=None):
 # ==============================================================================
 
 DONT_CARE_RE = re.compile("^" + "|".join([
-    "ANY","-999","-999\.0","N/A","\(\)"]) + "$|^$")
+    "ANY","-999","-999\.0","4294967295.0","4294966297.0","\(\)"]) + "$|^$")
 
 NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
 
@@ -181,7 +181,7 @@ def condition_value(value):
     >>> condition_value('-999.0')
     '*'
     >>> condition_value('N/A')
-    '*'
+    'N/A'
     >>> condition_value('')
     '*'
     >>> condition_value('4294967295')
@@ -210,8 +210,6 @@ def condition_value(value):
         value = "T"
     elif value in ["F", "FALSE"]:
         value = "F"
-    if value in ["4294967295.0","4294966297.0",]:
-        value = "*"
     return value
 
 # ===================================================================

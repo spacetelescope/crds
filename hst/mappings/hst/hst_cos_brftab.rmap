@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:27',
-    'description' : 'Initially generated on 2012-01-25 12:51:27',
+    'derived_from' : 'scraped 2012-01-26 10:24:23',
+    'description' : 'Initially generated on 2012-01-26 10:24:23',
     'filekind' : 'BRFTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector == "fuv"',
-    'sha1sum' : 'ccd3def6c319ad7af7d6fa854ee671d0635b7e1e',
+    'sha1sum' : 'c7a2b77adfa0acefe036c84e3d86f03c79498069',
 }
 
 selector = Match({

@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:33',
-    'description' : 'Initially generated on 2012-01-25 12:51:33',
+    'derived_from' : 'scraped 2012-01-26 10:24:29',
+    'description' : 'Initially generated on 2012-01-26 10:24:29',
     'filekind' : 'HALOTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector != "ccd" and obstype == "spectroscopic"',
-    'sha1sum' : '776faf8c0bf7a51c81c507a9d82bc1a96e731ab0',
+    'sha1sum' : 'da6fbd4ac5d18dd71f1a4a8cbfcbe0b41e6a512b',
 }
 
 selector = Match({

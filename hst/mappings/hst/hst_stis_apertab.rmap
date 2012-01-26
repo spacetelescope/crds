@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-25 12:51:30',
-    'description' : 'Initially generated on 2012-01-25 12:51:30',
+    'derived_from' : 'scraped 2012-01-26 10:24:26',
+    'description' : 'Initially generated on 2012-01-26 10:24:26',
     'filekind' : 'APERTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '1bafff23bfb382d1fd425667009f5c8aa56b7620',
+    'sha1sum' : 'cff5f3d2335c0ea6d002880a356972e7c525d42e',
 }
 
 selector = Match({

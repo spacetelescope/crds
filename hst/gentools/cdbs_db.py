@@ -1,13 +1,14 @@
 """Supports accessing CDBS reference and archive catalogs for the purposes
 of generating rmaps and comparing CRDS best refs to CDBS best refs.
 """
-
+import sys
 import pprint
 import cPickle
 import random
 import getpass
 from collections import OrderedDict
 import os.path
+import datetime
 
 import pyodbc
 
@@ -242,6 +243,7 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
     on pipeline `context`.
     """
     log.reset()
+    start = datetime.datetime.now()
     if header_generator in crds.hst.INSTRUMENTS:
         headers = HEADER_GENERATORS[instr].get_headers()
     elif isinstance(header_generator, str): 
@@ -267,12 +269,16 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
             continue
         crds_refs = rmap.get_best_references(context, header)
         compare_results(header, crds_refs, mismatched, ignore)
+    elapsed = datetime.datetime.now() - start
     log.write()
     log.write()
     for filekind in mismatched:
         log.write(filekind, "mismatched:", mismatched[filekind])
     log.write()
     log.write(count, "datasets")
+    log.write(elapsed, "elapsed")
+    log.write(count/elapsed.total_seconds(), "best refs / sec")
+    log.write()
     log.standard_status()
     log.set_verbose(oldv)
 
@@ -293,7 +299,7 @@ def compare_results(header, crds_refs, mismatched, ignore):
             log.warning("No comparison for", repr(filekind))
             continue
         new = crds_refs[filekind]
-        if old in ["n/a", "*", "none"]:
+        if old in ["n/a", "*", "none"] or new == "NOT FOUND n/a":
             log.verbose("Ignoring", repr(filekind), "as n/a")
             continue
         if old != new:
@@ -331,7 +337,7 @@ def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
     cPickle.dump(samples, open(instr + suffix, "w+"))
 
 
-def dumpall(context="hst.pmap", ncases=1000, random_samples=True, 
+def dumpall(context="hst.pmap", ncases=10**10, random_samples=True, 
             suffix="_headers.pkl"):
     """Generate header pickles for all instruments referred to by `context`,
     where the headers are taken from the DADSOPS database.   Optionally collect
@@ -342,3 +348,15 @@ def dumpall(context="hst.pmap", ncases=1000, random_samples=True,
         log.info("collecting", repr(instr))
         dump(instr, ncases, random_samples, suffix)
 
+
+def main():
+    if sys.argv[1] == "dumpall":
+        dumpall()
+    elif sys.argv[1] == "testall":
+        testall()
+    else:
+        print "usage: python cdbs_db.py [ dumpall | testall ]"
+        sys.exit(-1)
+
+if __name__ == "__main__":
+    main()
