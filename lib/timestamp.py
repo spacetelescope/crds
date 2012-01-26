@@ -16,8 +16,8 @@ def format_date(d):
 def parse_date(d):
     if d.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         d = d[:-3]
-    if "T" in d:    # '2010-08-17T17:25:47'
-        d = d.replace("T", " ")
+    if "T" in d[3:]:    # '2010-08-17T17:25:47',  not 'OCT...'
+        d = d[:3] + d[3:].replace("T", " ")
     if re.match("[A-Za-z]", d):
         return parse_alphabetical_date(d)
     else:
