@@ -155,7 +155,8 @@ class Selector(object):
         self._selections = sorted(selections.items())
         
     def __repr__(self):
-        return self.__class__.__name__ + "(" + repr(self._parameters) + ")"
+        return self.__class__.__name__ + "(" + repr(self._parameters) \
+            + ", nselections=" + str(len(self._selections)) + ")"
 
     def keys(self):
         """Return the list of keys used to make selections."""
@@ -648,16 +649,17 @@ class MatchingSelector(Selector):
 
         sorted_candidates = self._rank_candidates(weights, remaining)
         
-        # Yield successive candidates in order from best match to worst, failing
-        # if any candidate group has more than one equivalently weighted match.
+        # Yield successive candidates in order from best match to worst, 
+        # merging equivalently weighted canidate groups.
         for _weight, group in sorted_candidates:
             if len(group) > 1:
-                log.verbose("Ambigious match error.")
-                raise AmbiguousMatchError("Ambiguous match.")
+                raise AmbiguousMatchError("More than one match clause matched.")
+                subselectors = [remaining[match_tuple][1] for match_tuple in group]
+                selector = self.merge_group(subselectors)
             else:
                 selector = remaining[group[0]][1]
-                log.verbose("Matched", repr(group), "returning", repr(selector))
-                yield selector
+            log.verbose("Matched", repr(group), "returning", repr(selector))
+            yield selector
     
     def _winnow(self, header, remaining):
         """Based on the parkey values in `header`, winnow out selections
@@ -676,7 +678,7 @@ class MatchingSelector(Selector):
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "NOT PRESENT")
             log.verbose("Binding", repr(parkey), "=", repr(value))
-            for match_tuple, (matchers, _subselectors) in remaining.items():
+            for match_tuple, (matchers, _subselector) in remaining.items():
                 # Match the key to the current header vaue
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
@@ -707,6 +709,20 @@ class MatchingSelector(Selector):
             log.verbose("Candidates", pp.pformat(candidates))
         return candidates
 
+    def merge_group(self, equivalent_selectors):
+        """Merge a group of equal-weighted selectors into a single
+        combined selector.  Nominally this merges special case
+        Useafter clauses into a more general UseAfter creating
+        something appropriate only for the special case.  Doing this
+        dynamically helps keep rmaps small by factoring out the
+        special cases and not repeating common info for every special
+        case.
+        """
+        combined = equivalent_selectors[0].merge(equivalent_selectors[1])
+        for next in equivalent_selectors[2:]:
+            combined = combined.merge(next)
+        return combined
+
     def get_value_map(self):
         """Return the map { FITSVAR : ( possible_values ) }
         """
@@ -723,7 +739,8 @@ class MatchingSelector(Selector):
                 if not isinstance(values, tuple):
                     values = [values]
                 for value in values:
-                    vmap[fitsvar].add(value)
+                    for regex_case in value.split("|"):
+                        vmap[fitsvar].add(regex_case)
         for fitsvar in vmap:
             vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
         return vmap
@@ -780,7 +797,7 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
-    def _validate_key(self, key, valid_values_map, warned):
+    def __validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values
         in `valid_values_map`.   Note that each selections `key` is 
         (nominally) a tuple with values for multiple parkeys.
@@ -799,12 +816,9 @@ class MatchingSelector(Selector):
                 # raise ValidationError("Unknown parameter " + repr(name))
             valid = valid_values_map[name]
             value = key[i]
-            if value in ["NOT PRESENT"] or value == "*":
+            if value == "*":
                 continue
-            if value in ["%NO REFERENCE%"]:
-                log.warning("Missing references in key",repr(key))
-                break
-            if value in valid:
+            if self._is_literal_or_regex_value(value, valid):
                 continue
             if value.replace(".0","") in valid:
                 continue
@@ -823,9 +837,14 @@ class MatchingSelector(Selector):
                 continue
             raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
                                   " is not in " + repr(valid))
-            
-    def _is_substitution(self, name, value):
-        """Return True iff `value` is a valid substitution in `name`."""
+
+    def _is_literal_or_regex_value(value, valid):
+        """Return True if all of the |-combined elements of `value` are in `valid`."""
+        for val in value.split("|"):
+            if val not in valid:
+                return False
+        return True
+
 # ==============================================================================
 
 class UseAfterSelector(Selector):
@@ -929,6 +948,16 @@ class UseAfterSelector(Selector):
         else:
             return Xml(self.selection_xname, attributes = {"date":key}, 
                        elements=[choice], eol="")
+
+    def merge(self, other):
+        """Merge the selections from two UseAfters into a single UseAfter.
+        """
+        combined_selections = dict(self._selections)
+        for key, val in other._selections:
+            # if key in combined_selections and combined_selections[key] != val:
+            #    raise ValueError("Collision during UseAfterMerge at ", repr(key))
+            combined_selections[key] = val
+        return self.__class__(self._parameters[:], combined_selections)
 
 # ==============================================================================
 
