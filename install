@@ -1,7 +1,5 @@
 #! /bin/tcsh
 
-source ~/normal.csh
-
 cd `dirname $0`
 
 ./clean
