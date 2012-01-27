@@ -53,7 +53,6 @@ ADJUSTMENTS = {
                     ignore=["subarray",],                 
                     ),
               },
-
 }
 
 

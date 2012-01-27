@@ -288,7 +288,8 @@ class Selector(object):
 
     def _validate_key(self, key, valid_values_map, warned):
         """Abstract method validates a single key or raises exception."""
-        pass
+        raise NotImplementedError("Class " + repr(self.__class__.__name__) 
+                                  + " must implement _validate_key.")
 
     def file_matches(self, filename, sofar=()):
         """Return the nested match keys leading to selections of `filename`.
@@ -797,7 +798,7 @@ class MatchingSelector(Selector):
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
 
-    def __validate_key(self, key, valid_values_map, warned):
+    def _validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values
         in `valid_values_map`.   Note that each selections `key` is 
         (nominally) a tuple with values for multiple parkeys.
@@ -838,8 +839,9 @@ class MatchingSelector(Selector):
             raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
                                   " is not in " + repr(valid))
 
-    def _is_literal_or_regex_value(value, valid):
+    def _is_literal_or_regex_value(self, value, valid):
         """Return True if all of the |-combined elements of `value` are in `valid`."""
+        return value in valid
         for val in value.split("|"):
             if val not in valid:
                 return False
