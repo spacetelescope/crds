@@ -116,7 +116,7 @@ def process_reference_file_defs():
                     )
     return rdefs
 
-HERE = os.path.dirname(__file__)
+HERE = os.path.dirname(__file__) or "."
 try:
     PARKEYS = eval(open(HERE + "/parkeys.dat").read())
 except:
@@ -170,6 +170,9 @@ def get_instruments():
 
 def get_filekinds(instrument):
     return sorted(PARKEYS[instrument].keys())
+
+def get_extra_keys(instrument, filekind):
+    return PARKEYS[instrument][filekind]["not_in_db"]
 
 # =======================================================================
 

@@ -297,6 +297,7 @@ def write_rmap(observatory, instrument, filekind, kind_map):
         ("instrument", instrument.upper()),
         ("filekind", filekind.upper()),
         ("parkey", (fitskeys, mapkeys)),
+        ("extra_keys", parkeys.get_extra_keys(instrument, filekind)),
         ("relevance", parkeys.get_relevance(instrument, filekind)),
         ("description", ("Initially generated on " + now)),
     ])

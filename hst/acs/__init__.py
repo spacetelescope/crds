@@ -20,11 +20,11 @@ def precondition_header_acs_biasfile(header_in):
 
     # convert amp A or D reads to AD if size is more than half a chip
     if not beyond_sm4(header):
-        if header["CCDAMP"] in ["A","D"] and int(header["NUMCOLS"]) > ACS_HALF_CHIP_COLS: 
+        if header["CCDAMP"] in ["A","D"] and float(header["NUMCOLS"]) > ACS_HALF_CHIP_COLS: 
             log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
                                   "to AD for NUMCOLS = "+ header["NUMCOLS"])
             header["CCDAMP"] = "AD"
-        elif header["CCDAMP"] in ["B","C"] and int(header["NUMCOLS"]) > ACS_HALF_CHIP_COLS: 
+        elif header["CCDAMP"] in ["B","C"] and float(header["NUMCOLS"]) > ACS_HALF_CHIP_COLS: 
             log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
                         "to AD for NUMCOLS = "+ header["NUMCOLS"])
             header["CCDAMP"] = "BC"
