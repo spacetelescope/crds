@@ -106,9 +106,14 @@ def process_reference_file_defs():
                             ccontents(rnode.restriction_test))
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
-                rdefs[instr][filekind] = \
-                    (reftype, tuple(fits_parkeys), tuple(db_parkeys), relevant, 
-                     parkey_restrictions)
+                rdefs[instr][filekind] = dict(
+                        reftype = reftype,
+                        parkeys = tuple(fits_parkeys),
+                        db_translations = adjustment.translate,
+                        not_in_db = tuple(adjustment.ignore),
+                        relevance = relevant,
+                        parkey_restrictions = parkey_restrictions,
+                    )
     return rdefs
 
 HERE = os.path.dirname(__file__)
@@ -142,19 +147,23 @@ def simplify_restriction(restriction_text):
 # note:  fits_parkeys and db_parkeys need to be in the same order.
 
 def get_reftype(instrument, filekind):
-    return PARKEYS[instrument][filekind][0]
+    return PARKEYS[instrument][filekind]["reftype"]
 
 def get_fits_parkeys(instrument, filekind):
-    return PARKEYS[instrument][filekind][1]
+    return PARKEYS[instrument][filekind]["parkeys"]
 
 def get_db_parkeys(instrument, filekind):
-    return PARKEYS[instrument][filekind][2]
+    db_parkeys = []
+    translations = PARKEYS[instrument][filekind]["db_translations"]
+    for key in get_fits_parkeys(instrument, filekind):
+        db_parkeys.append(translations.get(key, key))
+    return tuple(db_parkeys)
 
 def get_relevance(instrument, filekind):
-    return PARKEYS[instrument][filekind][3]
+    return PARKEYS[instrument][filekind]["relevance"]
 
 def get_parkey_restrictions(instrument, filekind):
-    return PARKEYS[instrument][filekind][4]
+    return PARKEYS[instrument][filekind]["parkey_restrictions"]
 
 def get_instruments():
     return sorted(PARKEYS.keys())
