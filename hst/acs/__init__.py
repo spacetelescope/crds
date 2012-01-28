@@ -1,5 +1,16 @@
 from crds import log
 
+ACS_HALF_CHIP_COLS = 2048         #used in custom bias selection algorithm
+SM4_YYYYDDDHHMMSS  = '2009.134:12:00:00'  # date beyond which an exposure was
+                                          # taken in the SM4 configuration
+                                          # (day 2009.134 = May 14 2009,
+                                          #  after HST was captured by 
+                                          #  the shuttle during SM4, and
+                                          #  pre-SM4 exposures had ceased)
+
+def beyond_sm4(header):
+    return header["DATE-OBS"] + " " + header["TIME-OBS"] >= "2009-05-15 00:00"
+
 def precondition_header_acs_biasfile(header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.   This is an alternative to generating
