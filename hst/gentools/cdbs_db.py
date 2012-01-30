@@ -84,8 +84,9 @@ def get_instrument_db_parkeys(instrument):
     filekinds of instrument.
     """
     dbkeys = set()
-    for kind in parkeys.get_filekinds(instrument):
+    for filekind in parkeys.get_filekinds(instrument):
         dbkeys = dbkeys.union(set(parkeys.get_db_parkeys(instrument, filekind)))
+        dbkeys = dbkeys.union(set(parkeys.get_extra_keys(instrument, filekind)))
     return list(dbkeys)
 
 def required_keys(instr):
@@ -237,7 +238,7 @@ except:
 
 
 def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
-         ignore=None, dump_header=False):
+         ignore=[], dump_header=False, verbose=False):
     """Evaluate the first `ncases` best references cases from 
     `header_generator` against similar results attained from CRDS running
     on pipeline `context`.
@@ -256,6 +257,8 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
     count = 0
     mismatched = {}
     oldv = log.get_verbose()
+    if verbose:
+        log.set_verbose(verbose)
     for header in headers:
         if ncases is not None and count >= ncases:
             break
@@ -267,6 +270,9 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
         if dump_header:
             pprint.pprint(header)
             continue
+        if log.get_verbose():
+            log.verbose("="*70)
+            log.verbose("DATA_SET:", header["DATA_SET"])
         crds_refs = rmap.get_best_references(context, header)
         compare_results(header, crds_refs, mismatched, ignore)
     elapsed = datetime.datetime.now() - start
@@ -289,7 +295,7 @@ def compare_results(header, crds_refs, mismatched, ignore):
     """
     mismatches = 0
     for filekind in crds_refs:
-        if ignore and filekind in ignore:
+        if filekind in ignore:
             continue
         if filekind not in mismatched:
             mismatched[filekind] = {}
@@ -311,6 +317,8 @@ def compare_results(header, crds_refs, mismatched, ignore):
             if (old, new) not in mismatched[filekind]:
                 mismatched[filekind][(old,new)] = 0
             mismatched[filekind][(old,new)] += 1
+        else:
+            log.verbose("CDBS/CRDS matched:", filekind, old)
     if not mismatches:
         log.write(".", eol="", sep="")
 
