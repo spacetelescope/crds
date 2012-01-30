@@ -15,6 +15,9 @@ INFO:[14]: Validating hst_stis_wcptab.rmap
 INFO:[15]: Validating hst_stis_teltab.rmap 
 INFO:[16]: Validating hst_stis_darkfile.rmap 
 INFO:[17]: Validating hst_stis_biasfile.rmap 
+WARNING[1]: Parameter 'CCDOFFST' is unchecked. 
+WARNING[2]: Parameter 'BINAXIS1' is unchecked. 
+WARNING[3]: Parameter 'BINAXIS2' is unchecked. 
 INFO:[18]: Validating hst_stis_mlintab.rmap 
 INFO:[19]: Validating hst_stis_echsctab.rmap 
 INFO:[20]: Validating hst_stis_disptab.rmap 
@@ -32,6 +35,6 @@ INFO:[31]: Validating hst_stis_apdestab.rmap
 INFO:[32]: Validating hst_stis_apertab.rmap 
 INFO:[33]: Validating hst_stis_tdctab.rmap 
 0 errors 
-0 warnings 
+3 warnings 
 33 infos 
  

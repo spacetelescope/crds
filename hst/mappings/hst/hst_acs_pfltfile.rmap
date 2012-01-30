@@ -1,6 +1,7 @@
 header = {
-    'derived_from' : 'scraped 2012-01-26 10:24:21',
-    'description' : 'Initially generated on 2012-01-26 10:24:21',
+    'derived_from' : 'scraped 2012-01-30 14:48:28',
+    'description' : 'Initially generated on 2012-01-30 14:48:28',
+    'extra_keys' : (),
     'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'obstype != "internal"',
-    'sha1sum' : 'f36afd58eaf91221879c5e3082bc19e547532182',
+    'sha1sum' : '22983c9f8aa13d43841418cd9e55789e900e8f9b',
 }
 
 selector = Match({

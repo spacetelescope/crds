@@ -777,7 +777,7 @@ class MatchingSelector(Selector):
         try:
             relevant = eval(self._relevance_expr, lc_header, lc_header)
         except Exception, exc:
-            log.verbose("Relevance check failed: " + str(exc))
+            log.warning("Relevance check failed: " + str(exc))
         else:
             if not relevant:
                 raise IrrelevantReferenceTypeError(

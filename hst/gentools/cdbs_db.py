@@ -238,13 +238,12 @@ except:
 
 
 def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
-         ignore=[], dump_header=False, verbose=False):
+         ignore=[], include=[], dump_header=False, verbose=False):
     """Evaluate the first `ncases` best references cases from 
     `header_generator` against similar results attained from CRDS running
     on pipeline `context`.
     """
     log.reset()
-    start = datetime.datetime.now()
     if header_generator in crds.hst.INSTRUMENTS:
         headers = HEADER_GENERATORS[instr].get_headers()
     elif isinstance(header_generator, str): 
@@ -254,11 +253,15 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
             headers = eval(open(header_generator).read())
     else:
         raise ValueError("header_generator should name an instrument, pickle, or eval file.")
+
     count = 0
     mismatched = {}
     oldv = log.get_verbose()
     if verbose:
         log.set_verbose(verbose)
+
+    start = datetime.datetime.now()
+
     for header in headers:
         if ncases is not None and count >= ncases:
             break
@@ -273,8 +276,9 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
         if log.get_verbose():
             log.verbose("="*70)
             log.verbose("DATA_SET:", header["DATA_SET"])
-        crds_refs = rmap.get_best_references(context, header)
+        crds_refs = rmap.get_best_references(context, header, include)
         compare_results(header, crds_refs, mismatched, ignore)
+
     elapsed = datetime.datetime.now() - start
     log.write()
     log.write()

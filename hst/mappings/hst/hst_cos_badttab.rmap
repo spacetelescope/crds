@@ -1,6 +1,7 @@
 header = {
-    'derived_from' : 'scraped 2012-01-26 10:24:23',
-    'description' : 'Initially generated on 2012-01-26 10:24:23',
+    'derived_from' : 'scraped 2012-01-30 14:48:30',
+    'description' : 'Initially generated on 2012-01-30 14:48:30',
+    'extra_keys' : (),
     'filekind' : 'BADTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -8,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector == "fuv" and obsmode == "time-tag"',
-    'sha1sum' : '1bace91da8b3fda2320c1c4150802a284d23333f',
+    'sha1sum' : 'f1693967255cb1b173db8b35d1903c5e415950b5',
 }
 
 selector = Match({

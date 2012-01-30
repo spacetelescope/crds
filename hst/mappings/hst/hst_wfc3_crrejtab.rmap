@@ -1,6 +1,7 @@
 header = {
-    'derived_from' : 'scraped 2012-01-26 10:24:34',
-    'description' : 'Initially generated on 2012-01-26 10:24:34',
+    'derived_from' : 'scraped 2012-01-30 14:49:01',
+    'description' : 'Initially generated on 2012-01-30 14:49:01',
+    'extra_keys' : (),
     'filekind' : 'CRREJTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -8,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '156686a80003228cafa0e3e5ca66c13ed7fe83ba',
+    'sha1sum' : '3598be77f7cdba5c8823ac6cce4c18463880d81c',
 }
 
 selector = Match({

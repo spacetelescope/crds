@@ -1,6 +1,7 @@
 header = {
-    'derived_from' : 'scraped 2012-01-26 10:23:34',
-    'description' : 'Initially generated on 2012-01-26 10:23:34',
+    'derived_from' : 'scraped 2012-01-30 14:47:12',
+    'description' : 'Initially generated on 2012-01-30 14:47:12',
+    'extra_keys' : (),
     'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector == "hrc" and obstype == "coronagraphic"',
-    'sha1sum' : '039b2c576d8452d13c26fd544168035b2fe4a5ea',
+    'sha1sum' : 'eaa378841d559f2be7cccf8ef0fec530a6af13d8',
 }
 
 selector = Match({

@@ -500,12 +500,13 @@ class PipelineContext(Mapping):
             assert instrument == ictx.instrument, \
                 "Nested 'instrument' doesn't match in " + repr(filename)
     
-    def get_best_references(self, header):
-        """Return the best references for keyword map `header`.
+    def get_best_references(self, header, include=None):
+        """Return the best references for keyword map `header`.  If `include`
+        is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
         instrument = header["INSTRUME"].lower()
-        return self.selections[instrument].get_best_references(header)
+        return self.selections[instrument].get_best_references(header, include)
     
     def reference_names(self):
         """Return the list of reference files associated with this pipeline
@@ -609,12 +610,16 @@ class InstrumentContext(Mapping):
         """
         return self.selections[filekind.lower()].get_best_ref(header)
 
-    def get_best_references(self, header):
+    def get_best_references(self, header, include=None):
         """Returns a map of best references { filekind : reffile_basename } 
-        appropriate for this `header`.
+        appropriate for this `header`.   If `include` is None, include all
+        filekinds in the results,  otherwise compute and include only 
+        those filekinds listed.
         """
         refs = {}
-        for filekind in self.selections:
+        if not include:
+            include = self.selections
+        for filekind in include:
             log.verbose("\nGetting bestref for", repr(filekind))
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
@@ -690,19 +695,44 @@ class ReferenceMapping(Mapping):
     reference filetype and instantiate an appropriate selector tree from the 
     rmap header and data.
     """
-    required_attrs = InstrumentContext.required_attrs + ["filekind"]
+    required_attrs = InstrumentContext.required_attrs + ["filekind","extra_keys"]
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
         self._valid_values = self.get_valid_values()
+        # header precondition method, e.g. crds.hst.acs.precondition_header
+        # this is optional code which pre-processes and mutates header inputs
+        # set to identity if not defined.
+        try:  
+            self._precondition_header = utils.get_object(
+                ".".join(["crds", self.observatory, self.instrument, 
+                          "precondition_header"]))
+        except ImportError:
+            self._precondition_header = lambda self, header: header
+        # fallback routine called when standard best refs fails
+        # set to return None if not defined.
+        try:
+            self._fallback_header = utils.get_object(
+                ".".join(["crds", self.observatory, self.instrument, 
+                          "fallback_header"]))    
+        except ImportError:
+            self._fallback_header = lambda self, header: None
 
-        
-    def get_best_ref(self, header):
-        """Return the single reference file basename appropriate for `header` 
+    def get_best_ref(self, header_in):
+        """Return the single reference file basename appropriate for `header_in` 
         selected by this ReferenceMapping.
         """
-        return self.selector.choose(header)
-    
+        # Some filekinds, .e.g. ACS biasfile, mutate the header 
+        header = self._precondition_header(self, header_in)
+        try:
+            return self.selector.choose(header)
+        except Exception:
+            header = self._fallback_header(self, header_in)
+            if header:
+                return self.selector.choose(header)
+            else:
+                raise
+
     def reference_names(self):
         """Return the list of reference file basenames associated with this
         ReferenceMapping.
@@ -722,6 +752,7 @@ class ReferenceMapping(Mapping):
                 parkeys += list(key)
             else:
                 parkeys.append(key)
+        parkeys += list(self.extra_keys)
         keys = []
         for key in parkeys:
             if key.startswith("*"):
@@ -908,13 +939,15 @@ def mapping_to_filekind(context_file):
 
 # ===================================================================
 
-def get_best_references(context_file, header):
+def get_best_references(context_file, header, include=None):
     """Compute the best references for `header` for the given CRDS 
     `context_file`.   This is a local computation using local rmaps and 
-    CPU resources.
+    CPU resources.   If `include` is None,  return results for all
+    filekinds appropriate to `header`,  otherwise return only those
+    filekinds listed in `include`.
     """
     ctx = get_cached_mapping(context_file)
-    return ctx.get_best_references(header)
+    return ctx.get_best_references(header, include=include)
 
 
 def test():
