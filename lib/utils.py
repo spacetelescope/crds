@@ -212,17 +212,24 @@ def condition_value(value):
         value = "F"
     return value
 
-# ===================================================================
-
 def instrument_to_observatory(instrument):
     """Given the name of an instrument,  return the associated observatory."""
     instrument = instrument.lower()
-    if instrument in ["acs", "cos", "wfc3", "stis"]:
-        return "hst"
-    elif instrument in ["miri", "nircam", "nirspec", "tfi"]:
-        return "jwst"
+    try:
+        import crds.hst
+    except importError:
+        pass
     else:
-        raise ValueError("Unknown instrument " + repr(instrument))
+        if instrument in crds.hst.INSTRUMENTS:
+            return "hst"
+    try:
+        import crds.jwst
+    except ImportError:
+        pass
+    else:
+        if instrument in crds.jwst.INSTRUMENTS:
+            return "jwst"
+    raise ValueError("Unknown instrument " + repr(instrument))
     
 def instrument_to_locator(instrument):
     """Given an instrument,  return the locator module associated with the
