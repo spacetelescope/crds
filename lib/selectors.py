@@ -953,12 +953,13 @@ class UseAfterSelector(Selector):
 
     def merge(self, other):
         """Merge the selections from two UseAfters into a single UseAfter.
+        For collisions, take the greatest value,  which using known and planned
+        naming conventions is always the most recent version of a file.
         """
         combined_selections = dict(self._selections)
         for key, val in other._selections:
-            # if key in combined_selections and combined_selections[key] != val:
-            #    raise ValueError("Collision during UseAfterMerge at ", repr(key))
-            combined_selections[key] = val
+            if key not in combined_selections or val > combined_selections[key]:
+                combined_selections[key] = val
         return self.__class__(self._parameters[:], combined_selections)
 
 # ==============================================================================
