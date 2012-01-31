@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:49:09',
-    'description' : 'Initially generated on 2012-01-30 14:49:09',
+    'derived_from' : 'scraped 2012-01-31 12:14:33',
+    'description' : 'Initially generated on 2012-01-31 12:14:33',
     'extra_keys' : (),
     'filekind' : 'MASKFILE',
     'instrument' : 'WFPC2',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'defefc0cf23fadfa9762bed40cf565c10a190cf7',
+    'sha1sum' : 'f2dc550b7ff4cbcd73a81904271c354214a9c253',
 }
 
 selector = Match({

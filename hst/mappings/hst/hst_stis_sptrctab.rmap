@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:48:51',
-    'description' : 'Initially generated on 2012-01-30 14:48:51',
+    'derived_from' : 'scraped 2012-01-31 12:14:25',
+    'description' : 'Initially generated on 2012-01-31 12:14:25',
     'extra_keys' : (),
     'filekind' : 'SPTRCTAB',
     'instrument' : 'STIS',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'obstype == "spectroscopic"',
-    'sha1sum' : '6fd517aee411c56cf939bc70d301e4a525d39cae',
+    'sha1sum' : 'da8d6050cb6189e6b625222ea0968ccb50c9d906',
 }
 
 selector = Match({

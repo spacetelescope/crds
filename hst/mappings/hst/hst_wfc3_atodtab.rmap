@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:48:53',
-    'description' : 'Initially generated on 2012-01-30 14:48:53',
+    'derived_from' : 'scraped 2012-01-31 12:14:26',
+    'description' : 'Initially generated on 2012-01-31 12:14:26',
     'extra_keys' : (),
     'filekind' : 'ATODTAB',
     'instrument' : 'WFC3',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector == "uvis"',
-    'sha1sum' : '58b384ab25677e2bdd9a1e2b3633e95b33cdbc15',
+    'sha1sum' : '3f98d9eccced63e0416c2a434cdb585814b15c34',
 }
 
 selector = Match({

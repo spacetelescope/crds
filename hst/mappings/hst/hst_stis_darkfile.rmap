@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:48:46',
-    'description' : 'Initially generated on 2012-01-30 14:48:46',
+    'derived_from' : 'scraped 2012-01-31 12:14:24',
+    'description' : 'Initially generated on 2012-01-31 12:14:24',
     'extra_keys' : (),
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
@@ -9,11 +9,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '55035083db833db6aa7e49250b290adb2ace8bac',
+    'sha1sum' : 'cdf570a671c710df013c95fcc9e19c8204b12228',
 }
 
 selector = Match({
-    ('CCD', '*', '*') : UseAfter({
+    ('CCD', '*', '-1.0') : UseAfter({
         '1997-10-23 00:00:00' : 'j991518ao_drk.fits',
     }),
     ('CCD', 'A', '1.0') : UseAfter({

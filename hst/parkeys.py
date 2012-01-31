@@ -1,5 +1,5 @@
 """This module extracts information about instruments, filekinds, filekind
-relevance, and parkey relevance out of the CDBS configuration file
+relevance, parkeys, and parkey relevance out of the CDBS configuration file
 reference_file_defs.xml.
 """
 import pprint
@@ -8,7 +8,7 @@ import re
 
 from BeautifulSoup import BeautifulStoneSoup
 
-from crds import (log)
+from crds import (log, utils)
 
 # =======================================================================
 
@@ -122,15 +122,31 @@ try:
 except:
     PARKEYS = {}
 
-# (aSource._keywords['DETECTOR'][0] != 'SBC')
+FLOAT_RE = r"[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?"
 
-def replace_asource(match):
-    return match.group(1) + "header" + match.group(2) + match.group(3)
+def _replace_syntax(match):
+    return match.group(1) + match.group(2) + match.group(3)
+
+def _replace_conditioned_float(match):
+    unconditioned = match.group(2)
+    number = utils.condition_value(unconditioned)
+    return match.group(1) + repr(number) + match.group(4)
 
 def _simplify_restriction(restriction_text):
-    return re.sub(r"(.*)asource._keywords\['(.*)'\]\[0\](.*)", 
-                  r"\1\2\3",
+    # simplify syntax
+    # (aSource._keywords['DETECTOR'][0] != 'SBC')
+    rval = re.sub(r"(.*)asource._keywords\['(.*)'\]\[0\](.*)", 
+                  _replace_syntax,
                   restriction_text)
+    return rval
+
+
+def _condition_numbers(restriction_text):
+    # convert ints/floats to conditioned float strings
+    rval = re.sub(r"(.*\s+)(" + FLOAT_RE + ")(.*)",
+                  _replace_conditioned_float,
+                  restriction_text)
+    return rval
 
 def simplify_restriction(restriction_text):
     """Transform file_selection_tests and restrictions to simple expressions of
@@ -139,10 +155,14 @@ def simplify_restriction(restriction_text):
     test = restriction_text
     for i in range(10):
         test = _simplify_restriction(test)
+    for i in range(10):
+        test = _condition_numbers(test)
     val = test.replace("'", '"')
     if val[0] == "(" and val[-1] == ")":
         val = val[1:-1]
     return val
+
+# =======================================================================
 
 # note:  fits_parkeys and db_parkeys need to be in the same order.
 

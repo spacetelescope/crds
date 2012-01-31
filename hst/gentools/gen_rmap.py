@@ -89,6 +89,9 @@ and {file_table}.reference_file_type = '{reference_file_type}'
         row_dicts.append(rowd)
     return row_dicts    
 
+def get_reference_dicts(instrument, filekind, reffile):
+    return [ x for x in get_row_dicts(instrument, filekind) if x["file_name"].lower() == reffile.lower()]
+
 # =======================================================================
 
 def dicts_to_kind_map(instr, kind, row_dicts):
@@ -246,14 +249,14 @@ def get_match_tuple(row, instrument, filekind):
     for pkey in db_parkeys:
         raw[pkey] = row.get(pkey, "not present")
     # Mutate irrelevant parameters to *
-    restricted = apply_restrictions(restrictions, raw)
+    restricted = apply_restrictions(restrictions, raw, row)
     # Construct a simple match tuple (no names) in the right order.
     match = []
     for pkey in db_parkeys:
         match.append(restricted.get(pkey, "not present"))
     return tuple(match)
 
-def apply_restrictions(restrictions, raw):
+def apply_restrictions(restrictions, raw, row):
     """Apply CDBS parameter restrictions to a raw match tuple dictionary,
     mutating irrelevant parameters to "*".
     """
@@ -265,8 +268,9 @@ def apply_restrictions(restrictions, raw):
     # Mutate irrelevant parameters to "*".
     for key, value in raw.items():
         if key in restrictions:
-            if not eval(restrictions[key], header, header):
+            if not eval(restrictions[key], {}, header):
                 value = "*"
+            log.info("restricting", row["file_name"], key, "of", header,"with",restrictions[key],"value =", value)
         result[key] = value
     return result
 

@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:49:04',
-    'description' : 'Initially generated on 2012-01-30 14:49:04',
+    'derived_from' : 'scraped 2012-01-31 12:14:30',
+    'description' : 'Initially generated on 2012-01-31 12:14:30',
     'extra_keys' : (),
     'filekind' : 'MDRIZTAB',
     'instrument' : 'WFC3',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'b6e6da2c4f6df8236a5479b13ce59be89125ce03',
+    'sha1sum' : 'b916e933f554d0ac3320a65231098672206943aa',
 }
 
 selector = Match({

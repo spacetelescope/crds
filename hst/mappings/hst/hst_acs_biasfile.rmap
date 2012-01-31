@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:47:11',
-    'description' : 'Initially generated on 2012-01-30 14:47:11',
+    'derived_from' : 'scraped 2012-01-31 12:13:10',
+    'description' : 'Initially generated on 2012-01-31 12:13:10',
     'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'detector != "sbc"',
-    'sha1sum' : 'd88dd501b2c06efc251f40fa30d74ed9769235bc',
+    'sha1sum' : '8ef1833112ad6fef630c6fe62b5963e06bfa294b',
 }
 
 selector = Match({

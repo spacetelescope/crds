@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-30 14:48:28',
-    'description' : 'Initially generated on 2012-01-30 14:48:28',
+    'derived_from' : 'scraped 2012-01-31 12:14:16',
+    'description' : 'Initially generated on 2012-01-31 12:14:16',
     'extra_keys' : (),
     'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'obstype != "internal"',
-    'sha1sum' : '22983c9f8aa13d43841418cd9e55789e900e8f9b',
+    'sha1sum' : 'a14aff4326a055035bdefee5b61e9f3875d71237',
 }
 
 selector = Match({
@@ -285,6 +285,14 @@ selector = Match({
     ('HRC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658fj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -302,6 +310,14 @@ selector = Match({
     ('HRC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -621,6 +637,14 @@ selector = Match({
     ('HRC', 'A', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516596j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'A', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'A', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -638,6 +662,14 @@ selector = Match({
     ('HRC', 'A', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516598j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -887,6 +919,14 @@ selector = Match({
     ('HRC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658rj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -904,6 +944,14 @@ selector = Match({
     ('HRC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658tj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -1665,6 +1713,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1416oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -1682,6 +1738,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1418ej_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -2001,6 +2065,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515333j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -2018,6 +2090,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515334j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -2267,6 +2347,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13504j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -2284,6 +2372,14 @@ selector = Match({
     ('HRC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13528j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -3045,6 +3141,14 @@ selector = Match({
     ('HRC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1416oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -3062,6 +3166,14 @@ selector = Match({
     ('HRC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1418ej_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -3381,6 +3493,14 @@ selector = Match({
     ('HRC', 'AD', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515333j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -3398,6 +3518,14 @@ selector = Match({
     ('HRC', 'AD', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515334j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -3647,6 +3775,14 @@ selector = Match({
     ('HRC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13504j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -3664,6 +3800,14 @@ selector = Match({
     ('HRC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13528j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -4425,6 +4569,14 @@ selector = Match({
     ('HRC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658fj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -4442,6 +4594,14 @@ selector = Match({
     ('HRC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -4761,6 +4921,14 @@ selector = Match({
     ('HRC', 'B', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516596j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'B', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'B', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -4778,6 +4946,14 @@ selector = Match({
     ('HRC', 'B', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516598j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -5027,6 +5203,14 @@ selector = Match({
     ('HRC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658rj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -5044,6 +5228,14 @@ selector = Match({
     ('HRC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658tj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -5805,6 +5997,14 @@ selector = Match({
     ('HRC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1416oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -5822,6 +6022,14 @@ selector = Match({
     ('HRC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan1418ej_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -6141,6 +6349,14 @@ selector = Match({
     ('HRC', 'BC', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515333j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -6158,6 +6374,14 @@ selector = Match({
     ('HRC', 'BC', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lb515334j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -6407,6 +6631,14 @@ selector = Match({
     ('HRC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13504j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -6424,6 +6656,14 @@ selector = Match({
     ('HRC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lan13528j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -7185,6 +7425,14 @@ selector = Match({
     ('HRC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658fj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -7202,6 +7450,14 @@ selector = Match({
     ('HRC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -7521,6 +7777,14 @@ selector = Match({
     ('HRC', 'C', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516596j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'C', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'C', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -7538,6 +7802,14 @@ selector = Match({
     ('HRC', 'C', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516598j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -7787,6 +8059,14 @@ selector = Match({
     ('HRC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658rj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -7804,6 +8084,14 @@ selector = Match({
     ('HRC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658tj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -8637,6 +8925,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658fj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1230lj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1230kj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12314j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12313j_pfl.fits',
+    }),
+    ('HRC', 'D', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1231gj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1231fj_pfl.fits',
     }),
@@ -8656,6 +8952,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1231tj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1231sj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1232cj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1232bj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1232oj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1232nj_pfl.fits',
     }),
@@ -9069,6 +9373,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516596j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12337j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12336j_pfl.fits',
+    }),
+    ('HRC', 'D', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1233jj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1233ij_pfl.fits',
+    }),
+    ('HRC', 'D', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12342j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12341j_pfl.fits',
     }),
@@ -9088,6 +9400,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc516598j_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1234ej_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234dj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1234rj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1234qj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12359j_pfl.fits',
         '2002-08-13 00:00:00' : 'nan12358j_pfl.fits',
     }),
@@ -9407,6 +9727,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658rj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1235mj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1235lj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12365j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan12364j_pfl.fits',
+    }),
+    ('HRC', 'D', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1236hj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1236gj_pfl.fits',
     }),
@@ -9426,6 +9754,14 @@ selector = Match({
         '1991-01-01 00:00:00' : 'k391500kj_pfl.fits',
         '1992-01-01 00:00:00' : 'kcb1734qj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc51658tj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12370j_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1236tj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1237dj_pfl.fits',
+        '2002-08-13 00:00:00' : 'nan1237cj_pfl.fits',
+    }),
+    ('HRC', 'D', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1237pj_pfl.fits',
         '2002-08-13 00:00:00' : 'nan1237oj_pfl.fits',
     }),
@@ -10328,6 +10664,14 @@ selector = Match({
     ('WFC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'A', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -10340,6 +10684,14 @@ selector = Match({
     ('WFC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -10612,7 +10964,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'A', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -10680,6 +11040,14 @@ selector = Match({
     ('WFC', 'A', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -10692,6 +11060,14 @@ selector = Match({
     ('WFC', 'A', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -10944,6 +11320,14 @@ selector = Match({
     ('WFC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -10956,6 +11340,14 @@ selector = Match({
     ('WFC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'A', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -11640,6 +12032,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -11652,6 +12052,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -11924,7 +12332,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'ABCD', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -11992,6 +12408,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -12004,6 +12428,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -12256,6 +12688,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -12268,6 +12708,14 @@ selector = Match({
     ('WFC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'ABCD', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -12947,6 +13395,12 @@ selector = Match({
     ('WFC', 'AC', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
     }),
     ('WFC', 'AC', 'F475W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -12957,6 +13411,12 @@ selector = Match({
     ('WFC', 'AC', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
     }),
     ('WFC', 'AC', 'F502N', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -13217,6 +13677,12 @@ selector = Match({
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
     }),
+    ('WFC', 'AC', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+    }),
     ('WFC', 'AC', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
     }),
@@ -13283,6 +13749,12 @@ selector = Match({
     ('WFC', 'AC', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
     }),
     ('WFC', 'AC', 'F606W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -13293,6 +13765,12 @@ selector = Match({
     ('WFC', 'AC', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
     }),
     ('WFC', 'AC', 'F625W', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -13535,6 +14013,12 @@ selector = Match({
     ('WFC', 'AC', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
     }),
     ('WFC', 'AC', 'F775W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -13545,6 +14029,12 @@ selector = Match({
     ('WFC', 'AC', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+    }),
+    ('WFC', 'AC', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
     }),
     ('WFC', 'AC', 'F850LP', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -14218,6 +14708,14 @@ selector = Match({
     ('WFC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -14230,6 +14728,14 @@ selector = Match({
     ('WFC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -14502,7 +15008,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'AD', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -14570,6 +15084,14 @@ selector = Match({
     ('WFC', 'AD', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -14582,6 +15104,14 @@ selector = Match({
     ('WFC', 'AD', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -14834,6 +15364,14 @@ selector = Match({
     ('WFC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -14846,6 +15384,14 @@ selector = Match({
     ('WFC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'AD', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -15529,6 +16075,14 @@ selector = Match({
     ('WFC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'B', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -15541,6 +16095,14 @@ selector = Match({
     ('WFC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -15813,7 +16375,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'B', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -15881,6 +16451,14 @@ selector = Match({
     ('WFC', 'B', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -15893,6 +16471,14 @@ selector = Match({
     ('WFC', 'B', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -16145,6 +16731,14 @@ selector = Match({
     ('WFC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -16157,6 +16751,14 @@ selector = Match({
     ('WFC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'B', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -16840,6 +17442,14 @@ selector = Match({
     ('WFC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -16852,6 +17462,14 @@ selector = Match({
     ('WFC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -17124,7 +17742,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'BC', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -17192,6 +17818,14 @@ selector = Match({
     ('WFC', 'BC', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -17204,6 +17838,14 @@ selector = Match({
     ('WFC', 'BC', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -17456,6 +18098,14 @@ selector = Match({
     ('WFC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -17468,6 +18118,14 @@ selector = Match({
     ('WFC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'BC', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -18147,6 +18805,12 @@ selector = Match({
     ('WFC', 'BD', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
     }),
     ('WFC', 'BD', 'F475W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -18157,6 +18821,12 @@ selector = Match({
     ('WFC', 'BD', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
     }),
     ('WFC', 'BD', 'F502N', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -18417,6 +19087,12 @@ selector = Match({
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
     }),
+    ('WFC', 'BD', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+    }),
     ('WFC', 'BD', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
     }),
@@ -18483,6 +19159,12 @@ selector = Match({
     ('WFC', 'BD', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
     }),
     ('WFC', 'BD', 'F606W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -18493,6 +19175,12 @@ selector = Match({
     ('WFC', 'BD', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
     }),
     ('WFC', 'BD', 'F625W', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -18735,6 +19423,12 @@ selector = Match({
     ('WFC', 'BD', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
     }),
     ('WFC', 'BD', 'F775W', 'POL120V', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -18745,6 +19439,12 @@ selector = Match({
     ('WFC', 'BD', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+    }),
+    ('WFC', 'BD', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
     }),
     ('WFC', 'BD', 'F850LP', 'CLEAR2L', 'IMAGING', '*', '*', '*') : UseAfter({
@@ -19418,6 +20118,14 @@ selector = Match({
     ('WFC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'C', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -19430,6 +20138,14 @@ selector = Match({
     ('WFC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -19702,7 +20418,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'C', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -19770,6 +20494,14 @@ selector = Match({
     ('WFC', 'C', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -19782,6 +20514,14 @@ selector = Match({
     ('WFC', 'C', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -20034,6 +20774,14 @@ selector = Match({
     ('WFC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -20046,6 +20794,14 @@ selector = Match({
     ('WFC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'C', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
@@ -20729,6 +21485,14 @@ selector = Match({
     ('WFC', 'D', 'F475W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326hj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12387j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914dj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F475W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan12415j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914ej_pfl.fits',
+    }),
+    ('WFC', 'D', 'F475W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan12443j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914fj_pfl.fits',
     }),
@@ -20741,6 +21505,14 @@ selector = Match({
     ('WFC', 'D', 'F475W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41326jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan12470j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914gj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F475W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1249sj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914hj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F475W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1252pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914ij_pfl.fits',
     }),
@@ -21013,7 +21785,15 @@ selector = Match({
         '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
         '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
         '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
         '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'CLEAR2L', 'IMAGING', '1.0', '*', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13231j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qb12257qj_pfl.fits',
     }),
     ('WFC', 'D', 'F606W', 'CLEAR2S', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
@@ -21081,6 +21861,14 @@ selector = Match({
     ('WFC', 'D', 'F606W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045jj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1255nj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914jj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'POL0V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1258lj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914kj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'POL0V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1301ij_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914lj_pfl.fits',
     }),
@@ -21093,6 +21881,14 @@ selector = Match({
     ('WFC', 'D', 'F606W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41045lj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1304gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914mj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'POL60V', 'IMAGING', '-1.0', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1307fj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914nj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F606W', 'POL60V', 'IMAGING', '1.0', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1310cj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914oj_pfl.fits',
     }),
@@ -21345,6 +22141,14 @@ selector = Match({
     ('WFC', 'D', 'F775W', 'POL0V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318mj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan1313gj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914pj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F775W', 'POL0V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan1316kj_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914qj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F775W', 'POL0V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan1319pj_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr1914rj_pfl.fits',
     }),
@@ -21357,6 +22161,14 @@ selector = Match({
     ('WFC', 'D', 'F775W', 'POL60V', 'IMAGING', '*', '*', '*') : UseAfter({
         '1991-01-01 00:00:00' : 'kcb1734aj_pfl.fits',
         '1997-01-01 00:00:00' : 'lc41318oj_pfl.fits',
+        '2002-03-01 00:00:00' : 'nan13232j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914sj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F775W', 'POL60V', 'IMAGING', '*', '-1.0', '*') : UseAfter({
+        '2002-03-01 00:00:00' : 'nan13261j_pfl.fits',
+        '2006-07-04 00:00:00' : 'qbr1914tj_pfl.fits',
+    }),
+    ('WFC', 'D', 'F775W', 'POL60V', 'IMAGING', '*', '1.0', '*') : UseAfter({
         '2002-03-01 00:00:00' : 'nan13290j_pfl.fits',
         '2006-07-04 00:00:00' : 'qbr19150j_pfl.fits',
     }),
