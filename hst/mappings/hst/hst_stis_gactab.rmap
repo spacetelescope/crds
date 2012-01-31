@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:24',
-    'description' : 'Initially generated on 2012-01-31 12:14:24',
+    'derived_from' : 'scraped 2012-01-31 13:39:39',
+    'description' : 'Initially generated on 2012-01-31 13:39:39',
     'extra_keys' : (),
     'filekind' : 'GACTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_gactab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'obstype == "spectroscopic"',
-    'sha1sum' : 'dca742aff693e8a85bf634d964d447d6f73b3acf',
+    'relevance' : '(obstype == "spectroscopic")',
+    'sha1sum' : '455793e2555b2603c8ac03812e7674f1ae9ae5ed',
 }
 
 selector = Match({

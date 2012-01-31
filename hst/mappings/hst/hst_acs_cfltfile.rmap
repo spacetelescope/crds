@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:13:10',
-    'description' : 'Initially generated on 2012-01-31 12:13:10',
+    'derived_from' : 'scraped 2012-01-31 13:38:25',
+    'description' : 'Initially generated on 2012-01-31 13:38:25',
     'extra_keys' : (),
     'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_acs_cfltfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "hrc" and obstype == "coronagraphic"',
-    'sha1sum' : 'de7ddd62013c41067a625063309bb37f762e024b',
+    'relevance' : '(detector == "hrc" and obstype == "coronagraphic")',
+    'sha1sum' : '1d0bf691ca3aaef067300fa0b0d315a653148f10',
 }
 
 selector = Match({

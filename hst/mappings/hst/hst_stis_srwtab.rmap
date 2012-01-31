@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:25',
-    'description' : 'Initially generated on 2012-01-31 12:14:25',
+    'derived_from' : 'scraped 2012-01-31 13:39:40',
+    'description' : 'Initially generated on 2012-01-31 13:39:40',
     'extra_keys' : (),
     'filekind' : 'SRWTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_srwtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector != "ccd" and obstype == "spectroscopic"',
-    'sha1sum' : '2bba1d321188f3fa7164d4465a6c7b2f7d0cf640',
+    'relevance' : '(detector != "ccd" and obstype == "spectroscopic")',
+    'sha1sum' : 'fa0bf8f98608f7686c053ea4199f4deb65f052be',
 }
 
 selector = Match({

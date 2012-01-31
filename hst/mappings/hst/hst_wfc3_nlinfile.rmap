@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:30',
-    'description' : 'Initially generated on 2012-01-31 12:14:30',
+    'derived_from' : 'scraped 2012-01-31 13:39:45',
+    'description' : 'Initially generated on 2012-01-31 13:39:45',
     'extra_keys' : (),
     'filekind' : 'NLINFILE',
     'instrument' : 'WFC3',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_wfc3_nlinfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "ir"',
-    'sha1sum' : '3bb9b50b23c8a8166923c530ebc932bb7ee7c407',
+    'relevance' : '(detector == "ir")',
+    'sha1sum' : 'b49fbfa65d45130239534d6ac5358531fcfc45e3',
 }
 
 selector = Match({

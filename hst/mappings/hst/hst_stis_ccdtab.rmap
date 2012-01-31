@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:22',
-    'description' : 'Initially generated on 2012-01-31 12:14:22',
+    'derived_from' : 'scraped 2012-01-31 13:39:36',
+    'description' : 'Initially generated on 2012-01-31 13:39:36',
     'extra_keys' : (),
     'filekind' : 'CCDTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_ccdtab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "ccd"',
-    'sha1sum' : '0b4ced7abd60fa94eb95f1021529d715fd44c533',
+    'relevance' : '(detector == "ccd")',
+    'sha1sum' : '50de8a1cffc43cc92ab2715135cb7cc278f1fccd',
 }
 
 selector = Match({

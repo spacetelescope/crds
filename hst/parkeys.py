@@ -158,8 +158,6 @@ def simplify_restriction(restriction_text):
     for i in range(10):
         test = _condition_numbers(test)
     val = test.replace("'", '"')
-    if val[0] == "(" and val[-1] == ")":
-        val = val[1:-1]
     return val
 
 # =======================================================================

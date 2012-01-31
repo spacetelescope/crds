@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:21',
-    'description' : 'Initially generated on 2012-01-31 12:14:21',
+    'derived_from' : 'scraped 2012-01-31 13:39:36',
+    'description' : 'Initially generated on 2012-01-31 13:39:36',
     'extra_keys' : (),
     'filekind' : 'APDESTAB',
     'instrument' : 'STIS',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'cf853c546e4118564c3fffc730b6f23c8efc635b',
+    'sha1sum' : '0ccc658f6245214396a056d24e69beb52f62d345',
 }
 
 selector = Match({

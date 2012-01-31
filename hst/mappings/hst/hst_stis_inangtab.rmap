@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:24',
-    'description' : 'Initially generated on 2012-01-31 12:14:24',
+    'derived_from' : 'scraped 2012-01-31 13:39:39',
+    'description' : 'Initially generated on 2012-01-31 13:39:39',
     'extra_keys' : (),
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_inangtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'obstype == "spectroscopic"',
-    'sha1sum' : '5c0a752dce3da89acaf2dced8ded3f35a0ac451b',
+    'relevance' : '(obstype == "spectroscopic")',
+    'sha1sum' : '5974af3d9e74dba1c6d8d4821192090beb5b7961',
 }
 
 selector = Match({

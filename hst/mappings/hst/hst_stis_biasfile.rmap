@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:21',
-    'description' : 'Initially generated on 2012-01-31 12:14:21',
+    'derived_from' : 'scraped 2012-01-31 13:39:36',
+    'description' : 'Initially generated on 2012-01-31 13:39:36',
     'extra_keys' : (),
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "ccd"',
-    'sha1sum' : '26a0f1db06816504c5ac9c5d4cf931c0b1b41614',
+    'relevance' : '(detector == "ccd")',
+    'sha1sum' : '592d0d45b57e0392569395a7def4c89df401e1e9',
 }
 
 selector = Match({

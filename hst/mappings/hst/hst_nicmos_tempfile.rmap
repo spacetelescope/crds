@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:21',
-    'description' : 'Initially generated on 2012-01-31 12:14:21',
+    'derived_from' : 'scraped 2012-01-31 13:39:35',
+    'description' : 'Initially generated on 2012-01-31 13:39:35',
     'extra_keys' : (),
     'filekind' : 'TEMPFILE',
     'instrument' : 'NICMOS',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '96d15622da1ee6b38df66e526e49139f74e95907',
+    'sha1sum' : 'fe5bbf1575e95826cd0965f4c3c334433552d182',
 }
 
 selector = Match({

@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:33',
-    'description' : 'Initially generated on 2012-01-31 12:14:33',
+    'derived_from' : 'scraped 2012-01-31 13:39:49',
+    'description' : 'Initially generated on 2012-01-31 13:39:49',
     'extra_keys' : ('IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'),
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
@@ -9,7 +9,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '511f891aa6b87cf446822afa573642cc5772500d',
+    'sha1sum' : '1ab0ed529f6d3b4fd2c8dec67f5e0a8c98e298a6',
 }
 
 selector = Match({

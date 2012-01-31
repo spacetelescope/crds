@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:24',
-    'description' : 'Initially generated on 2012-01-31 12:14:24',
+    'derived_from' : 'scraped 2012-01-31 13:39:39',
+    'description' : 'Initially generated on 2012-01-31 13:39:39',
     'extra_keys' : (),
     'filekind' : 'IDCTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'obstype == "imaging"',
-    'sha1sum' : '332178b58b2aa5af4d66dacdf04fb64bacc7b240',
+    'relevance' : '(obstype == "imaging")',
+    'sha1sum' : '8ddd3024d053c087cb5010ddfc4a7961a667a00b',
 }
 
 selector = Match({

@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:19',
-    'description' : 'Initially generated on 2012-01-31 12:14:19',
+    'derived_from' : 'scraped 2012-01-31 13:39:34',
+    'description' : 'Initially generated on 2012-01-31 13:39:34',
     'extra_keys' : (),
     'filekind' : 'SPWCSTAB',
     'instrument' : 'COS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_cos_spwcstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'obstype == "spectroscopic") and (exptype == "external/sci"',
-    'sha1sum' : 'be588f936c73f1a13ce3416930b984f11263c39b',
+    'relevance' : '(obstype == "spectroscopic") and (exptype == "external/sci")',
+    'sha1sum' : '358fd8115b2aa6fb0677ea87bf34455dc26b9dda',
 }
 
 selector = Match({

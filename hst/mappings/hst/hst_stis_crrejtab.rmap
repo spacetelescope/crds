@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:22',
-    'description' : 'Initially generated on 2012-01-31 12:14:22',
+    'derived_from' : 'scraped 2012-01-31 13:39:36',
+    'description' : 'Initially generated on 2012-01-31 13:39:36',
     'extra_keys' : (),
     'filekind' : 'CRREJTAB',
     'instrument' : 'STIS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_stis_crrejtab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "ccd"',
-    'sha1sum' : '7e0bd6a85e7ef7055293fd6029f0674ed5e7a0db',
+    'relevance' : '(detector == "ccd")',
+    'sha1sum' : '9ff786db0ebf7ec7f7f25118db1f35468ee76c3d',
 }
 
 selector = Match({

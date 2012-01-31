@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:19',
-    'description' : 'Initially generated on 2012-01-31 12:14:19',
+    'derived_from' : 'scraped 2012-01-31 13:39:33',
+    'description' : 'Initially generated on 2012-01-31 13:39:33',
     'extra_keys' : (),
     'filekind' : 'GEOFILE',
     'instrument' : 'COS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_cos_geofile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "fuv"',
-    'sha1sum' : 'e2ccd5c2832b716d3cf695ae2e159c7e4c933c99',
+    'relevance' : '(detector == "fuv")',
+    'sha1sum' : '57cc6359064627e50709b5f520bc243e007b8035',
 }
 
 selector = Match({

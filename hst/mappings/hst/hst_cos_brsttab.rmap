@@ -1,6 +1,6 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 12:14:18',
-    'description' : 'Initially generated on 2012-01-31 12:14:18',
+    'derived_from' : 'scraped 2012-01-31 13:39:33',
+    'description' : 'Initially generated on 2012-01-31 13:39:33',
     'extra_keys' : (),
     'filekind' : 'BRSTTAB',
     'instrument' : 'COS',
@@ -8,8 +8,8 @@ header = {
     'name' : 'hst_cos_brsttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'detector == "fuv" and obsmode == "time-tag"',
-    'sha1sum' : '20d5b076390a1610d37aeaf607e71a6afef95b3a',
+    'relevance' : '(detector == "fuv" and obsmode == "time-tag")',
+    'sha1sum' : 'db4fd980647d3210ed64bfdbdfebe8170d061b35',
 }
 
 selector = Match({
