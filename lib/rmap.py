@@ -753,12 +753,7 @@ class ReferenceMapping(Mapping):
             else:
                 parkeys.append(key)
         parkeys += list(self.extra_keys)
-        keys = []
-        for key in parkeys:
-            if key.startswith("*"):
-                key = key[1:]
-            keys.append(key)
-        return keys
+        return parkeys
     
     def get_parkey_map(self):
         """Based on the rmap,  return the mapping from parkeys to their

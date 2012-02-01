@@ -185,6 +185,8 @@ def condition_value(value):
     >>> condition_value('')
     '*'
     >>> condition_value('4294967295')
+    '-1.0'
+    >>> condition_value('4294966297.0')   # -999
     '*'
     >>> condition_value(False)
     'F'

@@ -207,20 +207,11 @@ class Selector(object):
         """Return a mapping from parkeys to values for them."""
         pmap = {}
         for i, par in enumerate(self._parameters):
-            wild = par.startswith("*")
-            if wild:
-                par = par[1:]
             if par not in pmap:
                 pmap[par] = set()
-            if wild:
-                pmap[par].add("*")
             for choice in self.keys():
-                val = choice[i]
-                if val == "NOT PRESENT":
-                    val = "*"
-                pmap[par].add(val)
+                pmap[par].add(choice[i])
         for par, val in pmap.items():
-            val = val.difference(set(["%NO REFERENCE%"]))
             pmap[par] = sorted(list(val))
         return pmap
 
@@ -441,23 +432,11 @@ def matcher(key):
 class MatchingSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching
     the runtime (header) parameters specified as choose() header to the .   
-    MatchingSelector differs from a simple dictionary in that some of the 
-    Selector parameters may begin with '*'.   '*' means that the parameter was 
-    considered optional by the HTML CDBS tables and not all selections supply 
-    it.   Explicit values for *-parameters presently come from one of two 
-    places:  from the CDBS table row,  or from the reference file header.   
-    Literal *-values mean the parameter was not specified in the table and was 
-    not specified in the reference file,  or was specified in the reference 
-    file as ANY.
 
-    What's hard is that for some selections,  the same parameter will be a 
-    "do care".   This complexity arises because different usages of the same 
-    instrument are parameterized differently, whereas there is only a single 
-    header keyword for all usages.   In essence,  within a single instrument, 
-    the same header keyword (file kind) maps onto different tables,  .e.g. for
-    a different detector.
+    The value '*' is equivalent to "don't care" and does not add to the value
+    of a match.   Literal matches increase confidence of a good match.
 
-    >>> m = MatchingSelector(("*foo","bar"), {
+    >>> m = MatchingSelector(("foo","bar"), {
     ...    ('1.0', '*') : "100",
     ...    ('1.0', '2.0') : "200",
     ...    ('*', '*') : "300",
@@ -465,21 +444,11 @@ class MatchingSelector(Selector):
 
     >>> m.choose(dict(foo='1.0',bar='2.0'))
     '200'
-
-    Since foo has a leading *,  it is optional:
-
-    >>> m.choose(dict(bar='2.0'))
-    '200'
     
-    It matches 200 because bar=2.0 is weighted more than bar=*
-    which also matches,  just not as strongly.
-
-    Since bar has no leading *,  it is required:
-
     >>> m.choose({})
     Traceback (most recent call last):
     ...
-    MissingParameterError: Required parameter 'bar' is missing.
+    MissingParameterError: Required parameter 'foo' is missing.
     
     >>> print m.format()
     Match({
@@ -487,7 +456,6 @@ class MatchingSelector(Selector):
         ('1.0', '*') : '100',
         ('1.0', '2.0') : '200',
     })
-    
     
     All match tuple fields should appear on a valid values list:
 
@@ -498,7 +466,7 @@ class MatchingSelector(Selector):
     
     Match tuples should have the same length as the parameter list:
     
-    >>> m = MatchingSelector(("*foo","bar"), { ('1.0',) : "100", })
+    >>> m = MatchingSelector(("foo","bar"), { ('1.0',) : "100", })
     Traceback (most recent call last):
     ...
     ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
@@ -506,7 +474,7 @@ class MatchingSelector(Selector):
     
     The last thing matched in a selector tree is assumed to be a file:
     
-    >>> m = MatchingSelector(("*foo","bar"), {
+    >>> m = MatchingSelector(("foo","bar"), {
     ...    ('1.0', '*') : "100",
     ...    ('1.0', '2.0') : "200",
     ...    ('*', '*') : "300",
@@ -521,19 +489,15 @@ class MatchingSelector(Selector):
     
     The result of file_matches() is a list of lists of keys because it is
     used recursively on trees of mappings and selectors.
-    
     """
     rmap_name = "Match"
     
     def __init__(self, parameters, selections, rmap_header=None):
         Selector.__init__(self, parameters, selections)  # largely overridden
-        self._parameters = []
-        self._required = {}
+        self._parameters = tuple(parameters)
         self._value_map = {}
         self._selections = sorted(selections.items())
 
-        self.setup_parameters(parameters)
-        
         selections = self.fix_simple_keys(selections)
         
         if rmap_header is None:
@@ -548,18 +512,6 @@ class MatchingSelector(Selector):
         
         self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
-    
-    def setup_parameters(self, parameters):
-        """Strip off *=optional prefixes and store the status in the _required
-        mapping.  Save simple *-less var names in the _parameters list.
-        """
-        for par in parameters:
-            if par.startswith("*"):
-                par = par[1:]
-                self._required[par] = False
-            else:
-                self._required[par] = True
-            self._parameters.append(par)
             
     def fix_simple_keys(self, selections):
         """ Enable simple mappings like:  "ACS":"filename" rather than 
@@ -684,8 +636,7 @@ class MatchingSelector(Selector):
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
-                    if self._required[parkey]:
-                        del remaining[match_tuple]   # winnow!
+                    del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   
         return weights, remaining
@@ -757,14 +708,12 @@ class MatchingSelector(Selector):
             if fitsvar in header:
                 value = header[fitsvar]
                 valid_values = self._value_map[fitsvar]
-                if self._required[fitsvar] and value not in valid_values and \
-                    '*' not in valid_values:
+                if value not in valid_values and '*' not in valid_values:
                     raise BadValueError("Key " + fitsvar + "=" + value +
                                 " not in valid values " + repr(valid_values))
             else:
-                if self._required[fitsvar]:
-                    raise MissingParameterError(
-                        "Required parameter " + repr(fitsvar) + " is missing.")
+                raise MissingParameterError(
+                    "Required parameter " + repr(fitsvar) + " is missing.")
                     
     def check_relevance(self, header):
         """Raise an exception if this rmap doesn't apply to the instrument
@@ -792,8 +741,6 @@ class MatchingSelector(Selector):
         for fitsvar in self._parameters:
             if fitsvar in header:
                 binding[fitsvar] = header[fitsvar]
-            elif not self._required[fitsvar]:
-                binding[fitsvar] = '*'
             else:
                 binding[fitsvar] = '**required parameter not defined**'
         return binding
@@ -807,8 +754,6 @@ class MatchingSelector(Selector):
             raise ValidationError("wrong length for parameter list " + 
                                   repr(self._parameters))
         for i, name in enumerate(self._parameters):
-            if name.startswith("*"):
-                name = name[1:]
             if name not in valid_values_map:
                 if name not in warned:
                     warned.append(name)
