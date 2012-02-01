@@ -314,10 +314,11 @@ def compare_results(header, crds_refs, mismatched, ignore):
             continue
         if old != new:
             dataset = header["DATA_SET"]
+            instr = header["INSTRUME"]
             if not mismatches:
                 log.verbose("dataset", dataset, "...", "ERROR")
             mismatches += 1
-            log.error("mismatch:", dataset, filekind, old, new)
+            log.error("mismatch:", dataset, instr, filekind, old, new)
             if (old, new) not in mismatched[filekind]:
                 mismatched[filekind][(old,new)] = 0
             mismatched[filekind][(old,new)] += 1
