@@ -176,6 +176,26 @@ class DashDate(DateParser):
 class CdbsDate(DateParser):
     pass
 
+# ============================================================================
+
+DATETIME_RE_STR = "(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)"
+DATE_RE_STR = r"\d\d\d\d\-\d\d\-\d\d"
+TIME_RE_STR = r"\d\d:\d\d:\d\d"
+
+def is_datetime(datetime_str):
+    """Raise an assertion error if `datetime_str` doesn't look like a CRDS date.
+    Otherwise return `datetime_str`.
+    """
+    assert re.match(DATETIME_RE_STR, datetime_str), \
+        "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
+    try:
+        timestamp.parse_date(datetime_str)
+    except ValueError, exc:
+        raise CrdsError(str(exc))
+    return datetime_str
+
+# ============================================================================
+
 def test():
     import doctest, timestamp
     return doctest.testmod(timestamp)

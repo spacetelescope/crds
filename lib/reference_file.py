@@ -7,16 +7,26 @@ Subsequently,  support was added for GEIS files to support WFPC2.
 New formats are a strong possibility for JWST so the intent of this module is
 to represent the least common denominator functionality here.
 """
+from crds import utils
+
 import pyfits
 import geis
 
 # =============================================================================
 
 def get_header(name):
-    """Return the complete unconditioned header dictionary of a geis or fits file.
+    """Return the complete unconditioned header dictionary of a reference file.
     """
     if geis.is_geis_header(name):
         return geis.get_header(name)
     else:
         return pyfits.getheader(name)
-
+    
+def get_conditioned_header(fname, parkeys=[]):
+    """Return the complete conditioned header dictionary of a reference file,
+    or optionally only the keys listed by `parkeys`.
+    """
+    header = get_header(fname)
+    for key in parkeys or header:
+        header[key] = utils.condition_value(header[key])
+    return header

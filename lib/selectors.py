@@ -348,7 +348,7 @@ class Matcher(object):
     def match(self, value):
         """Return 1 (match),  0 (don't care), or -1 (no match).
         """
-        return 1 if self._key == value else -1
+        return 1 if (self._key == value or value == "*") else -1
 
     def __repr__(self):
         return self.__class__.__name__ + "(%s)" % self._key
@@ -374,7 +374,7 @@ class RegexMatcher(Matcher):
         self._regex = re.compile(key)
         
     def match(self, value):
-        return 1 if self._regex.match(value) else -1
+        return 1 if (value == '*' or self._regex.match(value)) else -1
         
 class InequalityMatcher(Matcher):
     """
@@ -402,6 +402,8 @@ class InequalityMatcher(Matcher):
         self._value =  float(parts.group(2))
         
     def match(self, value):
+        if value == "*":
+            return 1
         return { 
             ">" : lambda m, n :  1 if m > n else -1,
             "<" : lambda m, n :  1 if m < n else -1,
@@ -577,7 +579,7 @@ class MatchingSelector(Selector):
         # needed because there is no guarantee that the nested UseAfter selector
         # will also match;  in that case,  the next best match where the
         # UseAfter selector does produce a result is desired.
-        for choice in self._winnowing_match(header):
+        for _match_tuples, choice in self.winnowing_match(header):
             if isinstance(choice, Selector):
                 try:
                     return choice.choose(header)
@@ -590,7 +592,7 @@ class MatchingSelector(Selector):
         log.verbose("Match failed.")
         raise MatchingError("No match.")
 
-    def _winnowing_match(self, header):
+    def winnowing_match(self, header, raise_ambiguous=True):
         """Iterate through each of the parameters in `fitskeys`, binding
         them successively to corresponding values from `header`.  For
         each bound fitskey,  iterate through `selections` and winnow out
@@ -603,17 +605,18 @@ class MatchingSelector(Selector):
         sorted_candidates = self._rank_candidates(weights, remaining)
         
         # Yield successive candidates in order from best match to worst, 
-        # merging equivalently weighted canidate groups.
-        for _weight, group in sorted_candidates:
-            if len(group) > 1:
-                raise AmbiguousMatchError("More than one match clause matched.")
-                subselectors = [remaining[match_tuple][1] for match_tuple in group]
+        # merging equivalently weighted candidate match_tuples.
+        for _weight, match_tuples in sorted_candidates:
+            if len(match_tuples) > 1:
+                if raise_ambiguous:
+                    raise AmbiguousMatchError("More than one match clause matched.")
+                subselectors = [remaining[match_tuple][1] for match_tuple in match_tuples]
                 selector = self.merge_group(subselectors)
             else:
-                selector = remaining[group[0]][1]
-            log.verbose("Matched", repr(group), "returning", repr(selector))
-            yield selector
-    
+                selector = remaining[match_tuples[0]][1]
+            log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector))
+            yield match_tuples, selector
+
     def _winnow(self, header, remaining):
         """Based on the parkey values in `header`, winnow out selections
         from `remaining` which cannot possibly match.  For each surviving
@@ -636,6 +639,7 @@ class MatchingSelector(Selector):
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
+                    # log.verbose("Winnowing", match_tuple)
                     del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   

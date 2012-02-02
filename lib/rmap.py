@@ -122,11 +122,10 @@ class MappingValidator(ast.NodeVisitor):
     raises exceptions for invalid constructs.   MappingValidator is concerned
     with limiting rmaps to safe code,  not deep semantic checks.
     """
-    def compile_and_check(self, filepath):
-        """Parse the file at `filepath`,  verify that it's a legal mapping,
-        and return a compiled code object.
+    def compile_and_check(self, text):
+        """Parse `text` to verify that it's a legal mapping, and return a 
+        compiled code object.
         """
-        text = open(filepath).read()
         if sys.version_info >= (2, 7, 0):
             self.visit(ast.parse(text))
         return compile(text, "<ast>", "exec")
@@ -227,22 +226,31 @@ class Mapping(object):
         """Load a mapping file `basename` and do syntax and basic validation.
         """
         where = locate_mapping(basename)
-        header, selector = cls._parse_header_selector(where)
+        text = open(where).read()
+        header, selector = cls._parse_header_selector(text, where)
         mapping = cls(basename, header, selector, **keys)
         mapping._validate_file_load(keys)
         return mapping
     
     @classmethod
-    def _parse_header_selector(cls, filepath):
+    def from_string(cls, text, basename="(noname)", **keys):
+        """Construct a mapping from string `text` nominally named `basename`.
+        """
+        header, selector = cls._parse_header_selector(text, basename)
+        mapping = cls(basename, header, selector, **keys)
+        mapping._validate_file_load(keys)
+        return mapping
+    
+    @classmethod
+    def _parse_header_selector(cls, text, where=""):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        code = MAPPING_VALIDATOR.compile_and_check(filepath)
+        code = MAPPING_VALIDATOR.compile_and_check(text)
         try:
             header, selector = cls._interpret(code)
         except Exception, exc:
-            raise MappingError("Can't load file ", 
-                               repr(os.path.basename(filepath)) +" : ", str(exc))
+            raise MappingError("Can't load file " + where + " : " + str(exc))
         return header, selector
     
     @classmethod
