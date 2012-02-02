@@ -90,7 +90,7 @@ and {file_table}.reference_file_type = '{reference_file_type}'
     return row_dicts    
 
 def get_reference_dicts(instrument, filekind, reffile):
-    return [ x for x in get_row_dicts(instrument, filekind) if x["file_name"].lower() == reffile.lower()]
+    return [ x for x in get_row_dicts(instrument, filekind) if x["file_name"] == reffile.lower()]
 
 # =======================================================================
 

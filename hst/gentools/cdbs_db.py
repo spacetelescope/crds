@@ -279,15 +279,18 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
         crds_refs = rmap.get_best_references(context, header, include)
         compare_results(header, crds_refs, mismatched, ignore)
 
+    # by usage convention all headers share the same instrument
+    instrument = header["INSTRUME"]
+
     elapsed = datetime.datetime.now() - start
     log.write()
     log.write()
     for filekind in mismatched:
         log.write(filekind, "mismatched:", mismatched[filekind])
     log.write()
-    log.write(count, "datasets")
-    log.write(elapsed, "elapsed")
-    log.write(count/elapsed.total_seconds(), "best refs / sec")
+    log.write(instrument, count, "datasets")
+    log.write(instrument, elapsed, "elapsed")
+    log.write(instrument, count/elapsed.total_seconds(), "best refs / sec")
     log.write()
     log.standard_status()
     log.set_verbose(oldv)
@@ -334,7 +337,7 @@ def testall(ncases=10**10, context="hst.pmap", instruments=None,
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
-        log.write(instr, ":")
+        log.write("instrument", instr + ":")
         test(instr+suffix, ncases, context)
         log.write()
 
