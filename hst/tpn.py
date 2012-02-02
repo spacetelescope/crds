@@ -34,22 +34,12 @@ import pprint
 
 import pyfits
 
-from crds import rmap, log, utils
+from crds import rmap, log, utils, reference_file
 from crds.certify import TpnInfo
-import geis
 
 # =============================================================================
 
 HERE = os.path.dirname(__file__) or "./"
-
-# =============================================================================
-
-def get_header(name):
-    """Return the unconditioned header dictionary of a geis or fits file."""
-    if geis.is_geis_header(name):
-        return geis.get_header(name)
-    else:
-        return pyfits.getheader(name)
 
 # =============================================================================
 
@@ -298,13 +288,13 @@ def get_tpninfos(instrument, filekind):
 
 # =============================================================================
 
-def reference_name_to_validator_key(fitsname):
+def reference_name_to_validator_key(filename):
     """Given a reference filename `fitsname`,  return a dictionary key
     suitable for caching the reference type's Validator.
     
     Return (instrument, filekind)
     """
-    header = get_header(fitsname)
+    header = reference_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]
