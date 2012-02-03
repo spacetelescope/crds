@@ -16,7 +16,7 @@ import gzip
 import re
 
 # import crds.pysh as pysh
-from crds import (log, rmap, pysh, reference_file)
+from crds import (log, rmap, pysh, data_file)
 from crds.hst import (tpn)
 
 HERE = os.path.dirname(__file__) or "./"
@@ -267,7 +267,7 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = reference_file.get_header(filename)
+    header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)

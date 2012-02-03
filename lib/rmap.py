@@ -70,7 +70,7 @@ import pyfits
 
 from .compat import namedtuple
 
-from . import (log, utils, selectors, reference_file)
+from . import (log, utils, selectors, data_file)
 from crds.selectors import ValidationError
 
 try:
@@ -425,7 +425,7 @@ class Mapping(object):
         """Return the names and values of `dataset`s header parameters which 
         are required to compute best references for it.
         """
-        return reference_file.get_conditioned_header(
+        return data_file.get_conditioned_header(
                 dataset, needed_keys=self.get_required_parkeys())
         
     def validate(self,  trap_exceptions=False):

@@ -34,7 +34,7 @@ import pprint
 
 import pyfits
 
-from crds import rmap, log, utils, reference_file
+from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
 
 # =============================================================================
@@ -294,7 +294,7 @@ def reference_name_to_validator_key(filename):
     
     Return (instrument, filekind)
     """
-    header = reference_file.get_header(filename)
+    header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     extension = FILETYPE_TO_EXTENSION[instrument][filetype]

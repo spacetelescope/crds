@@ -6,7 +6,7 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, utils, reference_file, timestamp, compat, log)
+from crds import (rmap, utils, data_file, timestamp, compat, log)
 from crds.timestamp import DATETIME_RE_STR
 
 KEY_RE = r"(\s*')(.*)('\s*:\s*')(.*)('\s*,.*)"
@@ -36,7 +36,7 @@ def rmap_insert_reference(old_rmap_contents, reffile):
     """
     loaded_rmap = rmap.ReferenceMapping.from_string(old_rmap_contents, ignore_checksum=True)
     parkeys = loaded_rmap.get_required_parkeys()[:-2] # skip DATE-OBS, TIME-OBS
-    header = reference_file.get_conditioned_header(reffile)
+    header = data_file.get_conditioned_header(reffile)
     
     # Figure out the explicit lookup pattern for reffile.
     ref_match_tuple = tuple([header[key] for key in parkeys])

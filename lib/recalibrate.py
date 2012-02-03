@@ -23,7 +23,7 @@ import optparse
 
 import pyfits
 
-from crds import (log, rmap, reference_file)
+from crds import (log, rmap, data_file)
 
 # ===================================================================
 
@@ -75,8 +75,8 @@ def get_recalibrate_info(context, dataset):
     """
     required_parkeys = context.get_minimum_header(dataset)
     filekinds = context.get_filekinds(dataset)
-    parkey_values = reference_file.get_header(dataset, required_parkeys)
-    old_bestrefs = reference_file.get_header(dataset, filekinds)
+    parkey_values = data_file.get_header(dataset, required_parkeys)
+    old_bestrefs = data_file.get_header(dataset, filekinds)
     old_bestrefs = { key.lower(): val.lower() \
                     for key, val in old_bestrefs.items()}
     return (parkey_values, old_bestrefs)
