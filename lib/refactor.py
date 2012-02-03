@@ -6,12 +6,25 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, utils, data_file, timestamp, compat, log)
+from crds import (rmap, utils, data_file, timestamp, compat, log, selectors)
 from crds.timestamp import DATETIME_RE_STR
 
+# ============================================================================
+    
 KEY_RE = r"(\s*')(.*)('\s*:\s*')(.*)('\s*,.*)"
 
+# ============================================================================
+    
+class NoUseAfterError(ValueError):
+    "The specified UseAfter datetime didn't exist in the rmap."
+
+class NoMatchTupleError(ValueError):
+    "The specified UseAfter datetime didn't exist in the rmap."
+
+# ============================================================================
+    
 def replace_header_value(filename, key, new_value):
+    """Set the value of `key` in `filename` to `new_value`."""
     # print "refactoring", repr(filename), ":", key, "=", repr(new_value)
     newfile = cStringIO.StringIO()
     openfile = open(filename)
@@ -35,29 +48,40 @@ def rmap_insert_reference(old_rmap_contents, reffile):
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
     loaded_rmap = rmap.ReferenceMapping.from_string(old_rmap_contents, ignore_checksum=True)
-    parkeys = loaded_rmap.get_required_parkeys()[:-2] # skip DATE-OBS, TIME-OBS
-    header = data_file.get_conditioned_header(reffile)
-    
-    # Figure out the explicit lookup pattern for reffile.
+
+    # XXX Hack alert skip DATE-OBS, TIME-OBS
+    parkeys = loaded_rmap.get_required_parkeys()[:-2]  
+    header = data_file.get_conditioned_header(
+        reffile, needed_keys=parkeys + ["USEAFTER"])
+    useafter_date = timestamp.reformat_date(header["USEAFTER"])
+    # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
     ref_match_tuple = tuple([header[key] for key in parkeys])
     
-    # log.write("Insert reference match tuple", repr(ref_match_tuple))
+    log.write("Insert at", ref_match_tuple, repr(useafter_date))
     
-    useafter_date = timestamp.reformat_date(header["USEAFTER"])
-
     # Figure out the abstract match tuples header matches against.
-    old_rmap_matches = get_tuple_matches(loaded_rmap, header)
-
+    old_rmap_tuples = get_tuple_matches(loaded_rmap, header, ref_match_tuple)
     new_contents = old_rmap_contents
-    for match_tuple in old_rmap_matches: 
-        new_contents = _rmap_delete_useafter(
-            new_contents, match_tuple, useafter_date)
-        new_contents = _rmap_add_useafter(
-            new_contents, match_tuple, useafter_date, os.path.basename(reffile))
+    for rmap_tuple in old_rmap_tuples:
+        if selectors.match_superset(ref_match_tuple, rmap_tuple):
+            log.write("Trying", rmap_tuple)
+            try:
+                new_contents, filename = _rmap_delete_useafter(
+                    new_contents, match_tuple, useafter_date)
+            except NoUseAfterError:
+                pass
+            except NoMatchTupleError:
+                pass
+            new_contents = _rmap_add_useafter(
+                new_contents, rmap_tuple, useafter_date, 
+                os.path.basename(reffile))
     
-    return new_contents, old_rmap_matches, useafter_date
+    return new_contents, old_rmap_tuples, useafter_date
 
-def get_tuple_matches(loaded_rmap, header):
+def _rmap_optional_delete_useafter(new_contents, match_tuple, useafter_date):
+
+
+def get_tuple_matches(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
     perform a winnowing match and return a list of match tuples corresponding
     to all possible matches of `loaded_rmap` against `header`.
@@ -70,14 +94,13 @@ def get_tuple_matches(loaded_rmap, header):
     never supported,  len(match tuples) == 1.
     """
     matches = []
-    for tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(
+    for rmap_tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(
                                         header, raise_ambiguous=False):
-        matches.extend(tuples)
+        for rmap_tuple in rmap_tuples:
+            if selectors.match_superset(ref_match_tuple, rmap_tuple):
+                matches.append(rmap_tuple)
     return matches
     
-def get_useafter_date(header):
-    return 
-
 def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, useafter_file):
     """Add one new useafter date / file to the `match_tuple` case of
     `old_rmap_contents`,  returning the modified rmap as a string.   If
@@ -152,7 +175,7 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
                     state = "find useafter"
             elif line.strip() == "})":   # end of rmap
                 # Never found match,  report an error.
-                raise CrdsError("Couldn't find match tuple " + repr(match_tuple))
+                raise NoMatchTupleError("Couldn't find match tuple " + repr(match_tuple))
         elif state == "find useafter":
             if line.strip().endswith(".fits',"):
                 # Handle a standard useafter clause
@@ -165,21 +188,22 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
                         state = "copy remainder"
                         continue
             elif line.strip() == "}),":
-                raise ValueError("Couldn't find useafter " +
+                raise NoUseAfterError("Couldn't find useafter " +
                                 repr((useafter_date, useafter_file)) +
                                 " in match tuple " + repr(match_tuple))
         new_mapping_file.write(line)
     assert state == "copy remainder", "no useafter insertion performed"
     new_mapping_file.seek(0)
-    return new_mapping_file.read()
+    return new_mapping_file.read(), filename
 
 def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
                       useafter_file):
-    """Add one new useafter date / file to the `match_tuple` case of
-    `old_rmap`,  writing the modified rmap out to `new_rmap`.
+    """Delete one new useafter date / file of the `match_tuple` case of
+    `old_rmap`,  writing the modified rmap out to `new_rmap`.   The case
+    is expected to be present in the rmap or an exception is raised.
     """
     old_rmap_contents = open(old_rmap).read()
-    new_rmap_contents = _rmap_delete_useafter(
+    new_rmap_contents, _filename = _rmap_delete_useafter(
         old_rmap_contents, match_tuple, usafter_date, useafter_file)
     open(new_rmap, "w+").write(new_rmap_contents)
 

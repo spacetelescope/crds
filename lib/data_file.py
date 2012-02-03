@@ -43,11 +43,10 @@ def get_fits_header_union(fname, needed_keys=[]):
         for key in hdu.header:
             if get_all_keys or key in needed_keys:
                 newval = hdu.header[key]
-                if key not in union:
-                    union[key] = newval
-                elif union[key] != newval and key in needed_keys:
+                union[key] = newval
+                if union[key] != newval and key in needed_keys:
                     log.warning("Header union collision on", repr(key),
-                                repr(union[key]), "precedes",repr(newval))
+                                repr(union[key]), "replaces",repr(newval))
     for key in needed_keys:
         if key not in union:
             union[key] = "NOT PRESENT"

@@ -338,6 +338,33 @@ class Selector(object):
 
 # ==============================================================================
 
+def match_superset(tuple1, tuple2):
+    """Return True IFF match tuple1 is equal to or more general than tuple2.
+    
+    >>> match_superset(('1','2'),  ('1','2'))
+    True
+    >>> match_superset(('1','*'),  ('1','2'))
+    True
+    >>> match_superset(('1','2'),  ('1','*'))
+    False
+    >>> match_superset(('1|a','2'),  ('1','2'))
+    True
+    >>> match_superset(('1','2'),  ('1','2|b'))
+    False
+    >>> match_superset(('1|a','2'),  ('1','2|b'))
+    False
+    """
+    for i in range(len(tuple1)):
+        v1 = tuple1[i]
+        v2 = tuple2[i]
+        if v1 == v2 or (v1 == "*" and v2 != "*"):
+            continue
+        if v1 != "*" and v2 == "*":
+            return False
+        if set(v1.split("|")) < set(v2.split("|")):
+            return False
+    return True
+
 class Matcher(object):
     """Matches a single key of a matching tuple to a dataset value.  Every
     key of a MatchingSelector will have a tuple of corresponding Matchers.
