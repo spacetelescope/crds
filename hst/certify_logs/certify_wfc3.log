@@ -10,12 +10,14 @@ INFO:[6]: Validating hst_wfc3_atodtab.rmap
 INFO:[7]: Validating hst_wfc3_ccdtab.rmap 
 INFO:[8]: Validating hst_wfc3_bpixtab.rmap 
 INFO:[9]: Validating hst_wfc3_oscntab.rmap 
-INFO:[10]: Validating hst_wfc3_crrejtab.rmap 
-INFO:[11]: Validating hst_wfc3_pfltfile.rmap 
-WARNING[4]: Parameter 'BINAXIS1' is unchecked. 
-WARNING[5]: Parameter 'BINAXIS2' is unchecked. 
-INFO:[12]: Validating hst_wfc3_mdriztab.rmap 
+INFO:[10]: Validating hst_wfc3_biasfile.rmap 
+WARNING[4]: Parameter 'SUBARRAY' is unchecked. 
+INFO:[11]: Validating hst_wfc3_crrejtab.rmap 
+INFO:[12]: Validating hst_wfc3_pfltfile.rmap 
+WARNING[5]: Parameter 'BINAXIS1' is unchecked. 
+WARNING[6]: Parameter 'BINAXIS2' is unchecked. 
+INFO:[13]: Validating hst_wfc3_mdriztab.rmap 
 0 errors 
-5 warnings 
-12 infos 
+6 warnings 
+13 infos 
  

@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:35',
-    'description' : 'Initially generated on 2012-01-31 13:39:35',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:09:57',
     'filekind' : 'PEDSBTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '34d4fb129900db01a33382b3ded53417a1b59ec6',
+    'sha1sum' : 'f5ef8e93437d5d3cabe25ec1b5510bf0812c503b',
 }
 
 selector = Match({

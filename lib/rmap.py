@@ -639,15 +639,6 @@ class InstrumentContext(Mapping):
                 refs[filekind] = "NOT FOUND " + str(exc)
         return refs
 
-    def get_binding(self, header):
-        """Given a header,  return the binding of all keywords pertinent to all
-        filekinds for this instrument.
-        """
-        binding = {}
-        for filekind in self.selections:
-            binding.update(self.selections[filekind].get_binding(header))
-        return binding
-    
     def reference_names(self):
         """Returns [ref_file_name...]
         """
@@ -703,7 +694,7 @@ class ReferenceMapping(Mapping):
     reference filetype and instantiate an appropriate selector tree from the 
     rmap header and data.
     """
-    required_attrs = InstrumentContext.required_attrs + ["filekind","extra_keys"]
+    required_attrs = InstrumentContext.required_attrs + ["filekind"]
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
@@ -760,7 +751,6 @@ class ReferenceMapping(Mapping):
                 parkeys += list(key)
             else:
                 parkeys.append(key)
-        parkeys += list(self.extra_keys)
         return parkeys
     
     def get_parkey_map(self):

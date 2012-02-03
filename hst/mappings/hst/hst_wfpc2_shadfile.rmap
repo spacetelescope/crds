@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:49',
-    'description' : 'Initially generated on 2012-01-31 13:39:49',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:44',
     'filekind' : 'SHADFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE', 'SHUTTER'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'd6337307aca3d08cd2e0848d2a0dfe11eaa6f514',
+    'sha1sum' : '51e1462b791f12220bbabe6424d73ee03b3a3fd3',
 }
 
 selector = Match({

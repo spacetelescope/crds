@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:39',
-    'description' : 'Initially generated on 2012-01-31 13:39:39',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:07',
     'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector != "ccd")',
-    'sha1sum' : 'fa975f7dda166cf421061c3c84db2035a3612505',
+    'sha1sum' : '500fb1aa85360b00c5123ea49551308fdf118691',
 }
 
 selector = Match({

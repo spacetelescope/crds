@@ -441,7 +441,7 @@ class MatchingSelector(Selector):
     >>> m = MatchingSelector(("foo","bar"), {
     ...    ('1.0', '*') : "100",
     ...    ('1.0', '2.0') : "200",
-    ...    ('*', '*') : "300",
+    ...    ('4.0', '*') : "300",
     ... })
 
     >>> m.choose(dict(foo='1.0',bar='2.0'))
@@ -454,9 +454,9 @@ class MatchingSelector(Selector):
     
     >>> print m.format()
     Match({
-        ('*', '*') : '300',
         ('1.0', '*') : '100',
         ('1.0', '2.0') : '200',
+        ('4.0', '*') : '300',
     })
     
     All match tuple fields should appear on a valid values list:
@@ -496,25 +496,23 @@ class MatchingSelector(Selector):
     
     def __init__(self, parameters, selections, rmap_header=None):
         Selector.__init__(self, parameters, selections)  # largely overridden
+        if rmap_header is None:
+            rmap_header = {}
+        self._relevance_expr = rmap_header.get("relevance","ALWAYS")
+        self._substitutions = rmap_header.get("substitutions", {})
+        self._extra_keys = rmap_header.get("extra_keys",())        
         self._parameters = tuple(parameters)
         self._value_map = {}
         self._selections = sorted(selections.items())
 
         selections = self.fix_simple_keys(selections)
         
-        if rmap_header is None:
-            rmap_header = {}
-        self._substitutions = rmap_header.get("substitutions", {})
         
         selections = self.do_substitutions(selections, self._substitutions)
         
-        self._relevance_expr = rmap_header.get("relevance","True")
-        if self._relevance_expr == "ALWAYS":
-            self._relevance_expr = "True"
-        
         self._match_selections = self.get_matcher_selections(selections)
         self._value_map = self.get_value_map()
-            
+     
     def fix_simple_keys(self, selections):
         """ Enable simple mappings like:  "ACS":"filename" rather than 
         ("ACS",):"filename"
@@ -706,48 +704,39 @@ class MatchingSelector(Selector):
         key,  or if the value of any key is not one of the possible
         values.
         """
-        self.check_relevance(header)
-        
-        for fitsvar in self._parameters:
-            if fitsvar in header:
-                value = header[fitsvar]
-                valid_values = self._value_map[fitsvar]
-                if value not in valid_values and '*' not in valid_values:
-                    raise BadValueError("Key " + fitsvar + "=" + value +
-                                " not in valid values " + repr(valid_values))
-            else:
-                raise MissingParameterError(
-                    "Required parameter " + repr(fitsvar) + " is missing.")
-                    
-    def check_relevance(self, header):
-        """Raise an exception if this rmap doesn't apply to the instrument
-        mode defined in `header`.
-        """
         # relevance expressions are in all lower case.
         lc_header = {}
         for key in header:
             lc_header[key.lower()] = header[key].lower()
+
+        self.check_relevance(lc_header)
+        
+        for fitsvar in self._parameters:
+            valid_values = self._value_map[fitsvar]
+            if fitsvar in header:
+                value = header[fitsvar]
+                if (value not in valid_values) and ('*' not in valid_values):
+                    raise BadValueError("Key " + fitsvar + "=" + value +
+                                " not in valid values " + repr(valid_values))
+            elif "*" not in valid_values:
+                raise MissingParameterError(
+                    "Required parameter " + repr(fitsvar) + " is missing.")
+
+    def check_relevance(self, lc_header):
+        """Raise an exception if this rmap doesn't apply to the instrument
+        mode defined in `header`.
+        """
         try:
-            relevant = eval(self._relevance_expr, lc_header, lc_header)
+            if self._relevance_expr != "ALWAYS":
+                relevant = eval(self._relevance_expr, {}, lc_header)
+            else:
+                relevant = True
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
             if not relevant:
                 raise IrrelevantReferenceTypeError(
                     "Rmap does not apply to the given parameter set.")
-
-    def get_binding(self, header):
-        """Return the assignment of `header` values to the parkeys of this
-        Selector.
-        """
-        # get the parameter names that matter,  based on *dataset*
-        binding = {}
-        for fitsvar in self._parameters:
-            if fitsvar in header:
-                binding[fitsvar] = header[fitsvar]
-            else:
-                binding[fitsvar] = '**required parameter not defined**'
-        return binding
 
     def _validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values

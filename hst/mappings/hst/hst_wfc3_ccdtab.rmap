@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:43',
-    'description' : 'Initially generated on 2012-01-31 13:39:43',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:30',
     'filekind' : 'CCDTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'e29b382c8c7a48b034cb92df4eaedee243fb4d83',
+    'sha1sum' : 'a01b9d9ff69402ae903fb4a00a86f6c6960a1d1d',
 }
 
 selector = Match({

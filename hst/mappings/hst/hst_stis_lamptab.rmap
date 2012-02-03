@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:39',
-    'description' : 'Initially generated on 2012-01-31 13:39:39',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:06',
     'filekind' : 'LAMPTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(obstype == "spectroscopic")',
-    'sha1sum' : '02d1a751f6ded6ac6fd50f13f825b913e75bd201',
+    'sha1sum' : 'b8feb63bf8147b14f278f7e48689e16edf6a8096',
 }
 
 selector = Match({

@@ -53,7 +53,23 @@ def generate_rmap(instrument, filekind):
     write_rmap("hst", instrument, filekind, kind_map)
 
 def get_row_dicts(instrument, kind):
+    """get_row_dicts() dumps the CDBS "row" table for `instrument` and
+    file`kind`.  It is complicated because not all match parameters
+    are in the database (hence extra_parkeys) and sometimes the
+    database name for a key differs from the FITS name of a key.
+
+    It returns a list of row dictionaries: [{parkey : value, ...}, ...]
+
+    Always, "extra" parkeys are used in tests which precede or follow
+    matching, but since they are not in the database by definition
+    CDBS does not use them for matching.   For CRDS,  "extra" parkeys
+    can once again be used in match relations but actual values for the
+    extra keys must be added to the rmap through another mechanism such
+    as an rmap customization filter.   By default,  extra parkeys are
+    assigned the value "*" in all match tuples.
+    """
     db_parkeys = list(parkeys.get_db_parkeys(instrument, kind))
+    extra_parkeys = list(parkeys.get_extra_keys(instrument, kind))
     reftype = parkeys.get_reftype(instrument, kind)
     row_table = ROW_TABLES.get(instrument, instrument + "_row")
     file_table = FILE_TABLES.get(instrument, instrument + "_file")
@@ -74,7 +90,9 @@ and {file_table}.reference_file_type = '{reference_file_type}'
            reference_file_type = reftype.upper())
     log.verbose("executing", sql)
     fits_parkeys = parkeys.get_fits_parkeys(instrument, kind)
-    fields = list(db_parkeys) + ["file_name", "comment", "useafter_date"]
+    fields = list(db_parkeys) + \
+        ["file_name", "comment", "useafter_date"] + \
+        list(extra_parkeys)
     try:
         generator = cdbs_db.get_reffile_ops().execute(sql)
     except:
@@ -82,6 +100,7 @@ and {file_table}.reference_file_type = '{reference_file_type}'
         return
     row_dicts = []
     for row in generator:
+        row = tuple(row) + (len(extra_parkeys) * ("*",))
         rowd = dict(zip(fields, row))
         for key, val in rowd.items():
             rowd[key] = utils.condition_value(val)
@@ -90,6 +109,7 @@ and {file_table}.reference_file_type = '{reference_file_type}'
     return row_dicts    
 
 def get_reference_dicts(instrument, filekind, reffile):
+    """Returns a list of the row dictionaries which apply to `reffile`."""
     return [ x for x in get_row_dicts(instrument, filekind) if x["file_name"] == reffile.lower()]
 
 # =======================================================================
@@ -243,34 +263,33 @@ def get_match_tuple(row, instrument, filekind):
     Return a tuple of match parameters.
     """
     db_parkeys = parkeys.get_db_parkeys(instrument, filekind)     # ordered
-    restrictions = parkeys.get_parkey_restrictions(instrument, filekind)
-    # Construct a raw parkey dictionary for this match tuple
-    raw = {}
-    for pkey in db_parkeys:
-        raw[pkey] = row.get(pkey, "not present")
+    extra_parkeys = parkeys.get_extra_keys(instrument, filekind)     # ordered
     # Mutate irrelevant parameters to *
-    restricted = apply_restrictions(restrictions, raw, row)
+    restricted = apply_restrictions(row, instrument, filekind)
     # Construct a simple match tuple (no names) in the right order.
     match = []
-    for pkey in db_parkeys:
-        match.append(restricted.get(pkey, "not present"))
+    for pkey in db_parkeys + extra_parkeys:
+        match.append(restricted[pkey])
     return tuple(match)
 
-def apply_restrictions(restrictions, raw, row):
+def apply_restrictions(row, instrument, filekind):
     """Apply CDBS parameter restrictions to a raw match tuple dictionary,
     mutating irrelevant parameters to "*".
     """
-    # Define the value "header" in the restriction expressions in parkeys.dat 
+    restrictions = parkeys.get_parkey_restrictions(instrument, filekind)
+    # Get a lowercase version of row for evaluating restriction expressions
+    # Nominally this corresponds to the dataset header.
     header = {}
-    for key,value in raw.items():
+    for key,value in row.items():
         header[key.lower()] = value.lower()
     result = {}
     # Mutate irrelevant parameters to "*".
-    for key, value in raw.items():
+    for key, value in row.items():
         if key in restrictions:
             if not eval(restrictions[key], {}, header):
                 value = "*"
-            log.info("restricting", row["file_name"], key, "of", header,"with",restrictions[key],"value =", value)
+            log.verbose("restricting", row["file_name"], key, "of", header, 
+                     "with", restrictions[key], "value =", value)
         result[key] = value
     return result
 
@@ -289,9 +308,17 @@ def write_rmap(observatory, instrument, filekind, kind_map):
     outputs an rmap file
     """
     outname  = "./" + observatory + "_" + instrument + "_" + filekind + ".rmap"
-    fitskeys = tuple([key.upper() for key in 
-                    parkeys.get_fits_parkeys(instrument, filekind)])
-    mapkeys  = ('DATE-OBS', 'TIME-OBS',)
+    # CRDS matches against keys which come from both the CDBS database
+    # and the dataset.  In both cases, FITS names are used in the rmap
+    # while the database name was/is required to obtain the match
+    # value.  At rmap generation time, the values of extra keys (non
+    # database FITS) ware either hard coded to "*" or computed by a
+    # reference specific generation filter.
+    match_keys = tuple([key.upper() for key in 
+                      parkeys.get_fits_parkeys(instrument, filekind) +
+                      parkeys.get_extra_keys(instrument, filekind)
+                      ])
+    useafter_keys  = ('DATE-OBS', 'TIME-OBS',)
     now = timestamp.now().split('.')[0]
     rmap_header = OrderedDict([
         ("name", outname[2:]),
@@ -300,10 +327,9 @@ def write_rmap(observatory, instrument, filekind, kind_map):
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),
         ("filekind", filekind.upper()),
-        ("parkey", (fitskeys, mapkeys)),
-        ("extra_keys", tuple([key.upper() for key in parkeys.get_extra_keys(instrument, filekind)])),
+        ("parkey", (match_keys, useafter_keys)),
+        # ("extra_keys", tuple([key.upper() for key in parkeys.get_extra_keys(instrument, filekind)])),
         ("relevance", parkeys.get_relevance(instrument, filekind)),
-        ("description", ("Initially generated on " + now)),
     ])
 
     # Execute filekind specific customizations on header    
@@ -323,9 +349,8 @@ def write_rmap(observatory, instrument, filekind, kind_map):
                                 repr(existing_file))
             useafter_selections[fmap.date] = fmap.file
         matching_selections[match_tuple] = selectors.UseAfterSelector(
-                ("DATE-OBS", "TIME-OBS"), useafter_selections)
-    rmap_selector = selectors.MatchingSelector(
-        fitskeys[:-2], matching_selections)
+                useafter_keys, useafter_selections)
+    rmap_selector = selectors.MatchingSelector(match_keys, matching_selections)
     rmapping = rmap.ReferenceMapping(outname, rmap_header, rmap_selector)
     rmapping.write()
 

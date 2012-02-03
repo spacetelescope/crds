@@ -9,6 +9,9 @@ WARNING[1]: Parameter 'NUMCOLS' is unchecked.
 WARNING[2]: Parameter 'NUMROWS' is unchecked. 
 WARNING[3]: Parameter 'LTV1' is unchecked. 
 WARNING[4]: Parameter 'LTV2' is unchecked. 
+WARNING[5]: Parameter 'XCORNER' is unchecked. 
+WARNING[6]: Parameter 'YCORNER' is unchecked. 
+WARNING[7]: Parameter 'CCDCHIP' is unchecked. 
 INFO:[8]: Validating hst_acs_spottab.rmap 
 INFO:[9]: Validating hst_acs_mlintab.rmap 
 INFO:[10]: Validating hst_acs_dgeofile.rmap 
@@ -22,6 +25,6 @@ INFO:[17]: Validating hst_acs_flshfile.rmap
 INFO:[18]: Validating hst_acs_cfltfile.rmap 
 INFO:[19]: Validating hst_acs_mdriztab.rmap 
 0 errors 
-4 warnings 
+7 warnings 
 19 infos 
  

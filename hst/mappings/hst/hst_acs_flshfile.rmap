@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:12',
-    'description' : 'Initially generated on 2012-01-31 13:39:12',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:09:24',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector != "sbc" and flashcur != "off")',
-    'sha1sum' : 'e55a4fb4b71d7ad2ba3984117af3ddecd289ef9a',
+    'sha1sum' : '9a743d4d66c2868094d885ef9d6b9fa581cc96aa',
 }
 
 selector = Match({

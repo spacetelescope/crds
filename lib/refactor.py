@@ -70,7 +70,8 @@ def get_tuple_matches(loaded_rmap, header):
     never supported,  len(match tuples) == 1.
     """
     matches = []
-    for tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(header):
+    for tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(
+                                        header, raise_ambiguous=False):
         matches.extend(tuples)
     return matches
     

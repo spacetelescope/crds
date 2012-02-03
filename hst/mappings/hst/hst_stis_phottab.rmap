@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:40',
-    'description' : 'Initially generated on 2012-01-31 13:39:40',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:08',
     'filekind' : 'PHOTTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '8118fe00776814852f0c67766a91863865854c8a',
+    'sha1sum' : 'f41d5c6a615dfa104c333a7308a2f3bc6ffeef79',
 }
 
 selector = Match({

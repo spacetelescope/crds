@@ -1,7 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-01-31 13:39:40',
-    'description' : 'Initially generated on 2012-01-31 13:39:40',
-    'extra_keys' : (),
+    'derived_from' : 'scraped 2012-02-03 08:10:08',
     'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '4159d6aa547f4393b4ef1a717964d628ab2e728e',
+    'sha1sum' : '8bf42b20ae84415756720c8f835b57510841d33e',
 }
 
 selector = Match({

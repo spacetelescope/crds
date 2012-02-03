@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 11:32:10',
-    'description' : 'Initially generated on 2012-01-20 11:32:10',
+    'derived_from' : 'scraped 2012-02-03 08:11:01',
+    'description' : 'Initially generated on 2012-02-03 08:11:01',
     'instrument' : 'WFPC2',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_wfpc2.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'd1c35de092f0e73bba874f494546df22f405b4cc',
+    'sha1sum' : '039178eba06f9ccff2bde16385a4aaa5ea7d1cf3',
 }
 
 selector = {
@@ -14,6 +14,7 @@ selector = {
     'biasfile' : 'hst_wfpc2_biasfile.rmap',
     'darkfile' : 'hst_wfpc2_darkfile.rmap',
     'dgeofile' : 'hst_wfpc2_dgeofile.rmap',
+    'flatfile' : 'hst_wfpc2_flatfile.rmap',
     'idctab' : 'hst_wfpc2_idctab.rmap',
     'maskfile' : 'hst_wfpc2_maskfile.rmap',
     'offtab' : 'hst_wfpc2_offtab.rmap',

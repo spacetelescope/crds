@@ -1,16 +1,17 @@
 header = {
-    'derived_from' : 'scraped 2012-01-20 11:32:10',
-    'description' : 'Initially generated on 2012-01-20 11:32:10',
+    'derived_from' : 'scraped 2012-02-03 08:11:01',
+    'description' : 'Initially generated on 2012-02-03 08:11:01',
     'instrument' : 'WFC3',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_wfc3.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '233d575331e002183dc01b08581d3724c1a98603',
+    'sha1sum' : 'fe1b3ac8426784b59e9a8f12a7c46d0dfbc07b6f',
 }
 
 selector = {
     'atodtab' : 'hst_wfc3_atodtab.rmap',
+    'biasfile' : 'hst_wfc3_biasfile.rmap',
     'bpixtab' : 'hst_wfc3_bpixtab.rmap',
     'ccdtab' : 'hst_wfc3_ccdtab.rmap',
     'crrejtab' : 'hst_wfc3_crrejtab.rmap',
