@@ -38,8 +38,40 @@ def replace_header_value(filename, key, new_value):
     open(filename, "w+").write(newfile.read())
     
 # ============================================================================
-    
-def rmap_insert_reference(old_rmap_contents, reffile):
+
+class RefactorAction(object):
+    """Records and formats info regarding a refactoring operation."""
+    def __init__(self, rmap_name, action, ref_file, ref_match_tuple, rmap_match_tuple, 
+                 useafter, replaced_file):
+        self.rmap_name = rmap_name
+        self.action = action
+        self.ref_file = ref_file
+        self.ref_match_tuple = ref_match_tuple
+        self.rmap_match_tuple = rmap_match_tuple
+        self.useafter = useafter
+        self.replaced_file = replaced_file
+            
+    def __str__(self):
+        if self.action == "insert":
+            parts = [ "In rmap", repr(self.rmap_name),
+                     "at match", self.rmap_match_tuple,
+                     "useafter", repr(self.useafter),
+                     "INSERT", repr(self.ref_file), 
+                     "matching", self.ref_match_tuple,
+                      ]
+        elif self.action == "replace":
+            parts = [ "In rmap", repr(self.rmap_name),
+                      "at match", self.rmap_match_tuple,
+                      "useafter", repr(self.useafter),
+                      "REPLACE", repr(self.replaced_file),
+                      "with", repr(self.ref_file), 
+                      "matching", self.ref_match_tuple, 
+                      ]
+        else:
+            raise ValueError("Unknown action " + repr(self.action))    
+        return " ".join([str(x) for x in parts])
+
+def rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the contents
     of a new rmap with `reffile` inserted at all matching parkey 
     locations.  This routine assumes HST standard selector organization,  
@@ -57,29 +89,30 @@ def rmap_insert_reference(old_rmap_contents, reffile):
     # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
     ref_match_tuple = tuple([header[key] for key in parkeys])
     
-    log.write("Insert at", ref_match_tuple, repr(useafter_date))
+    # log.write("Insert at", ref_match_tuple, repr(useafter_date))
     
     # Figure out the abstract match tuples header matches against.
     old_rmap_tuples = get_tuple_matches(loaded_rmap, header, ref_match_tuple)
     new_contents = old_rmap_contents
+    actions = []
     for rmap_tuple in old_rmap_tuples:
         if selectors.match_superset(ref_match_tuple, rmap_tuple):
-            log.write("Trying", rmap_tuple)
+            # log.write("Trying", rmap_tuple)
+            replaced_filename = None
             try:
-                new_contents, filename = _rmap_delete_useafter(
-                    new_contents, match_tuple, useafter_date)
+                new_contents, replaced_filename = _rmap_delete_useafter(
+                    new_contents, rmap_tuple, useafter_date)
+                kind = "replace"
             except NoUseAfterError:
-                pass
+                kind = "insert"
             except NoMatchTupleError:
-                pass
+                kind = "insert"
             new_contents = _rmap_add_useafter(
                 new_contents, rmap_tuple, useafter_date, 
                 os.path.basename(reffile))
-    
-    return new_contents, old_rmap_tuples, useafter_date
-
-def _rmap_optional_delete_useafter(new_contents, match_tuple, useafter_date):
-
+        actions.append(RefactorAction(old_rmap_name, kind, reffile, ref_match_tuple,
+                        rmap_tuple, useafter_date, replaced_filename,))
+    return new_contents, actions, useafter_date
 
 def get_tuple_matches(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
@@ -216,12 +249,10 @@ def main():
         inserted_references = sys.argv[4:]
         contents = open(rmap.locate_mapping(old_rmap, "hst")).read()
         for reference in inserted_references:
-            log.write("Inserting", repr(reference))
-            contents, match_tuples, useafter = \
-                rmap_insert_reference(contents, reference)
-            for match in match_tuples:
-                log.write("Inserted", repr(reference), "at", repr(match), 
-                          repr(useafter))
+            contents, actions, useafter = \
+                rmap_insert_reference(old_rmap, contents, reference)
+            for action in actions:
+                log.write(action)
         open(new_rmap, "w+").write(contents)
     else:
         print "usage: python -m crds.refactor insert <old_rmap> <new_rmap> <references...>"
