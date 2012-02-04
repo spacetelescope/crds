@@ -51,3 +51,12 @@ def get_fits_header_union(fname, needed_keys=[]):
         if key not in union:
             union[key] = "NOT PRESENT"
     return union
+
+def get_fits_header(fname, needed_keys=[]):
+    """Return `needed_keys` or all from FITS file `fname`s primary header."""
+    header = {}
+    all = pyfits.getheader(fname)
+    for key in needed_keys or all:
+        header[key] = all[key]
+    return header
+
