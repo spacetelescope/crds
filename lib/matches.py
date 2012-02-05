@@ -46,9 +46,26 @@ def reference(filename):
 
 # ===================================================================
 
-def find_match_tuples(context, reference):
+def find_full_match_paths(context, reference):
+    """Return the list of full match paths for `reference` in `context` as a
+    list of tuples of tuples.   Each inner tuple is a (var, value) pair.
+    
+    Returns [((context_tuples,),(match_tuple,),(useafter_tuple,)), ...]
+    """
     ctx = rmap.get_cached_mapping(context)
     return ctx.file_matches(reference)
+
+def find_match_tuples(context, reference):
+    """Return the list of match tuples for `reference` in `context`.   
+    
+    Returns [ match_tuple, ...] where match_tuple = ((var, value), ...)
+    """
+    ctx = rmap.get_cached_mapping(context)
+    result = []
+    for path in ctx.file_matches(reference):
+        match_tuple = tuple([tup[1] for tup in path[1]])
+        result.append(match_tuple)
+    return result
 
 def main():
     # Check inputs

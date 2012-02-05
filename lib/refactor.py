@@ -71,7 +71,7 @@ class RefactorAction(object):
             raise ValueError("Unknown action " + repr(self.action))    
         return " ".join([str(x) for x in parts])
 
-def rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
+def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the contents
     of a new rmap with `reffile` inserted at all matching parkey 
     locations.  This routine assumes HST standard selector organization,  
@@ -86,33 +86,47 @@ def rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     header = data_file.get_conditioned_header(
         reffile, needed_keys=parkeys + ["USEAFTER"])
     useafter_date = timestamp.reformat_date(header["USEAFTER"])
+
     # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
     ref_match_tuple = tuple([header[key] for key in parkeys])
-    
-    # log.write("Insert at", ref_match_tuple, repr(useafter_date))
+    actions = []
+    new_contents = old_rmap_contents
     
     # Figure out the abstract match tuples header matches against.
-    old_rmap_tuples = get_tuple_matches(loaded_rmap, header, ref_match_tuple)
-    new_contents = old_rmap_contents
-    actions = []
-    for rmap_tuple in old_rmap_tuples:
-        if selectors.match_superset(ref_match_tuple, rmap_tuple):
-            # log.write("Trying", rmap_tuple)
-            replaced_filename = None
-            try:
-                new_contents, replaced_filename = _rmap_delete_useafter(
-                    new_contents, rmap_tuple, useafter_date)
-                kind = "replace"
-            except NoUseAfterError:
-                kind = "insert"
-            except NoMatchTupleError:
-                kind = "insert"
-            new_contents = _rmap_add_useafter(
-                new_contents, rmap_tuple, useafter_date, 
-                os.path.basename(reffile))
+    for rmap_tuple in get_tuple_matches(loaded_rmap, header, ref_match_tuple):
+        # log.write("Trying", rmap_tuple)
+        replaced_filename = None
+        try:
+            new_contents, replaced_filename = _rmap_delete_useafter(
+                new_contents, rmap_tuple, useafter_date)
+            kind = "replace"
+        except NoUseAfterError:
+            kind = "insert"
+        except NoMatchTupleError:
+            kind = "insert"
+        new_contents = _rmap_add_useafter(
+            new_contents, rmap_tuple, useafter_date, 
+            os.path.basename(reffile))
         actions.append(RefactorAction(old_rmap_name, kind, reffile, ref_match_tuple,
                         rmap_tuple, useafter_date, replaced_filename,))
     return new_contents, actions, useafter_date
+
+def rmap_insert_references(old_rmap, new_rmap, inserted_references):
+    """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
+    or replacing all files in `inserted_references` and write out the result to
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
+    
+    Return the list of RefactorAction's performed.
+    """
+    contents = open(old_rmap).read()
+    for reference in inserted_references:
+        contents, actions, useafter = \
+            _rmap_insert_reference(old_rmap, contents, reference)
+        for action in actions:
+            log.write(action)
+    if actions:
+        open(new_rmap, "w+").write(contents)
+    return actions
 
 def get_tuple_matches(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
@@ -247,13 +261,7 @@ def main():
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
-        contents = open(rmap.locate_mapping(old_rmap, "hst")).read()
-        for reference in inserted_references:
-            contents, actions, useafter = \
-                rmap_insert_reference(old_rmap, contents, reference)
-            for action in actions:
-                log.write(action)
-        open(new_rmap, "w+").write(contents)
+        rmap_insert_references(old_rmap, new_rmap, inserted_references)
     else:
         print "usage: python -m crds.refactor insert <old_rmap> <new_rmap> <references...>"
 
