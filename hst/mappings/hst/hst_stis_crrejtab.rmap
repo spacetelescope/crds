@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-03 08:10:02',
+    'derived_from' : 'scraped 2012-02-07 11:00:02',
     'filekind' : 'CRREJTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector == "ccd")',
-    'sha1sum' : '7a72829dc56e5bd1ccef0c5fc6b722f249f19c5d',
+    'sha1sum' : '065b27472b1e883e5e2057ec4dd3b8bcfb8c208f',
 }
 
 selector = Match({

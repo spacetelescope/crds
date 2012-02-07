@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-03 08:09:45',
+    'derived_from' : 'scraped 2012-02-07 10:59:55',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,40 +7,20 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '02430363caeb48f17a563b618ac62a48625d0c81',
+    'sha1sum' : 'a050f28d66839415387a371179032abe805bcb19',
 }
 
 selector = Match({
     ('FUV', 'G130M') : UseAfter({
         '1996-10-01 00:00:00' : 'v3n1816ml_flat.fits',
     }),
-    ('FUV', 'G140L') : UseAfter({
+    ('FUV', 'G130M|G140L|G160M') : UseAfter({
         '1996-10-01 00:00:00' : 'n9n20182l_flat.fits',
     }),
     ('FUV', 'G160M') : UseAfter({
         '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
     }),
-    ('NUV', 'G185M') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
-    }),
-    ('NUV', 'G225M') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
-    }),
-    ('NUV', 'G230L') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
-    }),
-    ('NUV', 'G285M') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
-    }),
-    ('NUV', 'MIRRORA') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
-        '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
-    }),
-    ('NUV', 'MIRRORB') : UseAfter({
+    ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB') : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
         '2009-05-11 00:00:00' : 'v2e20129l_flat.fits',
     }),

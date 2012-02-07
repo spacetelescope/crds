@@ -1,0 +1,36 @@
+# /bin/tcsh
+
+# This script executes the myriad of steps used in importing
+# information from CDBS in order to generate and test rmaps.  In
+# theory this should probably be a make file,  in practice the output
+# needs some review anyway.
+
+# Regenerate the CDBS reference file map, basically a cache of the 
+# /grp/hst/cdbs dir listing to use to find CDBS file paths fast.
+python locate.py
+
+# Process CDBS reference_file_defs.xml to extract information about when 
+# reference files are relevant to a parameter set,  when particular parameters
+# are relevant to a reference selection, what the relationship between FITS
+# keywords and database column names is, etc.   i.e. regenerate parkeys.dat
+python parkeys.py
+
+
+# Regenerate rmaps, imaps, and pmaps.   
+# Dump the DADSOPS dataset catalogs into pickles for testing consistent with
+# the current rmaps;  the best refs in DADSOPS
+(cd gentools;  ./gen_rmaps >& gen_rmaps.out; python gen_contexts.py >& tee gen_context.out; python cdbs_db.py dumpall)
+
+# Examine cdbscatalog.dat to generate the maps relating filekinds,
+# CDBS file suffixes, etc.  
+python tpn.py hst.pmap
+
+# Re-install CRDS to capture the latest generated .dat files
+../install
+
+# Run the CRDS certifier on the new rmaps
+(cd certify_logs; ./certify_all)
+
+# Run comparison tests on all HST datasets.
+(cd gentools; python cdbs_db.py testall >& testall.err;  grep errors testall.err)
+

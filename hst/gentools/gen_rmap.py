@@ -146,7 +146,7 @@ def dicts_to_kind_map(instr, kind, row_dicts):
 
     kmap = instrument_specific_hacks(instr, kind, kmap)
 
-    # kmap = unexplode_kmap(kmap)
+    kmap = unexplode_kmap(kmap)
 
     for val in kmap.values():
         val.sort()
@@ -170,7 +170,8 @@ def unexplode_kmap(kmap):
         for key in collapsed:
             if key not in matches_view:
                 matches_view[key] = []
-            matches_view[key].append(use)           
+            matches_view[key].append(use)
+    return matches_view           
     return factor_out_overlaps(matches_view)
 
 def collapse_cluster_key(key):
@@ -184,8 +185,8 @@ def collapse_cluster_key(key):
     if expanded == key:
         return [folded(parsets)]
     else:
-        return key
-
+        return roll_up_n_vars(key)
+    
 def _expand_parsets(parsets):
     if not parsets:
         yield ()
@@ -225,11 +226,61 @@ def match_any(par1, par2_all):
 def fixre(regex):
     return "|".join(["^" + par + "$" for par in regex.split("|")])
 
+def roll_up_n_vars(matches):
+    if not matches:
+        return []
+    for i in range(len(matches[0])):
+        matches = roll_up_one_var(matches)
+    return matches
+
+def roll_up_one_var(matches):
+    """Given a list of match tuples `matches`,  or-together any tuples which
+    differ by only a single variable.
+    """
+    remainder = list(matches[:])
+    rolled = []
+    while remainder:
+        match = remainder.pop()
+        combined, remainder = _roll_up_one_var(match, remainder)
+        rolled.append(combined)
+    return rolled
+
+def _roll_up_one_var(match, matches):
+    remainder = matches[:]
+    combined = match
+    for match2 in matches:
+        if differ_by_one(combined, match2):
+            combined = fold_one(combined, match2)
+            remainder.remove(match2)
+    return combined, remainder
+
+def differ_by_one(match1, match2):
+    return len(set(match1) - set(match2)) == 1
+
+def fold_one(match1, match2):
+    """Combined two match tuples which differ in only a single variable."""
+    folded = []
+    for i in range(len(match1)):
+        if match1[i] == match2[i]:
+            folded.append(match1[i])
+        else:
+            combined = set(match1[i].split("|")).union(set(match2[i].split("|")))
+            folded.append("|".join(sorted(combined)))
+    return tuple(folded)
+
 def factor_out_overlaps(kmap):
+    """Overlapping match tuples of certain kinds result in ambiguous matches.
+    Modify kmap to remove equal ranked overlaps.    Note that ambiguous matches 
+    were initially considered an error but might be resolved by merging match 
+    useafter sets.
+    """
     for i, ikey in enumerate(kmap.keys()):
         for jkey in kmap.keys()[i+1:]:
             if ikey != jkey and overlaps(ikey, jkey):
                 log.info("Overlap",repr(ikey),"<->", repr(jkey))
+                
+    # XXXXX TODO actually handle overlaps
+                
     return kmap
 
 # =======================================================================

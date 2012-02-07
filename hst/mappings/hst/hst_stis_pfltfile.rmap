@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-03 08:10:08',
+    'derived_from' : 'scraped 2012-02-07 11:00:08',
     'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '8bf42b20ae84415756720c8f835b57510841d33e',
+    'sha1sum' : '6d06ac63eb1762d5dacc9739719e88233e3fe665',
 }
 
 selector = Match({
@@ -21,6 +21,8 @@ selector = Match({
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1351so_pfl.fits',
+    }),
+    ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', '*') : UseAfter({
         '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
         '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
         '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
@@ -29,91 +31,36 @@ selector = Match({
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '1854.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1351to_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '1995.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13520o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2135.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725eo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2276.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13521o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2416.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725fo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2557.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13522o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2697.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725go_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2794.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13523o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2836.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725ho_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '2976.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13524o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', '3115.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725io_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910261o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401co_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401do_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
     }),
     ('CCD', 'G430L', 'SPECTROSCOPIC', '4300.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725jo_pfl.fits',
@@ -125,6 +72,8 @@ selector = Match({
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725ko_pfl.fits',
+    }),
+    ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', '*') : UseAfter({
         '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
         '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
         '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
@@ -133,110 +82,47 @@ selector = Match({
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3305.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13525o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3423.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725lo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3680.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13526o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3843.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13527o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '3936.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i13528o_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '4194.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850ao_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '4451.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850bo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '4706.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850do_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '4781.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850eo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '4961.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850fo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '5093.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850go_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '5216.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850ho_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', '5471.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230850io_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910263o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401io_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401jo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
     }),
     ('CCD', 'G750L', 'SPECTROSCOPIC', '7751.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851ao_pfl.fits',
+    }),
+    ('CCD', 'G750L', 'SPECTROSCOPIC', '7751.0|8975.0', '*') : UseAfter({
         '1997-01-01 00:00:00' : 'k2910264o_pfl.fits',
         '1999-07-01 00:00:00' : 'n491401lo_pfl.fits',
         '2000-08-14 00:00:00' : 'n491401mo_pfl.fits',
@@ -245,14 +131,11 @@ selector = Match({
     }),
     ('CCD', 'G750L', 'SPECTROSCOPIC', '8975.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851bo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910264o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401lo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401mo_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401no_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16087o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851co_pfl.fits',
+    }),
+    ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', '*') : UseAfter({
         '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
         '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
         '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
@@ -261,569 +144,65 @@ selector = Match({
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '5734.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851do_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '6094.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851eo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '6252.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851fo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '6581.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851go_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '6768.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851ho_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '7283.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851io_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '7795.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851ko_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '8311.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851lo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '8561.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851mo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '8825.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851no_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '9286.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851oo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '9336.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851po_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '9806.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851qo_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', '9851.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851so_pfl.fits',
-        '1997-01-01 00:00:00' : 'k2910265o_pfl.fits',
-        '1999-07-01 00:00:00' : 'n491401oo_pfl.fits',
-        '2000-08-14 00:00:00' : 'n491401po_pfl.fits',
-        '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
-        '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
     }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.05X29') : UseAfter({
+    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') : UseAfter({
         '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
     }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.05X31NDA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.05X31NDB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.09X29') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.1X0.03') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.1X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.1X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.1X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.05ND') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPE') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPE') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.2X29') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.3X0.05ND') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.3X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.3X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.3X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '0.5X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '1X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '1X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '25MAMA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '31X0.05NDA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '31X0.05NDB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '31X0.05NDC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '36X0.05N45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '36X0.05P45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '36X0.6N45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '36X0.6P45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '50CCD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '50CORON') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.05') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.05F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.05F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1B0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1B1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1B3.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.1F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.2F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.2F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.5F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X0.5F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X2F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '52X2F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '6X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '6X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '6X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'BAR10') : UseAfter({
+    ('CCD', 'MIRVIS', 'IMAGING', '*', 'BAR10|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|WEDGEA1.0|WEDGEA1.8|WEDGEA2.0|WEDGEA2.5|WEDGEA2.8|WEDGEB1.0|WEDGEB1.8|WEDGEB2.0|WEDGEB2.5|WEDGEB2.8') : UseAfter({
         '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
     }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25CIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25CN182') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25CN270') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25LYA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25MGII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25ND3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F28X50LP') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F28X50OII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'F28X50OIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('CCD', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2310096o_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1234.0', '*') : UseAfter({
+    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1234.0|1271.0|1307.0|1343.0|1380.0|1416.0|1453.0|1489.0|1526.0|1562.0|1598.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1271.0', '*') : UseAfter({
+    ('FUV-MAMA', 'E140M|G140L|X140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1307.0', '*') : UseAfter({
+    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1763.0|1813.0|1863.0|1913.0|1963.0|2013.0|2063.0|2113.0|2163.0|2213.0|2263.0|2313.0|2363.0|2413.0|2463.0|2513.0|2563.0|2613.0|2663.0|2713.0|2762.0|2812.0|2862.0|2912.0|2962.0|3012.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1343.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1380.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1416.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1453.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1489.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1526.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1562.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1598.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1763.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1813.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1863.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1913.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1963.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2013.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2063.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2113.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2163.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2213.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2263.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2313.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2363.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2413.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2463.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2513.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2563.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2613.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2663.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2713.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2762.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2812.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2862.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2912.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2962.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230H', 'SPECTROSCOPIC', '3012.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '1978.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2124.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2269.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2415.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2561.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2707.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140L', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
+    ('FUV-MAMA', 'E230M', 'SPECTROSCOPIC', '1978.0|2124.0|2269.0|2415.0|2561.0|2707.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
@@ -831,75 +210,7 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1173.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1218.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1222.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1272.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1321.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1371.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1387.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1400.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1420.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1470.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1518.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1540.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1550.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1567.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1616.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1640.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1665.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1714.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1173.0|1218.0|1222.0|1272.0|1321.0|1371.0|1387.0|1400.0|1420.0|1470.0|1518.0|1540.0|1550.0|1567.0|1616.0|1640.0|1665.0|1714.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
@@ -911,139 +222,11 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1687.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1687.0|1769.0|1851.0|1884.0|1933.0|2014.0|2095.0|2176.0|2257.0|2338.0|2419.0|2499.0|2579.0|2600.0|2659.0|2739.0|2800.0|2818.0|2828.0|2898.0|2977.0|3055.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1769.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1851.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1884.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1933.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2014.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2095.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2176.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2257.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2338.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2419.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2499.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2579.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2600.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2659.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2739.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2800.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2818.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2828.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2898.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2977.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230M', 'SPECTROSCOPIC', '3055.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1713.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1854.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1995.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2135.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2276.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2416.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2557.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2697.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2794.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2836.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2976.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '3115.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
@@ -1051,906 +234,76 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3165.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3305.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G750L', 'SPECTROSCOPIC', '7751.0|8975.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3423.0', '*') : UseAfter({
+    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3680.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3843.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3936.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4194.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4451.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4706.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4781.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4961.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5093.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5216.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5471.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750L', 'SPECTROSCOPIC', '7751.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750L', 'SPECTROSCOPIC', '8975.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '10363.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '5734.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6094.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6252.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6581.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6768.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '7283.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '7795.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8311.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8561.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8825.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9286.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9336.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9806.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9851.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', '25MAMA') : UseAfter({
+    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', '25MAMA|2X2|6X6') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
     }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
+    ('FUV-MAMA', 'MIRCUV|MIRFUV|MIRNUV', 'IMAGING', '*', 'F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4') : UseAfter({
         '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
     }),
     ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25LYA') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
     }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25ND3') : UseAfter({
+    ('FUV-MAMA', 'MIRFUV|MIRNUV', 'IMAGING', '*', 'F25ND3|F25ND5|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|F25QTZ|F25SRF2') : UseAfter({
+        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
+    }),
+    ('FUV-MAMA', 'MIRFUV|MIRNUV', 'IMAGING', '*', 'F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2') : UseAfter({
+        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
+    }),
+    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', '25MAMA|2X2|6X6|F25CIII|F25CN182|F25CN270|F25MGII') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
     }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
+    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') : UseAfter({
         '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
     }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', '25MAMA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CN182') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CN270') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25MGII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25ND3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X29') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X31NDA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X31NDB') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.09X29') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.03') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.06') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.09') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.05ND') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPB') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPC') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPD') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPE') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.09') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPB') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPC') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPD') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPE') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.5') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X29') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.05ND') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.06') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.09') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.5X0.5') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '1X0.06') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '1X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '25MAMA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '2X2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDB') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDC') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.05N45') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.05P45') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.6N45') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.6P45') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '50CCD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '50CORON') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05F1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05F2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B0.5') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B1.0') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B3.0') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1F1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1F2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2F1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2F2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5F1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5F2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2F1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2F2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.06') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.5') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X6') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'BAR10') : UseAfter({
+    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', '50CCD|50CORON|BAR10|F25ND3|F25ND5|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|F28X50LP|F28X50OII|F28X50OIII|WEDGEA1.0|WEDGEA1.8|WEDGEA2.0|WEDGEA2.5|WEDGEA2.8|WEDGEB1.0|WEDGEB1.8|WEDGEB2.0|WEDGEB2.5|WEDGEB2.8') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
     }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CIII') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CN182') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CN270') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25LYA') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25MGII') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25ND3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50LP') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50OII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50OIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352ao_pfl.fits',
-    }),
-    ('FUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '1200.0', '*') : UseAfter({
+    ('FUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '1200.0|2125.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '2125.0', '*') : UseAfter({
+    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1232.0|1269.0|1305.0|1341.0|1378.0|1414.0|1451.0|1487.0|1523.0|1560.0|1587.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1232.0', '*') : UseAfter({
+    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1760.0|1810.0|1860.0|1910.0|1960.0|2010.0|2060.0|2110.0|2160.0|2210.0|2261.0|2310.0|2360.0|2410.0|2460.0|2511.0|2560.0|2610.0|2660.0|2710.0|2760.0|2810.0|2860.0|2910.0|2960.0|3010.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1269.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1305.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1341.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1378.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1414.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1451.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1487.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1523.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1587.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1760.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1810.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1860.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1910.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1960.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2010.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2060.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2110.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2160.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2210.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2261.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2310.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2360.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2410.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2460.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2511.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2610.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2660.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2710.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2760.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2810.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2860.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2910.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2960.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230H', 'SPECTROSCOPIC', '3010.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2112.0', '*') : UseAfter({
+    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0|2112.0|2268.0|2414.0|2560.0|2703.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
     }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2122.0', '*') : UseAfter({
+    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0|2122.0|2268.0|2414.0|2560.0|2703.0', '*') : UseAfter({
         '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
     }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2268.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2414.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('FUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2703.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h2i1352co_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658bo_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1234.0', '*') : UseAfter({
+    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1234.0|1271.0|1307.0|1343.0|1380.0|1416.0|1453.0|1489.0|1526.0|1562.0|1598.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1271.0', '*') : UseAfter({
+    ('NUV-MAMA', 'E140M|G140L|X140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1307.0', '*') : UseAfter({
+    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1763.0|1813.0|1863.0|1913.0|1963.0|2013.0|2063.0|2113.0|2163.0|2213.0|2263.0|2313.0|2363.0|2413.0|2463.0|2513.0|2563.0|2613.0|2663.0|2713.0|2762.0|2812.0|2862.0|2912.0|2962.0|3012.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1343.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1380.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1416.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1453.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1489.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1526.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1562.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140H', 'SPECTROSCOPIC', '1598.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1763.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1813.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1863.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1913.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '1963.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2013.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2063.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2113.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2163.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2213.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2263.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2313.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2363.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2413.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2463.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2513.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2563.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2613.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2663.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2713.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2762.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2812.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2862.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2912.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '2962.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230H', 'SPECTROSCOPIC', '3012.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '1978.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2124.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2269.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2415.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2561.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '2707.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140L', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
+    ('NUV-MAMA', 'E230M', 'SPECTROSCOPIC', '1978.0|2124.0|2269.0|2415.0|2561.0|2707.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
@@ -1958,75 +311,7 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1173.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1218.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1222.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1272.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1321.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1371.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1387.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1400.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1420.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1470.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1518.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1540.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1550.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1567.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1616.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1640.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1665.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1714.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G140M', 'SPECTROSCOPIC', '1173.0|1218.0|1222.0|1272.0|1321.0|1371.0|1387.0|1400.0|1420.0|1470.0|1518.0|1540.0|1550.0|1567.0|1616.0|1640.0|1665.0|1714.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
@@ -2038,139 +323,11 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1687.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1687.0|1769.0|1851.0|1884.0|1933.0|2014.0|2095.0|2176.0|2257.0|2338.0|2419.0|2499.0|2579.0|2600.0|2659.0|2739.0|2800.0|2818.0|2828.0|2898.0|2977.0|3055.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1769.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1851.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1884.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '1933.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2014.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2095.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2176.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2257.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2338.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2419.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2499.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2579.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2600.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2659.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2739.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2800.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2818.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2828.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2898.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '2977.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230M', 'SPECTROSCOPIC', '3055.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1713.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1854.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1995.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2135.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2276.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2416.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2557.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2697.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2794.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2836.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '2976.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '3115.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
@@ -2178,799 +335,65 @@ selector = Match({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3165.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3305.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G750L', 'SPECTROSCOPIC', '7751.0|8975.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3423.0', '*') : UseAfter({
+    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3680.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3843.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '3936.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4194.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4451.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4706.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4781.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '4961.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5093.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5216.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G430M', 'SPECTROSCOPIC', '5471.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750L', 'SPECTROSCOPIC', '7751.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750L', 'SPECTROSCOPIC', '8975.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '10363.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '5734.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6094.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6252.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6581.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '6768.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '7283.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '7795.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8311.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8561.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '8825.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9286.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9336.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9806.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'G750M', 'SPECTROSCOPIC', '9851.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', '25MAMA') : UseAfter({
+    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', '25MAMA|2X2|6X6') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRCUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
+    ('NUV-MAMA', 'MIRCUV|MIRFUV|MIRNUV', 'IMAGING', '*', 'F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4') : UseAfter({
         '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
     ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25LYA') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25ND3') : UseAfter({
+    ('NUV-MAMA', 'MIRFUV|MIRNUV', 'IMAGING', '*', 'F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRFUV', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', '25MAMA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CN182') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25CN270') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25MGII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25ND3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X29') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X31NDA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X31NDB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.09X29') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.03') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.1X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.05ND') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.06FPE') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.2FPE') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.2X29') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.05ND') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.09') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.3X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.5X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '1X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '1X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '25MAMA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '2X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDB') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '31X0.05NDC') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.05N45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.05P45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.6N45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '36X0.6P45') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '50CCD') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '50CORON') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.05F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1B3.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.1F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.2F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X0.5F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2F1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '52X2F2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.06') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X0.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '6X6') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'BAR10') : UseAfter({
+    ('NUV-MAMA', 'MIRFUV|MIRNUV', 'IMAGING', '*', 'F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4') : UseAfter({
         '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CIII') : UseAfter({
+    ('NUV-MAMA', 'MIRNUV', 'IMAGING', '*', '25MAMA|2X2|6X6|F25CIII|F25CN182|F25CN270|F25MGII') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CN182') : UseAfter({
+    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') : UseAfter({
+        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
+    }),
+    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25CN270') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25LYA') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25MGII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25ND3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25ND5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ1') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ3') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25NDQ4') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25QTZ') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F25SRF2') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50LP') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50OII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'F28X50OIII') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140jo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658co_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.0') : UseAfter({
+    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'BAR10|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|WEDGEA1.0|WEDGEA1.8|WEDGEA2.0|WEDGEA2.5|WEDGEA2.8|WEDGEB1.0|WEDGEB1.8|WEDGEB2.0|WEDGEB2.5|WEDGEB2.8') : UseAfter({
         '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
     }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEA2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB1.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.0') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.5') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'MIRVIS', 'IMAGING', '*', 'WEDGEB2.8') : UseAfter({
-        '1996-10-01 00:00:00' : 'h260836ho_pfl.fits',
-    }),
-    ('NUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '1200.0', '*') : UseAfter({
+    ('NUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '1200.0|2125.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'PRISM', 'SPECTROSCOPIC', '2125.0', '*') : UseAfter({
+    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1232.0|1269.0|1305.0|1341.0|1378.0|1414.0|1451.0|1487.0|1523.0|1560.0|1587.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1232.0', '*') : UseAfter({
+    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1760.0|1810.0|1860.0|1910.0|1960.0|2010.0|2060.0|2110.0|2160.0|2210.0|2261.0|2310.0|2360.0|2410.0|2460.0|2511.0|2560.0|2610.0|2660.0|2710.0|2760.0|2810.0|2860.0|2910.0|2960.0|3010.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1269.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1305.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1341.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1378.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1414.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1451.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1487.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1523.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140H', 'SPECTROSCOPIC', '1587.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X140M', 'SPECTROSCOPIC', '1425.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1760.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1810.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1860.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1910.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '1960.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2010.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2060.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2110.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2160.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2210.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2261.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2310.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2360.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2410.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2460.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2511.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2610.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2660.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2710.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2760.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2810.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2860.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2910.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '2960.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230H', 'SPECTROSCOPIC', '3010.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2112.0', '*') : UseAfter({
+    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0|2112.0|2268.0|2414.0|2560.0|2703.0', '*') : UseAfter({
         '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
     }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2122.0', '*') : UseAfter({
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2268.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2414.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2560.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
-        '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
-    }),
-    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '2703.0', '*') : UseAfter({
-        '1996-10-01 00:00:00' : 'h5s1140lo_pfl.fits',
+    ('NUV-MAMA', 'X230M', 'SPECTROSCOPIC', '1975.0|2122.0|2268.0|2414.0|2560.0|2703.0', '*') : UseAfter({
         '1997-03-01 00:00:00' : 'mbj1658do_pfl.fits',
     }),
 })

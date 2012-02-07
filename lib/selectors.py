@@ -210,9 +210,9 @@ class Selector(object):
             if par not in pmap:
                 pmap[par] = set()
             for choice in self.keys():
-                pmap[par].add(choice[i])
+                pmap[par] = pmap[par].union(set(choice[i].split("|")))
         for par, val in pmap.items():
-            pmap[par] = sorted(list(val))
+            pmap[par] = sorted(val)
         return pmap
 
     def reference_names(self):
@@ -389,6 +389,28 @@ class RegexMatcher(Matcher):
     1
     >>> m.match("fo")
     -1
+    >>> n = RegexMatcher(("foo","bar","baz"))
+    >>> n.match("far")
+    -1
+    >>> n.match("fo")
+    -1
+    >>> n.match("foo")
+    1
+    >>> n.match("baz")
+    1
+    >>> n.match("ba")
+    -1
+    >>> o = RegexMatcher("foo|bar|baz")
+    >>> n.match("far")
+    -1
+    >>> n.match("fo")
+    -1
+    >>> n.match("foo")
+    1
+    >>> n.match("baz")
+    1
+    >>> n.match("ba")
+    -1
     """
     def __init__(self, key):
         Matcher.__init__(self, key)
@@ -396,6 +418,8 @@ class RegexMatcher(Matcher):
             key = "^.*$"
         elif isinstance(key, tuple):
             key = "|".join(["^" + k + "$" for k in key])
+        elif "|" in key:
+            key = "|".join(["^" + k + "$" for k in key.split("|")])            
         else:
             key = "^" + key + "$"
         self._regex = re.compile(key)
@@ -534,7 +558,6 @@ class MatchingSelector(Selector):
 
         selections = self.fix_simple_keys(selections)
         
-        
         selections = self.do_substitutions(selections, self._substitutions)
         
         self._match_selections = self.get_matcher_selections(selections)
@@ -617,7 +640,7 @@ class MatchingSelector(Selector):
         log.verbose("Match failed.")
         raise MatchingError("No match.")
 
-    def winnowing_match(self, header, raise_ambiguous=True):
+    def winnowing_match(self, header, raise_ambiguous=False):
         """Iterate through each of the parameters in `fitskeys`, binding
         them successively to corresponding values from `header`.  For
         each bound fitskey,  iterate through `selections` and winnow out
@@ -742,7 +765,9 @@ class MatchingSelector(Selector):
             valid_values = self._value_map[fitsvar]
             if fitsvar in header:
                 value = header[fitsvar]
-                if (value not in valid_values) and ('*' not in valid_values):
+                if ((value not in valid_values) and
+                    (value != '*') and 
+                    ('*' not in valid_values)):
                     raise BadValueError("Key " + fitsvar + "=" + value +
                                 " not in valid values " + repr(valid_values))
             elif "*" not in valid_values:
@@ -781,28 +806,28 @@ class MatchingSelector(Selector):
                 continue
                 # raise ValidationError("Unknown parameter " + repr(name))
             valid = valid_values_map[name]
-            value = key[i]
-            if value == "*":
-                continue
-            if self._is_literal_or_regex_value(value, valid):
-                continue
-            if value.replace(".0","") in valid:
-                continue
-            if not valid:  # some TPNs are type-only
-                continue
-            if len(valid) ==1 and ":" in valid[0]:   # handle ranges
-                min, max = [float(x) for x in valid[0].split(":")]
-                if min <= float(value) <= max:
+            for value in key[i].split("|"):
+                if value == "*":
                     continue
-                else:
-                    raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                  " is not in range [" + str(min) + " .. " + 
-                                  str(max) + "]")     
-            if name in self._substitutions and \
-                value in self._substitutions[name]:
-                continue
-            raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                  " is not in " + repr(valid))
+                if self._is_literal_or_regex_value(value, valid):
+                    continue
+                if value.replace(".0","") in valid:
+                    continue
+                if not valid:  # some TPNs are type-only
+                    continue
+                if len(valid) ==1 and ":" in valid[0]:   # handle ranges
+                    min, max = [float(x) for x in valid[0].split(":")]
+                    if min <= float(value) <= max:
+                        continue
+                    else:
+                        raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
+                                      " is not in range [" + str(min) + " .. " + 
+                                      str(max) + "]")     
+                if name in self._substitutions and \
+                    value in self._substitutions[name]:
+                    continue
+                raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
+                                      " is not in " + repr(valid))
 
     def _is_literal_or_regex_value(self, value, valid):
         """Return True if all of the |-combined elements of `value` are in `valid`."""

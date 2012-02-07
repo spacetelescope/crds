@@ -6,7 +6,7 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, utils, data_file, timestamp, compat, log, selectors)
+from crds import (rmap, utils, data_file, timestamp, compat, log, selectors, checksum)
 from crds.timestamp import DATETIME_RE_STR
 
 # ============================================================================
@@ -125,7 +125,11 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
         for action in actions:
             log.write(action)
     if actions:
+        log.write("Writing", repr(new_rmap))
         open(new_rmap, "w+").write(contents)
+        checksum.update_checksum(new_rmap)
+    else:
+        log.warning("No actions in rmap_insert_references().")
     return actions
 
 def get_tuple_matches(loaded_rmap, header, ref_match_tuple):
