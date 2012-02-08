@@ -107,7 +107,7 @@ def info(*args, **keys):
     INFOS += 1
     if EOL_PENDING: 
         write()
-    write(*(("INFO:[%d]%s:" % (INFOS, logtime()),) + args), **keys)
+    write(*(("INFO[%d]%s:" % (INFOS, logtime()),) + args), **keys)
 
 def infos():
     """Returns count of logged warnings."""

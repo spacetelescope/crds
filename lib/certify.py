@@ -9,7 +9,7 @@ import re
 
 import pyfits 
 
-from crds import rmap, log, timestamp, utils
+from crds import rmap, log, timestamp, utils, data_file
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
     
@@ -98,7 +98,7 @@ class KeywordValidator(object):
         or from `filename`'s header if header is None.   Check the value.
         """
         if header is None:
-            header = pyfits.getheader(filename)
+            header = data_file.get_header(filename)
         value = self._get_header_value(header)
         self.check_value(filename, value)
         
@@ -106,7 +106,10 @@ class KeywordValidator(object):
         """Extract a column of values from `filename` and check them all against
         the legal values for this Validator.
         """
-        values = self._get_column_values(filename)
+        try:
+            values = self._get_column_values(filename)
+        except Exception, exc:
+            raise RuntimeError("Can't read column values : " + str(exc))
         for i, value in enumerate(values):
             self.check_value(filename + "[" + str(i) +"]", value)
 
@@ -325,7 +328,14 @@ def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
         dump_multi_key(fitsname, ["DESCRIP","COMMENT","PEDIGREE","USEAFTER",
                                   "HISTORY",])
     for checker in get_validators(fitsname):
-        checker.check(fitsname)
+        try:
+            checker.check(fitsname)
+        except Exception, exc:
+            if trap_exceptions:
+                log.error("Checking", repr(checker._info.name), "in", 
+                          repr(fitsname))
+            else:
+                raise
 
 def dump_multi_key(fitsname, keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
@@ -410,7 +420,7 @@ def main():
     else:
         check_references = None
         
-    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping)", 
+    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=True)", 
                      options, globals(), locals())
     log.standard_status()
     return log.errors()

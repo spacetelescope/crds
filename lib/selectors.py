@@ -353,15 +353,23 @@ def match_superset(tuple1, tuple2):
     False
     >>> match_superset(('1|a','2'),  ('1','2|b'))
     False
+    >>> match_superset(('1','2'),  ('1','3'))
+    False
     """
     for i in range(len(tuple1)):
         v1 = tuple1[i]
         v2 = tuple2[i]
-        if v1 == v2 or (v1 == "*" and v2 != "*"):
+        if v1 == v2:
             continue
-        if v1 != "*" and v2 == "*":
+        if v1 == "*":
+            continue
+        if v2 == "*":
             return False
+        if set(v1.split("|")) > set(v2.split("|")):
+            continue
         if set(v1.split("|")) < set(v2.split("|")):
+            return False
+        if v1 != v2:
             return False
     return True
 
@@ -828,6 +836,10 @@ class MatchingSelector(Selector):
                     continue
                 raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
                                       " is not in " + repr(valid))
+        for other in self.keys():
+            if key != other and match_superset(other, key):
+                log.warning("Match tuple", repr(key), 
+                            "is a special case of", repr(other))
 
     def _is_literal_or_regex_value(self, value, valid):
         """Return True if all of the |-combined elements of `value` are in `valid`."""

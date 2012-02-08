@@ -43,24 +43,24 @@ class RefactorAction(object):
     """Records and formats info regarding a refactoring operation."""
     def __init__(self, rmap_name, action, ref_file, ref_match_tuple, rmap_match_tuple, 
                  useafter, replaced_file):
-        self.rmap_name = rmap_name
+        self.rmap_name = str(os.path.basename(rmap_name))
         self.action = action
-        self.ref_file = ref_file
+        self.ref_file = str(os.path.basename(ref_file))
         self.ref_match_tuple = ref_match_tuple
         self.rmap_match_tuple = rmap_match_tuple
         self.useafter = useafter
-        self.replaced_file = replaced_file
+        self.replaced_file = str(os.path.basename(replaced_file))
             
     def __str__(self):
         if self.action == "insert":
-            parts = [ "In rmap", repr(self.rmap_name),
+            parts = [ "In", repr(self.rmap_name),
                      "at match", self.rmap_match_tuple,
                      "useafter", repr(self.useafter),
                      "INSERT", repr(self.ref_file), 
                      "matching", self.ref_match_tuple,
                       ]
         elif self.action == "replace":
-            parts = [ "In rmap", repr(self.rmap_name),
+            parts = [ "In", repr(self.rmap_name),
                       "at match", self.rmap_match_tuple,
                       "useafter", repr(self.useafter),
                       "REPLACE", repr(self.replaced_file),
