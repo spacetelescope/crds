@@ -49,19 +49,18 @@ class RefactorAction(object):
         self.ref_match_tuple = ref_match_tuple
         self.rmap_match_tuple = rmap_match_tuple
         self.useafter = useafter
-        self.replaced_file = str(os.path.basename(replaced_file))
+        if replaced_file:
+            self.replaced_file = str(os.path.basename(replaced_file))
             
     def __str__(self):
         if self.action == "insert":
-            parts = [ "In", repr(self.rmap_name),
-                     "at match", self.rmap_match_tuple,
+            parts = [ "At match", self.rmap_match_tuple,
                      "useafter", repr(self.useafter),
                      "INSERT", repr(self.ref_file), 
                      "matching", self.ref_match_tuple,
                       ]
         elif self.action == "replace":
-            parts = [ "In", repr(self.rmap_name),
-                      "at match", self.rmap_match_tuple,
+            parts = [ "At match", self.rmap_match_tuple,
                       "useafter", repr(self.useafter),
                       "REPLACE", repr(self.replaced_file),
                       "with", repr(self.ref_file), 
