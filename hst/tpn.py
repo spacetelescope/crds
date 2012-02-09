@@ -32,8 +32,6 @@ import sys
 import os.path
 import pprint
 
-import pyfits
-
 from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
 
@@ -159,10 +157,10 @@ def get_filetype_to_extension(context):
         if instr not in map:
             map[instr] = {}
         filetype = cat.header.get("filetype", cat.reftype).lower()
-        if cat.ext == ".fits":
-            suffix_ext = cat.reftype
-        else:
-            suffix_ext = cat.ext
+        suffix_ext = cat.reftype
+#       if cat.ext == ".fits":
+#       else:
+#            suffix_ext = cat.ext
         map[instr][filetype] = suffix_ext
     return map
 
