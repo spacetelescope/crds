@@ -788,7 +788,7 @@ class MatchingSelector(Selector):
                     ('*' not in valid_values)):
                     raise BadValueError("Key " + fitsvar + "=" + value +
                                 " not in valid values " + repr(valid_values))
-            elif "*" not in valid_values:
+            elif "*" not in valid_values and "N/A" not in valid_values:
                 raise MissingParameterError(
                     "Required parameter " + repr(fitsvar) + " is missing.")
 
