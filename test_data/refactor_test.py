@@ -24,6 +24,7 @@ def get_reference(context, r):
          client.dump_references(context, [old_ref])
          return rmap.locate_file(old_ref)
       except Exception:
+         raise
          log.error()
          nerrors += 1
          if nerrors > 10:
@@ -31,9 +32,13 @@ def get_reference(context, r):
 
 
 def main():
-   # usage("<context>", 1, 1)
+   # usage("<context> [seed]", 1, 2)
 
    context = sys.argv[1]
+   if len(sys.argv) == 3:
+      random.seed(sys.argv[2])
+   else:
+      random.seed("0")
    map = rmap.get_cached_mapping(context)
 
    for mapping in map.mapping_names():

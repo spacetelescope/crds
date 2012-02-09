@@ -40,12 +40,15 @@ def month_num(month):
     return  MONTHS.index(month[:3].capitalize()) + 1
 
 def parse_alphabetical_date(d):
-
+    
     try:
         month, day, year, time = d.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
         month, day, year = d.split()          # 'Feb 08 2006'
         time = "00:00AM"
+
+    if day.endswith(","):     # July 27, 1999 00:00:00
+        day = day[:-1]
 
     imonth = month_num(month)
     iday = int(day)
@@ -78,13 +81,20 @@ def parse_alphabetical_date(d):
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
-
 def parse_numerical_date(d):
-    date, time = d.split()
-    if re.match("\d\d\d\d", date):
-        year, month, day = date.split("-")
+    if re.match("^\d\d/\d\d/\d\d\d\d$", d):
+        day, month, year = d.split("/")
+        time = "00:00:00"
+    elif re.match("^\d\d/\d\d/9\d$", d):
+        day, month, year = d.split("/")
+        year = "19" + year
+        time = "00:00:00"
     else:
-        month, day, year = date.split("-")
+        date, time = d.split()
+        if re.match("\d\d\d\d", date):
+            year, month, day = date.split("-")
+        else:
+            month, day, year = date.split("-")
     imonth, iday, iyear, = int(month), int(day), int(year)
     hour, minute, second = time.split(":")
     second = float(second)
