@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 11:00:06',
+    'derived_from' : 'scraped 2012-02-09 10:08:52',
     'filekind' : 'ECHSCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector != "ccd" and obstype == "spectroscopic")',
-    'sha1sum' : '77d7704df5ec1eac800e84844cd36892fe1da8ed',
+    'sha1sum' : '9d2c33acc64a6110e527ff985da1bf15b48f4b77',
 }
 
 selector = Match({

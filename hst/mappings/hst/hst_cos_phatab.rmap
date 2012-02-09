@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:56',
+    'derived_from' : 'scraped 2012-02-09 10:08:43',
     'filekind' : 'PHATAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector == "fuv")',
-    'sha1sum' : '08f2d0a698f50d19d08e96f49f20a5edded1b9a9',
+    'sha1sum' : '00580173da1c2a444ff090dc6943ae63f1944f3e',
 }
 
 selector = Match({

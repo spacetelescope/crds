@@ -1,17 +1,36 @@
-INFO:[1]: Certifying 'hst_wfpc2.imap' 
-INFO:[2]: Validating hst_wfpc2.imap 
-INFO:[3]: Validating hst_wfpc2_offtab.rmap 
-INFO:[4]: Validating hst_wfpc2_flatfile.rmap 
+INFO[1]: Certifying 'hst_wfpc2.imap' 
+INFO[2]: Validating hst_wfpc2.imap 
+INFO[3]: Validating hst_wfpc2_offtab.rmap 
+INFO[4]: Validating hst_wfpc2_flatfile.rmap 
 WARNING[1]: Parameter 'LRFWAVE' is unchecked. 
-INFO:[5]: Validating hst_wfpc2_idctab.rmap 
-INFO:[6]: Validating hst_wfpc2_darkfile.rmap 
-INFO:[7]: Validating hst_wfpc2_biasfile.rmap 
-INFO:[8]: Validating hst_wfpc2_dgeofile.rmap 
-INFO:[9]: Validating hst_wfpc2_wf4tfile.rmap 
-INFO:[10]: Validating hst_wfpc2_atodfile.rmap 
-INFO:[11]: Validating hst_wfpc2_maskfile.rmap 
-INFO:[12]: Validating hst_wfpc2_shadfile.rmap 
+WARNING[2]: Match tuple ('FULL', '15.0', '48.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|28.0|31.0', '48.0', '*', '*', '*', '*') 
+WARNING[3]: Match tuple ('FULL', '15.0', '53.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|31.0', '53.0|54.0', '*', '*', '*', '*') 
+WARNING[4]: Match tuple ('FULL', '15.0', '54.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|31.0', '53.0|54.0', '*', '*', '*', '*') 
+WARNING[5]: Match tuple ('FULL', '18.0', '48.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|24.0', '48.0', '*', '*', '*', '*') 
+WARNING[6]: Match tuple ('FULL', '18.0', '53.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[7]: Match tuple ('FULL', '18.0', '54.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[8]: Match tuple ('FULL', '18.0', '55.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[9]: Match tuple ('FULL', '2.0', '4.0', '*', '*', '*', '*') is a special case of ('FULL', '2.0|4.0', '4.0|7.0', '*', '*', '*', '*') 
+WARNING[10]: Match tuple ('FULL', '24.0', '48.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|24.0', '48.0', '*', '*', '*', '*') 
+WARNING[11]: Match tuple ('FULL', '25.0', '53.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[12]: Match tuple ('FULL', '25.0', '54.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[13]: Match tuple ('FULL', '25.0', '55.0', '*', '*', '*', '*') is a special case of ('FULL', '18.0|25.0', '53.0|54.0|55.0', '*', '*', '*', '*') 
+WARNING[14]: Match tuple ('FULL', '28.0', '48.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|28.0|31.0', '48.0', '*', '*', '*', '*') 
+WARNING[15]: Match tuple ('FULL', '31.0', '48.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|28.0|31.0', '48.0', '*', '*', '*', '*') 
+WARNING[16]: Match tuple ('FULL', '31.0', '53.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|31.0', '53.0|54.0', '*', '*', '*', '*') 
+WARNING[17]: Match tuple ('FULL', '31.0', '54.0', '*', '*', '*', '*') is a special case of ('FULL', '15.0|31.0', '53.0|54.0', '*', '*', '*', '*') 
+WARNING[18]: Match tuple ('FULL', '34.0', '53.0', '*', '*', '*', '*') is a special case of ('FULL', '34.0', '53.0|55.0', '*', '*', '*', '*') 
+WARNING[19]: Match tuple ('FULL', '34.0', '55.0', '*', '*', '*', '*') is a special case of ('FULL', '34.0', '53.0|55.0', '*', '*', '*', '*') 
+WARNING[20]: Match tuple ('FULL', '4.0', '7.0', '*', '*', '*', '*') is a special case of ('FULL', '2.0|4.0', '4.0|7.0', '*', '*', '*', '*') 
+INFO[5]: Validating hst_wfpc2_idctab.rmap 
+INFO[6]: Validating hst_wfpc2_darkfile.rmap 
+INFO[7]: Validating hst_wfpc2_biasfile.rmap 
+INFO[8]: Validating hst_wfpc2_dgeofile.rmap 
+INFO[9]: Validating hst_wfpc2_wf4tfile.rmap 
+INFO[10]: Validating hst_wfpc2_atodfile.rmap 
+INFO[11]: Validating hst_wfpc2_maskfile.rmap 
+INFO[12]: Validating hst_wfpc2_shadfile.rmap 
 0 errors 
-1 warnings 
+20 warnings 
 12 infos 
  

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:57',
+    'derived_from' : 'scraped 2012-02-09 10:08:44',
     'filekind' : 'TDSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(obstype == "spectroscopic")',
-    'sha1sum' : 'fab57cb548247b391a7ac41fd6cefbd22d60720c',
+    'sha1sum' : '6b89800cbaa7be7653cab329b2b9d97000821217',
 }
 
 selector = Match({

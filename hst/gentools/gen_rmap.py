@@ -22,6 +22,7 @@ import crds.hst.wfc3
 import crds.hst.wfpc2
 
 import crds.hst.parkeys as parkeys
+import crds.hst.tpn as tpn
 
 # =======================================================================
 
@@ -50,9 +51,12 @@ def generate_rmap(instrument, filekind):
         log.warning("No rows for",instrument,filekind)
         return
     kind_map = dicts_to_kind_map(instrument, filekind, row_dicts) 
+    
+    # kind_map = replace_full_sets_with_star(instrument, filekind, kind_map)
+    
     write_rmap("hst", instrument, filekind, kind_map)
 
-def get_row_dicts(instrument, kind):
+def get_row_dicts(instrument, kind, condition=True):
     """get_row_dicts() dumps the CDBS "row" table for `instrument` and
     file`kind`.  It is complicated because not all match parameters
     are in the database (hence extra_parkeys) and sometimes the
@@ -103,14 +107,14 @@ and {file_table}.reference_file_type = '{reference_file_type}'
         row = tuple(row) + (len(extra_parkeys) * ("*",))
         rowd = dict(zip(fields, row))
         for key, val in rowd.items():
-            rowd[key] = utils.condition_value(val)
+            rowd[key] = utils.condition_value(val) if condition else val
         rowd["file_name"] = rowd["file_name"].lower()
         row_dicts.append(rowd)
     return row_dicts    
 
 def get_reference_dicts(instrument, filekind, reffile):
     """Returns a list of the row dictionaries which apply to `reffile`."""
-    return [ x for x in get_row_dicts(instrument, filekind) if x["file_name"] == reffile.lower()]
+    return [ x for x in get_row_dicts(instrument, filekind, False) if x["file_name"] == reffile.lower()]
 
 # =======================================================================
 
@@ -283,6 +287,28 @@ def factor_out_overlaps(kmap):
                 
     return kmap
 
+def replace_full_sets_with_star(instrument, filekind, kmap):
+    """Check each parameter of each match tuple to see if it contains the 
+    or-ed set of all possible values.   If so,  replace it with '*'.
+    """
+    fitskeys = parkeys.get_fits_parkeys(instrument, filekind)
+    tpnmap = { t.name.lower() : t for t in tpn.get_tpninfos(instrument, filekind) }
+    for i, key in enumerate(fitskeys):
+        try:
+            keyset = set([utils.condition_value(x) for x in tpnmap[key].values])
+        except KeyError:
+            continue
+        for match in kmap.keys():
+            valset = set(match[i].split("|"))
+            if keyset <= valset and len(keyset) > 1:
+                log.write("Replacing", repr(match[i]), "with '*' in", repr(match))
+                files = kmap.pop(match)
+                match = list(match)
+                match[i] = '*'
+                match = tuple(match)
+                kmap[match] = files
+    return kmap
+
 # =======================================================================
 
 REFTYPE_FILTER = {
@@ -338,7 +364,7 @@ def apply_restrictions(row, instrument, filekind):
     for key, value in row.items():
         if key in restrictions:
             if not eval(restrictions[key], {}, header):
-                value = "*"
+                value = "N/A"
             log.verbose("restricting", row["file_name"], key, "of", header, 
                      "with", restrictions[key], "value =", value)
         result[key] = value

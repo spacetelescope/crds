@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:25',
+    'derived_from' : 'scraped 2012-02-09 10:07:55',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '84343c43ad4e1450e3f8b0c35be5ba85833023b2',
+    'sha1sum' : 'b94ec29917e6215cf08e750cc88cb850badcc2d3',
 }
 
 selector = Match({

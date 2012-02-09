@@ -481,10 +481,10 @@ class WildcardMatcher(Matcher):
 
 def matcher(key):
     """Factory for different matchers based on key types."""
-    if isinstance(key, tuple) or "|" in key:
+    if isinstance(key, tuple) or "|" in key or key == "*":
         return RegexMatcher(key)
-    elif key == "*":
-        return WildcardMatcher(key)
+    elif key == "N/A":
+        return WildcardMatcher("N/A")
     elif key.startswith((">","<")):
         return InequalityMatcher(key)
     else:
@@ -494,17 +494,26 @@ class MatchingSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching
     the runtime (header) parameters specified as choose() header to the .   
 
-    The value '*' is equivalent to "don't care" and does not add to the value
+    The value 'N/A' is equivalent to "don't care" and does not add to the value
     of a match.   Literal matches increase confidence of a good match.
 
     >>> m = MatchingSelector(("foo","bar"), {
-    ...    ('1.0', '*') : "100",
+    ...    ('1.0', 'N/A') : "100",
     ...    ('1.0', '2.0') : "200",
     ...    ('4.0', '*') : "300",
     ... })
 
     >>> m.choose(dict(foo='1.0',bar='2.0'))
     '200'
+    
+    For now anyway,  an dataset value of N/A will not match discrete values
+    in the rmap,  so it is a one-way don't care.  Hence, this is not ambiguous:
+ 
+    >>> m.choose(dict(foo='1.0',bar='N/A'))
+    '100'
+    
+    because dataset value of 'N/A' doesn't match rmap value '2.0',  whereas
+    dataset value of '2.0' does match rmap value 'N/A'.
     
     >>> m.choose({})
     Traceback (most recent call last):
@@ -513,8 +522,8 @@ class MatchingSelector(Selector):
     
     >>> print m.format()
     Match({
-        ('1.0', '*') : '100',
         ('1.0', '2.0') : '200',
+        ('1.0', 'N/A') : '100',
         ('4.0', '*') : '300',
     })
     
@@ -775,6 +784,7 @@ class MatchingSelector(Selector):
                 value = header[fitsvar]
                 if ((value not in valid_values) and
                     (value != '*') and 
+                    ('N/A' not in valid_values) and
                     ('*' not in valid_values)):
                     raise BadValueError("Key " + fitsvar + "=" + value +
                                 " not in valid values " + repr(valid_values))
@@ -815,7 +825,7 @@ class MatchingSelector(Selector):
                 # raise ValidationError("Unknown parameter " + repr(name))
             valid = valid_values_map[name]
             for value in key[i].split("|"):
-                if value == "*":
+                if value in ["*","N/A"]:
                     continue
                 if self._is_literal_or_regex_value(value, valid):
                     continue

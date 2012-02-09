@@ -310,6 +310,7 @@ def compare_results(header, crds_refs, mismatched, ignore):
             old = header[filekind.upper()].lower()
         except:
             log.warning("No comparison for", repr(filekind))
+            sys.exc_clear()
             continue
         new = crds_refs[filekind]
         if old in ["n/a", "*", "none"] or new == "NOT FOUND n/a":

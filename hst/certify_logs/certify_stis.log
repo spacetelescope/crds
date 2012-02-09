@@ -1,40 +1,86 @@
-INFO:[1]: Certifying 'hst_stis.imap' 
-INFO:[2]: Validating hst_stis.imap 
-INFO:[3]: Validating hst_stis_lfltfile.rmap 
-INFO:[4]: Validating hst_stis_mofftab.rmap 
-INFO:[5]: Validating hst_stis_halotab.rmap 
-INFO:[6]: Validating hst_stis_riptab.rmap 
-INFO:[7]: Validating hst_stis_lamptab.rmap 
-INFO:[8]: Validating hst_stis_tdstab.rmap 
-INFO:[9]: Validating hst_stis_cdstab.rmap 
-INFO:[10]: Validating hst_stis_pctab.rmap 
-INFO:[11]: Validating hst_stis_crrejtab.rmap 
-INFO:[12]: Validating hst_stis_pfltfile.rmap 
-INFO:[13]: Validating hst_stis_inangtab.rmap 
-INFO:[14]: Validating hst_stis_wcptab.rmap 
-INFO:[15]: Validating hst_stis_teltab.rmap 
-INFO:[16]: Validating hst_stis_darkfile.rmap 
-INFO:[17]: Validating hst_stis_biasfile.rmap 
-WARNING[1]: Parameter 'CCDOFFST' is unchecked. 
-WARNING[2]: Parameter 'BINAXIS1' is unchecked. 
-WARNING[3]: Parameter 'BINAXIS2' is unchecked. 
-INFO:[18]: Validating hst_stis_mlintab.rmap 
-INFO:[19]: Validating hst_stis_echsctab.rmap 
-INFO:[20]: Validating hst_stis_disptab.rmap 
-INFO:[21]: Validating hst_stis_idctab.rmap 
-INFO:[22]: Validating hst_stis_xtractab.rmap 
-INFO:[23]: Validating hst_stis_phottab.rmap 
-INFO:[24]: Validating hst_stis_sptrctab.rmap 
-INFO:[25]: Validating hst_stis_exstab.rmap 
-INFO:[26]: Validating hst_stis_sdctab.rmap 
-INFO:[27]: Validating hst_stis_bpixtab.rmap 
-INFO:[28]: Validating hst_stis_srwtab.rmap 
-INFO:[29]: Validating hst_stis_gactab.rmap 
-INFO:[30]: Validating hst_stis_ccdtab.rmap 
-INFO:[31]: Validating hst_stis_apdestab.rmap 
-INFO:[32]: Validating hst_stis_apertab.rmap 
-INFO:[33]: Validating hst_stis_tdctab.rmap 
+INFO[1]: Certifying 'hst_stis.imap' 
+INFO[2]: Validating hst_stis.imap 
+INFO[3]: Validating hst_stis_lfltfile.rmap 
+INFO[4]: Validating hst_stis_mofftab.rmap 
+INFO[5]: Validating hst_stis_halotab.rmap 
+INFO[6]: Validating hst_stis_riptab.rmap 
+INFO[7]: Validating hst_stis_lamptab.rmap 
+INFO[8]: Validating hst_stis_tdstab.rmap 
+INFO[9]: Validating hst_stis_cdstab.rmap 
+INFO[10]: Validating hst_stis_pctab.rmap 
+INFO[11]: Validating hst_stis_crrejtab.rmap 
+INFO[12]: Validating hst_stis_pfltfile.rmap 
+WARNING[1]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[2]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '1854.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[3]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '1995.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[4]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2135.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[5]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2276.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[6]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2416.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[7]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2557.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[8]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2697.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[9]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2794.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[10]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2836.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[11]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '2976.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[12]: Match tuple ('CCD', 'G230MB', 'SPECTROSCOPIC', '3115.0', 'N/A') is a special case of ('CCD', 'G230MB', 'SPECTROSCOPIC', '1713.0|1854.0|1995.0|2135.0|2276.0|2416.0|2557.0|2697.0|2794.0|2836.0|2976.0|3115.0', 'N/A') 
+WARNING[13]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[14]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3305.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[15]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3423.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[16]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3680.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[17]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3843.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[18]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '3936.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[19]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '4194.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[20]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '4451.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[21]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '4706.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[22]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '4781.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[23]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '4961.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[24]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '5093.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[25]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '5216.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[26]: Match tuple ('CCD', 'G430M', 'SPECTROSCOPIC', '5471.0', 'N/A') is a special case of ('CCD', 'G430M', 'SPECTROSCOPIC', '3165.0|3305.0|3423.0|3680.0|3843.0|3936.0|4194.0|4451.0|4706.0|4781.0|4961.0|5093.0|5216.0|5471.0', 'N/A') 
+WARNING[27]: Match tuple ('CCD', 'G750L', 'SPECTROSCOPIC', '7751.0', 'N/A') is a special case of ('CCD', 'G750L', 'SPECTROSCOPIC', '7751.0|8975.0', 'N/A') 
+WARNING[28]: Match tuple ('CCD', 'G750L', 'SPECTROSCOPIC', '8975.0', 'N/A') is a special case of ('CCD', 'G750L', 'SPECTROSCOPIC', '7751.0|8975.0', 'N/A') 
+WARNING[29]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[30]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '5734.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[31]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '6094.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[32]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '6252.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[33]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '6581.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[34]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '6768.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[35]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '7283.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[36]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '7795.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[37]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '8311.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[38]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '8561.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[39]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '8825.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[40]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '9286.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[41]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '9336.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[42]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '9806.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[43]: Match tuple ('CCD', 'G750M', 'SPECTROSCOPIC', '9851.0', 'N/A') is a special case of ('CCD', 'G750M', 'SPECTROSCOPIC', '10363.0|5734.0|6094.0|6252.0|6581.0|6768.0|7283.0|7795.0|8311.0|8561.0|8825.0|9286.0|9336.0|9806.0|9851.0', 'N/A') 
+WARNING[44]: Match tuple ('NUV-MAMA', 'MIRFUV|MIRNUV', 'IMAGING', 'N/A', 'F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4') is a special case of ('NUV-MAMA', 'MIRCUV|MIRFUV|MIRNUV', 'IMAGING', 'N/A', 'F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4') 
+WARNING[45]: Match tuple ('NUV-MAMA', 'MIRVIS', 'IMAGING', 'N/A', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') is a special case of ('NUV-MAMA', 'MIRVIS', 'IMAGING', 'N/A', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25NDQ1|F25NDQ2|F25NDQ3|F25NDQ4|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') 
+INFO[13]: Validating hst_stis_inangtab.rmap 
+INFO[14]: Validating hst_stis_wcptab.rmap 
+INFO[15]: Validating hst_stis_teltab.rmap 
+INFO[16]: Validating hst_stis_darkfile.rmap 
+WARNING[46]: Match tuple ('CCD', 'D', '1.0|2.0|4.0|8.0') is a special case of ('CCD', 'A|B|C|D', '1.0|2.0|4.0|8.0') 
+INFO[17]: Validating hst_stis_biasfile.rmap 
+WARNING[47]: Parameter 'CCDOFFST' is unchecked. 
+WARNING[48]: Parameter 'BINAXIS1' is unchecked. 
+WARNING[49]: Parameter 'BINAXIS2' is unchecked. 
+INFO[18]: Validating hst_stis_mlintab.rmap 
+INFO[19]: Validating hst_stis_echsctab.rmap 
+INFO[20]: Validating hst_stis_disptab.rmap 
+INFO[21]: Validating hst_stis_idctab.rmap 
+INFO[22]: Validating hst_stis_xtractab.rmap 
+INFO[23]: Validating hst_stis_phottab.rmap 
+INFO[24]: Validating hst_stis_sptrctab.rmap 
+INFO[25]: Validating hst_stis_exstab.rmap 
+INFO[26]: Validating hst_stis_sdctab.rmap 
+INFO[27]: Validating hst_stis_bpixtab.rmap 
+INFO[28]: Validating hst_stis_srwtab.rmap 
+INFO[29]: Validating hst_stis_gactab.rmap 
+INFO[30]: Validating hst_stis_ccdtab.rmap 
+INFO[31]: Validating hst_stis_apdestab.rmap 
+INFO[32]: Validating hst_stis_apertab.rmap 
+INFO[33]: Validating hst_stis_tdctab.rmap 
 0 errors 
-3 warnings 
+49 warnings 
 33 infos 
  

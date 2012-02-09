@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:59',
+    'derived_from' : 'scraped 2012-02-09 10:08:46',
     'filekind' : 'PMODFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'bfab7218aab9a34131a79857b7103ba39ced952e',
+    'sha1sum' : '756a39ff25c65629df08772473ad9ced741d6f86',
 }
 
 selector = Match({

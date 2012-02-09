@@ -5,11 +5,17 @@ with a reference file.
 (('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab'), ('DETECTOR', 'SBC'), ('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')) 
 
 
-The core function find_match_tuples() returns a list of "match paths",  lists of
+The core function find_full_match_paths() returns a list of "match paths",  lists of
 parkey value assignment tuples:
 
->>> find_match_tuples("hst.pmap", "u451251ej_bpx.fits")
+>>> find_full_match_paths("hst.pmap", "u451251ej_bpx.fits")
 [((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
+
+A related function finds only the "match tuples",  the value portion of a match
+expression for HST:
+
+>>> find_match_tuples("hst.pmap", "u451251ej_bpx.fits")
+[('SBC',)]
 
 observatory and filekind are really pseudo-parkeys because they are not
 directly present in dataset file headers,  whereas the other parkeys all 

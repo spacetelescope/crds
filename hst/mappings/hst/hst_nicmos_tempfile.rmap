@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 11:00:00',
+    'derived_from' : 'scraped 2012-02-09 10:08:46',
     'filekind' : 'TEMPFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'f682dc7552042e3ca55b256a2e6d4a679a086578',
+    'sha1sum' : 'a7a279cefc4ae263e253c618ad25771cbefdba80',
 }
 
 selector = Match({

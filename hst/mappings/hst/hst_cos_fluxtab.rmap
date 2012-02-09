@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:56',
+    'derived_from' : 'scraped 2012-02-09 10:08:42',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(obstype == "spectroscopic")',
-    'sha1sum' : '5794122b430a41ce42162769c554f3aca6c258f4',
+    'sha1sum' : '0b522b360b6366cd6acae60fecf420659900d5bc',
 }
 
 selector = Match({

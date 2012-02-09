@@ -143,7 +143,7 @@ def get_object(dotted_name):
 # ==============================================================================
 
 DONT_CARE_RE = re.compile("^" + "|".join([
-    "ANY","-999","-999\.0","4294966297.0","\(\)"]) + "$|^$")
+    "-999","-999\.0","4294966297.0","\(\)"]) + "$|^$")
 
 NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
 
@@ -155,17 +155,17 @@ def condition_value(value):
     >>> condition_value('ANY')
     '*'
     >>> condition_value('-999')
-    '*'
+    'N/A'
     >>> condition_value('-999.0')
-    '*'
+    'N/A'
     >>> condition_value('N/A')
     'N/A'
     >>> condition_value('')
-    '*'
+    'N/A'
     >>> condition_value('4294967295')
     '-1.0'
     >>> condition_value('4294966297.0')   # -999
-    '*'
+    'N/A'
     >>> condition_value(False)
     'F'
     >>> condition_value(True)
@@ -185,8 +185,10 @@ def condition_value(value):
     if NUMBER_RE.match(value):
         value = str(float(value))
     if DONT_CARE_RE.match(value):
+        value = "N/A"
+    if value == "ANY":
         value = "*"
-    if value == "4294967295.0":
+    elif value == "4294967295.0":
         value = "-1.0"
     elif value in ["T", "TRUE"]:
         value = "T"

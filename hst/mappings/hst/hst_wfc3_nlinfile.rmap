@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 11:00:19',
+    'derived_from' : 'scraped 2012-02-09 10:09:14',
     'filekind' : 'NLINFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector == "ir")',
-    'sha1sum' : '9f72861eb4d0b116e9efdbbb083bf9b97081f447',
+    'sha1sum' : '8e5c6acc55130290f0a629350797d07caf044265',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 11:00:06',
+    'derived_from' : 'scraped 2012-02-09 10:08:52',
     'filekind' : 'GACTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(obstype == "spectroscopic")',
-    'sha1sum' : '43389e2307dbaccb5a1b68d49c84088ef2595a99',
+    'sha1sum' : 'e24bb2f1d74a80e138b8756b5a587dc821bacb4f',
 }
 
 selector = Match({

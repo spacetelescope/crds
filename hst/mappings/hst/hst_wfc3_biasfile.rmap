@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 11:00:13',
+    'derived_from' : 'scraped 2012-02-09 10:09:09',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector == "uvis")',
-    'sha1sum' : 'aaf66820b493d26b2549163adaccd0893d0f2600',
+    'sha1sum' : 'f05c159935e8c0dc70d2a20d31cd5535940e913f',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),

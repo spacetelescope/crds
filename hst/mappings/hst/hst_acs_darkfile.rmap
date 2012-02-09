@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-07 10:59:20',
+    'derived_from' : 'scraped 2012-02-09 10:07:47',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '885920957e8dc86d9dacd5da2a66d55bb355afab',
+    'sha1sum' : '19aa26eaf463d3080d333f04fa682e62163f7b29',
 }
 
 selector = Match({
@@ -1337,7 +1337,7 @@ selector = Match({
     ('HRC', 'D', '1.0|2.0|4.0|8.0') : UseAfter({
         '1991-01-01 00:00:00' : 'j4d1435nj_drk.fits',
     }),
-    ('SBC', '*', '*') : UseAfter({
+    ('SBC', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 'k9c13373j_drk.fits',
         '1993-01-01 00:00:00' : 'lcb1355jj_drk.fits',
         '2002-03-01 00:00:00' : 'u3o19557j_drk.fits',
@@ -2572,19 +2572,6 @@ selector = Match({
         '2006-07-26 00:08:15' : 'q8121108j_drk.fits',
         '2006-07-28 00:05:37' : 'q812110aj_drk.fits',
     }),
-    ('WFC', 'A|ABCD|AD|B|BC|C|D', '*') : UseAfter({
-        '2003-03-02 16:45:00' : 'u641457ej_drk.fits',
-        '2009-05-16 00:00:00' : 't941348gj_drk.fits',
-        '2009-07-06 17:00:00' : 'taf18113j_drk.fits',
-        '2009-07-10 15:36:02' : 'taf18114j_drk.fits',
-        '2009-07-18 00:00:00' : 'taf18115j_drk.fits',
-        '2009-07-21 09:00:00' : 'taf18116j_drk.fits',
-        '2009-07-30 00:00:00' : 'taf18117j_drk.fits',
-        '2009-08-05 07:00:19' : 'taf18118j_drk.fits',
-        '2009-08-16 00:00:00' : 'taf18119j_drk.fits',
-        '2009-08-20 00:00:00' : 'taf1811aj_drk.fits',
-        '2009-08-29 00:00:00' : 'taf1811bj_drk.fits',
-    }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0') : UseAfter({
         '2008-01-01 00:00:00' : 't7d1504dj_drk.fits',
         '2009-05-16 00:00:00' : 'tam17023j_drk.fits',
@@ -3079,5 +3066,18 @@ selector = Match({
         '2007-01-21 02:09:05' : 'r1u1415ij_drk.fits',
         '2007-01-22 00:40:13' : 'r1u1415kj_drk.fits',
         '2007-01-26 00:07:33' : 'r1u1415mj_drk.fits',
+    }),
+    ('WFC', 'A|ABCD|AD|B|BC|C|D', 'N/A') : UseAfter({
+        '2003-03-02 16:45:00' : 'u641457ej_drk.fits',
+        '2009-05-16 00:00:00' : 't941348gj_drk.fits',
+        '2009-07-06 17:00:00' : 'taf18113j_drk.fits',
+        '2009-07-10 15:36:02' : 'taf18114j_drk.fits',
+        '2009-07-18 00:00:00' : 'taf18115j_drk.fits',
+        '2009-07-21 09:00:00' : 'taf18116j_drk.fits',
+        '2009-07-30 00:00:00' : 'taf18117j_drk.fits',
+        '2009-08-05 07:00:19' : 'taf18118j_drk.fits',
+        '2009-08-16 00:00:00' : 'taf18119j_drk.fits',
+        '2009-08-20 00:00:00' : 'taf1811aj_drk.fits',
+        '2009-08-29 00:00:00' : 'taf1811bj_drk.fits',
     }),
 })
