@@ -272,7 +272,7 @@ class Selector(object):
         try:
             self._validate_key(key, valid_values_map, warned)
         except ValidationError, exc:
-            if trap_exceptions:
+            if trap_exceptions in ["selector", True]:
                 log.error(context + repr(key))
             else:
                 raise ValidationError(repr(key) + " " + str(exc))
@@ -848,8 +848,8 @@ class MatchingSelector(Selector):
                                       " is not in " + repr(valid))
         for other in self.keys():
             if key != other and match_superset(other, key):
-                log.warning("Match tuple", repr(key), 
-                            "is a special case of", repr(other))
+                raise ValidationError(
+                    "Match tuple is a special case of " + repr(other))
 
     def _is_literal_or_regex_value(self, value, valid):
         """Return True if all of the |-combined elements of `value` are in `valid`."""

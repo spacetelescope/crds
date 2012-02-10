@@ -437,7 +437,9 @@ class Mapping(object):
             try:
                 sel.validate(trap_exceptions)
             except Exception, exc:
-                if not trap_exceptions:
+                if trap_exceptions == mapping_type(self):
+                    log.error()
+                else:
                     raise ValidationError(repr(self) + " : " + str(exc))
 
     def file_matches(self, filename):
@@ -791,7 +793,9 @@ class ReferenceMapping(Mapping):
             self.selector.validate(self._valid_values, trap_exceptions, 
                                    context=repr(self))
         except Exception, exc:
-            if not trap_exceptions:
+            if trap_exceptions == mapping_type(self):
+                log.error()
+            else:
                 raise ValidationError(repr(self) + " : " + str(exc))
 
     def file_matches(self, filename):
@@ -930,6 +934,38 @@ def mapping_to_filekind(context_file):
     """
     return os.path.basename(context_file).split("_")[2].split(".")[0]
 
+def mapping_type(mapping):
+    """
+    >>> mapping_type("hst.pmap")
+    'pmap'
+    >>> mapping_type("hst_acs.imap")
+    'imap'
+    >>> mapping_type("hst_acs_biasfile.rmap")
+    'rmap'
+    >>> try:
+    ...    mapping_type("hst_acs.foo")
+    ... except IOError:
+    ...    pass
+    >>> mapping_type(get_cached_mapping('hst.pmap'))
+    'pmap'
+    >>> mapping_type(get_cached_mapping('hst_acs.imap'))
+    'imap'
+    >>> mapping_type(get_cached_mapping('hst_acs_darkfile.rmap'))
+    'rmap'
+    """
+    if isinstance(mapping, (str, unicode)):
+        if is_mapping(mapping):
+            return os.path.splitext(mapping)[1][1:]
+        else:
+            mapping = load_mapping(mapping)
+    if isinstance(mapping, PipelineContext):
+        return "pmap"
+    elif isinstance(mapping, InstrumentContext):
+        return "imap"
+    elif isinstance(mapping, ReferenceMapping):
+        return "rmap"
+    else:
+        raise ValueError("Unknown mapping type for " + repr(Mapping))
 # ===================================================================
 
 def get_best_references(context_file, header, include=None):

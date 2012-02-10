@@ -14,13 +14,11 @@ INFO[13]: Validating hst_nicmos_pedsbtab.rmap
 INFO[14]: Validating hst_nicmos_rnlcortb.rmap 
 INFO[15]: Validating hst_nicmos_tdffile.rmap 
 INFO[16]: Validating hst_nicmos_noisfile.rmap 
-WARNING[1]: Match tuple ('1.0', 'FAST', '1.0') is a special case of ('1.0', 'FAST', '1.0|2.0|3.0|4.0') 
-WARNING[2]: Match tuple ('2.0', 'FAST', '1.0') is a special case of ('2.0', 'FAST', '1.0|2.0|3.0|4.0') 
-WARNING[3]: Match tuple ('3.0', 'FAST', '1.0') is a special case of ('3.0', 'FAST', '1.0|2.0|3.0|4.0') 
+ERROR[1]: : ('1.0', 'FAST', '1.0') Match tuple is a special case of ('1.0', 'FAST', '1.0|2.0|3.0|4.0') 
 INFO[17]: Validating hst_nicmos_saacntab.rmap 
 INFO[18]: Validating hst_nicmos_pmskfile.rmap 
 INFO[19]: Validating hst_nicmos_zprattab.rmap 
-0 errors 
-3 warnings 
+1 errors 
+0 warnings 
 19 infos 
  

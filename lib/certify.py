@@ -410,6 +410,9 @@ def main():
         action="store_true")
     parser.add_option("-p", "--dump-provenance", dest="provenance",
         help="Dump provenance keywords.", action="store_true")
+    parser.add_option("-t", "--trap-exceptions", dest="trap_exceptions",
+        help="Capture exceptions at level: pmap, imap, rmap, selector, none",
+        type=str, default="selector")
     
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
@@ -420,7 +423,10 @@ def main():
     else:
         check_references = None
         
-    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=True)", 
+    if options.trap_exceptions == "none":
+        options.trap_exceptions = False
+    
+    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)", 
                      options, globals(), locals())
     log.standard_status()
     return log.errors()
