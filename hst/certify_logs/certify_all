@@ -1,8 +1,7 @@
 #! /bin/sh
 
-python -m crds.certify hst_acs.imap $* |& tee certify_acs.log
-python -m crds.certify hst_cos.imap $* |& tee certify_cos.log
-python -m crds.certify hst_stis.imap $* |& tee certify_stis.log
-python -m crds.certify hst_wfc3.imap $* |& tee certify_wfc3.log
-python -m crds.certify hst_nicmos.imap $* |& tee certify_nicmos.log
-python -m crds.certify hst_wfpc2.imap $* |& tee certify_wfpc2.log
+for instr in acs cos stis wfc3 nicmos wfpc2
+do 
+    python -m crds.certify hst_${instr}.imap   
+done | tee certify_all.log
+
