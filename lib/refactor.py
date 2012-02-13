@@ -203,8 +203,8 @@ def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
     """
     old_rmap_contents = open(old_rmap).read()
     new_rmap_contents = _rmap_add_useafter(
-        old_rmap_contents, match_tuple, usafter_date, useafter_file)
-    open(new_rmap, "w+").write(new_mapping_contents)
+        old_rmap_contents, match_tuple, useafter_date, useafter_file)
+    open(new_rmap, "w+").write(new_rmap_contents)
 
 def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date, 
                           useafter_file=None):
@@ -255,7 +255,7 @@ def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
     """
     old_rmap_contents = open(old_rmap).read()
     new_rmap_contents, _filename = _rmap_delete_useafter(
-        old_rmap_contents, match_tuple, usafter_date, useafter_file)
+        old_rmap_contents, match_tuple, useafter_date, useafter_file)
     open(new_rmap, "w+").write(new_rmap_contents)
 
 # ===========================================================================

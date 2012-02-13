@@ -199,7 +199,7 @@ def is_datetime(datetime_str):
     assert re.match(DATETIME_RE_STR, datetime_str), \
         "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
     try:
-        timestamp.parse_date(datetime_str)
+        parse_date(datetime_str)
     except ValueError, exc:
         raise CrdsError(str(exc))
     return datetime_str
