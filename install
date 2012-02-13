@@ -1,17 +1,21 @@
-#! /bin/tcsh
+#! /bin/sh
+
+# source ~/normal.csh
 
 cd `dirname $0`
 
 ./clean
 
-foreach dir (lib hst client)
-    if (-e $dir) then
+for dir in lib client hst jwst
+do
+    if (test -e $dir)
+    then
     	echo "Installing $dir"
-		(cd $dir;  python setup.py install $* --force)  > /dev/null
+	(cd $dir;  python setup.py install $* --force)  > /dev/null
     else
-		echo "Skipping $dir"
-    endif
-end
+	echo "Skipping $dir"
+    fi
+done
 
 echo "Installing django-json-rpc"
 tar zxf third_party/django-json-rpc-git-0.0.pygz
