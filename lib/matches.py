@@ -46,8 +46,8 @@ def mapping(filename):
 
 def reference(filename):
     """Raise and exception if `filename` does not specify a reference file."""
-    if not filename.endswith(".fits"):
-        raise ValueError("Must be a reference (.fits) file.")
+    # if not filename.endswith(".fits"):
+    #     raise ValueError("Must be a reference (.fits) file.")
     return filename
 
 # ===================================================================

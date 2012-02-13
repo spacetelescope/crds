@@ -91,9 +91,10 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     actions = []
     new_contents = old_rmap_contents
     
+    log.verbose("Matching against", ref_match_tuple, repr(useafter_date))
     # Figure out the abstract match tuples header matches against.
-    for rmap_tuple in get_tuple_matches(loaded_rmap, header, ref_match_tuple):
-        # log.write("Trying", rmap_tuple)
+    for rmap_tuple in get_match_tuples(loaded_rmap, header, ref_match_tuple):
+        log.verbose("Trying", rmap_tuple)
         replaced_filename = None
         try:
             new_contents, replaced_filename = _rmap_delete_useafter(
@@ -122,16 +123,16 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
         contents, actions, useafter = \
             _rmap_insert_reference(old_rmap, contents, reference)
         for action in actions:
-            log.write(action)
+            log.verbose(action)
     if actions:
-        log.write("Writing", repr(new_rmap))
+        log.verbose("Writing", repr(new_rmap))
         open(new_rmap, "w+").write(contents)
         checksum.update_checksum(new_rmap)
     else:
         log.warning("No actions in rmap_insert_references().")
     return actions
 
-def get_tuple_matches(loaded_rmap, header, ref_match_tuple):
+def get_match_tuples(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
     perform a winnowing match and return a list of match tuples corresponding
     to all possible matches of `loaded_rmap` against `header`.
@@ -173,7 +174,7 @@ def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, useafter_f
                 # Never found match,  report an error.
                 raise ValueError("Couldn't find match tuple " + repr(match_tuple))
         elif state == "find useafter":
-            if line.strip().endswith(".fits',"):
+            if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause
                 # '2002-03-01 00:00:00' : 'oai16328j_cfl.fits', 
                 line_date = re.search(DATETIME_RE_STR, line)
@@ -227,7 +228,7 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
                 # Never found match,  report an error.
                 raise NoMatchTupleError("Couldn't find match tuple " + repr(match_tuple))
         elif state == "find useafter":
-            if line.strip().endswith(".fits',"):
+            if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause
                 # '2002-03-01 00:00:00' : 'oai16328j_cfl.fits', 
                 line_date = re.search(DATETIME_RE_STR, line)

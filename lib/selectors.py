@@ -355,15 +355,25 @@ def match_superset(tuple1, tuple2):
     False
     >>> match_superset(('1','2'),  ('1','3'))
     False
+    >>> match_superset(('1','N/A'), ('1','3'))
+    True
+    >>> match_superset(('1','3'), ('1','N/A'))
+    True
+    >>> match_superset(('1','*'), ('1','N/A'))
+    True
+    >>> match_superset(('1','N/A'), ('1','*'))
+    True
     """
     for i in range(len(tuple1)):
         v1 = tuple1[i]
         v2 = tuple2[i]
         if v1 == v2:
             continue
-        if v1 == "*":
+        if v1 in ["*",'N/A']:
             continue
-        if v2 == "*":
+        if v2 in ["N/A"]:
+            continue
+        if v2 == ["*"]:
             return False
         if set(v1.split("|")) > set(v2.split("|")):
             continue
@@ -433,7 +443,7 @@ class RegexMatcher(Matcher):
         self._regex = re.compile(key)
         
     def match(self, value):
-        return 1 if (value == '*' or self._regex.match(value)) else -1
+        return 1 if (value in ['*',"N/A"] or self._regex.match(value)) else -1
         
 class InequalityMatcher(Matcher):
     """
@@ -704,7 +714,7 @@ class MatchingSelector(Selector):
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
-                    # log.verbose("Winnowing", match_tuple)
+                    log.verbose("Winnowing", match_tuple)
                     del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   

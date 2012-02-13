@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-09 10:09:23',
+    'derived_from' : 'generated from CDBS database 2012-02-12 06:54:10',
     'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'FILTER', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '5b669080d386740e9121121b26761a72c24c1700',
+    'sha1sum' : '931257eae860ff1927da7071971a7455db29af25',
 }
 
 selector = Match({

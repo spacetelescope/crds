@@ -1,6 +1,6 @@
-"""Given an instrument this script will access the CDBS database reffile_ops
-and generate an rmap file for each filekind associated with the
-instrument as defined by reference_file_defs.xml.
+"""Given an instrument this script will access the CDBS database
+reffile_ops and generate an rmap file for each filekind associated
+with the instrument as defined by reference_file_defs.xml.
 """
 import sys
 import os
@@ -102,9 +102,14 @@ and {file_table}.reference_file_type = '{reference_file_type}'
     except:
         log.error("Database error")
         return
+
+    # Generate row dictionaries based on database values and N/A
+    # for those extra parameters which are taken from the dataset
+    # rather than the database and used for special processing 
+    # instead of matching.
     row_dicts = []
     for row in generator:
-        row = tuple(row) + (len(extra_parkeys) * ("*",))
+        row = tuple(row) + (len(extra_parkeys) * ("N/A",))
         rowd = dict(zip(fields, row))
         for key, val in rowd.items():
             rowd[key] = utils.condition_value(val) if condition else val
@@ -336,12 +341,11 @@ def instrument_specific_hacks(instr, kind, kmap):
 
 def get_match_tuple(row, instrument, filekind):
     """Format a row dictionary into a tuple of parkeys in the proper order.
-    Apply parameter restrictions to reduce irrelevant match parameters to *.
+    Apply parameter restrictions to reduce irrelevant match parameters to N/A.
     Return a tuple of match parameters.
     """
     db_parkeys = parkeys.get_db_parkeys(instrument, filekind)     # ordered
     extra_parkeys = parkeys.get_extra_keys(instrument, filekind)     # ordered
-    # Mutate irrelevant parameters to *
     restricted = apply_restrictions(row, instrument, filekind)
     # Construct a simple match tuple (no names) in the right order.
     match = []
@@ -350,8 +354,8 @@ def get_match_tuple(row, instrument, filekind):
     return tuple(match)
 
 def apply_restrictions(row, instrument, filekind):
-    """Apply CDBS parameter restrictions to a raw match tuple dictionary,
-    mutating irrelevant parameters to "*".
+    """Evaluate CDBS parameter restrictions in the context of a raw match 
+    tuple dictionary,  mutating irrelevant parameters to "N/A".
     """
     restrictions = parkeys.get_parkey_restrictions(instrument, filekind)
     # Get a lowercase version of row for evaluating restriction expressions
@@ -360,7 +364,7 @@ def apply_restrictions(row, instrument, filekind):
     for key,value in row.items():
         header[key.lower()] = value.lower()
     result = {}
-    # Mutate irrelevant parameters to "*".
+    # Mutate irrelevant parameters to "N/A".
     for key, value in row.items():
         if key in restrictions:
             if not eval(restrictions[key], {}, header):
@@ -399,7 +403,7 @@ def write_rmap(observatory, instrument, filekind, kind_map):
     now = timestamp.now().split('.')[0]
     rmap_header = OrderedDict([
         ("name", outname[2:]),
-        ("derived_from", "scraped " + now),
+        ("derived_from", "generated from CDBS database " + now),
         ("mapping", "REFERENCE"),
         ("observatory", observatory.upper()),
         ("instrument", instrument.upper()),

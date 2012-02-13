@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'scraped 2012-02-09 10:08:54',
+    'derived_from' : 'generated from CDBS database 2012-02-12 06:54:04',
     'filekind' : 'WCPTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(obstype == "spectroscopic")',
-    'sha1sum' : '7c18fd1c0812defc3516102a29f9aa6a6d29ae17',
+    'sha1sum' : '2be4d4704b7ef02eee5aee8e20cbce288f55df40',
 }
 
 selector = Match({

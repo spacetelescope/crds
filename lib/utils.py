@@ -143,9 +143,9 @@ def get_object(dotted_name):
 # ==============================================================================
 
 DONT_CARE_RE = re.compile("^" + "|".join([
-    "-999","-999\.0","4294966297.0","\(\)"]) + "$|^$")
+    "-999","-999\.0","4294966297.0","\(\)","N/A","NOT APPLICABLE"]) + "$|^$")
 
-NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
+NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
 
 def condition_value(value):
     """Condition `value`,  ostensibly taken from a FITS header or CDBS
@@ -159,6 +159,8 @@ def condition_value(value):
     >>> condition_value('-999.0')
     'N/A'
     >>> condition_value('N/A')
+    'N/A'
+    >>> condition_value('NOT APPLICABLE')
     'N/A'
     >>> condition_value('')
     'N/A'
@@ -175,6 +177,8 @@ def condition_value(value):
     >>> condition_value('-9')
     '-9.0'
     >>> condition_value('1.0')
+    '1.0'
+    >>> condition_value('1.')
     '1.0'
     >>> condition_value('foo')
     'FOO'
