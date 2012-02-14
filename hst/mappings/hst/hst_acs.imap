@@ -6,7 +6,7 @@ header = {
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '36ac715d6b8261fb9e0a3b8944e409a30094d1d5',
+    'sha1sum' : '5ad5faf7f7dab8d5ba3751c8b96905868783a1bb',
 }
 
 selector = {
@@ -25,6 +25,6 @@ selector = {
     'mlintab' : 'hst_acs_mlintab.rmap',
     'oscntab' : 'hst_acs_oscntab.rmap',
     'pfltfile' : 'hst_acs_pfltfile.rmap',
-    'shadfile' : 'hst_acs_shadfile.rmap',
+    # 'shadfile' : 'hst_acs_shadfile.rmap',
     'spottab' : 'hst_acs_spottab.rmap',
 }

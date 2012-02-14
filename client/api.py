@@ -243,6 +243,6 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     """Given a `dataset` and a `context`,  extract relevant header 
     information from the `dataset`.
     """
-    # cache_mappings(context, ignore_cache)
+    dump_mappings(context, ignore_cache)
     ctx = rmap.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)

@@ -61,10 +61,10 @@ def get_file_properties(filename):
     """Figure out (instrument, filekind, serial) based on `filename` which
     should be a mapping or FITS reference file.
 
-    >>> get_file_properties("./hst_acs_biasfile_0001.rmap")
+    >> get_file_properties("./hst_acs_biasfile_0001.rmap")
     ('acs', 'biasfile')
 
-    >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
+    >> get_file_properties("./hst_acs_biasfile_0001.pmap")
     Traceback (most recent call last):
     ...
     AssertionError: Invalid .pmap filename './hst_acs_biasfile_0001.pmap'
@@ -88,28 +88,28 @@ def get_file_properties(filename):
 
 def decompose_newstyle_name(filename):
     """
-    >>> decompose_newstyle_name("./hst.pmap")
+    >> decompose_newstyle_name("./hst.pmap")
     ('.', 'hst', '', '', '', '.pmap')
 
-    >>> decompose_newstyle_name("./hst_0001.pmap")
+    >> decompose_newstyle_name("./hst_0001.pmap")
     ('.', 'hst', '', '', '0001', '.pmap')
 
-    >>> decompose_newstyle_name("./hst_acs.imap")
+    >> decompose_newstyle_name("./hst_acs.imap")
     ('.', 'hst', 'acs', '', '', '.imap')
 
-    >>> decompose_newstyle_name("./hst_acs_0001.imap")
+    >> decompose_newstyle_name("./hst_acs_0001.imap")
     ('.', 'hst', 'acs', '', '0001', '.imap')
 
-    >>> decompose_newstyle_name("./hst_acs_biasfile.rmap")
+    >> decompose_newstyle_name("./hst_acs_biasfile.rmap")
     ('.', 'hst', 'acs', 'biasfile', '', '.rmap')
 
-    >>> decompose_newstyle_name("./hst_acs_biasfile_0001.rmap")
+    >> decompose_newstyle_name("./hst_acs_biasfile_0001.rmap")
     ('.', 'hst', 'acs', 'biasfile', '0001', '.rmap')
 
-    >>> decompose_newstyle_name("./hst_acs_biasfile.fits")
+    >> decompose_newstyle_name("./hst_acs_biasfile.fits")
     ('.', 'hst', 'acs', 'biasfile', '', '.fits')
 
-    >>> decompose_newstyle_name("./hst_acs_biasfile_0001.fits")
+    >> decompose_newstyle_name("./hst_acs_biasfile_0001.fits")
     ('.', 'hst', 'acs', 'biasfile', '0001', '.fits')
     """
     path, parts, ext = _get_fields(filename)
