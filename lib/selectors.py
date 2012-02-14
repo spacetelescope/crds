@@ -858,7 +858,8 @@ class MatchingSelector(Selector):
                                       " is not in " + repr(valid))
         for other in self.keys():
             if key != other and match_superset(other, key):
-                raise ValidationError(
+                # raise ValidationError(
+                log.warning(
                     "Match tuple is a special case of " + repr(other))
 
     def _is_literal_or_regex_value(self, value, valid):
