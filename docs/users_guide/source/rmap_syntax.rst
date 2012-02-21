@@ -1,4 +1,4 @@
-Mapping Syntax
+About Mappings
 ==============
 
 CRDS mappings are organized in a 3 tier hierarchy:  pipeline (.pmap),
@@ -11,8 +11,13 @@ CRDS mappings are written in a subset of Python and given the proper global
 definitions can be parsed directly by the Python interpreter.   Nothing 
 precludes writing a parser for CRDS mappings in some other language.
 
+.. figure:: file_relationships.png
+   :scale: 50 %
+   :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
+   
+
 Naming
-======
+------
 
 The CRDS HST mapping prototypes which are generated from information scraped from 
 the CDBS web site are named with the forms::
@@ -25,7 +30,7 @@ The names of subsequent derived mappings include a version number::
 
   <observatory> _ <version> .pmap                               .e.g. hst_00001.pmap
   <observatory> _ <instrument> _ <version> .imap                .e.g. hst_acs_00047.imap 
-  <observatory> _ <instrument> _ <verrsion> _ <filekind> .rmap  .e.g. hst_acs_darkfile_00012.rmap
+  <observatory> _ <instrument> _ <version> _ <filekind> .rmap  .e.g. hst_acs_darkfile_00012.rmap
 
 Basic Structure
 ---------------
@@ -156,71 +161,58 @@ Match
 .....
 
 Conceptually,  the Match operator does a dictionary lookup based on the header
-keyword values listed in the first tuple of rmap header field "parkey".   In
+keyword values listed in the first tuple of rmap header field *parkey*.   In
 actuality however,  CRDS does a winnowing search based on each successive 
 parkey value,  eliminating impossible matches and returning the best matching
 survivor.   There are a number of special values associated with the CRDS Match
-operator:  *,  NOT PRESENT, %NO REFERENCE%.
+operator:  *,  Regular Expressions, N/A, and Substitutions.
 
-Wild Cards and Optional Match Parameters
+Wild Cards and Regular Expressions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Star * is used in two places in CRDS rmaps.   When * precedes a header keyword 
-listed in "parkey" it means the header keyword is not *required* to be defined 
-by a dataset.   So an rmap header looking like::
+CRDS supports pseudo-regular expressions in its match patterns.   A
+tuple value of "*" will match any value assigned to that parameter by the 
+dataset.   Similarly,  literal patterns separated by the "|" punctuator
+, e.g.  "A|B|C|D", will match any one of the patterns,  .e.g. "A" or "B" or
+"C" or "D".   These are dubbed "pseudo" regular expressions because "*" is 
+techinically equivalent to "^.*$",  and "A|B" is technically equivalent to
+"^A$|^B$".   While losing some flexibility,  CRDS simplifies the notation for
+the sake of brevity and clarity.
 
-  'parkey' : (("*CCDGAIN", ...), ...)
-  
-indicates that the CCDGAIN parameter is only used for some matches. In this 
-instance,  when a dataset does not define CCDGAIN at all,  a match can still 
-occur.
 
-When * is used as a value in a Match pattern, it indicates that the pattern will
-match any value for that field.
+N/A
+,,,
 
-Match Weighting
-,,,,,,,,,,,,,,,
+Some of the HST rmaps have match tuple values of "N/A",  or Not Applicable.   
+This indicates that the parameter does not "count" for matching that case.
+A value of N/A is matched as a special version of "*".   N/A will match any
+value in the dataset,  or no value,  but does not add to the overall sense of
+goodness of the match.   Effectively, N/A parameters are ignored for that match
+case only,  during matching only.
 
-A consequence of optional parameters and wild card matches is that CRDS cannot
-do a direct lookup based on dataset header values.  Consequently CRDS  does a
-winnowing match which iterates over all possible selector matches and each
-parkey keyword,  discarding at each step selections which cannot possibly match
-a dataset.   Each parameter which does match contributes to the selection's
-match weight,  where greater weights correspond to better matches.   A parameter
-which matches literally contributes +1 to the weight.  A parameter which matches
-via a wild card contributes 0 to the weight.   Thus,  more specific matches are
-given greater weights and considered better.
+There are a couple uses for N/A parameters by HST.    First,  sometimes a
+parameter is irrelevant in the context of the other parameters.   Second,
+sometimes a parameter relevant,  but is not stored in the reference file or
+CDBS,  and is not known until supplied by the dataset.   In this second case,
+the unknown parameter can still be used to mutate the values of the other
+parameters,  prior to doing the match. At least initially this technique is used
+for ACS biasfile with match customization code.
 
-After all of the keywords listed in "parkey" have been examined,  one of the
-surviving selections should have a unique greatest weight. It's possible to
-define rmaps or datasets which match two selections with identical weights;
-this is considered an error and CRDS raises an exception for these ambiguous
-matches.
+An example of both regular expression and N/A matching occurs in this extract
+from the ACS biasfile rmap::
 
-NOT PRESENT
-,,,,,,,,,,,
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
 
-The initial HST rmaps were all scraped from the CDBS web site which lists
-reference file selection criteria.  The value NOT PRESENT means that a match
-value could not be found in the CDBS HTML table.   In cases where the rmap
-generator was instructed to look into reference files for undefined parkey
-values,   NOT PRESENT means the associated reference file didn't define it
-either.  Since not all parameter values are always required or relevant, a value
-of NOT PRESENT is generally not an error.   A value of NOT PRESENT does however
-imply that the parameter itself is considered optional and the corresponding
-parkeys keyword will be prefixed with *.
+    ('HRC', 'ABCD|AD|BC', '1.0|2.0|4.0|8.0', '1062.0', '1044.0', '19.0', '0.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '1992-01-01 00:00:00' : 'kcb1734jj_bia.fits',
+    }),
 
-%NO REFERENCE%
-,,,,,,,,,,,,,,
-
-To first order, CRDS expects the CDBS web site to list required parameter values
-for best reference matching. In practice,  the CDBS website doesn't list all
-required parameter values so CRDS sometimes finds them by looking inside the
-rerefence files themselves.  For match tuples containing %NO REFERENCE%, the
-rmap generator was instructed to look inside reference files but could not find
-the reference file in order to do so.   This suggests a missing or obsoleted 
-reference file.    Note that the rmap generator is not always instructed to 
-search inside reference files.
+This case matches 3 distinct values for CCDAMP, namely ABCD, AD, and BC. It
+matches 4 distinct values for CCDGAIN, namely 1.0, 2.0, 4.0, and 8.0.   The
+parameters XCORNER, YCORNER, and CCDCHIP are unknown to CDBS and only supplied
+by actual ACS datasets.   They are used to mutate the values of NUMROWS and 
+CCDAMP prior to matching,  and hence while they affect the outcome of the match,
+they are not used literally during the match.
 
 Substitution Parameters
 ,,,,,,,,,,,,,,,,,,,,,,,
@@ -249,12 +241,58 @@ amplifier configurations,  while the dataset specifies a particular
 configuration.   CRDS automatically expands substitutions into equivalent sets
 of match rules.
 
+Match Weighting
+,,,,,,,,,,,,,,,
+
+Because of the presence of special values like regular expressions, CRDS uses a
+winnowing match algorithm which works on a parameter-by-parameter basis by
+discarding match tuples which cannot possibly match. After examining all
+parameters,   CRDS is left with a list of candidate matches.
+
+For each literal, *, or regular expression parameter that matched,  CRDS
+increases its sense of the goodness of the match by 1.   For each N/A that was
+ignored, CRDS doesn't change the weight of the match.   The highest ranked match
+is the one CRDS chooses as best.   When more than one match tuple has the same 
+highest rank, we call this an "ambiguous" match.   Ambiguous matches will 
+either be merged,  or treated as errors/exceptions that cause the match to fail.   
+Talk about ambiguity.
+
+For the initial HST rmaps, there are a number of match cases which overlap,
+creating the potential for ambiguous matches by actual datasets.   For HST,  all
+of the match cases refer to nested UseAfter selectors.  A working approach for
+handling ambiguities here is to merge the two or more equal weighted UseAfter
+lists into a single combined UseAfter which is then searched.
+
+The ultimate goal of CRDS is to produce clear non-overlapping rules.  However,
+since the initial rmaps are generated from historical mission data in CDBS,  
+there are eccentricities which need to be accomodated by merging or eventually 
+addressed by human beings who will simplify the rules by hand.
+
 UseAfter
 ........
 
 The UseAfter selector matches an ordered sequence of date time values to
 corresponding reference filenames.   UseAfter finds the greatest date-time which
-is less than or equal to ( <= ) DATE-OBS and TIME-OBS of the dataset.   Unlike
+is less than or equal to ( <= ) TEXPSTRT of the dataset.   Unlike
 reference file and dataset timestamp values,  all CRDS rmaps represent times in
-the single format shown in the rmap example above.
+the single format shown in the rmap example below::
+
+ selector = Match({
+    ('HRC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'j4d1435hj_a2d.fits',
+        '1992-01-01 00:00:00' : 'kcb1734ij_a2d.fits',
+    }),
+    ('WFC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'kcb1734hj_a2d.fits',
+        '2008-01-01 00:00:00' : 't3n1116mj_a2d.fits',
+    }),
+ })
+
+In the above mapping,  when the detector is HRC,  if the dataset's date/time
+is before 1991-01-01,  there is no match.   If the date/time is between
+1991-01-01 and 1992-01-01,  the reference file 'j4d1435hj_a2d.fits' is matched.
+If the dataset date/time is 1992-01-01 or after,  the recommended reference
+file is 'kcb1734ij_a2d.fits'.
+
+
 
