@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-02-12 06:54:00',
+    'derived_from' : 'generated from CDBS database 2012-02-21 13:20:03.378672',
     'filekind' : 'ZPRATTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '1598c5116e8069f072c92d2011f7a675e7d93c40',
+    'sha1sum' : '903b2b105552cf91d059addba83e30dd7c7f40d3',
 }
 
 selector = Match({

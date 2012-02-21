@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'scraped 2012-02-12 06:54:13',
-    'description' : 'Initially generated on 2012-02-12 06:54:13',
+    'derived_from' : 'scraped 2012-02-21 13:20:31',
+    'description' : 'Initially generated on 2012-02-21 13:20:31',
     'instrument' : 'ACS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '5ad5faf7f7dab8d5ba3751c8b96905868783a1bb',
+    'sha1sum' : 'e7773fa809560824ad53e8f007cf4142b51d80c4',
 }
 
 selector = {
@@ -25,6 +25,6 @@ selector = {
     'mlintab' : 'hst_acs_mlintab.rmap',
     'oscntab' : 'hst_acs_oscntab.rmap',
     'pfltfile' : 'hst_acs_pfltfile.rmap',
-    # 'shadfile' : 'hst_acs_shadfile.rmap',
+    'shadfile' : 'hst_acs_shadfile.rmap',
     'spottab' : 'hst_acs_spottab.rmap',
 }

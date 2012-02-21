@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-02-12 06:54:01',
+    'derived_from' : 'generated from CDBS database 2012-02-21 13:20:05.140969',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector == "ccd")',
-    'sha1sum' : '16d5c5f61881075b5eab375aa14878abc6bf73fd',
+    'sha1sum' : '75041aceed1e64f8a9b898154c66b08930a3f701',
 }
 
 selector = Match({
@@ -481,6 +481,10 @@ selector = Match({
         '2011-12-07 09:17:02' : 'w1j1436fo_bia.fits',
         '2011-12-14 16:23:19' : 'w1j1436go_bia.fits',
         '2011-12-21 00:00:07' : 'w1j1436ho_bia.fits',
+        '2011-12-26 23:38:33' : 'w2g1626do_bia.fits',
+        '2012-01-04 00:45:06' : 'w2g1626eo_bia.fits',
+        '2012-01-11 00:18:35' : 'w2g1626fo_bia.fits',
+        '2012-01-17 23:59:59' : 'w2g1626go_bia.fits',
     }),
     ('D', '1.0', '3.0', '1.0', '2.0') : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1019qo_bia.fits',
@@ -1255,6 +1259,8 @@ selector = Match({
         '2011-11-18 01:38:54' : 'vcd17357o_bia.fits',
         '2011-11-30 01:26:00' : 'w1j1436co_bia.fits',
         '2011-12-14 16:39:33' : 'w1j1436do_bia.fits',
+        '2011-12-26 23:38:33' : 'w2g1626bo_bia.fits',
+        '2012-01-11 02:49:31' : 'w2g1626co_bia.fits',
     }),
     ('D', '4.0', '3.0', '1.0', '2.0') : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1020co_bia.fits',

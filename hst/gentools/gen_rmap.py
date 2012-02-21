@@ -400,7 +400,7 @@ def write_rmap(observatory, instrument, filekind, kind_map):
                       parkeys.get_extra_keys(instrument, filekind)
                       ])
     useafter_keys  = ('DATE-OBS', 'TIME-OBS',)
-    now = timestamp.now().split('.')[0]
+    now = str(timestamp.now())
     rmap_header = OrderedDict([
         ("name", outname[2:]),
         ("derived_from", "generated from CDBS database " + now),

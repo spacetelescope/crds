@@ -12,6 +12,8 @@ import cStringIO
 
 from crds import log
 
+from . import tpn
+
 RAW_WEB_CUTS = {
 "acs" : """
 acr_best_biasfile   BIAS IMAGE  BIA
@@ -29,12 +31,12 @@ acr_best_ccdtab CCD PARAMETERS TABLE    CCD
 acr_best_comptab    THE HST MASTER COMPONENT TABLE  TMC
 acr_best_crrejtab   COSMIC RAY REJECTION PARAMETER TABLE    CRR
 acr_best_graphtab   THE HST GRAPH TABLE TMG
-acr_best_idctabtab  DISTORTION COEFFICIENTS TABLE   IDC
-acr_best_mdriztabtab    MULTIDRIZZLE PARAMETER TABLE    MDZ
-acr_best_mlintabtab MAMA LINEARITY TABLE    LIN
-acr_best_oscntabtab CCD OVERSCAN REGION TABLE   OSC
-acr_best_phottabtab PHOTOMETRY and THROUGHPUT TABLE PHT
-acr_best_spottabtab SPOT POSITION TABLE CSP
+acr_best_idctab     DISTORTION COEFFICIENTS TABLE   IDC
+acr_best_mdriztab   MULTIDRIZZLE PARAMETER TABLE    MDZ
+acr_best_mlintab    MAMA LINEARITY TABLE    LIN
+acr_best_oscntab    CCD OVERSCAN REGION TABLE   OSC
+acr_best_phottab    PHOTOMETRY and THROUGHPUT TABLE PHT
+acr_best_spottab    SPOT POSITION TABLE CSP
 acr_best_drkcfile   CTE corrected dark  DKC
 acr_best_pctetab    CTE CORRECTION TABLE    PCTE
 acr_best_imphttab   PHOTOMETRY KEYWORD TABLE    IMP
@@ -147,7 +149,7 @@ w2r_best_offtab not used    &bsp;/TD>
 TEXT_DESCR = {}
 
 def make_text_descr():
-    """Initialize nested mapping { [instr][filekind] : "text description" }"""
+    """Initialize mapping { filekind : "text description" }"""
     for instr, data in RAW_WEB_CUTS.items():
         # TEXT_DESCR[instr] = {}
         for line in cStringIO.StringIO(data):
@@ -163,6 +165,14 @@ def make_text_descr():
                 log.verbose("WARNING:  Different descriptions of", repr(filekind),
                             repr(TEXT_DESCR[filekind]), 
                             "versus", repr(description))
+    for fkind in tpn.FILEKINDS:
+        if fkind not in TEXT_DESCR:
+            log.verbose("WARNING: No text description for filekind",repr(fkind))
+            TEXT_DESCR[fkind] = fkind
+    for fkind in TEXT_DESCR.keys():
+        if fkind not in tpn.FILEKINDS:
+            log.verbose("WARNING: Removing extraneous text description for", repr(fkind))
+            del TEXT_DESCR[fkind]
 
 make_text_descr()
 

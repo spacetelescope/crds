@@ -31,3 +31,7 @@ EXTENSIONS = [
 
 from .tpn import FILEKINDS
 
+from .text_descr import TEXT_DESCR
+
+
+
