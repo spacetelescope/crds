@@ -10,6 +10,8 @@ based on limited e-mail direction from Rossy.
 
 import cStringIO
 
+from crds import log
+
 RAW_WEB_CUTS = {
 "acs" : """
 acr_best_biasfile   BIAS IMAGE  BIA
@@ -147,14 +149,20 @@ TEXT_DESCR = {}
 def make_text_descr():
     """Initialize nested mapping { [instr][filekind] : "text description" }"""
     for instr, data in RAW_WEB_CUTS.items():
-        TEXT_DESCR[instr] = {}
+        # TEXT_DESCR[instr] = {}
         for line in cStringIO.StringIO(data):
             words = line.split()
             if len(words) < 3:
                 continue
             filekind = words[0].split("_")[2]
             descr_words = [w.capitalize() for w in words[1:-1]]
-            TEXT_DESCR[instr][filekind] = " ".join(descr_words)
+            description = " ".join(descr_words)
+            if filekind not in TEXT_DESCR:
+                TEXT_DESCR[filekind] = description
+            elif TEXT_DESCR[filekind] != description:
+                log.verbose("WARNING:  Different descriptions of", repr(filekind),
+                            repr(TEXT_DESCR[filekind]), 
+                            "versus", repr(description))
 
 make_text_descr()
 
