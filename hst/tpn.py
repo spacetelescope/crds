@@ -41,7 +41,7 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =============================================================================
 
-def update_tpn_data(pipeline_context):
+def _update_tpn_data(pipeline_context):
     """Update the data files which relate reftypes, filekinds, and tpn
     extensions,  all somewhat redundant ways of saying the same thing,
     but the way HST is.
@@ -53,7 +53,7 @@ def update_tpn_data(pipeline_context):
     
 # =============================================================================
 
-def evalfile_with_fail(filename):
+def _evalfile_with_fail(filename):
     """Evaluate and return a dictionary file,  returning {} if the file
     cannot be found.
     """
@@ -63,7 +63,7 @@ def evalfile_with_fail(filename):
         result = {}
     return result
 
-def invert_instr_dict(map):
+def _invert_instr_dict(map):
     """Invert a set of nested dictionaries of the form {instr: {key: val}}
     to create a dict of the form {instr: {val: key}}.
     """
@@ -72,17 +72,17 @@ def invert_instr_dict(map):
         inverted[instr] = utils.invert_dict(map[instr])
     return inverted
 
-# .e.g. FILEKIND_TO_EXTENSION = {                 
+# .e.g. FILEKIND_TO_SUFFIX = {                 
 # 'acs': {'atodtab': 'a2d',
 #         'biasfile': 'bia',
-FILEKIND_TO_EXTENSION = evalfile_with_fail(HERE + "/filekind_ext.dat")
-EXTENSION_TO_FILEKIND = invert_instr_dict(FILEKIND_TO_EXTENSION)
+FILEKIND_TO_SUFFIX = _evalfile_with_fail(HERE + "/filekind_ext.dat")
+SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
 
-#.e.g. FILETYPE_TO_EXTENSION = {
+#.e.g. FILETYPE_TO_SUFFIX = {
 # 'acs': {'analog-to-digital': 'a2d',
 #         'bad pixels': 'bpx',
-FILETYPE_TO_EXTENSION = evalfile_with_fail(HERE + "/tpn_filetypes.dat")
-EXTENSION_TO_FILETYPE = invert_instr_dict(FILETYPE_TO_EXTENSION)
+FILETYPE_TO_SUFFIX = _evalfile_with_fail(HERE + "/tpn_filetypes.dat")
+SUFFIX_TO_FILETYPE = _invert_instr_dict(FILETYPE_TO_SUFFIX)
 
 
 # =============================================================================
@@ -129,7 +129,7 @@ class CdbsCat(object):
             rep += name + "=" + repr(getattr(self, name)) + ", "
         return rep[:-2] + ")"
 
-def load_cdbs_catalog():
+def _load_cdbs_catalog():
     """Return a list of CdbsCat objects read from cdbscatalog.dat"""
     catpath = os.path.join(HERE, "cdbs", "cdbs_tpns","cdbscatalog.dat")
     catalog = []
@@ -141,7 +141,7 @@ def load_cdbs_catalog():
         catalog.append(CdbsCat(*words))
     return catalog
 
-CDBS_CATALOG = load_cdbs_catalog()
+CDBS_CATALOG = _load_cdbs_catalog()
 
 # =============================================================================
 
@@ -172,18 +172,18 @@ def filetype_to_filekind(instrument, filetype):
     """
     instrument = instrument.lower()
     filetype = filetype.lower()
-    ext = FILETYPE_TO_EXTENSION[instrument][filetype]
-    return EXTENSION_TO_FILEKIND[instrument][ext]
+    ext = FILETYPE_TO_SUFFIX[instrument][filetype]
+    return SUFFIX_TO_FILEKIND[instrument][ext]
 
 def extension_to_filekind(instrument, extension):
     """Map the value of an instrument and TPN extension onto it's
     associated filekind keyword name,  i.e. drk --> darkfile
     """
-    return EXTENSION_TO_FILEKIND[instrument][extension]
+    return SUFFIX_TO_FILEKIND[instrument][extension]
 
 # =============================================================================
 
-def load_tpn_lines(fname):
+def _load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
      and joining lines ending in \\.
     """
@@ -201,7 +201,7 @@ def load_tpn_lines(fname):
     return lines
 
 
-def fix_quoted_whitespace(line):
+def _fix_quoted_whitespace(line):
     """Replace spaces and tabs which appear inside quotes in `line` with
     underscores,  and return it.
     """
@@ -221,13 +221,13 @@ def fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
-def load_tpn(fname):
+def _load_tpn(fname):
     """Load a TPN file and return it as a list of TpnInfo objects
     describing keyword requirements including acceptable values.
     """
     tpn = []
-    for line in load_tpn_lines(fname):
-        line = fix_quoted_whitespace(line)
+    for line in _load_tpn_lines(fname):
+        line = _fix_quoted_whitespace(line)
         items = line.split()
         if len(items) == 4:
             name, keytype, datatype, presence = items
@@ -264,7 +264,7 @@ WFPC2_HACK = {'atodfile': 'a2d',
            'wf4tfile': 'w4t'
 }
 
-def tpn_filepath(instrument, filekind):
+def _tpn_filepath(instrument, filekind):
     """Return the full path for the .tpn file corresponding to `instrument` and 
     `filekind`,  the CRDS name for the header keyword which refers to this 
     reference.
@@ -274,7 +274,7 @@ def tpn_filepath(instrument, filekind):
     if instrument == "wfpc2":
         file_suffix = WFPC2_HACK[filekind]
     else:
-        file_suffix = FILEKIND_TO_EXTENSION[instrument][filekind]
+        file_suffix = FILEKIND_TO_SUFFIX[instrument][filekind]
     path = rootpath + "_" + file_suffix + ".tpn"
     return path
 
@@ -282,7 +282,7 @@ def get_tpninfos(instrument, filekind):
     """Load the map of TPN_info tuples corresponding to `instrument` and 
     `extension` from it's .tpn file.
     """
-    return load_tpn(tpn_filepath(instrument, filekind))
+    return _load_tpn(_tpn_filepath(instrument, filekind))
 
 # =============================================================================
 
@@ -295,8 +295,8 @@ def reference_name_to_validator_key(filename):
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
-    extension = FILETYPE_TO_EXTENSION[instrument][filetype]
-    filekind = EXTENSION_TO_FILEKIND[instrument][extension]
+    extension = FILETYPE_TO_SUFFIX[instrument][filetype]
+    filekind = SUFFIX_TO_FILEKIND[instrument][extension]
     return (instrument, filekind)
 
 # =============================================================================
@@ -309,18 +309,18 @@ def reference_name_to_tpninfos(key):
 
 # =============================================================================
 
-INSTRUMENTS = FILEKIND_TO_EXTENSION.keys()
+INSTRUMENTS = FILEKIND_TO_SUFFIX.keys()
 
 FILEKINDS = set()
-for instr in FILEKIND_TO_EXTENSION:
-    FILEKINDS.update(FILEKIND_TO_EXTENSION[instr].keys())
+for instr in FILEKIND_TO_SUFFIX:
+    FILEKINDS.update(FILEKIND_TO_SUFFIX[instr].keys())
 FILEKINDS = list(FILEKINDS)
 
 # =============================================================================
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
-        update_tpn_data(sys.argv[1])
+        _update_tpn_data(sys.argv[1])
     else:
         print "usage: python tpn.py <pipeline_context,  e.g. hst.pmap>"
 
