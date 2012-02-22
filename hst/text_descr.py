@@ -11,26 +11,25 @@ based on limited e-mail direction from Rossy.
 import cStringIO
 
 from crds import log
-
-from . import tpn
+from crds.hst import tpn
 
 RAW_WEB_CUTS = {
 "acs" : """
-acr_best_biasfile   BIAS IMAGE  BIA
+acr_best_biasfile   BIAS Frame  BIA
 acr_best_cfltfile   CORONAGRAPHIC SPOT FLAT IMAGE   CFL
-acr_best_darkfile   DARK IMAGE  DRK
-acr_best_dfltfile   DELTA FLAT IMAGE    DFL
+acr_best_darkfile   DARK Frame  DRK
+acr_best_dfltfile   DELTA FLAT Field IMAGE    DFL
 acr_best_dgeofile   GEOMETRIC DELTA IMAGE (DISTORTION)  DXY
-acr_best_flshfile   POST FLASH IMAGE    FLS
-acr_best_lfltfile   LOW ORDER FLAT IMAGE    LFL
-acr_best_pfltfile   PIXEL TO PIXEL FLAT FIELD IMAGE PFL
-acr_best_shadfile   SHUTTER SHADING IMAGE   SHD
-acr_best_atodtab    ANALOG-TO-DIGITAL TABLE A2D
-acr_best_bpixtab    BAD PIXEL TABLE BPX
-acr_best_ccdtab CCD PARAMETERS TABLE    CCD
-acr_best_comptab    THE HST MASTER COMPONENT TABLE  TMC
-acr_best_crrejtab   COSMIC RAY REJECTION PARAMETER TABLE    CRR
-acr_best_graphtab   THE HST GRAPH TABLE TMG
+acr_best_flshfile   POST-FLASH IMAGE    FLS
+acr_best_lfltfile   Low-order Flat Field Image   LFL
+acr_best_pfltfile   Pixel To Pixel Flat Field Image PFL
+acr_best_shadfile   Shutter Shading Correction Image   SHD
+acr_best_atodtab    Analog To Digital Lookup Table A2D
+acr_best_bpixtab    Bad Pixel Table BPX
+acr_best_ccdtab CCD Parameters Table    CCD
+acr_best_comptab    Master Component Table (py/synphot)  TMC
+acr_best_crrejtab   Cosmic Ray Rejection Parameter Table    CRR
+acr_best_graphtab   Master Graph Table (py/synphot) TMG
 acr_best_idctab     DISTORTION COEFFICIENTS TABLE   IDC
 acr_best_mdriztab   MULTIDRIZZLE PARAMETER TABLE    MDZ
 acr_best_mlintab    MAMA LINEARITY TABLE    LIN
@@ -46,25 +45,25 @@ acr_best_imphttab   PHOTOMETRY KEYWORD TABLE    IMP
 csr_best_geofile    Geometric Distortion Correction     GEO
 csr_best_flatfile   Flat Field  FLT
 csr_best_badttab    Bad Time Interval Table     BADT
-csr_best_bpixtab    Data Quality Initialization Tables  BPIX
+csr_best_bpixtab    Bad Pixel Table  BPIX
 csr_best_brftab     Baseline Reference Frame Table  BRF
 csr_best_brsttab    Burst Parameters Tables     BURST
 csr_best_deadtab    Deadtime Reference Table    DEAD
 csr_best_disptab    Dispersion Relation Tables  DISP
 csr_best_fluxtab    Sensitivity Reference Files     PHOT
-csr_best_lamptab    Template Cal Lamp Spectra Tables    LAMP
+csr_best_lamptab    Template Calibration Lamp Spectra Tables   LAMP
 csr_best_phatab     Pulse Height Parameters Tables  PHA
-csr_best_tdstab     Time Dependent Sensitivity Table    TDS
+csr_best_tdstab     Time Dependent Sensitivity Table   TDS
 csr_best_wcptab     Wavecal Parameters Reference Table  WCP
 csr_best_xtractab   1-D Extraction Parameters Tables    1DX
 """,
 
 "nicmos" : """
-nsr_best_darkfile   Dark Current File   DRK
+nsr_best_darkfile   Dark Frame   DRK
 nsr_best_flatfile   Flat Field  FLT
 nsr_best_illmfile   Illumination Pattern File   ILM
 nsr_best_maskfile   On-Orbit MASK for NCS data  
-nsr_best_nlinfile   Detector Linearity File     LIN
+nsr_best_nlinfile   Detector Linearity Correction File     LIN
 nsr_best_noisfile   Detector Read-Noise File    NOI
 nsr_best_saadfile   Post SAA Dark Assoc.    Name
 nsr_best_tempfile   Temperature-dependent dark reference file   TDD
@@ -74,24 +73,24 @@ nsr_best_idctab     Image Distortion Coefficients File  IDC
 """,
 
 "stis" : """
-ssr_best_biasfile   Bias image file     BIA
-ssr_best_darkfile   Dark image files    DRK
-ssr_best_pfltfile   Pixel-to-pixel flat files   PFL
-ssr_best_dfltfile   Delta flat image files  DFL
-ssr_best_lfltfile   Low-order flat image files  LFL
-ssr_best_shadfile   Shutter shading correction image files  SSC
+ssr_best_biasfile   Bias Frame    BIA
+ssr_best_darkfile   Dark Frame    DRK
+ssr_best_pfltfile   Pixel To Pixel Flat Field Image   PFL
+ssr_best_dfltfile   Delta flat field image  DFL
+ssr_best_lfltfile   Low-order Flat Field Image  LFL
+ssr_best_shadfile   Shutter Shading Correction Image SSC
 ssr_best_sdstfile   Small scale distortion image files  SSD
-ssr_best_atodtab    A2D Correction Tables   A2D
+ssr_best_atodtab    Analog To Digital Lookup Table A2D
 ssr_best_apdstab    Aperture Description Tables     APD
 ssr_best_apertab    Aperture Throughput Tables  APT
-ssr_best_bpixtab    Bad Pixel Tables    BPX
-ssr_best_ccdtab     CCD Parameters Tables   CCD
-ssr_best_crrejtab   Cosmic Ray Rejection Parameters Tables  CRR
+ssr_best_bpixtab    Bad Pixel Table    BPX
+ssr_best_ccdtab     CCD Parameters Table   CCD
+ssr_best_crrejtab   Cosmic Ray Rejection Parameter Table  CRR
 ssr_best_disptab    Dispersion Coefficients Tables  DSP
 ssr_best_inangtab   Incidence Angle Correction Tables   IAC
 ssr_best_idctab     Image Distortion Correction Tables  IDC
-ssr_best_mlintab    MAMA Linearity Tables   LIN
-ssr_best_lamptab    Calibration Lamp Tables     LMP
+ssr_best_mlintab    MAMA Linearity Table  LIN
+ssr_best_lamptab    Template Calibration Lamp Spectra Tables     LMP
 ssr_best_mofftab    MAMA Offset Correction Tables   MOC
 ssr_best_pctab  Photometric Correction Tables   PCT
 ssr_best_phottab    Photometric Conversion Tables   PHOT
@@ -104,30 +103,30 @@ ssr_best_riptab     Echelle Ripple Tables   RIP
 ssr_best_srwtab     Scattering reference Wavelength Tables  SRW
 ssr_best_psftab     Telescope Point Spread Function Tables  TEL
 ssr_best_tdctab     NUV Dark Correction Tables  TDC
-ssr_best_tdstab     Time Dependent Sensitivity Tables   TDS
-ssr_best_wcptab     Wavecal Parameters Tables   WCP
+ssr_best_tdstab     Time Dependent Sensitivity Table   TDS
+ssr_best_wcptab     Wavecal Parameters Reference Table  WCP
 ssr_best_sptrctab   1-D Spectrum Trace Tables   1DT
 ssr_best_xtractab   1-D Extraction Parameters Tables    1DX 
 """,
 
 "wfc3" : """
-w3r_best_atodtab    Analog to Digital Converter Lookup Table    A2D
+w3r_best_atodtab    Analog To Digital Lookup Table    A2D
 w3r_best_biasfile   Bias Frame  BIA
 w3r_best_darkfile   Dark Frame  DRK
-w3r_best_dfltfile   Delta Flat Field File   DFL
-w3r_best_lfltfile   Low-Order Flat Field    LFL
-w3r_best_pfltfile   Pixel-to-Pixel Flat Field   PFL
+w3r_best_dfltfile   Delta Flat Field Image   DFL
+w3r_best_lfltfile   Low-order Flat Field Image    LFL
+w3r_best_pfltfile   Pixel To Pixel Flat Field Image  PFL
 w3r_best_dgeofile   Geometric Distortion    DXY
-w3r_best_flshfile   Post-Flash Image File   FLS
-w3r_best_nlinfile   Linearity Correction file   LIN
-w3r_best_shadfile   Shutter Shading Correction  SHD
-w3r_best_bpixtab    Bad Pixel Tables    BPX
-w3r_best_ccdtab     Detector Characteristics Tables CCD
-w3r_best_comptab    Master Component Table  TMC
-w3r_best_graphtab   The Master Graph Table (SYNPHOT)    TMG
+w3r_best_flshfile   Post-Flash Image   FLS
+w3r_best_nlinfile   Detector Linearity Correction File   LIN
+w3r_best_shadfile   Shutter Shading Correction Image  SHD
+w3r_best_bpixtab    Bad Pixel Table    BPX
+w3r_best_ccdtab     CCD Parameters Table CCD
+w3r_best_comptab    Master Component Table (py/synphot)  TMC
+w3r_best_graphtab   Master Graph Table (py/synphot)    TMG
 w3r_best_idctab     Image Distortion Coefficients File  IDC
-w3r_best_crrejtab   Cosmic Ray Rejection Tables CRR
-w3r_best_mdriztab   Multidrizzle Parameter Tables   MDZ
+w3r_best_crrejtab   Cosmic Ray Rejection Parameter Table CRR
+w3r_best_mdriztab   Multidrizzle Parameter Table   MDZ
 w3r_best_oscntab    Overscan Region Tables  OSC
 """,
 
@@ -135,11 +134,11 @@ w3r_best_oscntab    Overscan Region Tables  OSC
 w2r_best_atodfile   Analog to Digital Converter Lookup Table    R1?
 w2r_best_biasfile   Bias Frame  R2?
 w2r_best_darkfile   Dark Frame  R3?
-w2r_best_flatfile   Flat Field File R4?
+w2r_best_flatfile   Flat Field R4?
 w2r_best_maskfile   Static Mask File    R0?
-w2r_best_shadfile   Shutter Shading Correction  R5?
-w2r_best_comptab    Master Component Table  TMC.FITS
-w2r_best_graphtab   The Master Graph Table (SYNPHOT)    TMG.FITS
+w2r_best_shadfile   Shutter Shading Correction Image  R5?
+w2r_best_comptab    Master Component Table (py/synphot)  TMC.FITS
+w2r_best_graphtab   Master Graph Table (py/synphot)    TMG.FITS
 w2r_best_idctab     Image Distortion Coefficients File  IDC.FITS
 w2r_best_offtab not used    &bsp;/TD>
 """,
@@ -148,8 +147,14 @@ w2r_best_offtab not used    &bsp;/TD>
 
 TEXT_DESCR = {}
 
+def logger(*args):
+    pass
+
 def make_text_descr():
     """Initialize mapping { filekind : "text description" }"""
+    
+    instruments = {}
+    
     for instr, data in RAW_WEB_CUTS.items():
         # TEXT_DESCR[instr] = {}
         for line in cStringIO.StringIO(data):
@@ -162,17 +167,26 @@ def make_text_descr():
             if filekind not in TEXT_DESCR:
                 TEXT_DESCR[filekind] = description
             elif TEXT_DESCR[filekind] != description:
-                log.verbose("WARNING:  Different descriptions of", repr(filekind),
+                logger("Different descriptions of", repr(filekind),
                             repr(TEXT_DESCR[filekind]), 
                             "versus", repr(description))
+            if filekind not in instruments:
+                instruments[filekind] = set()
+            instruments[filekind] = instruments[filekind].union(set([instr]))
     for fkind in tpn.FILEKINDS:
         if fkind not in TEXT_DESCR:
-            log.verbose("WARNING: No text description for filekind",repr(fkind))
+            logger("No text description for filekind",repr(fkind))
             TEXT_DESCR[fkind] = fkind
     for fkind in TEXT_DESCR.keys():
         if fkind not in tpn.FILEKINDS:
-            log.verbose("WARNING: Removing extraneous text description for", repr(fkind))
+            logger("Removing extraneous text description for", repr(fkind),
+                   "of instruments", repr(sorted(instruments[fkind])))
             del TEXT_DESCR[fkind]
 
-make_text_descr()
+if __name__ == "__main__":
+    import crds.log as log
+    logger = log.warning
+    make_text_descr()
+else:
+    make_text_descr()
 
