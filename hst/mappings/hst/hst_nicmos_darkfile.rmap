@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-02-21 13:20:02.372595',
+    'derived_from' : 'generated from CDBS database 2012-02-23 10:10:34.548781',
     'filekind' : 'DARKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '14f9817d701754f70340eab1ceeae61fbe77df1e',
+    'sha1sum' : '8a5e2f4892a244138363c90a156961f63e028061',
 }
 
 selector = Match({

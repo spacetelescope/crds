@@ -10,16 +10,16 @@ from crds.compat import OrderedDict
 import crds.hst.parkeys as parkeys
 
 def generate_imap(instr, filekinds):
-    now = timestamp.now().split('.')[0]
+    now = str(timestamp.now())
     name = "hst_" + instr + ".imap"
     header = OrderedDict([
       ("name", name),
-      ("derived_from", "scraped " + now),
+      ("derived_from", "generated " + now),
       ("mapping", "INSTRUMENT"),
       ("observatory" , "HST"),
       ("instrument", instr.upper()),
       ('parkey', ('REFTYPE',)),
-      ("description", ("Initially generated on " + now)),
+      # ("description", ("Initially generated on " + now)),
     ])
 
     imap = "../mappings/hst/hst_"  + instr + ".imap"

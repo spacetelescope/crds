@@ -1,0 +1,92 @@
+"""This module differences two CRDS reference or mapping files on the local
+system.   It supports specification of the files using only the basenames or
+a full path.   Currently it operates on mapping, FITS, or text files.
+"""
+import sys
+import os
+import optparse
+
+from crds import rmap, log, pysh
+
+def mapping_difference(file1, file2):
+    """Print the logical differences between CRDS mappings named `file1` 
+    and `file2`.
+    """
+    assert rmap.is_mapping(file1), \
+        "File " + repr(file1) + " is not a CRDS mapping."
+    assert rmap.is_mapping(file2), \
+        "File " + repr(file2) + " is not a CRDS mapping."
+    assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
+        "Files " + repr(file1) + " and " + repr(file2) + \
+        " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
+    map1 = rmap.get_cached_mapping(file1)
+    map2 = rmap.get_cached_mapping(file2)
+    differences = map1.difference(map2)
+    for diff in differences:
+        log.write(diff)
+        
+def fits_difference(observatory, file1, file2):
+    """Run fitsdiff on files named `file1` and `file2`.
+    """
+    assert file1.endswith(".fits"), \
+        "File " + repr(file1) + " is not a FITS file."
+    assert file2.endswith(".fits"), \
+        "File " + repr(file2) + " is not a FITS file."
+    loc_file1 = rmap.locate_file(file1, observatory)
+    loc_file2 = rmap.locate_file(file2, observatory)
+    pysh.sh("fitsdiff ${loc_file1} ${loc_file1}")
+
+def text_difference(observatory, file1, file2):
+    """Run UNIX diff on two text files named `file1` and `file2`.
+    """
+    assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
+        "Files " + repr(file1) + " and " + repr(file2) + " are of different types."
+    loc_file1 = rmap.locate_file(file1, observatory)
+    loc_file2 = rmap.locate_file(file2, observatory)
+    pysh.sh("diff -b -c ${loc_file1} ${loc_file2}")
+
+def difference(observatory, file1, file2):
+    """Difference different kinds of CRDS files (mappings, FITS references, etc.)
+    named `file1` and `file2` against one another and print out the results 
+    on stdout.
+    """
+    if rmap.is_mapping(file1):
+        mapping_difference(file1, file2)
+    elif file1.endswith(".fits"):
+        fits_difference(observatory, file1, file2)
+    else:
+        text_difference(observatory, file1, file2)
+
+ 
+def main():
+    parser = optparse.OptionParser("""usage: %prog [options] <file1> <file2>
+        
+        Appropriately difference CRDS mapping or reference files.
+        """)
+    
+    parser.add_option("-J", "--jwst", dest="jwst",
+        help="Locate files using JWST naming conventions.", 
+        action="store_true")
+
+    parser.add_option("-H", "--hst", dest="hst",
+        help="Locate files using HST naming conventions.", 
+        action="store_true")
+
+    options, args = log.handle_standard_options(sys.argv, parser=parser)
+    
+    if options.jwst:
+        observatory = "jwst"
+        assert not options.hst, "Can only specify one of --hst or --jwst"
+    elif options.hst:
+        observatory = "hst"
+        assert not options.jwst, "Can only specify one of --hst or --jwst"
+    else:
+        observatory = "hst"
+    
+    log.standard_run("difference(observatory, args[1], args[2])", 
+                     options, globals(), locals())
+
+# ============================================================================
+
+if __name__ == "__main__":
+    main()
