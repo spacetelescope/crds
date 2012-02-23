@@ -321,7 +321,7 @@ class Selector(object):
         other_map = dict(other._selections)
         for key, choice in self._selections:
             if key not in other_keys:
-                differences.append(msg(key, "deleted"))
+                differences.append(msg(key, "deleted " + repr(choice)))
             else:
                 other_choice = other_map[key]
                 if isinstance(choice, Selector):
@@ -333,9 +333,10 @@ class Selector(object):
         self_keys = self.keys()
         for key in other_keys:
             if key not in self_keys:
-                differences.append(msg(key, "added"))
+                other_choice = other_map[key]
+                differences.append(msg(key, "added " + repr(other_choice)))
         return differences
-
+    
 # ==============================================================================
 
 def match_superset(tuple1, tuple2):
