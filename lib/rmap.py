@@ -421,11 +421,13 @@ class Mapping(object):
                 parkeys = parkeys.union(set(key))
         return tuple(sorted(parkeys))
     
-    def get_minimum_header(self, dataset):
+    def get_minimum_header(self, dataset, original_name=None):
         """Return the names and values of `dataset`s header parameters which 
-        are required to compute best references for it.
+        are required to compute best references for it.   `original_name` is
+        used to determine file type when `dataset` is a temporary file with a
+        useless name.
         """
-        header = data_file.get_conditioned_header(dataset)
+        header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
 
     def minimize_header(self, header):

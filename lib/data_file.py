@@ -66,20 +66,26 @@ def get_filetype(name):
     else:
         raise TypeError("Unknown file type for file named" + repr(name))
 
-def get_conditioned_header(fname, needed_keys=[]):
+def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
+    
+    `original_name`,  if specified,  is used to determine the type of the file
+    and is not required to be readable,  whereas `filepath` must be readable
+    and contain the desired header.
     """
-    header = get_header(fname, needed_keys)
+    header = get_header(filepath, needed_keys, original_name)
     return condition_header(header, needed_keys)
 
-def get_header(name, needed_keys=[]):
+def get_header(filepath, needed_keys=[], original_name=None):
     """Return the complete unconditioned header dictionary of a reference file.
     """
-    if is_geis(name):
-        return get_geis_header(name)
+    if original_name is None:
+        original_name = os.path.basename(filepath)
+    if is_geis(original_name):
+        return get_geis_header(filepath)
     else:
-        return get_fits_header_union(name, needed_keys)
+        return get_fits_header_union(filepath, needed_keys)
     
 def condition_header(header, needed_keys=[]):
     """Return a dictionary of all `needed_keys` from `header` after passing
