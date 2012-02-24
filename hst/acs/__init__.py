@@ -40,7 +40,7 @@ def _precondition_header_biasfile(header_in):
         header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
         log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
         try:
-            numrows = float(HEADER["NUMROWS"]) / 2
+            numrows = float(header["NUMROWS"]) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
             sys.exc_clear()
