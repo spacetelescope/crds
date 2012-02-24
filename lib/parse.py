@@ -7,6 +7,8 @@ import cProfile
 
 import crds.rmap as rmap
 
+sys.setrecursionlimit(50000)
+
 GRAMMAR = """
 MAPPING  :=  WHITESPACES HEADER SELECTOR
 
@@ -86,12 +88,17 @@ class Parser(object):
         mapping = rmap.locate_mapping(filename)
         return self.parse(open(mapping).read())
     
-    def trace(self, kind, name, input):
-        pure = input[:min(10,len(input))]
-        pure = pure.replace("\n","\\n")
+    def trace(self, kind, name, input): pass
+#        pure = input[:min(10,len(input))]
+#        pure = pure.replace("\n","\\n")
         # print "matching", kind, name, pure
     
     def match_rule(self, rule, input):
+        """Matches the expansions of rule against input,  returning the result
+        from the first match.
+        
+        returns (rule, matched_input), remaining_input
+        """
         self.trace("rule", rule, input)
         for expansion in self.rules[rule]:
             result = self.match_expansion(expansion, input)
@@ -100,6 +107,14 @@ class Parser(object):
                 return (rule, result[0]), result[1]
 
     def match_expansion(self, expansion, input):
+        """Match each of the terms in `expansion` against `input`,  optionally
+        matching WHITESPACES between each term.   Terms which are in all caps
+        name other rules to match.   Other terms are regexes which must match 
+        exactly.
+        
+        Returns   ([matched_input_terms], remaining_input)
+        """
+        
         self.trace("expansion", expansion, input)
         parsed = []
         
@@ -117,12 +132,13 @@ class Parser(object):
 
             result = self.match_rule("WHITESPACES", input)
             if result and result[0][1]:
-                parsed.append(result[0])
+                # parsed.append(result[0])
                 input = result[1]
                          
         return parsed, input
 
     def match_re(self, regex, input):
+        """Match regular expression `regex` against `input`."""
         self.trace("regex", regex, input)
         m = re.match(regex, input, re.MULTILINE)
         if m:
@@ -137,16 +153,14 @@ def simplify(parsing):
     simpler = []
     for node in parsing:
         name, value = node
-        if "simplify_" + name in globals():
+        simplifier = "simplify_" + name
+        if simplifier in globals():
             simpleval = simplify(value)
-            result = globals()["simplify_"+name](simpleval)
+            result = globals()[simplifier](simpleval)
         elif name == value or isinstance(value, str) and name == "\\" + value:
             result = value
         else:
-            if isinstance(value, str):
-                nested = value
-            else:
-                nested = simplify(value)
+            nested = value if isinstance(value,str) else simplify(value)
             if nested is not None:
                 result = (name, nested)
             else:
@@ -155,7 +169,25 @@ def simplify(parsing):
             simpler.append(result)
     if len(simpler) == 1  and isinstance(simpler[0], (str, tuple)):
         simpler = simpler[0]
+#    print "Simplify", repr(parsing)
+#    print "-->", repr(simpler)
     return simpler
+
+def collapse_plurals(name, value, i=0):
+    """Collapses grammar tail recursion into a list."""
+    print i, name, "collapse_plurals", value
+    if isinstance(value, str):
+        return value
+    result = []
+    for node in value:
+        if isinstance(node, str):
+            result.append(node)
+        elif node[0] == name:
+            result.extend(collapse_plurals(name, node[1], i+1))
+        else:
+            result.append(collapse_plurals(name, node, i+1))
+    print i, name, "-->", result
+    return result
 
 def simplify_EXPR(value):
     return value
@@ -176,67 +208,59 @@ def simplify_KEYVAL(value):
 
 def simplify_KEYVALS(value):
     vals = collapse_plurals("KEYVALS",  value)
+    if isinstance(vals, str):
+        return vals
     result = []
     for val in vals:
         if val != ",":
             result.append(val)
+#    print "KEYVALS", value
+#    print "-->", result
     return result
 
 def simplify_TUPLE_ITEMS(value):
+    print "TUPLE_ITEMS", value
     vals = collapse_plurals("TUPLE_ITEMS", value)
+    if isinstance(vals, str):
+        return vals
     result = []
     for val in vals:
         if val != ",":
             result.append(val)
+    print "-->", result
     return result
 
 def simplify_CALL(value):
     return ("CALL", value[0][1][1], tuple(value[2]))
 
-#def simplify_HEADER(value):
-#    return ("HEADER", value[-1][1])
+def simplify_HEADER(value):
+    return ("HEADER", value[2])
 
 def simplify_SELECTOR(value):
     return ("SELECTOR", value[2])
 
 def simplify_DICT(value):
-    return ("DICT", [tuple(x) for x in value[1:-1]])
+    rval = ("DICT", [(x[0], x[2]) for x in value[1]])
+    return rval
 
 def simplify_TUPLE(value):
-    return tuple(value[1])
+    # return tuple(value[1])
     return ("TUPLE", tuple(value[1]))
-
-def collapse_plurals(name, value, i=0):
-    """Collapses grammar tail recursion into a list."""
-    if isinstance(value, str):
-        return value
-    result = []
-    for node in value:
-        if isinstance(node, str):
-            nested = node
-        elif node[0] == name:
-            nested = collapse_plurals(name, node[1], i+1)
-        else:
-            nested = collapse_plurals(name, node, i+1)
-        if isinstance(nested, list) and nested and isinstance(nested[0], list):
-            result.extend(nested)
-        else:
-            result.append(nested)
-    return result
 
 PARSER = Parser(GRAMMAR, "MAPPING") 
 
 def test():
     if len(sys.argv) == 1:
-        files = ["hst.pmap"]
+        files = ["hst_cos_deadtab.rmap"]
     else:
         files = sys.argv[1:]
     for f in files:
         where = rmap.locate_file(f)
+        print "text:", open(where).read()
         print "parsing:", where
         parsing = PARSER.parse_file(where)
         print "parsed."
-#        print "parsed:", pprint.pformat(parsing)
+        # print "parsed:", pprint.pformat(parsing)
         simplified = simplify(parsing)
         print "simplified:", pprint.pformat(simplified)
     
