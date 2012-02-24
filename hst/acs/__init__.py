@@ -1,4 +1,4 @@
-from crds import log
+from crds import log, utils
 
 # ===========================================================================    
 
@@ -18,23 +18,35 @@ def _precondition_header_biasfile(header_in):
     """
     header = dict(header_in)
     
-    # if pre-SM4 and NUMCOLS > HALF_CHIP
-    if ((header["DATE-OBS"] + " " + header["TIME-OBS"]) < SM4) and \
-            float(header["NUMCOLS"]) > ACS_HALF_CHIP_COLS:
-        if header["CCDAMP"] in ["A","D"]: 
-            log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
-                        "to AD for NUMCOLS = "+ header["NUMCOLS"])
-            header["CCDAMP"] = "AD"
-        elif header["CCDAMP"] in ["B","C"]:  
-            log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
-                        "to AD for NUMCOLS = "+ header["NUMCOLS"])
-            header["CCDAMP"] = "BC"
+    try:
+        numcols = float(header["NUMCOLS"])
+    except ValueError:
+        log.verbose("acs_biasfile_selection: bad NUMCOLS.")
+    else:
+        # if pre-SM4 and NUMCOLS > HALF_CHIP
+        exptime = utils.condition_value(
+            header["DATE-OBS"] + " " + header["TIME-OBS"])
+        if (exptime < SM4) and numcols > ACS_HALF_CHIP_COLS:
+            if header["CCDAMP"] in ["A","D"]: 
+                log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
+                            "to AD for NUMCOLS = "+ header["NUMCOLS"])
+                header["CCDAMP"] = "AD"
+            elif header["CCDAMP"] in ["B","C"]:  
+                log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
+                            "to AD for NUMCOLS = "+ header["NUMCOLS"])
+                header["CCDAMP"] = "BC"
 
     if header['DETECTOR'] == "WFC" and \
-        header['XCORNER'] == 0 and header['YCORNER'] == 0:
+        header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
         log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
-        header["NUMROWS"] /= "f.1" % float(HEADER["NUMROWS"]) / 2
- 
+        try:
+            numrows = float(HEADER["NUMROWS"]) / 2
+        except ValueError:
+            log.verbose("acs_biasfile_selection: bad NUMROWS.")
+            sys.exc_clear()
+        else:
+            header["NUMROWS"] = utils.condition_value(str(numrows)) 
+
     return header
 
 def precondition_header(rmap, header):
