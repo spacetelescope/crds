@@ -425,9 +425,25 @@ class Mapping(object):
         """Return the names and values of `dataset`s header parameters which 
         are required to compute best references for it.
         """
-        return data_file.get_conditioned_header(
-                dataset, needed_keys=self.get_required_parkeys())
-        
+        header = data_file.get_conditioned_header(dataset)
+        return self.minimize_header(header)
+
+    def minimize_header(self, header):
+        """Return only those items of `header` which are required to determine
+        bestrefs.
+        """
+        if isinstance(self, PipelineContext):
+            mapping = self.get_imap(header["INSTRUME"].lower())
+        else:
+            mapping = self
+        minimized = {}
+        for key in mapping.get_required_parkeys() + ("INSTRUME",):
+            try:
+                minimized[key] = header[key]
+            except KeyError:
+                minimized[key] = "N/A"
+        return minimized
+    
     def validate(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
