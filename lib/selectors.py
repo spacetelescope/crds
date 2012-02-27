@@ -860,7 +860,7 @@ class MatchingSelector(Selector):
         for other in self.keys():
             if key != other and match_superset(other, key):
                 # raise ValidationError(
-                log.warning(
+                log.verbose_warning(
                     "Match tuple is a special case of " + repr(other))
 
     def _is_literal_or_regex_value(self, value, valid):

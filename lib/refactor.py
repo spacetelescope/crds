@@ -119,18 +119,20 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     Return the list of RefactorAction's performed.
     """
     contents = open(old_rmap).read()
+    total_actions = []
     for reference in inserted_references:
         contents, actions, useafter = \
             _rmap_insert_reference(old_rmap, contents, reference)
-        for action in actions:
-            log.verbose(action)
-    if actions:
+        total_actions.extend(actions)
+    if total_actions:
         log.verbose("Writing", repr(new_rmap))
         open(new_rmap, "w+").write(contents)
         checksum.update_checksum(new_rmap)
+        for action in total_actions:
+            log.info(action)            
     else:
         log.warning("No actions in rmap_insert_references().")
-    return actions
+    return total_actions
 
 def get_match_tuples(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
