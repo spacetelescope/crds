@@ -18,6 +18,58 @@ import crds.hst.parkeys as parkeys
 
 log.set_verbose(False)
 
+"""  
+IPPPSSOOT   ---   dataset naming breakdown
+
+Denotes the instrument type:
+J - Advanced Camera for Surveys
+U - Wide Field / Planetary Camera 2
+V - High Speed Photometer
+W - Wide Field / Planetary Camera
+X - Faint Object Camera
+Y - Faint Object Spectrograph
+Z - Goddard High Resolution Spectrograph
+E - Reserved for engineering data
+F - Fine Guide Sensor (Astrometry)
+H-I,M - Reserved for additional instruments
+N - Near Infrared Camera Multi Object Spectrograph
+O - Space Telescope Imaging Spectrograph
+S - Reserved for engineering subset data
+T - Reserved for guide star position data
+PPP     Denotes the program ID, any combination of letters or numbers
+SS    Denotes the observation set ID, any combination of letters or numbers
+OO    Denotes the observation ID, any combination of letters or numbers
+T    Denotes the source of transmission:
+R - Real time (not tape recorded)
+T - Tape recorded
+M - Merged real time and tape recorded
+N - Retransmitted merged real time and tape recorded
+O - Retransmitted real time
+P - Retransmitted tape recorded
+"""
+
+IPPPSSOOT_INSTR = {
+    "J" : "acs",
+    "U" : "wfpc2",
+    "V" : "hsp",
+    "W" : "wfpc",
+    "X" : "foc",
+    "Y" : "fos",
+    "Z" : "hrs",
+    "E" : "eng",
+    "F" : "fgs",
+    "I" : "wfc3",
+    "N" : "nicmos",
+    "O" : "stis",
+}
+
+def dataset_to_instrument(dataset):
+    instr = dataset[0].upper()
+    try:
+        return IPPPSSOOT_INSTR[instr]
+    except KeyError:
+        raise ValueError("Can't determine instrument for dataset " + repr(dataset))
+
 class DB(object):
     def __init__(self, dsn, user, password=None):
         self.dsn = dsn
@@ -188,14 +240,14 @@ class HeaderGenerator(object):
             tables.add(table)
         return list(tables)
 
-    def getter_sql(self):
+    def getter_sql(self, extra_constraints={}):
         sql = "SELECT %s FROM %s " % (", ".join(self.db_columns), 
                                       ", ".join(self.db_tables))
         if len(self.db_tables) >= 2:
-            sql += "WHERE %s" % self.join_expr()
+            sql += "WHERE %s" % self.join_expr(extra_constraints)
         return sql
 
-    def join_expr(self):
+    def join_expr(self, extra_constraints={}):
         dadsops = get_dadsops()
         all_cols = []
         for table in self.db_tables:
@@ -209,11 +261,18 @@ class HeaderGenerator(object):
             if len(joined) >= 2:
                 for more in joined[1:]:
                     clauses.append(joined[0] + "=" + more)
+        for key in extra_constraints:
+            for col in all_cols:
+                if key.lower() in col:
+                    break
+            else:
+                raise ValueError("No db column found for constraint " + repr(key))
+            clauses.append(col + "=" + repr(extra_constraints[key]))
         return (" and ").join(clauses)
 
-    def get_headers(self):
+    def get_headers(self, extra_constraints={}):
         dadsops = get_dadsops()
-        sql = self.getter_sql()
+        sql = self.getter_sql(extra_constraints)
         for dataset in dadsops.execute(sql):
             hdr = dict(zip(self.header_keys, [utils.condition_value(x) for x in dataset]))
             self.fix_time(hdr)
@@ -236,6 +295,20 @@ try:
 except:
     log.error("Failed loading 'header_tables.dat'")
 
+
+def get_dataset_header(dataset):
+    """Get the header for a particular dataset,  nominally in a context where
+    one only cares about a small list of specific datasets.
+    """
+    instrument = dataset_to_instrument(dataset)
+    igen = HEADER_GENERATORS[instrument]
+    headers = list(igen.get_headers({"DATA_SET":dataset.upper()}))
+    if len(headers) == 1:
+        return headers[0]
+    elif len(headers) == 0:
+        raise LookupError("No header found for " + repr(instrument) + " dataset " + repr(dataset))
+    elif len(headers) > 1:
+        raise LookupError("More than one header found for " + repr(instrument) + " dataset " + repr(dataset))
 
 def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
          ignore=[], include=[], dump_header=False, verbose=False):
@@ -309,7 +382,7 @@ def compare_results(header, crds_refs, mismatched, ignore):
         try:
             old = header[filekind.upper()].lower()
         except:
-            log.warning("No comparison for", repr(filekind))
+            log.verbose_warning("No comparison for", repr(filekind))
             sys.exc_clear()
             continue
         new = crds_refs[filekind]
