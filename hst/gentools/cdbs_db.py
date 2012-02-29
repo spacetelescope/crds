@@ -301,8 +301,11 @@ def get_dataset_header(dataset):
     one only cares about a small list of specific datasets.
     """
     instrument = dataset_to_instrument(dataset)
-    igen = HEADER_GENERATORS[instrument]
-    headers = list(igen.get_headers({"DATA_SET":dataset.upper()}))
+    try:
+        igen = HEADER_GENERATORS[instrument]
+        headers = list(igen.get_headers({"DATA_SET":dataset.upper()}))
+    except Exception, exc:
+        raise RuntimeError("Error accessing DADSOPS for dataset" + repr(dataset) + ":" + str(exc))
     if len(headers) == 1:
         return headers[0]
     elif len(headers) == 0:
