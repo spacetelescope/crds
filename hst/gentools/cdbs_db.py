@@ -121,14 +121,16 @@ def get_password():
             get_password._password = getpass.getpass("password: ")
     return get_password._password
 
-def get_dadsops():
+def get_dadsops(user="jmiller"):
+    """Cache and return a database connection to DADSOPS."""
     if not hasattr(get_dadsops, "_dadsops"):
-        get_dadsops._dadsops = DB("DadsopsDsn", "jmiller", get_password())
+        get_dadsops._dadsops = DB("DadsopsDsn", user, get_password())
     return get_dadsops._dadsops
 
-def get_reffile_ops():
+def get_reffile_ops(user="jmiller"):
+    """Cache and return a database connection to REFFILE_OPS."""
     if not hasattr(get_reffile_ops, "_reffile_ops"):
-        get_reffile_ops._reffile_ops = DB("ReffileOpsRepDsn", "jmiller", get_password())
+        get_reffile_ops._reffile_ops = DB("ReffileOpsRepDsn", user, get_password())
     return get_reffile_ops._reffile_ops
 
 def get_instrument_db_parkeys(instrument):
@@ -152,28 +154,30 @@ def required_keys(instr):
     pars.extend(imap.selections.keys())
     return pars
 
-def scan_tables(instr):
-    dadsops = get_dadsops()
-    pars = required_keys(instr)
-    columns = {}
-    for table in dadsops.get_tables():
-        if instr not in table:
-            continue
-        for par in pars:
-            for col in dadsops.get_columns(table):
-                if par in col:
-                    if par not in columns:
-                        columns[par] = []
-                    columns[par].append(table + "." + col)
-    return columns, set(pars) - set(columns.keys())
-
-
+def gen_header_tables(datfile="header_tables.dat"):
+    """gen_header_tables() generates the mapping: 
+    
+    { instrument : { best_refs_item : "table.column"  } }
+    
+    where best_refs_item is nominally the name of a best refs parameter or
+    result or other relevant info,  assumed to be a substring of `column`.
+    """
+    table = {}
+    for instr in crds.hst.INSTRUMENTS:
+        table[instr] = clean_scan(instr)
+    open(datfile, "w+").write(pprint.pformat(table) + "\n")
+        
 def clean_scan(instr):
+    """clean_scan() sorts out the map produced by scan_tables(),  mapping each
+    parameter of `instr` to a single "table.column" database location.
+    Emits a warning for parameters which are not automatically mapped to the
+    database.
+    """
     columns, remainder = scan_tables(instr)
     if remainder:
         log.warning("For", repr(instr), "can't locate", sorted(list(remainder)))
     else:
-        log.info("collected", repr(instr), "ok")
+        log.info("Collected", repr(instr), "ok")
     clean = {}
     for var in columns:
         tvar2 = columns[var]
@@ -203,14 +207,29 @@ def clean_scan(instr):
             clean[var] = tvar[1]
         else:
             clean[var] = tvar
+
     return clean
 
-def gen_header_tables(datfile="header_tables.dat"):
-    table = {}
-    for instr in crds.hst.INSTRUMENTS:
-        table[instr] = clean_scan(instr)
-    open(datfile, "w+").write(pprint.pformat(table) + "\n")
-        
+def scan_tables(instr):
+    """scan_tables() automatically matches the required parameters for each
+    instrument against the available instrument tables and columns in DADSOPS,
+    returning a map  { parameter : [ "table.column", ...] } finding plausible
+    locations for each CRDS best refs parameter in the dataset catalog.
+    """
+    dadsops = get_dadsops()
+    pars = required_keys(instr)
+    columns = {}
+    for table in dadsops.get_tables():
+        if instr not in table:
+            continue
+        for par in pars:
+            for col in dadsops.get_columns(table):
+                if par in col:
+                    if par not in columns:
+                        columns[par] = []
+                    columns[par].append(table + "." + col)
+    return columns, set(pars) - set(columns.keys())
+
 """
 SELECT Persons.LastName, Persons.FirstName, Orders.OrderNo
 FROM Persons
