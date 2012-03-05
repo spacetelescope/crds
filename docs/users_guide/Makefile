@@ -12,7 +12,8 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 
-.PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest \
+        serverhtml serverpdf server pdf setup-pdf
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -88,6 +89,13 @@ doctest:
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
+setup-pdf:
+	cp sphinxtsr.cls build/latex
+	cp stsci_logo.pdf build/latex
+
+pdf: latex setup-pdf
+	(cd build/latex; make all-pdf)
+
 tarhtml: clean html
 	mv $(BUILDDIR)/html  users_guide
 	tar zcf users_guide.tar.gz users_guide
@@ -98,3 +106,9 @@ serverhtml: tarhtml
 	cd ../../../CRDS_server/sources/interactive/static; \
 	tar zxf users_guide.tar.gz; \
 	rm users_guide.tar.gz
+
+serverpdf: pdf
+	mv build/latex/crds_users_manual.pdf ../../../CRDS_server/sources/interactive/static
+
+server: serverhtml serverpdf
+

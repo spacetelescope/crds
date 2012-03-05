@@ -116,10 +116,10 @@ Computing Best References
 The primary function of CRDS is the computation of best reference files based
 upon a dictionary of dataset metadata.   Hence,  both an InstrumentContext and a
 ReferenceMapping can meaningfully return the best references for a dataset based
-upon a parameter dictionary.   If you know what you're doing you can make up any
-Python dictionary to define the best reference parameters::
+upon a parameter dictionary.   It's possible define a header as any Python 
+dictionary provided you have sufficient knowledge of the parameters::
 
->>>  hdr = { ... what matters because you know what you're doing ... }
+>>>  hdr = { ... what matters most ... }
 
 On the other hand,  if your dataset is a FITS file and you want to do something
 quick and dirty,  you can ask CRDS what dataset metadata may matter for 
@@ -150,29 +150,29 @@ Once you have your dataset parameters,  you can ask an InstrumentContext for
 the best references for *all* filekinds for that instrument::
 
   >>> acs.get_best_references(hdr)
-  {'atodtab': 'kcb1734ij_a2d.fits',
-   'biasfile': 'NOT FOUND Ambiguous match.',
-   'bpixtab': 'm8r09169j_bpx.fits',
-   'ccdtab': 'o1515069j_ccd.fits',
-   'cfltfile': "NOT FOUND Key FILTER1=F555W not in valid values ('CLEAR1S', 'F475W', 'F606W')",
-   'crrejtab': 'n4e12510j_crr.fits',
-   'darkfile': 'n3o1059hj_drk.fits',
-   'dgeofile': 'o8u2214mj_dxy.fits',
-   'idctab': 'p7d1548qj_idc.fits',
-   'mdriztab': 'ub215378j_mdz.fits',
-   'mlintab': 'k9c13374j_lin.fits',
-   'oscntab': 'm2j1057pj_osc.fits',
-   'pfltfile': 'o3u1448rj_pfl.fits',
-   'spottab': 'r3301467j_csp.fits'}
+{'atodtab': 'kcb1734ij_a2d.fits',
+ 'biasfile': 'm4r1753rj_bia.fits',
+ 'bpixtab': 'm8r09169j_bpx.fits',
+ 'ccdtab': 'o1515069j_ccd.fits',
+ 'cfltfile': 'NOT FOUND n/a',
+ 'crrejtab': 'n4e12510j_crr.fits',
+ 'darkfile': 'n3o1059hj_drk.fits',
+ 'dgeofile': 'o8u2214mj_dxy.fits',
+ 'flshfile': 'NOT FOUND n/a',
+ 'idctab': 'p7d1548qj_idc.fits',
+ 'imphttab': 'vbb18105j_imp.fits',
+ 'mdriztab': 'ub215378j_mdz.fits',
+ 'mlintab': 'NOT FOUND n/a',
+ 'oscntab': 'm2j1057pj_osc.fits',
+ 'pfltfile': 'o3u1448rj_pfl.fits',
+ 'shadfile': 'kcb1734pj_shd.fits',
+ 'spottab': 'NOT FOUND n/a'}
 
-Note that this is not currently guaranteed to return *only* the appropriate
-filekinds,  and may include extra mappings that are inappropriate for the
-specified instrument configuration.   In all likelihood they will be failure
-cases where no mapping could be determined.   In any case this is a limitation
-of the current instrument contexts which don't capture which filekinds are
-appropriate for which instrument configuration.  Note that in the example above,
-the first error case,  for biasfile,  is most likely occurring for another
-reason: known deficiencies of the ACS biasfile rmap prototype.
+In the above results,  FITS files are the recommended best references,  while
+a value of "NOT FOUND n/a" indicates that no result was expected for the current
+instrument mode as defined in the header.   Other values of "NOT FOUND xxx"
+include an error message xxx which hints at why no result was found,  such as
+an invalid dataset parameter value or simply a matching failure.
 
 You can ask a ReferenceMapping for the best reference for single the filekind
 it manages::
