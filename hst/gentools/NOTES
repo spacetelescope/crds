@@ -1,62 +1,727 @@
-==============================================================================================================
+# ========================================================================================================
 
-Properties that would be good for filetypes
+ Notes on ACS pfltfile:
+ 
+ 
+     <FILE_SELECTION> 
+      <FILE_SELECTION_FIELD> FW1OFFST </FILE_SELECTION_FIELD>
+      <FILE_SELECTION_TEST> (aSource._keywords['FW1OFFST'][0] == -1 or aSource._keywords['FW1OFFST'][0] == 1) </FILE_SELECTION_TEST>
+    </FILE_SELECTION>
+    <FILE_SELECTION> 
+      <FILE_SELECTION_FIELD> FW2OFFST </FILE_SELECTION_FIELD>
+      <FILE_SELECTION_TEST> (aSource._keywords['FW2OFFST'][0] == -1 or aSource._keywords['FW2OFFST'][0] == 1) </FILE_SELECTION_TEST>
+    </FILE_SELECTION>
+    <FILE_SELECTION> 
+      <FILE_SELECTION_FIELD> FWSOFFST </FILE_SELECTION_FIELD>
+      <FILE_SELECTION_TEST> (aSource._keywords['FWSOFFST'][0] == -1 or aSource._keywords['FWSOFFST'][0] == 1) </FILE_SELECTION_TEST>
+    </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['OBSTYPE'][0] != 'INTERNAL') </RESTRICTION_TEST>
+    </RESTRICTION>
+ 
+          CDBS                   CRDS
+    ('nar1136nj_pfl.fits', 'nar1136pj_pfl.fits'): 990
 
-1. A single set of keywords is *always* present
-2. A single set of reference files is *always* matched
-3. Both reference and dataset key values are either numerical or fall within a finite set,  which includes "don't care" values
-4. Consistent numerical formatting between dataset key values and reference file keyvalues
+    ('DETECTOR', 'CCDAMP', 'FILTER1', 'FILTER2', 'OBSTYPE', 'FW1OFFST', 'FW2OFFST', 'FWSOFFST')
 
-==============================================================================================================
-
-ACS rmap test results:   85 errors, 91 warnings in 107 tests
-
-pfltfile:  3
-    Custom scraper for file restrictions based on FW*OFFST,  0 -> *
-
-    2 mismatches 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits'      CRDS answer o451214ej_pfl.fits looks like later improved copy based on HISTORY:
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', 'N/A', 'N/A') : UseAfter({
+        '2002-03-01 00:00:00' : 'nar1136nj_pfl.fits',
+    }),
     
-    HISTORY   o3u1448lj_pfl.fits renamed to o451214ej_pfl.fits on Apr 5 2004
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', 'F606W', 'CLEAR2L', 'IMAGING', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '1997-01-01 00:00:00' : 'lbj12001j_pfl.fits',
+        '2001-03-01 00:00:00' : 'm2f1516ej_pfl.fits',
+        '2002-03-01 00:00:00' : 'nar1136pj_pfl.fits',
+    }),
+    
+    'nar1136nj_pfl.fits'
+    
+[0]: SIMPLE = True
+[0]: BITPIX = 16
+[0]: NAXIS = 0
+[0]: EXTEND = True
+[0]: IRAF-TLM = 22:57:57 (01/11/2006)
+[0]: NEXTEND = 6
+[0]: DATE = 2006-10-24
+[0]: ORIGIN = R. Bohlin IDL
+[0]: FILETYPE = PIXEL-TO-PIXEL FLAT
+[0]: TELESCOP = HST
+[0]: INSTRUME = ACS
+[0]: CCDAMP = ANY
+[0]: CCDGAIN = -1
+[0]: CCDOFSTA = -1
+[0]: CCDOFSTB = -1
+[0]: CCDOFSTC = -1
+[0]: CCDOFSTD = -1
+[0]: OBSTYPE = IMAGING
+[0]: OBSMODE = ACCUM
+[0]: PEDIGREE = INFLIGHT 18/04/2002 - 04/07/2006
+[0]: SUBARRAY = FULL
+[0]: FILTER1 = F606W
+[0]: FILTER2 = CLEAR2L
+[0]: IDTFILT1 = F606W
+[0]: IDTFILT2 = CLEAR2L
+[0]: DETECTOR = WFC
+[0]: CCDTEMP1 = -76.6214
+[0]: STIMULUS = RAS/HOMS
+[0]: SCLAMP = NONE
+[0]: TOTIMG = 3
+[0]: XNORM1 = 1843
+[0]: XNORM2 = 2252
+[0]: YNORM1 = 921
+[0]: YNORM2 = 1126
+[0]: COMMENT = = 'File created by R.Bohlin'
+[0]: DESCRIP = F606W step +1 flat w/ mote shifted to -1 step
+[0]: USEAFTER = July 04 2006
+[0]: FW1OFFST = -1
+[0]: FW2OFFST = 0
+[0]: FWSOFFST = 0
+[0]: FWOFFSET = -1
+[0]: REFRAME = GO
+[0]: MONOWAVE =    0
 
-WARNING[554]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wlq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
-WARNING[561]: Lookup MISMATCH for '../../testdata/acs/warren/j8cd02wnq_raw.fits' 'pfltfile' 'o451214ej_pfl.fits' 'o3u1448lj_pfl.fits' 
+'nar1136pj_pfl.fits'
 
-    1 mismatch 'p4s15155j_pfl.fits' 'o841350jj_pfl.fits' appears to be a problem related to merging / rmap definition.
+[0]: SIMPLE = True
+[0]: BITPIX = 16
+[0]: NAXIS = 0
+[0]: EXTEND = True
+[0]: IRAF-TLM = 11:36:52 (27/10/2003)
+[0]: NEXTEND = 6
+[0]: DATE = 2003-10-17
+[0]: ORIGIN = Bohlin IDL
+[0]: FILETYPE = PIXEL-TO-PIXEL FLAT
+[0]: TELESCOP = HST
+[0]: INSTRUME = ACS
+[0]: CCDAMP = ANY
+[0]: CCDGAIN = -999
+[0]: CCDOFSTA = -1
+[0]: CCDOFSTB = -1
+[0]: CCDOFSTC = -1
+[0]: CCDOFSTD = -1
+[0]: OBSTYPE = IMAGING
+[0]: OBSMODE = ACCUM
+[0]: PEDIGREE = InFlight 18/04/2002 - 09/05/2002
+[0]: USEAFTER = March 1 2002
+[0]: DESCRIP = F606W step +1 flat w/ mote shifted to  0 step
+[0]: SUBARRAY = FULL
+[0]: FILTER1 = F606W
+[0]: FILTER2 = CLEAR2L
+[0]: IDTFILT1 = F606W
+[0]: IDTFILT2 = CLEAR2L
+[0]: DETECTOR = WFC
+[0]: CCDTEMP1 = -76.6214
+[0]: STIMULUS = RAS/HOMS
+[0]: SCLAMP = NONE
+[0]: TOTIMG = 3
+[0]: FWOFFSET = 0
 
-WARNING[701]: Lookup MISMATCH for '../../testdata/acs/warren/j8mt11efq_raw.fits' 'pfltfile' 'p4s15155j_pfl.fits' 'o841350jj_pfl.fits' 
+
+    J9FAKFT1Q
+
+{'ATODTAB': 'KCB1734HJ_A2D.FITS',
+  'BIASFILE': 'Q1I19096J_BIA.FITS',
+  'BPIXTAB': 'Q860440TJ_BPX.FITS',
+  'CCDAMP': 'ABCD',
+  'CCDCHIP': '2.0',
+  'CCDGAIN': '1.0',
+  'CCDTAB': 'O151506FJ_CCD.FITS',
+  'CFLTFILE': 'N/A',
+  'CRREJTAB': 'N4E12511J_CRR.FITS',
+  'DARKFILE': 'Q1I1909BJ_DRK.FITS',
+  'DATA_SET': 'J9FAKFT1Q',
+  'DATE-OBS': '2005-12-09',
+  'DETECTOR': 'WFC',
+  'DGEOFILE': 'QBU16424J_DXY.FITS',
+  'EXPSTART': '2005-12-09 15:01:52.557000',
+  'FILTER1': 'F606W',
+  'FILTER2': 'CLEAR2L',
+  'FLASHCUR': 'OFF',
+  'FLSHFILE': 'N/A',
+  'FW1OFFST': '0.0',
+  'FW2OFFST': '0.0',
+  'FWSOFFST': '0.0',
+  'IDCTAB': 'V8Q14451J_IDC.FITS',
+  'IMPHTTAB': 'VBB18107J_IMP.FITS',
+  'INSTRUME': 'acs',
+  'LTV1': '0.0',
+  'LTV2': '0.0',
+  'MDRIZTAB': 'UB21537AJ_MDZ.FITS',
+  'MLINTAB': 'N/A',
+  'NUMCOLS': '4144.0',
+  'NUMROWS': '4136.0',
+  'OBSTYPE': 'IMAGING',
+  'OSCNTAB': 'LCH1459BJ_OSC.FITS',
+  'PFLTFILE': 'NAR1136NJ_PFL.FITS',
+  'SHADFILE': 'KCB17349J_SHD.FITS',
+  'SHUTRPOS': 'B',
+  'SPOTTAB': 'N/A',
+  'TIME-OBS': '15:01:52.557000',
+  'XCORNER': '0.0',
+  'YCORNER': '0.0'}
+    
+    J94F08G6Q
+    
+ {'ATODTAB': 'KCB1734HJ_A2D.FITS',
+  'BIASFILE': 'P8T1854PJ_BIA.FITS',
+  'BPIXTAB': 'Q860440TJ_BPX.FITS',
+  'CCDAMP': 'ABCD',
+  'CCDCHIP': '2.0',
+  'CCDGAIN': '1.0',
+  'CCDTAB': 'O151506FJ_CCD.FITS',
+  'CFLTFILE': 'N/A',
+  'CRREJTAB': 'N4E12511J_CRR.FITS',
+  'DARKFILE': 'P8T1855EJ_DRK.FITS',
+  'DATA_SET': 'J94F08G6Q',
+  'DATE-OBS': '2005-08-25',
+  'DETECTOR': 'WFC',
+  'DGEOFILE': 'QBU16424J_DXY.FITS',
+  'EXPSTART': '2005-08-25 19:48:45.440000',
+  'FILTER1': 'F606W',
+  'FILTER2': 'CLEAR2L',
+  'FLASHCUR': 'LOW',
+  'FLSHFILE': 'L5A13436J_FLS.FITS',
+  'FW1OFFST': '0.0',
+  'FW2OFFST': '0.0',
+  'FWSOFFST': '0.0',
+  'IDCTAB': 'V8Q14451J_IDC.FITS',
+  'IMPHTTAB': 'VBB18107J_IMP.FITS',
+  'INSTRUME': 'acs',
+  'LTV1': '0.0',
+  'LTV2': '0.0',
+  'MDRIZTAB': 'UB21537AJ_MDZ.FITS',
+  'MLINTAB': 'N/A',
+  'NUMCOLS': '4144.0',
+  'NUMROWS': '4136.0',
+  'OBSTYPE': 'IMAGING',
+  'OSCNTAB': 'LCH1459BJ_OSC.FITS',
+  'PFLTFILE': 'NAR1136NJ_PFL.FITS',
+  'SHADFILE': 'KCB17349J_SHD.FITS',
+  'SHUTRPOS': 'A',
+  'SPOTTAB': 'N/A',
+  'TIME-OBS': '19:48:45.439999',
+  'XCORNER': '0.0',
+  'YCORNER': '0.0'}
 
 
-mdriztab:  not counted
-    CDBS/scraped tables have next to nothing in them.  real data has unknown files.
+# -----------------------------------------------------------------------------
+    
+('qb12257sj_pfl.fits', 'qb12257rj_pfl.fits'): 214
 
-biasfile:  85
-	mostly broken with no attempt to fix since complicated and ill defined.
 
-idctab:   3
-	WARNING[1]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ycq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
-	WARNING[3]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ygq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
-	WARNING[5]: Lookup MISMATCH for '../../testdata/acs/warren/j6ll01ykq_raw.fits' 'idctab' 'v4115408j_idc.fits' 'q2h2010pj_idc.fits' 
+    ('WFC', 'A|ABCD|AD|B|BC|C|D', 'F606W', 'CLEAR2L', 'IMAGING', '-1.0', 'N/A', 'N/A') : UseAfter({
+        '2006-07-04 00:00:00' : 'qb12257sj_pfl.fits',
+    }),
 
-	v4115408j is new apparently replacing 'q2h2010pj_idc.fits' based on CDBS HTML comment for v114408j:
-	
-	Exact copy of u7n18502j; incorrect V2/V3 axis in q2h2010pj--------- File created June 9th by Co
+    ('WFC', 'A|ABCD|AD|B|BC|C|D', 'F606W', 'CLEAR2L', 'IMAGING', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2006-07-04 00:00:00' : 'qb12257rj_pfl.fits',
+    }),
+    
+    qb12257sj_pfl.fits
+    
+    [0]: SIMPLE = True
+[0]: BITPIX = 16
+[0]: NAXIS = 0
+[0]: EXTEND = True
+[0]: IRAF-TLM = 22:57:57 (01/11/2006)
+[0]: NEXTEND = 6
+[0]: DATE = 2006-10-24
+[0]: ORIGIN = R. Bohlin IDL
+[0]: FILETYPE = PIXEL-TO-PIXEL FLAT
+[0]: TELESCOP = HST
+[0]: INSTRUME = ACS
+[0]: CCDAMP = ANY
+[0]: CCDGAIN = -1
+[0]: CCDOFSTA = -1
+[0]: CCDOFSTB = -1
+[0]: CCDOFSTC = -1
+[0]: CCDOFSTD = -1
+[0]: OBSTYPE = IMAGING
+[0]: OBSMODE = ACCUM
+[0]: PEDIGREE = INFLIGHT 18/04/2002 - 04/07/2006
+[0]: SUBARRAY = FULL
+[0]: FILTER1 = F606W
+[0]: FILTER2 = CLEAR2L
+[0]: IDTFILT1 = F606W
+[0]: IDTFILT2 = CLEAR2L
+[0]: DETECTOR = WFC
+[0]: CCDTEMP1 = -76.6214
+[0]: STIMULUS = RAS/HOMS
+[0]: SCLAMP = NONE
+[0]: TOTIMG = 3
+[0]: XNORM1 = 1843
+[0]: XNORM2 = 2252
+[0]: YNORM1 = 921
+[0]: YNORM2 = 1126
+[0]: COMMENT = = 'File created by R.Bohlin'
+[0]: DESCRIP = F606W step +1 flat w/ mote shifted to -1 step
+[0]: USEAFTER = July 04 2006
+[0]: FW1OFFST = -1
+[0]: FW2OFFST = 0
+[0]: FWSOFFST = 0
+[0]: FWOFFSET = -1
+[0]: REFRAME = GO
+[0]: MONOWAVE =    0
+    
+    'qb12257rj_pfl.fits'
+    
+[0]: SIMPLE = True
+[0]: BITPIX = 16
+[0]: NAXIS = 0
+[0]: EXTEND = True
+[0]: IRAF-TLM = 22:57:55 (01/11/2006)
+[0]: NEXTEND = 6
+[0]: DATE = 2006-10-24
+[0]: ORIGIN = R. Bohlin IDL
+[0]: FILETYPE = PIXEL-TO-PIXEL FLAT
+[0]: TELESCOP = HST
+[0]: INSTRUME = ACS
+[0]: CCDAMP = ANY
+[0]: CCDGAIN = -1
+[0]: CCDOFSTA = -1
+[0]: CCDOFSTB = -1
+[0]: CCDOFSTC = -1
+[0]: CCDOFSTD = -1
+[0]: OBSTYPE = IMAGING
+[0]: OBSMODE = ACCUM
+[0]: PEDIGREE = INFLIGHT 18/04/2002 - 04/07/2006
+[0]: SUBARRAY = FULL
+[0]: FILTER1 = F606W
+[0]: FILTER2 = CLEAR2L
+[0]: IDTFILT1 = F606W
+[0]: IDTFILT2 = CLEAR2L
+[0]: DETECTOR = WFC
+[0]: CCDTEMP1 = -76.6214
+[0]: STIMULUS = RAS/HOMS
+[0]: SCLAMP = NONE
+[0]: TOTIMG = 3
+[0]: XNORM1 = 1843
+[0]: XNORM2 = 2252
+[0]: YNORM1 = 921
+[0]: YNORM2 = 1126
+[0]: COMMENT = = 'File created by R.Bohlin'
+[0]: DESCRIP = F606W step +1 flat w/ mote shifted to  0 step
+[0]: USEAFTER = July 04 2006
+[0]: FW1OFFST = 0
+[0]: FW2OFFST = 0
+[0]: FWSOFFST = 0
+[0]: FWOFFSET = 0
+[0]: REFRAME = GO
+[0]: MONOWAVE =    0
+    
+    JBL702IOQ
+    
+     {'ATODTAB': 'T3N1116MJ_A2D.FITS',
+  'BIASFILE': 'V9J13389J_BIA.FITS',
+  'BPIXTAB': 'T3N1116NJ_BPX.FITS',
+  'CCDAMP': 'ABCD',
+  'CCDCHIP': '2.0',
+  'CCDGAIN': '2.0',
+  'CCDTAB': 'UC82140BJ_CCD.FITS',
+  'CFLTFILE': 'N/A',
+  'CRREJTAB': 'N4E12511J_CRR.FITS',
+  'DARKFILE': 'V851613IJ_DRK.FITS',
+  'DATA_SET': 'JBL702IOQ',
+  'DATE-OBS': '2011-06-28',
+  'DETECTOR': 'WFC',
+  'DGEOFILE': 'QBU16424J_DXY.FITS',
+  'EXPSTART': '2011-06-28 05:43:37.920000',
+  'FILTER1': 'F606W',
+  'FILTER2': 'CLEAR2L',
+  'FLASHCUR': 'OFF',
+  'FLSHFILE': 'N/A',
+  'FW1OFFST': '0.0',
+  'FW2OFFST': '4294962976.0',
+  'FWSOFFST': '0.0',
+  'IDCTAB': 'V8Q1444TJ_IDC.FITS',
+  'IMPHTTAB': 'VBB18107J_IMP.FITS',
+  'INSTRUME': 'acs',
+  'LTV1': '0.0',
+  'LTV2': '0.0',
+  'MDRIZTAB': 'UB21537AJ_MDZ.FITS',
+  'MLINTAB': 'N/A',
+  'NUMCOLS': '4144.0',
+  'NUMROWS': '4136.0',
+  'OBSTYPE': 'IMAGING',
+  'OSCNTAB': 'LCH1459BJ_OSC.FITS',
+  'PFLTFILE': 'QB12257SJ_PFL.FITS',
+  'SHADFILE': 'KCB17349J_SHD.FITS',
+  'SHUTRPOS': 'A',
+  'SPOTTAB': 'N/A',
+  'TIME-OBS': '05:43:37.920000',
+  'XCORNER': '0.0',
+  'YCORNER': '0.0'}
+    
+    JB2F02XCQ
+    
+    {'ATODTAB': 'T3N1116MJ_A2D.FITS',
+  'BIASFILE': 'VB419350J_BIA.FITS',
+  'BPIXTAB': 'T3N1116NJ_BPX.FITS',
+  'CCDAMP': 'ABCD',
+  'CCDCHIP': '2.0',
+  'CCDGAIN': '2.0',
+  'CCDTAB': 'UC82140BJ_CCD.FITS',
+  'CFLTFILE': 'N/A',
+  'CRREJTAB': 'N4E12511J_CRR.FITS',
+  'DARKFILE': 'U4J12426J_DRK.FITS',
+  'DATA_SET': 'JB2F02XCQ',
+  'DATE-OBS': '2009-10-07',
+  'DETECTOR': 'WFC',
+  'DGEOFILE': 'QBU16424J_DXY.FITS',
+  'EXPSTART': '2009-10-07 11:40:09.767000',
+  'FILTER1': 'F606W',
+  'FILTER2': 'CLEAR2L',
+  'FLASHCUR': 'OFF',
+  'FLSHFILE': 'N/A',
+  'FW1OFFST': '0.0',
+  'FW2OFFST': '4294962976.0',
+  'FWSOFFST': '0.0',
+  'IDCTAB': 'V8Q1444SJ_IDC.FITS',
+  'IMPHTTAB': 'VBB18107J_IMP.FITS',
+  'INSTRUME': 'acs',
+  'LTV1': '0.0',
+  'LTV2': '0.0',
+  'MDRIZTAB': 'UB21537AJ_MDZ.FITS',
+  'MLINTAB': 'N/A',
+  'NUMCOLS': '4144.0',
+  'NUMROWS': '4136.0',
+  'OBSTYPE': 'IMAGING',
+  'OSCNTAB': 'LCH1459BJ_OSC.FITS',
+  'PFLTFILE': 'QB12257SJ_PFL.FITS',
+  'SHADFILE': 'KCB17349J_SHD.FITS',
+  'SHUTRPOS': 'B',
+  'SPOTTAB': 'N/A',
+  'TIME-OBS': '11:40:09.766999',
+  'XCORNER': '0.0',
+  'YCORNER': '0.0'}
+  
+  # ===========================================================================
+  # ===========================================================================
 
-==============================================================================================================
+NICMOS darkfile
 
-WFC3 rmap test results:    122 errors, 122 warnings in 287 tests
+Actual datasets/CRDS says ACCUM but CDBS says BRIGHTOBJ
 
-CRDS warnings for these unsupported (yet, according to Howard) filetypes are expected:
+('t8620046n_drk.fits', 'h1s1026mn_drk.fits'): 730
 
-WARNING[1]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_lfltfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_lfltfile.rmap'
-WARNING[2]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dgeofile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dgeofile.rmap'
-WARNING[3]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dfltfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_dfltfile.rmap'
-WARNING[4]: Failed loading RmapError("Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_shadfile.rmap'",) with Can't load rmap file: '/Users/jmiller/work/normal/lib/python2.7/site-packages/crds/hst/wfc3/wfc3_shadfile.rmap'
+('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ', 'OBSMODE')
 
-biasfile:
-    Custom rmap generator filter for (1) APERTURE substitutions  (2) G280-REF hack to capture bestref custom query logic
-    no remaining test failures
+    ('2.0', 'FAST', '1.0', 'NONE', 'BRIGHTOBJ') : UseAfter({
+        '1997-01-01 00:00:00' : 't8620046n_drk.fits',
+        '2000-01-01 00:00:00' : 't8620045n_drk.fits',
+    }),
 
-darkfile:
+    ('2.0', 'FAST', '1.0|2.0|3.0|4.0', 'NONE', 'ACCUM|ACQ') : UseAfter({
+        '1997-01-01 00:00:00' : 'h1s1026mn_drk.fits',
+    }),
 
-    122   't3420177i_drk.fits' 's9j15532i_drk.fits'    20177i seems to replace 15532i
+'t8620046n_drk.fits'
+    
+[0]: FILENAME = t8620046n_drk.fits
+[0]: CAMERA = 2
+[0]: READOUT = FAST
+[0]: NREAD = 1
+[0]: SAMP_SEQ = NONE
+[0]: OBSMODE = BRIGHTOBJ
 
+'h1s1026mn_drk.fits'
+
+[0]: FILENAME = h1s1026mn_drk.fits
+[0]: CAMERA = 2
+[0]: READOUT = FAST
+[0]: NREAD = 1
+[0]: SAMP_SEQ = NONE
+[0]: OBSMODE = ACCUM
+
+ERROR[2]: mismatch: N4N114SOQ nicmos darkfile t8620046n_drk.fits h1s1026mn_drk.fits 
+
+N4N114SOQ
+
+{'CAMERA': '2.0',
+ 'DARKFILE': 'T8620046N_DRK.FITS',
+ 'DATA_SET': 'N4N114SOQ',
+ 'DATE-OBS': '1998-10-20',
+ 'EXPSTART': '1998-10-20 23:11:57.873000',
+ 'FILTER': 'BLANK',
+ 'FLATFILE': 'N/A',
+ 'IDCTAB': 'N/A',
+ 'ILLMFILE': 'N/A',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T511816FN_MSK.FITS',
+ 'NLINFILE': 'L1I1225EN_LIN.FITS',
+ 'NOISFILE': 'H4216218N_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'ACCUM',
+ 'PEDSBTAB': 'N/A',
+ 'PHOTTAB': 'T6423134N_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317CN_NLC.FITS',
+ 'SAACNTAB': 'N/A',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'N/A',
+ 'TEMPFILE': 'SC31741CN_TDD.FITS',
+ 'TIME-OBS': '23:11:57.872999',
+ 'ZPRATTAB': 'R5O0317EN_ZPR.FITS'}
+ 
+ ERROR[14]: mismatch: N4S201071 nicmos darkfile t8620046n_drk.fits h1s1026mn_drk.fits 
+ 
+ {'CAMERA': '2.0',
+ 'DARKFILE': 'T8620046N_DRK.FITS',
+ 'DATA_SET': 'N4S201071',
+ 'DATE-OBS': '1998-07-24',
+ 'EXPSTART': '1998-07-24 04:08:02.807000',
+ 'FILTER': 'F212N',
+ 'FLATFILE': 'I3A1616CN_FLT.FITS',
+ 'IDCTAB': 'N/A',
+ 'ILLMFILE': 'H2413247N_ILM.FITS',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T511816FN_MSK.FITS',
+ 'NLINFILE': 'L1I1225EN_LIN.FITS',
+ 'NOISFILE': 'H4216218N_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'ACCUM',
+ 'PEDSBTAB': 'N/A',
+ 'PHOTTAB': 'T6423134N_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317CN_NLC.FITS',
+ 'SAACNTAB': 'N/A',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'T1N2312NN_TDF.FITS',
+ 'TEMPFILE': 'SC31741CN_TDD.FITS',
+ 'TIME-OBS': '04:08:02.806999',
+ 'ZPRATTAB': 'R5O0317EN_ZPR.FITS'}
+ 
+
+# -----------------------------------------------------------------------------
+
+Actual datasets/CRDS say "ACQ" but CDBS answer says "BRIGHTOBJ"
+
+('t8620045n_drk.fits', 'h1s1026mn_drk.fits'): 680
+
+('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ', 'OBSMODE')
+
+    ('2.0', 'FAST', '1.0', 'NONE', 'BRIGHTOBJ') : UseAfter({
+        '1997-01-01 00:00:00' : 't8620046n_drk.fits',
+        '2000-01-01 00:00:00' : 't8620045n_drk.fits',
+    }),
+
+    ('2.0', 'FAST', '1.0|2.0|3.0|4.0', 'NONE', 'ACCUM|ACQ') : UseAfter({
+        '1997-01-01 00:00:00' : 'h1s1026mn_drk.fits',
+    }),
+
+ERROR[3]: mismatch: N9AQ07R2Q nicmos darkfile t8620045n_drk.fits h1s1026mn_drk.fits 
+
+{'CAMERA': '2.0',
+ 'DARKFILE': 'T8620045N_DRK.FITS',
+ 'DATA_SET': 'N9AQ07R2Q',
+ 'DATE-OBS': '2006-10-21',
+ 'EXPSTART': '2006-10-21 02:39:09.880000',
+ 'FILTER': 'F190N',
+ 'FLATFILE': 'SBJ17393N_FLT.FITS',
+ 'IDCTAB': 'S8D19550N_IDC.FITS',
+ 'ILLMFILE': 'H2413243N_ILM.FITS',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T461847BN_MSK.FITS',
+ 'NLINFILE': 'SAV04114N_LIN.FITS',
+ 'NOISFILE': 'MC91052DN_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'ACQ',
+ 'PEDSBTAB': 'S2D1302MN_PSB.FITS',
+ 'PHOTTAB': 'T621822QN_PHT.FITS',
+ 'PMODFILE': 'SCT17335N_PMD.FITS',
+ 'PMSKFILE': 'SAF02498N_PMK.FITS',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317CN_NLC.FITS',
+ 'SAACNTAB': 'T231621GN_SCN.FITS',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'SBJ1921IN_TDF.FITS',
+ 'TEMPFILE': 'T7A2001EN_TDD.FITS',
+ 'TIME-OBS': '02:39:09.880000',
+ 'ZPRATTAB': 'R5O0317FN_ZPR.FITS'}
+
+ERROR[13]: mismatch: N91898JZQ nicmos darkfile t8620045n_drk.fits h1s1026mn_drk.fits
+
+{'CAMERA': '2.0',
+ 'DARKFILE': 'T8620045N_DRK.FITS',
+ 'DATA_SET': 'N91898JZQ',
+ 'DATE-OBS': '2005-03-01',
+ 'EXPSTART': '2005-03-01 13:56:31.357000',
+ 'FILTER': 'F165M',
+ 'FLATFILE': 'SBJ1738SN_FLT.FITS',
+ 'IDCTAB': 'S8D19550N_IDC.FITS',
+ 'ILLMFILE': 'H241323RN_ILM.FITS',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T461847BN_MSK.FITS',
+ 'NLINFILE': 'SAV04114N_LIN.FITS',
+ 'NOISFILE': 'MC91052DN_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'ACQ',
+ 'PEDSBTAB': 'S2D1302MN_PSB.FITS',
+ 'PHOTTAB': 'T621822QN_PHT.FITS',
+ 'PMODFILE': 'SCT17335N_PMD.FITS',
+ 'PMSKFILE': 'SAF02498N_PMK.FITS',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317CN_NLC.FITS',
+ 'SAACNTAB': 'T231621GN_SCN.FITS',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'SBJ1921DN_TDF.FITS',
+ 'TEMPFILE': 'T7A2001EN_TDD.FITS',
+ 'TIME-OBS': '13:56:31.356999',
+ 'ZPRATTAB': 'R5O0317FN_ZPR.FITS'}
+ 
+ # ----------------------------------------------------------------------------
+
+('h1s10270n_drk.fits', 'NOT FOUND No match.'): 37
+ 
+ Explained by ACCUM vs. MULTIACCUM
+ 
+ ('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ', 'OBSMODE')
+ 
+     ('3.0', 'FAST', '1.0|2.0|3.0|4.0', 'NONE', 'ACCUM|ACQ') : UseAfter({
+        '1997-01-01 00:00:00' : 'h1s10270n_drk.fits',
+    }),
+ 
+ ERROR[67]: mismatch: N8AF01OXQ nicmos darkfile h1s10270n_drk.fits NOT FOUND No match.
+ 
+ {'CAMERA': '3.0',
+ 'DARKFILE': 'H1S10270N_DRK.FITS',
+ 'DATA_SET': 'N8AF01OXQ',
+ 'DATE-OBS': '2002-05-03',
+ 'EXPSTART': '2002-05-03 09:30:24.207000',
+ 'FILTER': 'BLANK',
+ 'FLATFILE': 'N/A',
+ 'IDCTAB': 'S8D19551N_IDC.FITS',
+ 'ILLMFILE': 'N/A',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T4618489N_MSK.FITS',
+ 'NLINFILE': 'SAV0411GN_LIN.FITS',
+ 'NOISFILE': 'MC91052EN_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'MULTIACCUM',
+ 'PEDSBTAB': 'S2D1302MN_PSB.FITS',
+ 'PHOTTAB': 'T621822QN_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317DN_NLC.FITS',
+ 'SAACNTAB': 'T231621GN_SCN.FITS',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'N/A',
+ 'TEMPFILE': 'SC31741NN_TDD.FITS',
+ 'TIME-OBS': '09:30:24.207000',
+ 'ZPRATTAB': 'R5O0317FN_ZPR.FITS'}
+ 
+ ERROR[69]: mismatch: N3T701ABQ nicmos darkfile h1s10270n_drk.fits NOT FOUND No match.
+ 
+ {'CAMERA': '3.0',
+ 'DARKFILE': 'H1S10270N_DRK.FITS',
+ 'DATA_SET': 'N3T701ABQ',
+ 'DATE-OBS': '1997-02-24',
+ 'EXPSTART': '1997-02-24 02:07:14.887000',
+ 'FILTER': 'BLANK',
+ 'FLATFILE': 'N/A',
+ 'IDCTAB': 'N/A',
+ 'ILLMFILE': 'N/A',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T511816GN_MSK.FITS',
+ 'NLINFILE': 'L1I1216CN_LIN.FITS',
+ 'NOISFILE': 'H1T1610GN_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'MULTIACCUM',
+ 'PEDSBTAB': 'N/A',
+ 'PHOTTAB': 'T6423133N_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317DN_NLC.FITS',
+ 'SAACNTAB': 'N/A',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'NONE',
+ 'TDFFILE': 'N/A',
+ 'TEMPFILE': 'T160441NN_TDD.FITS',
+ 'TIME-OBS': '02:07:14.887000',
+ 'ZPRATTAB': 'R5O0317EN_ZPR.FITS'}
+ 
+ # ----------------------------------------------------------------------------
+ 
+ ('s2d1302mn_psb.fits', 'NOT FOUND No match.'): 11
+ 
+ Explained by useafter date
+ 
+     () : UseAfter({
+        '1999-07-27 00:00:00' : 's2d1302mn_psb.fits',
+    }),
+ 
+ ERROR[6]: mismatch: N548CMU4Q nicmos pedsbtab s2d1302mn_psb.fits NOT FOUND No match. 
+ 
+ {'CAMERA': '1.0',
+ 'DARKFILE': 'HAT1336EN_DRK.FITS',
+ 'DATA_SET': 'N548CMU4Q',
+ 'DATE-OBS': '1998-11-28',
+ 'EXPSTART': '1998-11-28 15:37:09.793000',
+ 'FILTER': 'BLANK',
+ 'FLATFILE': 'N/A',
+ 'IDCTAB': 'N/A',
+ 'ILLMFILE': 'N/A',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T511816CN_MSK.FITS',
+ 'NLINFILE': 'L1I1225DN_LIN.FITS',
+ 'NOISFILE': 'H1T16104N_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'MULTIACCUM',
+ 'PEDSBTAB': 'S2D1302MN_PSB.FITS',
+ 'PHOTTAB': 'T6423134N_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317BN_NLC.FITS',
+ 'SAACNTAB': 'S2D1302NN_SCN.FITS',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'STEP64',
+ 'TDFFILE': 'N/A',
+ 'TEMPFILE': 'SC31741BN_TDD.FITS',
+ 'TIME-OBS': '15:37:09.792999',
+ 'ZPRATTAB': 'R5O0317EN_ZPR.FITS'}
+ 
+ ERROR[129]: mismatch: N4J001V8Q nicmos pedsbtab s2d1302mn_psb.fits NOT FOUND No match. =
+ 
+ {'CAMERA': '3.0',
+ 'DARKFILE': 'HBP2024DN_DRK.FITS',
+ 'DATA_SET': 'N4J001V8Q',
+ 'DATE-OBS': '1998-01-17',
+ 'EXPSTART': '1998-01-17 01:06:13.673000',
+ 'FILTER': 'BLANK',
+ 'FLATFILE': 'N/A',
+ 'IDCTAB': 'N/A',
+ 'ILLMFILE': 'N/A',
+ 'INSTRUME': 'nicmos',
+ 'MASKFILE': 'T511816GN_MSK.FITS',
+ 'NLINFILE': 'L1I1225FN_LIN.FITS',
+ 'NOISFILE': 'H1T1610GN_NOI.FITS',
+ 'NREAD': '1.0',
+ 'OBSMODE': 'MULTIACCUM',
+ 'PEDSBTAB': 'S2D1302MN_PSB.FITS',
+ 'PHOTTAB': 'T6423134N_PHT.FITS',
+ 'PMODFILE': 'N/A',
+ 'PMSKFILE': 'N/A',
+ 'READOUT': 'FAST',
+ 'RNLCORTB': 'R5O0317DN_NLC.FITS',
+ 'SAACNTAB': 'S2D1302NN_SCN.FITS',
+ 'SAADFILE': 'N/A',
+ 'SAMP_SEQ': 'STEP2',
+ 'TDFFILE': 'N/A',
+ 'TEMPFILE': 'SC31741DN_TDD.FITS',
+ 'TIME-OBS': '01:06:13.673000',
+ 'ZPRATTAB': 'R5O0317EN_ZPR.FITS'}
+ 
+ 
+ 

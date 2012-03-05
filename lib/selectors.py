@@ -570,6 +570,16 @@ class MatchingSelector(Selector):
     
     The result of file_matches() is a list of lists of keys because it is
     used recursively on trees of mappings and selectors.
+    
+    The special case of matching an empty set also needs to work for the sake
+    of uniform rmap structure for HST:
+    
+    >>> m = MatchingSelector((), {
+    ...    () : "100",
+    ... })
+    >>> m.choose({})
+    '100'
+    
     """
     rmap_name = "Match"
     

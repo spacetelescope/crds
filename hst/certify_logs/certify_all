@@ -1,7 +1,8 @@
 #! /bin/sh
 
-for instr in acs cos stis wfc3 nicmos wfpc2
-do 
-    python -m crds.certify hst_${instr}.imap   
-done | tee certify_all.log
+python -m crds.certify --verbose hst.pmap
+
+# for instr in acs cos stis wfc3 nicmos wfpc2
+# do 
+# done | tee certify_all.log
 

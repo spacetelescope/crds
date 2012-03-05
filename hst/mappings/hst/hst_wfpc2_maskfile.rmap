@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-02-23 10:10:52.607326',
+    'derived_from' : 'generated from CDBS database 2012-03-05 08:55:55.908988',
     'filekind' : 'MASKFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '1332ef37e2a58bc5ad7bd5db727d0e8e197946a7',
+    'sha1sum' : '836fb24d6084bef668812017c3bf4145df879025',
 }
 
 selector = Match({

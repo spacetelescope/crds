@@ -330,6 +330,7 @@ def get_dataset_header(dataset):
     elif len(headers) == 0:
         raise LookupError("No header found for " + repr(instrument) + " dataset " + repr(dataset))
     elif len(headers) > 1:
+        return headers
         raise LookupError("More than one header found for " + repr(instrument) + " dataset " + repr(dataset))
 
 def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
