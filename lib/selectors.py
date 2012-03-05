@@ -91,7 +91,6 @@ import pprint as pp
 # import numpy as np
 
 import log
-from ezxml import Xml
 
 # ==============================================================================
 
@@ -181,28 +180,6 @@ class Selector(object):
         else:
             return choice
         
-    def to_xml(self):
-        """Returns Xml object representing this selector."""
-        selections = []
-        for key, choice in self._selections:
-            selections.append(self._selection_xml(key, choice))
-        return Xml(self.__class__.__name__.lower(), elements=selections,
-                   attributes={ "parkeys": " ".join(self._parameters)})
-        
-    @property
-    def selection_xname(self):
-        """XML element name for one selection."""
-        return self.__class__.__name__[:-len("selector")].lower()
-
-    def _selection_xml(self, key, choice):
-        """XML for one selection."""
-        if isinstance(choice, Selector):
-            values = choice.to_xml()
-        else:
-            values = choice
-        return Xml(self.selection_xname, elements=[values],
-                   attributes={"key":str(key)})
-    
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
         pmap = {}
@@ -977,14 +954,6 @@ class UseAfterSelector(Selector):
         """Account for the slightly weird UseAfter syntax."""
         return tuple(zip(self._parameters, key.split()))
     
-    def _selection_xml(self, key, choice):
-        if isinstance(choice, Selector):
-            return Xml(self.selection_xname, attributes = {"date":key}, 
-                        elements=[choice.to_xml()], eol="")
-        else:
-            return Xml(self.selection_xname, attributes = {"date":key}, 
-                       elements=[choice], eol="")
-
     def merge(self, other):
         """Merge the selections from two UseAfters into a single UseAfter.
         For collisions, take the greatest value,  which using known and planned
