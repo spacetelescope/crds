@@ -443,7 +443,7 @@ class Mapping(object):
             try:
                 minimized[key] = header[key]
             except KeyError:
-                minimized[key] = "N/A"
+                minimized[key] = "NOT FOUND"
         return minimized
     
     def validate(self,  trap_exceptions=False):
