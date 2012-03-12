@@ -51,6 +51,8 @@ class RefactorAction(object):
         self.useafter = useafter
         if replaced_file:
             self.replaced_file = str(os.path.basename(replaced_file))
+        else:
+            self.replaced_file = "N/A"
             
     def __str__(self):
         if self.action == "insert":
