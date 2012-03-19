@@ -17,7 +17,9 @@ import crds.rmap as rmap
 
 from crds.client.proxy import CheckingProxy
 
-__all__ = ["set_crds_server", 
+__all__ = ["getreferences",
+           
+           "set_crds_server", 
            "get_crds_server",
            
            "list_mappings",
@@ -109,11 +111,11 @@ def get_reference_names(pipeline_context):
     """
     return [str(x) for x in S.get_reference_names(pipeline_context)]
 
-def get_best_references(pipeline_context, header):
+def get_best_references(pipeline_context, header, reftypes=[]):
     """Return the dictionary mapping { filetype : reference_basename ... }
     corresponding to the given `header`
     """
-    return S.get_best_references(pipeline_context, dict(header))
+    return S.get_best_references(pipeline_context, dict(header), reftypes)
 
 # ==============================================================================
 
@@ -246,3 +248,11 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     dump_mappings(context, ignore_cache)
     ctx = rmap.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
+
+# ============================================================================
+
+def getreferences(parameters, reftypes=[], context=None):
+    """This is the top-level get reference call for all of CRDS.   Conceptually
+    this is a network call.
+    """
+    
