@@ -22,6 +22,8 @@ __all__ = ["getreferences",
            "set_crds_server", 
            "get_crds_server",
            
+           "get_default_context",
+           
            "list_mappings",
            "get_mapping_names",
            "get_mapping_url", 
@@ -111,11 +113,18 @@ def get_reference_names(pipeline_context):
     """
     return [str(x) for x in S.get_reference_names(pipeline_context)]
 
-def get_best_references(pipeline_context, header, reftypes=[]):
-    """Return the dictionary mapping { filetype : reference_basename ... }
-    corresponding to the given `header`
+def get_best_references(pipeline_context, header, reftypes=None):
+    """Return the dictionary mapping { reftype : reference_basename ... }
+    corresponding to the given `header`.  If reftypes is None,  return
+    all types;  otherwise return best refs for the list of specified reftypes.
     """
     return S.get_best_references(pipeline_context, dict(header), reftypes)
+
+def get_default_context(observatory):
+    """Return the name of the latest pipeline mapping in use for processing
+    files for `observatory`.  
+    """
+    return S.get_default_context(observatory)
 
 # ==============================================================================
 
@@ -251,8 +260,43 @@ def get_minimum_header(context, dataset, ignore_cache=False):
 
 # ============================================================================
 
-def getreferences(parameters, reftypes=[], context=None):
-    """This is the top-level get reference call for all of CRDS.   Conceptually
-    this is a network call.
-    """
+def getreferences(parameters, reftypes=None, context=None):
+    """This is the top-level get reference call for all of CRDS. 
     
+    `parameters` should be a dictionary-like object mapping { str: str } for
+    crtical best reference related input parameters.
+    
+    If `reftypes` is None,  return all possible reference types.
+    
+    If `context` is None,  use the latest available context.
+    """
+    for key in parameters:
+        assert isinstance(key, str), \
+            "Non-string key " + repr(key) + " in parameters."
+        try:
+            parameters[key]
+        except Exception, exc:
+            raise ValueError("Can't fetch mapping key " + repr(key) + 
+                             " from parameters.")
+        assert isinstance(parameters[key], str), \
+            "Non-string value " + repr(value) + " for key " + repr(key) + \
+            " in parameters."
+    assert isinstance(reftypes, (list,tuple,type(None))), \
+        "reftypes must be a list or tuple of strings, or sub-class of those."
+    if reftypes is not None:
+        for reftype in reftypes:
+            assert isinstance(reftype, str), \
+                "each reftype must be a string, .e.g. biasfile or darkfile."
+    if context is None:
+        try:
+            instrument = parameters["INSTRUME"]
+        except KeyError:
+            raise ValueError("No 'INSTRUME' keyword specified,  "
+                             "required to determine context.")
+        observatory = utils.instrument_to_observatory(instrument)
+        ctx = get_default_context(observatory)
+    else:
+        assert isinstance(context, str) and context.endswith(".pmap"), \
+            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
+        ctx = context
+    return get_best_references(ctx, parameters, reftypes)
