@@ -6,7 +6,9 @@ web services on the central CRDS server.  Remote services support the
 determination of the best reference files for a dataset.  Remote
 services support transparently downloading CRDS mappings and reference
 files and caching them locally for use in development or dataset
-processing.
+processing.   This section is largely superseded by the section on 
+*Top Level Use*,  but remains to document lower level features which 
+are network oriented in nature.
 
 Simplest Useage
 ---------------
