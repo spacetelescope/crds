@@ -18,11 +18,12 @@ import crds.rmap as rmap
 from crds.client.proxy import CheckingProxy
 
 __all__ = ["getreferences",
+           "get_default_context",
+           "cache_references",
            
            "set_crds_server", 
            "get_crds_server",
            
-           "get_default_context",
            
            "list_mappings",
            "get_mapping_names",
