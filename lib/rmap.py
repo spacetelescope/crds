@@ -690,15 +690,33 @@ class InstrumentContext(Mapping):
         the latter being considered definitive.
         Return { parkey : [legal values...], ... }
         """
-        pmap = {}
-        for selector in self.selections.values():
-            for parkey, choices in selector.get_parkey_map().items():
-                if parkey not in pmap:
-                    pmap[parkey] = set()
-                pmap[parkey] = pmap[parkey].union(choices)
-        for parkey, choices in pmap.items():
-            pmap[parkey] = sorted(list(pmap[parkey]))
-        return pmap
+        pkmap = {}
+        for selection in self.selections.values():
+            for parkey, choices in selection.get_parkey_map().items():
+                if parkey not in pkmap:
+                    pkmap[parkey] = set()
+                pkmap[parkey] = pkmap[parkey].union(choices)
+        for parkey, choices in pkmap.items():
+            pkmap[parkey] = sorted(list(pkmap[parkey]))
+        return pkmap
+    
+    def get_valid_values_map(self):
+        """Based on the TPNs,  return a mapping from parkeys to their valid
+        values for all parkeys for all filekinds of this instrument.   This will
+        return the definitive lists of legal values,  not all of which are required
+        to be represented in rmaps;  these are the values that *could* be in an
+        rmap,  not necessarily what is in any given rmap to match.
+        """
+        pkmap = {}
+        for selection in self.selections.values():
+            rmap_pkmap = selection.get_valid_values()
+            for key in rmap_pkmap:
+                if key not in pkmap:
+                    pkmap[key] = set()
+                pkmap[key] = pkmap[key].union(set(rmap_pkmap[key]))
+        for key in pkmap:
+            pkmap[key] = sorted(pkmap[key])
+        return pkmap
     
     def get_filekinds(self, dataset):
         """Return the filekinds associated with this dataset,  ideally
