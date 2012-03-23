@@ -756,7 +756,8 @@ class ReferenceMapping(Mapping):
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
-        self._valid_values = self.get_valid_values_map()
+        self._tpn_valid_values = self.get_valid_values_map()
+        self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()  
         self._relevance_expr = getattr(self, "relevance", "ALWAYS")
 
@@ -864,7 +865,7 @@ class ReferenceMapping(Mapping):
         """
         log.info("Validating", self.basename)
         try:
-            self.selector.validate(self._valid_values, trap_exceptions, 
+            self.selector.validate(self._tpn_valid_values, trap_exceptions, 
                                    context=repr(self))
         except Exception, exc:
             if trap_exceptions == mapping_type(self):
@@ -892,12 +893,17 @@ class ReferenceMapping(Mapping):
         an exception. 
         """
         for key in self._required_parkeys:
-            if key in self._valid_values:   # only check validatable keys
-                valid = self._valid_values[key]
+            if key in self._tpn_valid_values:   # only check validatable keys
+                valid = self._tpn_valid_values[key]
                 if not valid:
                     continue
                 if key not in header:
+                    # If the TPN says N/A is OK,  ignore missing
                     if len(valid) >= 1 and 'N/A' in valid:
+                        continue
+                    # If the rmap says N/A is OK,  ignore missing
+                    if key in self._rmap_valid_values and \
+                        "N/A" in self._rmap_valid_values[key]:
                         continue
                     raise ValueError("Required parkey " + repr(key) + " is missing.")
                 if header[key] not in valid:

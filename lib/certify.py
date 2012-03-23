@@ -352,7 +352,7 @@ def certify_context(context, check_references=None, trap_exceptions=False):
     referenced files as well.
     """
     ctx = rmap.get_cached_mapping(context)
-    ctx.validate(trap_exceptions=trap_exceptions)
+    ctx.validate_mapping(trap_exceptions=trap_exceptions)
     if check_references is None:
         return
     assert check_references in ["exist", "contents"], \
