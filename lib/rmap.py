@@ -446,14 +446,14 @@ class Mapping(object):
                 minimized[key] = "NOT FOUND"
         return minimized
     
-    def validate(self,  trap_exceptions=False):
+    def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
         """
         log.info("Validating", self.basename)
         for key, sel in self.selections.items():
             try:
-                sel.validate(trap_exceptions)
+                sel.validate_mapping(trap_exceptions)
             except Exception, exc:
                 if trap_exceptions == mapping_type(self):
                     log.error()
@@ -651,7 +651,7 @@ class InstrumentContext(Mapping):
             log.verbose("\nGetting bestref for", repr(filekind))
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
-            except selectors.IrrelevantReferenceTypeError:
+            except IrrelevantReferenceTypeError:
                 refs[filekind] = "NOT FOUND n/a"
 #                log.verbose("Reference type",repr(filekind),
 #                            "is irrelevant for this dataset.")
@@ -700,21 +700,36 @@ class InstrumentContext(Mapping):
             pkmap[parkey] = sorted(list(pkmap[parkey]))
         return pkmap
     
-    def get_valid_values_map(self):
+    def get_valid_values_map(self, condition=False, remove_special=True):
         """Based on the TPNs,  return a mapping from parkeys to their valid
         values for all parkeys for all filekinds of this instrument.   This will
         return the definitive lists of legal values,  not all of which are required
         to be represented in rmaps;  these are the values that *could* be in an
         rmap,  not necessarily what is in any given rmap to match.
+        
+        If `condition` is True,  values are filtered with utils.condition_value()
+        to match their rmap string appearance.   If False,  values are returned
+        as raw TPN values and types.
+        
+        If `remove_special` is True,  values of ANY or N/A are removed from the
+        lists of valid values.
         """
         pkmap = {}
         for selection in self.selections.values():
-            rmap_pkmap = selection.get_valid_values()
+            rmap_pkmap = selection.get_valid_values_map(condition)
             for key in rmap_pkmap:
                 if key not in pkmap:
                     pkmap[key] = set()
                 pkmap[key] = pkmap[key].union(set(rmap_pkmap[key]))
-        for key in pkmap:
+        for key in self.get_parkey_map():
+            if key not in pkmap:
+                pkmap[key] = []    # flag a need for an unconstrained input
+        if remove_special:
+            specials = set(["ANY","N/A"])
+            for key in pkmap:  # remove specials like ANY or N/A
+                if pkmap[key]:
+                    pkmap[key] = pkmap[key] - specials
+        for key in pkmap:  # convert to sorted lists
             pkmap[key] = sorted(pkmap[key])
         return pkmap
     
@@ -727,6 +742,11 @@ class InstrumentContext(Mapping):
     
 # ===================================================================
 
+class IrrelevantReferenceTypeError(LookupError):
+    """The reference determined by this rmap does not apply to the instrument
+    mode specified by the dataset header.
+    """
+
 class ReferenceMapping(Mapping):
     """ReferenceMapping manages loading the rmap associated with a single
     reference filetype and instantiate an appropriate selector tree from the 
@@ -736,7 +756,10 @@ class ReferenceMapping(Mapping):
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
-        self._valid_values = self.get_valid_values()
+        self._valid_values = self.get_valid_values_map()
+        self._required_parkeys = self.get_required_parkeys()  
+        self._relevance_expr = getattr(self, "relevance", "ALWAYS")
+
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
@@ -759,6 +782,8 @@ class ReferenceMapping(Mapping):
         """Return the single reference file basename appropriate for `header_in` 
         selected by this ReferenceMapping.
         """
+        self.check_relevance(header_in)  # Is this rmap appropriate for header
+        self.validate_header(header_in)  # Are required params present and valid
         # Some filekinds, .e.g. ACS biasfile, mutate the header 
         header = self._precondition_header(self, header_in)
         try:
@@ -766,10 +791,11 @@ class ReferenceMapping(Mapping):
         except Exception:
             header = self._fallback_header(self, header_in)
             if header:
+                self.validate_header(header)
                 return self.selector.choose(header)
             else:
                 raise
-
+            
     def reference_names(self):
         """Return the list of reference file basenames associated with this
         ReferenceMapping.
@@ -781,8 +807,7 @@ class ReferenceMapping(Mapping):
         return [self.basename]
     
     def get_required_parkeys(self):
-        """Return the list of parkey names needed to select from this rmap.
-        """
+        """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
         for key in self.parkey:
             if isinstance(key, tuple):
@@ -801,12 +826,11 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.get_parkey_map()
     
-    def get_valid_values(self):
+    def get_valid_values_map(self, condition=True):
         """Based on the TPNs,  return a mapping from each of the required
         parkeys to its valid values, i.e. the definitive source for what is
         legal for this filekind.
    
-
         i.e. the definitive source for what is legal for this filekind.
         
         return { parkey : [ valid values ] }
@@ -816,10 +840,24 @@ class ReferenceMapping(Mapping):
         required_keys = self.get_required_parkeys()
         for info in tpninfos:
             if info.name in required_keys:
-                valid_values[info.name] = info.values
+                values = info.values
+                if len(values) == 1 and ":" in values[0]:
+                    limits = values[0].split(":")
+                    try:
+                        limits = [int(float(x)) for x in limits]
+                    except:
+                        sys.exc_clear()
+                    else:
+                        values = range(limits[0], limits[1]+1)
+                if condition:
+                    values = list(values)
+                    for i, value in enumerate(values):
+                        values[i] = utils.condition_value(value)
+                    values = tuple(values)
+                valid_values[info.name] = values 
         return valid_values
     
-    def validate(self, trap_exceptions=False):
+    def validate_mapping(self, trap_exceptions=False):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
@@ -847,6 +885,47 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.difference(other.selector, path + 
                 ((self.basename, other.basename),))
+
+    def validate_header(self, header):
+        """Check the values of this rmap's parkeys in `header` against any 
+        constraints specified by the TPN files.  Missing parkeys also raise
+        an exception. 
+        """
+        for key in self._required_parkeys:
+            if key in self._valid_values:   # only check validatable keys
+                valid = self._valid_values[key]
+                if not valid:
+                    continue
+                if key not in header:
+                    if len(valid) >= 1 and 'N/A' in valid:
+                        continue
+                    raise ValueError("Required parkey " + repr(key) + " is missing.")
+                if header[key] not in valid:
+                    raise ValueError("Value of " + repr(header[key]) + 
+                                     " for parameter " + repr(key) + 
+                                     " is not one of valid values " + 
+                                     repr(valid))
+        
+    def check_relevance(self, header):
+        """Raise an exception if this rmap's relevance expression evaluated
+        in the context of `header` returns False.
+        """
+        # relevance expressions are in all lower case.
+        lc_header = {}
+        for key in header:
+            lc_header[key.lower()] = header[key].lower()
+        try:
+            if self._relevance_expr != "always":
+                relevant = eval(self._relevance_expr, {}, lc_header)
+            else:
+                relevant = True
+        except Exception, exc:
+            log.warning("Relevance check failed: " + str(exc))
+        else:
+            if not relevant:
+                raise IrrelevantReferenceTypeError(
+                    "Rmap does not apply to the given parameter set.")
+
 # ===================================================================
 
 CACHED_MAPPINGS = {}
@@ -921,7 +1000,6 @@ def locate_reference(ref, observatory="hst"):
     if os.path.dirname(ref):
         return ref
     return os.path.join(get_crds_refpath(), observatory, ref)
-
 
 # =============================================================================
 
