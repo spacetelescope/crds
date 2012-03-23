@@ -117,10 +117,6 @@ class UseAfterError(LookupError):
     """None of the dates in the RMAP precedes the processing date.
     """
 
-class IrrelevantReferenceTypeError(LookupError):
-    """The reference determined by this rmap does not apply to the instrument
-    mode specified by the dataset header.
-    """
 # ==============================================================================
 
 class ValidationError(ValueError):
@@ -503,11 +499,6 @@ class MatchingSelector(Selector):
     because dataset value of 'N/A' doesn't match rmap value '2.0',  whereas
     dataset value of '2.0' does match rmap value 'N/A'.
     
-    >>> m.choose({})
-    Traceback (most recent call last):
-    ...
-    MissingParameterError: Required parameter 'foo' is missing.
-    
     >>> print m.format()
     Match({
         ('1.0', '2.0') : '200',
@@ -564,9 +555,7 @@ class MatchingSelector(Selector):
         Selector.__init__(self, parameters, selections)  # largely overridden
         if rmap_header is None:
             rmap_header = {}
-        self._relevance_expr = rmap_header.get("relevance","ALWAYS")
         self._substitutions = rmap_header.get("substitutions", {})
-        self._extra_keys = rmap_header.get("extra_keys",())        
         self._parameters = tuple(parameters)
         self._value_map = {}
         self._selections = sorted(selections.items())
@@ -634,9 +623,7 @@ class MatchingSelector(Selector):
         """Match the specified `header` to this selector's selections and
         return the best matching choice.    This is the top-level entry point
         for runtime selection making.
-        """
-        self.validate_query(header)
-        
+        """        
         # Iterate through ranked choices from best to worst,  stopping at the
         # first/best overall nested selection.  For HST, multiple tries may be
         # needed because there is no guarantee that the nested UseAfter selector
@@ -763,48 +750,6 @@ class MatchingSelector(Selector):
         for fitsvar in vmap:
             vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
         return vmap
-
-    def validate_query(self, header):
-        """Raise exceptions if `header` does not contain a required
-        key,  or if the value of any key is not one of the possible
-        values.
-        """
-        # relevance expressions are in all lower case.
-        lc_header = {}
-        for key in header:
-            lc_header[key.lower()] = header[key].lower()
-
-        self.check_relevance(lc_header)
-        
-        for fitsvar in self._parameters:
-            valid_values = self._value_map[fitsvar]
-            if fitsvar in header:
-                value = header[fitsvar]
-                if ((value not in valid_values) and
-                    (value != '*') and 
-                    ('N/A' not in valid_values) and
-                    ('*' not in valid_values)):
-                    raise BadValueError("Key " + fitsvar + "=" + value +
-                                " not in valid values " + repr(valid_values))
-            elif "*" not in valid_values and "N/A" not in valid_values:
-                raise MissingParameterError(
-                    "Required parameter " + repr(fitsvar) + " is missing.")
-
-    def check_relevance(self, lc_header):
-        """Raise an exception if this rmap doesn't apply to the instrument
-        mode defined in `header`.
-        """
-        try:
-            if self._relevance_expr != "ALWAYS":
-                relevant = eval(self._relevance_expr, {}, lc_header)
-            else:
-                relevant = True
-        except Exception, exc:
-            log.warning("Relevance check failed: " + str(exc))
-        else:
-            if not relevant:
-                raise IrrelevantReferenceTypeError(
-                    "Rmap does not apply to the given parameter set.")
 
     def _validate_key(self, key, valid_values_map, warned):
         """Validate a single selections `key` against the possible field values
