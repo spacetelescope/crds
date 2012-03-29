@@ -2,10 +2,19 @@
 reference recommendations for a particular context and dataset to prior bestrefs
 recommendations for the dataset.
 
-Prior recommendations can really come in two forms:
+Dataset parameters/headers required to compute best refs can come in three
+forms:
 
-1. Recommendations generated relative to a second context.
-2. Recommendations extracted from the FITS header.
+1. Dataset file headers
+2. Recalibrate cache file
+3. Database
+
+Prior recommendations can really come in four forms:
+
+1. Generated from a second context.
+2. Dataset file headers
+3. Recalibrate cache file
+4. Database
 
 To make new recommendations more quickly, recalibrate can store information
 about prior recommendations in a cache file,  including both the recommendations

@@ -486,7 +486,7 @@ class Mapping(object):
             if key not in self.selections:
                 msg = repr(other.basename) + " added " + repr(key)
                 differences.append(msg)
-        return differences
+        return sorted(differences)
                 
 # ===================================================================
 
