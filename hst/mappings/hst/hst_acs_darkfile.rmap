@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-03-05 08:54:46.542224',
+    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:18.965257',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '53cb2bc5ffaf98c356856afb0ef4f72cacae3b34',
+    'sha1sum' : '074a5f93bcff46468a0d66156738c693a7e7df8c',
 }
 
 selector = Match({

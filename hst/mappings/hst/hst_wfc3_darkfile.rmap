@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-03-05 08:55:50.720149',
+    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:59.449662',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'ff9af387018522659de049fa6fcb0df8dc60bcd2',
+    'sha1sum' : 'a033d44adb4e96979db7b5a13d55d7b7468f7fb7',
 }
 
 selector = Match({
@@ -721,6 +721,20 @@ selector = Match({
         '2012-01-25 08:21:19' : 'w2d19190i_drk.fits',
         '2012-01-30 11:24:44' : 'w2d19191i_drk.fits',
         '2012-02-02 13:52:55' : 'w2d19192i_drk.fits',
+        '2012-02-04 15:18:53' : 'w3e1718gi_drk.fits',
+        '2012-02-09 11:03:05' : 'w3e1718hi_drk.fits',
+        '2012-02-13 10:23:37' : 'w3e1718ii_drk.fits',
+        '2012-02-17 03:36:06' : 'w3e1718ji_drk.fits',
+        '2012-02-21 00:49:52' : 'w3e1718ki_drk.fits',
+        '2012-02-25 02:27:30' : 'w3e1718li_drk.fits',
+        '2012-02-29 00:04:17' : 'w3e1718mi_drk.fits',
+        '2012-02-29 17:14:38' : 'w3m14445i_drk.fits',
+        '2012-03-05 06:13:15' : 'w3m14446i_drk.fits',
+        '2012-03-09 05:56:14' : 'w3m14447i_drk.fits',
+        '2012-03-14 00:15:10' : 'w3m14448i_drk.fits',
+        '2012-03-18 16:26:29' : 'w421435hi_drk.fits',
+        '2012-03-21 12:50:05' : 'w421435ii_drk.fits',
+        '2012-03-25 10:13:13' : 'w421435ji_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', '2.0', '2.0', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',
