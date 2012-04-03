@@ -894,23 +894,22 @@ class ReferenceMapping(Mapping):
         """
         for key in self._required_parkeys:
             if key in self._tpn_valid_values:   # only check validatable keys
-                valid = self._tpn_valid_values[key]
-                if not valid:
+                tpn_valid = self._tpn_valid_values[key]
+                rmap_valid = self._rmap_valid_values[key]
+                if not tpn_valid:
+                    continue
+                if  "*" in rmap_valid or "N/A" in rmap_valid:
                     continue
                 if key not in header:
                     # If the TPN says N/A is OK,  ignore missing
-                    if len(valid) >= 1 and 'N/A' in valid:
-                        continue
-                    # If the rmap says N/A is OK,  ignore missing
-                    if key in self._rmap_valid_values and \
-                        "N/A" in self._rmap_valid_values[key]:
+                    if len(tpn_valid) >= 1 and 'N/A' in tpn_valid:
                         continue
                     raise ValueError("Required parkey " + repr(key) + " is missing.")
-                if header[key] not in valid:
+                if header[key] not in tpn_valid:
                     raise ValueError("Value of " + repr(header[key]) + 
                                      " for parameter " + repr(key) + 
                                      " is not one of valid values " + 
-                                     repr(valid))
+                                     repr(tpn_valid))
         
     def check_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated

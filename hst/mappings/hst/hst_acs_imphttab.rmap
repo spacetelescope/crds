@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-03-05 08:54:52.068487',
+    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:23.244214',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,17 +7,17 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'ec077905bda09022938efbf5f5f0349350096e43',
+    'sha1sum' : '190ec66e344b7b6f74ae6fe52d9f48098f28084e',
 }
 
 selector = Match({
     ('HRC',) : UseAfter({
-        '2002-03-01 00:00:00' : 'vbb18105j_imp.fits',
+        '2002-03-01 00:00:00' : 'w3m1716tj_imp.fits',
     }),
     ('SBC',) : UseAfter({
-        '2002-03-01 00:00:00' : 'vbb18106j_imp.fits',
+        '2002-03-01 00:00:00' : 'w3m17170j_imp.fits',
     }),
     ('WFC',) : UseAfter({
-        '2002-03-01 00:00:00' : 'vbb18107j_imp.fits',
+        '2002-03-01 00:00:00' : 'w3m17171j_imp.fits',
     }),
 })

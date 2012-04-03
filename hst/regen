@@ -7,7 +7,7 @@
 
 # Regenerate the CDBS reference file map, basically a cache of the 
 # /grp/hst/cdbs dir listing to use to find CDBS file paths fast.
-python locate.py
+# python locate.py
 
 # Process CDBS reference_file_defs.xml to extract information about when 
 # reference files are relevant to a parameter set,  when particular parameters

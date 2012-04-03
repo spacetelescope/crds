@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-03-05 08:53:49.292736',
+    'derived_from' : 'generated from CDBS database 2012-04-03 15:56:39.043340',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(detector != "sbc")',
-    'sha1sum' : 'd64b4d33a3ee169cf806bd2c7d944359b0569974',
+    'sha1sum' : '9dfe57d04a72f8613b9d3af8944435c489b9b52d',
 }
 
 selector = Match({
@@ -890,6 +890,9 @@ selector = Match({
         '2011-02-01 00:00:00' : 'v3b14330j_bia.fits',
         '2011-02-15 23:29:16' : 'v382219bj_bia.fits',
         '2011-07-07 15:15:25' : 'v841719oj_bia.fits',
+    }),
+    ('WFC', 'B', '2.0', '534.0', '512.0', '-3584.0', '-1535.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2011-12-24 10:40:15' : 'w392040ej_bia.fits',
     }),
     ('WFC', 'BC', '0.5', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-01-01 00:00:00' : 't4o1454dj_bia.fits',

@@ -9,6 +9,7 @@ import getpass
 from collections import OrderedDict
 import os.path
 import datetime
+import cProfile
 
 import pyodbc
 
@@ -116,7 +117,7 @@ HERE = os.path.dirname(__file__) or "."
 def get_password():
     if not hasattr(get_password, "_password"):
         try:
-            get_password._password = open(HERE + "/password").read()
+            get_password._password = open(HERE + "/password").read().strip()
         except:
             get_password._password = getpass.getpass("password: ")
     return get_password._password
@@ -466,7 +467,7 @@ def main():
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
-        testall()
+        cProfile.runctx("testall()", globals(), locals(), "testall.stats")
     else:
         print "usage: python cdbs_db.py [ dumpall | testall ]"
         sys.exit(-1)
