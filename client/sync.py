@@ -1,9 +1,10 @@
-"""This module is a command line script which dowloads the references and mappings
-required to support a set of contexts from the CRDS server:
+"""This module is a command line script which dowloads the references and 
+mappings required to support a set of contexts from the CRDS server:
 
 Mappings and references are downloaded to either a standard location in
-the Python package structure for CRDS (e.g. crds.hst.mappings or crds.hst.references)
-or to locations specified by CRDS_REFPATH and CRDS_MAPPATH environment variables.
+the Python package structure for CRDS (e.g. crds.hst.mappings or 
+crds.hst.references) or to locations specified by CRDS_REFPATH and CRDS_MAPPATH 
+environment variables.
 
 Synced contexts can be explicitly listed:
 
@@ -157,7 +158,8 @@ def determine_contexts(args):
                 if rmin <= id <= rmax:
                     contexts.append(context)
     else:
-        raise ValueError("Must explicitly list contexts, a context id --range, or --all.") 
+        raise ValueError("Must explicitly list contexts, " +
+                         "a context id --range, or --all.") 
     return contexts
 
 def main():

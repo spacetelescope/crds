@@ -6,7 +6,7 @@ import re
 
 # import pyfits,  import deferred until required
 
-from crds import (log, compat)
+from crds import compat
 
 # ===================================================================
 
@@ -118,11 +118,14 @@ def ensure_dir_exists(fullpath):
 
 def get_locator_module(observatory):
     """Return the project specific policy module for `observatory`."""
-    assert re.match("[A-Za-z0-9]+", observatory), "Bad observatory " + \
-        repr(observatory)
-    exec("import crds."+observatory+".locate as locate", locals(), locals())
+    if observatory == "hst":
+        import crds.hst.locate as locate
+    elif observatory == "jwst":
+        import crds.jwst.locate as locate
+    else:
+        raise ValueError("Unknown observatory " + repr(observatory))
     return locate
- 
+
 def get_file_properties(observatory, filename):
     """Return instrument,filekind,id fields associated with filename.
     """
@@ -205,7 +208,7 @@ def instrument_to_observatory(instrument):
     instrument = instrument.lower()
     try:
         import crds.hst
-    except importError:
+    except ImportError:
         pass
     else:
         if instrument in crds.hst.INSTRUMENTS:

@@ -1,5 +1,5 @@
-"""uses.py defines functions which will list the files which use a given reference
-or mapping file.
+"""uses.py defines functions which will list the files which use a given 
+reference or mapping file.
 
 >>> findall_mappings_using_reference("u451251ej_bpx.fits")
 ['hst.pmap', 'hst_acs.imap', 'hst_acs_bpixtab.rmap']
@@ -8,7 +8,7 @@ or mapping file.
 import sys
 import os.path
 
-from crds import (rmap, utils, pysh)
+from crds import (rmap, pysh)
 
 def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention 
@@ -71,15 +71,17 @@ def uses(files, observatory="hst"):
     """
     mappings = []
     for file_ in files:
-        if file_.endswith(".fits"):
-            mappings.extend(
-                findall_mappings_using_reference(file_, observatory))
-        elif file_.endswith(".rmap"):
+        if file_.endswith(".rmap"):
             mappings.extend(
                 findall_mappings_using_rmap(file_, observatory))
         elif file_.endswith(".imap"):
             mappings.extend(
                 findall_pmaps_using_imap(file_, observatory))
+        elif file_.endswith(".pmap"):
+            pass  # nothing refers to a .pmap
+        else:
+            mappings.extend(
+                findall_mappings_using_reference(file_, observatory))
     return sorted(list(set(mappings)))
 
 def main(observatory, files):

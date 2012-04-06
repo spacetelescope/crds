@@ -35,29 +35,35 @@ hst_acs_ccdtab.rmap
 ...
 
 """
-import sys
-import os
-import os.path
 import argparse
-import re
 
-import crds.client.api as api
-from crds import (rmap, pysh, log)
+from crds import log
 
 from crds.client.sync import (mapping, observatory, nrange, determine_contexts,
                               get_context_references, get_context_mappings)
+
 def list_references(contexts):
+    """Consult the server and print the names of all references associated with
+    the given contexts.
+    """
     for ref in get_context_references(contexts):
         log.write(ref)
 
 def list_mappings(contexts):
-    for mapping in get_context_mappings(contexts):
-        log.write(mapping)
+    """Consult the server and print the names of all CRDS mappings associated 
+    with the given contexts.
+    """
+    for mapfile in get_context_mappings(contexts):
+        log.write(mapfile)
 
 def main():
+    """Parse the command line into contexts and command qualifiers,  then list
+    files accordingly.
+    """
     log.set_verbose(True)
     parser = argparse.ArgumentParser(
-        description='List reference and/or mapping files associated with the specified contexts.')
+        description='List reference and/or mapping files " + \
+            "associated with the specified contexts.')
     parser.add_argument('--references', action='store_true',
         dest="list_references",
         help='print names of reference files referred to by contexts')

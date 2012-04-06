@@ -186,7 +186,7 @@ class NumericalValidator(KeywordValidator):
             if value < min or value > max:
                 raise ValueError("Value for " + repr(self._info.name) + " of " + 
                     repr(value) + " is outside acceptable range " + 
-                    self.infos.values[0])
+                    self._info.values[0])
         else:   # First try a simple exact string match check
             KeywordValidator._check_value(self, value)
 
@@ -325,12 +325,12 @@ def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
     and check `fitsname` against them.
     """
     if dump_provenance:
-        dump_multi_key(fitsname, ["DESCRIP","COMMENT","PEDIGREE","USEAFTER",
+        dump_multi_key(fitsname, ["DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER",
                                   "HISTORY",])
     for checker in get_validators(fitsname):
         try:
             checker.check(fitsname)
-        except Exception, exc:
+        except Exception:
             if trap_exceptions:
                 log.error("Checking", repr(checker._info.name), "in", 
                           repr(fitsname))

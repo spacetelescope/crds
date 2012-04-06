@@ -143,7 +143,7 @@ class MappingValidator(ast.NodeVisitor):
     def __getattr__(self, attr):
         if attr.startswith("visit_"):
             if attr[len("visit_"):] in self.illegal_nodes:
-                return visit_Illegal
+                return self.visit_Illegal
             else:
                 return self.generic_visit
         else:
@@ -427,7 +427,8 @@ class Mapping(object):
         used to determine file type when `dataset` is a temporary file with a
         useless name.
         """
-        header = data_file.get_conditioned_header(dataset, original_name=original_name)
+        header = data_file.get_conditioned_header(
+            dataset, original_name=original_name)
         return self.minimize_header(header)
 
     def minimize_header(self, header):
@@ -481,7 +482,7 @@ class Mapping(object):
             else:
                 differences.extend(self.selections[key].difference(
                     other.selections[key], 
-                    path + ((self.basename, other.basename),))                                                 )
+                    path + ((self.basename, other.basename),)))
         for key in other.selections:
             if key not in self.selections:
                 msg = repr(other.basename) + " added " + repr(key)
@@ -489,22 +490,6 @@ class Mapping(object):
         return sorted(differences)
                 
 # ===================================================================
-
-"""
-header = {
-    'observatory':'HST',
-    'parkey' : ('INSTRUME'),
-    'mapping': 'pipeline',
-}
-
-selector = {
-    'ACS': 'hst_acs_00023.imap',
-    'COS':'hst_cos_00023.imap', 
-    'STIS':'hst_stis_00023.imap',
-    'WFC3':'hst_wfc3_00023.imap',
-    'NICMOS':'hst_nicmos_00023.imap',
-})
-"""
 
 class PipelineContext(Mapping):
     """A pipeline context describes the context mappings for each instrument
@@ -578,28 +563,6 @@ class PipelineContext(Mapping):
         return self.get_imap(instrument).get_filekinds(dataset)
 
 # ===================================================================
-
-"""
-header = {
-    'observatory':'HST',
-    'instrument': 'ACS',
-    'mapping':'instrument',
-    'parkey' : ('REFTYPE',),
-}
-
-selector = Match({
-    'BIAS':  'hst_acs_bias_0021.rmap',
-    'CRREJ': 'hst_acs_crrej_0003.rmap',
-    'CCD':   'hst_acs_ccd_0002.rmap',
-    'IDC':   'hst_acs_idc_0005.rmap',
-    'LIN':   'hst_acs_lin_0002.rmap',
-    'DISTXY':'hst_acs_distxy_0004.rmap',
-    'BPIX':  'hst_acs_bpic_0056.rmap',
-    'MDRIZ': 'hst_acs_mdriz_0001.rmap',
-    ...
-})
-
-"""
 
 class InstrumentContext(Mapping):
     """An instrument context describes the rmaps associated with each filetype
@@ -703,13 +666,13 @@ class InstrumentContext(Mapping):
     def get_valid_values_map(self, condition=False, remove_special=True):
         """Based on the TPNs,  return a mapping from parkeys to their valid
         values for all parkeys for all filekinds of this instrument.   This will
-        return the definitive lists of legal values,  not all of which are required
-        to be represented in rmaps;  these are the values that *could* be in an
-        rmap,  not necessarily what is in any given rmap to match.
+        return the definitive lists of legal values,  not all of which are 
+        required to be represented in rmaps;  these are the values that *could*
+        be in an rmap,  not necessarily what is in any given rmap to match.
         
-        If `condition` is True,  values are filtered with utils.condition_value()
-        to match their rmap string appearance.   If False,  values are returned
-        as raw TPN values and types.
+        If `condition` is True,  values are filtered with 
+        utils.condition_value() to match their rmap string appearance.   If 
+        False,  values are returned as raw TPN values and types.
         
         If `remove_special` is True,  values of ANY or N/A are removed from the
         lists of valid values.
@@ -780,8 +743,8 @@ class ReferenceMapping(Mapping):
             self._fallback_header = lambda self, header: None
 
     def get_best_ref(self, header_in):
-        """Return the single reference file basename appropriate for `header_in` 
-        selected by this ReferenceMapping.
+        """Return the single reference file basename appropriate for 
+        `header_in` selected by this ReferenceMapping.
         """
         self.check_relevance(header_in)  # Is this rmap appropriate for header
         self.validate_header(header_in)  # Are required params present and valid
@@ -904,7 +867,8 @@ class ReferenceMapping(Mapping):
                     # If the TPN says N/A is OK,  ignore missing
                     if len(tpn_valid) >= 1 and 'N/A' in tpn_valid:
                         continue
-                    raise ValueError("Required parkey " + repr(key) + " is missing.")
+                    raise ValueError("Required parkey " + repr(key) + 
+                                     " is missing.")
                 if header[key] not in tpn_valid:
                     raise ValueError("Value of " + repr(header[key]) + 
                                      " for parameter " + repr(key) + 
@@ -974,14 +938,17 @@ def load_mapping(mapping, **keys):
 
 HERE = os.path.dirname(__file__) or "./"
 
-# CRDS_MAPPATH is the location of the client or sever side mapping directory
-# tree,  nominally the package location of crds.<observatory>,  .e.g. crds.hst
 def get_crds_mappath():
+    """CRDS_MAPPATH is the location of the client or sever side mapping 
+    directory tree,  defaulting to the package directory of crds.mappings.
+    """
     default = os.path.dirname(utils.get_object("crds.mappings").__file__)
     return os.environ.get("CRDS_MAPPATH", default)
 
-# CRDS_REFPATH is the path to the local/client copy of reference files.
 def get_crds_refpath():
+    """CRDS_REFPATH is the path to the local/client copy of reference files,
+    defaulting to the package directory for crds.references.
+    """
     default = os.path.dirname(utils.get_object("crds.references").__file__)
     return os.environ.get("CRDS_REFPATH", default)
 
@@ -998,7 +965,6 @@ def locate_file(filepath, observatory="hst"):
         return locate_mapping(filepath, observatory)
     else:
         return locate_reference(filepath, observatory)
-    return where
 
 def locate_reference(ref, observatory="hst"):
     """Return the absolute path where reference `ref` should be located."""
