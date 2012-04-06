@@ -1,7 +1,6 @@
 """This module manages the automatic generation of new context files based on
 a list of new rmaps and a baseline context.
 """
-import sys
 import os.path
 import shutil
 import re
@@ -29,7 +28,7 @@ def get_update_map(old_pipeline, updated_rmaps):
     pctx = rmap.get_cached_mapping(old_pipeline)
     updates = {}
     for update in updated_rmaps:
-        instrument, filekind = utils.get_file_properties(
+        instrument, _filekind = utils.get_file_properties(
                 pctx.observatory, update)
         imap_name = pctx.get_imap(instrument).filename
         if imap_name not in updates:
@@ -104,7 +103,8 @@ def fake_name(old_map):
     if m:
         serial = int(m.group(1)) + 1
         new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
-    elif re.match(r"\w+\.[pir]map", old_map):   # if no serial,  start off existing sequence as 0
+    elif re.match(r"\w+\.[pir]map", old_map):   
+        # if no serial,  start off existing sequence as 0
         parts = os.path.splitext(old_map)
         new_map = fake_name(parts[0] + "_0000" + parts[1])
     else:

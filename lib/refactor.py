@@ -6,7 +6,7 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, utils, data_file, timestamp, compat, log, selectors, checksum)
+from crds import (rmap, data_file, timestamp, compat, log, selectors, checksum)
 from crds.timestamp import DATETIME_RE_STR
 
 # ============================================================================
@@ -41,8 +41,8 @@ def replace_header_value(filename, key, new_value):
 
 class RefactorAction(object):
     """Records and formats info regarding a refactoring operation."""
-    def __init__(self, rmap_name, action, ref_file, ref_match_tuple, rmap_match_tuple, 
-                 useafter, replaced_file):
+    def __init__(self, rmap_name, action, ref_file, ref_match_tuple, 
+                 rmap_match_tuple, useafter, replaced_file):
         self.rmap_name = str(os.path.basename(rmap_name))
         self.action = action
         self.ref_file = str(os.path.basename(ref_file))
@@ -73,14 +73,15 @@ class RefactorAction(object):
         return " ".join([str(x) for x in parts])
 
 def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
-    """Given the rmap text `old_rmap_contents`,  generate and return the contents
-    of a new rmap with `reffile` inserted at all matching parkey 
+    """Given the rmap text `old_rmap_contents`,  generate and return the 
+    contents of a new rmap with `reffile` inserted at all matching parkey 
     locations.  This routine assumes HST standard selector organization,  
     Match -> UseAfter.
     
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
-    loaded_rmap = rmap.ReferenceMapping.from_string(old_rmap_contents, ignore_checksum=True)
+    loaded_rmap = rmap.ReferenceMapping.from_string(
+        old_rmap_contents, ignore_checksum=True)
 
     # XXX Hack alert skip DATE-OBS, TIME-OBS
     parkeys = loaded_rmap.get_required_parkeys()[:-2]  
@@ -109,8 +110,9 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
         new_contents = _rmap_add_useafter(
             new_contents, rmap_tuple, useafter_date, 
             os.path.basename(reffile))
-        actions.append(RefactorAction(old_rmap_name, kind, reffile, ref_match_tuple,
-                        rmap_tuple, useafter_date, replaced_filename,))
+        actions.append(RefactorAction(old_rmap_name, kind, reffile, 
+                                      ref_match_tuple, rmap_tuple, 
+                                      useafter_date, replaced_filename,))
     return new_contents, actions, useafter_date
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
@@ -123,7 +125,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     contents = open(old_rmap).read()
     total_actions = []
     for reference in inserted_references:
-        contents, actions, useafter = \
+        contents, actions, _useafter = \
             _rmap_insert_reference(old_rmap, contents, reference)
         total_actions.extend(actions)
     if total_actions:
@@ -156,12 +158,14 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
                 matches.append(rmap_tuple)
     return matches
     
-def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, useafter_file):
+def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, 
+                       useafter_file):
     """Add one new useafter date / file to the `match_tuple` case of
     `old_rmap_contents`,  returning the modified rmap as a string.   If
     `match_tuple` doesn't exist in `old_mapping`,  add `match_tuple` as well.
     """
-    # print "adding useafter", old_rmap, new_rmap, match_tuple, useafter_date, useafter_file
+    # print "adding useafter", old_rmap, new_rmap, match_tuple, useafter_date, 
+    # useafter_file
     old_rmap_file = cStringIO.StringIO(old_rmap_contents)
     new_mapping_file = cStringIO.StringIO()
     state = "find tuple"
@@ -176,7 +180,8 @@ def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, useafter_f
                     state = "find useafter"
             elif line.strip() == "})":   # end of rmap
                 # Never found match,  report an error.
-                raise ValueError("Couldn't find match tuple " + repr(match_tuple))
+                raise ValueError("Couldn't find match tuple " + 
+                                 repr(match_tuple))
         elif state == "find useafter":
             if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause
@@ -230,7 +235,8 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
                     state = "find useafter"
             elif line.strip() == "})":   # end of rmap
                 # Never found match,  report an error.
-                raise NoMatchTupleError("Couldn't find match tuple " + repr(match_tuple))
+                raise NoMatchTupleError("Couldn't find match tuple " + 
+                                        repr(match_tuple))
         elif state == "find useafter":
             if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause
@@ -265,13 +271,15 @@ def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
 # ===========================================================================
 
 def main():
-    if sys.argv[1] == "insert":
+    if len(sys.argv) >= 2 and sys.argv[1] == "insert":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
         rmap_insert_references(old_rmap, new_rmap, inserted_references)
     else:
-        print "usage: python -m crds.refactor insert <old_rmap> <new_rmap> <references...>"
+        print "usage: python -m crds.refactor insert " \
+                "<old_rmap> <new_rmap> <references...>"
+        sys.exit(-1)
 
 if __name__ == "__main__":
     main()

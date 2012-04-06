@@ -2,7 +2,6 @@
 here make remote service calls to the CRDS server to obtain mapping
 or reference files and cache them locally.
 """
-import sys
 import os
 import os.path
 import base64
@@ -14,8 +13,7 @@ import crds.utils as utils
 import crds.rmap as rmap
 
 # ==============================================================================
-
-from crds.client.proxy import CheckingProxy
+from crds.client.proxy import CheckingProxy, ServiceError
 
 __all__ = ["getreferences",
            "get_default_context",
@@ -47,13 +45,15 @@ __all__ = ["getreferences",
 
 URL_SUFFIX = "/json/"
 URL = os.environ.get("CRDS_SERVER_URL", 'http://etcbrady.stsci.edu:4997')
+S = None
 
 def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
     e.g. 'http://localhost:8000'
     """
     if not re.match("http://(\w+\.?)*\w(:\d+)?$", url):
-        raise ValueError("Invalid URL " + repr(url) + " , don't use trailing /")
+        raise ValueError("Invalid URL " + repr(url) + 
+                         " , don't use trailing /")
     global URL, S
     URL = url + URL_SUFFIX
     S = CheckingProxy(URL, version="1.0")
@@ -66,7 +66,7 @@ def get_crds_server():
 
 set_crds_server(URL)
 
-# ==============================================================================
+# =============================================================================
 def list_mappings(observatory="hst", glob_pattern=".*"):
     """Return the list of mappings associated with `observatory`
     which match `glob_pattern`.
@@ -82,7 +82,7 @@ def is_known_mapping(mapping):
     """Return True iff `mapping` is a known/official CRDS mapping file."""
     try:
         return len(get_mapping_url(mapping, mapping)) > 0
-    except Exception, exc:
+    except ServiceError:
         return False
     
 def get_mapping_data(pipeline_context, mapping):
@@ -93,8 +93,8 @@ def get_mapping_data(pipeline_context, mapping):
     
 def get_mapping_names(pipeline_context):
     """Get the complete set of pmap, imap, and rmap basenames required
-    for the specified pipeline_context.   context can be an observatory, pipeline,
-    or instrument context.
+    for the specified pipeline_context.   context can be an observatory, 
+    pipeline, or instrument context.
     """
     return [str(x) for x in S.get_mapping_names(pipeline_context)]
 
@@ -146,9 +146,9 @@ class FileCacher(object):
         return urllib2.urlopen(url).read()
 
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
-        """Given a list of basename `mapping_names` which are pertinent to the given
-        `pipeline_context`,   cache the mappings locally where they can be used
-        by CRDS.
+        """Given a list of basename `mapping_names` which are pertinent to the 
+        given `pipeline_context`,   cache the mappings locally where they can 
+        be used by CRDS.
         """
         if isinstance(names, dict):
             names = names.values()
@@ -156,21 +156,20 @@ class FileCacher(object):
         for i, name in enumerate(names):
             localpath = self._locate(pipeline_context, name)
             if (not os.path.exists(localpath)) or ignore_cache:
-                log.verbose("Cache miss. Fetching[%d]" % i, repr(name), "to", repr(localpath))
+                log.verbose("Cache miss. Fetching[%d]" % i, repr(name), 
+                            "to", repr(localpath))
                 utils.ensure_dir_exists(localpath)
                 contents = self._http_get_data(pipeline_context, name)
                 open(localpath,"w+").write(contents)
             else:
-                log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), "at", repr(localpath))
+                log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), 
+                            "at", repr(localpath))
             localpaths[name] = localpath
         return localpaths
 
     def _locate(self, pipeline_context, name):
         return rmap.locate_file(name)
 
-        # might be cleaner as:
-        # getattr(rmap.get_cached_mapping(pipeline_context).locate, self._locator)(name)
-    
 # ==============================================================================
 
 class MappingCacher(FileCacher):
@@ -226,24 +225,27 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     bestrefs = dict(bestrefs)
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
-            log.verbose("Reference type", repr(filetype),"NOT FOUND.  Ignoring.")
+            log.verbose("Reference type", repr(filetype), 
+                        "NOT FOUND.  Ignoring.")
             del bestrefs[filetype]
-    localrefs = REFERENCE_CACHER.get_local_files(pipeline_context, bestrefs, ignore_cache=ignore_cache)
+    localrefs = REFERENCE_CACHER.get_local_files(pipeline_context, bestrefs, 
+                                                 ignore_cache=ignore_cache)
     refs = {}
     for filetype, refname in bestrefs.items():
         refs[str(filetype)] = str(localrefs[refname])
     return refs
 
 def cache_best_references(pipeline_context, header, ignore_cache=False):
-    """Given the FITS `header` of a dataset and a `pipeline_context`,  determine the 
-    best set of reference files for processing the dataset,  cache them locally,  and
-    return the mapping  { filekind : local_file_path }.
+    """Given the FITS `header` of a dataset and a `pipeline_context`, determine
+    the best set of reference files for processing the dataset,  cache them 
+    locally,  and return the mapping  { filekind : local_file_path }.
     """
     best_refs = get_best_references(pipeline_context, header)
     local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
     return local_paths
 
-def cache_best_references_for_dataset(pipeline_context, dataset, ignore_cache=False):
+def cache_best_references_for_dataset(pipeline_context, dataset, 
+                                      ignore_cache=False):
     """
     determine the best set of reference files,  cache the references
     locally,  and return the mapping  { filekind : local_file_path }.
@@ -276,13 +278,13 @@ def getreferences(parameters, reftypes=None, context=None):
             "Non-string key " + repr(key) + " in parameters."
         try:
             parameters[key]
-        except Exception, exc:
+        except Exception:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters.")
         assert isinstance(parameters[key], str), \
-            "Non-string value " + repr(value) + " for key " + repr(key) + \
-            " in parameters."
-    assert isinstance(reftypes, (list,tuple,type(None))), \
+            "Non-string value " + repr(parameters[key]) + \
+            " for key " + repr(key) + " in parameters."
+    assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
     if reftypes is not None:
         for reftype in reftypes:
