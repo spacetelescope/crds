@@ -1305,10 +1305,36 @@ class UseAfterParameters(Parameters):
     def instantiate(self, parkey, header):
         assert tuple(parkey[0]) == ("DATE-OBS","TIME-OBS")
         return Parameters.instantiate(self, parkey, header)
+    
+class VersionDepParameters(Parameters):
+    """Parameters for VersionDepSelector"""
+    selector = VersionDepSelector
+    
+class SWVersionDepParameters(Parameters):
+    """Parameters for SWVersionDepSelector"""
+    selector = SWVersionDepSelector
+    
+class ClosestTimeParameters(Parameters):
+    """Parameters for ClosestTimeSelector"""
+    selector = ClosestTimeSelector
+    
+class ClosestGeometricRatioParameters(Parameters):
+    """Parameters for ClosestGeometricRatioSelector"""
+    selector = ClosestGeometricRatioSelector
+    
+class LinearInterpolationParameters(Parameters):
+    """Parameters for LinearInterpolationSelector"""
+    selector = LinearInterpolationSelector
 
+# Appearance in rmap has slightly abbreviated syntax,  minus "Parameters"
 SELECTORS = {
     "Match"  : MatchingParameters,
     "UseAfter" : UseAfterParameters,
+    "VersionDep" : VersionDepParameters,
+    "SWVersionDep" : SWVersionDepParameters,
+    "ClosestTime" : ClosestTimeParameters,
+    "ClosestGeometricRatio": ClosestGeometricRatioParameters,
+    "LinearInterpolation": LinearInterpolationParameters,
 }
 
 # ==============================================================================
