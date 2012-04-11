@@ -93,7 +93,7 @@ def condition_header(header, needed_keys=[]):
     """
     conditioned = {}
     for key in needed_keys or header:
-        conditioned[key] = utils.condition_value(header[key])
+        conditioned[key.upper()] = utils.condition_value(header[key])
     return conditioned
     
 def get_fits_header(fname, needed_keys=[]):

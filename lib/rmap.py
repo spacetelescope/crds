@@ -217,7 +217,13 @@ class Mapping(object):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.header:
             val = self.header[attr]
-            return val.lower() if isinstance(val, str) else val
+            if isinstance(val, str):
+                if val.startswith("(") and val.endswith(")"):
+                    return val
+                else:
+                    return val.lower()
+            else:
+                return val
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
 
@@ -879,13 +885,10 @@ class ReferenceMapping(Mapping):
         """Raise an exception if this rmap's relevance expression evaluated
         in the context of `header` returns False.
         """
-        # relevance expressions are in all lower case.
-        lc_header = {}
-        for key in header:
-            lc_header[key.lower()] = header[key].lower()
+        # header keys and values are upper case.  rmap attrs are lower case.
         try:
             if self._relevance_expr != "always":
-                relevant = eval(self._relevance_expr, {}, lc_header)
+                relevant = eval(self._relevance_expr, {}, header)
             else:
                 relevant = True
         except Exception, exc:

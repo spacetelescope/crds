@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:44.813266',
+    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:43.677694',
     'filekind' : 'BRFTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_brftab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(detector == "fuv")',
-    'sha1sum' : '7c6465f80494a67887ed505e93247d7ec54f87c3',
+    'relevance' : '(DETECTOR == "FUV")',
+    'sha1sum' : '1c60e6570211b8d08ac1c5ff1feed658595dc8f5',
 }
 
 selector = Match({

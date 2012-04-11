@@ -21,22 +21,22 @@ essentially done by a tree walk through a set of nested Selectors.
 A concrete example should make things clearer.   Here,  we describe which files
 to use for a particular wavelength and software version:
 
->>> r = ClosestGeometricRatioSelector('effective_wavelength', {
-...  1.2 : SWVersionDepSelector({
+>>> r = GeomtricallyNearestSelector(('effective_wavelength',), {
+...  1.2 : SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_73.fits',
 ...                'default': 'cref_flatfield_123.fits',
 ...          }),
-...  1.5 : SWVersionDepSelector({
+...  1.5 : SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_74.fits',
 ...                'default': 'cref_flatfield_124.fits',
 ...         }),
-...  5.0 : SWVersionDepSelector({
+...  5.0 : SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_87.fits',
 ...                'default': 'cref_flatfield_137.fits',
 ...        }),
 ... })
 
-ClosestGeometricRatioSelector and SWVersionDepSelector are both Selector
+GeomtricallyNearestSelector and SelectVersionSelector are both Selector
 subclasses.  At calibration time,  we choose from among the possible reference
 files based on our rules and the known context:
 
@@ -46,32 +46,32 @@ files based on our rules and the known context:
 Selectors are designed to be nestable and can describe rules of arbitrary type
 and complexity.   Here we add time to the selection criteria:
 
->>> r = ClosestGeometricRatioSelector('effective_wavelength', {
-...   1.2: ClosestTimeSelector("time", {
-...            '2017-4-24': SWVersionDepSelector({
+>>> r = GeomtricallyNearestSelector(('effective_wavelength',), {
+...   1.2: ClosestTimeSelector(("time",), {
+...            '2017-4-24': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_73.fits',
 ...                'default': 'cref_flatfield_123.fits',
 ...            }),
-...            '2018-2-1': SWVersionDepSelector({
+...            '2018-2-1': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_223.fits',
 ...                'default': 'cref_flatfield_222.fits',
 ...            }),
-...            '2019-4-15': SWVersionDepSelector({
+...            '2019-4-15': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_518.fits',
 ...                'default': 'cref_flatfield_517.fits',
 ...            }),
 ...        }),
-...  1.5: ClosestTimeSelector("time", {
-...            '2017-4-24': SWVersionDepSelector({
+...  1.5: ClosestTimeSelector(("time",), {
+...            '2017-4-24': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_74.fits',
 ...                'default': 'cref_flatfield_124.fits',
 ...            }),
-...            '2019-1-1': SWVersionDepSelector({
+...            '2019-1-1': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_490.fits',
 ...                'default': 'cref_flatfield_489.fits',
 ...            }),
 ...        }),
-...  5.0: SWVersionDepSelector({
+...  5.0: SelectVersionSelector(('sw_version',), {
 ...            '<5': 'cref_flatfield_87.fits',
 ...            'default': 'cref_flatfield_137.fits',
 ...        }),
@@ -81,7 +81,7 @@ and complexity.   Here we add time to the selection criteria:
 'cref_flatfield_490.fits'
 
 Note that the context variables used by some Selector's are implicit,
-with ClosestTime utilizing "time" and SWVersionDep utilizing "sw_version".
+with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
 import datetime
 import timestamp
@@ -141,13 +141,14 @@ class Selector(object):
     complete set of nested choices.   Each nested Selector only uses those 
     portions of the overall context that it requires.
     """
-    def __init__(self, parameters, selections):
+    def __init__(self, parameters, selections, rmap_header=None):
         assert isinstance(parameters, (list, tuple)), \
             "First parameter should be a list or tuple of header keys"
         assert isinstance(selections, dict),  \
             "Second parameter should be a dictionary { key: selection, ... }."
         self._parameters = list(parameters)
         self._selections = sorted(selections.items())
+        self._rmap_header = rmap_header or {} 
         
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._parameters) \
@@ -552,16 +553,14 @@ class MatchingSelector(Selector):
     rmap_name = "Match"
     
     def __init__(self, parameters, selections, rmap_header=None):
-        Selector.__init__(self, parameters, selections)  # largely overridden
-        if rmap_header is None:
-            rmap_header = {}
-        self._substitutions = rmap_header.get("substitutions", {})
+        Selector.__init__(self, parameters, selections, rmap_header)  # largely overridden
         self._parameters = tuple(parameters)
         self._value_map = {}
         self._selections = sorted(selections.items())
 
         selections = self.fix_simple_keys(selections)
         
+        self._substitutions = self._rmap_header.get("substitutions", {})
         selections = self.do_substitutions(selections, self._substitutions)
         
         self._match_selections = self.get_matcher_selections(selections)
@@ -859,9 +858,6 @@ class UseAfterSelector(Selector):
     ...
     ValidationError: '2003-09-35 01:28:00' date has invalid format.
     """
-    def __init__(self, parameters, datemapping, rmap_header=None):
-        Selector.__init__(self, parameters, datemapping)
-
     def choose(self, header):
         date = timestamp.reformat_date(
             " ".join([header[x] for x in self._parameters]))
@@ -912,11 +908,11 @@ class UseAfterSelector(Selector):
 
 # ==============================================================================
 
-class ClosestGeometricRatioSelector(Selector):
-    """ClosestGeometricRatio selects the choice whose key is at the smallest
+class GeomtricallyNearestSelector(Selector):
+    """GeomtricallyNearest selects the choice whose key is at the smallest
     distance from the specified condition value.
 
-    >>> r = ClosestGeometricRatioSelector("effective_wavelength", {
+    >>> r = GeomtricallyNearestSelector(("effective_wavelength",), {
     ...  1.2 : "cref_flatfield_120.fits",
     ...  1.5 : "cref_flatfield_124.fits",
     ...  5.0 : "cref_flatfield_137.fits",
@@ -946,12 +942,6 @@ class ClosestGeometricRatioSelector(Selector):
     >>> r.choose({"effective_wavelength":5.1})
     'cref_flatfield_137.fits'
     """
-    def __init__(self, keyname, selections):
-        if not isinstance(keyname, str):
-            raise TypeError("First parameter of ClosestGeometricRatio should be"
-                            " the name of a variable to check,  i.e. an str.")
-        Selector.__init__(self, [keyname], selections)
-
     def choose(self, header):
         import numpy as np
         keyval = float(header[self._parameters[0]])
@@ -966,7 +956,7 @@ class LinearInterpolationSelector(Selector):
     """LinearInterpolation selects the the bracketing values of the
     given context variable,  returning a two-tuple.
 
-    >>> r = LinearInterpolationSelector("effective_wavelength", {
+    >>> r = LinearInterpolationSelector(("effective_wavelength",), {
     ...   1.2: "cref_flatfield_120.fits",
     ...   1.5: "cref_flatfield_124.fits",
     ...   5.0: "cref_flatfield_137.fits",
@@ -994,11 +984,6 @@ class LinearInterpolationSelector(Selector):
     >>> r.choose({"effective_wavelength":6.0})
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
     """
-    def __init__(self, keyname, selections):
-        if not isinstance(keyname, str):
-            raise TypeError("First parameter should be variable name.")
-        Selector.__init__(self, [keyname], selections)
-
     def choose(self, header):
         keyval = header[self._parameters[0]]
         index = 0
@@ -1139,9 +1124,9 @@ class VersionRelation(object):
                                  repr(self.version) + " and " + repr(other))
         return result
 
-class VersionDepSelector(Selector):
-    """VersionDep chooses from among it's selections based on a number of
-    version relations. Each selection of a VersionDep consists of a version
+class SelectVersionSelector(Selector):
+    """SelectVersion chooses from among it's selections based on a number of
+    version relations. Each selection of a SelectVersion consists of a version
     relation and a filename or nested Selector:
 
     ('< 5', 'cref_flatfield_518.fits')
@@ -1168,34 +1153,13 @@ class VersionDepSelector(Selector):
 
     ('= (5,0,1)', 'cref_flatfield_501.fits')
 
-    In this case the tuple (5,0,1) directly represents the common 
-    representation of versions as major, minor, and point releases.   Note that
-    for non-numerical version expressions,  the type of the eval'ed expression
-    must exactly match the type of the choose()-time parameter,  i.e. in the 
-    previous example the choose()-time parameter must be a tuple.
-    """
-    versionvar = "header variable name for this version kind"
+    In this case the tuple (5,0,1) represents the common representation of
+    versions as major, minor, and point releases.   Note that for non-numerical
+    version expressions,  the type of the eval'ed expression must exactly match
+    the type of the choose()-time parameter,  i.e. in the previous example the
+    choose()-time parameter must be a tuple.
 
-    def __init__(self, selections):
-        Selector.__init__(self, [], self.parse_selections(selections))
-
-    def parse_selections(self, selections):
-        """Convert relation string keys into runtime comparator objects."""
-        return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
-
-    def choose(self, header):
-        version = header[self.versionvar]
-        index = 0
-        while self._selections[index][0] < version:
-            index += 1
-        return self.get_choice(self._selections[index], header)
-
-class SWVersionDepSelector(VersionDepSelector):
-    """SWVersionDep represents using the client application s/w version as the
-    selection criteria.  SWVersionDep implicitly uses the choose() method
-    keyword parameter 'sw_version'.
-
-    >>> r = SWVersionDepSelector({
+    >>> r = SelectVersionSelector(("sw_version",), {
     ...  '<3.1':    'cref_flatfield_65.fits',
     ...  '<5':      'cref_flatfield_73.fits',
     ...  'default': 'cref_flatfield_123.fits',
@@ -1213,7 +1177,20 @@ class SWVersionDepSelector(VersionDepSelector):
     >>> r.choose({"sw_version":2.0})
     'cref_flatfield_65.fits'
     """
-    versionvar = "sw_version"
+    def __init__(self, parkeys, selections, rmap_header=None):
+        Selector.__init__(self, parkeys, self.parse_selections(selections), 
+                          rmap_header)
+
+    def parse_selections(self, selections):
+        """Convert relation string keys into runtime comparator objects."""
+        return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
+
+    def choose(self, header):
+        version = header[self._parameters[0]]
+        index = 0
+        while self._selections[index][0] < version:
+            index += 1
+        return self.get_choice(self._selections[index], header)
 
 # ==============================================================================
 
@@ -1221,7 +1198,7 @@ class ClosestTimeSelector(Selector):
     """ClosestTime chooses the selection whose time most closely matches the
     choose() method "time" keyword parameter
 
-    >>> t = ClosestTimeSelector("time", {
+    >>> t = ClosestTimeSelector(("time",), {
     ...  '2017-4-24': "cref_flatfield_123.fits",
     ...  '2018-2-1':  "cref_flatfield_222.fits",
     ...  '2019-4-15': "cref_flatfield_123.fits",
@@ -1245,9 +1222,6 @@ class ClosestTimeSelector(Selector):
     >>> t.choose({"time":"2019-4-16"})
     'cref_flatfield_123.fits'
     """
-    def __init__(self, timevar, selections):
-        Selector.__init__(self, [timevar], selections)
-
     def choose(self, header):
         import numpy as np
         time = header[self._parameters[0]]
@@ -1306,21 +1280,17 @@ class UseAfterParameters(Parameters):
         assert tuple(parkey[0]) == ("DATE-OBS","TIME-OBS")
         return Parameters.instantiate(self, parkey, header)
     
-class VersionDepParameters(Parameters):
-    """Parameters for VersionDepSelector"""
-    selector = VersionDepSelector
-    
-class SWVersionDepParameters(Parameters):
-    """Parameters for SWVersionDepSelector"""
-    selector = SWVersionDepSelector
+class SelectVersionParameters(Parameters):
+    """Parameters for SelectVersionSelector"""
+    selector = SelectVersionSelector
     
 class ClosestTimeParameters(Parameters):
     """Parameters for ClosestTimeSelector"""
     selector = ClosestTimeSelector
     
-class ClosestGeometricRatioParameters(Parameters):
-    """Parameters for ClosestGeometricRatioSelector"""
-    selector = ClosestGeometricRatioSelector
+class GeomtricallyNearestParameters(Parameters):
+    """Parameters for GeomtricallyNearestSelector"""
+    selector = GeomtricallyNearestSelector
     
 class LinearInterpolationParameters(Parameters):
     """Parameters for LinearInterpolationSelector"""
@@ -1330,10 +1300,9 @@ class LinearInterpolationParameters(Parameters):
 SELECTORS = {
     "Match"  : MatchingParameters,
     "UseAfter" : UseAfterParameters,
-    "VersionDep" : VersionDepParameters,
-    "SWVersionDep" : SWVersionDepParameters,
+    "SelectVersion" : SelectVersionParameters,
     "ClosestTime" : ClosestTimeParameters,
-    "ClosestGeometricRatio": ClosestGeometricRatioParameters,
+    "GeomtricallyNearest": GeomtricallyNearestParameters,
     "LinearInterpolation": LinearInterpolationParameters,
 }
 

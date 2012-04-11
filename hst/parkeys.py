@@ -135,11 +135,13 @@ def _replace_conditioned_float(match):
 def _simplify_restriction(restriction_text):
     # simplify syntax
     # (aSource._keywords['DETECTOR'][0] != 'SBC')
-    rval = re.sub(r"(.*)asource._keywords\['(.*)'\]\[0\](.*)", 
+    rval = re.sub(r"(.*)ASOURCE._KEYWORDS\['(.*)'\]\[0\](.*)", 
                   _replace_syntax,
                   restriction_text)
+    rval = rval.upper()
+    rval = rval.replace(" AND ", " and ")
+    rval = rval.replace(" OR ", " or ")
     return rval
-
 
 def _condition_numbers(restriction_text):
     # convert ints/floats to conditioned float strings

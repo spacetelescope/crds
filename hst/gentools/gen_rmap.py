@@ -362,7 +362,7 @@ def apply_restrictions(row, instrument, filekind):
     # Nominally this corresponds to the dataset header.
     header = {}
     for key,value in row.items():
-        header[key.lower()] = value.lower()
+        header[key.upper()] = value.upper()
     result = {}
     # Mutate irrelevant parameters to "N/A".
     for key, value in row.items():
