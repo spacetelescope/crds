@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:50.525396',
+    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:53.784765',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(detector == "ccd")',
-    'sha1sum' : 'f78557b27b55684c078ba47ef6586d26480ec642',
+    'relevance' : '(DETECTOR == "CCD")',
+    'sha1sum' : '9e0e5d0b8693c5c71991618c3b1a31275d469efc',
 }
 
 selector = Match({

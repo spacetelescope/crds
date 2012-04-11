@@ -7,7 +7,7 @@
 
 # Regenerate the CDBS reference file map, basically a cache of the 
 # /grp/hst/cdbs dir listing to use to find CDBS file paths fast.
-# python locate.py
+python locate.py
 
 # Process CDBS reference_file_defs.xml to extract information about when 
 # reference files are relevant to a parameter set,  when particular parameters
@@ -15,6 +15,8 @@
 # keywords and database column names is, etc.   i.e. regenerate parkeys.dat
 python parkeys.py
 
+# Re-install CRDS to capture the new .dat files from the above.
+../install
 
 # Regenerate rmaps, imaps, and pmaps.   
 # Dump the DADSOPS dataset catalogs into pickles for testing consistent with

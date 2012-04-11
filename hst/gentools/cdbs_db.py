@@ -436,7 +436,7 @@ def testall(ncases=10**10, context="hst.pmap", instruments=None,
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
-        test(instr+suffix, ncases, context)
+        cProfile.runctx("test(instr+suffix, ncases, context)", globals(), locals(), instr + ".stats")
         log.write()
 
 def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
@@ -467,7 +467,7 @@ def main():
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
-        cProfile.runctx("testall()", globals(), locals(), "testall.stats")
+        testall()
     else:
         print "usage: python cdbs_db.py [ dumpall | testall ]"
         sys.exit(-1)

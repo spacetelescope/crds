@@ -1,13 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-03 15:57:56.044936',
+    'derived_from' : 'generated from CDBS database 2012-04-11 08:32:05.194805',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(detector == "uvis")',
-    'sha1sum' : '5cd0a9ffd9f23055426f4ea55b63bd3f54fd70dd',
+    'relevance' : '(DETECTOR == "UVIS")',
+    'sha1sum' : 'bf2c69e69e88aab13852ee77114f3f98448536a8',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),
@@ -75,13 +75,13 @@ selector = Match({
         '2011-04-01 00:00:00' : 'w1k1448li_bia.fits',
         '2011-05-01 00:00:00' : 'w1k14497i_bia.fits',
     }),
-    ('UVIS', 'ABCD', '1.5', '2.0', '2.0', 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'N/A') : UseAfter({
-        '2008-02-19 00:00:00' : 't3h2007fi_bia.fits',
-        '2008-02-20 00:00:00' : 't3h2007gi_bia.fits',
+    ('UVIS', 'ABCD', '1.5', '2.0', '2.0', 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'N/A') : UseAfter({
+        '2008-02-19 00:00:00' : 'w461345gi_bia.fits',
+        '2008-02-20 00:00:00' : 'w461345hi_bia.fits',
     }),
-    ('UVIS', 'ABCD', '1.5', '3.0', '3.0', 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'N/A') : UseAfter({
-        '2008-02-19 00:00:00' : 't3h2007hi_bia.fits',
-        '2008-02-20 00:00:00' : 't3h2007ii_bia.fits',
+    ('UVIS', 'ABCD', '1.5', '3.0', '3.0', 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'N/A') : UseAfter({
+        '2008-02-19 00:00:00' : 'w461345ii_bia.fits',
+        '2008-02-20 00:00:00' : 'w461345ji_bia.fits',
     }),
     ('UVIS', 'ABCD', '1.5|2.0|4.0', '2.0', '2.0', 'G280-REF', 'N/A') : UseAfter({
         '1990-01-01 00:00:00' : 't4d1321ki_bia.fits',

@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'generated 2012-04-03 15:58:04.691345',
+    'derived_from' : 'generated 2012-04-11 08:32:15.595316',
     'instrument' : 'NICMOS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_nicmos.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'ae887965cf1d6aec3750ad4b1be26028fe39ccff',
+    'sha1sum' : 'd576723f7455ddc869b6104522b51e91852c1481',
 }
 
 selector = {
