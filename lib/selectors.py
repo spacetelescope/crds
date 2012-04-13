@@ -969,11 +969,11 @@ class GeomtricallyNearestSelector(Selector):
 
 # ==============================================================================
 
-class LinearInterpolationSelector(Selector):
-    """LinearInterpolation selects the the bracketing values of the
+class BracketSelector(Selector):
+    """Bracket selects the the bracketing values of the
     given context variable,  returning a two-tuple.
 
-    >>> r = LinearInterpolationSelector(("effective_wavelength",), {
+    >>> r = BracketSelector(("effective_wavelength",), {
     ...   1.2: "cref_flatfield_120.fits",
     ...   1.5: "cref_flatfield_124.fits",
     ...   5.0: "cref_flatfield_137.fits",
@@ -1312,9 +1312,9 @@ class GeomtricallyNearestParameters(Parameters):
     """Parameters for GeomtricallyNearestSelector"""
     selector = GeomtricallyNearestSelector
     
-class LinearInterpolationParameters(Parameters):
-    """Parameters for LinearInterpolationSelector"""
-    selector = LinearInterpolationSelector
+class BracketParameters(Parameters):
+    """Parameters for BracketSelector"""
+    selector = BracketSelector
 
 # Appearance in rmap has slightly abbreviated syntax,  minus "Parameters"
 SELECTORS = {
@@ -1323,7 +1323,7 @@ SELECTORS = {
     "SelectVersion" : SelectVersionParameters,
     "ClosestTime" : ClosestTimeParameters,
     "GeomtricallyNearest": GeomtricallyNearestParameters,
-    "LinearInterpolation": LinearInterpolationParameters,
+    "Bracket": BracketParameters,
 }
 
 # ==============================================================================
