@@ -40,7 +40,7 @@ GeomtricallyNearestSelector and SelectVersionSelector are both Selector
 subclasses.  At calibration time,  we choose from among the possible reference
 files based on our rules and the known context:
 
->>> r.choose({"effective_wavelength":1.4, "sw_version":6.0})
+>>> r.choose({"effective_wavelength":'1.4', "sw_version":'6.0'})
 'cref_flatfield_124.fits'
 
 Selectors are designed to be nestable and can describe rules of arbitrary type
@@ -77,7 +77,7 @@ and complexity.   Here we add time to the selection criteria:
 ...        }),
 ... })
 
->>> r.choose({"effective_wavelength":1.6, "time":"2019-1-2", "sw_version":1.4})
+>>> r.choose({"effective_wavelength":'1.6', "time":"2019-1-2", "sw_version":'1.4'})
 'cref_flatfield_490.fits'
 
 Note that the context variables used by some Selector's are implicit,
@@ -90,7 +90,7 @@ import pprint as pp
 
 # import numpy as np
 
-import log
+import log, utils
 
 # ==============================================================================
 
@@ -146,10 +146,23 @@ class Selector(object):
             "First parameter should be a list or tuple of header keys"
         assert isinstance(selections, dict),  \
             "Second parameter should be a dictionary { key: selection, ... }."
-        self._parameters = list(parameters)
-        self._selections = sorted(selections.items())
-        self._rmap_header = rmap_header or {} 
+        self._parameters = tuple(parameters)
+        self._raw_selections = sorted(selections.items())
+        self._selections = self.condition_selections(selections)
+        self._rmap_header = rmap_header or {}
         
+    def condition_selections(self, selections):
+        """Replace the keys of selections with "conditioned" keys,  keys in
+        which all the values have passed through self.condition_key().
+        """
+        result = [(self.condition_key(key), value) \
+                  for (key,value) in selections.items()]
+        return sorted(result)
+    
+    def condition_key(self, key):
+        """Identity conditioning,  i.e. no change in key."""
+        return key
+    
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._parameters) \
             + ", nselections=" + str(len(self._selections)) + ")"
@@ -212,7 +225,7 @@ class Selector(object):
         rmap_name = getattr(self, "rmap_name",  
                             self.__class__.__name__[:-len("Selector")])
         lines = [rmap_name + "({"]
-        for key, sel in self._selections:  
+        for key, sel in self._raw_selections:  
             if isinstance(sel, Selector):
                 pf_sel = sel.format(indent+1)
             else:
@@ -483,9 +496,9 @@ class MatchingSelector(Selector):
     of a match.   Literal matches increase confidence of a good match.
 
     >>> m = MatchingSelector(("foo","bar"), {
-    ...    ('1.0', 'N/A') : "100",
-    ...    ('1.0', '2.0') : "200",
-    ...    ('4.0', '*') : "300",
+    ...    (1.0, 'N/A') : "100",
+    ...    (1.0, 2.0) : "200",
+    ...    (4.0, '*') : "300",
     ... })
 
     >>> m.choose(dict(foo='1.0',bar='2.0'))
@@ -502,9 +515,9 @@ class MatchingSelector(Selector):
     
     >>> print m.format()
     Match({
-        ('1.0', '2.0') : '200',
-        ('1.0', 'N/A') : '100',
-        ('4.0', '*') : '300',
+        (1.0, 2.0) : '200',
+        (1.0, 'N/A') : '100',
+        (4.0, '*') : '300',
     })
     
     All match tuple fields should appear on a valid values list:
@@ -516,7 +529,7 @@ class MatchingSelector(Selector):
     
     Match tuples should have the same length as the parameter list:
     
-    >>> m = MatchingSelector(("foo","bar"), { ('1.0',) : "100", })
+    >>> m = MatchingSelector(("foo","bar"), { (1.0,) : "100", })
     Traceback (most recent call last):
     ...
     ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
@@ -525,10 +538,10 @@ class MatchingSelector(Selector):
     The last thing matched in a selector tree is assumed to be a file:
     
     >>> m = MatchingSelector(("foo","bar"), {
-    ...    ('1.0', '*') : "100",
-    ...    ('1.0', '2.0') : "200",
+    ...    (1.0, '*') : "100",
+    ...    (1.0, 2.0) : "200",
     ...    ('*', '*') : "300",
-    ...    ('5.0', '3.0') : "200",
+    ...    (5.0, 3.0) : "200",
     ... })
     
     file_matches() returns a list of recursive trails/lists of keys which lead 
@@ -552,43 +565,44 @@ class MatchingSelector(Selector):
     """
     rmap_name = "Match"
     
-    def __init__(self, parameters, selections, rmap_header=None):
-        Selector.__init__(self, parameters, selections, rmap_header)  # largely overridden
-        self._parameters = tuple(parameters)
-        self._value_map = {}
-        self._selections = sorted(selections.items())
+    def __init__(self, parameters, selections, rmap_header={}):
+        self._substitutions = rmap_header.get("substitutions", {})
+        selects = self.do_substitutions(
+            parameters, selections, self._substitutions)
+        selects = self.fix_simple_keys(selects)
 
-        selections = self.fix_simple_keys(selections)
-        
-        self._substitutions = self._rmap_header.get("substitutions", {})
-        selections = self.do_substitutions(selections, self._substitutions)
-        
-        self._match_selections = self.get_matcher_selections(selections)
+        Selector.__init__(self, parameters, selects, rmap_header)  # largely overridden
+        self.raw_selections = selections  # override __init__ using selects
+
+        self._match_selections = self.get_matcher_selections(
+            dict(self._selections))
         self._value_map = self.get_value_map()
      
     def fix_simple_keys(self, selections):
         """ Enable simple mappings like:  "ACS":"filename" rather than 
         ("ACS",):"filename"
         """
-        if len(self._parameters) != 1:
-            return selections
         new_selections = {}
         for key, value in selections.items():
             if not isinstance(key, tuple):
                 key = (key,)
             new_selections[key] = value
         return new_selections
+    
+    def condition_key(self, match_tuple):
+        """Normalize the elements of match_tuple using utils.condition_value()"""
+        if isinstance(match_tuple, tuple):
+            return tuple([utils.condition_value(key) for key in match_tuple])
+        else:  # simple strings
+            return utils.condition_value(match_tuple)
 
-    def do_substitutions(self, selections, substitutions):
+    def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
         in mapping `substitutions` as {parkey : { old_value : new_value }}
         """
-        if substitutions is None:
-            return selections
         for parkey in substitutions:
-            which = self._parameters.index(parkey)
-            for match in selections.keys():
-                which = self._parameters.index(parkey)
+            which = parameters.index(parkey)
+            for match in selections:
                 old_parvalue = match[which]
                 if old_parvalue in substitutions[parkey]:
                     replacement = substitutions[parkey][old_parvalue]
@@ -857,7 +871,7 @@ class UseAfterSelector(Selector):
     Traceback (most recent call last):
     ...
     ValidationError: '2003-09-35 01:28:00' date has invalid format.
-    """
+    """    
     def choose(self, header):
         date = timestamp.reformat_date(
             " ".join([header[x] for x in self._parameters]))
@@ -918,30 +932,33 @@ class GeomtricallyNearestSelector(Selector):
     ...  5.0 : "cref_flatfield_137.fits",
     ... })
 
-    >>> r.choose({"effective_wavelength":1.0})
+    >>> r.choose({"effective_wavelength":'1.0'})
     'cref_flatfield_120.fits'
 
-    >>> r.choose({"effective_wavelength":1.2})
+    >>> r.choose({"effective_wavelength":'1.2'})
     'cref_flatfield_120.fits'
 
-    >>> r.choose({"effective_wavelength":1.25})
+    >>> r.choose({"effective_wavelength":'1.25'})
     'cref_flatfield_120.fits'
 
-    >>> r.choose({"effective_wavelength":1.4})
+    >>> r.choose({"effective_wavelength":'1.4'})
     'cref_flatfield_124.fits'
 
-    >>> r.choose({"effective_wavelength":3.25})
+    >>> r.choose({"effective_wavelength":'3.25'})
     'cref_flatfield_124.fits'
 
-    >>> r.choose({"effective_wavelength":3.26})
+    >>> r.choose({"effective_wavelength":'3.26'})
     'cref_flatfield_137.fits'
 
-    >>> r.choose({"effective_wavelength":5.0})
+    >>> r.choose({"effective_wavelength":'5.0'})
     'cref_flatfield_137.fits'
 
-    >>> r.choose({"effective_wavelength":5.1})
+    >>> r.choose({"effective_wavelength":'5.1'})
     'cref_flatfield_137.fits'
     """
+    def condition_key(self, key):
+        return utils.condition_value(key)
+    
     def choose(self, header):
         import numpy as np
         keyval = float(header[self._parameters[0]])
@@ -962,30 +979,30 @@ class LinearInterpolationSelector(Selector):
     ...   5.0: "cref_flatfield_137.fits",
     ... })
 
-    >>> r.choose({"effective_wavelength":1.25})
+    >>> r.choose({"effective_wavelength":'1.25'})
     ('cref_flatfield_120.fits', 'cref_flatfield_124.fits')
 
     Note that an exact match still produces a two-tuple.
 
-    >>> r.choose({"effective_wavelength":1.2})
+    >>> r.choose({"effective_wavelength":'1.2'})
     ('cref_flatfield_120.fits', 'cref_flatfield_120.fits')
 
-    >>> r.choose({"effective_wavelength":1.5})
+    >>> r.choose({"effective_wavelength":'1.5'})
     ('cref_flatfield_124.fits', 'cref_flatfield_124.fits')
 
-    >>> r.choose({"effective_wavelength":5.0})
+    >>> r.choose({"effective_wavelength":'5.0'})
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
 
     Selections off either end choose the boundary value:
 
-    >>> r.choose({"effective_wavelength":1.0})
+    >>> r.choose({"effective_wavelength":'1.0'})
     ('cref_flatfield_120.fits', 'cref_flatfield_120.fits')
 
-    >>> r.choose({"effective_wavelength":6.0})
+    >>> r.choose({"effective_wavelength":'6.0'})
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
     """
     def choose(self, header):
-        keyval = header[self._parameters[0]]
+        keyval = float(header[self._parameters[0]])
         index = 0
         while index < len(self._selections) and \
                 keyval > self._selections[index][0]:
@@ -1004,6 +1021,8 @@ class LinearInterpolationSelector(Selector):
 # ==============================================================================
 
 RELATION_RE = re.compile('^([<=][=]?|default)(.*)$')
+
+FIXED_RE = re.compile("\d+[.]*\d*")
 
 class VersionRelation(object):
     """A version relation consists of a relation operator <,=,== and an 
@@ -1101,7 +1120,8 @@ class VersionRelation(object):
         """
         if type(self.version) == type(other):
             return True
-        elif isinstance(other, (int, float, long)) and \
+        if  FIXED_RE.match(str(other)) and \
+            isinstance(float(other), (int, float, long)) and \
             isinstance(self.version, (int, float, long)):
             return True
         else:
@@ -1165,16 +1185,16 @@ class SelectVersionSelector(Selector):
     ...  'default': 'cref_flatfield_123.fits',
     ... })
 
-    >>> r.choose({"sw_version":4.5})
+    >>> r.choose({"sw_version":'4.5'})
     'cref_flatfield_73.fits'
 
-    >>> r.choose({"sw_version":5})
+    >>> r.choose({"sw_version":'5'})
     'cref_flatfield_123.fits'
 
-    >>> r.choose({"sw_version":6})
+    >>> r.choose({"sw_version":'6'})
     'cref_flatfield_123.fits'
 
-    >>> r.choose({"sw_version":2.0})
+    >>> r.choose({"sw_version":'2.0'})
     'cref_flatfield_65.fits'
     """
     def __init__(self, parkeys, selections, rmap_header=None):
