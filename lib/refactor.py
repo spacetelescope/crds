@@ -157,7 +157,7 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
             if selectors.match_superset(ref_match_tuple, rmap_tuple):
                 matches.append(rmap_tuple)
     return matches
-    
+
 def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, 
                        useafter_file):
     """Add one new useafter date / file to the `match_tuple` case of
@@ -171,17 +171,7 @@ def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date,
     state = "find tuple"
     for line in old_rmap_file:
         if state == "find tuple":
-            if "UseAfter" in line:
-                #     ('HRC', 'CLEAR1S', 'F435W') : UseAfter({ 
-                index = line.index(": UseAfter({")
-                tuple_str = line[:index]
-                line_tuple = compat.literal_eval(tuple_str.strip())
-                if match_tuple == line_tuple:
-                    state = "find useafter"
-            elif line.strip() == "})":   # end of rmap
-                # Never found match,  report an error.
-                raise ValueError("Couldn't find match tuple " + 
-                                 repr(match_tuple))
+            state = _find_match(line, match_tuple) or state
         elif state == "find useafter":
             if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause
@@ -203,6 +193,19 @@ def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date,
     assert state == "copy remainder", "no useafter insertion performed"
     new_mapping_file.seek(0)
     return new_mapping_file.read()
+    
+def _find_match(line, match_tuple):
+    if "UseAfter" in line:
+        #     ('HRC', 'CLEAR1S', 'F435W') : UseAfter({ 
+        index = line.index(": UseAfter({")
+        tuple_str = line[:index]
+        line_tuple = compat.literal_eval(tuple_str.strip())
+        if match_tuple == line_tuple:
+            return "find useafter"
+        elif line.strip() == "})":   # end of rmap
+            # Never found match,  report an error.
+            raise ValueError("Couldn't find match tuple " + repr(match_tuple))
+    return None
     
 def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
                       useafter_file):
@@ -226,17 +229,7 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
     state = "find tuple"
     for line in old_rmap_file:
         if state == "find tuple":
-            if "UseAfter" in line:
-                #     ('HRC', 'CLEAR1S', 'F435W') : UseAfter({ 
-                index = line.index(": UseAfter({")
-                tuple_str = line[:index]
-                line_tuple = compat.literal_eval(tuple_str.strip())
-                if match_tuple == line_tuple:
-                    state = "find useafter"
-            elif line.strip() == "})":   # end of rmap
-                # Never found match,  report an error.
-                raise NoMatchTupleError("Couldn't find match tuple " + 
-                                        repr(match_tuple))
+            state = _find_match(line, match_tuple) or state
         elif state == "find useafter":
             if re.match(".*: '.*',", line.strip()):
                 # Handle a standard useafter clause

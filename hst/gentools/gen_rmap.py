@@ -46,7 +46,7 @@ FILE_TABLES = {
 
 def generate_rmap(instrument, filekind):
     log.info("Processing", instrument, filekind)
-    row_dicts = get_row_dicts(instrument, filekind)
+    row_dicts = get_row_dicts(instrument, filekind, condition=False)
     if not row_dicts:
         log.warning("No rows for",instrument,filekind)
         return
@@ -175,46 +175,13 @@ def unexplode_kmap(kmap):
     matches_view = {}
     for use, matches in useafters.items():
         cluster_key = tuple(sorted(matches))
-        collapsed = collapse_cluster_key(cluster_key)
+        collapsed = roll_up_n_vars(cluster_key)
         for key in collapsed:
             if key not in matches_view:
                 matches_view[key] = []
             matches_view[key].append(use)
     return matches_view           
     return factor_out_overlaps(matches_view)
-
-def collapse_cluster_key(key):
-    parsets = []
-    for i in range(len(key[0])):
-        parset = set()
-        for match in key:
-            parset.add(match[i])
-        parsets.append(parset)
-    expanded = expand_parsets(parsets)
-    if expanded == key:
-        return [folded(parsets)]
-    else:
-        return roll_up_n_vars(key)
-    
-def _expand_parsets(parsets):
-    if not parsets:
-        yield ()
-    else:
-        expanded = []
-        for par in parsets[0]:
-            for sub in expand_parsets(parsets[1:]):
-                yield (par,) + sub
-
-def expand_parsets(parsets):
-    expanded = list(_expand_parsets(parsets))
-    expanded.sort()
-    return tuple(expanded)
-       
-def folded(parsets):
-    combined = []
-    for par in parsets:
-        combined.append("|".join(sorted(par)))
-    return tuple(combined)
 
 def overlaps(match_t1, match_t2):
     for par1, par2 in zip(match_t1, match_t2):
@@ -273,7 +240,9 @@ def fold_one(match1, match2):
         if match1[i] == match2[i]:
             folded.append(match1[i])
         else:
-            combined = set(match1[i].split("|")).union(set(match2[i].split("|")))
+            set1 = set([x.strip() for x in str(match1[i]).split("|")])
+            set2 = set([x.strip() for x in str(match2[i]).split("|")])
+            combined = set1.union(set2)
             folded.append("|".join(sorted(combined)))
     return tuple(folded)
 
@@ -362,7 +331,7 @@ def apply_restrictions(row, instrument, filekind):
     # Nominally this corresponds to the dataset header.
     header = {}
     for key,value in row.items():
-        header[key.upper()] = value.upper()
+        header[key.upper()] = value
     result = {}
     # Mutate irrelevant parameters to "N/A".
     for key, value in row.items():

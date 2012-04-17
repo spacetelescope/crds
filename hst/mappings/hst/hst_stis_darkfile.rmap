@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:58.874799',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:28:35.251234',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,14 +7,14 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '743b1d88792bcf9445bbd12d4dbb5f589c7474ea',
+    'sha1sum' : 'a42a1e4849ab2fd867abafb593b195820c12a4a7',
 }
 
 selector = Match({
-    ('CCD', '*', '-1.0') : UseAfter({
+    ('CCD', 'ANY', 4294967295) : UseAfter({
         '1997-10-23 00:00:00' : 'j991518ao_drk.fits',
     }),
-    ('CCD', 'A|B|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    ('CCD', 'A|B|C|D', '1|2|4|8') : UseAfter({
         '1996-10-01 00:00:00' : 'h1v1208eo_drk.fits',
         '1997-03-03 00:00:00' : 'hcg1440so_drk.fits',
         '1997-03-13 00:00:00' : 'hcg1440to_drk.fits',
@@ -504,7 +504,7 @@ selector = Match({
         '2012-03-06 00:00:03' : 'w3n1413ro_drk.fits',
         '2012-03-13 03:53:41' : 'w3n1413so_drk.fits',
     }),
-    ('CCD', 'D', '1.0|2.0|4.0|8.0') : UseAfter({
+    ('CCD', 'D', '1|2|4|8') : UseAfter({
         '1997-04-25 00:00:00' : 'hcc1558ro_drk.fits',
         '1997-07-31 00:00:00' : 'hcc1558mo_drk.fits',
     }),

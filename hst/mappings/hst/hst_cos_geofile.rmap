@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:48.453840',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:28:23.821497',
     'filekind' : 'GEOFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR == "FUV")',
-    'sha1sum' : 'eb9291865144e26797b1dc166d2a99b8d0c3b91e',
+    'sha1sum' : 'fcd4ec3806ed27be8717490a3567472751690feb',
 }
 
 selector = Match({

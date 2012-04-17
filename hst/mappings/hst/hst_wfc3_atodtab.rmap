@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:32:02.695049',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:28:37.580877',
     'filekind' : 'ATODTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : 'd4f1484f858162bc1027106a8ef7c9da9f465751',
+    'sha1sum' : 'c2b04c730a21c14c90e44d46d02308a82c8aa427',
 }
 
 selector = Match({

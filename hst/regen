@@ -21,18 +21,25 @@ python parkeys.py
 # Regenerate rmaps, imaps, and pmaps.   
 # Dump the DADSOPS dataset catalogs into pickles for testing consistent with
 # the current rmaps;  the best refs in DADSOPS
-(cd gentools;  ./gen_rmaps >& gen_rmaps.out; grep -i error gen_rmaps.out; python gen_contexts.py >& gen_contexts.out; grep -i error gen_contexts.out; python cdbs_db.py dumpall)
+echo "Generating rmaps"
+(cd gentools;  ./gen_rmaps >& gen_rmaps.out; grep -i error gen_rmaps.out)
+echo "Generating contexts"
+(cd gentools;  python gen_contexts.py >& gen_contexts.out; grep -i error gen_contexts.out)
+echo "Dumping catalog datasets"
+(cd gentools;  python cdbs_db.py dumpall)
 
 # Examine cdbscatalog.dat to generate the maps relating filekinds,
-# CDBS file suffixes, etc.  
+# CDBS file suffixes, etc.
 python tpn.py hst.pmap
 
 # Re-install CRDS to capture the latest generated .dat files
 ../install
 
 # Run the CRDS certifier on the new rmaps
+echo "Certifying all mappings"
 (cd certify_logs; ./certify_all  >& certify_all.log;   grep -i error certify_all.log)
 
 # Run comparison tests on all HST datasets.
+echo "Testing all datasets"
 (cd gentools; python cdbs_db.py testall >& testall.err;  grep -i error testall.err)
 
