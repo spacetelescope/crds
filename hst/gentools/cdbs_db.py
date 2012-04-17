@@ -429,14 +429,14 @@ def compare_results(header, crds_refs, mismatched, ignore):
         log.write(".", eol="", sep="")
 
 def testall(ncases=10**10, context="hst.pmap", instruments=None, 
-            suffix="_headers.pkl"):
+            suffix="_headers.pkl", filekinds=None):
     if instruments is None:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
-        cProfile.runctx("test(instr+suffix, ncases, context)", globals(), locals(), instr + ".stats")
+        cProfile.runctx("test(instr+suffix, ncases, context, include=filekinds)", globals(), locals(), instr + ".stats")
         log.write()
 
 def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
@@ -468,6 +468,17 @@ def main():
         dumpall()
     elif sys.argv[1] == "testall":
         testall()
+    elif sys.argv[1] == "test":
+        if len(sys.argv) > 2:
+            instruments = [instr.lower() for instr in sys.argv[2].split(",")]
+            if len(sys.argv) > 3:
+                filekinds = [kind.lower() for kind in sys.argv[3].split(",")]
+            else:
+                filekinds = None
+        else:
+            instruments = crds.hst.INSTRUMENTS
+            filekinds = None
+        testall(instruments=instruments, filekinds=filekinds)
     else:
         print "usage: python cdbs_db.py [ dumpall | testall ]"
         sys.exit(-1)
