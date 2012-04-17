@@ -14,6 +14,9 @@ def format_date(d):
     return d.isoformat(" ")
 
 def parse_date(d):
+    if isinstance(d, datetime.datetime):
+        d = str(d)
+
     if d.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         d = d[:-3]
 

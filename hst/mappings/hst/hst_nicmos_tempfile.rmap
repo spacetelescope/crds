@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:52.297412',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:28:29.966920',
     'filekind' : 'TEMPFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,21 +7,21 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'b28e2dbbcbd7149a231da7637da2453bfbf2b44a',
+    'sha1sum' : 'cc6531a16a52153f60612c6b324f20ea54e37a18',
 }
 
 selector = Match({
-    ('1.0',) : UseAfter({
+    (1,) : UseAfter({
         '1997-01-01 00:00:00' : 't160440tn_tdd.fits',
         '1997-08-21 00:00:00' : 'sc31741bn_tdd.fits',
         '2002-01-01 00:00:00' : 'sc31741ln_tdd.fits',
     }),
-    ('2.0',) : UseAfter({
+    (2,) : UseAfter({
         '1997-01-01 00:00:00' : 't160441hn_tdd.fits',
         '1997-08-21 00:00:00' : 'sc31741cn_tdd.fits',
         '2002-01-01 00:00:00' : 't7a2001en_tdd.fits',
     }),
-    ('3.0',) : UseAfter({
+    (3,) : UseAfter({
         '1997-01-01 00:00:00' : 't160441nn_tdd.fits',
         '1997-08-21 00:00:00' : 'sc31741dn_tdd.fits',
         '2002-01-01 00:00:00' : 'sc31741nn_tdd.fits',

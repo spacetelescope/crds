@@ -420,11 +420,11 @@ class RegexMatcher(Matcher):
     """
     def __init__(self, key):
         Matcher.__init__(self, key)
-        if key == "*":
-            key = "^.*$"
+        if isinstance(key, str):
+            key = key.replace("*", ".*")
         elif isinstance(key, tuple):
-            key = "|".join(["^" + k + "$" for k in key])
-        elif "|" in key:
+            key = "|".join(["^" + str(k) + "$" for k in key])
+        if "|" in key:
             key = "|".join(["^" + k + "$" for k in key.split("|")])            
         else:
             key = "^" + key + "$"
@@ -479,7 +479,7 @@ class WildcardMatcher(Matcher):
 
 def matcher(key):
     """Factory for different matchers based on key types."""
-    if isinstance(key, tuple) or "|" in key or key == "*":
+    if isinstance(key, tuple) or "|" in key or "*" in key:
         return RegexMatcher(key)
     elif key == "N/A":
         return WildcardMatcher("N/A")
@@ -592,7 +592,19 @@ class MatchingSelector(Selector):
     def condition_key(self, match_tuple):
         """Normalize the elements of match_tuple using utils.condition_value()"""
         if isinstance(match_tuple, tuple):
-            return tuple([utils.condition_value(key) for key in match_tuple])
+            conditioned = []
+            for elem in match_tuple:
+                if isinstance(elem, str):
+                    if "|" in elem:
+                        elem = "|".join([utils.condition_value(x) for x in elem.split("|")])
+                    else:
+                        elem = utils.condition_value(elem)
+                elif isinstance(elem, (tuple,list)):
+                    elem = "|".join([utils.condition_value(key) for key in elem])
+                else:
+                    elem = utils.condition_value(elem)
+                conditioned.append(elem)
+            return tuple(conditioned)
         else:  # simple strings
             return utils.condition_value(match_tuple)
 

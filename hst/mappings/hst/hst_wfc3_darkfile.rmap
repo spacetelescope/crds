@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:32:09.730803',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:28:41.884372',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,85 +7,391 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '475369553393a98f9b6830c7ec82e488ca4d600c',
+    'sha1sum' : '4ff71b29f862d98ddfdcb6c0ebd077c75482c8c6',
 }
 
 selector = Match({
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'MIF1200', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'MIF1200', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n16499i_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649ai_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'MIF1500', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'MIF1500', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649bi_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649ci_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'MIF600', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'MIF600', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649di_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649ei_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'MIF900', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'MIF900', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649fi_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649gi_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'RAPID', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'RAPID', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649hi_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649ii_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'SPARS10', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'SPARS10', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649li_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649mi_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'SPARS100', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'SPARS100', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649ji_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649ki_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'SPARS200', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'SPARS200', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649ni_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649oi_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'SPARS25', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'SPARS25', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649pi_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649qi_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'SPARS50', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'SPARS50', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649ri_drk.fits',
         '2008-02-20 00:00:00' : 't3n1649si_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'STEP100', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'STEP100', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n1649ti_drk.fits',
         '2008-02-20 00:00:00' : 't3n16500i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'STEP200', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'STEP200', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n16501i_drk.fits',
         '2008-02-20 00:00:00' : 't3n16502i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'STEP25', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'STEP25', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n16503i_drk.fits',
         '2008-02-20 00:00:00' : 't3n16504i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'STEP400', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'STEP400', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n16505i_drk.fits',
         '2008-02-20 00:00:00' : 't3n16506i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '1.0', 'STEP50', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 1.0, 'STEP50', 'FULLIMAG') : UseAfter({
         '2008-02-19 00:00:00' : 't3n16507i_drk.fits',
         '2008-02-20 00:00:00' : 't3n16508i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.0', 'RAPID', 'FULLIMAG') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.0, 'RAPID', 'FULLIMAG') : UseAfter({
         '1990-01-01 00:00:00' : 'u331824ci_drk.fits',
         '1991-01-01 00:00:00' : 's190404ii_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.0', 'RAPID', 'SQ128SUB') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.0, 'RAPID', 'SQ128SUB') : UseAfter({
         '1990-01-01 00:00:00' : 'u3a2002ai_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.0', 'RAPID', 'SQ512SUB') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.0, 'RAPID', 'SQ512SUB') : UseAfter({
         '1990-01-01 00:00:00' : 'u3a2002bi_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.0', 'RAPID', 'SQ64SUB') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.0, 'RAPID', 'SQ64SUB') : UseAfter({
         '1990-01-01 00:00:00' : 'u3a2002ci_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.0', 'SPARS10', 'SQ128SUB') : UseAfter({
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.0, 'SPARS10', 'SQ128SUB') : UseAfter({
         '1990-01-01 00:00:00' : 'u3a2002di_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1200', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404ei_drk.fits',
+        '2008-02-19 00:00:00' : 't611931hi_drk.fits',
+        '2008-02-20 00:00:00' : 't611931ii_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1200', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1753pi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1200', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1753qi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1200', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1753ri_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1200', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1753si_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1500', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404fi_drk.fits',
+        '2008-02-19 00:00:00' : 't611931ji_drk.fits',
+        '2008-02-20 00:00:00' : 't611931li_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1500', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1753ti_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1500', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17540i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1500', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17541i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF1500', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17542i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF600', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21042i_drk.fits',
+        '2008-02-19 00:00:00' : 't611931mi_drk.fits',
+        '2008-02-20 00:00:00' : 't611931ni_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF600', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17543i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF600', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17544i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF600', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17545i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF600', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17546i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF900', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404gi_drk.fits',
+        '2008-02-19 00:00:00' : 't611931oi_drk.fits',
+        '2008-02-20 00:00:00' : 't611931pi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF900', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17547i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF900', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17548i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF900', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17549i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'MIF900', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ai_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'RAPID', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404hi_drk.fits',
+        '2008-02-19 00:00:00' : 't6119321i_drk.fits',
+        '2008-02-20 00:00:00' : 't6119322i_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g2022ri_drk.fits',
+        '2009-05-11 00:00:01' : 'u4819490i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'RAPID', 'SQ128SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21046i_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1754bi_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf12556i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'RAPID', 'SQ256SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21047i_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1754ci_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf12557i_drk.fits',
+        '2011-01-09 00:00:00' : 'v241911qi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'RAPID', 'SQ512SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21048i_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1754di_drk.fits',
+        '2009-05-19 00:00:00' : 'v241911ri_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'RAPID', 'SQ64SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21049i_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1754ei_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf12559i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS10', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104di_drk.fits',
+        '2008-02-19 00:00:00' : 't611932ci_drk.fits',
+        '2008-02-20 00:00:00' : 't611932di_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g2022ti_drk.fits',
+        '2009-05-11 00:00:01' : 'u4819493i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS10', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ji_drk.fits',
+        '2009-05-19 00:00:00' : 'v2419125i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS10', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ki_drk.fits',
+        '2009-05-19 00:00:00' : 'v2419126i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS10', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754li_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf1255ei_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS10', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754mi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS100', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104ai_drk.fits',
+        '2008-02-19 00:00:00' : 't611932ai_drk.fits',
+        '2008-02-20 00:00:00' : 't611932bi_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g2022si_drk.fits',
+        '2009-05-11 00:00:01' : 'u4819491i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS100', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754fi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS100', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754gi_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf1255ai_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS100', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754hi_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf1255bi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS100', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ii_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104ei_drk.fits',
+        '2008-02-19 00:00:00' : 't611932ei_drk.fits',
+        '2008-02-20 00:00:00' : 't611932fi_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20230i_drk.fits',
+        '2009-05-11 00:00:01' : 'u4819494i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ni_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754oi_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf1255fi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754pi_drk.fits',
+        '2009-05-19 00:00:00' : 'uaf1255gi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754qi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS25', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104hi_drk.fits',
+        '2008-02-19 00:00:00' : 't611932gi_drk.fits',
+        '2008-02-20 00:00:00' : 't611932hi_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20232i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949ji_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS25', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ri_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS25', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754si_drk.fits',
+        '2009-05-19 00:00:00' : 'v2419127i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS25', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1754ti_drk.fits',
+        '2009-05-19 00:00:00' : 'v2419128i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS25', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17550i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS50', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104ji_drk.fits',
+        '2008-02-19 00:00:00' : 't611932ii_drk.fits',
+        '2008-02-20 00:00:00' : 't611932ji_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20233i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949ki_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS50', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17551i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS50', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17552i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS50', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17553i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS50', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17554i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP100', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104mi_drk.fits',
+        '2008-02-19 00:00:00' : 't611932qi_drk.fits',
+        '2008-02-20 00:00:00' : 't611932ri_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20234i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949li_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP100', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17555i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP100', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17556i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP100', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17557i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP100', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17558i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP200', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404li_drk.fits',
+        '2008-02-19 00:00:00' : 't611932si_drk.fits',
+        '2008-02-20 00:00:00' : 't611932ti_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20235i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949mi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP200', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s17559i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP200', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ai_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP200', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755bi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP200', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ci_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP25', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104qi_drk.fits',
+        '2008-02-19 00:00:00' : 't6119330i_drk.fits',
+        '2008-02-20 00:00:00' : 't6119331i_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20236i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949ri_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP25', 'SQ128SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104ri_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1755di_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP25', 'SQ256SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b2104si_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1755ei_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP25', 'SQ512SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404mi_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1755fi_drk.fits',
+        '2009-05-19 00:00:00' : 'v241912ei_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP25', 'SQ64SUB') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21050i_drk.fits',
+        '2008-02-20 00:00:00' : 't5s1755gi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP400', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 's190404ni_drk.fits',
+        '2008-02-19 00:00:00' : 't6119332i_drk.fits',
+        '2008-02-20 00:00:00' : 't6119333i_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20237i_drk.fits',
+        '2009-05-11 00:00:01' : 'u481949ti_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP400', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755hi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP400', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ii_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP400', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ji_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP400', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ki_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP50', 'FULLIMAG') : UseAfter({
+        '1991-01-02 00:00:00' : 'r5b21053i_drk.fits',
+        '2008-02-19 00:00:00' : 't6119334i_drk.fits',
+        '2008-02-20 00:00:00' : 't6119335i_drk.fits',
+        '2009-05-11 00:00:00' : 'u3g20238i_drk.fits',
+        '2009-05-11 00:00:01' : 'u4819501i_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP50', 'SQ128SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755li_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP50', 'SQ256SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755mi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP50', 'SQ512SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755ni_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'STEP50', 'SQ64SUB') : UseAfter({
+        '2008-02-20 00:00:00' : 't5s1755oi_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 3.0, 'SPARS10', 'FULLIMAG') : UseAfter({
+        '1991-01-01 00:00:00' : 's190404ji_drk.fits',
+    }),
+    ('IR', 'ABCD', 'N/A', 'N/A', 4.0, 'SPARS25', 'FULLIMAG') : UseAfter({
+        '1991-01-01 00:00:00' : 's190404ki_drk.fits',
     }),
     ('IR', 'ABCD', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'MIF1500', 'SQ64SUB') : UseAfter({
         '1991-01-02 00:00:00' : 'r5b21041i_drk.fits',
@@ -129,364 +435,58 @@ selector = Match({
     ('IR', 'ABCD', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', 'SQ64SUB') : UseAfter({
         '1991-01-02 00:00:00' : 'r5b21055i_drk.fits',
     }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1200', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404ei_drk.fits',
-        '2008-02-19 00:00:00' : 't611931hi_drk.fits',
-        '2008-02-20 00:00:00' : 't611931ii_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1200', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1753pi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1200', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1753qi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1200', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1753ri_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1200', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1753si_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1500', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404fi_drk.fits',
-        '2008-02-19 00:00:00' : 't611931ji_drk.fits',
-        '2008-02-20 00:00:00' : 't611931li_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1500', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1753ti_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1500', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17540i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1500', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17541i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF1500', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17542i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF600', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21042i_drk.fits',
-        '2008-02-19 00:00:00' : 't611931mi_drk.fits',
-        '2008-02-20 00:00:00' : 't611931ni_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF600', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17543i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF600', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17544i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF600', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17545i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF600', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17546i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF900', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404gi_drk.fits',
-        '2008-02-19 00:00:00' : 't611931oi_drk.fits',
-        '2008-02-20 00:00:00' : 't611931pi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF900', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17547i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF900', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17548i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF900', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17549i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'MIF900', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ai_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'RAPID', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404hi_drk.fits',
-        '2008-02-19 00:00:00' : 't6119321i_drk.fits',
-        '2008-02-20 00:00:00' : 't6119322i_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g2022ri_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819490i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'RAPID', 'SQ128SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21046i_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1754bi_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf12556i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'RAPID', 'SQ256SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21047i_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1754ci_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf12557i_drk.fits',
-        '2011-01-09 00:00:00' : 'v241911qi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'RAPID', 'SQ512SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21048i_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1754di_drk.fits',
-        '2009-05-19 00:00:00' : 'v241911ri_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'RAPID', 'SQ64SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21049i_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1754ei_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf12559i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS10', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104di_drk.fits',
-        '2008-02-19 00:00:00' : 't611932ci_drk.fits',
-        '2008-02-20 00:00:00' : 't611932di_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g2022ti_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819493i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS10', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ji_drk.fits',
-        '2009-05-19 00:00:00' : 'v2419125i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS10', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ki_drk.fits',
-        '2009-05-19 00:00:00' : 'v2419126i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS10', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754li_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf1255ei_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS10', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754mi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS100', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104ai_drk.fits',
-        '2008-02-19 00:00:00' : 't611932ai_drk.fits',
-        '2008-02-20 00:00:00' : 't611932bi_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g2022si_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819491i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS100', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754fi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS100', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754gi_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf1255ai_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS100', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754hi_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf1255bi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS100', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ii_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS200', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104ei_drk.fits',
-        '2008-02-19 00:00:00' : 't611932ei_drk.fits',
-        '2008-02-20 00:00:00' : 't611932fi_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20230i_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819494i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS200', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ni_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS200', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754oi_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf1255fi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS200', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754pi_drk.fits',
-        '2009-05-19 00:00:00' : 'uaf1255gi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS200', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754qi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS25', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104hi_drk.fits',
-        '2008-02-19 00:00:00' : 't611932gi_drk.fits',
-        '2008-02-20 00:00:00' : 't611932hi_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20232i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949ji_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS25', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ri_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS25', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754si_drk.fits',
-        '2009-05-19 00:00:00' : 'v2419127i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS25', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1754ti_drk.fits',
-        '2009-05-19 00:00:00' : 'v2419128i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS25', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17550i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS50', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104ji_drk.fits',
-        '2008-02-19 00:00:00' : 't611932ii_drk.fits',
-        '2008-02-20 00:00:00' : 't611932ji_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20233i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949ki_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS50', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17551i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS50', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17552i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS50', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17553i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'SPARS50', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17554i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP100', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104mi_drk.fits',
-        '2008-02-19 00:00:00' : 't611932qi_drk.fits',
-        '2008-02-20 00:00:00' : 't611932ri_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20234i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949li_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP100', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17555i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP100', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17556i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP100', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17557i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP100', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17558i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP200', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404li_drk.fits',
-        '2008-02-19 00:00:00' : 't611932si_drk.fits',
-        '2008-02-20 00:00:00' : 't611932ti_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20235i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949mi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP200', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s17559i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP200', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ai_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP200', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755bi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP200', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ci_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP25', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104qi_drk.fits',
-        '2008-02-19 00:00:00' : 't6119330i_drk.fits',
-        '2008-02-20 00:00:00' : 't6119331i_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20236i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949ri_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP25', 'SQ128SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104ri_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1755di_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP25', 'SQ256SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b2104si_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1755ei_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP25', 'SQ512SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404mi_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1755fi_drk.fits',
-        '2009-05-19 00:00:00' : 'v241912ei_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP25', 'SQ64SUB') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21050i_drk.fits',
-        '2008-02-20 00:00:00' : 't5s1755gi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP400', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 's190404ni_drk.fits',
-        '2008-02-19 00:00:00' : 't6119332i_drk.fits',
-        '2008-02-20 00:00:00' : 't6119333i_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20237i_drk.fits',
-        '2009-05-11 00:00:01' : 'u481949ti_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP400', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755hi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP400', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ii_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP400', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ji_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP400', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ki_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP50', 'FULLIMAG') : UseAfter({
-        '1991-01-02 00:00:00' : 'r5b21053i_drk.fits',
-        '2008-02-19 00:00:00' : 't6119334i_drk.fits',
-        '2008-02-20 00:00:00' : 't6119335i_drk.fits',
-        '2009-05-11 00:00:00' : 'u3g20238i_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819501i_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP50', 'SQ128SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755li_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP50', 'SQ256SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755mi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP50', 'SQ512SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755ni_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '2.5', 'STEP50', 'SQ64SUB') : UseAfter({
-        '2008-02-20 00:00:00' : 't5s1755oi_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '3.0', 'SPARS10', 'FULLIMAG') : UseAfter({
-        '1991-01-01 00:00:00' : 's190404ji_drk.fits',
-    }),
-    ('IR', 'ABCD', 'N/A', 'N/A', '4.0', 'SPARS25', 'FULLIMAG') : UseAfter({
-        '1991-01-01 00:00:00' : 's190404ki_drk.fits',
-    }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'ENG0', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'ENG0', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2033ti_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'NONE', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'NONE', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20340i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'RAPID', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'RAPID', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20341i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS100', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS100', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20342i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS200', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS200', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20343i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS25', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS25', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20344i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS350', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS350', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20345i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS50', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS50', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20346i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP100', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP100', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20347i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP200', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP200', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20348i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP25', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP25', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20349i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP400', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP400', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2034ai_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', 'N/A') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', ' ') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2034bi_drk.fits',
     }),
-    ('UVIS', 'ABCD', '1.0', '1.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'ABCD', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2007-12-17 00:00:00' : 's9q1628ci_drk.fits',
         '2007-12-18 00:00:00' : 's9q1628ei_drk.fits',
         '2008-02-19 00:00:00' : 't3420175i_drk.fits',
         '2008-02-20 00:00:00' : 't3420177i_drk.fits',
     }),
-    ('UVIS', 'ABCD', '2.0', '2.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'ABCD', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-02-20 00:00:00' : 't3420178i_drk.fits',
     }),
-    ('UVIS', 'ABCD', '3.0', '3.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'ABCD', 3, 3, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-02-20 00:00:00' : 't3420179i_drk.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0', '1.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-08-10 04:19:48' : 'u6b1348hi_drk.fits',
         '2009-08-14 06:25:22' : 'u6b1348ii_drk.fits',
         '2009-08-18 05:17:20' : 'u6b1348ji_drk.fits',
@@ -738,23 +738,23 @@ selector = Match({
         '2012-03-28 11:58:12' : 'w4514023i_drk.fits',
         '2012-04-02 00:34:30' : 'w4a15134i_drk.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', '2.0', '2.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', '3.0', '3.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ki_drk.fits',
     }),
-    ('UVIS', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', '1.0', '1.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2001-01-01 00:00:00' : 'o1920123i_drk.fits',
     }),
-    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', '1.0', '1.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-02-19 00:00:00' : 's9j15531i_drk.fits',
         '2008-02-20 00:00:00' : 's9j15532i_drk.fits',
     }),
-    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', '2.0', '2.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-02-20 00:00:00' : 's9j15533i_drk.fits',
     }),
-    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', '3.0', '3.0', 'N/A', 'N/A', 'N/A') : UseAfter({
+    ('UVIS', 'A|AC|AD|B|BC|BD|C|D', 3, 3, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-02-20 00:00:00' : 's9j15534i_drk.fits',
     }),
 })

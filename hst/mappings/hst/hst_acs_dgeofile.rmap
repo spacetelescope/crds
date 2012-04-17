@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:06.172317',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:27:53.201720',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '1c76fc0af78dceefda84c6e776eca71c02efb381',
+    'sha1sum' : '736c4b9ef86c67ee0f0e16c41c8a2a7212e40bec',
 }
 
 selector = Match({
@@ -41,7 +41,7 @@ selector = Match({
     ('HRC', 'F850LP', 'CLEAR2S') : UseAfter({
         '2002-03-01 00:00:00' : 'o8u2214sj_dxy.fits',
     }),
-    ('SBC', '*', 'N/A') : UseAfter({
+    ('SBC', 'ANY', 'N/A') : UseAfter({
         '2002-10-21 00:00:00' : 's5d1409ej_dxy.fits',
     }),
     ('SBC', 'BLOCK1|BLOCK2|BLOCK3|BLOCK4|F115LP|F122M|F125LP|F140LP|F150LP|F165LP', 'N/A') : UseAfter({

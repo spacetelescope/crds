@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-11 08:31:06.948200',
+    'derived_from' : 'generated from CDBS database 2012-04-16 14:27:53.565913',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,20 +7,20 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR != "SBC" and FLASHCUR != "OFF")',
-    'sha1sum' : 'b51ca0f487098a2d058ba805451857b63b7d69b0',
+    'sha1sum' : '1b9c9479946c832bc51da529ada17b58e9a67396',
 }
 
 selector = Match({
-    ('HRC', 'ABCD|AD|BC|C|D', '2.0', 'HIGH', 'A') : UseAfter({
+    ('HRC', 'ABCD|AD|BC|C|D', 2.0, 'HIGH', 'A') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1454sj_fls.fits',
     }),
-    ('HRC', 'ABCD|AD|BC|C|D', '2.0', 'HIGH', 'B') : UseAfter({
+    ('HRC', 'ABCD|AD|BC|C|D', 2.0, 'HIGH', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad14556j_fls.fits',
     }),
-    ('HRC', 'ABCD|AD|BC|C|D', '2.0', 'LOW', 'B') : UseAfter({
+    ('HRC', 'ABCD|AD|BC|C|D', 2.0, 'LOW ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1455dj_fls.fits',
     }),
-    ('HRC', 'ABCD|AD|BC|C|D', '2.0', 'MED', 'B') : UseAfter({
+    ('HRC', 'ABCD|AD|BC|C|D', 2.0, 'MED ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1455ej_fls.fits',
     }),
     ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B') : UseAfter({
@@ -32,22 +32,22 @@ selector = Match({
     ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|4.0|8.0', 'HIGH', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad14556j_fls.fits',
     }),
-    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|4.0|8.0', 'LOW', 'B') : UseAfter({
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|4.0|8.0', 'LOW ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1455dj_fls.fits',
     }),
-    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|4.0|8.0', 'MED', 'B') : UseAfter({
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|4.0|8.0', 'MED ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1455ej_fls.fits',
     }),
-    ('HRC', 'A|B', '2.0', 'HIGH', 'A') : UseAfter({
+    ('HRC', 'A|B', 2.0, 'HIGH', 'A') : UseAfter({
         '2002-03-01 00:00:00' : 'o3m1546lj_fls.fits',
     }),
-    ('HRC', 'A|B', '2.0', 'HIGH', 'B') : UseAfter({
+    ('HRC', 'A|B', 2.0, 'HIGH', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'o3m1546mj_fls.fits',
     }),
-    ('HRC', 'A|B', '2.0', 'LOW', 'A|B') : UseAfter({
+    ('HRC', 'A|B', 2.0, 'LOW ', 'A|B') : UseAfter({
         '2002-03-01 00:00:00' : 'o3m1546nj_fls.fits',
     }),
-    ('HRC', 'A|B', '2.0', 'MED', 'A|B') : UseAfter({
+    ('HRC', 'A|B', 2.0, 'MED ', 'A|B') : UseAfter({
         '2002-03-01 00:00:00' : 'o3o0734oj_fls.fits',
     }),
     ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'HIGH', 'A') : UseAfter({
@@ -59,10 +59,10 @@ selector = Match({
     ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B') : UseAfter({
         '1991-01-01 00:00:00' : 'l5a13436j_fls.fits',
     }),
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'LOW', 'B') : UseAfter({
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'LOW ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1455gj_fls.fits',
     }),
-    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'MED', 'B') : UseAfter({
+    ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'MED ', 'B') : UseAfter({
         '2002-03-01 00:00:00' : 'nad14594j_fls.fits',
     }),
 })
