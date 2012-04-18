@@ -155,7 +155,7 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
                                         header, raise_ambiguous=False):
         for rmap_tuple in rmap_tuples:
             if selectors.match_superset(ref_match_tuple, rmap_tuple):
-                matches.append(rmap_tuple)
+                matches.append(_normalize_match_tuple(rmap_tuple))
     return matches
 
 def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, 
@@ -200,12 +200,18 @@ def _find_match(line, match_tuple):
         index = line.index(": UseAfter({")
         tuple_str = line[:index]
         line_tuple = compat.literal_eval(tuple_str.strip())
-        if match_tuple == line_tuple:
+        norm_line_tuple = _normalize_match_tuple(line_tuple)
+        # log.write("comparing match tuples", repr(match_tuple), repr(norm_line_tuple))
+        if match_tuple == norm_line_tuple:
             return "find useafter"
         elif line.strip() == "})":   # end of rmap
             # Never found match,  report an error.
             raise ValueError("Couldn't find match tuple " + repr(match_tuple))
     return None
+
+def _normalize_match_tuple(tup):
+    return selectors.MatchingSelector.condition_key(tup)
+    # return tuple([str(item).strip() for item in tup])
     
 def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
                       useafter_file):
