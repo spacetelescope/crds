@@ -155,11 +155,12 @@ class Selector(object):
         """Replace the keys of selections with "conditioned" keys,  keys in
         which all the values have passed through self.condition_key().
         """
-        result = [(self.condition_key(key), value) \
+        result = [(self.__class__.condition_key(key), value) \
                   for (key,value) in selections.items()]
         return sorted(result)
     
-    def condition_key(self, key):
+    @classmethod
+    def condition_key(cls, key):
         """Identity conditioning,  i.e. no change in key."""
         return key
     
@@ -589,7 +590,8 @@ class MatchingSelector(Selector):
             new_selections[key] = value
         return new_selections
     
-    def condition_key(self, match_tuple):
+    @classmethod
+    def condition_key(cls, match_tuple):
         """Normalize the elements of match_tuple using utils.condition_value()"""
         if isinstance(match_tuple, tuple):
             conditioned = []
@@ -968,7 +970,8 @@ class GeomtricallyNearestSelector(Selector):
     >>> r.choose({"effective_wavelength":'5.1'})
     'cref_flatfield_137.fits'
     """
-    def condition_key(self, key):
+    @classmethod
+    def condition_key(cls, key):
         return utils.condition_value(key)
     
     def choose(self, header):
