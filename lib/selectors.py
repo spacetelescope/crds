@@ -87,6 +87,7 @@ import datetime
 import timestamp
 import re
 import pprint as pp
+import fnmatch
 
 # import numpy as np
 
@@ -382,57 +383,52 @@ class Matcher(object):
     def match(self, value):
         """Return 1 (match),  0 (don't care), or -1 (no match).
         """
-        return 1 if (self._key == value or value == "*") else -1
+        return 1 if (value in ["*", "N/A"] or self._key == value) else -1
 
     def __repr__(self):
         return self.__class__.__name__ + "(%s)" % self._key
         
 class RegexMatcher(Matcher):
-    """
-    >>> m = RegexMatcher("foo")
+    """Matcher for raw regular expressions."""
+    def __init__(self, key):
+        Matcher.__init__(self, key)
+        self._regex = re.compile(key)
+        
+    def match(self, value):
+        return 1 if (value in ['*',"N/A"] or self._regex.match(value)) else -1
+    
+class GlobMatcher(RegexMatcher):
+    """Matcher for |-joined or *-containing expressions which basically work
+    as or-ed name globs.  Globs are translated into regexes.
+    
+    >>> m = GlobMatcher("foo")
     >>> m.match("bar")
     -1
     >>> m.match("foo")
     1
     >>> m.match("fo")
     -1
-    >>> n = RegexMatcher(("foo","bar","baz"))
+    >>> n = GlobMatcher("fo*o|bar*|baz")
     >>> n.match("far")
     -1
     >>> n.match("fo")
     -1
     >>> n.match("foo")
     1
-    >>> n.match("baz")
-    1
-    >>> n.match("ba")
-    -1
-    >>> o = RegexMatcher("foo|bar|baz")
-    >>> n.match("far")
-    -1
-    >>> n.match("fo")
-    -1
-    >>> n.match("foo")
+    >>> n.match("fo1o")
     1
     >>> n.match("baz")
     1
     >>> n.match("ba")
     -1
+    >>> n.match("bar12")
+    1
     """
     def __init__(self, key):
-        Matcher.__init__(self, key)
-        if isinstance(key, str):
-            key = key.replace("*", ".*")
-        elif isinstance(key, tuple):
-            key = "|".join(["^" + str(k) + "$" for k in key])
-        if "|" in key:
-            key = "|".join(["^" + k + "$" for k in key.split("|")])            
-        else:
-            key = "^" + key + "$"
-        self._regex = re.compile(key)
-        
-    def match(self, value):
-        return 1 if (value in ['*',"N/A"] or self._regex.match(value)) else -1
+        parts = key.split("|")
+        exprs = [fnmatch.translate(part) for part in parts]
+        all = "^(" + "|".join(exprs) + ")$"
+        RegexMatcher.__init__(self, all)
         
 class InequalityMatcher(Matcher):
     """
@@ -479,9 +475,68 @@ class WildcardMatcher(Matcher):
         return 0   
 
 def matcher(key):
-    """Factory for different matchers based on key types."""
-    if isinstance(key, tuple) or "|" in key or "*" in key:
-        return RegexMatcher(key)
+    """Factory for different matchers based on key types.
+    
+    A tuple of values is treated as an or-ed glob expression.
+    
+    >>> n = matcher(("foo","bar","baz"))
+    >>> n.match("far")
+    -1
+    >>> n.match("fo")
+    -1
+    >>> n.match("foo")
+    1
+    >>> n.match("baz")
+    1
+    >>> n.match("ba")
+    -1
+    
+    An expression bracketed with {} is matched with string equality, ignoring
+    glob and regex special characters.  The {} is removed.
+    
+    >>> literal = matcher("{||*|}")
+    >>> literal.match("0")
+    -1
+    >>> literal.match("||*|")
+    1
+    
+    An expression bracketed with () is treated as a raw regular expression which
+    is used without modification.  The () is removed.
+    
+    >>> regex = matcher("(something(0|1|2)f?tricky)")
+    >>> regex.match("something5tricky")
+    -1
+    >>> regex.match("something1tricky")
+    1
+    >>> regex.match("something1ftricky")
+    1
+    >>> regex.match("somethingttricky")
+    -1
+    >>> regex.match("foo")
+    -1
+    >>> regex.match("N/A")
+    1
+    >>> regex.match("*")
+    1
+    
+    A value of N/A becomes a matcher which always returns 0.
+    
+    >>> na = matcher("N/A")
+    >>> na.match("1")
+    0
+    >>> na.match("N/A")
+    0
+    >>> na.match("*")
+    0
+    """
+    if isinstance(key, tuple):
+        return GlobMatcher("|".join(key))
+    elif key.startswith("(") and key.endswith(")"):
+        return RegexMatcher(key[1:-1])
+    elif key.startswith("{") and key.endswith("}"):
+        return Matcher(key[1:-1])
+    elif "|" in key or "*" in key:
+        return GlobMatcher(key)
     elif key == "N/A":
         return WildcardMatcher("N/A")
     elif key.startswith((">","<")):
@@ -504,15 +559,6 @@ class MatchingSelector(Selector):
 
     >>> m.choose(dict(foo='1.0',bar='2.0'))
     '200'
-    
-    For now anyway,  an dataset value of N/A will not match discrete values
-    in the rmap,  so it is a one-way don't care.  Hence, this is not ambiguous:
- 
-    >>> m.choose(dict(foo='1.0',bar='N/A'))
-    '100'
-    
-    because dataset value of 'N/A' doesn't match rmap value '2.0',  whereas
-    dataset value of '2.0' does match rmap value 'N/A'.
     
     >>> print m.format()
     Match({
