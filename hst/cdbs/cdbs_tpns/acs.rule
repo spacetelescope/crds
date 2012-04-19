@@ -14,6 +14,10 @@
 # reference file type.  If not, the expansion rule won't have access to
 # the keyword value when evaluating the rule, and the rule will not trigger.
 #
+# History:
+# 03/08/12  MSwam   added CCDGAIN=-999 rule to allow pre-SM4 expansion of
+#                   gain values for WFC
+#-------------------------------------------------------------------------
 DETECTOR = WFC && CCDAMP = ABCDALL =>
 CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D || CCDAMP = ABCD ;
 
@@ -27,6 +31,9 @@ CCDAMP = AD || CCDAMP = BC || CCDAMP = ABCD ;
 
 DETECTOR = WFC && CCDGAIN = -1 =>
 CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 0.5 || CCDGAIN = 1.4 ;
+
+DETECTOR = WFC && CCDGAIN = -999 =>
+CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;
 
 DETECTOR = HRC && CCDGAIN = -1 =>
 CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;
