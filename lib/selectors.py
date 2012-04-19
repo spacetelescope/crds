@@ -408,6 +408,7 @@ class GlobMatcher(RegexMatcher):
     1
     >>> m.match("fo")
     -1
+    
     >>> n = GlobMatcher("fo*o|bar*|baz")
     >>> n.match("far")
     -1
@@ -581,7 +582,6 @@ class MatchingSelector(Selector):
     ...
     ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
 
-    
     The last thing matched in a selector tree is assumed to be a file:
     
     >>> m = MatchingSelector(("foo","bar"), {
@@ -643,7 +643,10 @@ class MatchingSelector(Selector):
             conditioned = []
             for elem in match_tuple:
                 if isinstance(elem, str):
-                    if "|" in elem:
+                    if (elem.startswith("{") and elem.endswith("}")) or \
+                        (elem.startswith("(") and elem.endswith(")")):
+                        pass  # raw regexes and equalities are not conditioned
+                    elif "|" in elem:
                         elem = "|".join([utils.condition_value(x) for x in elem.split("|")])
                     else:
                         elem = utils.condition_value(elem)
