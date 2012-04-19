@@ -5,12 +5,8 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
-# NOTE: There was a placeholder file here.  I have removed that file
-#    and completely replaced it as defined in PR 68331
-#
-# HISTORY:
-# 02/06/12  68331  mary  initial file
-# 02/09/12  68331  mary  change REFERENCE_FILE_TYPE from PIXCTE to CTE
+# History:
+# 02/05/12  683316  Mary   first version
 #
 # NAME          KEYTYPE DATATYPE        PRESENCE        VALUES
 #--------------------------------------------------------------------------
@@ -19,8 +15,10 @@ OPUS_FLAG       H       C       R       Y,N
 COMPARISON_FILE H       C       R
 COMMENT         H       C       R
 INSTRUMENT      H       C       R       ACS
-REFERENCE_FILE_TYPE H   C       R       CTE
+REFERENCE_FILE_TYPE H   C       R       DKC
 DETECTOR        C       C       R       WFC
+CCDAMP          C       C       R       A,B,C,D,AC,AD,BC,BD,ABCD,N/A
+CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0
 CHANGE_LEVEL    C       C       R       TRIVIAL,MODERATE,SEVERE
 PEDIGREE        C       C       R       INFLIGHT,GROUND,MODEL,DUMMY
 OBSERVATION_BEGIN_DATE  C   C   O       &SYBDATE
