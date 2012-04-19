@@ -31,10 +31,6 @@
 # 06/27/11 68306  MSwam       Add ACS:imp
 # 08/26/11 68293  MSwam       Add COS:walk
 # 09/01/11 69084  MSwam       Add ACS:d2i,npl
-# 02/06/12 68331  Mary        modify ACS:cte
-# 02/07/12 68331  Mary        modify ACS:dkc
-# 02/07/12 69213  Mary        Add COS:gsag
-# 02/07/12 70397  Mary        Add COS:hv
 #
 #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT	HEADER KEYWORDS
 #----------------------------------------------------------------------
@@ -356,7 +352,7 @@ acs    	bia     image   acs_bia.tpn    	   .fits   "instrume=acs,filetype=BIAS"
 acs    	cfl     image   acs_cfl.tpn    	   .fits   "instrume=acs,filetype=SPOT FLAT"
 acs    	d2i     image   acs_d2i.tpn    	   .fits   "instrume=acs,filetype=WFC D2I FILE"
 acs    	dfl     image   acs_dfl.tpn    	   .fits   "instrume=acs,filetype=DELTA FLAT"
-acs    	dkc     image   acs_dkc.tpn    	   .fits   "instrume=acs,filetype=CTEDARK"
+acs    	dkc     image   acs_dkc.tpn    	   .fits   "instrume=acs,filetype=DKC"
 acs    	drk     image   acs_drk.tpn    	   .fits   "instrume=acs,filetype=DARK"
 acs     dxy     image   acs_dxy.tpn        .fits   "instrume=acs,filetype=DISTORTION CORRECTION"
 acs     fls     image   acs_fls.tpn        .fits   "instrume=acs,filetype=POST FLASH"
@@ -451,10 +447,8 @@ cos	phot	table	cos_phot.tpn	   .fits   "instrume=cos,filetype=PHOTOMETRIC SENSIT
 cos	wcp 	table	cos_wcp.tpn	   .fits   "instrume=cos,filetype=WAVECAL PARAMETERS REFERENCE TABLE"
 cos	burst	table	cos_burst.tpn      .fits   "instrume=cos,filetype=BURST PARAMETERS TABLE"
 cos	tds	table	cos_tds.tpn        .fits   "instrume=cos,filetype=TIME DEPENDENT SENSITIVITY TABLE"
-cos	spwcs	table	cos_spwcs.tpn      .fits   "instrume=cos,filetype=SPECTROSCOPIC WCS PARAMETERS TABLE"
-cos	walk 	table	cos_walk.tpn       .fits   "instrume=cos,filetype=WALK CORRECTION TABLE"
-cos	gsag 	table	cos_gsag.tpn       .fits   "instrume=cos,filetype=GAIN SAG REFERENCE TABLE"
-cos	hv 	table	cos_hv.tpn         .fits   "instrume=cos,filetype=FUV HIGH VOLTAGE HISTORY"
+cos	spwcs	table	cos_spwcs.tpn        .fits   "instrume=cos,filetype=SPECTROSCOPIC WCS PARAMETERS TABLE"
+cos	walk 	table	cos_walk.tpn        .fits   "instrume=cos,filetype=WALK CORRECTION TABLE"
 #--------------------------------------------------------------------
 cos	flat	load	cos_flat_ld.tpn     .lod    instrument=cos,reference_file_type=flat
 cos	geo	load	cos_geo_ld.tpn     .lod    instrument=cos,reference_file_type=geo
@@ -472,6 +466,4 @@ cos	burst	load	cos_burst_ld.tpn   .lod    instrument=cos,reference_file_type=bur
 cos     tds     load    cos_tds_ld.tpn     .lod    instrument=cos,reference_file_type=tds
 cos     spwcs   load    cos_spwcs_ld.tpn   .lod    instrument=cos,reference_file_type=spwcs
 cos     walk    load    cos_walk_ld.tpn   .lod    instrument=cos,reference_file_type=walk
-cos     gsag    load    cos_gsag_ld.tpn   .lod    instrument=cos,reference_file_type=gsag
-cos     hv      load    cos_hv_ld.tpn     .lod    instrument=cos,reference_file_type=hv
 #-----------------------------------------------------------------------------
