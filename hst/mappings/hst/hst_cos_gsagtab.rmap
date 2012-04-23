@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2012-04-20 14:57:52.661495',
+    'filekind' : 'GSAGTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_gsagtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'relevance' : '(DETECTOR == "FUV")',
+    'sha1sum' : 'b7e2cdc661a4b6caf4ebe9f499deba900ea4d5f2',
+}
+
+selector = Match({
+    ('FUV',) : UseAfter({
+        '2009-05-11 00:00:00' : 'w4h18381l_gsag.fits',
+    }),
+})

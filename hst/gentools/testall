@@ -1,0 +1,5 @@
+#! /bin/csh
+
+foreach instr ( acs cos wfc3 stis wfpc2 nicmos )
+		python cdbs_db.py test ${instr}
+end

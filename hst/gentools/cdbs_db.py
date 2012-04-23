@@ -167,7 +167,8 @@ def gen_header_tables(datfile="header_tables.dat"):
     for instr in crds.hst.INSTRUMENTS:
         table[instr] = clean_scan(instr)
     open(datfile, "w+").write(pprint.pformat(table) + "\n")
-        
+    return table
+
 def clean_scan(instr):
     """clean_scan() sorts out the map produced by scan_tables(),  mapping each
     parameter of `instr` to a single "table.column" database location.
@@ -334,7 +335,7 @@ def get_dataset_header(dataset):
         return headers
         raise LookupError("More than one header found for " + repr(instrument) + " dataset " + repr(dataset))
 
-def test(header_generator, ncases=None, context="hst.pmap", dataset=None, 
+def test(header_generator, ncases=None, context="hst.pmap", datasets=None, 
          ignore=[], include=[], dump_header=False, verbose=False):
     """Evaluate the first `ncases` best references cases from 
     `header_generator` against similar results attained from CRDS running
@@ -363,17 +364,18 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
         if ncases is not None and count >= ncases:
             break
         count += 1
-        if dataset is not None:
-            if dataset != header["DATA_SET"]:
+        if datasets is not None:
+            if header["DATA_SET"] not in datasets:
                 continue
             log.set_verbose(True)
         if dump_header:
             pprint.pprint(header)
             continue
-        if log.get_verbose():
+        crds_refs = rmap.get_best_references(context, header, include)
+        if log.VERBOSE_FLAG:
             log.verbose("="*70)
             log.verbose("DATA_SET:", header["DATA_SET"])
-        crds_refs = rmap.get_best_references(context, header, include)
+            log.verbose("existing bestrefs", pprint.pformat(crds_refs))
         compare_results(header, crds_refs, mismatched, ignore)
 
     # by usage convention all headers share the same instrument
@@ -383,7 +385,12 @@ def test(header_generator, ncases=None, context="hst.pmap", dataset=None,
     log.write()
     log.write()
     for filekind in mismatched:
-        log.write(filekind, "mismatched:", mismatched[filekind])
+        for (old,new) in mismatched[filekind]:
+            if mismatched[filekind][(old, new)]:
+                which = mismatched[filekind][(old, new)]
+                log.write(filekind, "mismatched:", (old,new), len(which), which[0])
+            else:
+                log.write(filekind, "mismatched: 0")
     log.write()
     log.write(instrument, count, "datasets")
     log.write(instrument, elapsed, "elapsed")
@@ -421,22 +428,24 @@ def compare_results(header, crds_refs, mismatched, ignore):
             mismatches += 1
             log.error("mismatch:", dataset, instr, filekind, old, new)
             if (old, new) not in mismatched[filekind]:
-                mismatched[filekind][(old,new)] = 0
-            mismatched[filekind][(old,new)] += 1
+                mismatched[filekind][(old,new)] = []
+            mismatched[filekind][(old,new)].append(dataset)
         else:
             log.verbose("CDBS/CRDS matched:", filekind, old)
     if not mismatches:
         log.write(".", eol="", sep="")
+    return mismatches
 
 def testall(ncases=10**10, context="hst.pmap", instruments=None, 
-            suffix="_headers.pkl", filekinds=None):
+            suffix="_headers.pkl", filekinds=None, datasets=None,
+            dump_header=False):
     if instruments is None:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
-        cProfile.runctx("test(instr+suffix, ncases, context, include=filekinds)", globals(), locals(), instr + ".stats")
+        cProfile.runctx("test(instr+suffix, ncases, context, include=filekinds, datasets=datasets, dump_header=dump_header)", globals(), locals(), instr + ".stats")
         log.write()
 
 def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
@@ -464,6 +473,9 @@ def dumpall(context="hst.pmap", ncases=10**10, random_samples=True,
 
 
 def main():
+    if "--verbose" in sys.argv:
+        sys.argv.remove("--verbose")
+        log.set_verbose()
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
@@ -471,16 +483,24 @@ def main():
     elif sys.argv[1] == "test":
         if len(sys.argv) > 2:
             instruments = [instr.lower() for instr in sys.argv[2].split(",")]
-            if len(sys.argv) > 3:
-                filekinds = [kind.lower() for kind in sys.argv[3].split(",")]
-            else:
-                filekinds = None
         else:
-            instruments = crds.hst.INSTRUMENTS
+            instruments = None
             filekinds = None
-        testall(instruments=instruments, filekinds=filekinds)
+        if len(sys.argv) > 3:
+            filekinds = [kind.lower() for kind in sys.argv[3].split(",")]
+        else:
+            filekinds = None
+        if len(sys.argv) > 4:
+            datasets = [d.upper() for d in sys.argv[4].split(",")]
+        else:
+            datasets = None
+        testall(instruments=instruments, filekinds=filekinds, datasets=datasets, dump_header=log.get_verbose()>60)
     else:
-        print "usage: python cdbs_db.py [ dumpall | testall ]"
+        print """usage:
+python cdbs_db.py dumpall
+python cdbs_db.py testall
+python cdbs_db.py test [instrument [filekind [dataset]]]
+"""
         sys.exit(-1)
 
 if __name__ == "__main__":

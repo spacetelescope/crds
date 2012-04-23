@@ -740,7 +740,8 @@ class MatchingSelector(Selector):
                 selector = self.merge_group(subselectors)
             else:
                 selector = remaining[match_tuples[0]][1]
-            log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector))
+            if log.VERBOSE_FLAG:
+                log.write("Matched", repr(match_tuples[0]), "returning", repr(selector))
             yield match_tuples, selector
 
     def _winnow(self, header, remaining):
@@ -759,13 +760,15 @@ class MatchingSelector(Selector):
 
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "NOT PRESENT")
-            log.verbose("Binding", repr(parkey), "=", repr(value))
+            if log.VERBOSE_FLAG:
+                log.verbose("Binding", repr(parkey), "=", repr(value))
             for match_tuple, (matchers, _subselector) in remaining.items():
                 # Match the key to the current header vaue
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
-                    log.verbose("Winnowing", match_tuple)
+                    if log.VERBOSE_FLAG:
+                        log.verbose("Winnowing", match_tuple)
                     del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   
@@ -787,7 +790,7 @@ class MatchingSelector(Selector):
         # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
         # Lowest weight is best match
         candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
-        if log.get_verbose():
+        if log.VERBOSE_FLAG:
             log.verbose("Candidates", pp.pformat(candidates))
         return candidates
 
@@ -868,8 +871,9 @@ class MatchingSelector(Selector):
         for other in self.keys():
             if key != other and match_superset(other, key):
                 # raise ValidationError(
-                log.verbose_warning(
-                    "Match tuple " + repr(key) + " is a special case of " + repr(other))
+                if log.VERBOSE_FLAG:
+                    log.verbose_warning( "Match tuple " + repr(key) + 
+                                         " is a special case of " + repr(other))
 
     def _is_literal_or_regex_value(self, value, valid):
         """Return True if all of the |-combined elements of `value` are in `valid`."""
@@ -938,7 +942,8 @@ class UseAfterSelector(Selector):
     def choose(self, header):
         date = timestamp.reformat_date(
             " ".join([header[x] for x in self._parameters]))
-        log.verbose("Matching date", date, " ")
+        if log.VERBOSE_FLAG:
+            log.write("Matching date", date, " ")
         selection = self.bsearch(date, self._selections)
         return self.get_choice(selection, header)
 
@@ -950,14 +955,16 @@ class UseAfterSelector(Selector):
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
             compared = right[0][0]
-            log.verbose("...against", compared, eol="")
+            if log.VERBOSE_FLAG:
+                log.verbose("...against", compared, eol="")
             if date >= compared:
                 return self.bsearch(date, right)
             else:
                 return self.bsearch(date, left)
         else:
             if date >= selections[0][0]:
-                log.verbose("matched", repr(selections[0]))
+                if log.VERBOSE_FLAG:
+                    log.verbose("matched", repr(selections[0]))
                 return selections[0]
             else:
                 raise UseAfterError("No selection with time < " + repr(date))

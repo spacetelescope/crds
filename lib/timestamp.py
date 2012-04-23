@@ -13,6 +13,9 @@ def format_date(d):
         d = parse_date(d)
     return d.isoformat(" ")
 
+T_SEPERATED_DATE_RE = re.compile("\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d")
+ALPHABETICAL_RE = re.compile("[A-Za-z]")
+
 def parse_date(d):
     if isinstance(d, datetime.datetime):
         d = str(d)
@@ -20,10 +23,10 @@ def parse_date(d):
     if d.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
         d = d[:-3]
 
-    if re.match("\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d", d):
+    if T_SEPERATED_DATE_RE.match(d):
         d = d.replace("T", " ")
         
-    if re.match("[A-Za-z]", d):
+    if ALPHABETICAL_RE.match(d):
         return parse_alphabetical_date(d)
     else:
         return parse_numerical_date(d)
@@ -84,17 +87,21 @@ def parse_alphabetical_date(d):
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
+DAY_MONTH_YEAR_RE = re.compile("^\d\d/\d\d/\d\d\d\d$")
+NINETIES_RE = re.compile("^\d\d/\d\d/9\d$")
+DIGIT_4_RE = re.compile("\d\d\d\d")
+
 def parse_numerical_date(d):
-    if re.match("^\d\d/\d\d/\d\d\d\d$", d):
+    if DAY_MONTH_YEAR_RE.match(d):
         day, month, year = d.split("/")
         time = "00:00:00"
-    elif re.match("^\d\d/\d\d/9\d$", d):
+    elif NINETIES_RE.match(d):
         day, month, year = d.split("/")
         year = "19" + year
         time = "00:00:00"
     else:
         date, time = d.split()
-        if re.match("\d\d\d\d", date):
+        if DIGIT_4_RE.match(date):
             year, month, day = date.split("-")
         else:
             month, day, year = date.split("-")
@@ -192,6 +199,7 @@ class CdbsDate(DateParser):
 # ============================================================================
 
 DATETIME_RE_STR = "(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)"
+DATETIME_RE = re.compile(DATETIME_RE_STR)
 DATE_RE_STR = r"\d\d\d\d\-\d\d\-\d\d"
 TIME_RE_STR = r"\d\d:\d\d:\d\d"
 
@@ -199,7 +207,7 @@ def is_datetime(datetime_str):
     """Raise an assertion error if `datetime_str` doesn't look like a CRDS date.
     Otherwise return `datetime_str`.
     """
-    assert re.match(DATETIME_RE_STR, datetime_str), \
+    assert DATETIME_RE.match(datetime_str), \
         "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
     try:
         parse_date(datetime_str)

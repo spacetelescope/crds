@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'generated 2012-04-16 14:28:47.529565',
+    'derived_from' : 'generated 2012-04-20 14:58:12.067149',
     'instrument' : 'WFC3',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_wfc3.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'a37917d85709e2db95237d4b0776b3aee1ba975d',
+    'sha1sum' : '9a1224bc47fe3689c05b290d8d8a3594f0289284',
 }
 
 selector = {
