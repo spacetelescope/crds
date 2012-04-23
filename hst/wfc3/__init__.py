@@ -68,3 +68,21 @@ def wfc3_biasfile_filter(kmap):
 #               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
     return kmap, header_additions
 
+def _precondition_header_biasfile(header_in):
+    """Mutate the incoming dataset header based upon hard coded rules
+    and the header's contents.
+    """
+    header = dict(header_in)
+    subarray = header["SUBARRAY"]
+    aperture = header["APERTURE"]
+    if subarray == "T" and "SUB" not in aperture:
+        header["APERTURE"] = "*"
+    return header
+
+def precondition_header(rmap, header):
+    if rmap.filekind == "biasfile":
+        return _precondition_header_biasfile(header)
+    else:
+        return header
+    
+
