@@ -1,17 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-20 14:57:50.953579',
-    'filekind' : 'BRSTTAB',
+    'derived_from' : 'generated from CDBS database 2012-04-20 14:57:53.914405',
+    'filekind' : 'WALKTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
-    'name' : 'hst_cos_brsttab.rmap',
+    'name' : 'hst_cos_walktab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR == "FUV" and OBSMODE == "TIME-TAG")',
-    'sha1sum' : '2f77b58860cf1ae86f4dd2bf152c8ce69d216929',
+    'sha1sum' : '3663bcaf932a57bbfda30eea9dba7f469336a7ce',
 }
 
 selector = Match({
     ('FUV', 'TIME-TAG') : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700fl_burst.fits',
+        '2009-05-11 00:00:00' : 'w161831hl_walk.fits',
     }),
 })

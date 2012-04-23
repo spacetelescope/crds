@@ -59,6 +59,7 @@ def set_log(filename, append=False, timestamps=False):
         LOG = None
 
 VERBOSE_LEVEL = 0
+VERBOSE_FLAG = False  # True if messages of any verbosity level are active
 DEFAULT_VERBOSE_LEVEL = 50
 
 def set_verbose(level=DEFAULT_VERBOSE_LEVEL):
@@ -68,13 +69,14 @@ def set_verbose(level=DEFAULT_VERBOSE_LEVEL):
     log.verbose() defaults to verbosity=50
     log.error(), log.info(), log.warning() default to verbosity=0.
     """
-    global VERBOSE_LEVEL
+    global VERBOSE_LEVEL, VERBOSE_FLAG
     assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
     if level == True:
         level = DEFAULT_VERBOSE_LEVEL
     elif level == False:
         level = 0
     VERBOSE_LEVEL = level
+    VERBOSE_FLAG = VERBOSE_LEVEL > 0
 
 def get_verbose():
     """Return the verbosity level."""

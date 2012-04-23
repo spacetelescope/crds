@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2012-04-20 14:57:27.150707',
+    'filekind' : 'PCTETAB',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_pctetab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'relevance' : '(DETECTOR == "WFC")',
+    'sha1sum' : '88d286c8e4f0fe16c19f76961f6942abfa8735f2',
+}
+
+selector = Match({
+    ('WFC',) : UseAfter({
+        '2002-03-01 00:00:00' : 'w3j1327lj_cte.fits',
+    }),
+})
