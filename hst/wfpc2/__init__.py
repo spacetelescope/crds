@@ -17,17 +17,30 @@ def precondition_header(rmap, header):
         return header
 '''
 
-#   'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
-
+'''
+         if lrfwave > 3000 and lrfwave <= 4200:
+            filename = "M3C10045U.R4H"
+         elif lrfwave > 4200 and lrfwave <= 5800:
+            filename = "M3C1004FU.R4H"
+         elif lrfwave > 5800 and lrfwave <= 7600:
+            filename = "M3C1004NU.R4H"
+         elif lrfwave > 7600 and lrfwave <= 10000:
+            filename = "M3C10052U.R4H"
+'''
 
 def wfpc2_flatfile_filter(kmap):
      log.write("Hacking WFPC2 Flatfile.")
-#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
-#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
-#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
-    return kmap, header_additions
-
-
+     header_additions = {}
+     # :  ('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
+     kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >3000 and <=4200 #')] = \
+            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
+     kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >4200 and <=5800 #')] = \
+            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
+     kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >5800 and <=7600 #')] = \
+            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
+     kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >7600 and <=10000 #')] = \
+            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10052u.r4h', comment='')]
+     return kmap, header_additions
 
 
 '''
