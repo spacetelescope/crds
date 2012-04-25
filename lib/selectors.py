@@ -575,6 +575,20 @@ def matcher(key):
     1
     >>> c.match("20.1")
     1
+    
+    A simplified special relation,  between,  defines a slice range:
+    
+    >>> d = matcher("between 3000 3200")
+    >>> d.match("2999.99")
+    -1
+    >>> d.match("3000")
+    1
+    >>> d.match("3100")
+    1
+    >>> d.match("3199.99")
+    1
+    >>> d.match("3200")
+    -1
 
     A value of N/A becomes a matcher which always returns 0.
     
@@ -599,6 +613,10 @@ def matcher(key):
             return BinaryMatcher(key[1:-1], "or")
         else:
             return matcher(key[1:-1])
+    elif key.lower().startswith("between"):
+        parts = key.split()
+        assert len(parts) == 3, "Invalid between relation " + repr(key)
+        return BinaryMatcher(">=" + parts[1]+ " and <" + parts[2], "and")
     elif "|" in key or "*" in key:
         return GlobMatcher(key)
     elif key == "N/A":
