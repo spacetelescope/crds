@@ -386,7 +386,7 @@ class Matcher(object):
         return 1 if (value in ["*", "N/A"] or self._key == value) else -1
 
     def __repr__(self):
-        return self.__class__.__name__ + "(%s)" % self._key
+        return self.__class__.__name__ + "('%s')" % self._key
         
 class RegexMatcher(Matcher):
     """Matcher for raw regular expressions."""
@@ -466,6 +466,26 @@ class InequalityMatcher(Matcher):
             "<=" : lambda m, n :  1 if m <= n else -1,
          }[self._operator](float(value), self._value)
 
+class BinaryMatcher(Matcher):
+    """A matcher which supports logical "or" and "and" for relational
+    expressions.
+    """
+    def __init__(self, key, operator):
+        Matcher.__init__(self, key)
+        self._operator = operator.strip()
+        assert self._operator in ["and","or"], "bad binary operator"
+        parts = [x.strip() for x in key.split(operator)]
+        self._matcher1 = matcher(parts[0])
+        self._matcher2 = matcher(parts[1])
+        
+    def match(self, value):
+        if self._operator == "and" :
+            return 1 if ((self._matcher1.match(value)==1) and \
+                    (self._matcher2.match(value)==1)) else -1
+        elif self._operator == "or":
+            return 1 if ((self._matcher1.match(value)==1) or \
+                    (self._matcher2.match(value)==1)) else -1
+
 class WildcardMatcher(Matcher):
     """Matcher that always matches,  simplifies/speeds code elsewhere."""
     def __init__(self, key="*"):
@@ -501,6 +521,14 @@ def matcher(key):
     >>> literal.match("||*|")
     1
     
+    >>> someor = matcher("{for|me}")
+    >>> someor.match("for")
+    -1
+    >>> someor.match("me")
+    -1
+    >>> someor.match("for|me")
+    1
+    
     An expression bracketed with () is treated as a raw regular expression which
     is used without modification.  The () is removed.
     
@@ -520,6 +548,34 @@ def matcher(key):
     >>> regex.match("*")
     1
     
+    An match expression bracketed with # is treated as a relational expression 
+    supporting short circuiting binary operators (and, or) and relational
+    operators (<,<=,==,>,>=)
+    
+    >>> b = matcher("# >1 and <=20 #")
+    >>> b.match("4")
+    1
+    >>> b.match("-1")
+    -1
+    >>> b.match("20")
+    1
+    >>> b.match("21")
+    -1
+    
+    >>> c = matcher("#>20 or <5#")
+    >>> c.match("4")
+    1
+    >>> c.match("5")
+    -1
+    >>> c.match("-1")
+    1
+    >>> c.match("20")
+    -1
+    >>> c.match("21")
+    1
+    >>> c.match("20.1")
+    1
+
     A value of N/A becomes a matcher which always returns 0.
     
     >>> na = matcher("N/A")
@@ -536,6 +592,13 @@ def matcher(key):
         return RegexMatcher(key[1:-1])
     elif key.startswith("{") and key.endswith("}"):
         return Matcher(key[1:-1])
+    elif key.startswith("#") and key.endswith("#"):
+        if " and " in key:
+            return BinaryMatcher(key[1:-1], "and")
+        elif " or " in key:
+            return BinaryMatcher(key[1:-1], "or")
+        else:
+            return matcher(key[1:-1])
     elif "|" in key or "*" in key:
         return GlobMatcher(key)
     elif key == "N/A":
