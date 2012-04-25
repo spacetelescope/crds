@@ -1,0 +1,93 @@
+#! /usr/bin/env python
+#-*-python-*-
+
+"""This script updates the database header pickles using calibrated datasets
+downloaded from MAST (http://archive.stsci.edu/cgi-bin/dataset_lookup).  The
+reason some datasets are downloaded is that OPUS and the catalog have 
+different results sometimes but the OPUS/MAST OTFR is considered definitive.
+
+The general approach for CRDS testing is as follows:
+
+1. Dump dataset headers from the catalog DadsOps on zeppo.stsci.edu.  Create
+header pickles consisting of critical best ref parameters and CDBS results.
+
+2. Run CRDS using the header best ref parameters.   Compare the CRDS results
+to the CDBS results.   Report and aggregate any mismatches based on the
+(CDBS_answer, CRDS_answer) tuple,  an approximation to keying off header input
+tuples.   Report only the first dataset of each wrong answer tuple.
+
+3. For each wrong answer dataset reported,  download the dataset from MAST.
+
+4. Update the CDBS/dataset header pickles using actual datasets from MAST 
+rather than the catalog.
+
+5. Re-run the comparison test to see which problems are resolved as an error
+in the catalog and which remain.
+"""
+import sys
+import pyfits
+import cPickle
+import os.path
+
+from crds import (log, utils)
+
+def organize_datasets(datasets):
+    organized = {}
+    for dataset in datasets:
+        log.info("Loading", repr(dataset))
+        header = pyfits.getheader(dataset)
+        try:
+            instr = header["INSTRUME"].lower()
+        except:
+            log.error("Missing INSTRUME keyword in dataset", repr(dataset))
+        if instr not in organized:
+            organized[instr] = []
+        dataset_id = os.path.basename(dataset).split("_")[0].upper()
+        organized[instr].append((dataset_id, header))
+    return organized
+
+def fix_iraf_path(val):
+    if not isinstance(val, str):
+        return val
+    if "ref$" in val.lower():
+        val = val.split("$")[1].upper()
+    return val
+
+def fix_pickles(organized):
+    for instr in organized:
+        pickle = "../../../datasets/" + instr + "_headers.pkl"
+        log.info("Loading pickle", repr(pickle))
+        pheaders = cPickle.load(open(pickle))
+        for dataset, header in organized[instr]:
+            log.info("Processing", repr(dataset))
+            for pheader in pheaders:
+                if pheader["DATA_SET"] != dataset:
+                    continue
+                for key in pheader:
+                    if key in ["DATA_SET"]:
+                        continue
+                    if key not in header:
+                        log.warning("Missing key in dataset", repr(dataset),
+                                    "=", repr(key))
+                        continue
+                    hval = utils.condition_value(fix_iraf_path(header[key]))
+                    pval = utils.condition_value(pheader[key])
+                    if hval != pval:
+                        log.info("Updating dataset", repr(dataset),
+                                 "key", repr(key),
+                                 "from", pval, "to", hval)
+                        pheader[key] = hval
+                break
+        log.info("Saving pickle", repr(pickle))
+        file = open(pickle, "w+")
+        cPickle.dump(pheaders, file)
+        file.close()
+
+def main(datasets):
+    organized = organize_datasets(datasets)
+    fix_pickles(organized)
+    log.write()
+    log.standard_status()
+
+if __name__  == "__main__":
+    main(sys.argv[1:])

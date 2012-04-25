@@ -25,8 +25,12 @@ echo "Generating rmaps"
 (cd gentools;  ./gen_rmaps >& gen_rmaps.out; grep -E'error|warn' gen_rmaps.out)
 echo "Generating contexts"
 (cd gentools;  python gen_contexts.py >& gen_contexts.out; grep -E'error|warn' gen_contexts.out)
+
 echo "Dumping catalog datasets"
-(cd gentools;  python cdbs_db.py dumpall)
+(cd gentools;  python cdbs_db.py dumpall;)
+
+echo "Patching dataset pickles with MAST special case datasets"
+(cd gentools; ./fix_pickles ../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
 
 # Examine cdbscatalog.dat to generate the maps relating filekinds,
 # CDBS file suffixes, etc.
