@@ -1,0 +1,18 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+"""This is a script to reduce the output of testall.err into a list
+of datasets important enough to download.
+"""
+
+usage("<test_count_importance_threshhold>", 1, 1);
+
+important = int(sys.argv[1])
+
+for line in lines("grep mismatched testall.err"):
+	words = line.split()
+	count = int(words[-2])
+	dataset = words[-1].strip()
+	if count > important:
+		print dataset
+

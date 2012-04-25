@@ -19,6 +19,8 @@ import crds.hst.parkeys as parkeys
 
 log.set_verbose(False)
 
+DEFAULT_PKL_PATH = "../../../datasets/"
+
 """  
 IPPPSSOOT   ---   dataset naming breakdown
 
@@ -343,11 +345,14 @@ def test(header_generator, ncases=None, context="hst.pmap", datasets=None,
     """
     log.reset()
     if header_generator in crds.hst.INSTRUMENTS:
+        log.write("Getting headers from", repr(header_generator))
         headers = HEADER_GENERATORS[instr].get_headers()
     elif isinstance(header_generator, str): 
         if header_generator.endswith(".pkl"):
+            log.write("Loading pickle", repr(header_generator))
             headers = cPickle.load(open(header_generator))
         else:
+            log.write("Evaling saved headers", repr(header_generator))
             headers = eval(open(header_generator).read())
     else:
         raise ValueError("header_generator should name an instrument, pickle, or eval file.")
@@ -388,7 +393,7 @@ def test(header_generator, ncases=None, context="hst.pmap", datasets=None,
         for (old,new) in mismatched[filekind]:
             if mismatched[filekind][(old, new)]:
                 which = mismatched[filekind][(old, new)]
-                log.write(filekind, "mismatched:", (old,new), len(which), which[0])
+                log.write(filekind, "mismatched:", (old,new), len(which), " ".join(sorted(which)))
             else:
                 log.write(filekind, "mismatched: 0")
     log.write()
@@ -438,17 +443,18 @@ def compare_results(header, crds_refs, mismatched, ignore):
 
 def testall(ncases=10**10, context="hst.pmap", instruments=None, 
             suffix="_headers.pkl", filekinds=None, datasets=None,
-            dump_header=False):
+            dump_header=False, path=DEFAULT_PKL_PATH):
     if instruments is None:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
-        cProfile.runctx("test(instr+suffix, ncases, context, include=filekinds, datasets=datasets, dump_header=dump_header)", globals(), locals(), instr + ".stats")
+        cProfile.runctx("test(path+instr+suffix, ncases, context, include=filekinds, datasets=datasets, dump_header=dump_header)", globals(), locals(), instr + ".stats")
         log.write()
 
-def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
+def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl",
+         path=DEFAULT_PKL_PATH):
     """Store `ncases` header records taken from DADSOPS for `instr`ument in 
     a pickle file,  optionally sampling randomly from all headers.
     """
@@ -457,11 +463,13 @@ def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl"):
     while len(samples) < ncases and headers:
         selected = int(random.random()*len(headers)) if random_samples else 0
         samples.append(headers.pop(selected))
-    cPickle.dump(samples, open(instr + suffix, "w+"))
+    pickle = path + instr + suffix
+    log.write("Saving pickle", repr(pickle))
+    cPickle.dump(samples, open(pickle, "w+"))
 
 
 def dumpall(context="hst.pmap", ncases=10**10, random_samples=True, 
-            suffix="_headers.pkl"):
+            suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
     """Generate header pickles for all instruments referred to by `context`,
     where the headers are taken from the DADSOPS database.   Optionally collect
     only `ncases` samples taken randomly accoring to the `random_samples` flag.
@@ -469,7 +477,7 @@ def dumpall(context="hst.pmap", ncases=10**10, random_samples=True,
     pmap = rmap.get_cached_mapping(context)
     for instr in pmap.selections.keys():
         log.info("collecting", repr(instr))
-        dump(instr, ncases, random_samples, suffix)
+        dump(instr, ncases, random_samples, suffix, path)
 
 
 def main():
@@ -479,7 +487,7 @@ def main():
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
-        testall()
+        testall(path=DEFAULT_PKL_PATH)
     elif sys.argv[1] == "test":
         if len(sys.argv) > 2:
             instruments = [instr.lower() for instr in sys.argv[2].split(",")]
@@ -494,7 +502,8 @@ def main():
             datasets = [d.upper() for d in sys.argv[4].split(",")]
         else:
             datasets = None
-        testall(instruments=instruments, filekinds=filekinds, datasets=datasets, dump_header=log.get_verbose()>60)
+        testall(instruments=instruments, filekinds=filekinds, datasets=datasets, dump_header=log.get_verbose(),
+                path=DEFAULT_PKL_PATH)
     else:
         print """usage:
 python cdbs_db.py dumpall

@@ -157,8 +157,8 @@ def simplify_restriction(restriction_text):
     test = restriction_text
     for i in range(10):
         test = _simplify_restriction(test)
-    for i in range(10):
-        test = _condition_numbers(test)
+#    for i in range(10):
+#        test = _condition_numbers(test)
     val = test.replace("'", '"')
     return val
 

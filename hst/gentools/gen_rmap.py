@@ -414,6 +414,9 @@ def test():
 # ==========================================================================
 
 if __name__ == "__main__":
+    if "--verbose" in sys.argv:
+        log.set_verbose()
+        sys.argv.remove("--verbose")
     if len(sys.argv) == 2:
         generate_all_rmaps(instrument=sys.argv[1])
     elif len(sys.argv) == 3:
