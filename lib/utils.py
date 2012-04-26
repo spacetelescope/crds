@@ -115,10 +115,17 @@ def ensure_dir_exists(fullpath):
 
 # ===================================================================
 
+LOCATORS = {
+    }
+
 def get_file_properties(observatory, filename):
     """Return instrument,filekind,id fields associated with filename.
     """
-    locator = get_locator_module(observatory)
+    if observatory not in LOCATORS:
+        locator = get_object("crds." + observatory + ".locate")
+        LOCATORS[observatory] = locator
+    else:
+        locator = LOCATORS[observatory]
     return locator.get_file_properties(filename)        
 
 # ===================================================================
