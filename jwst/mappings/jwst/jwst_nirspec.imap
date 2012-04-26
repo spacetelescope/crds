@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'Hand written 04-26-2012',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_nirspec.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'ee123182df42ece5fe7eef03ab489bfc189e9dc2',
+}
+
+selector = {
+    'flatfile' : 'jwst_nirspec_flatfile.rmap',
+}
