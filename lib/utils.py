@@ -123,11 +123,19 @@ def get_file_properties(observatory, filename):
 
 # ===================================================================
 
-MODULE_PATH_RE = re.compile(r"crds(\.\w*)+")
+MODULE_PATH_RE = re.compile(r"^crds(\.\w+)+$")
 
 def get_object(dotted_name):
-    """Import the given `dotted_name` and return the object."""
+    """Import the given `dotted_name` and return the object.
     
+    >>> rmap = get_object("crds.rmap")
+    >>> fail = get_object("crds.rmap; eval('2+2')")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid dotted name for get_object() : "crds.rmap; eval('2+2')"
+    """
+    assert MODULE_PATH_RE.match(dotted_name), \
+        "Invalid dotted name for get_object() : " + repr(dotted_name)   
     parts = dotted_name.split(".")
     pkgpath = ".".join(parts[:-1])
     cls = parts[-1]
