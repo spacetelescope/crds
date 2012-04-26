@@ -13,7 +13,7 @@ import re
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file)
-from crds.hst import (tpn)
+from . import tpn
 
 HERE = os.path.dirname(__file__) or "./"
 
