@@ -113,18 +113,7 @@ def ensure_dir_exists(fullpath):
     """
     create_path(os.path.dirname(fullpath))
 
-
 # ===================================================================
-
-def get_locator_module(observatory):
-    """Return the project specific policy module for `observatory`."""
-    if observatory == "hst":
-        import crds.hst.locate as locate
-    elif observatory == "jwst":
-        import crds.jwst.locate as locate
-    else:
-        raise ValueError("Unknown observatory " + repr(observatory))
-    return locate
 
 def get_file_properties(observatory, filename):
     """Return instrument,filekind,id fields associated with filename.
@@ -134,8 +123,11 @@ def get_file_properties(observatory, filename):
 
 # ===================================================================
 
+MODULE_PATH_RE = re.compile(r"crds(\.\w*)+")
+
 def get_object(dotted_name):
     """Import the given `dotted_name` and return the object."""
+    
     parts = dotted_name.split(".")
     pkgpath = ".".join(parts[:-1])
     cls = parts[-1]
