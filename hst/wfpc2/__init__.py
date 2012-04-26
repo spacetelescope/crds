@@ -20,15 +20,17 @@ def precondition_header(rmap, header):
 '''
 
 def fallback_header(rmap, header):
-    filter1 = header["FILTER1"]
-    filter2 = header["FILTER2"]
-    log.verbose("Computing fallback header wfpc2 ", rmap.filekind, 
-                "swapping filter1 was" , filter1, "filter2 was", filter2)
-    header["FILTER1"] = filter1
-    header["FILTER2"] = filter2
-    return header
-    # return None for no fallback available ?
-
+    if rmap.filekind == "flatfile":
+        filter1 = header["FILTER1"]
+        filter2 = header["FILTER2"]
+        log.verbose("Computing fallback header wfpc2 ", rmap.filekind, 
+                    "swapping filter1 was" , filter1, "filter2 was", filter2)
+        header["FILTER1"] = filter1
+        header["FILTER2"] = filter2
+        return header
+    else:
+        return None
+    
 '''
          if lrfwave > 3000 and lrfwave <= 4200:
             filename = "M3C10045U.R4H"

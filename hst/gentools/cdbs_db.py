@@ -492,12 +492,11 @@ def main():
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
         log.set_verbose()
-    if "--profile" in sys.argv:
-        sys.argv.remove("--profile")
-        log.set_verbose()
-        profile = True
-    else:
+    if "--no-profile" in sys.argv:
+        sys.argv.remove("--no-profile")
         profile = False
+    else:
+        profile = True
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
