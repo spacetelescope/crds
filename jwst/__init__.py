@@ -2,6 +2,9 @@ INSTRUMENTS = ["miri","nirspec","nircam"]
 
 EXTENSIONS = [".pmap", ".imap", ".rmap", ".fits", ]
 
-FILEKINDS = ["flatfile"]
+TEXT_DESCR = {
+    "flatfile" : "Flat Field",
+}
 
+FILEKINDS = sorted(TEXT_DESCR.keys())
 

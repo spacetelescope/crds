@@ -131,7 +131,6 @@ def decompose_newstyle_name(filename):
         filekind = parts[2]
         serial = list_get(parts, 3, "")
 
-    assert observatory == "hst"
     assert instrument in INSTRUMENTS+[""], "Invalid instrument " + \
         repr(instrument) + " in name " + repr(filename)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + \
