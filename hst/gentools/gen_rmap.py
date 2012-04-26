@@ -287,8 +287,19 @@ def replace_full_sets_with_star(instrument, filekind, kmap):
 
 REFTYPE_FILTER = {
     ("wfc3", "biasfile") : crds.hst.wfc3.wfc3_biasfile_filter,
+    ("wfpc2", "flatfile") : crds.hst.wfpc2.wfpc2_flatfile_filter,
     # ("acs",  "pfltfile") : crds.hst.acs.acs_pfltfile_filter
 }
+
+for instr in crds.hst.INSTRUMENTS:
+    for filekind in crds.hst.FILEKINDS:
+        try:
+            REFTYPE_FILTER[(instr,filekind)] = utils.get_object(
+                "crds.hst."+instr+"."+instr+"_"+filekind+"_filter")
+            log.info("Found special case filter for",
+                     repr(instr), repr(filekind))
+        except:
+            pass # log.error()
 
 HEADER_ADDITIONS = {}
 

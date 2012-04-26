@@ -393,9 +393,11 @@ def test(header_generator, ncases=None, context="hst.pmap", datasets=None,
         for (old,new) in mismatched[filekind]:
             if mismatched[filekind][(old, new)]:
                 which = mismatched[filekind][(old, new)]
-                log.write(filekind, "mismatched:", (old,new), len(which), " ".join(sorted(which)))
+                log.write(instrument, filekind, "mismatched:", 
+                          old.replace(" ","_"), new.replace(" ","_"), 
+                          len(which), " ".join(sorted(which)))
             else:
-                log.write(filekind, "mismatched: 0")
+                log.write(instrument, filekind, "mismatched: 0")
     log.write()
     log.write(instrument, count, "datasets")
     log.write(instrument, elapsed, "elapsed")
@@ -443,14 +445,20 @@ def compare_results(header, crds_refs, mismatched, ignore):
 
 def testall(ncases=10**10, context="hst.pmap", instruments=None, 
             suffix="_headers.pkl", filekinds=None, datasets=None,
-            dump_header=False, path=DEFAULT_PKL_PATH):
+            dump_header=False, path=DEFAULT_PKL_PATH, profile=False):
     if instruments is None:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
-        cProfile.runctx("test(path+instr+suffix, ncases, context, include=filekinds, datasets=datasets, dump_header=dump_header)", globals(), locals(), instr + ".stats")
+        if profile:
+            cProfile.runctx("test(path+instr+suffix, ncases, context, "
+                            "include=filekinds, datasets=datasets, dump_header=dump_header)",
+                            globals(), locals(), instr + ".stats")
+        else:
+            test(path+instr+suffix, ncases, context, include=filekinds,
+                 datasets=datasets, dump_header=dump_header) 
         log.write()
 
 def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl",
@@ -484,10 +492,16 @@ def main():
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
         log.set_verbose()
+    if "--profile" in sys.argv:
+        sys.argv.remove("--profile")
+        log.set_verbose()
+        profile = True
+    else:
+        profile = False
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "testall":
-        testall(path=DEFAULT_PKL_PATH)
+        testall(path=DEFAULT_PKL_PATH, profile=profile)
     elif sys.argv[1] == "test":
         if len(sys.argv) > 2:
             instruments = [instr.lower() for instr in sys.argv[2].split(",")]
@@ -503,7 +517,7 @@ def main():
         else:
             datasets = None
         testall(instruments=instruments, filekinds=filekinds, datasets=datasets, dump_header=log.get_verbose(),
-                path=DEFAULT_PKL_PATH)
+                path=DEFAULT_PKL_PATH, profile=profile)
     else:
         print """usage:
 python cdbs_db.py dumpall

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-24 15:53:28.973679',
+    'derived_from' : 'generated from CDBS database 2012-04-25 17:56:57.733628',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -7,10 +7,22 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '978fc325d82724c85ef467415859919596115cd9',
+    'sha1sum' : 'd25b9e2a82ad2f91da600a3af5f19629f9de0d8a',
 }
 
 selector = Match({
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >3000 and <=4200 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c10045u.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >4200 and <=5800 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c1004fu.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >5800 and <=7600 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c1004nu.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >7600 and <=10000 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c10052u.r4h',
+    }),
     ('AREA', 1, 0, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1993-12-01 00:00:00' : 'sa61838pu.r4h',
     }),

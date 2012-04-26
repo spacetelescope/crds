@@ -23,6 +23,18 @@ rather than the catalog.
 
 5. Re-run the comparison test to see which problems are resolved as an error
 in the catalog and which remain.
+
+IMPORTANT:  This code makes the assumption that all datasets associated with the
+same wrong answer will produce the same right answer when run through the OTFR
+used by MAST.   This is an assumption because there's no guarantee that all the
+wrong answer file pairs correspond to the same input parameters,  hence CDBS 
+might produce a different answer if the inputs corresponding to some dataset
+actually do differ from the MAST dataset.   This code will make that case 
+appear to work when it does not.   
+
+This approximation could be fixed by reorganizing the mismatched lists to work 
+off the hash of the input parameters tuple... but that is a fairly extensive 
+change.
 """
 import sys
 import pyfits
@@ -30,6 +42,25 @@ import cPickle
 import os.path
 
 from crds import (log, utils)
+
+import get_mast_dataset_ids
+
+def get_fix_lists(errfile):
+    """Pull all the dataset error lists out of errfile as a list of lists"""
+    fix_lists = []
+    for mismatched in get_mast_dataset_ids.get_mismatched_objects():
+        fix_lists.append(mismatched.datasets)
+    return fix_lists
+
+def get_fix_list(dataset, fix_lists):
+    """Return the list of datasets to which dataset is PROBABLY applicable.
+    """
+    for fix_list in fix_lists:
+        if dataset in fix_list:
+            return fix_list
+    # Note:  this will happen when pickles have already been patched.
+    log.warning("No fix list found for dataset", dataset)
+    return []
 
 def organize_datasets(datasets):
     organized = {}
@@ -53,15 +84,23 @@ def fix_iraf_path(val):
         val = val.split("$")[1].upper()
     return val
 
-def fix_pickles(organized):
+def fix_pickles(organized, fix_lists):
+    """Apply the `organized` headers to each of the datasets in `fix_lists`.
+
+    A dataset for which MAST answers exists will be applied to all datasets
+    in the same fix_list to fix the catalog pickle.   If this eliminates the
+    error for one dataset,  it should fix the entire list...   but this is still
+    only an approximation.
+    """
     for instr in organized:
         pickle = "../../../datasets/" + instr + "_headers.pkl"
         log.info("Loading pickle", repr(pickle))
         pheaders = cPickle.load(open(pickle))
         for dataset, header in organized[instr]:
-            log.info("Processing", repr(dataset))
+            log.info("Processing", repr(dataset), eol="")
+            fix_list = get_fix_list(dataset, fix_lists)
             for pheader in pheaders:
-                if pheader["DATA_SET"] != dataset:
+                if pheader["DATA_SET"] not in fix_list:
                     continue
                 for key in pheader:
                     if key in ["DATA_SET"]:
@@ -83,11 +122,12 @@ def fix_pickles(organized):
         cPickle.dump(pheaders, file)
         file.close()
 
-def main(datasets):
+def main(errfile, datasets):
     organized = organize_datasets(datasets)
-    fix_pickles(organized)
+    fix_lists = get_fix_lists(errfile)
+    fix_pickles(organized, fix_lists)
     log.write()
     log.standard_status()
 
 if __name__  == "__main__":
-    main(sys.argv[1:])
+    main(errfile = sys.argv[1], datasets = sys.argv[2:])

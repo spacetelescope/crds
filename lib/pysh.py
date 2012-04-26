@@ -59,7 +59,7 @@ from subprocess import PIPE, STDOUT, Popen
 __all__ = [
     "sys", "os", "re", "glob",
 
-    "sh", "out", "err", "out_err", "status", "words", "lines",
+    "sh", "out", "err", "out_err", "status", "words", "lines", "usage",
 
     "Shell", "pysh_execfile"
 ]

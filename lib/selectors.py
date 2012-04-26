@@ -607,6 +607,7 @@ def matcher(key):
     elif key.startswith("{") and key.endswith("}"):
         return Matcher(key[1:-1])
     elif key.startswith("#") and key.endswith("#"):
+        key = key.lower()
         if " and " in key:
             return BinaryMatcher(key[1:-1], "and")
         elif " or " in key:
