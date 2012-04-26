@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'Hand written 04-26-2012',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_nircam.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '1032182333bee3e7a40d042566761164aa2241f4',
+}
+
+selector = {
+    'flatfile' : 'jwst_nircam_flatfile.rmap',
+}
