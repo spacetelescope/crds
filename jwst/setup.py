@@ -38,6 +38,8 @@ setup(name="crds.jwst",
 
         '': [
             '*.dat',
+            'tpns/*.tpn',
+
             ],
 
         'crds.mappings.jwst' : [
