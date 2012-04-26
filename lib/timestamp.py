@@ -13,8 +13,8 @@ def format_date(d):
         d = parse_date(d)
     return d.isoformat(" ")
 
-T_SEPERATED_DATE_RE = re.compile("\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d")
-ALPHABETICAL_RE = re.compile("[A-Za-z]")
+T_SEPERATED_DATE_RE = re.compile(r"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d")
+ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
 
 def parse_date(d):
     if isinstance(d, datetime.datetime):
@@ -87,9 +87,9 @@ def parse_alphabetical_date(d):
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
-DAY_MONTH_YEAR_RE = re.compile("^\d\d/\d\d/\d\d\d\d$")
-NINETIES_RE = re.compile("^\d\d/\d\d/9\d$")
-DIGIT_4_RE = re.compile("\d\d\d\d")
+DAY_MONTH_YEAR_RE = re.compile(r"^\d\d/\d\d/\d\d\d\d$")
+NINETIES_RE = re.compile(r"^\d\d/\d\d/9\d$")
+DIGIT_4_RE = re.compile(r"\d\d\d\d")
 
 def parse_numerical_date(d):
     if DAY_MONTH_YEAR_RE.match(d):
@@ -122,7 +122,7 @@ class DateParser(object):
         return datetime.datetime(**cls._get_date_dict(match))
 
 class Slashdate(DateParser):
-    _format = re.compile("(?P<day>\d+)\s*/\s*(?P<month>\d+)\s*/\s*(?P<year>\d+)")
+    _format = re.compile(r"(?P<day>\d+)\s*/\s*(?P<month>\d+)\s*/\s*(?P<year>\d+)")
     @classmethod
     def _get_date_dict(cls, match):    
         return dict(month=int(match.group("month")),
@@ -147,10 +147,10 @@ class Sybdate(DateParser):
     datetime.datetime(2001, 3, 21, 13, 0)
     """
     _format = re.compile(
-                "(?P<month>[A-Za-z]+)\s+" + \
-                "(?P<day>\d+)\s+" + \
-                "(?P<year>\d+)" + \
-                "(\s+(?P<hour>\d+):" + \
+                r"(?P<month>[A-Za-z]+)\s+" + \
+                r"(?P<day>\d+)\s+" + \
+                r"(?P<year>\d+)" + \
+                r"(\s+(?P<hour>\d+):" + \
                     "(?P<minute>\d+):" + \
                     "(?P<second>\d+)\s*" + \
                     "(?P<meridian>am|pm|AM|PM)?" + \
@@ -198,7 +198,7 @@ class CdbsDate(DateParser):
 
 # ============================================================================
 
-DATETIME_RE_STR = "(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)"
+DATETIME_RE_STR = r"(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)"
 DATETIME_RE = re.compile(DATETIME_RE_STR)
 DATE_RE_STR = r"\d\d\d\d\-\d\d\-\d\d"
 TIME_RE_STR = r"\d\d:\d\d:\d\d"
