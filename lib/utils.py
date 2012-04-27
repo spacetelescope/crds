@@ -216,7 +216,7 @@ def condition_header(header, needed_keys=[]):
     """
     conditioned = {}
     for key in needed_keys or header:
-        conditioned[key.upper()] = utils.condition_value(header[key])
+        conditioned[key.upper()] = condition_value(header[key])
     return conditioned
     
 # ==============================================================================
