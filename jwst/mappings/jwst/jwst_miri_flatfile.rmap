@@ -5,14 +5,14 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_flatfile.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '0e3d9be6618c47740f0673d3a546472b81c6a319',
+    'sha1sum' : 'dc9632a7dcf91f6ce77aeb9bc149628ecb31c4c9',
 }
 
 selector = Match({
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >3000 and <=4200 #') : UseAfter({
-        '1990-01-01 00:00:00' : 'jwst_miri_flatfile.fits',
+    () : UseAfter({
+        '1990-01-01 00:00:00' : 'jwst_miri_flatfile_0001.fits',
     }),
 })
 
