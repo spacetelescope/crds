@@ -86,9 +86,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         
     dump_mappings(ctx, ignore_cache=ignore_cache)
     
-    conditioned = utils.condition_header(parameters)
-
-    bestrefs = rmap.get_best_references(ctx, conditioned, include=reftypes)
+    bestrefs = get_best_references(ctx, parameters, reftypes=reftypes)
     
     best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
         
