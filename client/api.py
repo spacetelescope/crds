@@ -235,12 +235,12 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
         refs[str(filetype)] = str(localrefs[refname])
     return refs
 
-def cache_best_references(pipeline_context, header, ignore_cache=False):
+def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):
     """Given the FITS `header` of a dataset and a `pipeline_context`, determine
     the best set of reference files for processing the dataset,  cache them 
     locally,  and return the mapping  { filekind : local_file_path }.
     """
-    best_refs = get_best_references(pipeline_context, header)
+    best_refs = get_best_references(pipeline_context, header, reftypes=reftypes)
     local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
     return local_paths
 
@@ -263,7 +263,7 @@ def get_minimum_header(context, dataset, ignore_cache=False):
 
 # ============================================================================
 
-def getreferences(parameters, reftypes=None, context=None):
+def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     """This is the top-level get reference call for all of CRDS. 
     
     `parameters` should be a dictionary-like object mapping { str: str } for
@@ -272,6 +272,9 @@ def getreferences(parameters, reftypes=None, context=None):
     If `reftypes` is None,  return all possible reference types.
     
     If `context` is None,  use the latest available context.
+
+    If `ignore_cache` is True,  download references from server even if 
+    already present.
     """
     for key in parameters:
         assert isinstance(key, str), \
@@ -281,9 +284,8 @@ def getreferences(parameters, reftypes=None, context=None):
         except Exception:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters.")
-        assert isinstance(parameters[key], str), \
-            "Non-string value " + repr(parameters[key]) + \
-            " for key " + repr(key) + " in parameters."
+        assert isinstance(parameters[key], (str,float,int,bool)), \
+            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
     if reftypes is not None:
@@ -302,4 +304,5 @@ def getreferences(parameters, reftypes=None, context=None):
         assert isinstance(context, str) and context.endswith(".pmap"), \
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
         ctx = context
-    return get_best_references(ctx, parameters, reftypes)
+    return cache_best_references(ctx, parameters, reftypes=reftypes, 
+                                 ignore_cache=ignore_cache)

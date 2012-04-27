@@ -75,7 +75,7 @@ def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     and contain the desired header.
     """
     header = get_header(filepath, needed_keys, original_name)
-    return condition_header(header, needed_keys)
+    return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=[], original_name=None):
     """Return the complete unconditioned header dictionary of a reference file.
@@ -86,15 +86,6 @@ def get_header(filepath, needed_keys=[], original_name=None):
         return get_geis_header(filepath)
     else:
         return get_fits_header_union(filepath, needed_keys)
-    
-def condition_header(header, needed_keys=[]):
-    """Return a dictionary of all `needed_keys` from `header` after passing
-    their values through the CRDS value conditioner.
-    """
-    conditioned = {}
-    for key in needed_keys or header:
-        conditioned[key.upper()] = utils.condition_value(header[key])
-    return conditioned
     
 def get_fits_header(fname, needed_keys=[]):
     """Return `needed_keys` or all from FITS file `fname`s primary header."""

@@ -210,6 +210,17 @@ def condition_value(value):
         value = "F"
     return value
 
+def condition_header(header, needed_keys=[]):
+    """Return a dictionary of all `needed_keys` from `header` after passing
+    their values through the CRDS value conditioner.
+    """
+    conditioned = {}
+    for key in needed_keys or header:
+        conditioned[key.upper()] = utils.condition_value(header[key])
+    return conditioned
+    
+# ==============================================================================
+
 def instrument_to_observatory(instrument):
     """Given the name of an instrument,  return the associated observatory."""
     instrument = instrument.lower()
