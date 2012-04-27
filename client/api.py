@@ -39,6 +39,61 @@ __all__ = ["getreferences",
            
            "get_minimum_header"]
 
+# ============================================================================
+
+def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
+    """This is the top-level get reference call for all of CRDS. 
+    
+    `parameters` should be a dictionary-like object mapping { str: str } for
+    crtical best reference related input parameters.
+    
+    If `reftypes` is None,  return all possible reference types.
+    
+    If `context` is None,  use the latest available context.
+
+    If `ignore_cache` is True,  download references from server even if 
+    already present.
+    """
+    for key in parameters:
+        assert isinstance(key, str), \
+            "Non-string key " + repr(key) + " in parameters."
+        try:
+            parameters[key]
+        except Exception:
+            raise ValueError("Can't fetch mapping key " + repr(key) + 
+                             " from parameters.")
+        assert isinstance(parameters[key], (str,float,int,bool)), \
+            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+    assert isinstance(reftypes, (list, tuple, type(None))), \
+        "reftypes must be a list or tuple of strings, or sub-class of those."
+
+    if reftypes is not None:
+        for reftype in reftypes:
+            assert isinstance(reftype, str), \
+                "each reftype must be a string, .e.g. biasfile or darkfile."
+    if context is None:
+        try:
+            instrument = parameters["INSTRUME"]
+        except KeyError:
+            raise ValueError("No 'INSTRUME' keyword specified,  "
+                             "required to determine context.")
+        observatory = utils.instrument_to_observatory(instrument)
+        ctx = get_default_context(observatory)
+    else:
+        assert isinstance(context, str) and context.endswith(".pmap"), \
+            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
+        ctx = context
+        
+    dump_mappings(ctx, ignore_cache=ignore_cache)
+    
+    conditioned = utils.condition_header(parameters)
+
+    bestrefs = rmap.get_best_references(ctx, conditioned, include=reftypes)
+    
+    best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
+        
+    return best_refs_paths
+
 # ==============================================================================
 
 # Server for CRDS services and mappings
@@ -261,48 +316,3 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     ctx = rmap.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
 
-# ============================================================================
-
-def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
-    """This is the top-level get reference call for all of CRDS. 
-    
-    `parameters` should be a dictionary-like object mapping { str: str } for
-    crtical best reference related input parameters.
-    
-    If `reftypes` is None,  return all possible reference types.
-    
-    If `context` is None,  use the latest available context.
-
-    If `ignore_cache` is True,  download references from server even if 
-    already present.
-    """
-    for key in parameters:
-        assert isinstance(key, str), \
-            "Non-string key " + repr(key) + " in parameters."
-        try:
-            parameters[key]
-        except Exception:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters.")
-        assert isinstance(parameters[key], (str,float,int,bool)), \
-            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
-    assert isinstance(reftypes, (list, tuple, type(None))), \
-        "reftypes must be a list or tuple of strings, or sub-class of those."
-    if reftypes is not None:
-        for reftype in reftypes:
-            assert isinstance(reftype, str), \
-                "each reftype must be a string, .e.g. biasfile or darkfile."
-    if context is None:
-        try:
-            instrument = parameters["INSTRUME"]
-        except KeyError:
-            raise ValueError("No 'INSTRUME' keyword specified,  "
-                             "required to determine context.")
-        observatory = utils.instrument_to_observatory(instrument)
-        ctx = get_default_context(observatory)
-    else:
-        assert isinstance(context, str) and context.endswith(".pmap"), \
-            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
-        ctx = context
-    return cache_best_references(ctx, parameters, reftypes=reftypes, 
-                                 ignore_cache=ignore_cache)
