@@ -5,14 +5,14 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nircam_flatfile.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '00fa571570350ea7373a9941cd1c2f36fdf528ca',
+    'sha1sum' : 'fe99965580170b5de8ab5bba273e83ce67e89f50',
 }
 
 selector = Match({
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >3000 and <=4200 #') : UseAfter({
-        '1990-01-01 00:00:00' : 'jwst_nircam_flatfile.fits',
+    () : UseAfter({
+        '1990-01-01 00:00:00' : 'jwst_nircam_flatfile_0001.fits',
     }),
 })
 

@@ -45,5 +45,8 @@ setup(name="crds.jwst",
         'crds.mappings.jwst' : [
             '*.*map',
              ],
+        'crds.references.jwst' : [
+            '*.*fits',
+             ],
         },
     )
