@@ -203,13 +203,14 @@ def fixre(regex):
     return "|".join(["^" + par + "$" for par in regex.split("|")])
 
 def roll_up_n_vars(matches):
+    original_matches = set(expand_all_ors(matches[:]))
     if not matches:
         return []
     for i in range(len(matches[0])):
-        matches = roll_up_one_var(matches)
+        matches = roll_up_one_var(original_matches, matches)
     return matches
 
-def roll_up_one_var(matches):
+def roll_up_one_var(original_matches, matches):
     """Given a list of match tuples `matches`,  or-together any tuples which
     differ by only a single variable.
     """
@@ -217,7 +218,7 @@ def roll_up_one_var(matches):
     rolled = []
     while remainder:
         match = remainder.pop()
-        combined, remainder = _roll_up_one_var(match, remainder)
+        combined, remainder = _roll_up_one_var(original_matches, match, remainder)
         rolled.append(combined)
     return rolled
 
@@ -226,10 +227,35 @@ def _roll_up_one_var(match, matches):
     combined = match
     for match2 in matches:
         if differ_by_one(combined, match2):
-            combined = fold_one(combined, match2)
-            remainder.remove(match2)
+            maybe = fold_one(combined, match2)
+            if verify_completeness(maybe, original_matches):
+                combined = maybe
+                remainder.remove(match2)
     return combined, remainder
 
+def verify_completeness(maybe, original_matches):
+    for simple_match in expand_ors(maybe):
+        if simple_match not in original_matches:
+            return False
+    return True
+
+def expand_all_ors(matches):
+    result = []
+    for match in matches:
+        result.extend(expand_ors(match))
+    return result
+
+def expand_ors(match):
+    if not match:
+        return [()]
+    else:
+        expanded = []
+        nested_vals = expand_ors(match[1:])
+        for val in match[0].split("|"):
+            for nested in nested_vals:
+                expanded.append((val,) + nested)
+        return expanded
+                  
 def differ_by_one(match1, match2):
     return len(set(match1) - set(match2)) == 1
 
