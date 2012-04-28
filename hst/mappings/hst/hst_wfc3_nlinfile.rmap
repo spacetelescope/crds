@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-24 15:53:26.731867',
+    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:27.937642',
     'filekind' : 'NLINFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR == "IR")',
-    'sha1sum' : '2931792b709d1c02b183b0b9b40275dc0ad1a06d',
+    'sha1sum' : '57cb41c35234479edd3cb5668a2d99e706d1effd',
 }
 
 selector = Match({

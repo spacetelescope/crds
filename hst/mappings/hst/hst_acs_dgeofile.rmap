@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-24 15:52:27.500877',
+    'derived_from' : 'generated from CDBS database 2012-04-28 12:06:11.424084',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '55848c632b4bb995790712027eb5c8b4e191a314',
+    'sha1sum' : 'f5b09f2c839e3ee06def7e0ac49837ff9f7ae454',
 }
 
 selector = Match({

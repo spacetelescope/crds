@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-25 17:56:57.733628',
+    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:31.339841',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -7,20 +7,32 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'd25b9e2a82ad2f91da600a3af5f19629f9de0d8a',
+    'sha1sum' : 'e4e91d52cdf129d124de4b8c69677b13d9acfcef',
 }
 
 selector = Match({
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >3000 and <=4200 #') : UseAfter({
+    ('*', '*', '*', 'EXT', 'FR*', 'NONE', '# >3000 and <=4200 #') : UseAfter({
         '1990-01-01 00:00:00' : 'm3c10045u.r4h',
     }),
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >4200 and <=5800 #') : UseAfter({
+    ('*', '*', '*', 'EXT', 'FR*', 'NONE', '# >4200 and <=5800 #') : UseAfter({
         '1990-01-01 00:00:00' : 'm3c1004fu.r4h',
     }),
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >5800 and <=7600 #') : UseAfter({
+    ('*', '*', '*', 'EXT', 'FR*', 'NONE', '# >5800 and <=7600 #') : UseAfter({
         '1990-01-01 00:00:00' : 'm3c1004nu.r4h',
     }),
-    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*|NONE', '# >7600 and <=10000 #') : UseAfter({
+    ('*', '*', '*', 'EXT', 'FR*', 'NONE', '# >7600 and <=10000 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c10052u.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*', '# >3000 and <=4200 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c10045u.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*', '# >4200 and <=5800 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c1004fu.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*', '# >5800 and <=7600 #') : UseAfter({
+        '1990-01-01 00:00:00' : 'm3c1004nu.r4h',
+    }),
+    ('*', '*', '*', 'EXT', 'FR*|NONE', 'FR*', '# >7600 and <=10000 #') : UseAfter({
         '1990-01-01 00:00:00' : 'm3c10052u.r4h',
     }),
     ('AREA', 1, 0, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
@@ -184,15 +196,16 @@ selector = Match({
         '1995-01-01 00:00:00' : 'tat09497u.r4h',
     }),
     ('FULL', 2, 51, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
-        '1993-01-01 00:00:00' : 'f4i1559cu.r4h',
         '1995-01-01 00:00:00' : 'tat09499u.r4h',
+    }),
+    ('FULL', 2, '4|51', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '1993-01-01 00:00:00' : 'f4i1559cu.r4h',
     }),
     ('FULL', 4, 0, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1993-12-01 00:00:00' : 's9m1613du.r4h',
         '1994-01-01 00:00:00' : 't5b1134pu.r4h',
     }),
     ('FULL', 4, 5, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
-        '1993-01-01 00:00:00' : 'f4i1559cu.r4h',
         '1994-01-01 00:00:00' : 'ta211182u.r4h',
         '1995-01-01 00:00:00' : 'ta211181u.r4h',
     }),
@@ -207,6 +220,9 @@ selector = Match({
     }),
     ('FULL', 4, 38, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1993-12-01 00:00:00' : 't9p10068u.r4h',
+    }),
+    ('FULL', 4, '5|7', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
+        '1993-01-01 00:00:00' : 'f4i1559cu.r4h',
     }),
     ('FULL', 5, 51, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1994-01-01 00:00:00' : 'tat0949au.r4h',
@@ -692,9 +708,6 @@ selector = Match({
     }),
     ('FULL', '18|25', '53|54|55', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1994-01-01 00:00:00' : 'f4i1559cu.r4h',
-    }),
-    ('FULL', '2|4', '4|7', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
-        '1993-01-01 00:00:00' : 'f4i1559cu.r4h',
     }),
     ('FULL', '44|45|47', 0, 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1995-01-01 00:00:00' : 'f4i1559cu.r4h',
