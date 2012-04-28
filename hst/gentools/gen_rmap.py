@@ -222,7 +222,7 @@ def roll_up_one_var(original_matches, matches):
         rolled.append(combined)
     return rolled
 
-def _roll_up_one_var(match, matches):
+def _roll_up_one_var(original_matches, match, matches):
     remainder = matches[:]
     combined = match
     for match2 in matches:
@@ -251,7 +251,7 @@ def expand_ors(match):
     else:
         expanded = []
         nested_vals = expand_ors(match[1:])
-        for val in match[0].split("|"):
+        for val in str(match[0]).split("|"):
             for nested in nested_vals:
                 expanded.append((val,) + nested)
         return expanded
