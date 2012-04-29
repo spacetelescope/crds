@@ -223,29 +223,45 @@ def roll_up_one_var(original_matches, matches):
     return rolled
 
 def _roll_up_one_var(original_matches, match, matches):
+    """Combine tuple `match` with every tuple in `matches` which differs by only
+    a single variable.   After each fold,  verify that the expansion of the folded
+    tuple is fully covered by the `origninal_matches` cases.
+    
+    Returns  (folded_tuple,  unfolded_matches)
+    """
     remainder = matches[:]
     combined = match
     for match2 in matches:
         if differ_by_one(combined, match2):
-            maybe = fold_one(combined, match2)
-            if verify_completeness(maybe, original_matches):
-                combined = maybe
+            candidate_fold = fold_one(combined, match2)
+            if verify_completeness(candidate_fold, original_matches):
+                combined = candidate_fold
                 remainder.remove(match2)
     return combined, remainder
 
-def verify_completeness(maybe, original_matches):
-    for simple_match in expand_ors(maybe):
+def verify_completeness(candidate_fold, original_matches):
+    """The folding algorithm is over aggressive.   This check ensures that the
+    full expansion of the candidate folded tuple is covered by the expansions of
+    all the original match cases.
+    """
+    for simple_match in expand_ors(candidate_fold):
         if simple_match not in original_matches:
             return False
     return True
 
 def expand_all_ors(matches):
+    """For each tuple in matches,  explode it's or'ed items into all combinations
+    of simple un-or'ed items.
+    """
     result = []
     for match in matches:
         result.extend(expand_ors(match))
     return result
 
 def expand_ors(match):
+    """For a single match tuple containing or'ed items,  explode into the list
+    of equivalent match tuples containing only simple un-or'ed items.
+    """
     if not match:
         return [()]
     else:
