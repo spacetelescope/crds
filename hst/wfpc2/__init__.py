@@ -25,8 +25,8 @@ def fallback_header(rmap, header):
         filter2 = header["FILTER2"]
         log.verbose("Computing fallback header wfpc2 ", rmap.filekind, 
                     "swapping filter1 was" , filter1, "filter2 was", filter2)
-        header["FILTER1"] = filter1
-        header["FILTER2"] = filter2
+        header["FILTER1"] = filter2
+        header["FILTER2"] = filter1
         return header
     else:
         return None
