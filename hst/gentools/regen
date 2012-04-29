@@ -7,13 +7,13 @@
 
 # Regenerate the CDBS reference file map, basically a cache of the 
 # /grp/hst/cdbs dir listing to use to find CDBS file paths fast.
-python locate.py
+(cd ..; python locate.py)
 
 # Process CDBS reference_file_defs.xml to extract information about when 
 # reference files are relevant to a parameter set,  when particular parameters
 # are relevant to a reference selection, what the relationship between FITS
 # keywords and database column names is, etc.   i.e. regenerate parkeys.dat
-python parkeys.py
+(cd ..; python parkeys.py)
 
 # Re-install CRDS to capture the new .dat files from the above.
 ../install
@@ -22,19 +22,19 @@ python parkeys.py
 # Dump the DADSOPS dataset catalogs into pickles for testing consistent with
 # the current rmaps;  the best refs in DADSOPS
 echo "Generating rmaps"
-(cd gentools;  ./gen_rmaps >& gen_rmaps.out; grep -E'error|warn' gen_rmaps.out)
+(./gen_rmaps >& gen_rmaps.out; grep -E'error|warn' gen_rmaps.out)
 echo "Generating contexts"
-(cd gentools;  python gen_contexts.py >& gen_contexts.out; grep -E'error|warn' gen_contexts.out)
+(python gen_contexts.py >& gen_contexts.out; grep -E'error|warn' gen_contexts.out)
 
 echo "Dumping catalog datasets"
-(cd gentools;  python cdbs_db.py dumpall;)
+(python cdbs_db.py dumpall;)
 
 echo "Patching dataset pickles with MAST special case datasets"
-(cd gentools; ./fix_pickles ../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
+(./fix_pickles ../../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
 
 # Examine cdbscatalog.dat to generate the maps relating filekinds,
 # CDBS file suffixes, etc.
-python tpn.py hst.pmap
+(cd ..; python tpn.py hst.pmap)
 
 # Re-install CRDS to capture the latest generated .dat files
 ../install
@@ -45,5 +45,5 @@ echo "Certifying all mappings"
 
 # Run comparison tests on all HST datasets.
 echo "Testing all datasets"
-(cd gentools; ./testall >& testall.err;  grep -E 'error|warn|datasets|/sec' testall.err)
+(./testall >& testall.err;  grep -E 'error|warn|datasets|/sec' testall.err)
 
