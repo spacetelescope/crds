@@ -116,7 +116,6 @@ def fix_pickles(organized, fix_lists):
                                  "key", repr(key),
                                  "from", pval, "to", hval)
                         pheader[key] = hval
-                break
         log.info("Saving pickle", repr(pickle))
         file = open(pickle, "w+")
         cPickle.dump(pheaders, file)

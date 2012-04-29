@@ -617,7 +617,6 @@ class InstrumentContext(Mapping):
         if not include:
             include = self.selections
         for filekind in include:
-            log.verbose("\nGetting bestref for", repr(filekind))
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
             except IrrelevantReferenceTypeError:
@@ -752,16 +751,20 @@ class ReferenceMapping(Mapping):
         """Return the single reference file basename appropriate for 
         `header_in` selected by this ReferenceMapping.
         """
+        log.verbose("Getting bestrefs for", self.instrument, self.filekind, 
+                    "parkeys", self.parkey)
         self.check_relevance(header_in)  # Is this rmap appropriate for header
         self.validate_header(header_in)  # Are required params present and valid
         # Some filekinds, .e.g. ACS biasfile, mutate the header 
         header = self._precondition_header(self, header_in)
         try:
             return self.selector.choose(header)
-        except Exception:
+        except Exception, exc:
+            log.verbose("First selection failed: " + str(exc))
             header = self._fallback_header(self, header_in)
             if header:
                 self.validate_header(header)
+                log.verbose("Fallback lookup on", repr(header))
                 return self.selector.choose(header)
             else:
                 raise
