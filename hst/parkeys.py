@@ -16,16 +16,18 @@ class Adjustment(object):
     """Describes mutations to parkeys and rows required by specific
     instrument reference filekinds.
     """
-    def __init__(self, ignore=[], translate={}):
+    def __init__(self, ignore=[], translate={}, extra=[]):
         self.ignore = ignore
         self.translate = translate
-        
+        self.extra = extra
+
     def adjust(self, parkeys):
         """Returned the reduced FITS and database versions of the parkeys list.
         Reduced FITS is missing ignored parkeys.  Database version includes
         parkey FITS to database field name translations.
         """
         fits, db = [], []
+        parkeys = parkeys + self.extra
         for key in parkeys:
             if key not in self.ignore:
                 fits.append(key)
@@ -51,6 +53,12 @@ ADJUSTMENTS = {
     "wfc3" : {
                 "biasfile": Adjustment(
                     ignore=["subarray",],                 
+                    ),
+              },
+    "cos" : {
+                "spwcstab": Adjustment(
+                    ignore=["exptype",],   # used in relevance, not matching, may be in db
+                    extra=["exptype",],
                     ),
               },
 }

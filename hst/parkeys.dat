@@ -258,7 +258,7 @@
                     'reftype': 'pha',
                     'relevance': '(DETECTOR == "FUV")'},
          'spwcstab': {'db_translations': {},
-                      'not_in_db': (),
+                      'not_in_db': ('exptype',),
                       'parkey_restrictions': {},
                       'parkeys': ('detector', 'obstype'),
                       'reftype': 'spwcs',
