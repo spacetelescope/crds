@@ -326,6 +326,10 @@ class Selector(object):
                 differences.append(msg(key, "added " + repr(other_choice)))
         return differences
     
+    def merge(self, other):
+        raise AmbiguousMatchError("More than one match was found at the same weight and " +
+            self.__class__.__name__ + " does not support merging.")
+
 # ==============================================================================
 
 def match_superset(tuple1, tuple2):
@@ -1107,6 +1111,14 @@ class GeomtricallyNearestSelector(Selector):
 
     >>> r.choose({"effective_wavelength":'5.1'})
     'cref_flatfield_137.fits'
+    
+    A GeometricallyNearestSelector doesn't know now to resolve an
+    ambiguous match by merging two selectors:
+    
+    >>> r.merge(r)
+    Traceback (most recent call last):
+    ...
+    AmbiguousMatchError: More than one match was found at the same weight and GeomtricallyNearestSelector does not support merging.
     """
     @classmethod
     def condition_key(cls, key):
