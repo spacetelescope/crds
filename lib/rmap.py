@@ -892,6 +892,8 @@ class ReferenceMapping(Mapping):
         try:
             if self._relevance_expr != "always":
                 relevant = eval(self._relevance_expr, {}, header)
+                log.verbose("Filekind ", self.instrument, self.filekind, 
+                            "is relevant: ", relevant)
             else:
                 relevant = True
         except Exception, exc:

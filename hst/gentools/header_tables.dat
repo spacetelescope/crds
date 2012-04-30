@@ -48,6 +48,7 @@
          'detector': 'cos_ref_data.csr_detector',
          'disptab': 'cos_ref_data.csr_best_disptab',
          'expstart': 'cos_ref_data.csr_expstart',
+         'exptype':  'cos_a_data.csa_exptype', 
          'flatfile': 'cos_ref_data.csr_best_flatfile',
          'fluxtab': 'cos_ref_data.csr_best_fluxtab',
          'geofile': 'cos_ref_data.csr_best_geofile',
