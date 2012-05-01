@@ -593,6 +593,10 @@ def matcher(key):
     1
     >>> d.match("3200")
     -1
+    >>> matcher("between 42 39")
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid between relation 'between 42 39' should be 'between lower_bound upper_bound'
 
     A value of N/A becomes a matcher which always returns 0.
     
@@ -621,6 +625,9 @@ def matcher(key):
     elif key.lower().startswith("between"):
         parts = key.split()
         assert len(parts) == 3, "Invalid between relation " + repr(key)
+        assert float(parts[1]) <= float(parts[2]), \
+            "Invalid between relation " + repr(key) + \
+            " should be 'between lower_bound upper_bound'"
         return BinaryMatcher(">=" + parts[1]+ " and <" + parts[2], "and")
     elif "|" in key or "*" in key:
         return GlobMatcher(key)
