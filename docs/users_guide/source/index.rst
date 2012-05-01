@@ -7,7 +7,7 @@ CRDS User Manual
 ===================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    user_guide.rst
    release_notes.rst

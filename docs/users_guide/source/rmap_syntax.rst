@@ -141,6 +141,9 @@ A sample reference mapping for HST COS DEADTAB looks like::
 Reference mapping selectors are constructed as a nested hierarchy of selection
 operators which match against various dataset header keywords.
 
+Parkeys
+.......
+
 For reference mappings,  the header "parkey" field is a tuple of tuples.  Each 
 stage of the nested selector consumes the next tuple of header keys.  For the 
 example above,   the Match operator matches against the value of the dataset 
@@ -148,71 +151,148 @@ keyword "DETECTOR".   Based on that match, the selected UseAfter operator
 matches against the dataset's "DATE-OBS" and "TIME-OBS" keywords to lookup
 the name of a reference file.
 
-HST Selectors
--------------
+Selectors
+---------
 
-For HST,  all reference mapping selectors are defined as a two tiered hierarchy 
-with one general matching step (Match) and one date-time match step (UseAfter).   
-All the CRDS selector operators are written to select either a filename *or*
+All the CRDS selection operators are written to select either a filename *or*
 a nested operator.   In the case of HST,  the Match operator locates a nested
 UseAfter operator which in turn locates the reference file.
 
 Match
 .....
 
-Conceptually,  the Match operator does a dictionary lookup based on the header
-keyword values listed in the first tuple of rmap header field *parkey*.   In
-actuality however,  CRDS does a winnowing search based on each successive 
-parkey value,  eliminating impossible matches and returning the best matching
-survivor.   There are a number of special values associated with the CRDS Match
-operator:  *,  Regular Expressions, N/A, and Substitutions.
+Based on a dataset`s header values,  Match locates the match tuple which best
+matches the dataset.   Conceptually this is a dictionary lookup.   In actuality,
+CRDS processes each match parameter in succession,  at each step eliminating
+match candidates that cannot possibly match.
 
-Wild Cards and Regular Expressions
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Parameter Tuples and Simple Matches
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-CRDS supports pseudo-regular expressions in its match patterns.   A
-tuple value of "*" will match any value assigned to that parameter by the 
-dataset.   Similarly,  literal patterns separated by the "|" punctuator
-, e.g.  "A|B|C|D", will match any one of the patterns,  .e.g. "A" or "B" or
-"C" or "D".   These are dubbed "pseudo" regular expressions because "*" is 
-techinically equivalent to "^.*$",  and "A|B" is technically equivalent to
-"^A$|^B$".   While losing some flexibility,  CRDS simplifies the notation for
-the sake of brevity and clarity.
+The CRDS Match operator typically matches a dataset header against a tuple
+which defines multiple parameter values whose names are specified in the rmap 
+header `parkey`::
 
+   ("UVIS", "F122LP")   :  'some_file_or_nested_selection'
+
+Alternately,  for simple use cases the Match operator can match against single
+strings,  which is a simplified syntax for a 1-tuple::
+
+   'UVIS'  :  'some_file_or_nested_selection'
+   ('UVIS',) : 'this_is_the_equivalent_one_tuple'
+
+Single Parameter Values
+,,,,,,,,,,,,,,,,,,,,,,,
+
+Each value within the match tuples of a Match operator can be an expression in
+its own right.   There are a number of special values associated with each
+match expression:  Ors |, Wildcards *,  Regular Expressions (), Literals {},
+Relationals, between, N/A, and Substitutions.
+
+Or |
+,,,,
+
+Many CRDS match expressions consist of a series of match patterns separated by
+vertical bars.   The vertical bar is read as "or" and means that a match occurs
+if either pattern matches that dataset header.   For example, the expression::
+
+   ("either_this|that","1|2|3")  : "some_file.fits"
+   
+will match::
+
+   ("either_this", "2")
+   
+and also::
+   
+   ("that", "1")
+
+Wild Cards * 
+,,,,,,,,,,,,
+
+By default,  * is interpreted in CRDS as a glob pattern,  much like UNIX shell
+file name matching.  * matches any sequence of characters.  The expression::
+
+  ("F*122",) : "some_file.fits"
+
+will match any value starting with "F" and ending with "122".
+
+Regular Expressions
+,,,,,,,,,,,,,,,,,,,
+
+CRDS can match on true regular expressions.   A true regular expression match is
+triggered by bracketing the match in parentheses ()::
+
+  ("(^F[^13]22$)",)  : "some_file.fits"
+
+The above corresponds to matching the regular expression "^F[^1234]22$" (note
+that the bracketing parentheses within the string are removed.)   Regular
+expression syntax is explained in the Python documentation for the re module.
+The above expression will match values starting with "F", followed by any
+character which is not "1" or "3" followed by "22".
+
+Literal Expressions
+,,,,,,,,,,,,,,,,,,,
+
+A literal expression is bracketed with curly braces {} and is matched without
+any interpretation whatsoever.   Hence,  special characters like * or | are
+interpreted literally rather than as ors or wildcards.  The expression::
+
+  ("{F|*G}",) : "some_file.fits"
+
+matches the value "F|*G" as opposed to "F" or anything ending with "G".
+
+Relational Expressions
+,,,,,,,,,,,,,,,,,,,,,,
+
+Relational expressions are bracketed by the pound character #.   Relational
+expressions do numerical comparisons on the header value to determine a match.
+Relational expressions have implicit variables and support the operators::
+ 
+   > >= < <= == and or
+
+The expression::
+
+  ("# >1 and <37 #",)  : "some_file.fits"
+
+will match any number greater than 1 and less than 37.
+
+Between
+,,,,,,,
+
+A special relational operator "between" is used to simply express a range
+of numbers >= to the lower bound and < the upper bound,  similar to Python 
+slicing::
+
+  ("between 1  47",) : "some_file.fits"
+
+will match any number greater than or equal to 1 and less than 47.   This is 
+equivalent to::
+
+  ("# >=1 and <47 #",) : "some_file.fits"
+  
+Note that "between" matches sensibly stack into a complete range.  The expressions::
+
+  ("between 1 47",) : "some_file.fits"
+  ("between 47 90", ) : "another_file.fits"
+
+provide complete coverage for the range between 1 and 90.
 
 N/A
 ,,,
 
-Some of the HST rmaps have match tuple values of "N/A",  or Not Applicable.   
-This indicates that the parameter does not "count" for matching that case.
-A value of N/A is matched as a special version of "*".   N/A will match any
-value in the dataset,  or no value,  but does not add to the overall sense of
-goodness of the match.   Effectively, N/A parameters are ignored for that match
-case only,  during matching only.
+Some rmaps have match tuple values of "N/A",  or Not Applicable.   
+A value of N/A is matched as a special version of "*", matching anything,  but
+not affecting the "weight" of the match.
 
-There are a couple uses for N/A parameters by HST.    First,  sometimes a
-parameter is irrelevant in the context of the other parameters.   Second,
-sometimes a parameter relevant,  but is not stored in the reference file or
-CDBS,  and is not known until supplied by the dataset.   In this second case,
-the unknown parameter can still be used to mutate the values of the other
-parameters,  prior to doing the match. At least initially this technique is used
-for ACS biasfile with match customization code.
+   ('HRC', 'N/A') :  "some_file.fits"
 
-An example of both regular expression and N/A matching occurs in this extract
-from the ACS biasfile rmap::
-
-    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
-
-    ('HRC', 'ABCD|AD|BC', '1.0|2.0|4.0|8.0', '1062.0', '1044.0', '19.0', '0.0', 'N/A', 'N/A', 'N/A') : UseAfter({
-        '1992-01-01 00:00:00' : 'kcb1734jj_bia.fits',
-    }),
-
-This case matches 3 distinct values for CCDAMP, namely ABCD, AD, and BC. It
-matches 4 distinct values for CCDGAIN, namely 1.0, 2.0, 4.0, and 8.0.   The
-parameters XCORNER, YCORNER, and CCDCHIP are unknown to CDBS and only supplied
-by actual ACS datasets.   They are used to mutate the values of NUMROWS and 
-CCDAMP prior to matching,  and hence while they affect the outcome of the match,
-they are not used literally during the match.
+There are a couple uses for N/A parameters.    First,  sometimes a parameter is
+irrelevant in the context of the other parameters.   So for an rmap which covers
+multiple instrument modes,  a parameter may not apply to all modes. Second, 
+sometimes a parameter is relevant to custom lookup code,  but is not used by the 
+match directly.  In this second case,   the "N/A" parameter may be used by custom
+header preconditioning code to assist in mutating the other parameter values
+that *are* used in the match.
 
 Substitution Parameters
 ,,,,,,,,,,,,,,,,,,,,,,,
@@ -273,7 +353,7 @@ UseAfter
 
 The UseAfter selector matches an ordered sequence of date time values to
 corresponding reference filenames.   UseAfter finds the greatest date-time which
-is less than or equal to ( <= ) TEXPSTRT of the dataset.   Unlike
+is less than or equal to ( <= ) EXPSTART of a dataset.   Unlike
 reference file and dataset timestamp values,  all CRDS rmaps represent times in
 the single format shown in the rmap example below::
 
@@ -292,7 +372,67 @@ In the above mapping,  when the detector is HRC,  if the dataset's date/time
 is before 1991-01-01,  there is no match.   If the date/time is between
 1991-01-01 and 1992-01-01,  the reference file 'j4d1435hj_a2d.fits' is matched.
 If the dataset date/time is 1992-01-01 or after,  the recommended reference
-file is 'kcb1734ij_a2d.fits'.
+file is 'kcb1734ij_a2d.fits'
+
+SelectVersion
+.............
+
+The SelectVersion() rmap operator uses a software version and various relations
+to make a selection::
+
+   selector = SelectVersion({
+      '<3.1':    'cref_flatfield_65.fits',
+      '<5':      'cref_flatfield_73.fits',
+      'default': 'cref_flatfield_123.fits',
+   })
+   
+While similar to relational expressions in Match(),   SelectVersion() is 
+dedicated, simpler,  and more self-documenting.  With the exception of default,
+versions are examined in sorted order.
+
+ClosestTime
+...........
+
+The ClosestTime() rmap operator does a lookup on a series of times and selects
+the closest time which either precedes or follows the given parameter value::
+
+    selector = ClosestTime({
+         '2017-04-24 00:00:00':  "cref_flatfield_123.fits",
+         '2018-02-01 00:00:00' : "cref_flatfield_222.fits",
+         '2019-04-15 00:00:00':  "cref_flatfield_123.fits",
+    })
+
+So a parameter of '2017-04-25 00:00:00' would select 'cref_flatfield_123.fits'.
+
+GeometricallyNearest
+....................
+
+The GeometricallyNearest() selector applies a distance relation between a
+numerical parameter and the match values.   The match value which is closest to
+the supplied parameter is chosen::
+
+    selector = GeomtricallyNearest({
+        1.2 : "cref_flatfield_120.fits",
+        1.5 : "cref_flatfield_124.fits",
+        5.0 : "cref_flatfield_137.fits",
+    })
+
+In this case,  a value of 1.3 would match 'cref_flatfield_120.fits'.
 
 
+Bracket
+.......
+
+The Bracket() selector is unusual because it returns the pair of selections which
+enclose the supplied parameter value::
+
+    selector = Bracket({
+        1.2: "cref_flatfield_120.fits",
+        1.5: "cref_flatfield_124.fits",
+        5.0: "cref_flatfield_137.fits",
+    })
+
+Here,  a parameter value of 1.3 returns the value::
+
+    ('cref_flatfield_120.fits', 'cref_flatfield_124.fits')
 
