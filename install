@@ -6,21 +6,33 @@ cd `dirname $0`
 
 ./clean
 
+rm -f install.log
+
 for dir in lib client hst jwst
 do
     if (test -e $dir)
     then
     	echo "Installing $dir"
-	(cd $dir;  python setup.py install $* --force)  > /dev/null
+		echo "=====================================================" >>install.log
+    	echo "Installing $dir" >> install.log
+		echo "=====================================================" >>install.log
+	(cd $dir;  python setup.py install $* --force)  >> install.log
     else
-	echo "Skipping $dir"
+		echo "Skipping $dir"
+		echo "=====================================================" >>install.log
+		echo "Skipping $dir" >>install.log
+		echo "=====================================================" >>install.log
     fi
 done
 
 echo "Installing django-json-rpc"
+
+echo "=====================================================" >>install.log
+echo "Installing django-json-rpc" >> install.log
+echo "=====================================================" >>install.log
 tar zxf third_party/django-json-rpc-git-0.0.pygz
 cd django-json-rpc-git-0.0
-python setup.py install $* --force >/dev/null
+python setup.py install $* --force >> install.log
 cd ..
 rm -rf django-json-rpc-git-0.0
 
