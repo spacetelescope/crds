@@ -19,22 +19,22 @@ acr_best_biasfile   BIAS Frame  BIA
 acr_best_cfltfile   CORONAGRAPHIC SPOT FLAT IMAGE   CFL
 acr_best_darkfile   DARK Frame  DRK
 acr_best_dfltfile   DELTA FLAT Field IMAGE    DFL
-acr_best_dgeofile   GEOMETRIC DELTA IMAGE (DISTORTION)  DXY
+acr_best_dgeofile   Geometric Distortion Correction File DXY
 acr_best_flshfile   POST-FLASH IMAGE    FLS
 acr_best_lfltfile   Low-order Flat Field Image   LFL
 acr_best_pfltfile   Pixel To Pixel Flat Field Image PFL
 acr_best_shadfile   Shutter Shading Correction Image   SHD
 acr_best_atodtab    Analog To Digital Lookup Table A2D
-acr_best_bpixtab    Bad Pixel Table BPX
+acr_best_bpixtab    Data Quality (Bad Pixel) Initialization Tables  BPX
 acr_best_ccdtab CCD Parameters Table    CCD
 acr_best_comptab    Master Component Table (py/synphot)  TMC
 acr_best_crrejtab   Cosmic Ray Rejection Parameter Table    CRR
 acr_best_graphtab   Master Graph Table (py/synphot) TMG
-acr_best_idctab     DISTORTION COEFFICIENTS TABLE   IDC
+acr_best_idctab     Image Distortion Correction File IDC
 acr_best_mdriztab   MULTIDRIZZLE PARAMETER TABLE    MDZ
 acr_best_mlintab    MAMA LINEARITY TABLE    LIN
 acr_best_oscntab    CCD OVERSCAN REGION TABLE   OSC
-acr_best_phottab    PHOTOMETRY and THROUGHPUT TABLE PHT
+acr_best_phottab    Phototmetric Calibration Table PHT
 acr_best_spottab    SPOT POSITION TABLE CSP
 acr_best_drkcfile   CTE corrected dark  DKC
 acr_best_pctetab    CTE CORRECTION TABLE    PCTE
@@ -45,11 +45,11 @@ acr_best_imphttab   PHOTOMETRY KEYWORD TABLE    IMP
 csr_best_geofile    Geometric Distortion Correction     GEO
 csr_best_flatfile   Flat Field  FLT
 csr_best_badttab    Bad Time Interval Table     BADT
-csr_best_bpixtab    Bad Pixel Table  BPIX
+csr_best_bpixtab    Data Quality (Bad Pixel) Initialization Tables BPIX
 csr_best_brftab     Baseline Reference Frame Table  BRF
 csr_best_brsttab    Burst Parameters Tables     BURST
 csr_best_deadtab    Deadtime Reference Table    DEAD
-csr_best_disptab    Dispersion Relation Tables  DISP
+csr_best_disptab    Dispersion Relation Tables DISP
 csr_best_fluxtab    Sensitivity Reference Files     PHOT
 csr_best_lamptab    Template Calibration Lamp Spectra Tables   LAMP
 csr_best_phatab     Pulse Height Parameters Tables  PHA
@@ -62,14 +62,14 @@ csr_best_xtractab   1-D Extraction Parameters Tables    1DX
 nsr_best_darkfile   Dark Frame   DRK
 nsr_best_flatfile   Flat Field  FLT
 nsr_best_illmfile   Illumination Pattern File   ILM
-nsr_best_maskfile   On-Orbit MASK for NCS data  
+nsr_best_maskfile   Static Mask File  XXX  
 nsr_best_nlinfile   Detector Linearity Correction File     LIN
 nsr_best_noisfile   Detector Read-Noise File    NOI
 nsr_best_saadfile   Post SAA Dark Assoc.    Name
 nsr_best_tempfile   Temperature-dependent dark reference file   TDD
 nsr_best_backtab    Background Model Table  -
-nsr_best_phottab    Phototmetric Calibration Table  PHT
-nsr_best_idctab     Image Distortion Coefficients File  IDC
+nsr_best_phottab    Phototmetric Calibration Table PHT
+nsr_best_idctab     Image Distortion Correction File  IDC
 """,
 
 "stis" : """
@@ -83,17 +83,17 @@ ssr_best_sdstfile   Small scale distortion image files  SSD
 ssr_best_atodtab    Analog To Digital Lookup Table A2D
 ssr_best_apdstab    Aperture Description Tables     APD
 ssr_best_apertab    Aperture Throughput Tables  APT
-ssr_best_bpixtab    Bad Pixel Table    BPX
+ssr_best_bpixtab    Data Quality (Bad Pixel) Initialization Tables    BPX
 ssr_best_ccdtab     CCD Parameters Table   CCD
 ssr_best_crrejtab   Cosmic Ray Rejection Parameter Table  CRR
-ssr_best_disptab    Dispersion Coefficients Tables  DSP
+ssr_best_disptab    Dispersion Relation Tables  DSP
 ssr_best_inangtab   Incidence Angle Correction Tables   IAC
-ssr_best_idctab     Image Distortion Correction Tables  IDC
+ssr_best_idctab     Image Distortion Correction File  IDC
 ssr_best_mlintab    MAMA Linearity Table  LIN
 ssr_best_lamptab    Template Calibration Lamp Spectra Tables     LMP
 ssr_best_mofftab    MAMA Offset Correction Tables   MOC
 ssr_best_pctab  Photometric Correction Tables   PCT
-ssr_best_phottab    Photometric Conversion Tables   PHOT
+ssr_best_phottab    Phototmetric Calibration Table PHOT
 ssr_best_sdctab     2-D Spectrum Distortion Corrections     SDC
 ssr_best_cdstab     Cross-Disperser Scattering Tables   CDS
 ssr_best_echsctab   Echelle Scattering Tables   ECH
@@ -116,7 +116,7 @@ w3r_best_darkfile   Dark Frame  DRK
 w3r_best_dfltfile   Delta Flat Field Image   DFL
 w3r_best_lfltfile   Low-order Flat Field Image    LFL
 w3r_best_pfltfile   Pixel To Pixel Flat Field Image  PFL
-w3r_best_dgeofile   Geometric Distortion    DXY
+w3r_best_dgeofile   Geometric Distortion Correction File   DXY
 w3r_best_flshfile   Post-Flash Image   FLS
 w3r_best_nlinfile   Detector Linearity Correction File   LIN
 w3r_best_shadfile   Shutter Shading Correction Image  SHD
@@ -124,7 +124,7 @@ w3r_best_bpixtab    Bad Pixel Table    BPX
 w3r_best_ccdtab     CCD Parameters Table CCD
 w3r_best_comptab    Master Component Table (py/synphot)  TMC
 w3r_best_graphtab   Master Graph Table (py/synphot)    TMG
-w3r_best_idctab     Image Distortion Coefficients File  IDC
+w3r_best_idctab     Image Distortion Correction File  IDC
 w3r_best_crrejtab   Cosmic Ray Rejection Parameter Table CRR
 w3r_best_mdriztab   Multidrizzle Parameter Table   MDZ
 w3r_best_oscntab    Overscan Region Tables  OSC
@@ -139,7 +139,7 @@ w2r_best_maskfile   Static Mask File    R0?
 w2r_best_shadfile   Shutter Shading Correction Image  R5?
 w2r_best_comptab    Master Component Table (py/synphot)  TMC.FITS
 w2r_best_graphtab   Master Graph Table (py/synphot)    TMG.FITS
-w2r_best_idctab     Image Distortion Coefficients File  IDC.FITS
+w2r_best_idctab     Image Distortion Correction File  IDC.FITS
 w2r_best_offtab not used    &bsp;/TD>
 """,
 
