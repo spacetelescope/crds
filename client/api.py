@@ -8,9 +8,7 @@ import base64
 import re
 import urllib2
 
-import crds.log as log
-import crds.utils as utils
-import crds.rmap as rmap
+from crds import log, utils, rmap, data_file
 
 # ==============================================================================
 from crds.client.proxy import CheckingProxy, ServiceError
@@ -56,16 +54,31 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     If `ignore_cache` is True,  download references from server even if 
     already present.
     """
-    for key in parameters:
-        assert isinstance(key, str), \
-            "Non-string key " + repr(key) + " in parameters."
-        try:
-            parameters[key]
-        except Exception:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters.")
-        assert isinstance(parameters[key], (str,float,int,bool)), \
-            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+    if context is None:
+        observatory = get_observatory(parameters)
+        ctx = get_default_context(observatory)
+    else:
+        assert isinstance(context, str) and context.endswith(".pmap"), \
+            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
+        ctx = context
+
+    if isinstance(parameters, str):
+        header = get_minimum_header(ctx, parameters, ignore_cache=ignore_cache)
+    else:
+        header = parameters
+        for key in parameters:
+            assert isinstance(key, str), \
+                "Non-string key " + repr(key) + " in parameters."
+            try:
+                parameters[key]
+            except Exception:
+                raise ValueError("Can't fetch mapping key " + repr(key) + 
+                                 " from parameters.")
+            assert isinstance(parameters[key], (str,float,int,bool)), \
+                "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+    
+    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
+    
     assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
 
@@ -73,27 +86,8 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         for reftype in reftypes:
             assert isinstance(reftype, str), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
-    if context is None:
-        try:
-            instrument = parameters["INSTRUME"]
-        except KeyError:
-            raise ValueError("No 'INSTRUME' keyword specified,  "
-                             "required to determine context.")
-        observatory = utils.instrument_to_observatory(instrument)
-        ctx = get_default_context(observatory)
-    else:
-        assert isinstance(context, str) and context.endswith(".pmap"), \
-            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
-        ctx = context
         
     dump_mappings(ctx, ignore_cache=ignore_cache)
-    
-    if isinstance(parameters, str):
-        header = get_minimum_header(ctx, parameters, ignore_cache=ignore_cache)
-    else:
-        header = parameters
-    
-    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
     
     best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
         
@@ -320,4 +314,23 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     dump_mappings(context, ignore_cache)
     ctx = rmap.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
+
+def get_observatory(parameters):
+    """Given a dict-like set of bestref lookup `parameters`,  or the full
+    path of a dataset from which to extract them,  get_observatory() will
+    determine the name of the corresponding observatory.
+
+    parameters:  dict-like bestref header parameters *or* dataset path
+
+    returns: 'hst' or 'jwst'
+    """
+    if isinstance(parameters, (str,unicode)):
+        parameters = data_file.get_header(parameters)
+    try:
+        instrument = parameters["INSTRUME"]
+    except KeyError:
+        raise ValueError("No 'INSTRUME' keyword specified,  "
+                         "required to determine context.")
+    observatory = utils.instrument_to_observatory(instrument)
+    return observatory
 
