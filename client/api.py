@@ -40,7 +40,10 @@ __all__ = ["getreferences",
 # ============================================================================
 
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
-    """This is the top-level get reference call for all of CRDS. 
+    """This is the top-level get reference call for all of CRDS.  Based on
+    `parameters`, getreferences() will download/cache the
+    corresponding best reference and mapping files and return a map
+    from reference file types to local reference file locations.
     
     `parameters` should be a dictionary-like object mapping { str: str } for
     crtical best reference related input parameters.   Alternately, if 
@@ -62,6 +65,9 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
         ctx = context
 
+    # Make sure ctx is actually present on the local machine.
+    dump_mappings(ctx, ignore_cache=ignore_cache)
+    
     if isinstance(parameters, str):
         header = get_minimum_header(ctx, parameters, ignore_cache=ignore_cache)
     else:
@@ -87,8 +93,6 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
             assert isinstance(reftype, str), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
         
-    dump_mappings(ctx, ignore_cache=ignore_cache)
-    
     best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
         
     return best_refs_paths
