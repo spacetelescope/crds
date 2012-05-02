@@ -45,7 +45,9 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     """This is the top-level get reference call for all of CRDS. 
     
     `parameters` should be a dictionary-like object mapping { str: str } for
-    crtical best reference related input parameters.
+    crtical best reference related input parameters.   Alternately, if 
+    `parameters` is of type str it should be the full path of a science dataset 
+    from which reference matching header parameters will be read.
     
     If `reftypes` is None,  return all possible reference types.
     
@@ -86,7 +88,12 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         
     dump_mappings(ctx, ignore_cache=ignore_cache)
     
-    bestrefs = get_best_references(ctx, parameters, reftypes=reftypes)
+    if isinstance(parameters, str):
+        header = get_minimum_header(ctx, parameters, ignore_cache=ignore_cache)
+    else:
+        header = parameters
+    
+    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
     
     best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
         
