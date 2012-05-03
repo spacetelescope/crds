@@ -239,6 +239,10 @@ def instrument_to_observatory(instrument):
         if instrument in crds.jwst.INSTRUMENTS:
             return "jwst"
     raise ValueError("Unknown instrument " + repr(instrument))
+
+def get_locator_module(observatory):
+    """Return the observatory specific module for handling naming, file location, etc."""
+    return get_object("crds." + observatory + ".locate")
     
 def instrument_to_locator(instrument):
     """Given an instrument,  return the locator module associated with the
