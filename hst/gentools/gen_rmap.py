@@ -112,7 +112,11 @@ and {file_table}.reference_file_type = '{reference_file_type}'
         row = tuple(row) + (len(extra_parkeys) * ("N/A",))
         rowd = dict(zip(fields, row))
         for key, val in rowd.items():
-            rowd[key] = utils.condition_value(val) if condition else val
+            if condition:
+                val = utils.condition_value(val)
+            elif isinstance(val, str):
+                val = val.strip()
+            rowd[key] =  val
         rowd["file_name"] = rowd["file_name"].lower()
         row_dicts.append(rowd)
     return row_dicts    

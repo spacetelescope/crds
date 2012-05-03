@@ -10,10 +10,11 @@ from collections import OrderedDict
 import os.path
 import datetime
 import cProfile
+import glob
 
 import pyodbc
 
-from crds import rmap, log, utils, timestamp
+from crds import rmap, log, utils, timestamp, data_file
 import crds.hst
 import crds.hst.parkeys as parkeys
 
@@ -113,7 +114,18 @@ class DB(object):
             items = zip(col_list, [str(x).lower() for x in row] if lowercase else row)
             kind = OrderedDict if ordered else dict
             yield kind(items)
-
+            
+    def get_dataset_map(self, table, col_list=None):
+        dicts = list(self.make_dicts(table, col_list=col_list))
+        if not dicts:
+            return {}
+        map = {}
+        d = dicts[0]
+        dataset_col = [col for col in d.keys() if "data_set_name" in col][0]
+        for d in dicts:
+            map[d[dataset_col].upper()] = d
+        return map
+            
 HERE = os.path.dirname(__file__) or "."
 
 def get_password():
@@ -336,12 +348,40 @@ def get_dataset_header(dataset):
     elif len(headers) > 1:
         return headers
         raise LookupError("More than one header found for " + repr(instrument) + " dataset " + repr(dataset))
+    
+def load_alternate_dataset_headers(files=None):
+    """The catalog version of bestrefs is not always the best.   Sometimes full
+    datasets are OTFR'ed and downloaded from MAST to get better recommendations,
+    generally only when CRDS and CDBS disagree.
+    """
+    log.info("Loading extra dataset headers.")
+    if files is None:
+        files = glob.glob("../../../datasets/*.fits")
+    alternate_headers = {}
+    context = rmap.get_cached_mapping("hst.pmap")
+    for mast_dataset in files:
+        header = context.get_minimum_header(mast_dataset)
+        full_header = data_file.get_conditioned_header(mast_dataset)
+        key = lookup_key(header)
+        if key in alternate_headers:  
+            # More than one dataset defines the same
+            # header fixes for the same input parameters.   
+            # Will happen,  shouldn't happen all the time.
+            log.warning("Duplicate dataset key for", mast_dataset, "=", key)
+        log.info("Loading MAST dataset", repr(mast_dataset), "as", key)        
+        alternate_headers[key] = full_header
+    log.info("Done loading extra dataset headers.")
+    return alternate_headers
 
-def test(header_generator, ncases=None, context="hst.pmap", datasets=None, 
-         ignore=[], include=[], dump_header=False, verbose=False):
-    """Evaluate the first `ncases` best references cases from 
-    `header_generator` against similar results attained from CRDS running
-    on pipeline `context`.
+def lookup_key(header):
+    return tuple([x[1] for x in sorted(header.items()) \
+                      if ".FITS" not in x[1] ]    )
+
+def test(header_generator, context="hst.pmap", datasets=None, 
+         ignore=[], include=[], dump_header=False, verbose=False,
+         alternate_headers={}):
+    """Evaluate the best references cases from `header_generator` against 
+    similar results attained from CRDS running on pipeline `context`.
     """
     log.reset()
     if header_generator in crds.hst.INSTRUMENTS:
@@ -366,21 +406,30 @@ def test(header_generator, ncases=None, context="hst.pmap", datasets=None,
     start = datetime.datetime.now()
 
     for header in headers:
-        if ncases is not None and count >= ncases:
-            break
-        count += 1
+
+        dataset = header["DATA_SET"]
+        
+        # Check if updated bestrefs have been downloaded as a MAST dataset
+        key = lookup_key(header)
+        if key in alternate_headers:
+            header = alternate_headers[key]
+            
         if datasets is not None:
-            if header["DATA_SET"] not in datasets:
+            if dataset not in datasets:
                 continue
             log.set_verbose(True)
+
+        log.verbose("Using alternate header for ", dataset, "as", key)
+
         if dump_header:
             pprint.pprint(header)
             continue
+        
+        count += 1
         crds_refs = rmap.get_best_references(context, header, include)
         if log.VERBOSE_FLAG:
             log.verbose("="*70)
-            log.verbose("DATA_SET:", header["DATA_SET"])
-            log.verbose("existing bestrefs", pprint.pformat(crds_refs))
+            log.verbose("DATA_SET:", dataset)
         compare_results(header, crds_refs, mismatched, ignore)
 
     # by usage convention all headers share the same instrument
@@ -401,7 +450,7 @@ def test(header_generator, ncases=None, context="hst.pmap", datasets=None,
     log.write()
     log.write(instrument, count, "datasets")
     log.write(instrument, elapsed, "elapsed")
-    log.write(instrument, count/elapsed.total_seconds(), "best refs / sec")
+    log.write(instrument, count/elapsed.total_seconds(), "datasets / sec")
     log.write()
     log.standard_status()
     log.set_verbose(oldv)
@@ -435,30 +484,33 @@ def compare_results(header, crds_refs, mismatched, ignore):
             mismatches += 1
             log.error("mismatch:", dataset, instr, filekind, old, new)
             if (old, new) not in mismatched[filekind]:
-                mismatched[filekind][(old,new)] = []
-            mismatched[filekind][(old,new)].append(dataset)
+                mismatched[filekind][(old,new)] = set()
+            mismatched[filekind][(old,new)].add(dataset)
         else:
             log.verbose("CDBS/CRDS matched:", filekind, old)
     if not mismatches:
         log.write(".", eol="", sep="")
     return mismatches
 
-def testall(ncases=10**10, context="hst.pmap", instruments=None, 
+def testall(context="hst.pmap", instruments=None, 
             suffix="_headers.pkl", filekinds=None, datasets=None,
             dump_header=False, path=DEFAULT_PKL_PATH, profile=False):
+    alternate_headers = load_alternate_dataset_headers()
     if instruments is None:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
         log.write(70*"=")
         log.write("instrument", instr + ":")
+        headers = path+instr+suffix
         if profile:
-            cProfile.runctx("test(path+instr+suffix, ncases, context, "
-                            "include=filekinds, datasets=datasets, dump_header=dump_header)",
+            cProfile.runctx("test(headers, context, "
+                            "include=filekinds, datasets=datasets, "
+                            "dump_header=dump_header, alternate_headers=alternate_headers)",
                             globals(), locals(), instr + ".stats")
         else:
-            test(path+instr+suffix, ncases, context, include=filekinds,
-                 datasets=datasets, dump_header=dump_header) 
+            test(headers, context, datasets=datasets, include=filekinds,
+                 dump_header=dump_header, alternate_headers=alternate_headers) 
         log.write()
 
 def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl",
@@ -515,8 +567,9 @@ def main():
             datasets = [d.upper() for d in sys.argv[4].split(",")]
         else:
             datasets = None
-        testall(instruments=instruments, filekinds=filekinds, datasets=datasets, dump_header=log.get_verbose(),
-                path=DEFAULT_PKL_PATH, profile=profile)
+        testall(instruments=instruments, filekinds=filekinds, datasets=datasets,
+                dump_header=log.get_verbose(), path=DEFAULT_PKL_PATH, 
+                profile=profile)
     else:
         print """usage:
 python cdbs_db.py dumpall
