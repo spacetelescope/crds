@@ -16,7 +16,7 @@
 (cd ..; python parkeys.py)
 
 # Re-install CRDS to capture the new .dat files from the above.
-../install
+../../install
 
 # Regenerate rmaps, imaps, and pmaps.   
 # Dump the DADSOPS dataset catalogs into pickles for testing consistent with
@@ -29,15 +29,16 @@ echo "Generating contexts"
 echo "Dumping catalog datasets"
 (python cdbs_db.py dumpall;)
 
-echo "Patching dataset pickles with MAST special case datasets"
-(./fix_pickles ../../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
+# This should be dynamic now in cdbs_db.py
+# echo "Patching dataset pickles with MAST special case datasets"
+# (./fix_pickles ../../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
 
 # Examine cdbscatalog.dat to generate the maps relating filekinds,
 # CDBS file suffixes, etc.
 (cd ..; python tpn.py hst.pmap)
 
 # Re-install CRDS to capture the latest generated .dat files
-../install
+../../install
 
 # Run the CRDS certifier on the new rmaps
 echo "Certifying all mappings"
@@ -45,5 +46,5 @@ echo "Certifying all mappings"
 
 # Run comparison tests on all HST datasets.
 echo "Testing all datasets"
-(./testall >& testall.err;  grep -E 'error|warn|datasets|/sec' testall.err)
+(./testall >& testall.err;  grep -E 'error|warn|datasets' testall.err | grep -v MAST)
 

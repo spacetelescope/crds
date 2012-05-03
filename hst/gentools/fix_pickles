@@ -100,7 +100,8 @@ def fix_pickles(organized, fix_lists):
             log.info("Processing", repr(dataset), eol="")
             fix_list = get_fix_list(dataset, fix_lists)
             for pheader in pheaders:
-                if pheader["DATA_SET"] not in fix_list:
+                p_dataset = pheader["DATA_SET"].upper()
+                if p_dataset not in fix_list:
                     continue
                 for key in pheader:
                     if key in ["DATA_SET"]:
@@ -112,7 +113,7 @@ def fix_pickles(organized, fix_lists):
                     hval = utils.condition_value(fix_iraf_path(header[key]))
                     pval = utils.condition_value(pheader[key])
                     if hval != pval:
-                        log.info("Updating dataset", repr(dataset),
+                        log.info("Updating dataset", repr(p_dataset),
                                  "key", repr(key),
                                  "from", pval, "to", hval)
                         pheader[key] = hval
