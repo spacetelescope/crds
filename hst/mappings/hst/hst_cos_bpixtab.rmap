@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:01.407175',
+    'derived_from' : 'generated from CDBS database 2012-05-03 10:35:15.176898',
     'filekind' : 'BPIXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'bd05a2a0ce9853759f3e68c161e8b73559b5d1b6',
+    'sha1sum' : '769402a7e54e317fd0653744ff1cdf9f36bb7469',
 }
 
 selector = Match({

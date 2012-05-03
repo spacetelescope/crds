@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:03.308302',
+    'derived_from' : 'generated from CDBS database 2012-05-03 10:35:16.267541',
     'filekind' : 'DISPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '752c6de95b6bfd262411fc6405eceebdae643fe4',
+    'sha1sum' : '2f34b1ad491dca36688dc3ebf885a5bbb67119ea',
 }
 
 selector = Match({

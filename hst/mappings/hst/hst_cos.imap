@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'generated 2012-04-28 12:08:34.252011',
+    'derived_from' : 'generated 2012-05-03 10:35:48.492291',
     'instrument' : 'COS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_cos.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '4da73db0e6350870854a570ac3ccc6cfee864760',
+    'sha1sum' : '0787a4ed7b396ab7a1439535cac0568ea0b65d22',
 }
 
 selector = {
