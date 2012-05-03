@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:27.624080',
+    'derived_from' : 'generated from CDBS database 2012-05-03 10:35:43.702123',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'e972d2a265eb3ce8113a7e099687b1ab9e8173d9',
+    'sha1sum' : 'e585f7e99221b815cabd81a5a2a0c48cc96e33e3',
 }
 
 selector = Match({
@@ -435,43 +435,43 @@ selector = Match({
     ('IR', 'ABCD', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', 'SQ64SUB') : UseAfter({
         '1991-01-02 00:00:00' : 'r5b21055i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'ENG0', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'ENG0', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2033ti_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'NONE', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'NONE', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20340i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'RAPID', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'RAPID', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20341i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS100', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS100', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20342i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS200', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS200', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20343i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS25', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS25', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20344i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS350', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS350', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20345i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS50', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'SPARS50', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20346i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP100', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP100', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20347i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP200', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP200', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20348i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP25', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP25', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau20349i_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP400', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP400', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2034ai_drk.fits',
     }),
-    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', ' ') : UseAfter({
+    ('IR', 'A|AB|ABC|ABCD|ABD|AC|ACD|AD|B|BC|BCD|BD|C|CD|D', 'N/A', 'N/A', '2.0|2.5|3.0|4.0', 'STEP50', '') : UseAfter({
         '2001-01-01 00:00:00' : 'nau2034bi_drk.fits',
     }),
     ('UVIS', 'ABCD', 1, 1, 'N/A', 'N/A', 'N/A') : UseAfter({

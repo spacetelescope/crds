@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-04-28 12:08:18.967560',
+    'derived_from' : 'generated from CDBS database 2012-05-03 10:35:28.958180',
     'filekind' : 'TELTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'a87ece609c580f8512e03702395ceea7f47230a9',
+    'sha1sum' : '7e6c87275ffabcdf4c01734718b5bf1e2e0a88e1',
 }
 
 selector = Match({
