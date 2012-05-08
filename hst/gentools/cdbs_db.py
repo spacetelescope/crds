@@ -358,11 +358,11 @@ def load_alternate_dataset_headers(files=None):
     if files is None:
         files = glob.glob("../../../datasets/*.fits")
     alternate_headers = {}
-    context = rmap.get_cached_mapping("hst.pmap")
+    pmap = rmap.get_cached_mapping("hst.pmap")
     for mast_dataset in files:
-        header = context.get_minimum_header(mast_dataset)
-        full_header = data_file.get_conditioned_header(mast_dataset)
-        key = lookup_key(header)
+        full_header = fix_iraf_paths(data_file.get_conditioned_header(mast_dataset))
+        full_header["DATA_SET"] = dataset(mast_dataset)
+        key = lookup_key(pmap, full_header)
         if key in alternate_headers:  
             # More than one dataset defines the same
             # header fixes for the same input parameters.   
@@ -373,9 +373,30 @@ def load_alternate_dataset_headers(files=None):
     log.info("Done loading extra dataset headers.")
     return alternate_headers
 
-def lookup_key(header):
-    return tuple([x[1] for x in sorted(header.items()) \
-                      if ".FITS" not in x[1] ]    )
+def fix_iraf_paths(header):
+    header2 = {}
+    for key, value in header.items():
+        if "$" in value:
+            header2[key] = value.split("$")[1]
+        else:
+            header2[key] = value
+    return header2
+
+def dataset(filename):
+    return os.path.basename(filename).split("_")[0]
+
+def lookup_key(pmap, header):
+    min_header = pmap.minimize_header(header)
+    result = []
+    for key, val in sorted(min_header.items()):
+        if ".FITS" in val or key.endswith("FILE") or key.endswith("TAB"):
+            continue
+        if val in ["NOT FOUND", "NONE"]:
+            continue
+        if key in ["DATE-OBS","TIME-OBS","EXPSTART","DATA_SET"]:
+            continue
+        result.append((key,val.upper()))
+    return tuple(result)
 
 def test(header_generator, context="hst.pmap", datasets=None, 
          ignore=[], include=[], dump_header=False, verbose=False,
@@ -403,23 +424,30 @@ def test(header_generator, context="hst.pmap", datasets=None,
     if verbose:
         log.set_verbose(verbose)
 
+    pmap = rmap.get_cached_mapping(context)
+
     start = datetime.datetime.now()
 
     for header in headers:
 
         dataset = header["DATA_SET"]
         
-        # Check if updated bestrefs have been downloaded as a MAST dataset
-        key = lookup_key(header)
-        if key in alternate_headers:
-            header = alternate_headers[key]
-            
         if datasets is not None:
             if dataset not in datasets:
                 continue
             log.set_verbose(True)
 
-        log.verbose("Using alternate header for ", dataset, "as", key)
+        # Check if updated bestrefs have been downloaded as a MAST dataset
+        key = lookup_key(pmap, header)
+        log.verbose("Lookup key", key)
+        if key in alternate_headers:
+            header2 = alternate_headers[key]
+            log.verbose("Using alternate header for ", dataset)
+#            for key in header:
+#                if header[key] != header2[key]:
+#                    log.verbose("Using alternate value for", repr(key), "was", 
+#                                header[key], "is", header2[key])
+            header = header2
 
         if dump_header:
             pprint.pprint(header)
@@ -430,7 +458,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
         if log.VERBOSE_FLAG:
             log.verbose("="*70)
             log.verbose("DATA_SET:", dataset)
-        compare_results(header, crds_refs, mismatched, ignore)
+        compare_results(header, crds_refs, mismatched, ignore, key)
 
     # by usage convention all headers share the same instrument
     instrument = header["INSTRUME"]
@@ -438,15 +466,18 @@ def test(header_generator, context="hst.pmap", datasets=None,
     elapsed = datetime.datetime.now() - start
     log.write()
     log.write()
-    for filekind in mismatched:
-        for (old,new) in mismatched[filekind]:
-            if mismatched[filekind][(old, new)]:
-                which = mismatched[filekind][(old, new)]
-                log.write(instrument, filekind, "mismatched:", 
-                          old.replace(" ","_"), new.replace(" ","_"), 
-                          len(which), " ".join(sorted(which)))
-            else:
-                log.write(instrument, filekind, "mismatched: 0")
+    for category in mismatched:
+        filekind, inputs = category
+        datasets = mismatched[category]
+        log.write("Erring Inputs:", instrument, filekind, len(datasets), repr(inputs))
+        grouped = {}
+        for id, old, new in datasets:
+            if (old, new) not in grouped:
+                grouped[(old, new)] = set()
+            grouped[(old,new)].add(id)
+        for old, new in grouped:
+            ids = grouped[(old, new)]
+            log.write("Mismatch Set:", len(ids), instrument, filekind, old, new, " ".join(sorted(ids)))
     log.write()
     log.write(instrument, count, "datasets")
     log.write(instrument, elapsed, "elapsed")
@@ -455,17 +486,16 @@ def test(header_generator, context="hst.pmap", datasets=None,
     log.standard_status()
     log.set_verbose(oldv)
 
-def compare_results(header, crds_refs, mismatched, ignore):
+def compare_results(header, crds_refs, mismatched, ignore, inputs):
     """Compare the old best ref recommendations in `header` to those 
     in `crds_refs`,  recording a list of error tuples by filekind in
     dictionary `mismatched`.  Disregard any filekind listed in `ignore`.
     """
     mismatches = 0
+    matches = 0
     for filekind in crds_refs:
         if filekind in ignore:
             continue
-        if filekind not in mismatched:
-            mismatched[filekind] = {}
         try:
             old = header[filekind.upper()].lower()
         except:
@@ -483,13 +513,16 @@ def compare_results(header, crds_refs, mismatched, ignore):
                 log.verbose("dataset", dataset, "...", "ERROR")
             mismatches += 1
             log.error("mismatch:", dataset, instr, filekind, old, new)
-            if (old, new) not in mismatched[filekind]:
-                mismatched[filekind][(old,new)] = set()
-            mismatched[filekind][(old,new)].add(dataset)
+            category = (filekind, inputs)
+            if category not in mismatched:
+                mismatched[category] = set()
+            mismatched[category].add((dataset, old, new))
         else:
+            matches += 1
             log.verbose("CDBS/CRDS matched:", filekind, old)
     if not mismatches:
-        log.write(".", eol="", sep="")
+        char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZX"[matches]
+        log.write(char, eol="", sep="")
     return mismatches
 
 def testall(context="hst.pmap", instruments=None, 
