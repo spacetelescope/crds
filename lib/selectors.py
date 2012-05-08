@@ -142,14 +142,25 @@ class Selector(object):
     complete set of nested choices.   Each nested Selector only uses those 
     portions of the overall context that it requires.
     """
-    def __init__(self, parameters, selections, rmap_header=None):
+    def __init__(self, parameters, selections=None, rmap_header=None, 
+                 _selections=None):
         assert isinstance(parameters, (list, tuple)), \
-            "First parameter should be a list or tuple of header keys"
-        assert isinstance(selections, dict),  \
-            "Second parameter should be a dictionary { key: selection, ... }."
+            "parameters should be a list or tuple of header keys"
         self._parameters = tuple(parameters)
-        self._raw_selections = sorted(selections.items())
-        self._selections = self.condition_selections(selections)
+        if selections:
+            assert isinstance(selections, dict),  \
+                "selections should be a dictionary { key: selection, ... }."
+            self._raw_selections = sorted(selections.items())
+            self._selections = self.condition_selections(selections)
+        else:
+            # This branch exists to efficiently implement the
+            # UseAfter merge operation.   It's not really intended
+            # for uses beyond that capacity and the resulting rmap
+            # is really only good for a single lookup operation.
+            assert isinstance(_selections, list),  \
+                "_selections should be a list of key,value tuples."
+            self._raw_selections = _selections
+            self._selections = _selections
         self._rmap_header = rmap_header or {}
         
     def condition_selections(self, selections):
@@ -1081,7 +1092,7 @@ class UseAfterSelector(Selector):
         for key, val in other._selections:
             if key not in combined_selections or val > combined_selections[key]:
                 combined_selections[key] = val
-        return self.__class__(self._parameters[:], combined_selections)
+        return self.__class__(self._parameters[:], _selections=sorted(combined_selections.items()))
 
 # ==============================================================================
 
