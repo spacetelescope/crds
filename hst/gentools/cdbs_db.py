@@ -374,6 +374,7 @@ def load_alternate_dataset_headers(files=None):
     return alternate_headers
 
 def fix_iraf_paths(header):
+    """Get rid of the iref$ prefixes on filenames."""
     header2 = {}
     for key, value in header.items():
         if "$" in value:
@@ -383,9 +384,18 @@ def fix_iraf_paths(header):
     return header2
 
 def dataset(filename):
-    return os.path.basename(filename).split("_")[0]
+    """Convert a dataset filename into a dataset id."""
+    return os.path.basename(filename).split("_")[0].upper()
 
 def lookup_key(pmap, header):
+    """Convert a parameters+bestrefs dict into a tuple which can be used
+    to locate it in the dictionary of alternate headers.
+    
+    In theory then,  auxilliary datasets can be loaded into an "improved
+    bestrefs recommendations" dictionary keyed off their input parameters.
+    Then,  when a set of catalog inputs are known,  they can be used to 
+    search for any possible improved answers not found in the catalog.
+    """
     min_header = pmap.minimize_header(header)
     result = []
     for key, val in sorted(min_header.items()):
@@ -441,13 +451,8 @@ def test(header_generator, context="hst.pmap", datasets=None,
         key = lookup_key(pmap, header)
         log.verbose("Lookup key", key)
         if key in alternate_headers:
-            header2 = alternate_headers[key]
+            header = alternate_headers[key]
             log.verbose("Using alternate header for ", dataset)
-#            for key in header:
-#                if header[key] != header2[key]:
-#                    log.verbose("Using alternate value for", repr(key), "was", 
-#                                header[key], "is", header2[key])
-            header = header2
 
         if dump_header:
             pprint.pprint(header)
@@ -521,6 +526,8 @@ def compare_results(header, crds_refs, mismatched, ignore, inputs):
             matches += 1
             log.verbose("CDBS/CRDS matched:", filekind, old)
     if not mismatches:
+        # Output a single character count of the number of correct bestref
+        # recommendations for this dataset.
         char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZX"[matches]
         log.write(char, eol="", sep="")
     return mismatches
