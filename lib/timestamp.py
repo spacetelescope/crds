@@ -13,10 +13,27 @@ def format_date(d):
         d = parse_date(d)
     return d.isoformat(" ")
 
-T_SEPERATED_DATE_RE = re.compile(r"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d")
+T_SEPERATED_DATE_RE = re.compile(r"\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d:\d\d")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
 
 def parse_date(d):
+    """Parse any date-time string into a datetime object.
+    
+    >>> parse_date("Dec 01 1993 00:00:00 UT")
+    datetime.datetime(1993, 12, 1, 0, 0)
+    
+    >>> parse_date('Feb 08 2006 01:02AM')
+    datetime.datetime(2006, 2, 8, 1, 2)
+    
+    >>> parse_date('12/21/1999 05:42:35')
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+
+    >>> parse_date('1999-12-21T05:42:35')
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+
+    >>> parse_numerical_date('12-21-1999 05:42')
+    datetime.datetime(1999, 12, 21, 5, 42)
+    """
     if isinstance(d, datetime.datetime):
         d = str(d)
 
@@ -51,10 +68,13 @@ def parse_alphabetical_date(d):
     >>> parse_alphabetical_date('Feb 08 2006 01:02AM')
     datetime.datetime(2006, 2, 8, 1, 2)
 
-    >>> parse_alphabetical_date('Feb 08 2006')
+    >>> parse_alphabetical_date('feb 08 2006')
     datetime.datetime(2006, 2, 8, 0, 0)
 
     >>> parse_alphabetical_date('July 27, 1999 00:00:00')
+    datetime.datetime(1999, 7, 27, 0, 0)
+
+    >>> parse_alphabetical_date('JULY 27, 1999 00:00:00')
     datetime.datetime(1999, 7, 27, 0, 0)
     """
     try:
@@ -76,7 +96,8 @@ def parse_alphabetical_date(d):
                                 imicrosecond)
 
 def parse_time(time):
-    """Parse a time string into (hour, minute, second, microsecond), including AM/PM.
+    """Parse a time string into (hour, minute, second, microsecond), 
+    including AM/PM.
     
     >>> parse_time('12:00')
     (0, 0, 0, 0)
@@ -90,7 +111,14 @@ def parse_time(time):
     >>> parse_time('13:02PM')
     (13, 2, 0, 0)
 
+    >>> parse_time('13:02 PM')
+    (13, 2, 0, 0)
+
+    >>> parse_time(' 13:02 PM ')
+    (13, 2, 0, 0)
+
     """
+    time = time.strip()
     ampm = "AM"
     if time[-2:] in ["AM","am","PM","pm"]:
         ampm = time[-2:].upper()
@@ -119,8 +147,8 @@ NINETEEN_HUNDREDS_RE = re.compile(r"^\d\d/\d\d/9\d$")
 TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
 
 def parse_numerical_date(d):
-    """Parse a datetime string with the month expressed as a number in various formats.
-    Return a datetime object.
+    """Parse a datetime string with the month expressed as a number in various 
+    formats.   Return a datetime object.
     
     >>> parse_numerical_date('12/21/1999 05:42')
     datetime.datetime(1999, 12, 21, 5, 42)
@@ -134,8 +162,8 @@ def parse_numerical_date(d):
     >>> parse_numerical_date('12-21-1999 05:42:00')
     datetime.datetime(1999, 12, 21, 5, 42)
 
-    >>> parse_numerical_date('21/12/99 05:42:00')
-    datetime.datetime(1999, 12, 21, 5, 42)
+    >>> parse_numerical_date('21/12/99 05:42:00 PM')
+    datetime.datetime(1999, 12, 21, 17, 42)
 
     >>> parse_numerical_date('21/12/01 05:42:00')
     datetime.datetime(2001, 12, 21, 5, 42)
@@ -149,7 +177,7 @@ def parse_numerical_date(d):
     if len(parts) == 1:
         time = "00:00:00"
     else:
-        time = parts[1]
+        time = " ".join(parts[1:])
         
     if MONTH_DAY_YEAR_RE.match(date):
         month, day, year = date.split("/")
@@ -166,18 +194,8 @@ def parse_numerical_date(d):
     
     imonth, iday, iyear, = int(month), int(day), int(year)
  
-    parts = time.split(":")
-    if len(parts) == 2:
-        hour, minute, second = parts[0], parts[1], "00"
-    elif len(parts) == 3:
-        hour, minute, second = parts
-    else:
-        raise ValueError("Invalid time format in datetime " + repr(d))
-    
-    second = float(second)
-    ihour, iminute, isecond = int(hour), int(minute), int(second)
-    imicrosecond = int((second-isecond) * 10**6)
-    
+    ihour, iminute, isecond, imicrosecond = parse_time(time)
+
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
@@ -273,7 +291,8 @@ TIME_RE_STR = r"\d\d:\d\d:\d\d"
 
 def is_datetime(datetime_str):
     """Raise an assertion error if `datetime_str` doesn't look like a CRDS date.
-    Otherwise return `datetime_str`.
+    Otherwise return `datetime_str`.   This is used to match the composite
+    datetime string used by the UseAfter selector.
     """
     assert DATETIME_RE.match(datetime_str), \
         "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
