@@ -46,70 +46,138 @@ def month_num(month):
     return  MONTHS.index(month[:3].capitalize()) + 1
 
 def parse_alphabetical_date(d):
-    
+    """Parse date/time strings with alphabetical months into datetime's.
+
+    >>> parse_alphabetical_date('Feb 08 2006 01:02AM')
+    datetime.datetime(2006, 2, 8, 1, 2)
+
+    >>> parse_alphabetical_date('Feb 08 2006')
+    datetime.datetime(2006, 2, 8, 0, 0)
+
+    >>> parse_alphabetical_date('July 27, 1999 00:00:00')
+    datetime.datetime(1999, 7, 27, 0, 0)
+    """
     try:
         month, day, year, time = d.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
         month, day, year = d.split()          # 'Feb 08 2006'
         time = "00:00AM"
 
-    if day.endswith(","):     # July 27, 1999 00:00:00
+    if day.endswith(","):     # 
         day = day[:-1]
 
     imonth = month_num(month)
     iday = int(day)
     iyear = int(year)
 
+    ihour, iminute, isecond, imicrosecond = parse_time(time)
+
+    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
+                                imicrosecond)
+
+def parse_time(time):
+    """Parse a time string into (hour, minute, second, microsecond), including AM/PM.
+    
+    >>> parse_time('12:00')
+    (0, 0, 0, 0)
+
+    >>> parse_time('01:02AM')
+    (1, 2, 0, 0)
+
+    >>> parse_time('01:02PM')
+    (13, 2, 0, 0)
+
+    >>> parse_time('13:02PM')
+    (13, 2, 0, 0)
+
+    """
     ampm = "AM"
     if time[-2:] in ["AM","am","PM","pm"]:
         ampm = time[-2:].upper()
         time = time[:-2]
-
     try:
         hour, minute = time.split(":")
         second = "00"
     except ValueError:
         hour, minute, second = time.split(":")
-
     ihour = int(hour)
     iminute = int(minute)
     second = float(second)
     isecond = int(second)   # int rejects float strs
     imicrosecond = int((second-isecond) * 10**6)
-
     if ampm == "PM":
-        if ihour != 12:
+        if ihour < 12:
             ihour += 12
     else:
         if ihour == 12:
             ihour -= 12
+    return ihour, iminute, isecond, imicrosecond
 
-    return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
-                                imicrosecond)
-
-DAY_MONTH_YEAR_RE = re.compile(r"^\d\d/\d\d/\d\d\d\d$")
-NINETIES_RE = re.compile(r"^\d\d/\d\d/9\d$")
-DIGIT_4_RE = re.compile(r"\d\d\d\d")
+MONTH_DAY_YEAR_RE = re.compile(r"^\d\d/\d\d/\d\d\d\d$")
+YEAR_MONTH_DAY_RE = re.compile(r"^\d\d\d\d/\d\d/\d\d$")
+NINETEEN_HUNDREDS_RE = re.compile(r"^\d\d/\d\d/9\d$")
+TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
 
 def parse_numerical_date(d):
-    if DAY_MONTH_YEAR_RE.match(d):
-        day, month, year = d.split("/")
-        time = "00:00:00"
-    elif NINETIES_RE.match(d):
-        day, month, year = d.split("/")
-        year = "19" + year
+    """Parse a datetime string with the month expressed as a number in various formats.
+    Return a datetime object.
+    
+    >>> parse_numerical_date('12/21/1999 05:42')
+    datetime.datetime(1999, 12, 21, 5, 42)
+    
+    >>> parse_numerical_date('12/21/1999 05:42:35')
+    datetime.datetime(1999, 12, 21, 5, 42, 35)
+    
+    >>> parse_numerical_date('1999-12-21 05:42:00')
+    datetime.datetime(1999, 12, 21, 5, 42)
+    
+    >>> parse_numerical_date('12-21-1999 05:42:00')
+    datetime.datetime(1999, 12, 21, 5, 42)
+
+    >>> parse_numerical_date('21/12/99 05:42:00')
+    datetime.datetime(1999, 12, 21, 5, 42)
+
+    >>> parse_numerical_date('21/12/01 05:42:00')
+    datetime.datetime(2001, 12, 21, 5, 42)
+
+    >>> parse_numerical_date('21/12/15 05:42:00')
+    datetime.datetime(2015, 12, 21, 5, 42)
+    """
+    d = d.replace("-","/")
+    parts = d.split()
+    date = parts[0]
+    if len(parts) == 1:
         time = "00:00:00"
     else:
-        date, time = d.split()
-        if DIGIT_4_RE.match(date):
-            year, month, day = date.split("-")
-        else:
-            month, day, year = date.split("-")
+        time = parts[1]
+        
+    if MONTH_DAY_YEAR_RE.match(date):
+        month, day, year = date.split("/")
+    elif YEAR_MONTH_DAY_RE.match(date):
+        year, month, day = date.split("/")
+    elif NINETEEN_HUNDREDS_RE.match(date):
+        day, month, year = date.split("/")
+        year = "19" + year
+    elif TWENTY_FIRST_CENT_RE.match(date):
+        day, month, year = date.split("/")
+        year = "20" + year
+    else:
+        raise ValueError("Unknown numerical date format: " + repr(d))
+    
     imonth, iday, iyear, = int(month), int(day), int(year)
-    hour, minute, second = time.split(":")
+ 
+    parts = time.split(":")
+    if len(parts) == 2:
+        hour, minute, second = parts[0], parts[1], "00"
+    elif len(parts) == 3:
+        hour, minute, second = parts
+    else:
+        raise ValueError("Invalid time format in datetime " + repr(d))
+    
     second = float(second)
     ihour, iminute, isecond = int(hour), int(minute), int(second)
     imicrosecond = int((second-isecond) * 10**6)
+    
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
