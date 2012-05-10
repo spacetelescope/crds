@@ -226,7 +226,14 @@ class FileCacher(object):
         return localpaths
 
     def _locate(self, pipeline_context, name):
-        return rmap.locate_file(name)
+        if "jwst" in pipeline_context:
+            observatory = "jwst"
+        elif "hst" in pipeline_context:
+            observatory = "hst"
+        else:
+            raise ValueError("Can't determine observatory from " + 
+                             repr(pipeline_context))
+        return rmap.locate_file(name, observatory=observatory)
 
 # ==============================================================================
 
