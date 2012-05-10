@@ -216,7 +216,7 @@ def ref_properties_from_cdbs_path(filename):
         filekind = tpn.extension_to_filekind(instrument, ext)
     except KeyError:
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
-    return path, "hst", instrument, filekind, serial, ext
+    return path, "jwst", instrument, filekind, serial, ext
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
@@ -228,7 +228,7 @@ def ref_properties_from_header(filename):
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)
-    return path, "hst", instrument, filekind, serial, ext
+    return path, "jwst", instrument, filekind, serial, ext
 
 
     
