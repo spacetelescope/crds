@@ -5,10 +5,10 @@ header = {
     'observatory' : 'TOBS',
     'parkey' : ('INSTRUME',),
     'description' : '',
-    'sha1sum' : '8f3d0d80fa90054c8aa0a8f8f78e2f1cb9f28eb6',
+    'sha1sum' : '268f5a47cd5f3687201790cbd421a65e45433d7d',
 }
 
 selector = {
-    'TESTINSTR' : 'tobs_tinstr.imap',
+    'TINSTR' : 'tobs_tinstr.imap',
 }
 

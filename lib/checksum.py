@@ -10,7 +10,7 @@ This version of crds.checksum fully preserves comments.
 
 import sys
 
-import crds.rmap as rmap
+from crds import rmap, log
 
 def update_checksum(file_):
     """Rewrite the checksum of a single mapping, in place."""
@@ -20,6 +20,7 @@ def update_checksum(file_):
 def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
     for file_ in files:
+        log.write("Updating", file_)
         update_checksum(file_)
         
 if __name__ == "__main__":
