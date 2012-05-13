@@ -7,7 +7,7 @@ header = {
     'observatory' : 'TOBS',
     'parkey' : (('TEST_CASE',), ('PARAMETER',)),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'da46c1b3a3f2f7f1ea289bb4c0780485dfe9afe1',
+    'sha1sum' : 'e094e6effafb573814a9e6c3e0b65710667959fa',
 }
 
 selector = Match({
@@ -15,6 +15,21 @@ selector = Match({
        '<3.1':    'cref_flatfield_65.fits',
        '<5':      'cref_flatfield_73.fits',
        'default': 'cref_flatfield_123.fits',
+    }),
+    'CLOSEST_TIME' : ClosestTime({
+        '2017-04-24': "cref_flatfield_123.fits",
+        '2018-02-01':  "cref_flatfield_222.fits",
+        '2019-04-15': "cref_flatfield_123.fits",
+     }),
+    'BRACKET' : Bracket({
+        1.2: "cref_flatfield_120.fits",
+        1.5: "cref_flatfield_124.fits",
+        5.0: "cref_flatfield_137.fits",
+    }),
+    'GEOMETRICALLY_NEAREST' : Bracket({
+        1.2 : "cref_flatfield_120.fits",
+        1.5 : "cref_flatfield_124.fits",
+        5.0 : "cref_flatfield_137.fits",
     }),
 })
 
