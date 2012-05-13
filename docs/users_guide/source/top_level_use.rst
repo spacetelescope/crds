@@ -19,15 +19,12 @@ context,  and optionally a list of the reference types for which reference files
 to be determined,  getreferences() returns a mapping from reference types to
 reference file base names::
 
-    def getreferences(header_parameters, reftypes=None, context=None, ignore_cache=False):
+    def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         """Return the mapping from the requested `reftypes` to their 
         corresponding best reference file names appropriate for a dataset 
         described by `parameters` with CRDS rules defined by `context`::
         
-        Parameters
-        ----------
-        
-        header :    A mapping of parameter names to parameter value
+        parameters :    A mapping of parameter names to parameter value
                 strings for parameters which define best reference file matches.
     
                 { str  :   str, int, float, bool }
@@ -38,6 +35,14 @@ reference file base names::
                        'CCDGAIN' : '2.0',
                        ...
                     }
+		 
+		 Alternately,  a string specifying the full path of a dataset
+                 from which CRDS will extract header values.
+
+		 str
+
+		 e.g. "/where/it/is/j8bt05njq_raw.fits"
+		 
     
         reftypes :    A list of reference type names,  where each reftype is the
                     keyword used to record that kind of reference file in a 

@@ -1,0 +1,14 @@
+header = {
+    'name' : 'tobs.pmap',
+    'derived_from' : 'created by hand 05-13-2012',
+    'mapping' : 'PIPELINE',
+    'observatory' : 'TOBS',
+    'parkey' : ('INSTRUME',),
+    'description' : '',
+    'sha1sum' : '8f3d0d80fa90054c8aa0a8f8f78e2f1cb9f28eb6',
+}
+
+selector = {
+    'TESTINSTR' : 'tobs_tinstr.imap',
+}
+

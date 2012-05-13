@@ -8,7 +8,7 @@ cd `dirname $0`
 
 rm -f install.log
 
-for dir in lib client hst jwst
+for dir in lib client hst jwst tobs
 do
     if (test -e $dir)
     then

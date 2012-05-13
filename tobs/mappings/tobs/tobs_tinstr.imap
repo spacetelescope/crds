@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'Hand written 05-13-2012',
+    'instrument' : 'TINSTR',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'tobs_tinstr.imap',
+    'observatory' : 'TOBS',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'ad9975781f7af5b4bd1154e4de2e3dfc222bd5f5',
+}
+
+selector = {
+    'tfilekind' : 'tobs_tinstr_tfilekind.rmap',
+}
