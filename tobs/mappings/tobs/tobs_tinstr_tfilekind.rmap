@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'Hand written 05-12-2012',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'tobs_tinstr_tfilekind.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('TEST_CASE',), ('PARAMETER',)),
+    'relevance' : 'ALWAYS',
+    'sha1sum' : 'da46c1b3a3f2f7f1ea289bb4c0780485dfe9afe1',
+}
+
+selector = Match({
+    'SELECT_VERSION' : SelectVersion({
+       '<3.1':    'cref_flatfield_65.fits',
+       '<5':      'cref_flatfield_73.fits',
+       'default': 'cref_flatfield_123.fits',
+    }),
+})
+
