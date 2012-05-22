@@ -9,15 +9,32 @@ class TestSelectors(unittest.TestCase):
 
     def setUp(self):
         self.rmap = rmap.get_cached_mapping("tobs_tinstr_tfilekind.rmap")
-
+    
     def _selector_testcase(self, case, parameter, result):
         header = {
             "TEST_CASE": case,
             "PARAMETER": parameter,
-            }
+        }
         bestref = self.rmap.get_best_ref(header)
         self.assertEqual(bestref, result)
-    
+        
+    def test_use_after_bad_datetime(self):
+        with self.assertRaises(rmap.ValidationError):
+            self._selector_testcase('USE_AFTER', '4.5', 'cref_flatfield_73.fits')
+
+    def test_use_after_no_time(self):
+        self._selector_testcase('USE_AFTER', '2005-12-20', 'o9f15549j_bia.fits')
+
+    def test_use_after_nominal(self):
+        self._selector_testcase('USE_AFTER', '2005-12-20', 'o9f15549j_bia.fits')
+
+    def test_use_after_missing_parameter(self):
+        header = { "TEST_CASE": "USE_AFTER" }  # no PARAMETER
+        with self.assertRaisesRegexp(
+            rmap.ValidationError, 
+            "UseAfter required lookup parameter 'PARAMETER' is undefined."):
+            bestref = self.rmap.get_best_ref(header)
+
     def test_select_version1(self): 
         self._selector_testcase('SELECT_VERSION', '4.5', 'cref_flatfield_73.fits')
     def test_select_version2(self): 
@@ -56,24 +73,24 @@ class TestSelectors(unittest.TestCase):
         self._selector_testcase('BRACKET', '1.0',
             ('cref_flatfield_120.fits', 'cref_flatfield_120.fits'))
     def test_bracket6(self):
-        self._selector_testcase('BRACKET', '1.2',
+        self._selector_testcase('BRACKET', '6.0',
             ('cref_flatfield_137.fits', 'cref_flatfield_137.fits'))
 
     def test_geometrically_nearest1(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '1.0', 'cref_flatfield_120.fits')
     def test_geometrically_nearest2(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '1.2', 'cref_flatfield_120.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest3(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '1.25', 'cref_flatfield_120.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest4(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '1.4', 'cref_flatfield_124.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest5(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '3.25', 'cref_flatfield_124.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest6(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '3.26', 'cref_flatfield_137.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest7(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.0', 'cref_flatfield_137.fits')
-    def test_geometrically_nearest1(self):
+    def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
 
 if __name__ == '__main__':

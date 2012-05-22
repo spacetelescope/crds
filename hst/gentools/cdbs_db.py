@@ -91,13 +91,20 @@ class DB(object):
         return self.cursor.execute(sql)
 
     def get_tables(self):
+        """Return a list of table names for this database."""
         return [row.table_name for row in self.cursor.tables()]
 
     def get_columns(self, table):
+        """Return a list of column names for table."""
         return [col.column_name for col in self.cursor.columns(table=table)]
+
+    def get_column_info(self, table):
+        """Return a list/table of column information for this table."""
+        return list(self.cursor.columns(table=table))
 
     def make_dicts(self, table, col_list=None, ordered=False, 
                    where="", dataset=None, lowercase=True):
+        """Generate the dictionaries corresponding to rows of `table`."""
         if dataset is not None:
             all_cols = self.get_columns(table)
             for col in all_cols:
@@ -116,6 +123,9 @@ class DB(object):
             yield kind(items)
             
     def get_dataset_map(self, table, col_list=None):
+        """Return a mapping { dataset_id : row_dict } for the columns
+        in `col_list` of `table`.
+        """
         dicts = list(self.make_dicts(table, col_list=col_list))
         if not dicts:
             return {}

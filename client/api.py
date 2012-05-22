@@ -35,7 +35,10 @@ __all__ = ["getreferences",
            "cache_best_references",
            "cache_best_references_for_dataset",
            
-           "get_minimum_header"]
+           "get_minimum_header",
+           
+           "CrdsLookupError",
+           "ServiceError"]
 
 # ============================================================================
 
@@ -46,7 +49,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     from reference file types to local reference file locations.
     
     `parameters` should be a dictionary-like object mapping { str: str } for
-    crtical best reference related input parameters.   Alternately, if 
+    critical best reference related input parameters.   Alternately, if 
     `parameters` is of type str it should be the full path of a science dataset 
     from which reference matching header parameters will be read.
     
@@ -83,8 +86,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
             assert isinstance(parameters[key], (str,float,int,bool)), \
                 "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     
-    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
-    
+   
     assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
 
@@ -92,7 +94,9 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         for reftype in reftypes:
             assert isinstance(reftype, str), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
-        
+
+    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
+    
     best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
         
     return best_refs_paths
@@ -173,11 +177,32 @@ def get_reference_names(pipeline_context):
     return [str(x) for x in S.get_reference_names(pipeline_context)]
 
 def get_best_references(pipeline_context, header, reftypes=None):
-    """Return the dictionary mapping { reftype : reference_basename ... }
-    corresponding to the given `header`.  If reftypes is None,  return
-    all types;  otherwise return best refs for the list of specified reftypes.
+    """Get best references for dict-like `header` relative to 
+    `pipeline_context`.
+    
+    pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
+    header            dict-like mapping { lookup_parameter : value }
+    reftypes         If None,  return all reference types;  otherwise return 
+                     best refs for the specified list of reftypes. 
+
+    Returns          { reftype : reference_basename ... }
+    
+    Raises           CrdsLookupError,  typically for problems with header values
     """
-    return S.get_best_references(pipeline_context, dict(header), reftypes)
+    try:
+        bestrefs = S.get_best_references(pipeline_context, dict(header), reftypes)
+    except Exception, exc:
+        raise CrdsLookupError(str(exc))
+    # Due to limitations of jsonrpc,  exception handling is kludged in here.
+    for filetype, refname in bestrefs.items():
+        if "NOT FOUND" in refname:
+            if "NOT FOUND n/a" == refname:
+                log.verbose("Reference type", repr(filetype), "not applicable.")
+            else:
+                raise CrdsLookupError("Error determining best reference for " + 
+                                      repr(str(filetype)) + " = " + 
+                                      str(refname)[len("NOT FOUND"):])
+    return bestrefs
 
 def get_default_context(observatory):
     """Return the name of the latest pipeline mapping in use for processing
@@ -280,24 +305,37 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
             baserefs.remove(refname)
     return REFERENCE_CACHER.get_local_files(
         pipeline_context, baserefs, ignore_cache=ignore_cache)
-
+    
+class CrdsLookupError(utils.CrdsError):
+    """Filekind NOT FOUND but applicable according to current parameters."""
+    
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
-    set of reference files and cache them on the local file system.   
+    set of reference files and cache them on the local file system.
     
-    Returns:   { reference_keyword :   reference_local_filepath ... }   
+    bestrefs    { reference_keyword :  reference_basename } 
+    
+    Returns:   { reference_keyword :  reference_local_filepath ... }   
     """
-    bestrefs = dict(bestrefs)
-    for filetype, refname in bestrefs.items():
+    bestrefs2 = dict(bestrefs)
+    for filetype, refname in bestrefs2.items():
         if "NOT FOUND" in refname:
-            log.verbose("Reference type", repr(filetype), 
-                        "NOT FOUND.  Ignoring.")
-            del bestrefs[filetype]
-    localrefs = REFERENCE_CACHER.get_local_files(pipeline_context, bestrefs, 
-                                                 ignore_cache=ignore_cache)
+            if "n/a" in refname.lower():
+                log.verbose("Reference type", repr(filetype), 
+                            "NOT FOUND.  Ignoring.")
+                del bestrefs2[filetype]
+            else:
+                raise CrdsLookupError("Error determining best reference for " + 
+                                      repr(str(filetype)) + " = " + 
+                                      str(refname)[len("NOT FOUND"):])
+    localrefs = REFERENCE_CACHER.get_local_files(
+        pipeline_context, bestrefs2, ignore_cache=ignore_cache)
     refs = {}
     for filetype, refname in bestrefs.items():
-        refs[str(filetype)] = str(localrefs[refname])
+        if "NOT FOUND" in refname:
+            refs[str(filetype)] = str(refname)
+        else:
+            refs[str(filetype)] = str(localrefs[refname])
     return refs
 
 def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):

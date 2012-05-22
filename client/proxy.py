@@ -7,7 +7,9 @@ import uuid
 
 from json import loads, dumps
 
-class ServiceError(RuntimeError):
+from crds.utils import CrdsError
+
+class ServiceError(CrdsError):
     """The service call failed for some reason."""
         
 class CheckingProxy(object):

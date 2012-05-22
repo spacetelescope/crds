@@ -411,7 +411,7 @@ def main():
     parser.add_option("-p", "--dump-provenance", dest="provenance",
         help="Dump provenance keywords.", action="store_true")
     parser.add_option("-t", "--trap-exceptions", dest="trap_exceptions",
-        help="Capture exceptions at level: pmap, imap, rmap, selector, none",
+        help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none",
         type=str, default="selector")
     
     options, args = log.handle_standard_options(sys.argv, parser=parser)
