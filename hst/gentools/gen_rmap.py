@@ -457,7 +457,7 @@ def write_rmap(observatory, instrument, filekind, kind_map):
             useafter_selections[fmap.date] = fmap.file
         matching_selections[match_tuple] = selectors.UseAfterSelector(
                 useafter_keys, useafter_selections)
-    rmap_selector = selectors.MatchingSelector(match_keys, matching_selections)
+    rmap_selector = selectors.MatchSelector(match_keys, matching_selections)
     rmapping = rmap.ReferenceMapping(outname, rmap_header, rmap_selector)
     rmapping.write()
 

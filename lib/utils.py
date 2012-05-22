@@ -10,6 +10,11 @@ from crds import compat
 
 # ===================================================================
 
+class CrdsError(Exception):
+    """Baseclass for CRDS exceptions."""
+
+# ===================================================================
+
 def cached(func):
     """The cached decorator embeds a dictionary in a function wrapper to
     capture prior results.   The wrapped function works like the original,
@@ -160,7 +165,7 @@ NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$
 def condition_value(value):
     """Condition `value`,  ostensibly taken from a FITS header or CDBS
     reference file table,  such that it is suitable for appearing in or
-    matching an rmap MatchingSelector key.
+    matching an rmap MatchSelector key.
 
     >>> condition_value('ANY')
     '*'

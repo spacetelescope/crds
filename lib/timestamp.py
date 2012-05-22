@@ -6,6 +6,8 @@ a date and time in a sortable string representation (isoformat).
 import datetime
 import re
 
+from .utils import CrdsError
+
 # =======================================================================
 
 def format_date(d):

@@ -90,10 +90,10 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
-class MappingError(Exception):
+class MappingError(utils.CrdsError):
     """Exception in load_rmap."""
     def __init__(self, *args):
-        Exception.__init__(self, " ".join([str(x) for x in args]))
+        utils.CrdsError.__init__(self, " ".join([str(x) for x in args]))
         
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
@@ -464,6 +464,8 @@ class Mapping(object):
             except Exception, exc:
                 if trap_exceptions == mapping_type(self):
                     log.error()
+                elif trap_exceptions == "debug":
+                    raise
                 else:
                     raise ValidationError(repr(self) + " : " + str(exc))
 
@@ -525,7 +527,12 @@ class PipelineContext(Mapping):
         """
         header = dict(header)   # make a copy
         instrument = header["INSTRUME"].lower()
-        return self.selections[instrument].get_best_references(header, include)
+        try:
+            imap = self.selections[instrument]
+        except KeyError:
+            raise utils.CrdsError("Unknown instrument " + repr(instrument) +
+                                  " for context " + repr(self.name))
+        return imap.get_best_references(header, include)
     
     def reference_names(self):
         """Return the list of reference files associated with this pipeline
@@ -599,13 +606,16 @@ class InstrumentContext(Mapping):
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping.
         """
-        return self.selections[filekind]
+        try:
+            return self.selections[filekind.lower()]
+        except KeyError:
+            raise utils.CrdsError("Unknown reference type " + repr(str(filekind)))
 
     def get_best_ref(self, filekind, header):
         """Returns the single reference file basename appropriate for `header`
         corresponding to `filekind`.
         """
-        return self.selections[filekind.lower()].get_best_ref(header)
+        return self.get_rmap(filekind).get_best_ref(header)
 
     def get_best_references(self, header, include=None):
         """Returns a map of best references { filekind : reffile_basename } 
@@ -754,7 +764,6 @@ class ReferenceMapping(Mapping):
         log.verbose("Getting bestrefs for", self.instrument, self.filekind, 
                     "parkeys", self.parkey)
         self.check_relevance(header_in)  # Is this rmap appropriate for header
-        self.validate_header(header_in)  # Are required params present and valid
         # Some filekinds, .e.g. ACS biasfile, mutate the header 
         header = self._precondition_header(self, header_in)
         try:
@@ -763,7 +772,6 @@ class ReferenceMapping(Mapping):
             log.verbose("First selection failed: " + str(exc))
             header = self._fallback_header(self, header_in)
             if header:
-                self.validate_header(header)
                 log.verbose("Fallback lookup on", repr(header))
                 return self.selector.choose(header)
             else:
@@ -837,11 +845,12 @@ class ReferenceMapping(Mapping):
         """
         log.info("Validating", self.basename)
         try:
-            self.selector.validate(self._tpn_valid_values, trap_exceptions, 
-                                   context=repr(self))
+            self.selector.validate_selector(self._tpn_valid_values, trap_exceptions)
         except Exception, exc:
             if trap_exceptions == mapping_type(self):
                 log.error()
+            elif trap_exceptions == "debug":
+                raise
             else:
                 raise ValidationError(repr(self) + " : " + str(exc))
 
@@ -859,31 +868,6 @@ class ReferenceMapping(Mapping):
         return self.selector.difference(other.selector, path + 
                 ((self.basename, other.basename),))
 
-    def validate_header(self, header):
-        """Check the values of this rmap's parkeys in `header` against any 
-        constraints specified by the TPN files.  Missing parkeys also raise
-        an exception. 
-        """
-        for key in self._required_parkeys:
-            if key in self._tpn_valid_values:   # only check validatable keys
-                tpn_valid = self._tpn_valid_values[key]
-                rmap_valid = self._rmap_valid_values[key]
-                if not tpn_valid:
-                    continue
-                if  "*" in rmap_valid or "N/A" in rmap_valid:
-                    continue
-                if key not in header:
-                    # If the TPN says N/A is OK,  ignore missing
-                    if len(tpn_valid) >= 1 and 'N/A' in tpn_valid:
-                        continue
-                    raise ValueError("Required parkey " + repr(key) + 
-                                     " is missing.")
-                if header[key] not in tpn_valid:
-                    raise ValueError("Value of " + repr(header[key]) + 
-                                     " for parameter " + repr(key) + 
-                                     " is not one of valid values " + 
-                                     repr(tpn_valid))
-        
     def check_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
         in the context of `header` returns False.

@@ -48,25 +48,25 @@ and complexity.   Here we add time to the selection criteria:
 
 >>> r = GeomtricallyNearestSelector(('effective_wavelength',), {
 ...   1.2: ClosestTimeSelector(("time",), {
-...            '2017-4-24': SelectVersionSelector(('sw_version',), {
+...            '2017-04-24 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_73.fits',
 ...                'default': 'cref_flatfield_123.fits',
 ...            }),
-...            '2018-2-1': SelectVersionSelector(('sw_version',), {
+...            '2018-02-01 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_223.fits',
 ...                'default': 'cref_flatfield_222.fits',
 ...            }),
-...            '2019-4-15': SelectVersionSelector(('sw_version',), {
+...            '2019-04-15 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_518.fits',
 ...                'default': 'cref_flatfield_517.fits',
 ...            }),
 ...        }),
 ...  1.5: ClosestTimeSelector(("time",), {
-...            '2017-4-24': SelectVersionSelector(('sw_version',), {
+...            '2017-04-24 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_74.fits',
 ...                'default': 'cref_flatfield_124.fits',
 ...            }),
-...            '2019-1-1': SelectVersionSelector(('sw_version',), {
+...            '2019-01-01 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_490.fits',
 ...                'default': 'cref_flatfield_489.fits',
 ...            }),
@@ -77,7 +77,7 @@ and complexity.   Here we add time to the selection criteria:
 ...        }),
 ... })
 
->>> r.choose({"effective_wavelength":'1.6', "time":"2019-1-2", "sw_version":'1.4'})
+>>> r.choose({"effective_wavelength":'1.6', "time":"2019-01-02 00:00:00", "sw_version":'1.4'})
 'cref_flatfield_490.fits'
 
 Note that the context variables used by some Selector's are implicit,
@@ -95,26 +95,26 @@ import log, utils
 
 # ==============================================================================
 
-class MatchingError(LookupError):
-    """Represents a MatchingSelector lookup which failed.
+class MatchingError(utils.CrdsError):
+    """Represents a MatchSelector lookup which failed.
     """
 
-class AmbiguousMatchError(LookupError):
-    """Represents a MatchingSelector which matched more than one equivalent 
+class AmbiguousMatchError(utils.CrdsError):
+    """Represents a MatchSelector which matched more than one equivalent 
     choice.
     """
 
-class MissingParameterError(LookupError):
+class MissingParameterError(utils.CrdsError):
     """A required parameter for a matching selector did not appear
     in the parameter dictionary.
     """
 
-class BadValueError(LookupError):
+class BadValueError(utils.CrdsError):
     """A required parameter for a matching selector did not have
     any of the valid values.
     """
 
-class UseAfterError(LookupError):
+class UseAfterError(utils.CrdsError):
     """None of the dates in the RMAP precedes the processing date.
     """
 
@@ -162,6 +162,7 @@ class Selector(object):
             self._raw_selections = _selections
             self._selections = _selections
         self._rmap_header = rmap_header or {}
+        self._parkey_map = self.get_parkey_map()
         
     def condition_selections(self, selections):
         """Replace the keys of selections with "conditioned" keys,  keys in
@@ -180,6 +181,10 @@ class Selector(object):
         return self.__class__.__name__ + "(" + repr(self._parameters) \
             + ", nselections=" + str(len(self._selections)) + ")"
 
+    @property
+    def short_name(self):
+        return self.__class__.__name__[:-len("Selector")]
+
     def keys(self):
         """Return the list of keys used to make selections."""
         return [s[0] for s in self._selections]
@@ -192,6 +197,7 @@ class Selector(object):
         """Given `header`,  operate on self.keys() to choose one of
         self.selections(). 
         """
+        self._validate_header(header)
         raise NotImplementedError("Selector is an abstract class."
                                   " A subclass must re-define choose().")
 
@@ -206,11 +212,19 @@ class Selector(object):
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
         pmap = {}
+        npars = len(self._parameters)
         for i, par in enumerate(self._parameters):
             if par not in pmap:
                 pmap[par] = set()
-            for choice in self.keys():
-                pmap[par] = pmap[par].union(set(choice[i].split("|")))
+            for key in self.keys():
+                if not isinstance(key, tuple):
+                    key = (key,)
+                if len(key) != npars:
+                    raise ValidationError(
+                        self.short_name + " key=" + repr(key) + 
+                        " is wrong length for parameters " + repr(self._parameters))
+                field = key[i]
+                pmap[par] = pmap[par].union(set(field.split("|")))
         for par, val in pmap.items():
             pmap[par] = sorted(val)
         return pmap
@@ -235,8 +249,7 @@ class Selector(object):
         indenting each line with 4*`indent` spaces.   Return the resulting
         string.
         """
-        rmap_name = getattr(self, "rmap_name",  
-                            self.__class__.__name__[:-len("Selector")])
+        rmap_name = getattr(self, "rmap_name",  self.short_name)
         lines = [rmap_name + "({"]
         for key, sel in self._raw_selections:  
             if isinstance(sel, Selector):
@@ -248,39 +261,111 @@ class Selector(object):
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
     
-    def validate(self, valid_values_map, trap_exceptions=False, context=""):
+    def validate_selector(self, valid_values_map, trap_exceptions=False):
+        """Validate the parameters and keys of `self` against the legal
+        values spec'ed in `valid_values_map`.   If trap_exceptions is True
+        or 'selector',  issue an ERROR message and continue,  otherwise
+        re-raise the exception.
+        """
+        try:
+            self._validate_selector(valid_values_map, trap_exceptions)
+        except ValidationError, exc:
+            if trap_exceptions in [True, "selector"]:
+                log.error(self.short_name)
+            elif trap_exceptions == "debug":
+                raise
+            else:
+                raise ValidationError(str(exc))
+
+    def _validate_selector(self, valid_values_map, trap_exceptions=False):
         """Iterate over this Selector's keys checking each field
         of each key against `valid_values_map`.
         
         valid_values_map:    { parkey : [ legal values... ], ... }
         
-        Raise a ValueError if there are any problems with
+        Raise a ValidationError if there are any problems.
         """
-        warned = []
         for key in self.keys():
-            self.validate_key(key, valid_values_map, warned, trap_exceptions, context)
+            self._validate_key(key, valid_values_map)
         for choice in self.choices():
             if isinstance(choice, Selector):
-                choice.validate(valid_values_map, trap_exceptions, context)
-            
-    def validate_key(self, key, valid_values_map, warned, trap_exceptions, context):
-        """Validate a single `key` against the possible field values
-        in `valid_values_map`.   ABSTRACT STUB always passes.
-        """
-        if context:
-            context += " : "
-        try:
-            self._validate_key(key, valid_values_map, warned)
-        except ValidationError, exc:
-            if trap_exceptions in ["selector", True]:
-                log.error(context + repr(key))
-            else:
-                raise ValidationError(repr(key) + " " + str(exc))
+                choice.validate_selector(valid_values_map, trap_exceptions)
 
-    def _validate_key(self, key, valid_values_map, warned):
-        """Abstract method validates a single key or raises exception."""
-        raise NotImplementedError("Class " + repr(self.__class__.__name__) 
-                                  + " must implement _validate_key.")
+    def _validate_header(self, header):
+        """Check self._parameters in `header` against the values found in the
+        selector's keys.  Ignore nested selectors.
+        """
+        self._check_defined(header)
+        for name in self._parameters:
+            value = header[name] if name in header else "NOT FOUND"
+            self._validate_value(name, value, self._parkey_map[name])
+    
+    def _check_defined(self, header):
+        """Check that this selector's parkeys are all defined in `header`,
+        else raise ValidationError.
+        """
+        for name in self._parameters:
+            if name not in header:
+                if name in self._parkey_map and "N/A" not in self._parkey_map[name]:
+                    raise ValidationError(
+                        self.short_name + " required lookup parameter " + 
+                        repr(name) + " is undefined.")
+            
+    def _validate_value(self, name, value, valid_list):
+        """Verify that parameter `name` with `value` is in `valid_list` or
+        meets some other generic criteria for validity.   This is a generic
+        check against parameter constraints nominally from a TPN file.
+        """
+        if value in valid_list:
+            return
+        if value in ["*","N/A"]:
+            return
+        if "*" in valid_list or "N/A" in valid_list:
+            return
+        if value.replace(".0","") in valid_list:
+            return
+        if not valid_list:  # some TPNs are type-only
+            return
+        if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges
+            min, max = [float(x) for x in valid_list[0].split(":")]
+            if min <= float(value) <= max:
+                return
+            else:
+                raise ValidationError(
+                    " parameter " + repr(name) + " value =" + 
+                    repr(value) + " is not in range [" + 
+                    str(min) + " .. " + str(max) + "]")     
+        if name in self._substitutions and value in self._substitutions[name]:
+            return
+        raise ValidationError(
+            " parameter " + repr(name) + " value =" + repr(value) + 
+            " is not in " + repr(valid_list))
+            
+    def _validate_key(self, key, valid_values_map):
+        raise NotImplementedError(
+            self.__class__.__name__ + " hasn't defined _validate_key.")
+        
+    def _validate_number(self, parname, value):
+        """Convert `value` to a float and return it,  else ValidationError.
+        Generic methiod for validating header values.
+        """
+        try:
+            return float(value)
+        except ValueError, exc:
+            raise ValidationError(
+                self.short_name + " Invalid number for " + repr(parname) + 
+                " value=" + repr(value))
+
+    def _validate_datetime(self, pars, value):
+        """Convert `value` to CRDS timestamp and return it,  else ValidationError.
+        Generic method for validating and converting header date/times.
+        """
+        try:
+            return timestamp.reformat_date(value)
+        except Exception, exc:
+            raise ValidationError(
+                self.short_name + " Invalid date/time format for " + repr(pars) +
+                " value=" + repr(value) + " exception is " + repr(str(exc)))
 
     def file_matches(self, filename, sofar=()):
         """Return the nested match keys leading to selections of `filename`.
@@ -310,8 +395,8 @@ class Selector(object):
             return p2 + (" ".join(args),)
         if self.__class__ != other.__class__:
             return [msg(None, "different classes", 
-                    repr(self.__class__.__name__), ":",
-                    repr(other.__class__.__name__))]
+                    repr(self.short_name), ":",
+                    repr(other.short_name))]
         if self._parameters != other._parameters:
             return [msg(None, "different parameter lists ", 
                     repr(self._parameters), ":", 
@@ -339,7 +424,7 @@ class Selector(object):
     
     def merge(self, other):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
-            self.__class__.__name__ + " does not support merging.")
+            self.short_name + " does not support merging.")
 
 # ==============================================================================
 
@@ -390,7 +475,7 @@ def match_superset(tuple1, tuple2):
 
 class Matcher(object):
     """Matches a single key of a matching tuple to a dataset value.  Every
-    key of a MatchingSelector will have a tuple of corresponding Matchers.
+    key of a MatchSelector will have a tuple of corresponding Matchers.
     """
     def __init__(self, key):
         self._key = key
@@ -649,14 +734,14 @@ def matcher(key):
     else:
         return Matcher(key)
 
-class MatchingSelector(Selector):
+class MatchSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching
-    the runtime (header) parameters specified as choose() header to the .   
+    the runtime (header) parameters to the selector keys.  
 
-    The value 'N/A' is equivalent to "don't care" and does not add to the value
-    of a match.   Literal matches increase confidence of a good match.
+The value 'N/A' is equivalent to "don't care" and does not add to the value
+of a match.   Literal matches or "*" increase confidence of a good match.
 
-    >>> m = MatchingSelector(("foo","bar"), {
+    >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, 'N/A') : "100",
     ...    (1.0, 2.0) : "200",
     ...    (4.0, '*') : "300",
@@ -672,42 +757,61 @@ class MatchingSelector(Selector):
         (4.0, '*') : '300',
     })
     
-    All match tuple fields should appear on a valid values list:
+All match tuple fields should appear in the valid_values_map which is nominally
+derived from TPN files:
 
-    >>> m.validate({ "foo" : ("1.0",), "bar":("3.0",) })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError: ('1.0', '2.0') Field 'bar'='2.0' is not in ('3.0',)
+    ValidationError:  parameter 'bar' value ='2.0' is not in ('3.0',)
     
-    Match tuples should have the same length as the parameter list:
+Match tuples should have the same length as the parameter list:
     
-    >>> m = MatchingSelector(("foo","bar"), { (1.0,) : "100", })
+    >>> m = MatchSelector(("foo","bar"), { (1.0,) : "100", })
     Traceback (most recent call last):
     ...
-    ValueError: Match tuple ('1.0',) wrong length for parameter list ('foo', 'bar')
+    ValidationError: Match key=('1.0',) is wrong length for parameters ('foo', 'bar')
 
-    The last thing matched in a selector tree is assumed to be a file:
+Even though 'bar' is not defined in this call,  it is accepted because "N/A" is
+one of the choices for 'bar':
+
+    >>> choice = m.choose({"foo" : "1.0"})  
+
+On the other hand,  since "N/A" is not a value of 'foo',  it's definitely not
+OK to forget to define 'foo':
+
+    >>> choice = m.choose({"foo" : "1.0"})  
+
+Selector's can verify header values against a valid values map which is 
+derived from the rmap itself rather than TPNs:   
     
-    >>> m = MatchingSelector(("foo","bar"), {
+    >>> m.choose({"foo" : "doh!", "bar":"1.0"})  
+    Traceback (most recent call last):
+    ...
+    ValidationError:  parameter 'foo' value ='doh!' is not in ['1.0', '4.0']
+ 
+The last thing matched in a selector tree is assumed to be a file:
+    
+    >>> m = MatchSelector(("foo","bar"), {
     ...    (1.0, '*') : "100",
     ...    (1.0, 2.0) : "200",
     ...    ('*', '*') : "300",
     ...    (5.0, 3.0) : "200",
     ... })
     
-    file_matches() returns a list of recursive trails/lists of keys which lead 
-    to a given file:
+file_matches() returns a list of recursive trails/lists of keys which lead 
+to a given file:
     
     >>> m.file_matches("200")
     [((('foo', '1.0'), ('bar', '2.0')),), ((('foo', '5.0'), ('bar', '3.0')),)]
     
-    The result of file_matches() is a list of lists of keys because it is
-    used recursively on trees of mappings and selectors.
+The result of file_matches() is a list of lists of keys because it is
+used recursively on trees of mappings and selectors.
     
-    The special case of matching an empty set also needs to work for the sake
-    of uniform rmap structure for HST:
+The special case of matching an empty set also needs to work for the sake
+of uniform rmap structure for HST:
     
-    >>> m = MatchingSelector((), {
+    >>> m = MatchSelector((), {
     ...    () : "100",
     ... })
     >>> m.choose({})
@@ -797,7 +901,7 @@ class MatchingSelector(Selector):
         return selections
 
     def get_choice(self, selection, header):
-        raise NotImplementedError("MatchingSelector isn't a uniform subclass.")
+        raise NotImplementedError("MatchSelector isn't a uniform subclass.")
 
     def choose(self, header):
         """Match the specified `header` to this selector's selections and
@@ -809,11 +913,12 @@ class MatchingSelector(Selector):
         # needed because there is no guarantee that the nested UseAfter selector
         # will also match;  in that case,  the next best match where the
         # UseAfter selector does produce a result is desired.
+        self._validate_header(header)
         for _match_tuples, choice in self.winnowing_match(header):
             if isinstance(choice, Selector):
                 try:
                     return choice.choose(header)
-                except LookupError, exc:
+                except utils.CrdsError, exc:
                     log.verbose("Nested selector failed", str(exc))
                     continue
             else:
@@ -934,58 +1039,36 @@ class MatchingSelector(Selector):
             vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
         return vmap
 
-    def _validate_key(self, key, valid_values_map, warned):
-        """Validate a single selections `key` against the possible field values
-        in `valid_values_map`.   Note that each selections `key` is 
-        (nominally) a tuple with values for multiple parkeys.
+    def _validate_selector(self, valid_values_map, trap_exceptions=False):
+        self._check_valid_values(valid_values_map)
+        Selector._validate_selector(self, valid_values_map, trap_exceptions)
+            
+    def _check_valid_values(self, valid_values_map):
+        """Issue warnings for parkeys which aren't covered by valid_values_map."""
+        for name in self._parameters:
+            if name not in valid_values_map:
+                log.verbose_warning(self.short_name, "Parameter ",
+                                    repr(name), " is unchecked.")
+
+    def _validate_key(self, key, valid_values_map):
+        """Validate each field of a single Match `key` against the possible 
+        values in `valid_values_map`.   Note that each `key` is 
+        nominally a tuple with values for multiple parkeys.
         """
         if len(key) != len(self._parameters):
             raise ValidationError("wrong length for parameter list " + 
                                   repr(self._parameters))
         for i, name in enumerate(self._parameters):
             if name not in valid_values_map:
-                if name not in warned:
-                    warned.append(name)
-                    log.warning("Parameter", repr(name), "is unchecked.")
                 continue
-                # raise ValidationError("Unknown parameter " + repr(name))
-            valid = valid_values_map[name]
             for value in key[i].split("|"):
-                if value in ["*","N/A"]:
-                    continue
-                if self._is_literal_or_regex_value(value, valid):
-                    continue
-                if value.replace(".0","") in valid:
-                    continue
-                if not valid:  # some TPNs are type-only
-                    continue
-                if len(valid) ==1 and ":" in valid[0]:   # handle ranges
-                    min, max = [float(x) for x in valid[0].split(":")]
-                    if min <= float(value) <= max:
-                        continue
-                    else:
-                        raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                      " is not in range [" + str(min) + " .. " + 
-                                      str(max) + "]")     
-                if name in self._substitutions and \
-                    value in self._substitutions[name]:
-                    continue
-                raise ValidationError("Field " + repr(name) + "=" + repr(key[i]) + 
-                                      " is not in " + repr(valid))
+                self._validate_value(name, value, valid_values_map[name])
         for other in self.keys():
             if key != other and match_superset(other, key):
                 # raise ValidationError(
                 if log.VERBOSE_FLAG:
                     log.verbose_warning( "Match tuple " + repr(key) + 
                                          " is a special case of " + repr(other))
-
-    def _is_literal_or_regex_value(self, value, valid):
-        """Return True if all of the |-combined elements of `value` are in `valid`."""
-        return value in valid
-        for val in value.split("|"):
-            if val not in valid:
-                return False
-        return True
 
 # ==============================================================================
 
@@ -1004,48 +1087,85 @@ class UseAfterSelector(Selector):
     ... })
 
 
-    # exact match
+Exact match
+
     >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:09:00'})   
     'o9t1525sj_bia.fits'
 
-    # just before, in between
+Just before, in between
+
     >>> u.choose({'DATE-OBS': '2004-07-02', 'TIME-OBS': '08:08:59'})   
     'o9s16388j_bia.fits'
 
-    # later than all entries
+Later than all entries
+
     >>> u.choose({'DATE-OBS': '2005-07-02', 'TIME-OBS': '08:08:59'}) 
     'o9t1553tj_bia.fits'
 
-    # earlier than all entries
+Earlier than all entries
+
     >>> u.choose({'DATE-OBS': '2000-07-02', 'TIME-OBS': '08:08:59'})   
     Traceback (most recent call last):
     ...
     UseAfterError: No selection with time < '2000-07-02 08:08:59'
     
-    UseAfter dates should look like YYYY-MM-DD HH:MM:SS or:
+UseAfter dates should look like YYYY-MM-DD HH:MM:SS or:
     
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-26 foo 01:28:00':'nal1503ij_bia.fits',
     ... })
     
-    >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
+    >>> u.validate_selector({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValidationError: '2003-09-26 foo 01:28:00' date has invalid format.
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003-09-26 foo 01:28:00' exception is "invalid literal for int() with base 10: 'foo 01'"
 
-    A more subtle error in the date or time should still be detected:
+A more subtle error in the date or time should still be detected:
 
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-35 01:28:00':'nal1503ij_bia.fits',
     ... })
-    >>> u.validate({"DATE-OBS":"*", "TIME-OBS":"*"})
+    >>> u.validate_selector({"DATE-OBS":"*", "TIME-OBS":"*"})
     Traceback (most recent call last):
     ...
-    ValidationError: '2003-09-35 01:28:00' date has invalid format.
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003-09-35 01:28:00' exception is 'day is out of range for month'
+    
+    >>> choice = u.choose({"DATE-OBS":"2003-09-22", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    UseAfterError: No selection with time < '2003-09-22 01:28:00'
+   
+    >>> u.choose({"DATE-OBS":"2003-09-52", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003-09-52 01:28:00' exception is 'day is out of range for month'
+
+    >>> u.choose({"DATE-OBS":"2003/messed/up", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003/messed/up 01:28:00' exception is "Unknown numerical date format: '2003/messed/up 01:28:00'"
+
+    >>> u.choose({"DATE-EXP":"2003/messed/up", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: UseAfter required lookup parameter 'DATE-OBS' is undefined.
+
+    >>> u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28:00QM"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003/12/20 01:28:00QM' exception is 'invalid literal for float(): 00QM'
+
+    >>> u.choose({"DATE-OBS":"2003/12/2", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2003/12/2 01:28:00' exception is "Unknown numerical date format: '2003/12/2 01:28:00'"
+
+Alternate date/time formats are accepted as header parameters.
+    
+    >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
     """    
     def choose(self, header):
-        date = timestamp.reformat_date(
-            " ".join([header[x] for x in self._parameters]))
+        date = self._validate_header(header)     
         if log.VERBOSE_FLAG:
             log.write("Matching date", date, " ")
         selection = self.bsearch(date, self._selections)
@@ -1073,12 +1193,27 @@ class UseAfterSelector(Selector):
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
             
-    def _validate_key(self, key, valid_values_map, warned):
-        try:
-            timestamp.parse_numerical_date(key)
-        except ValueError:
-            raise ValidationError("date has invalid format.")
+    def _validate_key(self, key, valid_values_map):
+        """Validate a selector date/time field for this UseAfter."""
+        self._validate_datetime(self._parameters, key)
         
+    def _validate_header(self, header):
+        """Validate the `header` parameters which apply only to this UseAfter.
+        Ignore `valid_values_map`.
+        """
+        self._check_defined(header)
+        date = self._raw_date(header)
+        return self._validate_datetime(self._parameters, date)
+        
+    def _raw_date(self, header):
+        """Combine the values of self.parameters from `header` into a single
+        raw date separated by spaces.
+        """
+        date = ""
+        for par in self._parameters:
+            date += header[par] + " "
+        return date.strip()
+
     def match_item(self, key):
         """Account for the slightly weird UseAfter syntax."""
         return tuple(zip(self._parameters, key.split()))
@@ -1093,6 +1228,46 @@ class UseAfterSelector(Selector):
             if key not in combined_selections or val > combined_selections[key]:
                 combined_selections[key] = val
         return self.__class__(self._parameters[:], _selections=sorted(combined_selections.items()))
+    
+    def get_parkey_map(self):
+        return { par:"*" for par in self._parameters}
+
+# ==============================================================================
+
+class ClosestTimeSelector(UseAfterSelector):
+    """ClosestTime chooses the selection whose time most closely matches the
+    choose() method "time" keyword parameter
+
+    >>> t = ClosestTimeSelector(("time",), {
+    ...  '2017-04-24 00:00:00': "cref_flatfield_123.fits",
+    ...  '2018-02-01 00:00:00': "cref_flatfield_222.fits",
+    ...  '2019-04-15 00:00:00': "cref_flatfield_123.fits",
+    ... })
+
+    >>> t.choose({"time":"2016-05-05 00:00:00"})
+    'cref_flatfield_123.fits'
+
+    >>> t.choose({"time":"2016-04-24 00:00:00"})
+    'cref_flatfield_123.fits'
+
+    >>> t.choose({"time":"2018-02-02 00:00:00"})
+    'cref_flatfield_222.fits'
+
+    >>> t.choose({"time":"2019-03-01 00:00:00"})
+    'cref_flatfield_123.fits'
+
+    >>> t.choose({"time":"2019-04-15 00:00:00"})
+    'cref_flatfield_123.fits'
+
+    >>> t.choose({"time":"2019-04-16 00:00:00"})
+    'cref_flatfield_123.fits'
+    """
+    def choose(self, header):
+        import numpy as np
+        date = self._validate_header(header)
+        diff = np.array([abs_time_delta(date, key) for key in self.keys()], 'f')
+        index = np.argmin(diff)
+        return self.get_choice(self._selections[index], header)
 
 # ==============================================================================
 
@@ -1130,13 +1305,23 @@ class GeomtricallyNearestSelector(Selector):
     >>> r.choose({"effective_wavelength":'5.1'})
     'cref_flatfield_137.fits'
     
-    A GeometricallyNearestSelector doesn't know now to resolve an
-    ambiguous match by merging two selectors:
+A GeometricallyNearestSelector doesn't know now to resolve an ambiguous match by
+merging two selectors:
     
     >>> r.merge(r)
     Traceback (most recent call last):
     ...
-    AmbiguousMatchError: More than one match was found at the same weight and GeomtricallyNearestSelector does not support merging.
+    AmbiguousMatchError: More than one match was found at the same weight and GeomtricallyNearest does not support merging.
+
+Effective_wavelength doesn't have to be covered by valid_values_map:
+    
+    >>> r.validate_selector({})
+    
+    >>> r.choose({"effective_wavelength":"foo"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: GeomtricallyNearest Invalid number for 'effective_wavelength' value='foo'
+    
     """
     @classmethod
     def condition_key(cls, key):
@@ -1144,11 +1329,23 @@ class GeomtricallyNearestSelector(Selector):
     
     def choose(self, header):
         import numpy as np
-        keyval = float(header[self._parameters[0]])
+        keyval = self._validate_header(header)
         nkeys = np.array(self.keys(), dtype='f')
         diff = np.abs(nkeys - keyval)
         index = np.argmin(diff)
         return self.get_choice(self._selections[index], header)
+    
+    def _validate_key(self, key, valid_values_map):
+        parname = self._parameters[0]
+        self._validate_number(parname, key)
+        
+    def _validate_header(self, header):
+        self._check_defined(header)
+        parname = self._parameters[0]
+        return self._validate_number(parname, header[parname])
+
+    def _validate_value(self, name, value, valid_list):
+        self._validate_number(name, value)
 
 # ==============================================================================
 
@@ -1185,7 +1382,7 @@ class BracketSelector(Selector):
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
     """
     def choose(self, header):
-        keyval = float(header[self._parameters[0]])
+        keyval = self._validate_header(header)
         index = 0
         while index < len(self._selections) and \
                 keyval > self._selections[index][0]:
@@ -1200,7 +1397,21 @@ class BracketSelector(Selector):
             choice1 = self.get_choice(self._selections[index-1], header)
             choice2 = self.get_choice(self._selections[index], header)
         return choice1, choice2
+    
+    def get_parkey_map(self):
+        return {}
 
+    def _validate_key(self, key, valid_values_map):
+        return self._validate_number(self._parameters[0], key)
+
+    def _validate_value(self, name, value, valid_list):
+        self._validate_number(name, value)
+
+    def _validate_header(self, header):
+        self._check_defined(header)
+        parname = self._parameters[0]
+        return self._validate_number(parname, header[parname])
+        
 # ==============================================================================
 
 RELATION_RE = re.compile('^([<=][=]?|default)(.*)$')
@@ -1262,7 +1473,7 @@ class VersionRelation(object):
     >>> (5,0) < VersionRelation('< 5.1')
     Traceback (most recent call last):
     ...
-    ValueError: Incompatible version expression types: 5.1 and (5, 0)
+    ValidationError: Incompatible version expression types: 5.1 and (5, 0)
 
     >>> VersionRelation('< 3.1') < 6
     True
@@ -1271,7 +1482,7 @@ class VersionRelation(object):
     def __init__(self, relation_str):
         match = RELATION_RE.match(relation_str)
         if not match:
-            raise ValueError("RelationRelation " + repr(relation_str) + 
+            raise ValidationError("Relation " + repr(relation_str) + 
                              " does not begin with one of >,<,>=,<=,=,==")
         relation = match.group(1)
         if relation == "==":
@@ -1282,11 +1493,11 @@ class VersionRelation(object):
             try:
                 self.version = eval(version)
             except ValueError:
-                raise ValueError("Invalid version expression.  Expression must"
+                raise ValidationError("Invalid version expression.  Expression must"
                                  " evaluate to a comparable object.")
         else:
             if version:
-                raise ValueError("Illegal version expression " + repr(version))
+                raise ValidationError("Illegal version expression " + repr(version))
             self.version = "default"
             self.relation = "default"
             
@@ -1315,7 +1526,7 @@ class VersionRelation(object):
             result = 1
         elif isinstance(other, VersionRelation):
             if self.relation != other.relation and \
-               self.version == other.version: # '<' < '=',  '<' < '=='
+                self.version == other.version: # '<' < '=',  '<' < '=='
                 result = cmp(self.relation, other.relation)  
             else:
                 result = cmp(self.version, other.version)
@@ -1323,7 +1534,7 @@ class VersionRelation(object):
             if self.compatible_types(other):
                 result = cmp(self, VersionRelation("= " + str(other)))
             else:
-                raise ValueError("Incompatible version expression types: " + 
+                raise ValidationError("Incompatible version expression types: " + 
                                  repr(self.version) + " and " + repr(other))
         return result
 
@@ -1383,63 +1594,38 @@ class SelectVersionSelector(Selector):
     def __init__(self, parkeys, selections, rmap_header=None):
         Selector.__init__(self, parkeys, self.parse_selections(selections), 
                           rmap_header)
+    
+    def get_parkey_map(self):
+        return {}
 
     def parse_selections(self, selections):
         """Convert relation string keys into runtime comparator objects."""
         return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
 
     def choose(self, header):
-        version = header[self._parameters[0]]
+        """Based on `header`,  return the corresponding version selection."""
+        version = self._validate_header(header)
         index = 0
         while self._selections[index][0] < version:
             index += 1
         return self.get_choice(self._selections[index], header)
+    
+    def _validate_key(self, key, valid_values_map):
+        """Keys effectively validated at __init__ time."""
+        pass
 
-# ==============================================================================
-
-class ClosestTimeSelector(Selector):
-    """ClosestTime chooses the selection whose time most closely matches the
-    choose() method "time" keyword parameter
-
-    >>> t = ClosestTimeSelector(("time",), {
-    ...  '2017-4-24': "cref_flatfield_123.fits",
-    ...  '2018-2-1':  "cref_flatfield_222.fits",
-    ...  '2019-4-15': "cref_flatfield_123.fits",
-    ... })
-
-    >>> t.choose({"time":"2016-5-5"})
-    'cref_flatfield_123.fits'
-
-    >>> t.choose({"time":"2016-4-24"})
-    'cref_flatfield_123.fits'
-
-    >>> t.choose({"time":"2018-2-2"})
-    'cref_flatfield_222.fits'
-
-    >>> t.choose({"time":"2019-3-1"})
-    'cref_flatfield_123.fits'
-
-    >>> t.choose({"time":"2019-4-15"})
-    'cref_flatfield_123.fits'
-
-    >>> t.choose({"time":"2019-4-16"})
-    'cref_flatfield_123.fits'
-    """
-    def choose(self, header):
-        import numpy as np
-        time = header[self._parameters[0]]
-        diff = np.array([abs_time_delta(time, key) for key in self.keys()], 'f')
-        index = np.argmin(diff)
-        return self.get_choice(self._selections[index], header)
-
-def str_to_datetime(string):
-    """Convert a date string into a datetime object."""
-    return datetime.datetime(*[int(x) for x in string.split("-")])
+    def _validate_value(self, name, value, valid_list):
+        self._validate_number(name, value)
+    
+    def _validate_header(self, header):
+        self._check_defined(header)
+        parname = self._parameters[0]
+        return self._validate_number(parname, header[parname])
 
 def abs_time_delta(time1, time2):
     """Return abs(time1 - time2) in total seconds."""
-    date1 = str_to_datetime(time1)
-    date2 = str_to_datetime(time2)
+    date1 = timestamp.parse_date(time1)
+    date2 = timestamp.parse_date(time2)
     return abs((date1-date2).total_seconds())
 
 
@@ -1471,17 +1657,13 @@ class Parameters(object):
                 selections[key] = selpars
         return self.selector(mykeys, selections, rmap_header)
 
-class MatchingParameters(Parameters):
-    """Parameters for MatchingSelector"""
-    selector = MatchingSelector
+class MatchParameters(Parameters):
+    """Parameters for MatchSelector"""
+    selector = MatchSelector
     
 class UseAfterParameters(Parameters):
     """Parameters for UseAfterSelector"""
     selector = UseAfterSelector
-    
-    def instantiate(self, parkey, header):
-        assert tuple(parkey[0]) == ("DATE-OBS","TIME-OBS")
-        return Parameters.instantiate(self, parkey, header)
     
 class SelectVersionParameters(Parameters):
     """Parameters for SelectVersionSelector"""
@@ -1491,7 +1673,7 @@ class ClosestTimeParameters(Parameters):
     """Parameters for ClosestTimeSelector"""
     selector = ClosestTimeSelector
     
-class GeomtricallyNearestParameters(Parameters):
+class GeometricallyNearestParameters(Parameters):
     """Parameters for GeomtricallyNearestSelector"""
     selector = GeomtricallyNearestSelector
     
@@ -1501,11 +1683,11 @@ class BracketParameters(Parameters):
 
 # Appearance in rmap has slightly abbreviated syntax,  minus "Parameters"
 SELECTORS = {
-    "Match"  : MatchingParameters,
+    "Match"  : MatchParameters,
     "UseAfter" : UseAfterParameters,
     "SelectVersion" : SelectVersionParameters,
     "ClosestTime" : ClosestTimeParameters,
-    "GeomtricallyNearest": GeomtricallyNearestParameters,
+    "GeometricallyNearest": GeometricallyNearestParameters,
     "Bracket": BracketParameters,
 }
 

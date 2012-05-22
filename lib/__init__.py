@@ -1,3 +1,4 @@
 
 
-from crds.client import getreferences, cache_references, get_default_context
+from crds.client import getreferences, cache_references, get_default_context, CrdsLookupError
+from crds.utils import CrdsError

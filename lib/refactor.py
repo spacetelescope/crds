@@ -210,7 +210,7 @@ def _find_match(line, match_tuple):
     return None
 
 def _normalize_match_tuple(tup):
-    return selectors.MatchingSelector.condition_key(tup)
+    return selectors.MatchSelector.condition_key(tup)
     # return tuple([str(item).strip() for item in tup])
     
 def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
