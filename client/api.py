@@ -204,7 +204,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
                                       str(refname)[len("NOT FOUND"):])
     return bestrefs
 
-def get_default_context(observatory):
+def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.  
     """
