@@ -121,7 +121,7 @@ def parse_time(time):
 
     """
     time = time.strip()
-    ampm = "AM"
+    ampm = "unspecified"
     if time[-2:] in ["AM","am","PM","pm"]:
         ampm = time[-2:].upper()
         time = time[:-2]
@@ -138,7 +138,7 @@ def parse_time(time):
     if ampm == "PM":
         if ihour < 12:
             ihour += 12
-    else:
+    elif ampm == "AM":
         if ihour == 12:
             ihour -= 12
     return ihour, iminute, isecond, imicrosecond

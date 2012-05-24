@@ -1012,9 +1012,13 @@ of uniform rmap structure for HST:
         special cases and not repeating common info for every special
         case.
         """
+        if log.VERBOSE_FLAG:
+            log.verbose("Merging equivalent selectors", equivalent_selectors)
         combined = equivalent_selectors[0].merge(equivalent_selectors[1])
         for next in equivalent_selectors[2:]:
             combined = combined.merge(next)
+        if log.VERBOSE_FLAG:
+            log.verbose("Merge result:\n", combined.format())
         return combined
 
     def get_value_map(self):
@@ -1226,6 +1230,9 @@ Alternate date/time formats are accepted as header parameters.
         combined_selections = dict(self._selections)
         for key, val in other._selections:
             if key not in combined_selections or val > combined_selections[key]:
+                if log.VERBOSE_FLAG and key in combined_selections:
+                    log.verbose("Merge collision at", repr(key), "replacing",
+                                repr(combined_selections[key]), "with", repr(val))
                 combined_selections[key] = val
         return self.__class__(self._parameters[:], _selections=sorted(combined_selections.items()))
     

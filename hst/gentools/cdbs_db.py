@@ -315,11 +315,14 @@ class HeaderGenerator(object):
             clauses.append(col + "=" + repr(extra_constraints[key]))
         return (" and ").join(clauses)
 
-    def get_headers(self, extra_constraints={}):
+    def get_headers(self, extra_constraints={}, condition=True):
         dadsops = get_dadsops()
         sql = self.getter_sql(extra_constraints)
         for dataset in dadsops.execute(sql):
-            hdr = dict(zip(self.header_keys, [utils.condition_value(x) for x in dataset]))
+            if condition:
+                hdr = dict(zip(self.header_keys, [utils.condition_value(x) for x in dataset]))
+            else:
+                hdr = dict(zip(self.header_keys, dataset))
             self.fix_time(hdr)
             hdr["INSTRUME"] = self.instrument
             yield hdr
@@ -341,14 +344,14 @@ except:
     log.error("Failed loading 'header_tables.dat'")
 
 
-def get_dataset_header(dataset):
+def get_dataset_header(dataset, condition=True):
     """Get the header for a particular dataset,  nominally in a context where
     one only cares about a small list of specific datasets.
     """
     instrument = dataset_to_instrument(dataset)
     try:
         igen = HEADER_GENERATORS[instrument]
-        headers = list(igen.get_headers({"DATA_SET":dataset.upper()}))
+        headers = list(igen.get_headers({"DATA_SET":dataset.upper()}, condition))
     except Exception, exc:
         raise RuntimeError("Error accessing DADSOPS for dataset" + repr(dataset) + ":" + str(exc))
     if len(headers) == 1:
@@ -481,6 +484,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
     elapsed = datetime.datetime.now() - start
     log.write()
     log.write()
+    totals = {}
     for category in mismatched:
         filekind, inputs = category
         datasets = mismatched[category]
@@ -493,6 +497,12 @@ def test(header_generator, context="hst.pmap", datasets=None,
         for old, new in grouped:
             ids = grouped[(old, new)]
             log.write("Mismatch Set:", len(ids), instrument, filekind, old, new, " ".join(sorted(ids)))
+        if (instrument, filekind) not in totals:
+            totals[(instrument, filekind)] = 0
+        totals[(instrument, filekind)] += len(datasets)
+    log.write()
+    for key in totals:
+        log.write(key, totals[key], "mismatch errors")
     log.write()
     log.write(instrument, count, "datasets")
     log.write(instrument, elapsed, "elapsed")
@@ -601,6 +611,8 @@ def main():
         profile = True
     if sys.argv[1] == "dumpall":
         dumpall()
+    elif sys.argv[1] == "dump":
+        dump(sys.argv[2], 10**10)
     elif sys.argv[1] == "testall":
         testall(path=DEFAULT_PKL_PATH, profile=profile)
     elif sys.argv[1] == "test":
@@ -627,6 +639,7 @@ python cdbs_db.py testall
 python cdbs_db.py test [instrument [filekind [dataset]]]
 """
         sys.exit(-1)
+    sys.exit(0)   # Bypass Python garbage collection if possible.
 
 if __name__ == "__main__":
     main()

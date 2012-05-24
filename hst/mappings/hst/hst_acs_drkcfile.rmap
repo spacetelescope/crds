@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-05-03 10:34:45.979148',
+    'derived_from' : 'generated from CDBS database 2012-05-24 15:34:02.546982',
     'filekind' : 'DRKCFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : 'f300e504c3187d78ee37348036fbf6fbbc9ee812',
+    'sha1sum' : 'e7044c32058b039d18d1b8479c31955cc4ff37c8',
 }
 
 selector = Match({
