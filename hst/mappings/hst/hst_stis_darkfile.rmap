@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-05-03 10:35:26.680277',
+    'derived_from' : 'generated from CDBS database 2012-05-24 15:36:15.206829',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,11 +7,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '96da3905610d4e930e7aba1b2b090301e02145a0',
+    'sha1sum' : '45d275f406fa142d2976823bc8ad9fa83a0238f6',
 }
 
 selector = Match({
-    ('CCD', 'ANY', 4294967295) : UseAfter({
+    ('CCD', 'ANY', -1) : UseAfter({
         '1997-10-23 00:00:00' : 'j991518ao_drk.fits',
     }),
     ('CCD', 'A|B|C|D', '1|2|4|8') : UseAfter({

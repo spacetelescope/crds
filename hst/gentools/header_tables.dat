@@ -55,6 +55,7 @@
          'gsagtab': 'cos_ref_data.csr_best_gsagtab',
          'hvtab': 'cos_ref_data.csr_best_hvtab',
          'lamptab': 'cos_ref_data.csr_best_lamptab',
+         'life_adj': 'cos_ref_data.csr_life_adj',
          'obsmode': 'cos_ref_data.csr_obsmode',
          'obstype': 'cos_ref_data.csr_obstype',
          'opt_elem': 'cos_ref_data.csr_opt_elem',

@@ -284,7 +284,7 @@
          'xtractab': {'db_translations': {},
                       'not_in_db': (),
                       'parkey_restrictions': {},
-                      'parkeys': ('detector', 'obstype'),
+                      'parkeys': ('detector', 'obstype', 'life_adj'),
                       'reftype': '1dx',
                       'relevance': '(OBSTYPE == "SPECTROSCOPIC")'}},
  'nicmos': {'backtab': {'db_translations': {},
