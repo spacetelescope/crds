@@ -3,6 +3,6 @@
 for instr in acs cos stis wfc3 nicmos wfpc2
 do 
 	echo ======================== $instr =========================
-	python -m crds.certify --verbose 50 hst_${instr}.imap
+	python -m crds.certify --verbose 50 hst_${instr}.imap -t rmap $*
 done | tee certify_all.log
 
