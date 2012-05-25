@@ -153,7 +153,10 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
     matches = []
     for rmap_tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(
                                         header, raise_ambiguous=False):
+        # rmap_tuples are all equally weighted matches to header requiring
+        # dynamic merger if there's more than one.
         for rmap_tuple in rmap_tuples:
+            # Any time ref_match_tuple matches,  rmap_tuple matches.
             if selectors.match_superset(ref_match_tuple, rmap_tuple):
                 matches.append(_normalize_match_tuple(rmap_tuple))
     return matches
