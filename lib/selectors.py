@@ -1068,11 +1068,32 @@ of uniform rmap structure for HST:
             for value in key[i].split("|"):
                 self._validate_value(name, value, valid_values_map[name])
         for other in self.keys():
-            if key != other and match_superset(other, key):
+            if key != other and match_superset(other, key) and \
+                not self._different_match_weight(key, other):
                 # raise ValidationError(
                 if log.VERBOSE_FLAG:
                     log.verbose_warning( "Match tuple " + repr(key) + 
-                                         " is a special case of " + repr(other))
+                                         " is an equal weight special case of " + repr(other),
+                                         " requiring dynamic merging.")
+
+    def _different_match_weight(self, subkey, superkey):
+        """The criteria for "ambiguous matches" are:
+
+        1. Superkey must be a match superset of subkey,  i.e. it matches any
+        time subkey does.
+        2. The match weights of superkey and subkey must be the same for an
+        ambiguity to exist. Where one key has the value N/A and the other 
+        does not, the weights of their matches diverge.   Unequally weighted
+        matches aren't merged and hence aren't considered an ambiguity.
+        """
+        super_count = sub_count = len(subkey)
+        for i in range(sub_count):
+            if subkey[i] == "N/A" and superkey[i] != "N/A":
+                sub_count -= 1
+            elif superkey[i] == "N/A" and subkey[i] != "N/A":
+                super_count -= 1
+        return sub_count != super_count
+
 
 # ==============================================================================
 

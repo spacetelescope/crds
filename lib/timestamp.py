@@ -102,7 +102,7 @@ def parse_time(time):
     including AM/PM.
     
     >>> parse_time('12:00')
-    (0, 0, 0, 0)
+    (12, 0, 0, 0)
 
     >>> parse_time('01:02AM')
     (1, 2, 0, 0)
