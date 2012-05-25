@@ -129,7 +129,7 @@ def get_crds_server():
 set_crds_server(URL)
 
 # =============================================================================
-def list_mappings(observatory="hst", glob_pattern=".*"):
+def list_mappings(observatory=None, glob_pattern=".*"):
     """Return the list of mappings associated with `observatory`
     which match `glob_pattern`.
     """
