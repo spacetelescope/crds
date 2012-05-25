@@ -1070,9 +1070,13 @@ of uniform rmap structure for HST:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not self._different_match_weight(key, other):
-                # raise ValidationError(
                 if log.VERBOSE_FLAG:
-                    log.verbose_warning( "Match tuple " + repr(key) + 
+                    if log.get_verbose() > 50:
+                        raise ValidationError( "Match tuple " + repr(key) + 
+                                         " is an equal weight special case of " + repr(other),
+                                         " requiring dynamic merging.")
+                    else:
+                        log.verbose_warning("Match tuple " + repr(key) + 
                                          " is an equal weight special case of " + repr(other),
                                          " requiring dynamic merging.")
 
