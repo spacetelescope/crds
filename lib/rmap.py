@@ -425,7 +425,7 @@ class Mapping(object):
             for selection in self.selections.values():
                 key = selection.get_required_parkeys()
                 parkeys = parkeys.union(set(key))
-        return tuple(sorted(parkeys))
+        return sorted(parkeys)
     
     def get_minimum_header(self, dataset, original_name=None):
         """Return the names and values of `dataset`s header parameters which 
@@ -446,7 +446,7 @@ class Mapping(object):
         else:
             mapping = self
         minimized = {}
-        for key in mapping.get_required_parkeys() + ("INSTRUME",):
+        for key in mapping.get_required_parkeys() + ["INSTRUME",]:
             try:
                 minimized[key] = header[key]
             except KeyError:
