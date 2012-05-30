@@ -9,9 +9,21 @@ import re
 import urllib2
 
 from crds import log, utils, rmap, data_file
+from crds.client.proxy import CheckingProxy
 
 # ==============================================================================
-from crds.client.proxy import CheckingProxy, ServiceError
+from crds.client.proxy import ServiceError
+from crds.utils import CrdsError
+
+class CrdsDownloadError(CrdsError):
+    """Error downloading data for a reference or mapping file."""
+
+def download_exc(pipeline_context, name, exc):    
+    return CrdsDownloadError("Error fetching data for " + srepr(name) + 
+                            " from context " + srepr(pipeline_context) + 
+                            " at server " + srepr(get_crds_server()) +
+                            " : " + str(exc))
+
 
 __all__ = ["getreferences",
            "get_default_context",
@@ -37,7 +49,9 @@ __all__ = ["getreferences",
            
            "get_minimum_header",
            
+           "CrdsError",
            "CrdsLookupError",
+           "CrdsDownloadError",
            "ServiceError"]
 
 # ============================================================================
@@ -129,6 +143,10 @@ def get_crds_server():
 set_crds_server(URL)
 
 # =============================================================================
+def srepr(o):
+    """Return the repr() of the str() of `o`"""
+    return repr(str(o))
+
 def list_mappings(observatory=None, glob_pattern=".*"):
     """Return the list of mappings associated with `observatory`
     which match `glob_pattern`.
@@ -151,8 +169,11 @@ def get_mapping_data(pipeline_context, mapping):
     """Returns the contents of the specified pmap, imap, or rmap file
     as a string.
     """
-    return S.get_mapping_data(pipeline_context, mapping)
-    
+    try:
+        return S.get_mapping_data(pipeline_context, mapping)
+    except ServiceError, exc:
+        raise download_exc(pipeline_context, mapping, exc)
+        
 def get_mapping_names(pipeline_context):
     """Get the complete set of pmap, imap, and rmap basenames required
     for the specified pipeline_context.   context can be an observatory, 
@@ -168,7 +189,11 @@ def get_reference_url(pipeline_context, reference):
 def get_reference_data(pipeline_context, reference):
     """Returns the contents of the specified reference file as a string.
     """
-    return base64.b64decode(S.get_reference_data(pipeline_context, reference))
+    try:
+        data = S.get_reference_data(pipeline_context, reference)
+    except ServiceError, exc:
+        raise download_exc(pipeline_context, reference, exc)
+    return base64.b64decode(data)
 
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
@@ -197,10 +222,10 @@ def get_best_references(pipeline_context, header, reftypes=None):
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
             if "NOT FOUND n/a" == refname:
-                log.verbose("Reference type", repr(filetype), "not applicable.")
+                log.verbose("Reference type", srepr(filetype), "not applicable.")
             else:
                 raise CrdsLookupError("Error determining best reference for " + 
-                                      repr(str(filetype)) + " = " + 
+                                      srepr(filetype) + " = " + 
                                       str(refname)[len("NOT FOUND"):])
     return bestrefs
 
@@ -224,9 +249,12 @@ class FileCacher(object):
     def _http_get_data(self, pipeline_context, name):
         """Fetch the data for `name` as a URL and return it.
         """
-        url = self._get_url(pipeline_context, name)
-        log.verbose("Fetching URL ", repr(url))
-        return urllib2.urlopen(url).read()
+        try:
+            url = self._get_url(pipeline_context, name)
+            log.verbose("Fetching URL ", repr(url))
+            return urllib2.urlopen(url).read()
+        except Exception, exc:
+            raise download_exc(pipeline_context, name, exc)
 
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
         """Given a list of basename `mapping_names` which are pertinent to the 
@@ -256,8 +284,7 @@ class FileCacher(object):
         elif "hst" in pipeline_context:
             observatory = "hst"
         else:
-            raise ValueError("Can't determine observatory from " + 
-                             repr(pipeline_context))
+            observatory = crds.get_cached_mapping(pipeline_context).observatory
         return rmap.locate_file(name, observatory=observatory)
 
 # ==============================================================================

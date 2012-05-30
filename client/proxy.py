@@ -37,14 +37,18 @@ class CheckingProxy(object):
         #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
         #                  '(the default version for this client, '
         #                  'pass version="2.0" to use keyword arguments)')
-        r = urllib.urlopen(self.__service_url,
-                           dumps({
-                                  "jsonrpc": self.__version,
-                                  "method": self.__service_name,
-                                  'params': params,
-                                  'id': str(uuid.uuid1())})).read()
-        return loads(r)
-  
+        parameters = dumps({"jsonrpc": self.__version,
+                            "method": self.__service_name,
+                            'params': params,
+                            'id': str(uuid.uuid1())})
+        try:    
+            channel = urllib.urlopen(self.__service_url, parameters)
+            response = channel.read()        
+        except Exception, exc:
+            raise ServiceError("CRDS network service call failure " + repr(parameters))
+        rval = loads(response)
+        return rval
+    
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
