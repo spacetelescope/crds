@@ -8,6 +8,8 @@ cd `dirname $0`
 
 rm -f install.log
 
+st=0
+
 for dir in lib client hst jwst tobs
 do
     if (test -e $dir)
@@ -17,11 +19,14 @@ do
     	echo "Installing $dir" >> install.log
 		echo "=====================================================" >>install.log
 	(cd $dir;  python setup.py install $* --force)  >> install.log
+	st=$st$?
     else
 		echo "Skipping $dir"
 		echo "=====================================================" >>install.log
 		echo "Skipping $dir" >>install.log
 		echo "=====================================================" >>install.log
+	# is it an error for a directory to be missing?  For the nightly builds I assume it is
+	st=${st}1
     fi
 done
 
@@ -33,9 +38,14 @@ echo "=====================================================" >>install.log
 tar zxf third_party/django-json-rpc-git-0.0.pygz
 cd django-json-rpc-git-0.0
 python setup.py install $* --force >> install.log
+st=$st$?
+
 cd ..
 rm -rf django-json-rpc-git-0.0
 
 
 ./clean
 
+echo final status $st
+st=`echo $st | tr -d 0 | cut -c1-1`
+exit $st
