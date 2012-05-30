@@ -76,18 +76,19 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     """
     if context is None:
         observatory = get_observatory(parameters)
-        ctx = get_default_context(observatory)
+        pmap_name = get_default_context(observatory)
     else:
         assert isinstance(context, str) and context.endswith(".pmap"), \
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
-        ctx = context
+        pmap_name = context
 
-    # Make sure ctx is actually present on the local machine.
-    dump_mappings(ctx, ignore_cache=ignore_cache)
+    # Make sure pmap_name is actually present on the local machine.
+    dump_mappings(pmap_name, ignore_cache=ignore_cache)
     
-    if isinstance(parameters, str):
-        header = get_minimum_header(ctx, parameters, ignore_cache=ignore_cache)
-    else:
+    if isinstance(parameters, str):   # It's a filepath
+        filepath = os.path.expandvars(parameters)
+        header = data_file.get_unconditioned_header(filepath)
+    else:   # It's assumed to be dict-like
         header = parameters
         for key in parameters:
             assert isinstance(key, str), \
@@ -100,7 +101,11 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
             assert isinstance(parameters[key], (str,float,int,bool)), \
                 "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     
-   
+    # Use the pmap's knowledge of what CRDS needs to shrink the header
+    # Note that at this point the min_header consists of unconditioned values.            
+    pmap = rmap.get_cached_mapping(pmap_name)
+    min_header = pmap.minimize_header(header)
+    
     assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
 
@@ -109,9 +114,9 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
             assert isinstance(reftype, str), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
 
-    bestrefs = get_best_references(ctx, header, reftypes=reftypes)
+    bestrefs = get_best_references(pmap_name, min_header, reftypes=reftypes)
     
-    best_refs_paths = cache_references(ctx, bestrefs, ignore_cache=ignore_cache)
+    best_refs_paths = cache_references(pmap_name, bestrefs, ignore_cache=ignore_cache)
         
     return best_refs_paths
 
