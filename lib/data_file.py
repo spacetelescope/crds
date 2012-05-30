@@ -83,10 +83,13 @@ def get_header(filepath, needed_keys=[], original_name=None):
     if original_name is None:
         original_name = os.path.basename(filepath)
     if is_geis(original_name):
-        return get_geis_header(filepath)
+        return get_geis_header(filepath, needed_keys)
     else:
         return get_fits_header_union(filepath, needed_keys)
-    
+
+# A clearer name
+get_unconditioned_header = get_header
+
 def get_fits_header(fname, needed_keys=[]):
     """Return `needed_keys` or all from FITS file `fname`s primary header."""
     header = {}
