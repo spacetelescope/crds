@@ -1,0 +1,7 @@
+#! /bin/sh
+
+# one-stop test script for developers in a modify-install-test loop
+
+`dirname $0`/install
+`dirname $0`/runtests
+
