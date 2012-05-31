@@ -1,29 +1,14 @@
-This is the CRDS client and core library along with rmaps for the CRDS HST demo/prototype.   The code is a work in process.  What's "working" now are rmaps
-for HST ACS and WFC3 which have been scraped from the CDBS online HTML tables and the basic selector logic which will match rmaps to reference files.
-
-Recent test datasets for HST ACS (107 datasets) and WFC3 (287 datasets) were delivered for test purposes but are not contained in this subversion archive.  
-Instead,  there is a header_cache file in crds/hst which contains the "header unions" for all test datasets and their associated reference files.  The
-header cache is accessed for HST testing via functions in crds.hst.gentools.lookup and will basically return a header dictionary when given a relative filepath.
-
 Installation for someone with csh access should be simple:
 
-./install
+% ./install
 
-will install the CRDS library and HST rmaps to your Python stack at the default location in site-packages.   People without csh access should read the
-install script and improvise.
+will install the CRDS library and HST rmaps to your Python stack at
+the default location in site-packages.  People without csh access
+should read the install script and improvise.   Any additional parameters
+passed into ./install will be supplied to all of the nested 
+invocations of "python setup.py install" for the various CRDS packages.
 
-The existing code and rmaps can be tested against the header_cache using the script tlookup in crds.hst.gentools.
+Basic checkout of the CRDS client/library can be accomplished by:
 
-All of the HST scraping and test scripts are really written to be run only from that directory.   You can test/demo
-CRDS like this:
+% ./runtests
 
-% cd crds/hst/gentools
-% ./tlookup `cat files_acs_warren` --verbose
-% ./tlookup `cat files_wfc3_howard` --verbose
-
-and tlookup will run the CRDS machinery as if it had access to the original datasets by faking things out with the header_cache.
-tlookup will compare the results produced by CRDS to the best references already listed in the dataset headers and dump information
-regarding the lookup process.
-
-Other early code exists for testing CRDS as a JSON service in the crds_server package.   The CRDS server package is not disclosed here
-for security reasons.

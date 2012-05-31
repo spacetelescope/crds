@@ -6,7 +6,7 @@ def main():
     for ref in references:
         try:
             where = pmap.locate.locate_server_reference(ref)
-	except Exception:
+        except Exception:
             log.error("Can't find", repr(ref))
             continue
         try:
@@ -14,7 +14,5 @@ def main():
         except Exception:
             log.error("Failed get_file_properties() for", repr(ref))
 
-
 if __name__ == "__main__":
     main()
-

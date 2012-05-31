@@ -35,14 +35,14 @@ reference file base names::
                        'CCDGAIN' : '2.0',
                        ...
                     }
-		 
-		 Alternately,  a string specifying the full path of a dataset
+         
+         Alternately,  a string specifying the full path of a dataset
                  from which CRDS will extract header values.
 
-		 str
+         str
 
-		 e.g. "/where/it/is/j8bt05njq_raw.fits"
-		 
+         e.g. "/where/it/is/j8bt05njq_raw.fits"
+         
     
         reftypes :    A list of reference type names,  where each reftype is the
                     keyword used to record that kind of reference file in a 
@@ -110,5 +110,4 @@ a given set of parameters::
         
             e.g.   'hst_0007.pmap'
         """
-
 
