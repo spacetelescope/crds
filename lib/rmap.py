@@ -809,8 +809,7 @@ class ReferenceMapping(Mapping):
     
     def get_valid_values_map(self, condition=True):
         """Based on the TPNs,  return a mapping from each of the required
-        parkeys to its valid values, i.e. the definitive source for what is
-        legal for this filekind.
+        parkeys to its valid values, 
    
         i.e. the definitive source for what is legal for this filekind.
         

@@ -1,5 +1,4 @@
 #! /bin/sh
 
-./install
 nosetests . --with-doctest
 

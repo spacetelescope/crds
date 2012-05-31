@@ -30,19 +30,16 @@ do
     fi
 done
 
-echo "Installing django-json-rpc"
-
-echo "=====================================================" >>install.log
-echo "Installing django-json-rpc" >> install.log
-echo "=====================================================" >>install.log
-tar zxf third_party/django-json-rpc-git-0.0.pygz
-cd django-json-rpc-git-0.0
-python setup.py install $* --force >> install.log
-st=$st$?
-
-cd ..
-rm -rf django-json-rpc-git-0.0
-
+# echo "Installing django-json-rpc"
+# echo "=====================================================" >>install.log
+# echo "Installing django-json-rpc" >> install.log
+# echo "=====================================================" >>install.log
+# tar zxf third_party/django-json-rpc-git-0.0.pygz
+# cd django-json-rpc-git-0.0
+# python setup.py install $* --force >> install.log
+# st=$st$?
+# cd ..
+# rm -rf django-json-rpc-git-0.0
 
 ./clean
 
