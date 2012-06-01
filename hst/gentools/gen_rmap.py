@@ -463,10 +463,10 @@ def write_rmap(observatory, instrument, filekind, kind_map):
 
 # ==========================================================================
 
-def test():
-    """Run the module doctests."""
-    import doctest, gen_file_rmap
-    return doctest.testmod(gen_file_rmap)
+# def test():
+#     """Run the module doctests."""
+#     import doctest, gen_file_rmap
+#     return doctest.testmod(gen_file_rmap)
 
 # ==========================================================================
 

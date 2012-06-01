@@ -1,0 +1,13 @@
+#! /usr/bin/env pysh
+#-*-python-*-
+
+candidate_downloads = words("python get_mast_dataset_ids.py $1 $2")
+# print "candidate datasets", candidate_downloads
+
+existing_datasets = [ out("basename $f _raw.fits").strip().upper() for f in \
+                          words("ls -1 ../../../datasets | grep -v .pkl | grep -iv hidden") ]
+# print "existing datasets", existing_datasets
+
+for candidate in candidate_downloads:
+    if candidate not in existing_datasets:
+        print candidate
