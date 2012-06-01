@@ -564,7 +564,7 @@ class PipelineContext(Mapping):
     
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
-        return self.selections[instrument]
+        return self.selections[instrument.lower()]
     
     def get_filekinds(self, dataset):
         """Return the filekinds associated with `dataset` by examining
@@ -572,7 +572,7 @@ class PipelineContext(Mapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
-        instrument = pyfits.getval(dataset, "INSTRUME").lower()
+        instrument = pyfits.getval(dataset, "INSTRUME")
         return self.get_imap(instrument).get_filekinds(dataset)
 
 # ===================================================================
@@ -627,6 +627,7 @@ class InstrumentContext(Mapping):
         if not include:
             include = self.selections
         for filekind in include:
+            filekind = filekind.lower()
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
             except IrrelevantReferenceTypeError:
@@ -711,7 +712,7 @@ class InstrumentContext(Mapping):
             pkmap[key] = sorted(pkmap[key])
         return pkmap
     
-    def get_filekinds(self, dataset):
+    def get_filekinds(self, dataset=None):
         """Return the filekinds associated with this dataset,  ideally
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.

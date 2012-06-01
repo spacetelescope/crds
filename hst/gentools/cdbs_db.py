@@ -14,7 +14,7 @@ import glob
 
 import pyodbc
 
-from crds import rmap, log, utils, timestamp, data_file
+from crds import rmap, log, utils, timestamp, data_file, selectors
 import crds.hst
 import crds.hst.parkeys as parkeys
 
@@ -383,8 +383,22 @@ def load_alternate_dataset_headers(files=None):
             log.warning("Duplicate dataset key for", mast_dataset, "=", key)
         log.info("Loading MAST dataset", repr(mast_dataset), "as", key)        
         alternate_headers[key] = full_header
+        instrument = full_header["INSTRUME"]
+        imap = pmap.get_imap(instrument)
+        for fk in imap.get_filekinds():
+            minkey = minimize_inputs(imap.instrument, fk, full_header.items())
+            alternate_headers[minkey] = full_header
     log.info("Done loading extra dataset headers.")
     return alternate_headers
+
+def minimum_key(instrument, filekind, full_header):
+    """Based on the instrument and filekind,  return the minimized key tuple
+    corresponding to the parameters from `full_header` required to lookup a
+    reference for `filekind` only.
+    """
+    min_header = dict(minimize_header(instrument, filekind, full_header))
+    minkey = lookup_key(pmap, min_header)
+    return minkey
 
 def fix_iraf_paths(header):
     """Get rid of the iref$ prefixes on filenames."""
@@ -408,6 +422,11 @@ def lookup_key(pmap, header):
     bestrefs recommendations" dictionary keyed off their input parameters.
     Then,  when a set of catalog inputs are known,  they can be used to 
     search for any possible improved answers not found in the catalog.
+    
+    This basic key includes parameters for all reftypes,  which is inadequate.
+    minimize_inputs() reduces the key to those required for one reftype,
+    which is more suitable for identifying dataset equivalence sets within
+    a single reftype.
     """
     min_header = pmap.minimize_header(header)
     result = []
@@ -421,6 +440,16 @@ def lookup_key(pmap, header):
         result.append((key,val.upper()))
     return tuple(result)
 
+def minimize_inputs(instrument, filekind, inputs):
+    """Return an item tuple of only those inputs required by filekind.
+    """
+    r = rmap.get_cached_mapping("hst_"+instrument+"_"+filekind+".rmap")
+    required = r.get_required_parkeys()
+    min_inputs = { key : val for key, val in inputs if key in required }
+    min_inputs["INSTRUME"] = instrument.upper()
+    min_inputs["REFTYPE"] = filekind.upper()
+    return tuple(sorted(min_inputs.items()))
+
 def test(header_generator, context="hst.pmap", datasets=None, 
          ignore=[], include=[], dump_header=False, verbose=False,
          alternate_headers={}):
@@ -432,17 +461,11 @@ def test(header_generator, context="hst.pmap", datasets=None,
         log.write("Getting headers from", repr(header_generator))
         headers = HEADER_GENERATORS[instr].get_headers()
     elif isinstance(header_generator, str): 
-        if header_generator.endswith(".pkl"):
-            log.write("Loading pickle", repr(header_generator))
-            headers = cPickle.load(open(header_generator))
-        else:
-            log.write("Evaling saved headers", repr(header_generator))
-            headers = eval(open(header_generator).read())
+        log.write("Loading pickle", repr(header_generator))
+        headers = cPickle.load(open(header_generator)).values()
     else:
         raise ValueError("header_generator should name an instrument, pickle, or eval file.")
 
-    count = 0
-    mismatched = {}
     oldv = log.get_verbose()
     if verbose:
         log.set_verbose(verbose)
@@ -451,106 +474,110 @@ def test(header_generator, context="hst.pmap", datasets=None,
 
     start = datetime.datetime.now()
 
-    for header in headers:
+    dataset_count = 0
+    mismatched = {}
 
+    for header in headers:
+        dataset_count += 1
         dataset = header["DATA_SET"]
         
         if datasets is not None:
             if dataset not in datasets:
                 continue
             log.set_verbose(True)
-
-        # Check if updated bestrefs have been downloaded as a MAST dataset
-        key = lookup_key(pmap, header)
-        log.verbose("Lookup key", key)
-        if key in alternate_headers:
-            header = alternate_headers[key]
-            log.verbose("Using alternate header for ", dataset)
-
+            
         if dump_header:
+            log.write("Header from database")
             pprint.pprint(header)
             continue
         
-        count += 1
-        crds_refs = rmap.get_best_references(context, header, include)
-        if log.VERBOSE_FLAG:
-            log.verbose("="*70)
-            log.verbose("DATA_SET:", dataset)
-        compare_results(header, crds_refs, mismatched, ignore, key)
+        # Check if updated bestrefs have been downloaded as a MAST dataset
+        all_inputs = lookup_key(pmap, header)
 
-    # by usage convention all headers share the same instrument
-    instrument = header["INSTRUME"]
+        instrument = header["INSTRUME"]
+        imap = pmap.get_imap(instrument)
 
+        mismatches = 0
+        matches = 0
+        for filekind in imap.get_filekinds():
+            minkey = minimize_inputs(instrument, filekind, all_inputs)
+            if minkey in alternate_headers:
+                minkey_header = alternate_headers[minkey]
+                log.verbose("Using alternate header for", dataset, minkey_header)
+            else:
+                minkey_header = header
+            r = imap.get_rmap(filekind)
+            try:
+                new_bestref = r.get_best_ref(minkey_header)
+            except selectors.MatchingError:
+                new_bestref = "NO MATCH"
+            except crds.rmap.IrrelevantReferenceTypeError, exc:
+                log.verbose("\nIrrelevant", filekind, str(exc))
+                sys.exc_clear()
+                continue
+            except Exception, exc:
+                new_bestref = "FAILED " + str(exc)
+            sys.exc_clear()
+
+            try:
+                old_bestref = minkey_header[filekind.upper()].lower()
+            except KeyError:
+                log.verbose_warning("No comparison for", repr(filekind))
+                sys.exc_clear()
+                continue
+        
+            if old_bestref in ["n/a", "*", "none"] or new_bestref == "NOT FOUND n/a":
+                log.verbose("Ignoring", repr(filekind), "as n/a")
+                continue
+    
+            if old_bestref != new_bestref:
+                if not mismatches:
+                    log.verbose("dataset", dataset, "...", "ERROR")
+                mismatches += 1
+
+                log.error("mismatch:", dataset, instrument, filekind, old_bestref, new_bestref, minkey)
+                category = (instrument, filekind, minkey, old_bestref, new_bestref)
+                if category not in mismatched:
+                    mismatched[category] = set()
+                mismatched[category].add(dataset)
+            else:
+                matches += 1
+                log.verbose("CDBS/CRDS matched:", filekind, old_bestref)
+            
+        if not mismatches:
+            # Output a single character count of the number of correct bestref
+            # recommendations for this dataset.
+            char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[matches]
+            log.write(char, eol="", sep="")
+        
     elapsed = datetime.datetime.now() - start
     log.write()
     log.write()
     totals = {}
-    for category in mismatched:
-        filekind, inputs = category
-        datasets = mismatched[category]
-        log.write("Erring Inputs:", instrument, filekind, len(datasets), repr(inputs))
-        grouped = {}
-        for id, old, new in datasets:
-            if (old, new) not in grouped:
-                grouped[(old, new)] = set()
-            grouped[(old,new)].add(id)
-        for old, new in grouped:
-            ids = grouped[(old, new)]
-            log.write("Mismatch Set:", len(ids), instrument, filekind, old, new, " ".join(sorted(ids)))
+    for category, datasets in mismatched.items():
+        instrument, filekind, inputs, old, new = category
+        log.write("Erring Inputs:", instrument, filekind, len(datasets), old, new, repr(inputs))
+        log.write("Datasets:", instrument, filekind, len(datasets), " ".join(sorted(datasets)))
         if (instrument, filekind) not in totals:
             totals[(instrument, filekind)] = 0
         totals[(instrument, filekind)] += len(datasets)
     log.write()
     for key in totals:
         log.write(key, totals[key], "mismatch errors")
+
     log.write()
-    log.write(instrument, count, "datasets")
+    log.write(instrument, dataset_count, "datasets")
     log.write(instrument, elapsed, "elapsed")
-    log.write(instrument, count/elapsed.total_seconds(), "datasets / sec")
+    log.write(instrument, dataset_count/elapsed.total_seconds(), "datasets / sec")
     log.write()
     log.standard_status()
     log.set_verbose(oldv)
 
-def compare_results(header, crds_refs, mismatched, ignore, inputs):
+def compare_results(dataset, header, filekind, new, mismatched, inputs):
     """Compare the old best ref recommendations in `header` to those 
     in `crds_refs`,  recording a list of error tuples by filekind in
-    dictionary `mismatched`.  Disregard any filekind listed in `ignore`.
+    dictionary `mismatched`.
     """
-    mismatches = 0
-    matches = 0
-    for filekind in crds_refs:
-        if filekind in ignore:
-            continue
-        try:
-            old = header[filekind.upper()].lower()
-        except:
-            log.verbose_warning("No comparison for", repr(filekind))
-            sys.exc_clear()
-            continue
-        new = crds_refs[filekind]
-        if old in ["n/a", "*", "none"] or new == "NOT FOUND n/a":
-            log.verbose("Ignoring", repr(filekind), "as n/a")
-            continue
-        if old != new:
-            dataset = header["DATA_SET"]
-            instr = header["INSTRUME"]
-            if not mismatches:
-                log.verbose("dataset", dataset, "...", "ERROR")
-            mismatches += 1
-            log.error("mismatch:", dataset, instr, filekind, old, new)
-            category = (filekind, inputs)
-            if category not in mismatched:
-                mismatched[category] = set()
-            mismatched[category].add((dataset, old, new))
-        else:
-            matches += 1
-            log.verbose("CDBS/CRDS matched:", filekind, old)
-    if not mismatches:
-        # Output a single character count of the number of correct bestref
-        # recommendations for this dataset.
-        char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZX"[matches]
-        log.write(char, eol="", sep="")
-    return mismatches
 
 def testall(context="hst.pmap", instruments=None, 
             suffix="_headers.pkl", filekinds=None, datasets=None,
@@ -573,23 +600,17 @@ def testall(context="hst.pmap", instruments=None,
                  dump_header=dump_header, alternate_headers=alternate_headers) 
         log.write()
 
-def dump(instr, ncases=10**10, random_samples=True, suffix="_headers.pkl",
-         path=DEFAULT_PKL_PATH):
+def dump(instr, suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
     """Store `ncases` header records taken from DADSOPS for `instr`ument in 
     a pickle file,  optionally sampling randomly from all headers.
     """
-    samples = []
     headers = list(HEADER_GENERATORS[instr].get_headers())
-    while len(samples) < ncases and headers:
-        selected = int(random.random()*len(headers)) if random_samples else 0
-        samples.append(headers.pop(selected))
+    samples = { h["DATA_SET"] : h for h in headers }
     pickle = path + instr + suffix
     log.write("Saving pickle", repr(pickle))
     cPickle.dump(samples, open(pickle, "w+"))
 
-
-def dumpall(context="hst.pmap", ncases=10**10, random_samples=True, 
-            suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
+def dumpall(context="hst.pmap", suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
     """Generate header pickles for all instruments referred to by `context`,
     where the headers are taken from the DADSOPS database.   Optionally collect
     only `ncases` samples taken randomly accoring to the `random_samples` flag.
@@ -597,8 +618,7 @@ def dumpall(context="hst.pmap", ncases=10**10, random_samples=True,
     pmap = rmap.get_cached_mapping(context)
     for instr in pmap.selections.keys():
         log.info("collecting", repr(instr))
-        dump(instr, ncases, random_samples, suffix, path)
-
+        dump(instr, suffix, path)
 
 def main():
     if "--verbose" in sys.argv:
@@ -612,7 +632,7 @@ def main():
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "dump":
-        dump(sys.argv[2], 10**10)
+        dump(sys.argv[2])
     elif sys.argv[1] == "testall":
         testall(path=DEFAULT_PKL_PATH, profile=profile)
     elif sys.argv[1] == "test":
