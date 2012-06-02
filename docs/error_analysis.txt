@@ -1,149 +1,137 @@
-These notes summarize progress and status for informal comparison tests between
-CDBS and CRDS.   The bulk of the work here centers around explaining
-discrepancies between CRDS and CDBS given dataset input parameters taken from
-the HST catalog and best reference outputs taken from the HST catalog and CRDS.
-My intent is that the following test cases comprise all known datasets for
-modern HST instruments.
+These notes summarize progress and status for informal comparison
+tests between CDBS and CRDS.  The work centers around explaining
+discrepancies between CRDS and CDBS given dataset input parameters
+taken from the HST catalog and best reference outputs taken from the
+HST catalog and CRDS.  My intent is that the following test cases
+comprise all known datasets for modern HST instruments.
 
-In the tables below,  there are two broad classes of errors:  "mismatch errors" 
-where CDBS and CRDS produce different results based on the same inputs,  and 
-"rmaps with overlap" which represent an unexpected issue with defining rmaps.
-The bulk of my debug efforts have centered around mismatch error analysis.
+In the tables below, the column "mismatch errors" shows errors
+versus the total number of dataset comparisons.
 
-Here is the coarse of error status reported in March:   
+Status reported in March:   
 
-'''Mapping status 2012-03'''
+|| '''task'''         || '''mismatch errors''' || 
+||    ACS mappings    ||       1909 / 59006    ||
+||    COS mappings    ||       0  / 8877       ||
+||    NICMOS mappings ||    2393 / 116078      ||
+||    STIS mappings   ||     0  / 144711       ||
+||    WFPC2 mappings  ||    9  / 186480        ||
+||    WFC3 mappings   ||     0  / 34616        ||
 
-|| '''task'''         || '''mismatch errors''' || '''rmaps with overlap''' || 
-||    ACS mappings    ||       1909 / 59006    ||         5 / 18           ||
-||    COS mappings    ||       0  / 8877       ||         1 / 16           ||
-||    NICMOS mappings ||    2393 / 116078      ||         1 / 18           ||
-||    STIS mappings   ||     0  / 144711       ||         2 / 31           ||
-||    WFPC2 mappings  ||    9  / 186480        ||         1 / 11           ||
-||    WFC3 mappings   ||     0  / 34616        ||         3 / 12           ||
+Status now:
 
-
-Here is the current status of CRDS debugging as of now:
-
-'''Mapping status 2012-06'''
-
-
-|| '''task'''         || '''mismatch errors''' || '''rmaps with overlap''' || 
-||    ACS mappings    ||     1277 / 41121      ||          6 / 19          ||
-||    COS mappings    ||     1038  / 4752      ||          1 / 18          ||
-||    NICMOS mappings ||     781 / 116078      ||          1 / 17          ||
-||    STIS mappings   ||     0  / 146319       ||          2 / 31          ||
-||    WFPC2 mappings  ||     11  / 186480      ||          1 / 10          ||
-||    WFC3 mappings   ||     1243  / 37483     ||          3 / 11          ||
+|| '''task'''         || '''mismatch errors''' ||
+||    ACS mappings    ||     1277 / 41121      ||
+||    COS mappings    ||     1038  / 4752      ||
+||    NICMOS mappings ||     781 / 116078      ||
+||    STIS mappings   ||     0  / 146319       ||
+||    WFPC2 mappings  ||     11  / 186480      ||
+||    WFC3 mappings   ||     1243  / 37483     ||
 
 
-Further categorizing the mismatch errors:
+Further categorizing mismatch errors:
+-------------------------------------
 
-ACS  mostly pfltfile, biasfile,  some darkfile 
+ACS    mostly pfltfile, biasfile,  some darkfile 
 
-COS  all 1038 new errors related to a CDBS change in the handling of xtractab.
-     all the errors appear to be catalog related.
+COS    all errors are related to a CDBS change in the handling of xtractab
+	   the catalog is now out of date.
      
 NICMOS notable progress using MAST data
 
-WFC3 discovery of masked errors and completion of special case code
+WFC3   discovery of masked errors and missing special case code in CRDS
 
 WFPC2  11 errors in 2 equivalence classes
 
+In general:  reductions in overall dataset counts were due to discovery 
+   			 and removal of duplicate datasets.
 
+Both ACS and WFC3 have special case code involved.
 
-Mismatch Errors
----------------
+Difficulty with using MAST
+--------------------------
 
-The consensus for addressing the errors known in March was that there might be
-discrepancies between the CDBS answers reported in the catalog and the best
-computable answers available to OPUS, OTFR, and ultimately MAST.  In other
-words,  somewhat infrequently the catalog answers for CDBS are either wrong or
-out of date.  To compensate,  an effort was made to download selected datasets
-from MAST in an attempt to provide more accurate CDBS best references.  It has
-been noted that the possibility for error here runs two ways:  first,  CRDS and 
-CDBS might mismatch because the catalog is inaccurate.  second,  CRDS and CDBS
-might *match* when they really do not,  because the catalog is inaccurate.   This
-latter case is deemed less likely and ignored,   but we note the possibility as
-one of the limitations of catalog based testing.
+1.  Requirement to minimize MAST dataset downloads necessitates defining
+    dataset equivalence sets where any dataset in an ES is suitable for
+    representing the CDBS answers of all members of the set.   This was
+    complicated,  initially done wrong, and ultimately performed on a 
+	per-reference-type basis.   Even "done right" no two datasets are
+	trivially equivalent because they have different exposure start
+	times;   so my best effort at defining equivalence still has a 
+	measure of doubt involved.
 
-In order to minimize the amount of MAST data processing requested,  an attempt
-was made to group errors into equivalence sets requiring only a single MAST
-dataset to resolve.   Initially I grouped errors on the basis of "outputs",
-i.e. a comparision tuple:  (cdbs(x),   crds(x)).   That grouping basis is only
-heuristically correct.   The correct basis for equating datasets is by the input
-parameters "x",  not the output of the functions.  Here note that the input
-variable "x" is complex and corresponds to as many as 8 or 10 parameters which
-differ by instrument and reference file type.
+2.  Asking for datasets, there is ambiguity about which extension to ask
+    for,  and ambiguity about where exactly the corrected CDBS answers
+    are.   How does one get an updated dataset and be sure it is updated?
 
-Further refining the grouping of errors by inputs,  it became evident that "x"
-is actually different for all datasets because of the universal inclusion of
-exposure start time. Reluctant to give up,   I imployed the original "same
-outputs" heuristic and ignored time,  essentially keying the final equivalence
-on (x, cdbs(x), crds(x)) where "x" does not include time.   While I believe this
-is fairly good,  even this basis of equivalence is approximate...  because of
-the exclusion of time I may be smearing too many similar x's together.
+3.  Asking for MAST datasets,  they're not always delivered.   This
+    may be a problem in my interpretation of the database and definition
+    of "dataset".  Members of any associations are also included,  and 
+    sometimes the reference files themselves are included;  both vastly
+    expand the size of the original request without any confirmation.
 
-It should be pointed out that efforts at improved testing with MAST data did
-result in the reduction of some error counts, most notably for NICMOS. Further,
-adhoc examination of test cases resulted in the discovery of a few CRDS bugs.
-Nevertheless, compared to initial expectations the hard numbers reveal a 
-disappointing level of progress.
+4.  When datasets are successfully delivered, there's additional
+    complexity correctly applying them as surrogates for others in the
+    same equivalence set.
 
+In summary,  working with the catalog and attempting to enhance it with MAST
+datasets,  there are problems or complexity with:
 
-my recommendation will remain the same:  we
-should abandon using MAST as a source of corrected CDBS best reference answers
-and switch to more direct access to CDBS as it runs in OPUS.   Ultimately what
-is needed is an accurate function, cdbs(x).
+- defining the unique datasets which should be tested/compared
+  (duplicates and associations)
 
-Factors Impeding Error Reduction
-................................
+- defining equivalent dataset error classes (which erring datasets
+  represent the same case?  did I define "equivalent" right?)
 
-1. One of the problems with the "honest" grouping of dataset inputs into 
-better equivalence classes is that the granularity descreased:  there are more
-and smaller equivalence sets,  which runs counter to the requirement
-of minimizing MAST datasets downloaded.   The net result is that it is 
-impractical to get improved answers for all of the equivalence classes:  there 
-are now (probably) too many.   On the flip side, the testing is now more 
-rigorous, and less likely to hide errors.  The real problem though is that we're 
-effectively saying "it's too expensive to get exact answers for all these cases
-from MAST".
+- obtaining large numbers of representative MAST datasets (It's hard
+  to track all the failures.   Sometimes MAST is saying "no".)
 
-2. Further problems emerged in getting desired MAST data.   It wasn't always
-clear which 3 character data extension or class should be used to define best
-references.   MAST was not able to supply every requested dataset.   Sometimes
-single datasets turned out to be associations and exploded into several other
-datasets,  doubling or tripling the expected size of the original request.
+- applying equivalent datasets as substitute answers (did I use the
+  new MAST data when I should have?)
 
-3.  The core CRDS code was not as far along in March as believed.   A
-bug and unimplemented special case code hid errors for WFC3.
+- knowing whether or not the correct data was requested from MAST
+  (I asked MAST for *something*.  Does it actually have better answers?
+  What types of files am I supposed to be asking for?  I want to ask
+  for a "dataset" but I'm given a list of 5-6 obscure file types to
+  choose from as well.)
 
-4.  CDBS is a moving target.   The errors now seen in COS are all related to a
-single modest change to COS xtractab made in CDBS.   At present,  these new 
-"errors" are being absorbed randomly without notice.   An improved mechanism 
-for delivering key CDBS files and changfes to CRDS needs to be devised.
+- afterward, knowing whether an error case has a MAST correction
+  there are now two kinds of answers,  corrected and uncorrected.  
+  complicated.
 
-5. In general,  not getting exact answers from CDBS the first time around is
-greatly complicating testing.   First,  getting "answers" becomes a two step
-process.   Second,  many additional opportunities for error are introduced:
-were the correct equivalence classes created?  were the equivalence classes
-applied correctly?  did MAST deliver the files?
+- getting corrections for all small equivalence classes is a lot
+  of files.   So far I haven't asked for them all.
 
+- implementing equivalence classes required calling CRDS differently.
 
-Overlaps
---------
+These are all sources of potential error and implementation work.
+Consequently we have these questions:
 
-In principle,  for JWST overlaps can be avoided by careful incremental
-construction of rmaps,  preferrably with human oversight to assure simplicity and
-minimality.  In practice,  for HST,  overlaps are a direct result of intentional
-or unintentional special case handling of CDBS reference files as recorded in
-the database.
+1. Did CRDS give the wrong answer?
+2. Did CDBS give the wrong answer?
 
-I believe the majority/all of the HST ambiguities can be resolved by dynamically
-merging all matching rules for a set of inputs... effectively emulating the
-behavior of CDBS which also considers all of the same cases.  An alternative to
-tolerating ambiguities is for human beings to examine the rmaps and weed out any
-accidental or expendable complexity which is found in the CDBS database.  Unless
-the database itself is "fixed" however, manually simplifying the rmaps becomes
-an obstacle to automatically updating the rmaps from the database.
+but these extra questions:
+
+3. Was it a valid dataset?
+4. Did I accurately characterize equivalent datasets?
+5. Did I ask for an improved MAST answer?
+6. Did I get the answer I asked for?
+7. Did I correctly apply the answer I got?
+
+At intervals,  the answers to 3-7 are "no".
+
+Although I was initially optimistic about the MAST approach, it has
+gotten so complicated that I'll be less confident about the results
+even if it eventually appears to work.  As a remedy, I think we need
+access to the OPUS environment after all, the sooner, the better.
+
+What we need in the simplest possible fashion is:
+
+1. An accurate stream of dataset ids.  What *are* the datasets?  No
+duplicates.  No associations.
+
+2. For each dataset,  what are the best ref parameters?   Alternately,
+give us the .fits file somewhere.
+
+3. For each dataset, what are the CDBS best reference recommendations?
 
