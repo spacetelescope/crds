@@ -6,7 +6,7 @@ of datasets important enough to download.
 """
 from crds.pysh import *
 
-# Datasets: 5 IBWVA2OUQ IBWV02OPQ IBWVA2P0Q IBWVA2P5Q IBWVA2PBQ 
+# Datasets: wfc3 biasfile 5 IBWVA2OUQ IBWV02OPQ IBWVA2P0Q IBWVA2P5Q IBWVA2PBQ 
 
 def get_mismatched_objects(filename="testall.err"):
     objects = []
@@ -22,7 +22,7 @@ def get_mismatched_objects(filename="testall.err"):
 def main(filename, important):    
     for mismatched in get_mismatched_objects(filename):
         if mismatched[0] > important:
-            print mismatched[1][0]
+            print " ".join(mismatched[1])
 
 if __name__ == "__main__":
     usage("<source_file> <test_count_importance_threshhold>", 2, 2);
