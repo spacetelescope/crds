@@ -12,7 +12,7 @@ for line in candidate_lines:
     candidate_ids = [x.strip() for x in line.split()]
     for id in candidate_ids:
         if id in existing_datasets:
-            break
             print id, candidate_ids.index(id)
+            break
     else:
         print candidate_ids[0]

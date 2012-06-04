@@ -3,8 +3,7 @@ INFO[1]: Certifying 'hst_acs.imap'
 INFO[2]: Validating hst_acs.imap 
 INFO[3]: Validating hst_acs_pctetab.rmap 
 INFO[4]: Validating hst_acs_crrejtab.rmap 
-INFO[5]: Validating hst_acs_idctab.rmap 
-INFO[6]: Validating hst_acs_darkfile.rmap 
+INFO[5]: Validating hst_acs_darkfile.rmap 
 WARNING[1]: Match tuple ('HRC', 'C', '1.0|2.0|4.0|8.0') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
 WARNING[2]: Match tuple ('HRC', 'C', '2.0') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
 WARNING[3]: Match tuple ('HRC', 'C', '2.0') is an equal weight special case of ('HRC', 'C', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
@@ -15,8 +14,10 @@ WARNING[7]: Match tuple ('WFC', 'ABCD', '1.0') is an equal weight special case o
 WARNING[8]: Match tuple ('WFC', 'ABCD', '1.0') is an equal weight special case of ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
 WARNING[9]: Match tuple ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0') is an equal weight special case of ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
 WARNING[10]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') is an equal weight special case of ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0')  requiring dynamic merging. 
-INFO[7]: Validating hst_acs_atodtab.rmap 
-INFO[8]: Validating hst_acs_biasfile.rmap 
+INFO[6]: Validating hst_acs_d2imfile.rmap 
+INFO[7]: Validating hst_acs_bpixtab.rmap 
+INFO[8]: Validating hst_acs_atodtab.rmap 
+INFO[9]: Validating hst_acs_biasfile.rmap 
 WARNING[11]: Match Parameter  'NUMCOLS'  is unchecked. 
 WARNING[12]: Match Parameter  'NUMROWS'  is unchecked. 
 WARNING[13]: Match Parameter  'LTV1'  is unchecked. 
@@ -79,22 +80,23 @@ WARNING[69]: Match tuple ('WFC', 'B|C', '2.0', '4144.0', '2068.0', '24.0', '0.0'
 WARNING[70]: Match tuple ('WFC', 'B|C', '4.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'A|ABCD|B|C|D', '4.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[71]: Match tuple ('WFC', 'B|C', '4.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'B|BC|C', '4.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[72]: Match tuple ('WFC', 'B|C', '8.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'B|BC|C', '8.0', '4144.0', '2068.0', '24.0', '0.0', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
-INFO[9]: Validating hst_acs_spottab.rmap 
-INFO[10]: Validating hst_acs_mlintab.rmap 
-INFO[11]: Validating hst_acs_dgeofile.rmap 
+INFO[10]: Validating hst_acs_spottab.rmap 
+INFO[11]: Validating hst_acs_mlintab.rmap 
+INFO[12]: Validating hst_acs_dgeofile.rmap 
 WARNING[73]: Match tuple ('SBC', 'BLOCK1|BLOCK2|BLOCK3|BLOCK4|F115LP|F122M|F125LP|F140LP|F150LP|F165LP', 'N/A') is an equal weight special case of ('SBC', '*', 'N/A')  requiring dynamic merging. 
-INFO[12]: Validating hst_acs_flshfile.rmap 
+INFO[13]: Validating hst_acs_flshfile.rmap 
 WARNING[74]: Match tuple ('HRC', 'ABCD|AD|BC|C|D', '2.0', 'HIGH', 'A') is an equal weight special case of ('HRC', 'A|ABCD|AD|BC|C|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A')  requiring dynamic merging. 
 WARNING[75]: Match tuple ('HRC', 'A|B', '2.0', 'HIGH', 'A') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B')  requiring dynamic merging. 
 WARNING[76]: Match tuple ('HRC', 'A|B', '2.0', 'HIGH', 'B') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B')  requiring dynamic merging. 
 WARNING[77]: Match tuple ('HRC', 'A|B', '2.0', 'LOW', 'A|B') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B')  requiring dynamic merging. 
 WARNING[78]: Match tuple ('HRC', 'A|B', '2.0', 'MED', 'A|B') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|D', '1.0|2.0|4.0|8.0', 'HIGH|LOW|MED', 'A|B')  requiring dynamic merging. 
-INFO[13]: Validating hst_acs_bpixtab.rmap 
-INFO[14]: Validating hst_acs_oscntab.rmap 
-INFO[15]: Validating hst_acs_ccdtab.rmap 
-INFO[16]: Validating hst_acs_shadfile.rmap 
-INFO[17]: Validating hst_acs_imphttab.rmap 
-INFO[18]: Validating hst_acs_pfltfile.rmap 
+INFO[14]: Validating hst_acs_npolfile.rmap 
+INFO[15]: Validating hst_acs_oscntab.rmap 
+INFO[16]: Validating hst_acs_ccdtab.rmap 
+INFO[17]: Validating hst_acs_shadfile.rmap 
+INFO[18]: Validating hst_acs_idctab.rmap 
+INFO[19]: Validating hst_acs_imphttab.rmap 
+INFO[20]: Validating hst_acs_pfltfile.rmap 
 WARNING[79]: Match tuple ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1S', 'CLEAR2S', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1L|CLEAR1S|F475W|F502N|F550M|F555W|F606W|F625W|F658N|F775W|F850LP|F892N|POL0UV|POL120UV|POL60UV', 'CLEAR2L|CLEAR2S|F220W|F250W|F330W|F344N|F410W|F435W|F814W|FR388N|FR459M|FR505N|FR647M|FR656N|FR716N|FR782N|FR914M|POL0V|POL120V|POL60V', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[80]: Match tuple ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1S', 'F220W', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1L|CLEAR1S|F475W|F502N|F550M|F555W|F606W|F625W|F658N|F775W|F850LP|F892N|POL0UV|POL120UV|POL60UV', 'CLEAR2L|CLEAR2S|F220W|F250W|F330W|F344N|F410W|F435W|F814W|FR388N|FR459M|FR505N|FR647M|FR656N|FR716N|FR782N|FR914M|POL0V|POL120V|POL60V', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[81]: Match tuple ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1S', 'F250W', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('HRC', 'A|ABCD|AD|B|BC|C|D', 'CLEAR1L|CLEAR1S|F475W|F502N|F550M|F555W|F606W|F625W|F658N|F775W|F850LP|F892N|POL0UV|POL120UV|POL60UV', 'CLEAR2L|CLEAR2S|F220W|F250W|F330W|F344N|F410W|F435W|F814W|FR388N|FR459M|FR505N|FR647M|FR656N|FR716N|FR782N|FR914M|POL0V|POL120V|POL60V', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
@@ -535,13 +537,13 @@ WARNING[515]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', 'POL60UV', 'F435W', 'IMA
 WARNING[516]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', 'POL60UV', 'F660N', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', 'POL60UV', 'F660N', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[517]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', 'POL60UV', 'F814W', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', 'CLEAR1L|F475W|F502N|F550M|F555W|F606W|F625W|F658N|F775W|F850LP|F892N|POL0UV|POL120UV|POL60UV', 'CLEAR2L|CLEAR2S|F330W|F410W|F435W|F814W|FR1016N|FR388N|FR423N|FR459M|FR462N|FR505N|FR555N|FR601N|FR647M|FR656N|FR716N|FR782N|FR853N|FR914M|FR931N|POL0V|POL120V|POL60V', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
 WARNING[518]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', 'POL60UV', 'F814W', 'IMAGING', 'N/A', 'N/A', 'N/A') is an equal weight special case of ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', 'POL60UV', 'F814W', 'IMAGING', 'N/A', 'N/A', 'N/A')  requiring dynamic merging. 
-INFO[19]: Validating hst_acs_drkcfile.rmap 
+INFO[21]: Validating hst_acs_drkcfile.rmap 
 WARNING[519]: Match tuple ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.4') is an equal weight special case of ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0')  requiring dynamic merging. 
-INFO[20]: Validating hst_acs_cfltfile.rmap 
-INFO[21]: Validating hst_acs_mdriztab.rmap 
+INFO[22]: Validating hst_acs_cfltfile.rmap 
+INFO[23]: Validating hst_acs_mdriztab.rmap 
 0 errors 
 519 warnings 
-21 infos 
+23 infos 
  
 ======================== cos =========================
 INFO[1]: Certifying 'hst_cos.imap' 
