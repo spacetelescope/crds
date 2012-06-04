@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-05-24 15:36:44.130233',
+    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:52.727190',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : '7a7f84edef361866578c471f16918fabff4ed3a2',
+    'sha1sum' : '9f32365d0d111cd6367f192672f8ed8d5796060f',
 }
 
 selector = Match({
@@ -748,6 +748,8 @@ selector = Match({
         '2012-05-09 12:03:45' : 'w5n1341si_drk.fits',
         '2012-05-13 20:03:17' : 'w5n1341ti_drk.fits',
         '2012-05-17 02:26:01' : 'w5n13420i_drk.fits',
+        '2012-05-21 10:56:49' : 'w5p1345mi_drk.fits',
+        '2012-05-23 23:27:54' : 'w5u17124i_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-05-24 15:36:19.764183',
+    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:44.777489',
     'filekind' : 'LFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM', 'OBSTYPE', 'CENWAVE', 'APERTURE'), ('DATE-OBS', 'TIME-OBS')),
     'relevance' : 'ALWAYS',
-    'sha1sum' : 'f19bef381baa2b342bfc35981d4d23f00677f6da',
+    'sha1sum' : '9909ff4f227379740b1060e825453696d8a983bd',
 }
 
 selector = Match({

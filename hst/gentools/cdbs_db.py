@@ -377,17 +377,19 @@ def load_alternate_dataset_headers(files=None):
         full_header["DATA_SET"] = dataset(mast_dataset)
         key = lookup_key(pmap, full_header)
         if key in alternate_headers:  
+            pass
             # More than one dataset defines the same
             # header fixes for the same input parameters.   
             # Will happen,  shouldn't happen all the time.
-            log.warning("Duplicate dataset key for", mast_dataset, "=", key)
-        log.info("Loading MAST dataset", repr(mast_dataset), "as", key)        
+            # log.warning("Duplicate dataset key for", mast_dataset, "=", key)
+        log.verbose("Loading MAST dataset", repr(mast_dataset), "as", key)        
         alternate_headers[key] = full_header
         instrument = full_header["INSTRUME"]
         imap = pmap.get_imap(instrument)
         for fk in imap.get_filekinds():
-            minkey = minimize_inputs(imap.instrument, fk, full_header.items())
+            minkey = minimize_inputs(imap.instrument, fk, key)
             alternate_headers[minkey] = full_header
+            log.verbose("Alternate header", instrument, fk, mast_dataset, minkey)
     log.info("Done loading extra dataset headers.")
     return alternate_headers
 
@@ -448,7 +450,11 @@ def minimize_inputs(instrument, filekind, inputs):
     min_inputs = { key : val for key, val in inputs if key in required }
     min_inputs["INSTRUME"] = instrument.upper()
     min_inputs["REFTYPE"] = filekind.upper()
-    return tuple(sorted(min_inputs.items()))
+    return tuple([(key.upper(), val.upper()) for (key, val) in sorted(min_inputs.items())])
+
+def same_keys(dict1, dict2):
+    """return a copy of dict2 reduced to the same keywords as dict1"""
+    return { key:val for (key,val) in dict2 if key in dict1 }
 
 def test(header_generator, context="hst.pmap", datasets=None, 
          ignore=[], include=[], dump_header=False, verbose=False,
@@ -476,7 +482,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
 
     dataset_count = 0
     mismatched = {}
-
+    seen = set()
     for header in headers:
         dataset_count += 1
         dataset = header["DATA_SET"]
@@ -485,11 +491,15 @@ def test(header_generator, context="hst.pmap", datasets=None,
             if dataset not in datasets:
                 continue
             log.set_verbose(True)
+        
+        if dataset in seen:
+            log.write("Duplicate dataset", dataset)
+            continue
+        seen.add(dataset)
             
-        if dump_header:
+        if log.VERBOSE_FLAG:
             log.write("Header from database")
             pprint.pprint(header)
-            continue
         
         # Check if updated bestrefs have been downloaded as a MAST dataset
         all_inputs = lookup_key(pmap, header)
@@ -499,13 +509,18 @@ def test(header_generator, context="hst.pmap", datasets=None,
 
         mismatches = 0
         matches = 0
-        for filekind in imap.get_filekinds():
+        filekinds = imap.get_filekinds() if not include else include
+        for filekind in filekinds:
             minkey = minimize_inputs(instrument, filekind, all_inputs)
             if minkey in alternate_headers:
-                minkey_header = alternate_headers[minkey]
-                log.verbose("Using alternate header for", dataset, minkey_header)
+                minkey_header = alternate_headers[minkey].items()
+                minkey_header = same_keys(header, minkey_header)
+                log.verbose("Using alternate header for", dataset, instrument, filekind, minkey)
+                if log.VERBOSE_FLAG:
+                    pprint.pprint(minkey_header)
             else:
                 minkey_header = header
+                log.verbose("No alterneate header for", dataset, instrument, filekind, minkey)
             r = imap.get_rmap(filekind)
             try:
                 new_bestref = r.get_best_ref(minkey_header)
@@ -531,10 +546,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
                 continue
     
             if old_bestref != new_bestref:
-                if not mismatches:
-                    log.verbose("dataset", dataset, "...", "ERROR")
                 mismatches += 1
-
                 log.error("mismatch:", dataset, instrument, filekind, old_bestref, new_bestref, minkey)
                 category = (instrument, filekind, minkey, old_bestref, new_bestref)
                 if category not in mismatched:

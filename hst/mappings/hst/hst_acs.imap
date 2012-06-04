@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'generated 2012-05-24 15:37:00.784550',
+    'derived_from' : 'generated 2012-06-04 06:13:57.722985',
     'instrument' : 'ACS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '272f9dc2f4b80116d9451044dc6145491e2f5cb4',
+    'sha1sum' : '51cc257cfa627c2041bcf70453520b3ce6f4eaeb',
 }
 
 selector = {
@@ -15,6 +15,7 @@ selector = {
     'ccdtab' : 'hst_acs_ccdtab.rmap',
     'cfltfile' : 'hst_acs_cfltfile.rmap',
     'crrejtab' : 'hst_acs_crrejtab.rmap',
+    'd2imfile' : 'hst_acs_d2imfile.rmap',
     'darkfile' : 'hst_acs_darkfile.rmap',
     'dgeofile' : 'hst_acs_dgeofile.rmap',
     'drkcfile' : 'hst_acs_drkcfile.rmap',
@@ -23,6 +24,7 @@ selector = {
     'imphttab' : 'hst_acs_imphttab.rmap',
     'mdriztab' : 'hst_acs_mdriztab.rmap',
     'mlintab' : 'hst_acs_mlintab.rmap',
+    'npolfile' : 'hst_acs_npolfile.rmap',
     'oscntab' : 'hst_acs_oscntab.rmap',
     'pctetab' : 'hst_acs_pctetab.rmap',
     'pfltfile' : 'hst_acs_pfltfile.rmap',
