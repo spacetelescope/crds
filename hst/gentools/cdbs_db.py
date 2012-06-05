@@ -483,6 +483,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
     dataset_count = 0
     mismatched = {}
     seen = set()
+    has_substitution = set()
     for header in headers:
         dataset_count += 1
         dataset = header["DATA_SET"]
@@ -517,7 +518,8 @@ def test(header_generator, context="hst.pmap", datasets=None,
                 minkey_header = same_keys(header, minkey_header)
                 log.verbose("Using alternate header for", dataset, instrument, filekind, minkey)
                 if log.VERBOSE_FLAG:
-                    pprint.pprint(minkey_header)
+                   pprint.pprint(minkey_header)
+                has_substitution.add(dataset)
             else:
                 minkey_header = header
                 log.verbose("No alterneate header for", dataset, instrument, filekind, minkey)
@@ -569,7 +571,11 @@ def test(header_generator, context="hst.pmap", datasets=None,
     for category, datasets in mismatched.items():
         instrument, filekind, inputs, old, new = category
         log.write("Erring Inputs:", instrument, filekind, len(datasets), old, new, repr(inputs))
+        covered = sorted(list(datasets.intersection(has_substitution)))
         log.write("Datasets:", instrument, filekind, len(datasets), " ".join(sorted(datasets)))
+        log.write("MAST un-coverage:", 
+                  "none" if len(covered) == len(datasets) 
+                  else " ".join(sorted(list(datasets-set(covered)))))
         if (instrument, filekind) not in totals:
             totals[(instrument, filekind)] = 0
         totals[(instrument, filekind)] += len(datasets)

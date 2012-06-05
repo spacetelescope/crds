@@ -125,8 +125,12 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
 # Server for CRDS services and mappings
 
 URL_SUFFIX = "/json/"
-URL = os.environ.get("CRDS_SERVER_URL", 'http://etcbrady.stsci.edu:4997')
-S = None
+
+JWST_TEST_SERVER = 'http://etcbrady.stsci.edu:4995'
+HST_TEST_SERVER = 'http://etcbrady.stsci.edu:4997'
+URL = os.environ.get("CRDS_SERVER_URL", JWST_TEST_SERVER)
+
+S = None    # Proxy server
 
 def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
@@ -238,7 +242,7 @@ def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.  
     """
-    return S.get_default_context(observatory)
+    return str(S.get_default_context(observatory))
 
 # ==============================================================================
 
