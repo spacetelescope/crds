@@ -273,6 +273,8 @@ def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
 # ===========================================================================
 
 def main():
+    import crds
+    crds.handle_version()
     if len(sys.argv) >= 2 and sys.argv[1] == "insert":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]

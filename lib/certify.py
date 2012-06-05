@@ -398,6 +398,8 @@ def main():
     are located on the CRDS server.  If file is a .fits file,  it should include
     a relative or absolute filepath.
     """
+    import crds
+    crds.handle_version()
     parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
     parser.add_option("-d", "--deep", dest="deep",
         help="Certify reference files referred to by mappings have valid contents.", 

@@ -24,4 +24,6 @@ def update_checksums(files):
         update_checksum(file_)
         
 if __name__ == "__main__":
+    import crds
+    crds.handle_version()
     update_checksums(sys.argv[1:])

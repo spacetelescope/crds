@@ -211,6 +211,8 @@ def write_bestrefs(new_fname, dataset, bestrefs):
 
 def main():
     """Process command line parameters and run recalibrate."""
+    import crds
+    crds.handle_version()
     parser = optparse.OptionParser(
         "usage: %prog [options] <new_context> <datasets...>")
     parser.add_option("-c", "--cache-headers", dest="use_cache",

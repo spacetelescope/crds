@@ -77,6 +77,9 @@ def main():
     reference files.   Print out the match tuples within the context
     which contain the reference files.
     """
+    import crds
+    crds.handle_version()
+    
     # Check inputs
     context = mapping(sys.argv[1])
     for file_ in sys.argv[2:]:
