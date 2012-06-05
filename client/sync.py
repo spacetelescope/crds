@@ -163,6 +163,8 @@ def determine_contexts(args):
     return contexts
 
 def main():
+    import crds
+    crds.handle_version()
     log.set_verbose(True)
     parser = argparse.ArgumentParser(
         description='Synchronize local mapping and reference caches to ' + 

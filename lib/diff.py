@@ -59,6 +59,8 @@ def difference(observatory, file1, file2):
 
  
 def main():
+    import crds
+    crds.handle_version()
     parser = optparse.OptionParser("""usage: %prog [options] <file1> <file2>
         
         Appropriately difference CRDS mapping or reference files.

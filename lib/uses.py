@@ -88,6 +88,8 @@ def main(observatory, files):
     """Print the "anscestor" mappings which mention each reference file,
     rmap, or imap in `files`.
     """
+    import crds
+    crds.handle_version()
     mappings = uses(files, observatory)
     for mapping in mappings:
         print mapping

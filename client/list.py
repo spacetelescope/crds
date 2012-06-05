@@ -60,6 +60,8 @@ def main():
     """Parse the command line into contexts and command qualifiers,  then list
     files accordingly.
     """
+    import crds
+    crds.handle_version()
     log.set_verbose(True)
     parser = argparse.ArgumentParser(
         description='List reference and/or mapping files " + \
