@@ -46,14 +46,14 @@ def list_references(contexts):
     """Consult the server and print the names of all references associated with
     the given contexts.
     """
-    for ref in get_context_references(contexts):
+    for ref in sorted(get_context_references(contexts)):
         log.write(ref)
 
 def list_mappings(contexts):
     """Consult the server and print the names of all CRDS mappings associated 
     with the given contexts.
     """
-    for mapfile in get_context_mappings(contexts):
+    for mapfile in sorted(get_context_mappings(contexts)):
         log.write(mapfile)
 
 def main():
@@ -77,10 +77,6 @@ def main():
         help='a list of contexts determining files to list.')
     parser.add_argument('--all', action='store_true',
         help='list files for all known contexts.')
-    parser.add_argument(
-        "--observatory", dest="observatory", metavar="OBSERVATORY", 
-        type=observatory, default="hst",
-        help='observatory to list files for,  "hst" or "jwst".')
     parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
         dest="range", default=None,
         help='list files for context ids between <MIN> and <MAX>.')

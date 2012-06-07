@@ -73,11 +73,6 @@ def test():
 
 # =======================================================================
 
-def locate_reference(reference):
-    """Return the absolute path for the client-side copy of a reference file.
-    """
-    return os.path.join([rmap.get_crds_refpath(), reference])
-
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.
     """

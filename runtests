@@ -1,4 +1,13 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-nosetests . --with-doctest
+import os
+import os.path
+import crds.pysh
+import crds.mappings
+
+os.environ["CRDS_MAPPATH"] = os.path.dirname(crds.mappings.__file__)
+
+crds.pysh.sh("nosetests . --with-doctest")
+
+
 
