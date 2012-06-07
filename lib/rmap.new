@@ -425,40 +425,41 @@ class Mapping(object):
             for selection in self.selections.values():
                 key = selection.get_required_parkeys()
                 parkeys = parkeys.union(set(key))
-        return sorted(parkeys)
+        return tuple(sorted(parkeys))
     
-    def get_minimum_header(self, dataset, original_name=None):
-        """Return the names and values of `dataset`s header parameters which 
-        are required to compute best references for it.   `original_name` is
-        used to determine file type when `dataset` is a temporary file with a
-        useless name.
+    def get_minimum_header(self, dataset, original_name=None, condition=True):
+        """Return a dictionary of header parameters required for best refs
+        matching.
+        
+        dataset         str (filename) or dict-like object (header)
+        original_name   str (non-temporary filename)
         """
-        header = data_file.get_conditioned_header(
-            dataset, original_name=original_name)
-        return self.minimize_header(header)
+        if isinstance(dataset, (str, unicode)):
+            header2 = data_file.get_header(
+                dataset, original_name=original_name)
+        else:
+            header2 = header
+        minheader = self.minimize_header(header2)
+        if condition:
+            return utils.condition_header(minheader)
+        else:
+            return minheader
 
     def minimize_header(self, header):
         """Return only those items of `header` which are required to determine
         bestrefs.
         """
         if isinstance(self, PipelineContext):
-            instrument = self.get_instrument(header)
-            mapping = self.get_imap(instrument)
+            mapping = self.get_imap(header["INSTRUME"].lower())
         else:
             mapping = self
         minimized = {}
-        for key in mapping.get_required_parkeys() + ["INSTRUME",]:
+        for key in mapping.get_required_parkeys() + ("INSTRUME",):
             try:
                 minimized[key] = header[key]
             except KeyError:
                 minimized[key] = "NOT FOUND"
         return minimized
-    
-    def get_instrument(self, header):
-        try:
-            return header["INSTRUME"]
-        except KeyError:
-            raise utils.CrdsError("Missing INSTRUME keyword in header")
     
     def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
@@ -533,8 +534,12 @@ class PipelineContext(Mapping):
         is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
-        instrument = header["INSTRUME"]
-        imap = self.get_imap(instrument)
+        instrument = header["INSTRUME"].lower()
+        try:
+            imap = self.selections[instrument]
+        except KeyError:
+            raise utils.CrdsError("Unknown instrument " + repr(instrument) +
+                                  " for context " + repr(self.name))
         return imap.get_best_references(header, include)
     
     def reference_names(self):
@@ -567,11 +572,7 @@ class PipelineContext(Mapping):
     
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
-        try:
-            return self.selections[instrument.lower()]
-        except KeyError:
-            raise utils.CrdsError("Unknown instrument " + repr(instrument) +
-                                  " for context " + repr(self.name))
+        return self.selections[instrument]
     
     def get_filekinds(self, dataset):
         """Return the filekinds associated with `dataset` by examining
@@ -579,7 +580,7 @@ class PipelineContext(Mapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
-        instrument = pyfits.getval(dataset, "INSTRUME")
+        instrument = pyfits.getval(dataset, "INSTRUME").lower()
         return self.get_imap(instrument).get_filekinds(dataset)
 
 # ===================================================================
@@ -634,7 +635,6 @@ class InstrumentContext(Mapping):
         if not include:
             include = self.selections
         for filekind in include:
-            filekind = filekind.lower()
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
             except IrrelevantReferenceTypeError:
@@ -719,7 +719,7 @@ class InstrumentContext(Mapping):
             pkmap[key] = sorted(pkmap[key])
         return pkmap
     
-    def get_filekinds(self, dataset=None):
+    def get_filekinds(self, dataset):
         """Return the filekinds associated with this dataset,  ideally
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.
@@ -817,7 +817,8 @@ class ReferenceMapping(Mapping):
     
     def get_valid_values_map(self, condition=True):
         """Based on the TPNs,  return a mapping from each of the required
-        parkeys to its valid values, 
+        parkeys to its valid values, i.e. the definitive source for what is
+        legal for this filekind.
    
         i.e. the definitive source for what is legal for this filekind.
         
@@ -935,29 +936,25 @@ def load_mapping(mapping, **keys):
     
 # =============================================================================
 
-DEFAULT_CRDS_DIR = "./crds"
+HERE = os.path.dirname(__file__) or "./"
 
 def get_crds_mappath():
-    """get_crds_mappath() returns the base path of the CRDS mapping directory 
-    tree where CRDS rules files (mappings) are stored.
+    """CRDS_MAPPATH is the location of the client or sever side mapping 
+    directory tree,  defaulting to the package directory of crds.mappings.
     """
-    try:
-        return os.environ["CRDS_MAPPATH"]
-    except KeyError:
-        return os.environ.get("CRDS_PATH", DEFAULT_CRDS_DIR) + "/mappings"
+    default = os.path.dirname(utils.get_object("crds.mappings").__file__)
+    return os.environ.get("CRDS_MAPPATH", default)
 
 def get_crds_refpath():
-    """get_crds_refpath returns the base path of the directory tree where CRDS 
-    reference files are stored.
+    """CRDS_REFPATH is the path to the local/client copy of reference files,
+    defaulting to the package directory for crds.references.
     """
-    try:
-        return os.environ["CRDS_REFPATH"]
-    except KeyError:
-        return os.environ.get("CRDS_PATH", DEFAULT_CRDS_DIR) + "/references"
+    default = os.path.dirname(utils.get_object("crds.references").__file__)
+    return os.environ.get("CRDS_REFPATH", default)
 
 # =============================================================================
 
-def locate_file(filepath, observatory):
+def locate_file(filepath, observatory="hst"):
     """Figure out the absolute pathname where CRDS will stash a reference
     or mapping file.  If filepath already has a directory,  return filepath
     as-is.   Otherwise,  return the *client* path for a file.
@@ -969,18 +966,11 @@ def locate_file(filepath, observatory):
     else:
         return locate_reference(filepath, observatory)
 
-def locate_reference(ref, observatory):
+def locate_reference(ref, observatory="hst"):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
         return ref
     return os.path.join(get_crds_refpath(), observatory, ref)
-
-def list_references(glob_pattern, observatory):
-    """Return the list of references for `observatory` which match `glob_pattern`,
-    nominally the cached references.
-    """    
-    path = os.path.join(get_crds_refpath(), observatory, glob_pattern)
-    return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
 # =============================================================================
 
@@ -991,16 +981,15 @@ def is_mapping(mapping):
     return mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def locate_mapping(mappath, observatory=None):
-    """Return the path where CRDS mapping `mappath` should be."""
+    """Return the absolute path where CRDS mapping `mappath` should be."""
     if os.path.dirname(mappath):
         return mappath
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
     return os.path.join(get_crds_mappath(), observatory, mappath)
 
-def list_mappings(glob_pattern, observatory):
-    """Return the list of mappings for `observatory` which match `glob_pattern`,
-    nominally the cached mappings.
+def list_mappings(glob_pattern, observatory="hst"):
+    """Return the list of mappings for `observatory` which match `glob_pattern`.
     """    
     path = os.path.join(get_crds_mappath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
@@ -1064,14 +1053,17 @@ def mapping_type(mapping):
         raise ValueError("Unknown mapping type for " + repr(Mapping))
 # ===================================================================
 
-def get_best_references(context_file, header, include=None):
+def get_best_references(context_file, header, include=None, condition=True):
     """Compute the best references for `header` for the given CRDS 
     `context_file`.   This is a local computation using local rmaps and 
     CPU resources.   If `include` is None,  return results for all
     filekinds appropriate to `header`,  otherwise return only those
-    filekinds listed in `include`.
+    filekinds listed in `include`.   If `condition` is True,  pass
+    each value through utils.condition_value() to format it in
+    standard CRDS form.
     """
     ctx = get_cached_mapping(context_file)
+    minheader = ctx.get_minimum_header(header, include=include, condition=condition)
     return ctx.get_best_references(header, include=include)
 
 

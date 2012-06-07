@@ -28,8 +28,8 @@ class CheckingProxy(object):
         return CheckingProxy(self.__service_url, name, self.__version)
 
     def __repr__(self):
-        return self.__class__.__name__ + "(jsonrpc='%s', method='%s')" % \
-            (self.__version, self.__service_name)
+        return self.__class__.__name__ + "(url='%s', method='%s')" % \
+            (self.__service_url, self.__service_name)
         
     def _call(self, *args, **kwargs):
         params = kwargs if len(kwargs) else args

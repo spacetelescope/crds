@@ -359,7 +359,7 @@ def certify_context(context, check_references=None, trap_exceptions=False):
         "invalid check_references parameter"
     references = []
     for ref in ctx.reference_names():
-        where = rmap.locate_file(ref)
+        where = rmap.locate_file(ref, ctx.observatory)
         if os.path.exists(where):
             references.append(where)
         else:

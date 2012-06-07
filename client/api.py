@@ -75,8 +75,8 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     already present.
     """
     if context is None:
-        observatory = get_observatory(parameters)
-        pmap_name = get_default_context(observatory)
+        # observatory = get_observatory(parameters)
+        pmap_name = get_default_context()
     else:
         assert isinstance(context, str) and context.endswith(".pmap"), \
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
@@ -136,9 +136,10 @@ def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
     e.g. 'http://localhost:8000'
     """
-    if not re.match("http://(\w+\.?)*\w(:\d+)?$", url):
-        raise ValueError("Invalid URL " + repr(url) + 
-                         " , don't use trailing /")
+    if not re.match("http://(\w+\.?)*\w(:\d+)?/?$", url):
+        raise ValueError("Invalid URL " + repr(url))
+    if url.endswith("/"):
+        url = url[:-1]
     global URL, S
     URL = url + URL_SUFFIX
     S = CheckingProxy(URL, version="1.0")
@@ -156,7 +157,7 @@ def srepr(o):
     """Return the repr() of the str() of `o`"""
     return repr(str(o))
 
-def list_mappings(observatory=None, glob_pattern=".*"):
+def list_mappings(observatory=None, glob_pattern="*"):
     """Return the list of mappings associated with `observatory`
     which match `glob_pattern`.
     """
@@ -400,22 +401,34 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     ctx = rmap.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
 
-def get_observatory(parameters):
-    """Given a dict-like set of bestref lookup `parameters`,  or the full
-    path of a dataset from which to extract them,  get_observatory() will
-    determine the name of the corresponding observatory.
-
-    parameters:  dict-like bestref header parameters *or* dataset path
+def get_observatory(parameters=None):
+    """Return the observatory name based on `parameters`,  e.g. 'jwst'
+    
+    If parameters is a header dict-like,  base observatory on the instrument
+    described by the header.
+    
+    If parameters is a filepath,  get the instrument from the file and
+    map that to the observatory.
+    
+    If parameters is None,  ask the server for the default context and 
+    determine the observatory from that.
+    
+    parameters:  dict-like bestref header parameters  or
+                 dataset path or
+                 None
 
     returns: 'hst' or 'jwst'
     """
-    if isinstance(parameters, (str,unicode)):
-        parameters = data_file.get_header(parameters)
-    try:
-        instrument = parameters["INSTRUME"]
-    except KeyError:
-        raise ValueError("No 'INSTRUME' keyword specified,  "
-                         "required to determine context.")
-    observatory = utils.instrument_to_observatory(instrument)
+    if parameters is None:
+        pmap_name = get_default_context()   # ask server
+        observatory = pmap_name.split("_")[0]
+    else:
+        if isinstance(parameters, (str,unicode)):
+            parameters = data_file.get_header(parameters)
+        try:
+            instrument = parameters["INSTRUME"]
+        except KeyError:
+            raise ValueError("No 'INSTRUME' keyword specified,  "
+                             "required to determine context.")
+        observatory = utils.instrument_to_observatory(instrument)
     return observatory
-

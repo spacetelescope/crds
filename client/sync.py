@@ -1,27 +1,22 @@
 """This module is a command line script which dowloads the references and 
 mappings required to support a set of contexts from the CRDS server:
 
-Mappings and references are downloaded to either a standard location in
-the Python package structure for CRDS (e.g. crds.hst.mappings or 
-crds.hst.references) or to locations specified by CRDS_REFPATH and CRDS_MAPPATH 
-environment variables.
-
 Synced contexts can be explicitly listed:
 
 % python -m crds.client.sync  hst_0001.pmap hst_0002.pmap
 
 Synced contexts can be specified as a range:
 
-% python -m crds.client.sync --observatory hst --range 1:2
+% python -m crds.client.sync --range 1:2
 
 Synced contexts can be specified as --all contexts:
 
-% python -m crds.client.sync --observatory hst --all
+% python -m crds.client.sync --all
 
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge:
 
-% python -m crds.client.sync --observatory hst --range 1:2 --purge
+% python -m crds.client.sync --range 1:2 --purge
 
 will remove references or mappings not required by hst_0001.pmap or 
 hst_0002.pmap in addition to downloading the required files.
@@ -41,8 +36,9 @@ def get_context_mappings(contexts):
     """
     files = set()
     for context in contexts:
-        files = files.union(api.get_mapping_names(context))
-    return sorted(list(files))
+        pmap = rmap.get_cached_mapping(context)
+        files = files.union(pmap.mapping_names())
+    return files
 
 def sync_context_mappings(only_contexts, purge=False):
     """Gets all mappings required to support `only_contexts`.  Removes
@@ -51,21 +47,14 @@ def sync_context_mappings(only_contexts, purge=False):
     """
     if not only_contexts:
         return
-    add_context_mappings(only_contexts)
-    master_context = only_contexts[0]
-    # locator = rmap.get_cached_mapping(master_context).locate
-    purge_dir = rmap.get_crds_mappath()
-    purge_maps = pysh.lines("find ${purge_dir} -name '*.[pir]map'")
-    purge_maps = set([os.path.basename(x.strip()) for x in purge_maps])
-    keep = set(get_context_mappings(only_contexts))
-    if purge:
-        remove_files(master_context, purge_maps-keep, "mapping")
-    
-def add_context_mappings(contexts):
-    """Gets all the mappings required to support `contexts`."""
-    for context in contexts:
+    for context in only_contexts:
         api.dump_mappings(context)
-
+    pmap = rmap.get_cached_mapping(only_contexts[0])
+    purge_maps = rmap.list_mappings('*.[pir]map', pmap.observatory)
+    keep = get_context_mappings(only_contexts)
+    if purge:
+        remove_files(pmap.observatory, purge_maps-keep, "mapping")
+    
 def get_context_references(contexts):
     """Return the set of mappings which are pointed to by the mappings
     in `contexts`.
@@ -73,43 +62,32 @@ def get_context_references(contexts):
     files = set()
     for context in contexts:
         files = files.union(api.get_reference_names(context))
-    return sorted(list(files))
+    return files
 
 def sync_context_references(only_contexts, purge=False):
-    """Gets all mappings required to support `only_contexts`.  Removes
-    all mappings from the CRDS mapping cache which are not required for
+    """Gets all references required to support `only_contexts`.  Removes
+    all references from the CRDS reference cache which are not required for
     `only_contexts`.
     """
     if not only_contexts:
         return
-    add_context_references(only_contexts)
-    master_context = only_contexts[0]
-    # locator = rmap.get_cached_mapping(master_context).locate
-    purge_dir = rmap.get_crds_refpath()
-    purge_refs = pysh.lines("find ${purge_dir} "
-                            "-name '*.fits' ")
-                            # "-o -name '*.r*h' "
-                            # "-o -name '*.r*d'")
-    purge_refs = set([os.path.basename(x.strip()) for x in purge_refs])
-    keep = set(get_context_references(only_contexts))
+    for context in only_contexts:
+        api.dump_references(context)
+    pmap = rmap.get_cached_mapping(only_contexts[0])
+    purge_refs = rmap.list_references("*", pmap.observatory)
+    keep = get_context_references(only_contexts)
     if purge:
         remove = purge_refs - keep
-        remove_files(master_context, remove, "reference")
+        remove_files(pmap.observatory, remove, "reference")
     
-def add_context_references(contexts):
-    """Gets all the mappings required to support `contexts`."""
-    for context in contexts:
-        api.dump_references(context)
-    
-def remove_files(context, files, kind):
+def remove_files(observatory, files, kind):
     """Remove the list of `files` basenames which are converted to fully
     specified CRDS paths using the locator module associated with context.
     """
     if not files:
         log.verbose("No " + kind + "s to remove.")
-    # locator = rmap.get_cached_mapping(context).locate
     for file in files:
-        where = rmap.locate_file(file)
+        where = rmap.locate_file(file, observatory)
         log.verbose("Removing", file, "from", where)
         try:
             os.remove(where)
@@ -136,12 +114,12 @@ def nrange(string):
 
 def determine_contexts(args):
     """Support explicit specification of contexts, context id range, or all."""
-    all_contexts = api.list_mappings(args.observatory, "*.pmap")
+    all_contexts = api.list_mappings(glob_pattern="*.pmap")
     if args.contexts:
        assert not args.range, 'Cannot specify explicit contexts and --range'
        assert not args.all, 'Cannot specify explicit contexts and --all'
        # permit instrument and reference mappings,  not just pipelines:
-       all_contexts = api.list_mappings(args.observatory, "*.*map")
+       all_contexts = api.list_mappings(glob_pattern="*.*map")
        for context in args.contexts:
            assert context in all_contexts, "Unknown context " + repr(context)
        contexts = args.contexts
@@ -172,10 +150,6 @@ def main():
     parser.add_argument(
         'contexts', metavar='CONTEXT', type=mapping, nargs='*',
         help='a list of contexts determining files to sync.')
-    parser.add_argument(
-        "--observatory", dest="observatory", metavar="OBSERVATORY", 
-        type=observatory, default="hst",
-        help='observatory to sync files for,  "hst" or "jwst".')
     parser.add_argument('--all', action='store_true',
         help='fetch files for all known contexts.')
     parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
