@@ -6,9 +6,9 @@ main entry points for the calibration software or basic use.  Functions
 at this level should be assumed to require network connectivity with the CRDS
 server.   
 
-To function correctly,  these API calls require the user to set the environment
-variables CRDS_REFPATH,  CRDS_MAPPATH,  and CRDS_SERVER_URL.   See the section
-on *Installation* for more details.
+To function correctly,  these API calls may require the user to set the
+environment variables CRDS_SERVER_URL and CRDS_PATH.   See the section on
+*Installation* for more details.
 
 crds.getreferences()
 --------------------
@@ -16,8 +16,9 @@ crds.getreferences()
 Given  dataset header containing parameters required to determine best
 references, and optionally a specific .pmap to use as the best references
 context,  and optionally a list of the reference types for which reference files
-to be determined,  getreferences() returns a mapping from reference types to
-reference file base names::
+are to be determined,  getreferences() will determine best references,  cache
+them on the local file system,  and return a mapping from reference types to
+reference file paths::
 
     def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         """Return the mapping from the requested `reftypes` to their 
@@ -85,23 +86,16 @@ reference file base names::
 crds.get_default_context()
 --------------------------
 
-Given the observatory name,  get_default_context() returns the name
-of the pipeline mapping which is currently in operational use.   The default
-context defines the matching rules used to determine best reference files for
-a given set of parameters::
+get_default_context() returns the name of the pipeline mapping which is 
+currently in operational use.   When no
 
-    def get_default_context(observatory):
+The default context defines the matching rules used to determine best 
+reference files for a given set of parameters::
+
+    def get_default_context(observatory=None):
         """Return the name of the latest pipeline mapping in use for processing
-        files for `observatory`.  
+        files.  
     
-        Parameters
-        -----------
-        observatory  :  name of the observatory the returned context applies to.
-        
-            str 
-                
-            e.g. 'hst' or 'jwst'
-
         Returns   
         -------
         pipeline context mapping   
@@ -110,4 +104,3 @@ a given set of parameters::
         
             e.g.   'hst_0007.pmap'
         """
-

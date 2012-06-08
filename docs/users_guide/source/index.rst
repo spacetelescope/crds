@@ -10,14 +10,12 @@ CRDS User Manual
    :maxdepth: 3
    
    user_guide.rst
-   release_notes.rst
    installation.rst
    top_level_use.rst
-   client_use.rst
    non_networked_use.rst
-   web_site_use.rst
    rmap_syntax.rst
    command_line_tools.rst
+
 
 .. comment
   Indices and tables
