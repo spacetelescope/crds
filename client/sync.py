@@ -155,14 +155,18 @@ def main():
     parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
         dest="range", default=None,
         help='fetch files for context ids between <MIN> and <MAX>.')
-    parser.add_argument('--purge', action='store_true',
+    parser.add_argument('--purge', action='store_true', dest="purge",
         help='remove reference files and mappings not referred to by contexts')
+    parser.add_argument('--mappings-only', action='store_true', 
+        dest="mappings_only",
+        help='just get the mapping files, not the references')
     args = parser.parse_args()
     
     contexts = determine_contexts(args)
     
     sync_context_mappings(contexts, args.purge)
-    sync_context_references(contexts, args.purge)
+    if not args.mappings_only:
+        sync_context_references(contexts, args.purge)
 
 if __name__ == "__main__":
     main()
