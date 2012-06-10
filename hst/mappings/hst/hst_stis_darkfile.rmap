@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:43.813576',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:28.190784',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'd6db2e0c5a5f373cfab58aebb00208451fec4ac8',
+    'parkey_relevance' : {
+        'ccdamp' : '(DETECTOR == "CCD")',
+        'ccdgain' : '(DETECTOR == "CCD")',
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '6b0d326e2577f6a817cbf5b642566273916d318c',
 }
 
 selector = Match({
@@ -512,7 +516,7 @@ selector = Match({
         '1997-04-25 00:00:00' : 'hcc1558ro_drk.fits',
         '1997-07-31 00:00:00' : 'hcc1558mo_drk.fits',
     }),
-    ('FUV-MAMA', 'N/A', 'N/A') : UseAfter({
+    ('FUV-MAMA', 'N/A', -999) : UseAfter({
         '1996-10-01 00:00:00' : 'j1p13242o_drk.fits',
         '1998-02-01 00:00:00' : 'ma71317qo_drk.fits',
         '2000-01-01 00:00:00' : 'ma71317ro_drk.fits',
@@ -520,7 +524,7 @@ selector = Match({
         '2002-09-08 00:00:00' : 'q591955qo_drk.fits',
         '2003-06-14 00:00:00' : 'q591955ro_drk.fits',
     }),
-    ('NUV-MAMA', 'N/A', 'N/A') : UseAfter({
+    ('NUV-MAMA', 'N/A', -999) : UseAfter({
         '1996-10-01 00:00:00' : 'i9u1759io_drk.fits',
         '1998-03-31 00:00:00' : 'lcl11072o_drk.fits',
         '1998-12-24 00:00:00' : 'lcl11073o_drk.fits',

@@ -483,7 +483,12 @@ class Matcher(object):
     def match(self, value):
         """Return 1 (match),  0 (don't care), or -1 (no match).
         """
-        return 1 if (value in ["*", "N/A"] or self._key == value) else -1
+        if value == self._key or value == "*":
+            return 1
+        elif value == "N/A":
+            return 0
+        else:
+            return -1
 
     def __repr__(self):
         return self.__class__.__name__ + "('%s')" % self._key
@@ -495,7 +500,12 @@ class RegexMatcher(Matcher):
         self._regex = re.compile(key)
         
     def match(self, value):
-        return 1 if (value in ['*',"N/A"] or self._regex.match(value)) else -1
+        if value == "N/A":
+            return 0
+        elif value == "*" or self._regex.match(value):
+            return 1
+        else:
+            return -1
     
 class GlobMatcher(RegexMatcher):
     """Matcher for |-joined or *-containing expressions which basically work

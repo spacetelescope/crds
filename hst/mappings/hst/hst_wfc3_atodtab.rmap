@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:47.405956',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:31.544653',
     'filekind' : 'ATODTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_atodtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '11c8e9904bcf720dfd2e011d99aefcd2b4449ecc',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : '(DETECTOR == "UVIS")',
+    'sha1sum' : '2cf8b194473c8cb9a4ee9e3d97564a9dc9fe29be',
 }
 
 selector = Match({

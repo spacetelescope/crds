@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:31.836424',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:16.950914',
     'filekind' : 'SPOTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_spottab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
-    'sha1sum' : 'e005432b1cea00fe91f987450916f2a44197546c',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
+    'sha1sum' : '30be58bff29802d89de63cd9ebee826844ef3cb8',
 }
 
 selector = Match({

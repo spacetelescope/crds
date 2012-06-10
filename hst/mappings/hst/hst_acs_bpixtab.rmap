@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:11:53.240765',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:10:54.165695',
     'filekind' : 'BPIXTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : '7c5fe6b7a747db202fb53c5e7ab0dc4648111bac',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '5aec25b89dc29520057695f31a8f6dbfa4004908',
 }
 
 selector = Match({

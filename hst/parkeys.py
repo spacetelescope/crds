@@ -108,10 +108,12 @@ def process_reference_file_defs():
                         parkeys.append(parkey)
                         if rnode.file_selection_test is not None:
                             parkey_restrictions[parkey] = simplify_restriction(
-                                ccontents(rnode.file_selection_test))
+                                ccontents(rnode.file_selection_test),
+                                condition=True)
                     elif rnode.name == "restriction":
                         relevant = simplify_restriction(
-                            ccontents(rnode.restriction_test))
+                            ccontents(rnode.restriction_test),
+                            condition=True)
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
                 rdefs[instr][filekind] = dict(
@@ -119,8 +121,8 @@ def process_reference_file_defs():
                         parkeys = tuple(fits_parkeys),
                         db_translations = adjustment.translate,
                         not_in_db = tuple(adjustment.ignore),
-                        relevance = relevant,
-                        parkey_restrictions = parkey_restrictions,
+                        rmap_relevance = relevant,
+                        parkey_relevance = parkey_restrictions,
                     )
     return rdefs
 
@@ -158,15 +160,16 @@ def _condition_numbers(restriction_text):
                   restriction_text)
     return rval
 
-def simplify_restriction(restriction_text):
+def simplify_restriction(restriction_text, condition):
     """Transform file_selection_tests and restrictions to simple expressions of
     'header' values.
     """
     test = restriction_text
     for i in range(10):
         test = _simplify_restriction(test)
-#    for i in range(10):
-#        test = _condition_numbers(test)
+    if condition:
+        for i in range(10):
+            test = _condition_numbers(test)
     val = test.replace("'", '"')
     return val
 
@@ -187,11 +190,11 @@ def get_db_parkeys(instrument, filekind):
         db_parkeys.append(translations.get(key, key))
     return tuple(db_parkeys)
 
-def get_relevance(instrument, filekind):
-    return PARKEYS[instrument][filekind]["relevance"]
+def get_rmap_relevance(instrument, filekind):
+    return PARKEYS[instrument][filekind]["rmap_relevance"]
 
-def get_parkey_restrictions(instrument, filekind):
-    return PARKEYS[instrument][filekind]["parkey_restrictions"]
+def get_parkey_relevance(instrument, filekind):
+    return PARKEYS[instrument][filekind]["parkey_relevance"]
 
 def get_instruments():
     return sorted(PARKEYS.keys())

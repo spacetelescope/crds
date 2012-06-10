@@ -372,7 +372,7 @@ def get_match_tuple(row, instrument, filekind):
     """
     db_parkeys = parkeys.get_db_parkeys(instrument, filekind)     # ordered
     extra_parkeys = parkeys.get_extra_keys(instrument, filekind)     # ordered
-    restricted = apply_restrictions(row, instrument, filekind)
+    restricted = dict(row)
     # Construct a simple match tuple (no names) in the right order.
     match = []
     for pkey in db_parkeys + extra_parkeys:
@@ -436,7 +436,8 @@ def write_rmap(observatory, instrument, filekind, kind_map):
         ("filekind", filekind.upper()),
         ("parkey", (match_keys, useafter_keys)),
         # ("extra_keys", tuple([key.upper() for key in parkeys.get_extra_keys(instrument, filekind)])),
-        ("relevance", parkeys.get_relevance(instrument, filekind)),
+        ("rmap_relevance", parkeys.get_rmap_relevance(instrument, filekind)),
+        ("parkey_relevance", parkeys.get_parkey_relevance(instrument, filekind)),
     ])
 
     # Execute filekind specific customizations on header    
