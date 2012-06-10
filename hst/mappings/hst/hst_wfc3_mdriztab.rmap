@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:53.064224',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:36.843549',
     'filekind' : 'MDRIZTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_mdriztab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : '198898c413637c883c543f35cc9bfe03d871f273',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '554f9e3c027ae4847d722980a0b445135e9369a8',
 }
 
 selector = Match({

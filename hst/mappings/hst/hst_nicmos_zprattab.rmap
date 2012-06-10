@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:39.560620',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:25.214116',
     'filekind' : 'ZPRATTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_zprattab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : '66811bc6325b4e8856ac01735c1cc0d515598d86',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '7ecb561e759388fdfb802c31a0761d60db8fe85e',
 }
 
 selector = Match({

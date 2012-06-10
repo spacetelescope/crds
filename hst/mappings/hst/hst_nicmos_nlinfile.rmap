@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:39.154487',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:24.833100',
     'filekind' : 'NLINFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_nlinfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'dff9f5191b2ac30662ba62bf7f33043d16e32377',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '8f1c9a25e594e59bd2e6c43b65f3a695ef19cb69',
 }
 
 selector = Match({

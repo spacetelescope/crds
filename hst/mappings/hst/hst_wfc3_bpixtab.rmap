@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:49.085896',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:33.428341',
     'filekind' : 'BPIXTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'f31285f8a125e4ac8ef9b446caca066400916f7a',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'e93f7e95f2351b57f17a4b800bd2c48094221412',
 }
 
 selector = Match({
@@ -15,6 +17,7 @@ selector = Match({
         '1991-01-01 00:00:00' : 'q911321ki_bpx.fits',
         '2008-02-20 00:00:00' : 't291659ni_bpx.fits',
         '2009-05-14 00:00:00' : 'u4c1709ri_bpx.fits',
+        '2010-06-13 00:00:00' : 'w681807ii_bpx.fits',
     }),
     ('UVIS',) : UseAfter({
         '1991-01-02 00:00:00' : 'r5b17013i_bpx.fits',

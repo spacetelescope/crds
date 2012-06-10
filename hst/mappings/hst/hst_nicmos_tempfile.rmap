@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:39.549481',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:25.202092',
     'filekind' : 'TEMPFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_tempfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : '48421b8ee32fba13912bd2751a6ed45535678b3b',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '38a3413a2761e53c324c12deccec072c3ba1438d',
 }
 
 selector = Match({

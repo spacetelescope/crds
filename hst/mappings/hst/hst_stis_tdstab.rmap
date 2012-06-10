@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:46.365090',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:30.773633',
     'filekind' : 'TDSTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_tdstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'bc9c929ced9ef061803c1f05fae935dcdc7948cb',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '3f386c2f03e79a6fae4f82b2a55118d7d4ddc3dc',
 }
 
 selector = Match({

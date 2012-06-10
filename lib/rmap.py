@@ -745,7 +745,8 @@ class ReferenceMapping(Mapping):
         self._tpn_valid_values = self.get_valid_values_map()
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()  
-        self._relevance_expr = getattr(self, "relevance", "ALWAYS")
+        self._rmap_relevance_expr = getattr(self, "rmap_relevance", "ALWAYS")
+        self._parkey_relevance_exprs = getattr(self, "parkey_relevance", {})
 
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
@@ -771,14 +772,16 @@ class ReferenceMapping(Mapping):
         """
         log.verbose("Getting bestrefs for", self.instrument, self.filekind, 
                     "parkeys", self.parkey)
-        self.check_relevance(header_in)  # Is this rmap appropriate for header
+        self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
         # Some filekinds, .e.g. ACS biasfile, mutate the header 
         header = self._precondition_header(self, header_in)
+        header = self.map_irrelevant_parkeys_to_na(header)
         try:
             return self.selector.choose(header)
         except Exception, exc:
             log.verbose("First selection failed: " + str(exc))
             header = self._fallback_header(self, header_in)
+            header = self.map_irrelevant_parkeys_to_na(header)
             if header:
                 log.verbose("Fallback lookup on", repr(header))
                 return self.selector.choose(header)
@@ -875,14 +878,14 @@ class ReferenceMapping(Mapping):
         return self.selector.difference(other.selector, path + 
                 ((self.basename, other.basename),))
 
-    def check_relevance(self, header):
+    def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
         in the context of `header` returns False.
         """
         # header keys and values are upper case.  rmap attrs are lower case.
         try:
-            if self._relevance_expr != "always":
-                relevant = eval(self._relevance_expr, {}, header)
+            if self._rmap_relevance_expr != "always":
+                relevant = eval(self._rmap_relevance_expr, {}, header)
                 log.verbose("Filekind ", self.instrument, self.filekind, 
                             "is relevant: ", relevant)
             else:
@@ -893,6 +896,25 @@ class ReferenceMapping(Mapping):
             if not relevant:
                 raise IrrelevantReferenceTypeError(
                     "Rmap does not apply to the given parameter set.")
+
+    def map_irrelevant_parkeys_to_na(self, header):
+        """Evaluate any relevance expression for each parkey, and if it's
+        false,  then change the value to N/A.
+        """
+        header = dict(header)
+        for parkey in self._required_parkeys:  # ensure all parkeys defined
+            if parkey not in header:
+                header[parkey] = "NOT PRESENT"
+        original = dict(header)
+        for parkey in self._required_parkeys:
+            lparkey = parkey.lower()
+            if lparkey in self._parkey_relevance_exprs:
+                relevant = eval(self._parkey_relevance_exprs[lparkey], {}, original)
+                log.verbose("Parkey", self.instrument, self.filekind, lparkey,
+                            "is relevant:", relevant)
+                if not relevant:
+                    header[parkey] = "N/A"
+        return header
 
 # ===================================================================
 

@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:08.343362',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:11:57.907611',
     'filekind' : 'PCTETAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_pctetab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : '37adc11aa1ad854f8682d5cd7650bb1d3cc8008d',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : '(DETECTOR == "WFC")',
+    'sha1sum' : '37922dcec226776121d7a61eb60c0745aac5f473',
 }
 
 selector = Match({

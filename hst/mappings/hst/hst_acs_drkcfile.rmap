@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:00.969819',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:11:51.942509',
     'filekind' : 'DRKCFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_drkcfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : 'ce8f82c3926930051a5f3e6c4402b746b23f6e29',
+    'parkey_relevance' : {
+        'ccdamp' : '(DETECTOR != "SBC")',
+        'ccdgain' : '(DETECTOR != "SBC")',
+    },
+    'rmap_relevance' : '(DETECTOR == "WFC")',
+    'sha1sum' : '3bbf58b816c89dd542d2bb53531a087a1d69942e',
 }
 
 selector = Match({

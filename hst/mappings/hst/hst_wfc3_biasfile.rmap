@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:48.985023',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:33.350310',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '3daa8176f672ffa63de33c136f46cd7ab824b0ed',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : '(DETECTOR == "UVIS")',
+    'sha1sum' : '95060490d2ae16c4bd8f4d2718880ba028fc10e7',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),

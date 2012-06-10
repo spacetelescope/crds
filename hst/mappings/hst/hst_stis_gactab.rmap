@@ -1,13 +1,15 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-04 06:13:44.198881',
+    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:28.376130',
     'filekind' : 'GACTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_gactab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'bc81106a68073b1be32a6b500af0f520a67af2a8',
+    'parkey_relevance' : {
+    },
+    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
+    'sha1sum' : 'aea920fcd2c8282de7e81fd67efdaf29f6f77f2a',
 }
 
 selector = Match({
