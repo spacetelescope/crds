@@ -22,7 +22,7 @@ reference file paths::
 
     def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         """Return the mapping from the requested `reftypes` to their 
-        corresponding best reference file names appropriate for a dataset 
+        corresponding best reference file paths appropriate for a dataset 
         described by `parameters` with CRDS rules defined by `context`::
         
         parameters :    A mapping of parameter names to parameter value
@@ -37,25 +37,23 @@ reference file paths::
                        ...
                     }
          
-         Alternately,  a string specifying the full path of a dataset
-                 from which CRDS will extract header values.
+                 Alternately,  parameters can be a string specifying the full 
+                 path of a dataset from which CRDS will extract header values.
 
-         str
+                 str
 
-         e.g. "/where/it/is/j8bt05njq_raw.fits"
+                 e.g. "/where/it/is/j8bt05njq_raw.fits"
          
     
         reftypes :    A list of reference type names,  where each reftype is the
                     keyword used to record that kind of reference file in a 
                     dataset header.
                 
-                    [ str ]
-
                     e.g.  [ 'darkfile', 'biasfile']
                     
                     If reftypes is None,  return all reference types defined by
                     the instrument mapping for the instrument specified in 
-                    `header_parameters`.
+                    `parameters`.
                     
         context :   The name of the pipeline context mapping which should be
                 used to define best reference lookup rules,  or None.  If 
@@ -71,7 +69,7 @@ reference file paths::
 
         Returns
         -------
-                a mapping from reftypes to best reference file basenames.
+                a mapping from reftypes to cached best reference file paths.
         
                 { str : str }
                 
@@ -98,9 +96,7 @@ reference files for a given set of parameters::
     
         Returns   
         -------
-        pipeline context mapping   
-        
-            str
+        pipeline context name
         
             e.g.   'hst_0007.pmap'
         """
