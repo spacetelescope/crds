@@ -781,9 +781,9 @@ class ReferenceMapping(Mapping):
         except Exception, exc:
             log.verbose("First selection failed: " + str(exc))
             header = self._fallback_header(self, header_in)
-            header = self.map_irrelevant_parkeys_to_na(header)
             if header:
                 log.verbose("Fallback lookup on", repr(header))
+                header = self.map_irrelevant_parkeys_to_na(header)
                 return self.selector.choose(header)
             else:
                 raise
