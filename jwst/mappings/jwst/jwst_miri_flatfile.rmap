@@ -6,8 +6,7 @@ header = {
     'name' : 'jwst_miri_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'dc9632a7dcf91f6ce77aeb9bc149628ecb31c4c9',
+    'sha1sum' : 'acd549e97509d4efea98295157216fc3696cb349',
 }
 
 selector = Match({

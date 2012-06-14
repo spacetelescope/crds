@@ -6,8 +6,7 @@ header = {
     'name' : 'jwst_nircam_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'fe99965580170b5de8ab5bba273e83ce67e89f50',
+    'sha1sum' : '8c5679b6b57a00b740c9c855d51a36f1458268b4',
 }
 
 selector = Match({

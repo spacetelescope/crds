@@ -6,8 +6,7 @@ header = {
     'name' : 'jwst_nirspec_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'cc83a3aa1a21483ecd8c7a9f7214d456d7434553',
+    'sha1sum' : 'd33698518d10ac2f3660c0ff9696b5051ea243d6',
 }
 
 selector = Match({
