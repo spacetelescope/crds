@@ -1,9 +1,32 @@
+"""
+The special case handlers for WFC3 are now obsolete and this file does 
+essentially nothing.   It is left as an illustration of implementing
+rmap header substitutions,  dataset driven header overrides, and hard-coded
+HST rmap files.
+"""
+
 import crds.log as log
 import crds.rmap as rmap
 
 # =======================================================================
 
 """
+Header substitution notes:
+--------------------------
+
+The original CRDS rmap generator scraped rmap information from the CDBS web 
+pages.   The CDBS web pages displayed un-expanded aperture values.   Later
+CRDS switched to generating rmaps from the expanded rows found in the CDBS
+database reffile_ops.   The expanded rows effectively have the substitutions
+specified below already implemented.
+
+Testing with the biasfile special case code found that it gives the wrong
+answers for hundreds of cases.  Disabling the special case code reduced the
+biasfile error count against the catalog to 26 over all datasets.  Further
+refining best reference error counts using OPUS reduced the error counts
+further,  possibly to zero,  indicating that the special case handling should
+simply be turned off.
+
 ** See WFC3 TIR-2009-03, Changes to CDBS expansion and selection criteria
    for WFC3 UVIS bias reference files
 
@@ -20,7 +43,12 @@ WFC3_EXPANDED_APERTURES as the form:
 
 CRDS expands the reference file APERTURE at rmap creation time.
 
+NOTE:  since switching to database driven rmap creation,  the substitution
+source values no longer appear in the rmaps.
+
 """
+
+
 
 header_substitutions = {
     "APERTURE" : {
@@ -61,6 +89,10 @@ header_additions = [
     ("substitutions", header_substitutions),
 ]
 
+# =========================================================================
+
+"""example of adding a hard-coded rmap clause in HST:"""
+
 def wfc3_biasfile_filter(kmap):
 #     log.write("Hacking WFC3 Biasfile  APERTURE macros.   Adding t6i1733ei_bia.fits special case.")
 #     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
@@ -68,6 +100,17 @@ def wfc3_biasfile_filter(kmap):
 #               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
     return kmap, header_additions
 
+# =========================================================================
+"""Example of mutating dataset header values prior to match based on header."""
+
+
+def precondition_header(rmap, header):
+    if rmap.filekind == "biasfile":
+        return header   # XXX do nothing
+        return _precondition_header_biasfile(header)
+    else:
+        return header
+    
 def _precondition_header_biasfile(header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.
@@ -79,13 +122,11 @@ def _precondition_header_biasfile(header_in):
         header["APERTURE"] = "*"
     return header
 
-def precondition_header(rmap, header):
-    if rmap.filekind == "biasfile":
-        return _precondition_header_biasfile(header)
-    else:
-        return header
-    
 '''
+This is the original CDBS code for wfc3 biasfile which generates SQL for matching
+dataset header values against the CDBS reference file database::
+
+
   def wfc3_bias_file_selection(self, querynum, thereffile, aSource):
 
     querytxt = ""
