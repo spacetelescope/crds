@@ -46,5 +46,5 @@ echo "Certifying all mappings"
 
 # Run comparison tests on all HST datasets.
 echo "Testing all datasets"
-(./testall >& testall.err;  grep -E 'error|warn|datasets' testall.err | grep -v MAST)
+(./testall >& testall.err;  grep -E 'error|warn|datasets' testall.err | grep -v -E'MAST|pickle')
 

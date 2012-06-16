@@ -389,7 +389,7 @@ def load_alternate_dataset_headers(files=None):
         for fk in imap.get_filekinds():
             minkey = minimize_inputs(imap.instrument, fk, key)
             alternate_headers[minkey] = full_header
-            log.verbose("Alternate header", instrument, fk, mast_dataset, minkey)
+            log.info("Alternate header", instrument, fk, mast_dataset, minkey)
     log.info("Done loading extra dataset headers.")
     return alternate_headers
 
@@ -435,7 +435,7 @@ def lookup_key(pmap, header):
     for key, val in sorted(min_header.items()):
         if ".FITS" in val or key.endswith("FILE") or key.endswith("TAB"):
             continue
-        if val in ["NOT FOUND", "NONE"]:
+        if val in ["NOT FOUND"]:
             continue
         if key in ["DATE-OBS","TIME-OBS","EXPSTART","DATA_SET"]:
             continue
@@ -486,7 +486,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
     has_substitution = set()
     for header in headers:
         dataset_count += 1
-        dataset = header["DATA_SET"]
+        dataset = header["DATA_SET"].lower()
         
         if datasets is not None:
             if dataset not in datasets:
