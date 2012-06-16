@@ -6,7 +6,6 @@ import pprint
 import cPickle
 import random
 import getpass
-from collections import OrderedDict
 import os.path
 import datetime
 import cProfile
@@ -17,6 +16,8 @@ import pyodbc
 from crds import rmap, log, utils, timestamp, data_file, selectors
 import crds.hst
 import crds.hst.parkeys as parkeys
+
+import opus_bestref
 
 log.set_verbose(False)
 
@@ -367,40 +368,13 @@ def load_alternate_dataset_headers(files=None):
     datasets are OTFR'ed and downloaded from MAST to get better recommendations,
     generally only when CRDS and CDBS disagree.
     """
-    log.info("Loading extra dataset headers.")
-    if files is None:
-        files = glob.glob("../../../datasets/*.fits")
-    alternate_headers = {}
-    pmap = rmap.get_cached_mapping("hst.pmap")
-    for mast_dataset in files:
-        full_header = fix_iraf_paths(data_file.get_conditioned_header(mast_dataset))
-        full_header["DATA_SET"] = dataset(mast_dataset)
-        key = lookup_key(pmap, full_header)
-        if key in alternate_headers:  
-            pass
-            # More than one dataset defines the same
-            # header fixes for the same input parameters.   
-            # Will happen,  shouldn't happen all the time.
-            # log.warning("Duplicate dataset key for", mast_dataset, "=", key)
-        log.verbose("Loading MAST dataset", repr(mast_dataset), "as", key)        
-        alternate_headers[key] = full_header
-        instrument = full_header["INSTRUME"]
-        imap = pmap.get_imap(instrument)
-        for fk in imap.get_filekinds():
-            minkey = minimize_inputs(imap.instrument, fk, key)
-            alternate_headers[minkey] = full_header
-            log.info("Alternate header", instrument, fk, mast_dataset, minkey)
-    log.info("Done loading extra dataset headers.")
+    try:
+        alternate_headers = cPickle.load(open("opus_bestrefs.pickle"))
+        log.info("Loading opus dataset headers.")
+    except:
+        altenerate_header = {}
+        log.info("Loading opus headers failed.")
     return alternate_headers
-
-def minimum_key(instrument, filekind, full_header):
-    """Based on the instrument and filekind,  return the minimized key tuple
-    corresponding to the parameters from `full_header` required to lookup a
-    reference for `filekind` only.
-    """
-    min_header = dict(minimize_header(instrument, filekind, full_header))
-    minkey = lookup_key(pmap, min_header)
-    return minkey
 
 def fix_iraf_paths(header):
     """Get rid of the iref$ prefixes on filenames."""
@@ -411,10 +385,6 @@ def fix_iraf_paths(header):
         else:
             header2[key] = value
     return header2
-
-def dataset(filename):
-    """Convert a dataset filename into a dataset id."""
-    return os.path.basename(filename).split("_")[0].upper()
 
 def lookup_key(pmap, header):
     """Convert a parameters+bestrefs dict into a tuple which can be used
@@ -456,23 +426,16 @@ def same_keys(dict1, dict2):
     """return a copy of dict2 reduced to the same keywords as dict1"""
     return { key:val for (key,val) in dict2 if key in dict1 }
 
-def test(header_generator, context="hst.pmap", datasets=None, 
+def test(header_spec, context="hst.pmap", datasets=[], 
          ignore=[], include=[], dump_header=False, verbose=False,
          alternate_headers={}):
     """Evaluate the best references cases from `header_generator` against 
     similar results attained from CRDS running on pipeline `context`.
     """
     log.reset()
-    if header_generator in crds.hst.INSTRUMENTS:
-        log.write("Getting headers from", repr(header_generator))
-        headers = HEADER_GENERATORS[instr].get_headers()
-    elif isinstance(header_generator, str): 
-        log.write("Loading pickle", repr(header_generator))
-        headers = cPickle.load(open(header_generator)).values()
-    else:
-        raise ValueError("header_generator should name an instrument, pickle, or eval file.")
+    
+    headers = get_headers(header_generator)
 
-    oldv = log.get_verbose()
     if verbose:
         log.set_verbose(verbose)
 
@@ -484,50 +447,42 @@ def test(header_generator, context="hst.pmap", datasets=None,
     mismatched = {}
     seen = set()
     has_substitution = set()
+    
+    if datasets:
+        log.setverbose()
+    
     for header in headers:
-        dataset_count += 1
-        dataset = header["DATA_SET"].lower()
         
-        if datasets is not None:
-            if dataset not in datasets:
-                continue
-            log.set_verbose(True)
-        
+        dataset = header["DATA_SET"].lower()        
+        if dataset not in datasets:
+            continue
         if dataset in seen:
             log.write("Duplicate dataset", dataset)
             continue
         seen.add(dataset)
-            
+        dataset_count += 1
+        
         if log.VERBOSE_FLAG:
             log.write("Header from database")
             pprint.pprint(header)
         
-        # Check if updated bestrefs have been downloaded as a MAST dataset
-        all_inputs = lookup_key(pmap, header)
-
+        if dataset in alternate_headers:
+            header.update(alternate_headers[dataset])
+            log.verbose("Alternate header")
+            log.verbose(pprint.pformat(header))
+            
         instrument = header["INSTRUME"]
         imap = pmap.get_imap(instrument)
+        filekinds =  include if include else imap.get_filekinds()
 
         mismatches = 0
         matches = 0
-        filekinds = imap.get_filekinds() if not include else include
         for filekind in filekinds:
-            minkey = minimize_inputs(instrument, filekind, all_inputs)
-            if minkey in alternate_headers:
-                minkey_header = alternate_headers[minkey].items()
-                minkey_header = same_keys(header, minkey_header)
-                log.verbose("Using alternate header for", dataset, instrument, filekind, minkey)
-                if log.VERBOSE_FLAG:
-                   pprint.pprint(minkey_header)
-                has_substitution.add(dataset)
-            else:
-                minkey_header = header
-                log.verbose("No alterneate header for", dataset, instrument, filekind, minkey)
             r = imap.get_rmap(filekind)
             try:
-                new_bestref = r.get_best_ref(minkey_header)
-            except selectors.MatchingError:
-                new_bestref = "NO MATCH"
+                new_bestref = r.get_best_ref(header)
+            except selectors.MatchingError, exc:
+                new_bestref = "NO MATCH " + str(exc)
             except crds.rmap.IrrelevantReferenceTypeError, exc:
                 log.verbose("\nIrrelevant", filekind, str(exc))
                 sys.exc_clear()
@@ -537,7 +492,7 @@ def test(header_generator, context="hst.pmap", datasets=None,
             sys.exc_clear()
 
             try:
-                old_bestref = minkey_header[filekind.upper()].lower()
+                old_bestref = header[filekind.upper()].lower()
             except KeyError:
                 log.verbose_warning("No comparison for", repr(filekind))
                 sys.exc_clear()
@@ -549,8 +504,8 @@ def test(header_generator, context="hst.pmap", datasets=None,
     
             if old_bestref != new_bestref:
                 mismatches += 1
-                log.error("mismatch:", dataset, instrument, filekind, old_bestref, new_bestref, minkey)
-                category = (instrument, filekind, minkey, old_bestref, new_bestref)
+                log.error("mismatch:", dataset, instrument, filekind, old_bestref, new_bestref)
+                category = (instrument, filekind, old_bestref, new_bestref)
                 if category not in mismatched:
                     mismatched[category] = set()
                 mismatched[category].add(dataset)
@@ -565,37 +520,45 @@ def test(header_generator, context="hst.pmap", datasets=None,
             log.write(char, eol="", sep="")
         
     elapsed = datetime.datetime.now() - start
+    summarize_results(mismatched, dataset_count, elapsed)
+
+def summarize_results(mismatched, dataset_count, elapsed):
+    """Output summary of mismatch errors."""
     log.write()
     log.write()
     totals = {}
     for category, datasets in mismatched.items():
         instrument, filekind, inputs, old, new = category
         log.write("Erring Inputs:", instrument, filekind, len(datasets), old, new, repr(inputs))
-        covered = sorted(list(datasets.intersection(has_substitution)))
         log.write("Datasets:", instrument, filekind, len(datasets), " ".join(sorted(datasets)))
-        log.write("MAST un-coverage:", 
-                  "none" if len(covered) == len(datasets) 
-                  else " ".join(sorted(list(datasets-set(covered)))))
+#        covered = sorted(list(datasets.intersection(has_substitution)))
+#        log.write("MAST un-coverage:", 
+#                  "none" if len(covered) == len(datasets) 
+#                  else " ".join(sorted(list(datasets-set(covered)))))
         if (instrument, filekind) not in totals:
             totals[(instrument, filekind)] = 0
         totals[(instrument, filekind)] += len(datasets)
     log.write()
     for key in totals:
         log.write(key, totals[key], "mismatch errors")
-
     log.write()
     log.write(instrument, dataset_count, "datasets")
     log.write(instrument, elapsed, "elapsed")
     log.write(instrument, dataset_count/elapsed.total_seconds(), "datasets / sec")
     log.write()
     log.standard_status()
-    log.set_verbose(oldv)
 
-def compare_results(dataset, header, filekind, new, mismatched, inputs):
-    """Compare the old best ref recommendations in `header` to those 
-    in `crds_refs`,  recording a list of error tuples by filekind in
-    dictionary `mismatched`.
-    """
+def get_headers(header_spec):
+    """Get a header generator either as a database generator or a pickle."""
+    if header_spec in crds.hst.INSTRUMENTS:
+        log.write("Getting headers from", repr(header_spec))
+        headers = HEADER_GENERATORS[instr].get_headers()
+    elif isinstance(header_spec, str): 
+        log.write("Loading pickle", repr(header_spec))
+        headers = cPickle.load(open(header_spec)).values()
+    else:
+        raise ValueError("header_spec should name an instrument or pickle file.")
+    return headers
 
 def testall(context="hst.pmap", instruments=None, 
             suffix="_headers.pkl", filekinds=None, datasets=None,
