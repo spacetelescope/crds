@@ -363,19 +363,6 @@ def get_dataset_header(dataset, condition=True):
         return headers
         raise LookupError("More than one header found for " + repr(instrument) + " dataset " + repr(dataset))
     
-def load_alternate_dataset_headers(files=None):
-    """The catalog version of bestrefs is not always the best.   Sometimes full
-    datasets are OTFR'ed and downloaded from MAST to get better recommendations,
-    generally only when CRDS and CDBS disagree.
-    """
-    try:
-        alternate_headers = cPickle.load(open("opus_bestrefs.pickle"))
-        log.info("Loading opus dataset headers.")
-    except:
-        altenerate_header = {}
-        log.info("Loading opus headers failed.")
-    return alternate_headers
-
 def fix_iraf_paths(header):
     """Get rid of the iref$ prefixes on filenames."""
     header2 = {}
@@ -427,17 +414,13 @@ def same_keys(dict1, dict2):
     return { key:val for (key,val) in dict2 if key in dict1 }
 
 def test(header_spec, context="hst.pmap", datasets=[], 
-         ignore=[], include=[], dump_header=False, verbose=False,
-         alternate_headers={}):
+         ignore=[], filekinds=[], alternate_headers={}):
     """Evaluate the best references cases from `header_generator` against 
     similar results attained from CRDS running on pipeline `context`.
     """
     log.reset()
     
-    headers = get_headers(header_generator)
-
-    if verbose:
-        log.set_verbose(verbose)
+    headers = get_headers(header_spec)
 
     pmap = rmap.get_cached_mapping(context)
 
@@ -445,21 +428,12 @@ def test(header_spec, context="hst.pmap", datasets=[],
 
     dataset_count = 0
     mismatched = {}
-    seen = set()
-    has_substitution = set()
-    
-    if datasets:
-        log.setverbose()
     
     for header in headers:
         
-        dataset = header["DATA_SET"].lower()        
-        if dataset not in datasets:
+        dataset = header["DATA_SET"].lower()
+        if datasets and dataset not in datasets:
             continue
-        if dataset in seen:
-            log.write("Duplicate dataset", dataset)
-            continue
-        seen.add(dataset)
         dataset_count += 1
         
         if log.VERBOSE_FLAG:
@@ -468,40 +442,38 @@ def test(header_spec, context="hst.pmap", datasets=[],
         
         if dataset in alternate_headers:
             header.update(alternate_headers[dataset])
-            log.verbose("Alternate header")
-            log.verbose(pprint.pformat(header))
+            if log.VERBOSE_FLAG:
+                log.verbose("Alternate header")
+                log.verbose(pprint.pformat(header))
             
         instrument = header["INSTRUME"]
         imap = pmap.get_imap(instrument)
-        filekinds =  include if include else imap.get_filekinds()
+        if not filekinds:
+            filekinds = imap.get_filekinds()
+
+        crds_refs = pmap.get_best_references(header)
 
         mismatches = 0
         matches = 0
         for filekind in filekinds:
-            r = imap.get_rmap(filekind)
-            try:
-                new_bestref = r.get_best_ref(header)
-            except selectors.MatchingError, exc:
-                new_bestref = "NO MATCH " + str(exc)
-            except crds.rmap.IrrelevantReferenceTypeError, exc:
-                log.verbose("\nIrrelevant", filekind, str(exc))
-                sys.exc_clear()
-                continue
-            except Exception, exc:
-                new_bestref = "FAILED " + str(exc)
-            sys.exc_clear()
-
             try:
                 old_bestref = header[filekind.upper()].lower()
             except KeyError:
-                log.verbose_warning("No comparison for", repr(filekind))
+                log.verbose_warning("No CDBS comparison for", repr(filekind))
                 sys.exc_clear()
                 continue
-        
-            if old_bestref in ["n/a", "*", "none"] or new_bestref == "NOT FOUND n/a":
+
+            if old_bestref in ["n/a", "*", "none"]:
                 log.verbose("Ignoring", repr(filekind), "as n/a")
                 continue
     
+            try:
+                new_bestref = crds_refs[filekind.lower()]
+            except KeyError:
+                log.verbose_warning("No CRDS result for", filekind, "of", dataset)
+                sys.exc_clear()
+                continue
+
             if old_bestref != new_bestref:
                 mismatches += 1
                 log.error("mismatch:", dataset, instrument, filekind, old_bestref, new_bestref)
@@ -528,13 +500,9 @@ def summarize_results(mismatched, dataset_count, elapsed):
     log.write()
     totals = {}
     for category, datasets in mismatched.items():
-        instrument, filekind, inputs, old, new = category
-        log.write("Erring Inputs:", instrument, filekind, len(datasets), old, new, repr(inputs))
+        instrument, filekind, old, new = category
+        log.write("Erring Inputs:", instrument, filekind, len(datasets), old, new)
         log.write("Datasets:", instrument, filekind, len(datasets), " ".join(sorted(datasets)))
-#        covered = sorted(list(datasets.intersection(has_substitution)))
-#        log.write("MAST un-coverage:", 
-#                  "none" if len(covered) == len(datasets) 
-#                  else " ".join(sorted(list(datasets-set(covered)))))
         if (instrument, filekind) not in totals:
             totals[(instrument, filekind)] = 0
         totals[(instrument, filekind)] += len(datasets)
@@ -558,13 +526,14 @@ def get_headers(header_spec):
         headers = cPickle.load(open(header_spec)).values()
     else:
         raise ValueError("header_spec should name an instrument or pickle file.")
+    headers = {hdr["DATA_SET"].lower() : hdr for hdr in headers}.values() 
     return headers
 
-def testall(context="hst.pmap", instruments=None, 
-            suffix="_headers.pkl", filekinds=None, datasets=None,
-            dump_header=False, path=DEFAULT_PKL_PATH, profile=False):
-    alternate_headers = load_alternate_dataset_headers()
-    if instruments is None:
+def testall(context="hst.pmap", instruments=[], 
+            suffix="_headers.pkl", filekinds=[], datasets=[],
+            path=DEFAULT_PKL_PATH, profile=False):
+    alternate_headers = opus_bestref.load_alternate_dataset_headers()
+    if not instruments:
         pmap = rmap.get_cached_mapping(context)
         instruments = pmap.selections
     for instr in instruments:
@@ -573,12 +542,12 @@ def testall(context="hst.pmap", instruments=None,
         headers = path+instr+suffix
         if profile:
             cProfile.runctx("test(headers, context, "
-                            "include=filekinds, datasets=datasets, "
-                            "dump_header=dump_header, alternate_headers=alternate_headers)",
+                            "filekinds=filekinds, datasets=datasets, "
+                            "alternate_headers=alternate_headers)",
                             globals(), locals(), instr + ".stats")
         else:
-            test(headers, context, datasets=datasets, include=filekinds,
-                 dump_header=dump_header, alternate_headers=alternate_headers) 
+            test(headers, context, datasets=datasets, filekinds=filekinds,
+                 alternate_headers=alternate_headers) 
         log.write()
 
 def dump(instr, suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
@@ -620,19 +589,19 @@ def main():
         if len(sys.argv) > 2:
             instruments = [instr.lower() for instr in sys.argv[2].split(",")]
         else:
-            instruments = None
-            filekinds = None
+            instruments = []
+            filekinds = []
         if len(sys.argv) > 3:
             filekinds = [kind.lower() for kind in sys.argv[3].split(",")]
         else:
-            filekinds = None
+            filekinds = []
         if len(sys.argv) > 4:
             datasets = [d.upper() for d in sys.argv[4].split(",")]
+            log.set_verbose()
         else:
-            datasets = None
+            datasets = []
         testall(instruments=instruments, filekinds=filekinds, datasets=datasets,
-                dump_header=log.get_verbose(), path=DEFAULT_PKL_PATH, 
-                profile=profile)
+                path=DEFAULT_PKL_PATH, profile=profile)
     else:
         print """usage:
 python cdbs_db.py dumpall

@@ -3,8 +3,10 @@ runs in OPUS,  which under some circumstances might have different answers
 than the catalog.
 """
 import sys
+import pprint
+import cPickle
 
-import crds.pysh as pysh
+from crds import pysh, log
 
 DMS_HOST = "dmsdevvm4.stsci.edu"
 
@@ -25,8 +27,30 @@ def opus_bestrefs(dataset):
             bestrefs[keyword] = value
     return bestrefs
 
+def load_alternate_dataset_headers():
+    try:
+        alternate_headers = cPickle.load(open("opus_bestrefs.pickle"))
+        log.info("Loading opus dataset headers.")
+    except:
+        alternate_headers = {}
+        log.warning("Loading opus headers failed.")
+    return alternate_headers
+
+def main():
+    alternates = load_alternate_dataset_headers()
+    for dataset in sys.argv[1:]:
+        if log.VERBOSE_FLAG:
+            log.write(dataset)
+        else:
+            log.write(".", eol="", sep="")
+        try:
+            bestrefs = opus_bestrefs(dataset)
+            alternates[dataset] = bestrefs
+            log.verbose("Bestrefs for", dataset, "=", bestrefs)
+        except Exception, exc:
+            log.error("Exception on dataset", dataset)
+    with open("opus_bestrefs.pickle", "w+") as f:
+        cPickle.dump(alternates, f)
+
 if __name__ == "__main__":
-    print opus_bestrefs(sys.argv[1])
-
-
-            
+    main()
