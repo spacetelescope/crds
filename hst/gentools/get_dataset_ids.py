@@ -19,10 +19,12 @@ def get_mismatched_objects(filename="testall.err"):
         objects.append((count, datasets))
     return objects
 
-def main(filename, important):    
+def main(filename, important):
+    ids = []
     for mismatched in get_mismatched_objects(filename):
         if mismatched[0] > important:
-            print " ".join(mismatched[1])
+            ids.extend(mismatched[1])
+    print " ".join(ids)
 
 if __name__ == "__main__":
     usage("<source_file> <test_count_importance_threshhold>", 2, 2);

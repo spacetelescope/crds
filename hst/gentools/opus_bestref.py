@@ -10,6 +10,8 @@ from crds import pysh, log
 
 DMS_HOST = "dmsdevvm4.stsci.edu"
 
+BESTREF_PKL = "../../../datasets/opus_bestref.pkl"
+
 def remote_bestrefs_output(dataset):
     dataset = dataset.lower()
     lines = pysh.lines("ssh ${DMS_HOST} bestref.py -m dball -d ${dataset}")
@@ -29,7 +31,7 @@ def opus_bestrefs(dataset):
 
 def load_alternate_dataset_headers():
     try:
-        alternate_headers = cPickle.load(open("opus_bestrefs.pickle"))
+        alternate_headers = cPickle.load(open(BESTREF_PKL))
         log.info("Loading opus dataset headers.")
     except:
         alternate_headers = {}
@@ -49,7 +51,7 @@ def main():
             log.verbose("Bestrefs for", dataset, "=", bestrefs)
         except Exception, exc:
             log.error("Exception on dataset", dataset)
-    with open("opus_bestrefs.pickle", "w+") as f:
+    with open(BESTREF_PKL, "w+") as f:
         cPickle.dump(alternates, f)
 
 if __name__ == "__main__":
