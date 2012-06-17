@@ -1,0 +1,14 @@
+#! /bin/tcsh
+
+rm ../../../datasets/opus_bestref.pkl  opus_bestrefs.err
+
+./regen |& tee regen.out.1
+
+./get_opus_bestrefs |& tee opus_bestrefs.err
+
+mv testall.err testall.err.1
+
+./regen |& tee regen.out.2
+
+cp testall.err testall.err.2
+

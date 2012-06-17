@@ -5,6 +5,9 @@
 # theory this should probably be a make file,  in practice the output
 # needs some review anyway.
 
+# make sure CRDS_PATH is set up right for development
+source env.csh  
+
 # Regenerate the CDBS reference file map, basically a cache of the 
 # /grp/hst/cdbs dir listing to use to find CDBS file paths fast.
 (cd ..; python locate.py)
@@ -22,16 +25,16 @@
 # Dump the DADSOPS dataset catalogs into pickles for testing consistent with
 # the current rmaps;  the best refs in DADSOPS
 echo "Generating rmaps"
-(./gen_rmaps >& gen_rmaps.out; grep -E'error|warn' gen_rmaps.out)
+(./gen_rmaps >& gen_rmaps.out; grep -E 'error|warn' gen_rmaps.out)
 echo "Generating contexts"
-(python gen_contexts.py >& gen_contexts.out; grep -E'error|warn' gen_contexts.out)
+(python gen_contexts.py >& gen_contexts.out; grep -E 'error|warn' gen_contexts.out)
 
 echo "Dumping catalog datasets"
 (python cdbs_db.py dumpall;)
 
 # This should be dynamic now in cdbs_db.py
 # echo "Patching dataset pickles with MAST special case datasets"
-# (./fix_pickles ../../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E"error|warn" fix_pickles.out)
+# (./fix_pickles ../../../../datasets/*_raw.fits >& fix_pickles.out;  grep -E 'error|warn' fix_pickles.out)
 
 # Examine cdbscatalog.dat to generate the maps relating filekinds,
 # CDBS file suffixes, etc.
@@ -42,9 +45,11 @@ echo "Dumping catalog datasets"
 
 # Run the CRDS certifier on the new rmaps
 echo "Certifying all mappings"
-(cd certify_logs; ./certify_all  >& certify_all.log;   grep -E'error|warn' certify_all.log)
+(cd certify_logs; ./certify_all  >& certify_all.log;   grep -E 'error|warn' certify_all.log)
 
 # Run comparison tests on all HST datasets.
 echo "Testing all datasets"
-(./testall >& testall.err;  grep -E 'error|warn|datasets' testall.err | grep -v -E'MAST|pickle')
+(./testall >& testall.err;  grep -E 'error|warn|datasets' testall.err | grep -v -E 'MAST|pickle')
+
+mv *.stats ../../../stats
 

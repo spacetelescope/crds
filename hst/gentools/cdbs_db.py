@@ -492,9 +492,9 @@ def test(header_spec, context="hst.pmap", datasets=[],
             log.write(char, eol="", sep="")
         
     elapsed = datetime.datetime.now() - start
-    summarize_results(mismatched, dataset_count, elapsed)
+    summarize_results(instrument, mismatched, dataset_count, elapsed)
 
-def summarize_results(mismatched, dataset_count, elapsed):
+def summarize_results(instrument, mismatched, dataset_count, elapsed):
     """Output summary of mismatch errors."""
     log.write()
     log.write()
