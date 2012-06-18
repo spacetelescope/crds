@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:16.448411',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:45.610836',
     'filekind' : 'SHADFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : 'ee796e3ffbe5aa6f6d9c807b9243679e2bc36b62',
+    'sha1sum' : '30a62994e23fe0dc68c9e1750befa6cc42541924',
 }
 
 selector = Match({

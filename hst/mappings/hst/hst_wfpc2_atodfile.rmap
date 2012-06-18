@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:38.201498',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:47:10.043969',
     'filekind' : 'ATODFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '032b3a27f5d90a51c2d678b34b291cff5dcba228',
+    'sha1sum' : '61d7a69bfcdd7e22d07a1513db73f6bc2ee7d1ed',
 }
 
 selector = Match({

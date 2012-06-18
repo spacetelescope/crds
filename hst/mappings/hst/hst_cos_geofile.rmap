@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:21.545275',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:49.313505',
     'filekind' : 'GEOFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "FUV")',
-    'sha1sum' : '6c748e343b51a5f9d1361c29f84750048f9641c3',
+    'sha1sum' : '2551b48828fe10de442ed91c83a4976ab33865ef',
 }
 
 selector = Match({

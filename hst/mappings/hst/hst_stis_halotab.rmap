@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:28.407992',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:58.658907',
     'filekind' : 'HALOTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '3950236f299fe0a9c3337bca7f98da8efb8fe184',
+    'sha1sum' : '90023fd149d0378a2635f53c12e180a158dcfde8',
 }
 
 selector = Match({
