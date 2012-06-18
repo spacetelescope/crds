@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:31.544653',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:47:01.627894',
     'filekind' : 'ATODTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '2cf8b194473c8cb9a4ee9e3d97564a9dc9fe29be',
+    'sha1sum' : '36a22be765823fcfd018f49a7147913106b6d70a',
 }
 
 selector = Match({

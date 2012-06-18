@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:12:16.950914',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:45.844543',
     'filekind' : 'SPOTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
-    'sha1sum' : '30be58bff29802d89de63cd9ebee826844ef3cb8',
+    'sha1sum' : 'ed99c3e5b3571037bd89a7bbac38dcd01e521619',
 }
 
 selector = Match({

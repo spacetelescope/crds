@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-10 14:10:54.716124',
+    'derived_from' : 'generated from CDBS database 2012-06-18 01:45:00.685485',
     'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
-    'sha1sum' : '0e2608ca2e2f9882438ea2853bddb1d863d39f2b',
+    'sha1sum' : '758efb7370d6152d54180be362d174ae79192c86',
 }
 
 selector = Match({
