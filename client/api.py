@@ -152,6 +152,21 @@ def get_crds_server():
 
 set_crds_server(URL)
 
+def get_download_mode():
+    """Return the mode used to download references and mappings,  either normal
+    "http" file transfer or json "rpc" based.   In theory HTTP optimizes better 
+    with direct support for static files from Apache,  but RPC is more flexible
+    and works through firewalls.   The key distinction is that HTTP mode can
+    work with a server which is not the same as the CRDS server (perhaps an
+    archive server).   Once/if a public archive server is available with normal 
+    URLs,  that wopuld be the preferred means to get references and mappings.
+    """
+    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "rpc").lower()
+    assert mode in ["http","rpc"], \
+        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (preferred) " + \
+        "or 'rpc' (through firewall)."
+    return mode
+
 # =============================================================================
 def srepr(o):
     """Return the repr() of the str() of `o`"""
@@ -265,7 +280,13 @@ class FileCacher(object):
             return urllib2.urlopen(url).read()
         except Exception, exc:
             raise download_exc(pipeline_context, name, exc)
-
+        
+    def _download(self, pipeline_context, name):
+        if get_download_mode() == "http":
+            return self._http_get_data(pipeline_context, name)
+        else:
+            return self._rpc_get_data(pipeline_context, name)
+            
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
         """Given a list of basename `mapping_names` which are pertinent to the 
         given `pipeline_context`,   cache the mappings locally where they can 
@@ -280,7 +301,7 @@ class FileCacher(object):
                 log.verbose("Cache miss. Fetching[%d]" % i, repr(name), 
                             "to", repr(localpath))
                 utils.ensure_dir_exists(localpath)
-                contents = self._http_get_data(pipeline_context, name)
+                contents = self._download(pipeline_context, name)
                 open(localpath,"w+").write(contents)
             else:
                 log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), 

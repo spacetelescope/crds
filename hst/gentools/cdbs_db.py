@@ -451,7 +451,7 @@ def test(header_spec, context="hst.pmap", datasets=[],
         if not filekinds:
             filekinds = imap.get_filekinds()
 
-        crds_refs = pmap.get_best_references(header)
+        crds_refs = pmap.get_best_references(header, include=filekinds)
 
         mismatches = 0
         matches = 0
@@ -596,7 +596,7 @@ def main():
         else:
             filekinds = []
         if len(sys.argv) > 4:
-            datasets = [d.upper() for d in sys.argv[4].split(",")]
+            datasets = [d.lower() for d in sys.argv[4].split(",")]
             log.set_verbose()
         else:
             datasets = []

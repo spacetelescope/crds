@@ -5,12 +5,12 @@ header = {
     'observatory' : 'JWST',
     'parkey' : ('INSTRUME',),
     'description' : '',
-    'sha1sum' : '4594fae89773e170a631028b4f81add5e5f0b0d7',
+    'sha1sum' : '5c4096fd02e2e33874c18c84f88611b91877c74a',
 }
 
 selector = {
     'NIRCAM' : 'jwst_nircam.imap',
-    'NIRSPEC' : 'jwst_nirspec.imap',
+    # 'NIRSPEC' : 'jwst_nirspec.imap',
     'MIRI' : 'jwst_miri.imap',
 }
 
