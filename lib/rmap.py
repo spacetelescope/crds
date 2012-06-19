@@ -743,7 +743,7 @@ class ReferenceMapping(Mapping):
         self._tpn_valid_values = self.get_valid_values_map()
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()  
-        self._rmap_relevance_expr = getattr(self, "rmap_relevance", "ALWAYS")
+        self._rmap_relevance_expr = getattr(self, "rmap_relevance", "always")
         self._parkey_relevance_exprs = getattr(self, "parkey_relevance", {})
 
         # header precondition method, e.g. crds.hst.acs.precondition_header
@@ -882,7 +882,7 @@ class ReferenceMapping(Mapping):
         """
         # header keys and values are upper case.  rmap attrs are lower case.
         try:
-            if self._rmap_relevance_expr == "ALWAYS":
+            if self._rmap_relevance_expr == "always":
                 relevant = True
             else:
                 relevant = eval(self._rmap_relevance_expr, {}, header)
