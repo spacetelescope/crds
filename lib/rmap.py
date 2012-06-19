@@ -639,8 +639,6 @@ class InstrumentContext(Mapping):
                 refs[filekind] = self.get_best_ref(filekind, header)
             except IrrelevantReferenceTypeError:
                 refs[filekind] = "NOT FOUND n/a"
-#                log.verbose("Reference type",repr(filekind),
-#                            "is irrelevant for this dataset.")
             except Exception, exc:
                 refs[filekind] = "NOT FOUND " + str(exc)
         return refs
@@ -884,12 +882,12 @@ class ReferenceMapping(Mapping):
         """
         # header keys and values are upper case.  rmap attrs are lower case.
         try:
-            if self._rmap_relevance_expr != "always":
+            if self._rmap_relevance_expr == "ALWAYS":
+                relevant = True
+            else:
                 relevant = eval(self._rmap_relevance_expr, {}, header)
                 log.verbose("Filekind ", self.instrument, self.filekind, 
                             "is relevant: ", relevant)
-            else:
-                relevant = True
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
@@ -901,15 +899,15 @@ class ReferenceMapping(Mapping):
         """Evaluate any relevance expression for each parkey, and if it's
         false,  then change the value to N/A.
         """
-        header = dict(header)
+        header2 = dict(header)
         for parkey in self._required_parkeys:  # ensure all parkeys defined
             if parkey not in header:
-                header[parkey] = "NOT PRESENT"
-        original = dict(header)
-        for parkey in self._required_parkeys:
+                header2[parkey] = "NOT PRESENT"
+        header = dict(header)  # copy
+        for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()
             if lparkey in self._parkey_relevance_exprs:
-                relevant = eval(self._parkey_relevance_exprs[lparkey], {}, original)
+                relevant = eval(self._parkey_relevance_exprs[lparkey], {}, header2)
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant)
                 if not relevant:
