@@ -297,7 +297,7 @@ class Selector(object):
         """
         self._check_defined(header)
         for name in self._parameters:
-            value = header[name] if name in header else "NOT FOUND"
+            value = header.get(name, "NOT PRESENT")
             self._validate_value(name, value, self._parkey_map[name])
     
     def _check_defined(self, header):
@@ -654,7 +654,7 @@ def matcher(key):
     >>> regex.match("foo")
     -1
     >>> regex.match("N/A")
-    1
+    0
     >>> regex.match("*")
     1
     
