@@ -6,8 +6,7 @@ header = {
     'name' : 'tobs_tinstr_tfilekind.rmap',
     'observatory' : 'TOBS',
     'parkey' : (('TEST_CASE',), ('PARAMETER',)),
-    'relevance' : 'ALWAYS',
-    'sha1sum' : 'a7d2f97b606c651f2e7f49a7896137e33dfa1c73',
+    'sha1sum' : 'bcd74064987f7c168a90fa02bb19ba078fae399c',
 }
 
 selector = Match({
