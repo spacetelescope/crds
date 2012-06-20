@@ -32,7 +32,7 @@ def opus_bestrefs(dataset):
 def load_alternate_dataset_headers():
     try:
         alternate_headers = cPickle.load(open(BESTREF_PKL))
-        log.info("Loading opus dataset headers.")
+        log.info("Loading opus dataset headers", BESTREF_PKL)
     except:
         alternate_headers = {}
         log.warning("Loading opus headers failed.")

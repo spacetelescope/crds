@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:53.594419',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:15.336578',
     'filekind' : 'PMSKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '462d450041a2012817bbaf8a3373067ea9c26f7f',
+    'sha1sum' : 'f24b770968129f2d0d6a53239f28bce4bfa49213',
 }
 
 selector = Match({

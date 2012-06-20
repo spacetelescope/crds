@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:58.176204',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:22.612025',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR == "CCD")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'ba256dad8c20fcc04377cc5d7416f6ac5a5af3fb',
+    'sha1sum' : 'dff8842f4ede10563fb40a4703a693865c467524',
 }
 
 selector = Match({

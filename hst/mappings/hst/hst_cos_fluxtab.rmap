@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:49.297936',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:08.599038',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '266d137fe3c0ea23fccb2c404326429eee491a20',
+    'sha1sum' : '7d471fac1da5ec4a79d77bcfa09935de0e128725',
 }
 
 selector = Match({

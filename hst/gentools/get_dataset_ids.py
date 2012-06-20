@@ -22,7 +22,7 @@ def get_mismatched_objects(filename="testall.err"):
 def main(filename, important):
     ids = []
     for mismatched in get_mismatched_objects(filename):
-        if mismatched[0] > important:
+        if mismatched[0] >= important:
             ids.extend(mismatched[1])
     print " ".join(ids)
 

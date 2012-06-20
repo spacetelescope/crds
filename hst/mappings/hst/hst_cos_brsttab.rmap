@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:46.988561',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:04.621699',
     'filekind' : 'BRSTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "FUV" and OBSMODE == "TIME-TAG")',
-    'sha1sum' : 'b85efa655338b3483ca174aaea87137984784d85',
+    'sha1sum' : '32096de77fa15a582160ec58a6269c89d7dccad0',
 }
 
 selector = Match({
