@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:53.514513',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:15.255531',
     'filekind' : 'NLINFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '9c7154973e17985294338fcd6434a3700c41de68',
+    'sha1sum' : '40475dcb1bc10c68766822c931fa1152ef76b76a',
 }
 
 selector = Match({

@@ -1,8 +1,8 @@
 #! /bin/tcsh
 
 # This updates opus_bestrefs.pkl with the erring datasets listed 
-# in testall.err.   To regenerate opus_bestrefs.pkl entirely it
+# in file $1.   To regenerate opus_bestrefs.pkl entirely it
 # must be removed prior to running this.
 
-python opus_bestref.py `python get_dataset_ids.py testall.err 1` 
+python opus_bestref.py --verbose `python get_dataset_ids.py $1 1` 
 

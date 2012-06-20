@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:47:11.330020',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:48.085888',
     'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'a0ed173201aa562050ec4eaefae16f5968ed0836',
+    'sha1sum' : '57f0eeed56793d2ec6c89f9e05e7b832ff69a6b2',
 }
 
 selector = Match({

@@ -1,17 +1,18 @@
 import sys
 
-from crds import log, utils
+from crds import log, utils, timestamp
 
 # ===========================================================================    
 
 ACS_HALF_CHIP_COLS = 2048         #used in custom bias selection algorithm
 
-SM4 = "2009-05-14 00:00"  # date beyond which an exposure was
-                          # taken in the SM4 configuration
-                          # (day 2009.134 = May 14 2009,
-                          #  after HST was captured by 
-                          #  the shuttle during SM4, and
-                          #  pre-SM4 exposures had ceased)
+SM4 = timestamp.reformat_date("2009-05-14 00:00")
+# date beyond which an exposure was
+# taken in the SM4 configuration
+# (day 2009.134 = May 14 2009,
+#  after HST was captured by 
+#  the shuttle during SM4, and
+#  pre-SM4 exposures had ceased)
 
 def _precondition_header_biasfile(header_in):
     """Mutate the incoming dataset header based upon hard coded rules
@@ -19,7 +20,6 @@ def _precondition_header_biasfile(header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
-    
     try:
         numcols = float(header["NUMCOLS"])
     except ValueError:
@@ -27,8 +27,7 @@ def _precondition_header_biasfile(header_in):
         sys.exc_clear()
     else:
         # if pre-SM4 and NUMCOLS > HALF_CHIP
-        exptime = utils.condition_value(
-            header["DATE-OBS"] + " " + header["TIME-OBS"])
+        exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
         if (exptime < SM4) and numcols > ACS_HALF_CHIP_COLS:
             if header["CCDAMP"] in ["A","D"]: 
                 log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
@@ -36,7 +35,7 @@ def _precondition_header_biasfile(header_in):
                 header["CCDAMP"] = "AD"
             elif header["CCDAMP"] in ["B","C"]:  
                 log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
-                            "to AD for NUMCOLS = "+ header["NUMCOLS"])
+                            "to BC for NUMCOLS = "+ header["NUMCOLS"])
                 header["CCDAMP"] = "BC"
 
     if header['DETECTOR'] == "WFC" and \
@@ -54,6 +53,7 @@ def _precondition_header_biasfile(header_in):
 
 def precondition_header(rmap, header):
     if rmap.filekind == "biasfile":
+        return header
         return _precondition_header_biasfile(header)
     else:
         return header
@@ -62,7 +62,7 @@ def precondition_header(rmap, header):
 
 
 def _fallback_biasfile(header_in):
-    header = dict(header_in)
+    header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
                "NUMCOLS=" + repr(header['NUMCOLS']),
                "NUMROWS=" + repr(header['NUMROWS']),

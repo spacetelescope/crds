@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-18 01:46:20.961782',
+    'derived_from' : 'generated from CDBS database 2012-06-19 15:22:32.451211',
     'filekind' : 'MDRIZTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '7ce3caa8bc54dd5e9502a674ac0725487375fb12',
+    'sha1sum' : 'db9b7a6f29bf446f1dcfd0d6691ddaac205506dd',
 }
 
 selector = Match({
