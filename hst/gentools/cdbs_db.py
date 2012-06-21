@@ -414,7 +414,7 @@ def same_keys(dict1, dict2):
     return { key:val for (key,val) in dict2 if key in dict1 }
 
 def test(header_spec, context="hst.pmap", datasets=[], 
-         ignore=[], filekinds=[], alternate_headers={}):
+         ignore=[], filekinds=[], alternate_headers={}, inject_errors=None):
     """Evaluate the best references cases from `header_generator` against 
     similar results attained from CRDS running on pipeline `context`.
     """
@@ -445,6 +445,9 @@ def test(header_spec, context="hst.pmap", datasets=[],
             if log.VERBOSE_FLAG:
                 log.verbose("Alternate header")
                 log.verbose(pprint.pformat(header))
+        
+        if inject_errors:
+            header = inject_random_error(inject_errors, dataset, header)
             
         instrument = header["INSTRUME"]
         imap = pmap.get_imap(instrument)
@@ -531,7 +534,7 @@ def get_headers(header_spec):
 
 def testall(context="hst.pmap", instruments=[], 
             suffix="_headers.pkl", filekinds=[], datasets=[],
-            path=DEFAULT_PKL_PATH, profile=False):
+            path=DEFAULT_PKL_PATH, profile=False, inject_errors=None):
     alternate_headers = opus_bestref.load_alternate_dataset_headers()
     if not instruments:
         pmap = rmap.get_cached_mapping(context)
@@ -543,12 +546,50 @@ def testall(context="hst.pmap", instruments=[],
         if profile:
             cProfile.runctx("test(headers, context, "
                             "filekinds=filekinds, datasets=datasets, "
-                            "alternate_headers=alternate_headers)",
+                            "alternate_headers=alternate_headers,"
+                            "inject_errors=inject_errors)",
                             globals(), locals(), instr + ".stats")
         else:
             test(headers, context, datasets=datasets, filekinds=filekinds,
-                 alternate_headers=alternate_headers) 
+                 alternate_headers=alternate_headers, inject_errors=inject_errors) 
         log.write()
+
+def inject_random_error(inject_errors, dataset, header):
+    """Randomly set an element of dataset to 'foo'"""
+    words = inject_errors.split(",")
+    if len(words) == 1:
+        thresh = float(words[0])
+        mode = "bestrefs"
+    else:
+        assert len(words) == 2, "-random-errors=[params|bestrefs|both|<thresh>][,<thresh>]"
+        mode = words[0]
+        assert mode in ["params","bestrefs","both"],"-random-errors=[params|bestrefs|both|<thresh>][,<thresh>]"
+        thresh = float(words[1])
+
+    # log.write("mode",repr(mode),"thresh",repr(thresh))
+
+    if random.random() >= thresh:
+        return header
+
+    witherr = dict(header)
+    keys = witherr.keys()
+    key = None
+
+    if mode == "params":
+        while (not key) or key.endswith(("FILE","TAB")) or key in ["INSTRUME","DATA_SET",]:
+            which = int(random.random()*len(keys))
+            key = keys[which]
+    elif mode == "bestrefs":
+        while (not key) or not key.endswith(("FILE","TAB")):
+            which = int(random.random()*len(keys))
+            key = keys[which]
+    else: # both
+        while (not key) or key in ["INSTRUME","DATA_SET",]:
+            which = int(random.random()*len(keys))
+            key = keys[which]
+    log.info("Injecting error on dataset",repr(dataset),"at key",repr(key),"=",repr("foo"))
+    witherr[key] = "foo"
+    return witherr
 
 def dump(instr, suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
     """Store `ncases` header records taken from DADSOPS for `instr`ument in 
@@ -579,6 +620,17 @@ def main():
         profile = False
     else:
         profile = True
+    for i, arg in enumerate(sys.argv):
+        if arg.startswith("--random-errors"):
+            parts = arg.split("=")
+            if len(parts) == 1:
+                inject_errors = "0.005"
+            else:
+                inject_errors = parts[1]
+            del sys.argv[i]
+            break
+    else:
+        inject_errors = None
     if sys.argv[1] == "dumpall":
         dumpall()
     elif sys.argv[1] == "dump":
@@ -601,7 +653,7 @@ def main():
         else:
             datasets = []
         testall(instruments=instruments, filekinds=filekinds, datasets=datasets,
-                path=DEFAULT_PKL_PATH, profile=profile)
+                path=DEFAULT_PKL_PATH, profile=profile, inject_errors=inject_errors)
     else:
         print """usage:
 python cdbs_db.py dumpall
