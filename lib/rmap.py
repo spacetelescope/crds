@@ -70,7 +70,7 @@ import pyfits
 
 from .compat import namedtuple
 
-from . import (log, utils, selectors, data_file)
+from . import (log, utils, selectors, data_file, config)
 from crds.selectors import ValidationError
 
 try:
@@ -954,27 +954,6 @@ def load_mapping(mapping, **keys):
     return cls.from_file(mapping, **keys)
     
 # =============================================================================
-
-DEFAULT_CRDS_DIR = "./crds"
-
-def get_crds_mappath():
-    """get_crds_mappath() returns the base path of the CRDS mapping directory 
-    tree where CRDS rules files (mappings) are stored.
-    """
-    try:
-        return os.environ["CRDS_MAPPATH"]
-    except KeyError:
-        return os.environ.get("CRDS_PATH", DEFAULT_CRDS_DIR) + "/mappings"
-
-def get_crds_refpath():
-    """get_crds_refpath returns the base path of the directory tree where CRDS 
-    reference files are stored.
-    """
-    try:
-        return os.environ["CRDS_REFPATH"]
-    except KeyError:
-        return os.environ.get("CRDS_PATH", DEFAULT_CRDS_DIR) + "/references"
-
 # =============================================================================
 
 def locate_file(filepath, observatory):
@@ -993,13 +972,13 @@ def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
         return ref
-    return os.path.join(get_crds_refpath(), observatory, ref)
+    return os.path.join(config.get_crds_refpath(), observatory, ref)
 
 def list_references(glob_pattern, observatory):
     """Return the list of references for `observatory` which match `glob_pattern`,
     nominally the cached references.
     """    
-    path = os.path.join(get_crds_refpath(), observatory, glob_pattern)
+    path = os.path.join(config.get_crds_refpath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
 # =============================================================================
@@ -1016,13 +995,13 @@ def locate_mapping(mappath, observatory=None):
         return mappath
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
-    return os.path.join(get_crds_mappath(), observatory, mappath)
+    return os.path.join(config.get_crds_mappath(), observatory, mappath)
 
 def list_mappings(glob_pattern, observatory):
     """Return the list of mappings for `observatory` which match `glob_pattern`,
     nominally the cached mappings.
     """    
-    path = os.path.join(get_crds_mappath(), observatory, glob_pattern)
+    path = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
 def mapping_exists(mapping):
