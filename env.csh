@@ -2,7 +2,7 @@
 
 # If you don't care to much about CRDS file organization,  use CRDS_PATH
 # to define the root of a single tree of CRDS mapping and reference cache files.
-setenv CRDS_PATH /Users/jmiller/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/crds
+# setenv CRDS_PATH /Users/jmiller/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/crds
 # unsetenv CRDS_PATH
 
 # The URL for the CRDS server used by remote service calls,  
