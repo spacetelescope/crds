@@ -71,6 +71,11 @@ import pyfits
 from .compat import namedtuple
 
 from . import (log, utils, selectors, data_file, config)
+
+# XXX For backward compatability until refactored away.
+from .config import locate_file, locate_mapping, locate_reference
+from .config import mapping_exists, is_mapping
+
 from crds.selectors import ValidationError
 
 try:
@@ -231,7 +236,7 @@ class Mapping(object):
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation.
         """
-        where = locate_mapping(basename)
+        where = config.locate_mapping(basename)
         text = open(where).read()
         header, selector = cls._parse_header_selector(text, where)
         mapping = cls(basename, header, selector, **keys)
@@ -299,7 +304,7 @@ class Mapping(object):
         known to CRDS.
         """
         return [ mapping for mapping in self.mapping_names() \
-                if not mapping_exists(mapping) ]
+                if not config.mapping_exists(mapping) ]
 
     @property
     def locate(self):
@@ -372,7 +377,7 @@ class Mapping(object):
         """Compute the rmap checksum over the original file contents.
         Skip over the sha1sum line.   Preserves comments.
         """
-        where = locate_mapping(self.filename)
+        where = config.locate_mapping(self.filename)
         # Compute the new checksum over everything but the sha1sum line.
         # This will fail if sha1sum appears for some other reason.  It won't ;-)
         lines = [line for line in open(where).readlines() \
@@ -956,24 +961,6 @@ def load_mapping(mapping, **keys):
 # =============================================================================
 # =============================================================================
 
-def locate_file(filepath, observatory):
-    """Figure out the absolute pathname where CRDS will stash a reference
-    or mapping file.  If filepath already has a directory,  return filepath
-    as-is.   Otherwise,  return the *client* path for a file.
-    """
-    if os.path.dirname(filepath):
-        return filepath
-    if is_mapping(filepath):
-        return locate_mapping(filepath, observatory)
-    else:
-        return locate_reference(filepath, observatory)
-
-def locate_reference(ref, observatory):
-    """Return the absolute path where reference `ref` should be located."""
-    if os.path.dirname(ref):
-        return ref
-    return os.path.join(config.get_crds_refpath(), observatory, ref)
-
 def list_references(glob_pattern, observatory):
     """Return the list of references for `observatory` which match `glob_pattern`,
     nominally the cached references.
@@ -983,51 +970,12 @@ def list_references(glob_pattern, observatory):
 
 # =============================================================================
 
-def is_mapping(mapping):
-    """Return True IFF `mapping` has an extension indicating a CRDS mapping 
-    file.
-    """
-    return mapping.endswith((".pmap", ".imap", ".rmap"))
-
-def locate_mapping(mappath, observatory=None):
-    """Return the path where CRDS mapping `mappath` should be."""
-    if os.path.dirname(mappath):
-        return mappath
-    if observatory is None:
-        observatory = mapping_to_observatory(mappath)
-    return os.path.join(config.get_crds_mappath(), observatory, mappath)
-
 def list_mappings(glob_pattern, observatory):
     """Return the list of mappings for `observatory` which match `glob_pattern`,
     nominally the cached mappings.
     """    
     path = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
-
-def mapping_exists(mapping):
-    """Return True IFF `mapping` exists on the local file system."""
-    return os.path.exists(locate_mapping(mapping))
-
-def mapping_to_observatory(context_file):
-    """
-    >>> mapping_to_observatory('hst_acs_biasfile.rmap')
-    'hst'
-    """
-    return os.path.basename(context_file).split("_")[0].split(".")[0]
-
-def mapping_to_instrument(context_file):
-    """
-    >>> mapping_to_instrument('hst_acs_biasfile.rmap')
-    'acs'
-    """
-    return os.path.basename(context_file).split("_")[1].split(".")[0]
-
-def mapping_to_filekind(context_file):
-    """
-    >>> mapping_to_filekind('hst_acs_biasfile.rmap')
-    'biasfile'
-    """
-    return os.path.basename(context_file).split("_")[2].split(".")[0]
 
 def mapping_type(mapping):
     """
@@ -1049,7 +997,7 @@ def mapping_type(mapping):
     'rmap'
     """
     if isinstance(mapping, (str, unicode)):
-        if is_mapping(mapping):
+        if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:
             mapping = load_mapping(mapping)

@@ -2,8 +2,30 @@
 # crds.client
 __version__ = "0.1.0"
 
-from crds.client import getreferences, cache_references, get_default_context, CrdsLookupError
-from crds.utils import CrdsError
+# ============================================================================
+
+__all__ = [ 
+           "get_default_context", 
+           "getreferences", 
+           "get_cached_mapping",
+           
+           "CrdsError", 
+           "CrdsNetworkError", 
+           "CrdsLookupError", 
+           "CrdsDownloadError",
+           ]
+
+# ============================================================================
+
+from . import config   # module
+from crds.client import CrdsError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
+from crds.client import get_default_context
+
+from .heavy_client import getreferences
+
+from .rmap import get_cached_mapping
+
+# ============================================================================
 
 def handle_version():
     """Handles --version printing for scripts."""

@@ -1,6 +1,6 @@
-"""This module defines the API for CRDS clients.   Functions defined 
-here make remote service calls to the CRDS server to obtain mapping
-or reference files and cache them locally.
+"""This module defines the API for CRDS clients.   Functions defined here make
+remote service calls to the CRDS server to obtain mapping or reference files and
+cache them locally.
 """
 import os
 import os.path
@@ -8,31 +8,41 @@ import base64
 import re
 import urllib2
 
-from crds import log, utils, rmap, data_file
-from crds.client.proxy import CheckingProxy
+from .proxy import CheckingProxy, ServiceError, CrdsError
+
+# heavy versions of core CRDS modules defined in one place, client minimally
+# dependent on core for configuration, logging, and  file path management.
+from crds import utils, log, config
 
 # ==============================================================================
-from crds.client.proxy import ServiceError
-from crds.utils import CrdsError
 
+class CrdsNetworkError(CrdsError):
+    """First network service call failed, nominally connection refused."""
+    
+class CrdsLookupError(CrdsError):
+    """Filekind NOT FOUND but applicable according to current parameters."""
+    
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
 
 def download_exc(pipeline_context, name, exc):    
+    """Generate a standard exception message for download exceptions."""
     return CrdsDownloadError("Error fetching data for " + srepr(name) + 
                             " from context " + srepr(pipeline_context) + 
                             " at server " + srepr(get_crds_server()) +
                             " : " + str(exc))
 
+# ==============================================================================
 
-__all__ = ["getreferences",
+__all__ = [
+           "getreferences",
            "get_default_context",
+           "get_server_info",
            "cache_references",
            
            "set_crds_server", 
            "get_crds_server",
-           
-           
+         
            "list_mappings",
            "get_mapping_names",
            "get_mapping_url", 
@@ -45,38 +55,41 @@ __all__ = ["getreferences",
 
            "get_best_references",
            "cache_best_references",
-           "cache_best_references_for_dataset",
-           
-           "get_minimum_header",
            
            "CrdsError",
            "CrdsLookupError",
+           "CrdsNetworkError",
            "CrdsDownloadError",
-           "ServiceError"]
+           "ServiceError",
+           
+           # deprecated
+           "cache_best_references_for_dataset",
+           "get_minimum_header",           
+           ]
 
 # ============================================================================
 
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
-    """This is the top-level get reference call for all of CRDS.  Based on
-    `parameters`, getreferences() will download/cache the
-    corresponding best reference and mapping files and return a map
-    from reference file types to local reference file locations.
+    """
+    This is the top-level get reference call for all of CRDS.  Based on `parameters`, getreferences() will
+    download/cache the corresponding best reference and mapping files and return a map from reference file types to
+    local reference file locations.
     
-    `parameters` should be a dictionary-like object mapping { str: str } for
-    critical best reference related input parameters.   Alternately, if 
-    `parameters` is of type str it should be the full path of a science dataset 
-    from which reference matching header parameters will be read.
+    `parameters` should be a dictionary-like object mapping { str: str,int,float,bool } for critical best reference
+    related input parameters.
     
     If `reftypes` is None,  return all possible reference types.
     
     If `context` is None,  use the latest available context.
 
-    If `ignore_cache` is True,  download references from server even if 
-    already present.
+    If `ignore_cache` is True,  download files from server even if already present.
     """
     if context is None:
         # observatory = get_observatory(parameters)
-        pmap_name = get_default_context()
+        try:
+            pmap_name = get_default_context()
+        except CrdsError, exc:
+            raise CrdsNetworkError("Network connection error: " + str(exc))
     else:
         assert isinstance(context, str) and context.endswith(".pmap"), \
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
@@ -85,26 +98,23 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     # Make sure pmap_name is actually present on the local machine.
     dump_mappings(pmap_name, ignore_cache=ignore_cache)
     
-    if isinstance(parameters, str):   # It's a filepath
-        filepath = os.path.expandvars(parameters)
-        header = data_file.get_unconditioned_header(filepath)
-    else:   # It's assumed to be dict-like
-        header = parameters
-        for key in parameters:
-            assert isinstance(key, str), \
-                "Non-string key " + repr(key) + " in parameters."
-            try:
-                parameters[key]
-            except Exception:
-                raise ValueError("Can't fetch mapping key " + repr(key) + 
-                                 " from parameters.")
-            assert isinstance(parameters[key], (str,float,int,bool)), \
-                "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+    header = parameters
+    for key in parameters:
+        assert isinstance(key, str), \
+            "Non-string key " + repr(key) + " in parameters."
+        try:
+            parameters[key]
+        except Exception:
+            raise ValueError("Can't fetch mapping key " + repr(key) + 
+                             " from parameters.")
+        assert isinstance(parameters[key], (str, float, int, bool)), \
+            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     
     # Use the pmap's knowledge of what CRDS needs to shrink the header
     # Note that at this point the min_header consists of unconditioned values.            
-    pmap = rmap.get_cached_mapping(pmap_name)
-    min_header = pmap.minimize_header(header)
+    #    pmap = rmap.get_cached_mapping(pmap_name)
+    #    min_header = pmap.minimize_header(header)
+    min_header = header
     
     assert isinstance(reftypes, (list, tuple, type(None))), \
         "reftypes must be a list or tuple of strings, or sub-class of those."
@@ -119,7 +129,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     best_refs_paths = cache_references(pmap_name, bestrefs, ignore_cache=ignore_cache)
         
     return best_refs_paths
-
+    
 # ==============================================================================
 
 # Server for CRDS services and mappings
@@ -260,6 +270,22 @@ def get_default_context(observatory=None):
     """
     return str(S.get_default_context(observatory))
 
+def get_server_info():
+    """Return a dictionary of critical parameters about the server such as:
+    
+    operational_context  - the context in use in the operational pipeline
+
+    edit_context         - the context which was last edited, not 
+                           necessarily archived or operational yet.   
+
+    crds*                - the CRDS package versions on the server.
+    
+    This is intended as a single flexible network call which can be used to
+    initialize a higher level getreferences() call,  providing information on
+    what context, software, and network mode should be used for processing.
+    """
+    return S.get_server_info()
+
 # ==============================================================================
 
 class FileCacher(object):
@@ -315,8 +341,9 @@ class FileCacher(object):
         elif "hst" in pipeline_context:
             observatory = "hst"
         else:
+            import crds
             observatory = crds.get_cached_mapping(pipeline_context).observatory
-        return rmap.locate_file(name, observatory=observatory)
+        return config.locate_file(name, observatory=observatory)
 
 # ==============================================================================
 
@@ -359,13 +386,10 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
     baserefs = list(baserefs)
     for refname in baserefs:
         if "NOT FOUND" in refname:
-            log.verbose("Skipping " + repr(refname))
+            log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
     return REFERENCE_CACHER.get_local_files(
         pipeline_context, baserefs, ignore_cache=ignore_cache)
-    
-class CrdsLookupError(utils.CrdsError):
-    """Filekind NOT FOUND but applicable according to current parameters."""
     
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
@@ -405,6 +429,11 @@ def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes
     local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
     return local_paths
 
+# =====================================================================================================
+
+# These functions are deprecated and only work when the full CRDS library is installed,  and only for 
+# some data file formats (.fits).
+
 def cache_best_references_for_dataset(pipeline_context, dataset, 
                                       ignore_cache=False):
     """
@@ -418,38 +447,8 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     """Given a `dataset` and a `context`,  extract relevant header 
     information from the `dataset`.
     """
+    import crds.rmap
     dump_mappings(context, ignore_cache)
-    ctx = rmap.get_cached_mapping(context)
+    ctx = crds.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
 
-def get_observatory(parameters=None):
-    """Return the observatory name based on `parameters`,  e.g. 'jwst'
-    
-    If parameters is a header dict-like,  base observatory on the instrument
-    described by the header.
-    
-    If parameters is a filepath,  get the instrument from the file and
-    map that to the observatory.
-    
-    If parameters is None,  ask the server for the default context and 
-    determine the observatory from that.
-    
-    parameters:  dict-like bestref header parameters  or
-                 dataset path or
-                 None
-
-    returns: 'hst' or 'jwst'
-    """
-    if parameters is None:
-        pmap_name = get_default_context()   # ask server
-        observatory = pmap_name.split("_")[0]
-    else:
-        if isinstance(parameters, (str,unicode)):
-            parameters = data_file.get_header(parameters)
-        try:
-            instrument = parameters["INSTRUME"]
-        except KeyError:
-            raise ValueError("No 'INSTRUME' keyword specified,  "
-                             "required to determine context.")
-        observatory = utils.instrument_to_observatory(instrument)
-    return observatory
