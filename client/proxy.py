@@ -7,7 +7,8 @@ import uuid
 
 from json import loads, dumps
 
-from crds.utils import CrdsError
+class CrdsError(Exception):
+    """Baseclass for all client exceptions."""
 
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
@@ -45,7 +46,7 @@ class CheckingProxy(object):
             channel = urllib.urlopen(self.__service_url, parameters)
             response = channel.read()        
         except Exception, exc:
-            raise ServiceError("CRDS network service call failure " + repr(parameters))
+            raise ServiceError("CRDS network service call failure " + repr(parameters) + " " + str(exc))
         rval = loads(response)
         return rval
     
