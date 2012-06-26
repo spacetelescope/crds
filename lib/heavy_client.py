@@ -43,6 +43,8 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     If `context` is None,  use the latest available context.
 
     If `ignore_cache` is True,  download files from server even if already present.
+    
+    Returns { reftype : cached_bestref_path }
     """
     check_parameters(parameters)
     check_reftypes(reftypes)
@@ -133,7 +135,7 @@ def get_processing_mode(context):
     """
     try:
         info = light_client.get_server_info()
-    except light_client.CrdsNetworkError:
+    except light_client.CrdsError:
         log.warning("Error contacting CRDS server %s.  Attempting off-line mode.  References may be sub-optimal." % \
                     light_client.get_crds_server())
         info = load_server_info()
@@ -142,13 +144,14 @@ def get_processing_mode(context):
         cache_server_info(info)  # save locally
         connected = True
     mode = config.get_crds_processing_mode()
+    obsolete = local_version_obsolete(info)
     if mode == "auto":
-        effective_mode = "remote" if connected and local_version_obsolete(info) else "local"
+        effective_mode = "remote" if connected and obsolete else "local"
     else:
         effective_mode = mode
     if mode == "remote" and not connected:
         raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
-    if effective_mode == "local" and local_version_obsolete(info):
+    if effective_mode == "local" and obsolete:
         log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
     new_context = str(context if context else info["operational_context"])
     return effective_mode, new_context
@@ -169,7 +172,7 @@ def local_version_obsolete(info):
     obsolete = client_version < server_version
     log.verbose("CRDS client version=", srepr(client_version),
                 " server version=", srepr(server_version),
-                " client obsolete=", obsolete, sep="")
+                " CRDS client is ", "obsolete" if obsolete else "up-to-date", sep="")
     return obsolete
 # ============================================================================
 

@@ -614,7 +614,7 @@ def dumpall(context="hst.pmap", suffix="_headers.pkl", path=DEFAULT_PKL_PATH):
 def main():
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
-        log.set_verbose()
+        log.set_verbose(60)
     if "--no-profile" in sys.argv:
         sys.argv.remove("--no-profile")
         profile = False

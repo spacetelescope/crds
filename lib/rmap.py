@@ -775,7 +775,7 @@ class ReferenceMapping(Mapping):
         `header_in` selected by this ReferenceMapping.
         """
         log.verbose("Getting bestrefs for", self.instrument, self.filekind, 
-                    "parkeys", self.parkey)
+                    "parkeys", self.parkey, verbosity=60)
         self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
         # Some filekinds, .e.g. ACS biasfile, mutate the header 
         header = self._precondition_header(self, header_in)
@@ -783,10 +783,10 @@ class ReferenceMapping(Mapping):
         try:
             return self.selector.choose(header)
         except Exception, exc:
-            log.verbose("First selection failed: " + str(exc))
+            log.verbose("First selection failed: " + str(exc), verbosity=60)
             header = self._fallback_header(self, header_in)
             if header:
-                log.verbose("Fallback lookup on", repr(header))
+                log.verbose("Fallback lookup on", repr(header), verbosity=60)
                 header = self.map_irrelevant_parkeys_to_na(header)
                 return self.selector.choose(header)
             else:
@@ -893,7 +893,7 @@ class ReferenceMapping(Mapping):
             else:
                 relevant = eval(self._rmap_relevance_expr, {}, header)
                 log.verbose("Filekind ", self.instrument, self.filekind, 
-                            "is relevant: ", relevant)
+                            "is relevant: ", relevant, verbosity=60)
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
@@ -915,7 +915,7 @@ class ReferenceMapping(Mapping):
             if lparkey in self._parkey_relevance_exprs:
                 relevant = eval(self._parkey_relevance_exprs[lparkey], {}, header2)
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
-                            "is relevant:", relevant)
+                            "is relevant:", relevant, verbosity=60)
                 if not relevant:
                     header[parkey] = "N/A"
         return header
