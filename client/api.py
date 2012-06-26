@@ -290,10 +290,8 @@ def get_server_info():
         info["server"] = get_crds_server()
         return info
     except ServiceError, exc:
-        if "Connection refused" in str(exc):
-            raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()))
-        else:
-            raise
+        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()))
+
 # ==============================================================================
 
 class FileCacher(object):
