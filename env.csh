@@ -9,5 +9,8 @@
 #    .e.g. http://etcbrady.stsci.edu:4997
 # setenv CRDS_SERVER_URL  http://etcbrady.stsci.edu:4997    # HST demo
 # setenv CRDS_SERVER_URL  http://etcbrady.stsci.edu:4995    # JWST demo
-setenv CRDS_SERVER_URL  http://localhost:8000
+setenv CRDS_SERVER_URL  http://localhost:8000    # development
 
+setenv CRDS_OBSERVATORY "jwst"
+
+# setenv CRDS_OBSERVATORY "hst"

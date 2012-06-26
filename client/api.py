@@ -84,6 +84,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
 
     If `ignore_cache` is True,  download files from server even if already present.
     """
+    log.verbose("Computing best references remotely.")
     if context is None:
         # observatory = get_observatory(parameters)
         try:
@@ -91,7 +92,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
         except CrdsError, exc:
             raise CrdsNetworkError("Network connection error: " + str(exc))
     else:
-        assert isinstance(context, str) and context.endswith(".pmap"), \
+        assert isinstance(context, basestring) and context.endswith(".pmap"), \
             "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
         pmap_name = context
 
@@ -100,14 +101,14 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
     
     header = parameters
     for key in parameters:
-        assert isinstance(key, str), \
+        assert isinstance(key, basestring), \
             "Non-string key " + repr(key) + " in parameters."
         try:
             parameters[key]
         except Exception:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters.")
-        assert isinstance(parameters[key], (str, float, int, bool)), \
+        assert isinstance(parameters[key], (basestring, float, int, bool)), \
             "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     
     # Use the pmap's knowledge of what CRDS needs to shrink the header
@@ -121,7 +122,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
 
     if reftypes is not None:
         for reftype in reftypes:
-            assert isinstance(reftype, str), \
+            assert isinstance(reftype, basestring), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
 
     bestrefs = get_best_references(pmap_name, min_header, reftypes=reftypes)
@@ -284,8 +285,15 @@ def get_server_info():
     initialize a higher level getreferences() call,  providing information on
     what context, software, and network mode should be used for processing.
     """
-    return S.get_server_info()
-
+    try:
+        info = S.get_server_info()
+        info["server"] = get_crds_server()
+        return info
+    except ServiceError, exc:
+        if "Connection refused" in str(exc):
+            raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()))
+        else:
+            raise
 # ==============================================================================
 
 class FileCacher(object):

@@ -6,7 +6,7 @@ a date and time in a sortable string representation (isoformat).
 import datetime
 import re
 
-from .utils import CrdsError
+import crds
 
 # =======================================================================
 
@@ -301,7 +301,7 @@ def is_datetime(datetime_str):
     try:
         parse_date(datetime_str)
     except ValueError, exc:
-        raise CrdsError(str(exc))
+        raise crds.CrdsError(str(exc))
     return datetime_str
 
 # ============================================================================

@@ -24,9 +24,7 @@ server cannot be contacted.
 import pprint
 
 import crds.client as light_client
-from . import get_default_context, CrdsLookupError, CrdsError, CrdsNetworkError
-from . import rmap, log, utils, compat
-from .rmap import get_cached_mapping
+from . import rmap, log, utils, compat, config
 
 # ============================================================================
 
@@ -46,110 +44,115 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
 
     If `ignore_cache` is True,  download files from server even if already present.
     """
-    if context is None:
-        # observatory = get_observatory(parameters)
-        try:
-            pmap_name = get_default_context()
-        except CrdsError, exc:
-            raise CrdsNetworkError("Network connection error: " + str(exc))
+    check_parameters(parameters)
+    check_reftypes(reftypes)
+    check_context(context)  
+    mode, final_context = get_processing_mode(context)
+    if mode == "local":
+        return local_bestrefs(
+            parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
     else:
-        assert isinstance(context, str) and context.endswith(".pmap"), \
-            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
-        pmap_name = context
+        return light_client.getreferences(
+            parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
 
-    # Make sure pmap_name is actually present on the local machine.
-    light_client.dump_mappings(pmap_name, ignore_cache=ignore_cache)
-    
-    header = parameters
-    for key in parameters:
-        assert isinstance(key, str), \
-            "Non-string key " + repr(key) + " in parameters."
+# ============================================================================
+
+def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
+    """Perform bestref computations locally,  contacting the network only to
+    obtain references or mappings which are not already cached locally.
+    In the case of the default "auto" mode,  assuming it has an up-to-date client
+    CRDS will only use the server for status and to transfer files.
+    """
+
+    # Make sure pmap_name is actually present in the local machine's cache.
+    # First assume the context files are already here and try to load them.   
+    # If that fails,  attempt to use the network.
+    try:
+        if ignore_cache:
+            raise IOError("explicitly ignoring cache.")
+        pmap = rmap.get_cached_mapping(context)
+        log.verbose("Using cached context", srepr(context))
+    except IOError, exc:
+        log.verbose("Caching mapping files:", srepr(exc))
         try:
-            parameters[key]
-        except Exception:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters.")
-        assert isinstance(parameters[key], (str,float,int,bool)), \
-            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+            light_client.dump_mappings(context, ignore_cache=ignore_cache)
+        except crds.CrdsError, exc:
+            raise crds.CrdsNetworkError("Network failure caching mapping files.")
+        pmap = rmap.get_cached_mapping(context)
     
-    # Use the pmap's knowledge of what CRDS needs to shrink the header
-    # Note that at this point the min_header consists of unconditioned values.            
-    #    pmap = rmap.get_cached_mapping(pmap_name)
-    #    min_header = pmap.minimize_header(header)
-    min_header = header
-    
-    assert isinstance(reftypes, (list, tuple, type(None))), \
-        "reftypes must be a list or tuple of strings, or sub-class of those."
+    min_header = pmap.minimize_header(parameters)
 
-    if reftypes is not None:
-        for reftype in reftypes:
-            assert isinstance(reftype, str), \
-                "each reftype must be a string, .e.g. biasfile or darkfile."
-
-    bestrefs = light_client.get_best_references(pmap_name, min_header, reftypes=reftypes)
+    # Compute best references locally.
+    log.verbose("Computing best references locally.")
+    bestrefs = pmap.get_best_references(min_header, reftypes)
     
-    best_refs_paths = light_client.cache_references(pmap_name, bestrefs, ignore_cache=ignore_cache)
-        
+    # Attempt to cache the recommended references,  which unlike dump_mappings
+    # should work without network access if files are already cached.
+    best_refs_paths = light_client.cache_references(
+        context, bestrefs, ignore_cache=ignore_cache)
+    
     return best_refs_paths
 
-def local_bestrefs(parameters, reftypes=None, context=None):
-    """Compute bestrefs locally using the latest known local context."""
-    pmap_name = context or get_best_known_local_context()
-    log.warning("CRDS network getreferences() failed.  Using latest known local context", repr(pmap_name),
-                   "and computing best references locally.")
-    pmap = rmap.get_cached_mapping(pmap_name)
-    min_header = pmap.get_minimum_header(parameters)
-    bestrefs = pmap.get_best_references(header, list(reftypes))
-    return { filekind:rmap.locate_file(reffile, pmap.observatory) for (filekind, reffile) in bestrefs }
- 
 # ============================================================================
 
-def cache_server_info(info):
-    """Write down the server `info` dictionary to help configure offline use."""
-    observatory = info["observatory"]
-    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
-    try:
-        utils.ensure_dir_exists(server_config)
-        with open(server_config, "w+") as f:
-            f.write(pprint.pformat(info))
-    except IoError, exc:
-        log.warning("Couldn't save CRDS server info:", repr(exc))
- 
-def load_server_info():
-    """Return last connected server status to help configure offline use."""
-    observatory = config.get_crds_offline_observatory()
-    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
-    log.write("Loading last known CRDS state from", repr(server_config))
-    with open(server_config) as f:
-        info = compat.literal_eval(f.read())
-    return info
+def check_parameters(header):
+    """Make sure dict-like `header` is a mapping from strings to simple types."""
+    for key in header:
+        assert isinstance(key, basestring), \
+            "Non-string key " + repr(key) + " in parameters."
+        try:
+            header[key]
+        except Exception, exc:
+            raise ValueError("Can't fetch mapping key " + repr(key) + 
+                             " from parameters: " + repr(str(exc)))
+        assert isinstance(header[key], (basestring, float, int, bool)), \
+            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+    
+def check_reftypes(reftypes):
+    """Make sure reftypes is a sequence of string identifiers."""
+    assert isinstance(reftypes, (list, tuple, type(None))), \
+        "reftypes must be a list or tuple of strings, or sub-class of those."
+    if reftypes is not None:
+        for reftype in reftypes:
+            assert isinstance(reftype, basestring), \
+                "each reftype must be a string, .e.g. biasfile or darkfile."
+                
+def check_context(context):
+    """Make sure `context` is a pipeline mapping."""
+    if context is None:
+        return
+    assert isinstance(context, basestring) and config.is_mapping, \
+        "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
 
 # ============================================================================
 
-def establish_processing_mode():
+def get_processing_mode(context):
     """Return the processing mode (local, remote) and the server information
-    including the observatory and operational context.
+    including the observatory and operational context.   Map mode 'auto' onto
+    'local' or 'remote' depending on client s/w version status.
     """
     try:
-        info = client.get_server_info()
-    except client.CrdsNetworkError:
-        log.warning("Error contacting server %s,  attempting offline mode." % \
-                    client.get_crds_server())
+        info = light_client.get_server_info()
+    except light_client.CrdsNetworkError:
+        log.warning("Error contacting CRDS server %s.  Attempting off-line mode.  References may be sub-optimal." % \
+                    light_client.get_crds_server())
         info = load_server_info()
         connected = False
     else:
-        cache_server_info(info)
+        cache_server_info(info)  # save locally
         connected = True
     mode = config.get_crds_processing_mode()
-    if connected and mode == "auto":
-        mode = "remote" if local_version_obsolete(info) else "local"
-    return mode, info
+    if mode == "auto":
+        effective_mode = "remote" if connected and local_version_obsolete(info) else "local"
+    else:
+        effective_mode = mode
+    if mode == "remote" and not connected:
+        raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
+    if effective_mode == "local" and local_version_obsolete(info):
+        log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
+    new_context = str(context if context else info["operational_context"])
+    return effective_mode, new_context
 
-def get_best_known_local_context():
-     """Determine the latest local context,  nominally for use as a fallback when network connection is unavailable.
-     """
-     return sorted(rmap.list_mappings("*.pmap"))[-1]
- 
 def minor_version(vers):
     """Strip the revision number off of `vers` and conver to float.
      e.g. "1.1.7"  --> 1.1
@@ -163,5 +166,43 @@ def local_version_obsolete(info):
     server_version = info["crds_version"]["str"]
     server_version = minor_version(server_version)
     client_version = minor_version(crds.__version__)
-    return client_version < server_version
+    obsolete = client_version < server_version
+    log.verbose("CRDS client version=", srepr(client_version),
+                " server version=", srepr(server_version),
+                " client obsolete=", obsolete, sep="")
+    return obsolete
+# ============================================================================
+
+def cache_server_info(info):
+    """Write down the server `info` dictionary to help configure off-line use."""
+    observatory = info["observatory"]
+    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
+    try:
+        utils.ensure_dir_exists(server_config)
+        with open(server_config, "w+") as file_:
+            file_.write(pprint.pformat(info))
+    except IOError, exc:
+        log.warning("Couldn't save CRDS server info:", repr(exc), "offline mode won't work.")
  
+def load_server_info():
+    """Return last connected server status to help configure off-line use."""
+    observatory = config.get_crds_offline_observatory()
+    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
+    log.verbose("Loading CRDS context and server s/w version from", repr(server_config))
+    try:
+        with open(server_config) as file_:
+            info = compat.literal_eval(file_.read())
+    except IOError, exc:
+        raise crds.CrdsError("Off-line and error with cached server info: " + str(exc))
+    return info
+
+# ============================================================================
+
+def srepr(obj):
+    """Return the repr() of the str() of obj"""  
+    return repr(str(obj))
+
+# ============================================================================
+
+import crds # for __version__,  circular dependency.
+
