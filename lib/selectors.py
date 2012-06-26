@@ -91,36 +91,37 @@ import fnmatch
 
 # import numpy as np
 
+import crds
 import log, utils
 
 # ==============================================================================
 
-class MatchingError(utils.CrdsError):
+class MatchingError(crds.CrdsError):
     """Represents a MatchSelector lookup which failed.
     """
 
-class AmbiguousMatchError(utils.CrdsError):
+class AmbiguousMatchError(crds.CrdsError):
     """Represents a MatchSelector which matched more than one equivalent 
     choice.
     """
 
-class MissingParameterError(utils.CrdsError):
+class MissingParameterError(crds.CrdsError):
     """A required parameter for a matching selector did not appear
     in the parameter dictionary.
     """
 
-class BadValueError(utils.CrdsError):
+class BadValueError(crds.CrdsError):
     """A required parameter for a matching selector did not have
     any of the valid values.
     """
 
-class UseAfterError(utils.CrdsError):
+class UseAfterError(crds.CrdsError):
     """None of the dates in the RMAP precedes the processing date.
     """
 
 # ==============================================================================
 
-class ValidationError(ValueError):
+class ValidationError(crds.CrdsError):
     """Some Selector key did not match the set of legal values.
     """
 
@@ -928,7 +929,7 @@ of uniform rmap structure for HST:
             if isinstance(choice, Selector):
                 try:
                     return choice.choose(header)
-                except utils.CrdsError, exc:
+                except crds.CrdsError, exc:
                     log.verbose("Nested selector failed", str(exc))
                     continue
             else:

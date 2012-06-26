@@ -10,11 +10,6 @@ from crds import compat
 
 # ===================================================================
 
-class CrdsError(Exception):
-    """Baseclass for CRDS exceptions."""
-
-# ===================================================================
-
 def cached(func):
     """The cached decorator embeds a dictionary in a function wrapper to
     capture prior results.   The wrapped function works like the original,

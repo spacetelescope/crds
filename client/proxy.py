@@ -46,8 +46,9 @@ class CheckingProxy(object):
             channel = urllib.urlopen(self.__service_url, parameters)
             response = channel.read()        
         except Exception, exc:
-            raise ServiceError("CRDS network service call failure " + repr(parameters) + " " + str(exc))
+            raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
         rval = loads(response)
+        rval = fix_strings(rval)
         return rval
     
     def __call__(self, *args, **kwargs):
@@ -55,4 +56,16 @@ class CheckingProxy(object):
         if jsonrpc["error"]:
             raise ServiceError(jsonrpc["error"]["message"])
         return jsonrpc["result"]
-
+    
+def fix_strings(rval):
+    """Convert unicode to strings."""
+    if isinstance(rval, basestring):
+        return str(rval)
+    elif isinstance(rval, tuple):
+        return tuple([fix_strings(x) for x in rval])
+    elif isinstance(rval, list):
+        return [fix_strings(x) for x in rval]
+    elif isinstance(rval, dict):
+        return { fix_strings(key):fix_strings(val) for (key,val) in rval.items()}
+    else:
+        return rval

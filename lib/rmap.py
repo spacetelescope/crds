@@ -70,6 +70,7 @@ import pyfits
 
 from .compat import namedtuple
 
+import crds
 from . import (log, utils, selectors, data_file, config)
 
 # XXX For backward compatability until refactored away.
@@ -95,10 +96,10 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
-class MappingError(utils.CrdsError):
+class MappingError(crds.CrdsError):
     """Exception in load_rmap."""
     def __init__(self, *args):
-        utils.CrdsError.__init__(self, " ".join([str(x) for x in args]))
+        crds.CrdsError.__init__(self, " ".join([str(x) for x in args]))
         
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
@@ -463,7 +464,7 @@ class Mapping(object):
         try:
             return header["INSTRUME"]
         except KeyError:
-            raise utils.CrdsError("Missing INSTRUME keyword in header")
+            raise crds.CrdsError("Missing INSTRUME keyword in header")
     
     def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
@@ -575,7 +576,7 @@ class PipelineContext(Mapping):
         try:
             return self.selections[instrument.lower()]
         except KeyError:
-            raise utils.CrdsError("Unknown instrument " + repr(instrument) +
+            raise crds.CrdsError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.name))
     
     def get_filekinds(self, dataset):
@@ -621,7 +622,7 @@ class InstrumentContext(Mapping):
         try:
             return self.selections[filekind.lower()]
         except KeyError:
-            raise utils.CrdsError("Unknown reference type " + repr(str(filekind)))
+            raise crds.CrdsError("Unknown reference type " + repr(str(filekind)))
 
     def get_best_ref(self, filekind, header):
         """Returns the single reference file basename appropriate for `header`
