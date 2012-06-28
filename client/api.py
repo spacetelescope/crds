@@ -35,7 +35,6 @@ def download_exc(pipeline_context, name, exc):
 # ==============================================================================
 
 __all__ = [
-           "getreferences",
            "get_default_context",
            "get_server_info",
            "cache_references",
@@ -68,70 +67,6 @@ __all__ = [
            ]
 
 # ============================================================================
-
-def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
-    """
-    This is the top-level get reference call for all of CRDS.  Based on `parameters`, getreferences() will
-    download/cache the corresponding best reference and mapping files and return a map from reference file types to
-    local reference file locations.
-    
-    `parameters` should be a dictionary-like object mapping { str: str,int,float,bool } for critical best reference
-    related input parameters.
-    
-    If `reftypes` is None,  return all possible reference types.
-    
-    If `context` is None,  use the latest available context.
-
-    If `ignore_cache` is True,  download files from server even if already present.
-    """
-    log.verbose("Computing best references remotely.")
-    if context is None:
-        # observatory = get_observatory(parameters)
-        try:
-            pmap_name = get_default_context()
-        except CrdsError, exc:
-            raise CrdsNetworkError("Network connection error: " + str(exc))
-    else:
-        assert isinstance(context, basestring) and context.endswith(".pmap"), \
-            "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
-        pmap_name = context
-
-    # Make sure pmap_name is actually present on the local machine.
-    dump_mappings(pmap_name, ignore_cache=ignore_cache)
-    
-    header = parameters
-    for key in parameters:
-        assert isinstance(key, basestring), \
-            "Non-string key " + repr(key) + " in parameters."
-        try:
-            parameters[key]
-        except Exception:
-            raise ValueError("Can't fetch mapping key " + repr(key) + 
-                             " from parameters.")
-        assert isinstance(parameters[key], (basestring, float, int, bool)), \
-            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
-    
-    # Use the pmap's knowledge of what CRDS needs to shrink the header
-    # Note that at this point the min_header consists of unconditioned values.            
-    #    pmap = rmap.get_cached_mapping(pmap_name)
-    #    min_header = pmap.minimize_header(header)
-    min_header = header
-    
-    assert isinstance(reftypes, (list, tuple, type(None))), \
-        "reftypes must be a list or tuple of strings, or sub-class of those."
-
-    if reftypes is not None:
-        for reftype in reftypes:
-            assert isinstance(reftype, basestring), \
-                "each reftype must be a string, .e.g. biasfile or darkfile."
-
-    bestrefs = get_best_references(pmap_name, min_header, reftypes=reftypes)
-    
-    best_refs_paths = cache_references(pmap_name, bestrefs, ignore_cache=ignore_cache)
-        
-    return best_refs_paths
-    
-# ==============================================================================
 
 # Server for CRDS services and mappings
 

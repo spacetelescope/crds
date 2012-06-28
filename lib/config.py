@@ -58,13 +58,6 @@ def get_crds_processing_mode():
     assert mode in ["local", "remote", "auto"], "Invalid CRDS processing mode: " + repr(mode)
     return mode
 
-def get_crds_offline_observatory():
-    """Return the observatory used for offline processing paths."""
-    observatory  = os.environ.get("CRDS_OBSERVATORY", "jwst").lower()
-    assert observatory in ["hst", "jwst", "tobs"], \
-        "Invalid CRDS observatory setting " + repr(observatory)
-    return observatory
-
 # ===========================================================================
 
 def locate_file(filepath, observatory):

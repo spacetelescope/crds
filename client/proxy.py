@@ -7,6 +7,8 @@ import uuid
 
 from json import loads, dumps
 
+from crds import log
+
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
 
@@ -42,7 +44,11 @@ class CheckingProxy(object):
                             "method": self.__service_name,
                             'params': params,
                             'id': str(uuid.uuid1())})
-        try:    
+        try:
+            log.verbose("CRDS JSON RPC to", repr(self.__service_url), 
+                        "method", repr(self.__service_name), 
+                        "parameters", parameters,
+                        verbosity=55)
             channel = urllib.urlopen(self.__service_url, parameters)
             response = channel.read()        
         except Exception, exc:
