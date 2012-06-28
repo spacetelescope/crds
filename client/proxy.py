@@ -44,17 +44,20 @@ class CheckingProxy(object):
                             "method": self.__service_name,
                             'params': params,
                             'id': str(uuid.uuid1())})
+        log.verbose("CRDS JSON RPC to", repr(self.__service_url), 
+                    "method", repr(self.__service_name), 
+                    "parameters", parameters,
+                    "-->",
+                    verbosity=55, eol="")
         try:
-            log.verbose("CRDS JSON RPC to", repr(self.__service_url), 
-                        "method", repr(self.__service_name), 
-                        "parameters", parameters,
-                        verbosity=55)
             channel = urllib.urlopen(self.__service_url, parameters)
             response = channel.read()        
         except Exception, exc:
+            log.verbose("FAILED", str(exc))
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
         rval = loads(response)
         rval = fix_strings(rval)
+        log.verbose("SUCCEEDED returning", str(rval))
         return rval
     
     def __call__(self, *args, **kwargs):
