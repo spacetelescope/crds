@@ -77,7 +77,7 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
     else:
         bestrefs = light_client.get_best_references(
-            final_context, parameters, reftypes=reftypes, ignore_cache=ignore_cache)
+            final_context, parameters, reftypes=reftypes)
 
     # Attempt to cache the recommended references,  which unlike dump_mappings
     # should work without network access if files are already cached.
@@ -192,8 +192,7 @@ def local_version_obsolete(info):
     """Extract the CRDS server version from `info` and compare it to the minor
     version number of the CRDS client,  e.g. 1.2 vs. 1.1.
     """
-    server_version = info["crds_version"]["str"]
-    server_version = minor_version(server_version)
+    server_version = minor_version(info["crds_version"]["str"])
     client_version = minor_version(crds.__version__)
     obsolete = client_version < server_version
     log.verbose("CRDS client version=", srepr(client_version),
