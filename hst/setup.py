@@ -10,13 +10,6 @@ setup(name="crds.hst",
       packages=[
         'crds.hst',
 
-        'crds.hst.acs',
-        'crds.hst.cos',
-        'crds.hst.nicmos',
-        'crds.hst.stis',
-        'crds.hst.wfc3',
-        'crds.hst.wfpc2',
-        
         'crds.hst.gentools',
 
         'crds.mappings',
@@ -28,13 +21,6 @@ setup(name="crds.hst",
 
       package_dir = {
         'crds.hst':'.',
-
-         'crds.hst.acs':'acs',
-         'crds.hst.cos':'cos',
-         'crds.hst.nicmos':'nicmos',
-         'crds.hst.stis':'stis',
-         'crds.hst.wfc3':'wfc3',
-         'crds.hst.wfpc2':'wfpc2',
 
         'crds.hst.gentools' : 'gentools',
         
