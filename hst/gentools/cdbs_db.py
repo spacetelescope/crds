@@ -436,15 +436,14 @@ def test(header_spec, context="hst.pmap", datasets=[],
             continue
         dataset_count += 1
         
-        if log.VERBOSE_FLAG:
-            log.write("Header from database")
-            pprint.pprint(header)
+        log.verbose("Header from database")
+        log.verbose(log.PP(header))
+            
         
         if dataset in alternate_headers:
             header.update(alternate_headers[dataset])
-            if log.VERBOSE_FLAG:
-                log.verbose("Alternate header")
-                log.verbose(pprint.pformat(header))
+            log.verbose("Alternate header")
+            log.verbose(log.PP(header))
         
         if inject_errors:
             header = inject_random_error(inject_errors, dataset, header)
