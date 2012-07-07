@@ -41,10 +41,7 @@ def load_alternate_dataset_headers():
 def main():
     alternates = load_alternate_dataset_headers()
     for dataset in sys.argv[1:]:
-        if log.VERBOSE_FLAG:
-            log.write(dataset)
-        else:
-            log.write(".", eol="", sep="")
+        log.write(dataset)
         try:
             bestrefs = opus_bestrefs(dataset)
             alternates[dataset] = bestrefs

@@ -960,8 +960,7 @@ of uniform rmap structure for HST:
                 selector = self.merge_group(subselectors)
             else:
                 selector = remaining[match_tuples[0]][1]
-            if log.VERBOSE_FLAG:
-                log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector), verbosity=60)
+            log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector), verbosity=60)
             yield match_tuples, selector
 
     def _winnow(self, header, remaining):
@@ -980,15 +979,13 @@ of uniform rmap structure for HST:
 
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "NOT PRESENT")
-            if log.VERBOSE_FLAG:
-                log.verbose("Binding", repr(parkey), "=", repr(value), verbosity=60)
+            log.verbose("Binding", repr(parkey), "=", repr(value), verbosity=60)
             for match_tuple, (matchers, _subselector) in remaining.items():
                 # Match the key to the current header vaue
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
-                    if log.VERBOSE_FLAG:
-                        log.verbose("Winnowing", match_tuple, verbosity=60)
+                    log.verbose("Winnowing", match_tuple, verbosity=60)
                     del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   
@@ -1010,8 +1007,7 @@ of uniform rmap structure for HST:
         # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
         # Lowest weight is best match
         candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
-        if log.VERBOSE_FLAG:
-            log.verbose("Candidates", pp.pformat(candidates), verbosity=60)
+        log.verbose("Candidates", log.PP(candidates), verbosity=60)
         return candidates
 
     def merge_group(self, equivalent_selectors):
@@ -1023,13 +1019,11 @@ of uniform rmap structure for HST:
         special cases and not repeating common info for every special
         case.
         """
-        if log.VERBOSE_FLAG:
-            log.verbose("Merging equivalent selectors", equivalent_selectors, verbosity=60)
+        log.verbose("Merging equivalent selectors", equivalent_selectors, verbosity=60)
         combined = equivalent_selectors[0].merge(equivalent_selectors[1])
         for next in equivalent_selectors[2:]:
             combined = combined.merge(next)
-        if log.VERBOSE_FLAG:
-            log.verbose("Merge result:\n", combined.format(), verbosity=60)
+        log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=60)
         return combined
 
     def get_value_map(self):
@@ -1081,15 +1075,14 @@ of uniform rmap structure for HST:
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not self._different_match_weight(key, other):
-                if log.VERBOSE_FLAG:
-                    if log.get_verbose() > 50:
-                        raise ValidationError( "Match tuple " + repr(key) + 
-                                         " is an equal weight special case of " + repr(other),
-                                         " requiring dynamic merging.")
-                    else:
-                        log.verbose_warning("Match tuple " + repr(key) + 
-                                         " is an equal weight special case of " + repr(other),
-                                         " requiring dynamic merging.")
+                if log.get_verbose() > 50:
+                    raise ValidationError("Match tuple " + repr(key) + 
+                                          " is an equal weight special case of " + repr(other),
+                                          " requiring dynamic merging.")
+                else:
+                    log.verbose_warning("Match tuple " + repr(key) + 
+                                        " is an equal weight special case of " + repr(other),
+                                        " requiring dynamic merging.")
 
     def _different_match_weight(self, subkey, superkey):
         """The criteria for "ambiguous matches" are:
@@ -1206,8 +1199,7 @@ Alternate date/time formats are accepted as header parameters.
     """    
     def choose(self, header):
         date = self._validate_header(header)     
-        if log.VERBOSE_FLAG:
-            log.verbose("Matching date", date, " ", verbosity=60)
+        log.verbose("Matching date", date, " ", verbosity=60)
         selection = self.bsearch(date, self._selections)
         return self.get_choice(selection, header)
 
@@ -1219,16 +1211,14 @@ Alternate date/time formats are accepted as header parameters.
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
             compared = right[0][0]
-            if log.VERBOSE_FLAG:
-                log.verbose("...against", compared, eol="", verbosity=60)
+            log.verbose("...against", compared, eol="", verbosity=60)
             if date >= compared:
                 return self.bsearch(date, right)
             else:
                 return self.bsearch(date, left)
         else:
             if date >= selections[0][0]:
-                if log.VERBOSE_FLAG:
-                    log.verbose("matched", repr(selections[0]), verbosity=60)
+                log.verbose("matched", repr(selections[0]), verbosity=60)
                 return selections[0]
             else:
                 raise UseAfterError("No selection with time < " + repr(date))
@@ -1266,7 +1256,7 @@ Alternate date/time formats are accepted as header parameters.
         combined_selections = dict(self._selections)
         for key, val in other._selections:
             if key not in combined_selections or val > combined_selections[key]:
-                if log.VERBOSE_FLAG and key in combined_selections:
+                if key in combined_selections:
                     log.verbose("Merge collision at", repr(key), "replacing",
                                 repr(combined_selections[key]), "with", repr(val), verbosity=60)
                 combined_selections[key] = val
