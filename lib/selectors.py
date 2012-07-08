@@ -927,11 +927,7 @@ of uniform rmap structure for HST:
         self._validate_header(header)
         for _match_tuples, choice in self.winnowing_match(header):
             if isinstance(choice, Selector):
-                try:
-                    return choice.choose(header)
-                except crds.CrdsError, exc:
-                    log.verbose("Nested selector failed", str(exc), verbosity=60)
-                    continue
+                return choice.choose(header)
             else:
                 return choice
             
