@@ -1728,7 +1728,8 @@ SELECTORS = {
 
 def test():
     """Run module doctest."""
-    import doctest, selectors
+    import doctest
+    from . import selectors
     return doctest.testmod(selectors)
 
 if __name__ == "__main__":

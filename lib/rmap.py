@@ -1025,7 +1025,8 @@ def get_best_references(context_file, header, include=None):
 
 def test():
     """Run module doctests."""
-    import doctest, rmap
+    import doctest
+    from . import doctest
     return doctest.testmod(rmap)
 
 if __name__ == "__main__":
