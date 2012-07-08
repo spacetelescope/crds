@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:18.027263',
+    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:16.353506',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "CCD")',
-    'sha1sum' : '61586f444c983dd3eb0b3862a0e653d435cc0e39',
+    'sha1sum' : 'a656fe0e1afefe586068b5fd846668cc033faed3',
 }
 
 selector = Match({
@@ -499,6 +499,10 @@ selector = Match({
         '2012-03-27 01:48:09' : 'w521315fo_bia.fits',
         '2012-04-03 00:00:10' : 'w521315go_bia.fits',
         '2012-04-10 00:00:01' : 'w521315ho_bia.fits',
+        '2012-04-16 18:23:31' : 'w6k1722ho_bia.fits',
+        '2012-04-24 00:00:11' : 'w6k1722io_bia.fits',
+        '2012-05-01 00:00:04' : 'w6k1722jo_bia.fits',
+        '2012-05-10 01:06:04' : 'w6k1722ko_bia.fits',
     }),
     ('D', 1, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1019qo_bia.fits',
@@ -1281,6 +1285,8 @@ selector = Match({
         '2012-03-06 01:13:17' : 'w3n1413ko_bia.fits',
         '2012-03-19 17:49:18' : 'w521315co_bia.fits',
         '2012-04-03 02:04:18' : 'w521315do_bia.fits',
+        '2012-04-16 18:23:31' : 'w6k1722fo_bia.fits',
+        '2012-05-01 01:20:15' : 'w6k1722go_bia.fits',
     }),
     ('D', 4, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1020co_bia.fits',
