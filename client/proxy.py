@@ -48,7 +48,7 @@ class CheckingProxy(object):
                     "method", repr(self.__service_name), 
                     "parameters", params,
                     "-->",
-                    verbosity=55, eol="")
+                    verbosity=55, end="")
         try:
             channel = urllib.urlopen(self.__service_url, parameters)
             response = channel.read()        

@@ -34,13 +34,13 @@ class CrdsLogger(object):
         return os.environ.get(self.name.replace(".","_")+"_VERBOSITY", 50)
 
     def format(self, *args, **keys):
-        eol = keys.get("eol", "\n")
+        end = keys.get("end", "\n")
         sep = keys.get("sep", " ")
-        output = sep.join([str(arg) for arg in args]) + eol
+        output = sep.join([str(arg) for arg in args]) + end
         return output
 
     def eformat(self, *args, **keys):
-        keys["eol"] = ""
+        keys["end"] = ""
         if self.eol_pending:
             self.write()
         return self.format(*args, **keys)
