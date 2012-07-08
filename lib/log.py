@@ -25,7 +25,7 @@ class CrdsLogger(object):
         self.errors = 0
         self.warnings = 0
         self.infos = 0
-        self.verbose_level = self.default_verbose_level
+        self.verbose_level = 0
         self.verbose_flag = self.verbose_level > 0
         self.eol_pending = False
         
@@ -34,12 +34,13 @@ class CrdsLogger(object):
         return os.environ.get(self.name.replace(".","_")+"_VERBOSITY", 50)
 
     def format(self, *args, **keys):
-        eol = keys.get("eol", "")
+        eol = keys.get("eol", "\n")
         sep = keys.get("sep", " ")
         output = sep.join([str(arg) for arg in args]) + eol
         return output
 
     def eformat(self, *args, **keys):
+        keys["eol"] = ""
         if self.eol_pending:
             self.write()
         return self.format(*args, **keys)
@@ -110,6 +111,10 @@ write = THE_LOGGER.write
 set_verbose = THE_LOGGER.set_verbose
 get_verbose = THE_LOGGER.get_verbose
 
+def errors():
+    """Return the global count of errors."""
+    return THE_LOGGER.errors
+
 # ===========================================================================
 
 class PP(object):
@@ -119,7 +124,7 @@ class PP(object):
     def __init__(self, ppobj):
         self.ppobj = ppobj
     
-    def str(self):
+    def __str__(self):
         return pprint.pformat(self.ppobj)
 
 class Deferred(object):

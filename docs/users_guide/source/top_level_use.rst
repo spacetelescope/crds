@@ -11,7 +11,7 @@ environment variables CRDS_SERVER_URL and CRDS_PATH.   See the section on
 *Installation* for more details.
 
 crds.getreferences()
---------------------
+---------------------------
 
 Given  dataset header containing parameters required to determine best
 references, and optionally a specific .pmap to use as the best references
@@ -36,18 +36,11 @@ reference file paths::
                        'CCDGAIN' : '2.0',
                        ...
                     }
-         
-                 Alternately,  parameters can be a string specifying the full 
-                 path of a dataset from which CRDS will extract header values.
-
-                 str
-
-                 e.g. "/where/it/is/j8bt05njq_raw.fits"
-         
     
-        reftypes :    A list of reference type names,  where each reftype is the
-                    keyword used to record that kind of reference file in a 
-                    dataset header.
+        reftypes :    A list of reference type names.   For HST these are the keywords
+                     used to record reference files in dataset headers.   For JWST,  these
+                     are the identifiers which will appear in instrument contexts and
+                     reference mappings.
                 
                     e.g.  [ 'darkfile', 'biasfile']
                     
@@ -82,7 +75,7 @@ reference file paths::
 
 
 crds.get_default_context()
---------------------------
+---------------------------------
 
 get_default_context() returns the name of the pipeline mapping which is 
 currently in operational use.   When no
@@ -90,10 +83,10 @@ currently in operational use.   When no
 The default context defines the matching rules used to determine best 
 reference files for a given set of parameters::
 
-    def get_default_context(observatory=None):
+    def get_default_context():
         """Return the name of the latest pipeline mapping in use for processing
         files.  
-    
+        
         Returns   
         -------
         pipeline context name

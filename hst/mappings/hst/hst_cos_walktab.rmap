@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-06-19 15:23:10.647106',
+    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:12.821868',
     'filekind' : 'WALKTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "FUV" and OBSMODE == "TIME-TAG")',
-    'sha1sum' : '321347a69080d53bb911f50ed1ea0055c6d4b409',
+    'sha1sum' : 'da47eff203930300819705d3a0dd44dd4a04a8a1',
 }
 
 selector = Match({

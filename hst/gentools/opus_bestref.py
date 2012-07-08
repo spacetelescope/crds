@@ -41,15 +41,15 @@ def load_alternate_dataset_headers():
 def main():
     alternates = load_alternate_dataset_headers()
     for dataset in sys.argv[1:]:
-        log.write(dataset)
         try:
             bestrefs = opus_bestrefs(dataset)
             alternates[dataset] = bestrefs
-            log.verbose("Bestrefs for", dataset, "=", bestrefs)
+            log.info("Bestrefs for", dataset, "=", bestrefs)
         except Exception, exc:
             log.error("Exception on dataset", dataset)
     with open(BESTREF_PKL, "w+") as f:
         cPickle.dump(alternates, f)
+    log.standard_status()
 
 if __name__ == "__main__":
     main()
