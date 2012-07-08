@@ -491,7 +491,7 @@ def test(header_spec, context="hst.pmap", datasets=[],
             # Output a single character count of the number of correct bestref
             # recommendations for this dataset.
             char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[matches]
-            log.write(char, eol="", sep="")
+            log.write(char, end="", sep="")
         
     elapsed = datetime.datetime.now() - start
     summarize_results(instrument, mismatched, dataset_count, elapsed)

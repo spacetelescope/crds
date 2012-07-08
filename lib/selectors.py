@@ -1211,7 +1211,7 @@ Alternate date/time formats are accepted as header parameters.
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
             compared = right[0][0]
-            log.verbose("...against", compared, eol="", verbosity=60)
+            log.verbose("...against", compared, end="", verbosity=60)
             if date >= compared:
                 return self.bsearch(date, right)
             else:

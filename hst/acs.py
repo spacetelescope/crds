@@ -86,7 +86,7 @@ def _fallback_biasfile(header_in):
 
 def fallback_header(rmap, header):
     if rmap.filekind == "biasfile":
-        # log.write("x", eol="",sep="")
+        # log.write("x", end="",sep="")
         return _fallback_biasfile(header)
     else:
         None
