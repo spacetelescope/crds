@@ -226,7 +226,8 @@ def get_geis_header(name, needed_keys=[]):
 
 def test():
     """Run doctest on data_file module."""
-    import doctest, data_file
+    import doctest
+    from . import data_file
     return doctest.testmod(data_file)
 
 if __name__ == "__main__":

@@ -307,7 +307,8 @@ def is_datetime(datetime_str):
 # ============================================================================
 
 def test():
-    import doctest, timestamp
+    import doctest
+    from . import timestamp
     return doctest.testmod(timestamp)
 
 if __name__ == "__main__":

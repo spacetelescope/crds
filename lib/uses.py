@@ -63,7 +63,8 @@ def findall_mappings_using_rmap(rmap, observatory="hst"):
 
 def test():
     """Run the module doctest."""
-    import doctest, uses
+    import doctest
+    from . import uses
     return doctest.testmod(uses)
 
 def uses(files, observatory="hst"):
