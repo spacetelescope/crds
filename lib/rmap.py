@@ -128,13 +128,13 @@ class MappingValidator(ast.NodeVisitor):
     raises exceptions for invalid constructs.   MappingValidator is concerned
     with limiting rmaps to safe code,  not deep semantic checks.
     """
-    def compile_and_check(self, text):
+    def compile_and_check(self, text, source="<ast>", mode="exec"):
         """Parse `text` to verify that it's a legal mapping, and return a 
         compiled code object.
         """
         if sys.version_info >= (2, 7, 0):
             self.visit(ast.parse(text))
-        return compile(text, "<ast>", "exec")
+        return compile(text, source, mode)
 
     illegal_nodes = [
         "FunctionDef","ClassDef", "Return", "Delete", "AugAssign", "Print",
@@ -165,11 +165,6 @@ class MappingValidator(ast.NodeVisitor):
             else:
                 raise FormatError(message)
                 
-    def visit_Module(self, node):
-        self.assert_(node, len(node.body) == 2, 
-                     "define only 'header' and 'selector' sections")
-        self.generic_visit(node)
-
     def visit_Assign(self, node):
         self.assert_(node, len(node.targets) == 1, 
                      "Invalid 'header' or 'selector' definition")
@@ -577,7 +572,7 @@ class PipelineContext(Mapping):
             return self.selections[instrument.lower()]
         except KeyError:
             raise crds.CrdsError("Unknown instrument " + repr(instrument) +
-                                  " for context " + repr(self.name))
+                                  " for context " + repr(self.basename))
     
     def get_filekinds(self, dataset):
         """Return the filekinds associated with `dataset` by examining
@@ -749,8 +744,16 @@ class ReferenceMapping(Mapping):
         self._tpn_valid_values = self.get_valid_values_map()
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()  
-        self._rmap_relevance_expr = getattr(self, "rmap_relevance", "always")
-        self._parkey_relevance_exprs = getattr(self, "parkey_relevance", {})
+
+        rmap_relevance = getattr(self, "rmap_relevance", "always")
+        if rmap_relevance == "always":
+            rmap_relevance = "True"
+        self._rmap_relevance_expr = MAPPING_VALIDATOR.compile_and_check(
+            rmap_relevance, source=self.basename, mode="eval")
+
+        self._parkey_relevance_exprs = \
+            { parkey:MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval") \
+             for (parkey,expr) in getattr(self, "parkey_relevance", {}).items() }
 
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
@@ -888,12 +891,9 @@ class ReferenceMapping(Mapping):
         """
         # header keys and values are upper case.  rmap attrs are lower case.
         try:
-            if self._rmap_relevance_expr == "always":
-                relevant = True
-            else:
-                relevant = eval(self._rmap_relevance_expr, {}, header)
-                log.verbose("Filekind ", self.instrument, self.filekind, 
-                            "is relevant: ", relevant, verbosity=60)
+            relevant = eval(self._rmap_relevance_expr, {}, header)
+            log.verbose("Filekind ", self.instrument, self.filekind, 
+                        "is relevant: ", relevant, verbosity=60)
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
