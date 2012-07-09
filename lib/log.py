@@ -28,10 +28,8 @@ class CrdsLogger(object):
         self.verbose_level = 0
         self.verbose_flag = self.verbose_level > 0
         self.eol_pending = False
-        
-    @property
-    def default_verbose_level(self):
-        return os.environ.get(self.name.replace(".","_")+"_VERBOSITY", 50)
+        self.default_verbose_level = os.environ.get(
+            self.name.replace(".","_")+"_VERBOSITY", 50)
 
     def format(self, *args, **keys):
         end = keys.get("end", "\n")

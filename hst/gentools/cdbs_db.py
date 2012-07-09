@@ -648,7 +648,7 @@ def main():
             filekinds = []
         if len(sys.argv) > 4:
             datasets = [d.lower() for d in sys.argv[4].split(",")]
-            log.set_verbose()
+            log.set_verbose(60)
         else:
             datasets = []
         testall(instruments=instruments, filekinds=filekinds, datasets=datasets,
