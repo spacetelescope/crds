@@ -2,8 +2,6 @@ import sys
 import pprint
 import os.path
 
-from BeautifulSoup import BeautifulStoneSoup
-
 from crds import (rmap, log, timestamp)
 from crds.compat import OrderedDict
 
