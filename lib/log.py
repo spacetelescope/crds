@@ -10,6 +10,8 @@ import optparse
 import logging
 import pprint
 
+DEFAULT_VERBOSITY_LEVEL = 50
+
 class CrdsLogger(object):
     def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG):
         self.name = name
@@ -25,11 +27,10 @@ class CrdsLogger(object):
         self.errors = 0
         self.warnings = 0
         self.infos = 0
-        self.verbose_level = 0
-        self.verbose_flag = self.verbose_level > 0
         self.eol_pending = False
-        self.default_verbose_level = os.environ.get(
-            self.name.replace(".","_")+"_VERBOSITY", 50)
+        self.verbose_level =  os.environ.get(
+            self.name.replace(".","_")+"_VERBOSITY", 0)
+        self.verbose_flag = self.verbose_level > 0
 
     def format(self, *args, **keys):
         end = keys.get("end", "\n")
@@ -59,7 +60,7 @@ class CrdsLogger(object):
         self.logger.debug(self.eformat(*args, **keys))
 
     def verbose(self, *args, **keys):
-        verbosity = keys.get("verbosity", self.default_verbose_level)
+        verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
         if self.verbose_level < verbosity:
             return
         self.debug(*args, **keys)
@@ -86,7 +87,7 @@ class CrdsLogger(object):
     def set_verbose(self, level=True):
         assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
         if level == True:
-            level = self.default_verbose_level
+            level = DEFAULT_VERBOSITY_LEVEL
         elif level == False:
             level = 0
         self.verbose_level = level
@@ -100,7 +101,7 @@ THE_LOGGER = CrdsLogger("CRDS")
 info = THE_LOGGER.info
 error = THE_LOGGER.error
 warning = THE_LOGGER.warn
-verbose_warning = THE_LOGGER.warn
+verbose_warning = THE_LOGGER.verbose_warning
 verbose = THE_LOGGER.verbose
 debug = THE_LOGGER.debug
 status = THE_LOGGER.status
