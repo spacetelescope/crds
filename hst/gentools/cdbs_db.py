@@ -11,7 +11,7 @@ import datetime
 import cProfile
 import glob
 
-import pyodbc
+# import pyodbc  deferred...
 
 from crds import rmap, log, utils, timestamp, data_file, selectors
 import crds.hst
@@ -77,6 +77,9 @@ def dataset_to_instrument(dataset):
 
 class DB(object):
     def __init__(self, dsn, user, password=None):
+
+        import pyodbc
+
         self.dsn = dsn
         self.user = user
         if password is None:
@@ -413,7 +416,7 @@ def same_keys(dict1, dict2):
     """return a copy of dict2 reduced to the same keywords as dict1"""
     return { key:val for (key,val) in dict2 if key in dict1 }
 
-def test(header_spec, context="hst.pmap", datasets=[], 
+def testit(header_spec, context="hst.pmap", datasets=[], 
          ignore=[], filekinds=[], alternate_headers={}, inject_errors=None):
     """Evaluate the best references cases from `header_generator` against 
     similar results attained from CRDS running on pipeline `context`.
@@ -543,13 +546,13 @@ def testall(context="hst.pmap", instruments=[],
         log.write("instrument", instr + ":")
         headers = path+instr+suffix
         if profile:
-            cProfile.runctx("test(headers, context, "
+            cProfile.runctx("testit(headers, context, "
                             "filekinds=filekinds, datasets=datasets, "
                             "alternate_headers=alternate_headers,"
                             "inject_errors=inject_errors)",
                             globals(), locals(), instr + ".stats")
         else:
-            test(headers, context, datasets=datasets, filekinds=filekinds,
+            testit(headers, context, datasets=datasets, filekinds=filekinds,
                  alternate_headers=alternate_headers, inject_errors=inject_errors) 
         log.write()
 

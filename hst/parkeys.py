@@ -6,8 +6,6 @@ import pprint
 import os.path
 import re
 
-from BeautifulSoup import BeautifulStoneSoup
-
 from crds import (log, utils)
 
 # =======================================================================
@@ -85,6 +83,8 @@ def process_reference_file_defs():
     file, and parkeys is a list of dataset header keywords used to select the
     reference file.
     """
+    from BeautifulSoup import BeautifulStoneSoup
+
     xml = BeautifulStoneSoup(
             open("cdbs/cdbs_bestref/reference_file_defs.xml").read())
     rdefs = {}
