@@ -10,8 +10,6 @@ setup(name="crds.hst",
       packages=[
         'crds.hst',
 
-        'crds.hst.gentools',
-
         'crds.mappings',
         'crds.mappings.hst',
         'crds.references',
@@ -22,8 +20,6 @@ setup(name="crds.hst",
       package_dir = {
         'crds.hst':'.',
 
-        'crds.hst.gentools' : 'gentools',
-        
         'crds.mappings' : 'mappings',
         'crds.mappings.hst' : 'mappings/hst',
         'crds.references' : 'references',
