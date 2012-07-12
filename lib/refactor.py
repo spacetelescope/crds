@@ -159,8 +159,28 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
             # Any time ref_match_tuple matches,  rmap_tuple matches.
             if selectors.match_superset(ref_match_tuple, rmap_tuple):
                 matches.append(_normalize_match_tuple(rmap_tuple))
+    matches = _remove_special_cases(matches)
     return matches
 
+def _remove_special_cases(matches):
+    """It only makes sense to add the most general cases of the possible
+    matches,  removing all proper special cases.   Note that all overlapping
+    matches are not necessarily special cases,  only those with a true 
+    subset/superset relationship.
+    
+    For instance,  ("A|B",) overlaps ("B|C",),  but is not a special case, so
+    a refactoring of that rmap would affect both tuples.   On the other hand,
+    ("A",) overlaps ("A|B",) and there is no case where the former will match
+    and the latter will not... hence it only makes sense to change the latter.
+    """
+    matches2 = set(matches)
+    for m1 in matches2:
+        for m2 in matches2:
+            if m1 != m2 and selectors.match_superset(m1, m2) and m2 in matches:
+                log.verbose("Match",repr(m2),"is a special case of", repr(m1))
+                matches.remove(m2)
+    return list(set(matches))
+    
 def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, 
                        useafter_file):
     """Add one new useafter date / file to the `match_tuple` case of
@@ -275,6 +295,7 @@ def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
 def main():
     import crds
     crds.handle_version()
+    log.set_verbose(60)
     if len(sys.argv) >= 2 and sys.argv[1] == "insert":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]

@@ -133,7 +133,7 @@ class Deferred(object):
     def __init__(self, ppobj):
         self.ppobj = ppobj
     
-    def str(self):
+    def __str__(self):
         return str(self.ppobj())
 
 # ===========================================================================
