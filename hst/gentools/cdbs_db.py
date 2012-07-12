@@ -66,6 +66,7 @@ IPPPSSOOT_INSTR = {
     "I" : "wfc3",
     "N" : "nicmos",
     "O" : "stis",
+    "L" : "cos",
 }
 
 def dataset_to_instrument(dataset):
@@ -119,7 +120,7 @@ class DB(object):
 
         if col_list is None:
             col_list = self.get_columns(table)
-        col_names = ", ".join(col_list)
+        col_names = ", ".join(col_list) or "*"
 
         for row in self.cursor.execute("select %s from %s %s" % (col_names, table, where)):
             items = zip(col_list, [str(x).lower() for x in row] if lowercase else row)
