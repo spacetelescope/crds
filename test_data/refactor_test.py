@@ -106,5 +106,5 @@ if __name__ == "__main__":
     if sys.argv[2].startswith("@"):
         references = new_references(sys.argv[2][1:])
     else:
-        references = sys.argv[2]
+        references = sys.argv[2:]
     main(context, references)
