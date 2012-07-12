@@ -1019,7 +1019,7 @@ of uniform rmap structure for HST:
         combined = equivalent_selectors[0].merge(equivalent_selectors[1])
         for next in equivalent_selectors[2:]:
             combined = combined.merge(next)
-        log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=60)
+        log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=70)
         return combined
 
     def get_value_map(self):
