@@ -112,14 +112,22 @@ def get_fits_header_union(fname, needed_keys=[]):
         for key in hdu.header:
             if get_all_keys or key in needed_keys:
                 newval = hdu.header[key]
-                union[key] = newval
-                if union[key] != newval and key in needed_keys:
-                    log.warning("Header union collision on", repr(key),
-                                repr(union[key]), "replaces",repr(newval))
-    for key in needed_keys:
-        if key not in union:
-            union[key] = "NOT PRESENT"
+                if key in union and union[key] != newval:
+                    log.verbose_warning("Header union collision on", repr(key),
+                                        repr(union[key]), "collides with",
+                                        repr(newval), verbosity=70)
+                else:
+                    union[key] = str(newval)
+    union = ensure_keys_defined(union, needed_keys)
     return union
+
+def ensure_keys_defined(header, needed_keys):
+    """If any header key in `needed_keys` is not defined,  assign it a value
+    of "NOT PRESENT" in the result; return all other values.
+    """
+    result = { key:header.get(key, "NOT PRESENT") for key in needed_keys }
+    result.update(header)
+    return result
 
 _GEIS_TEST_DATA = """
 SIMPLE  =                    F /

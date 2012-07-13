@@ -449,7 +449,7 @@ def match_superset(tuple1, tuple2):
     >>> match_superset(('1','N/A'), ('1','3'))
     True
     >>> match_superset(('1','3'), ('1','N/A'))
-    True
+    False
     >>> match_superset(('1','*'), ('1','N/A'))
     True
     >>> match_superset(('1','N/A'), ('1','*'))
@@ -462,8 +462,8 @@ def match_superset(tuple1, tuple2):
             continue
         if v1 in ["*",'N/A']:
             continue
-        if v2 in ["N/A"]:
-            continue
+#        if v2 in ["N/A"]:
+#            continue
         if v2 == ["*"]:
             return False
         if set(v1.split("|")) > set(v2.split("|")):
@@ -499,11 +499,12 @@ class RegexMatcher(Matcher):
     def __init__(self, key):
         Matcher.__init__(self, key)
         self._regex = re.compile(key)
+        self._exceptional_matches = ["*"]
         
     def match(self, value):
         if value == "N/A":
             return 0
-        elif value == "*" or self._regex.match(value):
+        elif value in self._exceptional_matches or self._regex.match(value):
             return 1
         else:
             return -1
@@ -541,6 +542,9 @@ class GlobMatcher(RegexMatcher):
         exprs = [fnmatch.translate(part) for part in parts]
         all = "^(" + "|".join(exprs) + ")$"
         RegexMatcher.__init__(self, all)
+        # To support automatic refactoring in the refactor module,  also
+        # match on the original key such as A|B|C|D
+        self._exceptional_matches.append(key)
         
 class InequalityMatcher(Matcher):
     """
