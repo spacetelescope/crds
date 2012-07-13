@@ -394,7 +394,7 @@ def certify_files(files, dump_provenance=False, check_references=None,
                   is_mapping=False, trap_exceptions=True):
 
     if not isinstance(files,list):
-        files = list(files)
+        files = [files]
 
     for filename in files:
         bname = os.path.basename(filename)
