@@ -1,5 +1,5 @@
 """This module supports loading CDBS .rule files which define conditional
-substitutions to be performed on reference file headers as they are submitted
+expansions to be performed on reference file headers as they are submitted
 to CRDS.
 
 For instance,  from acs.rule:
@@ -8,32 +8,131 @@ For instance,  from acs.rule:
     CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;
 
 means that the value CCDGAIN=-999 really means CCDGAIN=1.0|2.0|4.0|8.0 whenever 
-DETECTOR=WFC.
+DETECTOR=WFC.   The abbreviated forms need to be expanded fully in order to 
+determine where a reference file should be inserted into an rmap.
 
 CRDS compiles the rules files into a mapping of the form:
 
-    { relevance_expr:  (key, expansion_value) }
+    { relevance_expr:  (variable, expansion) }
+    
+For our example above the expansion looks like:
+
+    "DETECTOR='WFC3' and CCDGAIN='-999'" : ("CCDGAIN", "1.0|2.0|4.0|8.0")
 
 CRDS defines a function:
 
-   expanded_header = expand_header_wildcards(header)
+   expanded_header = expand_wildcards(instrument, header)
 
 which will interpret the rules to expand appropriate values in header.
-
-The naive algorithm CRDS initially uses to expand these rules evaluates *all* 
-of the rules.
 """
 
 from __future__ import print_function
 
 import sys
+import os.path
+import pprint
+import glob
+import re
+
+from crds.hst import INSTRUMENTS
+
+from crds import log, utils
+
+# ============================================================================
+
+HERE = os.path.dirname(__file__) or "."
+    
+# ============================================================================    
+
+class HeaderExpander(object):
+    """HeaderExpander applies a set of expansion rules to a header.  It 
+    precompiles the applicability expression of each rule.
+    
+    >>> expansions = {
+    ...  "DETECTOR=='HRC' and FILTER1=='ANY'": ('FILTER1','F555W|F775W|F625W'),
+    ...  "DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": ('OBSTYPE','IMAGING|CORONAGRAPHIC'),
+    ... }
+    >>> expander = HeaderExpander(expansions)
+
+    >>> header = { "DETECTOR":"HRC", "FILTER1":"ANY" }
+    >>> expander.expand(header)
+    {'DETECTOR': 'HRC', 'FILTER1': 'F555W|F775W|F625W'}
+
+    >>> header = { "DETECTOR":"HRC", "FILTER1":"G280L", "OBSTYPE":"ANY" }
+    >>> expander.expand(header)
+    {'OBSTYPE': 'ANY', 'DETECTOR': 'HRC', 'FILTER1': 'G280L'}
+
+    >>> header = { "DETECTOR":"HRC", "FILTER1":"G800L", "OBSTYPE":"ANY" }
+    >>> expander.expand(header)
+    {'OBSTYPE': 'IMAGING|CORONAGRAPHIC', 'DETECTOR': 'HRC', 'FILTER1': 'G800L'}
+    """
+    def __init__(self, expansion_mapping, expansion_file="(none)"):
+        self.mapping = {}
+        for expr, (var, expansion) in expansion_mapping.items():
+            self.mapping[expr] = (var, expansion, compile(expr, expansion_file, "eval"))
+            
+    def expand(self, header):
+        header = dict(header)
+        expanded = dict(header)
+        for expr, (var, expansion, compiled) in self.mapping.items():
+            try:
+                applicable = eval(compiled, {}, header)
+                log.verbose("Expanding", repr(expr), "as", applicable)
+            except Exception, exc:
+                log.warning("Header expansion for",repr(expr),
+                            "failed against", header, "for", str(exc))
+                continue
+            if applicable:
+                log.verbose("Exapanding", repr(expr), "with", 
+                            var + "=" + repr(expansion))
+                expanded[var] = expansion
+        return expanded
+    
+EXPANDERS = {}
+def load_all():
+    for file in glob.glob(HERE + "/" + "*.exp"):
+        instrument = file.replace(".exp","")
+        try:
+            log.verbose("Loading header expansions from", repr(file))
+            expansions = utils.evalfile(file)
+        except Exception, exc:
+            log.error("Error loading",repr(file),":",str(exc))
+        else:
+            EXPANDERS[instrument] = HeaderExpander(expansions, file)
+
+def expand_wildcards(instrument, header):
+    if not EXPANDERS:
+        load_all()
+    return EXPANDERS[instrument].expand(header)
+
+# =============================================================================
+
+def compile_all(path):
+    files = []
+    for f in glob.glob(path +"/*.rule"):
+        if os.path.basename(f).replace(".rule","") in INSTRUMENTS:
+            files.append(f)
+    compile_files(files)
+    
+def compile_files(files):
+    """Generate variable expansion files for each of the CDBS .rule `files`.
+    """
+    for f in files:
+        new_name = os.path.basename(f).replace(".rule","") + ".exp"
+        log.info("Compiling expansion rules", repr(f), "to", repr(new_name))
+        expansions = compile_rules(f)
+        with open(new_name,"w+") as new_file:
+            new_file.write(pprint.pformat(expansions))
 
 def compile_rules(rules_file):
+    """Compile a single `rules_file` into a variable expansion mapping."""
     expression_terms = []
     expansion_terms = []
     expected = "expression"
     compiled = {}
+    source = ""
     for line in open(rules_file):
+        source += "\t" + line
         line = line.strip();
         if line.startswith("#"):
             continue
@@ -46,7 +145,7 @@ def compile_rules(rules_file):
             else:
                 expr = line
                 values = ""
-            expression_terms.extend(parse_terms(expr))
+            expression_terms.extend(parse_terms(expr, "&&"))
         else: # expected == "expansion"
             values = line
         if expected == "expansion":
@@ -54,22 +153,27 @@ def compile_rules(rules_file):
                 completed = True
             else:
                 completed = False        
-            expansion_terms.extend(parse_terms(values))
+            expansion_terms.extend(parse_terms(values, "||"))
         if completed:
-            compiled[format_relevance_expr(expression_terms)] = \
-                format_expansion(expansion_terms)
+            log.verbose("Compiling:", source[:-1])
+            relevance = format_relevance_expr(expression_terms)
+            expansion = format_expansion(expansion_terms)
+            log.verbose("Expansion:", "\n\t", repr(relevance), ":", expansion)
+            compiled[relevance] = expansion
             expression_terms = []
             expansion_terms = []
             completed = False
             expected = "expression"
+            source = ""
     return compiled
 
-def parse_terms(expr):
+def parse_terms(expr, delimeter):
     """
-    >>> parse_terms("VAR1 = VAL1 && VAR2 = VAL2 && VAR3 = VAL3")
+    >>> parse_terms("VAR1 = VAL1 && VAR2 = VAL2 && VAR3 = VAL3", "&&")
     [('VAR1', 'VAL1'), ('VAR2', 'VAL2'), ('VAR3', 'VAL3')]
     """
-    return [tuple([t.strip() for t in term.split("=")]) for term in expr.split("&&")]
+    return [tuple([t.replace(";","").strip() for t in term.split("=")]) \
+                for term in expr.split(delimeter) if term.strip()]
 
 def format_relevance_expr(terms):
     """
@@ -101,10 +205,15 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("usage: ", sys.argv[0], "[compile|test] <rules_files...>")
         sys.exit(0)
+    if "--verbose" in sys.argv:
+        sys.argv.remove("--verbose")
+        log.set_verbose(True)
     if sys.argv[1] == "test":
         test()
     elif sys.argv[1] == "compile":
-        compile_files(sys.argv[1:])
+        compile_files(sys.argv[2:])
+    elif sys.argv[1] == "compileall":
+        compile_all("cdbs/cdbs_tpns")
     else:
         print("unknown command '{0}'".format(sys.argv[1]))
         
