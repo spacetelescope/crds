@@ -70,28 +70,48 @@ class HeaderExpander(object):
         self.mapping = {}
         for expr, (var, expansion) in expansion_mapping.items():
             self.mapping[expr] = (var, expansion, compile(expr, expansion_file, "eval"))
-            
+        self._required_keys = self.required_keys()
+
     def expand(self, header):
         header = dict(header)
         expanded = dict(header)
+        log.verbose("Unexpanded header", self.required_header(header))
         for expr, (var, expansion, compiled) in self.mapping.items():
             try:
                 applicable = eval(compiled, {}, header)
-                log.verbose("Expanding", repr(expr), "as", applicable)
             except Exception, exc:
-                log.warning("Header expansion for",repr(expr),
-                            "failed against", header, "for", str(exc))
+                log.warning("Header expansion for",repr(expr), 
+                            "failed for", repr(str(exc)))
                 continue
             if applicable:
-                log.verbose("Exapanding", repr(expr), "with", 
+                log.verbose("Exapanding", repr(expr), "yields", 
                             var + "=" + repr(expansion))
                 expanded[var] = expansion
+            else:
+                log.verbose("Expanding", repr(expr), "doesn't apply.")
+        log.verbose("Expanded header", self.required_header(expanded))
         return expanded
+    
+    def required_keys(self):
+        required = []
+        for expr in self.mapping:
+            required.extend(required_keys(expr))
+        return sorted(set(required))
+    
+    def required_header(self, header):
+        return sorted({ key: header.get(key, "NOT PRESENT") for key in self._required_keys }.items())
+        
+def required_keys(expr):
+    """
+    >>> required_keys("VAR1=='VAL1' and VAR2=='VAL2' and VAR3=='VAL3'")
+    ['VAR1', 'VAR2', 'VAR3']
+    """
+    return sorted(set([term.split("=")[0].strip() for term in expr.split("and")]))
     
 EXPANDERS = {}
 def load_all():
-    for file in glob.glob(HERE + "/" + "*.exp"):
-        instrument = file.replace(".exp","")
+    for file in glob.glob(HERE + "/" + "*_expansions.dat"):
+        instrument = os.path.basename(file.replace("_expansions.dat",""))
         try:
             log.verbose("Loading header expansions from", repr(file))
             expansions = utils.evalfile(file)
@@ -103,7 +123,11 @@ def load_all():
 def expand_wildcards(instrument, header):
     if not EXPANDERS:
         load_all()
-    return EXPANDERS[instrument].expand(header)
+    try:
+        header = EXPANDERS[instrument].expand(header)
+    except KeyError:
+        log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
+    return header
 
 # =============================================================================
 
@@ -118,7 +142,7 @@ def compile_files(files):
     """Generate variable expansion files for each of the CDBS .rule `files`.
     """
     for f in files:
-        new_name = os.path.basename(f).replace(".rule","") + ".exp"
+        new_name = os.path.basename(f).replace(".rule","") + "_expansions.dat"
         log.info("Compiling expansion rules", repr(f), "to", repr(new_name))
         expansions = compile_rules(f)
         with open(new_name,"w+") as new_file:
@@ -194,7 +218,7 @@ def format_expansion(terms):
     """
     assert len(set([t[0] for t in terms])) == 1, "more than one expansion variable."
     var = terms[0][0]
-    expansion = "|".join([t[1] for t in terms])
+    expansion = "|".join(sorted([t[1] for t in terms]))
     return (var, expansion) 
 
 def test():
@@ -203,7 +227,7 @@ def test():
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("usage: ", sys.argv[0], "[compile|test] <rules_files...>")
+        print("usage: ", sys.argv[0], "compile <rules_files...> | compileall | test")
         sys.exit(0)
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
@@ -213,7 +237,7 @@ if __name__ == "__main__":
     elif sys.argv[1] == "compile":
         compile_files(sys.argv[2:])
     elif sys.argv[1] == "compileall":
-        compile_all("cdbs/cdbs_tpns")
+        compile_all(HERE + "/cdbs/cdbs_tpns")
     else:
         print("unknown command '{0}'".format(sys.argv[1]))
         

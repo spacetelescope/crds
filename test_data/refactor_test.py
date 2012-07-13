@@ -1,6 +1,12 @@
 #! /usr/bin/env pysh
 #-*-python-*-
 
+"""This module runs the refactoring code on a sequence of reference files in order
+to test automatic rmap refactoring.   Based on the reference file and a given
+context,  this code determines which rmap to modify and attempts to add the new
+reference file to it.
+"""
+
 import sys
 import random
 import shutil
@@ -13,23 +19,6 @@ def newfile(fname):
    root, ext = os.path.splitext(fname)
    return "./" + os.path.basename(root) + "_new" + ext
 
-def get_reference(context, r):
-   nerrors = 0
-   references = r.reference_names()
-   while True:
-      n = int(len(references) * random.random())
-      old_ref = references[n]
-      try:
-         log.write("dumping", repr(old_ref))
-         client.dump_references(context, [old_ref])
-         return rmap.locate_file(old_ref)
-      except Exception:
-         raise
-         log.error()
-         nerrors += 1
-         if nerrors > 10:
-            raise RuntimeError("too many missing references")
-        
 def new_references(new_file):
     for line in open(new_file):
         if not line.strip():
@@ -49,8 +38,7 @@ def main(context, new_references):
             log.error("Failed getting corresponding rmap for", repr(reference), repr(str(exc)))
             continue
 
-        log.info("Reference", instrument, filekind, 
-                 os.path.basename(old_rmap_path), os.path.basename(refpath))
+        log.info("Reference", os.path.basename(old_rmap_path), os.path.basename(refpath))
 
         new_rmap_path = "./temp.rmap"
             
@@ -73,8 +61,8 @@ def main(context, new_references):
             pysh.sh("diff -c ${old_rmap_path} ${new_rmap_path}")
             sys.stdout.flush()
             sys.stderr.flush()
-        except:
-            log.error()
+        except Exception, exc:
+            log.error("Exception", str(exc))
         
         pysh.sh("rm -f ${new_rmap_path} ${new_refpath}")
 

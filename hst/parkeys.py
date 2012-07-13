@@ -177,6 +177,11 @@ def simplify_restriction(restriction_text, condition):
 
 # note:  fits_parkeys and db_parkeys need to be in the same order.
 
+# From another perspective,   I think fits_parkeys are the dataset version
+# of a parameter,  and db_parkeys are the reference file version of a parameter
+# which in general are the same...  except for ACS biasfile NUMROWS, NUMCOLS
+# <-> BINAXIS1, BINAXIS2
+
 def get_reftype(instrument, filekind):
     return PARKEYS[instrument][filekind]["reftype"]
 
@@ -189,6 +194,21 @@ def get_db_parkeys(instrument, filekind):
     for key in get_fits_parkeys(instrument, filekind):
         db_parkeys.append(translations.get(key, key))
     return tuple(db_parkeys)
+
+def reference_keys_to_dataset_keys(instrument, filekind, header):
+    """Given a header dictionary for a reference file,  map the header back to
+    keys relevant to datasets.   So for ACS biasfile the reference says BINAXIS1
+    but the dataset says NUMCOLS.   This would convert { "BINAXIS1": 1024 } to
+    { "NUMCOLS" : 1024 }.
+    
+    In general,  rmap parkeys are matched against datset values and are defined
+    as dataset header keywords.   For refactoring though,  what's initially
+    available are reference file keywords...  which need to be mapped into the
+    terms rmaps know:  dataset keywords.
+    """
+    inv_trans = utils.invert_dict(
+        PARKEYS[instrument][filekind]["db_translations"])
+    return { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
 
 def get_rmap_relevance(instrument, filekind):
     return PARKEYS[instrument][filekind]["rmap_relevance"]

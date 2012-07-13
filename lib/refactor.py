@@ -6,7 +6,7 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, data_file, timestamp, compat, log, selectors, checksum)
+from crds import (rmap, data_file, timestamp, compat, log, selectors, checksum, utils)
 from crds.timestamp import DATETIME_RE_STR
 
 # ============================================================================
@@ -85,8 +85,15 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
 
     # XXX Hack alert skip DATE-OBS, TIME-OBS
     parkeys = loaded_rmap.get_required_parkeys()[:-2]  
-    header = data_file.get_conditioned_header(
-        reffile, needed_keys=parkeys + ["USEAFTER"])
+    header = data_file.get_header(reffile)
+    header = loaded_rmap.locate.reference_keys_to_dataset_keys(
+        loaded_rmap.instrument, loaded_rmap.filekind, header)
+    header = loaded_rmap.locate.expand_wildcards(loaded_rmap.instrument, header)
+    header = { key:utils.condition_value(value) for key, value in header.items() \
+               if key in parkeys + ["USEAFTER"] }
+    header = data_file.ensure_keys_defined(header, parkeys + ["USEAFTER"])
+    header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
+    
     useafter_date = timestamp.reformat_date(header["USEAFTER"])
 
     # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
@@ -159,6 +166,8 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
             # Any time ref_match_tuple matches,  rmap_tuple matches.
             if selectors.match_superset(ref_match_tuple, rmap_tuple):
                 matches.append(_normalize_match_tuple(rmap_tuple))
+            else:
+                log.verbose("Removing non-superset match", ref_match_tuple, "of", rmap_tuple)
     matches = _remove_special_cases(matches)
     return matches
 

@@ -66,8 +66,10 @@ class CrdsLogger(object):
         self.debug(*args, **keys)
  
     def verbose_warning(self, *args, **keys):
-        if self.verbose_flag:
-            self.warn(*args, **keys)
+        verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
+        if self.verbose_level < verbosity:
+            return
+        self.warn(*args, **keys)
             
     def write(self, *args, **keys):
         """Output a message to stdout, formatting each positional parameter
