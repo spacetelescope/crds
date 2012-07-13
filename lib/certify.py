@@ -7,12 +7,12 @@ import os
 import optparse
 import re
 
-import pyfits 
+import pyfits
 
 from crds import rmap, log, timestamp, utils, data_file
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
-    
+
 # ============================================================================
 
 #
@@ -30,7 +30,7 @@ TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 
 class MissingKeywordError(Exception):
     """A required keyword was not defined."""
-    
+
 class IllegalKeywordError(Exception):
     """A keyword which should not be defined was present."""
 
@@ -41,7 +41,7 @@ class KeywordValidator(object):
     def __init__(self, info):
         self._info = info
         if self._info.presence not in ["R", "P", "E", "O"]:
-            raise ValueError("Bad TPN presence field " + 
+            raise ValueError("Bad TPN presence field " +
                              repr(self._info.presence))
         if self.condition is not None:
             self._values = [self.condition(value) for value in info.values]
@@ -49,12 +49,12 @@ class KeywordValidator(object):
     def condition(self, value):
         """Condition `value` to standard format for this Validator."""
         return value
-            
+
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._info) + ")"
 
     def check(self, filename, header=None):
-        """Pull the value(s) corresponding to this Validator out of it's 
+        """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
@@ -66,14 +66,14 @@ class KeywordValidator(object):
             self.check_group(filename)
         else:
             raise ValueError(
-                "Unknown TPN keytype " + repr(self._info.keytype) + " for " + 
+                "Unknown TPN keytype " + repr(self._info.keytype) + " for " +
                 repr(self._info.name))
-        
+
     def check_value(self, filename, value):
         """Check a single header or column value against the legal values
         for this Validator.
         """
-        log.verbose("Checking ", repr(filename), "keyword", 
+        log.verbose("Checking ", repr(filename), "keyword",
                     repr(self._info.name), "=", repr(value))
         if value is None: # missing optional or excluded keyword
             return
@@ -82,17 +82,17 @@ class KeywordValidator(object):
         if not self._values:
             return
         self._check_value(value)
-        
+
     def _check_value(self, value):
         if value not in self._values and self._values != ('*',):
             if isinstance(value, str):
                 for pat in self._values:
                     if re.match(pat, value):
                         return
-            raise ValueError("Value for " + repr(self._info.name) + " of " + 
-                             repr(value) + " is not one of " + 
+            raise ValueError("Value for " + repr(self._info.name) + " of " +
+                             repr(value) + " is not one of " +
                              repr(self._values))
-        
+
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
@@ -101,17 +101,19 @@ class KeywordValidator(object):
             header = data_file.get_header(filename)
         value = self._get_header_value(header)
         self.check_value(filename, value)
-        
+
     def check_column(self, filename):
         """Extract a column of values from `filename` and check them all against
         the legal values for this Validator.
         """
+        values = None
         try:
             values = self._get_column_values(filename)
         except Exception, exc:
             raise RuntimeError("Can't read column values : " + str(exc))
-        for i, value in enumerate(values):
-            self.check_value(filename + "[" + str(i) +"]", value)
+        if values is not None: # Only check for non-optional columns
+            for i, value in enumerate(values):
+                self.check_value(filename + "[" + str(i) +"]", value)
 
     def check_group(self, filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
@@ -126,22 +128,36 @@ class KeywordValidator(object):
         except KeyError:
             return self.__handle_missing()
         return self.__handle_excluded(value)
-    
+
     def _get_column_values(self, filename):
         """Pull the column of values corresponding to this Validator out of
         `filename` and return it.   Handle missing and excluded cases.
         """
-        hdu = pyfits.open(filename) 
-        # XXX assume tables are in extension #1.
+        hdu = pyfits.open(filename)
+        # make sure table(s) are in extension(s) not the PRIMARY extension
         assert len(hdu) >1, "table file with only primary extension: " + repr(filename)
-        assert len(hdu) <3, "table file with more than one extension: " + repr(filename)
-        tbdata = hdu[1].data
-        try:
-            values = tbdata.field(self._info.name)
-        except KeyError:
+
+        # start by finding the extension which contains the requested column
+        col_extn = None
+        for extn in hdu:
+            if hasattr(extn,'_extension') and 'table' in extn._extension.lower()\
+                and self._info.name in extn.data.names:
+                    col_extn = extn
+                    break
+        # If no extension could be found with that column, report as missing
+        if col_extn is None:
+            # close FITS handle
+            hdu.close()
             return self.__handle_missing()
+
+        # If it was found, return the values
+        tbdata = col_extn.data
+        values = tbdata.field(self._info.name)
+
+        # close FITS handle
+        hdu.close()
         return self.__handle_excluded(values)
-    
+
     def __handle_missing(self):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
@@ -168,7 +184,7 @@ class CharacterValidator(KeywordValidator):
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
-    
+
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
@@ -184,8 +200,8 @@ class NumericalValidator(KeywordValidator):
     def _check_value(self, value):
         if self.is_range:
             if value < min or value > max:
-                raise ValueError("Value for " + repr(self._info.name) + " of " + 
-                    repr(value) + " is outside acceptable range " + 
+                raise ValueError("Value for " + repr(self._info.name) + " of " +
+                    repr(value) + " is outside acceptable range " +
                     self._info.values[0])
         else:   # First try a simple exact string match check
             KeywordValidator._check_value(self, value)
@@ -198,7 +214,7 @@ class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
     condition = float
     epsilon = 1e-7
-    
+
     def _check_value(self, value):
         try:
             NumericalValidator._check_value(self, value)
@@ -219,19 +235,19 @@ class FloatValidator(NumericalValidator):
 
 class RealValidator(FloatValidator):
     """Validate 32-bit floats."""
-    
+
 class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
     epsilon = 1e-14
-    
+
 class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields.
     """
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
     condition = None
-    
+
     def _get_header_value(self, header):
-        """Extract the PEDIGREE value from header,  checking any 
+        """Extract the PEDIGREE value from header,  checking any
         start/stop dates.   Return only the PEDIGREE classification.
         Ignore missing start/stop dates.
         """
@@ -256,7 +272,7 @@ class SybdateValidator(KeywordValidator):
     condition = None
     def check_value(self, filename, value):
         timestamp.Sybdate.get_datetime(value)
-        
+
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
     condition = None
@@ -268,7 +284,7 @@ class AnydateValidator(KeywordValidator):
     condition = None
     def check_value(self, filename, value):
         timestamp.Anydate.get_datetime(value)
-        
+
 class FilenameValidator(KeywordValidator):
     """Validates &FILENAME fields."""
     condition = None
@@ -300,12 +316,12 @@ def validator(info):
 
 VALIDATOR_CACHE = {}
 def get_validators(filename):
-    """Given a reference file `filename`,  return the observatory specific 
+    """Given a reference file `filename`,  return the observatory specific
     list of Validators used to check that reference file type.
     """
     # Find the observatory's locator module based on the reference file.
     locator = utils.reference_to_locator(filename)
-    
+
     # Get the cache key for this filetype.
     key = locator.reference_name_to_validator_key(filename)
 
@@ -332,7 +348,7 @@ def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
             checker.check(fitsname)
         except Exception:
             if trap_exceptions:
-                log.error("Checking", repr(checker._info.name), "in", 
+                log.error("Checking", repr(checker._info.name), "in",
                           repr(fitsname))
             else:
                 raise
@@ -368,14 +384,18 @@ def certify_context(context, check_references=None, trap_exceptions=False):
             else:
                 raise ValidationError("Missing reference file " + repr(ref))
     if check_references == "contents":
-        certify_files(references, check_references=check_references, 
+        certify_files(references, check_references=check_references,
                       trap_exceptions=trap_exceptions)
-    
+
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
-def certify_files(files, dump_provenance=False, check_references=None,  
+def certify_files(files, dump_provenance=False, check_references=None,
                   is_mapping=False, trap_exceptions=True):
+
+    if not isinstance(files,list):
+        files = list(files)
+
     for filename in files:
         bname = os.path.basename(filename)
         log.info("Certifying", repr(bname))
@@ -402,20 +422,20 @@ def main():
     crds.handle_version()
     parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
     parser.add_option("-d", "--deep", dest="deep",
-        help="Certify reference files referred to by mappings have valid contents.", 
+        help="Certify reference files referred to by mappings have valid contents.",
         action="store_true")
     parser.add_option("-e", "--exist", dest="exist",
-        help="Certify reference files referred to by mappings exist.", 
+        help="Certify reference files referred to by mappings exist.",
         action="store_true")
     parser.add_option("-m", "--mapping", dest="mapping",
-        help="Ignore extensions, the files being certified are mappings.", 
+        help="Ignore extensions, the files being certified are mappings.",
         action="store_true")
     parser.add_option("-p", "--dump-provenance", dest="provenance",
         help="Dump provenance keywords.", action="store_true")
     parser.add_option("-t", "--trap-exceptions", dest="trap_exceptions",
         help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none",
         type=str, default="selector")
-    
+
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
     if options.deep:
@@ -424,11 +444,11 @@ def main():
         check_references = "exist"
     else:
         check_references = None
-        
+
     if options.trap_exceptions == "none":
         options.trap_exceptions = False
-    
-    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)", 
+
+    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)",
                      options, globals(), locals())
     log.standard_status()
     return log.errors()
@@ -437,4 +457,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
