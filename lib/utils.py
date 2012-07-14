@@ -166,6 +166,7 @@ def condition_value(value):
 
     >>> condition_value('ANY')
     '*'
+    
     # >>> condition_value('-999')
     'N/A'
     # >>> condition_value('-999.0')

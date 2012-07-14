@@ -126,16 +126,18 @@ def replace_mapping(context, mapping):
     generic_mapping = generic_name(mapping)
     lines = []
     where = rmap.locate_mapping(context)
-    for line in open(where).readlines():
-        m = re.match(ppmap, line)
-        if m and generic_name(m.group(2)) == generic_mapping:
-            line = re.sub(ppmap, r"\1%s\3" % mapping, line)
-        m = re.match(pimap, line)
-        if m and generic_name(m.group(2)) == generic_mapping:
-            line = re.sub(pimap, r"\1%s\3" % mapping, line)
-        lines.append(line)
-    new_contents = "".join(lines)
-    open(where,"w+").write(new_contents)
+    with open(where) as old_file:
+        for line in old_file.readlines():
+            m = re.match(ppmap, line)
+            if m and generic_name(m.group(2)) == generic_mapping:
+                line = re.sub(ppmap, r"\1%s\3" % mapping, line)
+            m = re.match(pimap, line)
+            if m and generic_name(m.group(2)) == generic_mapping:
+                line = re.sub(pimap, r"\1%s\3" % mapping, line)
+            lines.append(line)
+        new_contents = "".join(lines)
+    with open(where,"w+") as new_file:
+        new_file.write(new_contents)
 
 def generic_name(mapping):
     """Return `mapping` with serial number chopped out.

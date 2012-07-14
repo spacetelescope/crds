@@ -27,15 +27,17 @@ def replace_header_value(filename, key, new_value):
     """Set the value of `key` in `filename` to `new_value`."""
     # print "refactoring", repr(filename), ":", key, "=", repr(new_value)
     newfile = cStringIO.StringIO()
-    openfile = open(filename)
-    for line in openfile:
-        m = re.match(KEY_RE, line)
-        if m and m.group(2) == key:
-            line = re.sub(KEY_RE, r"\1\2\3%s\5" % new_value, line)
-        newfile.write(line)
-    openfile.close()
+ 
+    with open(filename) as openfile:
+        for line in openfile:
+            m = re.match(KEY_RE, line)
+            if m and m.group(2) == key:
+                line = re.sub(KEY_RE, r"\1\2\3%s\5" % new_value, line)
+            newfile.write(line)
     newfile.seek(0)
-    open(filename, "w+").write(newfile.read())
+    
+    with open(filename, "w+") as outputfile:
+        outputfile.write(newfile.read())
     
 # ============================================================================
 
@@ -159,7 +161,8 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     
     Return the list of RefactorAction's performed.
     """
-    contents = open(old_rmap).read()
+    with open(old_rmap) as old_file:
+        contents = old_file.read()
     total_actions = []
     for reference in inserted_references:
         contents, actions, _useafter = \
@@ -167,7 +170,8 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
         total_actions.extend(actions)
     if total_actions:
         log.verbose("Writing", repr(new_rmap))
-        open(new_rmap, "w+").write(contents)
+        with open(new_rmap, "w+") as newfile:
+            newfile.write(contents)
         checksum.update_checksum(new_rmap)
         for action in total_actions:
             log.info(action)            
@@ -194,7 +198,7 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
         # dynamic merger if there's more than one.
         for rmap_tuple in rmap_tuples:
             # Any time ref_match_tuple matches,  rmap_tuple matches.
-            if selectors.match_superset(ref_match_tuple, rmap_tuple)
+            if selectors.match_superset(ref_match_tuple, rmap_tuple):
                 matches.append(_normalize_match_tuple(rmap_tuple))
             else:
                 log.verbose("Removing non-superset match", ref_match_tuple, "of", rmap_tuple)
@@ -282,10 +286,12 @@ def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
     `old_rmap`,  writing the modified rmap out to `new_rmap`.   If
     `match_tuple` doesn't exist in `old_mapping`,  add `match_tuple` as well.
     """
-    old_rmap_contents = open(old_rmap).read()
+    with open(old_rmap) as old_file:
+        old_rmap_contents = old_file.read()
     new_rmap_contents = _rmap_add_useafter(
         old_rmap_contents, match_tuple, useafter_date, useafter_file)
-    open(new_rmap, "w+").write(new_rmap_contents)
+    with open(new_rmap, "w+") as new_file:
+        new_file.write(new_rmap_contents)
 
 def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date, 
                           useafter_file=None):
@@ -325,10 +331,12 @@ def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date,
     `old_rmap`,  writing the modified rmap out to `new_rmap`.   The case
     is expected to be present in the rmap or an exception is raised.
     """
-    old_rmap_contents = open(old_rmap).read()
+    with open(old_rmap) as old_file:
+        old_rmap_contents = old_file.read()
     new_rmap_contents, _filename = _rmap_delete_useafter(
         old_rmap_contents, match_tuple, useafter_date, useafter_file)
-    open(new_rmap, "w+").write(new_rmap_contents)
+    with open(new_rmap, "w+") as new_file:
+        new_file.write(new_rmap_contents)
 
 # ===========================================================================
 
