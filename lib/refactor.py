@@ -194,7 +194,7 @@ def get_match_tuples(loaded_rmap, header, ref_match_tuple):
         # dynamic merger if there's more than one.
         for rmap_tuple in rmap_tuples:
             # Any time ref_match_tuple matches,  rmap_tuple matches.
-            if selectors.match_superset(ref_match_tuple, rmap_tuple):
+            if selectors.match_superset(ref_match_tuple, rmap_tuple)
                 matches.append(_normalize_match_tuple(rmap_tuple))
             else:
                 log.verbose("Removing non-superset match", ref_match_tuple, "of", rmap_tuple)
@@ -215,8 +215,9 @@ def _remove_special_cases(matches):
     matches2 = set(matches)
     for m1 in matches2:
         for m2 in matches2:
-            if m1 != m2 and selectors.match_superset(m1, m2) and m2 in matches:
-                log.verbose("Match",repr(m2),"is a special case of", repr(m1))
+            if m1 != m2 and selectors.match_superset(m1, m2) and \
+                    not selectors.different_match_weight(m1, m2) and m2 in matches:
+                log.verbose("Match",repr(m1),"is a supertset of", repr(m2))
                 matches.remove(m2)
     return list(set(matches))
     

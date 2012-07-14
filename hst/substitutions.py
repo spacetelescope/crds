@@ -218,7 +218,7 @@ def format_expansion(terms):
     """
     assert len(set([t[0] for t in terms])) == 1, "more than one expansion variable."
     var = terms[0][0]
-    expansion = "|".join(sorted([t[1] for t in terms]))
+    expansion = "|".join(sorted([utils.condition_value(t[1]) for t in terms]))
     return (var, expansion) 
 
 def test():

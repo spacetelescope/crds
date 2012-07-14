@@ -429,7 +429,7 @@ class Selector(object):
 
 # ==============================================================================
 
-def match_superset(tuple1, tuple2):
+def match_superset(tuple1, tuple2, match_na=True):
     """Return True IFF match tuple1 is equal to or more general than tuple2.
     
     >>> match_superset(('1','2'),  ('1','2'))
@@ -460,11 +460,11 @@ def match_superset(tuple1, tuple2):
         v2 = tuple2[i]
         if v1 == v2:
             continue
-        if v1 in ["*",'N/A']:
+        if v1 == "*":
             continue
-#        if v2 in ["N/A"]:
-#            continue
-        if v2 == ["*"]:
+        if match_na and "N/A" in [v1, v2]:
+            continue
+        if v2 == "*":
             return False
         if set(v1.split("|")) > set(v2.split("|")):
             continue
@@ -473,6 +473,24 @@ def match_superset(tuple1, tuple2):
         if v1 != v2:
             return False
     return True
+
+def different_match_weight(subkey, superkey):
+    """The criteria for "ambiguous matches" are:
+    
+    1. Superkey must be a match superset of subkey,  i.e. it matches any
+    time subkey does.
+    2. The match weights of superkey and subkey must be the same for an
+    ambiguity to exist. Where one key has the value N/A and the other 
+    does not, the weights of their matches diverge.   Unequally weighted
+    matches aren't merged and hence aren't considered an ambiguity.
+    """
+    super_count = sub_count = len(subkey)
+    for i in range(sub_count):
+        if subkey[i] == "N/A" and superkey[i] != "N/A":
+            sub_count -= 1
+        elif superkey[i] == "N/A" and subkey[i] != "N/A":
+            super_count -= 1
+    return sub_count != super_count
 
 class Matcher(object):
     """Matches a single key of a matching tuple to a dataset value.  Every
@@ -1074,7 +1092,7 @@ of uniform rmap structure for HST:
                 self._validate_value(name, value, valid_values_map[name])
         for other in self.keys():
             if key != other and match_superset(other, key) and \
-                not self._different_match_weight(key, other):
+                not different_match_weight(key, other):
                 if log.get_verbose() > 50:
                     raise ValidationError("Match tuple " + repr(key) + 
                                           " is an equal weight special case of " + repr(other),
@@ -1083,25 +1101,6 @@ of uniform rmap structure for HST:
                     log.verbose_warning("Match tuple " + repr(key) + 
                                         " is an equal weight special case of " + repr(other),
                                         " requiring dynamic merging.")
-
-    def _different_match_weight(self, subkey, superkey):
-        """The criteria for "ambiguous matches" are:
-
-        1. Superkey must be a match superset of subkey,  i.e. it matches any
-        time subkey does.
-        2. The match weights of superkey and subkey must be the same for an
-        ambiguity to exist. Where one key has the value N/A and the other 
-        does not, the weights of their matches diverge.   Unequally weighted
-        matches aren't merged and hence aren't considered an ambiguity.
-        """
-        super_count = sub_count = len(subkey)
-        for i in range(sub_count):
-            if subkey[i] == "N/A" and superkey[i] != "N/A":
-                sub_count -= 1
-            elif superkey[i] == "N/A" and subkey[i] != "N/A":
-                super_count -= 1
-        return sub_count != super_count
-
 
 # ==============================================================================
 
