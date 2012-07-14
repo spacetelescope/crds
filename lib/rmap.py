@@ -233,7 +233,8 @@ class Mapping(object):
         """Load a mapping file `basename` and do syntax and basic validation.
         """
         where = config.locate_mapping(basename)
-        text = open(where).read()
+        with open(where) as sourcefile:
+            text = sourcefile.read()
         header, selector = cls._parse_header_selector(text, where)
         mapping = cls(basename, header, selector, **keys)
         mapping._validate_file_load(keys)
@@ -354,9 +355,8 @@ class Mapping(object):
         else:
             self.filename = filename
         self.header["sha1sum"] = "99999"
-        file = open(filename, "w+")
-        file.write(self.format())
-        file.close()
+        with open(filename, "w+") as file:
+            file.write(self.format())
         self.rewrite_checksum()  # inefficient, but rare and consistent
 
     def _check_hash(self):
@@ -376,8 +376,8 @@ class Mapping(object):
         where = config.locate_mapping(self.filename)
         # Compute the new checksum over everything but the sha1sum line.
         # This will fail if sha1sum appears for some other reason.  It won't ;-)
-        lines = [line for line in open(where).readlines() \
-                 if "sha1sum" not in line]
+        with open(where) as file:
+            lines = [line for line in file.readlines() if "sha1sum" not in line]
         text = "".join(lines)
         return hashlib.sha1(text).hexdigest()
         
@@ -396,15 +396,16 @@ class Mapping(object):
         
         # re-write the file we loaded from,  inserting the new checksum,
         # outputting to a temporary file.
-        assert "sha1sum" in open(self.filename).read(), \
-            "no sha1sum field in " + repr(self.filename)
-        file = open(tmpname, "w+")
-        for line in open(self.filename).readlines():
-            line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
-                          r"\1" + repr(str(xsum)), 
-                          line)
-            file.write(line)
-        file.close()
+        with open(self.filename) as sourcefile:
+            assert "sha1sum" in sourcefile.read(), \
+                "no sha1sum field in " + repr(self.filename)
+        with open(tmpname, "w+") as tempfile:
+            with open(self.filename) as sourcefile:
+                for line in sourcefile.readlines():
+                    line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
+                                  r"\1" + repr(str(xsum)), 
+                                  line)
+                    tempfile.write(line)
         
         # If user specified a filename,  copy the new file to that.
         # Otherwise,  overwrite the original mapping file.

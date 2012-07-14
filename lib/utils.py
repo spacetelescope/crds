@@ -84,7 +84,8 @@ def evalfile(fname):
     """Evaluate and return the contents of file `fname`,  restricting
     expressions to data literals. 
     """
-    contents = open(fname).read()
+    with open(fname) as sourcefile:
+        contents = sourcefile.read()
     return compat.literal_eval(contents)
 
 # ===================================================================
