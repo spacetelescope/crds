@@ -389,34 +389,30 @@ class Mapping(object):
         if self.filename is None:
             raise ValueError("rewrite_checksums() only works on rmaps"
                              " that were read from a file.")
-            
-        _handle, tmpname = tempfile.mkstemp()
         
         xsum = self._get_checksum()
         
         # re-write the file we loaded from,  inserting the new checksum,
         # outputting to a temporary file.
         with open(self.filename) as sourcefile:
-            assert "sha1sum" in sourcefile.read(), \
-                "no sha1sum field in " + repr(self.filename)
-        with open(tmpname, "w+") as tempfile:
-            with open(self.filename) as sourcefile:
-                for line in sourcefile.readlines():
-                    line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
-                                  r"\1" + repr(str(xsum)), 
-                                  line)
-                    tempfile.write(line)
-        
+            assert "sha1sum" in sourcefile.read(), "no sha1sum field in " + repr(self.filename)
+
+        newsource = []
+        with open(self.filename) as sourcefile:
+            for line in sourcefile.readlines():
+                line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
+                              r"\1" + repr(str(xsum)), 
+                              line)
+                newsource.append(line)
+        newsource = "".join(newsource)
+
         # If user specified a filename,  copy the new file to that.
         # Otherwise,  overwrite the original mapping file.
-        if filename is not None:
-            where = filename
-        else:
-            where = self.filename
+        where = filename if filename is not None else self.filename
 
-        # rename might fail if `tmp` is not on same file system as `where`
-        shutil.copyfile(tmpname, where)
-        os.remove(tmpname)
+        with open(where, "w+") as newfile:
+            newfile.write(newsource)
+
       
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
