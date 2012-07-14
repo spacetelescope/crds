@@ -153,7 +153,8 @@ def get_object(dotted_name):
 # ==============================================================================
 
 DONT_CARE_RE = re.compile("^" + "|".join([
-    "-999","-999\.0","4294966297.0","-2147483648.0",
+    # "-999","-999\.0",
+    "4294966297.0","-2147483648.0",
     "\(\)","N/A","NOT APPLICABLE"]) + "$|^$")
 
 NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
@@ -165,10 +166,11 @@ def condition_value(value):
 
     >>> condition_value('ANY')
     '*'
-    >>> condition_value('-999')
+    # >>> condition_value('-999')
     'N/A'
-    >>> condition_value('-999.0')
+    # >>> condition_value('-999.0')
     'N/A'
+
     >>> condition_value('N/A')
     'N/A'
     >>> condition_value('NOT APPLICABLE')

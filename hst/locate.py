@@ -87,10 +87,10 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from .tpn import reference_name_to_validator_key, get_tpninfos
-from .__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
-from .substitutions import expand_wildcards
-from .parkeys import reference_keys_to_dataset_keys
+from crds.hst.tpn import reference_name_to_validator_key, get_tpninfos
+from crds.hst import INSTRUMENTS, FILEKINDS, EXTENSIONS
+from crds.hst.substitutions import expand_wildcards
+from crds.hst.parkeys import reference_keys_to_dataset_keys
 
 # =======================================================================
 

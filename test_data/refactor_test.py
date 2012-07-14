@@ -30,8 +30,13 @@ def main(context, new_references):
     for reference in new_references:
         
         pmap = rmap.get_cached_mapping(context)
-        refpath = pmap.locate.locate_server_reference(reference)
-        
+
+        try:
+           refpath = pmap.locate.locate_server_reference(reference)
+        except KeyError:
+           log.error("Can't locate reference file", repr(reference))
+           continue
+
         try:
             instrument, filekind, old_rmap_path = get_corresponding_rmap(context, refpath)
         except Exception, exc:
