@@ -82,18 +82,9 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     """
     loaded_rmap = rmap.ReferenceMapping.from_string(
         old_rmap_contents, ignore_checksum=True)
-
-    # XXX Hack alert skip DATE-OBS, TIME-OBS
-    parkeys = loaded_rmap.get_required_parkeys()[:-2]  
-    header = data_file.get_header(reffile)
-    header = loaded_rmap.locate.reference_keys_to_dataset_keys(
-        loaded_rmap.instrument, loaded_rmap.filekind, header)
-    header = loaded_rmap.locate.expand_wildcards(loaded_rmap.instrument, header)
-    header = { key:utils.condition_value(value) for key, value in header.items() \
-               if key in parkeys + ["USEAFTER"] }
-    header = data_file.ensure_keys_defined(header, parkeys + ["USEAFTER"])
-    header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
     
+    header = _get_matching_header(loaded_rmap, reffile)
+
     useafter_date = timestamp.reformat_date(header["USEAFTER"])
 
     # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
@@ -115,12 +106,51 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
         except NoMatchTupleError:
             kind = "insert"
         new_contents = _rmap_add_useafter(
-            new_contents, rmap_tuple, useafter_date, 
-            os.path.basename(reffile))
+            new_contents, rmap_tuple, useafter_date, os.path.basename(reffile))
         actions.append(RefactorAction(old_rmap_name, kind, reffile, 
                                       ref_match_tuple, rmap_tuple, 
                                       useafter_date, replaced_filename,))
     return new_contents, actions, useafter_date
+
+def _get_matching_header(loaded_rmap, reffile):
+    """Based on `loaded_rmap`,  fetch the abstract header from reffile and use 
+    it to define the parkey patterns to which this reffile will apply.   Note 
+    that reference files generally apply to a set of parkey values and that the
+    parkey patterns returned here can be unexploded or-globs.   The header 
+    returned actually represents a set of headers corresponding to the discrete 
+    values of exploded or-globs.
+    
+    XXX TODO possibly required:  it may be necessary to fully explode the 
+    or-globs and return a list of headers of discrete parameters for matching.
+    The current approach depends on an exact match to the or-glob.
+    """
+    # XXX Hack alert skip DATE-OBS, TIME-OBS
+    parkeys = loaded_rmap.get_required_parkeys()[:-2]
+    
+    # Since expansion rules may depend on keys not used in matching,  
+    # get entire header  
+    header = data_file.get_header(reffile)
+    
+    # The reference file key and dataset key matched aren't always the same!?!?
+    # Specifically ACS BIASFILE NUMROWS,NUMCOLS and BINAXIS1,BINAXIS2
+    header = loaded_rmap.locate.reference_keys_to_dataset_keys(
+        loaded_rmap.instrument, loaded_rmap.filekind, header)
+    
+    # Reference files specify things like ANY which must be expanded to 
+    # glob patterns for matching with the reference file.
+    header = loaded_rmap.locate.expand_wildcards(loaded_rmap.instrument, header)
+    
+    header = { key:utils.condition_value(value) for key, value in header.items() \
+               if key in parkeys + ["USEAFTER"] }
+    
+    # Add undefined parkeys as "NOT PRESENT"
+    header = data_file.ensure_keys_defined(header, parkeys + ["USEAFTER"])
+    
+    # Evaluate parkey relevance rules in the context of header to map
+    # mode irrelevant parameters to N/A.
+    # XXX not clear if/how this works with expanded wildcard or-patterns.
+    header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
+    return header
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
