@@ -293,7 +293,8 @@ def _rewrite_shell_statement(line):
 def pysh_execfile(fname, globals=None, locals=None):
     """Re-write pysh-script `fname` as Python and execute it."""
     import tempfile
-    lines =  open(fname).readlines()
+    with open(fname) as sourcefile:
+        lines =  sourcefile.readlines()
     for i, line in enumerate(lines):
         lines[i] = _rewrite_shell_statement(line)
     (handle, fname) = tempfile.mkstemp()
