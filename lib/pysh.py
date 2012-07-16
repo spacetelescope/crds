@@ -297,9 +297,13 @@ def pysh_execfile(fname, globals=None, locals=None):
         lines =  sourcefile.readlines()
     for i, line in enumerate(lines):
         lines[i] = _rewrite_shell_statement(line)
-    (handle, fname) = tempfile.mkstemp()
-    for line in lines:
-        os.write(handle, line)
+    try:
+        (handle, fname) = tempfile.mkstemp()
+        for line in lines:
+            os.write(handle, line)
+    finally:
+        os.close(handle)
+
     try:
         execfile(fname, globals, locals)
     finally:

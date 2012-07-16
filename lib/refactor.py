@@ -85,7 +85,7 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     loaded_rmap = rmap.ReferenceMapping.from_string(
         old_rmap_contents, ignore_checksum=True)
     
-    header = _get_matching_header(loaded_rmap, reffile)
+    header, parkeys = _get_matching_header(loaded_rmap, reffile)
 
     useafter_date = timestamp.reformat_date(header["USEAFTER"])
 
@@ -152,7 +152,7 @@ def _get_matching_header(loaded_rmap, reffile):
     # mode irrelevant parameters to N/A.
     # XXX not clear if/how this works with expanded wildcard or-patterns.
     header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
-    return header
+    return header, parkeys
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
