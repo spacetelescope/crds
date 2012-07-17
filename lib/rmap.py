@@ -425,39 +425,6 @@ class Mapping(object):
                 parkeys = parkeys.union(set(key))
         return sorted(parkeys)
     
-    def get_minimum_header(self, dataset, original_name=None):
-        """Return the names and values of `dataset`s header parameters which 
-        are required to compute best references for it.   `original_name` is
-        used to determine file type when `dataset` is a temporary file with a
-        useless name.
-        """
-        header = data_file.get_conditioned_header(
-            dataset, original_name=original_name)
-        return self.minimize_header(header)
-
-    def minimize_header(self, header):
-        """Return only those items of `header` which are required to determine
-        bestrefs.
-        """
-        if isinstance(self, PipelineContext):
-            instrument = self.get_instrument(header)
-            mapping = self.get_imap(instrument)
-        else:
-            mapping = self
-        minimized = {}
-        for key in mapping.get_required_parkeys() + ["INSTRUME",]:
-            try:
-                minimized[key] = header[key]
-            except KeyError:
-                minimized[key] = "NOT FOUND"
-        return minimized
-    
-    def get_instrument(self, header):
-        try:
-            return header["INSTRUME"]
-        except KeyError:
-            raise crds.CrdsError("Missing INSTRUME keyword in header")
-    
     def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
@@ -526,12 +493,16 @@ class PipelineContext(Mapping):
             assert instrument == ictx.instrument, \
                 "Nested 'instrument' doesn't match in " + repr(filename)
     
+    @property
+    def instrument_key(self):
+        return self.parkey[0]
+
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
         is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
-        instrument = header["INSTRUME"]
+        instrument = header[self.instrument_key]
         imap = self.get_imap(instrument)
         return imap.get_best_references(header, include)
     
@@ -577,9 +548,42 @@ class PipelineContext(Mapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
-        instrument = pyfits.getval(dataset, "INSTRUME")
+        instrument = pyfits.getval(dataset,  self.instrument_key)
         return self.get_imap(instrument).get_filekinds(dataset)
 
+    def get_minimum_header(self, dataset, original_name=None):
+        """Return the names and values of `dataset`s header parameters which 
+        are required to compute best references for it.   `original_name` is
+        used to determine file type when `dataset` is a temporary file with a
+        useless name.
+        """
+        header = data_file.get_conditioned_header(
+            dataset, original_name=original_name)
+        return self.minimize_header(header)
+
+    def minimize_header(self, header):
+        """Return only those items of `header` which are required to determine
+        bestrefs.
+        """
+        if isinstance(self, PipelineContext):
+            instrument = self.get_instrument(header)
+            mapping = self.get_imap(instrument)
+        else:
+            mapping = self
+        minimized = {}
+        for key in mapping.get_required_parkeys() + [self.instrument_key]:
+            try:
+                minimized[key] = header[key]
+            except KeyError:
+                minimized[key] = "NOT FOUND"
+        return minimized
+    
+    def get_instrument(self, header):
+        try:
+            return header[self.instrument_key]
+        except KeyError:
+            raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+    
 # ===================================================================
 
 class InstrumentContext(Mapping):
@@ -745,11 +749,11 @@ class ReferenceMapping(Mapping):
         rmap_relevance = getattr(self, "rmap_relevance", "always")
         if rmap_relevance == "always":
             rmap_relevance = "True"
-        self._rmap_relevance_expr = MAPPING_VALIDATOR.compile_and_check(
+        self._rmap_relevance_expr = rmap_relevance, MAPPING_VALIDATOR.compile_and_check(
             rmap_relevance, source=self.basename, mode="eval")
 
         self._parkey_relevance_exprs = \
-            { parkey:MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval") \
+            { parkey: (expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")) \
              for (parkey,expr) in getattr(self, "parkey_relevance", {}).items() }
 
         # header precondition method, e.g. crds.hst.acs.precondition_header
@@ -871,7 +875,7 @@ class ReferenceMapping(Mapping):
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
         sofar = ((("observatory", self.observatory), 
-                  ("INSTRUME",self.instrument), 
+                  ("instrument",self.instrument), 
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
     
@@ -888,9 +892,10 @@ class ReferenceMapping(Mapping):
         """
         # header keys and values are upper case.  rmap attrs are lower case.
         try:
-            relevant = eval(self._rmap_relevance_expr, {}, header)
+            source, compiled = self._rmap_relevance_expr
+            relevant = eval(compiled, {}, header)
             log.verbose("Filekind ", self.instrument, self.filekind, 
-                        "is relevant: ", relevant, verbosity=60)
+                        "is relevant: ", relevant, repr(source), verbosity=60)
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
@@ -910,9 +915,10 @@ class ReferenceMapping(Mapping):
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()
             if lparkey in self._parkey_relevance_exprs:
-                relevant = eval(self._parkey_relevance_exprs[lparkey], {}, header2)
+                source, compiled = self._parkey_relevance_exprs[lparkey]
+                relevant = eval(compiled, {}, header2)
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
-                            "is relevant:", relevant, verbosity=60)
+                            "is relevant:", relevant, repr(source), verbosity=60)
                 if not relevant:
                     header[parkey] = "N/A"
         return header

@@ -80,7 +80,7 @@ class HeaderExpander(object):
             try:
                 applicable = eval(compiled, {}, header)
             except Exception, exc:
-                log.warning("Header expansion for",repr(expr), 
+                log.verbose_warning("Header expansion for",repr(expr), 
                             "failed for", repr(str(exc)))
                 continue
             if applicable:

@@ -4,7 +4,7 @@
 import os.path
 import re
 
-# import pyfits,  import deferred until required
+# from crds import data_file,  import deferred until required
 
 from crds import compat
 
@@ -155,7 +155,8 @@ def get_object(dotted_name):
 
 DONT_CARE_RE = re.compile("^" + "|".join([
     # "-999","-999\.0",
-    "4294966297.0","-2147483648.0",
+    # "4294966297.0",
+    "-2147483648.0",
     "\(\)","N/A","NOT APPLICABLE"]) + "$|^$")
 
 NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
@@ -172,6 +173,8 @@ def condition_value(value):
     'N/A'
     # >>> condition_value('-999.0')
     'N/A'
+    # >> condition_value('4294966297.0')   # -999
+    'N/A'
 
     >>> condition_value('N/A')
     'N/A'
@@ -181,8 +184,7 @@ def condition_value(value):
     'N/A'
     >>> condition_value('4294967295')
     '-1.0'
-    >>> condition_value('4294966297.0')   # -999
-    'N/A'
+    
     >>> condition_value(False)
     'F'
     >>> condition_value(True)
@@ -258,8 +260,8 @@ def instrument_to_locator(instrument):
 def reference_to_instrument(filename):
     """Given reference file `filename`,  return the associated instrument.
     """
-    import pyfits
-    header = pyfits.getheader(filename)
+    from crds import data_file
+    header = data_file.get_header(filename)
     return header["INSTRUME"].lower()
 
 def reference_to_locator(filename):
