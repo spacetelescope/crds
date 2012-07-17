@@ -72,8 +72,8 @@ __all__ = [
 
 URL_SUFFIX = "/json/"
 
-JWST_TEST_SERVER = 'http://etcbrady.stsci.edu:4995'
-HST_TEST_SERVER = 'http://etcbrady.stsci.edu:4997'
+JWST_TEST_SERVER = 'http://jwst-crds.stsci.edu'
+HST_TEST_SERVER = 'http://hst-crds.stsci.edu'
 URL = os.environ.get("CRDS_SERVER_URL", JWST_TEST_SERVER)
 
 S = None    # Proxy server
