@@ -5,9 +5,7 @@
 # setenv CRDS_PATH /Users/jmiller/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/crds
 # unsetenv CRDS_PATH
 
-# The URL for the CRDS server used by remote service calls,  
-#    .e.g. http://etcbrady.stsci.edu:4997
-# setenv CRDS_SERVER_URL  http://etcbrady.stsci.edu:4997    # HST demo
-# setenv CRDS_SERVER_URL  http://etcbrady.stsci.edu:4995    # JWST demo
+# setenv CRDS_SERVER_URL  http://hst-crds.stsci.edu
+# setenv CRDS_SERVER_URL  http://jwst-crds.stsci.edu
 setenv CRDS_SERVER_URL  http://localhost:8000    # development
 
