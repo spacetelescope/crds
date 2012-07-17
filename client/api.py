@@ -82,8 +82,6 @@ def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
     e.g. 'http://localhost:8000'
     """
-    if not re.match("http://(\w+\.?)*\w(:\d+)?/?$", url):
-        raise ValueError("Invalid URL " + repr(url))
     if url.endswith("/"):
         url = url[:-1]
     global URL, S
