@@ -2,14 +2,14 @@
 with a reference file.
 
 % python -m crds.matches  hst_0001.pmap u451251ej_bpx.fits
-(('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab'), ('DETECTOR', 'SBC'), ('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')) 
+(('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'bpixtab'), ('DETECTOR', 'SBC'), ('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')) 
 
 
 The core function find_full_match_paths() returns a list of 
 "match paths",  lists of parkey value assignment tuples:
 
 >>> find_full_match_paths("hst.pmap", "u451251ej_bpx.fits")
-[((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
+[((('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
 
 A related function finds only the "match tuples",  the value portion of a match
 expression for HST:
