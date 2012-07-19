@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:25.044302',
+    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:29.412039',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
         'subtype' : '(DETECTOR == "IR")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'b3be2ad84ba4af0cd5b150ff340b29ede1bd2a2d',
+    'sha1sum' : 'a6adb9de36da3a97d571348be903bde635375aa8',
 }
 
 selector = Match({
@@ -767,6 +767,10 @@ selector = Match({
         '2012-06-14 15:52:48' : 'w6k0007hi_drk.fits',
         '2012-06-18 04:37:37' : 'w6r1411ki_drk.fits',
         '2012-06-20 07:04:07' : 'w751541bi_drk.fits',
+        '2012-06-25 10:50:52' : 'w7h17547i_drk.fits',
+        '2012-06-29 05:26:54' : 'w7h17548i_drk.fits',
+        '2012-07-03 01:12:17' : 'w7h17549i_drk.fits',
+        '2012-07-07 03:08:11' : 'w7h1754ai_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, '1.5|2.0|4.0', 'NONE', 'FULLIMAG') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',

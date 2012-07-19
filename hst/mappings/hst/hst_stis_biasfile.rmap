@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:16.353506',
+    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:17.254519',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "CCD")',
-    'sha1sum' : 'a656fe0e1afefe586068b5fd846668cc033faed3',
+    'sha1sum' : '6af7325147be0a744c7b29a82cad4e8b4d10ce11',
 }
 
 selector = Match({
