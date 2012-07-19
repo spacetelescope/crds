@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:19.211467',
+    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:21.521618',
     'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'cenwave' : '(OBSTYPE == "SPECTROSCOPIC")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '353e7eb18b46c841b49a34815204374b696e9a59',
+    'sha1sum' : '141a8a32d59098e4dc359aa245695633c117e1ac',
 }
 
 selector = Match({

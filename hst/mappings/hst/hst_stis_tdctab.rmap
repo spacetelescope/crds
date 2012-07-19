@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:19.596869',
+    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:22.109261',
     'filekind' : 'TDCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -9,7 +9,7 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(DETECTOR == "NUV-MAMA")',
-    'sha1sum' : '69b29a9a6b74030f871046c35052b093cb73d82f',
+    'sha1sum' : '39a2f2e97ea3184ea19767ce93543c2b2f5ce3b9',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-07 13:50:12.808365',
+    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:11.385169',
     'filekind' : 'TDSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -9,13 +9,13 @@ header = {
     'parkey_relevance' : {
     },
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'f7a4157d303aa5a43a6514d7d74ffeb3ff5926be',
+    'sha1sum' : 'a54ecccf0b6926cb4448a2780cf5932e595baf2f',
 }
 
 selector = Match({
     ('FUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 't2314312l_tds.fits',
-        '2009-05-11 00:00:00' : 'v3i16155l_tds.fits',
+        '2009-05-11 00:00:00' : 'w7h1935dl_tds.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 't2314314l_tds.fits',
