@@ -1,4 +1,5 @@
 # 09/06/11   RDiaz   first version
+# 04/04/12   MSwam   add LIFE_ADJ rule
 #
 # NOTE: To use a keyword value in an expansion rule, the keyword MUST
 # be either a "file select" or "row select" keyword in cdbs_mode for this
@@ -11,3 +12,6 @@ OPT_ELEM=MIRRORA || OPT_ELEM=MIRRORB;
 
 DETECTOR = FUV && OPT_ELEM = ANY =>
 OPT_ELEM=G130M || OPT_ELEM=G160M || OPT_ELEM=G140L;
+
+LIFE_ADJ = -11 =>
+LIFE_ADJ = 1 || LIFE_ADJ = -1;
