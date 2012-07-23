@@ -258,6 +258,10 @@ def ref_properties_from_cdbs_path(filename):
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
     return path, "hst", instrument, filekind, serial, ext
 
+INSTRUMENT_FIXERS = {
+    "wfii": "wfpc2",
+}
+
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
@@ -266,6 +270,8 @@ def ref_properties_from_header(filename):
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
+    if instrument in INSTRUMENT_FIXERS:
+        instrument = INSTRUMENT_FIXERS[instrument]
     filetype = header["FILETYPE"].lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext

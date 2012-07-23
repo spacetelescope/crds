@@ -298,7 +298,7 @@ class Selector(object):
         """
         self._check_defined(header)
         for name in self._parameters:
-            value = header.get(name, "NOT PRESENT")
+            value = header.get(name, "UNDEFINED")
             self._validate_value(name, value, self._parkey_map[name])
     
     def _check_defined(self, header):
@@ -996,7 +996,7 @@ of uniform rmap structure for HST:
             weights[match_tuple] = 0
 
         for i, parkey in enumerate(self._parameters):
-            value = header.get(parkey, "NOT PRESENT")
+            value = header.get(parkey, "UNDEFINED")
             log.verbose("Binding", repr(parkey), "=", repr(value), verbosity=60)
             for match_tuple, (matchers, _subselector) in remaining.items():
                 # Match the key to the current header vaue

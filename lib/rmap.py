@@ -575,7 +575,7 @@ class PipelineContext(Mapping):
             try:
                 minimized[key] = header[key]
             except KeyError:
-                minimized[key] = "NOT FOUND"
+                minimized[key] = "UNDEFINED"
         return minimized
     
     def get_instrument(self, header):
@@ -910,7 +910,7 @@ class ReferenceMapping(Mapping):
         header2 = dict(header)
         for parkey in self._required_parkeys:  # ensure all parkeys defined
             if parkey not in header:
-                header2[parkey] = "NOT PRESENT"
+                header2[parkey] = "UNDEFINED"
         header = dict(header)  # copy
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()

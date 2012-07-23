@@ -99,7 +99,7 @@ class HeaderExpander(object):
         return sorted(set(required))
     
     def required_header(self, header):
-        return sorted({ key: header.get(key, "NOT PRESENT") for key in self._required_keys }.items())
+        return sorted({ key: header.get(key, "UNDEFINED") for key in self._required_keys }.items())
         
 def required_keys(expr):
     """
