@@ -98,7 +98,7 @@ def get_fits_header(fname, needed_keys=[]):
         try:
             header[key] = allheader[key]
         except KeyError:
-            header[key] = "NOT PRESENT"
+            header[key] = "UNDEFINED"
     return header
 
 def get_fits_header_union(fname, needed_keys=[]):
@@ -123,9 +123,9 @@ def get_fits_header_union(fname, needed_keys=[]):
 
 def ensure_keys_defined(header, needed_keys):
     """If any header key in `needed_keys` is not defined,  assign it a value
-    of "NOT PRESENT" in the result; return all other values.
+    of "UNDEFINED" in the result; return all other values.
     """
-    result = { key:header.get(key, "NOT PRESENT") for key in needed_keys }
+    result = { key:header.get(key, "UNDEFINED") for key in needed_keys }
     result.update(header)
     return result
 

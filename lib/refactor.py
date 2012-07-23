@@ -145,7 +145,7 @@ def _get_matching_header(loaded_rmap, reffile):
     header = { key:utils.condition_value(value) for key, value in header.items() \
                if key in parkeys + ["USEAFTER"] }
     
-    # Add undefined parkeys as "NOT PRESENT"
+    # Add undefined parkeys as "UNDEFINED"
     header = data_file.ensure_keys_defined(header, parkeys + ["USEAFTER"])
     
     # Evaluate parkey relevance rules in the context of header to map

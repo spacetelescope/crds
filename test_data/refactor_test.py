@@ -100,6 +100,8 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
         pysh.sh("diff -c ${old_rmap_path} ${new_rmap_path}")
         sys.stdout.flush()
         sys.stderr.flush()
+        separator()
+        pysh.sh("cd ../../hst_gentools; python db_test.py info ${old_refpath}")
 
     return as_expected
 
