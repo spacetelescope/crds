@@ -43,12 +43,15 @@ class KeywordValidator(object):
         if self._info.presence not in ["R", "P", "E", "O"]:
             raise ValueError("Bad TPN presence field " +
                              repr(self._info.presence))
-        if self.condition is not None:
-            self._values = [self.condition(value) for value in info.values]
+        if not hasattr(self.__class__, "_values"):
+            self._values = self.condition_values(info)
 
     def condition(self, value):
         """Condition `value` to standard format for this Validator."""
         return value
+    
+    def condition_values(self, info):
+        return [self.condition(value) for value in info.values]
 
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._info) + ")"
@@ -190,12 +193,15 @@ class LogicalValidator(KeywordValidator):
     _values = ["T","F"]
 
 class NumericalValidator(KeywordValidator):
-    def __init__(self, info):
-        KeywordValidator.__init__(self, info)
+    def condition_values(self, info):
         self.is_range = len(info.values) == 1 and ":" in info.values[0]
         if self.is_range:
             smin, smax = info.values[0].split(":")
             self.min, self.max = self.condition(smin), self.condition(smax)
+            values = None
+        else:
+            values = KeywordValidator.condition_values(self, info)
+        return values
 
     def _check_value(self, value):
         if self.is_range:
@@ -244,7 +250,6 @@ class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields.
     """
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
-    condition = None
 
     def _get_header_value(self, header):
         """Extract the PEDIGREE value from header,  checking any
@@ -269,25 +274,21 @@ class PedigreeValidator(KeywordValidator):
 
 class SybdateValidator(KeywordValidator):
     """Check &SYBDATE Sybase date fields."""
-    condition = None
     def check_value(self, filename, value):
         timestamp.Sybdate.get_datetime(value)
 
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
-    condition = None
     def check_value(self, filename, value):
         timestamp.Slashdate.get_datetime(value)
 
 class AnydateValidator(KeywordValidator):
     """Validates &ANYDATE fields."""
-    condition = None
     def check_value(self, filename, value):
         timestamp.Anydate.get_datetime(value)
 
 class FilenameValidator(KeywordValidator):
     """Validates &FILENAME fields."""
-    condition = None
     def check_value(self, filename, value):
         return (value == "(initial)") or not os.path.dirname(value)
 
@@ -406,9 +407,9 @@ def certify_files(files, dump_provenance=False, check_references=None,
             else:
                 certify_reference(filename, dump_provenance=dump_provenance,
                                   trap_exceptions=trap_exceptions)
-        except Exception:
+        except Exception, exc:
             if trap_exceptions:
-                log.error("Validation error in " + repr(bname))
+                log.error("Validation error in " + repr(bname) + " : " + str(exc))
             else:
                 raise
 
