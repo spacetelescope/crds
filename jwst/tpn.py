@@ -102,19 +102,6 @@ def get_tpninfos(instrument, filekind):
 
 # =============================================================================
 
-def reference_name_to_validator_key(filename):
-    """Given a reference filename `fitsname`,  return a dictionary key
-    suitable for caching the reference type's Validator.
-    
-    Return (instrument, filekind)
-    """
-    header = data_file.get_header(filename)
-    instrument = header["INSTRUME"].lower()
-    filekind = header["FILEKIND"].lower()
-    return (instrument, filekind)
-
-# =============================================================================
-
 def reference_name_to_tpninfos(key):
     """Given a reference cache `key` for a reference's Validator,  return the 
     TpnInfo object which can be used to construct a Validator.

@@ -45,7 +45,7 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.jwst.tpn import reference_name_to_validator_key, get_tpninfos
+from crds.jwst.tpn import get_tpninfos
 from crds.jwst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
@@ -220,10 +220,24 @@ def ref_properties_from_header(filename):
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_header(filename)
-    instrument = header["INSTRUME"].lower()
-    filetype = header["FILETYPE"].lower()
-    filekind = tpn.filetype_to_filekind(instrument, filetype)
+    instrument = header.get("INSTRUME", "UNDEFINED").lower()
+    assert instrument in INSTRUMENTS, \
+        "Invalid instrument " + repr(instrument) + " in file " + repr(filename)
+    filekind = header.get("FILEKIND", "UNDEFINED").lower()
+    assert filekind in FILEKINDS, \
+        "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
 
+# =============================================================================
 
+def reference_name_to_validator_key(filename):
+    """Given a reference filename `fitsname`,  return a dictionary key
+    suitable for caching the reference type's Validator.
     
+    Return (instrument, filekind)
+    """
+    path, obsv, instrument, filekind, serial, ext = \
+        get_reference_properties(filename)
+    return (instrument, filekind)
+
+
