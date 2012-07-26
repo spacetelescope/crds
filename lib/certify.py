@@ -2,6 +2,7 @@
 used to check parameter values in .fits reference files.   It verifies that FITS
 files define required parameters and that they have legal values.
 """
+
 import sys
 import os
 import optparse
