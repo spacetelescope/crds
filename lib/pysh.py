@@ -84,8 +84,11 @@ class Shell:
         self.status = None  # overridden by __call__
         self._context = keys.pop("context", None)
         self._input = keys.pop("input", None)
+        self._raise_on_error = keys.pop("raise_on_error", False)
         capture_output = keys.pop("capture_output", False)
         independent_error = keys.pop("independent_error", False)
+        trace_commands = keys.pop("trace_commands", False)
+        
 
         if self._context is None:    
             # subclasses, were there any,  would need to pass this in
@@ -95,7 +98,9 @@ class Shell:
         # print "shell:", repr(self._context)
 
         args = self._handle_args(args)
-        # print "shell:", repr(args)
+        
+        if trace_commands:
+            sys.stderr.write("pysh: " + str(args) + "\n")
 
         if capture_output:
             if independent_error:
@@ -127,13 +132,13 @@ class Shell:
             args[i] = expand_vars(arg, self._context)
         return args
 
-    def __call__(self, raise_on_error):
+    def __call__(self):
         """Execute the commands in this Shell expression and either raise
         an Exception or return the subprocess error status.
         """
         self.out, self.err = self._popen.communicate(self._input)
         self.status = self._popen.returncode
-        if raise_on_error and self._popen.returncode:
+        if self._raise_on_error and self._popen.returncode:
             raise SubprocessFailure("status = " + str(self._popen.returncode))
         else:
             return self._popen.returncode
@@ -205,8 +210,8 @@ def sh(command, **keys):
     return the program exit status.  Output is not captured.
     If raise_on_error is True,  raise an exception on non-zero program exit.
     """
-    shell = Shell(command, context=_context(1), capture_output=False)
-    shell(keys.pop("raise_on_error", False))
+    shell = Shell(command, context=_context(1), capture_output=False, **keys)
+    shell()
     return shell.status
 
 def _captured_output(command, **keys):
@@ -214,9 +219,8 @@ def _captured_output(command, **keys):
     the output.   Execute the Shell and return it so that various output
     strings or error status can be fetched from attributes as needed.
     """
-    shell = Shell(command, context=_context(2), capture_output=True, 
-              independent_error=keys.pop("independent_error", True))
-    shell(keys.pop("raise_on_error", False))
+    shell = Shell(command, context=_context(2), capture_output=True, **keys)
+    shell()
     return shell
 
 def status(command, **keys):
