@@ -96,4 +96,7 @@ def main(observatory, files):
         print mapping
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print "usage: python -m crds.uses <observatory=hst|jwst> <mapping or reference>..."
+        sys.exit(-1)
     main(sys.argv[1], sys.argv[2:])
