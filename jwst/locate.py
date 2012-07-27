@@ -240,4 +240,36 @@ def reference_name_to_validator_key(filename):
         get_reference_properties(filename)
     return (instrument, filekind)
 
+# =============================================================================
+
+def reference_keys_to_dataset_keys(instrument, filekind, header):
+    """Given a header dictionary for a reference file,  map the header back to
+    keys relevant to datasets.   So for ACS biasfile the reference says BINAXIS1
+    but the dataset says NUMCOLS.   This would convert { "BINAXIS1": 1024 } to
+    { "NUMCOLS" : 1024 }.
+    
+    In general,  rmap parkeys are matched against datset values and are defined
+    as dataset header keywords.   For refactoring though,  what's initially
+    available are reference file keywords...  which need to be mapped into the
+    terms rmaps know:  dataset keywords.
+    """
+    return dict(header)    # NOOP for JWST for now.
+#   See hst/locate.py
+#    inv_trans = utils.invert_dict(
+#        PARKEYS[instrument][filekind]["db_translations"])
+#    return { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
+
+# =============================================================================
+
+def expand_wildcards(instrument, header):
+    """See hst/substitutions.py"""
+    return dict(header)
+#    if not EXPANDERS:
+#        load_all()
+#    try:
+#        header = EXPANDERS[instrument].expand(header)
+#    except KeyError:
+#        log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
+#    return header
+
 
