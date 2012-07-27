@@ -492,10 +492,7 @@ class PipelineContext(Mapping):
                 "Nested 'observatory' doesn't match in " + repr(filename)
             assert instrument == ictx.instrument, \
                 "Nested 'instrument' doesn't match in " + repr(filename)
-    
-    @property
-    def instrument_key(self):
-        return self.parkey[0]
+        self.instrument_key = self.parkey[0]   # e.g. INSTRUME
 
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
@@ -742,7 +739,9 @@ class ReferenceMapping(Mapping):
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
+        # TPNs define the static definitive possibilities for parameter choices
         self._tpn_valid_values = self.get_valid_values_map()
+        # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()  
 
@@ -765,6 +764,7 @@ class ReferenceMapping(Mapping):
                           "precondition_header"]))
         except ImportError:
             self._precondition_header = lambda self, header: header
+            
         # fallback routine called when standard best refs fails
         # set to return None if not defined.
         try:
