@@ -56,19 +56,36 @@ class RefactorAction(object):
         else:
             self.replaced_file = "N/A"
             
+    def close_enough(self, tup1, tup2):
+        if len(tup1) != len(tup2):
+            return False
+        for i in range(len(tup2)):
+            if tup1[i] == "N/A":
+                continue
+            if tup1[i] != tup2[i]:
+                return False
+        return True
+            
     def __str__(self):
+        exact = self.close_enough(self.rmap_match_tuple, self.ref_match_tuple)
+        if exact:
+            intro = "At exact match"
+            trailer = ""
+        else:
+            intro = "At match"
+            trailer = "matching " + str(self.ref_match_tuple)  
         if self.action == "insert":
-            parts = [ "At match", self.rmap_match_tuple,
+            parts = [ intro, self.rmap_match_tuple,
                      "useafter", repr(self.useafter),
                      "INSERT", repr(self.ref_file), 
-                     "matching", self.ref_match_tuple,
+                     trailer
                       ]
         elif self.action == "replace":
-            parts = [ "At match", self.rmap_match_tuple,
+            parts = [ intro, self.rmap_match_tuple,
                       "useafter", repr(self.useafter),
                       "REPLACE", repr(self.replaced_file),
                       "with", repr(self.ref_file), 
-                      "matching", self.ref_match_tuple, 
+                      trailer
                       ]
         else:
             raise ValueError("Unknown action " + repr(self.action))    

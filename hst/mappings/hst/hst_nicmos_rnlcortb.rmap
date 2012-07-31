@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:15.245728',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:58.385221',
     'filekind' : 'RNLCORTB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_rnlcortb.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'dfbbc87d9b06a444146859d420e383e2c1f04cd0',
+    'sha1sum' : '6e195982d7102179427896c678c39951de718ea2',
 }
 
 selector = Match({

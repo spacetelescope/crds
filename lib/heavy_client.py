@@ -142,7 +142,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         try:
             light_client.dump_mappings(context, ignore_cache=ignore_cache)
         except crds.CrdsError, exc:
-            raise crds.CrdsNetworkError("Network failure caching mapping files.")
+            raise crds.CrdsNetworkError("Network failure caching mapping files: " + str(exc))
         pmap = rmap.get_cached_mapping(context)
     # Finally do the best refs computation using pmap methods from local code.
     min_header = pmap.minimize_header(parameters)

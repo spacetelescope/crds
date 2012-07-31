@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:32.687164',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:16.822326',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN', 'SERIALS'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '77b3a93242acdfaf41b153850b72017bbcc8da37',
+    'sha1sum' : 'd91e630dd085521ae5b9adae235ba4e3cb352e5b',
 }
 
 selector = Match({

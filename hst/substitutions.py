@@ -126,7 +126,8 @@ def expand_wildcards(instrument, header):
     try:
         header = EXPANDERS[instrument].expand(header)
     except KeyError:
-        log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
+        header = dict(header)
+        # log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
     return header
 
 # =============================================================================

@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:31.487977',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:15.822873',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'e2347c49a1ffdb451f360a06e44e32e7da3f6072',
+    'sha1sum' : '75ded264326635089e5490d9d85e62391636be1b',
 }
 
 selector = Match({

@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:28.083338',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:11.473901',
     'filekind' : 'CRREJTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_crrejtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'b00ece886b9d8a2eac024223255f02ada63fa715',
+    'sha1sum' : '0a69e3d40390200682e49d3f784d7abc8c6aed20',
 }
 
 selector = Match({
