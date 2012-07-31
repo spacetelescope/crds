@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:31.447431',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:15.795072',
     'filekind' : 'ATODFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_atodfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'ATODGAIN'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '558af34febcebac4bd629671e5bd77a20036bc96',
+    'sha1sum' : 'e6ffb4bd3697911fdacdd725b432a6a0e98025cb',
 }
 
 selector = Match({

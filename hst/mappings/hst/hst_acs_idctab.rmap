@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:05:41.145973',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:27.290050',
     'filekind' : 'IDCTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '5eb70b7acce6bf23ee093d1cba42b8414d6549ee',
+    'sha1sum' : '77729c894bdc78f23263a873275e8e9c18874698',
 }
 
 selector = Match({

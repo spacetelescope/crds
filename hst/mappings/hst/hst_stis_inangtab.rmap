@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:20.369367',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:04.523710',
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_inangtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '913ba570bf6011ef2e3f9da2da54afe72ee876b6',
+    'sha1sum' : 'ff6113e639234fbb6be7c1e1d55dc4846a843e30',
 }
 
 selector = Match({

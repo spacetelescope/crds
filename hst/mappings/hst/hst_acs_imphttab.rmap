@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:05:41.390258',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:27.567643',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_imphttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '2a226387e66857f9b555800aa576ac1847d18118',
+    'sha1sum' : '006742a16e0924e3c4296f450f10f16d02a1200c',
 }
 
 selector = Match({

@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:32.867427',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:16.952161',
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '33f3c2dd14b7984b1764c77cbc5d86edada1e8eb',
+    'sha1sum' : '1e180da530717ec042fc1649c51bd736cdd7ead4',
 }
 
 selector = Match({

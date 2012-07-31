@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:15.113123',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:58.259004',
     'filekind' : 'ILLMFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_illmfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '55badbfd0191310a8c0ad493ba11e9a04c8ee68d',
+    'sha1sum' : '62fc4161de53fdc9e152e4edaec2a31b125f804e',
 }
 
 selector = Match({

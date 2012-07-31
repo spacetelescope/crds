@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:14.976744',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:58.173922',
     'filekind' : 'DARKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_darkfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'READOUT', 'NREAD', 'SAMP_SEQ', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'ae0d8295ae31229b6a46fd74321329e0d956dc52',
+    'sha1sum' : '443186e26713352409dad3afc6a35075da78a22b',
 }
 
 selector = Match({

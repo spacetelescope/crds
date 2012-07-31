@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:29.732534',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:12.830698',
     'filekind' : 'OSCNTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_oscntab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '533cff7fab3df7db0aa8ce1548b0bfc976fa4845',
+    'sha1sum' : 'fb90991b036a4927af3b67807580ebe756642c8e',
 }
 
 selector = Match({

@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:22.175711',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:06.270677',
     'filekind' : 'TELTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_teltab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '2199ac2ef8ff4f3480ef82c3f3978c33723a7c18',
+    'sha1sum' : '121ad29374cca69269b99a2134a2240663458b8b',
 }
 
 selector = Match({

@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:06:15.214022',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:14:58.354575',
     'filekind' : 'PHOTTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_phottab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'c7e1dc7fcf2df85d0756202e7fb301758d56f029',
+    'sha1sum' : '10e0d0afbced3566067cbaaebc2cc537716d594e',
 }
 
 selector = Match({

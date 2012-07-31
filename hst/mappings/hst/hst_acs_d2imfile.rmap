@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:04:06.864802',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:12:55.283625',
     'filekind' : 'D2IMFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_d2imfile.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : 'd216d663cbb59c48c36732af75332bb4c5206326',
+    'sha1sum' : 'f86e9a13e771038eda816107ee9f311169c62f55',
 }
 
 selector = Match({

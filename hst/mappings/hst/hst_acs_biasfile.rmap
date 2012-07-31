@@ -1,15 +1,13 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-17 17:04:04.873508',
+    'derived_from' : 'generated from CDBS database 2012-07-30 13:12:53.496517',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
-    'parkey_relevance' : {
-    },
     'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : '6939f26c397d4bc29945b2e6ccd7c9518c2474ac',
+    'sha1sum' : '0bce2bc3acea38891950b573aab4e449f07e3c68',
 }
 
 selector = Match({
@@ -834,6 +832,8 @@ selector = Match({
         '2012-04-27 00:10:25' : 'w7214005j_bia.fits',
         '2012-05-10 02:09:36' : 'w721600aj_bia.fits',
         '2012-05-25 00:02:17' : 'w721600cj_bia.fits',
+        '2012-06-08 13:03:18' : 'w7o1935mj_bia.fits',
+        '2012-06-22 00:02:13' : 'w7o1935nj_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 4.0, 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-07 07:46:35' : 'q9e1206rj_bia.fits',
@@ -897,6 +897,11 @@ selector = Match({
         '2012-03-04 01:36:59' : 'w641523aj_bia.fits',
         '2012-03-14 14:12:48' : 'w641523bj_bia.fits',
         '2012-04-01 01:50:54' : 'w641523cj_bia.fits',
+        '2012-04-11 15:01:50' : 'w7p1336ij_bia.fits',
+        '2012-04-29 00:02:34' : 'w7p1336jj_bia.fits',
+        '2012-05-10 02:09:36' : 'w7p1336kj_bia.fits',
+        '2012-06-08 13:03:18' : 'w7p1336lj_bia.fits',
+        '2012-06-24 00:02:12' : 'w7p1336mj_bia.fits',
     }),
     ('WFC', 'B', 2.0, 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'v5419452j_bia.fits',
