@@ -5,8 +5,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_flatfile.rmap',
     'observatory' : 'JWST',
-    'parkey' : ((), ('meta.observation.date',)),
-    'sha1sum' : '0760214a48e2528602f42bed719b57909ed2724e',
+    'parkey' : ((), ('META.OBSERVATION.DATE',)),
+    'sha1sum' : '94f9745b55f5f17bd267775988aff342b5ae205d',
 }
 
 selector = Match({
