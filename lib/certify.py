@@ -2,17 +2,18 @@
 used to check parameter values in .fits reference files.   It verifies that FITS
 files define required parameters and that they have legal values.
 """
-
 import sys
 import os
 import optparse
 import re
+import sets
 
 import pyfits
 
 from crds import rmap, log, timestamp, utils, data_file
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
+from crds import refmatch
 
 # ============================================================================
 
@@ -57,7 +58,7 @@ class KeywordValidator(object):
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self._info) + ")"
 
-    def check(self, filename, header=None):
+    def check(self, filename, header=None, context=None):
         """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
@@ -65,7 +66,7 @@ class KeywordValidator(object):
         if self._info.keytype == "H":
             self.check_header(filename, header)
         elif self._info.keytype == "C":
-            self.check_column(filename)
+            self.check_column(filename, context=context)
         elif self._info.keytype == "G":
             self.check_group(filename)
         else:
@@ -106,7 +107,7 @@ class KeywordValidator(object):
         value = self._get_header_value(header)
         self.check_value(filename, value)
 
-    def check_column(self, filename):
+    def check_column(self, filename, context=None):
         """Extract a column of values from `filename` and check them all against
         the legal values for this Validator.
         """
@@ -116,8 +117,29 @@ class KeywordValidator(object):
         except Exception, exc:
             raise RuntimeError("Can't read column values : " + str(exc))
         if values is not None: # Only check for non-optional columns
-            for i, value in enumerate(values):
+            for i, value in enumerate(values): # compare to TPN default values
                 self.check_value(filename + "[" + str(i) +"]", value)
+        if context: # If context has been specified, compare against previous reffile
+            current = refmatch.find_current_reffile(filename,context)
+            log.verbose("Checking values for column", repr(self._info.name),
+                        " against values found in ",current)
+            current_values = self._get_column_values(current)
+            # Use sets to perform comparisons more efficiently
+            current_set = sets.Set(current_values)
+            new_set = sets.Set(values)
+            # find values which are uniq to each set/file
+            uniq_new = new_set.difference(current_set)
+            uniq_current = current_set.difference(new_set)
+
+            # report how input values compare to current values, if different
+            if len(uniq_new) > 0:
+                log.warning("Value for " + repr(self._info.name) + " of " +
+                    repr(list(uniq_new)) + " is not one of " +
+                    repr(current_values))
+            if len(uniq_current) > 0:
+                log.info("These values for "+repr(self._info.name)+
+                        "were not present in new input:\n"+
+                        repr(list(uniq_current)))
 
     def check_group(self, filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
@@ -338,7 +360,8 @@ def get_validators(filename):
 
 # ============================================================================
 
-def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
+def certify_reference(fitsname, context=None,
+                      dump_provenance=False, trap_exceptions=False):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
@@ -347,7 +370,7 @@ def certify_reference(fitsname, dump_provenance=False, trap_exceptions=False):
                                   "HISTORY",])
     for checker in get_validators(fitsname):
         try:
-            checker.check(fitsname)
+            checker.check(fitsname,context=context) # validate against TPN values
         except Exception:
             if trap_exceptions:
                 log.error("Checking", repr(checker._info.name), "in",
@@ -386,14 +409,15 @@ def certify_context(context, check_references=None, trap_exceptions=False):
             else:
                 raise ValidationError("Missing reference file " + repr(ref))
     if check_references == "contents":
-        certify_files(references, check_references=check_references,
+        certify_files(references, current_context=context,
+                      check_references=check_references,
                       trap_exceptions=trap_exceptions)
 
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
-def certify_files(files, dump_provenance=False, check_references=None,
-                  is_mapping=False, trap_exceptions=True):
+def certify_files(files, context=None, dump_provenance=False,
+                  check_references=None, is_mapping=False, trap_exceptions=True):
 
     if not isinstance(files,list):
         files = [files]
@@ -406,7 +430,8 @@ def certify_files(files, dump_provenance=False, check_references=None,
                 certify_context(filename, check_references=check_references,
                                 trap_exceptions=trap_exceptions)
             else:
-                certify_reference(filename, dump_provenance=dump_provenance,
+                certify_reference(filename, context=context,
+                                  dump_provenance=dump_provenance,
                                   trap_exceptions=trap_exceptions)
         except Exception, exc:
             if trap_exceptions:
