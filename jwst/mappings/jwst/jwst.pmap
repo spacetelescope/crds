@@ -1,9 +1,9 @@
 header = {
     'name' : 'jwst.pmap',
-    'derived_from' : 'created by hand 04-26-2012',
+    'derived_from' : 'created by hand 07-31-2012',
     'mapping' : 'PIPELINE',
     'observatory' : 'JWST',
-    'parkey' : ('INSTRUME',),
+    'parkey' : ('meta.instrument.type',),
     'description' : '',
     'sha1sum' : '5c4096fd02e2e33874c18c84f88611b91877c74a',
 }

@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'Hand written 04-26-2012',
+    'derived_from' : 'Hand written 07-31-2012',
     'filekind' : 'FLATFILE',
     'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nircam_flatfile.rmap',
     'observatory' : 'JWST',
-    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('meta.observation.date',)),
     'sha1sum' : '8c5679b6b57a00b740c9c855d51a36f1458268b4',
 }
 
