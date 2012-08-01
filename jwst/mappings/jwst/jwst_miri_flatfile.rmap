@@ -5,7 +5,7 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_flatfile.rmap',
     'observatory' : 'JWST',
-    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('meta.observation.date',)),
     'sha1sum' : 'acd549e97509d4efea98295157216fc3696cb349',
 }
 
