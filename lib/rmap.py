@@ -492,14 +492,14 @@ class PipelineContext(Mapping):
                 "Nested 'observatory' doesn't match in " + repr(filename)
             assert instrument == ictx.instrument, \
                 "Nested 'instrument' doesn't match in " + repr(filename)
-        self.instrument_key = self.parkey[0]   # e.g. INSTRUME
+        self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
         is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
-        instrument = header[self.instrument_key]
+        instrument = self.get_instrument(header)
         imap = self.get_imap(instrument)
         return imap.get_best_references(header, include)
     
@@ -569,17 +569,19 @@ class PipelineContext(Mapping):
             mapping = self
         minimized = {}
         for key in mapping.get_required_parkeys() + [self.instrument_key]:
-            try:
-                minimized[key] = header[key]
-            except KeyError:
-                minimized[key] = "UNDEFINED"
+            minimized[key] = header.get(key.lower(), 
+                                        header.get(key.upper(), 
+                                                   "UNDEFINED"))
         return minimized
     
     def get_instrument(self, header):
         try:
-            return header[self.instrument_key]
+            return header[self.instrument_key.upper()]
         except KeyError:
-            raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+            try:
+                return header[self.instrument_key.lower()]
+            except KeyError:
+                raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
     
 # ===================================================================
 
