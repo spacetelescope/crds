@@ -6,7 +6,7 @@ header = {
     'name' : 'jwst_nirspec_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('meta.observation.date',)),
-    'sha1sum' : 'd33698518d10ac2f3660c0ff9696b5051ea243d6',
+    'sha1sum' : '4f60137b93f19d9891b3c0f351bf466f96557291',
 }
 
 selector = Match({

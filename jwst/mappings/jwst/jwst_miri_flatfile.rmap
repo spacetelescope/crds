@@ -6,7 +6,7 @@ header = {
     'name' : 'jwst_miri_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('meta.observation.date',)),
-    'sha1sum' : 'acd549e97509d4efea98295157216fc3696cb349',
+    'sha1sum' : '0760214a48e2528602f42bed719b57909ed2724e',
 }
 
 selector = Match({
