@@ -3,9 +3,9 @@ header = {
     'derived_from' : 'created by hand 07-31-2012',
     'mapping' : 'PIPELINE',
     'observatory' : 'JWST',
-    'parkey' : ('meta.instrument.type',),
+    'parkey' : ('META.INSTRUMENT.TYPE',),
     'description' : '',
-    'sha1sum' : '4dc73bac688f697f20fb785855aa4adca55a53f5',
+    'sha1sum' : '66ffd2f988ebdcb820e0991277c5f5a8edbb080d',
 }
 
 selector = {
