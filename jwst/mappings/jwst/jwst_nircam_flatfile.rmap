@@ -6,7 +6,7 @@ header = {
     'name' : 'jwst_nircam_flatfile.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('meta.observation.date',)),
-    'sha1sum' : '8c5679b6b57a00b740c9c855d51a36f1458268b4',
+    'sha1sum' : 'f457b23ab5f9591336a930734b6db9f724176c01',
 }
 
 selector = Match({
