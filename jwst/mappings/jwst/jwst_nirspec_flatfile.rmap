@@ -3,15 +3,15 @@ header = {
     'filekind' : 'FLATFILE',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_nirspec_flatfile.rmap',
+    'name' : 'jwst_nirspec_flat.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE',)),
-    'sha1sum' : '38f8267d3b5a1b27a83a396c464393a621992f88',
+    'sha1sum' : 'fb82e368b937209eeaffb1515daf9283855fc023',
 }
 
 selector = Match({
     () : UseAfter({
-        '1990-01-01 00:00:00' : 'jwst_nirspec_flatfile.fits',
+        '1990-01-01 00:00:00' : 'jwst_nirspec_flat.fits',
     }),
 })
 

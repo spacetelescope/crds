@@ -3,15 +3,15 @@ header = {
     'filekind' : 'FLATFILE',
     'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_nircam_flatfile.rmap',
+    'name' : 'jwst_nircam_flat.rmap',
     'observatory' : 'JWST',
     'parkey' : ((), ('META.OBSERVATION.DATE',)),
-    'sha1sum' : 'ad62cf9a1751ab5fc443c7684b23041c675ad8d7',
+    'sha1sum' : '79b1dd8a52fa8b8ef246108e4ed96cf71f95f32e',
 }
 
 selector = Match({
     () : UseAfter({
-        '1990-01-01 00:00:00' : 'jwst_nircam_flatfile_0001.fits',
+        '1990-01-01 00:00:00' : 'jwst_nircam_flat_0001.fits',
     }),
 })
 
