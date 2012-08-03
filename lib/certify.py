@@ -51,7 +51,7 @@ class KeywordValidator(object):
     def condition(self, value):
         """Condition `value` to standard format for this Validator."""
         return value
-    
+
     def condition_values(self, info):
         return [self.condition(value) for value in info.values]
 
@@ -121,25 +121,26 @@ class KeywordValidator(object):
                 self.check_value(filename + "[" + str(i) +"]", value)
         if context: # If context has been specified, compare against previous reffile
             current = refmatch.find_current_reffile(filename,context)
-            log.verbose("Checking values for column", repr(self._info.name),
-                        " against values found in ",current)
-            current_values = self._get_column_values(current)
-            # Use sets to perform comparisons more efficiently
-            current_set = sets.Set(current_values)
-            new_set = sets.Set(values)
-            # find values which are uniq to each set/file
-            uniq_new = new_set.difference(current_set)
-            uniq_current = current_set.difference(new_set)
+            if current: # Only do comparison if current ref file can be found
+                log.verbose("Checking values for column", repr(self._info.name),
+                            " against values found in ",current)
+                current_values = self._get_column_values(current)
+                # Use sets to perform comparisons more efficiently
+                current_set = sets.Set(current_values)
+                new_set = sets.Set(values)
+                # find values which are uniq to each set/file
+                uniq_new = new_set.difference(current_set)
+                uniq_current = current_set.difference(new_set)
 
-            # report how input values compare to current values, if different
-            if len(uniq_new) > 0:
-                log.warning("Value for " + repr(self._info.name) + " of " +
-                    repr(list(uniq_new)) + " is not one of " +
-                    repr(current_values))
-            if len(uniq_current) > 0:
-                log.info("These values for "+repr(self._info.name)+
-                        "were not present in new input:\n"+
-                        repr(list(uniq_current)))
+                # report how input values compare to current values, if different
+                if len(uniq_new) > 0:
+                    log.warning("Value for " + repr(self._info.name) + " of " +
+                        repr(list(uniq_new)) + " is not one of " +
+                        repr(current_values))
+                if len(uniq_current) > 0:
+                    log.info("These values for "+repr(self._info.name)+
+                            "were not present in new input:\n"+
+                            repr(list(uniq_current)))
 
     def check_group(self, filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
@@ -365,6 +366,14 @@ def certify_reference(fitsname, context=None,
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
+    try:
+        validate_file_format(fitsname)
+    except:
+        if trap_exceptions:
+            log.error("FITS file verification failed for "+fitsname)
+            return
+        else:
+            raise IOError
     if dump_provenance:
         dump_multi_key(fitsname, ["DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER",
                                   "HISTORY",])
@@ -387,6 +396,20 @@ def dump_multi_key(fitsname, keys):
             for card in cards:
                 if card.key == key:
                     log.write("["+str(i)+"]", key, card.value, card.comment)
+
+def validate_file_format(fitsname):
+    """ Run PyFITS verify method on file to report any FITS format problems
+        with the input file.
+    """
+    try:
+        f = pyfits.open(fitsname)
+        f.verify(option='exception') # validates all keywords 
+        log.info("FITS file "+fitsname+" conforms to FITS standards.")
+        f.close()
+    except Exception, exc:
+        log.error("FITS file "+fitsname+" does not comply with FITS format!")
+        log.error(exc)
+        raise IOError
 
 def certify_context(context, check_references=None, trap_exceptions=False):
     """Certify `context`.  Unless `shallow` is True,  recursively certify all
