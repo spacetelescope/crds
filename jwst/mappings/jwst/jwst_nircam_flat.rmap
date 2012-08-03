@@ -1,6 +1,6 @@
 header = {
     'derived_from' : 'Hand written 07-31-2012',
-    'filekind' : 'FLATFILE',
+    'filekind' : 'FLAT',
     'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nircam_flat.rmap',
