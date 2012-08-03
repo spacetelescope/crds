@@ -5,9 +5,9 @@ header = {
     'name' : 'jwst_nircam.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '1032182333bee3e7a40d042566761164aa2241f4',
+    'sha1sum' : '86bc77891b5df0163d7e4829683bb8bbc328d8e2',
 }
 
 selector = {
-    'flatfile' : 'jwst_nircam_flatfile.rmap',
+    'flat' : 'jwst_nircam_flat.rmap',
 }
