@@ -1,6 +1,6 @@
 header = {
     'derived_from' : 'Hand written 07-31-2012',
-    'filekind' : 'FLATFILE',
+    'filekind' : 'FLAT',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_flat.rmap',

@@ -1,6 +1,6 @@
 header = {
     'derived_from' : 'Hand written 04-26-2012',
-    'filekind' : 'FLATFILE',
+    'filekind' : 'FLAT',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_flat.rmap',
