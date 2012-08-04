@@ -257,6 +257,9 @@ def instrument_to_locator(instrument):
     """
     return get_locator_module(instrument_to_observatory(instrument))
 
+
+# XXXX TODO  use of INSTRUME probably won't work with .finf metadata but does
+# work with JWST .fits references typically accessed through the data model.
 def reference_to_instrument(filename):
     """Given reference file `filename`,  return the associated instrument.
     """

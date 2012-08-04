@@ -65,6 +65,14 @@ def get_filetype(name):
         return "geis"
     else:
         raise TypeError("Unknown file type for file named" + repr(name))
+    
+def getval(filepath, key, condition=True):
+    """Return a single metadata value from `key` of file at `filepath`."""
+    if condition:
+        header = get_conditioned_header(filepath, needed_keys=[key])
+    else:
+        header = get_unconditioned_header(filepath, needed_keys=[key])
+    return header[key]
 
 def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     """Return the complete conditioned header dictionary of a reference file,
