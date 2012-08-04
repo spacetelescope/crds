@@ -66,8 +66,6 @@ import tempfile
 import shutil
 import glob
 
-import pyfits
-
 from .compat import namedtuple
 
 import crds
@@ -545,7 +543,7 @@ class PipelineContext(Mapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
-        instrument = pyfits.getval(dataset,  self.instrument_key)
+        instrument = data_file.getval(dataset,  self.instrument_key)
         return self.get_imap(instrument).get_filekinds(dataset)
 
     def get_minimum_header(self, dataset, original_name=None):
