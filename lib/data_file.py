@@ -74,6 +74,14 @@ def getval(filepath, key, condition=True):
         header = get_unconditioned_header(filepath, needed_keys=[key])
     return header[key]
 
+def setval(filepath, key, value):
+    """Set metadata `key` in file `filepath` to `value`."""
+    ftype = get_filetype(filepath)
+    if ftype == "fits":
+        return pyfits.setval(filepath, key, value)
+    else:
+        raise NotImplementedError("setval not supported for type " + repr(ftype))
+
 def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
@@ -117,9 +125,8 @@ def get_fits_header_union(fname, needed_keys=[]):
     union = {}
     get_all_keys = not needed_keys
     for hdu in pyfits.open(fname):
-        for key in hdu.header:
+        for key, newval in hdu.header.items():
             if get_all_keys or key in needed_keys:
-                newval = hdu.header[key]
                 if key in union and union[key] != newval:
                     log.verbose_warning("Header union collision on", repr(key),
                                         repr(union[key]), "collides with",
