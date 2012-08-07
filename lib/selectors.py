@@ -454,6 +454,10 @@ def match_superset(tuple1, tuple2, match_na=True):
     True
     >>> match_superset(('1','N/A'), ('1','*'))
     True
+    >>> match_superset(('A|B|C|D','1'), ('A|B|C', '1'))
+    True
+    >>> match_superset(('A|B|C','1'), ('A|B|C|D', '1'))
+    False
     """
     for i in range(len(tuple1)):
         v1 = tuple1[i]
@@ -473,6 +477,12 @@ def match_superset(tuple1, tuple2, match_na=True):
         if v1 != v2:
             return False
     return True
+
+def match_equivalent(tuple1, tuple2):
+    """Returns True IFF tuple1 ~ tuple2 accounting for N/A and *.
+    Returns False if tuple1 < tuple2 or tuple2 < tuple1.
+    """
+    return match_superset(tuple1, tuple2) and match_superset(tuple2, tuple1)
 
 def different_match_weight(subkey, superkey):
     """The criteria for "ambiguous matches" are:

@@ -190,10 +190,6 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
         with open(new_rmap, "w+") as newfile:
             newfile.write(contents)
         checksum.update_checksum(new_rmap)
-        for action in total_actions:
-            log.info(action)            
-    else:
-        log.warning("No actions in rmap_insert_references().")
     return total_actions
 
 def get_match_tuples(loaded_rmap, header, ref_match_tuple):
@@ -365,7 +361,11 @@ def main():
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
-        rmap_insert_references(old_rmap, new_rmap, inserted_references)
+        actions = rmap_insert_references(old_rmap, new_rmap, inserted_references)
+        for action in actions:
+            log.info(action)
+        else:
+            log.warning("No actions.")
     else:
         print "usage: python -m crds.refactor insert " \
                 "<old_rmap> <new_rmap> <references...>"
