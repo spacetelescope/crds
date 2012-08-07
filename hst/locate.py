@@ -38,6 +38,9 @@ def locate_server_reference(ref_filename, cdbs=CDBS_REFPATH):
     which most likely depends on instrument.
     
     """
+    # return files with paths already unchanged.
+    if not os.path.basename(ref_filename) == ref_filename:
+        return ref_filename
     global CDBS_REFPATH
     CDBS_REFPATH = cdbs
     if not REFNAME_TO_PATH:
