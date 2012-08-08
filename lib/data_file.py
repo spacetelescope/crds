@@ -61,6 +61,8 @@ def get_filetype(name):
     """
     if name.endswith(".fits"):
         return "fits"
+    elif name.endswith(".finf"):
+        return "finf"
     elif is_geis(name):
         return "geis"
     else:
@@ -99,7 +101,11 @@ def setval(filepath, key, value):
     ftype = get_filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith("META."):
+            return dm_setval(filepath, key, value)
+        else:
             return pyfits.setval(filepath, key, value)
+    elif ftype == "finf":
+        return dm_setval(filepath, key, value)
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
     
