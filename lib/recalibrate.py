@@ -67,9 +67,9 @@ class Cache(object):
         function with `args` if `key` is not in the cache.
         """
         if key in self._cache:
-            log.verbose("Cache hit:", repr(key), verbosity=45)
+            log.verbose("Recalibrate header cache hit:", repr(key), verbosity=45)
         else:
-            log.verbose("Cache miss:", repr(key), verbosity=45)
+            log.verbose("Recalibrate header cache miss:", repr(key), verbosity=45)
             self._cache[key] = self._compute_value(*args)
         return self._cache[key]
     
@@ -82,14 +82,21 @@ def get_recalibrate_info(context, dataset):
     
     Return  ( {parkey: value, ...},  {filekind: bestref, ...} )
     """
-    required_parkeys = context.get_minimum_header(dataset)
-    filekinds = context.get_filekinds(dataset)
-    parkey_values = data_file.get_header(dataset, required_parkeys)
-    old_bestrefs = data_file.get_header(dataset, filekinds)
+    if isinstance(context, basestring):
+        pmap = rmap.get_cached_mapping(context)
+    else:
+        pmap = context
+    parkey_values = pmap.get_minimum_header(dataset)
+    filekinds = pmap.get_filekinds(dataset)
+    # XXX TODO switch get_fits_header to get_header if JWST meta defined for
+    # storing CRDS context and bestrefs in a dataset.   For now hack as FITS
+    old_bestrefs = data_file.get_fits_header(dataset, needed_keys=filekinds)
     old_bestrefs = { key.lower(): val.lower() \
-                    for key, val in old_bestrefs.items()}
+                    for (key, val) in old_bestrefs.items()}
+    log.verbose("Bestref parameters:", parkey_values)
+    log.verbose("Old bestrefs:", old_bestrefs)
     return (parkey_values, old_bestrefs)
-    
+
 HEADER_CACHE = Cache("recalibrate.cache", get_recalibrate_info)
 
 # ============================================================================
@@ -109,8 +116,8 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
         try:
             header, old_bestrefs = HEADER_CACHE.get(
                 basename, (new_context, dataset))
-        except Exception:
-            log.error("Can't get header info for " + repr(dataset))
+        except Exception, exc:
+            log.error("Can't get header info for " + repr(dataset) + " " + str(exc))
             continue 
 
         bestrefs1 = trapped_bestrefs(new_context, header)
@@ -122,10 +129,6 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
             bestrefs2 = old_bestrefs
             old_fname = "<dataset prior results>"
             
-        if not bestrefs1 or not bestrefs2:
-            log.error("Skipping comparison for", repr(dataset))
-            continue
-        
         new_fname = os.path.basename(new_context.filename)
         
         compare_bestrefs(new_fname, old_fname, dataset, bestrefs1, bestrefs2)
@@ -151,14 +154,18 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
     """
     mismatches = 0
     
-    # Warn about mismatched filekinds
-    check_same_filekinds(ctx1, ctx2, bestrefs1, bestrefs2)
-    check_same_filekinds(ctx2, ctx1, bestrefs2, bestrefs1)
-
     for filekind in bestrefs1:
-        if filekind not in bestrefs2:
-            continue
         new = remove_irafpath(bestrefs1[filekind])
+        if new.upper().startswith("NOT FOUND N/A"):
+            log.verbose("Filetype not applicable for ", repr(dataset), repr(filekind))
+            continue
+        if new.upper().startswith("NOT FOUND"):
+            log.error("No new bestref for", repr(dataset), repr(filekind), repr(new))
+            continue
+        if filekind not in bestrefs2:
+            log.warning("No existing bestref for", repr(dataset), repr(filekind),
+                        "recommending", repr(new))
+            continue
         old = remove_irafpath(bestrefs2[filekind])
         if isinstance(old, (str, unicode)):
             old = str(old).strip().lower()
@@ -185,13 +192,6 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
     else:
         log.verbose("All lookups for", repr(dataset), "MATCH.", verbosity=25)
 
-def check_same_filekinds(ctx1, ctx2, bestrefs1, bestrefs2):
-    """Verify all the filekinds in `bestrefs1` also exist in `bestrefs2`."""
-    for filekind in bestrefs1:
-        if filekind not in bestrefs2:
-            log.warning("Filekind", repr(filekind), "recommended by", 
-                        repr(ctx1), "but not", repr(ctx2))
-    
 def remove_irafpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
     return name.split("$")[-1]
@@ -200,12 +200,14 @@ def write_bestrefs(new_fname, dataset, bestrefs):
     """Update the header of `dataset` with best reference recommendations
     `bestrefs` determined by context named `new_fname`.
     """
-    pyfits.setval(dataset, "CRDS_CTX", new_fname)
+    # XXX TODO switch pyfits.setval to data_file.setval if a data model equivalent
+    # is defined for CRDS_CTX
+    pyfits.setval(dataset, "CRDS_CTX", value=new_fname, ext=0)
     for key, value in bestrefs.items():
 #        XXX what to do here for failed lookups?
 #        if value.startswith("NOT FOUND"):
 #            value = value + ", prior " + pyfits.getval(dataset, key)
-        pyfits.setval(dataset, key, value)
+        pyfits.setval(dataset, key, value=value, ext=0)
 
 # =============================================================================
 

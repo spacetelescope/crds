@@ -65,6 +65,26 @@ def get_filetype(name):
         return "geis"
     else:
         raise TypeError("Unknown file type for file named" + repr(name))
+
+def get_observatory(filepath, original_name=None):
+    """Return the observatory corresponding to `filepath`.  filepath
+    may be a web temporary file with a garbage name.   Use 
+    `original_name` to make inferences based on file extension, or
+    filepath if original_name is None.
+    """
+    if original_name is None:
+        original_name = filepath
+    if original_name.endswith(".fits"):
+        try:
+            observatory = pyfits.getval(filepath, "TELESCOP")
+        except:
+            observatory = "hst"
+        return observatory.lower()
+    elif original_name.endswith(".finf"):
+        return "jwst"
+    else:
+        return "hst"
+
     
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
@@ -78,9 +98,16 @@ def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
     ftype = get_filetype(filepath)
     if ftype == "fits":
-        return pyfits.setval(filepath, key, value)
+        if key.upper().startswith("META."):
+            return pyfits.setval(filepath, key, value)
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
+    
+def dm_setval(filepath, key, value):
+    """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
+    """
+    with models.open(filepath) as dm:
+        dm[key] = value
 
 def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     """Return the complete conditioned header dictionary of a reference file,
@@ -101,10 +128,27 @@ def get_header(filepath, needed_keys=[], original_name=None):
     if is_geis(original_name):
         return get_geis_header(filepath, needed_keys)
     else:
-        return get_fits_header_union(filepath, needed_keys)
+        observatory = get_observatory(filepath, original_name)
+        if observatory == "hst":
+            return get_fits_header_union(filepath, needed_keys)
+        else:
+            return get_data_model_header(filepath, needed_keys)
 
 # A clearer name
 get_unconditioned_header = get_header
+
+def get_data_model_header(filepath, needed_keys=[]):
+    """Get the header from `filepath` using the jwst data model.
+    """
+    from jwstlib import models
+    with models.open(filepath) as dm:
+        d = dm.to_flat_dict(include_arrays=False)
+        needed_keys = [key.upper() for key in needed_keys]
+        header = {}
+        for key, val in d.items():
+            if (not needed_keys) or (key.upper() in needed_keys):
+                header[str(key)] = str(val)    
+    return header
 
 def get_fits_header(fname, needed_keys=[]):
     """Return `needed_keys` or all from FITS file `fname`s primary header."""
