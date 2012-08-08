@@ -217,15 +217,18 @@ def condition_value(value):
         value = "F"
     return value
 
-def condition_header(header, needed_keys=[]):
+def condition_header(header, needed_keys=None):
     """Return a dictionary of all `needed_keys` from `header` after passing
     their values through the CRDS value conditioner.
     """
-    conditioned = {}
-    for key in needed_keys or header:
-        conditioned[key.upper()] = condition_value(header[key])
+    header = { key.upper():val for (key, val) in header.items() }
+    if not needed_keys:
+        needed_keys = header.keys()
+    else:
+        needed_keys = [ key.upper() for key in needed_keys ]
+    conditioned = { key:condition_value(header[key]) for key in needed_keys }
     return conditioned
-    
+
 # ==============================================================================
 
 def instrument_to_observatory(instrument):
@@ -264,8 +267,12 @@ def reference_to_instrument(filename):
     """Given reference file `filename`,  return the associated instrument.
     """
     from crds import data_file
-    header = data_file.get_header(filename)
-    return header["INSTRUME"].lower()
+    try:
+        header = data_file.get_conditioned_header(filename, needed_keys=["INSTRUME"])
+        return header["INSTRUME"].lower()
+    except KeyError:
+        header = data_file.get_conditioned_header(filename, needed_keys=["META.INSTRUMENT.TYPE"])
+        return header["META.INSTRUMENT.TYPE"]
 
 def reference_to_locator(filename):
     """Given reference file `filename`,  return the associated observatory 
