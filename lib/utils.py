@@ -90,7 +90,7 @@ def evalfile(fname):
 
 # ===================================================================
 
-def create_path(path):
+def create_path(path, mode=0755):
     """Recursively traverses directory path creating directories as
     needed so that the entire path exists.
     """
@@ -107,12 +107,12 @@ def create_path(path):
         d = os.path.join(*current)
         d.replace("//","/")
         if not os.path.exists(d):
-            os.mkdir(d)
+            os.mkdir(d, mode)
 
-def ensure_dir_exists(fullpath):
+def ensure_dir_exists(fullpath, mode=0755):
     """Creates dirs from `fullpath` if they don't already exist.
     """
-    create_path(os.path.dirname(fullpath))
+    create_path(os.path.dirname(fullpath), mode)
 
 # ===================================================================
 
