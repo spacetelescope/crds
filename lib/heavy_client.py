@@ -65,6 +65,11 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
       returns a mapping from types requested in `reftypes` to the path for each
       cached reference file.
     """
+    log.verbose("getreferences() observatory:", observatory)
+    log.verbose("getreferences() parameters:\n", log.PP(parameters))
+    log.verbose("getreferences() reftypes:", reftypes)
+    log.verbose("getreferences() context:", repr(context))
+    
     check_observatory(observatory)
     check_parameters(parameters)
     check_reftypes(reftypes)
