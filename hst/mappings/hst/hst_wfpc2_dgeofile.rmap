@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-07-30 13:15:16.889343',
+    'derived_from' : 'generated from CDBS database 2012-08-10 15:27:14.697397',
     'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '753165631eab07e5b0efdaa9f11f3e6975894834',
+    'sha1sum' : '3f2c76ce09269f01c7fe0593e9e18cd2b92cd0fc',
 }
 
 selector = Match({
