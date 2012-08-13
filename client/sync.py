@@ -3,20 +3,24 @@ mappings required to support a set of contexts from the CRDS server:
 
 Synced contexts can be explicitly listed:
 
-% python -m crds.client.sync  hst_0001.pmap hst_0002.pmap
+  % python -m crds.client.sync  --contexts hst_0001.pmap hst_0002.pmap
+
+Synced datasets can be explicitly listed:
+
+  % python -m crds.client.sync --datasets  *.fits
 
 Synced contexts can be specified as a range:
 
-% python -m crds.client.sync --range 1:2
+  % python -m crds.client.sync --range 1:2
 
 Synced contexts can be specified as --all contexts:
 
-% python -m crds.client.sync --all
+  % python -m crds.client.sync --all
 
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge:
 
-% python -m crds.client.sync --range 1:2 --purge
+  % python -m crds.client.sync --range 1:2 --purge
 
 will remove references or mappings not required by hst_0001.pmap or 
 hst_0002.pmap in addition to downloading the required files.
@@ -148,8 +152,11 @@ def main():
         description='Synchronize local mapping and reference caches to ' + 
                     'the given contexts, removing files not referenced.')
     parser.add_argument(
-        'contexts', metavar='CONTEXT', type=mapping, nargs='*',
-        help='a list of contexts determining files to sync.')
+        '--contexts', metavar='CONTEXT', type=mapping, nargs='*',
+        help='a list of contexts to sync.')
+    parser.add_argument(
+        '--datasets', metavar='DATASET', type=dataset, nargs='*',
+        help='a list of datasets for which to prefetch references.')
     parser.add_argument('--all', action='store_true',
         help='fetch files for all known contexts.')
     parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
@@ -163,8 +170,8 @@ def main():
     args = parser.parse_args()
     
     contexts = determine_contexts(args)
-    
-    sync_context_mappings(contexts, args.purge)
+    if contexts:
+        sync_context_mappings(contexts, args.purge)
     if not args.mappings_only:
         sync_context_references(contexts, args.purge)
 

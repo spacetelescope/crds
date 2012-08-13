@@ -92,6 +92,59 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     
     return best_refs_paths
 
+def getrecommendations(parameters, reftypes=None, context=None, ignore_cache=False,
+                       observatory="jwst"):
+    """
+    getrecommendations() returns the best references for the specified `parameters`
+    and pipeline `context`.   Unlike getreferences(),  getrecommendations() does
+    not attempt to cache the files locally.
+        
+    parameters      { str:  str,int,float,bool, ... }
+    
+      `parameters` should be a dictionary-like object mapping best reference 
+      matching parameters to their values for this dataset.
+    
+    reftypes        [ str, ... ] 
+    
+      If `reftypes` is None,  return all possible reference types.   Otherwise
+      return the reference types specified by `reftypes`.
+    
+    context         str
+    
+      Specifies the pipeline context,  i.e. specific version of CRDS rules used 
+      to do the best references match.   If `context` is None,  use the latest 
+      available context.
+
+    ignore_cache    bool
+
+      If `ignore_cache` is True,  download files from server even if already present.
+    
+    observatory     str
+    
+       nominally 'jwst' or 'hst'.
+    
+    Returns { reftype : bestref_basename }
+    
+      returns a mapping from types requested in `reftypes` to the path for each
+      cached reference file.
+    """
+    check_observatory(observatory)
+    check_parameters(parameters)
+    check_reftypes(reftypes)
+    check_context(context)  
+
+    mode, final_context = get_processing_mode(observatory, context)
+
+    if mode == "local":
+        bestrefs = local_bestrefs(
+            parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
+    else:
+        log.verbose("Computing best references remotely.")
+        bestrefs = light_client.get_best_references(
+            final_context, parameters, reftypes=reftypes)
+
+    return bestrefs
+
 # ============================================================================
 def check_observatory(observatory):
     assert observatory in ["hst", "jwst", "tobs"]
