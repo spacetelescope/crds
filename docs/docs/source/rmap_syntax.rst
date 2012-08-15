@@ -30,7 +30,7 @@ The names of subsequent derived mappings include a version number::
 
   <observatory> _ <version> .pmap                               .e.g. hst_00001.pmap
   <observatory> _ <instrument> _ <version> .imap                .e.g. hst_acs_00047.imap 
-  <observatory> _ <instrument> _ <version> _ <filekind> .rmap  .e.g. hst_acs_darkfile_00012.rmap
+  <observatory> _ <instrument> _ <filekind> _ <version> .rmap  .e.g. hst_acs_darkfile_00012.rmap
 
 Basic Structure
 ---------------
