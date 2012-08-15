@@ -58,6 +58,38 @@ def get_crds_processing_mode():
     assert mode in ["local", "remote", "auto"], "Invalid CRDS processing mode: " + repr(mode)
     return mode
 
+def get_crds_env_context():
+    """If it has been specified in the environment,  return the pipeline context
+    which defines CRDS best reference rules,  else None.
+    
+    >>> os.environ["CRDS_CONTEXT"] = "jwst.pmap"
+    >>> get_crds_env_context()
+    'jwst.pmap'
+    
+    >>> os.environ["CRDS_CONTEXT"] = "jwst_miri_0022.imap"    
+    >>> get_crds_env_context()
+    Traceback (most recent call last):
+    ...
+    AssertionError: If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. jwst.pmap, not 'jwst_miri_0022.imap'
+   
+    >>> os.environ["CRDS_CONTEXT"] = "/nowhere/to/be/found/jwst_0042.pmap"    
+    >>> get_crds_env_context()
+    Traceback (most recent call last):
+    ...
+    AssertionError: Can't find pipeline mapping specified by CRDS_CONTEXT = '/nowhere/to/be/found/jwst_0042.pmap'
+
+    >>> del os.environ["CRDS_CONTEXT"]
+    >>> get_crds_env_context()
+    """
+    context = os.environ.get("CRDS_CONTEXT", None)
+    if context is not None:
+        where = locate_mapping(context)
+        assert context.endswith(".pmap"), \
+            "If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. jwst.pmap, not " + repr(context)
+        assert os.path.exists(where), \
+            "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context)
+    return context
+
 # ===========================================================================
 
 def locate_file(filepath, observatory):
@@ -119,4 +151,9 @@ def mapping_to_filekind(context_file):
     'biasfile'
     """
     return os.path.basename(context_file).split("_")[2].split(".")[0]
+
+def test():
+    import doctest
+    from . import config
+    return doctest.testmod(config)
 
