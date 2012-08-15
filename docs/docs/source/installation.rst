@@ -47,7 +47,7 @@ Advanced Environment
       only server configuration information is cached.   The directory
       pointed to by CRDS_CFGPATH should be writable.   If CRDS is running in
       server-less mode,  this path is irrelevant.
-      CRDS_REFPATH defaults to ${CRDS_PATH}/config.
+      CRDS_CFGPATH defaults to ${CRDS_PATH}/config.
     
     * **CRDS_MODE** defines whether CRDS should compute best references using
       client software (local),  server software (remote),  or intelligently
