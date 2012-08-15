@@ -238,8 +238,18 @@ def get_processing_mode(observatory, context):
         raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
     if effective_mode == "local" and obsolete:
         log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
-    new_context = str(context if context else info["operational_context"])
-    return effective_mode, new_context
+    env_context = config.get_crds_env_context()
+    if context:
+        final_context = context
+        source = "caller."
+    elif env_context:
+        final_context = env_context
+        source = "environment variable CRDS_CONTEXT."
+    else:
+        final_context = str(info["operational_context"])
+        source = "server, server cache, or installed default."
+    log.info("Using CRDS pipeline context " + repr(final_context) + " specified by " + source)
+    return effective_mode, final_context
 
 def minor_version(vers):
     """Strip the revision number off of `vers` and conver to float.
@@ -268,7 +278,7 @@ def cache_server_info(observatory, info):
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
     except IOError, exc:
-        log.warning("Couldn't save CRDS server info:", repr(exc), "offline mode won't work.")
+        log.warning("Couldn't save CRDS server info:", repr(exc))
  
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
@@ -278,9 +288,20 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = compat.literal_eval(file_.read())
     except IOError, exc:
-        raise crds.CrdsError("Off-line and error with cached server info: " + str(exc))
+        log.warning("Off-line with no cached server info.  Using pre-installed pipeline context.")
+        info = get_fake_offline_info(observatory)
     return info
 
+def get_fake_offline_info(observatory):
+    """Make up a bare-bones server info dictionary to define the pipeline context
+    using pre-installed mappings for `observatory`.
+    """
+    return dict(
+            edit_context = observatory + ".pmap",
+            operational_context = observatory + ".pmap",
+            observatory = observatory,
+            crds_version = dict( str="0.0"),
+            )
 # ============================================================================
 
 def srepr(obj):
