@@ -19,20 +19,56 @@ environment variables, env.csh.   For JWST development,  there are
 reasonable defaults for everything so you may not need to set these
 at all.   For HST,  at a minimum CRDS_SERVER_URL must be defined.
 
-    * CRDS_PATH defines a common directory tree where CRDS reference files
+Basic Environment
+.................
+
+    * **CRDS_PATH** defines a common directory tree where CRDS reference files
       and mappings are stored.   CRDS_PATH defaults to "./crds".   Mappings
       are stored in ${CRDS_PATH}/mappings/[hst|jwst].   Reference files are
       stored in ${CRDS_PATH}/references/[hst|jwst].
     
-    * CRDS_MAPPATH can be used to override CRDS_PATH and define where 
-      only mapping files are stored.
-    
-    * CRDS_REFPATH can be used to override CRDS_PATH and define where 
-      only reference files are stored.
-    
-    * CRDS_SERVER_URL defines the base URL for accessing CRDS network
+    * **CRDS_SERVER_URL** defines the base URL for accessing CRDS network
       services.  CRDS_SERVER_URL defaults to the jwst test server.
       
+Advanced Environment
+....................
+
+    * **CRDS_MAPPATH** can be used to override CRDS_PATH and define where 
+      only mapping files are stored.   If mappings are pre-installed, the
+      directory pointed to by CRDS_MAPPATH can be readonly.
+      CRDS_MAPPATH defaults to ${CRDS_PATH}/mappings.
+          
+    * **CRDS_REFPATH** can be used to override CRDS_PATH and define where 
+      only reference files are stored.  If references are pre-installed, the
+      directory pointed to by CRDS_REFPATH can be readonly.
+      CRDS_REFPATH defaults to ${CRDS_PATH}/references.
+      
+    * **CRDS_CFGPATH** can be used to override CRDS_PATH and define where 
+      only server configuration information is cached.   The directory
+      pointed to by CRDS_CFGPATH should be writable.   If CRDS is running in
+      server-less mode,  this path is irrelevant.
+      CRDS_REFPATH defaults to ${CRDS_PATH}/config.
+    
+    * **CRDS_MODE** defines whether CRDS should compute best references using
+      client software (local),  server software (remote),  or intelligently
+      "fall up" to the server only when the client is deemed obsolete or
+      the server cannot be reached (auto).   The default is auto.
+      
+    * **CRDS_CONTEXT** is an override naming the CRDS pipeline mapping (.pmap)
+      used for computing best references.   Ordinarily,  CRDS will contact the 
+      server to determine the operational pipeline mapping.
+      If the server cannot be reached,  CRDS will look in CRDS_CFGPATH
+      to determine the last pipeline context the server recommended.   If there
+      is no prior server info available in the cache,  CRDS will fall-back to 
+      using the default pre-installed mappings, e.g. jwst.pmap.
+      When CRDS_CONTEXT is set, CRDS will ignore server recommendations and 
+      availability and use the specified pipeline mapping.   However, CRDS_CONTEXT 
+      will only be used when `context` was specified to getreferences() as None.
+      If `context` was explicitly specified in a call to getreferences() and
+      was not None,  the specified context will override CRDS_CONTEXT.   This
+      enables the implementation of command line switches which supercede
+      CRDS_CONTEXT.
+       
 Edit env.csh according to your preferences for where to put CRDS files.
 Then source env.csh to define the variables in your environment::
 
