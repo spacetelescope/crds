@@ -55,12 +55,12 @@ def get_crds_processing_mode():
     'auto'    --   compute locally unless connected and client CRDS is obsolete
     """
     mode = os.environ.get("CRDS_MODE","auto")
-    assert mode in ["local", "remote", "auto"], "Invalid CRDS processing mode: " + repr(mode)
+    assert mode in ["local", "remote", "auto"], "Invalid CRDS_MODE: " + repr(mode)
     return mode
 
 def get_crds_env_context():
-    """If it has been specified in the environment,  return the pipeline context
-    which defines CRDS best reference rules,  else None.
+    """If it has been specified in the environment by CRDS_CONTEXT,  return the 
+    pipeline context which defines CRDS best reference rules,  else None.
     
     >>> os.environ["CRDS_CONTEXT"] = "jwst.pmap"
     >>> get_crds_env_context()
@@ -85,7 +85,7 @@ def get_crds_env_context():
     if context is not None:
         where = locate_mapping(context)
         assert context.endswith(".pmap"), \
-            "If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. jwst.pmap, not " + repr(context)
+            "If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. 'jwst.pmap', not " + repr(context)
         assert os.path.exists(where), \
             "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context)
     return context
