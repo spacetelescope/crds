@@ -70,7 +70,7 @@ def get_crds_env_context():
     >>> get_crds_env_context()
     Traceback (most recent call last):
     ...
-    AssertionError: If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. jwst.pmap, not 'jwst_miri_0022.imap'
+    AssertionError: If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. 'jwst.pmap', not 'jwst_miri_0022.imap'
    
     >>> os.environ["CRDS_CONTEXT"] = "/nowhere/to/be/found/jwst_0042.pmap"    
     >>> get_crds_env_context()
