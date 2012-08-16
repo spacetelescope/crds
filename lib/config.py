@@ -7,7 +7,7 @@ import os.path
 
 # ===========================================================================
 
-DEFAULT_CRDS_DIR = "./crds"
+DEFAULT_CRDS_DIR = "/grp/crds/jwst"
 
 def get_crds_path():
     """Return the root directory of the CRDS cache."""

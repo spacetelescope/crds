@@ -74,7 +74,7 @@ URL_SUFFIX = "/json/"
 
 JWST_TEST_SERVER = 'http://jwst-crds.stsci.edu'
 HST_TEST_SERVER = 'http://hst-crds.stsci.edu'
-URL = os.environ.get("CRDS_SERVER_URL", JWST_TEST_SERVER)
+URL = os.environ.get("CRDS_SERVER_URL", "http://not-a-crds-server.stsci.edu")
 
 S = None    # Proxy server
 
