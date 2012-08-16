@@ -1,0 +1,31 @@
+header = {
+
+'derived_from' : 'Hand written 08-16-2012',
+
+'filekind' : 'PHOTOM',
+
+'instrument' : 'NIRCAM',
+
+'mapping' : 'REFERENCE',
+
+'name' : 'jwst_nircam_photom.rmap',
+
+'observatory' : 'JWST',
+
+'parkey' : ((), ('META.OBSERVATION.DATE',)),
+
+'sha1sum' : 'b470798ad4ce9c628e1f5e1ed4b6b9175adc4f6d',
+
+}
+
+
+
+selector = Match({
+
+() : UseAfter({
+
+'1990-01-01 00:00:00' : 'jwst_nircam_photom_0001.fits',
+ 
+}),
+
+})

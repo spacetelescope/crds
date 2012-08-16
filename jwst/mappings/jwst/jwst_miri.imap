@@ -5,9 +5,10 @@ header = {
     'name' : 'jwst_miri.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '4f4df72dee96b43717fbe39a7255104c55dd7550',
+    'sha1sum' : '678c8240a86605ba31bfa323e575922a487a69c4',
 }
 
 selector = {
     'flat' : 'jwst_miri_flat.rmap',
+    'photom' : 'jwst_miri_photom.rmap',
 }

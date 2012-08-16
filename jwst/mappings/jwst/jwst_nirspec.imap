@@ -5,9 +5,10 @@ header = {
     'name' : 'jwst_nirspec.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '1869466a96c55fa0573d5c22828fd36ca7765255',
+    'sha1sum' : '86fbcaaf75939dc54d7889eda005d098f3fe7b54',
 }
 
 selector = {
     'flat' : 'jwst_nirspec_flat.rmap',
+    'photom' : 'jwst_nirspec_photom.rmap',
 }
