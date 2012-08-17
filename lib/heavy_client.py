@@ -267,16 +267,16 @@ def get_final_context(context, info):
     env_context = config.get_crds_env_context()
     if context:    # context parameter trumps all
         final_context = context
-        log.info("Using reference file selection rules", srepr(final_context), 
-                 "defined by caller.")
+        log.verbose("Using reference file selection rules", srepr(final_context), 
+                    "defined by caller.")
     elif env_context:
         final_context = env_context
-        log.info("Using reference file selection rules", srepr(final_context), 
-                 "defined by environment CRDS_CONTEXT.")
+        log.verbose("Using reference file selection rules", srepr(final_context), 
+                    "defined by environment CRDS_CONTEXT.")
     else:
         final_context = str(info["operational_context"])
-        log.info("Using reference selection rules", srepr(final_context), 
-                 "defined by", info["status"] + ".")
+        log.verbose("Using reference file selection rules", srepr(final_context), 
+                    "defined by", info["status"] + ".")
     return final_context
 
 def local_version_obsolete(server_version):
