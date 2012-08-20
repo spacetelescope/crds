@@ -2,6 +2,7 @@ import re
 
 import pyfits
 from . import rmap
+from . import client
 
 filekind_kw = 'FILETYPE'
 
@@ -86,6 +87,14 @@ def find_current_reffile(reffile,pmap):
         else:
             select_vals[kw] = pyfits.getval(reffile,kw)
     match_file = r.selector.choose(select_vals)
-    match_file = ctx.locate.locate_server_reference(match_file)
+    # grab match_file from server and copy it to a local disk, if network
+    # connection is available and configured properly
+    try:
+        match_file = client.dump_references(pmap, baserefs=match_file, ignore_cache=False)
+    except:
+        match_file = None
+    # Otherwise, get file location from local server cache
+    if match_file is None:
+        match_file = ctx.locate.locate_server_reference(match_file)
 
     return match_file
