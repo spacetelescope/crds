@@ -2,7 +2,7 @@ import re
 
 import pyfits
 from . import rmap
-from . import client
+from crds import client
 
 filekind_kw = 'FILETYPE'
 
@@ -91,7 +91,7 @@ def find_current_reffile(reffile,pmap):
     # connection is available and configured properly
     try:
         match_file = client.dump_references(pmap, baserefs=match_file, ignore_cache=False)
-    except:
+    except Exception:
         match_file = None
     # Otherwise, get file location from local server cache
     if match_file is None:
