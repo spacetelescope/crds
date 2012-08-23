@@ -17,20 +17,32 @@ class CrdsLogger(object):
         self.name = name
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
+        self.console = None
         if enable_console:
+            self.add_console_handler(level)
+        self.errors = 0
+        self.warnings = 0
+        self.infos = 0
+        self.eol_pending = False
+        try:
+            self.verbose_level =  int(os.environ.get(
+                self.name.replace(".","_").upper() + "_VERBOSITY", 0))
+        except Exception:
+            self.verbose_lebel = DEFAULT_VERBOSITY_LEVEL
+
+    def add_console_handler(self, level=logging.DEBUG):
+        if self.console is None:
             self.console = logging.StreamHandler()
             self.console.setLevel(level)
             self.formatter = logging.Formatter(
                 '%(name)-12s: %(levelname)-8s %(message)s')
             self.console.setFormatter(self.formatter)
             self.logger.addHandler(self.console)
-        self.errors = 0
-        self.warnings = 0
-        self.infos = 0
-        self.eol_pending = False
-        self.verbose_level =  os.environ.get(
-            self.name.replace(".","_")+"_VERBOSITY", 0)
-        self.verbose_flag = self.verbose_level > 0
+
+    def remove_console_handler(self):
+        if self.console is not None:
+            self.logger.removeHandler(self.console)
+            self.console = None
 
     def format(self, *args, **keys):
         end = keys.get("end", "\n")
@@ -93,7 +105,6 @@ class CrdsLogger(object):
         elif level == False:
             level = 0
         self.verbose_level = level
-        self.verbose_flag = self.verbose_level > 0
         
     def get_verbose(self):
         return self.verbose_level
@@ -111,6 +122,8 @@ reset = THE_LOGGER.reset
 write = THE_LOGGER.write
 set_verbose = THE_LOGGER.set_verbose
 get_verbose = THE_LOGGER.get_verbose
+add_console_handler = THE_LOGGER.add_console_handler
+remove_console_handler = THE_LOGGER.remove_console_handler
 
 def errors():
     """Return the global count of errors."""

@@ -275,7 +275,7 @@ def get_final_context(context, info):
                     "defined by environment CRDS_CONTEXT.")
     else:
         final_context = str(info["operational_context"])
-        log.verbose("Using reference file selection rules", srepr(final_context), 
+        log.verbose("Using reference selection rules", srepr(final_context), 
                     "defined by", info["status"] + ".")
     return final_context
 
@@ -343,7 +343,7 @@ def load_server_info(observatory):
                     "References may be sub-optimal.")
     except IOError:
         log.verbose_warning("Couldn't load cached server info from '%s'." % server_config,
-                    "Using pre-installed CRDS .pmap pipeline context.  References may be sub-optimal." )
+                            "Using pre-installed CRDS context.  References may be sub-optimal." )
         info = get_installed_info(observatory)
         info["status"] = "s/w install"
     return info
