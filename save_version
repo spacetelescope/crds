@@ -1,0 +1,7 @@
+#! /bin/sh
+
+echo "__svn_version__ = '"`svnversion`"'"  
+echo 
+echo "__full_svn_info__ = '''" 
+svn info 
+echo "'''"
