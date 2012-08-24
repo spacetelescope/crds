@@ -30,6 +30,10 @@ Basic Environment
     * **CRDS_SERVER_URL** defines the base URL for accessing CRDS network
       services.  CRDS_SERVER_URL defaults to the jwst test server.
       
+    * **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
+      integer,  nominally 50.   Higher values output more information,  lower
+      values less information.
+      
 Advanced Environment
 ....................
 
