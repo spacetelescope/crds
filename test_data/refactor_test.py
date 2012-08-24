@@ -78,7 +78,7 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
                    expected_action_type="insert"):
 
    separator("=")
-   log.info("Reference", os.path.basename(old_rmap_path), os.path.basename(old_refpath))
+   log.info("Reference", os.path.basename(old_rmap_path), old_refpath)
 
    pysh.sh("rm -f ${new_rmap_path}")
    actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
