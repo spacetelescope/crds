@@ -30,7 +30,7 @@ import os
 import pprint
 
 import crds.client as light_client
-from . import rmap, log, utils, compat, config
+from . import rmap, log, utils, compat, config, svn_version
 
 __all__ = ["getreferences", "getrecommendations", "get_default_context", 
            "get_cached_mapping"]
@@ -129,6 +129,7 @@ def _initial_recommendations(
         name, parameters, reftypes=None, context=None, ignore_cache=False, observatory="jwst"):
     """shared logic for getreferences() and getrecommendations()."""
     
+    log.verbose(name + "() CRDS version: ", version_info())
     log.verbose(name + "() server:", light_client.get_crds_server())
     log.verbose(name + "() observatory:", observatory)
     log.verbose(name + "() parameters:\n", log.PP(parameters))
@@ -138,7 +139,7 @@ def _initial_recommendations(
     for var in os.environ:
         if var.upper().startswith("CRDS"):
             log.verbose(var, "=", repr(os.environ[var]))
-    
+
     check_observatory(observatory)
     check_parameters(parameters)
     check_reftypes(reftypes)
@@ -358,6 +359,14 @@ def get_installed_info(observatory):
             observatory = observatory,
             crds_version = dict( str="0.0.0"),
             )
+    
+def version_info():
+    """Return CRDS checkout URL and revision."""
+    try:
+        lines = svn_version.__full_svn_info__.strip().split("\n")
+        return ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
+    except Exception:
+        return "unknown"
 # ============================================================================
 
 def srepr(obj):
