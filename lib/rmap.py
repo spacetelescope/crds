@@ -216,6 +216,7 @@ class Mapping(object):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.header:
             val = self.header[attr]
+            # For case-sensitive HST rmap relevance expressions.
             if isinstance(val, str):
                 if val.startswith("(") and val.endswith(")"):
                     return val
