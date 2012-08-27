@@ -105,7 +105,7 @@
          'ccp7': 'ccp7',
          'ccp8': 'ccp8',
          'ccp9': 'ccp9'},
- 'nic': {'bkg': 'bkg',
+ 'nicmos': {'bkg': 'bkg',
          'drk': 'drk',
          'flt': 'flt',
          'idc': 'idc',
