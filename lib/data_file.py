@@ -112,8 +112,10 @@ def setval(filepath, key, value):
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
+    from jwstlib import models
     with models.open(filepath) as dm:
         dm[key] = value
+        dm.save(filepath)
 
 def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     """Return the complete conditioned header dictionary of a reference file,
