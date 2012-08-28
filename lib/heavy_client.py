@@ -30,7 +30,7 @@ import os
 import pprint
 
 import crds.client as light_client
-from . import rmap, log, utils, compat, config, svn_version
+from . import rmap, log, utils, compat, config
 
 __all__ = ["getreferences", "getrecommendations", "get_default_context", 
            "get_cached_mapping"]
@@ -363,6 +363,7 @@ def get_installed_info(observatory):
 def version_info():
     """Return CRDS checkout URL and revision."""
     try:
+        from . import svn_version
         lines = svn_version.__full_svn_info__.strip().split("\n")
         return ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
     except Exception:
