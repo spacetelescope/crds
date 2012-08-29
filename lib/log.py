@@ -28,7 +28,7 @@ class CrdsLogger(object):
             self.verbose_level =  int(os.environ.get(
                 self.name.replace(".","_").upper() + "_VERBOSITY", 0))
         except Exception:
-            self.verbose_lebel = DEFAULT_VERBOSITY_LEVEL
+            self.verbose_level = DEFAULT_VERBOSITY_LEVEL
 
     def add_console_handler(self, level=logging.DEBUG):
         if self.console is None:
