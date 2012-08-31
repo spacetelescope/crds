@@ -69,11 +69,11 @@ class KeywordValidator(object):
         requirements defined by this Validator.
         """
         if self._info.keytype == "H":
-            self.check_header(filename, header)
+            return self.check_header(filename, header)
         elif self._info.keytype == "C":
-            self.check_column(filename, context=context)
+            return self.check_column(filename, context=context)
         elif self._info.keytype == "G":
-            self.check_group(filename)
+            return self.check_group(filename)
         else:
             raise ValueError(
                 "Unknown TPN keytype " + repr(self._info.keytype) + " for " +
@@ -85,13 +85,17 @@ class KeywordValidator(object):
         """
         log.verbose("Checking ", repr(filename), "keyword",
                     repr(self.name), "=", repr(value))
+
         if value is None: # missing optional or excluded keyword
-            return
+            return True
         if self.condition is not None:
             value = self.condition(value)
         if not self._values:
-            return
+            return True
+
         self._check_value(value)
+        # If no exception was raised, consider it validated successfully
+        return True
 
     def _check_value(self, value):
         if value not in self._values and self._values != ('*',):
@@ -100,8 +104,8 @@ class KeywordValidator(object):
                     if re.match(pat, value):
                         return
             raise ValueError("Value for " + repr(self.name) + " of " +
-                             repr(value) + " is not one of " +
-                             repr(self._values))
+                            repr(value) + " is not one of " +
+                            repr(self._values))
 
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
@@ -110,7 +114,7 @@ class KeywordValidator(object):
         if header is None:
             header = data_file.get_header(filename)
         value = self._get_header_value(header)
-        self.check_value(filename, value)
+        return self.check_value(filename, value)
 
     def check_column(self, filename, context=None):
         """Extract a column of values from `filename` and check them all against
@@ -121,9 +125,14 @@ class KeywordValidator(object):
             values = self._get_column_values(filename)
         except Exception, exc:
             raise RuntimeError("Can't read column values : " + str(exc))
+        check_val = True
+
         if values is not None: # Only check for non-optional columns
             for i, value in enumerate(values): # compare to TPN default values
-                self.check_value(filename + "[" + str(i) +"]", value)
+                v = self.check_value(filename + "[" + str(i) +"]", value)
+                if not v:
+                    check_val = False
+
         if context: # If context has been specified, compare against previous reffile
             current = refmatch.find_current_reffile(filename,context)
             if current: # Only do comparison if current ref file can be found
@@ -131,7 +140,10 @@ class KeywordValidator(object):
                             " against values found in ",current)
                 current_values = self._get_column_values(current)
 
-                _check_column_values(values,current_values)
+                return _check_column_values(values,current_values)
+
+        # If no context, report results of check_value anyway if not an Exception
+        return check_val
 
     def check_group(self, filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
@@ -191,10 +203,17 @@ class KeywordValidator(object):
             log.warning("Value for " + repr(self.name) + " of \n" +
                 repr(list(uniq_new)) + "\nis not one of \n" +
                 repr(current_values))
+            return True
+
         if len(uniq_current) > 0:
             log.info("These values for "+repr(self.name)+
                     " were not present in new input:\n"+
                     repr(list(uniq_current)))
+            raise ValueError("These values for "+repr(self.name)+
+                    " were not present in new input:\n"+
+                    repr(list(uniq_current)))
+        # if no differences, return True
+        return True
 
     def __handle_missing(self):
         """This Validator's key is missing.   Either raise an exception or
@@ -205,6 +224,7 @@ class KeywordValidator(object):
                 "Missing required keyword " + repr(self.name))
         else:
             sys.exc_clear()
+            return # missing value is None, so let's be explicit about the return value
 
     def __handle_excluded(self, value):
         """If this Validator's key is excluded,  raise an exception.  Otherwise
@@ -477,9 +497,10 @@ def validate_file_format(fitsname):
     """ Run PyFITS verify method on file to report any FITS format problems
         with the input file.
     """
-    if '.fits' not in fitsname[-5:]:
-        log.warning('Reference file '+fitsname+' not a FITS file. No validation done.')
-        return NOT_FITS
+    # Not strictly necessary when pyfits.verify gets used...
+    #if '.fits' not in fitsname[-5:]:
+    #    log.warning('Reference file '+fitsname+' not a FITS file. No validation done.')
+    #    return NOT_FITS
 
     try:
         f = pyfits.open(fitsname)
@@ -510,8 +531,9 @@ def certify_context(context, check_references=None, trap_exceptions=False):
         # robustly based on these 2 options
         #
         try:
-            where = ctx.locate.locate_server_reference(ref)
-            #where = rmap.locate_file(ref, ctx.observatory)
+            where = rmap.locate_file(ref, ctx.observatory)
+            if not os.path.exists(where):
+                where = ctx.locate.locate_server_reference(ref)
         except:
             where = ref
         if os.path.exists(where):
@@ -521,6 +543,7 @@ def certify_context(context, check_references=None, trap_exceptions=False):
                 log.error("Can't find reference file " + repr(where))
             else:
                 raise ValidationError("Missing reference file " + repr(ref))
+
     if check_references == "contents":
         certify_files(references, context=context,
                       check_references=check_references,
