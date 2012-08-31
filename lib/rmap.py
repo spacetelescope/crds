@@ -872,6 +872,20 @@ class ReferenceMapping(Mapping):
                 raise
             else:
                 raise ValidationError(repr(self) + " : " + str(exc))
+        # also perform mode checking now as well, if context has been provided
+        # start by getting previously installed mapping that matches what
+        # this mapping
+        try:
+            derived_file = self.header['derived_from']
+            if 'generated' not in derived_file:
+                derived_from = get_cached_mapping(derived_file)
+                diffs = derived_from.difference(self)
+                if len(diffs) > 0:
+                    log.warning("Differences found relative to installed mapping: %s"%
+                            derived_from.basename)
+                    log.warning(repr(diffs))
+        except IOError:
+            pass
 
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
