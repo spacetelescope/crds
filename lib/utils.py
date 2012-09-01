@@ -3,10 +3,13 @@
 
 import os.path
 import re
+import sha
 
 # from crds import data_file,  import deferred until required
 
 from crds import compat
+
+CRDS_CHECKSUM_BLOCK_SIZE = 2**26
 
 # ===================================================================
 
@@ -113,6 +116,21 @@ def ensure_dir_exists(fullpath, mode=0755):
     """Creates dirs from `fullpath` if they don't already exist.
     """
     create_path(os.path.dirname(fullpath), mode)
+    
+
+def checksum(pathname):
+    """Return the CRDS hexdigest for file at `pathname`.""" 
+    sum = sha.new()
+    with open(pathname) as infile:
+        size = 0
+        insize = os.stat(pathname).st_size
+        while size < insize:
+            block = infile.read(CRDS_CHECKSUM_BLOCK_SIZE)
+            size += len(block)
+            sum.update(block)
+    return sum.hexdigest()
+
+
 
 # ===================================================================
 
