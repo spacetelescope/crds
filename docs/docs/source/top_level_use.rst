@@ -20,7 +20,8 @@ are to be determined,  getreferences() will determine best references,  cache
 them on the local file system,  and return a mapping from reference types to
 reference file paths::
 
-    def getreferences(parameters, reftypes=None, context=None, ignore_cache=False):
+    def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
+                      observatory="jwst"):
         """Return the mapping from the requested `reftypes` to their 
         corresponding best reference file paths appropriate for a dataset 
         described by `parameters` with CRDS rules defined by `context`::
@@ -59,6 +60,9 @@ reference file paths::
         ignore_cache :   If True,  download all required mappings and references
                 from the CRDS server.  If False,  download only those files not
                 already in the local caches.
+        
+        observatory :  The name of the observatory this query applies to,  needed
+                to support both 'hst' and 'jwst' from a single server.
 
         Returns
         -------
