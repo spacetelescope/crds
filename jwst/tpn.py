@@ -95,10 +95,14 @@ def _tpn_filepath(instrument, filekind):
     return path
 
 def get_tpninfos(instrument, filekind):
-    """Load the map of TPN_info tuples corresponding to `instrument` and 
-    `extension` from it's .tpn file.
+    """Load the listof TPN info tuples corresponding to `instrument` and 
+    `filekind` from it's .tpn file.
     """
-    return _load_tpn(_tpn_filepath(instrument, filekind))
+    try:
+        return _load_tpn(_tpn_filepath(instrument, filekind))
+    except IOError:
+        log.verbose_warning("no TPN for", instrument, filekind)
+        return []
 
 # =============================================================================
 
