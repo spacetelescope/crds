@@ -10,10 +10,6 @@ setup(name="crds.jwst",
       packages=[
         'crds.jwst',
 
-        'crds.jwst.miri',
-        'crds.jwst.nirspec',
-        'crds.jwst.nircam',
-
         'crds.mappings',
         'crds.mappings.jwst',
         'crds.references',
@@ -23,10 +19,6 @@ setup(name="crds.jwst",
 
       package_dir = {
         'crds.jwst':'.',
-        
-        'crds.jwst.miri':'miri',
-        'crds.jwst.nirspec':'nirspec',
-        'crds.jwst.nircam':'nircam',
         
         'crds.mappings' : 'mappings',
         'crds.mappings.jwst' : 'mappings/jwst',
