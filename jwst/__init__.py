@@ -7,6 +7,9 @@ TEXT_DESCR = {
     "photom" : "Absolute Calibration",
     "dark" : "Dark Frame",
     "linearity" : "Detector Linearity Correction Coefficients",
+    "mask" : "Bad Pixel Mask",
+    "amplifier" : "Detector Amplifier Readout Parameters",
+    "dqi" : "Data Quality Information",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
