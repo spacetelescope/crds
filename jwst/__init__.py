@@ -9,7 +9,7 @@ TEXT_DESCR = {
     "linearity" : "Detector Linearity Correction Coefficients",
     "mask" : "Bad Pixel Mask",
     "amplifier" : "Detector Amplifier Readout Parameters",
-    "dqi" : "Data Quality Information",
+    "dqi" : "Data Quality Initialization",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
