@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'AMPLIFIER',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_amplifier_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'c905b7c5bfa530ce141c6aa199666e59feefefa6',
+}
+
+selector = Match({
+    ('FGS1', 'ANY') : 'jwst_fgs_amplifier_0000.fits',
+    ('FGS2', 'ANY') : 'jwst_fgs_amplifier_0001.fits',
+})

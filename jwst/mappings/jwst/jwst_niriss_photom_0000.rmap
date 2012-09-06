@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'PHOTOM',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_photom_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'),),
+    'sha1sum' : '3df5f8232708baa1683ec5227d3a216b161c89b1',
+}
+
+selector = Match({
+    ('NIRISS', 'CLEAR', 'F090W') : 'jwst_niriss_photom_0007.fits',
+    ('NIRISS', 'CLEAR', 'F115W') : 'jwst_niriss_photom_0008.fits',
+    ('NIRISS', 'CLEAR', 'F150W') : 'jwst_niriss_photom_0009.fits',
+    ('NIRISS', 'CLEAR', 'F200W') : 'jwst_niriss_photom_0010.fits',
+    ('NIRISS', 'F277W', 'CLEARP') : 'jwst_niriss_photom_0011.fits',
+    ('NIRISS', 'F356W', 'CLEARP') : 'jwst_niriss_photom_0012.fits',
+    ('NIRISS', 'F444W', 'CLEARP') : 'jwst_niriss_photom_0013.fits',
+})

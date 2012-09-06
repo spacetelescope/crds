@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'AMPLIFIER',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_amplifier_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '4ff60e52cbd93a6cb5dc86f1ead871bce535be95',
+}
+
+selector = Match({
+    ('NIRISS', 'ANY') : 'jwst_niriss_amplifier_0000.fits',
+})

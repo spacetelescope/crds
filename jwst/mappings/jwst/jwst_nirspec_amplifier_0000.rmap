@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'AMPLIFIER',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_amplifier_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '400aeffa87bc7640853526841b1776b0b9bef099',
+}
+
+selector = Match({
+    ('NRS1', 'ANY') : 'jwst_nirspec_amplifier_0000.fits',
+    ('NRS2', 'ANY') : 'jwst_nirspec_amplifier_0001.fits',
+})

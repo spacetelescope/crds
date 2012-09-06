@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_linearity_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '0de96c6ed32ec2afc71e9a8fe01b442987be7cf9',
+}
+
+selector = Match({
+    ('ANY', 'ANY') : 'jwst_miri_linearity_0001.fits',
+})
