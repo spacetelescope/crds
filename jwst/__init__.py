@@ -1,4 +1,4 @@
-INSTRUMENTS = ["miri","nirspec","nircam","niriss"]
+INSTRUMENTS = ["miri","nirspec","nircam","niriss", "fgs"]
 
 EXTENSIONS = [".pmap", ".imap", ".rmap", ".fits", ]
 
@@ -9,7 +9,6 @@ TEXT_DESCR = {
     "linearity" : "Detector Linearity Correction Coefficients",
     "mask" : "Bad Pixel Mask",
     "amplifier" : "Detector Amplifier Readout Parameters",
-    "dqi" : "Data Quality Initialization",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
