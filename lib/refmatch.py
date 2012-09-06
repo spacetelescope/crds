@@ -90,7 +90,8 @@ def find_current_reffile(reffile,pmap):
     # grab match_file from server and copy it to a local disk, if network
     # connection is available and configured properly
     try:
-        match_file = client.dump_references(pmap, baserefs=match_refname, ignore_cache=False)
+        match_files = client.dump_references(pmap, baserefs=[match_refname], ignore_cache=False)
+        match_file = match_files[match_refname]
     except Exception:
         match_file = None
     # Otherwise, get file location from local server cache
