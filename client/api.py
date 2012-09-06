@@ -7,6 +7,7 @@ import os.path
 import base64
 import re
 import urllib2
+import traceback
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
@@ -24,15 +25,6 @@ class CrdsLookupError(CrdsError):
     
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
-
-def download_exc(pipeline_context, name, exc):    
-    """Generate a standard exception message for download exceptions."""
-    return CrdsDownloadError("Error fetching data for " + srepr(name) + 
-                            " from context " + srepr(pipeline_context) + 
-                            " at server " + srepr(get_crds_server()) +
-                            " : " + str(exc))
-
-# ==============================================================================
 
 __all__ = [
            "get_default_context",
@@ -277,7 +269,11 @@ class FileCacher(object):
                     outfile.write(data)
             self.verify_file(pipeline_context, name, localpath)
         except Exception, exc:
-            raise download_exc(pipeline_context, name, exc)
+            traceback.print_exc()
+            raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
+                                     " from context " + srepr(pipeline_context) + 
+                                     " at server " + srepr(get_crds_server()) +
+                                     " : " + str(exc))
             
     def get_data_rpc(self, pipeline_context, file, localpath):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""
@@ -312,7 +308,7 @@ class FileCacher(object):
         basename = os.path.basename(localpath)
         if original_length != local_length:
             raise CrdsDownloadError("downloaded file size " + str(local_length) +
-                                    " does not match server size " + original_length)
+                                    " does not match server size " + str(original_length))
         original_sha1sum = remote_info["sha1sum"]
         local_sha1sum = utils.checksum(localpath)
         if original_sha1sum != local_sha1sum:
