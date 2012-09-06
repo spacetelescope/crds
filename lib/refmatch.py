@@ -86,15 +86,15 @@ def find_current_reffile(reffile,pmap):
             select_vals[kw] = timeobs
         else:
             select_vals[kw] = pyfits.getval(reffile,kw)
-    match_file = r.selector.choose(select_vals)
+    match_refname = r.selector.choose(select_vals)
     # grab match_file from server and copy it to a local disk, if network
     # connection is available and configured properly
     try:
-        match_file = client.dump_references(pmap, baserefs=match_file, ignore_cache=False)
+        match_file = client.dump_references(pmap, baserefs=match_refname, ignore_cache=False)
     except Exception:
         match_file = None
     # Otherwise, get file location from local server cache
     if match_file is None:
-        match_file = ctx.locate.locate_server_reference(match_file)
+        match_file = ctx.locate.locate_server_reference(match_refname)
 
     return match_file
