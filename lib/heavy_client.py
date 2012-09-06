@@ -354,10 +354,19 @@ def load_server_info(observatory):
 def get_installed_info(observatory):
     """Make up a bare-bones server info dictionary to define the pipeline context
     using pre-installed mappings for `observatory`.
+    
+    These are the ultimate fall-back settings for CRDS in serverless-mode and 
+    assume the mappings are pre-installed and/or visible on the Central Store.
     """
+    if observatory in ["hst","tobs"]:
+        pmap = observatory + ".pmap"
+    elif observatory == "jwst":
+        pmap = "jwst_0000.pmap"
+    else:
+        raise ValueError("Unknown observatory " + repr(observatory))
     return dict(
-            edit_context = observatory + ".pmap",
-            operational_context = observatory + ".pmap",
+            edit_context = pmap,
+            operational_context = pmap,
             observatory = observatory,
             crds_version = dict( str="0.0.0"),
             )

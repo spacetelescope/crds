@@ -442,7 +442,7 @@ def certify_reference(fitsname, context=None,
     """
     try:
         validation = validate_file_format(fitsname)
-    except:
+    except Exception:
         if trap_exceptions:
             log.error("FITS file verification failed for "+fitsname)
             return
@@ -603,6 +603,9 @@ def main():
     parser.add_option("-t", "--trap-exceptions", dest="trap_exceptions",
         help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none",
         type=str, default="selector")
+    parser.add_option("-x", "--context", dest="context",
+        help="Pipeline context defining replacement reference.",
+        type=str, default=None)
 
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
@@ -616,7 +619,10 @@ def main():
     if options.trap_exceptions == "none":
         options.trap_exceptions = False
 
-    log.standard_run("certify_files(args[1:], dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)",
+    assert (options.context is None) or rmap.is_mapping(options.context), \
+        "Specified --context file " + repr(options.context) + " is not a CRDS mapping."
+
+    log.standard_run("certify_files(args[1:], context=options.context, dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)",
                      options, globals(), locals())
     log.standard_status()
     return log.errors()
