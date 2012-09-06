@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'FLAT',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_flat_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '5674bd4a63bd270c7e38c5a3d85d57b762c26677',
+}
+
+selector = Match({
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_flat_0002.fits',
+})

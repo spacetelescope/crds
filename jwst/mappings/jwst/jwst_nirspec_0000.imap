@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_nirspec_0000.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '7169fcbe0e94baeeece3408a497591f9a9d8833f',
+}
+
+selector = {
+    'AMPLIFIER' : 'jwst_nirspec_amplifier_0000.rmap',
+    'DARK' : 'jwst_nirspec_dark_0000.rmap',
+    'FLAT' : 'jwst_nirspec_flat_0000.rmap',
+    'LINEARITY' : 'jwst_nirspec_linearity_0000.rmap',
+    'MASK' : 'jwst_nirspec_mask_0000.rmap',
+    'PHOTOM' : 'jwst_nirspec_photom_0000.rmap',
+}

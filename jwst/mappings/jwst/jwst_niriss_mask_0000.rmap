@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'MASK',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_mask_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'ec6e4367fcbd1ade6b3238ce7ad0ec4bd6c9ab44',
+}
+
+selector = Match({
+    ('NIRISS', 'ANY') : 'jwst_niriss_mask_0000.fits',
+})

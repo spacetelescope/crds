@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'FLAT',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_flat_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'),),
+    'sha1sum' : '4f5185c5e2cfb524fb6ae585edc523c8766384c8',
+}
+
+selector = Match({
+    ('NRCA1', 'ANY', 'ANY') : 'jwst_nircam_flat_0011.fits',
+    ('NRCA2', 'ANY', 'ANY') : 'jwst_nircam_flat_0012.fits',
+    ('NRCA3', 'ANY', 'ANY') : 'jwst_nircam_flat_0013.fits',
+    ('NRCA4', 'ANY', 'ANY') : 'jwst_nircam_flat_0014.fits',
+    ('NRCALONG', 'ANY', 'ANY') : 'jwst_nircam_flat_0015.fits',
+    ('NRCB1', 'ANY', 'ANY') : 'jwst_nircam_flat_0016.fits',
+    ('NRCB2', 'ANY', 'ANY') : 'jwst_nircam_flat_0017.fits',
+    ('NRCB3', 'ANY', 'ANY') : 'jwst_nircam_flat_0018.fits',
+    ('NRCB4', 'ANY', 'ANY') : 'jwst_nircam_flat_0019.fits',
+    ('NRCBLONG', 'ANY', 'ANY') : 'jwst_nircam_flat_0020.fits',
+})

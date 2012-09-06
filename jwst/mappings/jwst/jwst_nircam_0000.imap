@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_nircam_0000.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '7e32aebd41d547e19718c96a893210da5297ac89',
+}
+
+selector = {
+    'AMPLIFIER' : 'jwst_nircam_amplifier_0000.rmap',
+    'DARK' : 'jwst_nircam_dark_0000.rmap',
+    'FLAT' : 'jwst_nircam_flat_0000.rmap',
+    'LINEARITY' : 'jwst_nircam_linearity_0000.rmap',
+    'MASK' : 'jwst_nircam_mask_0000.rmap',
+    'PHOTOM' : 'jwst_nircam_photom_0000.rmap',
+}

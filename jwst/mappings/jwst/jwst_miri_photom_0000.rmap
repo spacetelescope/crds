@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'PHOTOM',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_photom_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'b4c7cd1e810c260bb4e6ab2717392daf5b27bf34',
+}
+
+selector = Match({
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_photom_0002.fits',
+})

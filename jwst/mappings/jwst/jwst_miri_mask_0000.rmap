@@ -1,0 +1,16 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'MASK',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_mask_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '49c53a1a76f7ca72c39613b111f8aaf8feeeda90',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'ANY') : 'jwst_miri_mask_0000.fits',
+    ('MIRIFUSHORT', 'ANY') : 'jwst_miri_mask_0001.fits',
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_mask_0002.fits',
+})

@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_linearity_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '0bfe40f59cacc5ceede2679a23535256d8e8f814',
+}
+
+selector = Match({
+    ('ANY', 'ANY') : 'jwst_nircam_linearity_0001.fits',
+})

@@ -1,0 +1,16 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'AMPLIFIER',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_amplifier_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'd7ed0d10f59ce59cc9b1757cac5024f5162266d8',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'ANY') : 'jwst_miri_amplifier_0000.fits',
+    ('MIRIFUSHORT', 'ANY') : 'jwst_miri_amplifier_0001.fits',
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_amplifier_0002.fits',
+})

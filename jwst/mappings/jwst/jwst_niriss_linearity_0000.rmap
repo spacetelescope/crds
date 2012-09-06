@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_linearity_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '4dcfe5a007d9e6036b17b8fda5d84f81f72d4b3c',
+}
+
+selector = Match({
+    ('ANY', 'ANY') : 'jwst_niriss_linearity_0001.fits',
+})

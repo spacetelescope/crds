@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'filekind' : 'AMPLIFIER',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_amplifier_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '5edba75ecb9de9ba4dd95515efc8358db22f7081',
+}
+
+selector = Match({
+    ('NRCA1', 'ANY') : 'jwst_nircam_amplifier_0000.fits',
+    ('NRCA2', 'ANY') : 'jwst_nircam_amplifier_0001.fits',
+    ('NRCA3', 'ANY') : 'jwst_nircam_amplifier_0002.fits',
+    ('NRCA4', 'ANY') : 'jwst_nircam_amplifier_0003.fits',
+    ('NRCALONG', 'ANY') : 'jwst_nircam_amplifier_0004.fits',
+    ('NRCB1', 'ANY') : 'jwst_nircam_amplifier_0005.fits',
+    ('NRCB2', 'ANY') : 'jwst_nircam_amplifier_0006.fits',
+    ('NRCB3', 'ANY') : 'jwst_nircam_amplifier_0007.fits',
+    ('NRCB4', 'ANY') : 'jwst_nircam_amplifier_0008.fits',
+    ('NRCBLONG', 'ANY') : 'jwst_nircam_amplifier_0009.fits',
+})
