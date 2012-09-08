@@ -299,8 +299,11 @@ class FileCacher(object):
                 chunk += 1
                 data = infile.read(CRDS_DATA_CHUNK_SIZE)
         finally:
-            infile.close()
-        
+            try:
+                infile.close()
+            except UnboundLocalError:   # maybe the open failed.
+                pass
+
     def verify_file(self, pipeline_context, filename, localpath):
         remote_info = get_file_info(pipeline_context, filename)
         local_length = os.stat(localpath).st_size
