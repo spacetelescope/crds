@@ -467,19 +467,19 @@ def certify_reference(fitsname, context=None,
             # validate other values independently
             try:
                 checker.check(fitsname) # validate against TPN values
-            except Exception:
+            except Exception, exc:
                 if trap_exceptions:
                     log.error("Checking", repr(checker._info.name), "in",
-                              repr(fitsname))
+                              repr(fitsname), ":", str(exc))
                 else:
                     raise
     if mode_checker: # Run validation on all collected modes
         try:
             mode_checker.check(fitsname,context=context)
-        except Exception:
+        except Exception, exc:
             if trap_exceptions:
                 log.error("Checking", repr(mode_checker.names), "in",
-                          repr(fitsname))
+                          repr(fitsname), ":", str(exc))
             else:
                 raise
 
