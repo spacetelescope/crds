@@ -11,6 +11,7 @@ import crds
 # =======================================================================
 
 def format_date(d):
+    """Format a datestring `d` in CRDS standard form."""
     if isinstance(d, (str, unicode)):
         d = parse_date(d)
     return d.isoformat(" ")
@@ -51,6 +52,7 @@ def parse_date(d):
         return parse_numerical_date(d)
 
 def reformat_date(d):
+    """Reformat datestring `d` in any recognized format in CRDS standard form."""
     dt = parse_date(d)
     return format_date(dt)
 
