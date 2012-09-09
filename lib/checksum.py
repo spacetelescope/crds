@@ -20,7 +20,7 @@ def update_checksum(file_):
 def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
     for file_ in files:
-        log.write("Updating", file_)
+        log.info("Updating checksum for", file_)
         update_checksum(file_)
         
 if __name__ == "__main__":
