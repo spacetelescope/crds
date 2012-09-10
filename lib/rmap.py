@@ -12,7 +12,7 @@ missing:
 >>> p.missing_mappings()
 []
 
-The available HST reference data seems to have a number of ACS 
+The available HST reference data seems to have a number of ACS
 references missing relative to the CDBS HTML table dump:
 
 >>> len(p.missing_references()) > 0
@@ -36,13 +36,13 @@ Pipeline reference files are also broken down by instrument:
 
 >>> i = InstrumentContext.from_file("hst_acs.imap")
 
-The ACS instrument has 15 associated mappings,  including the instrument 
+The ACS instrument has 15 associated mappings,  including the instrument
 context:
 
 >>> len(i.mapping_names()) > 10
 True
 
-The ACS instrument has 3983 associated reference files in the hst_acs.imap 
+The ACS instrument has 3983 associated reference files in the hst_acs.imap
 context:
 
 >>> len(i.reference_names()) > 2000
@@ -84,7 +84,7 @@ except ImportError:
         """Fake ast module for Python2.5 / googleapp."""
         class NodeVisitor(object):
             """Fake NodeVisitor class for Python2.5 / googleapp."""
-            pass    
+            pass
 
 # ===================================================================
 
@@ -98,7 +98,7 @@ class MappingError(crds.CrdsError):
     """Exception in load_rmap."""
     def __init__(self, *args):
         crds.CrdsError.__init__(self, " ".join([str(x) for x in args]))
-        
+
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
 
@@ -127,7 +127,7 @@ class MappingValidator(ast.NodeVisitor):
     with limiting rmaps to safe code,  not deep semantic checks.
     """
     def compile_and_check(self, text, source="<ast>", mode="exec"):
-        """Parse `text` to verify that it's a legal mapping, and return a 
+        """Parse `text` to verify that it's a legal mapping, and return a
         compiled code object.
         """
         if sys.version_info >= (2, 7, 0):
@@ -140,10 +140,10 @@ class MappingValidator(ast.NodeVisitor):
         "Assert", "Import", "ImportFrom", "Exec","Global","Pass",
         "Repr", "Yield","Lambda","Attribute","Subscript"
         ]
-    
+
     def visit_Illegal(self, node):
         self.assert_(False, node, "Illegal statement or expression in mapping")
-    
+
     def __getattr__(self, attr):
         if attr.startswith("visit_"):
             if attr[len("visit_"):] in self.illegal_nodes:
@@ -152,7 +152,7 @@ class MappingValidator(ast.NodeVisitor):
                 return self.generic_visit
         else:
             return ast.NodeVisitor.__getattribute__(self, attr)
-        
+
     def assert_(self, node, flag, message):
         """Raise an appropriate FormatError exception based on `node`
         and `message` if `flag` is False.
@@ -162,12 +162,12 @@ class MappingValidator(ast.NodeVisitor):
                 raise FormatError(message + " at line " + str(node.lineno))
             else:
                 raise FormatError(message)
-                
+
     def visit_Assign(self, node):
-        self.assert_(node, len(node.targets) == 1, 
+        self.assert_(node, len(node.targets) == 1,
                      "Invalid 'header' or 'selector' definition")
         self.assert_(node, isinstance(node.targets[0], ast.Name),
-                     "Invalid 'header' or 'selector' definition")       
+                     "Invalid 'header' or 'selector' definition")
         self.assert_(node, node.targets[0].id in ["header","selector"],
                      "Only define 'header' or 'selector' sections")
         self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict)),
@@ -176,8 +176,8 @@ class MappingValidator(ast.NodeVisitor):
 
     def visit_Call(self, node):
         self.assert_(node, node.func.id in selectors.SELECTORS,
-            "Selector " + repr(node.func.id) + 
-            " is not one of supported Selectors: " + 
+            "Selector " + repr(node.func.id) +
+            " is not one of supported Selectors: " +
             repr(sorted(selectors.SELECTORS.keys())))
         self.generic_visit(node)
 
@@ -186,23 +186,23 @@ MAPPING_VALIDATOR = MappingValidator()
 # =============================================================================
 
 class Mapping(object):
-    """Mapping is the abstract baseclass for PipelineContext, 
+    """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
     required_attrs = []
-    
+
     def __init__(self, filename, header, selector, **keys):
         self.filename = filename
         self.header = header
         self.selector = selector
-        
+
     @property
     def basename(self):
         return os.path.basename(self.filename)
 
     def __repr__(self):
         """A subclass-safe repr which includes required parameters except for
-        'mapping' which is implied by the classname. 
+        'mapping' which is implied by the classname.
         """
         rep = self.__class__.__name__ + "("
         rep += repr(self.filename)
@@ -211,7 +211,7 @@ class Mapping(object):
 #            rep += attr + "=" + repr(getattr(self, attr)) + ", "
         rep = rep[:-2] + ")"
         return rep
-            
+
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.header:
@@ -238,7 +238,7 @@ class Mapping(object):
         mapping = cls(basename, header, selector, **keys)
         mapping._validate_file_load(keys)
         return mapping
-    
+
     @classmethod
     def from_string(cls, text, basename="(noname)", **keys):
         """Construct a mapping from string `text` nominally named `basename`.
@@ -247,7 +247,7 @@ class Mapping(object):
         mapping = cls(basename, header, selector, **keys)
         mapping._validate_file_load(keys)
         return mapping
-    
+
     @classmethod
     def _parse_header_selector(cls, text, where=""):
         """Given a mapping at `filepath`,  validate it and return a fully
@@ -259,10 +259,10 @@ class Mapping(object):
         except Exception, exc:
             raise MappingError("Can't load file " + where + " : " + str(exc))
         return header, selector
-    
+
     @classmethod
     def _interpret(cls, code):
-        """Interpret a valid rmap code object and return it's header and 
+        """Interpret a valid rmap code object and return it's header and
         selector.
         """
         namespace = {}
@@ -276,9 +276,9 @@ class Mapping(object):
             return header, selector
         else:
             raise FormatError("selector must be a dict or a Selector.")
-            
+
     def _validate_file_load(self, keys):
-        """Validate assertions about the contents of this rmap after it's 
+        """Validate assertions about the contents of this rmap after it's
         built.
         """
         for name in self.required_attrs:
@@ -312,14 +312,14 @@ class Mapping(object):
         return self._locate
 
     def format(self):
-        """Return the string representation of this mapping, i.e. pretty 
+        """Return the string representation of this mapping, i.e. pretty
         serialization.   This is currently limited to initially creating rmaps,
         not rewriting them since it is based on internal representations and
         therefore loses comments.
         """
         return "header = %s\n\nselector = %s\n" % \
             (self._format_header(), self._format_selector())
-        
+
     def _format_dict(self, dict_, indent=0):
         """Return indented source code for nested `dict`.
         """
@@ -333,11 +333,11 @@ class Mapping(object):
             output += prefix + " "*4 + repr(key) + " : " + rval + ",\n"
         output += prefix + "}"
         return output
-    
+
     def _format_header(self):
         """Return the code string for the mapping header."""
         return self._format_dict(self.header)
-    
+
     def _format_selector(self):
         """Return the code string for the mapping body/selector."""
         if isinstance(self.selector, dict):
@@ -346,7 +346,7 @@ class Mapping(object):
             return self.selector.format()
 
     def write(self, filename=None):
-        """Write out this mapping to the specified `filename`,  
+        """Write out this mapping to the specified `filename`,
         or else self.filename. DOES NOT PRESERVE COMMENTS.
         """
         if filename is None:
@@ -379,7 +379,7 @@ class Mapping(object):
             lines = [line for line in file.readlines() if "sha1sum" not in line]
         text = "".join(lines)
         return hashlib.sha1(text).hexdigest()
-        
+
     def rewrite_checksum(self, filename=None):
         """Re-write checksum updates the checksum for a Mapping which must
         have been loaded from a file.  Preserves comments.   Outputs results
@@ -388,9 +388,9 @@ class Mapping(object):
         if self.filename is None:
             raise ValueError("rewrite_checksums() only works on rmaps"
                              " that were read from a file.")
-        
+
         xsum = self._get_checksum()
-        
+
         # re-write the file we loaded from,  inserting the new checksum,
         # outputting to a temporary file.
         with open(self.filename) as sourcefile:
@@ -400,7 +400,7 @@ class Mapping(object):
         with open(self.filename) as sourcefile:
             for line in sourcefile.readlines():
                 line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
-                              r"\1" + repr(str(xsum)), 
+                              r"\1" + repr(str(xsum)),
                               line)
                 newsource.append(line)
         newsource = "".join(newsource)
@@ -412,7 +412,7 @@ class Mapping(object):
         with open(where, "w+") as newfile:
             newfile.write(newsource)
 
-      
+
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
         and all the mappings selected by it.
@@ -423,7 +423,7 @@ class Mapping(object):
                 key = selection.get_required_parkeys()
                 parkeys = parkeys.union(set(key))
         return sorted(parkeys)
-    
+
     def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
@@ -441,7 +441,7 @@ class Mapping(object):
                     raise ValidationError(repr(self) + " : " + str(exc))
 
     def file_matches(self, filename):
-        """Return the "extended match tuples" which can be followed to 
+        """Return the "extended match tuples" which can be followed to
         arrive at `filename`.
         """
         more = []
@@ -460,14 +460,14 @@ class Mapping(object):
                 differences.append(msg)
             else:
                 differences.extend(self.selections[key].difference(
-                    other.selections[key], 
+                    other.selections[key],
                     path + ((self.basename, other.basename),)))
         for key in other.selections:
             if key not in self.selections:
                 msg = repr(other.basename) + " added " + repr(key)
                 differences.append(msg)
         return sorted(differences)
-                
+
 # ===================================================================
 
 class PipelineContext(Mapping):
@@ -475,9 +475,9 @@ class PipelineContext(Mapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey", 
+    required_attrs = ["observatory", "mapping", "parkey",
                       "name", "derived_from"]
-    
+
     def __init__(self, filename, header, selector, **keys):
         Mapping.__init__(self, filename, header, selector, **keys)
         self.selections = {}
@@ -501,7 +501,7 @@ class PipelineContext(Mapping):
         instrument = self.get_instrument(header)
         imap = self.get_imap(instrument)
         return imap.get_best_references(header, include)
-    
+
     def reference_names(self):
         """Return the list of reference files associated with this pipeline
         context.
@@ -520,16 +520,16 @@ class PipelineContext(Mapping):
             for filekind_files in irefs.values():
                 files[instrument].update(set(filekind_files))
         return files
-    
+
     def mapping_names(self):
-        """Return the list of pipeline, instrument, and reference map files 
+        """Return the list of pipeline, instrument, and reference map files
         associated with this pipeline context.
         """
         files = set([self.basename])
         for instrument in self.selections:
             files.update(self.selections[instrument].mapping_names())
         return sorted(list(files))
-    
+
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
         try:
@@ -537,10 +537,10 @@ class PipelineContext(Mapping):
         except KeyError:
             raise crds.CrdsError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.basename))
-    
+
     def get_filekinds(self, dataset):
         """Return the filekinds associated with `dataset` by examining
-        it's parameters.  Currently returns ALL filekinds for 
+        it's parameters.  Currently returns ALL filekinds for
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.
         """
@@ -548,7 +548,7 @@ class PipelineContext(Mapping):
         return self.get_imap(instrument).get_filekinds(dataset)
 
     def get_minimum_header(self, dataset, original_name=None):
-        """Return the names and values of `dataset`s header parameters which 
+        """Return the names and values of `dataset`s header parameters which
         are required to compute best references for it.   `original_name` is
         used to determine file type when `dataset` is a temporary file with a
         useless name.
@@ -568,11 +568,11 @@ class PipelineContext(Mapping):
             mapping = self
         minimized = {}
         for key in mapping.get_required_parkeys() + [self.instrument_key]:
-            minimized[key] = header.get(key.lower(), 
-                                        header.get(key.upper(), 
+            minimized[key] = header.get(key.lower(),
+                                        header.get(key.upper(),
                                                    "UNDEFINED"))
         return minimized
-    
+
     def get_instrument(self, header):
         try:
             return header[self.instrument_key.upper()]
@@ -581,7 +581,7 @@ class PipelineContext(Mapping):
                 return header[self.instrument_key.lower()]
             except KeyError:
                 raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
-    
+
 # ===================================================================
 
 class InstrumentContext(Mapping):
@@ -597,7 +597,7 @@ class InstrumentContext(Mapping):
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
             self.selections[filekind] = refmap = ReferenceMapping.from_file(
-                rmap_name, **keys)            
+                rmap_name, **keys)
             assert self.mapping == "instrument", \
                 "InstrumentContext 'mapping' format is not 'instrument'."
             assert self.observatory == refmap.observatory, \
@@ -609,7 +609,7 @@ class InstrumentContext(Mapping):
             assert refmap.filekind == filekind, \
                 "Nested 'filekind' doesn't match for " + \
                 repr(filekind) + " in " + repr(filename)
-                
+
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping.
         """
@@ -625,9 +625,9 @@ class InstrumentContext(Mapping):
         return self.get_rmap(filekind).get_best_ref(header)
 
     def get_best_references(self, header, include=None):
-        """Returns a map of best references { filekind : reffile_basename } 
+        """Returns a map of best references { filekind : reffile_basename }
         appropriate for this `header`.   If `include` is None, include all
-        filekinds in the results,  otherwise compute and include only 
+        filekinds in the results,  otherwise compute and include only
         those filekinds listed.
         """
         refs = {}
@@ -658,16 +658,16 @@ class InstrumentContext(Mapping):
         for filekind, selector in self.selections.items():
             files[filekind] = sorted(selector.reference_names())
         return files
-    
+
     def mapping_names(self):
-        """Returns a list of mapping files associated with this 
+        """Returns a list of mapping files associated with this
         InstrumentContext.
         """
         files = [self.basename]
         for selector in self.selections.values():
             files.append(selector.basename)
         return files
-    
+
     def get_parkey_map(self):
         """Infers the legal values of each parkey from the rmap itself.
         This is a potentially different answer than that defined by the TPNs,
@@ -683,18 +683,18 @@ class InstrumentContext(Mapping):
         for parkey, choices in pkmap.items():
             pkmap[parkey] = sorted(list(pkmap[parkey]))
         return pkmap
-    
+
     def get_valid_values_map(self, condition=False, remove_special=True):
         """Based on the TPNs,  return a mapping from parkeys to their valid
         values for all parkeys for all filekinds of this instrument.   This will
-        return the definitive lists of legal values,  not all of which are 
+        return the definitive lists of legal values,  not all of which are
         required to be represented in rmaps;  these are the values that *could*
         be in an rmap,  not necessarily what is in any given rmap to match.
-        
-        If `condition` is True,  values are filtered with 
-        utils.condition_value() to match their rmap string appearance.   If 
+
+        If `condition` is True,  values are filtered with
+        utils.condition_value() to match their rmap string appearance.   If
         False,  values are returned as raw TPN values and types.
-        
+
         If `remove_special` is True,  values of ANY or N/A are removed from the
         lists of valid values.
         """
@@ -716,14 +716,14 @@ class InstrumentContext(Mapping):
         for key in pkmap:  # convert to sorted lists
             pkmap[key] = sorted(pkmap[key])
         return pkmap
-    
+
     def get_filekinds(self, dataset=None):
         """Return the filekinds associated with this dataset,  ideally
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.
         """
         return [key.upper() for key in self.selections.keys()]
-    
+
 # ===================================================================
 
 class IrrelevantReferenceTypeError(LookupError):
@@ -733,7 +733,7 @@ class IrrelevantReferenceTypeError(LookupError):
 
 class ReferenceMapping(Mapping):
     """ReferenceMapping manages loading the rmap associated with a single
-    reference filetype and instantiate an appropriate selector tree from the 
+    reference filetype and instantiate an appropriate selector tree from the
     rmap header and data.
     """
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
@@ -744,7 +744,7 @@ class ReferenceMapping(Mapping):
         self._tpn_valid_values = self.get_valid_values_map()
         # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
-        self._required_parkeys = self.get_required_parkeys()  
+        self._required_parkeys = self.get_required_parkeys()
 
         rmap_relevance = getattr(self, "rmap_relevance", "always")
         if rmap_relevance == "always":
@@ -759,30 +759,30 @@ class ReferenceMapping(Mapping):
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
-        try:  
+        try:
             self._precondition_header = utils.get_object(
-                ".".join(["crds", self.observatory, self.instrument, 
+                ".".join(["crds", self.observatory, self.instrument,
                           "precondition_header"]))
         except ImportError:
             self._precondition_header = lambda self, header: header
-            
+
         # fallback routine called when standard best refs fails
         # set to return None if not defined.
         try:
             self._fallback_header = utils.get_object(
-                ".".join(["crds", self.observatory, self.instrument, 
-                          "fallback_header"]))    
+                ".".join(["crds", self.observatory, self.instrument,
+                          "fallback_header"]))
         except ImportError:
             self._fallback_header = lambda self, header: None
 
     def get_best_ref(self, header_in):
-        """Return the single reference file basename appropriate for 
+        """Return the single reference file basename appropriate for
         `header_in` selected by this ReferenceMapping.
         """
-        log.verbose("Getting bestrefs for", self.instrument, self.filekind, 
+        log.verbose("Getting bestrefs for", self.instrument, self.filekind,
                     "parkeys", self.parkey, verbosity=60)
         self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
-        # Some filekinds, .e.g. ACS biasfile, mutate the header 
+        # Some filekinds, .e.g. ACS biasfile, mutate the header
         header = self._precondition_header(self, header_in)
         header = self.map_irrelevant_parkeys_to_na(header)
         try:
@@ -796,17 +796,17 @@ class ReferenceMapping(Mapping):
                 return self.selector.choose(header)
             else:
                 raise
-            
+
     def reference_names(self):
         """Return the list of reference file basenames associated with this
         ReferenceMapping.
         """
         return self.selector.reference_names()
-    
+
     def mapping_names(self):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
         return [self.basename]
-    
+
     def get_required_parkeys(self):
         """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
@@ -816,23 +816,23 @@ class ReferenceMapping(Mapping):
             else:
                 parkeys.append(key)
         return parkeys
-    
+
     def get_parkey_map(self):
         """Based on the rmap,  return the mapping from parkeys to their
         handled values,  i.e. what this rmap says it matches against.
-        Note that these are the values seen in the rmap prior to any 
+        Note that these are the values seen in the rmap prior to any
         substitutions which are defined in the header.
-        
+
         Return { parkey : [match values, ...], ... }
         """
         return self.selector.get_parkey_map()
-    
+
     def get_valid_values_map(self, condition=True):
         """Based on the TPNs,  return a mapping from each of the required
-        parkeys to its valid values, 
-   
+        parkeys to its valid values,
+
         i.e. the definitive source for what is legal for this filekind.
-        
+
         return { parkey : [ valid values ] }
         """
         tpninfos = self.locate.get_tpninfos(self.instrument, self.filekind)
@@ -854,9 +854,9 @@ class ReferenceMapping(Mapping):
                     for i, value in enumerate(values):
                         values[i] = utils.condition_value(value)
                     values = tuple(values)
-                valid_values[info.name] = values 
+                valid_values[info.name] = values
         return valid_values
-    
+
     def validate_mapping(self, trap_exceptions=False):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
@@ -881,24 +881,38 @@ class ReferenceMapping(Mapping):
                 derived_from = get_cached_mapping(derived_file)
                 diffs = derived_from.difference(self)
                 if len(diffs) > 0:
-                    log.warning("Differences found relative to installed mapping: %s"%
+                    replacements = []
+                    warnings = []
+                    for d in diffs:
+                        if 'replaced' in d[-1]:
+                            replacements.append(d[-1])
+                        else:
+                            warnings.append(d)
+                    if len(replacements)>0:
+                        log.info('Reference files replaced by new context file "%s" include:'%self.basename)
+                        for msg in replacements:
+                            log.info(repr(msg))
+
+                    if len(warnings)>0:
+                        log.warning("Differences found relative to installed mapping: %s"%
                             derived_from.basename)
-                    log.warning(repr(diffs))
+                        for msg in warnings:
+                            log.warning(repr(msg))
         except IOError:
             pass
 
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
-        sofar = ((("observatory", self.observatory), 
-                  ("instrument",self.instrument), 
+        sofar = ((("observatory", self.observatory),
+                  ("instrument",self.instrument),
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
-    
+
     def difference(self, other, path=()):
         """Return the list of difference tuples between `self` and `other`,
         prefixing each tuple with context `path`.
         """
-        return self.selector.difference(other.selector, path + 
+        return self.selector.difference(other.selector, path +
                 ((self.basename, other.basename),))
 
     def check_rmap_relevance(self, header):
@@ -909,7 +923,7 @@ class ReferenceMapping(Mapping):
         try:
             source, compiled = self._rmap_relevance_expr
             relevant = eval(compiled, {}, header)
-            log.verbose("Filekind ", self.instrument, self.filekind, 
+            log.verbose("Filekind ", self.instrument, self.filekind,
                         "is relevant: ", relevant, repr(source), verbosity=60)
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
@@ -943,10 +957,10 @@ class ReferenceMapping(Mapping):
 CACHED_MAPPINGS = {}
 
 def get_cached_mapping(mapping_basename, **keys):
-    """Retrieve the Mapping corresponding to the specified 
+    """Retrieve the Mapping corresponding to the specified
     `mapping_basename` from the global mapping cache,  recursively
     loading and caching it if it has not already been cached.
-    
+
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
     if mapping_basename not in CACHED_MAPPINGS:
@@ -976,14 +990,14 @@ def load_mapping(mapping, **keys):
         else:
             raise ValueError("Unknown mapping type for " + repr(mapping))
     return cls.from_file(mapping, **keys)
-    
+
 # =============================================================================
 # =============================================================================
 
 def list_references(glob_pattern, observatory):
     """Return the list of references for `observatory` which match `glob_pattern`,
     nominally the cached references.
-    """    
+    """
     path = os.path.join(config.get_crds_refpath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
@@ -992,7 +1006,7 @@ def list_references(glob_pattern, observatory):
 def list_mappings(glob_pattern, observatory):
     """Return the list of mappings for `observatory` which match `glob_pattern`,
     nominally the cached mappings.
-    """    
+    """
     path = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
     return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
@@ -1031,8 +1045,8 @@ def mapping_type(mapping):
 # ===================================================================
 
 def get_best_references(context_file, header, include=None):
-    """Compute the best references for `header` for the given CRDS 
-    `context_file`.   This is a local computation using local rmaps and 
+    """Compute the best references for `header` for the given CRDS
+    `context_file`.   This is a local computation using local rmaps and
     CPU resources.   If `include` is None,  return results for all
     filekinds appropriate to `header`,  otherwise return only those
     filekinds listed in `include`.
@@ -1049,4 +1063,3 @@ def test():
 
 if __name__ == "__main__":
     print test()
-
