@@ -305,6 +305,7 @@ class FileCacher(object):
                 pass
 
     def verify_file(self, pipeline_context, filename, localpath):
+        """Check that the size and checksum of downloaded `filename` match the server."""
         remote_info = get_file_info(pipeline_context, filename)
         local_length = os.stat(localpath).st_size
         original_length = long(remote_info["size"])
@@ -322,14 +323,15 @@ FILE_CACHER = FileCacher()
 
 # ==============================================================================
 
-def dump_mappings(pipeline_context, ignore_cache=False):
+def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
     """Given a `pipeline_context`, determine the closure of CRDS mappings and 
     cache them on the local file system.
     
     Returns:   { mapping_basename :   mapping_local_filepath ... }   
     """
     assert isinstance(ignore_cache, bool)
-    mappings = get_mapping_names(pipeline_context)
+    if mappings is None:
+        mappings = get_mapping_names(pipeline_context)
     return FILE_CACHER.get_local_files(
         pipeline_context, mappings, ignore_cache=ignore_cache)
   
@@ -407,7 +409,7 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     information from the `dataset`.
     """
     import crds.rmap
-    dump_mappings(context, ignore_cache)
+    dump_mappings(context, ignore_cache=ignore_cache)
     ctx = crds.get_cached_mapping(context)
     return ctx.get_minimum_header(dataset)
 

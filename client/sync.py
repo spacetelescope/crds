@@ -17,6 +17,11 @@ Synced contexts can be specified as --all contexts:
 
   % python -m crds.client.sync --all
 
+XXX TODO
+Or explicitly list the files you want cached:
+
+  % python -m crds.client.sync <references or mappings to cache>
+
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge:
 
@@ -32,7 +37,7 @@ import argparse
 import re
 
 import crds.client.api as api
-from crds import (rmap, pysh, log)
+from crds import (rmap, pysh, log, data_file)
 
 def get_context_mappings(contexts):
     """Return the set of mappings which are pointed to by the mappings
@@ -103,7 +108,15 @@ def mapping(string):
         return string
     else:
         raise ValueError("Parameter " + repr(string) + 
-                         " is not a known CRDS mapping.")        
+                         " is not a known CRDS mapping.")
+
+def dataset(string):
+    if data_file.is_dataset(string):
+        return string
+    else:
+        raise ValueError("Parameter " + repr(string) + 
+                         " does not appear to be a dataset filename.")
+
 def observatory(string):
     string = string.lower()
     assert string in ["hst","jwst"], "Unknown observatory " + repr(string)
@@ -154,6 +167,9 @@ def main():
     parser.add_argument(
         '--contexts', metavar='CONTEXT', type=mapping, nargs='*',
         help='a list of contexts to sync.')
+    parser.add_argument('--mappings-only', action='store_true', 
+        dest="mappings_only",
+        help='just get the mapping files, not the references')
     parser.add_argument(
         '--datasets', metavar='DATASET', type=dataset, nargs='*',
         help='a list of datasets for which to prefetch references.')
@@ -164,9 +180,6 @@ def main():
         help='fetch files for context ids between <MIN> and <MAX>.')
     parser.add_argument('--purge', action='store_true', dest="purge",
         help='remove reference files and mappings not referred to by contexts')
-    parser.add_argument('--mappings-only', action='store_true', 
-        dest="mappings_only",
-        help='just get the mapping files, not the references')
     args = parser.parse_args()
     
     contexts = determine_contexts(args)
@@ -174,6 +187,7 @@ def main():
         sync_context_mappings(contexts, args.purge)
     if not args.mappings_only:
         sync_context_references(contexts, args.purge)
+
 
 if __name__ == "__main__":
     main()
