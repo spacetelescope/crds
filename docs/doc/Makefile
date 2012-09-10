@@ -96,7 +96,7 @@ setup-pdf:
 pdf: latex setup-pdf
 	(cd build/latex; make all-pdf)
 
-tarhtml: clean html
+tarhtml: html
 	mv $(BUILDDIR)/html  users_guide
 	tar zcf users_guide.tar.gz users_guide
 	rm -rf users_guide
