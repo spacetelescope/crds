@@ -68,6 +68,13 @@ def get_filetype(name):
     else:
         raise TypeError("Unknown file type for file named" + repr(name))
 
+def is_dataset(name):
+    """Returns True IFF `name` is plausible as a dataset.   Not a guarantee."""
+    try:
+        return isinstance(get_filetype(name), str)
+    except Exception:
+        return False
+
 def get_observatory(filepath, original_name=None):
     """Return the observatory corresponding to `filepath`.  filepath
     may be a web temporary file with a garbage name.   Use 
