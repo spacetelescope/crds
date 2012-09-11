@@ -103,10 +103,10 @@ class KeywordValidator(object):
                 for pat in self._values:
                     if re.match(pat, value):
                         return
-            raise ValueError("Value for " + repr(self.name) + " of " +
-                            repr(value) + " is not one of " +
-                            repr(self._values))
-
+            raise ValueError("Value(s) for " + repr(self.name) + " of " +
+                            log.PP(value) + " is not one of " +
+                            log.PP(self._values))
+            
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
@@ -200,9 +200,8 @@ class KeywordValidator(object):
 
         # report how input values compare to current values, if different
         if len(uniq_new) > 0:
-            log.warning("Value for " + repr(self.name) + " of \n" +
-                repr(list(uniq_new)) + "\nis not one of \n" +
-                repr(current_values))
+            log.warning("Value(s) for", repr(self.name), "of", log.PP(list(uniq_new)), 
+                "is/are not one of", log.PP(current_values), sep='\n')
             return True
 
         if len(uniq_current) > 0:
@@ -273,7 +272,10 @@ class ModeValidator(CharacterValidator):
 
         if context: # If context has been specified, compare against previous reffile
             current = refmatch.find_current_reffile(filename,context)
-            if current: # Only do comparison if current ref file can be found
+            if not current: # Only do comparison if current ref file can be found
+                log.warning("No comparison reference for", repr(filename),
+                            "in context", repr(context))
+            else:
                 log.verbose("Checking values for mode", repr(self.names),
                             " against values found in ",current)
 
