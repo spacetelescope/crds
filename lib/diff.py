@@ -34,7 +34,7 @@ def fits_difference(observatory, file1, file2):
         "File " + repr(file2) + " is not a FITS file."
     loc_file1 = rmap.locate_file(file1, observatory)
     loc_file2 = rmap.locate_file(file2, observatory)
-    pysh.sh("fitsdiff ${loc_file1} ${loc_file1}")
+    pysh.sh("fitsdiff ${loc_file1} ${loc_file2}")
 
 def text_difference(observatory, file1, file2):
     """Run UNIX diff on two text files named `file1` and `file2`.
