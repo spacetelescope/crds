@@ -82,9 +82,12 @@ def main():
     elif options.hst:
         observatory = "hst"
         assert not options.jwst, "Can only specify one of --hst or --jwst"
-    else:
+    elif "hst" in args[1]:
         observatory = "hst"
-    
+    elif "jwst" in args[1]:
+        observatory = "jwst"
+    else:
+        observatory = "jwst"
     log.standard_run("difference(observatory, args[1], args[2])", 
                      options, globals(), locals())
 
