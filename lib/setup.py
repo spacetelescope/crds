@@ -9,13 +9,15 @@ setup(name="crds",
 
       packages=[
         'crds',
+        'crds.tests',
         ],
 
       package_dir = {
         'crds' : '.',
+        'crds.tests': 'tests',
         },
 
       package_data = {
-#        'crds.hst.acs.rmaps': [ 'hst/acs/rmaps/*.rmap' ],
+        'crds.tests' : ['data/*.fits'],
         }
     )
