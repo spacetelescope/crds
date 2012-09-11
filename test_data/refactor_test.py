@@ -77,51 +77,60 @@ def main(context, new_references, expected_action_type):
 def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpath, verbosity=0,
                    expected_action_type="insert"):
 
-   separator("=")
-   log.info("Reference", os.path.basename(old_rmap_path), old_refpath)
+    separator("=")
+    log.info("Reference", os.path.basename(old_rmap_path), old_refpath)
 
-   pysh.sh("rm -f ${new_rmap_path}")
-   actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
+    pysh.sh("rm -f ${new_rmap_path}")
+    actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
 
-   expected_matches = matches.find_match_tuples(context, os.path.basename(old_refpath))    
-   log.info("Expected matches:", expected_matches)
-   as_expected = True
-   for action in actions:
-      log.info(action)
-      if action.action != expected_action_type:
-         log.warning("Unexpected action:", action.action.upper())
-         as_expected = False
-      for expected in expected_matches:
-         if selectors.match_equivalent(action.rmap_match_tuple, expected):
-            break
-      else:
-         if action.action != expected_action_type:
-            log.info("New match at", action.rmap_match_tuple)
+    as_expected = True
+    if expected_action_type == "replace":
+         expected_matches = matches.find_match_tuples(context, os.path.basename(old_refpath))    
+         log.info("Expected matches:", expected_matches)
+         for action in actions:
+             log.info(action)
+             if action.action != "replace":
+                 log.warning("Unexpected action:", action.action.upper())
+                 as_expected = False
+             for expected in expected_matches:
+                 if selectors.match_equivalent(action.rmap_match_tuple, expected):
+                     break
+             else:
+                 if action.action != "replace":
+                     log.info("New match at", action.rmap_match_tuple)
+                     as_expected = False
+         for expected in expected_matches:
+             for action in actions:
+                 if selectors.match_equivalent(action.rmap_match_tuple, expected):
+                     break
+             else:
+                 log.info("Missing expected match at", expected)
+                 as_expected = False    
+    else:
+        for action in actions:
+            if action.action != "insert":
+                log.warning("Unexpected action:", action)
+                as_expected = False
+            else:
+                log.info(action)
+        if not actions:
+            expected_matches = matches.find_match_tuples(context, os.path.basename(new_refpath))    
+            log.warning("No actions for", new_refpath, "matches", expected_matches)
             as_expected = False
 
-   for expected in expected_matches:
-      for action in actions:
-         if selectors.match_equivalent(action.rmap_match_tuple, expected):
-            break
-      else:
-         log.info("Missing expected match at", expected)
-         as_expected = False
-    
-   if not as_expected or verbosity:
-      pysh.sh("rm -f ${new_rmap_path}")
-      actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
-      separator()
-      log.write("diffing", repr(new_rmap_path), "from", repr(old_rmap_path))
-      sys.stdout.flush()
-      sys.stderr.flush()
-      pysh.sh("diff -c ${old_rmap_path} ${new_rmap_path}")
-      sys.stdout.flush()
-      sys.stderr.flush()
-      separator()
-      pysh.sh("cd ../../hst_gentools; python db_test.py info ${old_refpath}")
-   else:
-      pass
-
+    if not as_expected or verbosity:
+        pysh.sh("rm -f ${new_rmap_path}")
+        actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
+        separator()
+        log.write("diffing", repr(new_rmap_path), "from", repr(old_rmap_path))
+        sys.stdout.flush()
+        sys.stderr.flush()
+        pysh.sh("diff -c ${old_rmap_path} ${new_rmap_path}")
+        sys.stdout.flush()
+        sys.stderr.flush()
+        separator()
+        pysh.sh("cd ../../hst_gentools; python db_test.py info ${old_refpath}")
+ 
 def get_corresponding_rmap(context, refpath):
     """Return the path to the rmap which *would* refer to `reference` in `context.`
     """
@@ -137,9 +146,13 @@ if __name__ == "__main__":
        expected_action_type = "replace"
     else:
        expected_action_type = "insert"
+       
+    if "--verbose" in sys.argv:
+        sys.argv.remove("--verbose")
+        log.set_verbose()
 
     if len(sys.argv) < 3:
-        log.write("usage: %s  [--replace] <context>  @file_list | <reference_file>..." % sys.argv[0])
+        log.write("usage: %s  [--verbose] [--replace] <context>  @file_list | <reference_file>..." % sys.argv[0])
         sys.exit(-1)
     if sys.argv[2].startswith("@"):
         references = new_references(sys.argv[2][1:])
