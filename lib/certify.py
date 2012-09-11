@@ -491,7 +491,7 @@ def dump_multi_key(fitsname, keys):
         for key in keys:
             for card in cards:
                 if card.key == key:
-                    log.write("["+str(i)+"]", key, card.value, card.comment)
+                    log.info("["+str(i)+"]", key, card.value, card.comment)
 
 def validate_file_format(fitsname):
     """ Run PyFITS verify method on file to report any FITS format problems
