@@ -23,8 +23,9 @@ appear as header values.
 
 """
 import sys
+import optparse
 
-from crds import rmap, log
+from crds import rmap, log, pysh, config
 
 # ===================================================================
 
@@ -40,13 +41,13 @@ def test():
 def mapping(filename):
     """Raise an exception if `filename` does not specify a mapping file."""
     if not rmap.is_mapping(filename):
-        raise ValueError("Must be a .pmap, .imap, or .rmap file.")
+        raise ValueError("Must be a .pmap, .imap, or .rmap file: " + repr(filename))
     return filename
 
 def reference(filename):
     """Raise and exception if `filename` does not specify a reference file."""
-    # if not filename.endswith(".fits"):
-    #     raise ValueError("Must be a reference (.fits) file.")
+    if not config.is_reference(filename):
+        raise ValueError("Must be a reference (.fits) file: " + repr(filename))
     return filename
 
 # ===================================================================
@@ -60,10 +61,24 @@ def find_full_match_paths(context, reffile):
     ctx = rmap.get_cached_mapping(context)
     return ctx.file_matches(reffile)
 
+def find_full_match_tuples(context, reference):
+    """Return a list of the complete match paths of `reference` within `context`.
+    
+    e.g. [('hst', 'acs', 'dgeofile', 'HRC', 'CLEAR1S', 'F220W', '2002-03-01', '00:00:00')]
+
+    """
+    full = []
+    for match in find_full_match_paths(context, reference):
+        tup = ()
+        for part in match:
+            tup = tup + tuple([t[1] for t in part])
+        full.append(tup)
+    return full
+
 def find_match_tuples(context, reffile):
     """Return the list of match tuples for `reference` in `context`.   
     
-    Returns [ match_tuple, ...] where match_tuple = ((var, value), ...)
+    Returns [ match_tuple, ...] where match_tuple = (value, ...)
     """
     ctx = rmap.get_cached_mapping(context)
     result = []
@@ -72,6 +87,17 @@ def find_match_tuples(context, reffile):
         result.append(match_tuple)
     return result
 
+def dump_match_tuples(context, references, finder):
+    """Print out the match tuples for `references` under `context` as located
+    and expressed by `finder()`
+    """
+    for ref in references:
+        if len(references) > 1:
+            log.write(ref, ":")
+        for match in finder(context, ref) or ["none"]:
+            log.write(tuple(match))
+        log.write()
+
 def main():
     """Process command line parameters in to a context and list of
     reference files.   Print out the match tuples within the context
@@ -79,20 +105,25 @@ def main():
     """
     import crds
     crds.handle_version()
+
+    parser = optparse.OptionParser("usage: %prog [options] <context> <references...>")
+    parser.add_option("-f", "--full", dest="full",
+        help="Show the complete match path through the mapping hierarchy.",
+        action="store_true")
+    options, args = log.handle_standard_options(sys.argv, parser=parser)
     
     # Check inputs
-    context = mapping(sys.argv[1])
-    for file_ in sys.argv[2:]:
+    context = mapping(args[1])
+    references = args[2:]
+    
+    for file_ in references:
         reference(file_)
-        
-    # Print match tuples
-    for file_ in sys.argv[2:]:
-        ref = reference(file_)
-        if len(sys.argv) > 3:
-            log.write(ref, ":")
-        for match in find_match_tuples(context, ref) or ["none"]:
-            log.write(tuple(match))
-        log.write()
+
+    if options.full:
+        dump_match_tuples(context, references, find_full_match_tuples)
+    else:   
+        # Print match tuples
+        dump_match_tuples(context, references, find_match_tuples)
 
 if __name__ == "__main__":
     main()
