@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'MASK',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_mask_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : 'bef017994ada6066176cb2fe21967f5e9b3d4aa6',
+    'sha1sum' : '729e3da378fa64c225194c90e35ec76f755a6fa6',
 }
 
 selector = Match({

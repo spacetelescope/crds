@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'MASK',
     'instrument' : 'NIRISS',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_niriss_mask_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : 'ec6e4367fcbd1ade6b3238ce7ad0ec4bd6c9ab44',
+    'sha1sum' : 'e8ec598f2b260fc77b9d98167df75907425f524d',
 }
 
 selector = Match({

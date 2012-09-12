@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'MASK',
     'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nircam_mask_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '13ae3d206d33f7bd04160cba1afa8aa0f00b3a77',
+    'sha1sum' : '1cc1fcd0c9a6ab7b8a26f404e6c0012715908e96',
 }
 
 selector = Match({

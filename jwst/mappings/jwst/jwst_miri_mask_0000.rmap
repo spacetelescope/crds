@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'MASK',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_mask_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '49c53a1a76f7ca72c39613b111f8aaf8feeeda90',
+    'sha1sum' : '1aef97f9839c86e072a671b25cbac56ecdd0ff9a',
 }
 
 selector = Match({

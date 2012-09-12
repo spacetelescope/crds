@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'instrument' : 'NIRISS',
     'mapping' : 'INSTRUMENT',
     'name' : 'jwst_niriss_0000.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'c7aa8c448519a5bf6025e3766f55441fcf67a704',
+    'sha1sum' : '65f28dafc7365450d6ef25097a94dd15cf9c3e72',
 }
 
 selector = {

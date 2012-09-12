@@ -1,14 +1,15 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'LINEARITY',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_linearity_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '2508a119d6e294f8143902a4dcddfaea3929fd40',
+    'sha1sum' : 'ea4d077d91728a84bc8d397dcdf8cd1403fa63de',
 }
 
 selector = Match({
-    ('ANY', 'ANY') : 'jwst_nirspec_linearity_0001.fits',
+    ('NRS1', 'ANY') : 'jwst_nirspec_linearity_0000.fits',
+    ('NRS2', 'ANY') : 'jwst_nirspec_linearity_0001.fits',
 })

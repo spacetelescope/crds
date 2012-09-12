@@ -1,12 +1,12 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'AMPLIFIER',
     'instrument' : 'NIRCAM',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nircam_amplifier_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '5edba75ecb9de9ba4dd95515efc8358db22f7081',
+    'sha1sum' : '202e5e76e4ceb6b5f08673c0f5eb6592b14873e2',
 }
 
 selector = Match({
