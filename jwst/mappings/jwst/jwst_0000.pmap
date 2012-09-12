@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'description' : 'rules from clone_directive.txt',
     'mapping' : 'PIPELINE',
     'name' : 'jwst_0000.pmap',
     'observatory' : 'JWST',
     'parkey' : ('META.INSTRUMENT.TYPE',),
-    'sha1sum' : '1dbe6954a6c31cdf1f3abb84df8a0084dbccf251',
+    'sha1sum' : '57523113da9ca4493e54ebe87d8621d9581d706b',
 }
 
 selector = {

@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'instrument' : 'NIRSPEC',
     'mapping' : 'INSTRUMENT',
     'name' : 'jwst_nirspec_0000.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '7169fcbe0e94baeeece3408a497591f9a9d8833f',
+    'sha1sum' : '388d802cc32e4b905ef6c31d57d7d82e3d343d16',
 }
 
 selector = {

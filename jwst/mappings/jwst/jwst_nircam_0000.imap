@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'instrument' : 'NIRCAM',
     'mapping' : 'INSTRUMENT',
     'name' : 'jwst_nircam_0000.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '7e32aebd41d547e19718c96a893210da5297ac89',
+    'sha1sum' : '31c66f00a7d2c42e5e0c434eb8e17a985346e2f7',
 }
 
 selector = {

@@ -1,15 +1,15 @@
 header = {
-    'derived_from' : 'cloning tool 0.03b (2012-09-05)',
+    'derived_from' : 'cloning tool 0.03b (2012-09-11)',
     'filekind' : 'FLAT',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_flat_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '40ae8e4f4380ccbc8327c20b79fe8466c9a70a5e',
+    'sha1sum' : 'f8a6181e514dfb7659efa0221205a65bcafec7ed',
 }
 
 selector = Match({
-    ('NRS1', 'ANY') : 'jwst_nirspec_flat_0002.fits',
-    ('NRS2', 'ANY') : 'jwst_nirspec_flat_0003.fits',
+    ('NRS1', 'ANY') : 'jwst_nirspec_flat_0000.fits',
+    ('NRS2', 'ANY') : 'jwst_nirspec_flat_0001.fits',
 })
