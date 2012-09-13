@@ -208,9 +208,9 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         if ignore_cache:
             raise IOError("explicitly ignoring cache.")
         pmap = rmap.get_cached_mapping(context)
-        log.verbose("Using cached context", srepr(context))
+        log.verbose("Loading context file", srepr(context),"from cache.")
     except IOError, exc:
-        log.verbose("Caching mapping files:", srepr(exc))
+        log.verbose("Caching mapping files for context", srepr(context))
         try:
             light_client.dump_mappings(context, ignore_cache=ignore_cache)
         except crds.CrdsError, exc:
@@ -272,10 +272,12 @@ def get_final_context(context, info):
         final_context = context
         log.verbose("Using reference file selection rules", srepr(final_context), 
                     "defined by caller.")
+        info["status"] = "getreferences() context parameter"
     elif env_context:
         final_context = env_context
         log.verbose("Using reference file selection rules", srepr(final_context), 
                     "defined by environment CRDS_CONTEXT.")
+        info["status"] = "env var CRDS_CONTEXT"
     else:
         final_context = str(info["operational_context"])
         log.verbose("Using reference selection rules", srepr(final_context), 
@@ -342,8 +344,8 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = compat.literal_eval(file_.read())
             info["status"] = "cache"
-        log.warning("Loaded .pmap context name and version info from cache '%s'." % server_config, 
-                    "References may be sub-optimal.")
+        log.verbose_warning("Loading server context and version info from cache '%s'." % server_config, 
+                            "References may be sub-optimal.")
     except IOError:
         log.verbose_warning("Couldn't load cached server info from '%s'." % server_config,
                             "Using pre-installed CRDS context.  References may be sub-optimal." )
