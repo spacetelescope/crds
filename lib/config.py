@@ -88,7 +88,7 @@ def get_crds_env_context():
         assert context.endswith(".pmap"), \
             "If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. 'jwst.pmap', not " + repr(context)
         assert os.path.exists(where), \
-            "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context)
+            "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context) + " at " + repr(where)
     return context
 
 # ===========================================================================
