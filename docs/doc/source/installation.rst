@@ -133,4 +133,14 @@ Python environment:
 
    * numpy
    * pyfits
+   
+For executing the unit tests (runtests) add:
+
+   * nose
+   * BeautifulSoup
+   * stsci.tools
+   
+For building documentation add:
+
+   * stsci.sphinxext   
 
