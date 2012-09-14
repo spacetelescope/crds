@@ -2,13 +2,18 @@
 Using the CRDS Web Site
 =======================
 
-CRDS has websites at hst-crds_ and jwst-crds_ which support the submission, use,
+CRDS has websites at hst-crds.stsci.edu_ and jwst-crds.stsci.edu_ which support the submission, use,
 and distribution of CRDS reference and mappings files.   Functions on the CRDS
 website are either public functions which do not require authentication or private
 functions which require a CRDS login account.
 
-.. _crds-hst: http://hst-crds.stsci.edu/
-.. _crds-jwst: http://jwst-crds.stsci.edu/
+.. _crds-hst.stsci.edu: http://hst-crds.stsci.edu/
+.. _crds-jwst.stsci.edu: http://jwst-crds.stsci.edu/
+
+.. figure:: images/web_index.png
+   :scale: 50 %
+   :alt: home page of CRDS website
+
 
 Functions annotated with the word (alpha) are partially completed components of
 a future build which may prove useful now.
@@ -25,7 +30,12 @@ Dataset Best References (alpha)
 
 The *Dataset Best References* page supports determining the best references for
 a single dataset with respect to one CRDS context.   Best references are based 
-upon a CRDS context and the parameters of the dataset.
+upon a CRDS context and the parameters of the dataset as determined by the 
+dataset file itself or a database catalog entry.
+
+.. figure:: images/web_dataset_bestrefs.png
+   :scale: 50 %
+   :alt: dataset based best references input page
 
 Context
 +++++++
@@ -59,15 +69,46 @@ Archived Dataset
 Datasets can be specified by ID and their best reference input parameters will 
 be retrieved from the catalog.
 
+Dataset Best References Results
++++++++++++++++++++++++++++++++
+
+.. figure:: images/web_dataset_bestrefs_results.png
+   :scale: 50 %
+   :alt: dataset based best references results page
+   
+The results page for dataset best references displays the input parameters which
+were extracted from the dataset header on the right side of the page.
+
+Best reference recommendations are displayed on the left side of the page.
+
+
 Explore Best References (alpha)
 ...............................
 
 Explore Best References supports entering best references parameters directly
-rather than extracting them from a dataset or catalog.   The first phase of 
-exploration is to choose an instrument.   The second phase is to enter the
-parameters of a dataset which are relevant to best references selection.  The explorer
-currently lists all parameters which might be relevant to any mode of an instrument
-and has no knowledge of default values.
+rather than extracting them from a dataset or catalog.   Explore best references
+is essentially a sand box which lets someone evaluate what CRDS will do given
+particular parameter values.  The explorer currently lists all parameters 
+which might be relevant to any mode of an instrument and has no knowledge of 
+default values.  
+
+The first phase of exploration is to choose a pipeline context and instrument
+which will be used to define parameter choices:   
+
+.. figure:: images/web_explore_bestrefs.png
+   :scale: 50 %
+   :alt: user input based best references
+
+The second phase is to enter the parameters of a dataset which are relevant 
+to best references selection.  
+
+.. figure:: images/web_explore_bestrefs_parameters.png
+   :scale: 50 %
+   :alt: user input based best references
+
+The entered parameters are evaluated with respect to the given pipeline context
+and best references are determined.   The results are similar or identical to
+the *Dataset Best References* results.
 
 Difference Files
 ................
@@ -76,13 +117,96 @@ Difference Files can be used to compare two reference or mapping files.   Either
 the name of a file already in CRDS can be specified (known) or any file can be
 uploaded via the web (uploaded).
 
+.. figure:: images/web_difference.png
+   :scale: 50 %
+   :alt: file difference input
+
+For mappings,  *Difference Files* displays two kinds of information:
+
+.. figure:: images/web_difference_summary.png
+   :scale: 50 %
+   :alt: file difference summary
+
+* logical differences where CRDS analyzes the mappings and reports the
+  parameter trail and effect of the difference (add, delete, replace).
+
+.. figure:: images/web_difference_logical.png
+   :scale: 50 %
+   :alt: file difference logical
+
+* textual differences which show the context difference (diff -c) of the
+  two mapping files.
+
+.. figure:: images/web_difference_text.png
+   :scale: 50 %
+   :alt: file difference textual
 
 Browse Database
 ...............
 
+The *Browse Database* feature enables examining the metadata and computable
+properties of CRDS reference and mapping files.
+
+.. figure:: images/web_browse_database.png
+   :scale: 50 %
+   :alt: database browse filter page
+
+The first phase is to enter a number of filters to narrow the number or variety 
+of files which are displayed.   Leaving any filter at the default value of *
+renders that constraint irrelevant and all possible files are displayed with
+respect to that constraint.   The result of the first phase is a table of files
+which matched the filters showing their basic properties.
+
+.. figure:: images/web_browse_database_files.png
+   :scale: 50 %
+   :alt: database browse filter page
+
+The second phase is initiated by clicking on the filename link of any file
+displayed in the table from the first phase.   Clicking on a filename link switches
+to a detailed view of that file only:
+
+.. figure:: images/web_browse_database_details.png
+   :scale: 50 %
+   :alt: database browse details page
+   
+The database details page has a number of accordion panes which open when you
+click on them.  All file types have these generic panes:
+
+- Database - lists a table of CRDS metadata for the file.
+
+- Contents - shows the text of a mapping or internal details about a reference file.
+
+- Past Actions  - lists website actions which affected this file.
+
+- Used By Files - list files which reference this file.
+
+Reference files have these additional panes:
+
+- Certify Results - shows the results of crds.certify run on this reference now.
+
+- Lookup Patterns - lists the parameters sets which lead to this reference.
+
 Recent Activity
 ...............
 
+The *Recent Activity* view shows a table of the actions on CRDS files which
+are tracked.  Only actions which change the states of files in some way are 
+tracked:
+
+.. figure:: images/web_recent_activity.png
+   :scale: 50 %
+   :alt: database browse details page
+   
+The first page lists a number of constraints which can be used to choose
+activities of interest.   To ignore any constraint,  leave it set at the default
+value of *.   The result of the activity search is a table of matching actions:
+
+.. figure:: images/web_recent_activity_results.png
+   :scale: 50 %
+   :alt: database browse details page
+   
+The details vary by the type of action,  in this case showing the original name
+of a file prior to submission to CRDS and the assignment of its official name.
 
 Private Functions
 -----------------
@@ -91,34 +215,208 @@ The following functions are restricted to users with accounts on the CRDS websit
 and support the submission of new reference and mapping files and maintenance
 of the overall site.
 
-Certify File
-............
-
 Batch Submit References
 .......................
+
+*Batch Submit References* is intended to handle the majority of CRDS reference
+submissions with a high degree of automation.   This page accepts a number of
+reference files and metadata which is applied to all of them.   The specified
+reference files are checked on the server using crds.certify and if they pass
+are submitted to CRDS.   All of the submitted references must be of the same
+reference type,  i.e. controlled by the same .rmap file.
+
+.. figure:: images/web_batch_submit.png
+   :scale: 50 %
+   :alt: batch reference submission inputs
+   
+The specified context is used as the starting point for new automatically 
+generated context files and also determines any predecessors of the submitted 
+references for comparison during certification.   If all the submitted reference
+files pass certification,  a new .rmap, .imap, and .pmap are all generated
+automatically to refer to the newly entered references.    Based on their
+header parameters,  references are automatically assigned to appropriate
+match locations in the .rmap file.
+
+.. figure:: images/web_batch_submit_results.png
+   :scale: 50 %
+   :alt: batch reference submission results
+   
+Reference Certification
++++++++++++++++++++++++
+
+In this case the user submitted a single COS deadtab file named
+s7g1700gm_dead.fits which was added to context hst_0021.pmap.   As indicated in
+the Certify Results accordion panel,  s7g1700gm_dead.fits was renamed to
+hst_cos_deadtab_0006.fits in CRDS and certified OK.   Opening the accordion
+panel dispays the results of the crds.certify including provenance information.
+Changes in table mode coverage will show up as Certify Results warnings.
+
+Any certification error will result in the failure of the entire batch
+submission and will redirect back to the input page with a single error message.
+
+Batch submitting s7g1700gl_dead.fits added it to CRDS and generated three new
+mapping files which were derived from hst_0019.pmap:  hst_cos_deadtab_0006.rmap,
+hst_cos_0005.imap, hst_0022.pmap.
+
+Rmap Updates
+++++++++++++
+
+The rmap under hst_0021.pmap that corresponds to s7g1700gm_dead.fits was
+hst_cos_deadtab_0005.rmap. To add s7g1700gm_dead.fits,  its header parameters
+were matched against hst_cos_deadtab_0005.rmap to determine where it should be
+added.   *Actions on hst_cos_deadtab_0005.rmap* shows that the new reference
+file replaced hst_cos_deadtab_0002.fits.  The *Rmap Differences* accordion
+shows the textual differences between hst_cos_deadtab_0005.rmap and 0006.
+
+Collisions
+++++++++++
+
+Under some circumstances,  a *Collision Warning* accordion will be present.
+It should be carefully examined to ensure that overlapping edits of the
+same context file have not occurred.   Overlaps can be resolved by cancelling
+the current submission and re-doing it, or by accepting the current submission
+and manually correcting the mappings involved.   Failure to correctly resolve
+a collision will most likely result in one of two sets of conflicting changes
+being lost.
+
+Confirm or Discard
+++++++++++++++++++
+
+If everything looks good the last step is to click the *Confirm* button.
+Clicking the Confirm button finalizes the submission process,  submits the files
+for archive pickup,  and makes them a permanent part of CRDS visible in the 
+database browser and potentially redistributable.   A confirmed submission 
+cannot be revoked,  but neither will it go into use until the pipeline or a 
+user explicitly requests it.
+
+*Discarding* a batch submission based on warnings or bad rmap modifications
+removes the submission from CRDS.   In particular temporary database records
+and file copies are removed.
+
+If a submission is neither confirmed nor cancelled the files involved will be
+automatically removed,  nominally after two weeks.
+
+Following any CRDS pipeline mapping submission,  the default *edit* context
+is updated to that pipeline mapping making it the default starting point for
+future submissions.
+
 
 Edit Rmap
 .........
 
+*Edit Rmap* provides a Javascript based rmap editor which supports adding or
+replacing new rmap rows.   The existing prototype can add new USEAFTER rows
+but cannot add new Match tuple cases.   The prototype works only on HST-style
+rmaps which consist of an outer Match() selector and a number of inner 
+UseAfter() selectors.
+
+.. figure:: images/web_edit_rmap_filter.png
+   :scale: 50 %
+   :alt: edit rmap filtering
+
+The first step is to select an rmap to edit by choosing filters of rmaps to list
+and then clicking on one of the links in the *name* column:
+
+.. figure:: images/web_edit_rmap_select.png
+   :scale: 50 %
+   :alt: edit rmap selection
+
+The second step is to add or replace file lines in an rmap by clicking on them:
+
+.. figure:: images/web_edit_rmap_click.png
+   :scale: 50 %
+   :alt: edit rmap editing
+   
+Clicking on a line exposes two buttons adjacent to it:  *+* and *replace*.
+
+.. figure:: images/web_edit_rmap_edit.png
+   :scale: 50 %
+   :alt: edit rmap editing
+   
+New lines are added by clicking on the *+*.   This will open a line with a text
+entry box for entering a USEAFTER date and a file input as well as some additional
+parameters.   A newly submitted reference file can be entered into the file input
+box and will be uploaded and submitted to CRDS when the page is submitted.
+
+Clicking *replace* strikes out the clicked line and adds inputs below it at the
+same USEAFTER time.   
+
+Additional lines can be added by clicking the *+* adjacent to an added line.  An
+added line can be removed by clicking the *delete* button adjacent to it.   A
+replaced line can be restored by clicking on *unreplace*.
+
+When the edited rmap is submitted,  the supplied reference files are uploaded
+and certified.
+
+Certify File
+............
+
+*Certify File* runs crds.certify on a file currently in CRDS (known) or on a file
+uploaded to the server.
+
+.. figure:: images/web_certify_file.png
+   :scale: 50 %
+   :alt: certify file inputs
+   
+If the certified file is a reference table,  the specified context is used to
+locate a comparison file.    Certify File can be used to check files already
+in CRDS.
+
 Submit References
 .................
+
+*Submit References* provides a basic interface for submitting a list of references
+which don't have to be related.   No context mappings are generated to refer to the
+submitted files.   Submitted references must still pass through crds.certify.
+
+.. figure:: images/web_submit_references.png
+   :scale: 50 %
+   :alt: create contexts inputs
 
 Submit Mappings
 ...............
 
+*Submit Mappings* provides a basic interface for submitting a list of mapping
+files which don't have to be related.   This can be used to submit context files
+which refer to files from *Submit References* and with fewer restrictions on
+allowable changes.   Typically only .rmaps are submitted this way.
+
+.. figure:: images/web_submit_mappings.png
+   :scale: 50 %
+   :alt: create contexts inputs
+   
 Create Contexts
 ...............
+
+*Create Contexts* provides a basic interface for automatically generating pipeline
+and instrument context mappings which refer to the specified reference mapping
+files.   
+
+.. figure:: images/web_create_contexts.png
+   :scale: 50 %
+   :alt: create contexts inputs
+   
+Using *Create Contexts* the upper level mappings can be modified to refer to a
+number of (most likely hand-edited) reference mappings.   Rmaps referred to by
+create contexts must already be known to CRDS and can be typed into the
 
 
 Set File Enable
 ...............
 
-Set Default Context
-...................
+*Set File Enable* provides control over the Blacklist and Reject attributes of
+a file.   
 
-Server Version Info
-...................
+.. figure:: images/web_set_file_enable.png
+   :scale: 50 %
+   :alt: set file enable inputs
+   
+Rejecting a file is used to signal that the file should no longer be
+used.   Rejecting a file affects only that file.   Blacklisting a file marks
+the file as unusable,  but it also blacklists all files which directly or
+indirectly refer to the original blacklisted file.   So,  blacklisting is
+transitive,  but rejection is intransitive.   Either blacklisting or rejection
+can be undone by marking the file as OK again using *Set File Enable*.  Only
+files which are already known to CRDS can be rejected or blacklisted.
 
-Server Admin
-............
-
+  
