@@ -495,7 +495,17 @@ def dump_multi_key(fitsname, keys):
         for key in keys:
             for card in cards:
                 if card.key == key:
-                    log.info("["+str(i)+"]", key, card.value, card.comment)
+                    if interesting_value(card.value):
+                        log.info("["+str(i)+"]", key, card.value, card.comment)
+
+def interesting_value(value):
+    """Return True IFF `value` isn't uninteresting."""
+    if value.strip().lower() in ["",
+                                 "*** end of mandatory fields ***",
+                                 "*** column names ***",
+                                 "*** column formats ***"]:
+        return False
+    return True
 
 def get_rmap_parkeys(refname, context):
     """Determine required parkeys in reference path `refname` according to pipeline 
