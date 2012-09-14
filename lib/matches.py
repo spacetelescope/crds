@@ -105,12 +105,17 @@ def main():
     """
     import crds
     crds.handle_version()
-
+    
     parser = optparse.OptionParser("usage: %prog [options] <context> <references...>")
     parser.add_option("-f", "--full", dest="full",
         help="Show the complete match path through the mapping hierarchy.",
         action="store_true")
     options, args = log.handle_standard_options(sys.argv, parser=parser)
+    
+    if len(args) == 1:
+        sys.argv.append("--help")
+        parser.parse_args(sys.argv)
+        sys.exit(-1)
     
     # Check inputs
     context = mapping(args[1])

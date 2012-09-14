@@ -1,6 +1,10 @@
 Command Line Tools
 ==================
 
+Using the command line tools requires a local installation of the CRDS library.
+Some of the command line tools also interact with the CRDS server in order to
+implement their functionality.
+
 Specifying Files
 ----------------
 
@@ -80,19 +84,24 @@ invoked like::
   % python -m crds.diff   jwst_nircam_dark_0010.fits  jwst_nircam_dark_0011.fits
 
   % python -m crds.diff  jwst_0001.pmap   jwst_0002.pmap
+  (('hst.pmap', 'hst_0004.pmap'), ('hst_acs.imap', 'hst_acs_0004.imap'), ('hst_acs_darkfile.rmap', 'hst_acs_darkfile_0003.rmap'), ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej_drk.fits' with 'hst_acs_darkfile_0003.fits'")
+ 
 
 crds.uses
 ---------
 
 crds.uses searches the files in the local cache for mappings which refer to the 
-specified files.  Since the local cache is used only mappings present in the local
-cache will be included in the results given.  crds.uses is invoked as::
+specified files.  Since the **local cache** is used only mappings present in the 
+local cache will be included in the results given.  crds.uses is invoked as::
 
    % python -m crds.uses <observatory=hst|jwst> <mapping or reference>...
 
 e.g.::
 
    % python -m crds.uses hst s7g1700gl_dead.fits
+   hst.pmap
+   hst_cos.imap
+   hst_cos_deadtab.rmap
 
 
 crds.matches
@@ -100,6 +109,17 @@ crds.matches
 
 crds.matches reports the match patterns which are associated with the given
 reference files::
+
+    Usage: matches.py [options] <context> <references...>
+
+    Options:
+      -h, --help            show this help message and exit
+      -f, --full            Show the complete match path through the mapping
+                            hierarchy.
+      -V VERBOSITY, --verbose=VERBOSITY
+                            Set verbosity level.
+
+*crds.matches* can be invoked as::    
 
     % python -m crds.matches hst.pmap o8u2214fj_dxy.fits
     ('HRC', 'CLEAR1S', 'F220W')
@@ -110,5 +130,8 @@ reference files::
 
 crds.sync
 ---------
+
+crds.sync downloads references and mappings from the CRDS server based on a
+variety of specification mechanisms.
 
 
