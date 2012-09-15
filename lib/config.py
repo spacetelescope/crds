@@ -77,7 +77,7 @@ def get_crds_env_context():
     >>> get_crds_env_context()
     Traceback (most recent call last):
     ...
-    AssertionError: Can't find pipeline mapping specified by CRDS_CONTEXT = '/nowhere/to/be/found/jwst_0042.pmap'
+    AssertionError: Can't find pipeline mapping specified by CRDS_CONTEXT = '/nowhere/to/be/found/jwst_0042.pmap' at '/nowhere/to/be/found/jwst_0042.pmap'
 
     >>> del os.environ["CRDS_CONTEXT"]
     >>> get_crds_env_context()
