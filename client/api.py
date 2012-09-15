@@ -269,7 +269,7 @@ class FileCacher(object):
                     outfile.write(data)
             self.verify_file(pipeline_context, name, localpath)
         except Exception, exc:
-            traceback.print_exc()
+            # traceback.print_exc()
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) +
