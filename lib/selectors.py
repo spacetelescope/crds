@@ -448,8 +448,8 @@ def match_superset(tuple1, tuple2, match_na=True):
     False
     >>> match_superset(('1','N/A'), ('1','3'))
     True
-    >>> match_superset(('1','3'), ('1','N/A'))
-    False
+    >>> match_superset(('1','3'), ('1','N/A'))  # controversial
+    True
     >>> match_superset(('1','*'), ('1','N/A'))
     True
     >>> match_superset(('1','N/A'), ('1','*'))
