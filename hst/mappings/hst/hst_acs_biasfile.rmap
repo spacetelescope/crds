@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:25:19.799021',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:17:05.371099',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : '501d880f666adfcbc226e734060441c83d69c0a6',
+    'sha1sum' : '5ac0b9beece5a3813f720e5d43d91e9ffffda03d',
 }
 
 selector = Match({
@@ -341,6 +341,8 @@ selector = Match({
         '2010-08-02 17:46:40' : 'uc215175j_bia.fits',
         '2010-09-04 07:02:28' : 'uc215176j_bia.fits',
         '2010-09-28 11:49:05' : 'uc215177j_bia.fits',
+        '2012-02-19 00:00:00' : 'w8s1944mj_bia.fits',
+        '2012-05-10 00:00:00' : 'w8s1944nj_bia.fits',
     }),
     ('WFC', 'ABCD', 1.0, 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 'lbr09525j_bia.fits',
@@ -834,6 +836,8 @@ selector = Match({
         '2012-05-25 00:02:17' : 'w721600cj_bia.fits',
         '2012-06-08 13:03:18' : 'w7o1935mj_bia.fits',
         '2012-06-22 00:02:13' : 'w7o1935nj_bia.fits',
+        '2012-07-03 02:03:00' : 'w8k1824ij_bia.fits',
+        '2012-07-18 04:53:47' : 'w8k18254j_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 4.0, 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-07 07:46:35' : 'q9e1206rj_bia.fits',
@@ -924,6 +928,9 @@ selector = Match({
         '2011-02-01 00:00:00' : 'v3b14330j_bia.fits',
         '2011-02-15 23:29:16' : 'v382219bj_bia.fits',
         '2011-07-07 15:15:25' : 'v841719oj_bia.fits',
+        '2012-02-19 00:00:00' : 'w8s1944oj_bia.fits',
+        '2012-03-14 00:00:00' : 'w8s1944pj_bia.fits',
+        '2012-05-10 00:00:00' : 'w8s1944qj_bia.fits',
     }),
     ('WFC', 'BC', 0.5, 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-01-01 00:00:00' : 't4o1454dj_bia.fits',

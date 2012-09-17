@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:27:03.520523',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:19:04.231289',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR == "CCD")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'db93b91aa5e226daec20f37ee701c631d00f0c99',
+    'sha1sum' : '9640c480f531672fa66efaff4909564f85b980ec',
 }
 
 selector = Match({
@@ -519,6 +519,10 @@ selector = Match({
         '2012-06-19 00:48:16' : 'w7r1710so_drk.fits',
         '2012-06-26 00:00:13' : 'w7r1710to_drk.fits',
         '2012-07-03 00:00:08' : 'w7r17110o_drk.fits',
+        '2012-07-09 17:26:36' : 'w8n1954eo_drk.fits',
+        '2012-07-17 00:13:32' : 'w8n1954fo_drk.fits',
+        '2012-07-24 00:59:27' : 'w8n1954go_drk.fits',
+        '2012-07-31 00:00:04' : 'w8n1954ho_drk.fits',
     }),
     ('CCD', 'D', '1|2|4|8') : UseAfter({
         '1997-04-25 00:00:00' : 'hcc1558ro_drk.fits',

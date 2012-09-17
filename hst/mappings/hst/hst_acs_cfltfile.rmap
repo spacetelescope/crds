@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:25:21.224144',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:17:06.468693',
     'filekind' : 'CFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
-    'sha1sum' : '6d476ec54a4b0429e1a5fbc270baa82a12f9dda5',
+    'sha1sum' : '8fb5fbd09bb75e0beeb365bbdbee2c8338cf47b5',
 }
 
 selector = Match({

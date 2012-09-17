@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:27:11.709998',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:19:15.470796',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
         'subtype' : '(DETECTOR == "IR")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'b25398c50b5e5b027c6256ff959be9ebe8258eaf',
+    'sha1sum' : 'b2ba859456b9bfc77928b84a64b961c7c9be96cf',
 }
 
 selector = Match({
@@ -238,7 +238,7 @@ selector = Match({
         '2008-02-19 00:00:00' : 't611932ei_drk.fits',
         '2008-02-20 00:00:00' : 't611932fi_drk.fits',
         '2009-05-11 00:00:00' : 'u3g20230i_drk.fits',
-        '2009-05-11 00:00:01' : 'u4819494i_drk.fits',
+        '2009-05-11 00:00:01' : 'w8o18272i_drk.fits',
     }),
     ('IR', 'ABCD', 1, 1, 2.5, 'SPARS200', 'SQ128SUB') : UseAfter({
         '2008-02-20 00:00:00' : 't5s1754ni_drk.fits',
@@ -778,6 +778,12 @@ selector = Match({
         '2012-07-26 08:12:06' : 'w8a1551ei_drk.fits',
         '2012-07-31 01:56:44' : 'w8a1551fi_drk.fits',
         '2012-08-04 03:13:31' : 'w8a1551gi_drk.fits',
+        '2012-08-08 06:04:00' : 'w8u1945di_drk.fits',
+        '2012-08-12 00:45:20' : 'w8u1945ei_drk.fits',
+        '2012-08-15 15:02:26' : 'w8v1356pi_drk.fits',
+        '2012-08-21 05:43:00' : 'w8v1356qi_drk.fits',
+        '2012-08-24 10:54:28' : 'w8v1356ri_drk.fits',
+        '2012-08-28 09:28:27' : 'w971325mi_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, '1.5|2.0|4.0', 'NONE', 'FULLIMAG') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',
