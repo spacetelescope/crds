@@ -104,8 +104,8 @@ class KeywordValidator(object):
                     if re.match(pat, value):
                         return
             raise ValueError("Value(s) for " + repr(self.name) + " of " +
-                            log.PP(value) + " is not one of " +
-                            log.PP(self._values))
+                            str(log.PP(value)) + " is not one of " +
+                            str(log.PP(self._values)))
             
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
