@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:26:26.688441',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:18:20.771603',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR != "SBC" and FLASHCUR != "OFF")',
-    'sha1sum' : 'b11028314e33001824791d1d1fd5907719e15f6e',
+    'sha1sum' : '0fd9c9f1c89012952eb1ab8b3abde62e729257e3',
 }
 
 selector = Match({

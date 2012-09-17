@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:27:07.606667',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:19:11.173379',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '30e6814c53fccf926ae28bc8aac4a2b34919d811',
+    'sha1sum' : 'd5c6c5d1fe60452e68a4073cff5cea794945fcd8',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),
@@ -44,6 +44,12 @@ selector = Match({
         '2012-01-22 00:00:00' : 'w4u2007ji_bia.fits',
         '2012-03-01 00:00:00' : 'w4u2007ki_bia.fits',
         '2012-03-30 00:00:00' : 'w4u2007ii_bia.fits',
+        '2012-04-16 00:00:00' : 'w8r1420ri_bia.fits',
+        '2012-04-29 00:00:00' : 'w8r1420si_bia.fits',
+        '2012-05-07 00:00:00' : 'w8r14212i_bia.fits',
+        '2012-05-29 00:00:00' : 'w8r14211i_bia.fits',
+        '2012-06-05 00:00:00' : 'w8r14210i_bia.fits',
+        '2012-06-16 00:00:00' : 'w8r1420ti_bia.fits',
     }),
     ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE25', 'N/A') : UseAfter({
         '2010-08-01 00:00:00' : 'w1k1448si_bia.fits',

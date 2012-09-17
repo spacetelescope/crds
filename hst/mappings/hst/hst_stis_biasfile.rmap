@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-08-10 15:27:00.774302',
+    'derived_from' : 'generated from CDBS database 2012-09-14 08:18:59.921638',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "CCD")',
-    'sha1sum' : '07960648f42b7d0ced9a32e7d21a2860d3947844',
+    'sha1sum' : 'f7e0a1cc0e6e599c5ac3a2b2a08b694769394d9f',
 }
 
 selector = Match({
@@ -508,6 +508,10 @@ selector = Match({
         '2012-06-19 00:48:16' : 'w7r1710oo_bia.fits',
         '2012-06-26 00:00:13' : 'w7r1710po_bia.fits',
         '2012-07-03 00:00:08' : 'w7r1710qo_bia.fits',
+        '2012-07-09 17:26:36' : 'w8n1954ao_bia.fits',
+        '2012-07-17 00:13:32' : 'w8n1954bo_bia.fits',
+        '2012-07-24 00:59:27' : 'w8n1954co_bia.fits',
+        '2012-07-31 00:00:04' : 'w8n1954do_bia.fits',
     }),
     ('D', 1, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1019qo_bia.fits',
@@ -1296,6 +1300,8 @@ selector = Match({
         '2012-05-31 07:22:50' : 'w7r1710eo_bia.fits',
         '2012-06-11 19:23:00' : 'w7r1710lo_bia.fits',
         '2012-06-26 01:27:44' : 'w7r1710mo_bia.fits',
+        '2012-07-09 17:26:36' : 'w8n19548o_bia.fits',
+        '2012-07-24 02:58:23' : 'w8n19549o_bia.fits',
     }),
     ('D', 4, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1020co_bia.fits',
