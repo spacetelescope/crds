@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 __all__ = [ 
            "get_default_context", 
            "getreferences", 
+           "getrecommendations",
            "get_cached_mapping",
            
            "CrdsError", 
@@ -21,7 +22,7 @@ from . import config   # module
 from crds.client import CrdsError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
 from crds.client import get_default_context
 
-from .heavy_client import getreferences
+from .heavy_client import getreferences, getrecommendations
 
 from .rmap import get_cached_mapping
 

@@ -28,6 +28,7 @@ through the network, parameter, or environment variable mechanisms.
 """
 import os
 import pprint
+import glob
 
 import crds.client as light_client
 from . import rmap, log, utils, compat, config
@@ -355,17 +356,29 @@ def load_server_info(observatory):
 
 def get_installed_info(observatory):
     """Make up a bare-bones server info dictionary to define the pipeline context
-    using pre-installed mappings for `observatory`.
+    using pre-installed mappings for `observatory`.   Choose the most recent
+    pipeline context as the default operational context as determined by the 
+    context numbering scheme,  highest serial number wins.
     
     These are the ultimate fall-back settings for CRDS in serverless-mode and 
     assume the mappings are pre-installed and/or visible on the Central Store.
+    
+    By providing a config directory and server config file,  the results of this
+    code should not be used in so-called "server-less mode".   This code is the
+    fallback for remote users when network connectivity has failed and they do
+    not *already* have cached server config (and mappings).
     """
-    if observatory in ["hst","tobs"]:
-        pmap = observatory + ".pmap"
-    elif observatory == "jwst":
-        pmap = "jwst_0000.pmap"
-    else:
-        raise ValueError("Unknown observatory " + repr(observatory))
+    try:
+        # lexical sort of pmap names yields most recent (highest numbered) last.
+        import crds
+        os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/mappings"
+        where = config.locate_mapping("*.pmap", observatory)
+        pmap = os.path.basename(sorted(glob.glob(where))[-1])
+        log.warning("CRDS cache failure,  using pre-installed mappings at", repr(where),
+                    "and highest numbered pipeline context", repr(pmap), "as default.")
+    except IndexError, exc:
+        raise crds.CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
+                        repr(where) + " : " + str(exc))
     return dict(
             edit_context = pmap,
             operational_context = pmap,
