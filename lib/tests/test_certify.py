@@ -20,8 +20,10 @@ class TestHSTTpninfoClass(CRDSTestCase):
         CRDSTestCase.setup(self)
         self.tpninfos = hstlocator.get_tpninfos('acs','idctab')
         self.validators = [certify.validator(info) for info in self.tpninfos]
-        os.environ['CRDS_SERVER_URL'] = 'http://hst-crds.stsci.edu'
+        os.environ['CRDS_SERVER_URL'] = 'http://not-a-crds-server.stsci.edu'
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
+        os.environ['CRDS_PATH'] = "/grp/crds/hst"
+        os.environ["CRDS_CONTEXT"] ="hst.pmap"
 
     def test_character_validator(self):
         assert self.validators[2].check(self.data('acs_new_idc.fits'))
