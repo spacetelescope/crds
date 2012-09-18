@@ -89,13 +89,13 @@ def find_current_reffile(reffile,pmap):
     match_refname = r.selector.choose(select_vals)
     # grab match_file from server and copy it to a local disk, if network
     # connection is available and configured properly
+    # Note: this call works in both networked and non-networked modes of operation.
+    # Non-networked mode requires access to /grp/crds/[hst|jwst] or a copy of it.
     try:
         match_files = client.dump_references(pmap, baserefs=[match_refname], ignore_cache=False)
         match_file = match_files[match_refname]
     except Exception:
+        log.warning("Failed to obtain reference comparison file", repr(match_refname))
         match_file = None
-    # Otherwise, get file location from local server cache
-    if match_file is None:
-        match_file = ctx.locate.locate_server_reference(match_refname)
 
     return match_file
