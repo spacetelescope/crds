@@ -33,8 +33,7 @@ import glob
 import crds.client as light_client
 from . import rmap, log, utils, compat, config
 
-__all__ = ["getreferences", "getrecommendations", "get_default_context", 
-           "get_cached_mapping"]
+__all__ = ["getreferences", "getrecommendations"]
 
 # ============================================================================
 
@@ -230,7 +229,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
 # change after the first call without some special action.
 
 @utils.cached
-def get_processing_mode(observatory, context):
+def get_processing_mode(observatory, context=None):
     """Return the processing mode (local, remote) and the .pmap name to be used
     for best references selections.
     """
