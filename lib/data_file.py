@@ -83,6 +83,10 @@ def get_observatory(filepath, original_name=None):
     """
     if original_name is None:
         original_name = filepath
+    if "jwst" in original_name:
+        return "jwst"
+    if "hst" in original_name:
+        return "hst"
     if original_name.endswith(".fits"):
         try:
             observatory = pyfits.getval(filepath, "TELESCOP")
