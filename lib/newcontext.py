@@ -12,7 +12,7 @@ def new_context(old_pipeline, updated_rmaps):
     of new rmaps, `updated_rmaps`, generate new imaps as needed and a single
     pmap which refers to them all.   
     
-    Returns  [ paths-to-new-context-mappings ]
+    Returns  { old_name : fake_names }
     """
     updates = get_update_map(old_pipeline, updated_rmaps)
     new_names = generate_fake_names(old_pipeline, updates)
