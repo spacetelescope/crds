@@ -23,7 +23,7 @@ Public Functions
 
 The following functions are available for anyone with access to the CRDS web
 server and basically serve to distribute information about CRDS files and
-recommendations.   
+recommendations.   Initially,  the CRDS sites are only visible within the Institute.
 
 Dataset Best References (alpha)
 ...............................
@@ -40,11 +40,11 @@ dataset file itself or a database catalog entry.
 Context
 +++++++
 
-The context defines the versions set of CRDS rules used to select best references.
+The context defines the set of CRDS rules used to select best references.
 *Edit* is the default context from which most newly created contexts are derived.  
 *Operational* is the context currently in use by the pipeline.   *Recent* shows
-the most recent contexts.   *User Specified* enables the submitter to type in the
-name of any other known context.
+the most recently created contexts.   *User Specified* enables the submitter to 
+type in the name of any other known context.
 
 Dataset
 +++++++
@@ -121,6 +121,9 @@ uploaded via the web (uploaded).
    :scale: 50 %
    :alt: file difference input
 
+Mapping Differences
++++++++++++++++++++
+
 For mappings,  *Difference Files* displays two kinds of information:
 
 .. figure:: images/web_difference_summary.png
@@ -140,6 +143,15 @@ For mappings,  *Difference Files* displays two kinds of information:
 .. figure:: images/web_difference_text.png
    :scale: 50 %
    :alt: file difference textual
+
+
+Reference Differences
++++++++++++++++++++++
+
+For references,  *Difference Files* is a thin wrapper around the pyfits
+script *fitsdiff*.   Potentially this is useful where a user doesn't have access 
+to pyfits or wants to compare existing reference files without downloading them.
+
 
 Browse Database
 ...............
@@ -169,7 +181,7 @@ to a detailed view of that file only:
    :scale: 50 %
    :alt: database browse details page
    
-The database details page has a number of accordion panes which open when you
+The file details page has a number of accordion panes which open when you
 click on them.  All file types have these generic panes:
 
 - Database - lists a table of CRDS metadata for the file.
@@ -178,7 +190,7 @@ click on them.  All file types have these generic panes:
 
 - Past Actions  - lists website actions which affected this file.
 
-- Used By Files - list files which reference this file.
+- Used By Files - list known CRDS files which reference this file.
 
 Reference files have these additional panes:
 
@@ -229,6 +241,9 @@ reference type,  i.e. controlled by the same .rmap file.
    :scale: 50 %
    :alt: batch reference submission inputs
    
+Old Context to Derive From
+++++++++++++++++++++++++++
+
 The specified context is used as the starting point for new automatically 
 generated context files and also determines any predecessors of the submitted 
 references for comparison during certification.   If all the submitted reference
@@ -237,9 +252,43 @@ automatically to refer to the newly entered references.    Based on their
 header parameters,  references are automatically assigned to appropriate
 match locations in the .rmap file.
 
+Submitted References
+++++++++++++++++++++
+
+This section is a work in progress.   
+
+* *Uploaded Files* lets a user upload a list of files from their browser;  
+   this is both crude in terms of feedback and unstable for large numbers of 
+   large files at the time of this writing.   
+
+* *Server Directory* requires that a submitter have write access to the 
+  Central Store directory /grp/crds/{hst,jwst}/ingest by being a member of group 
+  crdsoper.   To submit files in this manner,  a submitter should:
+  
+  1. Create a sub-directory in /grp/crds/{hst,jwst}/ingest named like: <instrument>_<filetype>_<date>,
+     e.g. acs_darkfile_2012_09_20
+  
+  2. Copy the submitted files to that directory using some means (cp or scp).
+  
+  3. Refresh the page and choose your directory from the drop-down menu.
+  
+  4. Submit.   All files in your ingest directory are submitted.   All the files
+     must be of the same reference type.
+  
+  5. Once your files are in CRDS and you have confirmed the submission,  
+     remove your ingest directory from /grp/crds.
+
 .. figure:: images/web_batch_submit_results.png
    :scale: 50 %
    :alt: batch reference submission results
+   
+Auto Rename
++++++++++++
+
+Normally files uploaded to CRDS will be assigned new unique names.   During side-by-side
+testing with CDBS,  *Auto Rename* can be deselected so that new files added to CRDS
+retain their CDBS names for easier comparison.  The CRDS database remembers both
+the name of the file the submitter uploaded as well as the new unique name.
    
 Reference Certification
 +++++++++++++++++++++++
@@ -321,7 +370,8 @@ and then clicking on one of the links in the *name* column:
    :scale: 50 %
    :alt: edit rmap selection
 
-The second step is to add or replace file lines in an rmap by clicking on them:
+The second step is to add or replace file lines in an rmap by clicking on a
+useafter-date/filename line:
 
 .. figure:: images/web_edit_rmap_click.png
    :scale: 50 %
@@ -334,9 +384,10 @@ Clicking on a line exposes two buttons adjacent to it:  *+* and *replace*.
    :alt: edit rmap editing
    
 New lines are added by clicking on the *+*.   This will open a line with a text
-entry box for entering a USEAFTER date and a file input as well as some additional
-parameters.   A newly submitted reference file can be entered into the file input
-box and will be uploaded and submitted to CRDS when the page is submitted.
+entry box below the clicked line for entering a USEAFTER date and a file input 
+as well as some additional parameters.   A newly submitted reference file can 
+be entered into the file input box and will be uploaded and submitted to CRDS 
+when the page is submitted.
 
 Clicking *replace* strikes out the clicked line and adds inputs below it at the
 same USEAFTER time.   
@@ -359,15 +410,15 @@ uploaded to the server.
    :alt: certify file inputs
    
 If the certified file is a reference table,  the specified context is used to
-locate a comparison file.    Certify File can be used to check files already
-in CRDS.
+locate a comparison file. 
 
 Submit References
 .................
 
-*Submit References* provides a basic interface for submitting a list of references
-which don't have to be related.   No context mappings are generated to refer to the
-submitted files.   Submitted references must still pass through crds.certify.
+*Submit References* provides a lower level interface for submitting a list of 
+references which don't have to be of the same instrument and filetype.   No 
+context mappings are generated to refer to the submitted files.   Submitted 
+references must still pass through crds.certify.
 
 .. figure:: images/web_submit_references.png
    :scale: 50 %
@@ -379,7 +430,8 @@ Submit Mappings
 *Submit Mappings* provides a basic interface for submitting a list of mapping
 files which don't have to be related.   This can be used to submit context files
 which refer to files from *Submit References* and with fewer restrictions on
-allowable changes.   Typically only .rmaps are submitted this way.
+allowable changes.   Typically only .rmaps are submitted this way.   Mappings
+submitted this way must also pass through crds.certify.   
 
 .. figure:: images/web_submit_mappings.png
    :scale: 50 %
