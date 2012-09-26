@@ -512,7 +512,7 @@ def get_rmap_parkeys(refname, context):
     mapping `context`.
     """
     if context is None:
-        return
+        return []
     try:
         header = data_file.get_header(refname)
         pmap = rmap.get_cached_mapping(context)
