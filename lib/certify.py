@@ -500,7 +500,7 @@ def dump_multi_key(fitsname, keys):
 
 def interesting_value(value):
     """Return True IFF `value` isn't uninteresting."""
-    if value.strip().lower() in ["",
+    if str(value).strip().lower() in ["",
                                  "*** end of mandatory fields ***",
                                  "*** column names ***",
                                  "*** column formats ***"]:
