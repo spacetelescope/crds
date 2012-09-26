@@ -2,7 +2,7 @@ import re
 
 import pyfits
 from . import rmap
-from crds import client
+from crds import client, log
 
 filekind_kw = 'FILETYPE'
 
