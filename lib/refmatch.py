@@ -1,4 +1,5 @@
 import re
+import os.path
 
 import pyfits
 from . import rmap
@@ -94,8 +95,10 @@ def find_current_reffile(reffile,pmap):
     try:
         match_files = client.dump_references(pmap, baserefs=[match_refname], ignore_cache=False)
         match_file = match_files[match_refname]
-    except Exception:
-        log.warning("Failed to obtain reference comparison file", repr(match_refname))
+        if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
+            raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")
+    except Exception, exc:
+        log.warning("Failed to obtain reference comparison file", repr(match_refname), ":", str(exc))
         match_file = None
 
     return match_file
