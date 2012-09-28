@@ -97,6 +97,7 @@ def find_current_reffile(reffile,pmap):
         match_file = match_files[match_refname]
         if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
             raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")
+        log.info("Comparing reference", repr(reffile), "against", repr(match_file))
     except Exception, exc:
         log.warning("Failed to obtain reference comparison file", repr(match_refname), ":", str(exc))
         match_file = None
