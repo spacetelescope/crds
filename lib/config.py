@@ -93,6 +93,16 @@ def get_crds_env_context():
 
 # ===========================================================================
 
+def get_crds_env_vars():
+    """Return a dictionary of all env vars starting with 'CRDS'."""
+    vars = {}
+    for var in os.environ:
+        if var.upper().startswith("CRDS"):
+            vars[var] = os.environ[var]
+    return vars
+
+# ===========================================================================
+
 def locate_file(filepath, observatory):
     """Figure out the absolute pathname where CRDS will stash a reference
     or mapping file.  If filepath already has a directory,  return filepath
