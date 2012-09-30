@@ -235,52 +235,80 @@ submissions with a high degree of automation.   This page accepts a number of
 reference files and metadata which is applied to all of them.   The specified
 reference files are checked on the server using crds.certify and if they pass
 are submitted to CRDS.   All of the submitted references must be of the same
-reference type,  i.e. controlled by the same .rmap file.
+reference type,  i.e. controlled by the same .rmap file.   Tabular reference 
+files are checked with respect to the derivation context by crds.certify.
 
-.. figure:: images/web_batch_submit.png
+.. figure:: images/web_batch_submit_references.png
    :scale: 50 %
    :alt: batch reference submission inputs
    
-Old Context to Derive From
-++++++++++++++++++++++++++
+Upload Files
+++++++++++++
+
+The Upload Files accordion opens to support uploading submitted files to a user's
+CRDS ingest directory.   
+
+.. figure:: images/web_upload_files.png
+   :scale: 50 %
+   :alt: file upload accordion
+
+Uploading files is accomplished by:
+
+* Opening the accordion panel by clicking on it.
+
+* Add files to the upload list by clicking on the *Add Files...* button.  Alternately for modern browsers (Chrome) drag-and-drop files from your desktop to the upload accordion.
+
+* Click *Start Upload* to initiate the file transfer.
+
+* Click *Delete* for any file added by mistake or for failed uploads.
+
+* Click *Cancel Upload* to abort a file transfer during the upload.
+
+* Close the accordion panel by clicking on it.
+
+**IMPORTANT**  Just adding files to the file list does not upload them.   You
+must click *Start Upload* to initiate the file transfer.
+
+Derive From Context
++++++++++++++++++++
 
 The specified context is used as the starting point for new automatically 
 generated context files and also determines any predecessors of the submitted 
 references for comparison during certification.   If all the submitted reference
-files pass certification,  a new .rmap, .imap, and .pmap are all generated
+files pass certification,  a new .rmap, .imap, and .pmap are generated
 automatically to refer to the newly entered references.    Based on their
 header parameters,  references are automatically assigned to appropriate
 match locations in the .rmap file.
 
-Submitted References
-++++++++++++++++++++
-
-This section is a work in progress.   
-
-* *Uploaded Files* lets a user upload a list of files from their browser;  
-   this is both crude in terms of feedback and unstable for large numbers of 
-   large files at the time of this writing.   
-
-* *Server Directory* requires that a submitter have write access to the 
-  Central Store directory /grp/crds/{hst,jwst}/ingest by being a member of group 
-  crdsoper.   To submit files in this manner,  a submitter should:
-  
-  1. Create a sub-directory in /grp/crds/{hst,jwst}/ingest named like: <instrument>_<filetype>_<date>,
-     e.g. acs_darkfile_2012_09_20
-  
-  2. Copy the submitted files to that directory using some means (cp or scp).
-  
-  3. Refresh the page and choose your directory from the drop-down menu.
-  
-  4. Submit.   All files in your ingest directory are submitted.   All the files
-     must be of the same reference type.
-  
-  5. Once your files are in CRDS and you have confirmed the submission,  
-     remove your ingest directory from /grp/crds.
-
-.. figure:: images/web_batch_submit_results.png
+.. figure:: images/web_derive_from_context.png
    :scale: 50 %
-   :alt: batch reference submission results
+   :alt: context specification
+
+There are two special contexts in CRDS which are tracked:
+
+Edit Context
+!!!!!!!!!!!!
+
+Edit Context is the default context used for editing.   Whenever a new .pmap is created or
+added,  it becomes the editing context from which other .pmaps are derived by
+default.
+
+Operational Context
+!!!!!!!!!!!!!!!!!!!
+
+Operational Context is the .pmap which is nominally in use by
+the pipeline.  Generally speaking,  multiple contexts might be added to CRDS as
+the Edit Context long before they become operational.   
+
+Recent 
+!!!!!!
+
+Recent lists a number of recently added contexts based on delivery time.   
+
+User Specified
+!!!!!!!!!!!!!!
+
+Any valid CRDS context can be typed in directly as User Specified.
    
 Auto Rename
 +++++++++++
@@ -290,32 +318,34 @@ testing with CDBS,  *Auto Rename* can be deselected so that new files added to C
 retain their CDBS names for easier comparison.  The CRDS database remembers both
 the name of the file the submitter uploaded as well as the new unique name.
    
-Reference Certification
-+++++++++++++++++++++++
+Compare Old Reference
++++++++++++++++++++++
 
-In this case the user submitted a single COS deadtab file named
-s7g1700gm_dead.fits which was added to context hst_0021.pmap.   As indicated in
-the Certify Results accordion panel,  s7g1700gm_dead.fits was renamed to
-hst_cos_deadtab_0006.fits in CRDS and certified OK.   Opening the accordion
-panel dispays the results of the crds.certify including provenance information.
-Changes in table mode coverage will show up as Certify Results warnings.
+When checked CRDS will certify incoming tabular references against the files
+they replace with respect to the derivation context.   For other references this 
+input is irrelevant and ignored.
 
-Any certification error will result in the failure of the entire batch
-submission and will redirect back to the input page with a single error message.
+Results
++++++++
 
-Batch submitting s7g1700gl_dead.fits added it to CRDS and generated three new
-mapping files which were derived from hst_0019.pmap:  hst_cos_deadtab_0006.rmap,
-hst_cos_0005.imap, hst_0022.pmap.
+.. figure:: images/web_batch_submit_results.png
+   :scale: 50 %
+   :alt: batch submission results
+   
+The results page lists the following items:
 
-Rmap Updates
-++++++++++++
+* *Starting Context* is the context this submission derove from.
 
-The rmap under hst_0021.pmap that corresponds to s7g1700gm_dead.fits was
-hst_cos_deadtab_0005.rmap. To add s7g1700gm_dead.fits,  its header parameters
-were matched against hst_cos_deadtab_0005.rmap to determine where it should be
-added.   *Actions on hst_cos_deadtab_0005.rmap* shows that the new reference
-file replaced hst_cos_deadtab_0002.fits.  The *Rmap Differences* accordion
-shows the textual differences between hst_cos_deadtab_0005.rmap and 0006.
+* *Generated New Mappings* lists the new mapping files which provide the generated context for using the submitted references.
+
+* *Actions on Rmap* provides two accordions showing how the rmap controlling the submitted references was modified.   The logical differences accordion has a table of actions,  either *insert* for completely new files or *replace* for files which replaced an existing file.
+
+* *Certify Results* has an accordion panel for each submitted reference file which contains the results from crds.certify.   The submitted name of each file is listed first,  followed by any official name of the file assigned by CRDS.   The status of the certification can be "OK" or "Warnings".   Warnings should be reviewed by opening the accorion panel.
+   
+**IMPORTANT**  The results page only indicates the files which will be added to
+CRDS if the submission is *confirmed*.   Prior to confirmation of the submission,
+neither the submitted references nor the generated mappings are officially in CRDS.
+Do not *leave the confirmation page* prior to confirming.
 
 Collisions
 ++++++++++
@@ -327,6 +357,21 @@ the current submission and re-doing it, or by accepting the current submission
 and manually correcting the mappings involved.   Failure to correctly resolve
 a collision will most likely result in one of two sets of conflicting changes
 being lost.
+
+.. figure:: images/web_collision_warnings.png
+   :scale: 50 %
+   :alt: collision warnings
+   
+Collision tracking for CRDS mappings files is done based upon header fields,
+nominally the *name* and *derived_from* fields.  These fields are automatically
+updated when mappings are submitted or generated.
+
+Collision tracking for reference files is currently filename based.   The submitted
+name of a reference file is assumed to be the same as the file it 
+was derived from.   This fits a work-flow where a reference is first downloaded
+from CRDS, modified under the same name,  and re-uploaded.   Nominally,  submitted
+files are automatically re-named.
+   
 
 Confirm or Discard
 ++++++++++++++++++
@@ -341,9 +386,6 @@ user explicitly requests it.
 *Discarding* a batch submission based on warnings or bad rmap modifications
 removes the submission from CRDS.   In particular temporary database records
 and file copies are removed.
-
-If a submission is neither confirmed nor cancelled the files involved will be
-automatically removed,  nominally after two weeks.
 
 Following any CRDS pipeline mapping submission,  the default *edit* context
 is updated to that pipeline mapping making it the default starting point for
@@ -450,7 +492,7 @@ files.
    
 Using *Create Contexts* the upper level mappings can be modified to refer to a
 number of (most likely hand-edited) reference mappings.   Rmaps referred to by
-create contexts must already be known to CRDS and can be typed into the
+create contexts must already be known to CRDS.   *Create Contexts*
 
 
 Set File Enable
