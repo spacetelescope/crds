@@ -459,27 +459,40 @@ def certify_reference(fitsname, context=None,
         parkeys = get_rmap_parkeys(fitsname, context)
         dump_multi_key(fitsname, parkeys + provenance_keys)
 
-    mode_checker = None # Initialize mode validation
+    header = data_file.get_header(fitsname)
+    
+    certify_simple_parameters(fitsname, context, trap_exceptions, header)
+
+    certify_reference_modes(fitsname, context, trap_exceptions, header)
+
+def certify_simple_parameters(fitsname, context, trap_exceptions, header):
+    """Check non-column parameters."""
     for checker in get_validators(fitsname):
-        # Treat column validations together as a 'mode'
-        if checker._info.keytype == 'C':
-            checker.check(fitsname) # validate values against TPN valid values
-            if mode_checker is None:
-                mode_checker = ModeValidator(checker._info)
-            mode_checker.add_column(checker)
-        else:
+        if checker._info.keytype != 'C':
             # validate other values independently
             try:
-                checker.check(fitsname) # validate against TPN values
+                checker.check(fitsname, header=header) # validate against TPN values
             except Exception, exc:
                 if trap_exceptions:
                     log.error("Checking", repr(checker._info.name), "in",
                               repr(fitsname), ":", str(exc))
                 else:
                     raise
+
+def certify_reference_modes(fitsname, context, trap_exceptions, header):
+    """Check column parameters row-by-row."""
+    mode_checker = None # Initialize mode validation
+    for checker in get_validators(fitsname):
+        # Treat column validations together as a 'mode'
+        if checker._info.keytype == 'C':
+            checker.check(fitsname, header=header) # validate values against TPN valid values
+            if mode_checker is None:
+                mode_checker = ModeValidator(checker._info)
+            mode_checker.add_column(checker)
+
     if mode_checker: # Run validation on all collected modes
         try:
-            mode_checker.check(fitsname,context=context)
+            mode_checker.check(fitsname, context=context, header=header)
         except Exception, exc:
             if trap_exceptions:
                 log.error("Checking", repr(mode_checker.names), "in",
@@ -514,7 +527,6 @@ def get_rmap_parkeys(refname, context):
     if context is None:
         return []
     try:
-        header = data_file.get_header(refname)
         pmap = rmap.get_cached_mapping(context)
         instrument, filekind = pmap.locate.get_file_properties(refname)
         return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
