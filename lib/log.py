@@ -17,6 +17,7 @@ class CrdsLogger(object):
         self.name = name
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
+        self.formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
         self.console = None
         if enable_console:
             self.add_console_handler(level)
@@ -29,21 +30,7 @@ class CrdsLogger(object):
                 self.name.replace(".","_").upper() + "_VERBOSITY", 0))
         except Exception:
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
-
-    def add_console_handler(self, level=logging.DEBUG):
-        if self.console is None:
-            self.console = logging.StreamHandler()
-            self.console.setLevel(level)
-            self.formatter = logging.Formatter(
-                '%(name)-12s: %(levelname)-8s %(message)s')
-            self.console.setFormatter(self.formatter)
-            self.logger.addHandler(self.console)
-
-    def remove_console_handler(self):
-        if self.console is not None:
-            self.logger.removeHandler(self.console)
-            self.console = None
-
+            
     def format(self, *args, **keys):
         end = keys.get("end", "\n")
         sep = keys.get("sep", " ")
@@ -108,7 +95,27 @@ class CrdsLogger(object):
         
     def get_verbose(self):
         return self.verbose_level
+    
+    def add_console_handler(self, level=logging.DEBUG):
+        if self.console is None:
+            self.console = self.add_stream_handler(sys.stdout)
 
+    def remove_console_handler(self):
+        if self.console is not None:
+            self.console = self.remove_stream_handler(self.console)
+
+    def add_stream_handler(self, filelike=None, level=logging.DEBUG):
+        if filelike is None:
+            filelike = cStringIO.StringIO()
+        handler = logging.StreamHandler(filelike)
+        handler.setLevel(level)
+        handler.setFormatter(self.formatter)
+        self.logger.addHandler(handler)
+        return handler
+    
+    def remove_stream_handler(self, handler):
+        self.logger.removeHandler(handler)
+    
 THE_LOGGER = CrdsLogger("CRDS")
 
 info = THE_LOGGER.info
@@ -124,6 +131,8 @@ set_verbose = THE_LOGGER.set_verbose
 get_verbose = THE_LOGGER.get_verbose
 add_console_handler = THE_LOGGER.add_console_handler
 remove_console_handler = THE_LOGGER.remove_console_handler
+add_stream_handler = THE_LOGGER.add_stream_handler
+remove_stream_handler = THE_LOGGER.remove_stream_handler
 
 def errors():
     """Return the global count of errors."""
