@@ -560,10 +560,10 @@ def certify_context(context, check_references=None, trap_exceptions=False):
     """
     ctx = rmap.get_cached_mapping(context)
     ctx.validate_mapping(trap_exceptions=trap_exceptions)
-    if check_references is None:
+    if not check_references: # Accept None or False
         return
     assert check_references in ["exist", "contents"], \
-        "invalid check_references parameter"
+        "invalid check_references parameter " + repr(check_references) 
     references = []
     for ref in ctx.reference_names():
         log.info('Validating reference file: '+ref)
