@@ -6,15 +6,16 @@ header = {
     'name' : 'jwst_niriss_photom_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'),),
-    'sha1sum' : '9f7f69959e0f696a207cc3c5737d6c652974fcc3',
+    'sha1sum' : '55485316cded35de2646cb73bfc015819358e40a',
 }
 
 selector = Match({
-    ('NIRISS', 'CLEAR', 'F090W') : 'jwst_niriss_photom_0000.fits',
-    ('NIRISS', 'CLEAR', 'F115W') : 'jwst_niriss_photom_0001.fits',
-    ('NIRISS', 'CLEAR', 'F150W') : 'jwst_niriss_photom_0002.fits',
-    ('NIRISS', 'CLEAR', 'F200W') : 'jwst_niriss_photom_0003.fits',
-    ('NIRISS', 'F277W', 'CLEARP') : 'jwst_niriss_photom_0004.fits',
-    ('NIRISS', 'F356W', 'CLEARP') : 'jwst_niriss_photom_0005.fits',
-    ('NIRISS', 'F444W', 'CLEARP') : 'jwst_niriss_photom_0006.fits',
+    ('NIRISS', 'CLEAR', 'CLEARP') : 'jwst_niriss_photom_0000.fits',
+    ('NIRISS', 'CLEAR', 'F090W') : 'jwst_niriss_photom_0001.fits',
+    ('NIRISS', 'CLEAR', 'F115W') : 'jwst_niriss_photom_0002.fits',
+    ('NIRISS', 'CLEAR', 'F150W') : 'jwst_niriss_photom_0003.fits',
+    ('NIRISS', 'CLEAR', 'F200W') : 'jwst_niriss_photom_0004.fits',
+    ('NIRISS', 'F277W', 'CLEARP') : 'jwst_niriss_photom_0005.fits',
+    ('NIRISS', 'F356W', 'CLEARP') : 'jwst_niriss_photom_0006.fits',
+    ('NIRISS', 'F444W', 'CLEARP') : 'jwst_niriss_photom_0007.fits',
 })
