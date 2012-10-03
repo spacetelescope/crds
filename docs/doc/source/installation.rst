@@ -17,23 +17,63 @@ Setting up your Environment
 The CRDS checkout has a template file for the C-shell which defines
 environment variables, env.csh.   For JWST development,  there are
 reasonable defaults for everything so you may not need to set these
-at all.   For HST,  at a minimum CRDS_SERVER_URL must be defined.
+at all.
 
 Basic Environment
 .................
 
     * **CRDS_PATH** defines a common directory tree where CRDS reference files
-      and mappings are stored.   CRDS_PATH defaults to "./crds".   Mappings
+      and mappings are stored.   CRDS_PATH defaults to "/grp/crds/jwst".   Mappings
       are stored in ${CRDS_PATH}/mappings/[hst|jwst].   Reference files are
       stored in ${CRDS_PATH}/references/[hst|jwst].
     
     * **CRDS_SERVER_URL** defines the base URL for accessing CRDS network
-      services.  CRDS_SERVER_URL defaults to the jwst test server.
+      services.  CRDS_SERVER_URL defaults to http://not-a-crds-server.stsci.edu.
+      Other fallbacks result in operational defaults for JWST only.
       
     * **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
       integer,  nominally 50.   Higher values output more information,  lower
       values less information.
       
+
+Typical Build-1 Environments
+............................
+
+A typical build-1 environment for CRDS *within STScI* works by aligning the CRDS
+file cache with the CRDS server's master copy of reference and mapping files.   
+This makes the master copy of CRDS files on the server appear to be the user's 
+personal file cache... with the exception that the files are readonly.   This
+approach avoids creating additional copies of the reference files.
+
+HST Settings
+++++++++++++
+::
+
+  % setenv CRDS_PATH    /grp/crds/hst
+  % setenv CRDS_SERVER_URL http://hst-crds.stsci.edu
+
+JWST Settings
++++++++++++++
+::
+ 
+  % setenv CRDS_PATH /grp/crds/jwst
+  % setenv CRDS_SERVER_URL http://not-a-crds-server.stsci.edu
+  
+Remote Settings
++++++++++++++++
+
+Even for build-1 it's possible to operate CRDS over the network.  These settings
+would create a cache named "crds" in the current working directory when CRDS
+tools or functions are run::
+
+   % setenv CRDS_PATH ./crds
+   % setenv CRDS_SERVER_URL http://jwst-crds.stsci.edu
+  
+The main caveat is that the CRDS servers are only visible within STScI so outside
+users must port-forward in order to reach the CRDS server.  As an alternative to
+port forwarding,  an on-site user can create a local cache which should continue 
+to work when they are off-site and don't have access to the server or central store.
+
 Advanced Environment
 ....................
 
