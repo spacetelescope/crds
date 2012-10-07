@@ -136,7 +136,7 @@ def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
     """
-    header = get_header(filepath, needed_keys, original_name)
+    header = get_header(filepath, needed_keys, original_name, observatory=None)
     return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=[], original_name=None):
@@ -147,11 +147,12 @@ def get_header(filepath, needed_keys=[], original_name=None):
     if is_geis(original_name):
         return get_geis_header(filepath, needed_keys)
     else:
-        observatory = get_observatory(filepath, original_name)
-        if observatory == "hst":
-            return get_fits_header_union(filepath, needed_keys)
-        else:
+        if observatory is None:
+            observatory = get_observatory(filepath, original_name)
+        if observatory == "jwst":
             return get_data_model_header(filepath, needed_keys)
+        else:
+            return get_fits_header_union(filepath, needed_keys)
 
 # A clearer name
 get_unconditioned_header = get_header
