@@ -1,26 +1,23 @@
 """This module is a command line script which handles comparing the best
-reference recommendations for a particular context and dataset to prior bestrefs
-recommendations for the dataset.
+reference recommendations for a particular context and dataset files.
 
-Dataset parameters/headers required to compute best refs can come in three
+Dataset parameters/headers required to compute best refs can come in two
 forms:
 
 1. Dataset file headers
-2. Recalibrate cache file
-3. Database
+2. Cache file
 
-Prior recommendations can really come in four forms:
+Prior recommendations can really come in three forms:
 
 1. Generated from a second context.
 2. Dataset file headers
-3. Recalibrate cache file
-4. Database
+3. Cache file
 
-To make new recommendations more quickly, recalibrate can store information
+To make new recommendations more quickly, file_bestrefs can store information
 about prior recommendations in a cache file,  including both the recommendations
 themselves and as well as critical parameters required to find them.
 
-To support one possible use case of CRDS,  recalibrate can write new best
+To support one possible use case of CRDS,  file_bestrefs can write new best
 reference recommendations into the dataset file headers.
 """
 
@@ -73,7 +70,7 @@ class Cache(object):
             self._cache[key] = self._compute_value(*args)
         return self._cache[key]
     
-def get_recalibrate_info(context, dataset):
+def get_bestrefs_info(context, dataset):
     """Fetch best reference parameters and results from `dataset`.
     
     `context` is only used as a helper to determine parkeys and
@@ -97,11 +94,11 @@ def get_recalibrate_info(context, dataset):
     log.verbose("Old bestrefs:", old_bestrefs)
     return (parkey_values, old_bestrefs)
 
-HEADER_CACHE = Cache("recalibrate.cache", get_recalibrate_info)
+HEADER_CACHE = Cache("file_bestrefs.cache", get_bestrefs_info)
 
 # ============================================================================
 
-def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
+def file_bestrefs(new_context, datasets, old_context=None, update_datasets=False):
     """Compute best references for `dataset`s with respect to pipeline
     mapping `new_context`.  Either compare `new_context` results to 
     references from an `old_context` or compare to prior results recorded 
@@ -114,8 +111,7 @@ def recalibrate(new_context, datasets, old_context=None, update_datasets=False):
         basename = os.path.basename(dataset)
         
         try:
-            header, old_bestrefs = HEADER_CACHE.get(
-                basename, (new_context, dataset))
+            header, old_bestrefs = HEADER_CACHE.get(basename, (new_context, dataset))
         except Exception, exc:
             log.error("Can't get header info for " + repr(dataset) + " " + str(exc))
             continue 
@@ -145,6 +141,7 @@ def trapped_bestrefs(ctx, header):
     """
     try:
         return ctx.get_best_references(header)
+        # return crds.getrecommendations(header, context=ctx,)
     except Exception:
         log.error("Best references FAILED for ", repr(ctx))
 
@@ -180,10 +177,10 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
                         MISMATCHES[filekind] = []
                     MISMATCHES[filekind].append(dataset)
             else:
-                log.verbose("Lookup MATCHES for", repr(filekind), repr(new), 
+                log.verbose("Lookup MATCHES for", repr(new), repr(filekind), 
                             verbosity=30)
         else:
-            log.verbose("Lookup N/A for", repr(filekind), repr(new),
+            log.verbose("Lookup N/A for", repr(new), repr(filekind), 
                         verbosity=30)
     if mismatches > 0:
         sys.exc_clear()
@@ -212,7 +209,7 @@ def write_bestrefs(new_fname, dataset, bestrefs):
 # =============================================================================
 
 def main():
-    """Process command line parameters and run recalibrate."""
+    """Process command line parameters and run file_bestrefs."""
     import crds
     crds.handle_version()
     parser = optparse.OptionParser(
@@ -232,7 +229,7 @@ def main():
     options, args = log.handle_standard_options(sys.argv, parser=parser)
 
     if len(args) < 2:
-        log.write("usage: recalibrate.py <pmap>  <dataset>... [options]")
+        log.write("usage: file_bestrefs.py <pmap>  <dataset>... [options]")
         sys.exit(-1)
 
     newctx_fname, datasets = args[1], args[2:]
@@ -250,10 +247,8 @@ def main():
     if options.use_cache:
         HEADER_CACHE.load()
     
-    log.standard_run(
-        "recalibrate(newctx, datasets, oldctx, options.update_datasets)", 
-        options, globals(), locals())
-
+    file_bestrefs(newctx, datasets, oldctx, options.update_datasets)
+    
     if options.use_cache:
         HEADER_CACHE.save()
 

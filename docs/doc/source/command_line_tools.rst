@@ -128,10 +128,52 @@ reference files::
     ('hst', 'acs', 'dgeofile', 'HRC', 'CLEAR1S', 'F220W', '2002-03-01', '00:00:00')
 
 
-crds.sync
----------
+crds.file_bestrefs *(preliminary)*
+----------------------------------
 
-crds.sync downloads references and mappings from the CRDS server based on a
-variety of specification mechanisms.
+crds.file_bestrefs computes the best references for a set of dataset FITS files
+with respect to a particular context or contexts::
+
+    Usage: file_bestrefs.py [options] <new_context> <datasets...>
+    
+    Options:
+      -h, --help            show this help message and exit
+      -c, --cache-headers   Use and remember critical header parameters in a
+                            cache file.
+      -f FILELIST, --files=FILELIST
+                            Read datasets from FILELIST, one dataset per line.
+      -o OLD_CONTEXT, --old-context=OLD_CONTEXT
+                            Compare best refs recommendations from two contexts.
+      -u, --update-datasets
+                            Update dataset headers with new best reference
+                            recommendations.
+      -V VERBOSITY, --verbose=VERBOSITY
+                            Set verbosity level.
+                            
+*crds.file_bestrefs* can be invoked as::
+
+    % python -m crds.file_bestrefs hst.pmap *_raw.fits
+    CRDS        : INFO     New Reference for 'j8bt05njq_raw.fits' 'imphttab' is 'w3m1716tj_imp.fits' was 'undefined'
+    CRDS        : INFO     New Reference for 'j8bt05njq_raw.fits' 'npolfile' is 'v9718263j_npl.fits' was 'undefined'
+    CRDS        : INFO     New Reference for 'j8bt06o6q_raw.fits' 'imphttab' is 'w3m1716tj_imp.fits' was 'undefined'
+    CRDS        : INFO     New Reference for 'j8bt06o6q_raw.fits' 'npolfile' is 'v9718264j_npl.fits' was 'undefined'
+    CRDS        : INFO     New Reference for 'j8bt09jcq_raw.fits' 'imphttab' is 'w3m1716tj_imp.fits' was 'undefined'
+    CRDS        : INFO     New Reference for 'j8bt09jcq_raw.fits' 'npolfile' is 'v9718260j_npl.fits' was 'undefined'
+    Reference Changes:
+    {'imphttab': ['j8bt05njq_raw.fits',
+                  'j8bt06o6q_raw.fits',
+                  'j8bt09jcq_raw.fits'],
+     'npolfile': ['j8bt05njq_raw.fits',
+                  'j8bt06o6q_raw.fits',
+                  'j8bt09jcq_raw.fits']}
+    0 errors
+    0 warnings
+    6 infos
+
+.. crds.sync *(preliminary)*
+    -------------------------
+    
+    crds.sync downloads references and mappings from the CRDS server based on a
+    variety of specification mechanisms.
 
 
