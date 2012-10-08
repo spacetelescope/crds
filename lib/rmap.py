@@ -879,6 +879,8 @@ class ReferenceMapping(Mapping):
             derived_file = self.header['derived_from']
             if 'generated' not in derived_file:
                 derived_from = get_cached_mapping(derived_file)
+                log.info('Comparing context file "'+self.basename+
+                        '" against "'+ derived_from.basename+'"')
                 diffs = derived_from.difference(self)
                 if len(diffs) > 0:
                     replacements = []

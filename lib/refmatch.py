@@ -31,6 +31,8 @@ def determine_filekind(reffile,imap):
     """
     newkind = pyfits.getval(reffile,filekind_kw)
     newkind = newkind.replace(' ','_') # get kw value into same format as tpninfo
+    newkind = newkind.upper().strip()
+
     filetype = None # return value
     filekinds = get_filekind_vals(imap)
     for fkind in filekinds:
@@ -70,8 +72,8 @@ def find_current_reffile(reffile,pmap):
 
     filetype = pyfits.getval(reffile,filekind_kw)
     dateobs,timeobs = split_useafter(pyfits.getval(reffile,'USEAFTER'))
-
     filekind = determine_filekind(reffile, i)
+
     if filekind:
         r = i.get_rmap(filekind)
     else:
