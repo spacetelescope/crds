@@ -3,32 +3,33 @@ mappings required to support a set of contexts from the CRDS server:
 
 Synced contexts can be explicitly listed:
 
-  % python -m crds.client.sync  --contexts hst_0001.pmap hst_0002.pmap
-
-Synced datasets can be explicitly listed:
-
-  % python -m crds.client.sync --contexts hst_0001.pmap hst_0002.pmap --datasets *.fits
+  % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
 
 Synced contexts can be specified as a range:
 
-  % python -m crds.client.sync --range 1:2
+  % python -m crds.sync --range 1:2
 
 Synced contexts can be specified as --all contexts:
 
-  % python -m crds.client.sync --all
-
-XXX TODO
-Or explicitly list the files you want cached:
-
-  % python -m crds.client.sync <references or mappings to cache>
+  % python -m crds.sync --all
 
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge:
 
-  % python -m crds.client.sync --range 1:2 --purge
+  % python -m crds.sync --range 1:2 --purge
 
 will remove references or mappings not required by hst_0001.pmap or 
 hst_0002.pmap in addition to downloading the required files.
+
+XXX TODO
+Or explicitly list the files you want cached:
+
+  % python -m crds.sync <references or mappings to cache>
+
+Synced datasets can be explicitly listed:
+
+  % python -m crds.sync --contexts hst_0001.pmap hst_0002.pmap --datasets *.fits
+
 """
 import sys
 import os
