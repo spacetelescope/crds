@@ -139,7 +139,7 @@ def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     header = get_header(filepath, needed_keys, original_name, observatory=None)
     return utils.condition_header(header, needed_keys)
 
-def get_header(filepath, needed_keys=[], original_name=None):
+def get_header(filepath, needed_keys=[], original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
     """
     if original_name is None:
