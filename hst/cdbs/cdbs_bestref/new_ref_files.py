@@ -31,6 +31,13 @@ COS_SPWCS_LEAVE_OUT = ['EXPTYPE']
 # leave these out of the WFPC2 FLAT file selection test
 WFPC2_FLAT_LEAVE_OUT = ['LRFWAVE','FILTNAM1','FILTNAM2','IMAGETYP']
 
+SM4_DATE = '2009/05/14 12:00:00'  # date beyond which an exposure was
+                                  # taken in the SM4 configuration
+                                  # (May 14 2009)
+                                  #  after HST was captured by
+                                  #  the shuttle during SM4, and
+                                  #  pre-SM4 exposures had ceased)
+
 #--------------------------------------------------------------------------
 def new_files_usage():
   opusutil.PrintMsg('F','Interactive Usage: new_files [-h] [-o sqloutfile] [-l updatelimit]')
@@ -285,6 +292,18 @@ def wfpc2_flatfile(aSource, field_prefix, querytxt):
 
   return querytxt
 
+
+def reformat_MMDDYYYYHHMMSS(inDate):
+    """Reformat a date from MM/DD/YYYY HH:MM:SS to YYYY/MM/DD HH:MM:SS"""
+    #
+    YYYYMMDDHHMMSS_date = (inDate[6:10]+"/"+
+                           inDate[0:2]+"/"+
+                           inDate[3:5]+
+                           inDate[10:] )
+    #print ("inDate="+inDate+", sortable form="+YYYYMMDDHHMMSS_date)
+    return YYYYMMDDHHMMSS_date
+
+
 #--------------------------------------------------------------------------
 #
 # Name: file_selection_fields
@@ -324,10 +343,10 @@ def wfpc2_flatfile(aSource, field_prefix, querytxt):
 # -------- -----  --------  --------------------------------------
 # 09/23/02 xxxxx  MSwam     first version
 # 04/15/09 62457  MSwam     add WFC3 BIAS special case
-#
+# 09/14/12 72156  MSwam     leave ACS APERTURE out for pre-SM4 BIASES
 #------------------------------------------------------------------------
 def file_selection_fields(cdbs_prefix, aSource, theReffile, field_prefix, 
-                          querytxt):
+                          useafter_date, querytxt):
   #
   # add file selection fields
   for k in theReffile._file_selections:
@@ -346,6 +365,17 @@ def file_selection_fields(cdbs_prefix, aSource, theReffile, field_prefix,
     if (cdbs_prefix == "acs" and theReffile._keyword == "BIASFILE" and
         k._field in ACS_BIAS_LEAVE_OUT):
       continue
+    #
+    # 2nd ACS BIAS special adjustment: leave APERTURE OUT of selection for
+    # pre-SM4 useafter dates
+    #
+    if (cdbs_prefix == "acs" and theReffile._keyword == "BIASFILE" and
+        k._field == "APERTURE"):
+      useafter_YYYYMMDDHHMMSS = reformat_MMDDYYYYHHMMSS(useafter_date)
+      if useafter_YYYYMMDDHHMMSS < SM4_DATE:
+        opusutil.PrintMsg("I",
+                 "pre-SM4 useafter, leaving APERTURE off ACS BIAS selection")
+        continue
 
     # 
     # SPECIAL CASE: WFC3 BIAS
@@ -431,7 +461,7 @@ def find_stop_date(cdbs_prefix, ref_data_prefix, useafter_date, aSource,
 
     # add the file selection fields and finish the query
     querytxt = file_selection_fields(cdbs_prefix, aSource, theReffile, 
-                                     "r.", querytxt)
+                                     "r.", useafter_date, querytxt)
     querytxt = querytxt + " order by f.useafter_date"
     opusutil.PrintMsg("D","querytxt="+querytxt)  
 
@@ -524,8 +554,8 @@ def new_files(sqloutfile, updatelimit, anXmlmaster):
                                      reffile_db)
 
     # get the useafter date for this ref file
-    useafter = get_useafter(cdbs_prefix, newfile[0], reffile_db)
-    opusutil.PrintMsg("D","useafter="+str(useafter))
+    useafter_date = get_useafter(cdbs_prefix, newfile[0], reffile_db)
+    opusutil.PrintMsg("D","useafter_date="+str(useafter_date))
 
 
     # write updates for *_ref_data exposures matching useafter period and mode,
@@ -569,7 +599,7 @@ def new_files(sqloutfile, updatelimit, anXmlmaster):
       else:
         # find STOP_DATE for the useafter period
         # 
-        stop_date = find_stop_date(cdbs_prefix, ref_data_prefix, useafter, 
+        stop_date = find_stop_date(cdbs_prefix, ref_data_prefix, useafter_date, 
                                    Source._sources[0], theReffile, reffile_db)
         opusutil.PrintMsg("D","stop_date="+str(stop_date))
         #
@@ -589,7 +619,7 @@ def new_files(sqloutfile, updatelimit, anXmlmaster):
                   ref_data_prefix+"_best_"+
                   string.lower(theReffile._keyword)+" is null) " +
                   "and "+ref_data_prefix+"_"+expstart_field+" >= "+
-                 "'"+str(useafter)+"' and "+ref_data_prefix+"_"+expstart_field+
+                 "'"+str(useafter_date)+"' and "+ref_data_prefix+"_"+expstart_field+
                   " < '"+str(stop_date)+"'")
 
 ###
@@ -608,8 +638,8 @@ def new_files(sqloutfile, updatelimit, anXmlmaster):
 
         # add file selection fields
         querytxt = file_selection_fields(cdbs_prefix, Source._sources[0], 
-                                         theReffile, 
-                                         ref_data_prefix+"_", querytxt)
+                                         theReffile, ref_data_prefix+"_", 
+                                         useafter_date,querytxt)
         opusutil.PrintMsg("D","querytxt="+querytxt)
 
         # write the update statement

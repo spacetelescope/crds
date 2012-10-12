@@ -426,6 +426,8 @@ History:
 09/21/06 56495 MSwam     add amp conversions for single-amp multi-chip reads
 03/15/11 67806 MSwam     only do amp conversion for pre-SM4 data
 03/29/11 67806 MSwam     change in algorithm from ACS team 
+09/05/12 72156 MSwam     add APERTURE selection field for post-SM4 cases
+
 =======================================================================
   """
   def acs_bias_file_selection(self, querynum, thereffile, aSource, beyond_SM4):
@@ -445,6 +447,10 @@ History:
       # skip these (not used in selection, only for special tests)
       if (k._field == 'XCORNER' or k._field == 'YCORNER' or
           k._field == 'CCDCHIP'):
+          continue
+      #
+      # skip APERTURE prior to SM4, otherwise use it (PR 72156)
+      if (k._field == 'APERTURE' and not beyond_SM4):
           continue
       #
       # special cases
