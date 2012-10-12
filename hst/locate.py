@@ -281,6 +281,12 @@ def ref_properties_from_header(filename):
 
 # ============================================================================
 
+def fits_to_parkeys(header):
+    """Map a FITS header onto rmap parkeys appropriate for this observatory."""
+    return dict(header)
+
+# ============================================================================
+
 if __name__ == "__main__":
     main()
 

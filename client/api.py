@@ -61,7 +61,7 @@ __all__ = [
 
 # ============================================================================
 
-CRDS_DATA_CHUNK_SIZE = 2**26   # 64M, HTTP, sha1sum,  but maybe not RPC.
+CRDS_DATA_CHUNK_SIZE = 2**23   # 8M, HTTP, sha1sum,  but maybe not RPC.
 
 # Server for CRDS services and mappings
 
