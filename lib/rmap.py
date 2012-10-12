@@ -457,7 +457,7 @@ class Mapping(object):
         for key in self.selections:
             if key not in other.selections:
                 msg = repr(other.basename) + " deleted " + repr(key)
-                differences.append(msg)
+                differences.append(((self.basename, other.basename), msg))
             else:
                 differences.extend(self.selections[key].difference(
                     other.selections[key],
@@ -465,7 +465,7 @@ class Mapping(object):
         for key in other.selections:
             if key not in self.selections:
                 msg = repr(other.basename) + " added " + repr(key)
-                differences.append(msg)
+                differences.append(((self.basename, other.basename), msg))
         return sorted(differences)
 
 # ===================================================================
