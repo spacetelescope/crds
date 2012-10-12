@@ -35,6 +35,7 @@
 # 02/07/12 68331  Mary        modify ACS:dkc
 # 02/07/12 69213  Mary        Add COS:gsag
 # 02/07/12 70397  Mary        Add COS:hv
+# 06/14/12 71537  MSwam       Add WFC3:imp
 #
 #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT	HEADER KEYWORDS
 #----------------------------------------------------------------------
@@ -418,6 +419,7 @@ wfc3	ccd     table   wfc3_ccd.tpn       .fits   "instrume=wfc3,filetype=CCD PARA
 wfc3	crr     table   wfc3_crr.tpn       .fits   "instrume=wfc3,filetype=COSMIC RAY REJECTION"
 wfc3	osc     table   wfc3_osc.tpn       .fits   "instrume=wfc3,filetype=OVERSCAN"
 wfc3	idc	table	wfc3_idc.tpn	   .fits   "instrume=wfc3,filetype=DISTORTION COEFFICIENTS"
+wfc3	imp     table   wfc3_imp.tpn   	   .fits   "instrume=wfc3,filetype=IMAGE PHOTOMETRY TABLE"
 wfc3	mdz	table	wfc3_mdz.tpn	   .fits   "instrume=wfc3,filetype=MULTIDRIZZLE PARAMETERS"
 #----------------------------------------------------------------------
 wfc3	bia	load	wfc3_bia_ld.tpn     .lod    instrument=wfc3,reference_file_type=bia
@@ -434,6 +436,7 @@ wfc3	crr	load	wfc3_crr_ld.tpn     .lod    instrument=wfc3,reference_file_type=cr
 wfc3	osc	load	wfc3_osc_ld.tpn     .lod    instrument=wfc3,reference_file_type=osc
 wfc3    fls     load    wfc3_fls_ld.tpn     .lod    instrument=wfc3,reference_file_type=fls
 wfc3    idc     load    wfc3_idc_ld.tpn     .lod    instrument=wfc3,reference_file_type=idc
+wfc3    imp     load    wfc3_imp_ld.tpn     .lod    instrument=wfc3,reference_file_type=imp
 wfc3    mdz     load    wfc3_mdz_ld.tpn     .lod    instrument=wfc3,reference_file_type=mdz
 #-----------------------------------------------------------------------------
 cos   	flat    image   cos_flat.tpn   	   .fits   "instrume=cos,filetype=FLAT FIELD REFERENCE IMAGE"

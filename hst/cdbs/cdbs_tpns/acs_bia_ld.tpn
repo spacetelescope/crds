@@ -6,6 +6,7 @@
 # presence = (Optional|Required)
 #
 # 09/15/08 60769 MSwam    new CCDGAIN values
+# 09/06/12 72157 MSwam    add APERTURE
 #
 # NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
 #--------------------------------------------------------------------------
@@ -18,6 +19,18 @@ REFERENCE_FILE_TYPE H	C	R    	BIA
 DETECTOR	C	C	R	WFC,HRC
 CCDAMP		C	C	R	A,B,C,D,AC,AD,BC,BD,ABCD
 CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0
+APERTURE        C       C       R       SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
+                                        WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
+                                        WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
+                                        WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\
+                                        WFC2-FIX,WFC2-MRAMP,WFC2-ORAMP,\
+                                        WFC2-ORAMPQ,WFCENTER,\
+					WFC1-POL0UV,WFC1-POL0V,\
+					WFC1-POL60V,WFC1-POL60UV,\
+					WFC1-POL120V,WFC1-POL120UV,WFC1-SMFL,\
+					WFC2-POL0UV,WFC2-POL0V,\
+					WFC2-POL60V,WFC2-POL60UV,\
+					WFC2-POL120V,WFC2-POL120UV,WFC2-SMFL
 CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
 PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
 OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE

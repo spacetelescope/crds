@@ -7,6 +7,7 @@
 #
 # 08/31/06 56455 MSwam    add ABCDALL (but NOT for .lod file)
 # 09/15/08 60769 MSwam    new CCDGAIN values
+# 09/06/12 72157 MSwam    add APERTURE
 #
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
@@ -15,6 +16,19 @@ FILETYPE	H	C	R    	BIAS
 DETECTOR	H	C	R	WFC,HRC
 CCDAMP		H	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,ABCDALL,ANY
 CCDGAIN		H	R	R	0.5,1.0,1.4,2.0,4.0,8.0,-1
+APERTURE        H       C       R       ANY_FULL,ANY_WFC1_2K,ANY_WFC2_2K,\
+					SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
+                                        WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
+                                        WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
+                                        WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\
+                                        WFC2-FIX,WFC2-MRAMP,WFC2-ORAMP,\
+                                        WFC2-ORAMPQ,WFCENTER,\
+					WFC1-POL0UV,WFC1-POL0V,\
+					WFC1-POL60V,WFC1-POL60UV,\
+					WFC1-POL120V,WFC1-POL120UV,WFC1-SMFL,\
+					WFC2-POL0UV,WFC2-POL0V,\
+					WFC2-POL60V,WFC2-POL60UV,\
+					WFC2-POL120V,WFC2-POL120UV,WFC2-SMFL
 USEAFTER  	H	C	R	&SYBDATE
 PEDIGREE  	H	C	R	&PEDIGREE
 
