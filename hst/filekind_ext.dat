@@ -106,6 +106,7 @@
           'flshfile': 'fls',
           'graphtab': 'tmg',
           'idctab': 'idc',
+          'imphttab': 'imp',
           'lfltfile': 'lfl',
           'mdriztab': 'mdz',
           'nlinfile': 'lin',
