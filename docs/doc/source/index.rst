@@ -15,6 +15,7 @@ CRDS User Manual
    rmap_syntax.rst
    command_line_tools.rst
    web_site_use.rst
+   web_services.rst
  
 
 .. comment

@@ -4,7 +4,7 @@ server.
 
 Contexts to list can be specified explicitly:
 
-% python -m crds.client.list  hst_0001.pmap hst_0002.pmap --references
+% python -m crds.list  hst_0001.pmap hst_0002.pmap --references
 vb41935ij_bia.fits 
 vb41935jj_bia.fits 
 vb41935kj_bia.fits 
@@ -12,7 +12,7 @@ vb41935kj_bia.fits
 
 Contexts to list can be specified as a range:
 
-% python -m crds.client.list --observatory hst --range 1:2 --references
+% python -m crds.list --observatory hst --range 1:2 --references
 vb41935lj_bia.fits 
 vb41935mj_bia.fits 
 vb41935nj_bia.fits 
@@ -21,7 +21,7 @@ vb41935oj_bia.fits
 
 Contexts to list can be specified as --all contexts:
 
-% python -m crds.client.list --observatory hst --all --mappings
+% python -m crds.list --observatory hst --all --mappings
 hst.pmap 
 hst_0001.pmap 
 hst_0002.pmap 
@@ -39,7 +39,7 @@ import argparse
 
 from crds import log
 
-from crds.client.sync import (mapping, observatory, nrange, determine_contexts,
+from crds.sync import (mapping, observatory, nrange, determine_contexts,
                               get_context_references, get_context_mappings)
 
 def list_references(contexts):

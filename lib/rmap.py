@@ -498,9 +498,10 @@ class PipelineContext(Mapping):
         is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
-        instrument = self.get_instrument(header)
+        parkey_header = self.locate.fits_to_parkeys(header)
+        instrument = self.get_instrument(parkey_header)
         imap = self.get_imap(instrument)
-        return imap.get_best_references(header, include)
+        return imap.get_best_references(parkey_header, include)
 
     def reference_names(self):
         """Return the list of reference files associated with this pipeline

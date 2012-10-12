@@ -15,6 +15,16 @@ import re
 from crds import (log, rmap, pysh, data_file, config)
 from . import tpn
 
+# =======================================================================
+
+try:
+    from jwstlib.models import DataModel
+    MODEL = DataModel()
+except:
+    log.warning("JWST data model is not installed.   Cannot fits_to_parkeys().")
+
+# =======================================================================
+
 HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
@@ -271,5 +281,24 @@ def expand_wildcards(instrument, header):
 #    except KeyError:
 #        log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
 #    return header
+
+# ============================================================================
+
+def fits_to_parkeys(fits_header):
+    """Map a FITS header onto rmap parkeys appropriate for JWST."""
+    parkeys = {}
+    for key, value in fits_header.items():
+        if not key.lower().startswith("meta."):
+            pk = MODEL.find_fits_keyword(key.upper(), return_result=True)
+            if not pk:
+                pk = key
+            else:
+                assert len(pk) == 1, "CRDS JWST Data Model ambiguity on " + \
+                    repr(key) + " = " + repr(pk)
+                pk = pk[0]
+        else:
+            pk = key
+        parkeys[str(pk).upper()] = str(value)
+    return parkeys
 
 
