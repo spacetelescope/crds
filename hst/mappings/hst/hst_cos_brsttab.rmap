@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-08 14:16:04.289734',
+    'derived_from' : 'generated from CDBS database 2012-10-12 11:54:00.777467',
     'filekind' : 'BRSTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "FUV" and OBSMODE == "TIME-TAG")',
-    'sha1sum' : '0d4fecc37d3a63273a567ac10ad0df46f0c5232f',
+    'sha1sum' : 'd26e70e66519512b6639bbbc45039d07c37eb049',
 }
 
 selector = Match({

@@ -1,23 +1,23 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-08 14:16:30.446258',
+    'derived_from' : 'generated from CDBS database 2012-10-12 11:54:23.633268',
     'filekind' : 'FLSHFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_flshfile.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '95624e2c295d41de5074bf1f40218c90f99f79b9',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
+    'rmap_relevance' : '(DETECTOR == "UVIS" and FLASHCUR != "OFF")',
+    'sha1sum' : '15be2624c3c5c841ea476fc89d98ff5358ea1ee1',
 }
 
 selector = Match({
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, None, None) : UseAfter({
         '1990-01-01 00:00:00' : 'w7j1705di_fls.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, None, None) : UseAfter({
         '1990-01-01 00:00:00' : 'w7j17051i_fls.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, None, None) : UseAfter({
         '1990-01-01 00:00:00' : 'w7j17057i_fls.fits',
     }),
 })
