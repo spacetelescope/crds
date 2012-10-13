@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-08 14:14:11.766065',
+    'derived_from' : 'generated from CDBS database 2012-10-12 11:53:07.765575',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR != "SBC")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '5c5310ce166025f0f637a5060645b37098201c42',
+    'sha1sum' : 'a31791c1a0304d876d7153398ae9870f1a8471cf',
 }
 
 selector = Match({
@@ -2578,6 +2578,19 @@ selector = Match({
         '2006-07-24 00:35:36' : 'q8121106j_drk.fits',
         '2006-07-26 00:08:15' : 'q8121108j_drk.fits',
         '2006-07-28 00:05:37' : 'q812110aj_drk.fits',
+    }),
+    ('WFC', 'A|ABCD|AD|B|BC|C|D', -999.0) : UseAfter({
+        '2003-03-02 16:45:00' : 'u641457ej_drk.fits',
+        '2009-05-16 00:00:00' : 't941348gj_drk.fits',
+        '2009-07-06 17:00:00' : 'taf18113j_drk.fits',
+        '2009-07-10 15:36:02' : 'taf18114j_drk.fits',
+        '2009-07-18 00:00:00' : 'taf18115j_drk.fits',
+        '2009-07-21 09:00:00' : 'taf18116j_drk.fits',
+        '2009-07-30 00:00:00' : 'taf18117j_drk.fits',
+        '2009-08-05 07:00:19' : 'taf18118j_drk.fits',
+        '2009-08-16 00:00:00' : 'taf18119j_drk.fits',
+        '2009-08-20 00:00:00' : 'taf1811aj_drk.fits',
+        '2009-08-29 00:00:00' : 'taf1811bj_drk.fits',
     }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0') : UseAfter({
         '2008-01-01 00:00:00' : 't7d1504dj_drk.fits',
