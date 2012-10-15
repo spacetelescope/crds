@@ -434,7 +434,7 @@ class Mapping(object):
                 sel.validate_mapping(trap_exceptions)
             except Exception, exc:
                 if trap_exceptions == mapping_type(self):
-                    log.error()
+                    log.error("invalid mapping:", str(exc))
                 elif trap_exceptions == "debug":
                     raise
                 else:
@@ -868,7 +868,7 @@ class ReferenceMapping(Mapping):
             self.selector.validate_selector(self._tpn_valid_values, trap_exceptions)
         except Exception, exc:
             if trap_exceptions == mapping_type(self):
-                log.error()
+                log.error("invalid mapping:", self.instrument, self.filekind, ":", str(exc))
             elif trap_exceptions == "debug":
                 raise
             else:
