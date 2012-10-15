@@ -43,7 +43,7 @@ def fallback_header(rmap, header):
 '''
 
 def wfpc2_flatfile_filter(kmap):
-     log.write("Hacking WFPC2 Flatfile.")
+     log.info("Hacking WFPC2 Flatfile.")
      header_additions = {}
      # :  ('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
      kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >3000 and <=4200 #')] = \

@@ -20,6 +20,13 @@ def _precondition_header_biasfile(header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
+    exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
+    if (exptime < SM4):
+        if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
+            header["APERTURE"] = "N/A"
+    return header     # XXXXXX RETURN NOW !!!!
+    
+    # Theoretical code copying cdbsquery.py just introduces mismatches...
     try:
         numcols = float(header["NUMCOLS"])
     except ValueError:
@@ -28,16 +35,16 @@ def _precondition_header_biasfile(header_in):
     else:
         # if pre-SM4 and NUMCOLS > HALF_CHIP
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
-        if (exptime < SM4) and numcols > ACS_HALF_CHIP_COLS:
-            if header["CCDAMP"] in ["A","D"]: 
-                log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
-                            "to AD for NUMCOLS = "+ header["NUMCOLS"])
-                header["CCDAMP"] = "AD"
-            elif header["CCDAMP"] in ["B","C"]:  
-                log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
-                            "to BC for NUMCOLS = "+ header["NUMCOLS"])
-                header["CCDAMP"] = "BC"
-
+        if (exptime < SM4):
+            if numcols > ACS_HALF_CHIP_COLS:
+                if header["CCDAMP"] in ["A","D"]: 
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
+                                "to AD for NUMCOLS = "+ header["NUMCOLS"])
+                    header["CCDAMP"] = "AD"
+                elif header["CCDAMP"] in ["B","C"]:  
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
+                                "to BC for NUMCOLS = "+ header["NUMCOLS"])
+                    header["CCDAMP"] = "BC"
     if header['DETECTOR'] == "WFC" and \
         header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
         log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
@@ -52,8 +59,8 @@ def _precondition_header_biasfile(header_in):
     return header
 
 def precondition_header(rmap, header):
+    header = dict(header)
     if rmap.filekind == "biasfile":
-        return header
         return _precondition_header_biasfile(header)
     else:
         return header
@@ -86,7 +93,7 @@ def _fallback_biasfile(header_in):
 
 def fallback_header(rmap, header):
     if rmap.filekind == "biasfile":
-        # log.write("x", end="",sep="")
+        # log.info("x", end="",sep="")
         return _fallback_biasfile(header)
     else:
         None
@@ -102,7 +109,7 @@ def acs_biasfile_filter(kmap):
     Here we change '' to N/A to make CRDS ignore it when it doesn't matter;  resulting matches
     will be "weaker" than matches with a real APERTURE value.
     """
-    log.write("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
+    log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
     for match, value in kmap.items():
         if match[3] == '':
             new = list(match)
