@@ -272,7 +272,7 @@ class Selector(object):
             self._validate_selector(valid_values_map, trap_exceptions)
         except ValidationError, exc:
             if trap_exceptions in [True, "selector"]:
-                log.error(self.short_name)
+                log.error(self.short_name, ":", str(exc))
             elif trap_exceptions == "debug":
                 raise
             else:
