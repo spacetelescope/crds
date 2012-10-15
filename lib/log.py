@@ -187,8 +187,8 @@ def standard_run(run_str, options, globals_dict, locals_dict):
 def standard_status():
     """Print out errors, warnings, and infos."""
     errors, warnings, infos = THE_LOGGER.status()
-    print(errors, "errors")
-    print(warnings, "warnings")
-    print(infos, "infos")
-    print("")
+    info(errors, "errors")
+    info(warnings, "warnings")
+    info(infos, "infos")
+
 
