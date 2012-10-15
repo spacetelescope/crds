@@ -240,11 +240,11 @@ def generate_filekinds_map():
 def main():
     global PARKEYS
     
-    log.write("Writing parkeys.dat")
+    log.info("Writing parkeys.dat")
     PARKEYS = process_reference_file_defs()
     open("parkeys.dat","w+").write(pprint.pformat(PARKEYS))
     
-    log.write("Writing filekind_ext.dat")
+    log.info("Writing filekind_ext.dat")
     map = generate_filekinds_map()
     open("filekind_ext.dat","w+").write(pprint.pformat(map))
 
