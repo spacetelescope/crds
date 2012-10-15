@@ -76,9 +76,9 @@ class CrdsLogger(object):
         """
         output = self.format(*args, **keys)
         self.eol_pending = not output.endswith("\n")
-        sys.stderr.write(output)
-        sys.stderr.flush()
-            
+        sys.stdout.write(output)
+        sys.stdout.flush()
+
     def status(self):
         return self.errors, self.warnings, self.infos
     
