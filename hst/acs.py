@@ -91,6 +91,28 @@ def fallback_header(rmap, header):
     else:
         None
 
+# =============================================================================================
+
+header_additions = [   # dictionary items (ordered)
+]
+
+def acs_biasfile_filter(kmap):
+    """APERTURE was added late as a matching parameter and so many existing references
+    have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
+    Here we change '' to N/A to make CRDS ignore it when it doesn't matter;  resulting matches
+    will be "weaker" than matches with a real APERTURE value.
+    """
+    log.write("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
+    for match, value in kmap.items():
+        if match[3] == '':
+            new = list(match)
+            new[3] = 'N/A'
+            kmap[tuple(new)] = value
+            del kmap[match]
+#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
+#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
+#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
+    return kmap, header_additions
 
 '''
   def acs_biasfile(self, thereffile, aSource):
