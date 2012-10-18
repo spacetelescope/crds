@@ -104,9 +104,7 @@ class CrdsLogger(object):
         if self.console is not None:
             self.console = self.remove_stream_handler(self.console)
 
-    def add_stream_handler(self, filelike=None, level=logging.DEBUG):
-        if filelike is None:
-            filelike = cStringIO.StringIO()
+    def add_stream_handler(self, filelike, level=logging.DEBUG):
         handler = logging.StreamHandler(filelike)
         handler.setLevel(level)
         handler.setFormatter(self.formatter)
