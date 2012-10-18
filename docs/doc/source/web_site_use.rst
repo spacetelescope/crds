@@ -245,8 +245,19 @@ files are checked with respect to the derivation context by crds.certify.
 Upload Files
 ++++++++++++
 
-The Upload Files accordion opens to support uploading submitted files to a user's
-CRDS ingest directory.   
+The first task involved with *Batch Submit References* is transferring the
+submitted files to the server.  For CRDS build-2,  there are two approaches for
+getting files on the server,  web based and shell based.   Both approaches
+involve transferring files to an ingest directory in the CRDS filestore.  Each
+CRDS user will have their own ingest directory.   Initially the only user is
+"test".   This section applies equally to all of the file submission pages that
+have an *Upload Files* accordion.   
+
+Web Approach
+!!!!!!!!!!!!
+
+On the file submission pages,  the *Upload Files* accordion opens to support
+uploading submitted files to a user's CRDS ingest directory via the browser.
 
 .. figure:: images/web_upload_files.png
    :scale: 50 %
@@ -258,7 +269,7 @@ Uploading files is accomplished by:
 
 * Add files to the upload list by clicking on the *Add Files...* button.  Alternately for modern browsers (Chrome) drag-and-drop files from your desktop to the upload accordion.
 
-* Click *Start Upload* to initiate the file transfer.
+* Click *Start Upload* to initiate the file transfer.   You should see a progress bar(s) showing the status of the upload(s).   When the upload successfully completes the buttons will change to *delete*.
 
 * Click *Delete* for any file added by mistake or for failed uploads.
 
@@ -267,9 +278,48 @@ Uploading files is accomplished by:
 * Close the accordion panel by clicking on it.
 
 **IMPORTANT**  Just adding files to the file list does not upload them.   You
-must click *Start Upload* to initiate the file transfer.
+must click *Start upload* to initiate the file transfer.   In the screenshot above,
+the file with the *delete* button next to it is already on the server in the
+ingest directory.   The files with *start* and *cancel* buttons next to them have
+only been declared as candidates for upload.   To finish uploading all 3 files,  
+check *select all* and click *Start upload*.
 
-Derive From Context
+Shell Approach
+!!!!!!!!!!!!!!
+
+In the shell approach a user must login to UNIX (in some fashion) and transfer
+files into their CRDS ingest directory manually.   The nominal approach
+for doing this is to use the cp or scp commands.   For instance,  from my home,
+having already set up ssh and scp access, I might say::
+
+  % scp /this_delivery/*.fits   thor.stsci.edu:/grp/crds/hst/ingest/test
+
+Abstractly this is::
+
+  % scp <submitted reference files...>   <host>:/grp/crds/<observatory>/ingest/<crds_username>
+
+The submitted reference files should now be in the ingest directory for *HST*
+user *test*.   Once the files are in the ingest directory,  the CRDS web server
+will behave as if they had been uploaded through web interface.  Refreshing the
+file submission web page should make manually copied files show up in the
+*Upload Files* accordion.
+
+The purpose of using cp or scp is to improve the efficiency and reliability of
+the file transfers.  Files transferred to the ingest directory via shell should
+still be removeable using the *Upload Files* delete buttons.
+
+Cleaning Up
+!!!!!!!!!!!
+
+No matter which file transfer approach you use,  transferring many large
+references to the CRDS ingest directories can take a long time.   As long as the
+files remain in the ingest directory,  it is possible to submit them more than
+once (if things go wrong) without uploading again.   Consequently,  for build-2,
+file removal from the ingest directory is left as a user directed activity.   To
+remove files from your ingest directory,  either use "rm" in the shell,  or use
+the delete buttons in *Upload Files*.
+
+Derive From Context 
 +++++++++++++++++++
 
 The specified context is used as the starting point for new automatically 
@@ -338,7 +388,7 @@ The results page lists the following items:
 
 * *Generated New Mappings* lists the new mapping files which provide the generated context for using the submitted references.
 
-* *Actions on Rmap* provides two accordions showing how the rmap controlling the submitted references was modified.   The logical differences accordion has a table of actions,  either *insert* for completely new files or *replace* for files which replaced an existing file.
+* *Actions on Rmap* provides two accordions showing how the rmap controlling the submitted references was modified.   The logical differences accordion has a table of actions,  either *insert* for completely new files or *replace* for files which replaced an existing file.   The text differences are essentially output from UNIX *diff* for the old and new rmaps.
 
 * *Certify Results* has an accordion panel for each submitted reference file which contains the results from crds.certify.   The submitted name of each file is listed first,  followed by any official name of the file assigned by CRDS.   The status of the certification can be "OK" or "Warnings".   Warnings should be reviewed by opening the accorion panel.
    
