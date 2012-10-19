@@ -4,6 +4,8 @@ from crds import log, utils, timestamp
 
 # ===========================================================================    
 
+#   This section contains matching customizations.
+
 ACS_HALF_CHIP_COLS = 2048         #used in custom bias selection algorithm
 
 SM4 = timestamp.reformat_date("2009-05-14 00:00")
@@ -24,13 +26,10 @@ def _precondition_header_biasfile(header_in):
     if (exptime < SM4):
         if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
             header["APERTURE"] = "N/A"
-    return header     # XXXXXX RETURN NOW !!!!
-    
-    # Theoretical code copying cdbsquery.py just introduces mismatches...
     try:
         numcols = float(header["NUMCOLS"])
     except ValueError:
-        log.verbose("acs_biasfile_selection: bad NUMCOLS.")
+        log.info("acs_biasfile_selection: bad NUMCOLS.")
         sys.exc_clear()
     else:
         # if pre-SM4 and NUMCOLS > HALF_CHIP
@@ -56,7 +55,8 @@ def _precondition_header_biasfile(header_in):
         else:
             header["NUMROWS"] = utils.condition_value(str(numrows)) 
 
-    return header
+    return header     # XXXXXX RETURN NOW !!!!
+
 
 def precondition_header(rmap, header):
     header = dict(header)
@@ -67,6 +67,7 @@ def precondition_header(rmap, header):
     
 # ===========================================================================    
 
+#   This section contains matching customizations.
 
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
@@ -100,6 +101,8 @@ def fallback_header(rmap, header):
 
 # =============================================================================================
 
+# This section contains rmap generation code.
+
 header_additions = [   # dictionary items (ordered)
 ]
 
@@ -107,139 +110,124 @@ def acs_biasfile_filter(kmap):
     """APERTURE was added late as a matching parameter and so many existing references
     have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
     Here we change '' to N/A to make CRDS ignore it when it doesn't matter;  resulting matches
-    will be "weaker" than matches with a real APERTURE value.
+    will be "weaker" than matches with a real APERTURE value.   We also change APERTURE to
+    N/A for any useafter date which precedes SM4 (possibly they define APERTURE).
     """
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
-    for match, value in kmap.items():
-        if match[3] == '':
-            new = list(match)
-            new[3] = 'N/A'
-            kmap[tuple(new)] = value
+    for match, fmaps in kmap.items():
+        if match[3] != 'N/A':
+            remap_values = []
+            for fmap in fmaps:
+                if fmap.date < SM4:
+                    log.info("Remapping APERTURE to N/A", repr(fmap))
+                    remap_values.append(fmap)
+                    fmaps.remove(fmap)
+            if remap_values:
+                kmap[na_key(match)] = remap_values
+            if not fmaps:
+                del kmap[match]
+        if match in kmap and match[3] == '':  # still there,  still bad
+            new = na_key(match)
             del kmap[match]
+            kmap[new] = fmaps
+    return kmap, header_additions
+
+def na_key(match):
+    """Replace APERTURE with N/A"""
+    new = list(match)
+    new[3] = "N/A"
+    return tuple(new)
+
 #     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
 #       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
 #               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
     return kmap, header_additions
 
+
+# =============================================================================================
+#
+# This section contains relevant code from cdbsquery.py and explanation,  such as it is.
+# cdbsquery.py was/is part of CDBS.  This module is about capturing those quirks in different
+# ways for CRDS.
+#
 '''
-  def acs_biasfile(self, thereffile, aSource):
-    # the query templates
-    # (no need to define these outside, like those for the generic case, since
-    #  this routine is only called once per dataset)
-    query_template_a = (
-       "SELECT max(acs_file_1.file_name) "+
-       "FROM acs_file acs_file_1, acs_row acs_row_1 "+
-       "WHERE acs_file_1.useafter_date = "+
-           "(SELECT max(acs_file_2.useafter_date) "+
-           "FROM acs_file acs_file_2, acs_row acs_row_2 "+
-               "WHERE acs_file_2.reference_file_type = 'BIA' "+
-               "and acs_file_2.useafter_date <= 'EXPOSURE_START' "+
-               "and acs_file_2.reject_flag = 'N' "+
-               "and acs_file_2.opus_flag = 'Y' "+
-               "and acs_file_2.archive_date is not null "+
-               "and acs_file_2.opus_load_date is not null "+
-               "and acs_file_2.file_name =acs_row_2.file_name "+
-               "and acs_file_2.expansion_number = acs_row_2.expansion_number ")
-    #
-    query_template_b = (
-           ") and acs_file_1.reference_file_type = 'BIA' "+
-       "and acs_file_1.reject_flag = 'N' "+
-       "and acs_file_1.opus_flag = 'Y' "+
-       "and acs_file_1.archive_date is not null "+
-       "and acs_file_1.opus_load_date is not null "+
-       "and acs_file_1.file_name =acs_row_1.file_name "+
-       "and acs_file_1.expansion_number = acs_row_1.expansion_number ")
+This is special case code which CDBS implements in cdbsquery.py 
+(see crds/hst/cdbs/cdbs_bestrefs/cdbsquery.py or get the latest from Mike Swam / OPUS)
 
-    querytxt = query_template_a
+Fundamentally, cdbsquery searches the reference file database
+(reffile_ops...) which enumerates how specific dataset header
+configurations map onto reference files.  Each row of reffile_ops maps
+one instrument configuration and date onto the reference file which
+handles it.  Some files are used in many rows.  Each column of a row
+specifies the value of a particular parameter.
 
-    # fill the exposure start time, after converting keyword value
-    # to datetime format from source format
-    #
-    exposure_start, beyond_SM4 = self.find_exposure_start(aSource)
-    querytxt = string.replace(querytxt,"EXPOSURE_START", exposure_start)                         
-    # adjust naxis2 for WFC full-array images
-    try:
-      obs_naxis2 = aSource._keywords['NUMROWS'][0]
-      if (aSource._keywords['DETECTOR'][0] == "WFC" and
-          aSource._keywords['XCORNER'][0] == 0 and
-          aSource._keywords['YCORNER'][0] == 0) :
-        #
-        # image is half of the specific size (2 chips)
-        obs_naxis2 = obs_naxis2 / 2
-    except KeyError:
-      # missing key parameters
-      opusutil.PrintMsg("E","Key parameters missing for acs_biasfile")
-      raise ZeroRowsFound, "missing one of NUMROWS, DETECTOR, XCORNER, YCORNER"
+reffile_ops matching parameters, and other things,  are specified in the CDBS file
+reference_file_defs.xml.   Parameters listed here are important in some way for
+matching.
 
-    # add the file selection fields (row_2)
-    querytxt = querytxt + self.acs_bias_file_selection("2", thereffile, aSource,
-                                                       beyond_SM4)
+Ideally,  CDBS and CRDS implement something like:   
 
-    # add second template
-    querytxt = querytxt + query_template_b
-    
-    # add the file selection fields again (row_1)
-    querytxt = querytxt + self.acs_bias_file_selection("1", thereffile, aSource,
-                                                       beyond_SM4)
-    
-    # replace the place-holders in the query with the real selection values
-    query1 = string.replace(querytxt,"OBS_NAXIS1", 
-                                       str(aSource._keywords['NUMCOLS'][0]))
-    query1 = string.replace(query1,"OBS_NAXIS2", str(obs_naxis2))
-    query1 = string.replace(query1,"OBS_LTV1",
-                                       str(aSource._keywords['LTV1'][0]))
-    query1 = string.replace(query1,"OBS_LTV2",
-                                       str(aSource._keywords['LTV2'][0]))
+   match(dataset parameters, reference parameters) --> reference.
 
-    # replace any None values with null
-    query1 = string.replace(query1, "None", "null")                         
+Here dataset and reference correspond to the tuples of relevant header values
+or database values.  1:1,  match them up,  shebang.
 
-    # get results in a list of lists
-    result = [[]]
-    self.zombie_select(query1, result)
-    if len(result) == 0 or result[0][0] == None:
-      #
-      # no matching CDBS record found for inital search, try full-frame search
-      opusutil.PrintMsg("D","No matching BIAS file found for "+
-                            "naxis1="+str(aSource._keywords['NUMCOLS'][0])+
-                            " naxis2="+str(obs_naxis2)+
-                            " ltv1="+str(aSource._keywords['LTV1'][0])+
-                            " ltv2="+str(aSource._keywords['LTV2'][0]))
-      opusutil.PrintMsg("D","Trying full-frame default search")
-      #
-      # replace the place-holders with full-frame selection values
-      if aSource._keywords['DETECTOR'][0] == "WFC":
-        obs_naxis1 = "4144"
-        obs_naxis2 = "2068"
-        obs_ltv1 = "24.0"
-        obs_ltv2 = "0.0"
-      else:
-        obs_naxis1 = "1062"
-        obs_naxis2 = "1044"
-        obs_ltv1 = "19.0"
-        if (aSource._keywords['CCDAMP'][0] == "C" or
-            aSource._keywords['CCDAMP'][0] == "D"):
-          obs_ltv2 = "0.0"
-        else: # assuming HRC with CCDAMP = A or B
-          obs_ltv2 = "20.0"
-      query2 = string.replace(querytxt,"OBS_NAXIS1", obs_naxis1)
-      query2 = string.replace(query2,"OBS_NAXIS2", obs_naxis2)
-      query2 = string.replace(query2,"OBS_LTV1", obs_ltv1)
-      query2 = string.replace(query2,"OBS_LTV2", obs_ltv2)
-      #
-      # get results in a list of lists
-      result = [[]]
-      self.zombie_select(query2, result)
-      if len(result) == 0 or result[0][0] == None:
-        #
-        # no matching CDBS record found
-        opusutil.PrintMsg("E","No full-frame default BIAS found either.")
-        raise ZeroRowsFound, query2
-    #
-    # return the first filename found
-    return result[0][0]
-    
-    
+CDBS does the matching as a single SQL query against refile_ops...  cdbsquery
+builds the SQL which constrains each parameter to the configuration of one dataset.
+
+CRDS encodes the matching parameters of reference_file_ops in a
+more compact way,  the rmaps.   The rmaps are interpreted by CRDS code
+in selectors.py rather than by a SQL engine.
+
+In practice,  CDBS special case code like that below does this:   
+
+   match(f(dataset parameters), reference parameters) -->  reference or g(dataset)
+
+There are a few kinds of hacks:
+
+1. The special case code excludes some dataset parameters from
+matching in the reference database.  There might be no column for that
+parameter but it is needed later.
+
+2. The special case code fudges some of the dataset parameters,
+replacing dataset[X] with f(dataset),  where the fudged value of one 
+matching parameter may depend on the value of many other parameters.
+
+3. Sometimes fallback code,  g(dataset),  is used as a secondary solution
+when the primary solution fails to obtain a match.
+
+In CDBS:
+
+"dataset" can come from the dadsops database (there are many servers and variants).
+
+"dataset" can come from a FITS header.
+
+At match time,  "reference" comes from the reffile_ops database.   Matching is
+done by doing a gigantic anded SQL query which equates reffile_ops columns with 
+specific dataset values,  doing a gigantic anded SQL query,  and also choosing 
+the maximum applicable USEAFTER.  In cdbsquery,  the query is built one 
+parameter at a time.   Some parameters are omitted from the query.
+
+At new reference submission time, "reference" comes from the ref file
+header and is exploded in to refile_ops database rows.
+
+In CRDS:
+
+"dataset" comes from the same places, either a database or dataset file header.
+  
+At rmap generation time,  "reference" comes from the reffile_ops database and
+is encoded into rmaps.
+
+At new file submission time, "reference" comes from the reference file
+headers and must be appropriately matched against rmaps to see where
+to insert or replace files.   This is batch reference submission / refactoring.
+
+At match time, essentially "reference" comes from the rmaps and
+matching is done by recursively executing CRDS selector.py Selector code
+on nested selectors.
+
+# ================================================================================
+
   def acs_bias_file_selection(self, querynum, thereffile, aSource, beyond_SM4):
     querytxt = ""
     #
@@ -257,6 +245,10 @@ def acs_biasfile_filter(kmap):
       # skip these (not used in selection, only for special tests)
       if (k._field == 'XCORNER' or k._field == 'YCORNER' or
           k._field == 'CCDCHIP'):
+          continue
+      #
+      # skip APERTURE prior to SM4, otherwise use it (PR 72156)
+      if (k._field == 'APERTURE' and not beyond_SM4):
           continue
       #
       # special cases
@@ -306,5 +298,4 @@ def acs_biasfile_filter(kmap):
                  str(aSource._keywords[k._field][0]) + " ")
     #
     return querytxt
-
 '''
