@@ -424,6 +424,22 @@ class Mapping(object):
                 parkeys = parkeys.union(set(key))
         return sorted(parkeys)
 
+    def minimize_header(self, header):
+        """Return only those items of `header` which are required to determine
+        bestrefs.   Missing keys are set to 'UNDEFINED'.
+        """
+        if isinstance(self, PipelineContext):
+            instrument = self.get_instrument(header)
+            mapping = self.get_imap(instrument)
+            keys = mapping.get_required_parkeys() + [self.instrument_key]
+        else:
+            keys = self.get_required_parkeys()
+        minimized = {}
+        for key in keys:
+            minimized[key] = header.get(
+                key.lower(),header.get(key.upper(), "UNDEFINED"))
+        return minimized
+
     def validate_mapping(self,  trap_exceptions=False):
         """Recursively validate this mapping,  performing the checks
         required by crds.certify.
@@ -557,22 +573,6 @@ class PipelineContext(Mapping):
         header = data_file.get_conditioned_header(
             dataset, original_name=original_name)
         return self.minimize_header(header)
-
-    def minimize_header(self, header):
-        """Return only those items of `header` which are required to determine
-        bestrefs.
-        """
-        if isinstance(self, PipelineContext):
-            instrument = self.get_instrument(header)
-            mapping = self.get_imap(instrument)
-        else:
-            mapping = self
-        minimized = {}
-        for key in mapping.get_required_parkeys() + [self.instrument_key]:
-            minimized[key] = header.get(key.lower(),
-                                        header.get(key.upper(),
-                                                   "UNDEFINED"))
-        return minimized
 
     def get_instrument(self, header):
         try:
@@ -792,6 +792,7 @@ class ReferenceMapping(Mapping):
             log.verbose("First selection failed: " + str(exc), verbosity=60)
             header = self._fallback_header(self, header_in)
             if header:
+                header = self.minimize_header(header)
                 log.verbose("Fallback lookup on", repr(header), verbosity=60)
                 header = self.map_irrelevant_parkeys_to_na(header)
                 return self.selector.choose(header)
