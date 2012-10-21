@@ -24,8 +24,9 @@ def _precondition_header_biasfile(header_in):
     header = dict(header_in)
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
-        if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-            header["APERTURE"] = "N/A"
+        #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
+        log.verbose("Mapping pre-SM4 APERTURE to N/A")
+        header["APERTURE"] = "N/A"
     try:
         numcols = float(header["NUMCOLS"])
     except ValueError:
@@ -114,22 +115,29 @@ def acs_biasfile_filter(kmap):
     N/A for any useafter date which precedes SM4 (possibly they define APERTURE).
     """
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
+    start_files = total_files(kmap)
     for match, fmaps in kmap.items():
-        if match[3] != 'N/A':
-            remap_values = []
-            for fmap in fmaps:
-                if fmap.date < SM4:
-                    log.info("Remapping APERTURE to N/A", repr(fmap))
-                    remap_values.append(fmap)
-                    fmaps.remove(fmap)
-            if remap_values:
-                kmap[na_key(match)] = remap_values
-            if not fmaps:
-                del kmap[match]
-        if match in kmap and match[3] == '':  # still there,  still bad
-            new = na_key(match)
+        if match[3] == '':
+            kmap[na_key(match)] = fmaps
             del kmap[match]
-            kmap[new] = fmaps
+            continue
+        remap_fmaps = []
+        for fmap in fmaps[:]:
+            if fmap.date < SM4:
+                log.info("Remapping <SM4 APERTURE to N/A", repr(fmap))
+                remap_fmaps.append(fmap)
+                fmaps.remove(fmap)
+        if remap_fmaps:
+            if na_key(match) not in kmap:
+                kmap[na_key(match)] = []
+            kmap[na_key(match)].extend(remap_fmaps)
+            log.info("Moving", match, "to", na_key(match), "for files", total_files({None:remap_fmaps}))
+            log.info("Remainder", match, "=", total_files({None:kmap[match]}))
+        if not fmaps and (na_key(match) != match):
+            del kmap[match]
+    dropped_files = start_files - total_files(kmap)
+    if dropped_files:  # bummer,  bug in my code...
+        log.error("Dropped files:", sorted(dropped_files))
     return kmap, header_additions
 
 def na_key(match):
@@ -137,6 +145,13 @@ def na_key(match):
     new = list(match)
     new[3] = "N/A"
     return tuple(new)
+
+def total_files(kmap):
+    total = set()
+    for match, fmaps in kmap.items():
+        total = total.union(set([fmap.file for fmap in fmaps]))
+    return total
+        
 
 #     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
 #       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
