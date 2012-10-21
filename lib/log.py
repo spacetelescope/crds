@@ -87,11 +87,13 @@ class CrdsLogger(object):
         
     def set_verbose(self, level=True):
         assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
+        old_verbose = self.verbose_level
         if level == True:
             level = DEFAULT_VERBOSITY_LEVEL
         elif level == False:
             level = 0
         self.verbose_level = level
+        return old_verbose
         
     def get_verbose(self):
         return self.verbose_level
