@@ -14,11 +14,10 @@
 # -------
 # 11/05/02 xxxxx MSwam    first version
 # 10/23/03 49468 MSwam    activate COS,WFC3 in CDBS
+# 10/22/12  Todd Miller   hacked into CRDS
 #
 #========================================================================
 import string
-import opusutil
-import instReferenceFileDefs
 import re
 
 # exceptions
@@ -76,8 +75,7 @@ History:
    elif (string.lower(dataset[0]) == 'l'):
       return("COS")
    else:
-      opusutil.PrintMsg("E",
-                        "ERROR: unable to determine instrument for "+dataset)
+      log.error("unable to determine instrument for "+dataset)
       raise UnknownInstrument
 
 def add_IRAF_prefix(instrument_name):
@@ -124,8 +122,7 @@ History:
     elif (instrument_name == "SYNPHOT"):
       iraf_prefix = "ttab$"
     else:
-      opusutil.PrintMsg("E","Unknown IRAF prefix for instrument "+
-                        instrument_name)
+      log.error("Unknown IRAF prefix for instrument " + instrument_name)
       raise UnknownIRAFPrefix
     #
     return iraf_prefix
@@ -173,8 +170,7 @@ History:
     elif (instrument_name == "WFC3"):
       return "w3r"
     else:
-      opusutil.PrintMsg("W","Unknown ref_data prefix for instrument "+
-                        instrument_name)
+      log.warning("Unknown ref_data prefix for instrument " + instrument_name)
       raise UnknownRefDataPrefix
 
 def supported_by_CDBS(instrument_name):
@@ -244,8 +240,7 @@ History:
     elif (instrument_name == "SYNPHOT" or instrument_name == "MULTI"):
       return "synphot"
     else:
-      opusutil.PrintMsg("E","Unknown cdbs prefix for instrument "+ 
-                        instrument_name)
+      log.error("Unknown cdbs prefix for instrument " +  instrument_name)
       raise UnknownCDBSPrefix
 
 def WhichCDBSInstrument(reffilename):
@@ -305,19 +300,6 @@ History:
    elif (string.lower(parts[0][-1:]) == 'm'):
       return("MULTI")
    else:
-      opusutil.PrintMsg("E","Unable to determine instrument for "+
-                         str(parts))
+      log.error("Unable to determine instrument for " + str(parts))
       raise UnknownInstrument
 
-#========================================================================
-# TEST 
-# % python siname.py
-#========================================================================
-if __name__ == "__main__":
-  print WhichInstrument("j8c103010")
-  the_master = instReferenceFileDefs.InstReferenceFileDefs()
-  instrument = instReferenceFileDefs.InstReferenceFiles("ACS")
-  reffile = instReferenceFileDefs.Reffile("FLS","FLSHFILE","IMAGE")
-  print add_IRAF_prefix("ACS")
-  print get_ref_data_prefix("ACS")
-  print get_cdbs_prefix("ACS")

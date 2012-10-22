@@ -17,7 +17,7 @@ import re
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config)
-from crds.hst import (tpn)
+from crds.hst import (tpn, siname)
 
 HERE = os.path.dirname(__file__) or "./"
 
@@ -248,12 +248,7 @@ def ref_properties_from_cdbs_path(filename):
     # For legacy files,  just use the root filename as the unique id
     serial = os.path.basename(os.path.splitext(filename)[0])
     # First try to figure everything out by decoding filename. fast
-    for idir in CDBS_DIRS_TO_INSTR:
-        if idir in filename:
-            instrument = CDBS_DIRS_TO_INSTR[idir]
-            break
-    else:
-        assert False, "CDBS instrument directory not found in filepath"
+    instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
     ext = fields[-1]
     try:
         filekind = tpn.extension_to_filekind(instrument, ext)
