@@ -75,7 +75,6 @@ History:
    elif (string.lower(dataset[0]) == 'l'):
       return("COS")
    else:
-      log.error("unable to determine instrument for "+dataset)
       raise UnknownInstrument
 
 def add_IRAF_prefix(instrument_name):
@@ -122,7 +121,6 @@ History:
     elif (instrument_name == "SYNPHOT"):
       iraf_prefix = "ttab$"
     else:
-      log.error("Unknown IRAF prefix for instrument " + instrument_name)
       raise UnknownIRAFPrefix
     #
     return iraf_prefix
@@ -170,7 +168,6 @@ History:
     elif (instrument_name == "WFC3"):
       return "w3r"
     else:
-      log.warning("Unknown ref_data prefix for instrument " + instrument_name)
       raise UnknownRefDataPrefix
 
 def supported_by_CDBS(instrument_name):
@@ -240,7 +237,6 @@ History:
     elif (instrument_name == "SYNPHOT" or instrument_name == "MULTI"):
       return "synphot"
     else:
-      log.error("Unknown cdbs prefix for instrument " +  instrument_name)
       raise UnknownCDBSPrefix
 
 def WhichCDBSInstrument(reffilename):
@@ -300,6 +296,5 @@ History:
    elif (string.lower(parts[0][-1:]) == 'm'):
       return("MULTI")
    else:
-      log.error("Unable to determine instrument for " + str(parts))
       raise UnknownInstrument
 

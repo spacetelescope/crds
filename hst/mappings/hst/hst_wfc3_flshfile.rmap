@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-12 11:54:23.633268',
+    'derived_from' : 'generated from CDBS database 2012-10-22 08:41:49.082497',
     'filekind' : 'FLSHFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,17 +7,62 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "UVIS" and FLASHCUR != "OFF")',
-    'sha1sum' : '15be2624c3c5c841ea476fc89d98ff5358ea1ee1',
+    'sha1sum' : 'e170f132787621ccf74f2fab5f2c01a09ac2341f',
 }
 
 selector = Match({
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, None, None) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'HIGH', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1705bi_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'HIGH', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17058i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'LOW', 'A') : UseAfter({
         '1990-01-01 00:00:00' : 'w7j1705di_fls.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, None, None) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'LOW', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1705ai_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'MED', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1705ci_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'MED', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17059i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'HIGH', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1704ti_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'HIGH', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1704qi_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'LOW', 'A') : UseAfter({
         '1990-01-01 00:00:00' : 'w7j17051i_fls.fits',
     }),
-    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, None, None) : UseAfter({
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'LOW', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1704si_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'MED', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17050i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'MED', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1704ri_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'HIGH', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17055i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'HIGH', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17052i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'LOW', 'A') : UseAfter({
         '1990-01-01 00:00:00' : 'w7j17057i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'LOW', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17054i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'MED', 'A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17056i_fls.fits',
+    }),
+    ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 3, 3, 'MED', 'B') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j17053i_fls.fits',
     }),
 })

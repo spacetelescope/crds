@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-12 11:53:35.531091',
+    'derived_from' : 'generated from CDBS database 2012-10-22 08:40:40.714612',
     'filekind' : 'PCTETAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : '2367f50ef2e8fb57a2fa6394a2941b3e1aa81ba1',
+    'sha1sum' : '69519df0dcfe130bc22c0e4b0d774d4d9fe204f2',
 }
 
 selector = Match({
