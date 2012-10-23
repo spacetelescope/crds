@@ -612,7 +612,7 @@ def certify_files(files, context=None, dump_provenance=False,
     for filename in files:
         n += 1
         bname = os.path.basename(filename)
-        print ('#'*40)+'\n#' # Serves as demarkation for each file's report
+        log.info('#'*40)  # Serves as demarkation for each file's report
         log.info("Certifying", repr(bname)+ ' ('+str(n)+'/'+str(len(files))+')')
         try:
             if is_mapping or rmap.is_mapping(filename):
