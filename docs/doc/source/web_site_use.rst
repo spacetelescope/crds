@@ -494,8 +494,7 @@ and certified.
 Certify File
 ............
 
-*Certify File* runs crds.certify on a file currently in CRDS (known) or on a file
-uploaded to the server.
+*Certify File* runs crds.certify on the files in the ingest directory.
 
 .. figure:: images/web_certify_file.png
    :scale: 50 %
