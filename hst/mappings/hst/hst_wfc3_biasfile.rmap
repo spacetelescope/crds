@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-12 11:54:19.239318',
+    'derived_from' : 'generated from CDBS database 2012-10-22 08:41:41.658496',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : 'f9ea8a7066983275f0ad2d121a36aeb2b3dcfbd8',
+    'sha1sum' : 'c023d1e4edece5bc34bf91203c8858911402f8eb',
     'substitutions' : {
         'APERTURE' : {
             '*' : ('UVIS', 'UVIS-FIX', 'UVIS1', 'UVIS1-FIX', 'UVIS2', 'UVIS2-FIX', 'UVIS-CENTER', 'UVIS-QUAD', 'UVIS-QUAD-FIX', 'G280-REF'),

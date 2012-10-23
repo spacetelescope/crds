@@ -235,7 +235,7 @@ def get_reference_properties(filename):
         pass
     try:   # or maybe a recognizable HST legacy path/filename, fast
         return ref_properties_from_cdbs_path(filename)
-    except AssertionError:
+    except Exception:
         pass
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
