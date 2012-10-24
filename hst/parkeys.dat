@@ -710,7 +710,7 @@
                                    'flashcur',
                                    'shutrpos'),
                        'reftype': 'fls',
-                       'rmap_relevance': '(DETECTOR == "UVIS" and FLASHCUR != "OFF")'},
+                       'rmap_relevance': '(DETECTOR == "UVIS" and FLASHCUR != "OFF" and FLASHCUR != "ZERO" and FLASHCUR != "ZEROCUR")'},
           'graphtab': {'db_translations': {},
                        'not_in_db': (),
                        'parkey_relevance': {},

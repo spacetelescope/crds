@@ -104,7 +104,12 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
                  if selectors.match_equivalent(action.rmap_match_tuple, expected):
                      break
              else:
-                 log.info("Missing expected match at", expected)
+                 try:
+                     instrument, filekind = utils.get_file_properties("hst", new_refpath)
+                 except Exception:
+                     instrument, filekind = "UNKNOWN", "UNKNOWN"
+                 log.error("Missing expected match for", repr((instrument, filekind)), 
+                           "at", expected)
                  as_expected = False    
     else:
         for action in actions:

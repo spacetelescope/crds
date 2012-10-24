@@ -225,6 +225,20 @@ def get_filekinds(instrument):
 def get_extra_keys(instrument, filekind):
     return PARKEYS[instrument][filekind]["not_in_db"]
 
+def evaluate_parkey_relevance(instrument, filekind, rowdict):
+    header = dict(rowdict)
+    header2 = {key.upper():val for (key,val) in header.items()}
+    relevance = get_parkey_relevance(instrument, filekind)
+    for parkey, expr in relevance.items():
+        try:
+            if not eval(expr, header2, {}):
+                log.verbose("parkey relevance", repr(expr), "mapping", 
+                         parkey, "to N/A")
+                header[parkey] = "N/A"
+        except Exception, exc:
+            log.verbose("ERROR parkey relevance", str(exc))
+    return header
+
 # =======================================================================
 
 def generate_filekinds_map():
