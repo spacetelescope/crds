@@ -110,15 +110,10 @@ def required_keys(expr):
     
 EXPANDERS = {}
 def load_all():
-    for file in glob.glob(HERE + "/" + "*_expansions.dat"):
-        instrument = os.path.basename(file.replace("_expansions.dat",""))
-        try:
-            log.verbose("Loading header expansions from", repr(file))
-            expansions = utils.evalfile(file)
-        except Exception, exc:
-            log.error("Error loading",repr(file),":",str(exc))
-        else:
-            EXPANDERS[instrument] = HeaderExpander(expansions, file)
+    global EXPANDERS
+    rules = utils.evalfile(HERE + "/substitutions.dat")
+    for instrument in rules:
+        EXPANDERS[instrument] = HeaderExpander(rules[instrument])
 
 def expand_wildcards(instrument, header):
     if not EXPANDERS:
@@ -142,12 +137,12 @@ def compile_all(path):
 def compile_files(files):
     """Generate variable expansion files for each of the CDBS .rule `files`.
     """
+    expansions = {}
     for f in files:
-        new_name = os.path.basename(f).replace(".rule","") + "_expansions.dat"
-        log.info("Compiling expansion rules", repr(f), "to", repr(new_name))
-        expansions = compile_rules(f)
-        with open(new_name,"w+") as new_file:
-            new_file.write(pprint.pformat(expansions))
+        instrument = os.path.basename(f).replace(".rule","")
+        log.info("Compiling expansion rules for", instrument)
+        expansions[instrument] = compile_rules(f)
+    open(HERE + "/substitutions.dat", "w+").write(pprint.pformat(expansions))
 
 def compile_rules(rules_file):
     """Compile a single `rules_file` into a variable expansion mapping."""
@@ -228,15 +223,13 @@ def test():
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("usage: ", sys.argv[0], "compile <rules_files...> | compileall | test")
+        print("usage: ", sys.argv[0], "compileall | test")
         sys.exit(0)
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
         log.set_verbose(True)
     if sys.argv[1] == "test":
-        test()
-    elif sys.argv[1] == "compile":
-        compile_files(sys.argv[2:])
+        print(test())
     elif sys.argv[1] == "compileall":
         compile_all(HERE + "/cdbs/cdbs_tpns")
     else:

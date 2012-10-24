@@ -1,4 +1,0 @@
-{"DETECTOR=='FUV' and OPT_ELEM=='ANY'": ('OPT_ELEM', 'G130M|G140L|G160M'),
- "DETECTOR=='NUV' and OPT_ELEM=='ANY'": ('OPT_ELEM',
-                                         'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'),
- "LIFE_ADJ=='-11'": ('LIFE_ADJ', '-1.0|1.0')}
