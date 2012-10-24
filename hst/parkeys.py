@@ -227,7 +227,7 @@ def get_extra_keys(instrument, filekind):
 
 def evaluate_parkey_relevance(instrument, filekind, rowdict):
     header = dict(rowdict)
-    header2 = {key.upper():val for (key,val) in header.items()}
+    header2 = {key.upper(): utils.condition_value(val) for (key,val) in header.items()}
     relevance = get_parkey_relevance(instrument, filekind)
     for parkey, expr in relevance.items():
         try:
