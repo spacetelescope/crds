@@ -1,16 +1,19 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-22 08:41:49.082497',
+    'derived_from' : 'generated from CDBS database 2012-10-24 17:13:23.092329',
     'filekind' : 'FLSHFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_flshfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR == "UVIS" and FLASHCUR != "OFF")',
-    'sha1sum' : 'e170f132787621ccf74f2fab5f2c01a09ac2341f',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'ae1796d3ca0f3e233d761b42e641f2c038454ead',
 }
 
 selector = Match({
+    ('N/A', 'N/A', 'N/A', 'N/A', 'ZERO|ZEROCUR|OFF', 'N/A') : UseAfter({
+        '1990-01-01 00:00:00' : 'w7j1705di_fls.fits',
+    }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 1, 1, 'HIGH', 'A') : UseAfter({
         '1990-01-01 00:00:00' : 'w7j1705bi_fls.fits',
     }),
