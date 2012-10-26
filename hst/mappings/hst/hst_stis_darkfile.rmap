@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-22 08:41:35.187486',
+    'derived_from' : 'generated from CDBS database 2012-10-24 17:13:14.151232',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR == "CCD")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '2b53fda9ed80b256d9b16a34040fbfa0f449c6d9',
+    'sha1sum' : 'a6a722ed6d62124bb5bafb7a26758ca4e4c834ae',
 }
 
 selector = Match({
@@ -528,7 +528,7 @@ selector = Match({
         '1997-04-25 00:00:00' : 'hcc1558ro_drk.fits',
         '1997-07-31 00:00:00' : 'hcc1558mo_drk.fits',
     }),
-    ('FUV-MAMA', 'N/A', -999) : UseAfter({
+    ('FUV-MAMA', 'N/A', 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'j1p13242o_drk.fits',
         '1998-02-01 00:00:00' : 'ma71317qo_drk.fits',
         '2000-01-01 00:00:00' : 'ma71317ro_drk.fits',
@@ -536,7 +536,7 @@ selector = Match({
         '2002-09-08 00:00:00' : 'q591955qo_drk.fits',
         '2003-06-14 00:00:00' : 'q591955ro_drk.fits',
     }),
-    ('NUV-MAMA', 'N/A', -999) : UseAfter({
+    ('NUV-MAMA', 'N/A', 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'i9u1759io_drk.fits',
         '1998-03-31 00:00:00' : 'lcl11072o_drk.fits',
         '1998-12-24 00:00:00' : 'lcl11073o_drk.fits',

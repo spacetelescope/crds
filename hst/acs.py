@@ -25,7 +25,7 @@ def _precondition_header_biasfile(header_in):
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-        log.verbose("Mapping pre-SM4 APERTURE to N/A")
+        log.verbose("Mapping pre-SM4 APERTURE to *")
         header["APERTURE"] = "N/A"
     try:
         numcols = float(header["NUMCOLS"])
@@ -120,6 +120,8 @@ def acs_biasfile_filter(kmap):
         if match[3] == '':
             kmap[na_key(match)] = fmaps
             del kmap[match]
+            for fmap in fmaps:
+                log.info("Unconditionally mapping APERTURE '' to * for", fmap)
             continue
         remap_fmaps = []
         for fmap in fmaps[:]:
@@ -140,10 +142,10 @@ def acs_biasfile_filter(kmap):
         log.error("Dropped files:", sorted(dropped_files))
     return kmap, header_additions
 
-def na_key(match):
+def na_key(match, replacement='*'):
     """Replace APERTURE with N/A"""
     new = list(match)
-    new[3] = "N/A"
+    new[3] = replacement
     return tuple(new)
 
 def total_files(kmap):

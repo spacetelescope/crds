@@ -1,11 +1,11 @@
 header = {
-    'derived_from' : 'generated 2012-10-22 08:41:55.862842',
+    'derived_from' : 'generated 2012-10-24 17:13:28.963074',
     'instrument' : 'ACS',
     'mapping' : 'INSTRUMENT',
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'd49e0229a76f228364b8c3482f55e7b52b25a85d',
+    'sha1sum' : 'b8eed2375ef939e87f2e89442d2d0012096a7edd',
 }
 
 selector = {
