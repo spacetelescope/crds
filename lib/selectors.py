@@ -454,7 +454,7 @@ def match_superset(reference_tuple, rmap_tuple, match_na=False):
     >>> match_superset(('1','2'),  ('1','3'))
     False
     >>> match_superset(('1','N/A'), ('1','3'))
-    True
+    False
     >>> match_superset(('1','3'), ('1','N/A'))  # controversial
     True
     >>> match_superset(('1','*'), ('1','N/A'))
@@ -474,6 +474,8 @@ def match_superset(reference_tuple, rmap_tuple, match_na=False):
         if v1 == "*":
             continue
         if v2 == "N/A":
+            continue
+        if v1=="N/A" and v2=="*":
             continue
         if match_na and v1 == "N/A":
             continue
