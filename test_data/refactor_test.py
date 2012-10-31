@@ -88,29 +88,15 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
          expected_matches = matches.find_match_tuples(context, os.path.basename(old_refpath))    
          log.info("Expected matches:", expected_matches)
          for action in actions:
-             log.info(action)
-             if action.action != "replace":
-                 log.warning("Unexpected action:", action.action.upper())
+             if action.rmap_match_tuple not in expected_matches or action.action != "replace":
+                 log.warning("Unexpected action:", action)
                  as_expected = False
-             for expected in expected_matches:
-                 if selectors.match_equivalent(action.rmap_match_tuple, expected):
-                     break
              else:
-                 if action.action != "replace":
-                     log.info("New match at", action.rmap_match_tuple)
-                     as_expected = False
+                 log.info(action)
          for expected in expected_matches:
-             for action in actions:
-                 if selectors.match_equivalent(action.rmap_match_tuple, expected):
-                     break
-             else:
-                 try:
-                     instrument, filekind = utils.get_file_properties("hst", new_refpath)
-                 except Exception:
-                     instrument, filekind = "UNKNOWN", "UNKNOWN"
-                 log.error("Missing expected match for", repr((instrument, filekind)), 
-                           "at", expected)
-                 as_expected = False    
+            if expected not in [ action.rmap_match_tuple for action in actions ]:
+                log.error("Missing expected match", expected)
+                as_expected = False
     else:
         for action in actions:
             if action.action != "insert":
@@ -120,7 +106,7 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
                 log.info(action)
         if not actions:
             expected_matches = matches.find_match_tuples(context, os.path.basename(new_refpath))    
-            log.warning("No actions for", new_refpath, "matches", expected_matches)
+            log.error("No actions for", new_refpath, "matches", expected_matches)
             as_expected = False
 
     if not as_expected or verbosity:
@@ -154,7 +140,7 @@ if __name__ == "__main__":
        
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")
-        log.set_verbose()
+        log.set_verbose(55)
 
     if len(sys.argv) < 3:
         log.write("usage: %s  [--verbose] [--replace] <context>  @file_list | <reference_file>..." % sys.argv[0])
