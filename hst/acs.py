@@ -114,28 +114,30 @@ def acs_biasfile_filter(kmap):
     will be "weaker" than matches with a real APERTURE value.   We also change APERTURE to
     N/A for any useafter date which precedes SM4 (possibly they define APERTURE).
     """
-    log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='N/A'")
+    replacement = "*"
+    log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)
     start_files = total_files(kmap)
     for match, fmaps in kmap.items():
+        new_key = na_key(match, replacement)
         if match[3] == '':
-            kmap[na_key(match)] = fmaps
+            kmap[new_key] = fmaps
             del kmap[match]
             for fmap in fmaps:
-                log.info("Unconditionally mapping APERTURE '' to * for", fmap)
+                log.info("Unconditionally mapping APERTURE '' to '%s' for" % replacement, fmap)
             continue
         remap_fmaps = []
         for fmap in fmaps[:]:
             if fmap.date < SM4:
-                log.info("Remapping <SM4 APERTURE to N/A", repr(fmap))
+                log.info("Remapping <SM4 APERTURE to '%s'" % replacement, repr(fmap))
                 remap_fmaps.append(fmap)
                 fmaps.remove(fmap)
         if remap_fmaps:
-            if na_key(match) not in kmap:
-                kmap[na_key(match)] = []
-            kmap[na_key(match)].extend(remap_fmaps)
-            log.info("Moving", match, "to", na_key(match), "for files", total_files({None:remap_fmaps}))
+            if new_key not in kmap:
+                kmap[new_key] = []
+            kmap[new_key].extend(remap_fmaps)
+            log.info("Moving", match, "to", new_key, "for files", total_files({None:remap_fmaps}))
             log.info("Remainder", match, "=", total_files({None:kmap[match]}))
-        if not fmaps and (na_key(match) != match):
+        if not fmaps and (new_key != match):
             del kmap[match]
     dropped_files = start_files - total_files(kmap)
     if dropped_files:  # bummer,  bug in my code...
@@ -143,7 +145,7 @@ def acs_biasfile_filter(kmap):
     return kmap, header_additions
 
 def na_key(match, replacement='*'):
-    """Replace APERTURE with N/A"""
+    """Replace APERTURE with N/A or *"""
     new = list(match)
     new[3] = replacement
     return tuple(new)
