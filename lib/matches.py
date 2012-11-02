@@ -94,9 +94,12 @@ def dump_match_tuples(context, references, finder):
     for ref in references:
         if len(references) > 1:
             log.write(ref, ":")
-        for match in finder(context, ref) or ["none"]:
-            log.write(tuple(match))
-        log.write()
+        matches = finder(context, ref)
+        if matches:
+            for match in matches:        
+                log.write(tuple(match))
+        else:
+            log.write("none")
 
 def main():
     """Process command line parameters in to a context and list of
