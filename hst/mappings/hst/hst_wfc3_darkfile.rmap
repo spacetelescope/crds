@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-24 17:13:22.978327',
+    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:23.965541',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
         'subtype' : '(DETECTOR == "IR")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '71b26c4243cf8c0be9c0cfc903f032af245c27dc',
+    'sha1sum' : '43e1712ee665efb61ae0b87399d17b405fb70a08',
 }
 
 selector = Match({
