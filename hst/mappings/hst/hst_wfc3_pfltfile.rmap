@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-24 17:13:24.450659',
+    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:27.158250',
     'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'binaxis2' : '(DETECTOR == "UVIS")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '3c843d2018dd1b1a80500e536cdbaa360c386ce2',
+    'sha1sum' : 'cf9922667ab8f8eb51fa1b35f86ad38df11d3490',
 }
 
 selector = Match({

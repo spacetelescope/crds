@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-24 17:11:21.858246',
+    'derived_from' : 'generated from CDBS database 2012-11-03 20:29:24.251731',
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : 'fb8596121bbd450d80422b4b64b46dd74327d5dd',
+    'sha1sum' : 'f2f804edc5b1605b713edc591341cf780df8d546',
 }
 
 selector = Match({
@@ -756,6 +756,7 @@ selector = Match({
         '2007-01-17 03:30:47' : 'r1u14159j_bia.fits',
         '2008-01-01 00:00:00' : 't4o1454fj_bia.fits',
         '2009-01-01 00:00:00' : 'ua61347lj_bia.fits',
+        '2009-05-01 00:00:00' : 'wav1924nj_bia.fits',
         '2009-08-05 13:00:19' : 'ua61347mj_bia.fits',
         '2009-10-02 08:21:32' : 'ua61347nj_bia.fits',
     }),
@@ -765,6 +766,7 @@ selector = Match({
     }),
     ('WFC', 'A|ABCD|B|C|D', 1.4, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2008-01-01 00:00:00' : 't4o1454ij_bia.fits',
+        '2009-05-01 00:00:00' : 'wav1924oj_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 2.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-30 06:50:56' : 'q9520143j_bia.fits',
@@ -957,6 +959,8 @@ selector = Match({
         '2012-07-18 04:53:47' : 'w9b1552rj_bia.fits',
         '2012-08-01 11:01:34' : 'wa312074j_bia.fits',
         '2012-08-20 09:15:18' : 'wa312075j_bia.fits',
+        '2012-09-01 09:20:22' : 'waq1304pj_bia.fits',
+        '2012-09-14 22:39:35' : 'waq13056j_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 4.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-07 07:46:35' : 'q9e1206rj_bia.fits',
@@ -974,6 +978,9 @@ selector = Match({
     }),
     ('WFC', 'A|AD|D', 8.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 'lca0950rj_bia.fits',
+    }),
+    ('WFC', 'A|B|C|D', 0.5, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-01 00:00:00' : 'wav1924mj_bia.fits',
     }),
     ('WFC', 'A|D', 2.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2001-03-01 00:00:00' : 'm2f1516kj_bia.fits',
@@ -1091,6 +1098,8 @@ selector = Match({
         '2012-07-22 08:10:44' : 'wa312071j_bia.fits',
         '2012-08-05 01:52:16' : 'wa312072j_bia.fits',
         '2012-08-19 05:54:02' : 'wa312073j_bia.fits',
+        '2012-09-01 09:20:22' : 'waq1304nj_bia.fits',
+        '2012-09-16 00:02:21' : 'waq1304oj_bia.fits',
     }),
     ('WFC', 'B', 2.0, 'WFC1-2K|WFC1-POL0UV|WFC1-POL0V|WFC1-POL120UV|WFC1-POL120V|WFC1-POL60UV|WFC1-POL60V|WFC1-SMFL', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9c1408cj_bia.fits',

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-10-24 17:13:23.161687',
+    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:24.200421',
     'filekind' : 'MDRIZTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'ef67f2514893b4e07be24500784a85f999e2ba89',
+    'sha1sum' : '59681ed8a3be8ac702bf32c07e64978737b4bc1c',
 }
 
 selector = Match({
