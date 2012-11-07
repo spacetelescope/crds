@@ -100,7 +100,7 @@ def get_download_mode():
     archive server).   Once/if a public archive server is available with normal 
     URLs,  that wopuld be the preferred means to get references and mappings.
     """
-    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "rpc").lower()
+    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "http").lower()
     assert mode in ["http","rpc"], \
         "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (preferred) " + \
         "or 'rpc' (through firewall)."
@@ -286,8 +286,13 @@ class FileCacher(object):
             yield data
     
     def get_data_http(self, pipeline_context, file):
-        """Yields successive manageable chunks of `file` fetched by http."""
-        url = get_url(pipeline_context, file)
+        """Yields successive manageable chunks of `file` fetched by http.
+        Unlike earlier versions of the protocol which requested the URL from
+        the server,  the URL used is static,  essentially /get/<file>,  and
+        the server brokers and redirects the request to the real download server.
+        """
+        # url = get_url(pipeline_context, file)
+        url = get_crds_server() + "/get/" + file
         log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
