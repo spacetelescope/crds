@@ -7,8 +7,8 @@ and distribution of CRDS reference and mappings files.   Functions on the CRDS
 website are either public functions which do not require authentication or private
 functions which require a CRDS login account.
 
-.. _crds-hst.stsci.edu: http://hst-crds.stsci.edu/
-.. _crds-jwst.stsci.edu: http://jwst-crds.stsci.edu/
+.. _hst-crds.stsci.edu: http://hst-crds.stsci.edu/
+.. _jwst-crds.stsci.edu: http://jwst-crds.stsci.edu/
 
 .. figure:: images/web_index.png
    :scale: 50 %
