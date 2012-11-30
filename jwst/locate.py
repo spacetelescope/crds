@@ -301,4 +301,9 @@ def fits_to_parkeys(fits_header):
         parkeys[str(pk).upper()] = str(value)
     return parkeys
 
+# ============================================================================
+
+def get_env_prefix(instrument):
+    """Return the environment variable prefix (IRAF prefix) for `instrument`."""
+    return ""
 
