@@ -1,18 +1,6 @@
 """This module is a command line script which dowloads the references and 
 mappings required to support a set of contexts from the CRDS server:
 
-Synced contexts can be explicitly listed:
-
-  % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
-
-Synced contexts can be specified as a range:
-
-  % python -m crds.sync --range 1:2
-
-Synced contexts can be specified as --all contexts:
-
-  % python -m crds.sync --all
-
 Old references and mappings which are no longer needed can be automatically
 removed by specifying --purge:
 
@@ -37,8 +25,10 @@ import os.path
 import argparse
 import re
 
+from argparse import RawTextHelpFormatter
+
 import crds.client.api as api
-from crds import (rmap, pysh, log, data_file)
+from crds import (rmap, log, data_file)
 
 # ============================================================================
 
@@ -138,9 +128,7 @@ def sync_datasets(contexts, datasets):
                 log.error("Failed to get matching parameters from", repr(dataset))
                 continue
             try:
-                bestrefs = crds.getrecommendations(dataset, context=context, 
-                                                   observatory=pmap.observatory)
-                api.dump_references(context, bestrefs.values())
+                bestrefs = crds.getreferences(header, context=context, observatory=pmap.observatory)
             except Exception, exc:
                 log.error("Failed to sync references for dataset", repr(dataset), 
                           "under context", repr(context), ":", str(exc))
@@ -197,41 +185,95 @@ def determine_contexts(args):
                 if rmin <= id <= rmax:
                     contexts.append(context)
     else:
-        raise ValueError("Must explicitly list contexts, " +
-                         "a context id --range, or --all.") 
+        contexts = []
     return contexts
+
+def sync_explicit_files(files):
+    """Cache the listed `files`."""
+    log.info("Syncing explicitly listed files.")
+    mappings, references = [], []
+    for file in files:
+        file = os.path.basename(file)
+        if rmap.is_mapping(file):
+            mappings.append(file)
+        else:
+            references.append(file)
+    context = api.get_default_context()
+    if mappings:
+        api.dump_mappings(context, mappings=mappings)
+    if references:
+        api.dump_references(context, references=references)
+
 
 def main():
     import crds
     crds.handle_version()
-    log.set_verbose(True)
+    
+    try:
+        info = api.get_server_info()
+    except Exception:
+        log.error("Failed connecting to CRDS server at", repr(api.get_crds_server()))
+        sys.exit(-1)
+
     parser = argparse.ArgumentParser(
-        description='Synchronize local mapping and reference caches to ' + 
-                    'the given contexts, removing files not referenced.')
-    parser.add_argument(
-        '--contexts', metavar='CONTEXT', type=mapping, nargs='*',
-        help='a list of contexts to sync.  dependent mappings are loaded recursively.')
-    parser.add_argument('--mappings-only', action='store_true', 
-        dest="mappings_only",
-        help='just get the mapping files, not the references')
-    parser.add_argument(
-        '--datasets', metavar='DATASET', type=dataset, nargs='*',
+        formatter_class = RawTextHelpFormatter,
+        description = \
+"""Synchronize local mapping and reference caches for the given contexts by
+downloading missing files from the CRDS server and/or archive.
+
+* Primitive syncing can be done by explicitly listing the files you wish to cache:
+
+     % python -m crds.sync  hst_0001.pmap hst_acs_darkfile_0037.fits
+
+* Typically syncing is done with respect to particular CRDS contexts:
+
+    Synced contexts can be explicitly listed:
+    
+      % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+    
+    Synced contexts can be specified as a numerical range:
+    
+      % python -m crds.sync --range 1:2
+    
+    Synced contexts can be specified as --all contexts:
+    
+      % python -m crds.sync --all
+
+* Typically reference file retrieval behavior is driven by switches:
+
+      Cache all references for the specified contexts like this:
+
+      % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --references   
+      
+      Cache the best references for the specified datasets like this:
+    
+      % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --datasets  <dataset_files...>        
+""")
+    
+    parser.add_argument('--contexts', metavar='CONTEXT', type=mapping, nargs='*',
+        help='A list of contexts to sync.  dependent mappings are loaded recursively.')
+    parser.add_argument('--references', action='store_true', dest="get_context_references",
+                        help='get all the references for the specified contexts.')
+    parser.add_argument('--datasets', metavar='DATASET', type=dataset, nargs='*',
         help='a list of datasets for which to prefetch references.')
     parser.add_argument('--all', action='store_true',
-        help='fetch files for all known contexts.')
-    parser.add_argument("--range", metavar="MIN:MAX",  type=nrange,
-        dest="range", default=None,
-        help='fetch files for context ids between <MIN> and <MAX>.')
+        help='Operate with respect to all known contexts.')
+    parser.add_argument("--range", metavar="MIN:MAX",  type=nrange, dest="range", default=None,
+        help='Fetch files for pipeline context ids between <MIN> and <MAX>.')
     parser.add_argument('--purge', action='store_true', dest="purge",
-        help='remove reference files and mappings not referred to by contexts')
+        help='Remove reference files and mappings not referred to by contexts.')
+    parser.add_argument("files", nargs="*", help="Synced files can be explicitly listed.")
     args = parser.parse_args()
     
     contexts = determine_contexts(args)
     if contexts:
         sync_context_mappings(contexts, args.purge)
-    if not args.mappings_only:
-        sync_context_references(contexts, args.purge)
-
+        if args.datasets:
+            sync_datasets(contexts, args.datasets)
+        elif args.get_context_references:
+            sync_context_references(contexts, args.purge)
+    elif args.files:
+        sync_explicit_files(args.files)
 
 if __name__ == "__main__":
     main()

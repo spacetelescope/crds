@@ -8,11 +8,13 @@ import base64
 import re
 import urllib2
 import traceback
+import tarfile
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
+import crds
 from crds import utils, log, config
 
 # ==============================================================================
@@ -226,8 +228,7 @@ def get_server_info():
 # ==============================================================================
 
 class FileCacher(object):
-    """FileCacher is an abstract base class which gets remote files
-    with simple names into a local cache.
+    """FileCacher gets remote files with simple names into a local cache.
     """
     def get_local_files(self, pipeline_context, names, ignore_cache=False):
         """Given a list of basename `mapping_names` which are pertinent to the 
@@ -237,14 +238,16 @@ class FileCacher(object):
         if isinstance(names, dict):
             names = names.values()
         localpaths = {}
+        downloads = []
         for i, name in enumerate(names):
             localpath = self.locate(pipeline_context, name)
             if (not os.path.exists(localpath)) or ignore_cache:
-                log.verbose("Cache miss. Fetching[%d]" % i, repr(name), "to", repr(localpath))
-                self.download(pipeline_context, name, localpath)
-            else:
-                log.verbose("Cache hit.  Skipping[%d]" % i, repr(name), "at", repr(localpath))
+                downloads.append(name)
             localpaths[name] = localpath
+        if downloads:
+            self.download_files(pipeline_context, downloads, localpaths)
+        else:
+            log.verbose("Skipping download for cached files", names)
         return localpaths
 
     def locate(self, pipeline_context, name):
@@ -257,7 +260,14 @@ class FileCacher(object):
             observatory = crds.get_cached_mapping(pipeline_context).observatory
         return config.locate_file(name, observatory=observatory)
 
+    def download_files(self, pipeline_context, downloads, localpaths):
+        """Serial file-by-file download."""
+        for name in downloads:
+            self.download(pipeline_context, name, localpaths[name])
+
     def download(self, pipeline_context, name, localpath):
+        """Download a single file."""
+        log.verbose("Fetching", repr(name), "to", repr(localpath))
         try:
             utils.ensure_dir_exists(localpath)
             if get_download_mode() == "http":
@@ -285,14 +295,9 @@ class FileCacher(object):
             chunk += 1
             yield data
     
-    def get_data_http(self, pipeline_context, file):
-        """Yields successive manageable chunks of `file` fetched by http.
-        Unlike earlier versions of the protocol which requested the URL from
-        the server,  the URL used is static,  essentially /get/<file>,  and
-        the server brokers and redirects the request to the real download server.
-        """
+    def _get_data_http(self, url):
+        """Yield the data returned from `url` in manageable chunks."""
         # url = get_url(pipeline_context, file)
-        url = get_crds_server() + "/get/" + file
         log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
@@ -308,6 +313,15 @@ class FileCacher(object):
                 infile.close()
             except UnboundLocalError:   # maybe the open failed.
                 pass
+
+    def get_data_http(self, pipeline_context, file):
+        """Yields successive manageable chunks of `file` fetched by http.
+        Unlike earlier versions of the protocol which requested the URL from
+        the server,  the URL used is static,  essentially /get/<file>,  and
+        the server brokers and redirects the request to the real download server.
+        """
+        url = get_crds_server() + "/get/" + file
+        return self._get_data_http(url)
 
     def verify_file(self, pipeline_context, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
@@ -328,6 +342,54 @@ FILE_CACHER = FileCacher()
 
 # ==============================================================================
 
+class BundleCacher(FileCacher):
+    """BundleCacher gets remote files into a local cache by requesting a bundle
+    of any missing files and then unpacking it.
+    """
+    def download_files(self, pipeline_context, downloads, localpaths):
+        """Download a list of files as an archive bundle and unpack it."""
+        bundlepath = config.get_crds_config_path() 
+        bundlepath += "/" + "crds_bundle.tar.gz"
+        utils.ensure_dir_exists(bundlepath, 0700)
+        for name in localpaths:
+            if name not in downloads:
+                log.verbose("Skipping existing file", repr(name), level=60)
+        self.fetch_bundle(bundlepath, downloads)
+        self.unpack_bundle(bundlepath, downloads, localpaths)
+        
+    def fetch_bundle(self, bundlepath, downloads):
+        """Ask the CRDS server for an archive of the files listed in `downloads`
+        and store the archive in filename `bundlepath`.
+        """
+        bundle = os.path.basename(bundlepath)
+        url = get_crds_server() + "/get_archive/" + bundle + "?"
+        for i, name in enumerate(sorted(downloads)):
+            url = url + "file" + str(i) + "=" + name + "&"
+            log.verbose("Adding", repr(name), "to download request.", level=60)
+        url = url[:-1]
+        generator = self._get_data_http(url)
+        with open(bundlepath, "wb+") as outfile:
+            for data in generator:
+                outfile.write(data)
+        
+    def unpack_bundle(self, bundlepath, downloads, localpaths):
+        """Unpack the files listed in `downloads` from the archive at `bundlepath`
+        storing the extracted files at paths defined by `localpaths`.
+        """
+        with tarfile.open(bundlepath) as tar:
+            for name in sorted(downloads):
+                member = tar.getmember(name)
+                file = tar.extractfile(member)
+                utils.ensure_dir_exists(localpaths[name])
+                with open(localpaths[name], "w+") as localfile:
+                    log.verbose("Unpacking download", repr(name), "to", repr(localpaths[name]))
+                    contents = file.read()
+                    localfile.write(contents)
+                    
+MAPPING_CACHER = BundleCacher()
+
+# ==============================================================================
+
 def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
     """Given a `pipeline_context`, determine the closure of CRDS mappings and 
     cache them on the local file system.
@@ -337,7 +399,7 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
     assert isinstance(ignore_cache, bool)
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
-    return FILE_CACHER.get_local_files(
+    return MAPPING_CACHER.get_local_files(
         pipeline_context, mappings, ignore_cache=ignore_cache)
   
 def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
