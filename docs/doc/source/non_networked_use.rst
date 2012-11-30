@@ -251,7 +251,7 @@ loaded,  the checksum is transparently verified to ensure that the Mapping
 contents are intact.   
 
 Ignoring Checksums!
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Ordinarily,  during pipeline operations,  ignoring checksums should not be done.
 Ironically though,  the first thing you may want to do as a developer is ignore 
