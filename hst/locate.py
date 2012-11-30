@@ -16,7 +16,7 @@ import gzip
 import re
 
 # import crds.pysh as pysh
-from crds import (log, rmap, pysh, data_file, config)
+from crds import (log, rmap, pysh, data_file, config, utils)
 from crds.hst import (tpn, siname)
 
 HERE = os.path.dirname(__file__) or "./"
@@ -100,7 +100,7 @@ from crds.hst.parkeys import reference_keys_to_dataset_keys
 REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
 
 def get_file_properties(filename):
-    """Figure out (instrument, filekind, serial) based on `filename` which
+    """Figure out (instrument, filekind) based on `filename` which
     should be a mapping or FITS reference file.
 
     >>> get_file_properties("./hst_acs_biasfile_0001.rmap")
@@ -273,6 +273,15 @@ def ref_properties_from_header(filename):
     filetype = header["FILETYPE"].lower()
     filekind = tpn.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext
+
+# ============================================================================
+
+# HST FITS headers have filenames adorned with environment prefixes for each
+# instrument.
+
+def get_env_prefix(instrument):
+    """Return the environment variable prefix (IRAF prefix) for `instrument`."""
+    return siname.add_IRAF_prefix(instrument.upper())
 
 # ============================================================================
 

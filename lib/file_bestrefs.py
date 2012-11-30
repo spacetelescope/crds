@@ -29,7 +29,7 @@ import optparse
 
 import pyfits
 
-from crds import (log, rmap, data_file)
+from crds import (log, rmap, data_file, utils)
 
 # ===================================================================
 
@@ -193,18 +193,28 @@ def remove_irafpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
     return name.split("$")[-1]
 
-def write_bestrefs(new_fname, dataset, bestrefs):
+def write_bestrefs(new_pmap_name, dataset, bestrefs):
     """Update the header of `dataset` with best reference recommendations
-    `bestrefs` determined by context named `new_fname`.
+    `bestrefs` determined by context named `new_pmap`.
     """
     # XXX TODO switch pyfits.setval to data_file.setval if a data model equivalent
     # is defined for CRDS_CTX
-    pyfits.setval(dataset, "CRDS_CTX", value=new_fname, ext=0)
+    
+    # Here we use the dataset file because we know we have the full path, 
+    # whereas the reference we'd have to locate.
+    instrument = utils.file_to_instrument(dataset)
+    pmap = rmap.get_cached_mapping(new_pmap_name)
+    prefix = pmap.locate.get_env_prefix(instrument)
+    
+    pyfits.setval(dataset, "CRDS_CTX", value=new_pmap_name, ext=0)
     for key, value in bestrefs.items():
-#        XXX what to do here for failed lookups?
-#        if value.startswith("NOT FOUND"):
-#            value = value + ", prior " + pyfits.getval(dataset, key)
-        pyfits.setval(dataset, key, value=value, ext=0)
+#        XXX what to do here for failed startswith("NOT FOUND") lookups?
+        if value.upper().startswith("NOT FOUND"):
+            if "N/A" in value.upper():
+                value = "N/A"
+        else:
+            value = prefix + value
+        pyfits.setval(dataset, key, value=value, ext=0)            
 
 # =============================================================================
 
