@@ -8,8 +8,8 @@ import optparse
 
 from crds import rmap, log, pysh
 
-def mapping_difference(file1, file2):
-    """Print the logical differences between CRDS mappings named `file1` 
+def _mapping_difference(file1, file2):
+    """Return the logical differences between CRDS mappings named `file1` 
     and `file2`.
     """
     assert rmap.is_mapping(file1), \
@@ -22,8 +22,72 @@ def mapping_difference(file1, file2):
     map1 = rmap.get_cached_mapping(file1)
     map2 = rmap.get_cached_mapping(file2)
     differences = map1.difference(map2)
+    return differences
+
+def mapping_difference(file1, file2):
+    """Print the logical differences between CRDS mappings named `file1` 
+    and `file2`.
+    """
+    differences = _mapping_difference(file1, file2)
     for diff in differences:
-        log.write(diff)
+        log.write(rq(diff))
+        
+def rq(diff):
+    """Remove repr str quoting."""
+    return diff[:-1] + (diff[-1].replace("'",""),)
+# =============================================================================
+
+def mapping_check_reversions(file1, file2):
+    """Print warnings for file reversions between contexts `file1` and `file2`.
+    Warns on:
+        Deleted files.
+        Replaced files where the new file is older than the old file.
+    """
+    if newer(file1, file2):
+        log.warning("File order for reversion check looks backward:", 
+                    repr(file1), ">", repr(file2))
+    differences = _mapping_difference(file1, file2)
+    for diff in differences:
+        diff = rq(diff)
+        if "deleted" in diff[-1]:
+            log.warning("Deleted file at", diff)
+        elif "replaced" in diff[-1]:
+            _replaced, old_val, _with, new_val = diff[-1].split()
+            if not newer(new_val, old_val):
+                log.warning("Reversion.  Replaced newer file at", diff)
+                
+def newstyle_name(name):
+    return name.startswith(("hst_","jwst_","tobs_"))
+
+#def similar(name1, name2):
+#    if len(name1) != len(name2):
+#        return False
+#    parts1, parts2 = name1.split("_"), name2.split("_")
+#    if "_".join(parts1[:-1]) != "_".join(parts2[:-1]):   #  non-serial # prefix
+#        return False
+#    if os.path.splitexit(name1)[-1] != os.path.splitext(name2)[-1]:  # extension
+#        return False
+#    return True
+
+def newer(name1, name2):
+    """Determine if `name1` is a more recent file than `name2` accounting for 
+    limited differences in naming conventions. Official CDBS and CRDS names are 
+    comparable using a simple text comparison,  just not to each other.
+    """
+    n1 = newstyle_name(name1)
+    n2 = newstyle_name(name2)
+    if n1:
+        if n2: # compare CRDS names
+            return name1 > name2
+        else:  # CRDS > CDBS
+            return True
+    else:
+        if n2:  # CDBS < CRDS
+            return False
+        else:  # compare CDBS names
+            return name1 > name2
+
+# ============================================================================
         
 def fits_difference(observatory, file1, file2):
     """Run fitsdiff on files named `file1` and `file2`.
@@ -61,6 +125,7 @@ def difference(observatory, file1, file2):
 def main():
     import crds
     crds.handle_version()
+    
     parser = optparse.OptionParser("""usage: %prog [options] <file1> <file2>
         
         Appropriately difference CRDS mapping or reference files.
@@ -72,6 +137,10 @@ def main():
 
     parser.add_option("-H", "--hst", dest="hst",
         help="Locate files using HST naming conventions.", 
+        action="store_true")
+    
+    parser.add_option("-R", "--reversions", dest="reversions",
+        help="Check for file reversions between CRDS mappings.", 
         action="store_true")
 
     options, args = log.handle_standard_options(sys.argv, parser=parser)
@@ -88,8 +157,12 @@ def main():
         observatory = "jwst"
     else:
         observatory = "jwst"
-    log.standard_run("difference(observatory, args[1], args[2])", 
-                     options, globals(), locals())
+
+    file1, file2 = args[1:]
+    if options.reversions:
+        mapping_check_reversions(file1, file2)
+    else:
+        difference(observatory, file1, file2)
 
 # ============================================================================
 
