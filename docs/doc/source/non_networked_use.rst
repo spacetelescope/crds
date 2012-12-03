@@ -150,23 +150,23 @@ Once you have your dataset parameters,  you can ask an InstrumentContext for
 the best references for *all* filekinds for that instrument::
 
   >>> acs.get_best_references(hdr)
-{'atodtab': 'kcb1734ij_a2d.fits',
- 'biasfile': 'm4r1753rj_bia.fits',
- 'bpixtab': 'm8r09169j_bpx.fits',
- 'ccdtab': 'o1515069j_ccd.fits',
- 'cfltfile': 'NOT FOUND n/a',
- 'crrejtab': 'n4e12510j_crr.fits',
- 'darkfile': 'n3o1059hj_drk.fits',
- 'dgeofile': 'o8u2214mj_dxy.fits',
- 'flshfile': 'NOT FOUND n/a',
- 'idctab': 'p7d1548qj_idc.fits',
- 'imphttab': 'vbb18105j_imp.fits',
- 'mdriztab': 'ub215378j_mdz.fits',
- 'mlintab': 'NOT FOUND n/a',
- 'oscntab': 'm2j1057pj_osc.fits',
- 'pfltfile': 'o3u1448rj_pfl.fits',
- 'shadfile': 'kcb1734pj_shd.fits',
- 'spottab': 'NOT FOUND n/a'}
+  {'atodtab': 'kcb1734ij_a2d.fits',
+  'biasfile': 'm4r1753rj_bia.fits',
+  'bpixtab': 'm8r09169j_bpx.fits',
+  'ccdtab': 'o1515069j_ccd.fits',
+  'cfltfile': 'NOT FOUND n/a',
+  'crrejtab': 'n4e12510j_crr.fits',
+  'darkfile': 'n3o1059hj_drk.fits',
+  'dgeofile': 'o8u2214mj_dxy.fits',
+  'flshfile': 'NOT FOUND n/a',
+  'idctab': 'p7d1548qj_idc.fits',
+  'imphttab': 'vbb18105j_imp.fits',
+  'mdriztab': 'ub215378j_mdz.fits',
+  'mlintab': 'NOT FOUND n/a',
+  'oscntab': 'm2j1057pj_osc.fits',
+  'pfltfile': 'o3u1448rj_pfl.fits',
+  'shadfile': 'kcb1734pj_shd.fits',
+  'spottab': 'NOT FOUND n/a'}
 
 In the above results,  FITS files are the recommended best references,  while
 a value of "NOT FOUND n/a" indicates that no result was expected for the current
