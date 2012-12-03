@@ -405,6 +405,8 @@ class Selector(object):
         differences = []
         other_keys = other.keys()
         other_map = dict(other._selections)
+        # Warning:  the message formats here are important to client code.
+        # don't change without doing a survey. e.g. replaced blank1 with blank2.
         for key, choice in self._selections:
             if key not in other_keys:
                 differences.append(msg(key, "deleted " + repr(choice)))
