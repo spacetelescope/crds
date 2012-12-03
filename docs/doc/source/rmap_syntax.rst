@@ -186,7 +186,7 @@ Single Parameter Values
 
 Each value within the match tuples of a Match operator can be an expression in
 its own right.   There are a number of special values associated with each
-match expression:  Ors |, Wildcards *,  Regular Expressions (), Literals {},
+match expression:  Ors \|, Wildcards \*,  Regular Expressions (), Literals {},
 Relationals, between, N/A, and Substitutions.
 
 Or |
@@ -329,7 +329,7 @@ winnowing match algorithm which works on a parameter-by-parameter basis by
 discarding match tuples which cannot possibly match. After examining all
 parameters,   CRDS is left with a list of candidate matches.
 
-For each literal, *, or regular expression parameter that matched,  CRDS
+For each literal, \*, or regular expression parameter that matched,  CRDS
 increases its sense of the goodness of the match by 1.   For each N/A that was
 ignored, CRDS doesn't change the weight of the match.   The highest ranked match
 is the one CRDS chooses as best.   When more than one match tuple has the same 

@@ -2,8 +2,6 @@
 Welcome
 =======
 
-:ref:`release-notes`
-
 Welcome to the Calibration and Reference Data System (CRDS).   CRDS manages
 the reference files and the rules which are used to assign appropriate
 references to particular data sets.   CRDS has a variety of aspects:
@@ -16,7 +14,7 @@ references to particular data sets.   CRDS has a variety of aspects:
      mappings (rules).   CRDS has a database which tracks delivery 
      metadata for references and mappings.
    * The CRDS web server also provides network services via JSONRPC
-     related to best reference determination and file distribution.
+     related to best reference determination.
    * CRDS has a Python client package which accesses the network
      services to determine and locally cache the best references
      for a dataset.

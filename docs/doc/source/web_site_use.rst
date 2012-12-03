@@ -211,7 +211,7 @@ tracked:
    
 The first page lists a number of constraints which can be used to choose
 activities of interest.   To ignore any constraint,  leave it set at the default
-value of *.   The result of the activity search is a table of matching actions:
+value of \*.   The result of the activity search is a table of matching actions:
 
 .. figure:: images/web_recent_activity_results.png
    :scale: 50 %
