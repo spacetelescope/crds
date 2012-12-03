@@ -5,7 +5,7 @@ import os.path
 import shutil
 import re
 
-from crds import (rmap, utils, checksum)
+from crds import (rmap, utils, checksum, log)
 
 def new_context(old_pipeline, updated_rmaps):
     """Given a pipeline mapping name `old_pipeline`, and a list of the names
@@ -24,7 +24,6 @@ def get_update_map(old_pipeline, updated_rmaps):
     of new rmap names, `updated_rmaps`,  return the mapping:
         { imap_name : [ updates_for_that_imap, ... ], ... }
     """
-    # ensure_mappings_exist(updated_rmaps)
     pctx = rmap.get_cached_mapping(old_pipeline)
     updates = {}
     for update in updated_rmaps:
@@ -38,30 +37,21 @@ def get_update_map(old_pipeline, updated_rmaps):
         updates[imap_name].append(update)
     return updates
             
-def ensure_mappings_exist(mappings):
-    """Make sure the list of `mappings` is really on the CRDS file system,
-    but don't require load-ability.
-    """
-    #    On the CRDS server,  existence should imply load-ability.   For
-    #    developers, mapping existence is probably sufficient to establish
-    #    intent-to-develop-it, and there's no point in forcing finish-your-rmap-
-    #    then-finish-your-context ordering.
-    for map in mappings:
-        where = rmap.locate_mapping(map)
-        assert os.path.exists(where), "File " + repr(map) + " does not exist."
-
-def generate_new_contexts(old_pipeline, updates, new_names):
+def generate_new_contexts(old_pipeline, updates, new_names, observatory=None):
     """Generate new pipeline and instrument context files given:
     old_pipeline -- name of pipeline mapping
     updates --   { old_imap : [ new_rmaps ], ... }
     new_names --   { old_pmap : new_pmap, old_imaps : new_imaps }
     """
+    if observatory is None:
+        observatory = rmap.get_cached_mapping(old_pipeline).observatory
     new_names = dict(new_names)
     for imap_name in updates:
-        hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name])
+        hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name], 
+                         observatory=observatory)
     new_pipeline = new_names.pop(old_pipeline)
     new_imaps = new_names.values()
-    hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
+    hack_in_new_maps(old_pipeline, new_pipeline, new_imaps, observatory=observatory)
     where = [ rmap.locate_mapping(m) for m in [new_pipeline] + new_imaps]
     checksum.update_checksums(where)
     return [new_pipeline] + new_imaps
@@ -78,14 +68,24 @@ def generate_fake_names(old_pipeline, updates):
         new_names[old_imap] = fake_name(old_imap)
     return new_names
 
-def hack_in_new_maps(old, new, updated_maps):
+def hack_in_new_maps(old, new, updated_maps, observatory):
     """Given mapping named `old`,  create a modified copy named `new` which
     installs each map of `updated_maps` in place of it's predecessor.
     """
     copy_mapping(old, new)                    
     for map in updated_maps:
-        replace_mapping(new, map)
-
+        replaced = replace_mapping(new, map)
+        if replaced:
+            log.info("Replaced", repr(replaced), "in", repr(new), "with", repr(map))
+        else:
+            instrument, filekind = utils.get_file_properties(observatory, map)
+            if old.endswith(".imap"):
+                add_mapping(new, filekind, map)
+                log.info("Added", repr(map), "to", repr(new), "for", repr(filekind))
+            else:  # .pmap,  other things probably preclude this from ever working...
+                add_mapping(new, instrument, map)
+                log.info("Added", repr(map), "to", repr(new), "for", repr(instrument))
+            
 def copy_mapping(old_map, new_map):
     """Make a copy of mapping `old_map` named `new_map`."""
     old_path = rmap.locate_mapping(old_map)
@@ -121,23 +121,38 @@ def replace_mapping(context, mapping):
     """
     #    'ACS' : 'hst_acs.imap',
     ppmap = r"(\s*'\w+'\s*:\s*')(\S+)(',.*)"
-    #    'badttab' : ('badt', 'hst_cos_badttab.rmap'),
-    pimap = r"(\s*'\w+'\s*:\s*\('\w+',\s*')(\S+)('\),.*)"
     generic_mapping = generic_name(mapping)
     lines = []
     where = rmap.locate_mapping(context)
+    replaced = None
     with open(where) as old_file:
         for line in old_file.readlines():
             m = re.match(ppmap, line)
             if m and generic_name(m.group(2)) == generic_mapping:
                 line = re.sub(ppmap, r"\1%s\3" % mapping, line)
-            m = re.match(pimap, line)
-            if m and generic_name(m.group(2)) == generic_mapping:
-                line = re.sub(pimap, r"\1%s\3" % mapping, line)
+                replaced = m.group(2)
             lines.append(line)
+    if replaced:
         new_contents = "".join(lines)
-    with open(where,"w+") as new_file:
-        new_file.write(new_contents)
+        with open(where,"w+") as new_file:
+            new_file.write(new_contents)
+    return replaced
+
+def add_mapping(context, key, mapping):
+    """Add the filename `mapping` to `context` at `key`."""
+    where = rmap.locate_mapping(context)
+    with open(where) as old_file:
+        in_selector = False
+        lines = []
+        for line in old_file.readlines():
+            if in_selector and line.startswith("}"):
+                lines.append("    " + repr(key) + " : " + repr(mapping) + ",\n")
+                in_selector = False
+            if line.startswith("selector = {"):
+                in_selector = True
+            lines.append(line)
+    with open(where, "w+") as new_file:
+        new_file.write("".join(lines))
 
 def generic_name(mapping):
     """Return `mapping` with serial number chopped out.
