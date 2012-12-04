@@ -142,8 +142,8 @@ def errors():
 # ===========================================================================
 
 @contextlib.contextmanager
-def trap_warning(*args):
-    """trap_warning is a context manager which issues a warning if any statement
+def warn_on_exception(*args):
+    """warn_on_exception is a context manager which issues a warning if any statement
     in a with-block generates an exception.   The exception is suppressed.
     """
     try:
@@ -152,8 +152,8 @@ def trap_warning(*args):
         warning(*args + (":", str(exc)))
 
 @contextlib.contextmanager
-def trap_error(*args):
-    """trap_error is a context manager which issues an error if any statement
+def error_on_exception(*args):
+    """error_on_exception is a context manager which issues an error if any statement
     in a with-block generates an exception.   The exception is suppressed.
     """
     try:
