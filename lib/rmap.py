@@ -463,17 +463,68 @@ class Mapping(object):
         differences = []
         for key in self.selections:
             if key not in other.selections:
-                msg = repr(other.basename) + " deleted " + repr(key)
-                differences.append(((self.basename, other.basename), msg))
+                differences.append(((self.basename, other.basename), key, 
+                                    "deleted " + repr(self.selections[key].basename)))
             else:
                 differences.extend(self.selections[key].difference(
                     other.selections[key],
                     path + ((self.basename, other.basename),)))
         for key in other.selections:
             if key not in self.selections:
-                msg = repr(other.basename) + " added " + repr(key)
-                differences.append(((self.basename, other.basename), msg))
+                differences.append(((self.basename, other.basename), key, 
+                                    "added " + repr(other.selections[key].basename)))
         return sorted(differences)
+    
+    def warn_derivation_diffs(self):
+        """Issue warnings for *deletions* in self relative to parent derived_from
+        mapping.  Issue infos for *additions* and *replacements*.    This is 
+        intended to provide mode checking,  predominantly to check for missing
+        modes.
+        """
+        derived_from = self._get_derived_from()
+        if not derived_from:
+            return
+        log.info('Comparing mapping file', repr(self.basename),
+                 'against derived_from mapping', repr(derived_from.basename))
+        diffs = derived_from.difference(self)
+        infos = [d for d in diffs if "deleted" not in d[-1]]
+        warnings = [d for d in diffs if "deleted" in d[-1]]
+        if infos:
+            log.info('Additions and replacements in', repr(self.basename), ':')
+            for msg in infos:
+                log.info("In", _diff_tail(msg)[:-1], msg[-1])
+        if warnings:
+            log.warning("Deletions found in/under", repr(self.basename), ":")
+            for msg in warnings:
+                tail = _diff_tail(msg)[:-1]
+                log.warning("In", tail[:-1], "deleted", repr(tail[-1]))
+
+    def _get_derived_from(self):
+        """Return the mapping `self` was derived from, or None."""
+        derived_from = None
+        try:
+            derived_file = self.header['derived_from']
+            if 'generated' not in derived_file:
+                derived_from = get_cached_mapping(derived_file)
+        except Exception, exc:
+            log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
+        return derived_from
+    
+def _diff_tail(msg):
+    """`msg` is an arbitrary length difference "path",  which could
+    be coming from any part of the hierarchy and ending in any kind of selector tree.
+    The last item is always the change message: add, replace, delete <blah>.  The
+    next to last should always be a selector key of some kind.  Back up from 
+    there to find the first mapping tuple.
+    """
+    tail = []
+    for part in msg[::-1]:
+        if isinstance(part, tuple) and len(part) == 2 and isinstance(part[0], str) and part[0].endswith("map"):
+            tail.append(part[1])
+            break
+        else:
+            tail.append(part)
+    return tuple(reversed(tail))
 
 # ===================================================================
 
@@ -865,36 +916,6 @@ class ReferenceMapping(Mapping):
                 raise
             else:
                 raise ValidationError(repr(self) + " : " + str(exc))
-        # also perform mode checking now as well, if context has been provided
-        # start by getting previously installed mapping that matches what
-        # this mapping
-        try:
-            derived_file = self.header['derived_from']
-            if 'generated' not in derived_file:
-                derived_from = get_cached_mapping(derived_file)
-                log.info('Comparing context file "'+self.basename+
-                        '" against "'+ derived_from.basename+'"')
-                diffs = derived_from.difference(self)
-                if len(diffs) > 0:
-                    replacements = []
-                    warnings = []
-                    for d in diffs:
-                        if 'replaced' in d[-1]:
-                            replacements.append(d[-1])
-                        else:
-                            warnings.append(d)
-                    if len(replacements)>0:
-                        log.info('Reference files replaced by new context file "%s" include:'%self.basename)
-                        for msg in replacements:
-                            log.info(repr(msg))
-
-                    if len(warnings)>0:
-                        log.warning("Differences found relative to installed mapping: %s"%
-                            derived_from.basename)
-                        for msg in warnings:
-                            log.warning(repr(msg))
-        except IOError:
-            pass
 
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""

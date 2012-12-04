@@ -9,6 +9,7 @@ import os
 import optparse
 import logging
 import pprint
+import contextlib
 
 DEFAULT_VERBOSITY_LEVEL = 50
 
@@ -137,6 +138,28 @@ remove_stream_handler = THE_LOGGER.remove_stream_handler
 def errors():
     """Return the global count of errors."""
     return THE_LOGGER.errors
+
+# ===========================================================================
+
+@contextlib.contextmanager
+def trap_warning(*args):
+    """trap_warning is a context manager which issues a warning if any statement
+    in a with-block generates an exception.   The exception is suppressed.
+    """
+    try:
+        yield
+    except Exception,  exc:
+        warning(*args + (":", str(exc)))
+
+@contextlib.contextmanager
+def trap_error(*args):
+    """trap_error is a context manager which issues an error if any statement
+    in a with-block generates an exception.   The exception is suppressed.
+    """
+    try:
+        yield
+    except Exception,  exc:
+        error(*args + (":", str(exc)))
 
 # ===========================================================================
 
