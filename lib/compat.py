@@ -157,3 +157,12 @@ except:
         """Fake ordered dictionary."""
     tell_fake("OrderedDict.  OrderedDict's will be unordered.")
 
+try:
+    import ast
+except ImportError:
+    class ast(object):
+        """Fake ast module for Python2.5 / googleapp."""
+        class NodeVisitor(object):
+            """Fake NodeVisitor class for Python2.5 / googleapp."""
+            pass
+    tell_fake("ast module.  Some checking functions not available.")

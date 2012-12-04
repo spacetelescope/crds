@@ -66,7 +66,7 @@ import tempfile
 import shutil
 import glob
 
-from .compat import namedtuple
+from .compat import namedtuple, ast
 
 import crds
 from . import (log, utils, selectors, data_file, config)
@@ -76,15 +76,6 @@ from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
 from crds.selectors import ValidationError
-
-try:
-    import ast
-except ImportError:
-    class ast(object):
-        """Fake ast module for Python2.5 / googleapp."""
-        class NodeVisitor(object):
-            """Fake NodeVisitor class for Python2.5 / googleapp."""
-            pass
 
 # ===================================================================
 
