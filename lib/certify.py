@@ -570,6 +570,7 @@ def certify_context(filename, context=None, check_references=None, trap_exceptio
     """
     ctx = rmap.get_cached_mapping(filename)
     ctx.validate_mapping(trap_exceptions=trap_exceptions)
+    ctx.warn_derivation_diffs()
     if not check_references: # Accept None or False
         return
     assert check_references in ["exist", "contents"], \
