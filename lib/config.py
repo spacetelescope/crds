@@ -91,6 +91,10 @@ def get_crds_env_context():
             "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context) + " at " + repr(where)
     return context
 
+def get_ignore_checksum():
+    """Returns environment override for disabling mapping checksums during development."""
+    return bool(os.environ.get("CRDS_IGNORE_MAPPING_CHECKSUM", False))
+
 # ===========================================================================
 
 def get_crds_env_vars():
