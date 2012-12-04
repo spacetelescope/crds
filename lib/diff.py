@@ -24,17 +24,42 @@ def _mapping_difference(file1, file2):
     differences = map1.difference(map2)
     return differences
 
-def mapping_difference(file1, file2):
+def mapping_difference(observatory, file1, file2, primitive_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
     and `file2`.
     """
     differences = _mapping_difference(file1, file2)
+    if primitive_diffs:
+        for pair in mapping_pairs(differences):
+            log.write("="*80)
+            log.write(pair)
+            text_difference(observatory, pair[0], pair[1])
     for diff in differences:
-        log.write(rq(diff))
+        diff = rq(diff)
+        if primitive_diffs:
+            log.write("="*80)
+        log.write(diff)
+        if primitive_diffs:
+            if "replaced" in diff[-1]:
+                old, new = diff_replace_old_new(diff)
+                difference(observatory, old, new, primitive_diffs=primitive_diffs)
+
+def mapping_pairs(differences):
+    pairs = set()
+    for diff in differences:
+        for pair in diff:
+            if len(pair) == 2 and rmap.is_mapping(pair[0]):
+                pairs.add(pair)
+    return sorted(pairs)
         
 def rq(diff):
     """Remove repr str quoting."""
     return diff[:-1] + (diff[-1].replace("'",""),)
+
+def diff_replace_old_new(diff):
+    _replaced, old, _with, new = diff[-1].split()
+    return old, new
+    
 # =============================================================================
 
 def mapping_check_reversions(file1, file2):
@@ -47,12 +72,12 @@ def mapping_check_reversions(file1, file2):
         log.warning("File order for reversion check looks backward:", 
                     repr(file1), ">", repr(file2))
     differences = _mapping_difference(file1, file2)
-    for diff in differences:
+    for diff in sorted(differences):
         diff = rq(diff)
         if "deleted" in diff[-1]:
             log.warning("Deleted file at", diff)
         elif "replaced" in diff[-1]:
-            _replaced, old_val, _with, new_val = diff[-1].split()
+            old_val, new_val = diff_replace_old_new(diff)
             if not newer(new_val, old_val):
                 log.warning("Reversion.  Replaced newer file at", diff)
                 
@@ -109,13 +134,13 @@ def text_difference(observatory, file1, file2):
     loc_file2 = rmap.locate_file(file2, observatory)
     pysh.sh("diff -b -c ${loc_file1} ${loc_file2}")
 
-def difference(observatory, file1, file2):
+def difference(observatory, file1, file2, primitive_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
     named `file1` and `file2` against one another and print out the results 
     on stdout.
     """
     if rmap.is_mapping(file1):
-        mapping_difference(file1, file2)
+        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs)
     elif file1.endswith(".fits"):
         fits_difference(observatory, file1, file2)
     else:
@@ -143,6 +168,10 @@ def main():
         help="Check for file reversions between CRDS mappings.", 
         action="store_true")
 
+    parser.add_option("-P", "--primitive-diffs", dest="primitive_diffs",
+        help="Include primitive differences on replaced files.", 
+        action="store_true")
+
     options, args = log.handle_standard_options(sys.argv, parser=parser)
     
     if options.jwst:
@@ -162,7 +191,7 @@ def main():
     if options.reversions:
         mapping_check_reversions(file1, file2)
     else:
-        difference(observatory, file1, file2)
+        difference(observatory, file1, file2, primitive_diffs=options.primitive_diffs)
 
 # ============================================================================
 
