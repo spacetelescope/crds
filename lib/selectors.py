@@ -196,11 +196,20 @@ class Selector(object):
 
     def choose(self, header):
         """Given `header`,  operate on self.keys() to choose one of
-        self.selections(). 
+        self.choices(). 
         """
-        self._validate_header(header)
+        lookup_key = self._validate_header(header)  # may return header or a key
+        selection = self.get_selection(lookup_key)  # what's selection for `self`?
+        choice = self.get_choice(selection, header) # recursively,  what's final choice?
+        return choice
+
+    def get_selection(self, header, lookup_key):
+        """Most selectors are based on a sorted items list which represents a
+        dictionary.  get_selection() typically returns one such item,  both the
+        key and the value,  which can be used rapidly to recurse if need be.
+        """
         raise NotImplementedError("Selector is an abstract class."
-                                  " A subclass must re-define choose().")
+                                  " A subclass must re-define get_selection().")
 
     def get_choice(self, selection, header):
         """Provide boiler-plate code to extract a choice or recurse."""
@@ -210,6 +219,18 @@ class Selector(object):
         else:
             return choice
         
+    def insert(self, header, value):
+        """Based on `header` recursively insert `value` into the Selector hierarchy,
+        either adding it as a new choice or replacing the existing choice with 
+        the same parameter set.   Add nested Selectors as required.
+        
+        `value` is a primitive element,  e.g. a filename, not a sub-Selector.
+        
+        As usual,  `header` must be complete,  containing definitions for parkeys
+        at all levels of the hierarchy,  not just this one.
+        """
+        pass
+
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
         pmap = {}
@@ -300,6 +321,7 @@ class Selector(object):
         for name in self._parameters:
             value = header.get(name, "UNDEFINED")
             self._validate_value(name, value, self._parkey_map[name])
+        return header
     
     def _check_defined(self, header):
         """Check that this selector's parkeys are all defined in `header`,
@@ -956,28 +978,15 @@ of uniform rmap structure for HST:
             selections[keytuple] = (tuple(matchers), choice)
         return selections
 
-    def get_choice(self, selection, header):
-        raise NotImplementedError("MatchSelector isn't a uniform subclass.")
+    def get_selection(self, header):
+        """Get the matching selection for `self` based on parameters in `header`.
+        """
+        # in principle we might want to resort to lower weighted choices
+        # if the higher weighted choices fail during recursion.  In practice,   
+        # highest ranked choices always worked for HST.
+        _match_tuples, selection = self.winnowing_match(header).next()
+        return _match_tuples, selection
 
-    def choose(self, header):
-        """Match the specified `header` to this selector's selections and
-        return the best matching choice.    This is the top-level entry point
-        for runtime selection making.
-        """        
-        # Iterate through ranked choices from best to worst,  stopping at the
-        # first/best overall nested selection.  For HST, multiple tries may be
-        # needed because there is no guarantee that the nested UseAfter selector
-        # will also match;  in that case,  the next best match where the
-        # UseAfter selector does produce a result is desired.
-        self._validate_header(header)
-        for _match_tuples, choice in self.winnowing_match(header):
-            if isinstance(choice, Selector):
-                return choice.choose(header)
-            else:
-                return choice
-            
-        log.verbose("Match failed.", verbosity=60)
-        raise MatchingError("No match.")
 
     def winnowing_match(self, header, raise_ambiguous=False):
         """Iterate through each of the parameters in `fitskeys`, binding
@@ -1014,9 +1023,7 @@ of uniform rmap structure for HST:
         """
         # weights counts the # of parkey value matches, establishing a
         # goodness-of-match weighting.  negative weights are better matches
-        weights = {}
-        for match_tuple in remaining.keys():
-            weights[match_tuple] = 0
+        weights = { match_tuple:0 for match_tuple in remaining.keys() }
 
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "UNDEFINED")
@@ -1219,12 +1226,10 @@ Alternate date/time formats are accepted as header parameters.
     
     >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
     """    
-    def choose(self, header):
-        date = self._validate_header(header)     
+    def get_selection(self, date):
         log.verbose("Matching date", date, " ", verbosity=60)
-        selection = self.bsearch(date, self._selections)
-        return self.get_choice(selection, header)
-
+        return self.bsearch(date, self._selections)
+    
     def bsearch(self, date, selections):
         """Do a binary search over a sorted selections list."""
         if len(selections) == 0:
@@ -1251,7 +1256,9 @@ Alternate date/time formats are accepted as header parameters.
         
     def _validate_header(self, header):
         """Validate the `header` parameters which apply only to this UseAfter.
-        Ignore `valid_values_map`.
+        Ignore `valid_values_map`.   
+        
+        Return lookup date.
         """
         self._check_defined(header)
         date = self._raw_date(header)
@@ -1317,12 +1324,11 @@ class ClosestTimeSelector(UseAfterSelector):
     >>> t.choose({"time":"2019-04-16 00:00:00"})
     'cref_flatfield_123.fits'
     """
-    def choose(self, header):
+    def get_selection(self, date):        
         import numpy as np
-        date = self._validate_header(header)
         diff = np.array([abs_time_delta(date, key) for key in self.keys()], 'f')
         index = np.argmin(diff)
-        return self.get_choice(self._selections[index], header)
+        return self._selections[index]
 
 # ==============================================================================
 
@@ -1382,13 +1388,12 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
     def condition_key(cls, key):
         return utils.condition_value(key)
     
-    def choose(self, header):
+    def get_selection(self, keyval):
         import numpy as np
-        keyval = self._validate_header(header)
         nkeys = np.array(self.keys(), dtype='f')
         diff = np.abs(nkeys - keyval)
         index = np.argmin(diff)
-        return self.get_choice(self._selections[index], header)
+        return self._selections[index]
     
     def _validate_key(self, key, valid_values_map):
         parname = self._parameters[0]
@@ -1435,24 +1440,27 @@ class BracketSelector(Selector):
 
     >>> r.choose({"effective_wavelength":'6.0'})
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
-    """
-    def choose(self, header):
-        keyval = self._validate_header(header)
+    """    
+    def get_selection(self, keyval):
         index = 0
-        while index < len(self._selections) and \
-                keyval > self._selections[index][0]:
+        selections = self._selections
+        while index < len(selections) and keyval > selections[index][0]:
             index += 1
-        if index == len(self._selections):
-            choice1 = choice2 = self.get_choice(
-                    self._selections[index-1], header)
-        elif index == 0 or keyval == self._selections[index][0]:
-            choice1 = choice2 = self.get_choice(
-                    self._selections[index], header)
+        if index == len(selections):
+            return selections[index-1], selections[index-1]
+        elif index == 0 or keyval == selections[index][0]:
+            return selections[index], selections[index]
         else:
-            choice1 = self.get_choice(self._selections[index-1], header)
-            choice2 = self.get_choice(self._selections[index], header)
-        return choice1, choice2
+            return selections[index-1], selections[index]
     
+    def get_choice(self, selection, header):
+        result1 = super(BracketSelector, self).get_choice(selection[0], header)
+        if selection[0] == selection[1]:
+            result2 = result1
+        else:
+            result2 = super(BracketSelector, self).get_choice(selection[1], header)
+        return result1, result2
+
     def get_parkey_map(self):
         return {}
 
@@ -1657,13 +1665,12 @@ class SelectVersionSelector(Selector):
         """Convert relation string keys into runtime comparator objects."""
         return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
 
-    def choose(self, header):
-        """Based on `header`,  return the corresponding version selection."""
-        version = self._validate_header(header)
+    def get_selection(self, version):
+        """Based on `version`,  return the corresponding selection."""
         index = 0
         while self._selections[index][0] < version:
             index += 1
-        return self.get_choice(self._selections[index], header)
+        return self._selections[index]
     
     def _validate_key(self, key, valid_values_map):
         """Keys effectively validated at __init__ time."""
@@ -1682,7 +1689,6 @@ def abs_time_delta(time1, time2):
     date1 = timestamp.parse_date(time1)
     date2 = timestamp.parse_date(time2)
     return abs((date1-date2).total_seconds())
-
 
 # ==============================================================================
 
