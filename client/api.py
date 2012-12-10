@@ -282,7 +282,8 @@ class FileCacher(object):
             # traceback.print_exc()
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
-                                     " at server " + srepr(get_crds_server()) +
+                                     " at server " + srepr(get_crds_server()) + 
+                                     " with mode " + srepr(get_download_mode()) +
                                      " : " + str(exc))
             
     def get_data_rpc(self, pipeline_context, file, localpath):
