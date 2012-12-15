@@ -219,18 +219,6 @@ class Selector(object):
         else:
             return choice
         
-    def insert(self, header, value):
-        """Based on `header` recursively insert `value` into the Selector hierarchy,
-        either adding it as a new choice or replacing the existing choice with 
-        the same parameter set.   Add nested Selectors as required.
-        
-        `value` is a primitive element,  e.g. a filename, not a sub-Selector.
-        
-        As usual,  `header` must be complete,  containing definitions for parkeys
-        at all levels of the hierarchy,  not just this one.
-        """
-        pass
-
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
         pmap = {}
@@ -450,6 +438,86 @@ class Selector(object):
     def merge(self, other):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
             self.short_name + " does not support merging.")
+        
+    @property
+    def class_list(self):
+        """Return the pattern of selector nesting for this rmap."""
+        if "classes" in self._rmap_header:
+            return tuple(self._rmap_header["classes"])
+        elif self._rmap_header["observatory"] == "jwst":
+            return ("Match",)
+        else:  # nominally HST / CDBS
+            return ("Match", "UseAfter")
+
+    def insert(self, header, value):
+        """Based on `header` recursively insert `value` into the Selector hierarchy,
+        either adding it as a new choice or replacing the existing choice with 
+        the same parameter set.   Add nested Selectors as required.
+        
+        `value` is a primitive element,  e.g. a filename, not a sub-Selector.
+        
+        As usual, `header` should be complete, containing definitions for parkeys
+        at all levels of the hierarchy.
+        
+        This call defines the starting point for parkeys and classes,  whereas
+        _insert has gradually diminishing lists passed down to nested Selectors.
+        """
+        self._insert(header, value, self._rmap_header["parkey"], self.class_list)
+
+    def _insert(self, lookup_parameters, value, parkey, classes):
+        """Execute the insertion,  popping off parkeys and classes on the way down."""
+        try:
+            selection = self.get_selection(header)
+        except LookupError:
+            key = self.get_key(header, parkey[0])
+            new_value = create_nested(header, value, parkey[1:], classes[1:], self._rmap_header)
+        else:
+            new_value = self._insert(lookup_parameters, value, parkey[1:], classes[1:])
+            key = selection[0]
+        self._replace(key, new_value)
+    
+    def _replace(self, key, value):
+        """Replace the selection item corresponding to `key` with (`key`,`value`).
+        Add a completely new item if there's no existing `key` yet.
+        """
+        selections = self._raw_selections[:]
+        for i, (old_key, old_value) in enumerate(selections):
+            if key == old_key:
+                selections[i] = (key, value)
+                break
+        else:
+            selections.append((key, value))
+        self.__init__(self._parameters, selections, rmap_header=self._rmap_header)
+        
+    def get_key(self, header):
+        """Make a typical key from `header` corresponding to parameters for this
+        Selector:  a tuple of header values.
+        """
+        pars = []
+        for par in self._parameters:
+            pars.append(header[par])
+        return tuple(pars)
+
+def create_nested(header, value, parkey, classes, rmap_header):
+    """Based on reference file `header`,  a portion of the `parkey` tuple from
+    `rmap_header`,  a portion of the class list for the rmap, create the 
+    nested chain of Selectors enumerated in `classes`,   terminating with
+    `value`.  The returned expansion is essentially linear,  not yet a tree.
+    This is used to create portions of a hierarchy where the parameter keys
+    don't exist yet, adding new Selectors rather than replacing the values for
+    existing keys.   This works for an arbitrary class chain.   It assumes that
+    the class nesting of an rmap is homogeneous,  that all areas follow the same
+    nesting pattern.
+    """
+    if classes:
+        key = self.get_key(header, parkey[0])
+        nested = create_nested(header, value, parkey[1:], classes[1:], rmap_header)
+        selections = { key : nested }
+        classname = "crds.selectors." + classes[0] + "Selector"
+        selector_class = utils.get_object(classname)
+        return selector_class(parkey[0], selections, rmap_header=rmap_header)
+    else:
+        return value
 
 # ==============================================================================
 
