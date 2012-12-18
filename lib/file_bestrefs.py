@@ -178,7 +178,7 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
                     MISMATCHES[filekind].append(dataset)
             else:
                 log.verbose("Lookup MATCHES for", repr(new), repr(filekind), 
-                            verbosity=30)
+                            "=", repr(old), verbosity=30)
         else:
             log.verbose("Lookup N/A for", repr(new), repr(filekind), 
                         verbosity=30)
