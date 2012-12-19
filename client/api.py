@@ -280,6 +280,11 @@ class FileCacher(object):
             self.verify_file(pipeline_context, name, localpath)
         except Exception, exc:
             # traceback.print_exc()
+            try:
+                os.remove(localpath)
+            except Exception, exc:
+                log.error("Failed removing failed download for", 
+                          repr(localpath),":", str(exc))
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) + 
