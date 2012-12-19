@@ -22,34 +22,36 @@ def _precondition_header_biasfile(header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
+    log.verbose("acs_biasfile_precondition_header:", header)
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-        log.verbose("Mapping pre-SM4 APERTURE to *")
+        log.verbose("Mapping pre-SM4 APERTURE to N/A")
         header["APERTURE"] = "N/A"
     try:
-        numcols = float(header["NUMCOLS"])
+        numcols = int(header["NAXIS1"])
     except ValueError:
         log.info("acs_biasfile_selection: bad NUMCOLS.")
         sys.exc_clear()
     else:
+        header["NUMCOLS"] = utils.condition_value(str(numcols))
         # if pre-SM4 and NUMCOLS > HALF_CHIP
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
         if (exptime < SM4):
             if numcols > ACS_HALF_CHIP_COLS:
                 if header["CCDAMP"] in ["A","D"]: 
-                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D "+
-                                "to AD for NUMCOLS = "+ header["NUMCOLS"])
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
+                                "to AD for NUMCOLS = " + header["NAXIS1"])
                     header["CCDAMP"] = "AD"
                 elif header["CCDAMP"] in ["B","C"]:  
-                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C "+
-                                "to BC for NUMCOLS = "+ header["NUMCOLS"])
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
+                                "to BC for NUMCOLS = " + header["NAXIS1"])
                     header["CCDAMP"] = "BC"
     if header['DETECTOR'] == "WFC" and \
         header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
         log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
         try:
-            numrows = float(header["NUMROWS"]) / 2
+            numrows = int(header["NAXIS2"]) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
             sys.exc_clear()
@@ -73,8 +75,8 @@ def precondition_header(rmap, header):
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
-               "NUMCOLS=" + repr(header['NUMCOLS']),
-               "NUMROWS=" + repr(header['NUMROWS']),
+               "NUMCOLS=" + repr(header['NAXIS1']),
+               "NUMROWS=" + repr(header['NAXIS2']),
                "LTV1=" + repr(header['LTV1']),
                "LTV2=" + repr(header['LTV2']))
     log.verbose("Trying full-frame default search")
