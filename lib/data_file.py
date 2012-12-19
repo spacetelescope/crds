@@ -128,7 +128,7 @@ def dm_setval(filepath, key, value):
         dm[key] = value
         dm.save(filepath)
 
-def get_conditioned_header(filepath, needed_keys=[], original_name=None):
+def get_conditioned_header(filepath, needed_keys=[], original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
     
@@ -136,7 +136,7 @@ def get_conditioned_header(filepath, needed_keys=[], original_name=None):
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
     """
-    header = get_header(filepath, needed_keys, original_name, observatory=None)
+    header = get_header(filepath, needed_keys, original_name, observatory=observatory)
     return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=[], original_name=None, observatory=None):

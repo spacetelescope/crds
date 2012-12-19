@@ -197,8 +197,8 @@ def get_db_parkeys(instrument, filekind):
 
 def reference_keys_to_dataset_keys(instrument, filekind, header):
     """Given a header dictionary for a reference file,  map the header back to
-    keys relevant to datasets.   So for ACS biasfile the reference says BINAXIS1
-    but the dataset says NUMCOLS.   This would convert { "BINAXIS1": 1024 } to
+    keys relevant to datasets.   So for ACS biasfile the reference says NAXIS1
+    but the dataset says NUMCOLS.   This would convert { "NAXIS1": 1024 } to
     { "NUMCOLS" : 1024 }.
     
     In general,  rmap parkeys are matched against datset values and are defined

@@ -29,6 +29,7 @@ from argparse import RawTextHelpFormatter
 
 import crds.client.api as api
 from crds import (rmap, log, data_file)
+import crds
 
 # ============================================================================
 
@@ -111,24 +112,15 @@ def remove_files(observatory, files, kind):
 def sync_datasets(contexts, datasets):
     """Sync mappings and references for datasets with respect to `contexts`."""
     for context in contexts:
-        try:
-            sync_context_mappings([context])
-        except Exception, exc:
-            log.error("Filed to sync mappings for context", repr(context), str(exc))
-            continue
-        try:
-            pmap = rmap.get_cached_mapping(context)
-        except Exception, exc:
-            log.error("Failed to load context", repr(context), ":", str(exc))
-            continue
+        observatory = data_file.get_observatory(context)
         for dataset in datasets:
             try:
-                header = data_file.get_header(dataset, observatory=pmap.observatory)
+                header = data_file.get_conditioned_header(dataset, observatory=observatory)
             except Exception, exc:
                 log.error("Failed to get matching parameters from", repr(dataset))
                 continue
             try:
-                bestrefs = crds.getreferences(header, context=context, observatory=pmap.observatory)
+                bestrefs = crds.getreferences(header, context=context, observatory=observatory)
             except Exception, exc:
                 log.error("Failed to sync references for dataset", repr(dataset), 
                           "under context", repr(context), ":", str(exc))
@@ -262,8 +254,13 @@ downloading missing files from the CRDS server and/or archive.
         help='Fetch files for pipeline context ids between <MIN> and <MAX>.')
     parser.add_argument('--purge', action='store_true', dest="purge",
         help='Remove reference files and mappings not referred to by contexts.')
+    parser.add_argument('--verbose', action='store_true', dest="verbose",
+        help='Enable nominal debug output.')
     parser.add_argument("files", nargs="*", help="Synced files can be explicitly listed.")
     args = parser.parse_args()
+    
+    if args.verbose:
+        log.set_verbose()
     
     contexts = determine_contexts(args)
     if contexts:
