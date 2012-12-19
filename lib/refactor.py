@@ -90,6 +90,14 @@ class RefactorAction(object):
         else:
             raise ValueError("Unknown action " + repr(self.action))    
         return " ".join([str(x) for x in parts])
+    
+def __repr__(self):
+#    (self, rmap_name, action, ref_file, ref_match_tuple, 
+#                 rmap_match_tuple, useafter, replaced_file):
+    attrs = ["rmap_name", "action", "ref_file", "ref_match_tuple", 
+             "rmap_match_tuple", "useafter", "replaced_file"]
+    return self.__class__.__name__ + "(%s, %s, %s, %s, %s, %s, %s)" % \
+        tuple([ repr(getattr(self, attr)) for attr in attrs ])
 
 def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the 
@@ -151,7 +159,7 @@ def _get_matching_header(loaded_rmap, reffile):
     header = data_file.get_header(reffile)
     
     # The reference file key and dataset key matched aren't always the same!?!?
-    # Specifically ACS BIASFILE NUMROWS,NUMCOLS and BINAXIS1,BINAXIS2
+    # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
     header = loaded_rmap.locate.reference_keys_to_dataset_keys(
         loaded_rmap.instrument, loaded_rmap.filekind, header)
     
@@ -234,7 +242,7 @@ def _remove_special_cases(matches):
         for m2 in matches2:
             if m1 != m2 and selectors.match_superset(m1, m2) and \
                     not selectors.different_match_weight(m1, m2) and m2 in matches:
-                log.verbose("Match",repr(m1),"is a supertset of", repr(m2))
+                log.verbose("Match",repr(m1),"is a superset of", repr(m2))
                 matches.remove(m2)
     return list(set(matches))
     
