@@ -131,6 +131,13 @@ def checksum(pathname):
     return sum.hexdigest()
 
 
+def str_checksum(str):
+    """Return the CRDS hexdigest for small strings.""" 
+    sum = sha.new()
+    sum.update(str)
+    return sum.hexdigest()
+
+
 
 # ===================================================================
 
