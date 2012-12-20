@@ -7,6 +7,7 @@ header = {
     'observatory' : 'TOBS',
     'parkey' : (('TEST_CASE',), ('PARAMETER',)),
     'sha1sum' : 'bcd74064987f7c168a90fa02bb19ba078fae399c',
+    'classes' : ('Match', 'UseAfter',)
 }
 
 selector = Match({

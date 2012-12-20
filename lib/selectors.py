@@ -266,8 +266,7 @@ class Selector(object):
                 pf_sel = sel.format(indent+1)
             else:
                 pf_sel = repr(sel)
-            lines.append((indent+1)*" "*4 + repr(key) + 
-                         " : " + pf_sel + ",")
+            lines.append((indent+1)*" "*4 + repr(key) + " : " + pf_sel + ",")
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
     
@@ -464,18 +463,20 @@ class Selector(object):
         """
         self._insert(header, value, self._rmap_header["parkey"], self.class_list)
 
-    def _insert(self, lookup_parameters, value, parkey, classes):
+    def _insert(self, header, value, parkey, classes):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
+        if not len(parkey):
+            return value
+        key = self.get_key(header, parkey[0])
         try:
             selection = self.get_selection(header)
-        except LookupError:
-            key = self.get_key(header, parkey[0])
-            new_value = create_nested(header, value, parkey[1:], classes[1:], self._rmap_header)
+        except crds.CrdsError:
+            new_value = self.create_nested(header, value, parkey[1:], classes[1:])
         else:
-            new_value = self._insert(lookup_parameters, value, parkey[1:], classes[1:])
-            key = selection[0]
+            new_value = selection[1]._insert(header, value, parkey[1:], classes[1:])
         self._replace(key, new_value)
-    
+        return self
+
     def _replace(self, key, value):
         """Replace the selection item corresponding to `key` with (`key`,`value`).
         Add a completely new item if there's no existing `key` yet.
@@ -487,37 +488,37 @@ class Selector(object):
                 break
         else:
             selections.append((key, value))
-        self.__init__(self._parameters, selections, rmap_header=self._rmap_header)
+        self.__init__(self._parameters, dict(selections), rmap_header=self._rmap_header)
         
-    def get_key(self, header):
-        """Make a typical key from `header` corresponding to parameters for this
-        Selector:  a tuple of header values.
+    def get_key(self, header, parkeys):
+        """Make a typical key from `header` corresponding to `parkeys`,  one 
+        member of an rmap parkey tuple.
         """
-        pars = []
-        for par in self._parameters:
-            pars.append(header[par])
-        return tuple(pars)
+        key = tuple([header[par] for par in parkeys])
+        if len(key) == 1:
+            key = key[0]
+        return key
 
-def create_nested(header, value, parkey, classes, rmap_header):
-    """Based on reference file `header`,  a portion of the `parkey` tuple from
-    `rmap_header`,  a portion of the class list for the rmap, create the 
-    nested chain of Selectors enumerated in `classes`,   terminating with
-    `value`.  The returned expansion is essentially linear,  not yet a tree.
-    This is used to create portions of a hierarchy where the parameter keys
-    don't exist yet, adding new Selectors rather than replacing the values for
-    existing keys.   This works for an arbitrary class chain.   It assumes that
-    the class nesting of an rmap is homogeneous,  that all areas follow the same
-    nesting pattern.
-    """
-    if classes:
-        key = self.get_key(header, parkey[0])
-        nested = create_nested(header, value, parkey[1:], classes[1:], rmap_header)
-        selections = { key : nested }
-        classname = "crds.selectors." + classes[0] + "Selector"
-        selector_class = utils.get_object(classname)
-        return selector_class(parkey[0], selections, rmap_header=rmap_header)
-    else:
-        return value
+    def create_nested(self, header, value, parkey, classes):
+        """Based on reference file `header`,  a portion of the `parkey` tuple,
+        a portion of the class list for the rmap, create the nested chain of 
+        Selectors enumerated in `classes`,   terminating with `value`.  The 
+        returned expansion is essentially linear,  not yet a tree.  This is used
+        to create portions of a hierarchy where the parameter keys don't exist 
+        yet, adding new Selectors rather than replacing the values for existing
+        keys.   This works for an arbitrary class chain.   It assumes that the 
+        class nesting of an rmap is homogeneous,  that all areas follow the same
+        nesting pattern.
+        """
+        if classes:
+            key = self.get_key(header, parkey[0])
+            nested = self.create_nested(header, value, parkey[1:], classes[1:])
+            selections = { key : nested }
+            classname = "crds.selectors." + classes[0] + "Selector"
+            selector_class = utils.get_object(classname)
+            return selector_class(parkey[0], selections, rmap_header=self._rmap_header)
+        else:
+            return value
 
 # ==============================================================================
 
@@ -1052,7 +1053,10 @@ of uniform rmap structure for HST:
         # in principle we might want to resort to lower weighted choices
         # if the higher weighted choices fail during recursion.  In practice,   
         # highest ranked choices always worked for HST.
-        _match_tuples, selection = self.winnowing_match(header).next()
+        try:
+            _match_tuples, selection = self.winnowing_match(header).next()
+        except StopIteration:
+            raise LookupError("No Match found.")
         return _match_tuples, selection
 
 
@@ -1653,21 +1657,26 @@ class VersionRelation(object):
             return False
 
     def __cmp__(self, other):
-        if self.version == "default":
-            result = 1
-        elif isinstance(other, VersionRelation):
-            if self.relation != other.relation and \
+        if isinstance(other, VersionRelation):
+            if self.version == "default":
+                result = 0 if self.version == other.version else 1
+            elif self.relation != other.relation and \
                 self.version == other.version: # '<' < '=',  '<' < '=='
                 result = cmp(self.relation, other.relation)  
             else:
                 result = cmp(self.version, other.version)
         else:
-            if self.compatible_types(other):
+            if self.version == "default":
+                result =  0 if other == "default" else 1
+            elif self.compatible_types(other):
                 result = cmp(self, VersionRelation("= " + str(other)))
             else:
                 raise ValidationError("Incompatible version expression types: " + 
                                  repr(self.version) + " and " + repr(other))
         return result
+    
+    def __hash__(self):
+        return hash(self.relation + str(self.version))
 
 class SelectVersionSelector(Selector):
     """SelectVersion chooses from among it's selections based on a number of

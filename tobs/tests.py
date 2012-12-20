@@ -92,7 +92,70 @@ class TestSelectors(unittest.TestCase):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.0', 'cref_flatfield_137.fits')
     def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
+        
+class TestSelectorInsert(unittest.TestCase):
 
+    def setUp(self):
+        self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
+        self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
+        
+    def terminal_insert(self, selector, param, value):
+        header = { 
+                  "TEST_CASE" : selector,
+                  "PARAMETER" : param, 
+        }
+        self.rmap.selector.insert(header, value)
+        diffs = self.original.difference(self.rmap)
+        # print diffs
+        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
+        assert diffs[0][1] == (selector,)
+        assert diffs[0][2] == param
+        assert diffs[0][3] == "added " + repr(value)
+
+    def terminal_replace(self, selector, param, value):
+        header = { 
+                  "TEST_CASE" : selector,
+                  "PARAMETER" : param, 
+        }
+        self.rmap.selector.insert(header, value)
+        diffs = self.original.difference(self.rmap)
+        # print diffs
+        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
+        assert diffs[0][1] == (selector,)
+        assert diffs[0][2] == param
+        assert "replaced" in diffs[0][3]
+        assert diffs[0][3].endswith(repr(value))
+
+    def test_useafter_insert_before(self):
+        self.terminal_insert("USE_AFTER", '2003-09-25 01:28:00', 'foo.fits')
+
+    def test_useafter_replace_before(self):
+        self.terminal_replace("USE_AFTER", '2003-09-26 01:28:00', 'foo.fits')
+            
+    def test_useafter_insert_mid(self):
+        self.terminal_insert("USE_AFTER", '2004-06-18 04:36:01', 'foo.fits')
+            
+    def test_useafter_replace_mid(self):
+        self.terminal_replace("USE_AFTER", '2004-06-18 04:36:00', 'foo.fits')
+            
+    def test_useafter_insert_after(self):
+        self.terminal_insert("USE_AFTER", '2004-07-14 16:52:01', 'foo.fits')
+
+    def test_useafter_replace_after(self):
+        self.terminal_replace("USE_AFTER", '2004-07-14 16:52:00', 'foo.fits')
+
+    def test_closest_time_insert(self):
+        pass
+    
+    def test_select_version_insert(self):
+        pass
+    
+    def test_bracket_insert(self):
+        pass
+    
+    def test_geometrically_nearest_insert(self):
+        pass
+    
 if __name__ == '__main__':
     unittest.main()
 
