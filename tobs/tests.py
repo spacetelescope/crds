@@ -110,7 +110,7 @@ class TestSelectorInsert(unittest.TestCase):
         # print diffs
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
         assert diffs[0][1] == (selector,)
-        assert diffs[0][2] == param
+        assert str(diffs[0][2]) == str(param),  diffs
         assert diffs[0][3] == "added " + repr(value)
 
     def terminal_replace(self, selector, param, value):
@@ -123,7 +123,7 @@ class TestSelectorInsert(unittest.TestCase):
         # print diffs
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
         assert diffs[0][1] == (selector,)
-        assert diffs[0][2] == param
+        assert str(diffs[0][2]) == str(param), diffs
         assert "replaced" in diffs[0][3]
         assert diffs[0][3].endswith(repr(value))
 
@@ -156,33 +156,76 @@ class TestSelectorInsert(unittest.TestCase):
     def test_select_version_insert_mid(self):
         self.terminal_insert("SELECT_VERSION", '<4', 'foo.fits')
 
-    # There's *nothing* after default.
+    # There's *nothing* after default,  so no insert possible.
     #    def test_select_version_insert_after(self):
     #        self.terminal_insert("SELECT_VERSION", 'default', 'foo.fits')
+
+    def test_select_version_replace_before(self):
+        self.terminal_replace("SELECT_VERSION", '<3.1', 'foo.fits')
+
+    def test_select_version_replace_mid(self):
+        self.terminal_replace("SELECT_VERSION", '<5', 'foo.fits')
+
+    def test_select_version_replace_after(self):
+        self.terminal_replace("SELECT_VERSION", 'default', 'foo.fits')
 
     """
             '2017-04-24': "cref_flatfield_123.fits",
             '2018-02-01':  "cref_flatfield_222.fits",
             '2019-04-15': "cref_flatfield_123.fits",
     """
-    def test_closest_time_insert(self):
-        pass
+    def test_closest_time_insert_before(self):
+         self.terminal_insert("CLOSEST_TIME", '2017-04-20 00:00:00', 'foo.fits')
+    def test_closest_time_insert_mid(self):
+         self.terminal_insert("CLOSEST_TIME", '2018-01-20 00:57', 'foo.fits')
+    def test_closest_time_insert_after(self):
+         self.terminal_insert("CLOSEST_TIME", '2020-04-20 00:00:00', 'foo.fits')
+    
+    def test_closest_time_replace_before(self):
+         self.terminal_replace("CLOSEST_TIME", '2017-04-24', 'foo.fits')
+    def test_closest_time_replace_mid(self):
+         self.terminal_replace("CLOSEST_TIME", '2018-02-01', 'foo.fits')
+    def test_closest_time_replace_after(self):
+         self.terminal_replace("CLOSEST_TIME", '2019-04-15', 'foo.fits')
     
     """
             1.2: "cref_flatfield_120.fits",
             1.5: "cref_flatfield_124.fits",
             5.0: "cref_flatfield_137.fits",
     """
-    def test_bracket_insert(self):
-        pass
+    def test_bracket_insert_before(self):
+         self.terminal_insert("BRACKET", 1.0, 'foo.fits')
+    def test_bracket_insert_mid(self):
+         self.terminal_insert("BRACKET", 1.3, 'foo.fits')
+    def test_bracket_insert_after(self):
+         self.terminal_insert("BRACKET", 5.1, 'foo.fits')
+
+    def test_bracket_replace_before(self):
+         self.terminal_replace("BRACKET", 1.2, 'foo.fits')
+    def test_bracket_replace_mid(self):
+         self.terminal_replace("BRACKET", 1.5, 'foo.fits')
+    def test_bracket_replace_after(self):
+         self.terminal_replace("BRACKET", 5.0, 'foo.fits')
 
     """
             1.2 : "cref_flatfield_120.fits",
             1.5 : "cref_flatfield_124.fits",
             5.0 : "cref_flatfield_137.fits",
     """
-    def test_geometrically_nearest_insert(self):
-        pass
+    def test_geometrically_nearest_insert_before(self):
+         self.terminal_insert("GEOMETRICALLY_NEAREST", 1.0, 'foo.fits')
+    def test_geometrically_nearest_insert_mid(self):
+         self.terminal_insert("GEOMETRICALLY_NEAREST", 1.3, 'foo.fits')
+    def test_geometrically_nearest_insert_after(self):
+         self.terminal_insert("GEOMETRICALLY_NEAREST", 5.1, 'foo.fits')
+
+    def test_geometrically_nearest_replace_before(self):
+         self.terminal_replace("GEOMETRICALLY_NEAREST", 1.2, 'foo.fits')
+    def test_geometrically_nearest_replace_mid(self):
+         self.terminal_replace("GEOMETRICALLY_NEAREST", 1.5, 'foo.fits')
+    def test_geometrically_nearest_replace_after(self):
+         self.terminal_replace("GEOMETRICALLY_NEAREST", 5.0, 'foo.fits')
+
     
 if __name__ == '__main__':
     unittest.main()

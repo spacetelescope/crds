@@ -1678,6 +1678,9 @@ class VersionRelation(ComparableMixin):
             
     def __repr__(self):
         return 'VersionRelation(%s)' % repr(self.relation_str)
+    
+    def __str__(self):
+        return self.relation_str
    
     def _cmpkey(self):
         return (self.version, self.relation)
