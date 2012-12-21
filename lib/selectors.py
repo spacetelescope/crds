@@ -975,12 +975,11 @@ of uniform rmap structure for HST:
     
     def __init__(self, parameters, selections, rmap_header={}):
         self._substitutions = rmap_header.get("substitutions", {})
-        selects = self.do_substitutions(
-            parameters, selections, self._substitutions)
+        selects = self.do_substitutions(parameters, selections, self._substitutions)
         selects = self.fix_simple_keys(selects)
 
         Selector.__init__(self, parameters, selects, rmap_header)  # largely overridden
-        self.raw_selections = selections  # override __init__ using selects
+        self._raw_selections = sorted(selections.items())  # override __init__ using selects
 
         self._match_selections = self.get_matcher_selections(
             dict(self._selections))
@@ -1018,7 +1017,7 @@ of uniform rmap structure for HST:
                 conditioned.append(elem)
             return tuple(conditioned)
         else:  # simple strings
-            return utils.condition_value(match_tuple)
+            return (utils.condition_value(match_tuple),)
 
     def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
