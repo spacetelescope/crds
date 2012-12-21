@@ -976,48 +976,37 @@ of uniform rmap structure for HST:
     def __init__(self, parameters, selections, rmap_header={}):
         self._substitutions = rmap_header.get("substitutions", {})
         selects = self.do_substitutions(parameters, selections, self._substitutions)
-        selects = self.fix_simple_keys(selects)
 
         Selector.__init__(self, parameters, selects, rmap_header)  # largely overridden
         self._raw_selections = sorted(selections.items())  # override __init__ using selects
 
-        self._match_selections = self.get_matcher_selections(
-            dict(self._selections))
+        self._match_selections = self.get_matcher_selections(dict(self._selections))
         self._value_map = self.get_value_map()
      
-    def fix_simple_keys(self, selections):
-        """ Enable simple mappings like:  "ACS":"filename" rather than 
-        ("ACS",):"filename"
-        """
-        new_selections = {}
-        for key, value in selections.items():
-            if not isinstance(key, tuple):
-                key = (key,)
-            new_selections[key] = value
-        return new_selections
-    
     @classmethod
     def condition_key(cls, match_tuple):
         """Normalize the elements of match_tuple using utils.condition_value()"""
         if isinstance(match_tuple, tuple):
-            conditioned = []
-            for elem in match_tuple:
-                if isinstance(elem, str):
-                    if (elem.startswith("{") and elem.endswith("}")) or \
-                        (elem.startswith("(") and elem.endswith(")")):
-                        pass  # raw regexes and equalities are not conditioned
-                    elif "|" in elem:
-                        elem = "|".join([utils.condition_value(x) for x in elem.split("|")])
-                    else:
-                        elem = utils.condition_value(elem)
-                elif isinstance(elem, (tuple,list)):
-                    elem = "|".join([utils.condition_value(key) for key in elem])
-                else:
-                    elem = utils.condition_value(elem)
-                conditioned.append(elem)
-            return tuple(conditioned)
+            return tuple([cls.condition_key_element(elem) for elem in match_tuple])
         else:  # simple strings
-            return (utils.condition_value(match_tuple),)
+            return (cls.condition_key_element(match_tuple),)
+    
+    @classmethod
+    def condition_key_element(cls, elem):
+        """Condition one element of a match tuple."""
+        if isinstance(elem, str):
+            if (elem.startswith("{") and elem.endswith("}")) or \
+                (elem.startswith("(") and elem.endswith(")")):
+                pass  # raw regexes and equalities are not conditioned
+            elif "|" in elem:
+                elem = "|".join([utils.condition_value(x) for x in elem.split("|")])
+            else:
+                elem = utils.condition_value(elem)
+        elif isinstance(elem, (tuple,list)):
+            elem = "|".join([utils.condition_value(key) for key in elem])
+        else:
+            elem = utils.condition_value(elem)
+        return elem
 
     def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
