@@ -226,6 +226,15 @@ class TestSelectorInsert(unittest.TestCase):
     def test_geometrically_nearest_replace_after(self):
          self.terminal_replace("GEOMETRICALLY_NEAREST", 5.0, 'foo.fits')
 
+    def test_recursive_insert(self): # , header, value, classes):
+        header = { 
+                  "TEST_CASE" : "INSERT",
+                  "PARAMETER" : "2012-09-09 03:07", 
+        }
+        self.rmap.selector.insert(header, "foo.fits")
+        diffs = self.original.difference(self.rmap)
+        print diffs
+        print self.rmap.selector.format()
     
 if __name__ == '__main__':
     unittest.main()
