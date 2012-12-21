@@ -1,9 +1,10 @@
 """Higher level mapping based tests for selectors not covered by hst.
 """
 
-from crds import rmap
-
+import sys
 import unittest
+
+from crds import rmap
 
 class TestSelectors(unittest.TestCase):
 
@@ -144,15 +145,42 @@ class TestSelectorInsert(unittest.TestCase):
     def test_useafter_replace_after(self):
         self.terminal_replace("USE_AFTER", '2004-07-14 16:52:00', 'foo.fits')
 
+    """
+           '<3.1':    'cref_flatfield_65.fits',
+           '<5':      'cref_flatfield_73.fits',
+           'default': 'cref_flatfield_123.fits',
+    """
+    def test_select_version_insert_before(self):
+        self.terminal_insert("SELECT_VERSION", '<3.0', 'foo.fits')
+
+    def test_select_version_insert_mid(self):
+        self.terminal_insert("SELECT_VERSION", '<4', 'foo.fits')
+
+    # There's *nothing* after default.
+    #    def test_select_version_insert_after(self):
+    #        self.terminal_insert("SELECT_VERSION", 'default', 'foo.fits')
+
+    """
+            '2017-04-24': "cref_flatfield_123.fits",
+            '2018-02-01':  "cref_flatfield_222.fits",
+            '2019-04-15': "cref_flatfield_123.fits",
+    """
     def test_closest_time_insert(self):
         pass
     
-    def test_select_version_insert(self):
-        pass
-    
+    """
+            1.2: "cref_flatfield_120.fits",
+            1.5: "cref_flatfield_124.fits",
+            5.0: "cref_flatfield_137.fits",
+    """
     def test_bracket_insert(self):
         pass
-    
+
+    """
+            1.2 : "cref_flatfield_120.fits",
+            1.5 : "cref_flatfield_124.fits",
+            5.0 : "cref_flatfield_137.fits",
+    """
     def test_geometrically_nearest_insert(self):
         pass
     
