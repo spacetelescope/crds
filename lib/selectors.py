@@ -88,11 +88,13 @@ import timestamp
 import re
 import pprint as pp
 import fnmatch
+import sys
+import numbers
 
 # import numpy as np
 
 import crds
-import log, utils
+from crds import log, utils, compat
 
 # ==============================================================================
 
@@ -469,11 +471,15 @@ class Selector(object):
             return value
         key = self.get_key(header, parkey[0])
         try:
-            selection = self.get_selection(header)
+            sel_param = self._validate_header(header)   # general it's key, not always
+            selection = self.get_selection(sel_param)
         except crds.CrdsError:
             new_value = self.create_nested(header, value, parkey[1:], classes[1:])
         else:
-            new_value = selection[1]._insert(header, value, parkey[1:], classes[1:])
+            if isinstance(selection[1], Selector):
+                new_value = selection[1]._insert(header, value, parkey[1:], classes[1:])
+            else:
+                new_value = value
         self._replace(key, new_value)
         return self
 
@@ -1549,17 +1555,54 @@ class BracketSelector(Selector):
         
 # ==============================================================================
 
+class ComparableMixin(object):
+    
+    def _compare(self, other, method):
+        if not isinstance(other, self.__class__):
+            other = self._convert(other)
+        self._check_compatible(other)            
+        try:
+            return method(self._cmpkey(), other._cmpkey())
+        except (AttributeError, TypeError):
+            # _cmpkey not implemented, or return different type,
+            # so I can't compare with "other".
+            return NotImplemented
+    
+    def __lt__(self, other):
+        return self._compare(other, lambda s, o: s < o)
+
+    def __le__(self, other):
+        return self._compare(other, lambda s, o: s <= o)
+
+    def __eq__(self, other):
+        return self._compare(other, lambda s, o: s == o)
+
+    def __ge__(self, other):
+        return self._compare(other, lambda s, o: s >= o)
+
+    def __gt__(self, other):
+        return self._compare(other, lambda s, o: s > o)
+
+    def __ne__(self, other):
+        return self._compare(other, lambda s, o: s != o)
+    
+    def __hash__(self):
+        return hash(self._cmpkey())
+    
+    def _check_compatible(self, other):
+        pass
+    
 RELATION_RE = re.compile('^([<=][=]?|default)(.*)$')
 
 FIXED_RE = re.compile("\d+[.]*\d*")
 
-class VersionRelation(object):
+class VersionRelation(ComparableMixin):
     """A version relation consists of a relation operator <,=,== and an 
     expression representing a version.   VersionRelations can be compared to 
     themselves to support generating a sorted list:
 
-    >>> s = VersionRelation('< 5')
-    >>> t = VersionRelation('< 6')
+    >>> s = VersionRelation('<5')
+    >>> t = VersionRelation('<6')
     >>> s < t
     True
     >>> s == t
@@ -1615,68 +1658,43 @@ class VersionRelation(object):
 
     """
     def __init__(self, relation_str):
-        match = RELATION_RE.match(relation_str)
-        if not match:
-            raise ValidationError("Relation " + repr(relation_str) + 
-                             " does not begin with one of >,<,>=,<=,=,==")
-        relation = match.group(1)
-        if relation == "==":
-            relation = "="
-        self.relation = relation
-        version = match.group(2).strip()
-        if self.relation != "default":
-            try:
-                self.version = eval(version)
-            except ValueError:
-                raise ValidationError("Invalid version expression.  Expression must"
-                                 " evaluate to a comparable object.")
+        self.relation_str = str(relation_str)
+        if self.relation_str.replace("=","").strip() == "default":
+            self.relation = "="
+            self.version = sys.maxint
         else:
-            if version:
-                raise ValidationError("Illegal version expression " + repr(version))
-            self.version = "default"
-            self.relation = "default"
+            if not self.relation_str.startswith(("<","=")):
+                self.relation_str = "=" + self.relation_str
+            match = RELATION_RE.match(self.relation_str)
+            if match:
+                self.relation = match.group(1).replace("==","=")
+                version = match.group(2).strip()
+                try:
+                    self.version = compat.literal_eval(version)
+                except ValueError:
+                    raise ValidationError("Invalid version expression in: " + repr(self.relation_str))
+            else:
+                raise ValidationError("Illegal version expression in: " + repr(self.relation_str))
             
     def __repr__(self):
-        if self.version == "default":
-            return "VersionRelation('default')"
-        else:
-            return 'VersionRelation(%s)' % \
-                (repr(self.relation + " " + repr(self.version)))
-
-    def compatible_types(self, other):
-        """`other` is "compatible" if it is the same type as self.version,  or
-        if both self.version and other are numerical.  Otherwise incompatible.
-        """
-        if type(self.version) == type(other):
-            return True
-        if  FIXED_RE.match(str(other)) and \
-            isinstance(float(other), (int, float, long)) and \
-            isinstance(self.version, (int, float, long)):
-            return True
-        else:
-            return False
-
-    def __cmp__(self, other):
-        if isinstance(other, VersionRelation):
-            if self.version == "default":
-                result = 0 if self.version == other.version else 1
-            elif self.relation != other.relation and \
-                self.version == other.version: # '<' < '=',  '<' < '=='
-                result = cmp(self.relation, other.relation)  
-            else:
-                result = cmp(self.version, other.version)
-        else:
-            if self.version == "default":
-                result =  0 if other == "default" else 1
-            elif self.compatible_types(other):
-                result = cmp(self, VersionRelation("= " + str(other)))
-            else:
-                raise ValidationError("Incompatible version expression types: " + 
-                                 repr(self.version) + " and " + repr(other))
-        return result
+        return 'VersionRelation(%s)' % repr(self.relation_str)
+   
+    def _cmpkey(self):
+        return (self.version, self.relation)
     
-    def __hash__(self):
-        return hash(self.relation + str(self.version))
+    def _convert(self, other):
+        return self.__class__(str(other))
+    
+    def _check_compatible(self, other):
+        if self.version == "default":
+            return True
+        elif isinstance(self.version, numbers.Number) and isinstance(other.version, numbers.Number):
+            return True
+        elif type(self.version) == type(other.version):
+            return True
+        else:
+            raise ValidationError("Incompatible version expression types: " + 
+                                  str(self.version) + " and " + str(other.version))
 
 class SelectVersionSelector(Selector):
     """SelectVersion chooses from among it's selections based on a number of
@@ -1730,17 +1748,19 @@ class SelectVersionSelector(Selector):
 
     >>> r.choose({"sw_version":'2.0'})
     'cref_flatfield_65.fits'
+
+    >>> r.choose({"sw_version":'default'})
+    'cref_flatfield_123.fits'
     """
-    def __init__(self, parkeys, selections, rmap_header=None):
-        Selector.__init__(self, parkeys, self.parse_selections(selections), 
-                          rmap_header)
-    
     def get_parkey_map(self):
         return {}
 
-    def parse_selections(self, selections):
-        """Convert relation string keys into runtime comparator objects."""
-        return dict([(VersionRelation(x[0]), x[1]) for x in selections.items()])
+    @classmethod    
+    def condition_key(cls, key):
+        if isinstance(key, VersionRelation):
+            return key
+        else:
+            return VersionRelation(key)
 
     def get_selection(self, version):
         """Based on `version`,  return the corresponding selection."""
@@ -1754,12 +1774,14 @@ class SelectVersionSelector(Selector):
         pass
 
     def _validate_value(self, name, value, valid_list):
-        self._validate_number(name, value)
+        if value.replace("=","").strip() != "default":
+            self._validate_number(name, value)
     
     def _validate_header(self, header):
         self._check_defined(header)
         parname = self._parameters[0]
-        return self._validate_number(parname, header[parname])
+        self._validate_value(parname, header[parname], [])
+        return header[parname]
 
 def abs_time_delta(time1, time2):
     """Return abs(time1 - time2) in total seconds."""
