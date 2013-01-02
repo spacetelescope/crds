@@ -99,7 +99,7 @@ def __repr__(self):
     return self.__class__.__name__ + "(%s, %s, %s, %s, %s, %s, %s)" % \
         tuple([ repr(getattr(self, attr)) for attr in attrs ])
 
-def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
+def _rmap_insert_reference(loaded_rmap, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the 
     contents of a new rmap with `reffile` inserted at all matching parkey 
     locations.  This routine assumes HST standard selector organization,  
@@ -107,37 +107,10 @@ def _rmap_insert_reference(old_rmap_name, old_rmap_contents, reffile):
     
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
-    loaded_rmap = rmap.ReferenceMapping.from_string(
-        old_rmap_contents, ignore_checksum=True)
-    
+    log.verbose("Inserting",repr(reffile),"into",repr(loaded_rmap))
     header, parkeys = _get_matching_header(loaded_rmap, reffile)
-
-    useafter_date = timestamp.reformat_date(header["USEAFTER"])
-
-    # Figure out the explicit lookup pattern for reffile.  Omit USEAFTER
-    ref_match_tuple = tuple([header[key] for key in parkeys])
-    actions = []
-    new_contents = old_rmap_contents
-    
-    log.verbose("Matching against", ref_match_tuple, repr(useafter_date))
-    # Figure out the abstract match tuples header matches against.
-    for rmap_tuple in get_match_tuples(loaded_rmap, header, ref_match_tuple):
-        log.verbose("Trying", rmap_tuple)
-        replaced_filename = None
-        try:
-            new_contents, replaced_filename = _rmap_delete_useafter(
-                new_contents, rmap_tuple, useafter_date)
-            kind = "replace"
-        except NoUseAfterError:
-            kind = "insert"
-        except NoMatchTupleError:
-            kind = "insert"
-        new_contents = _rmap_add_useafter(
-            new_contents, rmap_tuple, useafter_date, os.path.basename(reffile))
-        actions.append(RefactorAction(old_rmap_name, kind, reffile, 
-                                      ref_match_tuple, rmap_tuple, 
-                                      useafter_date, replaced_filename,))
-    return new_contents, actions, useafter_date
+    new_rmap = loaded_rmap.insert(header, os.path.basename(reffile))    
+    return new_rmap
 
 def _get_matching_header(loaded_rmap, reffile):
     """Based on `loaded_rmap`,  fetch the abstract header from reffile and use 
@@ -170,13 +143,19 @@ def _get_matching_header(loaded_rmap, reffile):
     header = { key:utils.condition_value(value) for key, value in header.items() \
                if key in parkeys + ["USEAFTER"] }
     
+    if "USEAFTER" in header and "DATE-OBS" not in header:
+        useafter = timestamp.reformat_date(header["USEAFTER"])
+        header["DATE-OBS"] = useafter.split()[0]
+        header["TIME-OBS"] = useafter.split()[1]
+    
     # Add undefined parkeys as "UNDEFINED"
-    header = data_file.ensure_keys_defined(header, parkeys + ["USEAFTER"])
+    header = data_file.ensure_keys_defined(header, parkeys + ["DATE-OBS", "TIME-OBS"])
     
     # Evaluate parkey relevance rules in the context of header to map
     # mode irrelevant parameters to N/A.
     # XXX not clear if/how this works with expanded wildcard or-patterns.
     header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
+    
     return header, parkeys
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references):
@@ -186,19 +165,12 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     
     Return the list of RefactorAction's performed.
     """
-    with open(old_rmap) as old_file:
-        contents = old_file.read()
-    total_actions = []
+    new = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
-        contents, actions, _useafter = \
-            _rmap_insert_reference(old_rmap, contents, reference)
-        total_actions.extend(actions)
-    if total_actions:
-        log.verbose("Writing", repr(new_rmap))
-        with open(new_rmap, "w+") as newfile:
-            newfile.write(contents)
-        checksum.update_checksum(new_rmap)
-    return total_actions
+        new = _rmap_insert_reference(new, reference)
+    log.verbose("Writing", repr(new_rmap))
+    new.write(new_rmap)
+    checksum.update_checksum(new_rmap)
 
 def get_match_tuples(loaded_rmap, header, ref_match_tuple):
     """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
@@ -369,14 +341,9 @@ def main():
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
-        actions = rmap_insert_references(old_rmap, new_rmap, inserted_references)
-        for action in actions:
-            log.info(action)
-        else:
-            log.warning("No actions.")
+        rmap_insert_references(old_rmap, new_rmap, inserted_references)
     else:
-        print "usage: python -m crds.refactor insert " \
-                "<old_rmap> <new_rmap> <references...>"
+        print "usage: python -m crds.refactor insert <old_rmap> <new_rmap> <references...>"
         sys.exit(-1)
 
 if __name__ == "__main__":

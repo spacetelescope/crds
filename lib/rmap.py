@@ -345,6 +345,7 @@ class Mapping(object):
         else:
             self.filename = filename
         self.header["sha1sum"] = "99999"
+        self.header["name"] = os.path.basename(filename)
         with open(filename, "w+") as file:
             file.write(self.format())
         self.rewrite_checksum()  # inefficient, but rare and consistent
@@ -509,6 +510,10 @@ class Mapping(object):
         except Exception, exc:
             log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
         return derived_from
+    
+    def copy(self):
+        """Return an in-memory copy of this rmap as a new object."""
+        return self.from_string(self.format(), self.filename)
     
 def _diff_tail(msg):
     """`msg` is an arbitrary length difference "path",  which could
@@ -967,7 +972,15 @@ class ReferenceMapping(Mapping):
                 if not relevant:
                     header[parkey] = "N/A"
         return header
-
+    
+    def insert(self, header, value):
+        """Dynamically add a new selection case to a copy of this rmap and
+        return the copy.
+        """
+        copy = self.copy()
+        copy.selector.insert(header, value)
+        return copy
+        
 # ===================================================================
 
 CACHED_MAPPINGS = {}

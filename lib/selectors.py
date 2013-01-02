@@ -1359,6 +1359,12 @@ Alternate date/time formats are accepted as header parameters.
     
     def get_parkey_map(self):
         return { par:"*" for par in self._parameters}
+    
+    def get_key(self, header, parkeys):
+        key = super(UseAfterSelector, self).get_key(header, parkeys)
+        if not isinstance(key, basestring):
+            key = " ".join(key)
+        return key
 
 # ==============================================================================
 
