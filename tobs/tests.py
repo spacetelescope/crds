@@ -101,6 +101,7 @@ class TestSelectorInsert(unittest.TestCase):
         self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         
     def terminal_insert(self, selector, param, value):
+        """Check the bottom level insert functionality."""
         header = { 
                   "TEST_CASE" : selector,
                   "PARAMETER" : param, 
@@ -114,6 +115,7 @@ class TestSelectorInsert(unittest.TestCase):
         assert diffs[0][3] == "added " + repr(value)
 
     def terminal_replace(self, selector, param, value):
+        """Check the bottom level replace functionality."""
         header = { 
                   "TEST_CASE" : selector,
                   "PARAMETER" : param, 
@@ -227,14 +229,15 @@ class TestSelectorInsert(unittest.TestCase):
          self.terminal_replace("GEOMETRICALLY_NEAREST", 5.0, 'foo.fits')
 
     def test_recursive_insert(self): # , header, value, classes):
+        """Check recursively adding a lookup path,  including new selectors."""
         header = { 
                   "TEST_CASE" : "INSERT",
                   "PARAMETER" : "2012-09-09 03:07", 
         }
         self.rmap.selector.insert(header, "foo.fits")
         diffs = self.original.difference(self.rmap)
-        print diffs
-        print self.rmap.selector.format()
+#        print diffs
+#        print self.rmap.selector.format()
     
 if __name__ == '__main__':
     unittest.main()
