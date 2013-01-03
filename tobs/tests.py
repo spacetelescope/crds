@@ -4,7 +4,7 @@
 import sys
 import unittest
 
-from crds import rmap
+from crds import rmap, log
 
 class TestSelectors(unittest.TestCase):
 
@@ -94,37 +94,37 @@ class TestSelectors(unittest.TestCase):
     def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
         
-class TestSelectorInsert(unittest.TestCase):
+class TestInsert(unittest.TestCase):
 
     def setUp(self):
         self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         
-    def terminal_insert(self, selector, param, value):
+    def terminal_insert(self, selector_name, param, value):
         """Check the bottom level insert functionality."""
         header = { 
-                  "TEST_CASE" : selector,
+                  "TEST_CASE" : selector_name,
                   "PARAMETER" : param, 
         }
-        self.rmap.selector.insert(header, value)
-        diffs = self.original.difference(self.rmap)
-        # print diffs
+        result = self.rmap.insert(header, value)
+        diffs = self.rmap.difference(result)
+        log.debug(diffs)
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
-        assert diffs[0][1] == (selector,)
+        assert diffs[0][1] == (selector_name,)
         assert str(diffs[0][2]) == str(param),  diffs
         assert diffs[0][3] == "added " + repr(value)
 
-    def terminal_replace(self, selector, param, value):
+    def terminal_replace(self, selector_name, param, value):
         """Check the bottom level replace functionality."""
         header = { 
-                  "TEST_CASE" : selector,
+                  "TEST_CASE" : selector_name,
                   "PARAMETER" : param, 
         }
-        self.rmap.selector.insert(header, value)
-        diffs = self.original.difference(self.rmap)
-        # print diffs
+        result = self.rmap.insert(header, value)
+        diffs = self.rmap.difference(result)
+        log.debug(diffs)
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
-        assert diffs[0][1] == (selector,)
+        assert diffs[0][1] == (selector_name,)
         assert str(diffs[0][2]) == str(param), diffs
         assert "replaced" in diffs[0][3]
         assert diffs[0][3].endswith(repr(value))
@@ -234,8 +234,8 @@ class TestSelectorInsert(unittest.TestCase):
                   "TEST_CASE" : "INSERT",
                   "PARAMETER" : "2012-09-09 03:07", 
         }
-        self.rmap.selector.insert(header, "foo.fits")
-        diffs = self.original.difference(self.rmap)
+        result = self.rmap.insert(header, "foo.fits")
+        diffs = self.rmap.difference(result)
 #        print diffs
 #        print self.rmap.selector.format()
     
