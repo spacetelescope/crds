@@ -7,5 +7,5 @@
 #
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
-TEST_CASE           H        C         R SELECT_VERSION,CLOSEST_TIME,GEOMETRICALLY_NEAREST,BRACKET,MATCH,USE_AFTER
+TEST_CASE           H        C         R SELECT_VERSION,CLOSEST_TIME,GEOMETRICALLY_NEAREST,BRACKET,MATCH,USE_AFTER,INSERT
 PARAMETER           H        C         R

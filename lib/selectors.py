@@ -21,7 +21,7 @@ essentially done by a tree walk through a set of nested Selectors.
 A concrete example should make things clearer.   Here,  we describe which files
 to use for a particular wavelength and software version:
 
->>> r = GeomtricallyNearestSelector(('effective_wavelength',), {
+>>> r = GeometricallyNearestSelector(('effective_wavelength',), {
 ...  1.2 : SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_73.fits',
 ...                'default': 'cref_flatfield_123.fits',
@@ -36,7 +36,7 @@ to use for a particular wavelength and software version:
 ...        }),
 ... })
 
-GeomtricallyNearestSelector and SelectVersionSelector are both Selector
+GeometricallyNearestSelector and SelectVersionSelector are both Selector
 subclasses.  At calibration time,  we choose from among the possible reference
 files based on our rules and the known context:
 
@@ -46,7 +46,7 @@ files based on our rules and the known context:
 Selectors are designed to be nestable and can describe rules of arbitrary type
 and complexity.   Here we add time to the selection criteria:
 
->>> r = GeomtricallyNearestSelector(('effective_wavelength',), {
+>>> r = GeometricallyNearestSelector(('effective_wavelength',), {
 ...   1.2: ClosestTimeSelector(("time",), {
 ...            '2017-04-24 00:00:00': SelectVersionSelector(('sw_version',), {
 ...                '<5': 'cref_flatfield_73.fits',
@@ -171,8 +171,7 @@ class Selector(object):
         """Replace the keys of selections with "conditioned" keys,  keys in
         which all the values have passed through self.condition_key().
         """
-        result = [(self.__class__.condition_key(key), value) \
-                  for (key,value) in selections.items()]
+        result = [(self.condition_key(key), value) for (key,value) in selections.items()]
         return sorted(result)
     
     @classmethod
@@ -450,7 +449,7 @@ class Selector(object):
         else:  # nominally HST / CDBS
             return ("Match", "UseAfter")
 
-    def insert(self, header, value):
+    def insert(self, header, value, valid_values_map):
         """Based on `header` recursively insert `value` into the Selector hierarchy,
         either adding it as a new choice or replacing the existing choice with 
         the same parameter set.   Add nested Selectors as required.
@@ -463,38 +462,31 @@ class Selector(object):
         This call defines the starting point for parkeys and classes,  whereas
         _insert has gradually diminishing lists passed down to nested Selectors.
         """
-        self._insert(header, value, self._rmap_header["parkey"], self.class_list)
+        self._insert(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
 
-    def _insert(self, header, value, parkey, classes):
+    def _insert(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
-        if not len(parkey):
-            return value
         key = self.get_key(header, parkey[0])
-        try:
-            sel_param = self._validate_header(header)   # general it's key, not always
-            selection = self.get_selection(sel_param)
-        except crds.CrdsError:
-            new_value = self.create_nested(header, value, parkey[1:], classes[1:])
-        else:
-            if isinstance(selection[1], Selector):
-                new_value = selection[1]._insert(header, value, parkey[1:], classes[1:])
-            else:
-                new_value = value
-        self._replace(key, new_value)
-        return self
-
-    def _replace(self, key, value):
-        """Replace the selection item corresponding to `key` with (`key`,`value`).
-        Add a completely new item if there's no existing `key` yet.
-        """
-        selections = self._raw_selections[:]
-        for i, (old_key, old_value) in enumerate(selections):
+        self._validate_key(self.condition_key(key), valid_values_map)
+        for i, (old_key, old_value) in enumerate(self._raw_selections):
             if key == old_key:
-                selections[i] = (key, value)
-                break
+                if isinstance(old_value, Selector):
+                    log.verbose("insert found", repr(key),"adding to", repr(old_value))
+                    old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                    return
+                else:
+                    log.verbose("insert found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
+                    self._raw_selections[i] = (old_key, value)
+                    break
         else:
-            selections.append((key, value))
-        self.__init__(self._parameters, dict(selections), rmap_header=self._rmap_header)
+            if parkey:
+                log.verbose("insert couldn't find", repr(key),"adding new selector.")
+                new_value = self.create_nested(header, value, parkey[1:], classes[1:])
+            else:
+                log.verbose("insert couldn't find", repr(key),"adding new value.")
+                new_value = value
+            self._raw_selections.append((key, new_value))
+        self.__init__(self._parameters, dict(self._raw_selections), rmap_header=self._rmap_header)
         
     def get_key(self, header, parkeys):
         """Make a typical key from `header` corresponding to `parkeys`,  one 
@@ -1180,7 +1172,7 @@ of uniform rmap structure for HST:
         """
         if len(key) != len(self._parameters):
             raise ValidationError("wrong length for parameter list " + 
-                                  repr(self._parameters))
+                                  repr(self._parameters) + " for key " + repr(key))
         for i, name in enumerate(self._parameters):
             if name not in valid_values_map:
                 continue
@@ -1361,10 +1353,7 @@ Alternate date/time formats are accepted as header parameters.
         return { par:"*" for par in self._parameters}
     
     def get_key(self, header, parkeys):
-        key = super(UseAfterSelector, self).get_key(header, parkeys)
-        if not isinstance(key, basestring):
-            key = " ".join(key)
-        return key
+        return " ".join([header[par] for par in parkeys])
 
 # ==============================================================================
 
@@ -1404,11 +1393,11 @@ class ClosestTimeSelector(UseAfterSelector):
 
 # ==============================================================================
 
-class GeomtricallyNearestSelector(Selector):
-    """GeomtricallyNearest selects the choice whose key is at the smallest
+class GeometricallyNearestSelector(Selector):
+    """GeometricallyNearest selects the choice whose key is at the smallest
     distance from the specified condition value.
 
-    >>> r = GeomtricallyNearestSelector(("effective_wavelength",), {
+    >>> r = GeometricallyNearestSelector(("effective_wavelength",), {
     ...  1.2 : "cref_flatfield_120.fits",
     ...  1.5 : "cref_flatfield_124.fits",
     ...  5.0 : "cref_flatfield_137.fits",
@@ -1444,7 +1433,7 @@ merging two selectors:
     >>> r.merge(r)
     Traceback (most recent call last):
     ...
-    AmbiguousMatchError: More than one match was found at the same weight and GeomtricallyNearest does not support merging.
+    AmbiguousMatchError: More than one match was found at the same weight and GeometricallyNearest does not support merging.
 
 Effective_wavelength doesn't have to be covered by valid_values_map:
     
@@ -1453,7 +1442,7 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
     >>> r.choose({"effective_wavelength":"foo"})
     Traceback (most recent call last):
     ...
-    ValidationError: GeomtricallyNearest Invalid number for 'effective_wavelength' value='foo'
+    ValidationError: GeometricallyNearest Invalid number for 'effective_wavelength' value='foo'
     
     """
     @classmethod
@@ -1831,8 +1820,8 @@ class ClosestTimeParameters(Parameters):
     selector = ClosestTimeSelector
     
 class GeometricallyNearestParameters(Parameters):
-    """Parameters for GeomtricallyNearestSelector"""
-    selector = GeomtricallyNearestSelector
+    """Parameters for GeometricallyNearestSelector"""
+    selector = GeometricallyNearestSelector
     
 class BracketParameters(Parameters):
     """Parameters for BracketSelector"""

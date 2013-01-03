@@ -978,7 +978,7 @@ class ReferenceMapping(Mapping):
         return the copy.
         """
         copy = self.copy()
-        copy.selector.insert(header, value)
+        copy.selector.insert(header, value, self._tpn_valid_values)
         return copy
         
 # ===================================================================
