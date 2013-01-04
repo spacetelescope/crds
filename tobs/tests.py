@@ -100,19 +100,28 @@ class TestInsert(unittest.TestCase):
         self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         
+    def class_name(self, selector_name):
+        return "".join([x.capitalize() for x in selector_name.split("_")])
+
+    def set_classes(self, classes):
+        self.rmap.selector._rmap_header["classes"] = classes
+        
     def terminal_insert(self, selector_name, param, value):
         """Check the bottom level insert functionality."""
         header = { 
                   "TEST_CASE" : selector_name,
                   "PARAMETER" : param, 
         }
+        inner_class = self.class_name(selector_name)
+        self.set_classes(("Match", inner_class))
         result = self.rmap.insert(header, value)
         diffs = self.rmap.difference(result)
-        log.debug(diffs)
-        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
-        assert diffs[0][1] == (selector_name,)
-        assert str(diffs[0][2]) == str(param),  diffs
-        assert diffs[0][3] == "added " + repr(value)
+        log.debug("diffs:", diffs)
+        assert len(diffs) == 1, "Fewer/more differences than expected"
+        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
+        assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
+        assert str(diffs[0][2]) == str(param), "unexpected parameter value in diff"
+        assert diffs[0][3] == "added " + repr(value), "diff is not an addition"
 
     def terminal_replace(self, selector_name, param, value):
         """Check the bottom level replace functionality."""
@@ -120,13 +129,16 @@ class TestInsert(unittest.TestCase):
                   "TEST_CASE" : selector_name,
                   "PARAMETER" : param, 
         }
+        inner_class = self.class_name(selector_name)
+        self.set_classes(("Match", inner_class))
         result = self.rmap.insert(header, value)
         diffs = self.rmap.difference(result)
-        log.debug(diffs)
-        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap')
-        assert diffs[0][1] == (selector_name,)
-        assert str(diffs[0][2]) == str(param), diffs
-        assert "replaced" in diffs[0][3]
+        log.debug("diffs:", diffs)
+        assert len(diffs) == 1, "Fewer/more differences than expected"
+        assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
+        assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
+        assert str(diffs[0][2]) == str(param), "unexpected parameter value in diff"
+        assert "replaced" in diffs[0][3], "diff is not a replacement"
         assert diffs[0][3].endswith(repr(value))
 
     def test_useafter_insert_before(self):
@@ -236,6 +248,11 @@ class TestInsert(unittest.TestCase):
         }
         result = self.rmap.insert(header, "foo.fits")
         diffs = self.rmap.difference(result)
+        log.debug("diffs:", diffs)
+        # XXX controversial what diffs for multi-stage nested insert look like,
+        # possibly there should be one tuple for each stage rather than only
+        # the terminal stage.
+        assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
 #        print diffs
 #        print self.rmap.selector.format()
     
