@@ -977,9 +977,9 @@ class ReferenceMapping(Mapping):
         """Dynamically add a new selection case to a copy of this rmap and
         return the copy.
         """
-        copy = self.copy()
-        copy.selector.insert(header, value, self._tpn_valid_values)
-        return copy
+        new = self.copy()
+        new.selector.modify(header, value, self._tpn_valid_values)
+        return new
         
 # ===================================================================
 

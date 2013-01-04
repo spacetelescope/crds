@@ -41,63 +41,19 @@ def replace_header_value(filename, key, new_value):
     
 # ============================================================================
 
-class RefactorAction(object):
-    """Records and formats info regarding a refactoring operation."""
-    def __init__(self, rmap_name, action, ref_file, ref_match_tuple, 
-                 rmap_match_tuple, useafter, replaced_file):
-        self.rmap_name = str(os.path.basename(rmap_name))
-        self.action = action
-        self.ref_file = str(os.path.basename(ref_file))
-        self.ref_match_tuple = ref_match_tuple
-        self.rmap_match_tuple = rmap_match_tuple
-        self.useafter = useafter
-        if replaced_file:
-            self.replaced_file = str(os.path.basename(replaced_file))
-        else:
-            self.replaced_file = "N/A"
-            
-    def close_enough(self, tup1, tup2):
-        if len(tup1) != len(tup2):
-            return False
-        for i in range(len(tup2)):
-            if tup1[i] == "N/A":
-                continue
-            if tup1[i] != tup2[i]:
-                return False
-        return True
-            
-    def __str__(self):
-        exact = self.close_enough(self.rmap_match_tuple, self.ref_match_tuple)
-        if exact:
-            intro = "At exact match"
-            trailer = ""
-        else:
-            intro = "At match"
-            trailer = "matching " + str(self.ref_match_tuple)  
-        if self.action == "insert":
-            parts = [ intro, self.rmap_match_tuple,
-                     "useafter", repr(self.useafter),
-                     "INSERT", repr(self.ref_file), 
-                     trailer
-                      ]
-        elif self.action == "replace":
-            parts = [ intro, self.rmap_match_tuple,
-                      "useafter", repr(self.useafter),
-                      "REPLACE", repr(self.replaced_file),
-                      "with", repr(self.ref_file), 
-                      trailer
-                      ]
-        else:
-            raise ValueError("Unknown action " + repr(self.action))    
-        return " ".join([str(x) for x in parts])
+def rmap_insert_references(old_rmap, new_rmap, inserted_references):
+    """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
+    or replacing all files in `inserted_references` and write out the result to
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
-def __repr__(self):
-#    (self, rmap_name, action, ref_file, ref_match_tuple, 
-#                 rmap_match_tuple, useafter, replaced_file):
-    attrs = ["rmap_name", "action", "ref_file", "ref_match_tuple", 
-             "rmap_match_tuple", "useafter", "replaced_file"]
-    return self.__class__.__name__ + "(%s, %s, %s, %s, %s, %s, %s)" % \
-        tuple([ repr(getattr(self, attr)) for attr in attrs ])
+    Return the list of RefactorAction's performed.
+    """
+    new = rmap.load_mapping(old_rmap, ignore_checksum=True)
+    for reference in inserted_references:
+        new = _rmap_insert_reference(new, reference)
+    log.verbose("Writing", repr(new_rmap))
+    new.write(new_rmap)
+    checksum.update_checksum(new_rmap)
 
 def _rmap_insert_reference(loaded_rmap, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the 
@@ -158,66 +114,22 @@ def _get_matching_header(loaded_rmap, reffile):
     
     return header, parkeys
 
-def rmap_insert_references(old_rmap, new_rmap, inserted_references):
-    """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
-    or replacing all files in `inserted_references` and write out the result to
-    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
-    Return the list of RefactorAction's performed.
-    """
-    new = rmap.load_mapping(old_rmap, ignore_checksum=True)
-    for reference in inserted_references:
-        new = _rmap_insert_reference(new, reference)
-    log.verbose("Writing", repr(new_rmap))
-    new.write(new_rmap)
-    checksum.update_checksum(new_rmap)
+# ============================================================================
 
-def get_match_tuples(loaded_rmap, header, ref_match_tuple):
-    """Given a ReferenceMapping `loaded_rmap` and a `header` dictionary,
-    perform a winnowing match and return a list of match tuples corresponding
-    to all possible matches of `loaded_rmap` against `header`.
-    
-    The match algorithm yields possible matches in best to worst order.   
-    Further,  each rank of match may contain multiple tuples if ambiguous 
-    matches are supported by merging.   Since a merged "ambiguous" match 
-    actually corresponds to one choice resulting from multiple match cases,  
-    each match returns a list of match tuples.   If ambiguous matches are 
-    never supported,  len(match tuples) == 1.
+def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
+                      useafter_file):
+    """Add one new useafter date / file to the `match_tuple` case of
+    `old_rmap`,  writing the modified rmap out to `new_rmap`.   If
+    `match_tuple` doesn't exist in `old_mapping`,  add `match_tuple` as well.
     """
-    matches = []
-    for rmap_tuples, _useafter_selector in loaded_rmap.selector.winnowing_match(
-                                        header, raise_ambiguous=False):
-        # rmap_tuples are all equally weighted matches to header requiring
-        # dynamic merger if there's more than one.
-        for rmap_tuple in rmap_tuples:
-            # Any time ref_match_tuple matches,  rmap_tuple matches.
-            if selectors.match_superset(ref_match_tuple, rmap_tuple):
-                matches.append(_normalize_match_tuple(rmap_tuple))
-            else:
-                log.verbose("Removing non-superset match", ref_match_tuple, "of", rmap_tuple)
-    matches = _remove_special_cases(matches)
-    return matches
+    with open(old_rmap) as old_file:
+        old_rmap_contents = old_file.read()
+    new_rmap_contents = _rmap_add_useafter(
+        old_rmap_contents, match_tuple, useafter_date, useafter_file)
+    with open(new_rmap, "w+") as new_file:
+        new_file.write(new_rmap_contents)
 
-def _remove_special_cases(matches):
-    """It only makes sense to add the most general cases of the possible
-    matches,  removing all proper special cases.   Note that all overlapping
-    matches are not necessarily special cases,  only those with a true 
-    subset/superset relationship.
-    
-    For instance,  ("A|B",) overlaps ("B|C",),  but is not a special case, so
-    a refactoring of that rmap would affect both tuples.   On the other hand,
-    ("A",) overlaps ("A|B",) and there is no case where the former will match
-    and the latter will not... hence it only makes sense to change the latter.
-    """
-    matches2 = set(matches)
-    for m1 in matches2:
-        for m2 in matches2:
-            if m1 != m2 and selectors.match_superset(m1, m2) and \
-                    not selectors.different_match_weight(m1, m2) and m2 in matches:
-                log.verbose("Match",repr(m1),"is a superset of", repr(m2))
-                matches.remove(m2)
-    return list(set(matches))
-    
 def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date, 
                        useafter_file):
     """Add one new useafter date / file to the `match_tuple` case of
@@ -273,15 +185,15 @@ def _normalize_match_tuple(tup):
     return selectors.MatchSelector.condition_key(tup)
     # return tuple([str(item).strip() for item in tup])
     
-def rmap_add_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
+def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
                       useafter_file):
-    """Add one new useafter date / file to the `match_tuple` case of
-    `old_rmap`,  writing the modified rmap out to `new_rmap`.   If
-    `match_tuple` doesn't exist in `old_mapping`,  add `match_tuple` as well.
+    """Delete one new useafter date / file of the `match_tuple` case of
+    `old_rmap`,  writing the modified rmap out to `new_rmap`.   The case
+    is expected to be present in the rmap or an exception is raised.
     """
     with open(old_rmap) as old_file:
         old_rmap_contents = old_file.read()
-    new_rmap_contents = _rmap_add_useafter(
+    new_rmap_contents, _filename = _rmap_delete_useafter(
         old_rmap_contents, match_tuple, useafter_date, useafter_file)
     with open(new_rmap, "w+") as new_file:
         new_file.write(new_rmap_contents)
@@ -317,19 +229,6 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
     assert state == "copy remainder", "no useafter insertion performed"
     new_mapping_file.seek(0)
     return new_mapping_file.read(), filename
-
-def rmap_delete_useafter(old_rmap, new_rmap, match_tuple, useafter_date, 
-                      useafter_file):
-    """Delete one new useafter date / file of the `match_tuple` case of
-    `old_rmap`,  writing the modified rmap out to `new_rmap`.   The case
-    is expected to be present in the rmap or an exception is raised.
-    """
-    with open(old_rmap) as old_file:
-        old_rmap_contents = old_file.read()
-    new_rmap_contents, _filename = _rmap_delete_useafter(
-        old_rmap_contents, match_tuple, useafter_date, useafter_file)
-    with open(new_rmap, "w+") as new_file:
-        new_file.write(new_rmap_contents)
 
 # ===========================================================================
 
