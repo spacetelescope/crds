@@ -443,20 +443,6 @@ class Selector(object):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
             self.short_name + " does not support merging.")
         
-    @property
-    def class_list(self):
-        """Return the pattern of selector nesting for this rmap."""
-        if "classes" in self._rmap_header:
-            return tuple(self._rmap_header["classes"])
-        elif self._rmap_header["observatory"] == "jwst":
-            return ("Match",)
-        else:  # nominally HST / CDBS
-            return ("Match", "UseAfter")
-        
-    @property
-    def parkey(self):
-        return self._rmap_header["parkey"]
-    
     # ------------------------------------------------------------------------
 
     def modify(self, header, value, valid_values_map):
@@ -474,6 +460,20 @@ class Selector(object):
         """
         self._modify(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
 
+    @property
+    def class_list(self):
+        """Return the pattern of selector nesting for this rmap."""
+        if "classes" in self._rmap_header:
+            return tuple(self._rmap_header["classes"])
+        elif self._rmap_header["observatory"] == "jwst":
+            return ("Match",)
+        else:  # nominally HST / CDBS
+            return ("Match", "UseAfter")
+        
+    @property
+    def parkey(self):
+        return self._rmap_header["parkey"]
+    
     def _modify(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
         key = self._make_key(header, parkey[0])
