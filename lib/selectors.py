@@ -410,12 +410,10 @@ class Selector(object):
             return p2 + (" ".join(args),)
         if self.__class__ != other.__class__:
             return [msg(None, "different classes", 
-                    repr(self.short_name), ":",
-                    repr(other.short_name))]
+                        repr(self.short_name), ":", repr(other.short_name))]
         if self._parameters != other._parameters:
             return [msg(None, "different parameter lists ", 
-                    repr(self._parameters), ":", 
-                    repr(other._parameters))]
+                    repr(self._parameters), ":", repr(other._parameters))]
         differences = []
         other_keys = other.keys()
         other_map = dict(other._selections)
@@ -427,11 +425,10 @@ class Selector(object):
             else:
                 other_choice = other_map[key]
                 if isinstance(choice, Selector):
-                    differences.extend(choice.difference(
-                        other_choice, path + (key,)))
+                    differences.extend(choice.difference(other_choice, path + (key,)))
                 elif choice != other_choice:
-                    differences.append(msg(key, "replaced", repr(choice), 
-                                           "with", repr(other_choice)))
+                    differences.append(
+                        msg(key, "replaced", repr(choice), "with", repr(other_choice)))
         self_keys = self.keys()
         for key in other_keys:
             if key not in self_keys:
@@ -485,17 +482,17 @@ class Selector(object):
                 new_value = self._create_path(header, value, parkey[1:], classes[1:])
                 self._add_item(key, new_value)
             else:
-                old_key, old_value = self._selections[i]
-                log.verbose("insert found", repr(key),"augmenting", repr(old_value), "with", repr(value))
+                old_key, old_value = self._raw_selections[i]
+                log.verbose("insert found", repr(old_key),"augmenting", repr(old_value), "with", repr(value))
                 old_value._modify(header, value, parkey[1:], classes[1:], valid_values_map)
         else:
             if i is None:
                 log.verbose("insert couldn't find", repr(key),"adding new value", repr(value))
                 self._add_item(key, value)
             else:
-                old_key, old_value = self._selections[i]
+                old_key, old_value = self._raw_selections[i]
                 log.verbose("insert found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
-                self._replace_item(key, value)
+                self._replace_item(old_key, value)
         
     def _create_path(self, header, value, parkey, classes):
         """Create the Selector tree corresponding to `header` and `value` based on the
@@ -1524,8 +1521,7 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
     @classmethod
     def _make_key(self, header, parkeys):
         """Always return key as a simple float."""
-        keystr = header[parkeys[0]]
-        return float(keystr)
+        return float(header[parkeys[0]])
 
 # ==============================================================================
 

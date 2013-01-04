@@ -8,7 +8,7 @@ import optparse
 
 from crds import rmap, log, pysh
 
-def _mapping_difference(file1, file2):
+def mapping_diffs(file1, file2):
     """Return the logical differences between CRDS mappings named `file1` 
     and `file2`.
     """
@@ -28,7 +28,7 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
     and `file2`.
     """
-    differences = _mapping_difference(file1, file2)
+    differences = mapping_diffs(file1, file2)
     if primitive_diffs:
         for pair in mapping_pairs(differences):
             log.write("="*80)
@@ -71,7 +71,7 @@ def mapping_check_reversions(file1, file2):
     if newer(file1, file2):
         log.warning("File order for reversion check looks backward:", 
                     repr(file1), ">", repr(file2))
-    differences = _mapping_difference(file1, file2)
+    differences = mapping_diffs(file1, file2)
     for diff in sorted(differences):
         diff = rq(diff)
         if "deleted" in diff[-1]:
