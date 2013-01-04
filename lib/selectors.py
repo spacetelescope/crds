@@ -125,11 +125,21 @@ class ModificationError(crds.CrdsError):
     """Failed attempt to modify rmap, e.g. replacement vs. addition.
     """
 
-# ==============================================================================
-
 class ValidationError(crds.CrdsError):
     """Some Selector key did not match the set of legal values.
     """
+
+# ==============================================================================
+
+def dict_wo_dups(items):
+    d = {}
+    for key, value in items:
+        if key in d:
+            raise ValueError("Key " + repr(key) + " appears more than once ")
+        d[key] = value
+    return d
+
+# ==============================================================================
 
 class Selector(object):
     """Baseclass for CRDS file selectors defining the basic protocol
@@ -176,6 +186,8 @@ class Selector(object):
         which all the values have passed through self.condition_key().
         """
         result = [(self.condition_key(key), value) for (key,value) in selections.items()]
+        if len(result) != len(dict(result).keys()):    # fast check
+            dict_wo_dups(result)  # slow generate more informative message
         return sorted(result)
     
     @classmethod
@@ -416,7 +428,8 @@ class Selector(object):
                     repr(self._parameters), ":", repr(other._parameters))]
         differences = []
         other_keys = other.keys()
-        other_map = dict(other._selections)
+        self_keys = self.keys()
+        other_map = dict_wo_dups(other._selections)
         # Warning:  the message formats here are important to client code.
         # don't change without doing a survey. e.g. replaced blank1 with blank2.
         for key, choice in self._selections:
@@ -429,7 +442,6 @@ class Selector(object):
                 elif choice != other_choice:
                     differences.append(
                         msg(key, "replaced", repr(choice), "with", repr(other_choice)))
-        self_keys = self.keys()
         for key in other_keys:
             if key not in self_keys:
                 other_choice = other_map[key]
@@ -513,14 +525,14 @@ class Selector(object):
         i = self._find_key(key)
         assert i is None, self.__class__.__name__ + " already contains " + repr(key)
         self._raw_selections.append((key, value))
-        self.__init__(self._parameters, dict(self._raw_selections), rmap_header=self._rmap_header)
+        self.__init__(self._parameters, dict_wo_dups(self._raw_selections), rmap_header=self._rmap_header)
 
     def _remove_item(self, key):
         """Remove the selection at `key`.   Flat:  this selector only."""
         i = self._find_key(key)
         assert i is not None, self.__class__.__name__ + " doesn't contain " + repr(key)
         del self._raw_selections[i]
-        self.__init__(self._parameters, dict(self._raw_selections), rmap_header=self._rmap_header)
+        self.__init__(self._parameters, dict_wo_dups(self._raw_selections), rmap_header=self._rmap_header)
 
     def _replace_item(self, key, value):
         """Replace the selection at `key` with `value`.   Flat:  this selector only."""
@@ -1013,7 +1025,7 @@ of uniform rmap structure for HST:
         Selector.__init__(self, parameters, selects, rmap_header)  # largely overridden
         self._raw_selections = sorted(selections.items())  # override __init__ using selects
 
-        self._match_selections = self.get_matcher_selections(dict(self._selections))
+        self._match_selections = self.get_matcher_selections(dict_wo_dups(self._selections))
         self._value_map = self.get_value_map()
      
     @classmethod
