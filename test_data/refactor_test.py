@@ -17,7 +17,7 @@ import random
 import shutil
 import os.path
 
-from crds import (rmap, log, refactor, pysh, matches, utils, selectors)
+from crds import (rmap, log, refactor, pysh, matches, utils, selectors, diff)
 import crds.client as client
 
 def newfile(fname):
@@ -64,6 +64,8 @@ def main(context, new_references, expected_action_type):
         try:
             do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, refpath, 0, expected_action_type)
         except Exception, exc:
+            if log.get_verbose():
+                raise
             log.error("Exception", str(exc))
         
         pysh.sh("rm -f ${new_rmap_path} ${new_refpath}")
@@ -75,38 +77,14 @@ def main(context, new_references, expected_action_type):
     log.standard_status()
 
 def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpath, verbosity=0,
-                   expected_action_type="insert"):
+                   expected="add"):
 
     separator("=")
-    log.info("Reference", os.path.basename(old_rmap_path), old_refpath)
+    log.info("Inserting reference", os.path.basename(old_rmap_path), old_refpath)
 
     pysh.sh("rm -f ${new_rmap_path}")
-    actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
-
-    as_expected = True
-    if not actions:
-        log.warning("No actions for", os.path.basename(old_rmap_path), new_refpath)
-        as_expected = False
-    elif expected_action_type == "replace":
-         expected_matches = matches.find_match_tuples(context, os.path.basename(old_refpath))    
-         log.info("Expected matches:", expected_matches)
-         for action in actions:
-             if action.rmap_match_tuple not in expected_matches or action.action != "replace":
-                 log.warning("Unexpected action:", action)
-                 as_expected = False
-             else:
-                 log.info(action)
-         for expected in expected_matches:
-            if expected not in [ action.rmap_match_tuple for action in actions ]:
-                log.error("Missing expected match", expected)
-                as_expected = False
-    else:  # insert
-        for action in actions:
-            if action.action != "insert":
-                log.warning("Unexpected action:", action)
-                as_expected = False
-            else:
-                log.info(action)
+    refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
+    as_expected = refactor.rmap_check_modifications(old_rmap_path, new_rmap_path, expected)
 
     if not as_expected or verbosity:
         generation_info = pysh.out_err("grep %s ../../hst_gentools/gen_rmaps.out" % 
@@ -118,7 +96,9 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
             log.warning("rmap generation anomalies in gen_rmaps.out:")
             log.write(generation_info.strip())
         pysh.sh("rm -f ${new_rmap_path}")
-        actions = refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
+        old = log.set_verbose(verbosity or 55)
+        refactor.rmap_insert_references(old_rmap_path, new_rmap_path, [new_refpath])
+        log.set_verbose(old)
         separator()
         log.write("diffing", repr(new_rmap_path), "from", repr(old_rmap_path))
         sys.stdout.flush()
@@ -128,7 +108,7 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
         sys.stderr.flush()
         separator()
         pysh.sh("cd ../../hst_gentools; python db_test.py info ${old_refpath}")
- 
+
 def get_corresponding_rmap(context, refpath):
     """Return the path to the rmap which *would* refer to `reference` in `context.`
     """
@@ -143,7 +123,7 @@ if __name__ == "__main__":
        sys.argv.remove("--replace")
        expected_action_type = "replace"
     else:
-       expected_action_type = "insert"
+       expected_action_type = "add"
        
     if "--verbose" in sys.argv:
         sys.argv.remove("--verbose")

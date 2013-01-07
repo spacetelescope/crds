@@ -358,7 +358,7 @@ class Mapping(object):
         if old is None:
             raise ChecksumError("sha1sum is missing in " + repr(self.basename))
         if self._get_checksum() != self.header["sha1sum"]:
-            raise ChecksumError("sha1sum mismatch.")
+            raise ChecksumError("sha1sum mismatch in " + repr(self.basename))
 
     def _get_checksum(self):
         """Compute the rmap checksum over the original file contents.
@@ -397,11 +397,9 @@ class Mapping(object):
                 newsource.append(line)
         newsource = "".join(newsource)
 
-        # If user specified a filename,  copy the new file to that.
-        # Otherwise,  overwrite the original mapping file.
-        where = filename if filename is not None else self.filename
-
-        with open(where, "w+") as newfile:
+        if filename is None:
+            filename = self.filename
+        with open(filename, "w+") as newfile:
             newfile.write(newsource)
 
 

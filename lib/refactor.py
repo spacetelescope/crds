@@ -6,12 +6,9 @@ import re
 import cStringIO
 import os.path
 
-from crds import (rmap, data_file, timestamp, compat, log, selectors, checksum, utils)
+from crds import (rmap, data_file, timestamp, compat, log, selectors, 
+                  checksum, utils, diff)
 from crds.timestamp import DATETIME_RE_STR
-
-# ============================================================================
-    
-KEY_RE = r"(\s*')(.*)('\s*:\s*')(.*)('\s*,.*)"
 
 # ============================================================================
     
@@ -24,36 +21,57 @@ class NoMatchTupleError(ValueError):
 # ============================================================================
     
 def replace_header_value(filename, key, new_value):
-    """Set the value of `key` in `filename` to `new_value`."""
-    # print "refactoring", repr(filename), ":", key, "=", repr(new_value)
-    newfile = cStringIO.StringIO()
- 
-    with open(filename) as openfile:
-        for line in openfile:
-            m = re.match(KEY_RE, line)
-            if m and m.group(2) == key:
-                line = re.sub(KEY_RE, r"\1\2\3%s\5" % new_value, line)
-            newfile.write(line)
-    newfile.seek(0)
-    
-    with open(filename, "w+") as outputfile:
-        outputfile.write(newfile.read())
+    """Replace the value of `key` in `filename` with `new_value`.    This is
+    intended to be a "loss-less" operation preserving comments, whitespace,
+    etc.,  but currently is not.
+    """
+    return set_header_value(filename, filename, key, new_value)
+
+
+def set_header_value(old_rmap, new_rmap, key, new_value):
+    """Set the value of `key` in `filename` to `new_value` and rewrite the rmap.
+    This is potentially lossy since rewriting the rmap may/will lose comments and 
+    formatting quirks.
+    """
+    map = rmap.load_mapping(old_rmap)
+    map.header[key] = new_value
+    map.write(new_rmap)
     
 # ============================================================================
 
-def rmap_insert_references(old_rmap, new_rmap, inserted_references):
+def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("add","replace")):
     """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
     or replacing all files in `inserted_references` and write out the result to
     `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
     
     Return the list of RefactorAction's performed.
     """
-    new = rmap.load_mapping(old_rmap, ignore_checksum=True)
+    new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
         new = _rmap_insert_reference(new, reference)
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
     checksum.update_checksum(new_rmap)
+
+def rmap_check_modifications(old_rmap, new_rmap, expected="add"):
+    """Check the differences between `old_rmap` and `new_rmap` and make sure they're
+    limited to the types listed in `expected`.
+    
+    expected should be "add" or "replace".
+    
+    Returns as_expected,  True IFF all rmap modifications match `expected`.
+    """
+    diffs = diff.mapping_diffs(old_rmap, new_rmap)
+    as_expected = True
+    for difference in diffs:
+        actual = diff.diff_action(difference)
+        if actual == expected:
+            pass   # white-list so it will fail when expected is bogus.
+        else:
+            log.error("Expected", repr(expected), "but got", repr(actual),
+                      "from change", repr(difference))
+            as_expected = False
+    return as_expected
 
 def _rmap_insert_reference(loaded_rmap, reffile):
     """Given the rmap text `old_rmap_contents`,  generate and return the 
@@ -63,8 +81,8 @@ def _rmap_insert_reference(loaded_rmap, reffile):
     
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
-    log.verbose("Inserting",repr(reffile),"into",repr(loaded_rmap))
-    header, parkeys = _get_matching_header(loaded_rmap, reffile)
+    log.verbose("Inserting", repr(reffile), "into", repr(loaded_rmap))
+    header = _get_matching_header(loaded_rmap, reffile)
     new_rmap = loaded_rmap.insert(header, os.path.basename(reffile))    
     return new_rmap
 
@@ -112,7 +130,7 @@ def _get_matching_header(loaded_rmap, reffile):
     # XXX not clear if/how this works with expanded wildcard or-patterns.
     header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
     
-    return header, parkeys
+    return header
 
     
 # ============================================================================
@@ -154,13 +172,13 @@ def _rmap_add_useafter(old_rmap_contents, match_tuple, useafter_date,
                     new_mapping_file.write("\t'%s' : '%s',\n" % \
                         (useafter_date, useafter_file))
                     state = "copy remainder"
-                    modification = "Inserted useafter into existing match case."
+                    # modification = "Inserted useafter into existing match case."
             elif line.strip() == "}),":
                 # Never found < useafter before next Match tuple
                 new_mapping_file.write("\t'%s' : '%s',\n" % \
                                            (useafter_date, useafter_file))
                 state = "copy remainder"
-                modification = "Appended useafter to existing match case."
+                # modification = "Appended useafter to existing match case."
         new_mapping_file.write(line)
     assert state == "copy remainder", "no useafter insertion performed"
     new_mapping_file.seek(0)
@@ -233,16 +251,24 @@ def _rmap_delete_useafter(old_rmap_contents, match_tuple, useafter_date,
 # ===========================================================================
 
 def main():
+    """Command line refactoring behavior."""
     import crds
     crds.handle_version()
     log.set_verbose(60)
-    if len(sys.argv) >= 2 and sys.argv[1] == "insert":
+    if len(sys.argv) >= 5 and sys.argv[1] == "insert":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
         rmap_insert_references(old_rmap, new_rmap, inserted_references)
+    elif len(sys.argv) == 6 and sys.argv[1] == "set_header":
+        old_rmap = sys.argv[2]
+        new_rmap = sys.argv[3]
+        key = sys.argv[4]
+        value = sys.argv[5]
+        set_header_value(old_rmap, new_rmap, key, value)        
     else:
         print "usage: python -m crds.refactor insert <old_rmap> <new_rmap> <references...>"
+        print "usage: python -m crds.refactor set_header <old_rmap> <new_rmap> <key> <value>"
         sys.exit(-1)
 
 if __name__ == "__main__":
