@@ -164,7 +164,7 @@ class Selector(object):
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
         self._parameters = tuple(parameters)
-        if selections:
+        if selections is not None:
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: selection, ... }."
             self._raw_selections = sorted(selections.items())
@@ -175,7 +175,7 @@ class Selector(object):
             # for uses beyond that capacity and the resulting rmap
             # is really only good for a single lookup operation.
             assert isinstance(_selections, list),  \
-                "_selections should be a list of key,value tuples."
+                "_selections should be a list of key,value tuples, not: " + repr(_selections)
             self._raw_selections = _selections
             self._selections = _selections
         self._rmap_header = rmap_header or {}
@@ -552,14 +552,16 @@ class Selector(object):
         return self._normalize_key(key1) == self._normalize_key(key2)
     
     def _normalize_key(self, key):
-        """Return the simple version of single element keys.
+        """Return the simple version of single element keys.   Include key
+        conditioning so that numbers are matched as float strings, times are
+        uniform, etc.
         
         e.g.   ('something',) -->   'something'
         e.g.   ('something','else') --> ('something','else')
         """
         if isinstance(key, tuple) and len(key) == 1:
             key = key[0]
-        return key
+        return self.condition_key(key)
     
     @classmethod    
     def _make_key(self, header, parameters):
@@ -1245,11 +1247,6 @@ of uniform rmap structure for HST:
                                         " is an equal weight special case of " + repr(other),
                                         " requiring dynamic merging.")
     
-    @classmethod                
-    def _make_key(self, header, parkeys):
-        """Always return the key as a tuple."""
-        return tuple([header[par] for par in parkeys])
-
 # ==============================================================================
 
 class UseAfterSelector(Selector):
@@ -1606,8 +1603,7 @@ class BracketSelector(Selector):
     @classmethod
     def _make_key(self, header, parkeys):
         """Always return key as a simple float."""
-        keystr = header[parkeys[0]]
-        return float(keystr)
+        return float(header[parkeys[0]])
 
 # ==============================================================================
 
