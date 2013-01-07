@@ -24,6 +24,19 @@ def mapping_diffs(file1, file2):
     differences = map1.difference(map2)
     return differences
 
+def diff_action(d):
+    """Return 'add', 'replace', or 'delete' based on action represented by
+    difference tuple `d`.
+    """
+    if "replace" in d[-1]:
+        return "replace"
+    elif "add" in d[-1]:
+        return "add"
+    elif "delete" in d[-1]:
+        return "delete"
+    else:
+      return "unknown: " + repr(d)
+
 def mapping_difference(observatory, file1, file2, primitive_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
     and `file2`.
