@@ -37,6 +37,14 @@ def set_header_value(old_rmap, new_rmap, key, new_value):
     map.header[key] = new_value
     map.write(new_rmap)
     
+def update_derivation(old_path, new_path):
+    """Set the 'derived_from' and 'name' header fields of `new_path` based on both."""
+    old = rmap.load_mapping(old_path)
+    new = rmap.load_mapping(new_path)
+    new.header["derived_from"] = old.name
+    new.header["name"] = os.path.basename(new_path)
+    new.write(new_path)
+    
 # ============================================================================
 
 def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("add","replace")):
@@ -49,6 +57,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("a
     new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
         new = _rmap_insert_reference(new, reference)
+    new.header["derived_from"] = old.derived_from
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
     checksum.update_checksum(new_rmap)
@@ -81,9 +90,9 @@ def _rmap_insert_reference(loaded_rmap, reffile):
     
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
-    log.verbose("Inserting", repr(reffile), "into", repr(loaded_rmap))
+    log.info("Inserting", repr(reffile), "into", repr(loaded_rmap.name))
     header = _get_matching_header(loaded_rmap, reffile)
-    new_rmap = loaded_rmap.insert(header, os.path.basename(reffile))    
+    new_rmap = loaded_rmap.insert(header, os.path.basename(reffile))
     return new_rmap
 
 def _get_matching_header(loaded_rmap, reffile):
@@ -254,12 +263,17 @@ def main():
     """Command line refactoring behavior."""
     import crds
     crds.handle_version()
-    log.set_verbose(60)
+    
+    if "--verbose" in sys.argv:
+        sys.argv.remove("--verbose")
+        log.set_verbose()
+    
     if len(sys.argv) >= 5 and sys.argv[1] == "insert":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
         inserted_references = sys.argv[4:]
         rmap_insert_references(old_rmap, new_rmap, inserted_references)
+        # update_derivation(old_rmap, new_rmap)
     elif len(sys.argv) == 6 and sys.argv[1] == "set_header":
         old_rmap = sys.argv[2]
         new_rmap = sys.argv[3]
