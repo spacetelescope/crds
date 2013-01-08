@@ -35,7 +35,7 @@ def diff_action(d):
     elif "delete" in d[-1]:
         return "delete"
     else:
-      return "unknown: " + repr(d)
+        return "unknown: " + repr(d)
 
 def mapping_difference(observatory, file1, file2, primitive_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
@@ -70,61 +70,10 @@ def rq(diff):
     return diff[:-1] + (diff[-1].replace("'",""),)
 
 def diff_replace_old_new(diff):
+    """Return the (old, new) filenames from difference tuple `diff`."""
     _replaced, old, _with, new = diff[-1].split()
     return old, new
     
-# =============================================================================
-
-def mapping_check_reversions(file1, file2):
-    """Print warnings for file reversions between contexts `file1` and `file2`.
-    Warns on:
-        Deleted files.
-        Replaced files where the new file is older than the old file.
-    """
-    if newer(file1, file2):
-        log.warning("File order for reversion check looks backward:", 
-                    repr(file1), ">", repr(file2))
-    differences = mapping_diffs(file1, file2)
-    for diff in sorted(differences):
-        diff = rq(diff)
-        if "deleted" in diff[-1]:
-            log.warning("Deleted file at", diff)
-        elif "replaced" in diff[-1]:
-            old_val, new_val = diff_replace_old_new(diff)
-            if not newer(new_val, old_val):
-                log.warning("Reversion.  Replaced newer file at", diff)
-                
-def newstyle_name(name):
-    return name.startswith(("hst_","jwst_","tobs_"))
-
-#def similar(name1, name2):
-#    if len(name1) != len(name2):
-#        return False
-#    parts1, parts2 = name1.split("_"), name2.split("_")
-#    if "_".join(parts1[:-1]) != "_".join(parts2[:-1]):   #  non-serial # prefix
-#        return False
-#    if os.path.splitexit(name1)[-1] != os.path.splitext(name2)[-1]:  # extension
-#        return False
-#    return True
-
-def newer(name1, name2):
-    """Determine if `name1` is a more recent file than `name2` accounting for 
-    limited differences in naming conventions. Official CDBS and CRDS names are 
-    comparable using a simple text comparison,  just not to each other.
-    """
-    n1 = newstyle_name(name1)
-    n2 = newstyle_name(name2)
-    if n1:
-        if n2: # compare CRDS names
-            return name1 > name2
-        else:  # CRDS > CDBS
-            return True
-    else:
-        if n2:  # CDBS < CRDS
-            return False
-        else:  # compare CDBS names
-            return name1 > name2
-
 # ============================================================================
         
 def fits_difference(observatory, file1, file2):
@@ -134,18 +83,18 @@ def fits_difference(observatory, file1, file2):
         "File " + repr(file1) + " is not a FITS file."
     assert file2.endswith(".fits"), \
         "File " + repr(file2) + " is not a FITS file."
-    loc_file1 = rmap.locate_file(file1, observatory)
-    loc_file2 = rmap.locate_file(file2, observatory)
-    pysh.sh("fitsdiff ${loc_file1} ${loc_file2}")
+    _loc_file1 = rmap.locate_file(file1, observatory)
+    _loc_file2 = rmap.locate_file(file2, observatory)
+    pysh.sh("fitsdiff ${_loc_file1} ${_loc_file2}")
 
 def text_difference(observatory, file1, file2):
     """Run UNIX diff on two text files named `file1` and `file2`.
     """
     assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
         "Files " + repr(file1) + " and " + repr(file2) + " are of different types."
-    loc_file1 = rmap.locate_file(file1, observatory)
-    loc_file2 = rmap.locate_file(file2, observatory)
-    pysh.sh("diff -b -c ${loc_file1} ${loc_file2}")
+    _loc_file1 = rmap.locate_file(file1, observatory)
+    _loc_file2 = rmap.locate_file(file2, observatory)
+    pysh.sh("diff -b -c ${_loc_file1} ${_loc_file2}")
 
 def difference(observatory, file1, file2, primitive_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
@@ -177,10 +126,6 @@ def main():
         help="Locate files using HST naming conventions.", 
         action="store_true")
     
-    parser.add_option("-R", "--reversions", dest="reversions",
-        help="Check for file reversions between CRDS mappings.", 
-        action="store_true")
-
     parser.add_option("-P", "--primitive-diffs", dest="primitive_diffs",
         help="Include primitive differences on replaced files.", 
         action="store_true")
@@ -201,10 +146,7 @@ def main():
         observatory = "jwst"
 
     file1, file2 = args[1:]
-    if options.reversions:
-        mapping_check_reversions(file1, file2)
-    else:
-        difference(observatory, file1, file2, primitive_diffs=options.primitive_diffs)
+    difference(observatory, file1, file2, primitive_diffs=options.primitive_diffs)
 
 # ============================================================================
 

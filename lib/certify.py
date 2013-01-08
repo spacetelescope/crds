@@ -10,7 +10,7 @@ import sets
 
 import pyfits
 
-from crds import rmap, log, timestamp, utils, data_file
+from crds import rmap, log, timestamp, utils, data_file, diff
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
 from crds import refmatch
@@ -134,13 +134,13 @@ class KeywordValidator(object):
                     check_val = False
 
         if context: # If context has been specified, compare against previous reffile
-            current = refmatch.find_current_reffile(filename,context)
+            current = refmatch.find_current_reffile(filename, context)
             if current: # Only do comparison if current ref file can be found
                 log.verbose("Checking values for column", repr(self.name),
                             " against values found in ",current)
                 current_values = self._get_column_values(current)
 
-                return _check_column_values(values,current_values)
+                return self._check_column_values(values, current_values)
 
         # If no context, report results of check_value anyway if not an Exception
         return check_val
@@ -170,10 +170,9 @@ class KeywordValidator(object):
         # start by finding the extension which contains the requested column
         col_extn = None
         for extn in hdu:
-            if hasattr(extn,'_extension') and 'table' in extn._extension.lower()\
-                and self.name in extn.data.names:
-                    col_extn = extn
-                    break
+            if (hasattr(extn,'_extension') and 'table' in extn._extension.lower() and self.name in extn.data.names):
+                col_extn = extn
+                break
         # If no extension could be found with that column, report as missing
         if col_extn is None:
             # close FITS handle
@@ -281,7 +280,7 @@ class ModeValidator(CharacterValidator):
         modes = map(tuple, transposed(new_values))
 
         if context: # If context has been specified, compare against previous reffile
-            current = refmatch.find_current_reffile(filename,context)
+            current = refmatch.find_current_reffile(filename, context)
             if not current: # Only do comparison if current ref file can be found
                 log.warning("No comparison reference for", repr(filename),
                             "in context", repr(context))
@@ -296,7 +295,7 @@ class ModeValidator(CharacterValidator):
                 current_modes = map(tuple, transposed(current_values))
                 # find values which are uniq to each set/file
                 self.name = self.names
-                self._check_column_values(modes,current_modes)
+                self._check_column_values(modes, current_modes)
 
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
@@ -357,8 +356,7 @@ class DoubleValidator(FloatValidator):
     epsilon = 1e-14
 
 class PedigreeValidator(KeywordValidator):
-    """Validates &PREDIGREE fields.
-    """
+    """Validates &PREDIGREE fields."""
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
 
     def _get_header_value(self, header):
@@ -447,8 +445,7 @@ def get_validators(filename):
 
 # ============================================================================
 
-def certify_reference(fitsname, context=None,
-                      dump_provenance=False, trap_exceptions=False):
+def certify_reference(fitsname, context=None, dump_provenance=False, trap_exceptions=False):
     """Given reference file path `fitsname`,  fetch the appropriate Validators
     and check `fitsname` against them.
     """
@@ -564,17 +561,24 @@ def validate_file_format(fitsname):
         raise IOError
     return VALID_FITS
 
-def certify_context(filename, context=None, check_references=None, trap_exceptions=False):
-    """Certify `context`.  Unless `shallow` is True,  recursively certify all
-    referenced files as well.
-    """
+# ============================================================================
+
+def certify_mapping(filename, context=None, check_references=None, trap_exceptions=False):
+    """Certify `filename` using `context` to determine source references."""
+    
     ctx = rmap.get_cached_mapping(filename)
     ctx.validate_mapping(trap_exceptions=trap_exceptions)
-    ctx.warn_derivation_diffs()
+
+    derived_from = get_derived_from(filename)
+    if derived_from is not None:
+        mapping_check_diffs(filename, derived_from.basename)
+
+    # Optionally check nested references
     if not check_references: # Accept None or False
         return
     assert check_references in ["exist", "contents"], \
         "invalid check_references parameter " + repr(check_references)
+
     references = []
     for ref in ctx.reference_names():
         log.info('Validating reference file: '+ref)
@@ -597,9 +601,92 @@ def certify_context(filename, context=None, check_references=None, trap_exceptio
                 raise ValidationError("Missing reference file " + repr(ref))
 
     if check_references == "contents":
-        certify_files(references, context=context,
-                      check_references=check_references,
-                      trap_exceptions=trap_exceptions)
+        certify_files(references, context=context, check_references=check_references,
+            trap_exceptions=trap_exceptions)
+
+# ============================================================================
+
+def mapping_check_diffs(mapping_file, derived_from_file):
+    """Issue warnings for *deletions* in self relative to parent derived_from
+    mapping.  Issue warnings for *reversions*,  defined as replacements which
+    have names in the "wrong" time order.   Issue infos for *additions* and 
+    other *replacements*.    
+    
+    This is intended to check for missing modes and for inadvertent reversions
+    to earlier versions of files.   For speed and simplicity,  file time order
+    is currently determined by the names themselves,  not file contents, file
+    system,  or database info.
+    """
+    log.verbose("Checking derivation diffs from", repr(derived_from_file), "to", repr(mapping_file))
+    mapping = rmap.get_cached_mapping(mapping_file)
+    derived_from = rmap.get_cached_mapping(derived_from_file)
+    diffs = derived_from.difference(mapping)
+    categorized = sorted([ (diff.diff_action(d), d) for d in diffs ])
+    for action, msg in categorized:
+        if action == "add":
+            log.info("In", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "replace":
+            old_val, new_val = diff.diff_replace_old_new(msg)
+            if not newer(new_val, old_val):
+                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
+            else:
+                log.info("In", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "delete":
+            log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
+        else:
+            raise ValueError("Unexpected difference action:", difference)
+
+def get_derived_from(filename):
+    """Return the mapping `self` was derived from, or None."""
+    mapping = rmap.get_cached_mapping(filename)
+    derived_from = None
+    try:
+        derived_file = mapping.header['derived_from']
+        if 'generated' not in derived_file:
+            derived_from = rmap.get_cached_mapping(derived_file)
+    except Exception, exc:
+        log.verbose_warning("No parent mapping for", repr(mapping.basename), ":", str(exc))
+    return derived_from
+
+def _diff_tail(msg):
+    """`msg` is an arbitrary length difference "path",  which could
+    be coming from any part of the mapping hierarchy and ending in any kind of 
+    selector tree.   The last item is always the change message: add, replace, 
+    delete <blah>.  The next to last should always be a selector key of some kind.  
+    Back up from there to find the first mapping tuple.
+    """
+    tail = []
+    for part in msg[::-1]:
+        if isinstance(part, tuple) and len(part) == 2 and isinstance(part[0], str) and part[0].endswith("map"):
+            tail.append(part[1])
+            break
+        else:
+            tail.append(part)
+    return tuple(reversed(tail))
+
+def newstyle_name(name):
+    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap"""
+    return name.startswith(("hst_", "jwst_", "tobs_"))
+
+def newer(name1, name2):
+    """Determine if `name1` is a more recent file than `name2` accounting for 
+    limited differences in naming conventions. Official CDBS and CRDS names are 
+    comparable using a simple text comparison,  just not to each other.
+    """
+    n1 = newstyle_name(name1)
+    n2 = newstyle_name(name2)
+    if n1:
+        if n2: # compare CRDS names
+            return name1 > name2
+        else:  # CRDS > CDBS
+            return True
+    else:
+        if n2:  # CDBS < CRDS
+            return False
+        else:  # compare CDBS names
+            return name1 > name2
+
+# ============================================================================
 
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
@@ -607,17 +694,17 @@ class MissingReferenceError(RuntimeError):
 def certify_files(files, context=None, dump_provenance=False,
                   check_references=None, is_mapping=False, trap_exceptions=True):
 
-    if not isinstance(files,list):
+    if not isinstance(files, list):
         files = [files]
     n = 0
     for filename in files:
         n += 1
         bname = os.path.basename(filename)
-        log.info('#'*40)  # Serves as demarkation for each file's report
-        log.info("Certifying", repr(bname)+ ' ('+str(n)+'/'+str(len(files))+')')
+        log.info('#' * 40)  # Serves as demarkation for each file's report
+        log.info("Certifying", repr(bname) + ' (' + str(n) + '/' + str(len(files)) + ')')
         try:
             if is_mapping or rmap.is_mapping(filename):
-                certify_context(filename, context=context,
+                certify_mapping(filename, context=context,
                                 check_references=check_references,
                                 trap_exceptions=trap_exceptions)
             else:
@@ -631,8 +718,11 @@ def certify_files(files, context=None, dump_provenance=False,
                 raise
 
 def transposed(lists):
-   if not lists: return []
-   return map(lambda *row: list(row), *lists)
+    if not lists: 
+        return []
+    return map(lambda *row: list(row), *lists)
+
+# ============================================================================
 
 def main():
     """Perform checks on each of `files`.   Print status.   If file is a
@@ -676,8 +766,12 @@ def main():
     assert (options.context is None) or rmap.is_mapping(options.context), \
         "Specified --context file " + repr(options.context) + " is not a CRDS mapping."
 
-    log.standard_run("certify_files(args[1:], context=options.context, dump_provenance=options.provenance, check_references=check_references, is_mapping=options.mapping, trap_exceptions=options.trap_exceptions)",
-                     options, globals(), locals())
+    certify_files(args[1:], context=options.context, 
+                  dump_provenance=options.provenance, 
+                  check_references=check_references, 
+                  is_mapping=options.mapping, 
+                  trap_exceptions=options.trap_exceptions)
+    
     log.standard_status()
     return log.errors()
 

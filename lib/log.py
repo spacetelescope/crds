@@ -195,11 +195,12 @@ def handle_standard_options(
     
     parser.add_option("-V", "--verbose", dest="verbose",
                       help="Set verbosity level.", 
-                      metavar="VERBOSITY", default=0)
+                      metavar="VERBOSITY", default=None)
 
     options, args = parser.parse_args(args)
 
-    set_verbose(int(options.verbose))
+    if options.verbose is not None:
+        set_verbose(int(options.verbose))
 
     return options, args
 
