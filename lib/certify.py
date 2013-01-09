@@ -624,13 +624,13 @@ def mapping_check_diffs(mapping_file, derived_from_file):
     categorized = sorted([ (diff.diff_action(d), d) for d in diffs ])
     for action, msg in categorized:
         if action == "add":
-            log.info("In", _diff_tail(msg)[:-1], msg[-1])
+            log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
             old_val, new_val = diff.diff_replace_old_new(msg)
             if not newer(new_val, old_val):
                 log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
             else:
-                log.info("In", _diff_tail(msg)[:-1], msg[-1])
+                log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
         elif action == "delete":
             log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
         else:
