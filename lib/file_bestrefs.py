@@ -106,44 +106,38 @@ def file_bestrefs(new_context, datasets, old_context=None, update_datasets=False
     recommendations to dataset headers.
     """
     for dataset in datasets:
-        log.verbose("===> Processing", dataset, verbosity=25)
-
+        log.info("===> Processing", dataset, verbosity=25)
         basename = os.path.basename(dataset)
-        
-        try:
-            header, old_bestrefs = HEADER_CACHE.get(basename, (new_context, dataset))
+        try:        
+            try:
+                header, old_bestrefs = HEADER_CACHE.get(basename, (new_context, dataset))
+            except Exception, exc:
+                raise RuntimeError("Can't get header info for " + repr(dataset) + " " + str(exc))
+            try:
+                bestrefs1 = new_context.get_best_references(header)
+            except Exception, exc:
+                raise crds.CrdsError("Bestrefs for " + repr(new_context.name) + " failed: " + str(exc))
+
+            if old_context:
+                try:
+                    bestrefs2 = old_context.get_best_references(header)
+                except Exception, exc:
+                    raise crds.CrdsError("Bestrefs for " + repr(old_context.name) + " failed: " + str(exc))
+                old_fname = old_context.filename
+            else:
+                bestrefs2 = old_bestrefs
+                old_fname = "<dataset prior results>"
+                
+            new_fname = os.path.basename(new_context.filename)
+            
+            compare_bestrefs(new_fname, old_fname, dataset, bestrefs1, bestrefs2)
+            
+            if update_datasets:
+                write_bestrefs(new_fname, dataset, bestrefs1)
+
         except Exception, exc:
-            log.error("Can't get header info for " + repr(dataset) + " " + str(exc))
-            continue 
-
-        bestrefs1 = trapped_bestrefs(new_context, header)
-
-        if old_context:
-            bestrefs2 = trapped_bestrefs(old_context, header)
-            old_fname = old_context.filename
-        else:
-            bestrefs2 = old_bestrefs
-            old_fname = "<dataset prior results>"
+            log.error("Failed processing", repr(dataset), ":", str(exc))
             
-        new_fname = os.path.basename(new_context.filename)
-        
-        compare_bestrefs(new_fname, old_fname, dataset, bestrefs1, bestrefs2)
-        
-        if update_datasets:
-            write_bestrefs(new_fname, dataset, bestrefs1)
-            
-    log.write("Reference Changes:")
-    log.write(pprint.pformat(MISMATCHES))
-
-def trapped_bestrefs(ctx, header):
-    """Compute and return bestrefs or convert exceptions to ERROR messages
-    and return None.
-    """
-    try:
-        return ctx.get_best_references(header)
-        # return crds.getrecommendations(header, context=ctx,)
-    except Exception:
-        log.error("Best references FAILED for ", repr(ctx))
 
 def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
     """Compare two sets of best references for `dataset` taken from
@@ -169,7 +163,7 @@ def compare_bestrefs(ctx1, ctx2, dataset, bestrefs1, bestrefs2):
         if old not in [None, "", "n/a","*"]:
             if new != old:
                 log.info("New Reference for",  repr(dataset), repr(filekind), 
-                            "is", repr(new), "was", repr(old))
+                            ":", repr(old), "-->", repr(new))
                 if filekind != "mdriztab":  
                     # these are guaranteed to fail for archive files
                     mismatches += 1
