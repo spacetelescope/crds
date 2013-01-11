@@ -57,10 +57,11 @@ def cached(func):
     3
     """
     cache = dict()
-    def cacher(*args):
-        if args not in cache:
-            cache[args] = func(*args)
-        return cache[args]
+    def cacher(*args, **keys):
+        key = args + tuple(keys.items())
+        if key not in cache:
+            cache[key] = func(*args)
+        return cache[key]
     cacher.func_name = func.func_name
     cacher.__dict__["cache"] = cache
     cacher.__dict__["uncached"] = func
