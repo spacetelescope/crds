@@ -423,26 +423,25 @@ def validator(info):
 
 # ============================================================================
 
-VALIDATOR_CACHE = {}
 def get_validators(filename):
     """Given a reference file `filename`,  return the observatory specific
     list of Validators used to check that reference file type.
     """
     # Find the observatory's locator module based on the reference file.
     locator = utils.reference_to_locator(filename)
-
     # Get the cache key for this filetype.
     key = locator.reference_name_to_validator_key(filename)
+    return validators_by_typekey(locator, key)
 
-    if key not in VALIDATOR_CACHE:
-        # Get tpninfos in an observatory specific way, a sequence of tuples.
-        tpninfos = tuple(locator.get_tpninfos(*key))
-        # Make and cache Validators for `filename`s reference file type.
-        VALIDATOR_CACHE[key] = [validator(x) for x in tpninfos]
-
-    # Return a list of Validator's for `filename`
-    return VALIDATOR_CACHE[key]
-
+@utils.cached
+def validators_by_typekey(locator, key):
+    """Load and return the list of validators associated with reference type 
+    validator `key`.
+    """
+    tpninfos = tuple(locator.get_tpninfos(*key))
+    # Make and cache Validators for `filename`s reference file type.
+    return [validator(x) for x in tpninfos]
+        
 # ============================================================================
 
 def certify_reference(fitsname, context=None, dump_provenance=False, trap_exceptions=False):
@@ -617,7 +616,7 @@ def mapping_check_diffs(mapping_file, derived_from_file):
     is currently determined by the names themselves,  not file contents, file
     system,  or database info.
     """
-    log.verbose("Checking derivation diffs from", repr(derived_from_file), "to", repr(mapping_file))
+    log.info("Checking derivation diffs from", repr(derived_from_file), "to", repr(mapping_file))
     mapping = rmap.get_cached_mapping(mapping_file)
     derived_from = rmap.get_cached_mapping(derived_from_file)
     diffs = derived_from.difference(mapping)
@@ -627,10 +626,10 @@ def mapping_check_diffs(mapping_file, derived_from_file):
             log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
             old_val, new_val = diff.diff_replace_old_new(msg)
-            if not newer(new_val, old_val):
-                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
-            else:
+            if newer(new_val, old_val):
                 log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+            else:
+                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "delete":
             log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
         else:
@@ -665,13 +664,34 @@ def _diff_tail(msg):
     return tuple(reversed(tail))
 
 def newstyle_name(name):
-    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap"""
-    return name.startswith(("hst_", "jwst_", "tobs_"))
+    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
+    
+    >>> newstyle_name("s7g1700gl_dead.fits")
+    False
+    >>> newstyle_name("hst.pmap")
+    True
+    >>> newstyle_name("hst_acs_darkfile_0001.fits")
+    True
+    """
+    return name.startswith(("hst", "jwst", "tobs"))
 
 def newer(name1, name2):
     """Determine if `name1` is a more recent file than `name2` accounting for 
     limited differences in naming conventions. Official CDBS and CRDS names are 
     comparable using a simple text comparison,  just not to each other.
+    
+    >>> newer("s7g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
+    False
+    >>> newer("hst_cos_deadtab_0001.fits", "s7g1700gl_dead.fits")
+    True
+    >>> newer("s7g1700gl_dead.fits", "bbbbb.fits")
+    True
+    >>> newer("bbbbb.fits", "s7g1700gl_dead.fits")
+    False
+    >>> newer("hst_cos_deadtab_0001.rmap", "hst_cos_deadtab_0002.rmap")
+    False
+    >>> newer("hst_cos_deadtab_0002.rmap", "hst_cos_deadtab_0001.rmap")
+    True
     """
     n1 = newstyle_name(name1)
     n2 = newstyle_name(name2)
@@ -701,7 +721,8 @@ def certify_files(files, context=None, dump_provenance=False,
         n += 1
         bname = os.path.basename(filename)
         log.info('#' * 40)  # Serves as demarkation for each file's report
-        log.info("Certifying", repr(bname) + ' (' + str(n) + '/' + str(len(files)) + ')')
+        log.info("Certifying", repr(bname) + ' (' + str(n) + '/' + str(len(files)) + ')', 
+                 "relative to context", repr(context))
         try:
             if is_mapping or rmap.is_mapping(filename):
                 certify_mapping(filename, context=context,
@@ -774,6 +795,12 @@ def main():
     
     log.standard_status()
     return log.errors()
+
+def test():
+    """Run doctests in this module.  See also certify unittests."""
+    import doctest
+    from crds import certify
+    return doctest.testmod(certify)
 
 # ============================================================================
 

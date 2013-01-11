@@ -929,8 +929,7 @@ class ReferenceMapping(Mapping):
         
 # ===================================================================
 
-CACHED_MAPPINGS = {}
-
+@utils.cached
 def get_cached_mapping(mapping_basename, **keys):
     """Retrieve the Mapping corresponding to the specified
     `mapping_basename` from the global mapping cache,  recursively
@@ -938,10 +937,7 @@ def get_cached_mapping(mapping_basename, **keys):
 
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
-    if mapping_basename not in CACHED_MAPPINGS:
-        CACHED_MAPPINGS[mapping_basename] = load_mapping(
-            mapping_basename, **keys)
-    return CACHED_MAPPINGS[mapping_basename]
+    return load_mapping(mapping_basename, **keys)
 
 def load_mapping(mapping, **keys):
     """Load any of the pipeline, instrument, or filekind `mapping`s
