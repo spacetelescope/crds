@@ -102,6 +102,8 @@ def wfc3_flshfile_filter(kmap):
     kmap[('N/A', 'N/A', 'N/A', 'N/A', 'ZERO|ZEROCUR|OFF', 'N/A')] = [
         rmap.Filemap(date='1990-01-01 00:00:00', file='w7j1705di_fls.fits', 
                      comment='Hack to support matching CDBS irrelevant answers to irrelevant FLASHCUR cases.'),
+        rmap.Filemap(date='2012-01-01 00:00:00', file='wc52031pi_fls.fits', 
+                     comment='post-flash created from in-flight wfc3/uvis frames.----------------')
         ]
     return kmap, []
 
