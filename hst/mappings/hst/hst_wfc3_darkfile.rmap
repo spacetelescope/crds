@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:23.965541',
+    'derived_from' : 'generated from CDBS database 2013-01-14 09:03:18.797442',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
         'subtype' : '(DETECTOR == "IR")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '43e1712ee665efb61ae0b87399d17b405fb70a08',
+    'sha1sum' : '329a9c32894482b4e9f9dd47857a346de68cb6ef',
 }
 
 selector = Match({
@@ -238,7 +238,7 @@ selector = Match({
         '2008-02-19 00:00:00' : 't611932ei_drk.fits',
         '2008-02-20 00:00:00' : 't611932fi_drk.fits',
         '2009-05-11 00:00:00' : 'u3g20230i_drk.fits',
-        '2009-05-11 00:00:01' : 'w8o18272i_drk.fits',
+        '2009-05-11 00:00:01' : 'wcj1946ti_drk.fits',
     }),
     ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ128SUB') : UseAfter({
         '2008-02-20 00:00:00' : 't5s1754ni_drk.fits',
@@ -786,9 +786,17 @@ selector = Match({
         '2012-09-10 22:37:40' : 'w9k15220i_drk.fits',
         '2012-09-11 04:39:21' : 'w9k15221i_drk.fits',
         '2012-09-16 00:09:58' : 'w9p1247ni_drk.fits',
-        '2012-09-20 08:22:58' : 'w9p1247oi_drk.fits',
-        '2012-09-24 00:30:13' : 'wa31859ei_drk.fits',
-        '2012-09-28 00:09:07' : 'wa31859fi_drk.fits',
+        '2012-09-20 08:22:58' : 'wb81559li_drk.fits',
+        '2012-09-24 00:30:13' : 'wb81559mi_drk.fits',
+        '2012-09-28 00:09:07' : 'wb81559ni_drk.fits',
+        '2012-10-02 00:00:04' : 'wb81559oi_drk.fits',
+        '2012-10-06 00:32:02' : 'wb81559pi_drk.fits',
+        '2012-10-10 02:04:35' : 'wb81559qi_drk.fits',
+        '2012-10-11 17:30:20' : 'wb81559ri_drk.fits',
+        '2012-10-17 05:12:27' : 'wb81559si_drk.fits',
+        '2012-10-20 11:16:31' : 'wb81559ti_drk.fits',
+        '2012-10-25 04:33:36' : 'wb816000i_drk.fits',
+        '2012-10-29 06:37:56' : 'wb816001i_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',

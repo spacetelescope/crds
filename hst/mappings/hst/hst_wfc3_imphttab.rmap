@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-01-14 09:03:18.910797',
+    'filekind' : 'IMPHTTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_imphttab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'a1f7be4b1a8c73b18d8e9606092edcb1d018b7d1',
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '2009-05-08 00:00:00' : 'wbj1825ri_imp.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '2009-05-08 00:00:00' : 'wbj1825si_imp.fits',
+    }),
+})

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-11-03 20:31:56.432050',
+    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:35.753226',
     'filekind' : 'DEADTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'fb0f06e06cbfbca3f088c4b67b4f61c6844b92df',
+    'sha1sum' : '21ca83eaea0b074ace3fe2e048d20162532414b4',
 }
 
 selector = Match({

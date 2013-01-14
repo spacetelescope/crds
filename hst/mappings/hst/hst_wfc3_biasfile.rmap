@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:18.460572',
+    'derived_from' : 'generated from CDBS database 2013-01-14 09:03:16.527903',
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '3552f68e3d987915e2a0e22fee7ac2f3b18d2fb7',
+    'sha1sum' : 'b3b7e811ca39231214578c402ad9981afccdd7e0',
 }
 
 selector = Match({
