@@ -19,23 +19,26 @@ def mapping_diffs(file1, file2):
     assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
         "Files " + repr(file1) + " and " + repr(file2) + \
         " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
-    map1 = rmap.get_cached_mapping(file1)
-    map2 = rmap.get_cached_mapping(file2)
+    map1 = rmap.load_mapping(file1)
+    map2 = rmap.load_mapping(file2)
     differences = map1.difference(map2)
     return differences
 
 def diff_action(d):
     """Return 'add', 'replace', or 'delete' based on action represented by
-    difference tuple `d`.
+    difference tuple `d`.   Append "_rule" if the change is a Selector.
     """
     if "replace" in d[-1]:
-        return "replace"
+        result = "replace"
     elif "add" in d[-1]:
-        return "add"
+        result = "add"
     elif "delete" in d[-1]:
-        return "delete"
+        result = "delete"
     else:
-        return "unknown: " + repr(d)
+        raise ValueError("Bad difference action: "  + repr(d))
+    if "Selector" in d[-1]:
+        result += "_rule"
+    return result
 
 def mapping_difference(observatory, file1, file2, primitive_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
