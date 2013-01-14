@@ -37,13 +37,16 @@ def set_header_value(old_rmap, new_rmap, key, new_value):
     map.header[key] = new_value
     map.write(new_rmap)
     
-def update_derivation(old_path, new_path):
+def update_derivation(new_path, old_basename=None):
     """Set the 'derived_from' and 'name' header fields of `new_path`.  
     This function works for all Mapping classes:  pmap, imap, and rmap.
     """
-    old = rmap.load_mapping(old_path)
     new = rmap.load_mapping(new_path)
-    new.header["derived_from"] = old.basename
+    if old_basename is None:    # assume new is a copy of old, with old's name in header
+        derived_from = new.basename
+    else:
+        derived_from = old_basename
+    new.header["derived_from"] = derived_from
     new.header["name"] = os.path.basename(new_path)
     new.write(new_path)
     
@@ -63,7 +66,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("a
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
 
-def rmap_check_modifications(old_rmap, new_rmap, expected="add"):
+def rmap_check_modifications(old_rmap, new_rmap, expected=["add"]):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
     limited to the types listed in `expected`.
     
@@ -75,10 +78,10 @@ def rmap_check_modifications(old_rmap, new_rmap, expected="add"):
     as_expected = True
     for difference in diffs:
         actual = diff.diff_action(difference)
-        if actual == expected:
+        if actual in expected:
             pass   # white-list so it will fail when expected is bogus.
         else:
-            log.error("Expected", repr(expected), "but got", repr(actual),
+            log.error("Expected one of", repr(expected), "but got", repr(actual),
                       "from change", repr(difference))
             as_expected = False
     return as_expected
@@ -113,7 +116,7 @@ def _get_matching_header(loaded_rmap, reffile):
     
     # Since expansion rules may depend on keys not used in matching,  
     # get entire header  
-    header = data_file.get_header(reffile)
+    header = data_file.get_header(reffile, observatory=loaded_rmap.observatory)
     
     # The reference file key and dataset key matched aren't always the same!?!?
     # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
