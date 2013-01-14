@@ -565,12 +565,12 @@ def validate_file_format(fitsname):
 def certify_mapping(filename, context=None, check_references=None, trap_exceptions=False):
     """Certify `filename` using `context` to determine source references."""
     
-    ctx = rmap.get_cached_mapping(filename)
-    ctx.validate_mapping(trap_exceptions=trap_exceptions)
+    mapping  = rmap.load_mapping(filename)
+    mapping.validate_mapping(trap_exceptions=trap_exceptions)
 
-    derived_from = get_derived_from(filename)
+    derived_from = get_derived_from(mapping)
     if derived_from is not None:
-        mapping_check_diffs(filename, derived_from.basename)
+        mapping_check_diffs(mapping, derived_from)
 
     # Optionally check nested references
     if not check_references: # Accept None or False
@@ -579,16 +579,16 @@ def certify_mapping(filename, context=None, check_references=None, trap_exceptio
         "invalid check_references parameter " + repr(check_references)
 
     references = []
-    for ref in ctx.reference_names():
+    for ref in mapping.reference_names():
         log.info('Validating reference file: '+ref)
         #
         # The location of reference files on disk need to be determined more
         # robustly based on these 2 options
         #
         try:
-            where = rmap.locate_file(ref, ctx.observatory)
+            where = rmap.locate_file(ref, mapping.observatory)
             if not os.path.exists(where):
-                where = ctx.locate.locate_server_reference(ref)
+                where = mapping.locate.locate_server_reference(ref)
         except:
             where = ref
         if os.path.exists(where):
@@ -605,7 +605,7 @@ def certify_mapping(filename, context=None, check_references=None, trap_exceptio
 
 # ============================================================================
 
-def mapping_check_diffs(mapping_file, derived_from_file):
+def mapping_check_diffs(mapping, derived_from):
     """Issue warnings for *deletions* in self relative to parent derived_from
     mapping.  Issue warnings for *reversions*,  defined as replacements which
     have names in the "wrong" time order.   Issue infos for *additions* and 
@@ -616,9 +616,7 @@ def mapping_check_diffs(mapping_file, derived_from_file):
     is currently determined by the names themselves,  not file contents, file
     system,  or database info.
     """
-    log.info("Checking derivation diffs from", repr(derived_from_file), "to", repr(mapping_file))
-    mapping = rmap.get_cached_mapping(mapping_file)
-    derived_from = rmap.get_cached_mapping(derived_from_file)
+    log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
     diffs = derived_from.difference(mapping)
     categorized = sorted([ (diff.diff_action(d), d) for d in diffs ])
     for action, msg in categorized:
@@ -635,14 +633,13 @@ def mapping_check_diffs(mapping_file, derived_from_file):
         else:
             raise ValueError("Unexpected difference action:", difference)
 
-def get_derived_from(filename):
+def get_derived_from(mapping):
     """Return the mapping `self` was derived from, or None."""
-    mapping = rmap.get_cached_mapping(filename)
     derived_from = None
     try:
         derived_file = mapping.header['derived_from']
         if 'generated' not in derived_file:
-            derived_from = rmap.get_cached_mapping(derived_file)
+            derived_from = rmap.load_mapping(derived_file)
     except Exception, exc:
         log.verbose_warning("No parent mapping for", repr(mapping.basename), ":", str(exc))
     return derived_from
