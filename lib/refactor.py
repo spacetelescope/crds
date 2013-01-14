@@ -38,10 +38,12 @@ def set_header_value(old_rmap, new_rmap, key, new_value):
     map.write(new_rmap)
     
 def update_derivation(old_path, new_path):
-    """Set the 'derived_from' and 'name' header fields of `new_path` based on both."""
+    """Set the 'derived_from' and 'name' header fields of `new_path`.  
+    This function works for all Mapping classes:  pmap, imap, and rmap.
+    """
     old = rmap.load_mapping(old_path)
     new = rmap.load_mapping(new_path)
-    new.header["derived_from"] = old.name
+    new.header["derived_from"] = old.basename
     new.header["name"] = os.path.basename(new_path)
     new.write(new_path)
     
@@ -57,10 +59,9 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("a
     new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
         new = _rmap_insert_reference(new, reference)
-    new.header["derived_from"] = old.derived_from
+    new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
-    checksum.update_checksum(new_rmap)
 
 def rmap_check_modifications(old_rmap, new_rmap, expected="add"):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
