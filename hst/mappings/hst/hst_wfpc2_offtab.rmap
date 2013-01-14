@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2012-11-03 20:32:29.881948',
+    'derived_from' : 'generated from CDBS database 2013-01-11 14:00:11.095697',
     'filekind' : 'OFFTAB',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '0b8671ba39e22391dc0bda4589be2ce8021080cd',
+    'sha1sum' : '40efe5c6e1689c50abb6e2d1e91f50664ef0e338',
 }
 
 selector = Match({
