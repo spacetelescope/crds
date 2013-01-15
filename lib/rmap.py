@@ -377,7 +377,7 @@ class Mapping(object):
         to `filename` or the original file.
         """
         if self.filename is None:
-            raise ValueError("rewrite_checksums() only works on rmaps"
+            raise ValueError("rewrite_checksums() only works on mappings"
                              " that were read from a file.")
 
         xsum = self._get_checksum()
@@ -475,7 +475,7 @@ class Mapping(object):
     
     def copy(self):
         """Return an in-memory copy of this rmap as a new object."""
-        return self.from_string(self.format(), self.filename)
+        return self.from_string(self.format(), self.filename, ignore_checksum=True)
     
 # ===================================================================
 

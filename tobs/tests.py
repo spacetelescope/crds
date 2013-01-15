@@ -2,6 +2,7 @@
 """
 
 import sys
+import os
 import unittest
 
 from crds import rmap, log
@@ -95,6 +96,7 @@ class TestSelectors(unittest.TestCase):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
         
 class TestInsert(unittest.TestCase):
+    """Tests for checking automatic rmap update logic for adding new references."""
 
     def setUp(self):
         self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
@@ -240,22 +242,70 @@ class TestInsert(unittest.TestCase):
     def test_geometrically_nearest_replace_after(self):
          self.terminal_replace("GEOMETRICALLY_NEAREST", 5.0, 'foo.fits')
 
-    def test_recursive_insert(self): # , header, value, classes):
-        """Check recursively adding a lookup path,  including new selectors."""
-        header = { 
-                  "TEST_CASE" : "INSERT",
-                  "PARAMETER" : "2012-09-09 03:07", 
+class TestRecursiveInsert(unittest.TestCase):
+    """Tests for checking automatic rmap update logic for adding new references."""
+    
+    def setUp(self):
+        self.rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test1.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('MATCH_PAR1','MATCH_PAR2'), ('DATE-OBS','TIME-OBS',), ('SW_VERSION',), ('CLOSETIME',), ('BRACKET_PAR',), ('GEOM_PAR',),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('Match', 'UseAfter','SelectVersion','ClosestTime','Bracket','GeometricallyNearest')
+}
+
+selector = Match({
+})
+        '''
+        self.header = { 
+                  "MATCH_PAR1" : "MP1",
+                  "MATCH_PAR2" : "MP2",
+                  "DATE-OBS" : "2017-04-20",
+                  "TIME-OBS" : "00:00:00",
+                  "SW_VERSION" : "1.2",
+                  "CLOSETIME" : "2017-05-30 00:01:02",
+                  "BRACKET_PAR" : 4.4,
+                  "PARAMETER" : "2012-09-09 03:07",
+                  "GEOM_PAR" : "2.7",
         }
-        result = self.rmap.insert(header, "foo.fits")
-        diffs = self.rmap.difference(result)
+
+    def test_0_recursive_insert(self): # , header, value, classes):
+        # Load the test rmap from a string.   The top level selector must exist.
+        # This is not a "realistic" test case.   It's a test of the recursive
+        # insertion capabilities of all the Selector classes in one go.
+        r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
+        result = r.insert(self.header, "foo.fits")
+        result.write("./recursive_insert.rmap")
+        diffs = r.difference(result)
         log.debug("diffs:", diffs)
         # XXX controversial what diffs for multi-stage nested insert look like,
         # possibly there should be one tuple for each stage rather than only
         # the terminal stage.
         assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
+        log.debug("-"*60)
+        log.debug("recursive insert result rmap:")
+        log.debug("-"*60)
+        log.debug(open("./recursive_insert.rmap").read())
+        log.debug("-"*60)
 #        print diffs
 #        print self.rmap.selector.format()
     
+    def test_1_recursive_use_rmap(self):
+        r = rmap.load_mapping("./recursive_insert.rmap")
+        result = r.get_best_ref(self.header)
+        log.debug("recursive lookup result:", result)
+        assert result == ("foo.fits", "foo.fits"), \
+            "Recursively generated rmap produced wrong result."
+
+    def test_9_recursive_tear_down(self):
+        os.remove("./recursive_insert.rmap")
+
+        
 if __name__ == '__main__':
     unittest.main()
 
