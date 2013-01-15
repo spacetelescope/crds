@@ -65,6 +65,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("a
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
+    return new
 
 def rmap_check_modifications(old_rmap, new_rmap, expected=["add"]):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
