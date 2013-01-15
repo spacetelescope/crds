@@ -622,6 +622,8 @@ def mapping_check_diffs(mapping, derived_from):
     for action, msg in categorized:
         if action == "add":
             log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+        elif "rule" in action:
+            log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
             old_val, new_val = diff.diff_replace_old_new(msg)
             if newer(new_val, old_val):
