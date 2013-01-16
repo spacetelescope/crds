@@ -445,15 +445,6 @@ class Mapping(object):
                 else:
                     raise ValidationError(repr(self) + " : " + str(exc))
 
-    def file_matches(self, filename):
-        """Return the "extended match tuples" which can be followed to
-        arrive at `filename`.
-        """
-        more = []
-        for key, value in self.selections.items():
-            more += value.file_matches(filename)
-        return sorted(more)
-
     def difference(self, other, path=()):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
@@ -489,6 +480,10 @@ class Mapping(object):
         """Returns a list of mapping files associated with this Mapping"""
         return sorted([self.basename] + [name for selector in self.selections.values() for name in selector.mapping_names()])
  
+    def file_matches(self, filename):
+        """Return the "extended match tuples" which can be followed to arrive at `filename`."""
+        return sorted([match for value in self.selections.values() for match in value.file_matches(filename)])
+
 # ===================================================================
 
 class PipelineContext(Mapping):
