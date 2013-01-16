@@ -477,6 +477,18 @@ class Mapping(object):
         """Return an in-memory copy of this rmap as a new object."""
         return self.from_string(self.format(), self.filename, ignore_checksum=True)
     
+    def reference_names(self):
+        """Returns set(ref_file_name...)"""
+        return sorted({ reference for selector in self.selections.values() for reference in selector.reference_names() })
+
+    def reference_name_map(self):
+        """Returns { filekind : set( ref_file_name... ) }"""
+        return { filekind:selector.reference_names() for (filekind,selector) in self.selections.items() }
+
+    def mapping_names(self):
+        """Returns a list of mapping files associated with this Mapping"""
+        return sorted([self.basename] + [name for selector in self.selections.values() for name in selector.mapping_names()])
+ 
 # ===================================================================
 
 class PipelineContext(Mapping):
@@ -512,34 +524,6 @@ class PipelineContext(Mapping):
         imap = self.get_imap(instrument)
         return imap.get_best_references(parkey_header, include)
 
-    def reference_names(self):
-        """Return the list of reference files associated with this pipeline
-        context.
-        """
-        files = set()
-        for instrument_files in self.reference_name_map().values():
-            files.update(instrument_files)
-        return sorted(files)
-
-    def reference_name_map(self):
-        """Returns { instrument : [ref_file_name...] ... }"""
-        files = {}
-        for instrument in self.selections:
-            files[instrument] = set()
-            irefs = self.selections[instrument].reference_name_map()
-            for filekind_files in irefs.values():
-                files[instrument].update(set(filekind_files))
-        return files
-
-    def mapping_names(self):
-        """Return the list of pipeline, instrument, and reference map files
-        associated with this pipeline context.
-        """
-        files = set([self.basename])
-        for instrument in self.selections:
-            files.update(self.selections[instrument].mapping_names())
-        return sorted(list(files))
-
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
         try:
@@ -563,8 +547,7 @@ class PipelineContext(Mapping):
         used to determine file type when `dataset` is a temporary file with a
         useless name.
         """
-        header = data_file.get_conditioned_header(
-            dataset, original_name=original_name)
+        header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
 
     def get_instrument(self, header):
@@ -636,31 +619,6 @@ class InstrumentContext(Mapping):
             except Exception, exc:
                 refs[filekind] = "NOT FOUND " + str(exc)
         return refs
-
-    def reference_names(self):
-        """Returns [ref_file_name...]
-        """
-        files = set()
-        for filekind_files in self.reference_name_map().values():
-            files.update(set(filekind_files))
-        return sorted(files)
-
-    def reference_name_map(self):
-        """Returns { filekind : set( ref_file_name... ) }
-        """
-        files = {}
-        for filekind, selector in self.selections.items():
-            files[filekind] = sorted(selector.reference_names())
-        return files
-
-    def mapping_names(self):
-        """Returns a list of mapping files associated with this
-        InstrumentContext.
-        """
-        files = [self.basename]
-        for selector in self.selections.values():
-            files.append(selector.basename)
-        return files
 
     def get_parkey_map(self):
         """Infers the legal values of each parkey from the rmap itself.
