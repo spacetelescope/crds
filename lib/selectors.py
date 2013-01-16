@@ -83,10 +83,8 @@ and complexity.   Here we add time to the selection criteria:
 Note that the context variables used by some Selector's are implicit,
 with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
-import datetime
-import timestamp
+from crds import timestamp
 import re
-import pprint as pp
 import fnmatch
 import sys
 import numbers
@@ -184,7 +182,7 @@ class Selector(object):
         """Replace the keys of selections with "conditioned" keys,  keys in
         which all the values have passed through self.condition_key().
         """
-        result = [(self.condition_key(key), value) for (key,value) in selections.items()]
+        result = [(self.condition_key(key), value) for (key, value) in selections.items()]
         if len(result) != len(dict(result).keys()):    # fast check
             dict_wo_dups(result)  # slow generate more informative message
         return sorted(result)
@@ -377,7 +375,7 @@ class Selector(object):
         """
         try:
             return float(value)
-        except ValueError, exc:
+        except ValueError:
             raise ValidationError(
                 self.short_name + " Invalid number for " + repr(parname) + 
                 " value=" + repr(value))
@@ -489,16 +487,16 @@ class Selector(object):
         i = self._find_key(key)
         if len(classes) > 1:   # add or modify nested selector
             if i is None:
-                log.verbose("Modify couldn't find", repr(key),"adding new selector.")
+                log.verbose("Modify couldn't find", repr(key), "adding new selector.")
                 new_value = self._create_path(header, value, parkey[1:], classes[1:])
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
-                log.verbose("Modify found", repr(old_key),"augmenting", repr(old_value), "with", repr(value))
+                log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
                 old_value._modify(header, value, parkey[1:], classes[1:], valid_values_map)
         else:  # add or replace primitive result
             if i is None:
-                log.verbose("Modify couldn't find", repr(key),"adding new value", repr(value))
+                log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))
                 self._add_item(key, value)
             else:
                 old_key, old_value = self._raw_selections[i]
@@ -514,7 +512,7 @@ class Selector(object):
             key = selector_class._make_key(header, parkey[0])
             nested = self._create_path(header, value, parkey[1:], classes[1:])
             selections = { key : nested }
-            log.verbose("creating nested", repr(classes[0]),"with", repr(key), "=", repr(nested))
+            log.verbose("creating nested", repr(classes[0]), "with", repr(key), "=", repr(nested))
             return selector_class(parkey[0], selections, rmap_header=self._rmap_header)
         else:   # end of the line,  just return the primitive value.
             return value
@@ -572,6 +570,34 @@ class Selector(object):
             key = key[0]
         return key
     
+    # ------------------------------------------------------------------------
+
+    def get_value_map(self):
+        """Returns { parameter : sorted(parameter values in use) }"""
+        vmap = self._get_value_map()  # mapping of sets
+        for fitsvar in vmap:
+            vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
+        return vmap
+            
+    def _get_value_map(self):
+        """Recursively combine get_selector_value_map()."""
+        vmap = self.get_selector_value_map()
+        for choice in self.choices():
+            if isinstance(choice, Selector):
+                nested = choice._get_value_map()
+                for parkey in nested:
+                    if parkey not in vmap:
+                        vmap[parkey] = set()
+                    vmap[parkey] = vmap[parkey].union(nested[parkey])
+        return vmap
+
+    def get_selector_value_map(self):
+        """Return { parameter : set( values in use ) } for this Selector only.
+        Many Selectors do not have meaningful discrete sets of values for their
+        parameters for the purpose of populating get_best_refs menus.
+        """
+        return {} # Not really relevant for UseAfter
+
 # ==============================================================================
 
 def match_superset(reference_tuple, rmap_tuple, match_na=False):
@@ -620,7 +646,7 @@ def match_superset(reference_tuple, rmap_tuple, match_na=False):
             continue
         if v2 == "N/A":
             continue
-        if v1=="N/A" and v2=="*":
+        if v1 == "N/A" and v2 == "*":
             continue
         if match_na and v1 == "N/A":
             continue
@@ -751,7 +777,7 @@ class InequalityMatcher(Matcher):
     def __init__(self, key):
         Matcher.__init__(self, key)
         parts = re.match(
-            "^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
+            r"^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
         self._operator = parts.group(1)
         self._value =  float(parts.group(2))
         
@@ -1048,7 +1074,7 @@ of uniform rmap structure for HST:
                 elem = "|".join([utils.condition_value(x) for x in elem.split("|")])
             else:
                 elem = utils.condition_value(elem)
-        elif isinstance(elem, (tuple,list)):
+        elif isinstance(elem, (tuple, list)):
             elem = "|".join([utils.condition_value(key) for key in elem])
         else:
             elem = utils.condition_value(elem)
@@ -1186,8 +1212,8 @@ of uniform rmap structure for HST:
         log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=70)
         return combined
 
-    def get_value_map(self):
-        """Return the map { FITSVAR : ( possible_values ) }"""
+    def get_selector_value_map(self):
+        """Return { parameter : set([values in use...]) }"""
         vmap = {}
         for i, fitsvar in enumerate(self._parameters):
             vmap[fitsvar] = set()
@@ -1203,8 +1229,6 @@ of uniform rmap structure for HST:
                 for value in values:
                     for regex_case in value.split("|"):
                         vmap[fitsvar].add(regex_case)
-        for fitsvar in vmap:
-            vmap[fitsvar] = tuple(sorted(vmap[fitsvar]))
         return vmap
 
     def _validate_selector(self, valid_values_map, trap_exceptions=False):
@@ -1642,9 +1666,9 @@ class ComparableMixin(object):
     def _check_compatible(self, other):
         pass
     
-RELATION_RE = re.compile('^([<=][=]?|default)(.*)$')
+RELATION_RE = re.compile(r'^([<=][=]?|default)(.*)$')
 
-FIXED_RE = re.compile("\d+[.]*\d*")
+FIXED_RE = re.compile(r"\d+[.]*\d*")
 
 class VersionRelation(ComparableMixin):
     """A version relation consists of a relation operator <,=,== and an 

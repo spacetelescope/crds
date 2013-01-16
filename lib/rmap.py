@@ -62,8 +62,6 @@ import os
 import os.path
 import hashlib
 import re
-import tempfile
-import shutil
 import glob
 
 from .compat import namedtuple, ast
@@ -474,7 +472,7 @@ class Mapping(object):
 
     def reference_name_map(self):
         """Returns { filekind : set( ref_file_name... ) }"""
-        return { filekind:selector.reference_names() for (filekind,selector) in self.selections.items() }
+        return { filekind:selector.reference_names() for (filekind, selector) in self.selections.items() }
 
     def mapping_names(self):
         """Returns a list of mapping files associated with this Mapping"""

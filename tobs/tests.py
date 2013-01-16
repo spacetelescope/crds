@@ -7,7 +7,9 @@ import unittest
 
 from crds import rmap, log
 
-class TestSelectors(unittest.TestCase):
+# =============================================================================
+
+class Test_00_Selectors(unittest.TestCase):
 
     def setUp(self):
         self.rmap = rmap.get_cached_mapping("tobs_tinstr_tfilekind.rmap")
@@ -95,7 +97,9 @@ class TestSelectors(unittest.TestCase):
     def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
         
-class TestInsert(unittest.TestCase):
+# =============================================================================
+
+class Test_01_Insert(unittest.TestCase):
     """Tests for checking automatic rmap update logic for adding new references."""
 
     def setUp(self):
@@ -242,68 +246,286 @@ class TestInsert(unittest.TestCase):
     def test_geometrically_nearest_replace_after(self):
          self.terminal_replace("GEOMETRICALLY_NEAREST", 5.0, 'foo.fits')
 
-class TestRecursiveInsert(unittest.TestCase):
+# =============================================================================
+
+class RecursiveModify(object):
     """Tests for checking automatic rmap update logic for adding new references."""
     
-    def setUp(self):
-        self.rmap_str = '''
+    result_filename = None
+    rmap_str = None
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "DATE-OBS" : "2017-04-20",
+          "TIME-OBS" : "00:00:00",
+          "SW_VERSION" : "1.2",
+          "CLOSETIME" : "2017-05-30 00:01:02",
+          "BRACKET_PAR" : "4.4",   # try a number
+          "PARAMETER" : "2012-09-09 03:07",
+          "GEOM_PAR" : "2.7",  # try a string-formatted number
+        }
+
+    def test_0_recursive_modify_rmap(self): # , header, value, classes):
+        # Load the test rmap from a string.   The top level selector must exist.
+        # This is not a "realistic" test case.   It's a test of the recursive
+        # insertion capabilities of all the Selector classes in one go.
+        log.debug("-"*60)
+        r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
+        log.debug("insert_header:", log.PP(self.insert_header))
+        result = r.insert(self.insert_header, "foo.fits")
+        result.write(self.result_filename)
+        diffs = r.difference(result)
+        log.debug("diffs:", diffs)
+        assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
+        log.debug("recursive insert result rmap:")
+        log.debug(open(self.result_filename).read())
+    
+    def test_1_recursive_use_rmap(self):
+        r = rmap.load_mapping(self.result_filename)
+        result = r.get_best_ref(self.lookup_header)
+        log.debug("recursive lookup result:", result)
+        assert result == self.expected_lookup_result, "Recursively generated rmap produced wrong result."
+    
+    def test_9_recursive_tear_down(self):
+        os.remove(self.result_filename)
+        
+class Test_02_DeepRecursiveModify(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_deep.rmap"
+    expected_lookup_result = ("foo.fits", "foo.fits")
+    rmap_str = '''
 header = {
     'derived_from' : 'Hand written 01-15-2013',
     'filekind' : 'TFILEKIND',
     'instrument' : 'TINSTR',
     'mapping' : 'REFERENCE',
-    'name' : 'test1.rmap',
+    'name' : 'test.rmap',
     'observatory' : 'TOBS',
     'parkey' : (('MATCH_PAR1','MATCH_PAR2'), ('DATE-OBS','TIME-OBS',), ('SW_VERSION',), ('CLOSETIME',), ('BRACKET_PAR',), ('GEOM_PAR',),),
     'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
-    'classes' : ('Match', 'UseAfter','SelectVersion','ClosestTime','Bracket','GeometricallyNearest')
+    'classes' : ('Match','UseAfter','SelectVersion','ClosestTime','Bracket','GeometricallyNearest')
 }
 
 selector = Match({
 })
-        '''
-        self.header = { 
-                  "MATCH_PAR1" : "MP1",
-                  "MATCH_PAR2" : "MP2",
-                  "DATE-OBS" : "2017-04-20",
-                  "TIME-OBS" : "00:00:00",
-                  "SW_VERSION" : "1.2",
-                  "CLOSETIME" : "2017-05-30 00:01:02",
-                  "BRACKET_PAR" : 4.4,
-                  "PARAMETER" : "2012-09-09 03:07",
-                  "GEOM_PAR" : "2.7",
+'''
+
+class Test_03_RecursiveUseAfter(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_useafter.rmap"
+    expected_lookup_result = "foo.fits"
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('DATE-OBS','TIME-OBS',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('UseAfter','Match',)
+}
+
+selector = UseAfter({
+    '2015-04-01 01:02:03' : Match({
+    }),
+    '2017-04-20 01:02:03' : Match({    
+    }),
+    '2018-04-03 01:02:03' : Match({
+    }),    
+})
+'''
+
+class Test_04_RecursiveClosestTime(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_closest_time.rmap"
+    expected_lookup_result = "foo.fits"
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('CLOSETIME',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('ClosestTime','Match',)
+}
+
+selector = ClosestTime({
+    '2015-04-01 01:02:03' : Match({
+    }),
+    '2017-04-20 01:02:03' : Match({    
+    }),
+    '2018-04-03 01:02:03' : Match({
+    }),    
+})
+'''
+
+class Test_05_RecursiveSelectVersion(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_select_version.rmap"
+    expected_lookup_result = "foo.fits"
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('SW_VERSION',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('SelectVersion','Match',)
+}
+
+selector = SelectVersion({
+    '<3.1': Match({
+    }),
+    '<5' : Match({
+    }),
+    'default' : Match({    
+    }),
+})
+'''
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "SW_VERSION" : "1.2",
+        }
+    
+class Test_06_RecursiveSelectVersion_MatchingVersion(Test_05_RecursiveSelectVersion):
+    insert_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "SW_VERSION" : "<3.1",
+        }
+    lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "SW_VERSION" : "3.0",
         }
 
-    def test_0_recursive_insert(self): # , header, value, classes):
-        # Load the test rmap from a string.   The top level selector must exist.
-        # This is not a "realistic" test case.   It's a test of the recursive
-        # insertion capabilities of all the Selector classes in one go.
-        r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
-        result = r.insert(self.header, "foo.fits")
-        result.write("./recursive_insert.rmap")
-        diffs = r.difference(result)
-        log.debug("diffs:", diffs)
-        # XXX controversial what diffs for multi-stage nested insert look like,
-        # possibly there should be one tuple for each stage rather than only
-        # the terminal stage.
-        assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
-        log.debug("-"*60)
-        log.debug("recursive insert result rmap:")
-        log.debug("-"*60)
-        log.debug(open("./recursive_insert.rmap").read())
-        log.debug("-"*60)
-#        print diffs
-#        print self.rmap.selector.format()
-    
-    def test_1_recursive_use_rmap(self):
-        r = rmap.load_mapping("./recursive_insert.rmap")
-        result = r.get_best_ref(self.header)
-        log.debug("recursive lookup result:", result)
-        assert result == ("foo.fits", "foo.fits"), \
-            "Recursively generated rmap produced wrong result."
+class Test_07_RecursiveSelectVersion_DefaultVersion(Test_05_RecursiveSelectVersion):
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "SW_VERSION" : "default",
+        }
 
-    def test_9_recursive_tear_down(self):
-        os.remove("./recursive_insert.rmap")
+class Test_08_RecursiveGeometricallyNearest(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_geometrically_nearest.rmap"
+    expected_lookup_result = "foo.fits"
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('GEOM_PAR',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('GeometricallyNearest','Match',)
+}
+
+selector = GeometricallyNearest({
+    0.1: Match({
+        ('MPX', '98.7') : 'bar.fits',
+    }),
+    2.8 : Match({
+    }),
+    99.0 : Match({    
+    }),
+})
+'''
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "GEOM_PAR" : "1.2",
+        }
+class Test_09_RecursiveGeometricallyNearestExact(Test_08_RecursiveGeometricallyNearest):
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "GEOM_PAR" : "0.1",
+        }
+    
+class Test_10_RecursiveBracket(unittest.TestCase, RecursiveModify):
+    result_filename = "./recursive_bracket.rmap"
+    expected_lookup_result = ("foo.fits", "foo.fits")
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('BRACKET_PAR',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('Bracket','Match',)
+}
+
+selector = Bracket({
+    0.1: Match({
+        ('MPX', '98.7') : 'bar.fits',
+    }),
+    2.8 : Match({
+        ('MPX', '98.7') : 'bar.fits',
+    }),
+    99.0 : Match({    
+    }),
+})
+'''
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "BRACKET_PAR" : "0.5",
+        }
+class Test_11_RecursiveBracketExact(Test_10_RecursiveBracket):
+    expected_lookup_result = ("foo.fits", "foo.fits")
+    insert_header = lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "BRACKET_PAR" : "0.1",
+        }
+
+class Test_12_RecursiveBracketExactMidLookup(Test_10_RecursiveBracket):
+    expected_lookup_result = ("foo.fits", "bar.fits")
+    insert_header = {
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "BRACKET_PAR" : "0.1",
+        }
+    lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "BRACKET_PAR" : "0.5",
+        }
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('BRACKET_PAR',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('Bracket','Match',)
+}
+
+selector = Bracket({
+    0.1: Match({
+        ('MP1', '99.9') : 'bar.fits',
+    }),
+    2.8 : Match({
+        ('MP1', '99.9') : 'bar.fits',
+    }),
+    99.0 : Match({    
+    }),
+})
+'''
+    
 
         
 if __name__ == '__main__':
