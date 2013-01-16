@@ -1,3 +1,8 @@
+# Warning:  This rmap is written in a heterogeneous nesting style which
+# works for testing purposes but is not fully supported by CRDS.  In particular,
+# nesting different Selector classes at the same depth (e.g. UseAfter and SelectVersion) 
+# is not allowed.
+
 header = {
     'derived_from' : 'Hand written 05-12-2012',
     'filekind' : 'TFILEKIND',
@@ -6,7 +11,7 @@ header = {
     'name' : 'tobs_tinstr_tfilekind.rmap',
     'observatory' : 'TOBS',
     'parkey' : (('TEST_CASE',), ('PARAMETER',)),
-    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'sha1sum' : '84a8846a914287268e096383577f8ec004f60c8e',
     'classes' : ('Match', 'UseAfter',)
 }
 
