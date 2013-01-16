@@ -159,8 +159,7 @@ class Selector(object):
     complete set of nested choices.   Each nested Selector only uses those 
     portions of the overall context that it requires.
     """
-    def __init__(self, parameters, selections=None, rmap_header=None, 
-                 _selections=None):
+    def __init__(self, parameters, selections=None, rmap_header=None, _selections=None):
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
         self._parameters = tuple(parameters)
@@ -238,11 +237,11 @@ class Selector(object):
         
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
-        pmap = {}
+        parmap = {}
         npars = len(self._parameters)
         for i, par in enumerate(self._parameters):
-            if par not in pmap:
-                pmap[par] = set()
+            if par not in parmap:
+                parmap[par] = set()
             for key in self.keys():
                 if not isinstance(key, tuple):
                     key = (key,)
@@ -251,10 +250,10 @@ class Selector(object):
                         self.short_name + " key=" + repr(key) + 
                         " is wrong length for parameters " + repr(self._parameters))
                 field = key[i]
-                pmap[par] = pmap[par].union(set(field.split("|")))
-        for par, val in pmap.items():
-            pmap[par] = sorted(val)
-        return pmap
+                parmap[par] = parmap[par].union(set(field.split("|")))
+        for par, val in parmap.items():
+            parmap[par] = sorted(val)
+        return parmap
 
     def reference_names(self):
         """Return the list of reference files located by this selector.
@@ -488,36 +487,36 @@ class Selector(object):
         key = self._make_key(header, parkey[0])
         self._validate_key(key, valid_values_map)
         i = self._find_key(key)
-        if len(classes) > 1:
+        if len(classes) > 1:   # add or modify nested selector
             if i is None:
-                log.verbose("insert couldn't find", repr(key),"adding new selector.")
+                log.verbose("Modify couldn't find", repr(key),"adding new selector.")
                 new_value = self._create_path(header, value, parkey[1:], classes[1:])
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
-                log.verbose("insert found", repr(old_key),"augmenting", repr(old_value), "with", repr(value))
+                log.verbose("Modify found", repr(old_key),"augmenting", repr(old_value), "with", repr(value))
                 old_value._modify(header, value, parkey[1:], classes[1:], valid_values_map)
-        else:
+        else:  # add or replace primitive result
             if i is None:
-                log.verbose("insert couldn't find", repr(key),"adding new value", repr(value))
+                log.verbose("Modify couldn't find", repr(key),"adding new value", repr(value))
                 self._add_item(key, value)
             else:
                 old_key, old_value = self._raw_selections[i]
-                log.verbose("insert found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
+                log.verbose("Modify found", repr(key), "as primitive", repr(old_value), "replacing with", repr(value))
                 self._replace_item(old_key, value)
         
     def _create_path(self, header, value, parkey, classes):
         """Create the Selector tree corresponding to `header` and `value` based on the
         current position in the hierarchy defined by `parkey` and `classes`.
         """
-        if classes:
+        if classes:   # add new Selectors defined by classes
             selector_class = utils.get_object("crds.selectors." + classes[0] + "Selector")
             key = selector_class._make_key(header, parkey[0])
             nested = self._create_path(header, value, parkey[1:], classes[1:])
             selections = { key : nested }
             log.verbose("creating nested", repr(classes[0]),"with", repr(key), "=", repr(nested))
             return selector_class(parkey[0], selections, rmap_header=self._rmap_header)
-        else:
+        else:   # end of the line,  just return the primitive value.
             return value
     
     def _add_item(self, key, value):
@@ -566,7 +565,7 @@ class Selector(object):
     @classmethod    
     def _make_key(self, header, parameters):
         """For rmap modification,  make a key for this Selector based on reference
-        file `header` and lookup `parameters`.
+        file `header` and self's lookup `parameters`.
         """
         key = tuple([header[par] for par in parameters])
         if len(key) == 1:
@@ -1188,8 +1187,7 @@ of uniform rmap structure for HST:
         return combined
 
     def get_value_map(self):
-        """Return the map { FITSVAR : ( possible_values ) }
-        """
+        """Return the map { FITSVAR : ( possible_values ) }"""
         vmap = {}
         for i, fitsvar in enumerate(self._parameters):
             vmap[fitsvar] = set()
