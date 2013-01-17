@@ -565,12 +565,12 @@ def validate_file_format(fitsname):
 def certify_mapping(filename, context=None, check_references=None, trap_exceptions=False):
     """Certify `filename` using `context` to determine source references."""
     
-    mapping  = rmap.load_mapping(filename)
+    mapping = rmap.load_mapping(filename)
     mapping.validate_mapping(trap_exceptions=trap_exceptions)
 
-    derived_from = get_derived_from(mapping)
+    derived_from = mapping.get_derived_from()
     if derived_from is not None:
-        mapping_check_diffs(mapping, derived_from)
+        diff.mapping_check_diffs(mapping, derived_from)
 
     # Optionally check nested references
     if not check_references: # Accept None or False
@@ -602,110 +602,6 @@ def certify_mapping(filename, context=None, check_references=None, trap_exceptio
     if check_references == "contents":
         certify_files(references, context=context, check_references=check_references,
             trap_exceptions=trap_exceptions)
-
-# ============================================================================
-
-def mapping_check_diffs(mapping, derived_from):
-    """Issue warnings for *deletions* in self relative to parent derived_from
-    mapping.  Issue warnings for *reversions*,  defined as replacements which
-    have names in the "wrong" time order.   Issue infos for *additions* and 
-    other *replacements*.    
-    
-    This is intended to check for missing modes and for inadvertent reversions
-    to earlier versions of files.   For speed and simplicity,  file time order
-    is currently determined by the names themselves,  not file contents, file
-    system,  or database info.
-    """
-    log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
-    diffs = derived_from.difference(mapping)
-    categorized = sorted([ (diff.diff_action(d), d) for d in diffs ])
-    for action, msg in categorized:
-        if action == "add":
-            log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
-        elif "rule" in action:
-            log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
-        elif action == "replace":
-            old_val, new_val = diff.diff_replace_old_new(msg)
-            if newer(new_val, old_val):
-                log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
-            else:
-                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
-        elif action == "delete":
-            log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
-        else:
-            raise ValueError("Unexpected difference action:", difference)
-
-def get_derived_from(mapping):
-    """Return the mapping `self` was derived from, or None."""
-    derived_from = None
-    try:
-        derived_file = mapping.header['derived_from']
-        if 'generated' not in derived_file:
-            derived_from = rmap.load_mapping(derived_file)
-    except Exception, exc:
-        log.verbose_warning("No parent mapping for", repr(mapping.basename), ":", str(exc))
-    return derived_from
-
-def _diff_tail(msg):
-    """`msg` is an arbitrary length difference "path",  which could
-    be coming from any part of the mapping hierarchy and ending in any kind of 
-    selector tree.   The last item is always the change message: add, replace, 
-    delete <blah>.  The next to last should always be a selector key of some kind.  
-    Back up from there to find the first mapping tuple.
-    """
-    tail = []
-    for part in msg[::-1]:
-        if isinstance(part, tuple) and len(part) == 2 and isinstance(part[0], str) and part[0].endswith("map"):
-            tail.append(part[1])
-            break
-        else:
-            tail.append(part)
-    return tuple(reversed(tail))
-
-def newstyle_name(name):
-    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
-    
-    >>> newstyle_name("s7g1700gl_dead.fits")
-    False
-    >>> newstyle_name("hst.pmap")
-    True
-    >>> newstyle_name("hst_acs_darkfile_0001.fits")
-    True
-    """
-    return name.startswith(("hst", "jwst", "tobs"))
-
-def newer(name1, name2):
-    """Determine if `name1` is a more recent file than `name2` accounting for 
-    limited differences in naming conventions. Official CDBS and CRDS names are 
-    comparable using a simple text comparison,  just not to each other.
-    
-    >>> newer("s7g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
-    False
-    >>> newer("hst_cos_deadtab_0001.fits", "s7g1700gl_dead.fits")
-    True
-    >>> newer("s7g1700gl_dead.fits", "bbbbb.fits")
-    True
-    >>> newer("bbbbb.fits", "s7g1700gl_dead.fits")
-    False
-    >>> newer("hst_cos_deadtab_0001.rmap", "hst_cos_deadtab_0002.rmap")
-    False
-    >>> newer("hst_cos_deadtab_0002.rmap", "hst_cos_deadtab_0001.rmap")
-    True
-    """
-    n1 = newstyle_name(name1)
-    n2 = newstyle_name(name2)
-    if n1:
-        if n2: # compare CRDS names
-            result = name1 > name2
-        else:  # CRDS > CDBS
-            result = True
-    else:
-        if n2:  # CDBS < CRDS
-            result = False
-        else:  # compare CDBS names
-            result = name1 > name2
-    log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
-    return result
 
 # ============================================================================
 

@@ -8,6 +8,8 @@ import optparse
 
 from crds import rmap, log, pysh
 
+# ============================================================================
+        
 def mapping_diffs(file1, file2):
     """Return the logical differences between CRDS mappings named `file1` 
     and `file2`.
@@ -40,9 +42,15 @@ def diff_action(d):
         result += "_rule"
     return result
 
-def mapping_difference(observatory, file1, file2, primitive_diffs=False):
+def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
-    and `file2`.
+    and `file2`.  
+    
+    IFF primitive_differences,  recursively difference any replaced files found
+    in the top level logical differences.
+    
+    IFF check_diffs, issue warnings about critical differences.   See
+    mapping_check_diffs().
     """
     differences = mapping_diffs(file1, file2)
     if primitive_diffs:
@@ -59,8 +67,11 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False):
             if "replaced" in diff[-1]:
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
+    if check_diffs:
+        mapping_check_diffs(file2, file1)
 
 def mapping_pairs(differences):
+    """Return the sorted list of all mapping tuples found in differences."""
     pairs = set()
     for diff in differences:
         for pair in diff:
@@ -81,6 +92,100 @@ def diff_replace_old_new(diff):
     _replaced, old, _with, new = diff[-1].split()
     return rq(old), rq(new)
     
+# ============================================================================
+
+def mapping_check_diffs(mapping, derived_from):
+    """Issue warnings for *deletions* in self relative to parent derived_from
+    mapping.  Issue warnings for *reversions*,  defined as replacements which
+    where the replacement is older than the original,  as defined by the names.   
+    
+    This is intended to check for missing modes and for inadvertent reversions
+    to earlier versions of files.   For speed and simplicity,  file time order
+    is currently determined by the names themselves,  not file contents, file
+    system,  or database info.
+    """
+    mapping = rmap.asmapping(mapping)
+    derived_from = rmap.asmapping(derived_from)
+    log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
+    diffs = derived_from.difference(mapping)
+    categorized = sorted([ (diff_action(d), d) for d in diffs ])
+    for action, msg in categorized:
+        if action == "add":
+            log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+        elif "rule" in action:
+            log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "replace":
+            old_val, new_val = diff_replace_old_new(msg)
+            if newer(new_val, old_val):
+                log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+            else:
+                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "delete":
+            log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
+        else:
+            raise ValueError("Unexpected difference action:", difference)
+
+def _diff_tail(msg):
+    """`msg` is an arbitrary length difference "path",  which could
+    be coming from any part of the mapping hierarchy and ending in any kind of 
+    selector tree.   The last item is always the change message: add, replace, 
+    delete <blah>.  The next to last should always be a selector key of some kind.  
+    Back up from there to find the first mapping tuple.
+    """
+    tail = []
+    for part in msg[::-1]:
+        if isinstance(part, tuple) and len(part) == 2 and isinstance(part[0], str) and part[0].endswith("map"):
+            tail.append(part[1])
+            break
+        else:
+            tail.append(part)
+    return tuple(reversed(tail))
+
+def newstyle_name(name):
+    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
+    
+    >>> newstyle_name("s7g1700gl_dead.fits")
+    False
+    >>> newstyle_name("hst.pmap")
+    True
+    >>> newstyle_name("hst_acs_darkfile_0001.fits")
+    True
+    """
+    return name.startswith(("hst", "jwst", "tobs"))
+
+def newer(name1, name2):
+    """Determine if `name1` is a more recent file than `name2` accounting for 
+    limited differences in naming conventions. Official CDBS and CRDS names are 
+    comparable using a simple text comparison,  just not to each other.
+    
+    >>> newer("s7g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
+    False
+    >>> newer("hst_cos_deadtab_0001.fits", "s7g1700gl_dead.fits")
+    True
+    >>> newer("s7g1700gl_dead.fits", "bbbbb.fits")
+    True
+    >>> newer("bbbbb.fits", "s7g1700gl_dead.fits")
+    False
+    >>> newer("hst_cos_deadtab_0001.rmap", "hst_cos_deadtab_0002.rmap")
+    False
+    >>> newer("hst_cos_deadtab_0002.rmap", "hst_cos_deadtab_0001.rmap")
+    True
+    """
+    n1 = newstyle_name(name1)
+    n2 = newstyle_name(name2)
+    if n1:
+        if n2: # compare CRDS names
+            result = name1 > name2
+        else:  # CRDS > CDBS
+            result = True
+    else:
+        if n2:  # CDBS < CRDS
+            result = False
+        else:  # compare CDBS names
+            result = name1 > name2
+    log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
+    return result
+
 # ============================================================================
         
 def fits_difference(observatory, file1, file2):
@@ -103,13 +208,13 @@ def text_difference(observatory, file1, file2):
     _loc_file2 = rmap.locate_file(file2, observatory)
     pysh.sh("diff -b -c ${_loc_file1} ${_loc_file2}")
 
-def difference(observatory, file1, file2, primitive_diffs=False):
+def difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
     named `file1` and `file2` against one another and print out the results 
     on stdout.
     """
     if rmap.is_mapping(file1):
-        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs)
+        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs, check_diffs=check_diffs)
     elif file1.endswith(".fits"):
         fits_difference(observatory, file1, file2)
     else:
@@ -136,6 +241,10 @@ def main():
     parser.add_option("-P", "--primitive-diffs", dest="primitive_diffs",
         help="Include primitive differences on replaced files.", 
         action="store_true")
+    
+    parser.add_option("-K", "--dont-check-diffs", dest="dont_check",
+        help="Don't issue warnings about new rules or reversions.",
+        action="store_true")
 
     options, args = log.handle_standard_options(sys.argv, parser=parser)
     
@@ -153,7 +262,8 @@ def main():
         observatory = "jwst"
 
     file1, file2 = args[1:]
-    difference(observatory, file1, file2, primitive_diffs=options.primitive_diffs)
+    difference(observatory, file1, file2, primitive_diffs=options.primitive_diffs, 
+               check_diffs=(not options.dont_check))
 
 # ============================================================================
 
