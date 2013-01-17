@@ -138,22 +138,11 @@ def str_checksum(str):
     sum.update(str)
     return sum.hexdigest()
 
-
-
 # ===================================================================
 
-LOCATORS = {
-    }
-
 def get_file_properties(observatory, filename):
-    """Return instrument,filekind,id fields associated with filename.
-    """
-    if observatory not in LOCATORS:
-        locator = get_object("crds." + observatory + ".locate")
-        LOCATORS[observatory] = locator
-    else:
-        locator = LOCATORS[observatory]
-    return locator.get_file_properties(filename)        
+    """Return instrument,filekind fields associated with filename."""
+    return get_locator_module(observatory).get_file_properties(filename)        
 
 # ===================================================================
 
@@ -259,6 +248,7 @@ def condition_header(header, needed_keys=None):
 
 # ==============================================================================
 
+@cached
 def instrument_to_observatory(instrument):
     """Given the name of an instrument,  return the associated observatory."""
     instrument = instrument.lower()
@@ -278,10 +268,12 @@ def instrument_to_observatory(instrument):
             return "jwst"
     raise ValueError("Unknown instrument " + repr(instrument))
 
+@cached
 def get_locator_module(observatory):
     """Return the observatory specific module for handling naming, file location, etc."""
     return get_object("crds." + observatory + ".locate")
 
+@cached
 def get_observatory_package(observatory):
     """Return the base observatory package."""
     return get_object("crds." + observatory)
@@ -293,11 +285,8 @@ def instrument_to_locator(instrument):
     return get_locator_module(instrument_to_observatory(instrument))
 
 
-# XXXX TODO  use of INSTRUME probably won't work with .finf metadata but does
-# work with JWST .fits references typically accessed through the data model.
 def reference_to_instrument(filename):
-    """Given reference file `filename`,  return the associated instrument.
-    """
+    """Given reference file `filename`,  return the associated instrument."""
     from crds import data_file
     try:
         header = data_file.get_conditioned_header(filename, needed_keys=["INSTRUME"])
@@ -307,15 +296,11 @@ def reference_to_instrument(filename):
         return header["META.INSTRUMENT.TYPE"]
     
 def reference_to_locator(filename):
-    """Given reference file `filename`,  return the associated observatory 
-    locator module.
-    """
+    """Given reference file `filename`,  return the associated observatory locator module."""
     return instrument_to_locator(reference_to_instrument(filename))
 
 def reference_to_observatory(filename):
-    """Return the name of the observatory corresponding to reference
-    `filename`.
-    """
+    """Return the name of the observatory corresponding to reference `filename`."""
     return instrument_to_observatory(reference_to_instrument(filename))
 
 
