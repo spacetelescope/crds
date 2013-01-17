@@ -196,8 +196,6 @@ class Mapping(object):
         rep = self.__class__.__name__ + "("
         rep += repr(self.filename)
         rep += ", "
-#        for attr in set(self.required_attrs)-set(["mapping"]):
-#            rep += attr + "=" + repr(getattr(self, attr)) + ", "
         rep = rep[:-2] + ")"
         return rep
 
@@ -218,23 +216,16 @@ class Mapping(object):
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
-        """Load a mapping file `basename` and do syntax and basic validation.
-        """
-        where = config.locate_mapping(basename)
-        with open(where) as sourcefile:
-            text = sourcefile.read()
-        header, selector = cls._parse_header_selector(text, where)
-        mapping = cls(basename, header, selector, **keys)
-        mapping._validate_file_load(keys)
-        return mapping
+        """Load a mapping file `basename` and do syntax and basic validation."""
+        text = open(config.locate_mapping(basename)).read()
+        return cls.from_string(text, basename, *args, **keys)
 
     @classmethod
-    def from_string(cls, text, basename="(noname)", **keys):
-        """Construct a mapping from string `text` nominally named `basename`.
-        """
+    def from_string(cls, text, basename="(noname)", *args, **keys):
+        """Construct a mapping from string `text` nominally named `basename`."""
         header, selector = cls._parse_header_selector(text, basename)
         mapping = cls(basename, header, selector, **keys)
-        mapping._validate_file_load(keys)
+        mapping._validate_file_load(text, keys)
         return mapping
 
     @classmethod
@@ -266,7 +257,7 @@ class Mapping(object):
         else:
             raise FormatError("selector must be a dict or a Selector.")
 
-    def _validate_file_load(self, keys):
+    def _validate_file_load(self, text, keys):
         """Validate assertions about the contents of this rmap after it's
         built.
         """
@@ -275,7 +266,7 @@ class Mapping(object):
                 raise MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
         if not keys.get("ignore_checksum", False) and not config.get_ignore_checksum():
-            self._check_hash()
+            self._check_hash(text)
 
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not
@@ -340,63 +331,33 @@ class Mapping(object):
             filename = self.filename
         else:
             self.filename = filename
-        self.header["sha1sum"] = "99999"
+        self.header["sha1sum"] = self._get_checksum(self.format())
         with open(filename, "w+") as file:
             file.write(self.format())
-        self.rewrite_checksum()  # inefficient, but rare and consistent
 
-    def _check_hash(self):
+    def _check_hash(self, text):
         """Verify that the mapping header has a checksum and that it is
         correct,  else raise an appropriate exception.
         """
         old = self.header.get("sha1sum", None)
         if old is None:
             raise ChecksumError("sha1sum is missing in " + repr(self.basename))
-        if self._get_checksum() != self.header["sha1sum"]:
+        if self._get_checksum(text) != self.header["sha1sum"]:
             raise ChecksumError("sha1sum mismatch in " + repr(self.basename))
 
-    def _get_checksum(self):
+    def _get_checksum(self, text):
         """Compute the rmap checksum over the original file contents.
         Skip over the sha1sum line.   Preserves comments.
         """
-        where = config.locate_mapping(self.filename)
         # Compute the new checksum over everything but the sha1sum line.
         # This will fail if sha1sum appears for some other reason.  It won't ;-)
-        with open(where) as file:
-            lines = [line for line in file.readlines() if "sha1sum" not in line]
-        text = "".join(lines)
+        text = "".join([line for line in text.splitlines(True) if "sha1sum" not in line])
         return hashlib.sha1(text).hexdigest()
 
-    def rewrite_checksum(self, filename=None):
-        """Re-write checksum updates the checksum for a Mapping which must
-        have been loaded from a file.  Preserves comments.   Outputs results
-        to `filename` or the original file.
-        """
-        if self.filename is None:
-            raise ValueError("rewrite_checksums() only works on mappings"
-                             " that were read from a file.")
-
-        xsum = self._get_checksum()
-
-        # re-write the file we loaded from,  inserting the new checksum,
-        # outputting to a temporary file.
-        with open(self.filename) as sourcefile:
-            assert "sha1sum" in sourcefile.read(), "no sha1sum field in " + repr(self.filename)
-
-        newsource = []
-        with open(self.filename) as sourcefile:
-            for line in sourcefile.readlines():
-                line = re.sub(r"('sha1sum'\s*:\s*)('[^']+')",
-                              r"\1" + repr(str(xsum)),
-                              line)
-                newsource.append(line)
-        newsource = "".join(newsource)
-
-        if filename is None:
-            filename = self.filename
-        with open(filename, "w+") as newfile:
-            newfile.write(newsource)
-
+    rewrite_checksum = write
+    #    """Re-write checksum updates the checksum for a Mapping writing the
+    #    result out to `filename`.
+    #    """
 
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping
@@ -490,6 +451,8 @@ class Mapping(object):
         except Exception, exc:
             log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
         return derived_from
+
+# ===================================================================
 
 class ContextMapping(Mapping):
     """.pmap and .imap base class.""" 
