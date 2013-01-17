@@ -32,8 +32,7 @@ def get_update_map(old_pipeline, updated_rmaps):
         imap_name = pctx.get_imap(instrument).filename
         if imap_name not in updates:
             updates[imap_name] = []
-        assert update not in updates[imap_name], \
-            "Duplicate update for " + repr(update)
+        assert update not in updates[imap_name], "Duplicate update for " + repr(update)
         updates[imap_name].append(update)
     return updates
             
@@ -43,15 +42,12 @@ def generate_new_contexts(old_pipeline, updates, new_names, observatory=None):
     updates --   { old_imap : [ new_rmaps ], ... }
     new_names --   { old_pmap : new_pmap, old_imaps : new_imaps }
     """
-    if observatory is None:
-        observatory = rmap.get_cached_mapping(old_pipeline).observatory
     new_names = dict(new_names)
     for imap_name in updates:
-        hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name], 
-                         observatory=observatory)
+        hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name])
     new_pipeline = new_names.pop(old_pipeline)
     new_imaps = new_names.values()
-    hack_in_new_maps(old_pipeline, new_pipeline, new_imaps, observatory=observatory)
+    hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
     where = [ rmap.locate_mapping(m) for m in [new_pipeline] + new_imaps]
     checksum.update_checksums(where)
     return [new_pipeline] + new_imaps
@@ -68,30 +64,23 @@ def generate_fake_names(old_pipeline, updates):
         new_names[old_imap] = fake_name(old_imap)
     return new_names
 
-def hack_in_new_maps(old, new, updated_maps, observatory):
+def hack_in_new_maps(old, new, updated_maps):
     """Given mapping named `old`,  create a modified copy named `new` which
     installs each map of `updated_maps` in place of it's predecessor.
     """
-    copy_mapping(old, new)                    
-    for map in updated_maps:
-        replaced = replace_mapping(new, map)
+    copy_mapping(old, new)  
+    for mapping in updated_maps:
+        key, replaced = insert_mapping(new, mapping)
         if replaced:
-            log.info("Replaced", repr(replaced), "in", repr(new), "with", repr(map))
+            log.info("Replaced", repr(replaced), "in", repr(new), "with", repr(mapping), "for", repr(key))
         else:
-            instrument, filekind = utils.get_file_properties(observatory, map)
-            if old.endswith(".imap"):
-                add_mapping(new, filekind, map)
-                log.info("Added", repr(map), "to", repr(new), "for", repr(filekind))
-            else:  # .pmap,  other things probably preclude this from ever working...
-                add_mapping(new, instrument, map)
-                log.info("Added", repr(map), "to", repr(new), "for", repr(instrument))
+            log.info("Added", repr(mapping), "to", repr(new), "for", repr(key))
             
 def copy_mapping(old_map, new_map):
     """Make a copy of mapping `old_map` named `new_map`."""
     old_path = rmap.locate_mapping(old_map)
     new_path = rmap.locate_mapping(new_map)
-    assert not os.path.exists(new_path), \
-        "New mapping file " + repr(new_map) + " already exists."
+    assert not os.path.exists(new_path), "New mapping file " + repr(new_map) + " already exists."
     shutil.copyfile(old_path, new_path)
 
 def fake_name(old_map):
@@ -99,9 +88,9 @@ def fake_name(old_map):
     create a new mapping name of the same series.   This name is fake in the
     sense that it is local to a developer's machine.
     """
-    m = re.search(r"_(\d+)\.[pir]map", old_map)
-    if m:
-        serial = int(m.group(1)) + 1
+    match = re.search(r"_(\d+)\.[pir]map", old_map)
+    if match:
+        serial = int(match.group(1)) + 1
         new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
     elif re.match(r"\w+\.[pir]map", old_map):   
         # if no serial,  start off existing sequence as 0
@@ -115,44 +104,17 @@ def fake_name(old_map):
     else:
         return new_map
         
-def replace_mapping(context, mapping):
+def insert_mapping(context, mapping):
     """Replace the filename in file `context` with the same generic name
     as `mapping` with `mapping`.  Re-write `context` in place.
     """
     #    'ACS' : 'hst_acs.imap',
-    ppmap = r"(\s*'\w+'\s*:\s*')(\S+)(',.*)"
-    generic_mapping = generic_name(mapping)
-    lines = []
     where = rmap.locate_mapping(context)
-    replaced = None
-    with open(where) as old_file:
-        for line in old_file.readlines():
-            m = re.match(ppmap, line)
-            if m and generic_name(m.group(2)) == generic_mapping:
-                line = re.sub(ppmap, r"\1%s\3" % mapping, line)
-                replaced = m.group(2)
-            lines.append(line)
-    if replaced:
-        new_contents = "".join(lines)
-        with open(where,"w+") as new_file:
-            new_file.write(new_contents)
-    return replaced
-
-def add_mapping(context, key, mapping):
-    """Add the filename `mapping` to `context` at `key`."""
-    where = rmap.locate_mapping(context)
-    with open(where) as old_file:
-        in_selector = False
-        lines = []
-        for line in old_file.readlines():
-            if in_selector and line.startswith("}"):
-                lines.append("    " + repr(key) + " : " + repr(mapping) + ",\n")
-                in_selector = False
-            if line.startswith("selector = {"):
-                in_selector = True
-            lines.append(line)
-    with open(where, "w+") as new_file:
-        new_file.write("".join(lines))
+    loaded = rmap.asmapping(context)
+    key = loaded.get_item_key(mapping)
+    replaced = loaded.set_item(key, mapping)
+    loaded.write(where)
+    return key, replaced
 
 def generic_name(mapping):
     """Return `mapping` with serial number chopped out.

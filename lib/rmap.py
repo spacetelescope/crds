@@ -293,8 +293,7 @@ class Mapping(object):
 
     @property
     def locate(self):
-        """Return the "locate" module associated with self.observatory.
-        """
+        """Return the "locate" module associated with self.observatory."""
         if not hasattr(self, "_locate"):
             self._locate = utils.get_object(
                 "crds." + self.observatory + ".locate")
@@ -310,8 +309,7 @@ class Mapping(object):
             (self._format_header(), self._format_selector())
 
     def _format_dict(self, dict_, indent=0):
-        """Return indented source code for nested `dict`.
-        """
+        """Return indented source code for nested `dict`."""
         prefix = indent*" "*4
         output = "{\n"
         for key, val in sorted(dict_.items()):
@@ -493,9 +491,24 @@ class Mapping(object):
             log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
         return derived_from
 
+class ContextMapping(Mapping):
+    """.pmap and .imap base class.""" 
+    def set_item(self, key, value):
+        """Add or replace and element of this mapping's selector.   For re-writing only."""
+        if key.upper() in self.selector:
+            key = key.upper()
+            replaced = self.selector[key]
+        elif key.lower() in self.selector:
+            key = key.lower()
+            replaced = self.selector[key]
+        else:
+            replaced = None
+        self.selector[key] = value
+        return replaced
+
 # ===================================================================
 
-class PipelineContext(Mapping):
+class PipelineContext(ContextMapping):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
@@ -555,6 +568,7 @@ class PipelineContext(Mapping):
         return self.minimize_header(header)
 
     def get_instrument(self, header):
+        """Get the instrument name defined by `header`."""
         try:
             return header[self.instrument_key.upper()]
         except KeyError:
@@ -563,9 +577,14 @@ class PipelineContext(Mapping):
             except KeyError:
                 raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
 
+    def get_item_key(self, filename):
+        """Given `filename` nominally to insert, return the instrument it corresponds to."""
+        instrument, _filekind = utils.get_file_properties(self.observatory, filename)
+        return instrument.upper()
+
 # ===================================================================
 
-class InstrumentContext(Mapping):
+class InstrumentContext(ContextMapping):
     """An instrument context describes the rmaps associated with each filetype
     of an instrument.
     """
@@ -592,8 +611,7 @@ class InstrumentContext(Mapping):
                 repr(filekind) + " in " + repr(filename)
 
     def get_rmap(self, filekind):
-        """Given `filekind`,  return the corresponding ReferenceMapping.
-        """
+        """Given `filekind`,  return the corresponding ReferenceMapping."""
         try:
             return self.selections[filekind.lower()]
         except KeyError:
@@ -679,6 +697,11 @@ class InstrumentContext(Mapping):
         for dataset's instrument,  assumed to be self.instrument.
         """
         return [key.upper() for key in self.selections.keys()]
+
+    def get_item_key(self, filename):
+        """Given `filename` nominally to insert, return the filekind it corresponds to."""
+        _instrument, filekind = utils.get_file_properties(self.observatory, filename)
+        return filekind.upper()
 
 # ===================================================================
 
@@ -938,8 +961,6 @@ def asmapping(filename_or_mapping, cached=False):
             return load_mapping(filename_or_mapping)
     else:
         raise TypeError("asmapping: parameter should be a string or mapping.")
-# =============================================================================
-
 
 # =============================================================================
 
