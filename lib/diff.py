@@ -51,7 +51,7 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False):
             log.write(pair)
             text_difference(observatory, pair[0], pair[1])
     for diff in differences:
-        diff = rq(diff)
+        diff = rq_diff(diff)
         if primitive_diffs:
             log.write("="*80)
         log.write(diff)
@@ -68,14 +68,18 @@ def mapping_pairs(differences):
                 pairs.add(pair)
     return sorted(pairs)
         
-def rq(diff):
-    """Remove repr str quoting."""
+def rq_diff(diff):
+    """Remove repr str quoting in `diff` tuple."""
     return diff[:-1] + (diff[-1].replace("'",""),)
+
+def rq(name):
+    """Remove string quotes from simple `name` repr."""
+    return name.replace("'","").replace('"','')
 
 def diff_replace_old_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
     _replaced, old, _with, new = diff[-1].split()
-    return old, new
+    return rq(old), rq(new)
     
 # ============================================================================
         
