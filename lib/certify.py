@@ -696,14 +696,16 @@ def newer(name1, name2):
     n2 = newstyle_name(name2)
     if n1:
         if n2: # compare CRDS names
-            return name1 > name2
+            result = name1 > name2
         else:  # CRDS > CDBS
-            return True
+            result = True
     else:
         if n2:  # CDBS < CRDS
-            return False
+            result = False
         else:  # compare CDBS names
-            return name1 > name2
+            result = name1 > name2
+    log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
+    return result
 
 # ============================================================================
 
