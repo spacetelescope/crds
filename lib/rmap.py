@@ -481,6 +481,17 @@ class Mapping(object):
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
         return sorted([match for value in self.selections.values() for match in value.file_matches(filename)])
+    
+    def get_derived_from(self):
+        """Return the Mapping object `self` was derived from, or None."""
+        derived_from = None
+        try:
+            derived_file = self.derived_from
+            if 'generated' not in derived_file:
+                derived_from = load_mapping(derived_file)
+        except Exception, exc:
+            log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
+        return derived_from
 
 # ===================================================================
 
@@ -913,7 +924,23 @@ def load_mapping(mapping, **keys):
             raise ValueError("Unknown mapping type for " + repr(mapping))
     return cls.from_file(mapping, **keys)
 
+def asmapping(filename_or_mapping, cached=False):
+    """Return the Mapping object corresponding to `filename_or_mapping`.
+    filename_or_mapping must either be a string (filename to be loaded) or 
+    a Mapping.
+    """
+    if isinstance(filename_or_mapping, Mapping):
+        return filename_or_mapping
+    elif isinstance(filename_or_mapping, basestring):
+        if cached:
+            return get_cached_mapping(filename_or_mapping)
+        else:
+            return load_mapping(filename_or_mapping)
+    else:
+        raise TypeError("asmapping: parameter should be a string or mapping.")
 # =============================================================================
+
+
 # =============================================================================
 
 def list_references(glob_pattern, observatory):
