@@ -60,7 +60,6 @@ True
 import sys
 import os
 import os.path
-import hashlib
 import re
 import glob
 
@@ -198,6 +197,10 @@ class Mapping(object):
         rep += ", "
         rep = rep[:-2] + ")"
         return rep
+    
+    def __str__(self):
+        """Return the source text of the Mapping."""
+        return self.format()
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
@@ -346,13 +349,11 @@ class Mapping(object):
             raise ChecksumError("sha1sum mismatch in " + repr(self.basename))
 
     def _get_checksum(self, text):
-        """Compute the rmap checksum over the original file contents.
-        Skip over the sha1sum line.   Preserves comments.
-        """
+        """Compute the rmap checksum over the original file contents.  Skip over the sha1sum line."""
         # Compute the new checksum over everything but the sha1sum line.
         # This will fail if sha1sum appears for some other reason.  It won't ;-)
         text = "".join([line for line in text.splitlines(True) if "sha1sum" not in line])
-        return hashlib.sha1(text).hexdigest()
+        return utils.str_checksum(text)
 
     rewrite_checksum = write
     #    """Re-write checksum updates the checksum for a Mapping writing the
@@ -360,9 +361,7 @@ class Mapping(object):
     #    """
 
     def get_required_parkeys(self):
-        """Determine the set of parkeys required for this mapping
-        and all the mappings selected by it.
-        """
+        """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
         if hasattr(self, "selections"):
             for selection in self.selections.values():
@@ -406,6 +405,7 @@ class Mapping(object):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
+        other = asmapping(other)
         differences = []
         for key in self.selections:
             if key not in other.selections:
@@ -827,6 +827,7 @@ class ReferenceMapping(Mapping):
         """Return the list of difference tuples between `self` and `other`,
         prefixing each tuple with context `path`.
         """
+        other = asmapping(other)
         return self.selector.difference(other.selector, path +
                 ((self.basename, other.basename),))
 
@@ -913,7 +914,7 @@ def load_mapping(mapping, **keys):
 def asmapping(filename_or_mapping, cached=False):
     """Return the Mapping object corresponding to `filename_or_mapping`.
     filename_or_mapping must either be a string (filename to be loaded) or 
-    a Mapping.
+    a Mapping subclass.
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping
