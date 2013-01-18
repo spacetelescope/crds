@@ -359,7 +359,7 @@ class BundleCacher(FileCacher):
         utils.ensure_dir_exists(bundlepath, 0700)
         for name in localpaths:
             if name not in downloads:
-                log.verbose("Skipping existing file", repr(name), level=60)
+                log.verbose("Skipping existing file", repr(name), verbosity=60)
         self.fetch_bundle(bundlepath, downloads)
         self.unpack_bundle(bundlepath, downloads, localpaths)
         
@@ -371,7 +371,7 @@ class BundleCacher(FileCacher):
         url = get_crds_server() + "/get_archive/" + bundle + "?"
         for i, name in enumerate(sorted(downloads)):
             url = url + "file" + str(i) + "=" + name + "&"
-            log.verbose("Adding", repr(name), "to download request.", level=60)
+            log.verbose("Adding", repr(name), "to download request.", verbosity=60)
         url = url[:-1]
         generator = self._get_data_http(url)
         with open(bundlepath, "wb+") as outfile:
