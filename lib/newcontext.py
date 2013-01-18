@@ -137,8 +137,8 @@ needed in order to support `new_rmaps`.   Currently generated contexts have
 fake names and are for local test purposes only,  not formal distribution.
 """
     def add_args(self):
-        self.parser.add_argument("old_pmap")
-        self.parser.add_argument("new_rmap", nargs="+", help="Names of new rmaps to insert into the new context.""")
+        self.add_argument("old_pmap")
+        self.add_argument("new_rmap", nargs="+", help="Names of new rmaps to insert into the new context.""")
         
     def main(self):
         new_context(self.args.old_pmap, self.args.new_rmap)

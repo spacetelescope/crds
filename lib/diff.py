@@ -229,13 +229,13 @@ class DiffScript(cmdline.Script):
     
     def add_args(self):
         """Add diff-specific command line parameters."""
-        self.parser.add_argument("old_file",  help="Prior file of difference.""")
-        self.parser.add_argument("new_file",  help="New file of difference.""")
-        self.parser.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
+        self.add_argument("old_file",  help="Prior file of difference.""")
+        self.add_argument("new_file",  help="New file of difference.""")
+        self.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
             help="Include primitive differences on replaced files.", 
             action="store_true")
-        self.parser.add_argument("-K", "--check-diffs", dest="check_diffs",
-            help="Don't issue warnings about new rules or reversions.",
+        self.add_argument("-K", "--check-diffs", dest="check_diffs",
+            help="Issue warnings about new rules, deletions, or reversions.",
             action="store_true")
 
     def main(self):
