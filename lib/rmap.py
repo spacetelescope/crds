@@ -702,21 +702,19 @@ class ReferenceMapping(Mapping):
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
         try:
-            self._precondition_header = utils.get_object(
-                ".".join(["crds", self.observatory, self.instrument,
-                          "precondition_header"]))
+            preconditioner = utils.get_object("crds", self.observatory, self.instrument, "precondition_header")
         except ImportError:
-            self._precondition_header = lambda self, header: header
+            preconditioner = lambda self, header: header
+        self._precondition_header = preconditioner
 
         # fallback routine called when standard best refs fails
         # set to return None if not defined.
         try:
-            self._fallback_header = utils.get_object(
-                ".".join(["crds", self.observatory, self.instrument,
-                          "fallback_header"]))
+            fallback = utils.get_object("crds", self.observatory, self.instrument, "fallback_header")
         except ImportError:
-            self._fallback_header = lambda self, header: None
-
+            fallback = lambda self, header: None
+        self._fallback_header = fallback
+        
     def get_best_ref(self, header_in):
         """Return the single reference file basename appropriate for
         `header_in` selected by this ReferenceMapping.
