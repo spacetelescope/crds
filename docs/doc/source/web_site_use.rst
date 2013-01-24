@@ -421,7 +421,6 @@ name of a reference file is assumed to be the same as the file it
 was derived from.   This fits a work-flow where a reference is first downloaded
 from CRDS, modified under the same name,  and re-uploaded.   Nominally,  submitted
 files are automatically re-named.
-   
 
 Confirm or Discard
 ++++++++++++++++++
@@ -440,56 +439,6 @@ and file copies are removed.
 Following any CRDS pipeline mapping submission,  the default *edit* context
 is updated to that pipeline mapping making it the default starting point for
 future submissions.
-
-
-Edit Rmap
-.........
-
-*Edit Rmap* provides a Javascript based rmap editor which supports adding or
-replacing new rmap rows.   The existing prototype can add new USEAFTER rows
-but cannot add new Match tuple cases.   The prototype works only on HST-style
-rmaps which consist of an outer Match() selector and a number of inner 
-UseAfter() selectors.
-
-.. figure:: images/web_edit_rmap_filter.png
-   :scale: 50 %
-   :alt: edit rmap filtering
-
-The first step is to select an rmap to edit by choosing filters of rmaps to list
-and then clicking on one of the links in the *name* column:
-
-.. figure:: images/web_edit_rmap_select.png
-   :scale: 50 %
-   :alt: edit rmap selection
-
-The second step is to add or replace file lines in an rmap by clicking on a
-useafter-date/filename line:
-
-.. figure:: images/web_edit_rmap_click.png
-   :scale: 50 %
-   :alt: edit rmap editing
-   
-Clicking on a line exposes two buttons adjacent to it:  *+* and *replace*.
-
-.. figure:: images/web_edit_rmap_edit.png
-   :scale: 50 %
-   :alt: edit rmap editing
-   
-New lines are added by clicking on the *+*.   This will open a line with a text
-entry box below the clicked line for entering a USEAFTER date and a file input 
-as well as some additional parameters.   A newly submitted reference file can 
-be entered into the file input box and will be uploaded and submitted to CRDS 
-when the page is submitted.
-
-Clicking *replace* strikes out the clicked line and adds inputs below it at the
-same USEAFTER time.   
-
-Additional lines can be added by clicking the *+* adjacent to an added line.  An
-added line can be removed by clicking the *delete* button adjacent to it.   A
-replaced line can be restored by clicking on *unreplace*.
-
-When the edited rmap is submitted,  the supplied reference files are uploaded
-and certified.
 
 Certify File
 ............
