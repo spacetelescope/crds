@@ -1145,7 +1145,10 @@ of uniform rmap structure for HST:
                 if raise_ambiguous:
                     raise AmbiguousMatchError("More than one match clause matched.")
                 subselectors = [remaining[match_tuple][1] for match_tuple in match_tuples]
-                selector = self.merge_group(subselectors)
+                if isinstance(subselectors[0], Selector):
+                    selector = self.merge_group(subselectors)
+                else:
+                    selector = subselectors
             else:
                 selector = remaining[match_tuples[0]][1]
             log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector), verbosity=60)
