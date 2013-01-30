@@ -18,7 +18,7 @@ class CrdsLogger(object):
         self.name = name
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
-        self.formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+        self.formatter = logging.Formatter('%(name)-6s: %(levelname)-8s %(message)s')
         self.console = None
         if enable_console:
             self.add_console_handler(level)
