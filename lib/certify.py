@@ -473,6 +473,10 @@ class Certifier(object):
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
     
+    @property
+    def basename(self):
+        return os.path.basename(self.filename)
+
     def trap(self, message, function, *args, **keys):
         """Execute function(*args, **keys) and log.error(message) on any exception 
         if self.trap_exception is True,  otherwise re-raise the exception as a
@@ -481,7 +485,7 @@ class Certifier(object):
         try:
             return function(*args, **keys)
         except Exception, exc:
-            msg = "In " + repr(self.filename) + " : " + message + " : " + str(exc)
+            msg = "In " + repr(self.basename) + " : " + message + " : " + str(exc)
             if self.trap_exceptions:
                 log.error(msg)
                 return None
@@ -517,7 +521,7 @@ class ReferenceCertifier(Certifier):
         fits = pyfits.open(self.filename)
         fits.verify(option='exception') # validates all keywords
         fits.close()
-        log.info("FITS file " + repr(self.filename) + " conforms to FITS standards.")
+        log.info("FITS file " + repr(self.basename) + " conforms to FITS standards.")
 
     def get_rmap_parkeys(self):
         """Determine required parkeys in reference path `refname` according to pipeline

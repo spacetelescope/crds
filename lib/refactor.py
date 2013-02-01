@@ -43,12 +43,13 @@ def update_derivation(new_path, old_basename=None):
     """
     new = rmap.load_mapping(new_path)
     if old_basename is None:    # assume new is a copy of old, with old's name in header
-        derived_from = new.basename
+        derived_from = new.name
     else:
         derived_from = old_basename
-    new.header["derived_from"] = derived_from
-    new.header["name"] = os.path.basename(new_path)
+    new.header["derived_from"] = str(derived_from)
+    new.header["name"] = str(os.path.basename(new_path))
     new.write(new_path)
+    return str(derived_from)
     
 # ============================================================================
 
@@ -95,7 +96,7 @@ def _rmap_insert_reference(loaded_rmap, reffile):
     
     returns new_contents, [ old_rmap_match_tuples... ],  useafter_date 
     """
-    log.info("Inserting", repr(reffile), "into", repr(loaded_rmap.name))
+    log.info("Inserting", repr(os.path.basename(reffile)), "into", repr(loaded_rmap.name))
     header = _get_matching_header(loaded_rmap, reffile)
     new_rmap = loaded_rmap.insert(header, os.path.basename(reffile))
     return new_rmap
