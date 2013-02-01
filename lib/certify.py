@@ -39,17 +39,18 @@ class MissingKeywordError(Exception):
 class IllegalKeywordError(Exception):
     """A keyword which should not be defined was present."""
 
+# ----------------------------------------------------------------------------
+
 class KeywordValidator(object):
     """Validates one field described in a .tpn file,  initialized with
     a TpnInfo object.
     """
     def __init__(self, info):
-        self._info = info
+        self.info = info
         self.name = info.name
         self.names = []
-        if self._info.presence not in ["R", "P", "E", "O"]:
-            raise ValueError("Bad TPN presence field " +
-                             repr(self._info.presence))
+        if self.info.presence not in ["R", "P", "E", "O"]:
+            raise ValueError("Bad TPN presence field " + repr(self.info.presence))
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info)
 
@@ -61,38 +62,33 @@ class KeywordValidator(object):
         return [self.condition(value) for value in info.values]
 
     def __repr__(self):
-        return self.__class__.__name__ + "(" + repr(self._info) + ")"
+        return self.__class__.__name__ + "(" + repr(self.info) + ")"
 
     def check(self, filename, header=None, context=None):
         """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
         """
-        if self._info.keytype == "H":
+        if self.info.keytype == "H":
             return self.check_header(filename, header)
-        elif self._info.keytype == "C":
+        elif self.info.keytype == "C":
             return self.check_column(filename, context=context)
-        elif self._info.keytype == "G":
+        elif self.info.keytype == "G":
             return self.check_group(filename)
         else:
-            raise ValueError(
-                "Unknown TPN keytype " + repr(self._info.keytype) + " for " +
-                repr(self.name))
+            raise ValueError("Unknown TPN keytype " + repr(self.info.keytype) + " for " + repr(self.name))
 
     def check_value(self, filename, value):
         """Check a single header or column value against the legal values
         for this Validator.
         """
-        log.verbose("Checking ", repr(filename), "keyword",
-                    repr(self.name), "=", repr(value))
-
+        log.verbose("Checking ", repr(filename), "keyword", repr(self.name), "=", repr(value))
         if value is None: # missing optional or excluded keyword
             return True
         if self.condition is not None:
             value = self.condition(value)
         if not self._values:
             return True
-
         self._check_value(value)
         # If no exception was raised, consider it validated successfully
         return True
@@ -129,8 +125,8 @@ class KeywordValidator(object):
 
         if values is not None: # Only check for non-optional columns
             for i, value in enumerate(values): # compare to TPN default values
-                v = self.check_value(filename + "[" + str(i) +"]", value)
-                if not v:
+                valid = self.check_value(filename + "[" + str(i) +"]", value)
+                if not valid:
                     check_val = False
 
         if context: # If context has been specified, compare against previous reffile
@@ -139,15 +135,14 @@ class KeywordValidator(object):
                 log.verbose("Checking values for column", repr(self.name),
                             " against values found in ",current)
                 current_values = self._get_column_values(current)
-
                 return self._check_column_values(values, current_values)
 
         # If no context, report results of check_value anyway if not an Exception
         return check_val
 
-    def check_group(self, filename):
+    def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
-        assert False, "Group keys were not expected and not implemented."
+        assert False, "Group keys are not currently supported by CRDS."
 
     def _get_header_value(self, header):
         """Pull this Validator's value out of `header` and return it.
@@ -197,19 +192,6 @@ class KeywordValidator(object):
         uniq_new = new_set.difference(current_set)
         uniq_current = current_set.difference(new_set)
 
-        # Report on any repeated values
-        if len(current_set) != len(current_values):
-            # duplicates found, so report which ones
-            seen = sets.Set()
-            duplicates = []
-            for n in new_values:
-                if n in seen:
-                    duplicates.append(n)
-                else:
-                    seen.add(n)
-            if len(duplicates) > 0:
-                log.warning("The following values were duplicated for column "+
-                            str(self.name)+": \n"+str(log.PP(duplicates)))
         # report how input values compare to current values, if different
         if len(uniq_new) > 0:
             log.warning("Value(s) for", repr(self.name), "of", log.PP(list(uniq_new)),
@@ -217,9 +199,8 @@ class KeywordValidator(object):
             return True
 
         if len(uniq_current) > 0:
-            log.warning("These values for "+repr(self.name)+
-                    " were not present in new input:\n"+
-                    str(log.PP(list(uniq_current))))
+            log.warning("These values for "+repr(self.name)+ " were not present in new input:\n"+
+                        str(log.PP(list(uniq_current))))
         # if no differences, return True
         return True
 
@@ -227,9 +208,8 @@ class KeywordValidator(object):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
         """
-        if self._info.presence in ["R","P"]:
-            raise MissingKeywordError(
-                "Missing required keyword " + repr(self.name))
+        if self.info.presence in ["R","P"]:
+            raise MissingKeywordError("Missing required keyword " + repr(self.name))
         else:
             sys.exc_clear()
             return # missing value is None, so let's be explicit about the return value
@@ -238,10 +218,11 @@ class KeywordValidator(object):
         """If this Validator's key is excluded,  raise an exception.  Otherwise
         return `value`.
         """
-        if self._info.presence == "E":
-            raise IllegalKeywordError(
-                "*Must not define* keyword " + repr(self.name))
+        if self.info.presence == "E":
+            raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
+
+# ----------------------------------------------------------------------------
 
 class CharacterValidator(KeywordValidator):
     """Validates values of type Character."""
@@ -250,6 +231,8 @@ class CharacterValidator(KeywordValidator):
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
+
+# ----------------------------------------------------------------------------
 
 class ModeValidator(CharacterValidator):
     """ Validates values from multiple columns as a single mode value"""
@@ -266,15 +249,15 @@ class ModeValidator(CharacterValidator):
         # TODO: Expand to concatenate all columns values
         #
         new_values = []
-        numcols = len(self.names)
         for name in self.names:
             self.name = name
             values = None
             try:
                 values = self._get_column_values(filename)
             except Exception, exc:
-                raise RuntimeError("Can't read column values from "+filename+": " + str(exc))
+                raise RuntimeError("Can't read column values from " + filename + ": " + str(exc))
             new_values.append(values)
+
         # convert these values into 'modes' by transposing the separate columns
         # of values into sets of values with one set per row.
         modes = map(tuple, transposed(new_values))
@@ -297,11 +280,21 @@ class ModeValidator(CharacterValidator):
                 self.name = self.names
                 self._check_column_values(modes, current_modes)
 
+def transposed(lists):
+    if not lists: 
+        return []
+    return map(lambda *row: list(row), *lists)
+
+# ----------------------------------------------------------------------------
+
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
 
+# ----------------------------------------------------------------------------
+
 class NumericalValidator(KeywordValidator):
+    """Check the value of a numerical keyword,  supporting range checking."""
     def condition_values(self, info):
         self.is_range = len(info.values) == 1 and ":" in info.values[0]
         if self.is_range:
@@ -314,16 +307,20 @@ class NumericalValidator(KeywordValidator):
 
     def _check_value(self, value):
         if self.is_range:
-            if value < min or value > max:
+            if value < self.min or value > self.max:
                 raise ValueError("Value for " + repr(self.name) + " of " +
                     repr(value) + " is outside acceptable range " +
-                    self._info.values[0])
+                    self.info.values[0])
         else:   # First try a simple exact string match check
             KeywordValidator._check_value(self, value)
+
+# ----------------------------------------------------------------------------
 
 class IntValidator(NumericalValidator):
     """Validates integer values."""
     condition = int
+
+# ----------------------------------------------------------------------------
 
 class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
@@ -348,12 +345,18 @@ class FloatValidator(NumericalValidator):
                     return
             raise
 
+# ----------------------------------------------------------------------------
+
 class RealValidator(FloatValidator):
     """Validate 32-bit floats."""
+
+# ----------------------------------------------------------------------------
 
 class DoubleValidator(FloatValidator):
     """Validate 64-bit floats."""
     epsilon = 1e-14
+
+# ----------------------------------------------------------------------------
 
 class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields."""
@@ -380,25 +383,35 @@ class PedigreeValidator(KeywordValidator):
             timestamp.Slashdate.get_datetime(stop)
         return pedigree
 
+# ----------------------------------------------------------------------------
+
 class SybdateValidator(KeywordValidator):
     """Check &SYBDATE Sybase date fields."""
     def check_value(self, filename, value):
         timestamp.Sybdate.get_datetime(value)
+
+# ----------------------------------------------------------------------------
 
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
     def check_value(self, filename, value):
         timestamp.Slashdate.get_datetime(value)
 
+# ----------------------------------------------------------------------------
+
 class AnydateValidator(KeywordValidator):
     """Validates &ANYDATE fields."""
     def check_value(self, filename, value):
         timestamp.Anydate.get_datetime(value)
 
+# ----------------------------------------------------------------------------
+
 class FilenameValidator(KeywordValidator):
     """Validates &FILENAME fields."""
     def check_value(self, filename, value):
         return (value == "(initial)") or not os.path.dirname(value)
+
+# ----------------------------------------------------------------------------
 
 def validator(info):
     """Given TpnInfo object `info`, construct and return a Validator for it."""
@@ -444,67 +457,103 @@ def validators_by_typekey(locator, key):
         
 # ============================================================================
 
-def certify_reference(fitsname, context=None, dump_provenance=False, trap_exceptions=False):
-    """Given reference file path `fitsname`,  fetch the appropriate Validators
-    and check `fitsname` against them.
-    """
-    try:
-        validation = validate_file_format(fitsname)
-    except Exception:
-        if trap_exceptions:
-            log.error("FITS file verification failed for "+fitsname)
-            return
-        else:
-            raise IOError
-    if validation == NOT_FITS:
-        return
+class Certifier(object):
+    """Container class for parameters for a certification run."""
+    def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
+                 compare_old_reference=False, dump_provenance=False,
+                 provenance_keys=["DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",]):
+        self.filename = filename
+        self.context = context
+        self.trap_exceptions = trap_exceptions
+        self.check_references = check_references
+        self.compare_old_reference = compare_old_reference
+        self.dump_provenance = dump_provenance
+        self.provenance_keys = provenance_keys
 
-    if dump_provenance:
-        provenance_keys = ["DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER",
-                                  "HISTORY",]
-        parkeys = get_rmap_parkeys(fitsname, context)
-        dump_multi_key(fitsname, parkeys + provenance_keys)
-
-    header = data_file.get_header(fitsname)
-
-    certify_simple_parameters(fitsname, context, trap_exceptions, header)
-
-    certify_reference_modes(fitsname, context, trap_exceptions, header)
-
-def certify_simple_parameters(fitsname, context, trap_exceptions, header):
-    """Check non-column parameters."""
-    for checker in get_validators(fitsname):
-        if checker._info.keytype != 'C':
-            # validate other values independently
-            try:
-                checker.check(fitsname, header=header) # validate against TPN values
-            except Exception, exc:
-                if trap_exceptions:
-                    log.error("Checking", repr(checker._info.name), "in",
-                              repr(fitsname), ":", str(exc))
-                else:
-                    raise
-
-def certify_reference_modes(fitsname, context, trap_exceptions, header):
-    """Check column parameters row-by-row."""
-    mode_checker = None # Initialize mode validation
-    for checker in get_validators(fitsname):
-        # Treat column validations together as a 'mode'
-        if checker._info.keytype == 'C':
-            checker.check(fitsname, header=header) # validate values against TPN valid values
-            if mode_checker is None:
-                mode_checker = ModeValidator(checker._info)
-            mode_checker.add_column(checker)
-
-    if mode_checker: # Run validation on all collected modes
+        assert self.check_references in [False, None, "exist", "contents"], \
+            "invalid check_references parameter " + repr(self.check_references)
+    
+    def trap(self, message, function, *args, **keys):
+        """Execute function(*args, **keys) and log.error(message) on any exception 
+        if self.trap_exception is True,  otherwise re-raise the exception as a
+        CrdsError.
+        """
         try:
-            mode_checker.check(fitsname, context=context, header=header)
+            return function(*args, **keys)
         except Exception, exc:
-            if trap_exceptions:
-                log.error("Checking", repr(mode_checker.names), "in",
-                          repr(fitsname), ":", str(exc))
+            msg = "In " + repr(self.filename) + " : " + message + " : " + str(exc)
+            if self.trap_exceptions:
+                log.error(msg)
+                return None
             else:
-                raise
+                raise ValidationError(msg)
+            
+    def certify(self):
+        """Certify `self.filename`,  either reporting using log.error() or raising
+        ValidationError exceptions.
+        """
+        raise NotImplementedError("Certify is an abstract class.")
+# ============================================================================
+
+class ReferenceCertifier(Certifier):
+    """Support certifying reference files:
+    
+    1. Check simple keywords against TPN files using the reftype's validators.
+    2. Check mode tables against prior reference of context.
+    3. Dump out keywords of interest.
+    """
+    def certify(self):
+        """Certify a reference file."""
+        if not self.trap("File does not comply with FITS format", self.fits_verify):
+            return
+        header = data_file.get_header(self.filename)
+        self.certify_simple_parameters(header)
+        self.certify_reference_modes(header)
+        if self.dump_provenance:
+            dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys)
+
+    def fits_verify(self):
+        """Use pyfits to verify the FITS format of self.filename."""     
+        fits = pyfits.open(self.filename)
+        fits.verify(option='exception') # validates all keywords
+        fits.close()
+        log.info("FITS file " + repr(self.filename) + " conforms to FITS standards.")
+
+    def get_rmap_parkeys(self):
+        """Determine required parkeys in reference path `refname` according to pipeline
+        mapping `context`.
+        """
+        if self.context is None:
+            return []
+        try:
+            pmap = rmap.get_cached_mapping(self.context)
+            instrument, filekind = pmap.locate.get_file_properties(self.filename)
+            return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
+        except Exception, exc:
+            log.verbose_warning("Failed retrieving required parkeys:", str(exc))
+            return []
+
+    def certify_simple_parameters(self, header):
+        """Check non-column parameters."""
+        for checker in get_validators(self.filename):
+            if checker.info.keytype != 'C':
+                self.trap("checking " + repr(checker.info.name),
+                          checker.check, self.filename, header=header)
+        
+    def certify_reference_modes(self, header):
+        """Check column parameters row-by-row."""
+        mode_checker = None # Initialize mode validation
+        for checker in get_validators(self.filename):
+            # Treat column validations together as a 'mode'
+            if checker.info.keytype == 'C':
+                checker.check(self.filename, header=header) # validate values against TPN valid values
+                if mode_checker is None:
+                    mode_checker = ModeValidator(checker.info)
+                mode_checker.add_column(checker)    
+        if mode_checker: # Run validation on all collected modes
+            context = self.context if self.compare_old_reference else None
+            self.trap("checking " + repr(mode_checker.names),
+                      mode_checker.check, context=context, header=header)
 
 def dump_multi_key(fitsname, keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
@@ -526,119 +575,91 @@ def interesting_value(value):
         return False
     return True
 
-def get_rmap_parkeys(refname, context):
-    """Determine required parkeys in reference path `refname` according to pipeline
-    mapping `context`.
-    """
-    if context is None:
-        return []
-    try:
-        pmap = rmap.get_cached_mapping(context)
-        instrument, filekind = pmap.locate.get_file_properties(refname)
-        return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-    except Exception, exc:
-        log.verbose_warning("Failed retrieving required parkeys:", str(exc))
-        return []
-
-def validate_file_format(fitsname):
-    """ Run PyFITS verify method on file to report any FITS format problems
-        with the input file.
-    """
-    # Not strictly necessary when pyfits.verify gets used...
-    #if '.fits' not in fitsname[-5:]:
-    #    log.warning('Reference file '+fitsname+' not a FITS file. No validation done.')
-    #    return NOT_FITS
-
-    try:
-        f = pyfits.open(fitsname)
-        f.verify(option='exception') # validates all keywords
-        log.info("FITS file "+fitsname+" conforms to FITS standards.")
-        f.close()
-    except Exception, exc:
-        log.error("FITS file "+fitsname+" does not comply with FITS format!")
-        log.error(exc)
-        raise IOError
-    return VALID_FITS
-
 # ============================================================================
+class MappingCertifier(Certifier):
+    """Parameter container for certifying a mapping file,  and possibly it's references."""
 
-def certify_mapping(filename, context=None, check_references=None, trap_exceptions=False):
-    """Certify `filename` using `context` to determine source references."""
+    def certify(self):
+        """Certify mapping `self.filename` relative to `self.context`."""        
+        mapping = rmap.load_mapping(self.filename)
+        mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
     
-    mapping = rmap.load_mapping(filename)
-    mapping.validate_mapping(trap_exceptions=trap_exceptions)
-
-    derived_from = mapping.get_derived_from()
-    if derived_from is not None:
-        diff.mapping_check_diffs(mapping, derived_from)
-
-    # Optionally check nested references
-    if not check_references: # Accept None or False
-        return
-    assert check_references in ["exist", "contents"], \
-        "invalid check_references parameter " + repr(check_references)
-
-    references = []
-    for ref in mapping.reference_names():
-        log.info('Validating reference file: '+ref)
-        #
-        # The location of reference files on disk need to be determined more
-        # robustly based on these 2 options
-        #
-        try:
-            where = rmap.locate_file(ref, mapping.observatory)
-            if not os.path.exists(where):
-                where = mapping.locate.locate_server_reference(ref)
-        except:
-            where = ref
-        if os.path.exists(where):
-            references.append(where)
-        else:
-            if trap_exceptions:
-                log.error("Can't find reference file " + repr(where))
-            else:
-                raise ValidationError("Missing reference file " + repr(ref))
-
-    if check_references == "contents":
-        certify_files(references, context=context, check_references=check_references,
-            trap_exceptions=trap_exceptions)
-
+        derived_from = mapping.get_derived_from()
+        if derived_from is not None:
+            diff.mapping_check_diffs(mapping, derived_from)
+    
+        # Optionally check nested references
+        if not self.check_references: # Accept None or False
+            return
+        
+        references = self.get_existing_reference_paths(mapping)
+        
+        if self.check_references == "contents":
+            certify_files(references, context=self.context, 
+                          check_references=self.check_references,
+                          trap_exceptions=self.trap_exceptions, 
+                          compare_old_reference=self.compare_old_reference)
+    
+    def get_existing_reference_paths(self, mapping):
+        """Return the paths of the references referred to by mapping.  Omit
+        paths for which the reference does not exist.
+        """
+        references = []
+        for ref in mapping.reference_names():
+            path = self.trap("Can't locate reference file.", 
+                             get_existing_path, ref, mapping.observatory)
+            if path:
+                references.append(path)
+        return references
+    
+def get_existing_path(reference, observatory):
+    """Return the path of `reference` located relative to `mapping`."""
+    path = rmap.locate_file(reference, observatory)
+    if not os.path.exists(path):
+        raise ValidationError("Path " + repr(path) + " does not exist.")
+    return path
 # ============================================================================
 
 class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
-def certify_files(files, context=None, dump_provenance=False,
-                  check_references=None, is_mapping=False, trap_exceptions=True):
+def certify_files(files, context=None, dump_provenance=False, check_references=False, 
+                  is_mapping=False, trap_exceptions=True, compare_old_reference=False):
+    """Certify the list of `files` relative to .pmap `context`.   Files can be
+    references or mappings.
+    
+    files:                  list of file paths to certify.
+    context:                .pmap name to certify relative to
+    dump_provenance:        for references,  log provenance keywords and rmap parkey values.
+    check_references:       False, "exists", "contents"
+    is_mapping:             bool  (assume mapping regardless of filename)
+    trap_exceptions:        bool   if True, issue log.error() messages, else raise.
+    compare_old_reference:  bool,  if True,  attempt table mode checking.
+    """
 
     if not isinstance(files, list):
         files = [files]
-    n = 0
-    for filename in files:
-        n += 1
+
+    for fileno, filename in enumerate(files):
         bname = os.path.basename(filename)
         log.info('#' * 40)  # Serves as demarkation for each file's report
-        log.info("Certifying", repr(bname) + ' (' + str(n) + '/' + str(len(files)) + ')', 
+        log.info("Certifying", repr(bname) + ' (' + str(fileno+1) + '/' + str(len(files)) + ')', 
                  "relative to context", repr(context))
         try:
             if is_mapping or rmap.is_mapping(filename):
-                certify_mapping(filename, context=context,
-                                check_references=check_references,
-                                trap_exceptions=trap_exceptions)
+                klass = MappingCertifier
             else:
-                certify_reference(filename, context=context,
-                                  dump_provenance=dump_provenance,
-                                  trap_exceptions=trap_exceptions)
+                klass = ReferenceCertifier
+            certifier = klass(filename, context=context, check_references=check_references,
+                              trap_exceptions=trap_exceptions, 
+                              compare_old_reference=compare_old_reference,
+                              dump_provenance=dump_provenance)
+            certifier.certify()
         except Exception, exc:
             if trap_exceptions:
                 log.error("Validation error in " + repr(bname) + " : " + str(exc))
             else:
                 raise
-
-def transposed(lists):
-    if not lists: 
-        return []
-    return map(lambda *row: list(row), *lists)
 
 # ============================================================================
 

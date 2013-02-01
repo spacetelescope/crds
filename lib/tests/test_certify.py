@@ -38,10 +38,10 @@ class TestHSTTpninfoClass(CRDSTestCase):
         mode_checker = None # Initialize mode validation
         for checker in self.validators:
             # Treat column validations together as a 'mode'
-            if checker._info.keytype == 'C':
+            if checker.info.keytype == 'C':
                 checker.check(self.data('acs_new_idc.fits')) # validate values against TPN valid values
                 if mode_checker is None:
-                    mode_checker = certify.ModeValidator(checker._info)
+                    mode_checker = certify.ModeValidator(checker.info)
                 mode_checker.add_column(checker)
         mode_pass = True
         try:
