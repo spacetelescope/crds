@@ -20,14 +20,6 @@ class NoMatchTupleError(ValueError):
 
 # ============================================================================
     
-def replace_header_value(filename, key, new_value):
-    """Replace the value of `key` in `filename` with `new_value`.    This is
-    intended to be a "loss-less" operation preserving comments, whitespace,
-    etc.,  but currently is not.
-    """
-    return set_header_value(filename, filename, key, new_value)
-
-
 def set_header_value(old_rmap, new_rmap, key, new_value):
     """Set the value of `key` in `filename` to `new_value` and rewrite the rmap.
     This is potentially lossy since rewriting the rmap may/will lose comments and 
@@ -41,7 +33,7 @@ def update_derivation(new_path, old_basename=None):
     """Set the 'derived_from' and 'name' header fields of `new_path`.  
     This function works for all Mapping classes:  pmap, imap, and rmap.
     """
-    new = rmap.load_mapping(new_path)
+    new = rmap.fetch_mapping(new_path)
     if old_basename is None:    # assume new is a copy of old, with old's name in header
         derived_from = new.name
     else:
@@ -60,7 +52,7 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references, expected=("a
     
     Return the list of RefactorAction's performed.
     """
-    new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
+    new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
         new = _rmap_insert_reference(new, reference)
     new.header["derived_from"] = old.basename

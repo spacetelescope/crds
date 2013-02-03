@@ -4,8 +4,6 @@ command line parameters:
 % python -m crds.checksum  hst.pmap
 
 will rewrite the sha1sum of hst.pmap.   
-
-This version of crds.checksum fully preserves comments.
 """
 
 import sys

@@ -19,8 +19,8 @@ def mapping_diffs(file1, file2):
     assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
         "Files " + repr(file1) + " and " + repr(file2) + \
         " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
-    map1 = rmap.load_mapping(file1)
-    map2 = rmap.load_mapping(file2)
+    map1 = rmap.fetch_mapping(file1)
+    map2 = rmap.fetch_mapping(file2)
     differences = map1.difference(map2)
     return differences
 
@@ -102,8 +102,8 @@ def mapping_check_diffs(mapping, derived_from):
     is currently determined by the names themselves,  not file contents, file
     system,  or database info.
     """
-    mapping = rmap.asmapping(mapping)
-    derived_from = rmap.asmapping(derived_from)
+    mapping = rmap.asmapping(mapping, cached="readonly")
+    derived_from = rmap.asmapping(derived_from, cached="readonly")
     log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
     diffs = derived_from.difference(mapping)
     return mapping_check_diffs_core(diffs)
