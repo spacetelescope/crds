@@ -7,21 +7,24 @@ import sha
 
 # from crds import data_file,  import deferred until required
 
-from crds import compat
+from crds import compat, log
 
 CRDS_CHECKSUM_BLOCK_SIZE = 2**26
 
 # ===================================================================
-
 def cached(func):
     """The cached decorator embeds a dictionary in a function wrapper to
-    capture prior results.   The wrapped function works like the original,
-    except it's faster because it fetches results for prior calls from the
-    cache.   The wrapped function has two extra attributes
+    capture prior results.   
     
-    .cache         -- { parameters: old_result } dictionary
-    .uncached      -- original unwrapped function
-        
+    The wrapped function works like the original, except it's faster because it
+    fetches results for prior calls from the cache.   The wrapped function has
+    extra attributes:
+    
+    .cache                      -- { key(parameters): old_result } dictionary
+    .uncached(*args, **keys)    -- original unwrapped function
+    .readonly(*args, **keys)    -- function variant which uses but doesn't update cache
+    .cache_key(*args, **keys)   -- returns tuple used to locate a function call result
+
     >>> @cached
     ... def sum(x,y):
     ...   print "really doing it."
@@ -55,17 +58,97 @@ def cached(func):
     >>> sum(1,2)
     really doing it.
     3
+    
+    A variant of the function which reads but does not update the cache is available.
+    After calling the read_only variant the cache is not updated:
+    
+    >>> sum.cache.clear()
+    >>> sum.readonly(1,2)
+    really doing it.
+    3
+    >>> sum(1,2)
+    really doing it.
+    3
+    
+    However,  the readonly variant will exploit any values in the cache already:
+
+    >>> sum(1,2)
+    3
     """
-    cache = dict()
-    def cacher(*args, **keys):
-        key = args + tuple(keys.items())
-        if key not in cache:
-            cache[key] = func(*args)
-        return cache[key]
-    cacher.func_name = func.func_name
-    cacher.__dict__["cache"] = cache
-    cacher.__dict__["uncached"] = func
-    return cacher
+    return CachedFunction(func)
+
+class xcached(object):
+    """Caching decorator which supports auxilliary caching parameters.
+    
+    omit_from_key lists keywords or positional indices to be excluded from cache
+    key creation:
+    
+    >>> @xcached(omit_from_key=[0, "x"])
+    ... def sum(x, y, z):
+    ...     return x + y + z
+    
+    >>> sum(1,2,3)
+    6
+    
+    >>> sum(2,2,3)
+    6
+    
+    >>> sum.uncached(2,2,3)
+    7
+    
+    >>> sum.readonly(2,2,3)
+    6
+    """
+    def __init__(self, *args, **keys):
+        """Stash the decorator parameters"""
+        self.args = args
+        self.keys = keys
+
+    def __call__(self, func):
+        """Create a CachedFunction for `func` with extra qualifiers *args and **keys.
+        Nomnially executes at import time.
+        """
+        return CachedFunction(func, *self.args, **self.keys)
+
+class CachedFunction(object):
+    """Class to support the @cached function decorator.   Called at runtime
+    for typical caching version of function.
+    """
+    def __init__(self, func, omit_from_key=None):
+        self.cache = dict()
+        self.uncached = func
+        self.omit_from_key = [] if omit_from_key is None else omit_from_key
+    
+    def cache_key(self, *args, **keys):
+        """Compute the cache key for the given parameters."""
+        args = tuple([ a for (i,a) in enumerate(args) if i not in self.omit_from_key])
+        keys = tuple([item for item in keys.items() if item[0] not in self.omit_from_key])
+        return args + keys
+    
+    def _readonly(self, *args, **keys):
+        """Compute (cache_key, func(*args, **keys)).   Do not add to cache."""
+        key = self.cache_key(*args, **keys)
+        if key in self.cache:
+            log.verbose("Cached call", self.uncached.func_name, repr(key), verbosity=80)
+            return key, self.cache[key]
+        else:
+            log.verbose("Uncached call", self.uncached.func_name, repr(key), verbosity=80)
+            return key, self.uncached(*args, **keys)
+
+    def readonly(self, *args, **keys):
+        """Compute or fetch func(*args, **keys) but do not add to cache.
+        Return func(*args, **keys)
+        """
+        _key, result = self._readonly(*args, **keys)
+        return result
+
+    def __call__(self, *args, **keys):
+        """Compute or fetch func(*args, **keys).  Add the result to the cache.
+        return func(*args, **keys)
+        """
+        key, result = self._readonly(*args, **keys)
+        self.cache[key] = result
+        return result
 
 # ===================================================================
 

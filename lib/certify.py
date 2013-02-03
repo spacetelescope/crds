@@ -585,7 +585,7 @@ class MappingCertifier(Certifier):
 
     def certify(self):
         """Certify mapping `self.filename` relative to `self.context`."""        
-        mapping = rmap.load_mapping(self.filename)
+        mapping = rmap.fetch_mapping(self.filename)
         mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
     
         derived_from = mapping.get_derived_from()

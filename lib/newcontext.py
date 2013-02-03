@@ -63,7 +63,9 @@ def insert_mapping(context, mapping):
     """
     #    'ACS' : 'hst_acs.imap',
     where = rmap.locate_mapping(context)
-    loaded = rmap.asmapping(context)
+    # readonly caching is ok because this call is always made on a newly named
+    # copy of the original rmap;  the only thing mutated is the uncached new mapping.
+    loaded = rmap.asmapping(context, cache="readonly")
     key = loaded.get_item_key(mapping)
     replaced = loaded.set_item(key, mapping)
     loaded.write(where)

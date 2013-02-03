@@ -34,7 +34,7 @@ Pipeline reference files are also broken down by instrument:
 >>> sorted(p.reference_name_map().keys())
 ['acs', 'cos', 'nicmos', 'stis', 'wfc3', 'wfpc2']
 
->>> i = InstrumentContext.from_file("hst_acs.imap")
+>>> i = load_mapping("hst_acs.imap")
 
 The ACS instrument has 15 associated mappings,  including the instrument
 context:
@@ -405,7 +405,7 @@ class Mapping(object):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
-        other = asmapping(other)
+        other = asmapping(other, cache="readonly")
         differences = []
         for key in self.selections:
             if key not in other.selections:
@@ -447,7 +447,7 @@ class Mapping(object):
         try:
             derived_file = self.derived_from
             if 'generated' not in derived_file:
-                derived_from = load_mapping(derived_file)
+                derived_from = fetch_mapping(derived_file)
         except Exception, exc:
             log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
         return derived_from
@@ -484,8 +484,7 @@ class PipelineContext(ContextMapping):
         self.selections = {}
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            self.selections[instrument] = ictx = InstrumentContext.from_file(
-                imapname, **keys)
+            self.selections[instrument] = ictx = _load(imapname, **keys)
             assert self.mapping == "pipeline", \
                 "PipelineContext 'mapping' format is not 'pipeline' in header."
             assert self.observatory == ictx.observatory, \
@@ -559,8 +558,7 @@ class InstrumentContext(ContextMapping):
         self.selections = {}
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
-            self.selections[filekind] = refmap = ReferenceMapping.from_file(
-                rmap_name, **keys)
+            self.selections[filekind] = refmap = _load(rmap_name, **keys)
             assert self.mapping == "instrument", \
                 "InstrumentContext 'mapping' format is not 'instrument'."
             assert self.observatory == refmap.observatory, \
@@ -825,7 +823,7 @@ class ReferenceMapping(Mapping):
         """Return the list of difference tuples between `self` and `other`,
         prefixing each tuple with context `path`.
         """
-        other = asmapping(other)
+        other = asmapping(other, cache="readonly")
         return self.selector.difference(other.selector, path +
                 ((self.basename, other.basename),))
 
@@ -876,20 +874,52 @@ class ReferenceMapping(Mapping):
         
 # ===================================================================
 
-@utils.cached
-def get_cached_mapping(mapping_basename, **keys):
-    """Retrieve the Mapping corresponding to the specified
-    `mapping_basename` from the global mapping cache,  recursively
-    loading and caching it if it has not already been cached.
+def _load(mapping, **keys):
+    """Stand-off function to call load_mapping, fetch_mapping, or get_cached_mapping
+    depending on the "loader" value of `keys`.
+    """
+    return keys["loader"](mapping, **keys)
+
+def get_cached_mapping(mapping, **keys):
+    """Load `mapping` from the file system or cache,  adding it and all it's
+    descendents to the cache.
+    
+    NOTE:   mutations to the mapping are reflected in the cache.   This call is
+    not suitable for experimental mappings which need to be reloaded from the
+    file system since the cached version will be returned instead.   This call
+    always returns the same Mapping object for a given set of parameters so it
+    should not be used where a copy is required.
 
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
-    return load_mapping(mapping_basename, **keys)
+    keys["loader"] = get_cached_mapping
+    return _load_mapping(mapping, **keys)
+
+def fetch_mapping(mapping, **keys):
+    """Load any `mapping`,  exploiting Mapping's already in the cache but not
+    adding anything extra.   This is safe for experimental mappings and temporaries
+    because new mappings not in the cache are not added to the cache.
+    
+    This call only returns a copy of mappings not already in the cache.
+    
+    Return a PipelineContext, InstrumentContext, or ReferenceMapping.
+    """
+    keys["loader"] = fetch_mapping
+    return _load_mapping.readonly(mapping, **keys)
 
 def load_mapping(mapping, **keys):
-    """Load any of the pipeline, instrument, or filekind `mapping`s
-    from the file system.   Not cached.
+    """Load any `mapping`,  ignoring the cache.   Returns a unique object
+    for each call.   Slow but safe for any use,  reads every file and 
+    returns a new copy.
+    
+    Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
+    keys["loader"] = load_mapping
+    return _load_mapping.uncached(mapping, **keys)
+
+@utils.xcached(omit_from_key=["loader", "ignore_checksum"])
+def _load_mapping(mapping, **keys):
+    """_load_mapping fetches `mapping` from the file system or cache."""
     if mapping.endswith(".pmap"):
         cls = PipelineContext
     elif mapping.endswith(".imap"):
@@ -909,18 +939,22 @@ def load_mapping(mapping, **keys):
             raise ValueError("Unknown mapping type for " + repr(mapping))
     return cls.from_file(mapping, **keys)
 
-def asmapping(filename_or_mapping, cached=False):
+def asmapping(filename_or_mapping, cached=False, **keys):
     """Return the Mapping object corresponding to `filename_or_mapping`.
     filename_or_mapping must either be a string (filename to be loaded) or 
-    a Mapping subclass.
+    a Mapping subclass which is simply returned.
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping
     elif isinstance(filename_or_mapping, basestring):
-        if cached:
-            return get_cached_mapping(filename_or_mapping)
+        if cached in [False, "uncached"]:
+            return load_mapping(filename_or_mapping, **keys)
+        elif cached in [True, "cached"]:
+            return get_cached_mapping(filename_or_mapping, **keys)
+        elif cached == "readonly":
+            return fetch_mapping(filename_or_mapping, **keys)
         else:
-            return load_mapping(filename_or_mapping)
+            raise ValueError("asmapping: cached must be in [True, 'cached', False, 'uncached','readonly']")
     else:
         raise TypeError("asmapping: parameter should be a string or mapping.")
 
@@ -965,7 +999,7 @@ def mapping_type(mapping):
         if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:
-            mapping = load_mapping(mapping)
+            mapping = fetch_mapping(mapping)
     if isinstance(mapping, PipelineContext):
         return "pmap"
     elif isinstance(mapping, InstrumentContext):

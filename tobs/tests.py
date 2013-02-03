@@ -103,6 +103,7 @@ class Test_01_Insert(unittest.TestCase):
     """Tests for checking automatic rmap update logic for adding new references."""
 
     def setUp(self):
+        # Note:  load_mapping must deliver a unique copy of the specified rmap
         self.rmap = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         self.original = rmap.load_mapping("tobs_tinstr_tfilekind.rmap")
         

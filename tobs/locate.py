@@ -140,7 +140,7 @@ def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and 
     return (instrument, filekind).
     """
-    map = rmap.load_mapping(filename)
+    map = rmap.fetch_mapping(filename)
     if map.filekind == "PIPELINE":
         result = "", ""
     elif map.filekind == "INSTRUMENT":
