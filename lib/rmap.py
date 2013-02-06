@@ -173,6 +173,19 @@ MAPPING_VALIDATOR = MappingValidator()
 
 # =============================================================================
 
+class LowerCaseDict(dict):
+    """Used to return Mapping header string values uniformly as lower case."""
+    def __getitem__(self, key):
+        val = super(LowerCaseDict, self).__getitem__(key)
+        # Return string values as lower case,  but exclude literal expressions surrounded by ()
+        # for case-sensitive HST rmap relevance expressions.
+        if isinstance(val, basestring) and not (val.startswith("(") and val.endswith(")")):
+            val = val.lower()
+        return val
+    
+    def __repr__(self):
+        return self.__class__.__name__ + "(%s)" % super(LowerCaseDict,self).__repr__()
+
 class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
@@ -205,15 +218,7 @@ class Mapping(object):
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.header:
-            val = self.header[attr]
-            # For case-sensitive HST rmap relevance expressions.
-            if isinstance(val, str):
-                if val.startswith("(") and val.endswith(")"):
-                    return val
-                else:
-                    return val.lower()
-            else:
-                return val
+            return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
 
@@ -241,7 +246,7 @@ class Mapping(object):
             header, selector = cls._interpret(code)
         except Exception, exc:
             raise MappingError("Can't load file " + where + " : " + str(exc))
-        return header, selector
+        return LowerCaseDict(header), selector
 
     @classmethod
     def _interpret(cls, code):
@@ -251,7 +256,7 @@ class Mapping(object):
         namespace = {}
         namespace.update(selectors.SELECTORS)
         exec code in namespace
-        header = namespace["header"]
+        header = LowerCaseDict(namespace["header"])
         selector = namespace["selector"]
         if isinstance(selector, selectors.Parameters):
             return header, selector.instantiate(header["parkey"], header)
@@ -381,8 +386,8 @@ class Mapping(object):
             keys = self.get_required_parkeys()
         minimized = {}
         for key in keys:
-            minimized[key] = header.get(
-                key.lower(),header.get(key.upper(), "UNDEFINED"))
+            minimized[key] = header.get(key.lower(), 
+                                        header.get(key.upper(), "UNDEFINED"))
         return minimized
 
     def validate_mapping(self,  trap_exceptions=False):
@@ -537,7 +542,10 @@ class PipelineContext(ContextMapping):
             try:
                 return header[self.instrument_key.lower()]
             except KeyError:
-                raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+                try: # This hack makes FITS headers work prior to back-mapping to data model names.
+                    return header["INSTRUME"].lower()
+                except:
+                    raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
 
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the instrument it corresponds to."""

@@ -6,7 +6,7 @@ import pprint
 import os.path
 import re
 
-from crds import (log, utils)
+from crds import (log, utils, timestamp)
 
 # =======================================================================
 
@@ -206,9 +206,13 @@ def reference_keys_to_dataset_keys(instrument, filekind, header):
     available are reference file keywords...  which need to be mapped into the
     terms rmaps know:  dataset keywords.
     """
-    inv_trans = utils.invert_dict(
-        PARKEYS[instrument][filekind]["db_translations"])
-    return { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
+    inv_trans = utils.invert_dict(PARKEYS[instrument][filekind]["db_translations"])    
+    result = { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
+    if "USEAFTER" in header and "DATE-OBS" not in header:
+        reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
+        result["DATE-OBS"] = reformatted[0]
+        result["TIME-OBS"] = reformatted[1]
+    return result
 
 def get_rmap_relevance(instrument, filekind):
     return PARKEYS[instrument][filekind]["rmap_relevance"]

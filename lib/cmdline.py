@@ -21,6 +21,30 @@ def _show_version():
 
 # =============================================================================
 
+# command line parameter type coercion / verification functions
+
+def reference_file(filename):
+    """Ensure `filename` is a reference file."""
+    assert filename.endswith((".fits",".finf")), "A .fits or .finf file is required but got: '%s'" % filename
+    return filename
+
+def mapping(filename):
+    """Ensure `filename` is a CRDS mapping file."""
+    assert filename.endswith(".rmap",".imap",".pmap"), "A .rmap, .imap, or .pmap file is required but got: '%s'" % filename
+    return filename
+
+def pipeline_mapping(filename):
+    """Ensure `filename` is a .pmap file."""
+    assert filename.endswith(".pmap"), "A .pmap file is required but got: '%s'" % filename
+    return filename
+
+def reference_mapping(filename):
+    """Ensure `filename` is a .rmap file."""
+    assert filename.endswith(".rmap"), "A .rmap file is required but got: '%s'" % filename
+    return filename
+
+# =============================================================================
+
 class Script(object):
     
     """Base class for CRDS command line scripts with standard properties."""
