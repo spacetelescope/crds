@@ -417,9 +417,10 @@ class Selector(object):
             if key:
                 p2 = p2 + (key,)
             return p2 + (" ".join(args),)
+        def short_name(obj):
+            return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
         if self.__class__ != other.__class__:
-            return [msg(None, "different classes", 
-                        repr(self.short_name), ":", repr(other.short_name))]
+            return [msg(None, "different classes", short_name(self), ":", short_name(other))]
         if self._parameters != other._parameters:
             return [msg(None, "different parameter lists ", 
                     repr(self._parameters), ":", repr(other._parameters))]
