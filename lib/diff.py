@@ -34,6 +34,8 @@ def diff_action(diff):
         result = "add"
     elif "delete" in diff[-1]:
         result = "delete"
+    elif "different classes" in diff[-1]:
+        result = "class_difference"
     else:
         raise ValueError("Bad difference action: "  + repr(diff))
     if "Selector" in diff[-1]:
