@@ -29,24 +29,26 @@ the file it replaces looking for new or missing table rows.
 
 crds.certify --help yields::
 
-    Usage: certify.py [options] <inpaths...>
+    usage: certify.py [-d] [-e] [-m] [-p] [-t TRAP_EXCEPTIONS] [-x CONTEXT] [-J] [-H]
+                      files [files ...]
     
-    Options:
-      -h, --help            show this help message and exit
-      -d, --deep            Certify reference files referred to by mappings have
-                            valid contents.
+    Checks a CRDS reference or mapping file.
+        
+    positional arguments:
+      files
+    
+    optional arguments:
+      -d, --deep            Certify reference files referred to by mappings have valid contents.
       -e, --exist           Certify reference files referred to by mappings exist.
-      -m, --mapping         Ignore extensions, the files being certified are
-                            mappings.
+      -m, --mapping         Ignore extensions, the files being certified are mappings.
       -p, --dump-provenance
-                            Print provenance keyword values.
-      -t TRAP_EXCEPTIONS, --trap-exceptions=TRAP_EXCEPTIONS
-                            Capture exceptions at level: pmap, imap, rmap,
-                            selector, debug, none
-      -x CONTEXT, --context=CONTEXT
-                            Pipeline context defining replacement reference.
-      -V VERBOSITY, --verbose=VERBOSITY
-                            Set verbosity level.
+                            Dump provenance keywords.
+      -t TRAP_EXCEPTIONS, --trap-exceptions TRAP_EXCEPTIONS
+                            Capture exceptions at level: pmap, imap, rmap, selector, debug, none
+      -x CONTEXT, --context CONTEXT
+                            Pipeline context defining comparison files.
+      -J, --jwst            Force observatory to JWST for determining header conventions.
+      -H, --hst             Force observatory to HST for determining heder conventions.
                             
 crds.certify is invoked as, e.g.::
 
@@ -65,17 +67,20 @@ references crds.diff is currently a thin wrapper around fitsdiff but may expand.
 For CRDS mappings crds.diff performs a recursive logical difference which shows 
 the full match path to each bottom level change.   crds.diff --help yields::
 
-    Usage: diff.py [options] <file1> <file2>
-            
-            Appropriately difference CRDS mapping or reference files.
-            
+    usage: diff.py [-P] [-K] [-J] [-H]  old_file new_file
     
-    Options:
-      -h, --help            show this help message and exit
-      -J, --jwst            Locate files using JWST naming conventions.
-      -H, --hst             Locate files using HST naming conventions.
-      -V VERBOSITY, --verbose=VERBOSITY
-                            Set verbosity level.
+    Difference CRDS mapping or reference files.
+    
+    positional arguments:
+      old_file              Prior file of difference.
+      new_file              New file of difference.
+    
+    optional arguments:
+      -P, --primitive-diffs
+                            Include primitive differences on replaced files.
+      -K, --check-diffs     Issue warnings about new rules, deletions, or reversions.
+      -J, --jwst            Force observatory to JWST for determining header conventions.
+      -H, --hst             Force observatory to HST for determining heder conventions.
 
 For standard CRDS filenames,  crds.diff can guess the observatory.   For 
 non-standard names,  the observatory needs to be specified.  crds.diff can be
