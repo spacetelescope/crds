@@ -313,6 +313,7 @@ def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
     parkeys = {}
     for key, value in fits_header.items():
+        key, value = str(key), str(value)
         if not key.lower().startswith("meta."):
             pk = MODEL.find_fits_keyword(key.upper(), return_result=True)
             if not pk:
@@ -323,7 +324,8 @@ def fits_to_parkeys(fits_header):
                 pk = pk[0]
         else:
             pk = key
-        parkeys[str(pk).upper()] = str(value)
+        pk = pk.upper()
+        parkeys[pk] = value
     return parkeys
 
 # ============================================================================
