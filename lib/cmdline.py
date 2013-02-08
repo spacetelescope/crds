@@ -65,9 +65,11 @@ class Script(object):
     
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
+        raise NotImplementedError("Script subclasses have to define main().")
         
     def add_args(self):
         """Add script-specific argparse add_argument calls here on self.parser"""
+        raise NotImplementedError("Script subclasses have to define add_args().")
     
     def get_observatory(self, filename=None):
         """Determine the observatory corresponding to the differenced files."""
@@ -117,4 +119,3 @@ class Script(object):
             pdb.runctx("self.main()", locals(), locals())
         else:
             self.main()
-    
