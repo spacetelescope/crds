@@ -4,13 +4,12 @@ files define required parameters and that they have legal values.
 """
 import sys
 import os
-import optparse
 import re
 import sets
 
 import pyfits
 
-from crds import rmap, log, timestamp, utils, data_file, diff
+from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
 from crds import refmatch
@@ -461,14 +460,14 @@ class Certifier(object):
     """Container class for parameters for a certification run."""
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
-                 provenance_keys=["DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",]):
+                 provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)):
         self.filename = filename
         self.context = context
         self.trap_exceptions = trap_exceptions
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
         self.dump_provenance = dump_provenance
-        self.provenance_keys = provenance_keys
+        self.provenance_keys = list(provenance_keys)
 
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -521,7 +520,8 @@ class ReferenceCertifier(Certifier):
         fits = pyfits.open(self.filename)
         fits.verify(option='exception') # validates all keywords
         fits.close()
-        log.info("FITS file " + repr(self.basename) + " conforms to FITS standards.")
+        log.info("FITS file", repr(self.basename), " conforms to FITS standards.")
+        return True
 
     def get_rmap_parkeys(self):
         """Determine required parkeys in reference path `refname` according to pipeline
@@ -557,11 +557,12 @@ class ReferenceCertifier(Certifier):
         if mode_checker: # Run validation on all collected modes
             context = self.context if self.compare_old_reference else None
             self.trap("checking " + repr(mode_checker.names),
-                      mode_checker.check, context=context, header=header)
+                      mode_checker.check, self.filename, context=context, header=header)
 
 def dump_multi_key(fitsname, keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
     hdulist = pyfits.open(fitsname)
+    unseen = set(keys)
     for i, hdu in enumerate(hdulist):
         cards = hdu.header.ascardlist()
         for key in keys:
@@ -569,6 +570,10 @@ def dump_multi_key(fitsname, keys):
                 if card.key == key:
                     if interesting_value(card.value):
                         log.info("["+str(i)+"]", key, card.value, card.comment)
+                        if key in unseen:
+                            unseen.remove(key)
+    for key in unseen:
+        log.warning("Missing keyword '%s'."  % key)
 
 def interesting_value(value):
     """Return True IFF `value` isn't uninteresting."""
@@ -665,58 +670,6 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
             else:
                 raise
 
-# ============================================================================
-
-def main():
-    """Perform checks on each of `files`.   Print status.   If file is a
-    context/mapping file,  it is used to define associated reference files which
-    are located on the CRDS server.  If file is a .fits file,  it should include
-    a relative or absolute filepath.
-    """
-    import crds
-    crds.handle_version()
-    parser = optparse.OptionParser("usage: %prog [options] <inpaths...>")
-    parser.add_option("-d", "--deep", dest="deep",
-        help="Certify reference files referred to by mappings have valid contents.",
-        action="store_true")
-    parser.add_option("-e", "--exist", dest="exist",
-        help="Certify reference files referred to by mappings exist.",
-        action="store_true")
-    parser.add_option("-m", "--mapping", dest="mapping",
-        help="Ignore extensions, the files being certified are mappings.",
-        action="store_true")
-    parser.add_option("-p", "--dump-provenance", dest="provenance",
-        help="Dump provenance keywords.", action="store_true")
-    parser.add_option("-t", "--trap-exceptions", dest="trap_exceptions",
-        help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none",
-        type=str, default="selector")
-    parser.add_option("-x", "--context", dest="context",
-        help="Pipeline context defining replacement reference.",
-        type=str, default=None)
-
-    options, args = log.handle_standard_options(sys.argv, parser=parser)
-
-    if options.deep:
-        check_references = "contents"
-    elif options.exist:
-        check_references = "exist"
-    else:
-        check_references = None
-
-    if options.trap_exceptions == "none":
-        options.trap_exceptions = False
-
-    assert (options.context is None) or rmap.is_mapping(options.context), \
-        "Specified --context file " + repr(options.context) + " is not a CRDS mapping."
-
-    certify_files(args[1:], context=options.context, 
-                  dump_provenance=options.provenance, 
-                  check_references=check_references, 
-                  is_mapping=options.mapping, 
-                  trap_exceptions=options.trap_exceptions)
-    
-    log.standard_status()
-    return log.errors()
 
 def test():
     """Run doctests in this module.  See also certify unittests."""
@@ -726,5 +679,61 @@ def test():
 
 # ============================================================================
 
+class CertifyScript(cmdline.Script):
+    """Command line script for for checking CRDS mapping and reference files.
+    
+    Perform checks on each of `files`.   Print status.   If file is a context /
+    mapping file,  it is used to define associated reference files which are
+    located on the CRDS server.  If file is a .fits file,  it should include a
+    relative or absolute filepath.
+    """
+
+    description = """
+Checks a CRDS reference or mapping file.
+    """
+    
+    epilog = """    
+    """
+    
+    def add_args(self):
+        self.add_argument("files", nargs="+")
+        self.add_argument("-d", "--deep", dest="deep", action="store_true",
+            help="Certify reference files referred to by mappings have valid contents.")
+        self.add_argument("-e", "--exist", dest="exist", action="store_true",
+            help="Certify reference files referred to by mappings exist.")
+        self.add_argument("-m", "--mapping", dest="mapping", action="store_true",
+            help="Ignore extensions, the files being certified are mappings.")
+        self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
+            help="Dump provenance keywords.")
+        self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", 
+            type=str, default="selector",
+            help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
+        self.add_argument("-x", "--context", dest="context", type=str, default=None,
+            help="Pipeline context defining comparison files.")
+
+    def main(self):
+        if self.args.deep:
+            check_references = "contents"
+        elif self.args.exist:
+            check_references = "exist"
+        else:
+            check_references = None
+
+        if self.args.trap_exceptions == "none":
+            self.args.trap_exceptions = False
+    
+        assert (self.args.context is None) or rmap.is_mapping(self.args.context), \
+            "Specified --context file " + repr(self.args.context) + " is not a CRDS mapping."
+
+        certify_files(self.args.files, context=self.args.context, 
+                      dump_provenance=self.args.dump_provenance, 
+                      check_references=check_references, 
+                      is_mapping=self.args.mapping, 
+                      trap_exceptions=self.args.trap_exceptions)
+    
+        log.standard_status()
+        
+        return log.errors()
+
 if __name__ == "__main__":
-    main()
+    CertifyScript()()
