@@ -294,8 +294,7 @@ class Mapping(object):
     def locate(self):
         """Return the "locate" module associated with self.observatory."""
         if not hasattr(self, "_locate"):
-            self._locate = utils.get_object(
-                "crds." + self.observatory + ".locate")
+            self._locate = utils.get_object("crds", self.observatory, "locate")
         return self._locate
 
     def format(self):
@@ -378,6 +377,7 @@ class Mapping(object):
         """Return only those items of `header` which are required to determine
         bestrefs.   Missing keys are set to 'UNDEFINED'.
         """
+        header = self.locate.fits_to_parkeys(header)
         if isinstance(self, PipelineContext):
             instrument = self.get_instrument(header)
             mapping = self.get_imap(instrument)
@@ -503,10 +503,9 @@ class PipelineContext(ContextMapping):
         is None,  collect all filekinds,  else only those listed.
         """
         header = dict(header)   # make a copy
-        parkey_header = self.locate.fits_to_parkeys(header)
-        instrument = self.get_instrument(parkey_header)
+        instrument = self.get_instrument(header)
         imap = self.get_imap(instrument)
-        return imap.get_best_references(parkey_header, include)
+        return imap.get_best_references(header, include)
 
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
@@ -1025,8 +1024,9 @@ def get_best_references(context_file, header, include=None):
     filekinds appropriate to `header`,  otherwise return only those
     filekinds listed in `include`.
     """
-    ctx = get_cached_mapping(context_file)
-    return ctx.get_best_references(header, include=include)
+    ctx = asmapping(context_file, cached=True)
+    minheader = ctx.minimize_header(header)
+    return ctx.get_best_references(minheader, include=include)
 
 
 def test():
