@@ -19,8 +19,8 @@ def mapping_diffs(file1, file2):
     assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
         "Files " + repr(file1) + " and " + repr(file2) + \
         " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
-    map1 = rmap.fetch_mapping(file1)
-    map2 = rmap.fetch_mapping(file2)
+    map1 = rmap.fetch_mapping(file1, ignore_checksum=True)
+    map2 = rmap.fetch_mapping(file2, ignore_checksum=True)
     differences = map1.difference(map2)
     return differences
 

@@ -169,7 +169,11 @@ def mapping_exists(mapping):
 # style functions.
 def mapping_to_observatory(context_file):
     """
-    >>> mapping_to_observatory('hst_acs_biasfile.rmap')
+    >>> mapping_to_observatory('hst.pmap')
+    'hst'
+    >>> mapping_to_observatory('hst_0000.pmap')
+    'hst'
+    >>> mapping_to_observatory('hst_acs_biasfile_0000.rmap')
     'hst'
     """
     return os.path.basename(context_file).split("_")[0].split(".")[0]
