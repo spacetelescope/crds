@@ -934,7 +934,7 @@ def _load_mapping(mapping, **keys):
     elif mapping.endswith(".rmap"):
         cls = ReferenceMapping
     else:
-        m = Mapping.from_file(mapping)
+        m = Mapping.from_file(mapping, **keys)
         mapping_type = m.header["mapping"].lower()
         if  mapping_type == "pipeline":
             cls = PipelineContext
@@ -1006,7 +1006,7 @@ def mapping_type(mapping):
         if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:
-            mapping = fetch_mapping(mapping)
+            mapping = fetch_mapping(mapping, ignore_checksum=True)
     if isinstance(mapping, PipelineContext):
         return "pmap"
     elif isinstance(mapping, InstrumentContext):
