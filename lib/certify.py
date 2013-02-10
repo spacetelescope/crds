@@ -513,7 +513,8 @@ class ReferenceCertifier(Certifier):
         self.certify_simple_parameters(header)
         self.certify_reference_modes(header)
         if self.dump_provenance:
-            dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys)
+            dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys, 
+                           self.provenance_keys)
 
     def fits_verify(self):
         """Use pyfits to verify the FITS format of self.filename."""     
@@ -559,7 +560,7 @@ class ReferenceCertifier(Certifier):
             self.trap("checking " + repr(mode_checker.names),
                       mode_checker.check, self.filename, context=context, header=header)
 
-def dump_multi_key(fitsname, keys):
+def dump_multi_key(fitsname, keys, warn_keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
     hdulist = pyfits.open(fitsname)
     unseen = set(keys)
@@ -573,7 +574,8 @@ def dump_multi_key(fitsname, keys):
                         if key in unseen:
                             unseen.remove(key)
     for key in unseen:
-        log.warning("Missing keyword '%s'."  % key)
+        if key in warn_keys:
+            log.warning("Missing keyword '%s'."  % key)
 
 def interesting_value(value):
     """Return True IFF `value` isn't uninteresting."""
