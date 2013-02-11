@@ -55,7 +55,7 @@ def sync_context_mappings(only_contexts, purge=False, ignore_cache=False):
 def purge_mappings(only_contexts):
     """Remove all mappings not references under pmaps `only_contexts."""
     pmap = rmap.get_cached_mapping(only_contexts[0])
-    purge_maps = rmap.list_mappings('*.[pir]map', pmap.observatory)
+    purge_maps = set(rmap.list_mappings('*.[pir]map', pmap.observatory))
     keep = get_context_mappings(only_contexts)
     remove_files(pmap.observatory, purge_maps-keep, "mapping")
         
@@ -113,6 +113,7 @@ def sync_datasets(contexts, datasets, ignore_cache=False):
     for context in contexts:
         observatory = data_file.get_observatory(context)
         for dataset in datasets:
+            log.info("Syncing context '%s' dataset '%s'." % (context, dataset))
             try:
                 header = data_file.get_conditioned_header(dataset, observatory=observatory)
             except Exception, exc:
@@ -224,6 +225,11 @@ class SyncScript(cmdline.Script):
         Synced contexts can be specified as --all contexts:
         
           % python -m crds.sync --all
+          
+        Files from unspecified contexts can be removed like this:
+        
+          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge
+          this would remove references and mappings for 0,1,2 which are not in 4 or 5.
     
     * Typically reference file retrieval behavior is driven by switches:
     
