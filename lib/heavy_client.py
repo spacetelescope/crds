@@ -135,6 +135,7 @@ def _initial_recommendations(
     log.verbose(name + "() parameters:\n", log.PP(parameters))
     log.verbose(name + "() reftypes:", reftypes)
     log.verbose(name + "() context:", repr(context))
+    log.verbose(name + "() ignore_cache:", True)
     
     for var in os.environ:
         if var.upper().startswith("CRDS"):
@@ -153,7 +154,7 @@ def _initial_recommendations(
     else:
         log.verbose("Computing best references remotely.")
         bestrefs = light_client.get_best_references(
-            final_context, parameters, reftypes=reftypes)
+            final_context, parameters, reftypes=reftypes, ignore_cache=ignore_cache)
         
     return final_context, bestrefs
 

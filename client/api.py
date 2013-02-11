@@ -247,7 +247,7 @@ class FileCacher(object):
         if downloads:
             self.download_files(pipeline_context, downloads, localpaths)
         else:
-            log.verbose("Skipping download for cached files", names)
+            log.verbose("Skipping download for cached files", names, verbosity=10)
         return localpaths
 
     def locate(self, pipeline_context, name):
@@ -267,7 +267,7 @@ class FileCacher(object):
 
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
-        log.verbose("Fetching", repr(name), "to", repr(localpath))
+        log.verbose("Fetching", repr(name), "to", repr(localpath), verbosity=10)
         try:
             utils.ensure_dir_exists(localpath)
             if get_download_mode() == "http":
@@ -359,7 +359,7 @@ class BundleCacher(FileCacher):
         utils.ensure_dir_exists(bundlepath, 0700)
         for name in localpaths:
             if name not in downloads:
-                log.verbose("Skipping existing file", repr(name), verbosity=60)
+                log.verbose("Skipping existing file", repr(name), verbosity=10)
         self.fetch_bundle(bundlepath, downloads)
         self.unpack_bundle(bundlepath, downloads, localpaths)
         
@@ -388,7 +388,7 @@ class BundleCacher(FileCacher):
                 file = tar.extractfile(member)
                 utils.ensure_dir_exists(localpaths[name])
                 with open(localpaths[name], "w+") as localfile:
-                    log.verbose("Unpacking download", repr(name), "to", repr(localpaths[name]))
+                    log.verbose("Unpacking download", repr(name), "to", repr(localpaths[name]), verbosity=10)
                     contents = file.read()
                     localfile.write(contents)
                     
