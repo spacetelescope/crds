@@ -17,6 +17,7 @@ Synced datasets can be explicitly listed:
 
   % python -m crds.sync --contexts hst_0001.pmap hst_0002.pmap --datasets *.fits
 
+
 """
 import sys
 import os
