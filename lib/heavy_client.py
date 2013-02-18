@@ -135,7 +135,7 @@ def _initial_recommendations(
     log.verbose(name + "() parameters:\n", log.PP(parameters))
     log.verbose(name + "() reftypes:", reftypes)
     log.verbose(name + "() context:", repr(context))
-    log.verbose(name + "() ignore_cache:", True)
+    log.verbose(name + "() ignore_cache:", ignore_cache)
     
     for var in os.environ:
         if var.upper().startswith("CRDS"):
