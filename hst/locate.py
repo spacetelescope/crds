@@ -109,7 +109,7 @@ def get_file_properties(filename):
     >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
     Traceback (most recent call last):
     ...
-    AssertionError: Invalid .pmap filename './hst_acs_biasfile_0001.pmap'
+    IOError: [Errno 2] No such file or directory: './hst_acs_biasfile_0001.pmap'
 
     >> get_file_properties("test_data/s7g1700gl_dead.fits")
     """
