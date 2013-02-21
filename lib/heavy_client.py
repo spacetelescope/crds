@@ -153,8 +153,7 @@ def _initial_recommendations(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
     else:
         log.verbose("Computing best references remotely.")
-        bestrefs = light_client.get_best_references(
-            final_context, parameters, reftypes=reftypes, ignore_cache=ignore_cache)
+        bestrefs = light_client.get_best_references(final_context, parameters, reftypes=reftypes)
         
     return final_context, bestrefs
 
