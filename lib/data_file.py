@@ -119,7 +119,8 @@ def setval(filepath, key, value):
         return dm_setval(filepath, key, value)
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
-    
+
+@utils.capture_output 
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
@@ -150,16 +151,16 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
         if observatory == "jwst":
-            return get_data_model_header(filepath, needed_keys)
+            return get_data_model_header.suppressed(filepath, needed_keys)
         else:
             return get_fits_header_union(filepath, needed_keys)
 
 # A clearer name
 get_unconditioned_header = get_header
 
+@utils.capture_output
 def get_data_model_header(filepath, needed_keys=()):
-    """Get the header from `filepath` using the jwst data model.
-    """
+    """Get the header from `filepath` using the jwst data model."""
     from jwstlib import models
     with models.open(filepath) as dm:
         d = dm.to_flat_dict(include_arrays=False)
