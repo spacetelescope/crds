@@ -1,9 +1,10 @@
 """Generic utility routines used by a variety of modules.
 """
-
+import sys
 import os.path
 import re
 import sha
+import cStringIO
 
 # from crds import data_file,  import deferred until required
 
@@ -149,6 +150,78 @@ class CachedFunction(object):
         key, result = self._readonly(*args, **keys)
         self.cache[key] = result
         return result
+
+# ===================================================================
+
+def capture_output(func):
+    """Decorate a function with @capture_output to define a CapturedFunction()
+    wrapper around it.   
+    
+    Doesn't currently capture non-python output but could with dup2.
+    
+    Decorate any function to wrap it in a CapturedFunction() wrapper:
+    
+    >>> @capture_output
+    ... def f(x,y): 
+    ...    print "hi"
+    ...    return x + y
+    
+    >>> f
+    CapturedFunction('f')
+
+    Calling works normally for a CapturedFunction():
+    
+    >>> f(1, 2)
+    hi
+    3
+    
+    To suppress output and just get the return value:
+    
+    >>> f.suppressed(1, 2)
+    3
+    
+    If you don't care about the return value,  but want the output:
+    
+    >>> f.outputs(1, 2)
+    'hi\\n'
+    
+    If you need both the return value and captured output:
+    
+    >>> f.returns_outputs(1, 2)
+    (3, 'hi\\n')
+       
+    """
+    class CapturedFunction(object):
+        def __repr__(self):
+            return "CapturedFunction('%s')" % func.func_name
+
+        def returns_outputs(self, *args, **keys):
+            """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
+            oldout, olderr = sys.stdout, sys.stderr
+            out = cStringIO.StringIO()
+            sys.stdout, sys.stderr = out, out
+            # handler = log.add_stream_handler(out)
+            try:
+                result = func(*args, **keys)
+            finally:
+                out.flush()
+                # log.remove_stream_handler(handler)
+                sys.stdout, sys.stderr = oldout, olderr
+            out.seek(0)
+            return result, out.read()
+        
+        def suppressed(self, *args, **keys):
+            """Call the wrapped function, suppress output,  return f() normally."""
+            return self.returns_outputs(*args, **keys)[0]
+
+        def outputs(self, *args, **keys):
+            """Call the wrapped function, capture output,  return output_from_f."""
+            return self.returns_outputs(*args, **keys)[1]
+        
+        def __call__(self, *args, **keys):
+            return func(*args, **keys)
+
+    return CapturedFunction()
 
 # ===================================================================
 
@@ -392,3 +465,10 @@ def reference_to_observatory(filename):
 file_to_instrument = reference_to_instrument
 file_to_locator = reference_to_locator
 file_to_observatory = reference_to_observatory
+
+def test():
+    """Run doctests."""
+    import doctest
+    from . import utils
+    return doctest.testmod(utils)
+
