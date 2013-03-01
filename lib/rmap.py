@@ -184,7 +184,7 @@ class LowerCaseDict(dict):
         return val
     
     def __repr__(self):
-        return self.__class__.__name__ + "(%s)" % super(LowerCaseDict,self).__repr__()
+        return self.__class__.__name__ + "(%s)" % super(LowerCaseDict, self).__repr__()
 
 class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
@@ -485,7 +485,7 @@ class PipelineContext(ContextMapping):
                       "name", "derived_from"]
 
     def __init__(self, filename, header, selector, **keys):
-        Mapping.__init__(self, filename, header, selector, **keys)
+        ContextMapping.__init__(self, filename, header, selector, **keys)
         self.selections = {}
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
@@ -561,7 +561,7 @@ class InstrumentContext(ContextMapping):
     type = "instrument"
 
     def __init__(self, filename, header, selector, **keys):
-        Mapping.__init__(self, filename, header, selector)
+        ContextMapping.__init__(self, filename, header, selector)
         self.selections = {}
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
@@ -967,21 +967,24 @@ def asmapping(filename_or_mapping, cached=False, **keys):
 
 # =============================================================================
 
-def list_references(glob_pattern, observatory):
-    """Return the list of references for `observatory` which match `glob_pattern`,
-    nominally the cached references.
-    """
-    path = os.path.join(config.get_crds_refpath(), observatory, glob_pattern)
-    return [os.path.basename(fpath) for fpath in glob.glob(path)]
+def list_references(glob_pattern, observatory, full_path=False):
+    """Return the list of cached references for `observatory` which match `glob_pattern`."""
+    pattern = os.path.join(config.get_crds_refpath(), observatory, glob_pattern)
+    return _glob_list(pattern, full_path)
 
+def list_mappings(glob_pattern, observatory, full_path=False):
+    """Return the list of cached mappings for `observatory` which match `glob_pattern`."""
+    pattern = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
+    return _glob_list(pattern, full_path)
+
+def _glob_list(pattern, full_path=False):
+    """Return the sorted glob of `pattern`, with/without path depending on `full_path`."""
+    if full_path:
+        return sorted(glob.glob(pattern))
+    else:
+        return sorted([os.path.basename(fpath) for fpath in glob.glob(pattern)])
+        
 # =============================================================================
-
-def list_mappings(glob_pattern, observatory):
-    """Return the list of mappings for `observatory` which match `glob_pattern`,
-    nominally the cached mappings.
-    """
-    path = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
-    return [os.path.basename(fpath) for fpath in glob.glob(path)]
 
 def mapping_type(mapping):
     """
