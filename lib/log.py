@@ -145,6 +145,16 @@ def errors():
 def warn_on_exception(*args):
     """warn_on_exception is a context manager which issues a warning if any statement
     in a with-block generates an exception.   The exception is suppressed.
+
+    >>> with warn_on_exception("As expected, it failed."):
+    ...    print("do it.")
+    do it.
+
+    >>> with warn_on_exception("As expected, it failed."):
+    ...    raise Exception("It failed!")
+    ...    print("do it.")
+    
+    Never got to 'do it.'  Nothing printed because the warning output is a log message.
     """
     try:
         yield
@@ -155,6 +165,16 @@ def warn_on_exception(*args):
 def error_on_exception(*args):
     """error_on_exception is a context manager which issues an error if any statement
     in a with-block generates an exception.   The exception is suppressed.
+    
+    >>> with error_on_exception("As expected, it failed."):
+    ...    print("do it.")
+    do it.
+
+    >>> with error_on_exception("As expected, it failed."):
+    ...    raise Exception("It failed!")
+    ...    print("do it.")
+    
+    Never got to 'do it'.  Nothing printed because the error output is a log message.
     """
     try:
         yield
