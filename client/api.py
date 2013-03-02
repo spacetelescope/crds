@@ -227,6 +227,42 @@ def get_server_info():
 
 # ==============================================================================
 
+HARD_DEFAULT_OBS = "jwst"
+
+def get_server_observatory():
+    """Return the default observatory according to the server, or None."""
+    try:
+        pmap = get_default_context()
+    except Exception:
+        server_obs = None
+    else:
+        server_obs = observatory_from_string(pmap)
+    return server_obs
+
+def get_default_observatory():
+    """Based on the environment, cache, and server,  determine the default observatory.
+    
+    1. CRDS_OBSERVATORY env var
+    2. CRDS_SERVER_URL env var
+    3. Observatory(Server default context)
+    4. jwst
+    """
+    return os.environ.get("CRDS_OBSERVATORY", None) or \
+           observatory_from_string(get_crds_server()) or \
+           get_server_observatory() or \
+           "jwst"
+
+def observatory_from_string(string):
+    """If "jwst" or "hst" is in `string`, return it,  otherwise return None."""
+    if "jwst" in string:
+        return "jwst"
+    elif "hst" in string:
+        return "hst"
+    else:
+        return None
+
+# ==============================================================================
+
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
     """
