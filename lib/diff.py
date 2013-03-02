@@ -242,7 +242,7 @@ class DiffScript(cmdline.Script):
 
     def main(self):
         """Perform the differencing."""
-        difference(self.get_observatory(self.args.old_file), self.args.old_file, self.args.new_file, 
+        difference(self.observatory, self.args.old_file, self.args.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs)
 
 if __name__ == "__main__":
