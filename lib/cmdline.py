@@ -170,6 +170,37 @@ class Script(object):
         """Return the default operational .pmap defined by the CRDS server or cache."""
         return self.server_info["operational_context"]
 
+    def get_files(self, file_list):
+        """Process a file list,  expanding @-files into corresponding lists of
+        files.   Return a flat, depth-first,  file list.
+        """
+        files = []
+        for fname in file_list:
+            if fname.startswith("@"):
+                files.extend(self.load_file_list(fname[1:]))
+            else:
+                files.append(fname)
+        return files
+
+    def load_file_list(self, at_file):
+        """Recursively load an @-file, returning a list of words/files.
+        Any stripped line beginning with # is a comment line to be ignored.
+        Any word beginning with @ is a file to load recursively.
+        Each line is split into words/files using whitespace.
+        """
+        files = []
+        with open(at_file) as atf:
+            for line in atf.readlines():
+                fname = line.strip()
+                if fname.startswith("#"):
+                    continue
+                if fname.startswith("@"):
+                    more = self.load_file_list(fname[1:])
+                else:
+                    more = fname.split()
+                files.extend(more)
+        return files
+
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         if self.args.profile:
