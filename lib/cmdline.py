@@ -139,12 +139,10 @@ class Script(object):
             help="Set log verbosity to True,  nominal debug level.", action="store_true")
         self.add_argument("--verbosity", 
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
-        self.add_argument("-J", "--jwst", 
-            help="Force observatory to JWST for determining header conventions.""",
-            action="store_true")
-        self.add_argument("-H", "--hst", 
-            help="Force observatory to HST for determining heder conventions.""",
-            action="store_true")
+        self.add_argument("-J", "--jwst", dest="jwst", action="store_true",
+            help="Force observatory to JWST for determining header conventions.""")
+        self.add_argument("-H", "--hst",  dest="hst", action="store_true",
+            help="Force observatory to HST for determining header conventions.""")
         self.add_argument("--profile", 
             help="Output profile stats to the specified file.", type=str, default="")
         self.add_argument("--pdb", 
