@@ -186,11 +186,11 @@ def check_reftypes(reftypes):
                 "each reftype must be a string, .e.g. biasfile or darkfile."
                 
 def check_context(context):
-    """Make sure `context` is a pipeline mapping."""
+    """Make sure `context` is a pipeline or instrument mapping."""
     if context is None:
         return
-    assert isinstance(context, basestring) and context.endswith(".pmap"), \
-                "context should specify a pipeline mapping, .e.g. hst_0023.pmap"
+    assert isinstance(context, basestring) and context.endswith((".pmap", ".imap")), \
+                "context should specify a pipeline or instrument mapping, .e.g. hst_0023.pmap"
 
 # ============================================================================
 
