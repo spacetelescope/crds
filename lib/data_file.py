@@ -126,7 +126,7 @@ def dm_setval(filepath, key, value):
     """
     from jwstlib import models
     with models.open(filepath) as dm:
-        dm[key] = value
+        dm[key.lower()] = value
         dm.save(filepath)
 
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
