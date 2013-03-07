@@ -174,7 +174,22 @@ MAPPING_VALIDATOR = MappingValidator()
 # =============================================================================
 
 class LowerCaseDict(dict):
-    """Used to return Mapping header string values uniformly as lower case."""
+    """Used to return Mapping header string values uniformly as lower case.
+    
+    >>> d = LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
+    
+    Ordinarily,  all string values are mapped to lower case:
+    
+    >>> d["this"]
+    'that'
+    
+    Values bracketed by () are returned unaltered in order to support header Python 
+    expressions which are typically evaluated in the context of an incoming header 
+    (FITS) dictionary,  all upper case:
+    
+    >>> d["another"]
+    '(ESCAPED)'
+    """
     def __getitem__(self, key):
         val = super(LowerCaseDict, self).__getitem__(key)
         # Return string values as lower case,  but exclude literal expressions surrounded by ()
@@ -194,7 +209,7 @@ class Mapping(object):
 
     def __init__(self, filename, header, selector, **keys):
         self.filename = filename
-        self.header = header
+        self.header = LowerCaseDict(header)
         self.selector = selector
 
     @property
