@@ -141,45 +141,33 @@ def errors():
 
 # ===========================================================================
 
-@contextlib.contextmanager
-def warn_on_exception(*args):
-    """warn_on_exception is a context manager which issues a warning if any statement
-    in a with-block generates an exception.   The exception is suppressed.
-
-    >>> with warn_on_exception("As expected, it failed."):
-    ...    print("do it.")
-    do it.
-
-    >>> with warn_on_exception("As expected, it failed."):
-    ...    raise Exception("It failed!")
-    ...    print("do it.")
+def exception_trap_logger(func):
+    @contextlib.contextmanager
+    def func_on_exception(*args, **keys):
+        """func_on_exception is a context manager which issues a func() message if any statement
+        in a with-block generates an exception.   The exception is suppressed.
     
-    Never got to 'do it.'  Nothing printed because the warning output is a log message.
-    """
-    try:
-        yield
-    except Exception,  exc:
-        warning(*args + (":", str(exc)))
-
-@contextlib.contextmanager
-def error_on_exception(*args):
-    """error_on_exception is a context manager which issues an error if any statement
-    in a with-block generates an exception.   The exception is suppressed.
+        >> with warn_on_exception("As expected, it failed."):
+        ...    print("do it.")
+        do it.
     
-    >>> with error_on_exception("As expected, it failed."):
-    ...    print("do it.")
-    do it.
+        >> with warn_on_exception("As expected, it failed."):
+        ...    raise Exception("It failed!")
+        ...    print("do it.")
+        
+        Never printed 'do it.'  Nothing printed because the func() output is a log message.
+        """
+        try:
+            yield
+        except Exception,  exc:
+            func(*args + (":", str(exc)), **keys)
+    return func_on_exception
 
-    >>> with error_on_exception("As expected, it failed."):
-    ...    raise Exception("It failed!")
-    ...    print("do it.")
-    
-    Never got to 'do it'.  Nothing printed because the error output is a log message.
-    """
-    try:
-        yield
-    except Exception,  exc:
-        error(*args + (":", str(exc)))
+info_on_exception = exception_trap_logger(info)
+debug_on_exception = exception_trap_logger(debug)
+verbose_on_exception = exception_trap_logger(verbose)
+warn_on_exception = exception_trap_logger(warning)
+error_on_exception = exception_trap_logger(error)
 
 # ===========================================================================
 
