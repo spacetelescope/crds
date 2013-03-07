@@ -501,6 +501,7 @@ class PipelineContext(ContextMapping):
 
     def __init__(self, filename, header, selector, **keys):
         ContextMapping.__init__(self, filename, header, selector, **keys)
+        self.observatory = self.header["observatory"]
         self.selections = {}
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
@@ -577,6 +578,8 @@ class InstrumentContext(ContextMapping):
 
     def __init__(self, filename, header, selector, **keys):
         ContextMapping.__init__(self, filename, header, selector)
+        self.observatory = self.header["observatory"]
+        self.instrument = self.header["instrument"]
         self.selections = {}
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
@@ -592,6 +595,7 @@ class InstrumentContext(ContextMapping):
             assert refmap.filekind == filekind, \
                 "Nested 'filekind' doesn't match for " + \
                 repr(filekind) + " in " + repr(filename)
+        self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping."""
@@ -679,8 +683,8 @@ class InstrumentContext(ContextMapping):
         the minimum set associated with `dataset`,  but initially all
         for dataset's instrument,  assumed to be self.instrument.
         """
-        return [key.upper() for key in self.selections.keys()]
-
+        return self._filekinds
+        
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the filekind it corresponds to."""
         _instrument, filekind = utils.get_file_properties(self.observatory, filename)
@@ -702,6 +706,10 @@ class ReferenceMapping(Mapping):
 
     def __init__(self, *args, **keys):
         Mapping.__init__(self, *args, **keys)
+        self.observatory = self.header["observatory"]
+        self.instrument = self.header["instrument"]
+        self.filekind = self.header["filekind"]
+
         # TPNs define the static definitive possibilities for parameter choices
         self._tpn_valid_values = self.get_valid_values_map()
         # rmaps define the actually appearing literal parameter values
