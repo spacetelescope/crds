@@ -564,10 +564,9 @@ def dump_multi_key(fitsname, keys, warn_keys):
     hdulist = pyfits.open(fitsname)
     unseen = set(keys)
     for i, hdu in enumerate(hdulist):
-        cards = hdu.header.ascardlist()
         for key in keys:
-            for card in cards:
-                if card.key == key:
+            for card in hdu.header.cards:
+                if card.keyword == key:
                     if interesting_value(card.value):
                         log.info("["+str(i)+"]", key, card.value, card.comment)
                         if key in unseen:
