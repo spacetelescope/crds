@@ -53,6 +53,12 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     new.header["derived_from"] = old.basename
     log.verbose("Writing", repr(new_rmap))
     new.write(new_rmap)
+    formatted = new.format()
+    for reference in inserted_references:
+        reference = os.path.basename(reference)
+        assert reference in formatted, \
+            "Rules update failure. " + repr(reference) + " does not appear in new rmap." \
+            "  May be identical match with other submitted references."
     return new
 
 def rmap_check_modifications(old_rmap, new_rmap, expected=("add",)):
