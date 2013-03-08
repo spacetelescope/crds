@@ -5,7 +5,6 @@ files define required parameters and that they have legal values.
 import sys
 import os
 import re
-import sets
 
 import pyfits
 
@@ -184,8 +183,8 @@ class KeywordValidator(object):
     def _check_column_values(self, new_values, current_values):
         """ Check column values from new table against values from current table"""
         # Use sets to perform comparisons more efficiently
-        current_set = sets.Set(current_values)
-        new_set = sets.Set(new_values)
+        current_set = set(current_values)
+        new_set = set(new_values)
 
         # find values which are uniq to each set/file
         uniq_new = new_set.difference(current_set)
