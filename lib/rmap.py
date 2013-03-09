@@ -831,7 +831,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        log.info("Validating", self.basename)
+        log.info("Validating", repr(self.basename))
         try:
             self.selector.validate_selector(self._tpn_valid_values, trap_exceptions)
         except Exception, exc:
