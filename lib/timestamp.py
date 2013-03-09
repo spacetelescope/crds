@@ -10,16 +10,16 @@ import crds
 
 # =======================================================================
 
-def format_date(d):
+def format_date(date):
     """Format a datestring `d` in CRDS standard form."""
-    if isinstance(d, (str, unicode)):
-        d = parse_date(d)
-    return d.isoformat(" ")
+    if isinstance(date, (str, unicode)):
+        date = parse_date(date)
+    return date.isoformat(" ")
 
 T_SEPERATED_DATE_RE = re.compile(r"\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d:\d\d")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
 
-def parse_date(d):
+def parse_date(date):
     """Parse any date-time string into a datetime object.
     
     >>> parse_date("Dec 01 1993 00:00:00 UT")
@@ -37,24 +37,24 @@ def parse_date(d):
     >>> parse_numerical_date('12-21-1999 05:42')
     datetime.datetime(1999, 12, 21, 5, 42)
     """
-    if isinstance(d, datetime.datetime):
-        d = str(d)
+    if isinstance(date, datetime.datetime):
+        date = str(date)
 
-    if d.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
-        d = d[:-3]
+    if date.endswith(" UT"):  # Dec 01 1993 00:00:00 UT
+        date = date[:-3]
 
-    if T_SEPERATED_DATE_RE.match(d):
-        d = d.replace("T", " ")
+    if T_SEPERATED_DATE_RE.match(date):
+        date = date.replace("T", " ")
         
-    if ALPHABETICAL_RE.match(d):
-        return parse_alphabetical_date(d)
+    if ALPHABETICAL_RE.match(date):
+        return parse_alphabetical_date(date)
     else:
-        return parse_numerical_date(d)
+        return parse_numerical_date(date)
 
-def reformat_date(d):
+def reformat_date(date):
     """Reformat datestring `d` in any recognized format in CRDS standard form."""
-    dt = parse_date(d)
-    return format_date(dt)
+    parsed = parse_date(date)
+    return format_date(parsed)
 
 def now():
     """Returns the timestamp for the current time."""
@@ -64,9 +64,10 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 def month_num(month):
+    """Convert a month name to a month number."""
     return  MONTHS.index(month[:3].capitalize()) + 1
 
-def parse_alphabetical_date(d):
+def parse_alphabetical_date(date):
     """Parse date/time strings with alphabetical months into datetime's.
 
     >>> parse_alphabetical_date('Feb 08 2006 01:02AM')
@@ -82,9 +83,9 @@ def parse_alphabetical_date(d):
     datetime.datetime(1999, 7, 27, 0, 0)
     """
     try:
-        month, day, year, time = d.split()    # 'Feb 08 2006 01:02AM'
+        month, day, year, time = date.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
-        month, day, year = d.split()          # 'Feb 08 2006'
+        month, day, year = date.split()          # 'Feb 08 2006'
         time = "00:00AM"
 
     if day.endswith(","):     # 
@@ -124,7 +125,7 @@ def parse_time(time):
     """
     time = time.strip()
     ampm = "unspecified"
-    if time[-2:] in ["AM","am","PM","pm"]:
+    if time[-2:].upper() in ["AM", "PM"]:
         ampm = time[-2:].upper()
         time = time[:-2]
     try:
@@ -150,7 +151,7 @@ YEAR_MONTH_DAY_RE = re.compile(r"^\d\d\d\d/\d\d/\d\d$")
 NINETEEN_HUNDREDS_RE = re.compile(r"^\d\d/\d\d/9\d$")
 TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
 
-def parse_numerical_date(d):
+def parse_numerical_date(dstr):
     """Parse a datetime string with the month expressed as a number in various 
     formats.   Return a datetime object.
     
@@ -175,8 +176,8 @@ def parse_numerical_date(d):
     >>> parse_numerical_date('21/12/15 05:42:00')
     datetime.datetime(2015, 12, 21, 5, 42)
     """
-    d = d.replace("-","/")
-    parts = d.split()
+    dstr = dstr.replace("-","/")
+    parts = dstr.split()
     date = parts[0]
     if len(parts) == 1:
         time = "00:00:00"
@@ -194,7 +195,7 @@ def parse_numerical_date(d):
         day, month, year = date.split("/")
         year = "20" + year
     else:
-        raise ValueError("Unknown numerical date format: " + repr(d))
+        raise ValueError("Unknown numerical date format: " + repr(dstr))
     
     imonth, iday, iyear, = int(month), int(day), int(year)
  
@@ -204,6 +205,11 @@ def parse_numerical_date(d):
                                 imicrosecond)
 
 class DateParser(object):
+    _format = re.compile("")
+    
+    def _get_date_dict(self, match):
+        raise NotImplementedError("Data Parser is an abstract class.")
+    
     @classmethod
     def get_datetime(cls, datestr):
         match = cls._format.match(datestr)
@@ -241,10 +247,10 @@ class Sybdate(DateParser):
                 r"(?P<day>\d+)\s+" + \
                 r"(?P<year>\d+)" + \
                 r"(\s+(?P<hour>\d+):" + \
-                    "(?P<minute>\d+):" + \
-                    "(?P<second>\d+)\s*" + \
-                    "(?P<meridian>am|pm|AM|PM)?" + \
-                ")?")
+                    r"(?P<minute>\d+):" + \
+                    r"(?P<second>\d+)\s*" + \
+                    r"(?P<meridian>am|pm|AM|PM)?" + \
+                r")?")
 
     @classmethod
     def _get_date_dict(cls, match):
@@ -276,15 +282,16 @@ class Anydate(DateParser):
             return Sybdate.get_datetime(datestr)
         except ValueError:
             raise ValueError("Invalid Anydate format " + repr(datestr))
+    
 
-class Shortdate(DateParser):
-    pass
-
-class DashDate(DateParser):
-    pass
-
-class CdbsDate(DateParser):
-    pass
+#class Shortdate(DateParser):
+#    pass
+#
+#class DashDate(DateParser):
+#    pass
+#
+#class CdbsDate(DateParser):
+#    pass
 
 # ============================================================================
 
@@ -309,6 +316,7 @@ def is_datetime(datetime_str):
 # ============================================================================
 
 def test():
+    """Run module doctests."""
     import doctest
     from . import timestamp
     return doctest.testmod(timestamp)

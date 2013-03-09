@@ -122,7 +122,7 @@ class CachedFunction(object):
     
     def cache_key(self, *args, **keys):
         """Compute the cache key for the given parameters."""
-        args = tuple([ a for (i,a) in enumerate(args) if i not in self.omit_from_key])
+        args = tuple([ a for (i, a) in enumerate(args) if i not in self.omit_from_key])
         keys = tuple([item for item in keys.items() if item[0] not in self.omit_from_key])
         return args + keys
     
@@ -192,6 +192,8 @@ def capture_output(func):
        
     """
     class CapturedFunction(object):
+        """Closure on `func` which supports various forms of output capture."""
+        
         def __repr__(self):
             return "CapturedFunction('%s')" % func.func_name
 
@@ -225,13 +227,13 @@ def capture_output(func):
 
 # ===================================================================
 
-def invert_dict(d):
+def invert_dict(dictionary):
     """Return the functional inverse of a dictionary,  raising an exception
     for values in `d` which map to more than one key producing an undefined
     inverse.
     """
     inverse = {}
-    for key, value in d.items():
+    for key, value in dictionary.items():
         if value in inverse:
             raise ValueError("Undefined inverse because of duplicate value " + \
                              repr(value))
@@ -259,15 +261,15 @@ def create_path(path, mode=0755):
     if os.path.exists(path):
         return
     current = []
-    for c in path.split("/"):
-        if not c:
+    for part in path.split("/"):
+        if not part:
             current.append("/")
             continue
-        current.append(str(c))
-        d = os.path.join(*current)
-        d.replace("//","/")
-        if not os.path.exists(d):
-            os.mkdir(d, mode)
+        current.append(str(part))
+        subdir = os.path.join(*current)
+        subdir.replace("//","/")
+        if not os.path.exists(subdir):
+            os.mkdir(subdir, mode)
 
 def ensure_dir_exists(fullpath, mode=0755):
     """Creates dirs from `fullpath` if they don't already exist.
@@ -277,22 +279,22 @@ def ensure_dir_exists(fullpath, mode=0755):
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
-    sum = sha.new()
+    xsum = sha.new()
     with open(pathname) as infile:
         size = 0
         insize = os.stat(pathname).st_size
         while size < insize:
             block = infile.read(CRDS_CHECKSUM_BLOCK_SIZE)
             size += len(block)
-            sum.update(block)
-    return sum.hexdigest()
+            xsum.update(block)
+    return xsum.hexdigest()
 
 
-def str_checksum(str):
+def str_checksum(data):
     """Return the CRDS hexdigest for small strings.""" 
-    sum = sha.new()
-    sum.update(str)
-    return sum.hexdigest()
+    xsum = sha.new()
+    xsum.update(data)
+    return xsum.hexdigest()
 
 # ===================================================================
 
@@ -326,13 +328,13 @@ def get_object(*args):
 
 # ==============================================================================
 
-DONT_CARE_RE = re.compile("^" + "|".join([
+DONT_CARE_RE = re.compile(r"^" + r"|".join([
     # "-999","-999\.0",
     # "4294966297.0",
-    "-2147483648.0",
-    "\(\)","N/A","NOT APPLICABLE"]) + "$|^$")
+    r"-2147483648.0",
+    r"\(\)","N/A","NOT APPLICABLE"]) + "$|^$")
 
-NUMBER_RE = re.compile("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
+NUMBER_RE = re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
 
 def condition_value(value):
     """Condition `value`,  ostensibly taken from a FITS header or CDBS
@@ -408,20 +410,10 @@ def condition_header(header, needed_keys=None):
 def instrument_to_observatory(instrument):
     """Given the name of an instrument,  return the associated observatory."""
     instrument = instrument.lower()
-    try:
-        import crds.hst
-    except ImportError:
-        pass
-    else:
-        if instrument in crds.hst.INSTRUMENTS:
-            return "hst"
-    try:
-        import crds.jwst
-    except ImportError:
-        pass
-    else:
-        if instrument in crds.jwst.INSTRUMENTS:
-            return "jwst"
+    if instrument in get_object("crds.hst.INSTRUMENTS"):
+        return "hst"
+    if instrument in get_object("crds.jwst.INSTRUMENTS"):
+        return "jwst"
     raise ValueError("Unknown instrument " + repr(instrument))
 
 @cached
