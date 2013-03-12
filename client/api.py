@@ -374,11 +374,14 @@ class FileCacher(object):
         if original_length != local_length:
             raise CrdsDownloadError("downloaded file size " + str(local_length) +
                                     " does not match server size " + str(original_length))
-        original_sha1sum = remote_info["sha1sum"]
-        local_sha1sum = utils.checksum(localpath)
-        if original_sha1sum != local_sha1sum:
-            raise CrdsDownloadError("downloaded file sha1sum " + repr(local_sha1sum) +
-                                    " does not match server sha1sum " + repr(original_sha1sum))
+        if remote_info["sha1sum"] not in ["", "none"]:
+            original_sha1sum = remote_info["sha1sum"]
+            local_sha1sum = utils.checksum(localpath)
+            if original_sha1sum != local_sha1sum:
+                raise CrdsDownloadError("downloaded file sha1sum " + repr(local_sha1sum) +
+                                        " does not match server sha1sum " + repr(original_sha1sum))
+        else:
+            log.verbose("Skipping sha1sum check since server doesn't know it.")
 
 FILE_CACHER = FileCacher()
 
