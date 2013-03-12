@@ -408,12 +408,26 @@ def condition_header(header, needed_keys=None):
 
 @cached
 def instrument_to_observatory(instrument):
-    """Given the name of an instrument,  return the associated observatory."""
+    """Given the name of an instrument,  return the associated observatory.
+    
+    >>> instrument_to_observatory("acs")
+    'hst'
+    >>> instrument_to_observatory("miri")
+    'jwst'
+    """
     instrument = instrument.lower()
-    if instrument in get_object("crds.hst.INSTRUMENTS"):
-        return "hst"
-    if instrument in get_object("crds.jwst.INSTRUMENTS"):
-        return "jwst"
+    try:
+        import crds.hst
+        if instrument in crds.hst.INSTRUMENTS:
+            return "hst"
+    except ImportError:
+        pass
+    try:
+        import crds.jwst
+        if instrument in crds.jwst.INSTRUMENTS:
+            return "jwst"
+    except ImportError:
+        pass
     raise ValueError("Unknown instrument " + repr(instrument))
 
 @cached
