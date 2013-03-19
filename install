@@ -10,7 +10,7 @@ rm -f install.log
 
 st=0
 
-for dir in lib client hst jwst tobs
+for dir in lib client hst jwst tobs third_party/Parsley-1.1
 do
     if (test -e $dir)
     then
@@ -18,7 +18,12 @@ do
 		echo "=====================================================" >>install.log
     	echo "Installing $dir" >> install.log
 		echo "=====================================================" >>install.log
-	(cd $dir;  ../save_version >svn_version.py;  python setup.py install $* --force)  >> install.log
+	(cd $dir;  
+	    if (test -e ../save_version) 
+	    then 
+		../save_version >svn_version.py;  
+	    fi
+	    python setup.py install $* --force)  >> install.log
 	st=$st$?
     else
 		echo "Skipping $dir"
