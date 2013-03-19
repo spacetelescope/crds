@@ -1885,11 +1885,11 @@ class Parameters(object):
     selector = Selector   # Parameters is abstract class
     def __init__(self, selections):
         if isinstance(selections, dict):
-            selections = selections.items()
+            self.selections = selections.items()
             self._duplicate_check_possible = False
         else:
+            self.selections = selections
             self._duplicate_check_possible = True
-        self.selections = selections
 
     def __repr__(self):
         return self.__class__.__name__[:-len("Parameters")] + \
@@ -1907,23 +1907,21 @@ class Parameters(object):
             self.warn_duplicates("header", [x[0] for x in rmap_header])
         rmap_header = dict(rmap_header)
         parkeys = rmap_header["parkey"]
-        self._instantiate(parkeys, rmap_header)
+        return self._instantiate(parkeys, rmap_header)
 
     def _instantiate(self, parkeys, rmap_header):
         """Guts of instantiate,  w/o repeatedly checking `rmap_header` for
         duplicates,  popping off parkeys during selector descent.
         """
-        mykeys = parkeys[0]
-        otherkeys = parkeys[1:]
-        selections = dict()
         if self._duplicate_check_possible:
             self.warn_duplicates("selector " + repr(self), self.keys())
+        selections = dict()
         for key, selpars in self.selections:
             if isinstance(selpars, Parameters):
-                selections[key] = selpars._instantiate(otherkeys, rmap_header)
+                selections[key] = selpars._instantiate(parkeys[1:], rmap_header)
             else:
                 selections[key] = selpars
-        return self.selector(mykeys, selections, rmap_header)
+        return self.selector(parkeys[0], selections=selections, rmap_header=rmap_header)
 
     def warn_duplicates(self, name, keys):
         """Scan the `keys` list for keys which have been repeated.
