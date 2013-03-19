@@ -9,9 +9,9 @@ import re
 import pyfits
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
+from crds import mapping_parser, refmatch
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
-from crds import refmatch
 
 NOT_FITS = -1
 VALID_FITS = 1
@@ -459,7 +459,8 @@ class Certifier(object):
     """Container class for parameters for a certification run."""
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
-                 provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)):
+                 provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
+                 check_duplicates=False):
         self.filename = filename
         self.context = context
         self.trap_exceptions = trap_exceptions
@@ -467,7 +468,8 @@ class Certifier(object):
         self.compare_old_reference = compare_old_reference
         self.dump_provenance = dump_provenance
         self.provenance_keys = list(provenance_keys)
-
+        self.check_duplicates = check_duplicates     # mapping only
+        
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
     
@@ -596,7 +598,15 @@ class MappingCertifier(Certifier):
         derived_from = mapping.get_derived_from()
         if derived_from is not None:
             diff.mapping_check_diffs(mapping, derived_from)
-    
+            
+        if self.check_duplicates:
+            for filename in mapping.mapping_names():
+                try:
+                    mapping_parser.check_duplicates(filename)
+                except NotImplementedError:
+                    log.warning("Importing parsley (parsing package) failed;  skipping duplicate entry checks.")
+                    break
+
         # Optionally check nested references
         if not self.check_references: # Accept None or False
             return
@@ -633,7 +643,8 @@ class MissingReferenceError(RuntimeError):
     """A reference file mentioned by a mapping isn't in CRDS yet."""
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
-                  is_mapping=False, trap_exceptions=True, compare_old_reference=False):
+                  is_mapping=False, trap_exceptions=True, compare_old_reference=False,
+                  check_duplicates=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.
     
@@ -644,6 +655,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     is_mapping:             bool  (assume mapping regardless of filename)
     trap_exceptions:        bool   if True, issue log.error() messages, else raise.
     compare_old_reference:  bool,  if True,  attempt table mode checking.
+    check_duplicates:       bool,  if True,  scan mappings for duplicate keys.
     """
 
     if not isinstance(files, list):
@@ -662,14 +674,14 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
             certifier = klass(filename, context=context, check_references=check_references,
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
-                              dump_provenance=dump_provenance)
+                              dump_provenance=dump_provenance,
+                              check_duplicates=check_duplicates)
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
                 log.error("Validation error in " + repr(bname) + " : " + str(exc))
             else:
                 raise
-
 
 def test():
     """Run doctests in this module.  See also certify unittests."""
@@ -699,6 +711,8 @@ Checks a CRDS reference or mapping file.
         self.add_argument("files", nargs="+")
         self.add_argument("-d", "--deep", dest="deep", action="store_true",
             help="Certify reference files referred to by mappings have valid contents.")
+        self.add_argument("-u", "--check-duplicates", dest="check_duplicates", action="store_true",
+            help="Check mappings to verify that there are no duplicate keys.  (slow).")
         self.add_argument("-e", "--exist", dest="exist", action="store_true",
             help="Certify reference files referred to by mappings exist.")
         self.add_argument("-m", "--mapping", dest="mapping", action="store_true",
@@ -729,7 +743,8 @@ Checks a CRDS reference or mapping file.
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 
-                      trap_exceptions=self.args.trap_exceptions)
+                      trap_exceptions=self.args.trap_exceptions,
+                      check_duplicates=self.args.check_duplicates)
     
         log.standard_status()
         
