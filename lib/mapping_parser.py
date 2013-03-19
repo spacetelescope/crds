@@ -6,13 +6,6 @@ removal of duplicate keys, the results can be used to detect duplicate
 dictionary entries which normally collide silently eliminating one
 item.  This is principally intended to detect rmap cut-and-paste
 errors in hand edited rmaps.
-
-NOTE: The grammar given here is actually more permissive than the
-intended CRDS design for the sake of brevity; immutable tuples used as
-dictionary or Selector keys should contain only immutable elements...
-but that is not enforced by this grammar since the intended purpose is
-only to check for duplicates, not to rigourously restrict and validate
-syntax.
 """
 import sys
 import os.path
@@ -20,8 +13,7 @@ import cProfile
 import pstats
 import pprint
 
-from parsley import makeGrammar
-from crds import rmap, selectors
+from crds import rmap, selectors, log
 
 MAPPING_GRAMMAR = r"""
 
@@ -72,7 +64,12 @@ false = 'False' -> False
 none = 'None' -> None
 """
 
-MAPPING_PARSER = makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
+try:
+    from parsley import makeGrammar
+except ImportError:
+    MAPPING_PARSER = None
+else:
+    MAPPING_PARSER = makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
 
 def profile_parse(filename="hst_cos_deadtab.rmap"):
     """Profile the parsing of `filename`, print stats, and instantiate the
@@ -80,23 +77,26 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     """
     filename = rmap.locate_mapping(filename)
     statsname = os.path.splitext(filename)[0] + ".stats"
-    cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename), locals(), globals(), statsname)
+    cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename), 
+                    locals(), globals(), statsname)
     pprint.pprint(result)
     stats = pstats.Stats(statsname)
     stats.sort_stats("time")
     stats.print_stats(20)
-    header, selector = result
-    selector.instantiate(header)
 
 def check_duplicates(filename="hst_acs_darkfile.rmap"):
     """Parse the specified mapping `filename` and check it for duplicate
     entries which would collide under the standard loader.
     """
-    filename = rmap.locate_mapping(filename)
-    header, selector = MAPPING_PARSER(open(filename).read()).mapping()
-    selector.instantiate(header)
+    if MAPPING_PARSER:
+        log.info("Checking for duplicate entries in", repr(filename))
+        filename = rmap.locate_mapping(filename)
+        _header, _selector = MAPPING_PARSER(open(filename).read()).mapping()
+        # _selector is actually a Parameter object tree.
+        # duplicate checking is done as the tree is constructed in selectors.py
+    else:
+        raise NotImplementedError()
 
 if __name__ == "__main__":
     profile_parse(sys.argv[1])
-
 
