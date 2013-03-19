@@ -274,7 +274,7 @@ class Mapping(object):
         header = LowerCaseDict(namespace["header"])
         selector = namespace["selector"]
         if isinstance(selector, selectors.Parameters):
-            return header, selector.instantiate(header["parkey"], header)
+            return header, selector.instantiate(header)
         elif isinstance(selector, dict):
             return header, selector
         else:
