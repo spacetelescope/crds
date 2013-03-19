@@ -1884,19 +1884,58 @@ class Parameters(object):
     """
     selector = Selector   # Parameters is abstract class
     def __init__(self, selections):
+        if isinstance(selections, dict):
+            selections = selections.items()
+            self._duplicate_check_possible = False
+        else:
+            self._duplicate_check_possible = True
         self.selections = selections
-        
-    def instantiate(self, parkeys, rmap_header):
-        """Recursively construct Selector tree with `rmap_header` available."""
+
+    def __repr__(self):
+        return self.__class__.__name__[:-len("Parameters")] + \
+            "(nkeys={})".format(len(self.keys()))
+
+    def keys(self):
+        return [x[0] for x in self.selections]
+
+    def instantiate(self, rmap_header):
+        """Recursively construct Selector tree with `rmap_header` available.
+        When possible check for duplicate keys in `self.selections` and 
+        `rmap_header`.
+        """
+        if self._duplicate_check_possible:
+            self.warn_duplicates("header", [x[0] for x in rmap_header])
+        rmap_header = dict(rmap_header)
+        parkeys = rmap_header["parkey"]
+        self._instantiate(parkeys, rmap_header)
+
+    def _instantiate(self, parkeys, rmap_header):
+        """Guts of instantiate,  w/o repeatedly checking `rmap_header` for
+        duplicates,  popping off parkeys during selector descent.
+        """
         mykeys = parkeys[0]
         otherkeys = parkeys[1:]
-        selections = {}
-        for key, selpars in self.selections.items():
+        selections = dict()
+        if self._duplicate_check_possible:
+            self.warn_duplicates("selector " + repr(self), self.keys())
+        for key, selpars in self.selections:
             if isinstance(selpars, Parameters):
-                selections[key] = selpars.instantiate(otherkeys, rmap_header)
+                selections[key] = selpars._instantiate(otherkeys, rmap_header)
             else:
                 selections[key] = selpars
         return self.selector(mykeys, selections, rmap_header)
+
+    def warn_duplicates(self, name, keys):
+        """Scan the `keys` list for keys which have been repeated.
+        These correspond to mapping entries which would be silently dropped by 
+        the normal Python dictionary evaluation process which is used to quickly
+        load rmaps.
+        """
+        already_seen = set()
+        for k in keys:
+            if k in already_seen:
+                log.warning("Duplicate entry in", repr(name), "=", repr(k))
+            already_seen.add(k)
 
 class MatchParameters(Parameters):
     """Parameters for MatchSelector"""
