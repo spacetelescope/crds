@@ -91,8 +91,9 @@ def check_duplicates(filename="hst_acs_darkfile.rmap"):
     if MAPPING_PARSER:
         log.info("Checking for duplicate entries in", repr(filename))
         filename = rmap.locate_mapping(filename)
-        _header, _selector = MAPPING_PARSER(open(filename).read()).mapping()
-        # _selector is actually a Parameter object tree.
+        header, selector = MAPPING_PARSER(open(filename).read()).mapping()
+        selector.instantiate(header)
+        # selector is actually a Parameter object tree.
         # duplicate checking is done as the tree is constructed in selectors.py
     else:
         raise NotImplementedError()
