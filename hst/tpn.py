@@ -48,6 +48,7 @@ def _update_tpn_data(pipeline_context):
     """
     log.info("Computing TPN filetype map")    
     tpn_filetypes = get_filetype_to_extension(pipeline_context)
+    tpn_filetypes["nicmos"] = tpn_filetypes.pop("nic")   # XXX hack
     open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
     log.standard_status()
     
