@@ -453,9 +453,10 @@ class Mapping(object):
         """Returns { filekind : set( ref_file_name... ) }"""
         return { filekind:selector.reference_names() for (filekind, selector) in self.selections.items() }
 
-    def mapping_names(self):
+    def mapping_names(self, full_path=False):
         """Returns a list of mapping files associated with this Mapping"""
-        return sorted([self.basename] + [name for selector in self.selections.values() for name in selector.mapping_names()])
+        name = self.filename if full_path else self.basename
+        return sorted([name] + [name for selector in self.selections.values() for name in selector.mapping_names(full_path)])
  
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
@@ -472,10 +473,22 @@ class Mapping(object):
             log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
         return derived_from
 
+    def _check_type(self, expected_type):
+        """Verify that this mapping has `expected_type` as the value of header 'mapping'."""
+        assert self.mapping == expected_type, \
+            "Expected header mapping='{}' in '{}' but got mapping='{}'".format(
+            expected_type.upper(), self.filename, self.mapping.upper())
+
+    def _check_nested(self, key, upper, nested):
+        """Verify that `key` in `nested's` header matches `key` in `self's` header."""
+        assert  upper == getattr(nested, key), \
+            "selector['{}']='{}' in '{}' doesn't match header['{}']='{}' in nested file '{}'.".format(
+            upper, nested.filename, self.filename, key, getattr(nested, key), nested.filename)
+
 # ===================================================================
 
 class ContextMapping(Mapping):
-    """.pmap and .imap base class.""" 
+    """.pmap and .imap base class."""
     def set_item(self, key, value):
         """Add or replace and element of this mapping's selector.   For re-writing only."""
         if key.upper() in self.selector:
@@ -503,15 +516,12 @@ class PipelineContext(ContextMapping):
         ContextMapping.__init__(self, filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
         self.selections = {}
+        self._check_type("pipeline")
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
             self.selections[instrument] = ictx = _load(imapname, **keys)
-            assert self.mapping == "pipeline", \
-                "PipelineContext 'mapping' format is not 'pipeline' in header."
-            assert self.observatory == ictx.observatory, \
-                "Nested 'observatory' doesn't match in " + repr(filename)
-            assert instrument == ictx.instrument, \
-                "Nested 'instrument' doesn't match in " + repr(filename)
+            self._check_nested("observatory", self.observatory, ictx)
+            self._check_nested("instrument", instrument, ictx)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def get_best_references(self, header, include=None):
@@ -581,20 +591,13 @@ class InstrumentContext(ContextMapping):
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.selections = {}
+        self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
             self.selections[filekind] = refmap = _load(rmap_name, **keys)
-            assert self.mapping == "instrument", \
-                "InstrumentContext 'mapping' format is not 'instrument'."
-            assert self.observatory == refmap.observatory, \
-                "Nested 'observatory' doesn't match for " +  \
-                repr(filekind) + " in " + repr(filename)
-            assert self.instrument == refmap.instrument, \
-                "Nested 'instrument' doesn't match for " + \
-                repr(filekind) + " in " + repr(filename)
-            assert refmap.filekind == filekind, \
-                "Nested 'filekind' doesn't match for " + \
-                repr(filekind) + " in " + repr(filename)
+            self._check_nested("observatory", self.observatory, refmap)
+            self._check_nested("instrument", self.instrument, refmap)
+            self._check_nested("filekind", filekind, refmap)
         self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def get_rmap(self, filekind):
@@ -709,6 +712,7 @@ class ReferenceMapping(Mapping):
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
+        self._check_type("reference")
 
         # TPNs define the static definitive possibilities for parameter choices
         self._tpn_valid_values = self.get_valid_values_map()
@@ -772,9 +776,9 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.reference_names()
 
-    def mapping_names(self):
+    def mapping_names(self, full_path=False):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
-        return [self.basename]
+        return [self.filename if full_path else self.basename]
 
     def get_required_parkeys(self):
         """Return the list of parkey names needed to select from this rmap."""

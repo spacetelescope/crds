@@ -14,7 +14,7 @@ class ListScript(cmdline.ContextsScript):
     epilog = """    
     Contexts to list can be specified explicitly:
     
-    % python -m crds.list  hst_0001.pmap hst_0002.pmap --references
+    % python -m crds.list  --contexts hst_0001.pmap hst_0002.pmap --references
     vb41935ij_bia.fits 
     vb41935kj_bia.fits 
     ...
