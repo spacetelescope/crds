@@ -5,14 +5,14 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_darkfile.rmap',
     'observatory' : 'HST',
-    'observatory' : 'JWST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'name' : 'hst_something_else.rmap',
     'parkey_relevance' : {
         'ccdamp' : '(DETECTOR != "SBC")',
         'ccdgain' : '(DETECTOR != "SBC")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '4e7b7964d045ffc1ae62c08b6d6bac598b7a2fb3',
+    'sha1sum' : 'fc2bc306dc4a85a1a9256c1323cb6458119cb82d',
 }
 
 selector = Match({

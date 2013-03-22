@@ -9,9 +9,7 @@ errors in hand edited rmaps.
 """
 import sys
 import os.path
-import cProfile
-import pstats
-import pprint
+from collections import namedtuple
 
 from crds import rmap, selectors, log
 
@@ -28,6 +26,7 @@ selector = ( dict | parameters ):d -> d
 parameters = ws parameters_name:n ws '(' ws dict:d ws ')' -> eval(n, globals(), locals())(d)
 parameters_name = ('Match' | 'UseAfter' | 'SelectVersion' | 'Bracket' | 'GeometricallyNearest' | 'ClosestTime'):n -> n
 
+# NOTE:  dict is returned as an item-list to preserve duplicates (considered errors)
 dict = ws '{' items:m '}' ws -> m
 items = ws (pair:first (ws ',' pair)*:rest ws ','? ws -> [first] + rest) | -> []
 pair = ws immutable:k ws ':' ws value:v ws -> (k, v)
@@ -39,9 +38,9 @@ string = (('"' (escapedChar | ~'"' anything)*:c '"')
          |("'" (escapedChar | ~"'" anything)*:c "'") -> ''.join(c))
 escapedChar = '\\' (('"' -> '"')    |('\\' -> '\\')
                    |('/' -> '/')    |('b' -> '\b')
-	               |('f' -> '\f')   |('n' -> '\n')
-	               |('r' -> '\r')   |('t' -> '\t')
-	               |('\'' -> '\'')  )
+                   |('f' -> '\f')   |('n' -> '\n')
+                   |('r' -> '\r')   |('t' -> '\t')
+                   |('\'' -> '\'')  )
 
 number = ('-' | -> ''):sign (intPart:ds (floatPart(sign ds) | -> int(sign + ds)))
 digit = :x ?(x in '0123456789') -> x
@@ -75,29 +74,42 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     """Profile the parsing of `filename`, print stats, and instantiate the
     mapping to run the duplicates checking.
     """
+    import cProfile
+    import pstats
     filename = rmap.locate_mapping(filename)
     statsname = os.path.splitext(filename)[0] + ".stats"
     cProfile.runctx('result = MAPPING_PARSER(open("{}").read()).mapping()'.format(filename), 
                     locals(), globals(), statsname)
-    pprint.pprint(result)
     stats = pstats.Stats(statsname)
     stats.sort_stats("time")
     stats.print_stats(20)
-
-def check_duplicates(filename="hst_acs_darkfile.rmap"):
-    """Parse the specified mapping `filename` and check it for duplicate
-    entries which would collide under the standard loader.
-    """
+    
+class ParsingError(Exception):
+    """A mapping file could not be parsed using the CRDS mapping grammar."""
+    
+Parsing = namedtuple("Parsing", "header,selector")
+    
+def parse_mapping(filename):
+    """Parse mapping `filename`.   Return parsing."""
     if MAPPING_PARSER:
-        log.info("Checking for duplicate entries in", repr(filename))
+        log.info("Parsing", repr(filename))
         filename = rmap.locate_mapping(filename)
-        header, selector = MAPPING_PARSER(open(filename).read()).mapping()
-        selector.instantiate(header)
-        # selector is actually a Parameter object tree.
-        # duplicate checking is done as the tree is constructed in selectors.py
+        try:
+            header, selector = MAPPING_PARSER(open(filename).read()).mapping()
+        except Exception, exc:
+            raise ParsingError("Parsing error in", repr(filename), ":", str(exc))
+        else:
+            return Parsing(header, selector)
     else:
-        raise NotImplementedError()
+        raise NotImplementedError("Parsley parsing package must be installed.")
+
+def check_duplicates(parsing):
+    """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""
+    selectors.warn_duplicates(parsing.header, ["header"])
+    if isinstance(parsing.selector, selectors.Parameters):
+        parsing.selector.instantiate(parsing.header)
+    else:
+        selectors.warn_duplicates(parsing.selector, ["selector"])
 
 if __name__ == "__main__":
-    profile_parse(sys.argv[1])
-
+    check_duplicates(sys.argv[1])

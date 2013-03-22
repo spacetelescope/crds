@@ -179,7 +179,7 @@ class Script(object):
             else:
                 files.append(fname)
         return files
-
+    
     def load_file_list(self, at_file):
         """Recursively load an @-file, returning a list of words/files.
         Any stripped line beginning with # is a comment line to be ignored.
@@ -197,7 +197,15 @@ class Script(object):
                 else:
                     more = fname.split()
                 files.extend(more)
-        return files
+        return self.get_files(files)   # another pass to fix paths
+
+    @property
+    def files(self):
+        """Handle @-files and add cache_paths to command line file parameters.""" 
+        if not hasattr(self.args, "files"):
+            raise NotImplementedError("Class must implement list of `self.args.files` raw file paths.")
+        return [rmap.locate_file(fname, observatory=self.observatory) 
+                    for fname in self.get_files(self.args.files)]
 
     def __call__(self):
         """Run the script's main() according to command line parameters."""

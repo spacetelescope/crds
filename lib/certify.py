@@ -460,7 +460,7 @@ class Certifier(object):
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
-                 check_duplicates=False):
+                 dont_parse=False):
         self.filename = filename
         self.context = context
         self.trap_exceptions = trap_exceptions
@@ -468,7 +468,7 @@ class Certifier(object):
         self.compare_old_reference = compare_old_reference
         self.dump_provenance = dump_provenance
         self.provenance_keys = list(provenance_keys)
-        self.check_duplicates = check_duplicates     # mapping only
+        self.dont_parse = dont_parse     # mapping only
         
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -485,7 +485,7 @@ class Certifier(object):
         try:
             return function(*args, **keys)
         except Exception, exc:
-            msg = "In " + repr(self.basename) + " : " + message + " : " + str(exc)
+            msg = "In " + repr(self.filename) + " : " + message + " : " + str(exc)
             if self.trap_exceptions:
                 log.error(msg)
                 return None
@@ -599,13 +599,10 @@ class MappingCertifier(Certifier):
         if derived_from is not None:
             diff.mapping_check_diffs(mapping, derived_from)
             
-        if self.check_duplicates:
-            for filename in mapping.mapping_names():
-                try:
-                    mapping_parser.check_duplicates(filename)
-                except NotImplementedError:
-                    log.warning("Importing parsley (parsing package) failed;  skipping duplicate entry checks.")
-                    break
+        if not self.dont_parse:
+            for filename in mapping.mapping_names(full_path=True):
+                parsing = mapping_parser.parse_mapping(filename)
+                mapping_parser.check_duplicates(parsing)
 
         # Optionally check nested references
         if not self.check_references: # Accept None or False
@@ -644,7 +641,7 @@ class MissingReferenceError(RuntimeError):
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
-                  check_duplicates=False):
+                  dont_parse=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.
     
@@ -655,16 +652,15 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     is_mapping:             bool  (assume mapping regardless of filename)
     trap_exceptions:        bool   if True, issue log.error() messages, else raise.
     compare_old_reference:  bool,  if True,  attempt table mode checking.
-    check_duplicates:       bool,  if True,  scan mappings for duplicate keys.
+    dont_parse:       bool,  if True,  scan mappings for duplicate keys.
     """
 
     if not isinstance(files, list):
         files = [files]
 
-    for fileno, filename in enumerate(files):
-        bname = os.path.basename(filename)
+    for fnum, filename in enumerate(files):
         log.info('#' * 40)  # Serves as demarkation for each file's report
-        log.info("Certifying", repr(bname) + ' (' + str(fileno+1) + '/' + str(len(files)) + ')', 
+        log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
                  "relative to context", repr(context))
         try:
             if is_mapping or rmap.is_mapping(filename):
@@ -675,11 +671,11 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
-                              check_duplicates=check_duplicates)
+                              dont_parse=dont_parse)
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
-                log.error("Validation error in " + repr(bname) + " : " + str(exc))
+                log.error("Validation error in " + repr(filename) + " : " + str(exc))
             else:
                 raise
 
@@ -711,8 +707,8 @@ Checks a CRDS reference or mapping file.
         self.add_argument("files", nargs="+")
         self.add_argument("-d", "--deep", dest="deep", action="store_true",
             help="Certify reference files referred to by mappings have valid contents.")
-        self.add_argument("-u", "--check-duplicates", dest="check_duplicates", action="store_true",
-            help="Check mappings to verify that there are no duplicate keys.  (slow).")
+        self.add_argument("--dont-parse", dest="dont_parse", action="store_true",
+            help="Skip slow mapping parse based checks,  including mapping duplicate entry checking.")
         self.add_argument("-e", "--exist", dest="exist", action="store_true",
             help="Certify reference files referred to by mappings exist.")
         self.add_argument("-m", "--mapping", dest="mapping", action="store_true",
@@ -738,13 +734,14 @@ Checks a CRDS reference or mapping file.
     
         assert (self.args.context is None) or rmap.is_mapping(self.args.context), \
             "Specified --context file " + repr(self.args.context) + " is not a CRDS mapping."
-
-        certify_files(self.args.files, context=self.args.context, 
+            
+        certify_files(self.files, 
+                      context=self.args.context, 
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 
                       trap_exceptions=self.args.trap_exceptions,
-                      check_duplicates=self.args.check_duplicates)
+                      dont_parse=self.args.dont_parse)
     
         log.standard_status()
         

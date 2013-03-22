@@ -24,7 +24,7 @@ from crds.client import get_default_context
 
 from .heavy_client import getreferences, getrecommendations
 
-from .rmap import get_cached_mapping
+from .rmap import get_cached_mapping, locate_mapping, locate_file
 
 # ============================================================================
 
