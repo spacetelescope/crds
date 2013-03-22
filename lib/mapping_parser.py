@@ -15,7 +15,9 @@ from crds import rmap, selectors, log
 
 MAPPING_GRAMMAR = r"""
 
-ws = (' ' | '\r' | '\n' | '\t')*
+ws = (' ' | '\r' | '\n' | '\t' | comment)*
+
+comment = '#' (~'\n' anything)*:c '\n' -> ''.join(c)
 
 mapping = header_section:h selector_section:s -> (h, s)
 
