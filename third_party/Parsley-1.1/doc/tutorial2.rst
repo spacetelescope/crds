@@ -112,7 +112,7 @@ followed by a ``floatPart`` or just an ``intPart`` by itself.
 
     intPart = (digit1_9:first digits:rest -> first + rest) | digit
     floatPart :sign :ds = <('.' digits exponent?) | exponent>:tail
-			 -> float(sign + ds + tail)
+             -> float(sign + ds + tail)
     exponent = ('e' | 'E') ('+' | '-')? digits
 
 In JSON, multi-digit numbers cannot start with 0 (since that is
