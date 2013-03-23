@@ -211,6 +211,10 @@ class Mapping(object):
         self.filename = filename
         self.header = LowerCaseDict(header)
         self.selector = selector
+        for name in self.required_attrs:
+            if name not in self.header:
+                raise MissingHeaderKeyError(
+                    "Required header key " + repr(name) + " is missing.")
 
     @property
     def basename(self):
@@ -248,7 +252,8 @@ class Mapping(object):
         """Construct a mapping from string `text` nominally named `basename`."""
         header, selector = cls._parse_header_selector(text, basename)
         mapping = cls(basename, header, selector, **keys)
-        mapping._validate_file_load(text, keys)
+        if not keys.get("ignore_checksum", False) and not config.get_ignore_checksum():
+            mapping._check_hash(text)
         return mapping
 
     @classmethod
@@ -279,17 +284,6 @@ class Mapping(object):
             return header, selector
         else:
             raise FormatError("selector must be a dict or a Selector.")
-
-    def _validate_file_load(self, text, keys):
-        """Validate assertions about the contents of this rmap after it's
-        built.
-        """
-        for name in self.required_attrs:
-            if name not in self.header:
-                raise MissingHeaderKeyError(
-                    "Required header key " + repr(name) + " is missing.")
-        if not keys.get("ignore_checksum", False) and not config.get_ignore_checksum():
-            self._check_hash(text)
 
     def missing_references(self):
         """Get the references mentioned by the closure of this mapping but not
@@ -406,20 +400,11 @@ class Mapping(object):
         return minimized
 
     def validate_mapping(self,  trap_exceptions=False):
-        """Recursively validate this mapping,  performing the checks
-        required by crds.certify.
+        """Validate `self` only implementing any checks to be performced by
+        crds.certify.   ContextMappings are mostly validated at load time.
+        Stick extra checks for context mappings here.
         """
-        log.info("Validating", repr(self.basename))
-        for key, sel in self.selections.items():
-            try:
-                sel.validate_mapping(trap_exceptions)
-            except Exception, exc:
-                if trap_exceptions == mapping_type(self):
-                    log.error("invalid mapping:", str(exc))
-                elif trap_exceptions == "debug":
-                    raise
-                else:
-                    raise ValidationError(repr(self) + " : " + str(exc))
+        log.verbose("Validating", repr(self.basename))
 
     def difference(self, other, path=()):
         """Compare `self` with `other` and return a list of difference
@@ -836,7 +821,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        log.info("Validating", repr(self.basename))
+        log.verbose("Validating", repr(self.basename))
         try:
             self.selector.validate_selector(self._tpn_valid_values, trap_exceptions)
         except Exception, exc:

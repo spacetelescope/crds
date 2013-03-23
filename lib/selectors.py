@@ -1899,7 +1899,7 @@ class Parameters(object):
         """Recursively construct Selector tree with `rmap_header` available.
         When possible check for duplicate keys in `self.selections` and `rmap_header`.
         """
-        warn_duplicates(rmap_header, ["header"])
+        check_duplicates(rmap_header, ["header"])
         rmap_header = dict(rmap_header)
         parkeys = rmap_header["parkey"]
         return self._instantiate(parkeys, rmap_header, ["selector"])
@@ -1910,7 +1910,7 @@ class Parameters(object):
         """
         if parents is None:
             parents = []
-        warn_duplicates(self.selections, parents)
+        check_duplicates(self.selections, parents)
         selections = dict()
         for key, selpars in self.selections:
             if isinstance(selpars, Parameters):
@@ -1920,10 +1920,10 @@ class Parameters(object):
                 selections[key] = selpars
         return self.selector(parkeys[0], selections=selections, rmap_header=rmap_header)
 
-def warn_duplicates(items, parents=None):
-    """Scan the `keys` list for keys which have been repeated.
+def check_duplicates(items, parents=None):
+    """Scan the `keys` list for keys which have been repeated and issue errors.
     These correspond to mapping entries which would be silently dropped by 
-    the normal Python dictionary evaluation process which is used to quickly
+    the normal Python dictionary evaluation process that is used to quickly
     load rmaps.
     """
     if isinstance(items, dict):   # duplicates impossible
@@ -1933,8 +1933,8 @@ def warn_duplicates(items, parents=None):
     already_seen = dict()
     for key, value in items:
         if key in already_seen:
-            log.warning("Duplicate entry at", " ".join(parents + [repr(key)]), "=",
-                        repr(value), "vs.", repr(already_seen[key]))
+            log.error("Duplicate entry at", " ".join(parents + [repr(key)]), "=",
+                      repr(value), "vs.", repr(already_seen[key]))
         else:
             already_seen[key] = value
 
