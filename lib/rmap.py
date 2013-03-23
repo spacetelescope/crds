@@ -491,6 +491,7 @@ class ContextMapping(Mapping):
     """.pmap and .imap base class."""
     def set_item(self, key, value):
         """Add or replace and element of this mapping's selector.   For re-writing only."""
+        key = str(key)
         if key.upper() in self.selector:
             key = key.upper()
             replaced = self.selector[key]
@@ -499,7 +500,7 @@ class ContextMapping(Mapping):
             replaced = self.selector[key]
         else:
             replaced = None
-        self.selector[key] = value
+        self.selector[key] = str(value)
         return replaced
 
 # ===================================================================
