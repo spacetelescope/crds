@@ -94,7 +94,7 @@ Parsing = namedtuple("Parsing", "header,selector")
 def parse_mapping(filename):
     """Parse mapping `filename`.   Return parsing."""
     if MAPPING_PARSER:
-        log.info("Parsing", repr(filename))
+        log.verbose("Parsing", repr(filename))
         filename = rmap.locate_mapping(filename)
         try:
             header, selector = MAPPING_PARSER(open(filename).read()).mapping()
@@ -107,11 +107,11 @@ def parse_mapping(filename):
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""
-    selectors.warn_duplicates(parsing.header, ["header"])
     if isinstance(parsing.selector, selectors.Parameters):
         parsing.selector.instantiate(parsing.header)
     else:
-        selectors.warn_duplicates(parsing.selector, ["selector"])
+        selectors.check_duplicates(parsing.header, ["header"])
+        selectors.check_duplicates(parsing.selector, ["selector"])
 
 if __name__ == "__main__":
     check_duplicates(sys.argv[1])

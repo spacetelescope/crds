@@ -592,6 +592,10 @@ class MappingCertifier(Certifier):
 
     def certify(self):
         """Certify mapping `self.filename` relative to `self.context`."""        
+        if not self.dont_parse:
+            parsing = mapping_parser.parse_mapping(self.filename)
+            mapping_parser.check_duplicates(parsing)
+
         mapping = rmap.fetch_mapping(self.filename)
         mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
     
@@ -599,13 +603,8 @@ class MappingCertifier(Certifier):
         if derived_from is not None:
             diff.mapping_check_diffs(mapping, derived_from)
             
-        if not self.dont_parse:
-            for filename in mapping.mapping_names(full_path=True):
-                parsing = mapping_parser.parse_mapping(filename)
-                mapping_parser.check_duplicates(parsing)
-
-        # Optionally check nested references
-        if not self.check_references: # Accept None or False
+        # Optionally check nested references,  only for rmaps.
+        if not isinstance(mapping, rmap.ReferenceMapping) or not self.check_references: # Accept None or False
             return
         
         references = self.get_existing_reference_paths(mapping)
@@ -652,7 +651,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     is_mapping:             bool  (assume mapping regardless of filename)
     trap_exceptions:        bool   if True, issue log.error() messages, else raise.
     compare_old_reference:  bool,  if True,  attempt table mode checking.
-    dont_parse:       bool,  if True,  scan mappings for duplicate keys.
+    dont_parse:       bool,  if True,  don't run parser to scan mappings for duplicate keys.
     """
 
     if not isinstance(files, list):
@@ -700,14 +699,15 @@ class CertifyScript(cmdline.Script):
 Checks a CRDS reference or mapping file.
     """
     
-    epilog = """    
-    """
+    epilog = ""
     
     def add_args(self):
         self.add_argument("files", nargs="+")
         self.add_argument("-d", "--deep", dest="deep", action="store_true",
             help="Certify reference files referred to by mappings have valid contents.")
-        self.add_argument("--dont-parse", dest="dont_parse", action="store_true",
+        self.add_argument("-r", "--dont-recurse-mappings", dest="dont_recurse_mappings", action="store_true",
+            help="Do not load and validate mappings recursively,  checking only directly specified files.")
+        self.add_argument("-a", "--dont-parse", dest="dont_parse", action="store_true",
             help="Skip slow mapping parse based checks,  including mapping duplicate entry checking.")
         self.add_argument("-e", "--exist", dest="exist", action="store_true",
             help="Certify reference files referred to by mappings exist.")
@@ -718,7 +718,7 @@ Checks a CRDS reference or mapping file.
         self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", 
             type=str, default="selector",
             help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
-        self.add_argument("-x", "--context", dest="context", type=str, default=None,
+        self.add_argument("-x", "--comparison-context", dest="context", type=str, default=None,
             help="Pipeline context defining comparison files.")
 
     def main(self):
@@ -735,7 +735,12 @@ Checks a CRDS reference or mapping file.
         assert (self.args.context is None) or rmap.is_mapping(self.args.context), \
             "Specified --context file " + repr(self.args.context) + " is not a CRDS mapping."
             
-        certify_files(self.files, 
+        if (not self.args.dont_recurse_mappings):
+            all_files = self.mapping_closure(self.files)
+        else:
+            all_files = set(self.files)
+            
+        certify_files(sorted(all_files), 
                       context=self.args.context, 
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
@@ -746,6 +751,20 @@ Checks a CRDS reference or mapping file.
         log.standard_status()
         
         return log.errors()
+    
+    def mapping_closure(self, files):
+        """Traverse the mappings in `files` and return a list of all mappings
+        referred to by `files` as well as any references in `files`.
+        """
+        closure_files = set()
+        for file_ in files:
+            if rmap.is_mapping(file_):
+                mapping = rmap.get_cached_mapping(file_)
+                more_files = mapping.mapping_names(full_path=True)
+            else:
+                more_files = [file_]
+            closure_files = closure_files.union(more_files)
+        return sorted(closure_files)
 
 if __name__ == "__main__":
     CertifyScript()()
