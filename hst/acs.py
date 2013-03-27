@@ -29,7 +29,7 @@ def _precondition_header_biasfile(header_in):
         log.verbose("Mapping pre-SM4 APERTURE to N/A")
         header["APERTURE"] = "N/A"
     try:
-        numcols = int(header["NAXIS1"])
+        numcols = int(float(header["NUMCOLS"]))
     except ValueError:
         log.info("acs_biasfile_selection: bad NUMCOLS.")
         sys.exc_clear()
@@ -41,17 +41,17 @@ def _precondition_header_biasfile(header_in):
             if numcols > ACS_HALF_CHIP_COLS:
                 if header["CCDAMP"] in ["A","D"]: 
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
-                                "to AD for NUMCOLS = " + header["NAXIS1"])
+                                "to AD for NUMCOLS = " + header["NUMCOLS"])
                     header["CCDAMP"] = "AD"
                 elif header["CCDAMP"] in ["B","C"]:  
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
-                                "to BC for NUMCOLS = " + header["NAXIS1"])
+                                "to BC for NUMCOLS = " + header["NUMCOLS"])
                     header["CCDAMP"] = "BC"
     if header['DETECTOR'] == "WFC" and \
         header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
         log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
         try:
-            numrows = int(header["NAXIS2"]) / 2
+            numrows = int(float(header["NUMROWS"])) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
             sys.exc_clear()
@@ -75,8 +75,8 @@ def precondition_header(rmap, header):
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
-               "NUMCOLS=" + repr(header['NAXIS1']),
-               "NUMROWS=" + repr(header['NAXIS2']),
+               "NUMCOLS=" + repr(header['NUMCOLS']),
+               "NUMROWS=" + repr(header['NUMROWS']),
                "LTV1=" + repr(header['LTV1']),
                "LTV2=" + repr(header['LTV2']))
     log.verbose("Trying full-frame default search")
@@ -112,9 +112,9 @@ header_additions = [   # dictionary items (ordered)
 def acs_biasfile_filter(kmap):
     """APERTURE was added late as a matching parameter and so many existing references
     have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
-    Here we change '' to N/A to make CRDS ignore it when it doesn't matter;  resulting matches
+    Here we change '' to * to make CRDS ignore it when it doesn't matter;  resulting matches
     will be "weaker" than matches with a real APERTURE value.   We also change APERTURE to
-    N/A for any useafter date which precedes SM4 (possibly they define APERTURE).
+    * for any useafter date which precedes SM4 (possibly they define APERTURE).
     """
     replacement = "*"
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)
@@ -122,7 +122,9 @@ def acs_biasfile_filter(kmap):
     for match, fmaps in kmap.items():
         new_key = na_key(match, replacement)
         if match[3] == '':
-            kmap[new_key] = fmaps
+            if new_key not in kmap:
+                kmap[new_key] = []
+            kmap[new_key] = sorted(set(kmap[new_key] + fmaps))
             del kmap[match]
             for fmap in fmaps:
                 log.info("Unconditionally mapping APERTURE '' to '%s' for" % replacement, fmap)
@@ -139,6 +141,7 @@ def acs_biasfile_filter(kmap):
             kmap[new_key].extend(remap_fmaps)
             log.info("Moving", match, "to", new_key, "for files", total_files({None:remap_fmaps}))
             log.info("Remainder", match, "=", total_files({None:kmap[match]}))
+            # log.info("New kmap for", repr(new_key), "is", repr(kmap[new_key]))
         if not fmaps and (new_key != match):
             del kmap[match]
     dropped_files = start_files - total_files(kmap)
