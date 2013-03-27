@@ -1,0 +1,83 @@
+-----------------------------------
+Finish build-3 end of January, late
+-----------------------------------
+
+Finish ACS biasfile handling:  matching errors,  special case code minimization & cleanup,  file submission correctness
+Review disposition of implicitly cancelled files when a lock is lost
+Set up CRDS background agent to monitor server aliveness and stale submitted files
+
+---------------------------
+Finish build-4 end of April
+---------------------------
+
+1. Dataset Best References  (multiple datasets input,  multiple datasets display, fix db query errors / association handling)
+2. Database generalization and cleanup
+3. Finalize and document command line utilities
+
+#56 	DMS-535 Files must be archived before use 
+#148 	DMS-540, DMS-541 web dataset best references 					 
+#149 	DMS-545 best refs multiple contexts, crds.file_bestrefs 		 
+#150 	DMS-547, mapping browse capability 	 stsci_jmiller 					
+#151 	DMS-548, list references for observing modes 						
+#152 	DMS-HST-1, crds.certify reversion checking 							
+#153 	DMS-HST-2, crds.sync tool 		  									
+#154 	DMS-HST-4, crds.certify/crds.diff context-to-context mode coverage 	
+#155 	DMS-HST-13, crds.certify detect different parkeys
+#156 	DMS-680, crds.certify validate input files 
+#4 		Implement web server dataset catalog access for best references  
+#5 		Handle multiple datasets for best references 	
+#46 	Implement CRDS background agent   
+
+There's another ~30 TODO-style tickets,  some overlapping
+
+---------------------------------
+Deploy CRDS operational server(s)
+---------------------------------
+
+1. crds user, crdsoper group on new system
+2. crds user catalog connections verify readonly
+3. Storage allocation on new system
+4. jmiller login on new system, sudo to crds user
+5. crds website db setup, possibly test db only
+6. Proxy configuration
+7. CRDS installation and test
+
+----------------------------------------------
+Prepare for side-by-side operations / Build-5
+----------------------------------------------
+
+Set up "continuous integration" for CRDS/CDBS reference file submissions.  
+
+	1. Manually update baseline rules with new files.  Todd starts parallel ops with CDBS file submissions
+	2. Automatically test all datasets against latest context nightly,  resolve differences
+
+Perform archive delivery tests
+Perform archive distribution tests
+Perform sync tests
+Perform file_bestref tests
+Integrate CRDS tools with pipeline (parallel CRDS test pipeline???)
+
+Resolve need for db_bestrefs and/or updating CDBS reference file db in future
+
+------------------------------------
+Build-6
+------------------------------------
+
+#162	DMS-HST-5, context-to-context datasets affected
+#142 	DMS-HST-9 FITS table comparison tool   
+#143 	DMS-HST-18, reference file selection info files 		
+#144 	DMS-HST-19, context-to-context affected instruments and modes
+#159 	DMS-543, ability to mark reference files bad
+#160 	DMS-641, ability to mark rules as bad 	 
+#161 	DMS-HST-3, crds.matches list selection criteria
+#163 	DMS-HST-7, operational context display
+#164 	DMS-HST-11, web explorer best references
+#165 	DMS-HST-12, crds.file_bestrefs reference file header update, web reference update
+#166 	DMS-HST-15, crds.certify duplicate entry detection
+#167 	DMS-HST-16, compare actual-calibrated-to-context reference files
+#42 	Datasets using reference file tool
+#104 	Implement scheme for large file submissions
+#119 	CRDS security review
+#128 	Block submitting identical files
+#168 	Add SSL support, enable offsite authenticated use
+
