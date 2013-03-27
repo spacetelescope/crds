@@ -518,7 +518,10 @@ class ReferenceCertifier(Certifier):
                            self.provenance_keys)
 
     def fits_verify(self):
-        """Use pyfits to verify the FITS format of self.filename."""     
+        """Use pyfits to verify the FITS format of self.filename."""
+        if not self.filename.endswith(".fits"):
+            log.verbose("Skipping FITS verify for '%s'" % self.filename)
+            return
         fits = pyfits.open(self.filename)
         fits.verify(option='exception') # validates all keywords
         fits.close()
