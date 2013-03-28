@@ -137,7 +137,7 @@ def acs_biasfile_filter(kmap):
                 fmaps.remove(fmap)
         if remap_fmaps:
             if new_key not in kmap:
-                kmap[new_key] = []
+                kmap[new_key] = []>
             kmap[new_key].extend(remap_fmaps)
             log.info("Moving", match, "to", new_key, "for files", total_files({None:remap_fmaps}))
             log.info("Remainder", match, "=", total_files({None:kmap[match]}))
@@ -148,6 +148,12 @@ def acs_biasfile_filter(kmap):
     if dropped_files:  # bummer,  bug in my code...
         log.error("Dropped files:", sorted(dropped_files))
     return kmap, header_additions
+
+#  An old example of hacking the kmap....
+#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
+#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
+#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
+#    return kmap, header_additions
 
 def na_key(match, replacement='*'):
     """Replace APERTURE with N/A or *"""
@@ -161,11 +167,6 @@ def total_files(kmap):
         total = total.union(set([fmap.file for fmap in fmaps]))
     return total
         
-
-#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
-#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
-#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
-    return kmap, header_additions
 
 
 # =============================================================================================
@@ -251,6 +252,83 @@ matching is done by recursively executing CRDS selector.py Selector code
 on nested selectors.
 
 # ================================================================================
+
+  def find_exposure_start(self, aSource):
+    # fill the exposure start time, after converting keyword value
+    # to datetime format from source format
+    beyond_SM4 = True    # default
+    try:
+      if aSource._keywords.has_key('TEXPSTRT'):
+       #timetuple = time.strptime(aSource._keywords['TEXPSTRT'][0],
+       #                        "%Y.%m.%d %H:%M:%S")
+        timetuple = time.strptime(aSource._keywords['TEXPSTRT'][0].rstrip(),
+                                "%Y.%m.%d %H:%M:%S")
+      elif aSource._keywords.has_key('EXPSTART'):
+       #timetuple = time.strptime(aSource._keywords['EXPSTART'][0],
+       #                        "%Y.%m.%d %H:%M:%S ")
+        timetuple = time.strptime(aSource._keywords['EXPSTART'][0].rstrip(),
+                                "%Y.%m.%d %H:%M:%S")
+      #
+      # these are used in FITS input mode
+      elif (aSource._keywords.has_key('PSTRTIME') and
+            aSource._keywords['PSTRTIME'][0] != ' '):
+        opusutil.PrintMsg("D","Trying PSTRTIME for exposure start:"+
+                          aSource._keywords['PSTRTIME'][0]+'|')
+        # its there, use it and convert it
+       #temptuple = time.strptime(aSource._keywords['PSTRTIME'][0],
+       #                        "%Y.%j:%H:%M:%S")
+        temptuple = time.strptime(aSource._keywords['PSTRTIME'][0].rstrip(),
+                                "%Y.%j:%H:%M:%S")
+        # convert DOY to month and day
+        parts = string.split(aSource._keywords['PSTRTIME'][0],":")
+        moparts = string.split(parts[0],".")
+        if int(moparts[0]) % 4 == 0:
+          modays = (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+        else:
+          modays = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+        monum = 0
+        doy = int(moparts[1])
+        while doy > modays[monum]:
+          doy = doy - modays[monum]
+          monum = monum + 1
+        # adjust month to 1-relative value
+        month = monum + 1
+        day = doy
+        timetuple = (temptuple[0],month,day,temptuple[3],temptuple[4],
+                     temptuple[5],temptuple[6],temptuple[7],temptuple[8])
+      elif (aSource._keywords.has_key('TVSTART') and 
+            aSource._keywords['TVSTART'][0] != ' '):
+        # thermal vac keyword for COS/WFC3 testing
+        opusutil.PrintMsg("D","Trying TVSTART for exposure start:"+
+                          aSource._keywords['TVSTART'][0]+'|')
+        timetuple = time.strptime(aSource._keywords['TVSTART'][0],
+                                  "%Y-%m-%dT%H:%M:%S")
+      elif (aSource._keywords.has_key('DATE-OBS') and 
+            aSource._keywords['DATE-OBS'][0] != ' ' and
+            aSource._keywords.has_key('TIME-OBS') and 
+            aSource._keywords['TIME-OBS'][0] != ' ') :
+        opusutil.PrintMsg("D","Trying DATE-OBS,TIME-OBS for exposure start.")
+        timetuple = time.strptime(aSource._keywords['DATE-OBS'][0]+' '+
+                                  aSource._keywords['TIME-OBS'][0],
+                                  "%Y-%m-%d %H:%M:%S")
+      else:
+        opusutil.PrintMsg("E","Failed to find any exposure start keys")
+        raise FailedTimeConversion
+      #
+      exposure_start = time.strftime("%m/%d/%Y %H:%M:%S",timetuple)
+      #
+      # determine if exposure start is post SM4
+      exposure_start_compare = time.strftime("%Y.%j:%H:%M:%S",timetuple)
+      if (exposure_start_compare > SM4_YYYYDDDHHMMSS): beyond_SM4 = True
+      else:                                            beyond_SM4 = False
+
+    except:
+      traceback.print_exc()
+      opusutil.PrintMsg("E","Failed time conversion for exposure start.")
+      raise FailedTimeConversion
+    #
+    return exposure_start, beyond_SM4
+
 
   def acs_bias_file_selection(self, querynum, thereffile, aSource, beyond_SM4):
     querytxt = ""
