@@ -137,7 +137,7 @@ def acs_biasfile_filter(kmap):
                 fmaps.remove(fmap)
         if remap_fmaps:
             if new_key not in kmap:
-                kmap[new_key] = []>
+                kmap[new_key] = []
             kmap[new_key].extend(remap_fmaps)
             log.info("Moving", match, "to", new_key, "for files", total_files({None:remap_fmaps}))
             log.info("Remainder", match, "=", total_files({None:kmap[match]}))
