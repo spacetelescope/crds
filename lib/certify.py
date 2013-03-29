@@ -643,7 +643,7 @@ class MissingReferenceError(RuntimeError):
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False):
+                  dont_parse=False, skip_banner=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.
     
@@ -661,9 +661,10 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         files = [files]
 
     for fnum, filename in enumerate(files):
-        log.info('#' * 40)  # Serves as demarkation for each file's report
-        log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
-                 "relative to context", repr(context))
+        if not skip_banner:
+            log.info('#' * 40)  # Serves as demarkation for each file's report
+            log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
+                     "relative to context", repr(context))
         try:
             if is_mapping or rmap.is_mapping(filename):
                 klass = MappingCertifier

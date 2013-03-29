@@ -112,9 +112,8 @@ header_additions = [   # dictionary items (ordered)
 def acs_biasfile_filter(kmap):
     """APERTURE was added late as a matching parameter and so many existing references
     have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
-    Here we change '' to * to make CRDS ignore it when it doesn't matter;  resulting matches
-    will be "weaker" than matches with a real APERTURE value.   We also change APERTURE to
-    * for any useafter date which precedes SM4 (possibly they define APERTURE).
+    Here we change '' to * to make CRDS ignore it when it doesn't matter.   We also change 
+    APERTURE to * for any useafter date which precedes SM4 (possibly they define APERTURE).
     """
     replacement = "*"
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)

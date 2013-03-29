@@ -1,8 +1,4 @@
 """
-The special case handlers for WFC3 are now obsolete and this file does 
-essentially nothing.   It is left as an illustration of implementing
-rmap header substitutions,  dataset driven header overrides, and hard-coded
-HST rmap files.
 """
 
 import crds.log as log

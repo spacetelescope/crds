@@ -107,9 +107,12 @@ def _get_matching_header(loaded_rmap, reffile):
     # Since expansion rules may depend on keys not used in matching,  
     # get entire header  
     header = data_file.get_header(reffile, observatory=loaded_rmap.observatory)
+
+    # log.info("header:", { (key,val) for (key,val) in header.items() if key in parkeys })
     
     # The reference file key and dataset key matched aren't always the same!?!?
     # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
+    # Also DATE-OBS, TIME-OBS  <-->  USEAFTER
     header = loaded_rmap.locate.reference_keys_to_dataset_keys(
         loaded_rmap.instrument, loaded_rmap.filekind, header)
     
@@ -118,7 +121,7 @@ def _get_matching_header(loaded_rmap, reffile):
     header = loaded_rmap.locate.expand_wildcards(loaded_rmap.instrument, header)
     
     header = { key:utils.condition_value(value) for key, value in header.items() }
-    
+
     # Add undefined parkeys as "UNDEFINED"
     header = data_file.ensure_keys_defined(header, parkeys)
     
@@ -126,7 +129,17 @@ def _get_matching_header(loaded_rmap, reffile):
     # mode irrelevant parameters to N/A.
     # XXX not clear if/how this works with expanded wildcard or-patterns.
     header = loaded_rmap.map_irrelevant_parkeys_to_na(header)
-    
+
+    # The "extra" parkeys always appear in the rmap with values of "N/A".
+    # The dataset value of the parkey is typically used to compute other parkeys
+    # for HST corner cases.   It's a little stupid for them to appear in the
+    # rmap match tuples,  but the dataset values for those parkeys are indeed 
+    # relevant,  and it does provide a hint that magic is going on.  At rmap update
+    # time,  these parkeys need to be set to N/A even if they're actually defined.
+    for key in loaded_rmap.get_extra_parkeys():
+        log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
+        header[key] = "N/A"
+
     return header
 
 # ============================================================================

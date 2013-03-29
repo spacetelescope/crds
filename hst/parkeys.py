@@ -208,7 +208,7 @@ def reference_keys_to_dataset_keys(instrument, filekind, header):
     """
     inv_trans = utils.invert_dict(PARKEYS[instrument][filekind]["db_translations"])    
     result = { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
-    if "USEAFTER" in header and "DATE-OBS" not in header:
+    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
         result["DATE-OBS"] = reformatted[0]
         result["TIME-OBS"] = reformatted[1]
