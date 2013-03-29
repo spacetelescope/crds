@@ -776,6 +776,16 @@ class ReferenceMapping(Mapping):
                 parkeys.append(key)
         return parkeys
 
+    def get_extra_parkeys(self):
+        """Return a tuple of parkeys which are not directly matched.   These correspond
+        to HST dataset parkeys which were used to compute the values of other keys 
+        which *are* used to match.   These keys appear in HST rmaps with constant
+        universal values of N/A.  At rmap update time,  these keys need to be mapped
+        to N/A in the event they're actually defined in the reference to avoid creating
+        new rules for that specific case when the parameter is not really intended for matching.
+        """
+        return self.extra_keys if hasattr(self, "extra_keys") else ()
+
     def get_parkey_map(self):
         """Based on the rmap,  return the mapping from parkeys to their
         handled values,  i.e. what this rmap says it matches against.
