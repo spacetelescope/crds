@@ -2,6 +2,8 @@ import sys
 
 from crds import log, utils, timestamp
 
+from collections import defaultdict
+
 # ===========================================================================    
 
 #   This section contains matching customizations.
@@ -72,6 +74,8 @@ def precondition_header(rmap, header):
 
 #   This section contains matching customizations.
 
+# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
+
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
@@ -96,6 +100,7 @@ def _fallback_biasfile(header_in):
     return header
 
 def fallback_header(rmap, header):
+    return None
     if rmap.filekind == "biasfile":
         # log.info("x", end="",sep="")
         return _fallback_biasfile(header)
@@ -143,9 +148,31 @@ def acs_biasfile_filter(kmap):
             # log.info("New kmap for", repr(new_key), "is", repr(kmap[new_key]))
         if not fmaps and (new_key != match):
             del kmap[match]
+
     dropped_files = start_files - total_files(kmap)
     if dropped_files:  # bummer,  bug in my code...
         log.error("Dropped files:", sorted(dropped_files))
+
+    kmap = add_fallback_to_kmap(kmap, 
+        matches=dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0'),
+        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    kmap = add_fallback_to_kmap(kmap, 
+        matches=dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
+        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    kmap = add_fallback_to_kmap(kmap, 
+        matches=dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
+        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    kmap = add_fallback_to_kmap(kmap, 
+        matches=dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
+        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    kmap = add_fallback_to_kmap(kmap, 
+        matches=dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
+        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+
     return kmap, header_additions
 
 #  An old example of hacking the kmap....
@@ -166,7 +193,45 @@ def total_files(kmap):
         total = total.union(set([fmap.file for fmap in fmaps]))
     return total
         
+def add_fallback_to_kmap(kmap, matches, dont_care,
+    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 
+             'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
+    """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
+    the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.
+    `parkeys` names the items of each tuple key in `kmap`,  in order.
+    """
+    kmap = defaultdict(list, kmap.items())
+    for key in kmap.keys():
+        if key_matches(key, parkeys, matches):
+            new_key = set_dont_care(key, parkeys, dont_care)
+#            if new_key not in kmap:
+#                kmap[new_key] = []
+            kmap[new_key].extend(list(kmap[key]))
+            kmap[new_key].sort()
+            log.info("Creating fallback", repr(key), "-->", repr(new_key))
+    return kmap
 
+def key_matches(key, parkeys, matches):
+    """Return True IFF `key` matches all the values in dict `matches`.
+    Corresponding values in tuple `key` are named by values in `parkeys`.
+    """
+    for i, name in enumerate(parkeys):
+        if name in matches:
+            if utils.condition_value(matches[name]) != utils.condition_value(key[i]):
+                log.verbose("Exiting on", repr(name), 
+                         utils.condition_value(matches[name]),
+                         utils.condition_value(key[i]))
+                return False
+    log.verbose("Matching", repr(key))
+    return True
+
+def set_dont_care(key, parkeys, dont_care):
+    """Set the values of `key` named in `dont_care` to 'N/A'."""
+    key = list(key)
+    for i, name in enumerate(parkeys):
+        if name in dont_care:
+            key[i] = 'N/A'
+    return tuple(key)
 
 # =============================================================================================
 #
