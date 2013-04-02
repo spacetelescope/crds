@@ -88,6 +88,7 @@ import re
 import fnmatch
 import sys
 import numbers
+from collections import namedtuple
 
 # import numpy as np
 
@@ -96,13 +97,18 @@ from crds import log, utils, compat
 
 # ==============================================================================
 
-class MatchingError(crds.CrdsError):
-    """Represents a MatchSelector lookup which failed.
+class ValidationError(crds.CrdsError):
+    """Some Selector key did not match the set of legal values.
     """
 
 class AmbiguousMatchError(crds.CrdsError):
-    """Represents a MatchSelector which matched more than one equivalent 
-    choice.
+    """Represents a MatchSelector which matched more than one equivalently 
+    weighted choice.   Ambiguous matches represents a problem in the RMAP 
+    for projects which don't allow these or Selectors which don't support 
+    them.   NOTE: allowing ambiguous matches is important to HST and the 
+    canonical HST Match -> UseAfter pattern can support them under many
+    circumstances.  The semantics for these are shaky since it's possible
+    to have merge collisions which work out badly.
     """
 
 class MissingParameterError(crds.CrdsError):
@@ -115,27 +121,42 @@ class BadValueError(crds.CrdsError):
     any of the valid values.
     """
 
-class UseAfterError(crds.CrdsError):
-    """None of the dates in the RMAP precedes the processing date.
-    """
-    
 class ModificationError(crds.CrdsError):
     """Failed attempt to modify rmap, e.g. replacement vs. addition.
     """
 
-class ValidationError(crds.CrdsError):
-    """Some Selector key did not match the set of legal values.
+class CrdsLookupError(crds.CrdsError, LookupError):
+    """A lookup which failed on otherwise valid parameters."""
+    
+class MatchingError(CrdsLookupError):
+    """Represents a MatchSelector lookup which failed.
     """
+
+class UseAfterError(CrdsLookupError):
+    """None of the dates in the selector precedes the processing date.
+    """
+    
 
 # ==============================================================================
 
 def dict_wo_dups(items):
+    """Convert an item list to a dictionary,  ensuring no duplicate keys exist
+    since they'd clobber one another.   Here duplicate keys are expected to correspond
+    to cut-and-paste errors in hand edited rmaps which duplicate file cases.
+    NOTE:  the Python exec code which nominally loads rmaps also silently removes dups...
+    seems un-pythonic to me...  so this code only has a chance of working for specially 
+    parsed item lists.
+    """
     d = {}
     for key, value in items:
         if key in d:
             raise ValueError("Key " + repr(key) + " appears more than once ")
         d[key] = value
     return d
+
+# Selections are items from a Selector's dictionary.   Portions of the lookup return both.
+# A "choice" is a Selector's ultimate choose() return value,  e.g. a filename or other Selector.
+Selection = namedtuple("Selection", ("key", "choice"))
 
 # ==============================================================================
 
@@ -157,24 +178,24 @@ class Selector(object):
     complete set of nested choices.   Each nested Selector only uses those 
     portions of the overall context that it requires.
     """
-    def __init__(self, parameters, selections=None, rmap_header=None, _selections=None):
+    def __init__(self, parameters, selections=None, rmap_header=None, merge_selections=None):
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
         self._parameters = tuple(parameters)
         if selections is not None:
             assert isinstance(selections, dict),  \
-                "selections should be a dictionary { key: selection, ... }."
-            self._raw_selections = sorted(selections.items())
-            self._selections = self.condition_selections(selections)
+                "selections should be a dictionary { key: choice, ... }."
+            self._raw_selections = sorted([Selection(*s) for s in selections.items()])
+            self._selections = [Selection(*s) for s in self.condition_selections(selections)]
         else:
             # This branch exists to efficiently implement the
             # UseAfter merge operation.   It's not really intended
             # for uses beyond that capacity and the resulting rmap
             # is really only good for a single lookup operation.
-            assert isinstance(_selections, list),  \
-                "_selections should be a list of key,value tuples, not: " + repr(_selections)
-            self._raw_selections = _selections
-            self._selections = _selections
+            assert isinstance(merge_selections, list),  \
+                "merge_selections should be a sorted item list,  not: " + repr(merge_selections)
+            self._raw_selections = [Selection(*s) for s in merge_selections]  # XXX not really,  nominally unused XXXX
+            self._selections = [Selection(*s) for s in merge_selections]
         self._rmap_header = rmap_header or {}
         self._parkey_map = self.get_parkey_map()
         
@@ -202,36 +223,47 @@ class Selector(object):
 
     def keys(self):
         """Return the list of keys used to make selections."""
-        return [s[0] for s in self._selections]
+        return [s.key for s in self._selections]
 
     def choices(self):
         """Return the list of items which can be selected."""
-        return [s[1] for s in self._selections]
+        return [s.choice for s in self._selections]
 
     def choose(self, header):
-        """Given `header`,  operate on self.keys() to choose one of
-        self.choices(). 
+        """Given `header`,  operate on self.keys() to choose one of self.choices(). 
         """
         lookup_key = self._validate_header(header)  # may return header or a key
-        selection = self.get_selection(lookup_key)  # what's selection for `self`?
-        choice = self.get_choice(selection, header) # recursively,  what's final choice?
-        return choice
-
-    def get_selection(self, header, lookup_key):
+        exc = None
+        for selection in self.get_selection(lookup_key):  # iterate over weighted selections, best match first.
+            try:
+                log.verbose("Trying", selection)
+                return self.get_choice(selection, header) # recursively,  what's final choice?
+            except CrdsLookupError, exc:
+                continue
+        more_info = " last exception: " + str(exc) if exc else ""
+        raise CrdsLookupError("All lookup attempts failed." + more_info)
+                
+    def get_selection(self, lookup_key):
         """Most selectors are based on a sorted items list which represents a
         dictionary.  get_selection() typically returns one such item,  both the
         key and the value,  which can be used rapidly to recurse if need be.
+        
+        yields Selection  to support multiple weighted recursive lookup attempts
+        
+        NOTE: several Selection's don't meet the same tuple API.   The key
+        requirement is that the Selection returned from get_selection() is
+        suitable for the corresponding get_choice() method.
         """
         raise NotImplementedError("Selector is an abstract class."
-                                  " A subclass must re-define get_selection().")
+                                  " Subclasses must re-define get_selection().")
 
     def get_choice(self, selection, header):
-        """Provide boiler-plate code to extract a choice or recurse."""
-        choice = selection[1]
-        if isinstance(choice, Selector):
-            return choice.choose(header)
+        """Provide boiler-plate code to extract a choice or recurse.   Sometimes overridden."""
+        assert isinstance(selection, Selection), repr(selection)
+        if isinstance(selection.choice, Selector):
+            return selection.choice.choose(header)
         else:
-            return choice
+            return selection.choice
         
     def get_parkey_map(self):
         """Return a mapping from parkeys to values for them."""
@@ -960,6 +992,15 @@ def matcher(key):
     else:
         return Matcher(key)
 
+class MatchSelection(Selection):
+    """
+    MatchSelection's are an atypical Selection consisting of multiple keys
+    which,  merged,  lead to one typical Selection taken from self._selections.   Often,  
+    the equal weight keys will be a tuple of a single key.   For HST,  merges are also common,  
+    and there are indeed multiple equal weighted keys.   Note that a MatchSelection still
+    reduces to a single merged choice.
+    """
+
 class MatchSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching
     the runtime (header) parameters to the selector keys.  
@@ -1111,21 +1152,17 @@ of uniform rmap structure for HST:
             matchers = []
             for parkey in keytuple:
                 matchers.append(matcher(parkey))
-            selections[keytuple] = (tuple(matchers), choice)
+            selections[keytuple] = MatchSelection(tuple(matchers), choice)
         return selections
 
     def get_selection(self, header):
         """Get the matching selection for `self` based on parameters in `header`.
-        """
-        # in principle we might want to resort to lower weighted choices
-        # if the higher weighted choices fail during recursion.  In practice,   
-        # highest ranked choices always worked for HST.
-        try:
-            _match_tuples, selection = self.winnowing_match(header).next()
-        except StopIteration:
-            raise LookupError("No Match found.")
-        return _match_tuples, selection
 
+        yield MatchSelection
+        """
+#         return self.winnowing_match(header)   # Return the nested generator directly...
+        for selection in self.winnowing_match(header):
+            yield selection
 
     def winnowing_match(self, header, raise_ambiguous=False):
         """Iterate through each of the parameters in `fitskeys`, binding
@@ -1145,15 +1182,16 @@ of uniform rmap structure for HST:
             if len(match_tuples) > 1:
                 if raise_ambiguous:
                     raise AmbiguousMatchError("More than one match clause matched.")
-                subselectors = [remaining[match_tuple][1] for match_tuple in match_tuples]
+                subselectors = [remaining[match_tuple].choice for match_tuple in match_tuples]
                 if isinstance(subselectors[0], Selector):
                     selector = self.merge_group(subselectors)
                 else:
                     selector = subselectors
             else:
-                selector = remaining[match_tuples[0]][1]
+                selector = remaining[match_tuples[0]].choice
             log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector), verbosity=60)
-            yield match_tuples, selector
+            yield MatchSelection(match_tuples, selector)
+        raise MatchingError("No match found.")
 
     def _winnow(self, header, remaining):
         """Based on the parkey values in `header`, winnow out selections
@@ -1210,8 +1248,8 @@ of uniform rmap structure for HST:
         case.
         """
         log.verbose("Merging equivalent selectors", equivalent_selectors, verbosity=60)
-        combined = equivalent_selectors[0].merge(equivalent_selectors[1])
-        for next in equivalent_selectors[2:]:
+        combined = equivalent_selectors[0]
+        for next in equivalent_selectors[1:]:
             combined = combined.merge(next)
         log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=70)
         return combined
@@ -1364,7 +1402,7 @@ Alternate date/time formats are accepted as header parameters.
     """    
     def get_selection(self, date):
         log.verbose("Matching date", date, " ", verbosity=60)
-        return self.bsearch(date, self._selections)
+        yield self.bsearch(date, self._selections)
     
     def bsearch(self, date, selections):
         """Do a binary search over a sorted selections list."""
@@ -1373,14 +1411,14 @@ Alternate date/time formats are accepted as header parameters.
         elif len(selections) > 1:
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
-            compared = right[0][0]
+            compared = right[0].key
             log.verbose("...against", compared, end="", verbosity=60)
             if date >= compared:
                 return self.bsearch(date, right)
             else:
                 return self.bsearch(date, left)
         else:
-            if date >= selections[0][0]:
+            if date >= selections[0].key:
                 log.verbose("matched", repr(selections[0]), verbosity=60)
                 return selections[0]
             else:
@@ -1425,7 +1463,7 @@ Alternate date/time formats are accepted as header parameters.
                     log.verbose("Merge collision at", repr(key), "replacing",
                                 repr(combined_selections[key]), "with", repr(val), verbosity=60)
                 combined_selections[key] = val
-        return self.__class__(self._parameters[:], _selections=sorted(combined_selections.items()))
+        return self.__class__(self._parameters[:], merge_selections=sorted(combined_selections.items()))
     
     def get_parkey_map(self):
         return { par:"*" for par in self._parameters}
@@ -1469,7 +1507,7 @@ class ClosestTimeSelector(UseAfterSelector):
         import numpy as np
         diff = np.array([abs_time_delta(date, key) for key in self.keys()], 'f')
         index = np.argmin(diff)
-        return self._selections[index]
+        yield self._selections[index]
 
 # ==============================================================================
 
@@ -1534,7 +1572,7 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
         nkeys = np.array(self.keys(), dtype='f')
         diff = np.abs(nkeys - keyval)
         index = np.argmin(diff)
-        return self._selections[index]
+        yield self._selections[index]
     
     def _validate_key(self, key, valid_values_map):
         parname = self._parameters[0]
@@ -1554,6 +1592,9 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
         return float(header[parkeys[0]])
 
 # ==============================================================================
+
+# Different interface,  not a true subclass of Selection so get_choice() is overridden also.
+BracketSelection = namedtuple("BracketSelection", ("less", "greater"))
 
 class BracketSelector(Selector):
     """Bracket selects the the bracketing values of the
@@ -1586,25 +1627,45 @@ class BracketSelector(Selector):
 
     >>> r.choose({"effective_wavelength":'6.0'})
     ('cref_flatfield_137.fits', 'cref_flatfield_137.fits')
-    """    
+    """        
     def get_selection(self, keyval):
+        """Returns BracketSelection() corresponding to keyval.   This is an atypical
+        Selection which is really two selections, right and left.   Consequently,  the
+        get_selection() followed by get_choice() protocol has to be carefully observed
+        here.  
+        
+        returns BracketSelection(less, greater)
+        
+        BracketSelection is atypical because it does not meet the (key, choice) protocol
+        of Selection but is rather (less, greater) where `less` and `greater` are normal 
+        (key, choice) Selections.
+        """
         index = 0
         selections = self._selections
-        while index < len(selections) and keyval > selections[index][0]:
+        while index < len(selections) and keyval > selections[index].key:
             index += 1
         if index == len(selections):
-            return selections[index-1], selections[index-1]
-        elif index == 0 or keyval == selections[index][0]:
-            return selections[index], selections[index]
+            less, greater = selections[index-1], selections[index-1]
+        elif index == 0 or keyval == selections[index].key:
+            less, greater = selections[index], selections[index]
         else:
-            return selections[index-1], selections[index]
+            less, greater = selections[index-1], selections[index]
+        yield BracketSelection(less, greater)   # XXXX non-standard interface
     
-    def get_choice(self, selection, header):
-        result1 = super(BracketSelector, self).get_choice(selection[0], header)
-        if selection[0] == selection[1]:
-            result2 = result1
+    def get_choice(self, bracket_selection, header):
+        """Return the paired choices of the BracketSelector based on an atypical
+        "BracketSelection" pair.   Recursively calls the standard get_choice() on
+        each half of the BracketSelection.
+        
+        Return  (less_choice, greater_choice)   a pair of choices.
+        """
+        # YYYYY weird get_selection() yield-value is handled/required/fixed here
+        assert isinstance(bracket_selection, BracketSelection), repr(bracket_selection)
+        result1 = super(BracketSelector, self).get_choice(bracket_selection.less, header)
+        if bracket_selection.less != bracket_selection.greater:
+            result2 = super(BracketSelector, self).get_choice(bracket_selection.greater, header)
         else:
-            result2 = super(BracketSelector, self).get_choice(selection[1], header)
+            result2 = result1
         return result1, result2
 
     def get_parkey_map(self):
@@ -1843,7 +1904,7 @@ class SelectVersionSelector(Selector):
         index = 0
         while self._selections[index][0] < version:
             index += 1
-        return self._selections[index]
+        yield self._selections[index]
     
     def _validate_key(self, key, valid_values_map):
         """Keys effectively validated at __init__ time."""
@@ -1972,7 +2033,7 @@ SELECTORS = {
 def test():
     """Run module doctest."""
     import doctest
-    from . import selectors
+    from crds import selectors
     return doctest.testmod(selectors)
 
 if __name__ == "__main__":
