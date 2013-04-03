@@ -90,7 +90,7 @@ def _tpn_filepath(instrument, filekind):
     `filekind`,  the CRDS name for the header keyword which refers to this 
     reference.
     """
-    tpn_filename = instrument + "_" + filekind + ".tpn"
+    tpn_filename = "jwst_{}_{}.tpn".format(instrument, filekind)
     path = os.path.join(HERE, "tpns", tpn_filename)
     return path
 
