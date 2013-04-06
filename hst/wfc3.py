@@ -106,7 +106,7 @@ def wfc3_flshfile_filter(kmap):
 # =========================================================================
 """Example of mutating dataset header values prior to match based on header."""
 
-
+'''
 def precondition_header(rmap, header):
     if rmap.filekind == "biasfile":
         return header   # XXX do nothing
@@ -124,6 +124,7 @@ def _precondition_header_biasfile(header_in):
     if subarray == "T" and "SUB" not in aperture:
         header["APERTURE"] = "*"
     return header
+'''
 
 '''
 This is the original CDBS code for wfc3 biasfile which generates SQL for matching
@@ -265,5 +266,3 @@ History:
     # return the first filename found
     return result[0][0]
 '''
-    
-
