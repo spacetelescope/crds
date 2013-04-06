@@ -59,7 +59,6 @@ def _precondition_header_biasfile(header_in):
             sys.exc_clear()
         else:
             header["NUMROWS"] = utils.condition_value(str(numrows)) 
-
     return header     # XXXXXX RETURN NOW !!!!
 
 
@@ -75,7 +74,7 @@ def precondition_header(rmap, header):
 #   This section contains matching customizations.
 
 # (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
-
+"""
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
@@ -106,6 +105,7 @@ def fallback_header(rmap, header):
         return _fallback_biasfile(header)
     else:
         None
+"""
 
 # =============================================================================================
 
@@ -119,6 +119,8 @@ def acs_biasfile_filter(kmap):
     have an APERTURE value of '' in CDBS.   Where it's relevant,  it's actually defined.
     Here we change '' to * to make CRDS ignore it when it doesn't matter.   We also change 
     APERTURE to * for any useafter date which precedes SM4 (possibly they define APERTURE).
+    
+    add_fallback_to_kmap() duplicates the correct filemaps to simulate the fallback header lookup.
     """
     replacement = "*"
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)
