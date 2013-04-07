@@ -1,5 +1,6 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:37.966185',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:22.767737',
+    'extra_keys' : ('EXPTYPE',),
     'filekind' : 'SPWCSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'EXPTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC") and (EXPTYPE == "EXTERNAL/SCI")',
-    'sha1sum' : '3f06e3525f278e3d734971b67591832b68caf9b8',
+    'sha1sum' : '3d9cc562b09e645b0fff1945bb4176d23d324381',
 }
 
 selector = Match({
@@ -16,6 +17,7 @@ selector = Match({
         '2006-10-01 00:00:00' : 'uai1737pl_spwcs.fits',
         '2009-06-08 00:00:00' : 'uai1737ql_spwcs.fits',
         '2009-08-17 00:00:00' : 'uai1737rl_spwcs.fits',
+        '2009-08-17 00:00:01' : 'x1v17417l_spwcs.fits',
     }),
     ('NUV', 'SPECTROSCOPIC', 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'uai17385l_spwcs.fits',

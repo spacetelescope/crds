@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:36.758571',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:21.535865',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '7e7a2e5abbb3f2390456ae98b70e4922af277e24',
+    'sha1sum' : '996979ee34d4fc0c6ccd442d2c321a96c3ff7e16',
 }
 
 selector = Match({

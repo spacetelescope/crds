@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:51.207678',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:36.689411',
     'filekind' : 'TDCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "NUV-MAMA")',
-    'sha1sum' : '0744be888a3c88c93360f13db2fb1cfb5781ad72',
+    'sha1sum' : '6b351ed3f760e3fe533baac96ff154c9511126f5',
 }
 
 selector = Match({

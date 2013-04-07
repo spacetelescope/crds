@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:35.735959',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:20.423847',
     'filekind' : 'BRFTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,11 +7,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "FUV")',
-    'sha1sum' : '43ba7746ef78e24d4c0b30ec91cc731ff2de13fc',
+    'sha1sum' : 'df2f8096326f32ebdfdeb5b02eedb2d1b9e1d75f',
 }
 
 selector = Match({
     ('FUV',) : UseAfter({
-        '1996-10-01 00:00:00' : 's7g1700el_brf.fits',
+        '1996-10-01 00:00:00' : 'x1u1459il_brf.fits',
     }),
 })

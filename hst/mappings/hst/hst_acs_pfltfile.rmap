@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:34.931299',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:19.401250',
     'filekind' : 'PFLTFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -13,7 +13,7 @@ header = {
         'fwsoffst' : '(FWSOFFST == "-1.0" or FWSOFFST == "1.0")',
     },
     'rmap_relevance' : '(OBSTYPE != "INTERNAL")',
-    'sha1sum' : '5608f051ea4d8c5b1f573e892050bdcf22452fc4',
+    'sha1sum' : 'db33919fe7ab38c40bfbcf2f0fd96897a6091d90',
 }
 
 selector = Match({
