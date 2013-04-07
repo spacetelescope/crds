@@ -1,5 +1,6 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-14 09:03:16.527903',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:44.616116',
+    'extra_keys' : ('SUBARRAY',),
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -7,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2', 'APERTURE', 'CHINJECT', 'SUBARRAY'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : 'b3b7e811ca39231214578c402ad9981afccdd7e0',
+    'sha1sum' : '17b72947d5dfeed22dbc5d7a8b3dd349cc197f78',
 }
 
 selector = Match({
@@ -21,6 +22,12 @@ selector = Match({
         '2011-04-01 00:00:00' : 'w1k1448mi_bia.fits',
         '2011-05-01 00:00:00' : 'w1k14498i_bia.fits',
         '2011-05-30 00:00:00' : 'w1r15488i_bia.fits',
+        '2012-11-10 00:00:00' : 'x2m1848gi_bia.fits',
+        '2012-12-21 00:00:00' : 'x2m1848di_bia.fits',
+        '2012-12-30 00:00:00' : 'x2m1848fi_bia.fits',
+        '2013-01-05 00:00:00' : 'x2m1848ei_bia.fits',
+        '2013-02-13 00:00:00' : 'x3f1740di_bia.fits',
+        '2013-02-21 00:00:00' : 'x3f1740ei_bia.fits',
     }),
     ('UVIS', 'ABCD', 1.5, 1, 1, 'G280-REF|UVIS|UVIS-CENTER|UVIS-FIX|UVIS-IR-FIX|UVIS-QUAD|UVIS-QUAD-FIX|UVIS1|UVIS1-FIX|UVIS2|UVIS2-FIX', 'LINE17', 'N/A') : UseAfter({
         '2010-08-01 00:00:00' : 'w1k1448qi_bia.fits',

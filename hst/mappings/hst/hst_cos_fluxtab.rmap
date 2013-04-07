@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:37.095141',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:21.897550',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,13 +7,14 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '9f44c0817673517855f3b2444cdfa35101eb5f9e',
+    'sha1sum' : '9e6511a5ad7c2f26f1f79dc4d684e722e490aa5f',
 }
 
 selector = Match({
     ('FUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700kl_phot.fits',
         '2009-05-11 00:00:00' : 'u8k1433ql_phot.fits',
+        '2009-05-11 00:00:01' : 'x1v17416l_phot.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 's7g17011l_phot.fits',

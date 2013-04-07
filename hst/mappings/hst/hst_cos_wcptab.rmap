@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:38.038860',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:22.833900',
     'filekind' : 'WCPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'e48f5b36010bfdf2bd9cf7f2d34f35802eacbb47',
+    'sha1sum' : 'e8cdf037c982d525cdde3015dbdcb283f949d398',
 }
 
 selector = Match({
@@ -17,6 +17,6 @@ selector = Match({
         '2009-08-17 00:00:00' : 'u1t1616ql_wcp.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
-        '1996-10-01 00:00:00' : 't2314313l_wcp.fits',
+        '1996-10-01 00:00:00' : 'x2i1559gl_wcp.fits',
     }),
 })

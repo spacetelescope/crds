@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:39.841885',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:24.742270',
     'filekind' : 'XTRACTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '9d1bf4dd59715552220aa0d6c03b83fb82d21387',
+    'sha1sum' : '83f816ad140b2e6e25c79ec5e4e19cc2d67ad61d',
 }
 
 selector = Match({
@@ -17,9 +17,11 @@ selector = Match({
     }),
     ('FUV', 'SPECTROSCOPIC', 2) : UseAfter({
         '2009-05-11 00:00:00' : 'w5g1439rl_1dx.fits',
+        '2009-05-11 00:00:01' : 'x1v17418l_1dx.fits',
     }),
     ('FUV', 'SPECTROSCOPIC', '-1|1') : UseAfter({
         '2009-05-11 00:00:00' : 'w5g1439ql_1dx.fits',
+        '2009-05-11 00:00:01' : 'x1v17414l_1dx.fits',
     }),
     ('NUV', 'SPECTROSCOPIC', -2147483648) : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700nl_1dx.fits',

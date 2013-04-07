@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:37.296397',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:22.109745',
     'filekind' : 'LAMPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'e84c7fddcf57347f7d640994a919545e43f8260e',
+    'sha1sum' : '3da84647d4e40cc6bd0f14a900b9dd7f3907b3d2',
 }
 
 selector = Match({
@@ -15,6 +15,7 @@ selector = Match({
         '1996-10-01 00:00:00' : 's7g1700il_lamp.fits',
         '2009-06-08 00:00:00' : 'u6s1320rl_lamp.fits',
         '2009-08-17 00:00:00' : 'v3g18195l_lamp.fits',
+        '2009-08-17 00:00:01' : 'x1v17413l_lamp.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 's7g17010l_lamp.fits',

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-01-11 13:59:35.721757',
+    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:20.394349',
     'filekind' : 'BPIXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,13 +7,13 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'ec81fa6cbdb65f077dbf539788b325beab17a73e',
+    'sha1sum' : 'ed65c9e1aef467f4fb1478ca21e6788429ddc2df',
 }
 
 selector = Match({
     ('FUV',) : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700dl_bpix.fits',
-        '2009-05-11 00:00:00' : 'w4i1707ol_bpix.fits',
+        '2009-05-11 00:00:00' : 'x1u1459hl_bpix.fits',
     }),
     ('NUV',) : UseAfter({
         '1996-10-01 00:00:00' : 's7g1700pl_bpix.fits',
