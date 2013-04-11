@@ -169,15 +169,15 @@ def capture_output(func):
     >>> f
     CapturedFunction('f')
 
-    Calling works normally for a CapturedFunction():
+    Calling a captured function suppresses its output:
     
     >>> f(1, 2)
-    hi
     3
     
-    To suppress output and just get the return value:
+    To call the original undecorated function:
     
-    >>> f.suppressed(1, 2)
+    >>> f.uncaptured(1, 2)
+    hi
     3
     
     If you don't care about the return value,  but want the output:
@@ -221,6 +221,11 @@ def capture_output(func):
             return self.returns_outputs(*args, **keys)[1]
         
         def __call__(self, *args, **keys):
+            """Call the undecorated function,  capturing and discarding it's output,  returning the result."""
+            return self.suppressed(*args, **keys)
+        
+        def uncaptured(self, *args, **keys):
+            """Call the undecorated function and return the result."""
             return func(*args, **keys)
 
     return CapturedFunction()
