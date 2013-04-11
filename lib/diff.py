@@ -36,6 +36,8 @@ def diff_action(diff):
         result = "delete"
     elif "different classes" in diff[-1]:
         result = "class_difference"
+    elif "different parameter" in diff[-1]:
+        result = "parkey_difference"
     else:
         raise ValueError("Bad difference action: "  + repr(diff))
     if "Selector" in diff[-1]:
@@ -111,7 +113,7 @@ def mapping_check_diffs(mapping, derived_from):
     derived_from = rmap.asmapping(derived_from, cached="readonly")
     log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
     diffs = derived_from.difference(mapping)
-    return mapping_check_diffs_core(diffs)
+    mapping_check_diffs_core(diffs)
 
 def mapping_check_diffs_core(diffs):
     """Perform the core difference checks on difference tuples `diffs`."""
@@ -129,8 +131,12 @@ def mapping_check_diffs_core(diffs):
                 log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "delete":
             log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "parkey_difference":
+            log.warning("Different lookup parameters", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "class_difference":
+            log.warning("Different classes at", _diff_tail(msg)[:-1], msg[-1])
         else:
-            raise ValueError("Unexpected difference action:", difference)
+            raise ValueError("Unexpected difference action:", action)
 
 def _diff_tail(msg):
     """`msg` is an arbitrary length difference "path",  which could

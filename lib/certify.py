@@ -535,7 +535,7 @@ class ReferenceCertifier(Certifier):
         if self.context is None:
             return []
         try:
-            pmap = rmap.get_cached_mapping(self.context)
+            pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
             instrument, filekind = pmap.locate.get_file_properties(self.filename)
             return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
         except Exception, exc:
@@ -599,7 +599,7 @@ class MappingCertifier(Certifier):
             parsing = mapping_parser.parse_mapping(self.filename)
             mapping_parser.check_duplicates(parsing)
 
-        mapping = rmap.fetch_mapping(self.filename)
+        mapping = rmap.fetch_mapping(self.filename, ignore_checksum="warn")
         mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
     
         derived_from = mapping.get_derived_from()
@@ -763,7 +763,7 @@ Checks a CRDS reference or mapping file.
         closure_files = set()
         for file_ in files:
             if rmap.is_mapping(file_):
-                mapping = rmap.get_cached_mapping(file_)
+                mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
                 more_files = mapping.mapping_names(full_path=True)
             else:
                 more_files = [file_]

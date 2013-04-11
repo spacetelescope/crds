@@ -252,8 +252,16 @@ class Mapping(object):
         """Construct a mapping from string `text` nominally named `basename`."""
         header, selector = cls._parse_header_selector(text, basename)
         mapping = cls(basename, header, selector, **keys)
-        if not keys.get("ignore_checksum", False) and not config.get_ignore_checksum():
+        ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
+        try:
             mapping._check_hash(text)
+        except ChecksumError, exc:
+            if ignore == "warn":
+                log.warning("Checksum error", ":", str(exc))
+            elif ignore:
+                pass
+            else:
+                raise
         return mapping
 
     @classmethod
