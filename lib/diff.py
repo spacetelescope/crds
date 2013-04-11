@@ -42,7 +42,8 @@ def diff_action(diff):
         result += "_rule"
     return result
 
-def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False):
+def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False,
+                       mapping_text_diffs=False):
     """Print the logical differences between CRDS mappings named `file1` 
     and `file2`.  
     
@@ -53,11 +54,8 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
     mapping_check_diffs().
     """
     differences = mapping_diffs(file1, file2)
-    if primitive_diffs:
-        for pair in mapping_pairs(differences):
-            log.write("="*80)
-            log.write(pair)
-            text_difference(observatory, pair[0], pair[1])
+    if mapping_text_diffs:   # only banner when there's two kinds to differentiate
+        log.write("="*20, "logical differences",  repr(file1), "vs.", repr(file2), "="*20)
     for diff in differences:
         diff = unquote_diff(diff)
         if primitive_diffs:
@@ -67,6 +65,11 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
             if "replaced" in diff[-1]:
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
+    if mapping_text_diffs:
+        for (d1, d2) in mapping_pairs(differences):
+            log.write("="*20, "text difference", repr(d1), "vs.", repr(d2), "="*20)
+            text_difference(observatory, d1, d2)
+        log.write("="*80)
     if check_diffs:
         mapping_check_diffs_core(differences)
 
@@ -210,13 +213,14 @@ def text_difference(observatory, file1, file2):
     _loc_file2 = rmap.locate_file(file2, observatory)
     pysh.sh("diff -b -c ${_loc_file1} ${_loc_file2}")
 
-def difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False):
+def difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
     named `file1` and `file2` against one another and print out the results 
     on stdout.
     """
     if rmap.is_mapping(file1):
-        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs, check_diffs=check_diffs)
+        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs, check_diffs=check_diffs,
+                           mapping_text_diffs=mapping_text_diffs)
     elif file1.endswith(".fits"):
         fits_difference(observatory, file1, file2)
     else:
@@ -229,12 +233,38 @@ class DiffScript(cmdline.Script):
     
     description = """Difference CRDS mapping or reference files."""
     
+    epilog = """Reference files are nominally differenced using FITS-diff or diff.
+    
+Mapping files are differenced using CRDS machinery to recursively compare too mappings and 
+their sub-mappings.
+    
+Differencing two mappings will find all the logical differences between the two contexts
+and any nested mappings.
+    
+By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to 
+CRDS logical diffs.
+    
+By specifying --primitive-diffs,  FITS diff will be run on all references which are replaced
+in the logical differences between two mappings.
+    
+For example:
+    
+    % python -m crds.diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
+    
+Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
+    
+    NOTE: mapping logical differences (the default) to not compare CRDS mapping headers.
+    """
+    
     def add_args(self):
         """Add diff-specific command line parameters."""
         self.add_argument("old_file",  help="Prior file of difference.""")
         self.add_argument("new_file",  help="New file of difference.""")
         self.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
-            help="Include primitive differences on replaced files.", 
+            help="Fitsdiff replaced reference files when diffing mappings.", 
+            action="store_true")
+        self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs",
+            help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.",
             action="store_true")
         self.add_argument("-K", "--check-diffs", dest="check_diffs",
             help="Issue warnings about new rules, deletions, or reversions.",
@@ -243,7 +273,8 @@ class DiffScript(cmdline.Script):
     def main(self):
         """Perform the differencing."""
         difference(self.observatory, self.args.old_file, self.args.new_file, 
-                   primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs)
+                   primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
+                   mapping_text_diffs=self.args.mapping_text_diffs)
 
 if __name__ == "__main__":
     DiffScript()()

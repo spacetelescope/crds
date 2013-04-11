@@ -414,16 +414,16 @@ class Mapping(object):
         differences = []
         for key in self.selections:
             if key not in other.selections:
-                differences.append(((self.basename, other.basename), key, 
-                                    "deleted " + repr(self.selections[key].basename)))
+                differences.append(((self.filename, other.filename), key, 
+                                    "deleted " + repr(self.selections[key].filename)))
             else:
                 differences.extend(self.selections[key].difference(
                     other.selections[key],
-                    path + ((self.basename, other.basename),)))
+                    path + ((self.filename, other.filename),)))
         for key in other.selections:
             if key not in self.selections:
-                differences.append(((self.basename, other.basename), key, 
-                                    "added " + repr(other.selections[key].basename)))
+                differences.append(((self.filename, other.filename), key, 
+                                    "added " + repr(other.selections[key].filename)))
         return sorted(differences)
     
     def copy(self):
@@ -852,7 +852,7 @@ class ReferenceMapping(Mapping):
         """
         other = asmapping(other, cache="readonly")
         return self.selector.difference(other.selector, path +
-                ((self.basename, other.basename),))
+                ((self.filename, other.filename),))
 
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
