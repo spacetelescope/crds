@@ -805,8 +805,8 @@ class ReferenceMapping(Mapping):
         return { parkey : [ valid values ] }
         """
         tpninfos = self.locate.get_tpninfos(self.instrument, self.filekind)
-        valid_values = {}
         required_keys = self.get_required_parkeys()
+        valid_values = {}
         for info in tpninfos:
             if info.name in required_keys:
                 values = info.values
@@ -819,10 +819,7 @@ class ReferenceMapping(Mapping):
                     else:
                         values = range(limits[0], limits[1]+1)
                 if condition:
-                    values = list(values)
-                    for i, value in enumerate(values):
-                        values[i] = utils.condition_value(value)
-                    values = tuple(values)
+                    values = tuple([utils.condition_value(val) for val in values])
                 valid_values[info.name] = values
         return valid_values
 
