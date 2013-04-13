@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-04-12',
+    'filekind' : 'PHOTOM',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_photom_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.PUPIL'),),
+    'sha1sum' : 'be6364ac0891910f1357d6bf1bb4669ea970ffb7',
+}
+
+selector = Match({
+    ('NIRISS', 'ANY', 'ANY') : 'jwst_niriss_photom_0014.fits',
+})

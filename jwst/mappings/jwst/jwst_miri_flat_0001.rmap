@@ -1,0 +1,16 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-04-12',
+    'filekind' : 'FLAT',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_flat_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'ef3f2e25650e777ebda54fdb04409c39fe0b7c0a',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'ANY') : 'jwst_miri_flat_0003.fits',
+    ('MIRIFUSHORT', 'ANY') : 'jwst_miri_flat_0004.fits',
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_flat_0005.fits',
+})

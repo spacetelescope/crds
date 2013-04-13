@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-04-12',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_linearity_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '341da094f6a2e1c481e9f1de532e260b65ab5f91',
+}
+
+selector = Match({
+    ('FGS1', 'ANY') : 'jwst_fgs_linearity_0002.fits',
+    ('FGS2', 'ANY') : 'jwst_fgs_linearity_0003.fits',
+})
