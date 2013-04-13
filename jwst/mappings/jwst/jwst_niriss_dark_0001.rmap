@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-04-12',
+    'filekind' : 'DARK',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_dark_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '85000a827300834602aa0f52fb04d59095e29d6f',
+}
+
+selector = Match({
+    ('NIRISS', 'ANY') : 'jwst_niriss_dark_0002.fits',
+})

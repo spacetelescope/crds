@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-04-12',
+    'filekind' : 'DARK',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_dark_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '90280fdebf7eb41e267640a25684886614bcd121',
+}
+
+selector = Match({
+    ('NRS1', 'ANY') : 'jwst_nirspec_dark_0004.fits',
+    ('NRS2', 'ANY') : 'jwst_nirspec_dark_0005.fits',
+})
