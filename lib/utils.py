@@ -5,6 +5,7 @@ import os.path
 import re
 import sha
 import cStringIO
+import functools
 
 # from crds import data_file,  import deferred until required
 
@@ -150,6 +151,10 @@ class CachedFunction(object):
         key, result = self._readonly(*args, **keys)
         self.cache[key] = result
         return result
+    
+    def __get__(self, obj, objtype):
+        '''Support instance methods.'''
+        return functools.partial(self.__call__, obj)
 
 # ===================================================================
 

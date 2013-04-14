@@ -190,12 +190,12 @@ class Selector(object):
         else:
             # This branch exists to efficiently implement the
             # UseAfter merge operation.   It's not really intended
-            # for uses beyond that capacity and the resulting rmap
+            # for uses beyond that capacity and the resulting Selector
             # is really only good for a single lookup operation.
             assert isinstance(merge_selections, list),  \
                 "merge_selections should be a sorted item list,  not: " + repr(merge_selections)
-            self._raw_selections = [Selection(*s) for s in merge_selections]  # XXX not really,  nominally unused XXXX
-            self._selections = [Selection(*s) for s in merge_selections]
+            self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
+            self._selections = merge_selections
         self._rmap_header = rmap_header or {}
         self._parkey_map = self.get_parkey_map()
         
@@ -1182,7 +1182,7 @@ of uniform rmap structure for HST:
             if len(match_tuples) > 1:
                 if raise_ambiguous:
                     raise AmbiguousMatchError("More than one match clause matched.")
-                subselectors = [remaining[match_tuple].choice for match_tuple in match_tuples]
+                subselectors = tuple([remaining[match_tuple].choice for match_tuple in match_tuples])
                 if isinstance(subselectors[0], Selector):
                     selector = self.merge_group(subselectors)
                 else:
@@ -1238,6 +1238,7 @@ of uniform rmap structure for HST:
         log.verbose("Candidates", log.PP(candidates), verbosity=60)
         return candidates
 
+    @utils.cached
     def merge_group(self, equivalent_selectors):
         """Merge a group of equal-weighted selectors into a single
         combined selector.  Nominally this merges special case
@@ -1452,18 +1453,38 @@ Alternate date/time formats are accepted as header parameters.
         return tuple(zip(self._parameters, key.split()))
     
     def merge(self, other):
-        """Merge the selections from two UseAfters into a single UseAfter.
-        For collisions, take the greatest value,  which using known and planned
-        naming conventions is always the most recent version of a file.
+        """Merge two UseAfterSelectors into a single selector.  Resolve
+        collisions of selections by using the "greater" of the colliding
+        selections...  nominally the greater filename which is the most
+        recent for CDBS and CRDS naming conventions.
         """
-        combined_selections = dict(self._selections)
-        for key, val in other._selections:
-            if key not in combined_selections or val > combined_selections[key]:
-                if key in combined_selections:
-                    log.verbose("Merge collision at", repr(key), "replacing",
-                                repr(combined_selections[key]), "with", repr(val), verbosity=60)
-                combined_selections[key] = val
-        return self.__class__(self._parameters[:], merge_selections=sorted(combined_selections.items()))
+        merge_selections = []
+        ownsel = self._selections[:]
+        othersel = other._selections[:]
+        while ownsel and othersel:
+            own = ownsel[0]
+            other = othersel[0]
+            if own.key < other.key:
+                appended = own
+                ownsel = ownsel[1:]
+            elif other.key < own.key:
+                appended = other
+                othersel = othersel[1:]
+            else: # collision
+                ownsel.pop(0)
+                othersel.pop(0)
+                if own.choice >= other.choice:
+                    appended = own
+                    overwritten = other
+                else:
+                    appended = other
+                    overwritten = own
+                log.verbose("Merge collision at", repr(appended.key), "using",
+                            repr(appended.choice), "not", overwritten.choice, verbosity=60)
+            merge_selections.append(appended)
+        merge_selections.extend(ownsel)
+        merge_selections.extend(othersel)
+        return self.__class__(self._parameters[:], merge_selections=merge_selections)
     
     def get_parkey_map(self):
         return { par:"*" for par in self._parameters}
