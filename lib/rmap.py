@@ -458,12 +458,18 @@ class Mapping(object):
     def get_derived_from(self):
         """Return the Mapping object `self` was derived from, or None."""
         derived_from = None
-        try:
-            derived_file = self.derived_from
-            if 'generated' not in derived_file:
-                derived_from = fetch_mapping(derived_file)
-        except Exception, exc:
-            log.verbose_warning("No parent mapping for", repr(self.basename), ":", str(exc))
+        derived_path = locate_mapping(self.derived_from)
+        if "generated" in self.derived_from or "cloning" in self.derived_from:
+            log.debug("Skipping derivation checks for root mapping", repr(self.basename),
+                      "derived_from =", repr(self.derived_from))
+        elif os.path.exists(derived_path):
+            try:
+                derived_from = fetch_mapping(derived_path)
+            except Exception, exc:
+                log.error("Can't load parent mapping", repr(derived_path), ":", str(exc))
+        else:
+            log.warning("Parent mapping for", repr(self.basename), "=", 
+                        repr(self.derived_from), "does not exist.")
         return derived_from
 
     def _check_type(self, expected_type):
