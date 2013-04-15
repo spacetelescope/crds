@@ -118,7 +118,8 @@ class KeywordValidator(object):
         try:
             values = self._get_column_values(filename)
         except Exception, exc:
-            raise RuntimeError("Can't read column values : " + str(exc))
+            log.error("Can't read column values : " + str(exc))
+            return
         check_val = True
 
         if values is not None: # Only check for non-optional columns
