@@ -628,6 +628,7 @@ class MappingCertifier(Certifier):
             path = self.trap("Can't locate reference file.", 
                              get_existing_path, ref, mapping.observatory)
             if path:
+                log.verbose("Reference", repr(ref), "exists at", repr(path))
                 references.append(path)
         return references
     
