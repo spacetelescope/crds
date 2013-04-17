@@ -6,6 +6,7 @@
 # presence = (Optional|Required)
 #
 # 10/07/2010  66259  MSwam  first version
+# 01/18/2013  73170  MSwam  add 1222 CENWAVE
 #
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ PEDIGREE	    C        C	       R    INFLIGHT,GROUND,MODEL,DUMMY
 SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC
 OPT_ELEM            C        C         R    G130M,G160M,G140L,\
           G185M,G225M,G285M,G230L
-CENWAVE             C        I         R    1291,1300,1309,1318,1327,\
+CENWAVE             C        I         R    1222,1291,1300,1309,1318,1327,\
           1577,1589,1600,1611,1623,\
           1105,1230,1280,\
           1786,1817,1835,1850,1864,1882,1890,1900,1913,\
