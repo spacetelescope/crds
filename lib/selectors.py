@@ -1977,7 +1977,9 @@ class Parameters(object):
         When possible check for duplicate keys in `self.selections` and `rmap_header`.
         """
         check_duplicates(rmap_header, ["header"])
-        parkeys = dict(rmap_header)["parkey"]   # rmap_header may be a LowerCaseDict.  Don't break it!
+        if not isinstance(rmap_header, dict):
+            rmap_header = dict(rmap_header)   # drop header item list form here.
+        parkeys = rmap_header["parkey"]   
         return self._instantiate(parkeys, rmap_header, ["selector"])
 
     def _instantiate(self, parkeys, rmap_header, parents=None):
