@@ -491,7 +491,9 @@ class Certifier(object):
                 log.error(msg)
                 return None
             else:
-                raise ValidationError(msg)
+                log.error(msg)
+                raise
+                # raise ValidationError(msg)
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
