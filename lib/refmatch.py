@@ -3,7 +3,7 @@ import os.path
 
 import pyfits
 from . import rmap
-from crds import client, log
+from crds import client, log, utils
 
 filekind_kw = 'FILETYPE'
 
@@ -88,7 +88,15 @@ def find_current_reffile(reffile,pmap):
         elif kw == 'TIME-OBS':
             select_vals[kw] = timeobs
         else:
-            select_vals[kw] = pyfits.getval(reffile,kw)
+            try:
+                select_vals[kw] = pyfits.getval(reffile,kw)
+            except KeyError, exc:
+                if kw in r.extra_keys:
+                    select_vals[kw] = "N/A"
+                else:
+                    raise
+                    
+    select_vals = utils.condition_header(select_vals)
     match_refname = r.selector.choose(select_vals)
     # grab match_file from server and copy it to a local disk, if network
     # connection is available and configured properly
