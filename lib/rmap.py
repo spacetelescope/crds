@@ -407,6 +407,15 @@ class Mapping(object):
                                         header.get(key.upper(), "UNDEFINED"))
         return minimized
 
+    def get_minimum_header(self, dataset, original_name=None):
+        """Return the names and values of `dataset`s header parameters which
+        are required to compute best references for it.   `original_name` is
+        used to determine file type when `dataset` is a temporary file with a
+        useless name.
+        """
+        header = data_file.get_conditioned_header(dataset, original_name=original_name)
+        return self.minimize_header(header)
+
     def validate_mapping(self,  trap_exceptions=False):
         """Validate `self` only implementing any checks to be performced by
         crds.certify.   ContextMappings are mostly validated at load time.
@@ -550,15 +559,6 @@ class PipelineContext(ContextMapping):
         instrument = data_file.getval(dataset,  self.instrument_key)
         return self.get_imap(instrument).get_filekinds(dataset)
 
-    def get_minimum_header(self, dataset, original_name=None):
-        """Return the names and values of `dataset`s header parameters which
-        are required to compute best references for it.   `original_name` is
-        used to determine file type when `dataset` is a temporary file with a
-        useless name.
-        """
-        header = data_file.get_conditioned_header(dataset, original_name=original_name)
-        return self.minimize_header(header)
-
     def get_instrument(self, header):
         """Get the instrument name defined by `header`."""
         try:
@@ -611,6 +611,9 @@ class InstrumentContext(ContextMapping):
         """Returns the single reference file basename appropriate for `header`
         corresponding to `filekind`.
         """
+#        if self.get_instrument(header).lower() != self.instrument:
+#            raise CrdsError("Dataset instrument value '{}' doesn't match CRDS rules instrument '{}' from file '{}'.".format(
+#                            self.get_instrument(header), self.instrument, self.filename))
         return self.get_rmap(filekind).get_best_ref(header)
 
     def get_best_references(self, header, include=None):
