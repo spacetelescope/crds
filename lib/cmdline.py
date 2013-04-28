@@ -57,6 +57,10 @@ def reference_mapping(filename):
     assert filename.endswith(".rmap"), "A .rmap file is required but got: '%s'" % filename
     return filename
 
+def context_mapping(filename):
+    assert filename.endswith((".pmap",".imap")), "A .pmap or .imap CRDS context file is required but got '%s'" % filename
+    return filename
+
 #def mapping(filename):
 #    """Ensure that `filename` is any known CRDS mapping."""
 #    if api.is_known_mapping(filename):
@@ -91,8 +95,6 @@ class Script(object):
         self._server_info = None
         for key in ["description", "epilog", "usage", "formatter_class"]: 
             self._add_key(key, parser_pars)
-        if "--version" in sys.argv:   # hack this since it's non-standard.
-            _show_version()
         self.parser = argparse.ArgumentParser(**parser_pars)
         self.add_args()
         self.add_standard_args()
@@ -139,6 +141,8 @@ class Script(object):
             help="Set log verbosity to True,  nominal debug level.", action="store_true")
         self.add_argument("--verbosity", 
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
+        self.add_argument("-V", "--version", 
+            help="Print the software version and exit.", action="store_true")
         self.add_argument("-J", "--jwst", dest="jwst", action="store_true",
             help="Force observatory to JWST for determining header conventions.""")
         self.add_argument("-H", "--hst",  dest="hst", action="store_true",
@@ -151,6 +155,7 @@ class Script(object):
     def test_server_connection(self):
         """Check the server connection and remember the server_info."""
         connected, server_info = heavy_client.get_config_info(self.observatory)
+        log.verbose("CRDS server info", server_info)
         if not connected:
             log.error("Failed connecting to CRDS server at", repr(api.get_crds_server()))
             sys.exit(-1)
@@ -201,15 +206,27 @@ class Script(object):
 
     @property
     def files(self):
-        """Handle @-files and add cache_paths to command line file parameters.""" 
+        """Handle @-files and add cache_paths to command line file parameters.
+        Nominally self.files are assumed to be references or mappings.  Override locate_file()
+        to handle other files.
+        """ 
         if not hasattr(self.args, "files"):
             raise NotImplementedError("Class must implement list of `self.args.files` raw file paths.")
-        return [rmap.locate_file(fname, observatory=self.observatory) 
-                    for fname in self.get_files(self.args.files)]
+        return [self.locate_file(fname) for fname in self.get_files(self.args.files)]
+        
+    def locate_file(self, filename):
+        """Locate file defines how members of the self.args.files list are located when they have
+        no absolute or relative path.   The default behavior is to locate CRDS cached files,  either
+        references or mappings.   This is inappropriate for datasets so in some cases locate_file
+        needs to be overridden.
+        """
+        return rmap.locate_file(filename, observatory=self.observatory)
 
     def __call__(self):
         """Run the script's main() according to command line parameters."""
-        if self.args.profile:
+        if self.args.version:
+            _show_version()
+        elif self.args.profile:
             profile.runctx("self.main()", locals(), locals(), self.args.profile)
         elif self.args.pdb:
             pdb.runctx("self.main()", locals(), locals())

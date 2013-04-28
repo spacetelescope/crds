@@ -554,9 +554,14 @@ class PipelineContext(ContextMapping):
         """Return the filekinds associated with `dataset` by examining
         it's parameters.  Currently returns ALL filekinds for
         `dataset`s instrument.   Not all are necessarily appropriate for
-        the current mode.
+        the current mode.  `dataset` can be a filename or a header dictionary.
         """
-        instrument = data_file.getval(dataset,  self.instrument_key)
+        if isinstance(dataset, basestring):
+            instrument = data_file.getval(dataset,  self.instrument_key)
+        elif isinstance(dataset, dict):
+            instrument = self.get_instrument(dataset)
+        else:
+            raise ValueError("Dataset should be a filename or header dictionary.")
         return self.get_imap(instrument).get_filekinds(dataset)
 
     def get_instrument(self, header):

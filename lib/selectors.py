@@ -236,7 +236,7 @@ class Selector(object):
         exc = None
         for selection in self.get_selection(lookup_key):  # iterate over weighted selections, best match first.
             try:
-                log.verbose("Trying", selection)
+                log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
             except CrdsLookupError, exc:
                 continue
@@ -394,7 +394,7 @@ class Selector(object):
         if name in self._substitutions and value in self._substitutions[name]:
             return
         raise ValidationError(
-            " parameter " + repr(name) + " value =" + repr(value) + 
+            " parameter=" + repr(name) + " value=" + repr(value) + 
             " is not in " + repr(valid_list))
             
     def _validate_key(self, key, valid_values_map):
