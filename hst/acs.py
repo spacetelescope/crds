@@ -33,7 +33,7 @@ def _precondition_header_biasfile(header_in):
     try:
         numcols = int(float(header["NUMCOLS"]))
     except ValueError:
-        log.info("acs_biasfile_selection: bad NUMCOLS.")
+        log.verbose("acs_biasfile_selection: bad NUMCOLS.")
         sys.exc_clear()
     else:
         header["NUMCOLS"] = utils.condition_value(str(numcols))
