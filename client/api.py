@@ -448,8 +448,10 @@ MAPPING_CACHER = BundleCacher()
 # ==============================================================================
 
 def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
-    """Given a `pipeline_context`, determine the closure of CRDS mappings and 
+    """Given a `pipeline_context`, determine the closure of CRDS mappings for it and 
     cache them on the local file system.
+    
+    If mappings is not None,  sync exactly that list of mapping names,  not their closures.
     
     Returns:   { mapping_basename :   mapping_local_filepath ... }   
     """
@@ -462,7 +464,9 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
 def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
     """Given a pipeline `pipeline_context` and list of `baserefs` reference 
     file basenames,  obtain the set of reference files and cache them on the
-    local file system.   
+    local file system.
+    
+    If `basrefs` is None,  sync the closure of references referred to by `pipeline_context`.
     
     Returns:   { ref_basename :   reference_local_filepath ... }
     """
