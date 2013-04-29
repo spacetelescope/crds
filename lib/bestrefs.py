@@ -29,6 +29,7 @@ import optparse
 
 import pyfits
 
+import crds
 from crds import (log, rmap, data_file, utils, cmdline)
 from crds.client import api
 
@@ -70,9 +71,9 @@ class FileHeaderGenerator(HeaderGenerator):
 class DatasetHeaderGenerator(HeaderGenerator):
     def __init__(self, context, datasets):
         super(DatasetHeaderGenerator, self).__init__(context, datasets)
-        log.verbose("Dumping datasets from CRDS server for", repr(datasets))
+        log.verbose("Dumping datasets from CRDS server for", repr(datasets), verbosity=25)
         self.headers = api.get_dataset_headers_by_id(context, datasets)
-        log.verbose("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server.")
+        log.verbose("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server.", verbosity=25)
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     def __init__(self, context, instruments):
@@ -80,9 +81,9 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         self.instruments = instruments
         sorted_sources = []
         for instrument in instruments:
-            log.verbose("Dumping datasets for", repr(instrument), "from CRDS server.")
+            log.verbose("Dumping datasets for", repr(instrument), "from CRDS server.", verbosity=25)
             more = api.get_dataset_headers_by_instrument(context, instrument)
-            log.verbose("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server.")
+            log.verbose("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server.", verbosity=25)
             self.headers.update(more)
             sorted_sources.extend(sorted(more.keys()))
         self.sources = sorted_sources
@@ -134,6 +135,8 @@ Determines best references with respect to a context.
         self.parameter_cache = {}
         self.old_bestrefs_cache = {}
     
+        self.process_filekinds = [typ.lower() for typ in self.args.types ]
+    
         # do one time startup outside profiler.
         self.newctx = rmap.get_cached_mapping(self.args.new_context)
         self.oldctx = None if self.args.old_context is None else rmap.get_cached_mapping(self.args.old_context)
@@ -160,6 +163,9 @@ Determines best references with respect to a context.
         
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
             help="Instruments to compute best references for, all historical datasets.")
+        
+        self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
+            help="A list of reference types to process,  defaulting to all types.")
         
         self.add_argument("-u", "--update-datasets", dest="update_datasets",
             help="Update dataset headers with new best reference recommendations.", 
@@ -188,7 +194,7 @@ Determines best references with respect to a context.
             new_headers = FileHeaderGenerator(context, self.args.files)
         elif self.args.datasets:
             self.test_server_connection()
-            new_headers = DatasetHeaderGenerator(context, self.args.datasets)
+            new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
         elif self.args.instruments:
             self.test_server_connection()
             new_headers = InstrumentHeaderGenerator(context, self.args.instruments)
@@ -250,7 +256,7 @@ Determines best references with respect to a context.
             bestrefs = header_gen.pmap.get_best_references(header)
             return bestrefs
         except Exception, exc:
-            raise crds.CrdsError("Failed computing bestrefs for '{}' with respect to '{}' : {}" .format(dataset, context.basename, str(exc)))
+            raise crds.CrdsError("Failed computing bestrefs for '{}' with respect to '{}' : {}" .format(dataset, header_gen.context, str(exc)))
 
     def compare_bestrefs(self, dataset, ctx1, ctx2, bestrefs1, bestrefs2):
         """Compare two sets of best references for `dataset` taken from contexts named `ctx1` and `ctx2`."""
@@ -258,12 +264,17 @@ Determines best references with respect to a context.
         updates = []
         
         errors = 0
-        for filekind in bestrefs1:
+        for filekind in (self.process_filekinds or bestrefs1):
             
-            new_org = cleanpath(bestrefs1[filekind])
+            new_org = cleanpath(bestrefs1.get(filekind, "UNDEFINED"))
             new = new_org.upper()
             u_filekind = filekind.upper()
             
+            old = cleanpath(bestrefs2.get(filekind, "UNDEFINED")).strip().upper()
+        
+            if old.startswith(("N/A","NONE","","*")):
+                log.verbose("Old bestref marked as", repr(old), "for", repr(dataset), repr(u_filekind))
+                continue    
             if new.startswith("NOT FOUND N/A"):
                 log.verbose("Filetype not applicable for ", repr(dataset), repr(u_filekind))
                 continue
@@ -276,8 +287,6 @@ Determines best references with respect to a context.
                 updates.append((dataset, filekind, None, new))
                 continue
             
-            old = cleanpath(bestrefs2[filekind]).upper()
-        
             if old not in ["", "N/A","*"]:
                 if new != old:
                     if self.args.print_new_references or log.get_verbose():
