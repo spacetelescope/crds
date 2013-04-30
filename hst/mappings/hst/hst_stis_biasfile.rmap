@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:28.030649',
+    'derived_from' : 'generated from CDBS database 2013-04-29 16:56:45.365945',
     'filekind' : 'BIASFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "CCD")',
-    'sha1sum' : '66177a7797d8313b149e14aa8acbbd4867176aeb',
+    'sha1sum' : '8e20ec610afa4aafa4db5aee2771cbd615981b9c',
 }
 
 selector = Match({
@@ -526,9 +526,17 @@ selector = Match({
         '2012-11-06 01:16:11' : 'x1218195o_bia.fits',
         '2012-11-13 00:00:07' : 'x1218196o_bia.fits',
         '2012-11-20 00:00:02' : 'x1218197o_bia.fits',
-        '2012-11-28 17:47:30' : 'x131458so_bia.fits',
-        '2012-12-08 00:00:11' : 'x131458to_bia.fits',
-        '2012-12-16 00:28:54' : 'x1314590o_bia.fits',
+        '2012-11-28 17:47:30' : 'x4b1409no_bia.fits',
+        '2012-12-06 00:00:08' : 'x4b1409oo_bia.fits',
+        '2012-12-12 02:55:43' : 'x4b1409po_bia.fits',
+        '2012-12-20 00:00:02' : 'x4b1409qo_bia.fits',
+        '2012-12-27 00:00:00' : 'x4b1409ro_bia.fits',
+        '2013-01-03 00:00:12' : 'x4b1409so_bia.fits',
+        '2013-01-10 00:00:07' : 'x4b1409to_bia.fits',
+        '2013-01-17 13:39:22' : 'x4t15455o_bia.fits',
+        '2013-01-25 02:00:05' : 'x4t15456o_bia.fits',
+        '2013-02-02 01:05:03' : 'x4t15457o_bia.fits',
+        '2013-02-11 05:41:02' : 'x4t15458o_bia.fits',
     }),
     ('D', 1, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1019qo_bia.fits',
@@ -1327,8 +1335,11 @@ selector = Match({
         '2012-10-19 01:30:56' : 'wbk1745bo_bia.fits',
         '2012-10-29 23:56:58' : 'x1218192o_bia.fits',
         '2012-11-13 00:44:49' : 'x1218193o_bia.fits',
-        '2012-11-28 17:47:30' : 'x131458qo_bia.fits',
-        '2012-12-12 03:11:53' : 'x131458ro_bia.fits',
+        '2012-11-28 17:47:30' : 'x4b14100o_bia.fits',
+        '2012-12-12 03:11:53' : 'x4b14101o_bia.fits',
+        '2012-12-27 01:40:44' : 'x4b14102o_bia.fits',
+        '2013-01-17 13:55:32' : 'x4t15453o_bia.fits',
+        '2013-02-04 08:33:58' : 'x4t15454o_bia.fits',
     }),
     ('D', 4, 3, 1, 2) : UseAfter({
         '1996-10-01 00:00:00' : 'h2l1020co_bia.fits',

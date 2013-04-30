@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-04-06 08:04:39.991907',
+    'derived_from' : 'generated from CDBS database 2013-04-29 16:55:51.020912',
     'filekind' : 'NPOLFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '7e74a83fc34dfd04ab82c8f67e9c9b7248e5890c',
+    'sha1sum' : 'a6a84bf94399b300f9453c3fded19ebf15891424',
 }
 
 selector = Match({
