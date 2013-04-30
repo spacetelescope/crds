@@ -123,7 +123,7 @@ class Test_01_Insert(unittest.TestCase):
         self.set_classes(("Match", inner_class))
         result = self.rmap.insert(header, value)
         diffs = self.rmap.difference(result)
-        log.debug("diffs:", diffs)
+        log.verbose("diffs:", diffs)
         assert len(diffs) == 1, "Fewer/more differences than expected"
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
         assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
@@ -140,7 +140,7 @@ class Test_01_Insert(unittest.TestCase):
         self.set_classes(("Match", inner_class))
         result = self.rmap.insert(header, value)
         diffs = self.rmap.difference(result)
-        log.debug("diffs:", diffs)
+        log.verbose("diffs:", diffs)
         assert len(diffs) == 1, "Fewer/more differences than expected"
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
         assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
@@ -270,21 +270,21 @@ class RecursiveModify(object):
         # Load the test rmap from a string.   The top level selector must exist.
         # This is not a "realistic" test case.   It's a test of the recursive
         # insertion capabilities of all the Selector classes in one go.
-        log.debug("-"*60)
+        log.verbose("-"*60)
         r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
-        log.debug("insert_header:", log.PP(self.insert_header))
+        log.verbose("insert_header:", log.PP(self.insert_header))
         result = r.insert(self.insert_header, "foo.fits")
         result.write(self.result_filename)
         diffs = r.difference(result)
-        log.debug("diffs:", diffs)
+        log.verbose("diffs:", diffs)
         assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
-        log.debug("recursive insert result rmap:")
-        log.debug(open(self.result_filename).read())
+        log.verbose("recursive insert result rmap:")
+        log.verbose(open(self.result_filename).read())
     
     def test_1_recursive_use_rmap(self):
         r = rmap.load_mapping(self.result_filename)
         result = r.get_best_ref(self.lookup_header)
-        log.debug("recursive lookup result:", result)
+        log.verbose("recursive lookup result:", result)
         assert result == self.expected_lookup_result, "Recursively generated rmap produced wrong result."
     
     def test_9_recursive_tear_down(self):
