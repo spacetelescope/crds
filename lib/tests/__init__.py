@@ -6,9 +6,11 @@ import tempfile
 
 import crds
 
+HERE = os.path.dirname(__file__) or "."
+
 class CRDSTestCase(object):
     def setup(self):
-        self.data_dir = os.path.join(os.path.dirname(__file__), 'data')
+        self.data_dir = os.path.join(HERE, 'data')
         self.temp_dir = tempfile.mkdtemp(prefix='crds-test-')
         self.hst_mappath =  os.path.join(crds.__path__[0],'mappings')
 

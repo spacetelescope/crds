@@ -388,7 +388,7 @@ class Selector(object):
                 return
             else:
                 raise ValidationError(
-                    " parameter " + repr(name) + " value =" + 
+                    " parameter=" + repr(name) + " value =" + 
                     repr(value) + " is not in range [" + 
                     str(min) + " .. " + str(max) + "]")     
         if name in self._substitutions and value in self._substitutions[name]:
@@ -1030,7 +1030,7 @@ derived from TPN files:
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError:  parameter 'bar' value ='2.0' is not in ('3.0',)
+    ValidationError:  parameter='bar' value='2.0' is not in ('3.0',)
     
 Match tuples should have the same length as the parameter list:
     
@@ -1055,7 +1055,7 @@ derived from the rmap itself rather than TPNs:
     >>> m.choose({"foo" : "doh!", "bar":"1.0"})  
     Traceback (most recent call last):
     ...
-    ValidationError:  parameter 'foo' value ='doh!' is not in ['1.0', '4.0']
+    ValidationError:  parameter='foo' value='doh!' is not in ['1.0', '4.0']
  
 The last thing matched in a selector tree is assumed to be a file:
     
