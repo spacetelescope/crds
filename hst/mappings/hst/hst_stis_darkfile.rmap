@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-04-06 08:05:33.674550',
+    'derived_from' : 'generated from CDBS database 2013-04-29 16:56:51.673498',
     'filekind' : 'DARKFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR == "CCD")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '5568cd6d230aeba3c28a1c6226ca165ed7342e2e',
+    'sha1sum' : 'cf248884f706e7c6a06bf85cf42ab1c0b713a62d',
 }
 
 selector = Match({
@@ -537,9 +537,17 @@ selector = Match({
         '2012-11-06 01:16:11' : 'x1218199o_drk.fits',
         '2012-11-13 00:00:07' : 'x121819ao_drk.fits',
         '2012-11-20 00:00:02' : 'x121819bo_drk.fits',
-        '2012-11-28 17:47:30' : 'x1314591o_drk.fits',
-        '2012-12-08 00:00:11' : 'x1314592o_drk.fits',
-        '2012-12-16 00:28:54' : 'x1314593o_drk.fits',
+        '2012-11-28 17:47:30' : 'x4b14103o_drk.fits',
+        '2012-12-06 00:00:08' : 'x4b14104o_drk.fits',
+        '2012-12-12 02:55:43' : 'x4b14105o_drk.fits',
+        '2012-12-20 00:00:02' : 'x4b14106o_drk.fits',
+        '2012-12-27 00:00:00' : 'x4b14107o_drk.fits',
+        '2013-01-03 00:00:12' : 'x4b14108o_drk.fits',
+        '2013-01-10 00:00:07' : 'x4b14109o_drk.fits',
+        '2013-01-17 00:23:31' : 'x4t15459o_drk.fits',
+        '2013-01-25 00:00:03' : 'x4t1545ao_drk.fits',
+        '2013-02-02 00:32:25' : 'x4t1545bo_drk.fits',
+        '2013-02-11 03:52:14' : 'x4t1545co_drk.fits',
     }),
     ('CCD', 'D', '1|2|4|8') : UseAfter({
         '1997-04-25 00:00:00' : 'hcc1558ro_drk.fits',

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-04-06 08:04:36.767418',
+    'derived_from' : 'generated from CDBS database 2013-04-29 16:55:47.418806',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR != "SBC" and FLASHCUR != "OFF")',
-    'sha1sum' : '019d8ec5821e102e6abe0f27902adb78cecb3592',
+    'sha1sum' : 'b634400f8445d9dae50b65a4e7caa244a6383010',
 }
 
 selector = Match({
@@ -49,6 +49,9 @@ selector = Match({
     }),
     ('HRC', 'A|B', 2.0, 'MED', 'A|B') : UseAfter({
         '2002-03-01 00:00:00' : 'o3o0734oj_fls.fits',
+    }),
+    ('WFC', 'ABCD', 2.0, 'LOW', 'B') : UseAfter({
+        '2012-01-01 00:00:00' : 'x4c1748mj_fls.fits',
     }),
     ('WFC', 'A|ABCD|AC|AD|B|BC|BD|C|D', '1.0|2.0|4.0|8.0', 'HIGH', 'A') : UseAfter({
         '2002-03-01 00:00:00' : 'nad1502pj_fls.fits',
