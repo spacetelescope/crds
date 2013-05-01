@@ -139,6 +139,11 @@ def errors():
     """Return the global count of errors."""
     return THE_LOGGER.errors
 
+def set_test_mode():
+    """Route log messages to standard output for testing with doctest."""
+    remove_console_handler()
+    add_console_handler(stream=sys.stdout)
+
 # ===========================================================================
 
 def exception_trap_logger(func):

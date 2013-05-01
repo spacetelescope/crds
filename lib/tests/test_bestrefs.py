@@ -86,36 +86,66 @@ TEST CASES
 
 >>> import os
 >>> os.environ["CRDS_PATH"] = os.path.join(os.getcwd(), "test_cache")
->>> os.environ["CRDS_SERVER_URL"] = "http://hst-crds.stsci.edu" 
+>>> os.environ["CRDS_SERVER_URL"] = "http://hst-crds.stsci.edu"
+>>> from crds import log
+>>> log.set_test_mode()
 
 >>> from crds.bestrefs import BestrefsScript
 
 Compute simple bestrefs for 3 files:
 
->>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
->>> case.files
-['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
->>> case.new_context
-'hst.pmap'
->>> case.run()
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
+    >>> case.files
+    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
+    >>> case.new_context
+    'hst.pmap'
+    >>> case.run()
+    CRDS  : INFO     No comparison context or source data bestrefs comparison requested;  skipping results comparisons.
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     1 infos
+
+Compute and print files with at least one reference change:
+
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected")
+    >>> case.files
+    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
+    >>> case.run()
+    CRDS  : INFO     No comparison context or source data bestrefs comparison requested;  skipping results comparisons.
+    data/j8bt05njq_raw.fits
+    data/j8bt09jcq_raw.fits
+    data/j8bt06o6q_raw.fits
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     5 infos
 
 Compute simple bestrefs for 3 files using the default context from the server:
 
->>> case = BestrefsScript(argv="bestrefs.py --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
->>> case.files
-['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
+    >>> case = BestrefsScript(argv="bestrefs.py --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
+    >>> case.files
+    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
 
-Can't really know what the default context will be over time.
+    Can't really know what the default context will be over time, so check vaguely.
+    
+    >>> case.new_context.startswith("hst") and case.new_context.endswith(".pmap")
+    True
+    >>> case.run()
+    CRDS  : INFO     No comparison context or source data bestrefs comparison requested;  skipping results comparisons.
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     9 infos
 
->>> case.new_context.startswith("hst") and case.new_context.endswith(".pmap")
-True
+Compute simple bestrefs for 3 catalog datasets using hst.pmap:
 
-Compute simple bestrefs for 3 datasets using hst.pmap:
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets j8bt05njq j8bt06o6q j8bt09jcq")
+    >>> case.args.datasets
+    ['j8bt05njq', 'j8bt06o6q', 'j8bt09jcq']
+    >>> case.run()
+    
+Compute comparison bestrefs between two contexts:
 
->>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets j8bt05njq j8bt06o6q j8bt09jcq")
->>> case.args.datasets
-[j8bt05njq', 'j8bt06o6q', 'j8bt09jcq']
->>> case.run()
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst_9999.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --verbose")
+    >>> case.run()
 
 """
 

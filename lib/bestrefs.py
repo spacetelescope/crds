@@ -1,24 +1,9 @@
 """This module is a command line script which handles comparing the best
 reference recommendations for a particular context and dataset files.
 
-Dataset parameters/headers required to compute best refs can come in two
-forms:
+For more details on the several modes of operations and command line parameters browse the source or run:   
 
-1. Dataset file headers
-2. Cache file
-
-Prior recommendations can really come in three forms:
-
-1. Generated from a second context.
-2. Dataset file headers
-3. Cache file
-
-To make new recommendations more quickly, file_bestrefs can store information
-about prior recommendations in a cache file,  including both the recommendations
-themselves and as well as critical parameters required to find them.
-
-To support one possible use case of CRDS,  file_bestrefs can write new best
-reference recommendations into the dataset file headers.
+% python -m crds.bestrefs --help
 """
 
 import sys
@@ -130,10 +115,105 @@ class BestrefsScript(cmdline.Script):
     """Command line script for determining best references for a sequence of dataset files."""
 
     description = """
-Determines best references with respect to a context.
+Determines best references with respect to a context or contexts.   
+Optionally compares new results to prior results.
+Optionally prints source data names affected by the new context.
+Optionally updates the headers of file-based data with new recommendations.
     """
     
-    epilog = ""
+    epilog = """
+Bestrefs has a number of command line parameters which make it operate in different modes. 
+
+-----------
+NEW CONTEXT
+-----------
+
+crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the 
+--new-context parameter.    If --new-context is not specified,  the default operational context is determined by 
+consulting the CRDS server or looking in the local cache.  
+
+------------------------
+LOOKUP PARAMETER SOURCES
+------------------------
+
+The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually 
+lookup parameters are always associated with particular datasets and used to identify the references
+required to process those datasets.
+
+The options --files, --datasets, --instruments, and --all determine the source of lookup parameters:
+
+1. To find best references for a list of files do something like this:
+
+    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
+
+the first parameter, hst.pmap,  is the context with respect to which best references are determined.
+
+2. To find best references for a list of catalog dataset ids do something like this:
+
+    % python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
+
+3. To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
+
+    % python -m crds.bestrefs --new-context hst.pmap --instruments acs
+
+4. To do mass scale testing for all supported instruments for all cataloged datasets do:
+
+    % python -m crds.bestrefs --new-context hst.pmap --all
+    
+    or to test for differences between two contexts
+
+    % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all
+
+----------------
+COMPARISON MODES
+----------------
+
+The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
+the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from 
+the newly computed bestrefs determined by --new-context.
+
+    CONTEXT-TO-CONTEXT
+    ..................
+    
+    --old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context implies 
+    that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it defaults to None.
+    
+    PRIOR SOURCE RECOMMENDATIONS
+    ............................
+    
+    --compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
+    recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
+    cases the prior best references are recorded static values,  not dynamically computed bestrefs.
+    
+------------
+OUTPUT MODES
+------------
+
+crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
+
+If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
+one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.
+
+    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
+    j8bt05njq_raw.fits
+    j8bt06o6q_raw.fits
+    j8bt09jcq_raw.fits
+    
+------------
+UPDATE MODES
+------------
+
+crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
+
+    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --update-bestrefs
+
+---------
+VERBOSITY
+---------
+
+crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational and debug output.
+
+    """
     
     def __init__(self, *args, **keys):
         super(BestrefsScript, self).__init__(*args, **keys)
@@ -156,13 +236,13 @@ Determines best references with respect to a context.
     def setup_contexts(self):
         """Determine and cache the new and comparison .pmap's for this run."""
         if self.args.new_context is None:
-            log.verbose("Using default context", repr(self.default_context), "for computing updated best references.", verbosity=25)
+            log.verbose("Using default new context", repr(self.default_context), "for computing updated best references.", verbosity=25)
             self.new_context = self.default_context
         else:
-            log.verbose("Using explicit context", repr(self.args.new_context), "for computing updated best references.", verbosity=25)
+            log.verbose("Using explicit new context", repr(self.args.new_context), "for computing updated best references.", verbosity=25)
             self.new_context = self.args.new_context
         if self.args.old_context is not None:
-            log.verbose("Using explicit comparison context", repr(self.args.old_context), verbosity=25)
+            log.verbose("Using explicit old context", repr(self.args.old_context), verbosity=25)
         self.sync_contexts()
         newctx = rmap.get_cached_mapping(self.new_context)
         oldctx = rmap.get_cached_mapping(self.args.old_context)  if self.args.old_context else None
@@ -244,9 +324,14 @@ Determines best references with respect to a context.
         return new_headers
     
     def init_comparison(self):
-        assert not (self.args.old_context and self.compare_source_bestrefs), \
+        assert not (self.args.old_context and self.args.compare_source_bestrefs), \
             "Cannot specify both --old-context and --compare-source-bestrefs."
-        compare_prior = self.args.old_context or self.args.compare_source_bestrefs
+        compare_prior = \
+            self.args.old_context or \
+            self.args.compare_source_bestrefs or \
+            self.args.update_bestrefs or \
+            self.args.print_affected or \
+            self.args.print_new_references
         old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
@@ -282,15 +367,15 @@ Determines best references with respect to a context.
         instrument = self.newctx.get_instrument(header)
         if self.args.print_best_references or log.get_verbose():
             log.info("Best references for", repr(instrument), "data", repr(dataset), 
-                     "with respect to", repr(self.args.new_context), "=", repr(new_bestrefs))
+                     "with respect to", repr(self.new_context), "=", repr(new_bestrefs))
         if self.compare_prior:
             if self.args.old_context:
                 old_header, old_bestrefs = self.get_bestrefs(self.old_headers, dataset)
             else:
                 old_header, old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
-            updates = self.compare_bestrefs(dataset, self.args.new_context, self.old_bestrefs_name, new_bestrefs, old_bestrefs)
+            updates = self.compare_bestrefs(instrument, dataset, self.args.new_context, self.old_bestrefs_name, new_bestrefs, old_bestrefs)
         else:
-            updates = self.screen_bestrefs(dataset, self.args.new_context, new_bestrefs)
+            updates = self.screen_bestrefs(instrument, dataset, self.args.new_context, new_bestrefs)
         return updates
     
     def get_bestrefs(self, header_gen, dataset):
@@ -305,12 +390,12 @@ Determines best references with respect to a context.
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(dataset, header_gen.context, str(exc)))
         return header, bestrefs
 
-    def screen_bestrefs(self, dataset, ctx1, bestrefs1):
+    def screen_bestrefs(self, instrument, dataset, ctx1, bestrefs1):
         """Screen one set of best references for `dataset` taken from context named `ctx1`."""
     
         # XXX  This is closely related to compare_bestrefs, maintain both!!
     
-        updates = {}
+        updates = []
         
         errors = 0
         for filekind in (self.process_filekinds or bestrefs1):
@@ -327,16 +412,16 @@ Determines best references with respect to a context.
                 log.error("Bestref FAILED for data", repr(dataset), "type", repr(u_filekind), new_org[len("NOT FOUND"):])
                 continue
             
-            updates[filekind] = new
+            updates.append((instrument, filekind, None, new))
 
         return updates
     
-    def compare_bestrefs(self, dataset, ctx1, ctx2, bestrefs1, bestrefs2):
+    def compare_bestrefs(self, instrument, dataset, ctx1, ctx2, bestrefs1, bestrefs2):
         """Compare two sets of best references for `dataset` taken from contexts named `ctx1` and `ctx2`."""
     
         # XXX  This is closely related to screen_bestrefs,  maintain both!!
     
-        updates = {}
+        updates = []
         
         errors = 0
         for filekind in (self.process_filekinds or bestrefs1):
@@ -359,13 +444,13 @@ Determines best references with respect to a context.
                 continue
             if filekind not in bestrefs2:
                 log.warning("No comparison bestref for data", repr(dataset), "type", repr(u_filekind), "recommending -->", repr(new))
-                updates[filekind] = new
+                updates.append((instrument, filekind, None, new))
                 continue
             
             if new != old:
                 if self.args.print_new_references or log.get_verbose():
                     log.info("New Reference for data",  repr(dataset), "type", repr(u_filekind), ":", repr(old), "-->", repr(new))
-                updates[filekind] = new
+                updates.append((instrument, filekind, old, new))
             else:
                 log.verbose("Lookup MATCHES for data", repr(dataset), "type", repr(u_filekind), "=", repr(old), verbosity=30)
             
@@ -377,6 +462,10 @@ Determines best references with respect to a context.
             for dataset in self.updates:
                 if self.updates[dataset]:
                     print(dataset) 
+        if self.args.print_new_references:
+            for dataset in self.updates:
+                for reftype in self.updates[dataset]:
+                    print(" ".join([val.upper() for val in reftype]))
         if self.args.update_bestrefs:
             log.verbose("Performing best references updates.")
             self.new_headers.handle_updates(self.updates)
