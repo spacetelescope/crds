@@ -290,20 +290,51 @@ Determines best references with respect to a context.
                 old_header, old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
             updates = self.compare_bestrefs(dataset, self.args.new_context, self.old_bestrefs_name, new_bestrefs, old_bestrefs)
         else:
-            updates = new_bestrefs
+            updates = self.screen_bestrefs(dataset, self.args.new_context, new_bestrefs)
         return updates
     
     def get_bestrefs(self, header_gen, dataset):
         """Compute the bestrefs for `dataset` with respect to the `context`."""
         try:
             header = header_gen.get_lookup_parameters(dataset)
+        except Exception, exc:
+            raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(dataset, header_gen.context, str(exc)))            
+        try:
             bestrefs = header_gen.pmap.get_best_references(header)
-            return header, bestrefs
         except Exception, exc:
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(dataset, header_gen.context, str(exc)))
+        return header, bestrefs
 
+    def screen_bestrefs(self, dataset, ctx1, bestrefs1):
+        """Screen one set of best references for `dataset` taken from context named `ctx1`."""
+    
+        # XXX  This is closely related to compare_bestrefs, maintain both!!
+    
+        updates = {}
+        
+        errors = 0
+        for filekind in (self.process_filekinds or bestrefs1):
+            
+            new_org = cleanpath(bestrefs1.get(filekind, "UNDEFINED"))
+            new = new_org.upper()
+            u_filekind = filekind.upper()
+            
+            if new.startswith("NOT FOUND N/A"):
+                log.verbose("Filetype not applicable for data", repr(dataset), "type", repr(u_filekind))
+                continue
+            if new.startswith("NOT FOUND"):
+                errors += 1
+                log.error("Bestref FAILED for data", repr(dataset), "type", repr(u_filekind), new_org[len("NOT FOUND"):])
+                continue
+            
+            updates[filekind] = new
+
+        return updates
+    
     def compare_bestrefs(self, dataset, ctx1, ctx2, bestrefs1, bestrefs2):
         """Compare two sets of best references for `dataset` taken from contexts named `ctx1` and `ctx2`."""
+    
+        # XXX  This is closely related to screen_bestrefs,  maintain both!!
     
         updates = {}
         
