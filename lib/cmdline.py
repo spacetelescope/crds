@@ -86,19 +86,32 @@ def nrange(string):
 # =============================================================================
 
 class Script(object):
-    """Base class for CRDS command line scripts with standard properties."""
+    """Base class for CRDS command line scripts with standard properties.
+    
+    `args` is either a string of command line parameters or a parameter list of command line words.  If
+           defaulted to None then `args` is treated as sys.argv (default argparse handling). Note that `args`
+           shoulld include the program name as args[0].  Explicitly specifying `args` is used to
+           instantiate a script in code for testing, etc.
+    """
     
     decription = epilog = usage = None
     formatter_class = RawTextHelpFormatter
     
-    def __init__(self, **parser_pars):
+    def __init__(self, argv=None, parser_pars=None):
+        if isinstance(argv, basestring):
+            argv = argv.split()
+        elif argv is None:
+            argv = sys.argv
+        self._argv = argv
+        if parser_pars is None:
+            parser_pars = {}
         self._server_info = None
         for key in ["description", "epilog", "usage", "formatter_class"]: 
             self._add_key(key, parser_pars)
-        self.parser = argparse.ArgumentParser(**parser_pars)
+        self.parser = argparse.ArgumentParser(prog=argv[0], **parser_pars)
         self.add_args()
         self.add_standard_args()
-        self.args = self.parser.parse_args()
+        self.args = self.parser.parse_args(argv[1:])
         log.set_verbose(self.args.verbosity or self.args.verbose)
         
     def main(self):
@@ -233,6 +246,10 @@ class Script(object):
         else:
             self.main()
 
+    def run(self, *args, **keys):
+        """script.run() is the same thing as script() but more explicit."""
+        self.__call__(*args, **keys)
+        
 # =============================================================================
 
 class ContextsScript(Script):
@@ -307,4 +324,4 @@ class ContextsScript(Script):
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
         raise NotImplementedError("ScriptWithContexts subclasses have to define main().")
-        
+    
