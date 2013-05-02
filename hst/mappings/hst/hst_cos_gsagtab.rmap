@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-04-29 16:56:37.408558',
+    'derived_from' : 'generated from CDBS database 2013-05-01 10:53:50.289163',
     'filekind' : 'GSAGTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR == "FUV")',
-    'sha1sum' : 'bb43257a8cc0539e9ed35330e3a422a47a40505b',
+    'sha1sum' : '22aa3499e3fd45329eaddddcf7c470a1ebe1a334',
 }
 
 selector = Match({
