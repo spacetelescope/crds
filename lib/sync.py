@@ -22,12 +22,12 @@ import os
 import os.path
 
 import crds.client.api as api
-from crds import (rmap, log, data_file, cmdline)
+from crds import (rmap, log, data_file, cmdline, utils)
 import crds
 
 # ============================================================================
 
-def remove_files(observatory, files, kind):
+def remove_files(observatory, files, kind, dryrun=False):
     """Remove the list of `files` basenames which are converted to fully
     specified CRDS paths using the locator module associated with context.
     """
@@ -35,9 +35,13 @@ def remove_files(observatory, files, kind):
         log.verbose("No " + kind + "s to remove.")
     for filename in files:
         where = rmap.locate_file(filename, observatory)
-        log.verbose("Removing", filename, "from", where)
-        with log.error_on_exception("File removal failed for", repr(where)):
-            os.remove(where)
+        instrument, filekind = utils.get_file_properties(observatory, where)
+        if not dryrun:
+            log.verbose("Removing", filename, "from", where)
+            with log.error_on_exception("File removal failed for", repr(where)):
+                os.remove(where)
+        else:
+            log.info("Without --dry-run would remove", repr(where))
 
 # ============================================================================
 
@@ -54,7 +58,7 @@ class SyncScript(cmdline.ContextsScript):
     
          % python -m crds.sync  hst_0001.pmap hst_acs_darkfile_0037.fits
     
-    * Typically syncing is done with respect to particular CRDS contexts:
+    * Typically syncing CRDS files is done with respect to particular CRDS contexts:
     
         Synced contexts can be explicitly listed:
         
@@ -68,34 +72,44 @@ class SyncScript(cmdline.ContextsScript):
         
           % python -m crds.sync --all
           
+        NOTE:  Fetching references required to support contexts has to be done explicitly:
+        
+          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references    
+          will download all the references mentioned by contexts 0001 and 0002.   This can be a huge undertaking.
+        
+    * Removing files:
+          
         Files from unspecified contexts can be removed like this:
         
-          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge
-          this would remove references and mappings for 0,1,2 which are not in 4 or 5.
+          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
+          this would remove mappings which are not in contexts 4 or 5.
     
-    * Typically reference file retrieval behavior is driven by switches:
+          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
+          this would remove reference files which are not in 4 or 5.
     
-          Cache all references for the specified contexts like this:
-    
-          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --references   
-          
-          Cache the best references for the specified datasets like this:
-        
-          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --datasets  <dataset_files...>        
+    * References for particular datasets can be cached like this:
+            
+          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
+          this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+          this mode does not update dataset file headers, or support purging.  See also crds.bestrefs.
     """
     
     # ------------------------------------------------------------------------------------------
     
     def add_args(self):    
-        self.add_argument('--references', action='store_true', dest="get_references",
-                          help='Get all the references for the specified contexts.')        
-        self.add_argument('--datasets', metavar='DATASET', type=cmdline.dataset, nargs='*',
-                          help='List dataset files for which to prefetch references.')
+        self.add_argument('--fetch-references', action='store_true', dest="fetch_references",
+                          help='Cache all the references for the specified contexts.')        
         self.add_argument("files", nargs="*", help="Explicitly list files to be synced.")
-        self.add_argument('--purge', action='store_true', dest="purge",
-                          help='Remove reference files and mappings not referred to by contexts.')
+        self.add_argument('--purge-references', action='store_true', dest="purge_references",
+                          help='Remove reference files not referred to by contexts from the cache.')
+        self.add_argument('--purge-mappings', action='store_true', dest="purge_mappings",
+                          help='Remove mapping files not referred to by contexts from the cache.')
+        self.add_argument('--datasets', metavar='DATASET', type=cmdline.dataset, nargs='*',
+                          help='Cache references for the specified datasets.')
         self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
                           help="Download sync'ed files even if they're already in the cache.")
+        self.add_argument('--dry-run', action="store_true",
+                          help= "Don't remove purged files,  just print out their names.")
         super(SyncScript, self).add_args()
 
     # ------------------------------------------------------------------------------------------
@@ -104,20 +118,26 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         self.test_server_connection()
         if self.contexts:
-            self.sync_context_mappings()
+            self.fetch_mappings()
             if self.args.datasets:
                 self.sync_datasets()
-            elif self.args.get_references:
-                self.sync_context_references()
+            else:
+                if self.args.fetch_references:
+                    self.fetch_references()
+                if self.args.purge_references:
+                    self.purge_references()    
+                if self.args.purge_mappings:
+                    self.purge_mappings()
         elif self.args.files:
             self.sync_explicit_files()
         else:
             log.error("Define --contexts and/or --datasets,  or explicitly list particular files to sync.")
             sys.exit(-1)
+        log.standard_status()
 
     # ------------------------------------------------------------------------------------------
     
-    def sync_context_mappings(self):
+    def fetch_mappings(self):
         """Gets all mappings required to support `self.contexts`.  
         if purge:  
             Remove all mappings from the CRDS mapping cache which are not required for `self.contexts`.
@@ -129,19 +149,17 @@ class SyncScript(cmdline.ContextsScript):
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
             api.dump_mappings(context, ignore_cache=self.args.ignore_cache)
-        if self.args.purge:
-            self.purge_mappings()
             
     def purge_mappings(self):
-        """Remove all mappings under pmaps `only_contexts`."""
+        """Remove all mappings not under pmaps `self.contexts`."""
         pmap = rmap.get_cached_mapping(self.contexts[0])
         purge_maps = set(rmap.list_mappings('*.[pir]map', pmap.observatory))
-        keep = self.get_context_mappings()
-        remove_files(pmap.observatory, sorted(purge_maps-keep), "mapping")
+        keep = set(self.get_context_mappings())
+        remove_files(pmap.observatory, sorted(purge_maps-keep), "mapping", dryrun=self.args.dry_run)
         
     # ------------------------------------------------------------------------------------------
     
-    def sync_context_references(self):
+    def fetch_references(self):
         """Gets all references required to support `only_contexts`.  Removes
         all references from the CRDS reference cache which are not required for
         `only_contexts`.
@@ -151,21 +169,19 @@ class SyncScript(cmdline.ContextsScript):
         for context in self.contexts:
             log.verbose("Syncing references for", repr(context))
             api.dump_references(context, ignore_cache=self.args.ignore_cache)
-        if self.args.purge:
-            self.purge_references()
-    
+
     def purge_references(self):
-        """Remove all references not references under pmaps `only_contexts`."""
+        """Remove all references not references under pmaps `self.contexts`."""
         pmap = rmap.get_cached_mapping(self.contexts[0])
-        purge_refs = rmap.list_references("*", pmap.observatory)
-        keep = self.get_context_references()
+        purge_refs = set(rmap.list_references("*", pmap.observatory))
+        keep = set(self.get_context_references())
         remove = purge_refs - keep
-        remove_files(pmap.observatory, remove, "reference")
+        remove_files(pmap.observatory, remove, "reference", dryrun=self.args.dry_run)
     
     # ------------------------------------------------------------------------------------------
     
     def sync_datasets(self):
-        """Sync mappings and references for datasets with respect to `contexts`."""
+        """Sync mappings and references for datasets with respect to `self.contexts`."""
         if not self.contexts:
             log.error("Define --contexts under which references are fetched for --datasets.""")
             sys.exit(-1)
@@ -182,7 +198,7 @@ class SyncScript(cmdline.ContextsScript):
     # ------------------------------------------------------------------------------------------
     
     def sync_explicit_files(self):
-        """Cache the listed `files`."""
+        """Cache `self.args.files`."""
         log.info("Syncing explicitly listed files.")
         mappings = [os.path.basename(mapping) for mapping in self.args.files if rmap.is_mapping(mapping)]
         references = [os.path.basename(ref) for ref in self.args.files if not rmap.is_mapping(ref)]
