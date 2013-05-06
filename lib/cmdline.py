@@ -127,13 +127,29 @@ class Script(object):
         """Return either the command-line override observatory,  or the one determined
         by the client/server exchange.
         """
+        obs = None
         if self.args.jwst:
             obs = "jwst"
-            assert not self.args.hst, "Can only specify one of --hst or --jwst"
-        elif self.args.hst:
+        if self.args.hst:
+            assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
             obs = "hst"
-            assert not self.args.jwst, "Can only specify one of --hst or --jwst"
-        else:
+        if hasattr(self.args, "files"):
+            for file in self.args.files:
+                if file.startswith("hst"):
+                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "hst"
+                if file.startswith("jwst"):
+                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "jwst"
+        if hasattr(self, "contexts"):  # XXX hack
+            for file in self.contexts:
+                if file.startswith("hst"):
+                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "hst"
+                if file.startswith("jwst"):
+                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "jwst"
+        if obs is None:
             obs = api.get_default_observatory()
         return obs
         
