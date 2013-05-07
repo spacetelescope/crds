@@ -277,11 +277,11 @@ class ContextsScript(Script):
 
     def add_args(self):
         self.add_argument('--contexts', metavar='CONTEXT', type=mapping, nargs='*',
-            help="Specify a list of .pmap's.")        
-        self.add_argument('--all', action='store_true',
-            help='Operate with respect to all known contexts.')
+            help="Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap")        
         self.add_argument("--range", metavar="MIN:MAX",  type=nrange, dest="range", default=None,
-            help='Fetch files for pipeline context ids between <MIN> and <MAX>.')
+            help='Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.')
+        self.add_argument('--all', action='store_true',
+            help='Operate with respect to all known CRDS contexts.')
 
     @property
     def contexts(self):

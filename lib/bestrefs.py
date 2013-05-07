@@ -132,26 +132,26 @@ class BestrefsScript(cmdline.Script):
     """Command line script for determining best references for a sequence of dataset files."""
 
     description = """
-Determines best references with respect to a context or contexts.   
-Optionally compares new results to prior results.
-Optionally prints source data names affected by the new context.
-Optionally updates the headers of file-based data with new recommendations.
+* Determines best references with respect to a context or contexts.   
+* Optionally compares new results to prior results.
+* Optionally prints source data names affected by the new context.
+* Optionally updates the headers of file-based data with new recommendations.
     """
     
     epilog = """
 Bestrefs has a number of command line parameters which make it operate in different modes. 
 
------------
-NEW CONTEXT
------------
+...........
+New Context
+...........
 
 crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the 
 --new-context parameter.    If --new-context is not specified,  the default operational context is determined by 
 consulting the CRDS server or looking in the local cache.  
 
-------------------------
-LOOKUP PARAMETER SOURCES
-------------------------
+........................
+Lookup Parameter Sources
+........................
 
 The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually 
 lookup parameters are always associated with particular datasets and used to identify the references
@@ -181,31 +181,31 @@ the first parameter, hst.pmap,  is the context with respect to which best refere
 
     % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all
 
-----------------
-COMPARISON MODES
-----------------
+................
+Comparison Modes
+................
 
 The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
 the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from 
 the newly computed bestrefs determined by --new-context.
 
-    CONTEXT-TO-CONTEXT
-    ..................
+    Context-to-Context
+    ::::::::::::::::::
     
     --old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context 
     implies that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it 
     defaults to None.
     
-    PRIOR SOURCE RECOMMENDATIONS
-    ............................
+    Prior Source Recommendations
+    ::::::::::::::::::::::::::::
     
     --compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
     recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
     cases the prior best references are recorded static values,  not dynamically computed bestrefs.
     
-------------
-OUTPUT MODES
-------------
+............
+Output Modes
+............
 
 crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
 
@@ -218,18 +218,18 @@ one reference type was recommended.   This is essentially a list of files to be 
     j8bt06o6q_raw.fits
     j8bt09jcq_raw.fits
     
-------------
-UPDATE MODES
-------------
+............
+Update Modes
+............
 
 crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --update-bestrefs
 
----------
-VERBOSITY
----------
+.........
+Verbosity
+.........
 
 crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational and debug output.
 

@@ -40,26 +40,31 @@ class SyncScript(cmdline.ContextsScript):
     epilog = """    
     * Primitive syncing can be done by explicitly listing the files you wish to cache:
     
-         % python -m crds.sync  hst_0001.pmap hst_acs_darkfile_0037.fits
+         % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
+         this will download only those two files.
     
     * Typically syncing CRDS files is done with respect to particular CRDS contexts:
     
         Synced contexts can be explicitly listed:
         
           % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+          this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
         
         Synced contexts can be specified as a numerical range:
         
-          % python -m crds.sync --range 1:2
+          % python -m crds.sync --range 1:3
+          this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
         
         Synced contexts can be specified as --all contexts:
         
           % python -m crds.sync --all
+          this will recursively download all CRDS mappings for all time.
           
         NOTE:  Fetching references required to support contexts has to be done explicitly:
         
           % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references    
-          will download all the references mentioned by contexts 0001 and 0002.   This can be a huge undertaking.
+          will download all the references mentioned by contexts 0001 and 0002.   
+          this can be a huge undertaking and should be done with care.
         
     * Removing files:
           
@@ -75,26 +80,26 @@ class SyncScript(cmdline.ContextsScript):
             
           % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
           this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
-          this mode does not update dataset file headers, or support purging.  See also crds.bestrefs.
+          this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
     """
     
     # ------------------------------------------------------------------------------------------
     
     def add_args(self):    
+        super(SyncScript, self).add_args()
+        self.add_argument("--files", nargs="*", help="Explicitly list files to be synced.")
+        self.add_argument('--datasets', metavar='DATASET', type=cmdline.dataset, nargs='*',
+                          help='Cache references for the specified datasets.')
         self.add_argument('--fetch-references', action='store_true', dest="fetch_references",
                           help='Cache all the references for the specified contexts.')        
-        self.add_argument("files", nargs="*", help="Explicitly list files to be synced.")
         self.add_argument('--purge-references', action='store_true', dest="purge_references",
                           help='Remove reference files not referred to by contexts from the cache.')
         self.add_argument('--purge-mappings', action='store_true', dest="purge_mappings",
                           help='Remove mapping files not referred to by contexts from the cache.')
-        self.add_argument('--datasets', metavar='DATASET', type=cmdline.dataset, nargs='*',
-                          help='Cache references for the specified datasets.')
         self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
                           help="Download sync'ed files even if they're already in the cache.")
         self.add_argument('--dry-run', action="store_true",
                           help= "Don't remove purged files,  just print out their names.")
-        super(SyncScript, self).add_args()
 
     # ------------------------------------------------------------------------------------------
     
