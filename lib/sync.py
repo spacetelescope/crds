@@ -27,22 +27,6 @@ import crds
 
 # ============================================================================
 
-def remove_files(observatory, files, kind, dryrun=False):
-    """Remove the list of `files` basenames which are converted to fully
-    specified CRDS paths using the locator module associated with context.
-    """
-    if not files:
-        log.verbose("No " + kind + "s to remove.")
-    for filename in files:
-        where = rmap.locate_file(filename, observatory)
-        instrument, filekind = utils.get_file_properties(observatory, where)
-        if not dryrun:
-            log.verbose("Removing", filename, "from", where)
-            with log.error_on_exception("File removal failed for", repr(where)):
-                os.remove(where)
-        else:
-            log.info("Without --dry-run would remove", repr(where))
-
 # ============================================================================
 
 class SyncScript(cmdline.ContextsScript):
@@ -82,10 +66,10 @@ class SyncScript(cmdline.ContextsScript):
         Files from unspecified contexts can be removed like this:
         
           % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
-          this would remove mappings which are not in contexts 4 or 5.
+          this would remove mappings which are *not* in contexts 4 or 5.
     
           % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
-          this would remove reference files which are not in 4 or 5.
+          this would remove reference files which are *not* in 4 or 5.
     
     * References for particular datasets can be cached like this:
             
@@ -120,14 +104,15 @@ class SyncScript(cmdline.ContextsScript):
         if self.contexts:
             self.fetch_mappings()
             if self.args.datasets:
-                self.sync_datasets()
+                active_references = self.sync_datasets()
             else:
-                if self.args.fetch_references:
-                    self.fetch_references()
-                if self.args.purge_references:
-                    self.purge_references()    
-                if self.args.purge_mappings:
-                    self.purge_mappings()
+                active_references = self.get_context_references()
+            if self.args.fetch_references:
+                self.fetch_references(active_references)
+            if self.args.purge_references:
+                self.purge_references(active_references)    
+            if self.args.purge_mappings:
+                self.purge_mappings()
         elif self.args.files:
             self.sync_explicit_files()
         else:
@@ -152,32 +137,51 @@ class SyncScript(cmdline.ContextsScript):
             
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
-        pmap = rmap.get_cached_mapping(self.contexts[0])
-        purge_maps = set(rmap.list_mappings('*.[pir]map', pmap.observatory))
+        purge_maps = set(rmap.list_mappings('*.[pir]map', self.observatory))
         keep = set(self.get_context_mappings())
-        remove_files(pmap.observatory, sorted(purge_maps-keep), "mapping", dryrun=self.args.dry_run)
+        self.remove_files(sorted(purge_maps-keep), "mapping")
         
     # ------------------------------------------------------------------------------------------
     
-    def fetch_references(self):
+    def fetch_references(self, references):
         """Gets all references required to support `only_contexts`.  Removes
         all references from the CRDS reference cache which are not required for
         `only_contexts`.
         """
         if not self.contexts:
             return
-        for context in self.contexts:
-            log.verbose("Syncing references for", repr(context))
-            api.dump_references(context, ignore_cache=self.args.ignore_cache)
+        if self.args.dry_run:
+            already_have = set(rmap.list_references("*", self.observatory))
+            fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
+            log.info("Would fetch references:", repr(fetched))
+        else:
+            api.dump_references(self.contexts[0], references, ignore_cache=self.args.ignore_cache, raise_exceptions=False)
 
-    def purge_references(self):
+    def purge_references(self, keep=None):
         """Remove all references not references under pmaps `self.contexts`."""
-        pmap = rmap.get_cached_mapping(self.contexts[0])
-        purge_refs = set(rmap.list_references("*", pmap.observatory))
-        keep = set(self.get_context_references())
-        remove = purge_refs - keep
-        remove_files(pmap.observatory, remove, "reference", dryrun=self.args.dry_run)
+        purge_refs = set(rmap.list_references("*", self.observatory))
+        if keep is None:
+            keep = set(self.get_context_references())
+        else:
+            keep = set(keep)
+        self.remove_files(sorted(purge_refs - keep), "reference")
     
+    def remove_files(self, files, kind):
+        """Remove the list of `files` basenames which are converted to fully
+        specified CRDS paths using the locator module associated with context.
+        """
+        if not files:
+            log.verbose("No " + kind + "s to remove.")
+        for filename in files:
+            where = rmap.locate_file(filename, self.observatory)
+            # instrument, filekind = utils.get_file_properties(self.observatory, where)
+            if not self.args.dry_run:
+                log.verbose("Removing", filename, "from", where)
+                with log.error_on_exception("File removal failed for", repr(where)):
+                    os.remove(where)
+            else:
+                log.info("Without --dry-run would remove", repr(where))
+
     # ------------------------------------------------------------------------------------------
     
     def sync_datasets(self):
@@ -185,6 +189,7 @@ class SyncScript(cmdline.ContextsScript):
         if not self.contexts:
             log.error("Define --contexts under which references are fetched for --datasets.""")
             sys.exit(-1)
+        active_references = []
         for context in self.contexts:
             for dataset in self.args.datasets:
                 log.info("Syncing context '%s' dataset '%s'." % (context, dataset))
@@ -192,9 +197,11 @@ class SyncScript(cmdline.ContextsScript):
                     header = data_file.get_conditioned_header(dataset, observatory=self.observatory)
                     with log.error_on_exception("Failed syncing references for dataset", repr(dataset), 
                                                 "under context", repr(context)):   
-                        _bestrefs = crds.getreferences(header, context=context, observatory=self.observatory, 
-                                                       ignore_cache=self.args.ignore_cache)
-
+                        bestrefs = crds.getrecommendations(header, context=context, observatory=self.observatory, 
+                                                           ignore_cache=self.args.ignore_cache)
+                        active_references.extend(bestrefs.values())
+        return set(active_references)
+        
     # ------------------------------------------------------------------------------------------
     
     def sync_explicit_files(self):

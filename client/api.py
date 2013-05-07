@@ -278,7 +278,7 @@ def observatory_from_string(string):
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
     """
-    def get_local_files(self, pipeline_context, names, ignore_cache=False):
+    def get_local_files(self, pipeline_context, names, ignore_cache=False, raise_exceptions=True):
         """Given a list of basename `mapping_names` which are pertinent to the 
         given `pipeline_context`,   cache the mappings locally where they can 
         be used by CRDS.
@@ -293,7 +293,7 @@ class FileCacher(object):
                 downloads.append(name)
             localpaths[name] = localpath
         if downloads:
-            self.download_files(pipeline_context, downloads, localpaths)
+            self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
         else:
             log.verbose("Skipping download for cached files", names, verbosity=10)
         return localpaths
@@ -308,10 +308,16 @@ class FileCacher(object):
             observatory = crds.get_cached_mapping(pipeline_context).observatory
         return config.locate_file(name, observatory=observatory)
 
-    def download_files(self, pipeline_context, downloads, localpaths):
+    def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
         """Serial file-by-file download."""
         for name in downloads:
-            self.download(pipeline_context, name, localpaths[name])
+            try:
+                self.download(pipeline_context, name, localpaths[name])
+            except Exception, exc:
+                if raise_exceptions:
+                    raise
+                else:
+                    log.error("Failure downloading file", repr(name), ":", str(exc))
 
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
@@ -403,7 +409,7 @@ class BundleCacher(FileCacher):
     """BundleCacher gets remote files into a local cache by requesting a bundle
     of any missing files and then unpacking it.
     """
-    def download_files(self, pipeline_context, downloads, localpaths):
+    def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
         """Download a list of files as an archive bundle and unpack it."""
         bundlepath = config.get_crds_config_path() 
         bundlepath += "/" + "crds_bundle.tar.gz"
@@ -461,7 +467,7 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
     return MAPPING_CACHER.get_local_files(
         pipeline_context, mappings, ignore_cache=ignore_cache)
   
-def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
+def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True):
     """Given a pipeline `pipeline_context` and list of `baserefs` reference 
     file basenames,  obtain the set of reference files and cache them on the
     local file system.
@@ -478,7 +484,7 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False):
             log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
     return FILE_CACHER.get_local_files(
-        pipeline_context, baserefs, ignore_cache=ignore_cache)
+        pipeline_context, baserefs, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
     
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
