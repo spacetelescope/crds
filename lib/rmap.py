@@ -1062,7 +1062,7 @@ def mapping_type(mapping):
         raise ValueError("Unknown mapping type for " + repr(Mapping))
 # ===================================================================
 
-def get_best_references(context_file, header, include=None):
+def get_best_references(context_file, header, include=None, condition=False):
     """Compute the best references for `header` for the given CRDS
     `context_file`.   This is a local computation using local rmaps and
     CPU resources.   If `include` is None,  return results for all
@@ -1071,6 +1071,8 @@ def get_best_references(context_file, header, include=None):
     """
     ctx = asmapping(context_file, cached=True)
     minheader = ctx.minimize_header(header)
+    if condition:
+        minheader = utils.condition_header(minheader)
     return ctx.get_best_references(minheader, include=include)
 
 
