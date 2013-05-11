@@ -164,6 +164,13 @@ def get_file_info(pipeline_context, filename):
     """Return a dictionary of CRDS information about `filename`."""
     return S.get_file_info(pipeline_context, filename)
 
+def get_file_info_map(observatory, files=None, fields=None):
+    """Return the info { filename : { info } } on `files` of `observatory`.
+    `fields` can be used to limit info returned to specified keys.
+    """
+    infos = S.get_info_map(observatory, files, fields)
+    return infos
+
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
     for the specified pipeline_context.
@@ -197,6 +204,54 @@ def get_best_references(pipeline_context, header, reftypes=None):
                                       srepr(filetype) + " = " + 
                                       str(refname)[len("NOT FOUND"):])
     return bestrefs
+
+'''
+def get_best_references_by_header_map(pipeline_context, header_map, reftypes=None):
+    """Get best references for each dataset in a map of ids to headers,  `header_map`,  
+    relative to `pipeline_context`.
+    
+    pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
+    header_map       { name: { lookup_parameter : value } } dictionary of named headers
+    reftypes         If None,  return all reference types;  otherwise return 
+                     best refs for the specified list of reftypes. 
+
+    Returns          { name : { reftype : reference_basename ... } }
+    
+    Raises           CrdsLookupError,  typically for problems with header values
+    """
+    try:
+        bestrefs = S.get_best_references_by_header_map(pipeline_context, dict(header_map), reftypes)
+    except Exception, exc:
+        raise CrdsLookupError(str(exc))
+    # Due to limitations of jsonrpc,  exception handling is kludged in here.
+    for filetype, refname in bestrefs.items():
+        if "NOT FOUND" in refname:
+            if "NOT FOUND n/a" == refname:
+                log.verbose("Reference type", srepr(filetype), "not applicable.")
+            else:
+                raise CrdsLookupError("Error determining best reference for " + 
+                                      srepr(filetype) + " = " + 
+                                      str(refname)[len("NOT FOUND"):])
+    return bestrefs
+
+def get_best_references_by_ids(pipeline_context, datasets, reftypes=None):
+    """Get best references for list of `datasets` ids relative to `pipeline_context`.
+    
+    pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
+    datasets         [ dataset_id, ... ]   e.g. ["I9ZF01010", "I9MF01012"]
+    reftypes         If None,  return all reference types;  otherwise return 
+                     best refs for the specified list of reftypes. 
+
+    Returns          { id: { reftype : reference_basename ... } }
+    
+    Raises           CrdsLookupError,  typically for problems with header values
+    """
+    try:
+        bestrefs = S.get_best_references_by_ids(pipeline_context, datasets, reftypes)
+    except Exception, exc:
+        raise CrdsLookupError(str(exc))
+    return bestrefs
+'''
 
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
