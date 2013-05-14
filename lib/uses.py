@@ -14,7 +14,7 @@ def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention 
     `filename`.
     """
-    mapping_path = config.get_crds_mappath() + "/" + observatory
+    mapping_path = config.get_path("test.pmap", observatory)
     rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' |"
                        " xargs grep -l ${filename}")
     return [os.path.basename(r.strip()) for r in rmaps]
@@ -23,7 +23,7 @@ def findall_imaps_using_rmap(filename, observatory="hst"):
     """Return the basenames of all instrument contexts which mention 
     `filename`.
     """
-    mapping_path = config.get_crds_mappath() + "/" + observatory
+    mapping_path = config.get_path("test.pmap", observatory)
     imaps = pysh.lines("find ${mapping_path} -name '*.imap' |"
                        " xargs grep -l ${filename}")
     return [os.path.basename(imap.strip()) for imap in imaps]
@@ -32,7 +32,7 @@ def findall_pmaps_using_imap(filename, observatory="hst"):
     """Return the basenames of all pipeline contexts which mention 
     `filename`.
     """
-    mapping_path = config.get_crds_mappath() + "/" + observatory
+    mapping_path = config.get_path("test.pmap", observatory)
     pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' |"
                        " xargs grep -l ${filename}")
     return [os.path.basename(pmap.strip()) for pmap in pmaps]

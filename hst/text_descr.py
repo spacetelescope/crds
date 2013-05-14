@@ -184,9 +184,11 @@ def make_text_descr():
             del TEXT_DESCR[fkind]
 
 if __name__ == "__main__":
+    import pprint
     import crds.log as log
     logger = log.warning
     make_text_descr()
+    pprint.pprint(TEXT_DESCR)
 else:
     make_text_descr()
 

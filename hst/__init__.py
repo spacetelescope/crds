@@ -1,3 +1,5 @@
+# To avoid circular imports,  limit this file to inline definitions,  not imports
+
 INSTRUMENTS = ["acs","cos","nicmos","stis","wfc3","wfpc2"]
 
 EXTENSIONS = [
@@ -29,9 +31,87 @@ EXTENSIONS = [
               ".r9d",
                 ]
 
-from .tpn import FILEKINDS
+# from .text_descr import TEXT_DESCR
+TEXT_DESCR = {
+    'apdestab': 'apdestab',
+    'apertab': 'Aperture Throughput Tables',
+    'atodfile': 'Analog To Digital Converter Lookup Table',
+    'atodtab': 'Analog To Digital Lookup Table',
+    'backtab': 'Background Model Table',
+    'badttab': 'Bad Time Interval Table',
+    'biasfile': 'Bias Frame',
+    'bpixtab': 'Data Quality (bad Pixel) Initialization Tables',
+    'brftab': 'Baseline Reference Frame Table',
+    'brsttab': 'Burst Parameters Tables',
+    'ccdtab': 'Ccd Parameters Table',
+    'cdstab': 'Cross-disperser Scattering Tables',
+    'cfltfile': 'Coronagraphic Spot Flat Image',
+    'comptab': 'Master Component Table (py/synphot)',
+    'crrejtab': 'Cosmic Ray Rejection Parameter Table',
+    'd2imfile': 'd2imfile',
+    'darkfile': 'Dark Frame',
+    'deadtab': 'Deadtime Reference Table',
+    'dfltfile': 'Delta Flat Field Image',
+    'dgeofile': 'Geometric Distortion Correction File',
+    'disptab': 'Dispersion Relation Tables',
+    'drkcfile': 'Cte Corrected Dark',
+    'echsctab': 'Echelle Scattering Tables',
+    'exstab': 'exstab',
+    'flatfile': 'Flat Field',
+    'flshfile': 'Post-flash Image',
+    'fluxtab': 'Sensitivity Reference Files',
+    'gactab': 'gactab',
+    'geofile': 'Geometric Distortion Correction',
+    'graphtab': 'Master Graph Table (py/synphot)',
+    'gsagtab': 'gsagtab',
+    'halotab': 'Detectore Halo Tables',
+    'hvtab': 'hvtab',
+    'idctab': 'Image Distortion Correction File',
+    'illmfile': 'Illumination Pattern File',
+    'imphttab': 'Photometry Keyword Table',
+    'inangtab': 'Incidence Angle Correction Tables',
+    'lamptab': 'Template Calibration Lamp Spectra Tables',
+    'lfltfile': 'Low-order Flat Field Image',
+    'maskfile': 'Static Mask File',
+    'mdriztab': 'Multidrizzle Parameter Table',
+    'mlintab': 'Mama Linearity Table',
+    'mofftab': 'Mama Offset Correction Tables',
+    'nlinfile': 'Detector Linearity Correction File',
+    'noisfile': 'Detector Read-noise File',
+    'npolfile': 'npolfile',
+    'offtab': 'Not Used',
+    'oscntab': 'Overscan Region Tables',
+    'pctab': 'Photometric Correction Tables',
+    'pctetab': 'Cte Correction Table',
+    'pedsbtab': 'pedsbtab',
+    'pfltfile': 'Pixel To Pixel Flat Field Image',
+    'phatab': 'Pulse Height Parameters Tables',
+    'phottab': 'Phototmetric Calibration Table',
+    'pmodfile': 'pmodfile',
+    'pmskfile': 'pmskfile',
+    'riptab': 'Echelle Ripple Tables',
+    'rnlcortb': 'rnlcortb',
+    'saacntab': 'saacntab',
+    'saadfile': 'Post Saa Dark Assoc.',
+    'sdctab': '2-d Spectrum Distortion Corrections',
+    'sdstfile': 'Small Scale Distortion Image Files',
+    'shadfile': 'Shutter Shading Correction Image',
+    'spottab': 'Spot Position Table',
+    'sptrctab': '1-d Spectrum Trace Tables',
+    'spwcstab': 'spwcstab',
+    'srwtab': 'Scattering Reference Wavelength Tables',
+    'tdctab': 'Nuv Dark Correction Tables',
+    'tdffile': 'tdffile',
+    'tdstab': 'Time Dependent Sensitivity Table',
+    'teltab': 'teltab',
+    'tempfile': 'Temperature-dependent Dark Reference File',
+    'walktab': 'walktab',
+    'wcptab': 'Wavecal Parameters Reference Table',
+    'wf4tfile': 'wf4tfile',
+    'xtractab': '1-d Extraction Parameters Tables',
+    'zprattab': 'zprattab'
+}
 
-from .text_descr import TEXT_DESCR
-
-
+# from .tpn import FILEKINDS
+FILEKINDS = sorted(TEXT_DESCR.keys())
 
