@@ -134,7 +134,8 @@ class Script(object):
             assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
             obs = "hst"
         if hasattr(self.args, "files"):
-            for file in self.args.files:
+            files = self.args.files if self.args.files else []
+            for file in files:
                 if file.startswith("hst"):
                     assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
                     obs = "hst"
