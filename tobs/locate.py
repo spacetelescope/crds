@@ -12,7 +12,7 @@ import gzip
 import re
 
 # import crds.pysh as pysh
-from crds import (log, rmap, pysh, data_file)
+from crds import (log, rmap, pysh, data_file, config)
 from . import tpn
 
 HERE = os.path.dirname(__file__) or "./"
@@ -27,9 +27,8 @@ def test():
 # =======================================================================
 
 def locate_server_reference(reference):
-    """Return the absolute path for the server-side copy of a reference file.
-    """
-    return os.path.join([rmap.get_crds_refpath(), reference])
+    """Return the absolute path for the server-side copy of a reference file. Default cache path."""
+    return config.locate_file(reference, "tobs")
 
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.
