@@ -8,7 +8,6 @@ import numpy as np
 
 import crds
 from crds import certify, utils
-from crds.hst import locate as hstlocator
 
 from crds.tests import CRDSTestCase
 #from pyfits.tests.util import CaptureStdout, catch_warnings
@@ -18,6 +17,7 @@ from nose.tools import assert_equal, assert_raises, assert_true, assert_false
 class TestHSTTpninfoClass(CRDSTestCase):
     def setup(self):
         CRDSTestCase.setup(self)
+        hstlocator = utils.get_locator_module("hst")
         self.tpninfos = hstlocator.get_tpninfos('acs','idctab')
         self.validators = [certify.validator(info) for info in self.tpninfos]
         os.environ['CRDS_SERVER_URL'] = 'http://not-a-crds-server.stsci.edu'

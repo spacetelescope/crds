@@ -20,6 +20,8 @@ def get_crds_mappath():
     """get_crds_mappath() returns the base path of the CRDS mapping directory 
     tree where CRDS rules files (mappings) are stored.   This is extended by
     <observatory> once it is known.
+    
+    DEPRECATED:  only use in the config module.  Use locate_file() or locate_mapping() instead.
     """
     try:
         return os.environ["CRDS_MAPPATH"]
@@ -30,6 +32,8 @@ def get_crds_refpath():
     """get_crds_refpath returns the base path of the directory tree where CRDS 
     reference files are stored.   This is extended by <observatory> once it is
     known.
+    
+    DEPRECATED: only use in config module.  Use locate_file() or locate_reference() instead.
     """
     try:
         return os.environ["CRDS_REFPATH"]
@@ -106,6 +110,13 @@ def get_crds_env_vars():
     return vars
 
 # ===========================================================================
+
+def get_path(filename, observatory):
+    """Return the CRDS cache path of `filename` for `observatory`.   The path is
+    similar to the one from locate_file(),  but includes dirname only,  not `filename` itself.
+    """
+    fullpath = locate_file(filename, observatory)
+    return os.path.dirname(fullpath)
 
 def locate_file(filepath, observatory):
     """Figure out the absolute pathname where CRDS will stash a reference
