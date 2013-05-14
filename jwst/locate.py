@@ -37,9 +37,9 @@ def test():
 # =======================================================================
 
 def locate_server_reference(reference):
-    """Return the absolute path for the server-side copy of a reference file.
-    """
-    return os.path.join([config.get_crds_refpath(), "jwst", reference])
+    """Return the absolute path for the server-side copy of a reference file. Default cache layout."""
+    return config.locate_file(reference, "jwst")
+
 
 def reference_exists(reference):
     """Return True iff basename `reference` is known/exists in CRDS.

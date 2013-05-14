@@ -1009,14 +1009,16 @@ def asmapping(filename_or_mapping, cached=False, **keys):
 
 # =============================================================================
 
+"""glob_pattern may not identify file type,  hence discrete versions."""
+
 def list_references(glob_pattern, observatory, full_path=False):
     """Return the list of cached references for `observatory` which match `glob_pattern`."""
-    pattern = os.path.join(config.get_crds_refpath(), observatory, glob_pattern)
+    pattern = config.locate_reference(glob_pattern, observatory)
     return _glob_list(pattern, full_path)
 
 def list_mappings(glob_pattern, observatory, full_path=False):
     """Return the list of cached mappings for `observatory` which match `glob_pattern`."""
-    pattern = os.path.join(config.get_crds_mappath(), observatory, glob_pattern)
+    pattern = config.locate_mapping(glob_pattern, observatory)
     return _glob_list(pattern, full_path)
 
 def _glob_list(pattern, full_path=False):
