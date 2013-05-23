@@ -40,6 +40,7 @@ __all__ = [
            "get_file_chunk",
            "get_url",
            "get_file_info",
+           "get_file_info_map",
            
            "get_mapping_names",
            "get_reference_names",
@@ -168,7 +169,7 @@ def get_file_info_map(observatory, files=None, fields=None):
     """Return the info { filename : { info } } on `files` of `observatory`.
     `fields` can be used to limit info returned to specified keys.
     """
-    infos = S.get_info_map(observatory, files, fields)
+    infos = S.get_file_info_map(observatory, files, fields)
     return infos
 
 def get_reference_names(pipeline_context):
