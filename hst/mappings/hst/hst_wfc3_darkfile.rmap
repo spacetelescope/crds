@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-01 10:54:22.254359',
+    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:23.304522',
     'filekind' : 'DARKFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
         'subtype' : '(DETECTOR == "IR")',
     },
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'c8987d5452fb6a9d3d75b5258eb7060223afea26',
+    'sha1sum' : '8b63484524b313b66bc2404a4f4288344c46b866',
 }
 
 selector = Match({
@@ -238,7 +238,7 @@ selector = Match({
         '2008-02-19 00:00:00' : 't611932ei_drk.fits',
         '2008-02-20 00:00:00' : 't611932fi_drk.fits',
         '2009-05-11 00:00:00' : 'u3g20230i_drk.fits',
-        '2009-05-11 00:00:01' : 'wcj1946ti_drk.fits',
+        '2009-05-11 00:00:01' : 'x5g1509ki_drk.fits',
     }),
     ('IR', 'ABCD', 'N/A', 'N/A', 2.5, 'SPARS200', 'SQ128SUB') : UseAfter({
         '2008-02-20 00:00:00' : 't5s1754ni_drk.fits',
@@ -841,6 +841,12 @@ selector = Match({
         '2013-04-09 00:14:32' : 'x4g2020ai_drk.fits',
         '2013-04-13 00:00:12' : 'x4q1440ni_drk.fits',
         '2013-04-17 02:39:02' : 'x4q1440oi_drk.fits',
+        '2013-04-20 11:43:06' : 'x561646ti_drk.fits',
+        '2013-04-25 00:44:57' : 'x5616470i_drk.fits',
+        '2013-04-26 07:33:12' : 'x5616471i_drk.fits',
+        '2013-05-01 03:37:57' : 'x5616472i_drk.fits',
+        '2013-05-05 09:23:25' : 'x5f17144i_drk.fits',
+        '2013-05-09 01:01:34' : 'x5f17145i_drk.fits',
     }),
     ('UVIS', 'A|ABCD|AC|AD|B|BC|BD|C|D', 2, 2, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 's191848ii_drk.fits',

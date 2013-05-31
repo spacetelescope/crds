@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-01 10:53:50.281957',
+    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:50.312677',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -7,7 +7,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : '11e8d9feca77be18e1a3e349b7ca9df2b483111b',
+    'sha1sum' : '57ab0beae3cec3b9b6ee423762cac0ad99cd5952',
 }
 
 selector = Match({

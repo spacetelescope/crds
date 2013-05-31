@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-01 10:50:55.350444',
+    'derived_from' : 'generated from CDBS database 2013-05-30 10:33:52.600880',
     'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
@@ -8,7 +8,7 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
     'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : '92e7c939b01fe23b25bef2e9915ccff43e209cc5',
+    'sha1sum' : '19c2fd0258871c699a52fcf11691ad78649c8742',
 }
 
 selector = Match({
@@ -631,6 +631,9 @@ selector = Match({
     ('HRC', 'D', '1.0|2.0|4.0|8.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1991-01-01 00:00:00' : 'j331211hj_bia.fits',
     }),
+    ('WFC', 'A', 1.0, 'WFC1-2K', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x5f1318nj_bia.fits',
+    }),
     ('WFC', 'A', 2.0, '*', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-10-28 12:13:58' : 'u8j19106j_bia.fits',
         '2009-11-25 14:40:37' : 'u8j19107j_bia.fits',
@@ -648,7 +651,17 @@ selector = Match({
         '2012-02-19 00:00:00' : 'w8s1944mj_bia.fits',
         '2012-05-10 00:00:00' : 'w8s1944nj_bia.fits',
     }),
+    ('WFC', 'A', 2.0, 'WFC1', 512, 512, 22.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d1750pj_bia.fits',
+    }),
+    ('WFC', 'A', 2.0, 'WFC1', 512, 512, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d1750qj_bia.fits',
+    }),
+    ('WFC', 'A', 2.0, 'WFC1-2K', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x5f1318lj_bia.fits',
+    }),
     ('WFC', 'A', 2.0, 'WFC1-IRAMPQ', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-07-20 03:00:00' : 'x5d1750oj_bia.fits',
         '2009-10-28 12:13:58' : 'w9c1737dj_bia.fits',
         '2009-11-25 14:40:37' : 'w9c1737ej_bia.fits',
         '2009-12-21 18:27:19' : 'w9c1737fj_bia.fits',
@@ -1788,6 +1801,8 @@ selector = Match({
         '2013-02-01 01:54:20' : 'x3417464j_bia.fits',
         '2013-02-14 02:21:01' : 'x4921097j_bia.fits',
         '2013-03-04 02:16:54' : 'x492109ij_bia.fits',
+        '2013-03-14 12:29:05' : 'x5916381j_bia.fits',
+        '2013-03-29 00:02:20' : 'x591638ej_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 2.0, 'WFC|WFC-FIX|WFC1|WFC1-CTE|WFC1-FIX|WFC1-IRAMP|WFC1-MRAMP|WFC2|WFC2-FIX|WFC2-MRAMP|WFC2-ORAMP|WFCENTER', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9b15505j_bia.fits',
@@ -1892,6 +1907,8 @@ selector = Match({
         '2013-02-01 01:54:20' : 'x3417464j_bia.fits',
         '2013-02-14 02:21:01' : 'x4921097j_bia.fits',
         '2013-03-04 02:16:54' : 'x492109ij_bia.fits',
+        '2013-03-14 12:29:05' : 'x5916381j_bia.fits',
+        '2013-03-29 00:02:20' : 'x591638ej_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 4.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-07 07:46:35' : 'q9e1206rj_bia.fits',
@@ -1944,6 +1961,9 @@ selector = Match({
     }),
     ('WFC', 'A|D', 8.0, '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '2001-03-01 00:00:00' : 'm2f1516mj_bia.fits',
+    }),
+    ('WFC', 'B', 1.0, 'WFC1-2K|WFC1-POL0UV|WFC1-POL0V|WFC1-POL120UV|WFC1-POL120V|WFC1-POL60UV|WFC1-POL60V|WFC1-SMFL', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x5d1750nj_bia.fits',
     }),
     ('WFC', 'B', 2.0, '*', 534, 512, -3584.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2011-12-24 10:40:15' : 'w392040ej_bia.fits',
@@ -2011,6 +2031,18 @@ selector = Match({
         '2012-02-19 00:00:00' : 'w8s1944oj_bia.fits',
         '2012-03-14 00:00:00' : 'w8s1944pj_bia.fits',
         '2012-05-10 00:00:00' : 'w8s1944qj_bia.fits',
+    }),
+    ('WFC', 'B', 2.0, 'WFC1', 512, 512, -3604.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d1750tj_bia.fits',
+    }),
+    ('WFC', 'B', 2.0, 'WFC1', 512, 512, -3604.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17510j_bia.fits',
+    }),
+    ('WFC', 'B', 2.0, 'WFC1', 2300, 400, -1816.0, -1591.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d1750sj_bia.fits',
+    }),
+    ('WFC', 'B', 2.0, 'WFC1', 2300, 400, -1816.0, -824.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d1750rj_bia.fits',
     }),
     ('WFC', 'B', 2.0, 'WFC1-1K', 1046, 1024, -3072.0, -1023.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9c1738fj_bia.fits',
@@ -2086,6 +2118,8 @@ selector = Match({
         '2013-01-17 18:47:57' : 'x341745jj_bia.fits',
         '2013-02-03 01:45:11' : 'x341745kj_bia.fits',
         '2013-02-14 02:21:01' : 'x4921095j_bia.fits',
+        '2013-03-14 12:29:05' : 'x591637tj_bia.fits',
+        '2013-04-12 13:06:59' : 'x5916380j_bia.fits',
     }),
     ('WFC', 'B', 2.0, 'WFC1-512', 534, 512, -3584.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2011-12-24 10:40:15' : 'w9c1738kj_bia.fits',
@@ -2226,11 +2260,23 @@ selector = Match({
     ('WFC', 'B|C', 8.0, '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '2001-03-01 00:00:00' : 'm2f1516qj_bia.fits',
     }),
+    ('WFC', 'C', 1.0, 'WFC2-2K', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x5f1318mj_bia.fits',
+    }),
     ('WFC', 'C', 2.0, '*', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'v5419455j_bia.fits',
     }),
+    ('WFC', 'C', 2.0, 'WFC2', 512, 512, 22.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17511j_bia.fits',
+    }),
+    ('WFC', 'C', 2.0, 'WFC2', 512, 512, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17512j_bia.fits',
+    }),
     ('WFC', 'C', 2.0, 'WFC2-2K|WFC2-POL0UV|WFC2-POL0V|WFC2-POL120UV|WFC2-POL120V|WFC2-POL60UV|WFC2-POL60V|WFC2-SMFL', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9c1408dj_bia.fits',
+    }),
+    ('WFC', 'D', 1.0, 'WFC2-2K', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x5f1318oj_bia.fits',
     }),
     ('WFC', 'D', 2.0, '*', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'v5419454j_bia.fits',
@@ -2248,6 +2294,24 @@ selector = Match({
         '2010-09-04 07:02:28' : 'uc215179j_bia.fits',
         '2010-09-28 11:49:05' : 'uc21517aj_bia.fits',
         '2011-06-07 16:07:25' : 'v841719pj_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2', 512, 512, -3604.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17516j_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2', 512, 512, -3604.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17517j_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2', 2300, 400, -1816.0, -1591.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17515j_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2', 2300, 400, -1816.0, -824.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17514j_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2', 2300, 400, -1816.0, -57.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2013-02-14 00:00:00' : 'x5d17513j_bia.fits',
+    }),
+    ('WFC', 'D', 2.0, 'WFC2-2K', 2070, 2046, 22.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '2009-05-16 00:00:00' : 'x591637sj_bia.fits',
     }),
     ('WFC', 'D', 2.0, 'WFC2-ORAMPQ', 2070, 2046, -2048.0, -1.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9c1738gj_bia.fits',
