@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-01 10:53:00.069890',
+    'derived_from' : 'generated from CDBS database 2013-05-30 10:35:57.487859',
     'filekind' : 'DRKCFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
         'ccdgain' : '(DETECTOR != "SBC")',
     },
     'rmap_relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : '0a2cf883a6af3cf31d8182b85a908a606198bb7b',
+    'sha1sum' : 'c649055355bdd5dfbf30786a4e3da1ae9946c16a',
 }
 
 selector = Match({
@@ -792,6 +792,19 @@ selector = Match({
         '2013-03-08 02:27:04' : 'x492109nj_dkc.fits',
         '2013-03-11 03:23:22' : 'x492109pj_dkc.fits',
         '2013-03-13 00:11:45' : 'x492109rj_dkc.fits',
+        '2013-03-14 12:29:05' : 'x5916382j_dkc.fits',
+        '2013-03-18 04:39:42' : 'x5916384j_dkc.fits',
+        '2013-03-20 00:04:34' : 'x5916386j_dkc.fits',
+        '2013-03-22 00:28:52' : 'x5916388j_dkc.fits',
+        '2013-03-25 04:01:41' : 'x591638aj_dkc.fits',
+        '2013-03-27 00:04:38' : 'x591638cj_dkc.fits',
+        '2013-03-29 00:04:37' : 'x591638fj_dkc.fits',
+        '2013-04-01 03:04:47' : 'x591638hj_dkc.fits',
+        '2013-04-03 01:12:40' : 'x591638jj_dkc.fits',
+        '2013-04-05 00:14:37' : 'x591638lj_dkc.fits',
+        '2013-04-08 03:50:04' : 'x591638nj_dkc.fits',
+        '2013-04-10 02:15:06' : 'x591638pj_dkc.fits',
+        '2013-04-12 03:25:53' : 'x591638rj_dkc.fits',
     }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.4') : UseAfter({
         '2003-03-02 16:45:00' : 'w352136cj_dkc.fits',
