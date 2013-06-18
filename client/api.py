@@ -331,6 +331,10 @@ def observatory_from_string(string):
 
 # ==============================================================================
 
+@utils.cached
+def get_cached_server_info():
+    return get_server_info()
+
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
     """
@@ -354,7 +358,7 @@ class FileCacher(object):
             log.verbose("Skipping download for cached files", names, verbosity=10)
         return localpaths
 
-    def locate(self, pipeline_context, name):
+    def observatory_from_context(self, pipeline_context):
         if "jwst" in pipeline_context:
             observatory = "jwst"
         elif "hst" in pipeline_context:
@@ -362,6 +366,10 @@ class FileCacher(object):
         else:
             import crds
             observatory = crds.get_cached_mapping(pipeline_context).observatory
+        return observatory
+
+    def locate(self, pipeline_context, name):
+        observatory = self.observatory_from_context(pipeline_context)
         return config.locate_file(name, observatory=observatory)
 
     def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
@@ -411,9 +419,13 @@ class FileCacher(object):
             chunk += 1
             yield data
     
+    def get_data_http(self, pipeline_context, file):
+        """Yield the data returned from `file` of `pipeline_context` in manageable chunks."""
+        url = self.get_url(pipeline_context, file)
+        return self._get_data_http(url)
+
     def _get_data_http(self, url):
         """Yield the data returned from `url` in manageable chunks."""
-        # url = get_url(pipeline_context, file)
         log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
@@ -430,14 +442,15 @@ class FileCacher(object):
             except UnboundLocalError:   # maybe the open failed.
                 pass
 
-    def get_data_http(self, pipeline_context, file):
-        """Yields successive manageable chunks of `file` fetched by http.
-        Unlike earlier versions of the protocol which requested the URL from
-        the server,  the URL used is static,  essentially /get/<file>,  and
-        the server brokers and redirects the request to the real download server.
-        """
-        url = get_crds_server() + "/get/" + file
-        return self._get_data_http(url)
+    def get_url(self, pipeline_context, file, checking="unchecked"):
+        """Return the URL used to fetch `file` of `pipeline_context`."""
+        info = get_cached_server_info()
+        observatory = self.observatory_from_context(pipeline_context)
+        if config.is_mapping(file):
+            url = info["mapping_url"][checking][observatory]
+        else:
+            url = info["reference_url"][checking][observatory]
+        return url + "/" + file
 
     def verify_file(self, pipeline_context, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
