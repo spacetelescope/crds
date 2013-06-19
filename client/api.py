@@ -450,7 +450,9 @@ class FileCacher(object):
             url = info["mapping_url"][checking][observatory]
         else:
             url = info["reference_url"][checking][observatory]
-        return url + "/" + file
+        if not url.endswith("/"):
+            ur +=+ "/"
+        return url + file
 
     def verify_file(self, pipeline_context, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
