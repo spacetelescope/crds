@@ -74,6 +74,8 @@ def get_adjustment(instrument, filekind):
 
 def ccontents(n): 
     """Return the lowercase stripped contents of a single values XML node"""
+    if n is None:
+        return None
     return str(n.contents[0].strip().lower())
 
 def process_reference_file_defs():
@@ -100,6 +102,10 @@ def process_reference_file_defs():
                 relevant = "ALWAYS"
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
+                required = "true"
+                switch = "none"
+                format = "none"
+                rowkeys = []
                 for rnode in inode:
                     if not hasattr(rnode, "name"):
                         continue
@@ -114,6 +120,15 @@ def process_reference_file_defs():
                         relevant = simplify_restriction(
                             ccontents(rnode.restriction_test),
                             condition=True)
+                    elif rnode.name == "row_selection":
+                        rowkeys.append(ccontents(rnode.row_selection_field))
+                    elif rnode.name == "reffile_format":
+                        format = ccontents(rnode)
+                    elif rnode.name == "reffile_required":
+                        required = ccontents(rnode)
+                    elif rnode.name == "reffile_switch":
+                        switch = ccontents(rnode)
+                        
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
                 rdefs[instr][filekind] = dict(
@@ -123,6 +138,10 @@ def process_reference_file_defs():
                         not_in_db = tuple(adjustment.ignore),
                         rmap_relevance = relevant,
                         parkey_relevance = parkey_restrictions,
+                        reffile_required = required,
+                        reffile_switch = switch,
+                        reffile_format = format,
+                        row_keys = tuple(rowkeys),
                     )
     return rdefs
 
