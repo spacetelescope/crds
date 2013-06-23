@@ -248,6 +248,18 @@ def get_filekinds(instrument):
 def get_extra_keys(instrument, filekind):
     return PARKEYS[instrument][filekind]["not_in_db"]
 
+def get_reffile_restrict(instrument, filekind):
+    return PARKEYS[instrument][filekind]["reffile_restrict"]
+
+def get_reffile_required(instrument, filekind):
+    return PARKEYS[instrument][filekind]["reffile_required"]
+
+def get_reffile_format(instrument, filekind):
+    return PARKEYS[instrument][filekind]["reffile_format"]
+
+def get_row_keys(instrument, filekind):
+    return PARKEYS[instrument][filekind]["row_keys"]
+
 def evaluate_parkey_relevance(instrument, filekind, rowdict):
     header = dict(rowdict)
     header2 = {key.upper(): utils.condition_value(val) for (key,val) in header.items()}
