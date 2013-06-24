@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:09.003384',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:33.546354',
     'filekind' : 'CRREJTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('CRSPLIT', 'MEANEXP'),
-    'sha1sum' : '8d0db744a0b0575a1254207aa622149602773ecc',
+    'sha1sum' : '64e45ea36a4d8e4b977b04daa13b7ced4e9539dd',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:56.399357',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:21.306783',
     'filekind' : 'GSAGTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR == "FUV")',
-    'sha1sum' : 'ca16e32e60d2f0c26df02c3c0d1f4a92ebf2d4bf',
+    'sha1sum' : 'fbb0aad7e29f346aedbe565ae4c476a5f01174d4',
 }
 
 selector = Match({

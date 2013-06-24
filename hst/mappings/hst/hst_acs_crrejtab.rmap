@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:16:39.687361',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:29:02.792147',
     'filekind' : 'CRREJTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'CRCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (CRCORR != "OMIT"))',
     'row_keys' : ('CCDCHIP',),
-    'sha1sum' : 'b8fcc51b2d13a8b121fe61cf1a4baab0e2fbfb3c',
+    'sha1sum' : 'd080005ea519b4a5cfb4a86e4c7b825e471246ee',
 }
 
 selector = Match({

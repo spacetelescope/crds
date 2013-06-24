@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:17.701318',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:29:41.353504',
     'filekind' : 'DGEOFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'd2f869a89430b6f15fa44931a30830d069dac707',
+    'sha1sum' : 'eaab2871d9d088b55f6c7fe4200aaa807bff69d2',
 }
 
 selector = Match({

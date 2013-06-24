@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:56.807144',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:21.664128',
     'filekind' : 'TDSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'TDSCORR',
     'rmap_relevance' : '((OBSTYPE == "SPECTROSCOPIC") and (TDSCORR != "OMIT"))',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'SEGMENT'),
-    'sha1sum' : '49304964518038117874312600e10e5933d037d1',
+    'sha1sum' : '874f6e6bd7fc132a3d38480d889b53c7d191698f',
 }
 
 selector = Match({

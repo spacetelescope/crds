@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.728587',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:23.557707',
     'filekind' : 'PHOTTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('PHOTMODE',),
-    'sha1sum' : '41883fc8b5e6384a23d79089d6b177e637f6ee00',
+    'sha1sum' : '9130595b947e5b3875b3b580908e2ca03ce4b7bf',
 }
 
 selector = Match({

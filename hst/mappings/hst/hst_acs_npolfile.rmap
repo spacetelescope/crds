@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:39.924546',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:04.950507',
     'filekind' : 'NPOLFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'DRIZCORR',
     'rmap_relevance' : '(DRIZCORR != "OMIT")',
-    'sha1sum' : 'b574c519b06b23f91cb3fb9ab29367657ced2efe',
+    'sha1sum' : 'fa98a612b635e8fbfa5108e6bc09919ad6e20e20',
 }
 
 selector = Match({
