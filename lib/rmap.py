@@ -722,10 +722,10 @@ class ReferenceMapping(Mapping):
         self.filekind = self.header["filekind"]
         self._check_type("reference")
 
-        self._reffile_switch = getattr(self, "reffile_switch", "NONE")
-        self._reffile_format = getattr(self, "reffile_format", "IMAGE")
-        self._reffile_required = getattr(self, "reffile_required", "YES")
-        self._row_keys = getattr(self, "row_keys", ())
+        self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
+        self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
+        self._reffile_required = self.header.get("reffile_required", "YES").upper()
+        self._row_keys = self.header.get("row_keys", ())
 
         # header precondition method, e.g. crds.hst.acs.precondition_header  # TPNs define the static definitive possibilities for parameter choices
         self._tpn_valid_values = self.get_valid_values_map()
