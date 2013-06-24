@@ -102,9 +102,9 @@ def process_reference_file_defs():
                 relevant = "ALWAYS"
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
-                required = "YES"
-                switch = "NONE"
-                format = "NONE"
+                required = "yes"
+                switch = "none"
+                format = "none"
                 rowkeys = []
                 for rnode in inode:
                     if not hasattr(rnode, "name"):
@@ -121,16 +121,16 @@ def process_reference_file_defs():
                             ccontents(rnode.restriction_test),
                             condition=True)
                     elif rnode.name == "row_selection":   # table row parkeys defining modes
-                        rowkeys.append(ccontents(rnode.row_selection_field).upper())
+                        rowkeys.append(ccontents(rnode.row_selection_field))
                     elif rnode.name == "reffile_format":  # image or table
-                        format = ccontents(rnode).upper()
+                        format = ccontents(rnode)
                     elif rnode.name == "reffile_required": # yes or no,  when no, "free-pass" if no best ref match
-                        required = ccontents(rnode).upper()
+                        required = ccontents(rnode)
                     elif rnode.name == "reffile_switch":  # value is dataset keyword,  when == OMIT,  irrelevant
-                        switch = ccontents(rnode).upper()
+                        switch = ccontents(rnode)
                 
-                if switch != "NONE":
-                    switch_expr = "(" + switch + ' != "OMIT"' +")"
+                if switch != "none":
+                    switch_expr = "(" + switch.upper() + ' != "OMIT"' +")"
                     if relevant == "ALWAYS":
                         relevant = switch_expr
                     else:

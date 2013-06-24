@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.734459',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:23.561530',
     'filekind' : 'RNLCORTB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '89c1c12727af12e2b09e0fbd2b48c5dc399b1d0e',
+    'sha1sum' : '32964834a112ad95ee33ca3f9a57cf30cf4b01b2',
 }
 
 selector = Match({

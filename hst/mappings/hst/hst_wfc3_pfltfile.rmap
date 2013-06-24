@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:11.349913',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:35.901559',
     'filekind' : 'PFLTFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'FLATCORR',
     'rmap_relevance' : '(FLATCORR != "OMIT")',
-    'sha1sum' : '1934eb2988295237bbd8ab51dde58dbb8a0e2de0',
+    'sha1sum' : '7d9c07ded1ed861fe9000ede3f87130c9d852872',
 }
 
 selector = Match({

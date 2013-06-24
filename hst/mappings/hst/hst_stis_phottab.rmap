@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:02.999179',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:27.559034',
     'filekind' : 'PHOTTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('OPT_ELEM', 'CENWAVE', 'SPORDER'),
-    'sha1sum' : 'e09d0438ad4714f2c5fab90d527028a72ebafb99',
+    'sha1sum' : '9bbed72a725d02d885f40647b7885780098ba443',
 }
 
 selector = Match({

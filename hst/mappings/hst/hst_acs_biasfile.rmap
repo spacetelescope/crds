@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:16:39.477376',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:29:02.600650',
     'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'BIASCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    'sha1sum' : '545073fadf004f03935812fdab6d071f2d661d54',
+    'sha1sum' : '101a66d066aaef9a56c46ebf9f82a64ecca7ea6f',
 }
 
 selector = Match({

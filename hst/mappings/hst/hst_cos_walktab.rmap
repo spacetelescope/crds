@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:56.810294',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:21.665988',
     'filekind' : 'WALKTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'WALKCORR',
     'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (WALKCORR != "OMIT"))',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : '17d73803cfaa56fc6b3e345ab0100db090d8933d',
+    'sha1sum' : 'd0d441391f723c043e116a76550a0c5323c6a4b2',
 }
 
 selector = Match({

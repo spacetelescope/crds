@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.719867',
+    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:23.550200',
     'filekind' : 'NOISFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '78e20b26406718a7620e26a1a4c866c17e184c49',
+    'sha1sum' : 'c9fd617d01eeb0d775164553930064c4bbd4211e',
 }
 
 selector = Match({
