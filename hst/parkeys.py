@@ -102,33 +102,40 @@ def process_reference_file_defs():
                 relevant = "ALWAYS"
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
-                required = "true"
-                switch = "none"
-                format = "none"
+                required = "YES"
+                switch = "NONE"
+                format = "NONE"
                 rowkeys = []
                 for rnode in inode:
                     if not hasattr(rnode, "name"):
                         continue
-                    if rnode.name == "file_selection":
+                    if rnode.name == "file_selection":  # expression which defines when parkey is irrelevant to bestref
                         parkey = ccontents(rnode.file_selection_field)
                         parkeys.append(parkey)
                         if rnode.file_selection_test is not None:
                             parkey_restrictions[parkey] = simplify_restriction(
                                 ccontents(rnode.file_selection_test),
                                 condition=True)
-                    elif rnode.name == "restriction":
+                    elif rnode.name == "restriction":   # expression which defines when filekind is irrelevant to dataset
                         relevant = simplify_restriction(
                             ccontents(rnode.restriction_test),
                             condition=True)
-                    elif rnode.name == "row_selection":
-                        rowkeys.append(ccontents(rnode.row_selection_field))
-                    elif rnode.name == "reffile_format":
-                        format = ccontents(rnode)
-                    elif rnode.name == "reffile_required":
-                        required = ccontents(rnode)
-                    elif rnode.name == "reffile_switch":
-                        switch = ccontents(rnode)
-                        
+                    elif rnode.name == "row_selection":   # table row parkeys defining modes
+                        rowkeys.append(ccontents(rnode.row_selection_field).upper())
+                    elif rnode.name == "reffile_format":  # image or table
+                        format = ccontents(rnode).upper()
+                    elif rnode.name == "reffile_required": # yes or no,  when no, "free-pass" if no best ref match
+                        required = ccontents(rnode).upper()
+                    elif rnode.name == "reffile_switch":  # value is dataset keyword,  when == OMIT,  irrelevant
+                        switch = ccontents(rnode).upper()
+                
+                if switch != "NONE":
+                    switch_expr = "(" + switch + ' != "OMIT"' +")"
+                    if relevant == "ALWAYS":
+                        relevant = switch_expr
+                    else:
+                        relevant = "(" + relevant + " and " + switch_expr + ")"
+
                 adjustment = get_adjustment(instr, filekind)
                 fits_parkeys, db_parkeys = adjustment.adjust(parkeys)
                 rdefs[instr][filekind] = dict(
@@ -248,8 +255,8 @@ def get_filekinds(instrument):
 def get_extra_keys(instrument, filekind):
     return PARKEYS[instrument][filekind]["not_in_db"]
 
-def get_reffile_restrict(instrument, filekind):
-    return PARKEYS[instrument][filekind]["reffile_restrict"]
+def get_reffile_switch(instrument, filekind):
+    return PARKEYS[instrument][filekind]["reffile_switch"]
 
 def get_reffile_required(instrument, filekind):
     return PARKEYS[instrument][filekind]["reffile_required"]

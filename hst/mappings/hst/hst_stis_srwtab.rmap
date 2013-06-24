@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:07.991069',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:03.057257',
     'filekind' : 'SRWTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_srwtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'bc637be1360d49ae7b0ed42f1fe7b153e2d36f88',
+    'row_keys' : ('OPT_ELEM', 'CENWAVE'),
+    'sha1sum' : 'bb8c297ffcfb65fd1a278e8444f075158a49d219',
 }
 
 selector = Match({

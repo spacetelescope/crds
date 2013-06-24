@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:51.457592',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:56.807144',
     'filekind' : 'TDSTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_tdstab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
-    'sha1sum' : 'd016bbd34778e6eae6fa2e3fde60ac1510ca1026',
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'TDSCORR',
+    'rmap_relevance' : '((OBSTYPE == "SPECTROSCOPIC") and (TDSCORR != "OMIT"))',
+    'row_keys' : ('APERTURE', 'OPT_ELEM', 'SEGMENT'),
+    'sha1sum' : '49304964518038117874312600e10e5933d037d1',
 }
 
 selector = Match({

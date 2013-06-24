@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:18.808163',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:08.966709',
     'filekind' : 'CCDTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_ccdtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '725581fadd700b761243fec800469bb4d8075634',
+    'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN', 'CCDOFSTA', 'CCDOFSTB', 'CCDOFSTC', 'CCDOFSTD', 'BINAXIS1', 'BINAXIS2'),
+    'sha1sum' : 'b2fdff2d5e23d8fd3216fcdd8e3f90ccacb6ab0f',
 }
 
 selector = Match({

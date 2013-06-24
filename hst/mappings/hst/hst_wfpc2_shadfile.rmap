@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:30.585806',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:15.897743',
     'filekind' : 'SHADFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_shadfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE', 'SHUTTER'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'da62a23ace84e22d90b6917ac8b08436d4275eff',
+    'sha1sum' : '83626c643d4888feeb2c6e0441d1a01d5d070e8a',
 }
 
 selector = Match({

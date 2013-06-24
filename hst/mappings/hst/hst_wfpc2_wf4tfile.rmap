@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:30.597382',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:15.900881',
     'filekind' : 'WF4TFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_wf4tfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('ATODGAIN',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'aebc47d14f176a4c3e0bc4197bbdc27d2d00542a',
+    'sha1sum' : '3c0c88764e47a92b52eed74e55d14dff5263b726',
 }
 
 selector = Match({

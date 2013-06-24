@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:23.559082',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:10.169568',
     'filekind' : 'FLSHFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_flshfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'FLASHCUR', 'SHUTRPOS'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '55d4d5f8290837f2b807ff7dbf051396e1c3339e',
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'FLSHCORR',
+    'rmap_relevance' : '(FLSHCORR != "OMIT")',
+    'sha1sum' : 'b0172a4c0ab8784b1a6f8e6b20a4ddf4daf6c625',
 }
 
 selector = Match({

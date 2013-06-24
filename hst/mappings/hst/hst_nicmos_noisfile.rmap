@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:55.436414',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.719867',
     'filekind' : 'NOISFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_noisfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'READOUT', 'NREAD'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '51e32e72e27535e9ae1c3d9a60244bb322d2da68',
+    'sha1sum' : '78e20b26406718a7620e26a1a4c866c17e184c49',
 }
 
 selector = Match({

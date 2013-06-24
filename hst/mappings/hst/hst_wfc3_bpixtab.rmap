@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:16.674808',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:07.568971',
     'filekind' : 'BPIXTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_bpixtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'c63203edc90bcc862aac4385a33572616598d9d2',
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'DQICORR',
+    'rmap_relevance' : '(DQICORR != "OMIT")',
+    'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN'),
+    'sha1sum' : '975fd616caf1821e1f179fb02397bda768351cc4',
 }
 
 selector = Match({

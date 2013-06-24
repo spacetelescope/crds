@@ -11,7 +11,11 @@ header = {
     'name' : 'tobs_tinstr_tfilekind.rmap',
     'observatory' : 'TOBS',
     'parkey' : (('TEST_CASE',), ('PARAMETER',)),
-    'sha1sum' : '84a8846a914287268e096383577f8ec004f60c8e',
+    'sha1sum' : 'fe95e31ce1d07ea6e4fc6a5ddbfddea27316a406',
+    'reffile_format': 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'row_keys' : (),
     'classes' : ('Match', 'UseAfter',)
 }
 

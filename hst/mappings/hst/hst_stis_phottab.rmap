@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:07.652588',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:02.999179',
     'filekind' : 'PHOTTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_stis_phottab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'c3f383547cfda6241da9328581cece839b59c53a',
+    'row_keys' : ('OPT_ELEM', 'CENWAVE', 'SPORDER'),
+    'sha1sum' : 'e09d0438ad4714f2c5fab90d527028a72ebafb99',
 }
 
 selector = Match({
