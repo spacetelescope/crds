@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:33:52.600880',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:16:39.477376',
     'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
@@ -7,8 +7,11 @@ header = {
     'name' : 'hst_acs_biasfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : '19c2fd0258871c699a52fcf11691ad78649c8742',
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'BIASCORR',
+    'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+    'sha1sum' : '545073fadf004f03935812fdab6d071f2d661d54',
 }
 
 selector = Match({

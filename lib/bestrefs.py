@@ -432,11 +432,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             u_filekind = filekind.upper()
             
             if new.startswith("NOT FOUND N/A"):
-                log.verbose("Filetype not applicable for data", repr(dataset), "type", repr(u_filekind))
+                log.verbose("Filetype not applicable for data", repr(dataset), 
+                            "instrument", repr(instrument), "type", repr(u_filekind))
                 continue
             if new.startswith("NOT FOUND"):
-                log.error("Bestref FAILED for data", repr(dataset), "type", repr(u_filekind), 
-                          new_org[len("NOT FOUND"):])
+                log.error("Bestref FAILED for data", repr(dataset), 
+                          "instrument", repr(instrument), "type", repr(u_filekind), new_org[len("NOT FOUND"):])
                 continue
             
             updates.append(UpdateTuple(instrument, filekind, None, new))
@@ -459,28 +460,28 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             old = cleanpath(bestrefs2.get(filekind, "UNDEFINED")).strip().upper()
         
             if old in ("N/A", "NONE", "", "*"):
-                log.verbose("Old bestref marked as", repr(old), "for data", repr(dataset), "type", repr(u_filekind))
+                log.verbose("Old bestref marked as", repr(old), "for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind))
                 continue    
             if new.startswith("NOT FOUND N/A"):
-                log.verbose("Filetype not applicable for data", repr(dataset), "type", repr(u_filekind))
+                log.verbose("Filetype not applicable for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind))
                 continue
             if new.startswith("NOT FOUND"):
-                log.error("Bestref FAILED for data", repr(dataset), "type", repr(u_filekind), 
+                log.error("Bestref FAILED for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), 
                           new_org[len("NOT FOUND"):])
                 continue
             if filekind not in bestrefs2:
-                log.warning("No comparison bestref for data", repr(dataset), "type", repr(u_filekind), 
+                log.warning("No comparison bestref for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), 
                             "recommending -->", repr(new))
                 updates.append(UpdateTuple(instrument, filekind, None, new))
                 continue
             
             if new != old:
                 if self.args.print_new_references or log.get_verbose():
-                    log.info("New Reference for data",  repr(dataset), "type", repr(u_filekind), ":", 
+                    log.info("New Reference for data",  repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), ":", 
                              repr(old), "-->", repr(new))
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
-                log.verbose("Lookup MATCHES for data", repr(dataset), "type", repr(u_filekind), "=", 
+                log.verbose("Lookup MATCHES for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), "=", 
                             repr(old), verbosity=30)
             
         return updates

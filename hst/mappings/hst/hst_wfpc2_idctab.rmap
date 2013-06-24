@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:30.537628',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:15.886678',
     'filekind' : 'IDCTAB',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_idctab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'e0c28f0d1be6b9daa74c7ff65f6978ed7a5f4c9e',
+    'sha1sum' : '2ece150d8490e79cf54f88679a42a4cec74ed24f',
 }
 
 selector = Match({

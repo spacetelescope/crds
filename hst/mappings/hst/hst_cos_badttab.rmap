@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:47.824177',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:55.595463',
     'filekind' : 'BADTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_cos_badttab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR == "FUV" and OBSMODE == "TIME-TAG")',
-    'sha1sum' : 'cd85c1eb40fe5bdf29b3c8ead4598efd8635fde3',
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'BADTCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (BADTCORR != "OMIT"))',
+    'row_keys' : ('SEGMENT',),
+    'sha1sum' : '6adba80dec19c31569280555c473c0fbcae0de92',
 }
 
 selector = Match({

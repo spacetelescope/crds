@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:35:57.487859',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:37.561255',
     'filekind' : 'DRKCFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,8 +10,11 @@ header = {
         'ccdamp' : '(DETECTOR != "SBC")',
         'ccdgain' : '(DETECTOR != "SBC")',
     },
-    'rmap_relevance' : '(DETECTOR == "WFC")',
-    'sha1sum' : 'c649055355bdd5dfbf30786a4e3da1ae9946c16a',
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'PCTECORR',
+    'rmap_relevance' : '((DETECTOR == "WFC") and (PCTECORR != "OMIT"))',
+    'sha1sum' : 'abb40fa7185eee6b710d0c7d6f36693eb2269e6f',
 }
 
 selector = Match({

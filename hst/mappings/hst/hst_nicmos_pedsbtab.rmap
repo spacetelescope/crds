@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:55.452226',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.726799',
     'filekind' : 'PEDSBTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_pedsbtab.rmap',
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '38b14c67880221e1b35db9e03dab3ff2e182d115',
+    'row_keys' : ('CAMERA',),
+    'sha1sum' : 'd1e0326137b36dc6074e06aa12a32c0a93fe1a19',
 }
 
 selector = Match({

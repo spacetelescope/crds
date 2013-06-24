@@ -1,13 +1,17 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:33:53.272279',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:16:39.687361',
     'filekind' : 'CRREJTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_crrejtab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR != "SBC")',
-    'sha1sum' : '924c8bfd77ebfd403d621e3489a81af6c9b7775b',
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'CRCORR',
+    'rmap_relevance' : '((DETECTOR != "SBC") and (CRCORR != "OMIT"))',
+    'row_keys' : ('CCDCHIP',),
+    'sha1sum' : 'b8fcc51b2d13a8b121fe61cf1a4baab0e2fbfb3c',
 }
 
 selector = Match({

@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:37:30.227013',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:18:15.245123',
     'filekind' : 'DGEOFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfpc2_dgeofile.rmap',
     'observatory' : 'HST',
     'parkey' : (('MODE',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'edf2a706d9a150ef166b367148580704e3a1ac6f',
+    'sha1sum' : '6127a7a39122c77be49f61912969b7603f7f6e5f',
 }
 
 selector = Match({

@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:55.303250',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.686911',
     'filekind' : 'MASKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_maskfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '3891a937c588c61908c90fc270ef86f54bc9ff3f',
+    'sha1sum' : '9742c8c1bf6eb6e89d3470c088f1ac48fb04b38f',
 }
 
 selector = Match({

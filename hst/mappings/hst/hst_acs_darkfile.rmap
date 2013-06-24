@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:35:13.872641',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:17.565406',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,8 +10,11 @@ header = {
         'ccdamp' : '(DETECTOR != "SBC")',
         'ccdgain' : '(DETECTOR != "SBC")',
     },
-    'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '345b07855077179df0dc751ba2dd02036c1e8646',
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'DARKCORR',
+    'rmap_relevance' : '(DARKCORR != "OMIT")',
+    'sha1sum' : 'f1cd4d3ecbbc142cf1d47ddc0bebe64dd2f44c30',
 }
 
 selector = Match({

@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:01.572693',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:39.919171',
     'filekind' : 'MLINTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_acs_mlintab.rmap',
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
-    'rmap_relevance' : '(DETECTOR == "SBC")',
-    'sha1sum' : '26e9f8cf5a95983778262332c9c757740e8c8280',
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'GLINCORR',
+    'rmap_relevance' : '((DETECTOR == "SBC") and (GLINCORR != "OMIT"))',
+    'sha1sum' : '97b91a705a8bba43501e5772acd51e4d70246078',
 }
 
 selector = Match({

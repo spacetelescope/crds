@@ -722,7 +722,12 @@ class ReferenceMapping(Mapping):
         self.filekind = self.header["filekind"]
         self._check_type("reference")
 
-        # TPNs define the static definitive possibilities for parameter choices
+        self._reffile_switch = getattr(self, "reffile_switch", "NONE")
+        self._reffile_format = getattr(self, "reffile_format", "IMAGE")
+        self._reffile_required = getattr(self, "reffile_required", "YES")
+        self._row_keys = getattr(self, "row_keys", ())
+
+        # header precondition method, e.g. crds.hst.acs.precondition_header  # TPNs define the static definitive possibilities for parameter choices
         self._tpn_valid_values = self.get_valid_values_map()
         # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
@@ -768,15 +773,22 @@ class ReferenceMapping(Mapping):
         try:
             return self.selector.choose(header)
         except Exception, exc:
-            log.verbose("First selection failed: " + str(exc), verbosity=60)
+            log.verbose("First selection failed:", str(exc), verbosity=60)
             header = self._fallback_header(self, header_in)
-            if header:
-                header = self.minimize_header(header)
-                log.verbose("Fallback lookup on", repr(header), verbosity=60)
-                header = self.map_irrelevant_parkeys_to_na(header)
-                return self.selector.choose(header)
-            else:
-                raise
+            try:
+                if header:
+                    header = self.minimize_header(header)
+                    log.verbose("Fallback lookup on", repr(header), verbosity=60)
+                    header = self.map_irrelevant_parkeys_to_na(header)
+                    return self.selector.choose(header)
+                else:
+                    raise
+            except Exception, exc:
+                log.verbose("Fallback selection failed:", str(exc), verbosity=60)
+                if self._reffile_required == "no":
+                    raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
+                else:
+                    raise
 
     def reference_names(self):
         """Return the list of reference file basenames associated with this
@@ -796,6 +808,10 @@ class ReferenceMapping(Mapping):
                 parkeys += list(key)
             else:
                 parkeys.append(key)
+        if self._reffile_switch != "NONE":
+            parkeys.append(self._reffile_switch)
+        if self._row_keys:
+            parkeys.extend(list(self._row_keys))
         return parkeys
 
     def get_extra_parkeys(self):
@@ -806,7 +822,12 @@ class ReferenceMapping(Mapping):
         to N/A in the event they're actually defined in the reference to avoid creating
         new rules for that specific case when the parameter is not really intended for matching.
         """
-        return self.extra_keys if hasattr(self, "extra_keys") else ()
+        extra = list(self.extra_keys) if hasattr(self, "extra_keys") else []
+        if self._reffile_switch != "NONE":
+            extra.append(self._reffile_switch)
+        if self._row_keys:
+            parkeys.extend(list(self._row_keys))
+        return tuple(extra)
 
     def get_parkey_map(self):
         """Based on the rmap,  return the mapping from parkeys to their

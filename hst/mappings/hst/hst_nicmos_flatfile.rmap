@@ -1,13 +1,16 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-05-30 10:36:55.221921',
+    'derived_from' : 'generated from CDBS database 2013-06-24 09:17:58.644367',
     'filekind' : 'FLATFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
     'name' : 'hst_nicmos_flatfile.rmap',
     'observatory' : 'HST',
     'parkey' : (('CAMERA', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '0d0cace65ef3724939d7fe957ef5293d514ed524',
+    'sha1sum' : '6eb15eaa643731dae3ff905f9630fddbbea8a3b8',
 }
 
 selector = Match({

@@ -7,6 +7,8 @@ import unittest
 
 from crds import rmap, log
 
+log.set_test_mode()
+
 # =============================================================================
 
 class Test_00_Selectors(unittest.TestCase):
@@ -482,6 +484,7 @@ selector = Bracket({
           "MATCH_PAR2" : "99.9",
           "BRACKET_PAR" : "0.5",
         }
+    
 class Test_11_RecursiveBracketExact(Test_10_RecursiveBracket):
     expected_lookup_result = ("foo.fits", "foo.fits")
     insert_header = lookup_header = { 
