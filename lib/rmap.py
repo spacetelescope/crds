@@ -785,9 +785,11 @@ class ReferenceMapping(Mapping):
                     raise
             except Exception, exc:
                 log.verbose("Fallback selection failed:", str(exc), verbosity=60)
-                if self._reffile_required == "no":
+                if self._reffile_required == "NO":
+                    log.verbose("No match found but reference is not required:",  str(exc), verbosity=60)
                     raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
                 else:
+                    log.verbose("No match found and reference is required:",  str(exc), verbosity=60)
                     raise
 
     def reference_names(self):
