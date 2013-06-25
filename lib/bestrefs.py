@@ -5,7 +5,7 @@ For more details on the several modes of operations and command line parameters 
 
 % python -m crds.bestrefs --help
 """
-
+import os
 from collections import namedtuple
 
 import pyfits
@@ -119,7 +119,7 @@ def update_file_bestrefs(pmap, dataset, updates):
         new_ref = update.new_reference.upper()
 #        XXX what to do here for failed startswith("NOT FOUND") lookups?
         if new_ref.startswith("NOT FOUND"):
-            if "N/A" in new_ref:
+            if "N/A" in new_ref.upper():
                 new_ref = "N/A"
         else:
             new_ref = (prefix + new_ref).lower()
@@ -242,7 +242,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.old_bestrefs_cache = {}
     
         self.process_filekinds = [typ.lower() for typ in self.args.types ]
-    
+
         # do one time startup outside profiler.
         self.new_context, self.newctx, self.oldctx = self.setup_contexts()
 
@@ -294,7 +294,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             action="store_true")
     
         self.add_argument("-r", "--remote-bestrefs",
-            help="Compute best references from CRDS server",
+            help="Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'",
             action="store_true")
         
         self.add_argument("-s", "--sync-references", action="store_true",
@@ -376,9 +376,9 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             log.info("No comparison context or source comparison requested.")
 
         for dataset in self.new_headers:
-            # with log.error_on_exception("Failed processing", repr(dataset)):
-            log.verbose("===> Processing", dataset, verbosity=25)
-            self.updates[dataset] = self.process(dataset)
+            with log.error_on_exception("Failed processing", repr(dataset)):
+                log.verbose("===> Processing", dataset, verbosity=25)
+                self.updates[dataset] = self.process(dataset)
             
         self.handle_updates()
 
@@ -412,7 +412,11 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
                                 dataset, header_gen.context, str(exc)))            
         try:
-            bestrefs = header_gen.pmap.get_best_references(header, include=self.process_filekinds)
+            if self.args.remote_bestrefs:
+                os.environ["CRDS_MODE"] = "remote"    
+                bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=header_gen.pmap.name)
+            else:
+                bestrefs = header_gen.pmap.get_best_references(header, include=self.process_filekinds)
         except Exception, exc:
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
                                 dataset, header_gen.context, str(exc)))
