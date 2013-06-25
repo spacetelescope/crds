@@ -412,7 +412,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
                                 dataset, header_gen.context, str(exc)))            
         try:
-            bestrefs = header_gen.pmap.get_best_references(header)
+            bestrefs = header_gen.pmap.get_best_references(header, include=self.process_filekinds)
         except Exception, exc:
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
                                 dataset, header_gen.context, str(exc)))
