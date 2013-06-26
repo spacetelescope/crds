@@ -437,12 +437,15 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
             if new.startswith("NOT FOUND N/A"):
                 log.verbose("Filetype not applicable for data", repr(dataset), 
-                            "instrument", repr(instrument), "type", repr(u_filekind))
+                            "instrument", repr(instrument), "type", repr(u_filekind), verbosity=55)
                 continue
             if new.startswith("NOT FOUND"):
                 log.error("Bestref FAILED for data", repr(dataset), 
                           "instrument", repr(instrument), "type", repr(u_filekind), new_org[len("NOT FOUND"):])
                 continue
+            
+            log.verbose("Bestref for", repr(dataset), "instrument", repr(instrument), "type", repr(filekind), 
+                        "=", repr(new), verbosity=55)
             
             updates.append(UpdateTuple(instrument, filekind, None, new))
 
@@ -464,10 +467,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             old = cleanpath(bestrefs2.get(filekind, "UNDEFINED")).strip().upper()
         
             if old in ("N/A", "NONE", "", "*"):
-                log.verbose("Old bestref marked as", repr(old), "for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind))
+                log.verbose("No comparison.  Old bestref marked as", repr(old), "for data", repr(dataset), "instrument", 
+                            repr(instrument), "type", repr(u_filekind), verbosity=55)
                 continue    
             if new.startswith("NOT FOUND N/A"):
-                log.verbose("Filetype not applicable for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind))
+                log.verbose("Filetype not applicable for data", repr(dataset), "instrument", repr(instrument), "type", 
+                            repr(u_filekind), verbosity=55)
                 continue
             if new.startswith("NOT FOUND"):
                 log.error("Bestref FAILED for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), 
