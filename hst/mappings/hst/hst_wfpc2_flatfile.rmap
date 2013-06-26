@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:37.812375',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:01:04.106091',
     'extra_keys' : ('IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'),
     'filekind' : 'FLATFILE',
     'instrument' : 'WFPC2',
@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '91522f4db24f041bd2ead3f9c6c987a47a2f8b98',
+    'sha1sum' : 'f61e7445e68d24c3bea78abf7ae3ea6f31a79fc1',
 }
 
 selector = Match({

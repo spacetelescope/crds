@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:21.302888',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:20.311787',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'FLUXCORR',
     'rmap_relevance' : '((OBSTYPE == "SPECTROSCOPIC") and (FLUXCORR != "OMIT"))',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
-    'sha1sum' : '3a54c8933d8a03c4a7749299f62bdb3540e178cd',
+    'sha1sum' : '694495bdfb9ce18580a172a29ac617c6825bfb8e',
 }
 
 selector = Match({

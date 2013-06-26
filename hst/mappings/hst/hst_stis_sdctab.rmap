@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:27.585803',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:38.533168',
     'filekind' : 'SDCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('OPT_ELEM', 'CENWAVE', 'SPORDER'),
-    'sha1sum' : '6c43ddabbb8c7bc19ed070ba42a061233e438ee7',
+    'sha1sum' : '4615f4529deb4ee2340484e38349901ec1fc92a4',
 }
 
 selector = Match({

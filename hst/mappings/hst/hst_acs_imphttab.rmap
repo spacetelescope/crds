@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:04.942331',
+    'derived_from' : 'generated from CDBS database 2013-06-25 13:59:25.791868',
     'filekind' : 'IMPHTTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PHOTCORR',
     'rmap_relevance' : '(PHOTCORR != "OMIT")',
-    'sha1sum' : '3f6d88621edd005c13c245bbb2af00fc52bf7a82',
+    'sha1sum' : 'a4f03784efad04540dbba829b49f4b5d72452dfb',
 }
 
 selector = Match({

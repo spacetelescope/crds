@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:26.864063',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:36.139207',
     'filekind' : 'MLINTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR != "CCD")',
     'row_keys' : ('DETECTOR',),
-    'sha1sum' : '634179b736a896f4217c99d523698ddfc2813770',
+    'sha1sum' : '5baabbe6a0192fa8ef0e8e88ea701b0d9ea13222',
 }
 
 selector = Match({

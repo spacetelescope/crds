@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:26.548784',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:35.298296',
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('OPT_ELEM', 'SPORDER', 'CENWAVE'),
-    'sha1sum' : 'd7118c9337717a91b08d0213c272f88840b793c7',
+    'sha1sum' : 'e6c8de83a7c29392f5e92eac1b922525dbec522e',
 }
 
 selector = Match({

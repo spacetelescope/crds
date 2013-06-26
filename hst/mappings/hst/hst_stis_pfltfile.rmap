@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:27.469579',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:38.081877',
     'filekind' : 'PFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '73b9781084f4ae753728c2cd5d8118655fba40e9',
+    'sha1sum' : 'd7e6bfc5e329660931f39e1a149031205681e110',
 }
 
 selector = Match({
@@ -25,6 +25,7 @@ selector = Match({
         '2000-08-14 00:00:00' : 'n491401ao_pfl.fits',
         '2001-10-15 00:00:00' : 'n491401bo_pfl.fits',
         '2009-05-12 00:00:00' : 'w521257qo_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417092o_pfl.fits',
     }),
     ('CCD', 'G230MB', 'SPECTROSCOPIC', 1713, 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'h2i1351so_pfl.fits',
@@ -69,6 +70,7 @@ selector = Match({
         '2001-10-15 00:00:00' : 'n491401eo_pfl.fits',
         '2009-05-12 00:00:00' : 'tch16084o_pfl.fits',
         '2010-09-01 00:00:00' : 'w521257ro_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417093o_pfl.fits',
     }),
     ('CCD', 'G430L', 'SPECTROSCOPIC', 4300, 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725jo_pfl.fits',
@@ -77,6 +79,7 @@ selector = Match({
         '2000-08-14 00:00:00' : 'n491401go_pfl.fits',
         '2001-10-15 00:00:00' : 'n491401ho_pfl.fits',
         '2009-05-12 00:00:00' : 'w521257so_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417094o_pfl.fits',
     }),
     ('CCD', 'G430M', 'SPECTROSCOPIC', 3165, 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'i4g1725ko_pfl.fits',
@@ -127,6 +130,7 @@ selector = Match({
         '2001-10-15 00:00:00' : 'n491401ko_pfl.fits',
         '2009-05-12 00:00:00' : 'tch16086o_pfl.fits',
         '2010-09-01 00:00:00' : 'w521257to_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417095o_pfl.fits',
     }),
     ('CCD', 'G750L', 'SPECTROSCOPIC', 7751, 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851ao_pfl.fits',
@@ -140,6 +144,7 @@ selector = Match({
         '2000-08-14 00:00:00' : 'n491401mo_pfl.fits',
         '2001-10-15 00:00:00' : 'n491401no_pfl.fits',
         '2009-05-12 00:00:00' : 'w5212580o_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417096o_pfl.fits',
     }),
     ('CCD', 'G750M', 'SPECTROSCOPIC', 5734, 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'h230851do_pfl.fits',
@@ -193,6 +198,7 @@ selector = Match({
         '2001-10-15 00:00:00' : 'n491401qo_pfl.fits',
         '2009-05-12 00:00:00' : 'tch16088o_pfl.fits',
         '2010-09-01 00:00:00' : 'w5212581o_pfl.fits',
+        '2011-10-01 00:00:00' : 'x6417097o_pfl.fits',
     }),
     ('CCD', 'MIRVIS', 'IMAGING', 'N/A', '0.05X29|0.05X31NDA|0.05X31NDB|0.09X29|0.1X0.03|0.1X0.06|0.1X0.09|0.1X0.2|0.2X0.05ND|0.2X0.06|0.2X0.06FPA|0.2X0.06FPB|0.2X0.06FPC|0.2X0.06FPD|0.2X0.06FPE|0.2X0.09|0.2X0.2|0.2X0.2FPA|0.2X0.2FPB|0.2X0.2FPC|0.2X0.2FPD|0.2X0.2FPE|0.2X0.5|0.2X29|0.3X0.05ND|0.3X0.06|0.3X0.09|0.3X0.2|0.5X0.5|1X0.06|1X0.2|25MAMA|2X2|31X0.05NDA|31X0.05NDB|31X0.05NDC|36X0.05N45|36X0.05P45|36X0.6N45|36X0.6P45|50CCD|50CORON|52X0.05|52X0.05F1|52X0.05F2|52X0.1|52X0.1B0.5|52X0.1B1.0|52X0.1B3.0|52X0.1F1|52X0.1F2|52X0.2|52X0.2F1|52X0.2F2|52X0.5|52X0.5F1|52X0.5F2|52X2|52X2F1|52X2F2|6X0.06|6X0.2|6X0.5|6X6|F25CIII|F25CN182|F25CN270|F25LYA|F25MGII|F25ND3|F25ND5|F25NDQ|F25QTZ|F25SRF2|F28X50LP|F28X50OII|F28X50OIII') : UseAfter({
         '1996-10-01 00:00:00' : 'h4s1351lo_pfl.fits',

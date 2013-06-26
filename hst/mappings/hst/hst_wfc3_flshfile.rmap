@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:34.708516',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:56.490249',
     'filekind' : 'FLSHFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'FLSHCORR',
     'rmap_relevance' : '(FLSHCORR != "OMIT")',
-    'sha1sum' : '7f134899c2b8e296c3c6835b40179779317bfb35',
+    'sha1sum' : '512f063183237d0e021587526b991d1038a75140',
 }
 
 selector = Match({

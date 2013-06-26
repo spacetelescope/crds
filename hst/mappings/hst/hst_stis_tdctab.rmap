@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:27.613880',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:38.735716',
     'filekind' : 'TDCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR == "NUV-MAMA")',
-    'sha1sum' : 'bcc2258302470a915148e3b6ea1dcdfb955c3a77',
+    'sha1sum' : '0760f167bc16780430a7aca1b6222c882a0bf2d9',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:26.551172',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:35.311105',
     'filekind' : 'LAMPTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('SCLAMP',),
-    'sha1sum' : '6e6c0a20a008b723e77c2ef22e1f0a09fd5cbc58',
+    'sha1sum' : '6854593da57d23e980e08556957fba5e6ee650fe',
 }
 
 selector = Match({

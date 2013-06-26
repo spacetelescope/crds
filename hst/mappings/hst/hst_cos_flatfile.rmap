@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:21.149195',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:19.861837',
     'filekind' : 'FLATFILE',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'FLATCORR',
     'rmap_relevance' : '(FLATCORR != "OMIT")',
-    'sha1sum' : '34a34dae696f35c6056fb789c6a59d6cb2e1ef78',
+    'sha1sum' : '43903071d0a2f81b387821934c6dc499fd57d2f0',
 }
 
 selector = Match({

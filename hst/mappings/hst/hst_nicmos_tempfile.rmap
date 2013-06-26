@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:23.585082',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:25.801479',
     'filekind' : 'TEMPFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '32fab2731c913cce7653ed96f608f038b6e12362',
+    'sha1sum' : 'fc801119305ee72727f3fcf3f92a4f8cd5d035dc',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:32.135193',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:48.748555',
     'filekind' : 'BPIXTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'DQICORR',
     'rmap_relevance' : '(DQICORR != "OMIT")',
     'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN'),
-    'sha1sum' : 'ad34d702f820551bc04eec0371e9cc584c53a393',
+    'sha1sum' : 'e32a17c829cf9931bd387aca592f52d4e89a5a46',
 }
 
 selector = Match({
