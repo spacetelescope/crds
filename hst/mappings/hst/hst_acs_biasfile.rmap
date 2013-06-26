@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:29:02.600650',
+    'derived_from' : 'generated from CDBS database 2013-06-25 13:57:04.855085',
     'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'BIASCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    'sha1sum' : '101a66d066aaef9a56c46ebf9f82a64ecca7ea6f',
+    'sha1sum' : '9600549e296b64cbcd6e81c929d850a0c09a5552',
 }
 
 selector = Match({
@@ -1806,6 +1806,8 @@ selector = Match({
         '2013-03-04 02:16:54' : 'x492109ij_bia.fits',
         '2013-03-14 12:29:05' : 'x5916381j_bia.fits',
         '2013-03-29 00:02:20' : 'x591638ej_bia.fits',
+        '2013-04-12 13:06:59' : 'x6k1256fj_bia.fits',
+        '2013-04-26 00:06:02' : 'x6k1256qj_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 2.0, 'WFC|WFC-FIX|WFC1|WFC1-CTE|WFC1-FIX|WFC1-IRAMP|WFC1-MRAMP|WFC2|WFC2-FIX|WFC2-MRAMP|WFC2-ORAMP|WFCENTER', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '2009-05-16 00:00:00' : 'w9b15505j_bia.fits',
@@ -1912,6 +1914,8 @@ selector = Match({
         '2013-03-04 02:16:54' : 'x492109ij_bia.fits',
         '2013-03-14 12:29:05' : 'x5916381j_bia.fits',
         '2013-03-29 00:02:20' : 'x591638ej_bia.fits',
+        '2013-04-12 13:06:59' : 'x6k1256fj_bia.fits',
+        '2013-04-26 00:06:02' : 'x6k1256qj_bia.fits',
     }),
     ('WFC', 'A|ABCD|B|C|D', 4.0, '*', 4144, 2068, 24.0, 0.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2006-07-07 07:46:35' : 'q9e1206rj_bia.fits',
@@ -2122,7 +2126,8 @@ selector = Match({
         '2013-02-03 01:45:11' : 'x341745kj_bia.fits',
         '2013-02-14 02:21:01' : 'x4921095j_bia.fits',
         '2013-03-14 12:29:05' : 'x591637tj_bia.fits',
-        '2013-04-12 13:06:59' : 'x5916380j_bia.fits',
+        '2013-04-12 13:06:59' : 'x6k1256dj_bia.fits',
+        '2013-04-28 00:02:26' : 'x6k1256ej_bia.fits',
     }),
     ('WFC', 'B', 2.0, 'WFC1-512', 534, 512, -3584.0, -1535.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '2011-12-24 10:40:15' : 'w9c1738kj_bia.fits',

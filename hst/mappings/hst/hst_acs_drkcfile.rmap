@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:02.611296',
+    'derived_from' : 'generated from CDBS database 2013-06-25 13:59:21.320995',
     'filekind' : 'DRKCFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '((DETECTOR == "WFC") and (PCTECORR != "OMIT"))',
-    'sha1sum' : '34aeb195c0afcb7b2e37b899b6bc7c4ebdc7f5b5',
+    'sha1sum' : '0a26f133ead1e8aede71e923938311227d666270',
 }
 
 selector = Match({
@@ -808,6 +808,17 @@ selector = Match({
         '2013-04-08 03:50:04' : 'x591638nj_dkc.fits',
         '2013-04-10 02:15:06' : 'x591638pj_dkc.fits',
         '2013-04-12 03:25:53' : 'x591638rj_dkc.fits',
+        '2013-04-12 13:06:59' : 'x6k1256gj_dkc.fits',
+        '2013-04-17 01:08:19' : 'x6k1256ij_dkc.fits',
+        '2013-04-19 00:43:38' : 'x6k1256kj_dkc.fits',
+        '2013-04-22 08:48:10' : 'x6k1256mj_dkc.fits',
+        '2013-04-24 04:14:21' : 'x6k1256oj_dkc.fits',
+        '2013-04-26 00:08:19' : 'x6k1256rj_dkc.fits',
+        '2013-04-29 00:38:58' : 'x6k1256tj_dkc.fits',
+        '2013-05-01 00:30:27' : 'x6k12571j_dkc.fits',
+        '2013-05-03 00:04:41' : 'x6k12573j_dkc.fits',
+        '2013-05-06 01:03:37' : 'x6k12575j_dkc.fits',
+        '2013-05-08 01:01:32' : 'x6k12577j_dkc.fits',
     }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.4') : UseAfter({
         '2003-03-02 16:45:00' : 'w352136cj_dkc.fits',

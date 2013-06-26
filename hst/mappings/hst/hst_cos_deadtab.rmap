@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:20.581851',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:18.543523',
     'filekind' : 'DEADTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'DEADCORR',
     'rmap_relevance' : '(DEADCORR != "OMIT")',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : 'd5c52b8e186ffd2e88b804e6971e1350d69b477f',
+    'sha1sum' : 'd0aa200d53bde15158633bb602ad1805d7ee9bff',
 }
 
 selector = Match({

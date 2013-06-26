@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:26.903618',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:36.450548',
     'filekind' : 'PCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('CENWAVE', 'APERTURE', 'EXTRHEIGHT'),
-    'sha1sum' : '9b17203c0c79b9b7d6cab9ad84169dc4f76bb70d',
+    'sha1sum' : 'd3624200a91ea8e716a5c92657162ee72c0f18da',
 }
 
 selector = Match({

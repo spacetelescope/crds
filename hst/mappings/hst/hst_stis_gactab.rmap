@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-24 15:30:26.538276',
+    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:35.225714',
     'filekind' : 'GACTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE'),
-    'sha1sum' : 'd1b3e387d5547017e6f59ea2631206ffa1e026c6',
+    'sha1sum' : '2d260520aefdabb0573eb90644b4573a8bab1467',
 }
 
 selector = Match({
