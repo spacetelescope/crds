@@ -1,31 +1,20 @@
 """This module is a command line script which lists the match tuples associated
 with a reference file.
 
-% python -m crds.matches  hst_0001.pmap u451251ej_bpx.fits
-(('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'bpixtab'), ('DETECTOR', 'SBC'), ('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')) 
+% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' OBSTYPE='IMAGING' FW1OFFST='N/A' FW2OFFST='N/A' FWSOFFST='N/A' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
 
+A number of command line switches control output formatting.
 
-The core function find_full_match_paths() returns a list of 
-"match paths",  lists of parkey value assignment tuples:
+The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
 
 >>> find_full_match_paths("hst.pmap", "u451251ej_bpx.fits")
 [((('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
 
-A related function finds only the "match tuples",  the value portion of a match
-expression for HST:
-
->>> find_match_tuples("hst.pmap", "u451251ej_bpx.fits")
-[('SBC',)]
-
-observatory and filekind are really pseudo-parkeys because they are not
-directly present in dataset file headers,  whereas the other parkeys all 
-appear as header values.
-
 """
-import sys
-import optparse
+import os.path
 
-from crds import rmap, log, pysh, config
+from crds import rmap, log, cmdline
 
 # ===================================================================
 
@@ -33,22 +22,6 @@ def test():
     """Run any doctests."""
     import doctest, crds.matches
     return doctest.testmod(crds.matches)
-
-# ===================================================================
-
-# For use with argparse.
-
-def mapping(filename):
-    """Raise an exception if `filename` does not specify a mapping file."""
-    if not rmap.is_mapping(filename):
-        raise ValueError("Must be a .pmap, .imap, or .rmap file: " + repr(filename))
-    return filename
-
-def reference(filename):
-    """Raise and exception if `filename` does not specify a reference file."""
-    if not config.is_reference(filename):
-        raise ValueError("Must be a reference (.fits) file: " + repr(filename))
-    return filename
 
 # ===================================================================
 
@@ -61,78 +34,90 @@ def find_full_match_paths(context, reffile):
     ctx = rmap.get_cached_mapping(context)
     return ctx.file_matches(reffile)
 
-def find_full_match_tuples(context, reference):
-    """Return a list of the complete match paths of `reference` within `context`.
+# ===================================================================
+
+class MatchesScript(cmdline.ContextsScript):
+    """Command line script for printing reference selection criteria."""
+
+    description = """
+Prints out the selection criteria by which the specified references are matched
+with respect to a particular context.
+    """
+
+    epilog = ""
     
-    e.g. [('hst', 'acs', 'dgeofile', 'HRC', 'CLEAR1S', 'F220W', '2002-03-01', '00:00:00')]
+    def add_args(self):
+        super(MatchesScript, self).add_args()
+        self.add_argument("--files", nargs="+", 
+            help="References for which to dump selection criteria.")
+        self.add_argument("-b", "--brief-paths", action="store_true",
+            help="Don't the instrument and filekind.")
+        self.add_argument("-o", "--omit-parameter-names", action="store_true",
+            help="Hide the parameter names of the selection criteria,  just show the values.")
+        self.add_argument("-t", "--tuple-format", action="store_true",
+            help="Print the match info as Python tuples.")
 
-    """
-    full = []
-    for match in find_full_match_paths(context, reference):
-        tup = ()
-        for part in match:
-            tup = tup + tuple([t[1] for t in part])
-        full.append(tup)
-    return full
-
-def find_match_tuples(context, reffile):
-    """Return the list of match tuples for `reference` in `context`.   
+    def main(self):
+        """Process command line parameters in to a context and list of
+        reference files.   Print out the match tuples within the context
+        which contain the reference files.
+        """
+        for ref in self.files:
+            cmdline.reference_file(ref)
+        for context in self.contexts:
+            self.dump_match_tuples(context)
+            
+    def locate_file(self, file):
+        """Override for self.files..."""
+        return os.path.basename(file)
     
-    Returns [ match_tuple, ...] where match_tuple = (value, ...)
-    """
-    ctx = rmap.get_cached_mapping(context)
-    result = []
-    for path in ctx.file_matches(reffile):
-        match_tuple = tuple([tup[1] for tup in path[1]])
-        result.append(match_tuple)
-    return result
+    def dump_match_tuples(self, context):
+        """Print out the match tuples for `references` under `context`.
+        """
+        ctx = context if len(self.contexts) > 1 else ""  
+        for ref in self.files:
+            matches = self.find_match_tuples(context, ref)
+            if matches:
+                for match in matches:        
+                    log.write(ctx, ref, ":", match)
+            else:
+                log.write(ctx, ref, ":", "none")
 
-def dump_match_tuples(context, references, finder):
-    """Print out the match tuples for `references` under `context` as located
-    and expressed by `finder()`
-    """
-    for ref in references:
-        if len(references) > 1:
-            log.write(ref, ":")
-        matches = finder(context, ref)
-        if matches:
-            for match in matches:        
-                log.write(tuple(match))
+    def find_match_tuples(self, context, reffile):
+        """Return the list of match representations for `reference` in `context`.   
+        """
+        ctx = rmap.get_cached_mapping(context)
+        matches = ctx.file_matches(reffile)
+        result = []
+        for path in matches:
+            prefix = self.format_prefix(path[0])
+            match_tuple = tuple([self.format_match_tup(tup) for section in path[1:] for tup in section])
+            if self.args.tuple_format:
+                if prefix:
+                    match_tuple = prefix + match_tuple
+            else:
+                match_tuple = prefix + " " + " ".join(match_tuple)    
+            result.append(match_tuple)
+        return result
+    
+    def format_prefix(self, path):
+        """Return any representation of observatory, instrument, and filekind."""
+        if not self.args.brief_paths:
+            if self.args.tuple_format:
+                prefix = tuple([tuple([t.upper() for t in tup]) for tup in path])
+            else:
+                prefix = " ".join(tup[1].upper() for tup in path[1:])
         else:
-            log.write("none")
+            prefix = ""
+        return prefix 
 
-def main():
-    """Process command line parameters in to a context and list of
-    reference files.   Print out the match tuples within the context
-    which contain the reference files.
-    """
-    import crds
-    crds.handle_version()
+    def format_match_tup(self, tup):
+        """Return the representation of the selection criteria."""
+        if self.args.tuple_format:
+            return tup if not self.args.omit_parameter_names else tup[1]
+        else:
+            tup = tup[0], repr(tup[1])
+            return "=".join(tup if not self.args.omit_parameter_names else tup[1:])
     
-    parser = optparse.OptionParser("usage: %prog [options] <context> <references...>")
-    parser.add_option("-f", "--full", dest="full",
-        help="Show the complete match path through the mapping hierarchy.",
-        action="store_true")
-    options, args = log.handle_standard_options(sys.argv, parser=parser)
-    
-    if len(args) == 1:
-        sys.argv.append("--help")
-        parser.parse_args(sys.argv)
-        sys.exit(-1)
-    
-    # Check inputs
-    context = mapping(args[1])
-    references = args[2:]
-    
-    for file_ in references:
-        reference(file_)
-
-    if options.full:
-        dump_match_tuples(context, references, find_full_match_tuples)
-    else:   
-        # Print match tuples
-        dump_match_tuples(context, references, find_match_tuples)
-
 if __name__ == "__main__":
-    main()
-
+    MatchesScript()()

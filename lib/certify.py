@@ -695,7 +695,7 @@ def test():
 # ============================================================================
 
 class CertifyScript(cmdline.Script):
-    """Command line script for for checking CRDS mapping and reference files.
+    """Command line script for checking CRDS mapping and reference files.
     
     Perform checks on each of `files`.   Print status.   If file is a context /
     mapping file,  it is used to define associated reference files which are
