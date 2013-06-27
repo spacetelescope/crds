@@ -134,6 +134,7 @@ add_console_handler = THE_LOGGER.add_console_handler
 remove_console_handler = THE_LOGGER.remove_console_handler
 add_stream_handler = THE_LOGGER.add_stream_handler
 remove_stream_handler = THE_LOGGER.remove_stream_handler
+format = THE_LOGGER.format
 
 def errors():
     """Return the global count of errors."""
