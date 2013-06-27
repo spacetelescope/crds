@@ -249,6 +249,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.new_headers = self.init_headers(self.new_context)
         
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
+        self.unique_errors = {}
             
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
@@ -299,6 +300,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         
         self.add_argument("-s", "--sync-references", action="store_true",
             help="Fetch the refefences recommended by new context to the local cache.")
+        
+        self.add_argument("--dump-unique-errors", action="store_true",
+            help="Record and dump the first instance of each kind of error.")
+    
+        self.add_argument("--differences-are-errors", action="store_true",
+            help="Treat recommendation differences between new context and original source as errors.")
     
     def setup_contexts(self):
         """Determine and cache the new and comparison .pmap's for this run."""
@@ -380,7 +387,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 log.verbose("===> Processing", dataset, verbosity=25)
                 self.updates[dataset] = self.process(dataset)
             
-        self.handle_updates()
+        self.post_processing()
 
         log.standard_status()
         return log.errors()
@@ -436,16 +443,16 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             u_filekind = filekind.upper()
             
             if new.startswith("NOT FOUND N/A"):
-                log.verbose("Filetype not applicable for data", repr(dataset), 
-                            "instrument", repr(instrument), "type", repr(u_filekind), verbosity=55)
+                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
+                            "Filetype N/A for dataset.", verbosity=55)
                 continue
-            if new.startswith("NOT FOUND"):
-                log.error("Bestref FAILED for data", repr(dataset), 
-                          "instrument", repr(instrument), "type", repr(u_filekind), new_org[len("NOT FOUND"):])
+            elif new.startswith("NOT FOUND"):
+                self.log_and_track_error(dataset, instrument, u_filekind, 
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):])
                 continue
-            
-            log.verbose("Bestref for", repr(dataset), "instrument", repr(instrument), "type", repr(filekind), 
-                        "=", repr(new), verbosity=55)
+            else:
+                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
+                            "Bestref FOUND:", repr(new), verbosity=55)
             
             updates.append(UpdateTuple(instrument, filekind, None, new))
 
@@ -467,35 +474,55 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             old = cleanpath(bestrefs2.get(filekind, "UNDEFINED")).strip().upper()
         
             if old in ("N/A", "NONE", "", "*"):
-                log.verbose("No comparison.  Old bestref marked as", repr(old), "for data", repr(dataset), "instrument", 
-                            repr(instrument), "type", repr(u_filekind), verbosity=55)
+                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
+                            "No comparison.  Old bestref marked as", repr(old), 
+                            verbosity=55)
                 continue    
             if new.startswith("NOT FOUND N/A"):
-                log.verbose("Filetype not applicable for data", repr(dataset), "instrument", repr(instrument), "type", 
-                            repr(u_filekind), verbosity=55)
+                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
+                            "Filetype N/A for dataset.", verbosity=55)
                 continue
             if new.startswith("NOT FOUND"):
-                log.error("Bestref FAILED for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), 
-                          new_org[len("NOT FOUND"):])
+                self.log_and_track_error(dataset, instrument, u_filekind, 
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):])
                 continue
             if filekind not in bestrefs2:
-                log.warning("No comparison bestref for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), 
-                            "recommending -->", repr(new))
+                log.warning(self.format_prefix(dataset, instrument, u_filekind), 
+                            "No comparison bestref for data; recommending -->", repr(new))
                 updates.append(UpdateTuple(instrument, filekind, None, new))
                 continue
             
             if new != old:
-                if self.args.print_new_references or log.get_verbose():
-                    log.info("New Reference for data",  repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), ":", 
-                             repr(old), "-->", repr(new))
+                if self.args.differences_are_errors:
+                    self.log_and_track_error(dataset, instrument, u_filekind, 
+                             "Comparison difference:", repr(old), "-->", repr(new))
+                elif self.args.print_new_references or log.get_verbose():
+                    log.info(self.format_prefix(dataset, instrument, u_filekind), 
+                             "New Reference for data:", repr(old), "-->", repr(new))
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
-                log.verbose("Lookup MATCHES for data", repr(dataset), "instrument", repr(instrument), "type", repr(u_filekind), "=", 
-                            repr(old), verbosity=30)
+                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
+                            "Lookup MATCHES for data:", repr(old), verbosity=30)
             
         return updates
     
-    def handle_updates(self):
+    def log_and_track_error(self, dataset, instrument, filekind, *params, **keys):
+        """Issue an error message and record the first instance of each unique kind of error,  where "unique"
+        is defined as (instrument, filekind, msg_text) and omits dataset id.
+        """
+        msg = self.format_prefix(dataset, instrument, filekind, *params, **keys)
+        log.error(msg)
+        if self.args.dump_unique_errors:
+            key = log.format(instrument, filekind, params, **keys)
+            if key not in self.unique_errors:
+                self.unique_errors[key] = msg
+        
+    def format_prefix(self, dataset, instrument, filekind, *params, **keys):
+        """Create a standard (instrument,filekind,dataset) prefix for log messages."""
+        return log.format("instrument="+repr(instrument), "type="+repr(filekind), "data="+repr(dataset), ":: ",
+                          *params, end="", **keys)
+
+    def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
         # (dataset, filekind, old, new)
         if self.args.print_affected:
@@ -512,7 +539,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         if self.args.sync_references:
             references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
             api.dump_references(self.new_context, references)
-
+        if self.args.dump_unique_errors:
+            log.info("Unique error types:")
+            for message in sorted(self.unique_errors.values()):
+                log.info("First instance of error::", message)
 
 # ===================================================================
 
