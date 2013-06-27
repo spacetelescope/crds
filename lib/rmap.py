@@ -834,7 +834,7 @@ class ReferenceMapping(Mapping):
         if self._reffile_switch != "NONE":
             extra.append(self._reffile_switch)
         if self._row_keys:
-            parkeys.extend(list(self._row_keys))
+            extra.extend(list(self._row_keys))
         return tuple(extra)
 
     def get_parkey_map(self):
