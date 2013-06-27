@@ -115,22 +115,35 @@ crds.matches
 crds.matches reports the match patterns which are associated with the given
 reference files::
 
-    Usage: matches.py [options] <context> <references...>
-
-    Options:
-      -h, --help            show this help message and exit
-      -f, --full            Show the complete match path through the mapping
-                            hierarchy.
-      -V VERBOSITY, --verbose=VERBOSITY
-                            Set verbosity level.
-
-*crds.matches* can be invoked as::    
-
-    % python -m crds.matches hst.pmap o8u2214fj_dxy.fits
-    ('HRC', 'CLEAR1S', 'F220W')
+    usage: matches.py
+           [-h] [--contexts [CONTEXT [CONTEXT ...]]] 
+           [--files FILES [FILES ...]] [-b] [-o] [-t] 
     
-    % python -m crds.matches --full hst.pmap o8u2214fj_dxy.fits
-    ('hst', 'acs', 'dgeofile', 'HRC', 'CLEAR1S', 'F220W', '2002-03-01', '00:00:00')
+    Prints out the selection criteria by which the specified references are matched
+    with respect to a particular context.
+        
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --contexts [CONTEXT [CONTEXT ...]]
+                            Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap
+      --files FILES [FILES ...]
+                            References for which to dump selection criteria.
+      -b, --brief-paths     Don't the instrument and filekind.
+      -o, --omit-parameter-names
+                            Hide the parameter names of the selection criteria,  just show the values.
+      -t, --tuple-format    Print the match info as Python tuples.
+
+*crds.matches* can be invoked in various ways with different output formatting::
+
+    % python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+    lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+    
+    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+    lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+    
+    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+    lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
 
 crds.sync 

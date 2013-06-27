@@ -44,7 +44,20 @@ Prints out the selection criteria by which the specified references are matched
 with respect to a particular context.
     """
 
-    epilog = ""
+    epilog = """
+crds.matches can be invoked like this:
+
+% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
+
+
+"""
     
     def add_args(self):
         super(MatchesScript, self).add_args()
