@@ -62,6 +62,7 @@ import os
 import os.path
 import re
 import glob
+import copy
 
 from .compat import namedtuple, ast
 
@@ -492,6 +493,28 @@ class Mapping(object):
         assert  upper == getattr(nested, key), \
             "selector['{}']='{}' in '{}' doesn't match header['{}']='{}' in nested file '{}'.".format(
             upper, nested.filename, self.filename, key, getattr(nested, key), nested.filename)
+            
+    def todict(self):
+        """Return a 'pure data' dictionary representation of this mapping and it's children
+        suitable for conversion to json.
+        """
+        return {
+                "header" : self.todict_header(),
+                "parameters" : self.parkey,
+                "selections" : self.todict_selections(),
+                }
+        
+    def todict_header(self):
+        """Return a copy of this mappings header as a dict suitable for JSON encoding."""
+        return copy.copy(self.header)
+    
+    def todict_selections(self):
+        """Return a copy of this mappings selections as a dict suitable for JSON encoding."""
+        return { key : val.todict() for key,val in self.selections.items() }
+    
+    def tojson(self):
+        """Return a JSON representation of this mapping and it's children."""
+        return json.dumps(self.todict())
 
 # ===================================================================
 
@@ -950,6 +973,10 @@ class ReferenceMapping(Mapping):
         new.selector.modify(header, value, self._tpn_valid_values)
         return new
         
+    def todict_selections(self):
+        """Return a copy of this mappings selections as a dict suitable for JSON encoding."""
+        return self.selector.todict()
+
 # ===================================================================
 
 def _load(mapping, **keys):

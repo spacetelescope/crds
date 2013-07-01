@@ -198,7 +198,16 @@ class Selector(object):
             self._selections = merge_selections
         self._rmap_header = rmap_header or {}
         self._parkey_map = self.get_parkey_map()
-        
+    
+    def todict(self):
+        """Return a 'pure data' dictionary representation of this selector and it's children
+        suitable for conversion to json.
+        """
+        return {
+                "parameters" : self._parameters,
+                "selections" : [ (key, val.todict()) if isinstance(val, Selector) else (key, val) for key,val in self._raw_selections ]
+                }
+
     def condition_selections(self, selections):
         """Replace the keys of selections with "conditioned" keys,  keys in
         which all the values have passed through self.condition_key().
