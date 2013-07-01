@@ -208,6 +208,25 @@ class Selector(object):
                 "selections" : [ (key, val.todict()) if isinstance(val, Selector) else (key, val) for key,val in self._raw_selections ]
                 }
 
+    def todict_flat(self):
+        flat = []
+        for key,val in self._raw_selections:
+            if isinstance(val, Selector):
+                nested = val.todict_flat()
+                subpars = nested["parameters"]
+                flat.extend([key + row for row in nested["selections"]])
+            else:
+                subpars = ["REFERENCE"]
+                flat.extend([(key, val)])
+        pars = list(self.todict_parameters()) + subpars
+        return {
+                "parameters" : pars,
+                "selections" : flat,
+                }
+        
+    def todict_parameters(self):
+        return self._parameters
+
     def condition_selections(self, selections):
         """Replace the keys of selections with "conditioned" keys,  keys in
         which all the values have passed through self.condition_key().
@@ -1502,6 +1521,9 @@ Alternate date/time formats are accepted as header parameters.
     def _make_key(self, header, parkeys):
         """Join reference file datetime parameters with spaces."""
         return " ".join([header[par] for par in parkeys])
+    
+    def todict_parameters(self):
+        return ("USEAFTER_DATE",)
 
 # ==============================================================================
 
