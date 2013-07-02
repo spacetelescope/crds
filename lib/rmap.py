@@ -63,6 +63,7 @@ import os.path
 import re
 import glob
 import copy
+import json
 
 from .compat import namedtuple, ast
 
@@ -507,9 +508,9 @@ class Mapping(object):
                                        for key,val in self.selections.items() ])
                 }
         
-    def tojson(self):
+    def tojson(self, recursive=10):
         """Return a JSON representation of this mapping and it's children."""
-        return json.dumps(self.todict())
+        return json.dumps(self.todict(recursive=recursive))
 
 # ===================================================================
 
