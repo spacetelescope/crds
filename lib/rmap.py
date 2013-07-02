@@ -494,14 +494,17 @@ class Mapping(object):
             "selector['{}']='{}' in '{}' doesn't match header['{}']='{}' in nested file '{}'.".format(
             upper, nested.filename, self.filename, key, getattr(nested, key), nested.filename)
             
-    def todict(self):
+    def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
-        suitable for conversion to json.
+        suitable for conversion to json.  If `recursive` is non-zero,  return that many 
+        levels of the hierarchy starting with this one.   If recursive is zero,  only
+        return the filename and header of the next levels down,  not the contents.
         """
         return {
                 "header" : copy.copy(self.header),
                 "parameters" : self.parkey,
-                "selections" : { key : val.todict() for key,val in self.selections.items() }
+                "selections" : sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
+                                       for key,val in self.selections.items() ])
                 }
         
     def tojson(self):
@@ -965,9 +968,9 @@ class ReferenceMapping(Mapping):
         new.selector.modify(header, value, self._tpn_valid_values)
         return new
         
-    def todict(self):
+    def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
-        suitable for conversion to json.
+        suitable for conversion to json.  `recursive` is ignored.
         """
         nested = self.selector.todict_flat()
         return {
