@@ -217,6 +217,7 @@ class Mapping(object):
             if name not in self.header:
                 raise MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
+        self.extra_keys = tuple(self.header.get("extra_keys", ()))
 
     @property
     def basename(self):
@@ -849,7 +850,7 @@ class ReferenceMapping(Mapping):
         to N/A in the event they're actually defined in the reference to avoid creating
         new rules for that specific case when the parameter is not really intended for matching.
         """
-        extra = list(self.extra_keys) if hasattr(self, "extra_keys") else []
+        extra = list(self.extra_keys) 
         if self._reffile_switch != "NONE":
             extra.append(self._reffile_switch)
         if self._row_keys:
