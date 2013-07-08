@@ -828,7 +828,7 @@ class ReferenceMapping(Mapping):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
         return [self.filename if full_path else self.basename]
 
-    def get_required_parkeys(self):
+    def get_required_parkeys(self, include_reffile_switch=True, include_row_keys=True):
         """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
         for key in self.parkey:
@@ -836,9 +836,9 @@ class ReferenceMapping(Mapping):
                 parkeys += list(key)
             else:
                 parkeys.append(key)
-        if self._reffile_switch != "NONE":
+        if include_reffile_switch and self._reffile_switch != "NONE":
             parkeys.append(self._reffile_switch)
-        if self._row_keys:
+        if include_row_keys and self._row_keys:
             parkeys.extend(list(self._row_keys))
         return parkeys
 
