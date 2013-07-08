@@ -8,7 +8,7 @@ from crds import client, log, utils
 filekind_kw = 'FILETYPE'
 
 def get_filekind_vals(imap):
-    """ Return the filekind values for all reference file types for this instrument
+    """ Return { filekind :  filetype } for all filekinds of `imap`.
     """
     fkinds = {}
     instrume = imap.header['instrument'].lower()
@@ -80,7 +80,7 @@ def find_current_reffile(reffile,pmap):
         print 'No valid reference file type found for filetype = ',filetype
         return None
     # Get selector kws from reffile to use to select current best matched reffile
-    select_kws = r.get_required_parkeys()
+    select_kws = r.get_required_parkeys(include_reffile_switch=False, include_row_keys=False)
     select_vals = {}
     for kw in select_kws:
         if kw == 'DATE-OBS':
