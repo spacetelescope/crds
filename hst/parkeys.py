@@ -102,7 +102,7 @@ def process_reference_file_defs():
                 relevant = "ALWAYS"
                 reftype = ccontents(inode.reffile_type)
                 filekind = ccontents(inode.reffile_keyword)
-                required = "yes"
+                required = "none"
                 switch = "none"
                 format = "none"
                 rowkeys = []
