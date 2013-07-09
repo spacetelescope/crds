@@ -265,7 +265,12 @@ END
 def is_geis(name):
     """Return True IFF `name` identifies a GEIS header file."""
     name = os.path.basename(name)
-    return bool(re.match(r"\w+\.r\dh", name))
+    return bool(re.match(r"r[0-9]h", name[-3:]))
+
+def is_geis_data(name):
+    """Return True IFF `name` identifies a GEIS data file."""
+    name = os.path.basename(name)
+    return bool(re.match(r"r[0-9]d", name[-3:]))
 
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
