@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:35.298296',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:02.174372',
     'filekind' : 'INANGTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,11 +7,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'TABLE',
-    'reffile_required' : 'YES',
+    'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('OPT_ELEM', 'SPORDER', 'CENWAVE'),
-    'sha1sum' : 'e6c8de83a7c29392f5e92eac1b922525dbec522e',
+    'sha1sum' : '906d6caab21830e87d059fc53efe8c4e24ac4c82',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:36.450548',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:02.524710',
     'filekind' : 'PCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -7,11 +7,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'OBSTYPE', 'OPT_ELEM'), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'TABLE',
-    'reffile_required' : 'YES',
+    'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('CENWAVE', 'APERTURE', 'EXTRHEIGHT'),
-    'sha1sum' : 'd3624200a91ea8e716a5c92657162ee72c0f18da',
+    'sha1sum' : '6ffda43890f6ae67f0bec2239a359c2c54568fa7',
 }
 
 selector = Match({

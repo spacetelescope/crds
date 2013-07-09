@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:25.812686',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:59.134904',
     'filekind' : 'ZPRATTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'c5271119f82734412671736ca4d80e884d305c5a',
+    'sha1sum' : '6af0eb6f405582bf3dd8c2d56e23f68e527392e9',
 }
 
 selector = Match({
