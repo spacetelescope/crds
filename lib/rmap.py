@@ -744,7 +744,7 @@ class ReferenceMapping(Mapping):
 
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
-        self._reffile_required = self.header.get("reffile_required", "YES").upper()
+        self._reffile_required = self.header.get("reffile_required", "NONE").upper()
         self._row_keys = self.header.get("row_keys", ())
 
         # header precondition method, e.g. crds.hst.acs.precondition_header  # TPNs define the static definitive possibilities for parameter choices
@@ -811,12 +811,12 @@ class ReferenceMapping(Mapping):
                     raise
             except Exception, exc:
                 log.verbose("Fallback selection failed:", str(exc), verbosity=55)
-                if self._reffile_required == "NO":
-                    log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
-                    raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
-                else:
+                if self._reffile_required == "YES":
                     log.verbose("No match found and reference is required:",  str(exc), verbosity=55)
                     raise
+                else:
+                    log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
+                    raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
 
     def reference_names(self):
         """Return the list of reference file basenames associated with this
