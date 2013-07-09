@@ -12,12 +12,6 @@ missing:
 >>> p.missing_mappings()
 []
 
-The available HST reference data seems to have a number of ACS
-references missing relative to the CDBS HTML table dump:
-
->>> len(p.missing_references()) > 0
-True
-
 There are 72 pmap, imap, and rmap files in the entire HST pipeline:
 
 >>> len(p.mapping_names()) > 50
