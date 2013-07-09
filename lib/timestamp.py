@@ -36,6 +36,9 @@ def parse_date(date):
 
     >>> parse_numerical_date('12-21-1999 05:42')
     datetime.datetime(1999, 12, 21, 5, 42)
+
+    >>> parse_date("19970114:053714")
+    datetime.datetime(1997, 1, 14, 5, 37, 14)
     """
     if isinstance(date, datetime.datetime):
         date = str(date)
@@ -150,6 +153,7 @@ MONTH_DAY_YEAR_RE = re.compile(r"^\d\d/\d\d/\d\d\d\d$")
 YEAR_MONTH_DAY_RE = re.compile(r"^\d\d\d\d/\d\d/\d\d$")
 NINETEEN_HUNDREDS_RE = re.compile(r"^\d\d/\d\d/9\d$")
 TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
+DATE_COLON_TIME_RE = re.compile(r"^\d\d\d\d\d\d\d\d:\d\d\d\d\d\d")
 
 def parse_numerical_date(dstr):
     """Parse a datetime string with the month expressed as a number in various 
@@ -175,6 +179,9 @@ def parse_numerical_date(dstr):
 
     >>> parse_numerical_date('21/12/15 05:42:00')
     datetime.datetime(2015, 12, 21, 5, 42)
+
+    >>> parse_date("19970114:053714")
+    datetime.datetime(1997, 1, 14, 5, 37, 14)
     """
     dstr = dstr.replace("-","/")
     parts = dstr.split()
@@ -184,6 +191,8 @@ def parse_numerical_date(dstr):
     else:
         time = " ".join(parts[1:])
         
+    ihour, iminute, isecond, imicrosecond = parse_time(time)
+
     if MONTH_DAY_YEAR_RE.match(date):
         month, day, year = date.split("/")
     elif YEAR_MONTH_DAY_RE.match(date):
@@ -194,13 +203,19 @@ def parse_numerical_date(dstr):
     elif TWENTY_FIRST_CENT_RE.match(date):
         day, month, year = date.split("/")
         year = "20" + year
+    elif DATE_COLON_TIME_RE.match(date):
+        year = date[:4]
+        month = date[4:6]
+        day = date[6:8]
+        ihour = int(date[9:11])
+        iminute = int(date[11:13])
+        isecond = int(date[13:15])
+        imicrosecond = 0
     else:
         raise ValueError("Unknown numerical date format: " + repr(dstr))
     
     imonth, iday, iyear, = int(month), int(day), int(year)
  
-    ihour, iminute, isecond, imicrosecond = parse_time(time)
-
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
                                 imicrosecond)
 
