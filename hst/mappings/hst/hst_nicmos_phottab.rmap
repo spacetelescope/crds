@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 14:00:25.658355',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:59.100781',
     'filekind' : 'PHOTTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -7,11 +7,11 @@ header = {
     'observatory' : 'HST',
     'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'TABLE',
-    'reffile_required' : 'YES',
+    'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('PHOTMODE',),
-    'sha1sum' : 'eceecbc298b5f94706b24e06ef73fe6d821ef6aa',
+    'sha1sum' : 'bec19f6bce64f54a62add320f1b930501810ad3f',
 }
 
 selector = Match({

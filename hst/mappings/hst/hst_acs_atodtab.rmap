@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 13:56:50.588793',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:30:32.617478',
     'filekind' : 'ATODTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'ATODCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (ATODCORR != "OMIT"))',
     'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN'),
-    'sha1sum' : 'b805d9637af5fc7252b356874931a7dfb4550ab0',
+    'sha1sum' : '8d1f836f74baa915aed0d7043cbb7737bcb17b34',
 }
 
 selector = Match({

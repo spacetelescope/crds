@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-06-25 13:57:05.427255',
+    'derived_from' : 'generated from CDBS database 2013-07-09 14:30:37.829112',
     'filekind' : 'D2IMFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'DRIZCORR',
     'rmap_relevance' : '((DETECTOR == "WFC") and (DRIZCORR != "OMIT"))',
-    'sha1sum' : 'd312c170305f7c3491953ee5dbee802a8269535c',
+    'sha1sum' : 'c28f208b034110d1715bfd48d6adb69d5fcc9823',
 }
 
 selector = Match({
