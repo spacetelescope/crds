@@ -307,9 +307,12 @@ class Mapping(object):
     @property
     def locate(self):
         """Return the "locate" module associated with self.observatory."""
-        if not hasattr(self, "_locate"):
-            self._locate = utils.get_object("crds", self.observatory, "locate")
-        return self._locate
+        return utils.get_object("crds", self.observatory, "locate")
+    
+    @property
+    def obs_package(self):
+        """Return the package (__init__) associated with self.observatory."""
+        return utils.get_observatory_package(self.observatory)
 
     def format(self):
         """Return the string representation of this mapping, i.e. pretty
@@ -971,6 +974,7 @@ class ReferenceMapping(Mapping):
         nested = self.selector.todict_flat()
         return {
                 "header" : copy.copy(self.header),
+                "text_descr" : self.obs_package.TEXT_DESCR[self.filekind],
                 "parameters" : nested["parameters"],
                 "selections" : nested["selections"]
                 }
