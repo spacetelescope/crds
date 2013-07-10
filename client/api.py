@@ -338,6 +338,9 @@ def get_cached_server_info():
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
     """
+    def __init__(self):
+        self.info_map = {}
+    
     def get_local_files(self, pipeline_context, names, ignore_cache=False, raise_exceptions=True):
         """Given a list of basename `mapping_names` which are pertinent to the 
         given `pipeline_context`,   cache the mappings locally where they can 
@@ -374,6 +377,8 @@ class FileCacher(object):
 
     def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
         """Serial file-by-file download."""
+        obs = self.observatory_from_context(pipeline_context)
+        self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
         for name in downloads:
             try:
                 self.download(pipeline_context, name, localpaths[name])
@@ -456,7 +461,7 @@ class FileCacher(object):
 
     def verify_file(self, pipeline_context, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
-        remote_info = get_file_info(pipeline_context, filename)
+        remote_info = self.info_map[filename]
         local_length = os.stat(localpath).st_size
         original_length = long(remote_info["size"])
         basename = os.path.basename(localpath)
