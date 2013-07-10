@@ -260,6 +260,10 @@ def get_default_context(observatory=None):
     """
     return str(S.get_default_context(observatory))
 
+def get_context_by_date(date, observatory=None):
+    """Return the name of the first operational context which precedes `date`."""
+    return str(S.get_context_by_date(date, observatory))
+    
 def get_server_info():
     """Return a dictionary of critical parameters about the server such as:
     
