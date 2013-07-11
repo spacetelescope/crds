@@ -1523,7 +1523,7 @@ Alternate date/time formats are accepted as header parameters.
         return " ".join([header[par] for par in parkeys])
     
     def todict_parameters(self):
-        return ("USEAFTER_DATE",)
+        return ("USEAFTER",)
 
 # ==============================================================================
 
