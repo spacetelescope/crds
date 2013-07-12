@@ -140,7 +140,7 @@ def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 
     file.
     """
-    return mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
 CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
@@ -182,7 +182,7 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("2040-01-29T12:00:00")
     True
     """
-    return is_mapping(mapping) or bool(CONTEXT_RE.match(mapping))
+    return is_mapping(mapping) or (isinstance(mapping, basestring) and bool(CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).

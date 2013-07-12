@@ -244,7 +244,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.process_filekinds = [typ.lower() for typ in self.args.types ]
 
         # do one time startup outside profiler.
-        self.new_context, self.newctx, self.oldctx = self.setup_contexts()
+        self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
 
         self.new_headers = self.init_headers(self.new_context)
         
@@ -257,11 +257,11 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.add_argument("-n", "--new-context", dest="new_context", 
             help="Compute the updated best references using this context. "
                  "Uses current operational context by default.",
-            default=None, type=cmdline.context_mapping)
+            default=None, type=cmdline.mapping_spec)
         
         self.add_argument("-o", "--old-context", dest="old_context",
             help="Compare bestrefs recommendations from two contexts.", 
-            metavar="OLD_CONTEXT", default=None, type=cmdline.context_mapping)
+            metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
         
         self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
             help="Compare new bestrefs recommendations to recommendations from data source,  files or database.")
@@ -316,22 +316,23 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         else:
             log.verbose("Using explicit new context", repr(self.args.new_context), 
                         "for computing updated best references.", verbosity=25)
-            new_context = self.args.new_context
+            new_context = self.resolve_context(self.args.new_context)
+        self.sync_context(new_context)
         if self.args.old_context is not None:
             log.verbose("Using explicit old context", repr(self.args.old_context), verbosity=25)
-        self.sync_contexts(new_context)
+            old_context = self.resolve_context(self.args.old_context)
+            self.sync_context(old_context)
+        else:
+            old_context = None
         newctx = rmap.get_cached_mapping(new_context)
-        oldctx = rmap.get_cached_mapping(self.args.old_context)  if self.args.old_context else None
-        return new_context, newctx, oldctx
+        oldctx = rmap.get_cached_mapping(old_context)  if old_context else None
+        return new_context, old_context, newctx, oldctx
 
-    def sync_contexts(self, new_context):
+    def sync_context(self, context):
         """Recursively cache the new and comparison mappings."""
-        if new_context:
-            log.verbose("Syncing context", repr(new_context), verbosity=25)
-            api.dump_mappings(new_context)
-        if self.args.old_context:
-            log.verbose("Syncing context", repr(self.args.old_context), verbosity=25)
-            api.dump_mappings(self.args.old_context)
+        if context:
+            log.verbose("Syncing context", repr(context), verbosity=25)
+            api.dump_mappings(context)
 
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
