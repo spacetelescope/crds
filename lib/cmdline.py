@@ -293,24 +293,24 @@ class ContextsScript(Script):
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
-        all_contexts = api.list_mappings(glob_pattern="*.pmap")
         if self.args.contexts:
             assert not self.args.range, 'Cannot specify explicit contexts and --range'
             assert not self.args.all, 'Cannot specify explicit contexts and --all'
             # permit instrument and reference mappings,  not just pipelines:
-            all_contexts = api.list_mappings(glob_pattern="*.*map")
             contexts = []
             for context in self.args.contexts:
                 if config.is_date_based_mapping_spec(context):
-                    context = api.get_context_by_date(context)
-                assert context in all_contexts, "Unknown context " + repr(context)
+                    resolved_context = api.get_context_by_date(context)
+                    log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
+                    context = resolved_context
                 contexts.append(context)
         elif self.args.all:
             assert not self.args.range, "Cannot specify --all and --range"
-            contexts = all_contexts
+            contexts = api.list_mappings(glob_pattern="*.pmap")
         elif self.args.range:
             rmin, rmax = self.args.range
             contexts = []
+            all_contexts = api.list_mappings(glob_pattern="*.pmap")
             for context in all_contexts:
                 match = re.match(r"\w+_(\d+).pmap", context)
                 if match:
