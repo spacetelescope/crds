@@ -30,6 +30,7 @@ class CrdsDownloadError(CrdsError):
 
 __all__ = [
            "get_default_context",
+           "get_context_by_date",
            "get_server_info",
            "cache_references",
            

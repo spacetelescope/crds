@@ -142,9 +142,63 @@ def is_mapping(mapping):
     """
     return mapping.endswith((".pmap", ".imap", ".rmap"))
 
+# e.g.  hst, hst-acs, hst-acs-darkfile
+CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
+
+# Standard date time format using T separator for command line use specifying contexts.
+# e.g. 2040-02-22T12:01:30.4567
+CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
+CONTEXT_DATETIME_RE = re.compile(CONTEXT_DATETIME_RE_STR)
+
+# e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
+CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?(?P<date>" + CONTEXT_DATETIME_RE_STR + r")"
+CONTEXT_RE = re.compile(CONTEXT_RE_STR)
+
+def is_mapping_spec(mapping):
+    """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
+    
+    Date-based specifications can be interpreted by the CRDS server with respect to the operational
+    context history to determine the default operational context which was in use at that date.
+    This function verifies syntax only,  not the existence of corresponding context.
+    
+    >>> is_mapping_spec("hst.pmap")
+    True
+    
+    >>> is_mapping_spec("foo.pmap")
+    True
+    
+    >>> is_mapping_spec("foo")
+    False
+    
+    >>> is_mapping_spec("hst-2040-01-29T12:00:00")
+    True
+
+    >>> is_mapping_spec("hst-acs-2040-01-29T12:00:00")
+    True
+
+    >>> is_mapping_spec("hst-acs-darkfile-2040-01-29T12:00:00")
+    True
+    
+    >>> is_mapping_spec("2040-01-29T12:00:00")
+    True
+    """
+    return is_mapping(mapping) or bool(CONTEXT_RE.match(mapping))
+
+def is_date_based_mapping_spec(mapping):
+    """Return True IFF `mapping` is a date based specification (not a filename).
+ 
+    >>> is_date_based_mapping_spec("2040-01-29T12:00:00")
+    True
+ 
+    >>> is_date_based_mapping_spec("hst.pmap")
+    False
+    """
+    return is_mapping_spec(mapping) and not is_mapping(mapping)
+
 def is_reference(reference):
     """Return True IFF file name `reference` is plausible as a reference file name.
-    is_reference() does not *guarantee* that `reference` is a reference file name.
+    is_reference() does not *guarantee* that `reference` is a reference file name,
+    in particular a dataset filename might pass as a reference.
 
     >>> is_reference("something.fits")
     True

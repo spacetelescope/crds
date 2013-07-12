@@ -10,7 +10,7 @@ import re
 
 from argparse import RawTextHelpFormatter
 
-from crds import rmap, log, data_file, heavy_client
+from crds import rmap, log, data_file, heavy_client, config
 from crds.client import api
 
 # =============================================================================
@@ -39,8 +39,13 @@ def reference_file(filename):
 
 def mapping(filename):
     """Ensure `filename` is a CRDS mapping file."""
-    assert rmap.is_mapping(filename), "A .rmap, .imap, or .pmap file is required but got: '%s'" % filename
+    assert config.is_mapping(filename), "A .rmap, .imap, or .pmap file is required but got: '%s'" % filename
     return filename
+
+def mapping_spec(spec):
+    """Ensure `spec` is a CRDS mapping specification, a filename or a date based spec."""
+    assert config.is_mapping_spec(spec), "A .rmap, .imap, or .pmap file or date base specification is required but got: '%s'" % spec
+    return spec
 
 def pipeline_mapping(filename):
     """Ensure `filename` is a .pmap file."""
@@ -113,11 +118,15 @@ class Script(object):
         self.add_standard_args()
         self.args = self.parser.parse_args(argv[1:])
         log.set_verbose(self.args.verbosity or self.args.verbose)
+        self.contexts = self.determine_contexts()
         
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
         raise NotImplementedError("Script subclasses have to define main().")
-        
+    
+    def determine_contexts(self):
+        return []    
+
     def add_args(self):
         """Add script-specific argparse add_argument calls here on self.parser"""
         raise NotImplementedError("Script subclasses have to define add_args().")
@@ -142,14 +151,13 @@ class Script(object):
                 if file.startswith("jwst"):
                     assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
                     obs = "jwst"
-        if hasattr(self, "contexts"):  # XXX hack
-            for file in self.contexts:
-                if file.startswith("hst"):
-                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                    obs = "hst"
-                if file.startswith("jwst"):
-                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                    obs = "jwst"
+        for file in self.contexts:
+            if file.startswith("hst"):
+                assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                obs = "hst"
+            if file.startswith("jwst"):
+                assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                obs = "jwst"
         if obs is None:
             obs = api.get_default_observatory()
         return obs
@@ -274,40 +282,34 @@ class ContextsScript(Script):
     
     def __init__(self, *args, **keys):
         super(ContextsScript, self).__init__(*args, **keys)
-        self._contexts = None
 
     def add_args(self):
-        self.add_argument('--contexts', metavar='CONTEXT', type=mapping, nargs='*',
-            help="Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap")        
+        self.add_argument('--contexts', metavar='CONTEXT', type=mapping_spec, nargs='*',
+            help="Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification")        
         self.add_argument("--range", metavar="MIN:MAX",  type=nrange, dest="range", default=None,
             help='Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.')
         self.add_argument('--all', action='store_true',
             help='Operate with respect to all known CRDS contexts.')
 
-    @property
-    def contexts(self):
-        """Return a list of contexts defined by the command line parameters."""
-        if self._contexts is None:
-            self._contexts = self.determine_contexts()
-        return self._contexts
-
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
-        args = self.args
         all_contexts = api.list_mappings(glob_pattern="*.pmap")
-        if args.contexts:
-            assert not args.range, 'Cannot specify explicit contexts and --range'
-            assert not args.all, 'Cannot specify explicit contexts and --all'
+        if self.args.contexts:
+            assert not self.args.range, 'Cannot specify explicit contexts and --range'
+            assert not self.args.all, 'Cannot specify explicit contexts and --all'
             # permit instrument and reference mappings,  not just pipelines:
             all_contexts = api.list_mappings(glob_pattern="*.*map")
-            for context in args.contexts:
+            contexts = []
+            for context in self.args.contexts:
+                if config.is_date_based_mapping_spec(context):
+                    context = api.get_context_by_date(context)
                 assert context in all_contexts, "Unknown context " + repr(context)
-            contexts = args.contexts
-        elif args.all:
-            assert not args.range, "Cannot specify --all and --range"
+                contexts.append(context)
+        elif self.args.all:
+            assert not self.args.range, "Cannot specify --all and --range"
             contexts = all_contexts
-        elif args.range:
-            rmin, rmax = args.range
+        elif self.args.range:
+            rmin, rmax = self.args.range
             contexts = []
             for context in all_contexts:
                 match = re.match(r"\w+_(\d+).pmap", context)
