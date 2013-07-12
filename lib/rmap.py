@@ -808,7 +808,7 @@ class ReferenceMapping(Mapping):
                     raise
             except Exception, exc:
                 log.verbose("Fallback selection failed:", str(exc), verbosity=55)
-                if self._reffile_required == "YES":
+                if self._reffile_required in ["YES", "NONE"]:
                     log.verbose("No match found and reference is required:",  str(exc), verbosity=55)
                     raise
                 else:
