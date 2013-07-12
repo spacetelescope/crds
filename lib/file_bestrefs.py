@@ -238,6 +238,8 @@ def main():
 
     newctx_fname, datasets = args[1], args[2:]
     
+    log.warning("crds.file_bestrefs is an unsupported prototype script which has been superceded by crds.bestrefs.")
+    
     if options.files:
         datasets += [file_.strip() for file_ in open(options.files).readlines()]
     

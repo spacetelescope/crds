@@ -62,10 +62,6 @@ def reference_mapping(filename):
     assert filename.endswith(".rmap"), "A .rmap file is required but got: '%s'" % filename
     return filename
 
-def context_mapping(filename):
-    assert filename.endswith((".pmap",".imap")), "A .pmap or .imap CRDS context file is required but got '%s'" % filename
-    return filename
-
 #def mapping(filename):
 #    """Ensure that `filename` is any known CRDS mapping."""
 #    if api.is_known_mapping(filename):
@@ -275,6 +271,18 @@ class Script(object):
         """script.run() is the same thing as script() but more explicit."""
         self.__call__(*args, **keys)
         
+    def resolve_context(self, context):
+        """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
+        date based specifications against the CRDS server operational context history.
+        """
+        assert config.is_mapping_spec(context), \
+            "Invalid .pmap, .imap, or .imap filename or date based context specification."
+        if config.is_date_based_mapping_spec(context):
+            resolved_context = api.get_context_by_date(context)
+            log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
+            context = resolved_context
+        return context
+
 # =============================================================================
 
 class ContextsScript(Script):
@@ -297,13 +305,7 @@ class ContextsScript(Script):
             assert not self.args.range, 'Cannot specify explicit contexts and --range'
             assert not self.args.all, 'Cannot specify explicit contexts and --all'
             # permit instrument and reference mappings,  not just pipelines:
-            contexts = []
-            for context in self.args.contexts:
-                if config.is_date_based_mapping_spec(context):
-                    resolved_context = api.get_context_by_date(context)
-                    log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
-                    context = resolved_context
-                contexts.append(context)
+            contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
             assert not self.args.range, "Cannot specify --all and --range"
             contexts = api.list_mappings(glob_pattern="*.pmap")
