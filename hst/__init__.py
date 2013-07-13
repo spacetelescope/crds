@@ -79,7 +79,7 @@ TEXT_DESCR = {
     'nlinfile': 'Detector Linearity Correction File',
     'noisfile': 'Detector Read-noise File',
     'npolfile': 'Non-polynomial Offset',
-    'offtab': 'Not Used',
+    'offtab': 'Inter-chip Offsets Table',
     'oscntab': 'Overscan Region Table',
     'pctab': 'Photometric Correction Table',
     'pctetab': 'Cte Correction Table',
