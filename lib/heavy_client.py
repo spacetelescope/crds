@@ -189,8 +189,8 @@ def check_context(context):
     """Make sure `context` is a pipeline or instrument mapping."""
     if context is None:
         return
-    assert isinstance(context, basestring) and context.endswith((".pmap", ".imap")), \
-                "context should specify a pipeline or instrument mapping, .e.g. hst_0023.pmap"
+    assert config.is_mapping_spec(context), \
+                "context should specify a pipeline or instrument mapping, .e.g. hst_0023.pmap,  or a date based spec, e.g. hst-2018-01-21T12:32:05"
 
 # ============================================================================
 
@@ -235,7 +235,7 @@ def get_processing_mode(observatory, context=None):
         
     effective_mode = get_effective_mode(connected, info["crds_version"]["str"])
 
-    final_context = get_final_context(context, info)
+    final_context = get_final_context(connected, context, info)
 
     return effective_mode, final_context
 
@@ -258,7 +258,7 @@ def get_effective_mode(connected,  server_version):
         log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
     return effective_mode
 
-def get_final_context(context, info):
+def get_final_context(connected, context, info):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
     cached, or defaulted `operational_context`,  choose the pipeline mapping which 
     defines the reference selection rules.
@@ -267,20 +267,39 @@ def get_final_context(context, info):
     """
     env_context = config.get_crds_env_context()
     if context:    # context parameter trumps all
-        final_context = context
-        log.verbose("Using reference file selection rules", srepr(final_context), 
+        input_context = context
+        log.verbose("Using reference file selection rules", srepr(input_context), 
                     "defined by caller.")
         info["status"] = "getreferences() context parameter"
     elif env_context:
-        final_context = env_context
-        log.verbose("Using reference file selection rules", srepr(final_context), 
+        input_context = env_context
+        log.verbose("Using reference file selection rules", srepr(input_context), 
                     "defined by environment CRDS_CONTEXT.")
         info["status"] = "env var CRDS_CONTEXT"
     else:
-        final_context = str(info["operational_context"])
-        log.verbose("Using reference selection rules", srepr(final_context), 
+        input_context = str(info["operational_context"])
+        log.verbose("Using reference selection rules", srepr(input_context), 
                     "defined by", info["status"] + ".")
+    final_context = translate_date_based_context(connected, info, input_context)
     return final_context
+
+def translate_date_based_context(connected, info, context):
+    """Check to see if `input_context` is based upon date rather than a context filename.  If it's 
+    just a filename,  return it.  If it's a date spec,  ask the server to interpret the date into 
+    a context filename.   If it's a date spec and not `connected`,  raise an exception.
+    """
+    if config.is_mapping(context):
+        return context
+    else:
+        if not connected:
+            raise crds.CrdsError("Specified CRDS context by date and CRDS server is not reachable.")
+        try:
+            translated = light_client.get_context_by_date(context, observatory=info["observatory"])
+        except Exception, exc:
+            log.error("Failed to translate date based context", repr(context), ":", str(exc))
+            raise
+        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=20)
+        return translated
 
 def local_version_obsolete(server_version):
     """Compare `server_version` to the minor version number of the locally 
