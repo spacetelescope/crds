@@ -10,9 +10,9 @@
 INSTRUME            H        C         R    STIS
 FILETYPE            H        C         R    "PIXEL-TO-PIXEL FLATFIELD IMAGE"
 DETECTOR            H        C         R    CCD,NUV-MAMA,FUV-MAMA
-OBSTYPE             H        C         R    IMAGING
+OBSTYPE             H        C         R    IMAGING,SPECTROSCOPIC
 OPT_ELEM            H        C         R    MIRCUV,MIRFUV,MIRNUV,MIRVIS,ANY
-CENWAVE             H        I         R   -999
+CENWAVE             H        I         R   ANY
 APERTURE            H        C         R    25MAMA,F25LYA,F25QTZ,\
          F25CN182,F25CIII,F25MGII,F25SRF2,F25NDQ,F25CN270,\
          50CCD,2X2,36X0.05P45,36X0.05N45,36X0.6P45,36X0.6N45,\

@@ -13,8 +13,8 @@ DETECTOR            H        C         R    CCD,NUV-MAMA,FUV-MAMA
 OPT_ELEM            H        C         R    G140L,G140M,E140M,E140H,G230L,\
           G230M,E230M,E230H,PRISM,G230LB,G230MB,G430L,G430M,G750L,G750M,\
           MIRCUV,MIRFUV,MIRNUV,MIRVIS,X140H,X140M,X230H,X230M,ANY
-OBSTYPE             H        C         R    IMAGING
-CENWAVE             H        I         R    -999
+OBSTYPE             H        C         R    IMAGING,SPECTROSCOPIC
+CENWAVE             H        I         R    ANY
 APERTURE            H        C         R    25MAMA,F25LYA,F25QTZ,\
          F25CN182,F25CIII,F25MGII,F25SRF2,F25NDQ,F25CN270,\
          50CCD,2X2,36X0.05P45,36X0.05N45,36X0.6P45,36X0.6N45,\
