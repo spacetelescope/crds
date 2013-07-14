@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:13.609572',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:57.967748',
     'filekind' : 'WF4TFILE',
     'instrument' : 'WFPC2',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '885fe48764a13d173ad191f732e7270713f16fb4',
+    'sha1sum' : '2f4e885512e3aa39917b9f0c2365add09ff2314c',
 }
 
 selector = Match({

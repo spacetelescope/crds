@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:56.175243',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:14.116674',
     'filekind' : 'BADTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'BADTCORR',
     'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (BADTCORR != "OMIT"))',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : '6f122ed22660c8fa437b64d03c6b97d4cea8c9c6',
+    'sha1sum' : '9c7f7429dd203e224165cbc23dc49f36f7770ee3',
 }
 
 selector = Match({

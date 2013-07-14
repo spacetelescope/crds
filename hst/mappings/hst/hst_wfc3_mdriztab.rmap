@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:10.484315',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:50.540175',
     'filekind' : 'MDRIZTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'DRIZCORR',
     'rmap_relevance' : '(DRIZCORR != "OMIT")',
-    'sha1sum' : '26e6ce0448adaf8541477f8b34dc55f62a00bf95',
+    'sha1sum' : 'c6c2400877c3c28ede3d4a77e4cc5dd877bcd621',
 }
 
 selector = Match({

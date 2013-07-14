@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:00.230336',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:23.446713',
     'filekind' : 'CRREJTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR == "CCD")',
     'row_keys' : ('CRSPLIT', 'MEANEXP'),
-    'sha1sum' : 'f4e731ee9a6b3c6eb52d425c485f281715a7214c',
+    'sha1sum' : '7cf0fb47f92628e7bfb9539379ceb8855f109a95',
 }
 
 selector = Match({

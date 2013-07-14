@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:10.478806',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:50.503696',
     'filekind' : 'IDCTAB',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('CCDCHIP',),
-    'sha1sum' : '699aecd07fae2792c4f3cc8c56e155b9180974db',
+    'sha1sum' : '8f18140ace94ce02c081ec116ca4e8e74e5cd289',
 }
 
 selector = Match({

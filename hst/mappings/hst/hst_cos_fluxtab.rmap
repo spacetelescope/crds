@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:56.897184',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:15.982090',
     'filekind' : 'FLUXTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'FLUXCORR',
     'rmap_relevance' : '((OBSTYPE == "SPECTROSCOPIC") and (FLUXCORR != "OMIT"))',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
-    'sha1sum' : '2bcc8573fc5f969be74765974a0e34a6d191107a',
+    'sha1sum' : 'c378fb079807cc35071d5426b58888f21d994c4d',
 }
 
 selector = Match({
@@ -19,6 +19,7 @@ selector = Match({
         '1996-10-01 00:00:00' : 's7g1700kl_phot.fits',
         '2009-05-11 00:00:00' : 'u8k1433ql_phot.fits',
         '2009-05-11 00:00:01' : 'x1v17416l_phot.fits',
+        '2009-05-11 00:00:02' : 'x6q17587l_phot.fits',
     }),
     ('NUV', 'SPECTROSCOPIC') : UseAfter({
         '1996-10-01 00:00:00' : 's7g17011l_phot.fits',

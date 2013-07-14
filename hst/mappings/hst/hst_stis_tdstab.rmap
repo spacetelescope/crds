@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:03.238569',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:33.793543',
     'filekind' : 'TDSTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('GRATING',),
-    'sha1sum' : '19e77c446a83d337429061419d20f1aa25413558',
+    'sha1sum' : '538cec7eaa9f0080bae41ff30933f4018e42e4f3',
 }
 
 selector = Match({
