@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:03.241502',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:33.806320',
     'filekind' : 'TELTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('REFWAVE',),
-    'sha1sum' : '05974419edc17d1c20ce7646514b367bfa1d1790',
+    'sha1sum' : 'a74601cafc81b02a455572d08dd976cf5bc60fb3',
 }
 
 selector = Match({

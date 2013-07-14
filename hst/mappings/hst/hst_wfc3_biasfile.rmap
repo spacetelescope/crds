@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:07.720431',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:42.873191',
     'extra_keys' : ('SUBARRAY',),
     'filekind' : 'BIASFILE',
     'instrument' : 'WFC3',
@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'BIASCORR',
     'rmap_relevance' : '((DETECTOR == "UVIS") and (BIASCORR != "OMIT"))',
-    'sha1sum' : '508d23f21431ceb4d0b24785dfb990e6716856e3',
+    'sha1sum' : 'da6b88061adcbbf6561890f06b4a9ef30d143835',
 }
 
 selector = Match({

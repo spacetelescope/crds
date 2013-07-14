@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:02.430119',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:31.101359',
     'filekind' : 'LFLTFILE',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : 'd146e346aa6a77a3107060e9f3ec7eb31b88c6aa',
+    'sha1sum' : '0d396fc57df9da6ddab74647926c689df6c8a73e',
 }
 
 selector = Match({

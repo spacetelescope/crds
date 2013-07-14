@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:32:00.193487',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:23.199528',
     'filekind' : 'BPIXTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '6f1f2c1452b9d6836b683d3ecb6b82ab2b76e47c',
+    'sha1sum' : '9a8168ef61221999d7a6881c20658b4d0882e44e',
 }
 
 selector = Match({

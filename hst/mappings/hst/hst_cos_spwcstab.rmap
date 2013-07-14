@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:57.233216',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:17.061642',
     'extra_keys' : ('EXPTYPE',),
     'filekind' : 'SPWCSTAB',
     'instrument' : 'COS',
@@ -12,7 +12,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC") and (EXPTYPE == "EXTERNAL/SCI")',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
-    'sha1sum' : 'f7795dd1eb78eda446ab18011cc58846ae0c68ff',
+    'sha1sum' : '7922b7b25e05c3019a40189d35d44934d91e8085',
 }
 
 selector = Match({
@@ -22,6 +22,7 @@ selector = Match({
         '2009-06-08 00:00:00' : 'uai1737ql_spwcs.fits',
         '2009-08-17 00:00:00' : 'uai1737rl_spwcs.fits',
         '2009-08-17 00:00:01' : 'x1v17417l_spwcs.fits',
+        '2009-08-17 00:00:02' : 'x6q17583l_spwcs.fits',
     }),
     ('NUV', 'SPECTROSCOPIC', 'N/A') : UseAfter({
         '1996-10-01 00:00:00' : 'uai17385l_spwcs.fits',

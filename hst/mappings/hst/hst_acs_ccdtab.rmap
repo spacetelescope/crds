@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:30:37.817472',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:26:10.556424',
     'filekind' : 'CCDTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR != "SBC")',
     'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN'),
-    'sha1sum' : '1c727e9ba04c75b192ef593b36cfbd0d7514613e',
+    'sha1sum' : '15b35992e9656d75f68a859b02c96f2165ff11a1',
 }
 
 selector = Match({

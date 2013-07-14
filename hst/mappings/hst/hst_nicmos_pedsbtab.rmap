@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:59.098971',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:20.811194',
     'filekind' : 'PEDSBTAB',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : 'ALWAYS',
     'row_keys' : ('CAMERA',),
-    'sha1sum' : 'a0f90125bd4ee37f89c14794c1b3bc6759b78727',
+    'sha1sum' : '171f0ff54ac222555b87406b0cc1dc95345a1e61',
 }
 
 selector = Match({

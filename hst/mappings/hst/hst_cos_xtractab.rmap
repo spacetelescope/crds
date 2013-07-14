@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:58.150338',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:19.222913',
     'filekind' : 'XTRACTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
-    'sha1sum' : '7d87b9c84ac0c7d79358206c7bf1fb943e3200b4',
+    'sha1sum' : '0572c6a3be70282338b4c379f513a7661ed383cd',
 }
 
 selector = Match({
@@ -20,11 +20,9 @@ selector = Match({
         '2006-10-01 00:00:00' : 's7g17007l_1dx.fits',
     }),
     ('FUV', 'SPECTROSCOPIC', 2) : UseAfter({
-        '2009-05-11 00:00:00' : 'w5g1439rl_1dx.fits',
-        '2009-05-11 00:00:01' : 'x1v17418l_1dx.fits',
+        '2009-05-11 00:00:02' : 'x6q17586l_1dx.fits',
     }),
     ('FUV', 'SPECTROSCOPIC', '-1|1') : UseAfter({
-        '2009-05-11 00:00:00' : 'w5g1439ql_1dx.fits',
         '2009-05-11 00:00:01' : 'x1v17414l_1dx.fits',
     }),
     ('NUV', 'SPECTROSCOPIC', -2147483648) : UseAfter({

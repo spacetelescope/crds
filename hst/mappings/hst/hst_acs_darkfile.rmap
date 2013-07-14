@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-09 14:31:17.294971',
+    'derived_from' : 'generated from CDBS database 2013-07-13 15:27:36.180254',
     'filekind' : 'DARKFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -14,7 +14,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'DARKCORR',
     'rmap_relevance' : '(DARKCORR != "OMIT")',
-    'sha1sum' : 'af532e6a92d6d776a39eb4e2ab5704460efc8cbf',
+    'sha1sum' : '0bbc8c709753761496c23701c0df43436f466882',
 }
 
 selector = Match({
@@ -2582,7 +2582,7 @@ selector = Match({
     }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0') : UseAfter({
         '2008-01-01 00:00:00' : 't7d1504dj_drk.fits',
-        '2009-05-16 00:00:00' : 'tam17023j_drk.fits',
+        '2009-05-16 00:00:00' : 'x781933ij_drk.fits',
         '2009-07-06 17:00:00' : 'u3f1848lj_drk.fits',
         '2009-07-10 15:36:02' : 'u3f1848mj_drk.fits',
         '2009-07-12 14:04:39' : 'u3f1848nj_drk.fits',
@@ -3204,6 +3204,19 @@ selector = Match({
         '2013-05-03 00:04:41' : 'x6k12574j_drk.fits',
         '2013-05-06 01:03:37' : 'x6k12576j_drk.fits',
         '2013-05-08 01:01:32' : 'x6k12578j_drk.fits',
+        '2013-05-09 23:18:10' : 'x781408pj_drk.fits',
+        '2013-05-13 03:08:26' : 'x781408qj_drk.fits',
+        '2013-05-15 00:04:26' : 'x781408rj_drk.fits',
+        '2013-05-17 00:12:50' : 'x781408sj_drk.fits',
+        '2013-05-20 03:42:05' : 'x781408tj_drk.fits',
+        '2013-05-22 01:04:38' : 'x7814090j_drk.fits',
+        '2013-05-24 00:10:40' : 'x7814092j_drk.fits',
+        '2013-05-27 06:22:46' : 'x7814093j_drk.fits',
+        '2013-05-29 00:04:31' : 'x7814094j_drk.fits',
+        '2013-05-31 00:04:28' : 'x7814095j_drk.fits',
+        '2013-06-03 03:04:40' : 'x7814096j_drk.fits',
+        '2013-06-05 01:25:24' : 'x7814097j_drk.fits',
+        '2013-06-07 00:24:53' : 'x7814098j_drk.fits',
     }),
     ('WFC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
         '2006-07-30 02:04:10' : 'q9520146j_drk.fits',
