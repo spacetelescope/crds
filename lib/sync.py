@@ -138,7 +138,7 @@ class SyncScript(cmdline.ContextsScript):
             return
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
-            api.dump_mappings(context, ignore_cache=self.args.ignore_cache)
+            api.dump_mappings(context, ignore_cache=self.args.ignore_cache, raise_exceptions=self.args.pdb)
             
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
@@ -160,7 +160,8 @@ class SyncScript(cmdline.ContextsScript):
             fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
             log.info("Would fetch references:", repr(fetched))
         else:
-            api.dump_references(self.contexts[0], references, ignore_cache=self.args.ignore_cache, raise_exceptions=False)
+            api.dump_references(self.contexts[0], references, ignore_cache=self.args.ignore_cache, 
+                                raise_exceptions=self.args.pdb)
 
     def purge_references(self, keep=None):
         """Remove all references not references under pmaps `self.contexts`."""
@@ -215,9 +216,11 @@ class SyncScript(cmdline.ContextsScript):
         mappings = [os.path.basename(mapping) for mapping in self.args.files if rmap.is_mapping(mapping)]
         references = [os.path.basename(ref) for ref in self.args.files if not rmap.is_mapping(ref)]
         if mappings:
-            api.dump_mappings(self.default_context, mappings=mappings, ignore_cache=self.args.ignore_cache)
+            api.dump_mappings(self.default_context, mappings=mappings, ignore_cache=self.args.ignore_cache,
+                              raise_exceptions=self.args.pdb)
         if references:
-            api.dump_references(self.default_context, baserefs=references, ignore_cache=self.args.ignore_cache)
+            api.dump_references(self.default_context, baserefs=references, ignore_cache=self.args.ignore_cache,
+                                raise_exceptions=self.args.pdb)
 
 # ==============================================================================================================
 

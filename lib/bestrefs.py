@@ -539,7 +539,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             self.new_headers.handle_updates(self.updates)
         if self.args.sync_references:
             references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
-            api.dump_references(self.new_context, references)
+            api.dump_references(self.new_context, references, ignore_cache=self.args.ignore_cache, 
+                                raise_exceptions=self.args.pdb)
         if self.args.dump_unique_errors:
             log.info("Unique error types:")
             for message in sorted(self.unique_errors.values()):
