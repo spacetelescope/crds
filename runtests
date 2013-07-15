@@ -8,7 +8,7 @@ import crds.mappings
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
 os.environ["CRDS_MAPPATH"] = os.path.dirname(crds.mappings.__file__)
 
-crds.pysh.sh("nosetests --with-doctest {}".format(" ".join(sys.argv[1:])))
+crds.pysh.sh("nosetests --with-doctest --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
 
 
 

@@ -79,14 +79,12 @@ class TestValidatorClasses(CRDSTestCase):
             test_pass = False
         assert_true(test_pass)
 
-def test_check_duplicates():
-    """
-    >>> from crds import certify
-    >>> certify.certify_files(["data/hst.pmap"])
-    >>> certify.certify_files(["data/hst_acs.imap"])
-    >>> certify.certify_files(["data/hst_acs_darkfile.rmap"])
-    """
-    
+    def test_check_dduplicates(self):
+        from crds import certify
+        certify.certify_files([self.data("hst.pmap")])
+        certify.certify_files([self.data("hst_acs.imap")])
+        certify.certify_files([self.data("hst_acs_darkfile.rmap")])
+
 def test():
     import doctest
     from . import test_certify

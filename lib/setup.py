@@ -18,6 +18,6 @@ setup(name="crds",
         },
 
       package_data = {
-        'crds.tests' : ['data/*.fits'],
+        'crds.tests' : ['data/*.fits','data/*.*map'],
         }
     )
