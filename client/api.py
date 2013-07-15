@@ -386,6 +386,8 @@ class FileCacher(object):
         self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
         for name in downloads:
             try:
+                if "NOT FOUND" in self.info_map[name]:
+                    raise CrdsDownloadError("file is not known to CRDS server.")
                 self.download(pipeline_context, name, localpaths[name])
             except Exception, exc:
                 if raise_exceptions:
@@ -408,11 +410,8 @@ class FileCacher(object):
             self.verify_file(pipeline_context, name, localpath)
         except Exception, exc:
             # traceback.print_exc()
-            try:
+            with log.error_on_exception("Failed removing failed download for", repr(localpath)):
                 os.remove(localpath)
-            except Exception, exc:
-                log.error("Failed removing failed download for", 
-                          repr(localpath),":", str(exc))
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) + 
@@ -534,7 +533,7 @@ MAPPING_CACHER = BundleCacher()
 
 # ==============================================================================
 
-def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
+def dump_mappings(pipeline_context, ignore_cache=False, mappings=None, raise_exceptions=True):
     """Given a `pipeline_context`, determine the closure of CRDS mappings for it and 
     cache them on the local file system.
     
@@ -546,7 +545,7 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None):
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
     return MAPPING_CACHER.get_local_files(
-        pipeline_context, mappings, ignore_cache=ignore_cache)
+        pipeline_context, mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
   
 def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True):
     """Given a pipeline `pipeline_context` and list of `baserefs` reference 
