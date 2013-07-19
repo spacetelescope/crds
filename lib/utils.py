@@ -365,6 +365,8 @@ def condition_value(value):
     'N/A'
     >>> condition_value('NOT APPLICABLE')
     'N/A'
+    >>> condition_value('NOT_APPLICABLE')
+    'N/A'
     >>> condition_value('')
     'N/A'
     >>> condition_value('4294967295')
