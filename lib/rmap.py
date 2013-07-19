@@ -944,9 +944,7 @@ class ReferenceMapping(Mapping):
         false,  then change the value to N/A.
         """
         header2 = dict(header)
-        for parkey in self._required_parkeys:  # ensure all parkeys defined
-            if parkey not in header:
-                header2[parkey] = "UNDEFINED"
+        header2.update({parkey:"UNDEFINED" for parkey in self._required_parkeys if parkey not in header})
         header = dict(header)  # copy
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()
