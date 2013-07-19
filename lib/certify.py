@@ -461,7 +461,7 @@ class Certifier(object):
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
-                 dont_parse=False):
+                 dont_parse=False, script=None):
         self.filename = filename
         self.context = context
         self.trap_exceptions = trap_exceptions
@@ -470,6 +470,7 @@ class Certifier(object):
         self.dump_provenance = dump_provenance
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
+        self.script = script
         
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -486,14 +487,25 @@ class Certifier(object):
         try:
             return function(*args, **keys)
         except Exception, exc:
-            msg = "In " + repr(self.filename) + " : " + message + " : " + str(exc)
+            msg = message + " : " + str(exc)
             if self.trap_exceptions:
-                log.error(msg)
+                self.log_error(filename, msg)
                 return None
             else:
-                log.error(msg)
+                self.log_error(filename, msg)
                 raise
                 # raise ValidationError(msg)
+
+    def log_error(self, filename, msg):
+        """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
+        if self.script:
+            try:
+                instrument, filekind = utils.get_file_properties(self.script.observatory, filename)
+            except:
+                instrument = filekind = "unknown"
+            self.script.log_and_track_error(filename, instrument, filekind, msg)
+        else:
+            log.error("In", repr(filename), ":", msg)
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
@@ -647,7 +659,7 @@ class MissingReferenceError(RuntimeError):
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False):
+                  dont_parse=False, skip_banner=False, script=None):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.
     
@@ -659,6 +671,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     trap_exceptions:        bool   if True, issue log.error() messages, else raise.
     compare_old_reference:  bool,  if True,  attempt table mode checking.
     dont_parse:       bool,  if True,  don't run parser to scan mappings for duplicate keys.
+    script:   command line Script instance
     """
 
     if not isinstance(files, list):
@@ -678,7 +691,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
-                              dont_parse=dont_parse)
+                              dont_parse=dont_parse, script=script)
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
@@ -694,7 +707,7 @@ def test():
 
 # ============================================================================
 
-class CertifyScript(cmdline.Script):
+class CertifyScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script for checking CRDS mapping and reference files.
     
     Perform checks on each of `files`.   Print status.   If file is a context /
@@ -702,6 +715,10 @@ class CertifyScript(cmdline.Script):
     located on the CRDS server.  If file is a .fits file,  it should include a
     relative or absolute filepath.
     """
+    
+    def __init__(self, *args, **keys):
+        cmdline.Script.__init__(self, *args, **keys)
+        cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
 
     description = """
 Checks a CRDS reference or mapping file.
@@ -728,6 +745,7 @@ Checks a CRDS reference or mapping file.
             help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
         self.add_argument("-x", "--comparison-context", dest="context", type=str, default=None,
             help="Pipeline context defining comparison files.")
+        cmdline.UniqueErrorsMixin.add_args(self)
 
     def main(self):
         if self.args.deep:
@@ -754,8 +772,10 @@ Checks a CRDS reference or mapping file.
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 
                       trap_exceptions=self.args.trap_exceptions,
-                      dont_parse=self.args.dont_parse)
+                      dont_parse=self.args.dont_parse,
+                      script=self)
     
+        self.dump_unique_errors()
         log.standard_status()
         
         return log.errors()
