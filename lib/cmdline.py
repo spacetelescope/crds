@@ -282,6 +282,40 @@ class Script(object):
             log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
             context = resolved_context
         return context
+    
+class UniqueErrorsMixin(object):
+    """This mixin supports tracking certain errors messages and
+    """
+    def __init__(self, *args, **keys):
+        self.unique_errors = {}
+    
+    def add_args(self):
+        """Add command line parameters to Script arg parser."""
+        self.add_argument("--dump-unique-errors", action="store_true",
+            help="Record and dump the first instance of each kind of error.")
+
+    def log_and_track_error(self, data, instrument, filekind, *params, **keys):
+        """Issue an error message and record the first instance of each unique kind of error,  where "unique"
+        is defined as (instrument, filekind, msg_text) and omits data id.
+        """
+        msg = self.format_prefix(data, instrument, filekind, *params, **keys)
+        log.error(msg)
+        if self.args.dump_unique_errors:
+            key = log.format(instrument, filekind, params, **keys)
+            if key not in self.unique_errors:
+                self.unique_errors[key] = msg
+    
+    def dump_unique_errors(self):
+        """Print out the first instance of errors recorded by log_and_track_error()."""
+        if self.args.dump_unique_errors:
+            log.info("Unique error types:")
+            for message in sorted(self.unique_errors.values()):
+                log.info("First instance of error::", message)
+
+    def format_prefix(self, data, instrument, filekind, *params, **keys):
+        """Create a standard (instrument,filekind,data) prefix for log messages."""
+        return log.format("instrument="+repr(instrument), "type="+repr(filekind), "data="+repr(data), ":: ",
+                          *params, end="", **keys)
 
 # =============================================================================
 

@@ -128,7 +128,7 @@ def update_file_bestrefs(pmap, dataset, updates):
 
 # ============================================================================
 
-class BestrefsScript(cmdline.Script):
+class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script for determining best references for a sequence of dataset files."""
 
     description = """
@@ -249,7 +249,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.new_headers = self.init_headers(self.new_context)
         
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
-        self.unique_errors = {}
+        
+        cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
@@ -301,11 +302,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.add_argument("-s", "--sync-references", action="store_true",
             help="Fetch the refefences recommended by new context to the local cache.")
         
-        self.add_argument("--dump-unique-errors", action="store_true",
-            help="Record and dump the first instance of each kind of error.")
-    
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
+        
+        cmdline.UniqueErrorsMixin.add_args(self)
     
     def setup_contexts(self):
         """Determine and cache the new and comparison .pmap's for this run."""
@@ -343,15 +343,18 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
                         self.args.all_instruments].count(None)
         assert 4 - source_modes == 1, \
-            "Can only specify one of: --files, --datasets, --instruments, --all.  Specified " + repr(source_modes)
+            "Must specify one and only one of: --files, --datasets, --instruments, --all."
         if self.args.files:
             new_headers = FileHeaderGenerator(context, self.args.files)
+            log.info("Computing bestrefs for dataset files", self.args.files)
         elif self.args.datasets:
             self.test_server_connection()
             new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
+            log.info("Computing bestrefs for all datasets", repr(datasets))
         elif self.args.instruments or self.args.all_instruments:
             self.test_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
+            log.info("Computing bestrefs for all cataloged datasets of", repr(instruments))
             new_headers = InstrumentHeaderGenerator(context, instruments)
         else:
             raise RuntimeError("Invalid header source configuration.   "
@@ -507,22 +510,6 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
         return updates
     
-    def log_and_track_error(self, dataset, instrument, filekind, *params, **keys):
-        """Issue an error message and record the first instance of each unique kind of error,  where "unique"
-        is defined as (instrument, filekind, msg_text) and omits dataset id.
-        """
-        msg = self.format_prefix(dataset, instrument, filekind, *params, **keys)
-        log.error(msg)
-        if self.args.dump_unique_errors:
-            key = log.format(instrument, filekind, params, **keys)
-            if key not in self.unique_errors:
-                self.unique_errors[key] = msg
-        
-    def format_prefix(self, dataset, instrument, filekind, *params, **keys):
-        """Create a standard (instrument,filekind,dataset) prefix for log messages."""
-        return log.format("instrument="+repr(instrument), "type="+repr(filekind), "data="+repr(dataset), ":: ",
-                          *params, end="", **keys)
-
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
         # (dataset, filekind, old, new)
@@ -541,10 +528,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
             api.dump_references(self.new_context, references, ignore_cache=self.args.ignore_cache, 
                                 raise_exceptions=self.args.pdb)
-        if self.args.dump_unique_errors:
-            log.info("Unique error types:")
-            for message in sorted(self.unique_errors.values()):
-                log.info("First instance of error::", message)
+        self.dump_unique_errors()
 
 # ===================================================================
 
