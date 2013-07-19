@@ -236,7 +236,9 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     """
     
     def __init__(self, *args, **keys):
-        super(BestrefsScript, self).__init__(*args, **keys)
+        cmdline.Script.__init__(self, *args, **keys)
+        cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
+            
         self.updates = {}
         self.parameter_cache = {}
         self.old_bestrefs_cache = {}
@@ -250,8 +252,6 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
         
-        cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
-            
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         

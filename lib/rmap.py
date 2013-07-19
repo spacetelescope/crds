@@ -469,7 +469,7 @@ class Mapping(object):
         derived_from = None
         derived_path = locate_mapping(self.derived_from)
         if "generated" in self.derived_from or "cloning" in self.derived_from:
-            log.debug("Skipping derivation checks for root mapping", repr(self.basename),
+            log.verbose("Skipping derivation checks for root mapping", repr(self.basename),
                       "derived_from =", repr(self.derived_from))
         elif os.path.exists(derived_path):
             try:

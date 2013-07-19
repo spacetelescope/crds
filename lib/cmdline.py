@@ -308,7 +308,7 @@ class UniqueErrorsMixin(object):
     def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error()."""
         if self.args.dump_unique_errors:
-            log.info("Unique error types:")
+            log.info("Unique error types:", len(self.unique_errors))
             for message in sorted(self.unique_errors.values()):
                 log.info("First instance of error::", message)
 
