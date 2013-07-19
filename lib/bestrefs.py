@@ -350,7 +350,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         elif self.args.datasets:
             self.test_server_connection()
             new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
-            log.info("Computing bestrefs for all datasets", repr(datasets))
+            log.info("Computing bestrefs for all datasets", repr(self.args.datasets))
         elif self.args.instruments or self.args.all_instruments:
             self.test_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
