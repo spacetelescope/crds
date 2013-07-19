@@ -489,23 +489,23 @@ class Certifier(object):
         except Exception, exc:
             msg = message + " : " + str(exc)
             if self.trap_exceptions:
-                self.log_error(filename, msg)
+                self.log_error(msg)
                 return None
             else:
-                self.log_error(filename, msg)
+                self.log_error(msg)
                 raise
                 # raise ValidationError(msg)
 
-    def log_error(self, filename, msg):
+    def log_error(self, msg):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
             try:
-                instrument, filekind = utils.get_file_properties(self.script.observatory, filename)
+                instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
             except:
                 instrument = filekind = "unknown"
-            self.script.log_and_track_error(filename, instrument, filekind, msg)
+            self.script.log_and_track_error(self.filename, instrument, filekind, msg)
         else:
-            log.error("In", repr(filename), ":", msg)
+            log.error("In", repr(self.filename), ":", msg)
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
