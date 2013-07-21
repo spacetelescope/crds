@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:28:26.034633',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:14.741672',
     'filekind' : 'MLINTAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'GLINCORR',
     'rmap_relevance' : '((DETECTOR == "SBC") and (GLINCORR != "OMIT"))',
-    'sha1sum' : '16b199b3331a5fc8a0e01c8c22f95f42679e22ab',
+    'sha1sum' : '394664f1fdee5bda80cd589c1a0089ebe467d57a',
 }
 
 selector = Match({

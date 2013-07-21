@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:20.436953',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.305788',
     'filekind' : 'DARKFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -9,8 +9,8 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
-    'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '672dffa9c8a2ba6a14b8a74aa29905c583f3c08a',
+    'rmap_relevance' : '(SAMP_SEQ not in ["SPARS4","SPARS16","SPARS32","SPARS128"])',
+    'sha1sum' : '0034e4ea94c27016e0ad2808d59ecc8293de6091',
 }
 
 selector = Match({
