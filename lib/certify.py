@@ -92,7 +92,7 @@ class KeywordValidator(object):
         return True
 
     def _check_value(self, value):
-        if value not in self._values and self._values != ('*',):
+        if value not in self._values and tuple(self._values) != ('*',):
             if isinstance(value, str):
                 for pat in self._values:
                     if re.match(pat, value):
@@ -299,6 +299,7 @@ class NumericalValidator(KeywordValidator):
         if self.is_range:
             smin, smax = info.values[0].split(":")
             self.min, self.max = self.condition(smin), self.condition(smax)
+            assert self.min != '*' and self.max != '*', "TPN error, range min/max conditioned to '*'"
             values = None
         else:
             values = KeywordValidator.condition_values(self, info)
@@ -317,7 +318,12 @@ class NumericalValidator(KeywordValidator):
 
 class IntValidator(NumericalValidator):
     """Validates integer values."""
-    condition = int
+
+    def condition(self, value):
+        val = float(value)
+        if val == -999:
+            val = '*'
+        return val
 
 # ----------------------------------------------------------------------------
 
@@ -343,6 +349,12 @@ class FloatValidator(NumericalValidator):
                 if abs(err) < self.epsilon:
                     return
             raise
+
+    def condition(self, value):
+        val = int(value)
+        if val == -999:
+            val = '*'
+        return val
 
 # ----------------------------------------------------------------------------
 
@@ -502,6 +514,7 @@ class Certifier(object):
             try:
                 instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
             except:
+                raise
                 instrument = filekind = "unknown"
             self.script.log_and_track_error(self.filename, instrument, filekind, msg)
         else:
