@@ -10,7 +10,7 @@ import re
 
 from argparse import RawTextHelpFormatter
 
-from crds import rmap, log, data_file, heavy_client, config
+from crds import rmap, log, data_file, heavy_client, config, utils
 from crds.client import api
 
 # =============================================================================
@@ -138,6 +138,13 @@ class Script(object):
         if self.args.hst:
             assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
             obs = "hst"
+        for file in self.contexts:
+            if file.startswith("hst"):
+                assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                obs = "hst"
+            if file.startswith("jwst"):
+                assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                obs = "jwst"
         if hasattr(self.args, "files"):
             files = self.args.files if self.args.files else []
             for file in files:
@@ -147,13 +154,10 @@ class Script(object):
                 if file.startswith("jwst"):
                     assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
                     obs = "jwst"
-        for file in self.contexts:
-            if file.startswith("hst"):
-                assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                obs = "hst"
-            if file.startswith("jwst"):
-                assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                obs = "jwst"
+            if obs is None:
+                for file in files:
+                    with log.verbose_on_exception("Failed file_to_observatory for", repr(file)):
+                        obs = utils.file_to_observatory(file)
         if obs is None:
             obs = api.get_default_observatory()
         return obs
