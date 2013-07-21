@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:14.150044',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:30.199368',
     'filekind' : 'BRFTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR == "FUV")',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : 'a79dc0a0bf85ad426953ffc11088cfbc384fdc38',
+    'sha1sum' : '308663a7884e460d2e73a8f457ab00df20e0d064',
 }
 
 selector = Match({

@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:19.222913',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:32.447022',
     'filekind' : 'XTRACTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
-    'sha1sum' : '0572c6a3be70282338b4c379f513a7661ed383cd',
+    'sha1sum' : '56c2f5d005d87dcb03d153c3a4f581d64ebf1439',
 }
 
 selector = Match({

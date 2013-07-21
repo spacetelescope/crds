@@ -177,6 +177,8 @@ def _simplify_restriction(restriction_text):
     rval = rval.upper()
     rval = rval.replace(" AND ", " and ")
     rval = rval.replace(" OR ", " or ")
+    rval = rval.replace(" NOT IN ", " not in ")  # order important with next line
+    rval = rval.replace(" IN ", " in ")
     return rval
 
 def _condition_numbers(restriction_text):

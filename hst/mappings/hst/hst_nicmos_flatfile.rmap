@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:20.551265',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.337089',
     'filekind' : 'FLATFILE',
     'instrument' : 'NICMOS',
     'mapping' : 'REFERENCE',
@@ -9,8 +9,8 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'NONE',
     'reffile_switch' : 'NONE',
-    'rmap_relevance' : 'ALWAYS',
-    'sha1sum' : '48ad828d3f93f1b82865411272a7b9bfbdd50e38',
+    'rmap_relevance' : '(FILTER != "BLANK")',
+    'sha1sum' : 'd17d1f0989de5db5fc1e3ee414f336cd4435a461',
 }
 
 selector = Match({

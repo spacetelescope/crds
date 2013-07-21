@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:17.138387',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:31.547207',
     'filekind' : 'WCPTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('OPT_ELEM',),
-    'sha1sum' : '02f05960364e5c3a17ff711f50ad651566f5edae',
+    'sha1sum' : '4ccb39bff6f4ad8218bb7212910ca8658084102a',
 }
 
 selector = Match({

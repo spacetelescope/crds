@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:28:26.107073',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:14.778516',
     'filekind' : 'PCTETAB',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '((DETECTOR == "WFC") and (PCTECORR != "OMIT"))',
-    'sha1sum' : '3fe2262dcfb934e96e030edd9665ee8ca1c1a4c5',
+    'sha1sum' : '93f1187f50430b2799788bb49e0b0470753f75f5',
 }
 
 selector = Match({

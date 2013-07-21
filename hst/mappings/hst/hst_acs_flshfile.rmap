@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:28:22.535877',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:12.494507',
     'filekind' : 'FLSHFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'FLSHCORR',
     'rmap_relevance' : '((DETECTOR != "SBC" and FLASHCUR != "OFF") and (FLSHCORR != "OMIT"))',
-    'sha1sum' : '31a878f889e14e8753f11e318b346e009b2e7728',
+    'sha1sum' : '9c8672dff484cfa791ecd0e1eb7ed61141411df4',
 }
 
 selector = Match({

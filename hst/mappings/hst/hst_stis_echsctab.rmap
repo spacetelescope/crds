@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:30.198118',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:36.694020',
     'filekind' : 'ECHSCTAB',
     'instrument' : 'STIS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'NONE',
     'rmap_relevance' : '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
     'row_keys' : ('OPT_ELEM', 'SPORDER'),
-    'sha1sum' : 'c45874a8074a298fa55da67bf403d37667481503',
+    'sha1sum' : 'c371c120a6362eae17bbdd7779e5dc32d4daae88',
 }
 
 selector = Match({

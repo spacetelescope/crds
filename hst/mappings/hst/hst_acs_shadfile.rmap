@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:13.188932',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:29.356994',
     'filekind' : 'SHADFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'SHADCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (SHADCORR != "OMIT"))',
-    'sha1sum' : '3d87e038e9868930c1b8e16b77c65c32a398f9a7',
+    'sha1sum' : '4df831a398c7e85bb3b8e9e9e567ca879b426c4a',
 }
 
 selector = Match({

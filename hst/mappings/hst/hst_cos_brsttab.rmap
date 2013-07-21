@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'generated from CDBS database 2013-07-13 15:29:14.161943',
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:30.201002',
     'filekind' : 'BRSTTAB',
     'instrument' : 'COS',
     'mapping' : 'REFERENCE',
@@ -11,7 +11,7 @@ header = {
     'reffile_switch' : 'BRSTCORR',
     'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (BRSTCORR != "OMIT"))',
     'row_keys' : ('SEGMENT',),
-    'sha1sum' : '4fac0a82845dcf162886497568da743bdc7f272e',
+    'sha1sum' : 'c93b4535598d38f1c01c8248298ef4989bb90749',
 }
 
 selector = Match({
