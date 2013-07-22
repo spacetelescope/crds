@@ -13,11 +13,11 @@ determine where a reference file should be inserted into an rmap.
 
 CRDS compiles the rules files into a mapping of the form:
 
-    { relevance_expr:  (variable, expansion) }
+    { variable:  { relevance_expr: expansion } }
     
 For our example above the expansion looks like:
 
-    "DETECTOR='WFC3' and CCDGAIN='-999'" : ("CCDGAIN", "1.0|2.0|4.0|8.0")
+    { "CCDGAIN" : { "DETECTOR='WFC3' and CCDGAIN='-999'" : "1.0|2.0|4.0|8.0" }
 
 CRDS defines a function:
 
@@ -33,6 +33,7 @@ import os.path
 import pprint
 import glob
 import re
+import collections
 
 from crds.hst import INSTRUMENTS
 
@@ -49,8 +50,8 @@ class HeaderExpander(object):
     precompiles the applicability expression of each rule.
     
     >>> expansions = {
-    ...  "DETECTOR=='HRC' and FILTER1=='ANY'": ('FILTER1','F555W|F775W|F625W'),
-    ...  "DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": ('OBSTYPE','IMAGING|CORONAGRAPHIC'),
+    ...  'FILTER1' : { "DETECTOR=='HRC' and FILTER1=='ANY'": 'F555W|F775W|F625W'},
+    ...  'OBSTYPE' : { "DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": 'IMAGING|CORONAGRAPHIC'},
     ... }
     >>> expander = HeaderExpander(expansions)
 
@@ -68,15 +69,16 @@ class HeaderExpander(object):
     """
     def __init__(self, expansion_mapping, expansion_file="(none)"):
         self.mapping = {}
-        for expr, (var, expansion) in expansion_mapping.items():
-            self.mapping[expr] = (var, expansion, compile(expr, expansion_file, "eval"))
+        for var, substitutes in expansion_mapping.items():
+            for expr, replacement in substitutes.items():
+                self.mapping[(var, expr)] = (replacement, compile(expr, expansion_file, "eval"))
         self._required_keys = self.required_keys()
 
     def expand(self, header):
         header = dict(header)
         expanded = dict(header)
         log.verbose("Unexpanded header", self.required_header(header))
-        for expr, (var, expansion, compiled) in self.mapping.items():
+        for (var, expr), (expansion, compiled) in self.mapping.items():
             try:
                 applicable = eval(compiled, {}, header)
             except Exception, exc:
@@ -94,7 +96,7 @@ class HeaderExpander(object):
     
     def required_keys(self):
         required = []
-        for expr in self.mapping:
+        for (_var, expr) in self.mapping:
             required.extend(required_keys(expr))
         return sorted(set(required))
     
@@ -144,12 +146,15 @@ def compile_files(files):
         expansions[instrument] = compile_rules(f)
     open(HERE + "/substitutions.dat", "w+").write(pprint.pformat(expansions))
 
+def get_substitutions(instr):
+    return utils.evalfile(HERE+"/substitutions.dat").get(instr.lower(), {})
+
 def compile_rules(rules_file):
     """Compile a single `rules_file` into a variable expansion mapping."""
     expression_terms = []
     expansion_terms = []
     expected = "expression"
-    compiled = {}
+    compiled = collections.defaultdict(dict)
     source = ""
     for line in open(rules_file):
         source += "\t" + line
@@ -177,15 +182,15 @@ def compile_rules(rules_file):
         if completed:
             log.verbose("Compiling:", source[:-1])
             relevance = format_relevance_expr(expression_terms)
-            expansion = format_expansion(expansion_terms)
+            var, expansion = format_expansion(expansion_terms)
             log.verbose("Expansion:", "\n\t", repr(relevance), ":", expansion)
-            compiled[relevance] = expansion
+            compiled[var][relevance] = expansion
             expression_terms = []
             expansion_terms = []
             completed = False
             expected = "expression"
             source = ""
-    return compiled
+    return dict(compiled)
 
 def parse_terms(expr, delimeter):
     """
