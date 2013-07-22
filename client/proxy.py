@@ -2,7 +2,7 @@
 w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
 call returns the jsonrpc "result" field.
 """
-import urllib
+import urllib2 as urllib
 import uuid
 
 from json import loads, dumps
