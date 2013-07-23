@@ -351,8 +351,8 @@ class FloatValidator(NumericalValidator):
             raise
 
     def condition(self, value):
-        val = int(value)
-        if val == -999:
+        val = float(value)
+        if val == -999.0:
             val = '*'
         return val
 
