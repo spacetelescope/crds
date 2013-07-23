@@ -888,6 +888,9 @@ class ReferenceMapping(Mapping):
                         values = range(limits[0], limits[1]+1)
                 if condition:
                     values = tuple([utils.condition_value(val) for val in values])
+                    if values in [('-999.0',)]:   # XXXX temporary,  for validating reffile submissions
+                        log.verbose_warning("get_valid_values_map() interpreting -999.0 as * for", repr(info.name))
+                        values = ('*',)
                 valid_values[info.name] = values
         return valid_values
 
@@ -958,36 +961,34 @@ class ReferenceMapping(Mapping):
         return header
     
     def insert_reference(self, reffile):
-        """Given the rmap text `old_rmap_contents`,  generate and return the 
-        contents of a new rmap with `reffile` inserted at all matching parkey 
-        locations.  This routine assumes HST standard selector organization,  
-        Match -> UseAfter.
-        
+        """
         returns new ReferenceMapping made from `self` inserting `reffile`.
         """
-        refname = os.path.basename(reffile)
-        log.info("Inserting", repr(refname), "into", repr(self.name))
-        header = self.get_matching_header(reffile)
+        # Since expansion rules may depend on keys not used in matching,  get entire header  
+        header = data_file.get_header(reffile, observatory=self.observatory)
+        # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
+        log.verbose("insert_reference raw reffile header:", 
+                    { (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() })        
+        header = self.get_matching_header(header)
+        log.verbose("insert_reference matching reffile header:", 
+                    { (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() })
+        return self.insert(header, os.path.basename(reffile))
+
+    def insert(self, header, value):
+        """Given reference file `header` and terminal `value`, insert the value into a copy
+        of this rmap and return it.
+        """
         new = self.copy()
-        new.selector.modify(header, refname, self._tpn_valid_values)
+        new.selector.modify(header, value, self._tpn_valid_values)
         return new
 
-    def get_matching_header(self, reffile):
-        """Based on `self`,  fetch the abstract header from reffile and use 
-        it to define the parkey patterns to which this reffile will apply.   Note 
-        that reference files generally apply to a set of parkey values and that the
-        parkey patterns returned here can be unexploded or-globs.
+    def get_matching_header(self, header):
+        """Convert the applicable keys in `header` from how they appear in the reference
+        file to how they appear in the rmap.   Where possible,  this uses CRDS substitution
+        rules as a function of `header` to replace reference file wild cards.  It also
+        evaluates parkey relevance expressions with respect to `header` to map unused parkeys
+        for a particular mode and extra parkeys to N/A.
         """
-        
-        # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
-        parkeys = self.get_required_parkeys()
-        
-        # Since expansion rules may depend on keys not used in matching,  
-        # get entire header  
-        header = data_file.get_header(reffile, observatory=self.observatory)
-    
-        # log.info("header:", { (key,val) for (key,val) in header.items() if key in parkeys })
-        
         # The reference file key and dataset key matched aren't always the same!?!?
         # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
         # Also DATE-OBS, TIME-OBS  <-->  USEAFTER
@@ -1001,7 +1002,7 @@ class ReferenceMapping(Mapping):
         header = { key:utils.condition_value(value) for key, value in header.items() }
     
         # Add undefined parkeys as "UNDEFINED"
-        header = data_file.ensure_keys_defined(header, parkeys)
+        header = data_file.ensure_keys_defined(header, self.get_required_parkeys())
         
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
@@ -1017,7 +1018,6 @@ class ReferenceMapping(Mapping):
         for key in self.get_extra_parkeys():
             log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
             header[key] = "N/A"
-    
         return header
         
     def todict(self, recursive=10):
