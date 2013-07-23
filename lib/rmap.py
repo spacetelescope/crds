@@ -957,13 +957,68 @@ class ReferenceMapping(Mapping):
                     header[parkey] = "N/A"
         return header
     
-    def insert(self, header, value):
-        """Dynamically add a new selection case to a copy of this rmap and
-        return the copy.
+    def insert_reference(self, reffile):
+        """Given the rmap text `old_rmap_contents`,  generate and return the 
+        contents of a new rmap with `reffile` inserted at all matching parkey 
+        locations.  This routine assumes HST standard selector organization,  
+        Match -> UseAfter.
+        
+        returns new ReferenceMapping made from `self` inserting `reffile`.
         """
+        refname = os.path.basename(reffile)
+        log.info("Inserting", repr(refname), "into", repr(self.name))
+        header = self.get_matching_header(reffile)
         new = self.copy()
-        new.selector.modify(header, value, self._tpn_valid_values)
+        new.selector.modify(header, refname, self._tpn_valid_values)
         return new
+
+    def get_matching_header(self, reffile):
+        """Based on `self`,  fetch the abstract header from reffile and use 
+        it to define the parkey patterns to which this reffile will apply.   Note 
+        that reference files generally apply to a set of parkey values and that the
+        parkey patterns returned here can be unexploded or-globs.
+        """
+        
+        # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
+        parkeys = self.get_required_parkeys()
+        
+        # Since expansion rules may depend on keys not used in matching,  
+        # get entire header  
+        header = data_file.get_header(reffile, observatory=self.observatory)
+    
+        # log.info("header:", { (key,val) for (key,val) in header.items() if key in parkeys })
+        
+        # The reference file key and dataset key matched aren't always the same!?!?
+        # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
+        # Also DATE-OBS, TIME-OBS  <-->  USEAFTER
+        header = self.locate.reference_keys_to_dataset_keys(
+            self.instrument, self.filekind, header)
+        
+        # Reference files specify things like ANY which must be expanded to 
+        # glob patterns for matching with the reference file.
+        header = self.locate.expand_wildcards(self.instrument, header)
+        
+        header = { key:utils.condition_value(value) for key, value in header.items() }
+    
+        # Add undefined parkeys as "UNDEFINED"
+        header = data_file.ensure_keys_defined(header, parkeys)
+        
+        # Evaluate parkey relevance rules in the context of header to map
+        # mode irrelevant parameters to N/A.
+        # XXX not clear if/how this works with expanded wildcard or-patterns.
+        header = self.map_irrelevant_parkeys_to_na(header)
+    
+        # The "extra" parkeys always appear in the rmap with values of "N/A".
+        # The dataset value of the parkey is typically used to compute other parkeys
+        # for HST corner cases.   It's a little stupid for them to appear in the
+        # rmap match tuples,  but the dataset values for those parkeys are indeed 
+        # relevant,  and it does provide a hint that magic is going on.  At rmap update
+        # time,  these parkeys need to be set to N/A even if they're actually defined.
+        for key in self.get_extra_parkeys():
+            log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
+            header[key] = "N/A"
+    
+        return header
         
     def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
