@@ -74,6 +74,7 @@ def precondition_header(rmap, header):
 #   This section contains matching customizations.
 
 # (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
+
 """
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
@@ -106,6 +107,54 @@ def fallback_header(rmap, header):
     else:
         None
 """
+
+def _reference_match_fallback_header_biasfile(header_in):
+    header = _precondition_header_biasfile(header_in)
+
+    if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    return header
+
+def header_matches(header, conditions):
+    for var, val in conditions.items():
+        if header[var] != val:
+            return False
+    return True
+
+def dont_care(header, vars):
+    header = dict(header)
+    for var in vars:
+        header[var] = "N/A"
+    return header
+
+# In theory,  this moves the fallback header computation to rmap insertion time.
+# This is horrendous,  a second mechanism in addition to the kmap filter for 
+# implementing fallbacks which execute in one pass via a more sophisticated rmap
+# rather than as a second call to getreferences.
+def reference_match_fallback_header(rmap, header):
+    if rmap.filekind == "biasfile":
+        return _reference_match_fallback_header_biasfile(header)
+    else:
+        None
 
 # =============================================================================================
 

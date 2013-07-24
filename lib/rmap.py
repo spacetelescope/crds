@@ -314,6 +314,11 @@ class Mapping(object):
         """Return the package (__init__) associated with self.observatory."""
         return utils.get_observatory_package(self.observatory)
 
+    @property
+    def instr_package(self):
+        """Return the module associated with self.instrument."""
+        return utils.get_object("crds", self.observatory, self.instrument)
+        
     def format(self):
         """Return the string representation of this mapping, i.e. pretty
         serialization.   This is currently limited to initially creating rmaps,
@@ -763,20 +768,10 @@ class ReferenceMapping(Mapping):
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
-        try:
-            preconditioner = utils.get_object("crds", self.observatory, self.instrument, "precondition_header")
-        except ImportError:
-            preconditioner = lambda self, header: header
-        self._precondition_header = preconditioner
+        self._precondition_header = getattr(self.instr_package, "precondition_header", (lambda self, header: header))
+        self._fallback_header = getattr(self.instr_package, "fallback_header", (lambda self, header: None))
+        self._reference_match_fallback_header = getattr(self.instr_package, "reference_match_fallback_header", (lambda self, header: None))
 
-        # fallback routine called when standard best refs fails
-        # set to return None if not defined.
-        try:
-            fallback = utils.get_object("crds", self.observatory, self.instrument, "fallback_header")
-        except ImportError:
-            fallback = lambda self, header: None
-        self._fallback_header = fallback
-        
     def get_best_ref(self, header_in):
         """Return the single reference file basename appropriate for
         `header_in` selected by this ReferenceMapping.
@@ -968,11 +963,17 @@ class ReferenceMapping(Mapping):
         header = data_file.get_header(reffile, observatory=self.observatory)
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:", 
-                    { (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() })        
+                    [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
         header = self.get_matching_header(header)
         log.verbose("insert_reference matching reffile header:", 
-                    { (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() })
-        return self.insert(header, os.path.basename(reffile))
+                    [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
+        new = self.insert(header, os.path.basename(reffile))
+        fallback = self._reference_match_fallback_header(self, header)
+        if fallback:
+            log.verbose("insert_reference fallback reffile header:", 
+                        [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
+            new = new.insert(fallback, os.path.basename(reffile))
+        return new
 
     def insert(self, header, value):
         """Given reference file `header` and terminal `value`, insert the value into a copy
