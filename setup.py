@@ -12,7 +12,7 @@ subpkgs = {
         "package_dir" : {
             'crds' : 'lib',
             'crds.tests': 'lib/tests',
-                },
+            },
         "package_data" : {
             'crds.tests' : ['data/*.fits','data/*.*map'],
             }
@@ -43,8 +43,7 @@ subpkgs = {
             'crds.references.hst' : 'hst/references/hst',
             },
         "package_data" : {
-            '': [
-                'cdbs.paths',
+            'crds.hst': [
                 'cdbs.paths.gz',
                 'cdbs/cdbs_tpns/*.tpn',
                 'cdbs/cdbs_tpns/*.rule',
@@ -72,21 +71,49 @@ subpkgs = {
             'crds.references.jwst' : 'jwst/references/jwst',
             },
         "package_data" : {
-            '': [
+            'crds.jwst': [
                 '*.dat',
                 'tpns/*.tpn',
                 ],
             'crds.mappings.jwst' : [
                 '*.*map',
                 ],
-            # 'crds.references.jwst' : [
-            #    '*.*fits',
-            #    ],
             },
         },
+    "tobs": {
+        "packages" : [
+            'crds.tobs',
+            'crds.tobs.tinstr',           
+            'crds.mappings',
+            'crds.mappings.tobs',
+            'crds.references',
+            'crds.references.tobs',
+            ],
+
+        "package_dir" : {
+            'crds.tobs':'tobs',
+            'crds.tobs.tinstr':'tobs/tinstr',
+            'crds.mappings' : 'tobs/mappings',
+            'crds.mappings.tobs' : 'tobs/mappings/tobs',
+            'crds.references' : 'tobs/references',
+            'crds.references.tobs' : 'tobs/references/tobs',
+            },
+        "package_data" : {
+            'crds.tobs': [
+                '*.dat',
+                'tpns/*.tpn',
+                ],
+            'crds.mappings.tobs' : [
+                '*.*map',
+                ],
+            'crds.references.tobs' : [
+                '*.*fits',
+                ],
+            },
+        }
     }
 
-installed_subpkgs = ["lib", "client"]
+installed_subpkgs = ["lib", "client", "tobs"]
 if "--hst" in sys.argv:
     sys.args.remove("--hst")
     installed_subpkgs.append("hst")
