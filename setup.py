@@ -1,94 +1,120 @@
 #!/usr/bin/env python
+import sys
+
 from distutils.core import setup
 
-    subpkgs = {
-      "lib": {
-            "packages" = [
-                'crds',
-                'crds.tests',
-                ],
-            "package_dir" = {
-                'crds' : '.',
-                'crds.tests': 'tests',
+subpkgs = {
+    "lib": {
+        "packages" : [
+            'crds',
+            'crds.tests',
+            ],
+        "package_dir" : {
+            'crds' : 'lib',
+            'crds.tests': 'lib/tests',
                 },
-            "package_data" = {
-                'crds.tests' : ['data/*.fits','data/*.*map'],
-                }
+        "package_data" : {
+            'crds.tests' : ['data/*.fits','data/*.*map'],
+            }
+        },
+    "client" :{
+        "packages" : [
+            'crds.client',
+            ],
+        "package_dir" : {
+            'crds.client':'client',
             },
-      "client" :{
-            "packages" : [
-                'crds.client',
-                ],
-            "package_dir" : {
-                'crds.client':'.',
-                },
-            "package_data" : {
-                },
+        "package_data" : {
             },
-      "hst" : {
-            "packages" : [
-                'crds.hst',
-                'crds.mappings',
-                'crds.mappings.hst',
-                'crds.references',
-                'crds.references.hst',
-                ],
-            "package_dir" : {
-                'crds.hst':'.',
-                'crds.mappings' : 'mappings',
-                'crds.mappings.hst' : 'mappings/hst',
-                'crds.references' : 'references',
-                'crds.references.hst' : 'references/hst',
-                },
-            "package_data" : {
-                '': [
-                    'cdbs.paths',
-                    'cdbs.paths.gz',
-                    'cdbs/cdbs_tpns/*.tpn',
-                    'cdbs/cdbs_tpns/*.rule',
-                    'cdbs/cdbs_tpns/cdbscatalog.dat',
-                    '*.dat',
-                    ],
-                'crds.mappings.hst' : [
-                    '*.*map',
-                    ],
-                },
+        },
+    "hst" : {
+        "packages" : [
+            'crds.hst',
+            'crds.mappings',
+            'crds.mappings.hst',
+            'crds.references',
+            'crds.references.hst',
+            ],
+        "package_dir" : {
+            'crds.hst':'hst',
+            'crds.mappings' : 'hst/mappings',
+            'crds.mappings.hst' : 'hst/mappings/hst',
+            'crds.references' : 'hst/references',
+            'crds.references.hst' : 'hst/references/hst',
             },
-      "jwst" : {
-            "packages" : [
-                'crds.jwst',
-                'crds.mappings',
-                'crds.mappings.jwst',
-                'crds.references',
-                'crds.references.jwst',
+        "package_data" : {
+            '': [
+                'cdbs.paths',
+                'cdbs.paths.gz',
+                'cdbs/cdbs_tpns/*.tpn',
+                'cdbs/cdbs_tpns/*.rule',
+                'cdbs/cdbs_tpns/cdbscatalog.dat',
+                '*.dat',
                 ],
-            "package_dir" : {
-                'crds.jwst':'.',
-                'crds.mappings' : 'mappings',
-                'crds.mappings.jwst' : 'mappings/jwst',
-                'crds.references' : 'references',
-                'crds.references.jwst' : 'references/jwst',
-                },
-            "package_data" : {
-                '': [
-                    '*.dat',
-                    'tpns/*.tpn',
-                    ],
-                'crds.mappings.jwst' : [
-                    '*.*map',
-                    ],
-                'crds.references.jwst' : [
-                    '*.*fits',
-                    ],
-                },
+            'crds.mappings.hst' : [
+                '*.*map',
+                ],
             },
-      }
+        },
+    "jwst" : {
+        "packages" : [
+            'crds.jwst',
+            'crds.mappings',
+            'crds.mappings.jwst',
+            'crds.references',
+            'crds.references.jwst',
+            ],
+        "package_dir" : {
+            'crds.jwst':'jwst',
+            'crds.mappings' : 'jwst/mappings',
+            'crds.mappings.jwst' : 'jwst/mappings/jwst',
+            'crds.references' : 'jwst/references',
+            'crds.references.jwst' : 'jwst/references/jwst',
+            },
+        "package_data" : {
+            '': [
+                '*.dat',
+                'tpns/*.tpn',
+                ],
+            'crds.mappings.jwst' : [
+                '*.*map',
+                ],
+            # 'crds.references.jwst' : [
+            #    '*.*fits',
+            #    ],
+            },
+        },
+    }
 
+installed_subpkgs = ["lib", "client"]
+if "--hst" in sys.argv:
+    sys.args.remove("--hst")
+    installed_subpkgs.append("hst")
+elif "--jwst" in sys.argv:
+    sys.args.remove("--jwst")
+    installed_subpkgs.append("jwst")
+else:
+    installed_subpkgs.extend(["hst","jwst"])
+
+# Merge all the subpackage spaces into common parameter dict
+setup_pars = {}
+for sub in installed_subpkgs:
+    for par,val in subpkgs[sub].items():
+        if isinstance(val, dict):
+            if not par in setup_pars:
+                setup_pars[par] = {}
+            setup_pars[par].update(val)
+        elif isinstance(val, list):
+            if not par in setup_pars:
+                setup_pars[par] = []
+            setup_pars[par].extend(val)
+        else:
+            raise ValueError("Unknown setup parameter type: {} {}".format(par, val)) 
 
 setup(name="crds",
-      version= "0.1",
+      version= "1.0",
       description="Python based Calibration Reference Data System,  best reference file",
       author="Todd Miller",
       author_email="jmiller@stsci.edu",
-
+      **setup_pars
     )
