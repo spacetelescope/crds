@@ -563,7 +563,7 @@ class ReferenceCertifier(Certifier):
         if self.context is None:
             return []
         try:
-            pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
+            pmap = rmap.fetch_mapping(self.context, ignore_checksum="warn")
             instrument, filekind = pmap.locate.get_file_properties(self.filename)
             return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
         except Exception, exc:
