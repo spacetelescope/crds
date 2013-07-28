@@ -468,44 +468,6 @@ class Selector(object):
     def match_item(self, key):
         return tuple(zip(self._parameters, key))
     
-    def difference(self, other, path):
-        """Return the list of differences between `self` and `other` where 
-        `path` names the
-        """
-        def msg(key, *args):
-            p2 = path
-            if key:
-                p2 = p2 + (key,)
-            return p2 + (" ".join(args),)
-        def short_name(obj):
-            return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
-        if self.__class__ != other.__class__:
-            return [msg(None, "different classes", short_name(self), ":", short_name(other))]
-        if self._parameters != other._parameters:
-            return [msg(None, "different parameter lists ", 
-                    repr(self._parameters), ":", repr(other._parameters))]
-        differences = []
-        other_keys = other.keys()
-        self_keys = self.keys()
-        other_map = dict_wo_dups(other._selections)
-        # Warning:  the message formats here are important to client code.
-        # don't change without doing a survey. e.g. replaced blank1 with blank2.
-        for key, choice in self._selections:
-            if key not in other_keys:
-                differences.append(msg(key, "deleted " + repr(choice)))
-            else:
-                other_choice = other_map[key]
-                if isinstance(choice, Selector):
-                    differences.extend(choice.difference(other_choice, path + (key,)))
-                elif choice != other_choice:
-                    differences.append(
-                        msg(key, "replaced", repr(choice), "with", repr(other_choice)))
-        for key in other_keys:
-            if key not in self_keys:
-                other_choice = other_map[key]
-                differences.append(msg(key, "added " + repr(other_choice)))
-        return differences
-    
     def merge(self, other):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
             self.short_name + " does not support merging.")
@@ -658,6 +620,90 @@ class Selector(object):
         parameters for the purpose of populating get_best_refs menus.
         """
         return {} # Not really relevant for UseAfter
+    
+
+    def difference(self, other, path=(), pars=()):
+        """Return the list of differences between `self` and `other` where 
+        `path` names the
+        """
+        def msg(key, *args):
+            path2 = path
+            pars2 = pars
+            if key:
+                path2 = path2 + (key,)
+                pars2 = pars2 + (self._parameters,)
+            pars2 = pars2 + ("difference",)
+            path2 = path2 + (" ".join(args),)
+            return DiffItem(*path2, parameter_names=pars2)
+
+        def short_name(obj):
+            return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
+        
+        if self.__class__ != other.__class__:
+            return [msg(None, "different classes", short_name(self), ":", short_name(other))]
+        if self._parameters != other._parameters:
+            return [msg(None, "different parameter lists ", 
+                    repr(self._parameters), ":", repr(other._parameters))]
+        differences = []
+        other_keys = other.keys()
+        self_keys = self.keys()
+        other_map = dict_wo_dups(other._selections)
+        # Warning:  the message formats here are important to client code.
+        # don't change without doing a survey. e.g. replaced blank1 with blank2.
+        for key, choice in self._selections:
+            if key not in other_keys:
+                if isinstance(choice, Selector):
+                    differences.extend(choice._flat_diff("deleted", path + (key,), pars + (self._parameters,)))
+                else:
+                    differences.append(msg(key, "deleted", repr(choice)))
+            else:
+                other_choice = other_map[key]
+                if isinstance(choice, Selector):
+                    differences.extend(choice.difference(other_choice, path + (key,), pars + (self._parameters,)))
+                elif choice != other_choice:
+                    differences.append(
+                        msg(key, "replaced", repr(choice), "with", repr(other_choice)))
+        for key in other_keys:
+            if key not in self_keys:
+                other_choice = other_map[key]
+                if isinstance(other_choice, Selector):
+                    differences.extend(other_choice._flat_diff("added", path + (key,), pars + (self._parameters,)))
+                else:
+                    differences.append(msg(key, "added", repr(other_choice)))
+        return differences
+    
+    def _flat_diff(self, change, path, pars):
+        """Return `change` messages relative to `path` for all of `self`s selections
+        as a simple flat list of one change tuple per nested choice.
+        """
+        def msg(key, *args):
+            path2 = path
+            pars2 = pars
+            if key:
+                path2 = path2 + (key,)
+                pars2 = pars2 + (self._parameters,)
+            pars2 = pars2 + ("difference",)
+            path2 = path2 + (" ".join(args),)
+            return DiffItem(*path2, parameter_names=pars2)
+        diffs = []        
+        for key, choice in self._selections:
+            if isinstance(choice, Selector):
+                diffs.extend(choice._flat_diff(change, path + (key,), pars + (self._parameters,)))
+            else:
+                diffs.append(msg(key, change, repr(choice)))
+        return diffs
+
+
+class DiffItem(tuple):
+    """Class similar to named tuple for reporting mapping differences and the affected parkeys."""
+    def __new__(cls, *args, **keys):
+        return super(DiffItem, cls).__new__(cls, tuple(args))
+        
+    def __init__(self, *args, **keys):
+        pars = keys.pop("parameter_names", None)
+        super(DiffItem, self).__init__()
+        self.parameter_names = pars
+
 
 # ==============================================================================
 
