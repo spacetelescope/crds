@@ -428,24 +428,27 @@ class Mapping(object):
         """
         log.verbose("Validating", repr(self.basename))
 
-    def difference(self, other, path=()):
+    def difference(self, other, path=(), pars=()):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
         other = asmapping(other, cache="readonly")
         differences = []
+        simple_pars = pars + (self.__class__.__name__,) + (self.parkey, "difference",)
         for key in self.selections:
             if key not in other.selections:
-                differences.append(((self.filename, other.filename), key, 
-                                    "deleted " + repr(self.selections[key].filename)))
+                diff = selectors.DiffItem((self.filename, other.filename), key, "deleted " + repr(self.selections[key].filename), 
+                                parameter_names = simple_pars)
+                differences.append(diff)
             else:
-                differences.extend(self.selections[key].difference(
-                    other.selections[key],
-                    path + ((self.filename, other.filename),)))
+                diffs = self.selections[key].difference(
+                    other.selections[key],  path = path + ((self.filename, other.filename,)), pars = pars)
+                differences.extend(diffs)
         for key in other.selections:
             if key not in self.selections:
-                differences.append(((self.filename, other.filename), key, 
-                                    "added " + repr(other.selections[key].filename)))
+                diff = selectors.DiffItem((self.filename, other.filename), key, "added " + repr(other.selections[key].filename),
+                                parameter_names = simple_pars)
+                differences.append(diff)
         return sorted(differences)
     
     def copy(self):
@@ -912,13 +915,15 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
-    def difference(self, other, path=()):
+    def difference(self, other, path=(), pars=()):
         """Return the list of difference tuples between `self` and `other`,
-        prefixing each tuple with context `path`.
+        prefixing each tuple with context `path`.   Elements of `path` are
+        named by correspnding elements of `pars`.
         """
         other = asmapping(other, cache="readonly")
-        return self.selector.difference(other.selector, path +
-                ((self.filename, other.filename),))
+        return self.selector.difference(other.selector, 
+                path = path + ((self.filename, other.filename),),
+                pars = pars + (self.__class__.__name__,))
 
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
