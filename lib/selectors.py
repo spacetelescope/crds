@@ -626,16 +626,8 @@ class Selector(object):
         """Return the list of differences between `self` and `other` where 
         `path` names the
         """
-        def msg(key, *args):
-            path2 = path
-            pars2 = pars
-            if key:
-                path2 = path2 + (key,)
-                pars2 = pars2 + (self._parameters,)
-            pars2 = pars2 + ("difference",)
-            path2 = path2 + (" ".join(args),)
-            return DiffItem(*path2, parameter_names=pars2)
-
+        msg = self._get_msg(path, pars)
+        
         def short_name(obj):
             return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
         
@@ -644,6 +636,7 @@ class Selector(object):
         if self._parameters != other._parameters:
             return [msg(None, "different parameter lists ", 
                     repr(self._parameters), ":", repr(other._parameters))]
+
         differences = []
         other_keys = other.keys()
         self_keys = self.keys()
@@ -651,23 +644,25 @@ class Selector(object):
         # Warning:  the message formats here are important to client code.
         # don't change without doing a survey. e.g. replaced blank1 with blank2.
         for key, choice in self._selections:
+            pkey = self._diff_key(key)
             if key not in other_keys:
                 if isinstance(choice, Selector):
-                    differences.extend(choice._flat_diff("deleted", path + (key,), pars + (self._parameters,)))
+                    differences.extend(choice._flat_diff("deleted", path + pkey, pars + self._parameters))
                 else:
                     differences.append(msg(key, "deleted", repr(choice)))
             else:
                 other_choice = other_map[key]
                 if isinstance(choice, Selector):
-                    differences.extend(choice.difference(other_choice, path + (key,), pars + (self._parameters,)))
+                    differences.extend(choice.difference(other_choice, path + pkey, pars + self._parameters))
                 elif choice != other_choice:
                     differences.append(
                         msg(key, "replaced", repr(choice), "with", repr(other_choice)))
         for key in other_keys:
+            pkey = self._diff_key(key)
             if key not in self_keys:
                 other_choice = other_map[key]
                 if isinstance(other_choice, Selector):
-                    differences.extend(other_choice._flat_diff("added", path + (key,), pars + (self._parameters,)))
+                    differences.extend(other_choice._flat_diff("added", path + pkey, pars + self._parameters))
                 else:
                     differences.append(msg(key, "added", repr(other_choice)))
         return differences
@@ -676,23 +671,36 @@ class Selector(object):
         """Return `change` messages relative to `path` for all of `self`s selections
         as a simple flat list of one change tuple per nested choice.
         """
+        msg = self._get_msg(path, pars)
+        diffs = []        
+        for key, choice in self._selections:
+            pkey = self._diff_key(key)
+            if isinstance(choice, Selector):
+                diffs.extend(choice._flat_diff(change, path + pkey, pars + self._parameters))
+            else:
+                diffs.append(msg(key, change, repr(choice)))
+        return diffs
+    
+    def _get_msg(self, path, pars):
+        """Return a message tuple generation function bound to `path` and `pars`."""
         def msg(key, *args):
             path2 = path
             pars2 = pars
             if key:
-                path2 = path2 + (key,)
-                pars2 = pars2 + (self._parameters,)
-            pars2 = pars2 + ("difference",)
+                path2 = path2 + self._diff_key(key)
+                pars2 = pars2 + self._parameters
+            pars2 = pars2 + ("DIFFERENCE",)
             path2 = path2 + (" ".join(args),)
             return DiffItem(*path2, parameter_names=pars2)
-        diffs = []        
-        for key, choice in self._selections:
-            if isinstance(choice, Selector):
-                diffs.extend(choice._flat_diff(change, path + (key,), pars + (self._parameters,)))
-            else:
-                diffs.append(msg(key, change, repr(choice)))
-        return diffs
-
+        return msg
+ 
+    def _diff_key(self, key):
+        """Use the ((parname, parvalue), ...) format of match_item to produce (parvalues, ...) for diff.
+        Handles UseAfter / odd cases where `key` and match_item values aren't quite the same.
+        """
+        item = self.match_item(key)
+        pars, vals = zip(*item)
+        return vals
 
 class DiffItem(tuple):
     """Class similar to named tuple for reporting mapping differences and the affected parkeys."""
