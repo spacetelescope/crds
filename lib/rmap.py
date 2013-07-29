@@ -434,22 +434,27 @@ class Mapping(object):
         """
         other = asmapping(other, cache="readonly")
         differences = []
-        simple_pars = pars + (self.__class__.__name__,) + (self.parkey, "difference",)
         for key in self.selections:
             if key not in other.selections:
-                diff = selectors.DiffItem((self.filename, other.filename), key, "deleted " + repr(self.selections[key].filename), 
-                                parameter_names = simple_pars)
+                diff = selectors.DiffTuple((self.filename, other.filename), key, "deleted " + repr(self.selections[key].filename), 
+                                parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
                 differences.append(diff)
             else:
-                diffs = self.selections[key].difference(
-                    other.selections[key],  path = path + ((self.filename, other.filename,)), pars = pars)
+                diffs = self.selections[key].difference( other.selections[key],  
+                    path = path + ((self.filename, other.filename,),), 
+                    pars = pars + (self.diff_name,))
                 differences.extend(diffs)
         for key in other.selections:
             if key not in self.selections:
-                diff = selectors.DiffItem((self.filename, other.filename), key, "added " + repr(other.selections[key].filename),
-                                parameter_names = simple_pars)
+                diff = selectors.DiffTuple((self.filename, other.filename), key, "added " + repr(other.selections[key].filename),
+                                parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
                 differences.append(diff)
         return sorted(differences)
+    
+    @property
+    def diff_name(self):
+        """Name used to identify mapping item in DiffTuple's"""
+        return self.__class__.__name__ # .replace("Context","").replace("Mapping","")
     
     def copy(self):
         """Return an in-memory copy of this rmap as a new object."""
@@ -923,7 +928,7 @@ class ReferenceMapping(Mapping):
         other = asmapping(other, cache="readonly")
         return self.selector.difference(other.selector, 
                 path = path + ((self.filename, other.filename),),
-                pars = pars + (self.__class__.__name__,))
+                pars = pars + (self.diff_name,))
 
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
