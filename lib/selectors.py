@@ -466,6 +466,8 @@ class Selector(object):
         return sorted(matches)
     
     def match_item(self, key):
+        if not isinstance(key, tuple):
+            key = (key,)
         return tuple(zip(self._parameters, key))
     
     def merge(self, other):
@@ -700,7 +702,7 @@ class Selector(object):
         """
         item = self.match_item(key)
         pars, vals = zip(*item)
-        return vals
+        return tuple([str(x) for x in vals])
 
 class DiffItem(tuple):
     """Class similar to named tuple for reporting mapping differences and the affected parkeys."""
@@ -1532,7 +1534,10 @@ Alternate date/time formats are accepted as header parameters.
 
     def match_item(self, key):
         """Account for the slightly weird UseAfter syntax."""
-        return tuple(zip(self._parameters, key.split()))
+        if len(self._parameters) == 1:
+            return ((self._parameters[0], key),)
+        else:
+            return tuple(zip(self._parameters, key.split()))
     
     def merge(self, other):
         """Merge two UseAfterSelectors into a single selector.  Resolve
