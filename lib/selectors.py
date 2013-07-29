@@ -649,22 +649,21 @@ class Selector(object):
             pkey = self._diff_key(key)
             if key not in other_keys:
                 if isinstance(choice, Selector):
-                    differences.extend(choice._flat_diff("deleted", path + pkey, pars + self._parameters))
+                    differences.extend(choice._flat_diff("deleted", path + (pkey,), pars + (self._parameters,)))
                 else:
                     differences.append(msg(key, "deleted", repr(choice)))
             else:
                 other_choice = other_map[key]
                 if isinstance(choice, Selector):
-                    differences.extend(choice.difference(other_choice, path + pkey, pars + self._parameters))
+                    differences.extend(choice.difference(other_choice, path + (pkey,), pars + (self._parameters,)))
                 elif choice != other_choice:
-                    differences.append(
-                        msg(key, "replaced", repr(choice), "with", repr(other_choice)))
+                    differences.append(msg(key, "replaced", repr(choice), "with", repr(other_choice)))
         for key in other_keys:
             pkey = self._diff_key(key)
             if key not in self_keys:
                 other_choice = other_map[key]
                 if isinstance(other_choice, Selector):
-                    differences.extend(other_choice._flat_diff("added", path + pkey, pars + self._parameters))
+                    differences.extend(other_choice._flat_diff("added", path + (pkey,), pars + (self._parameters,)))
                 else:
                     differences.append(msg(key, "added", repr(other_choice)))
         return differences
@@ -678,7 +677,7 @@ class Selector(object):
         for key, choice in self._selections:
             pkey = self._diff_key(key)
             if isinstance(choice, Selector):
-                diffs.extend(choice._flat_diff(change, path + pkey, pars + self._parameters))
+                diffs.extend(choice._flat_diff(change, path + (pkey,), pars + (self._parameters,)))
             else:
                 diffs.append(msg(key, change, repr(choice)))
         return diffs
@@ -689,11 +688,11 @@ class Selector(object):
             path2 = path
             pars2 = pars
             if key:
-                path2 = path2 + self._diff_key(key)
-                pars2 = pars2 + self._parameters
+                path2 = path2 + (self._diff_key(key),)
+                pars2 = pars2 + (self._parameters,)
             pars2 = pars2 + ("DIFFERENCE",)
             path2 = path2 + (" ".join(args),)
-            return DiffItem(*path2, parameter_names=pars2)
+            return DiffTuple(*path2, parameter_names=pars2)
         return msg
  
     def _diff_key(self, key):
@@ -701,19 +700,39 @@ class Selector(object):
         Handles UseAfter / odd cases where `key` and match_item values aren't quite the same.
         """
         item = self.match_item(key)
-        pars, vals = zip(*item)
-        return tuple([str(x) for x in vals])
+        if item:
+            pars, vals = zip(*item)
+            return tuple([str(x) for x in vals])
+        else:
+            return ()
 
-class DiffItem(tuple):
+class DiffTuple(tuple):
     """Class similar to named tuple for reporting mapping differences and the affected parkeys."""
     def __new__(cls, *args, **keys):
-        return super(DiffItem, cls).__new__(cls, tuple(args))
+        return super(DiffTuple, cls).__new__(cls, tuple(args))
         
     def __init__(self, *args, **keys):
         pars = keys.pop("parameter_names", None)
-        super(DiffItem, self).__init__()
+        super(DiffTuple, self).__init__()
         self.parameter_names = pars
-
+        
+    @property
+    def flat(self):
+        """Removes the Selector nesting structure and return and equivalent tuple."""
+        pars2 = []
+        vals2 = []
+        for i, par in enumerate(self.parameter_names):
+            if isinstance(par, basestring):
+                pars2.append(par)
+                vals2.append(self[i])
+            else:
+                pars2.extend(list(par))
+                vals2.extend(list(self[i]))
+        return DiffTuple(*vals2, parameter_names=pars2)
+    
+    def items(self):
+        return [ (str(x), str(y)) for (x, y) in zip(self.parameter_names, self) ]
+ 
 
 # ==============================================================================
 
