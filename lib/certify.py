@@ -632,7 +632,10 @@ class MappingCertifier(Certifier):
     
         derived_from = mapping.get_derived_from()
         if derived_from is not None:
+            log.info("Comparing", repr(mapping.name), "against parent", repr(derived_from.name))
             diff.mapping_check_diffs(mapping, derived_from)
+        else:
+            log.info("No parent for", repr(mapping.name))
             
         # Optionally check nested references,  only for rmaps.
         if not isinstance(mapping, rmap.ReferenceMapping) or not self.check_references: # Accept None or False
