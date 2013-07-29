@@ -3,8 +3,11 @@ system.   It supports specification of the files using only the basenames or
 a full path.   Currently it operates on mapping, FITS, or text files.
 """
 import os
+import sys
 
 from crds import rmap, log, pysh, cmdline
+
+from astropy.io.fits import FITSDiff
 
 # ============================================================================
         
@@ -206,9 +209,11 @@ def fits_difference(observatory, file1, file2):
         "File " + repr(file1) + " is not a FITS file."
     assert file2.endswith(".fits"), \
         "File " + repr(file2) + " is not a FITS file."
-    _loc_file1 = rmap.locate_file(file1, observatory)
-    _loc_file2 = rmap.locate_file(file2, observatory)
-    pysh.sh("fitsdiff ${_loc_file1} ${_loc_file2}")
+    loc_file1 = rmap.locate_file(file1, observatory)
+    loc_file2 = rmap.locate_file(file2, observatory)
+    fd = FITSDiff(loc_file1, loc_file2)
+    if not fd.identical:
+        fd.report(fileobj=sys.stdout)
 
 def text_difference(observatory, file1, file2):
     """Run UNIX diff on two text files named `file1` and `file2`.
