@@ -128,7 +128,7 @@ class Test_01_Insert(unittest.TestCase):
         log.verbose("diffs:", diffs)
         assert len(diffs) == 1, "Fewer/more differences than expected"
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
-        assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
+        assert diffs[0][1] == selector_name, "unexpected match case in diff"
         assert str(diffs[0][2]) == str(param), "unexpected parameter value in diff"
         assert diffs[0][3] == "added " + repr(value), "diff is not an addition"
 
@@ -145,7 +145,7 @@ class Test_01_Insert(unittest.TestCase):
         log.verbose("diffs:", diffs)
         assert len(diffs) == 1, "Fewer/more differences than expected"
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
-        assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
+        assert diffs[0][1] == selector_name, "unexpected match case in diff"
         assert str(diffs[0][2]) == str(param), "unexpected parameter value in diff"
         assert "replaced" in diffs[0][3], "diff is not a replacement"
         assert diffs[0][3].endswith(repr(value))
