@@ -7,7 +7,7 @@ import sys
 
 from crds import rmap, log, pysh, cmdline
 
-from astropy.io.fits import FITSDiff
+from pyfits import FITSDiff
 
 # ============================================================================
         
