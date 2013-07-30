@@ -66,11 +66,11 @@ none = 'None' -> None
 """
 
 try:
-    from parsley import makeGrammar
+    import parsley
 except ImportError:
-    MAPPING_PARSER = None
-else:
-    MAPPING_PARSER = makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
+    parsley = None
+
+MAPPING_PARSER = None
 
 def profile_parse(filename="hst_cos_deadtab.rmap"):
     """Profile the parsing of `filename`, print stats, and instantiate the
@@ -93,17 +93,23 @@ Parsing = namedtuple("Parsing", "header,selector")
     
 def parse_mapping(filename):
     """Parse mapping `filename`.   Return parsing."""
-    if MAPPING_PARSER:
-        log.verbose("Parsing", repr(filename))
-        filename = rmap.locate_mapping(filename)
-        try:
-            header, selector = MAPPING_PARSER(open(filename).read()).mapping()
-        except Exception, exc:
-            raise ParsingError("Parsing error in", repr(filename), ":", str(exc))
-        else:
-            return Parsing(header, selector)
-    else:
+    global parsley, MAPPING_PARSER
+    
+    if parsley is None:
         raise NotImplementedError("Parsley parsing package must be installed.")
+
+    if MAPPING_PARSER is None:
+        MAPPING_PARSER = parsley.makeGrammar(MAPPING_GRAMMAR, selectors.SELECTORS)
+
+    log.verbose("Parsing", repr(filename))
+    filename = rmap.locate_mapping(filename)
+    try:
+        header, selector = MAPPING_PARSER(open(filename).read()).mapping()
+    except Exception, exc:
+        raise ParsingError("Parsing error in", repr(filename), ":", str(exc))
+    else:
+        return Parsing(header, selector)
+
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""
