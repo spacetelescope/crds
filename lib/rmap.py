@@ -436,17 +436,22 @@ class Mapping(object):
         differences = []
         for key in self.selections:
             if key not in other.selections:
-                diff = selectors.DiffTuple((self.filename, other.filename), key, "deleted " + repr(self.selections[key].filename), 
-                                parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
+                diff = selectors.DiffTuple((self.filename, other.filename), (key,), "deleted " + repr(self.selections[key].filename), 
+                    parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
                 differences.append(diff)
             else:
                 diffs = self.selections[key].difference( other.selections[key],  
                     path = path + ((self.filename, other.filename,),), 
                     pars = pars + (self.diff_name,))
                 differences.extend(diffs)
+                if diffs:
+                    diff = selectors.DiffTuple((self.filename, other.filename), (key,), 
+                        "replaced " + repr(self.selections[key].filename) + " with " + repr(other.selections[key].filename),
+                        parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                    differences.append(diff)
         for key in other.selections:
             if key not in self.selections:
-                diff = selectors.DiffTuple((self.filename, other.filename), key, "added " + repr(other.selections[key].filename),
+                diff = selectors.DiffTuple((self.filename, other.filename), (key,), "added " + repr(other.selections[key].filename),
                                 parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
                 differences.append(diff)
         return sorted(differences)
