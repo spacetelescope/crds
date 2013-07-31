@@ -275,9 +275,12 @@ def is_geis_data(name):
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
-    lines = open(name) if isinstance(name, str) else name
-    if name.endswith("d"):
-        name = name[:-1] + "h"
+    if isinstance(name, basestring):
+        if name.endswith("d"):
+            name = name[:-1] + "h"
+            lines = open(name)
+    else:  # assume file-like object
+        lines = name
 
     header = {}
     history = []
