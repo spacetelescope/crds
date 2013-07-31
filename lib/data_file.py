@@ -278,7 +278,7 @@ def get_geis_header(name, needed_keys=()):
     if isinstance(name, basestring):
         if name.endswith("d"):
             name = name[:-1] + "h"
-            lines = open(name)
+        lines = open(name)
     else:  # assume file-like object
         lines = name
 
