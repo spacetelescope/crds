@@ -102,13 +102,13 @@ tarhtml: html
 	rm -rf users_guide
 
 serverhtml: tarhtml
-	mv users_guide.tar.gz ../../../CRDS_server/sources/interactive/static
-	cd ../../../CRDS_server/sources/interactive/static; \
+	mv users_guide.tar.gz ../../../CRDS_server/sources/static
+	cd ../../../CRDS_server/sources/static; \
 	tar zxf users_guide.tar.gz; \
 	rm users_guide.tar.gz
 
 serverpdf: pdf
-	mv build/latex/crds_users_manual.pdf ../../../CRDS_server/sources/interactive/static
+	mv build/latex/crds_users_manual.pdf ../../../CRDS_server/sources/static
 
 server: serverhtml serverpdf
 
