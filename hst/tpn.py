@@ -25,12 +25,57 @@ The importance of sorting all this out is being able to map
 in cdbscatalog.dat.
 
 Another somewhat difficult mapping is going from a reference file's description
-of it's purpose to the corresponding TPN.   Reference file's identify their
-purpose using the FILETYPE keyword.
+of it's purpose to the corresponding TPN.   Reference file's typically identify 
+their purpose using the FILETYPE keyword.
+
+There are several additional complications not forseen at the time this was 
+originally written:
+
+1. CRDS/CDBS rules have a different keyword value vocabulary than reference files.
+
+These keyword values are defined in _ld.tpn files.  These describe
+what reference file keyword values are legal to use in a CRDS mapping
+file.  The values in CRDS mapping files for HST are the discrete
+parameter settings a particular dataset might have been using.  In
+contrast, the values in reference files describe the sets of dataset
+values to which the reference applies.  (There is an additional
+subtlety that dataset keywords are not always matched to identically
+named reference file keywords; e.g.  DATE-OBS, TIME-OBS matches to
+USEAFTER.)  Further, the values in reference files are subject to
+substitution rules described in the CDBS .rules files and captured in
+crds.hst's substitutions.dat file.  CRDS reference file keywords are
+described in the CDBS .tpn files.  CRDS mapping keyword values are
+described in CDBS _ld.tpn files; effectively, mapping values are also
+described using a combination of the .tpn files and substitutions.dat.
+
+It should be noted that the initial CRDS mappings for HST were derived
+from the CDBS database.  The CDBS database lists only discrete
+parameter values for reference files, not the un-substituted
+/unexploded wildcard values.  In addition, the substitution rules of
+CDBS changed over time, so there's no guarantee that current
+substitution patterns will be found for all reference files.   While the
+CRDS mapping generator does re-cluster the exploded CDBS database
+into relatively compact rules using or-globs,  it does not attempt
+to reverse wild card substitutions.   Consequently mapping files use
+the exploded CDBS keyword vocabulary defined by the _ld.tpn files.
+
+2. CDBS refines the basic pipeline -> instrument -> filetype hiearchy down one
+additional level,  pipeline -> instrument -> filetype -> subtype.
+
+This applies for reference file values only (.tpn, not _ld.tpn) but
+not dataset/mapping values. The additional level of constraint
+specialization is keyed off values in the reference file itself,
+currently OBSTYPE=IMAGING or OBSTYPE=SPECTROSCOPIC mapping to
+stis_ipfl.tpn, stis_ilfl.tpn, stis_spfl.tpn, stis_lpfl.tpn.  In CRDS
+these should be referred to as "subtypes".  Note that there's an
+asymmetry here (mapping's / _ld.tpn's don't currrently support subtype
+values)
+
 """
 import sys
 import os.path
 import pprint
+from collections import defaultdict
 
 from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
@@ -41,19 +86,6 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =============================================================================
 
-def _update_tpn_data(pipeline_context):
-    """Update the data files which relate reftypes, filekinds, and tpn
-    extensions,  all somewhat redundant ways of saying the same thing,
-    but the way HST is.
-    """
-    log.info("Computing TPN filetype map")    
-    tpn_filetypes = get_filetype_to_extension(pipeline_context)
-    tpn_filetypes["nicmos"] = tpn_filetypes.pop("nic")   # XXX hack
-    open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
-    log.standard_status()
-    
-# =============================================================================
-
 def _evalfile_with_fail(filename):
     """Evaluate and return a dictionary file,  returning {} if the file
     cannot be found.
@@ -61,6 +93,7 @@ def _evalfile_with_fail(filename):
     if os.path.exists(filename):
         result = utils.evalfile(filename)
     else:
+        log.warning("Couldn't load CRDS config file", repr(filename))
         result = {}
     return result
 
@@ -83,20 +116,25 @@ SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
 # 'acs': {'analog-to-digital': 'a2d',
 #         'bad pixels': 'bpx',
 FILETYPE_TO_SUFFIX = _evalfile_with_fail(HERE + "/tpn_filetypes.dat")
-SUFFIX_TO_FILETYPE = _invert_instr_dict(FILETYPE_TO_SUFFIX)
 
+# CRDS encoding of most of CDBS catalog.dat
+TPN_CATALOG = _evalfile_with_fail(HERE + "/crds_tpn_catalog.dat")
 
 # =============================================================================
 
 class CdbsCat(object):
     """Represents one record from cdbscatalog.dat,  i.e. one filekind."""
+    
+    #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT    HEADER KEYWORDS
+    
     def __init__(self, inst, reftype, ftype, template, ext, *args):
         self.inst = inst
         self.reftype = reftype
         self.ftype = ftype
         self.template = template
         self.ext = ext
-        self.header = self.parse_header(args)
+        self.header_items = self.parse_header(args)
+        self.header = dict(self.header_items) 
     
     def parse_header(self, args):
         """In general the last parameter in a catalog looks like this:
@@ -116,12 +154,12 @@ class CdbsCat(object):
         if header_keywords.startswith('"'):
             header_keywords = header_keywords[1:-1]
         header_keywords = header_keywords.split(",")
-        header = {}
+        header = []
         for assgn in header_keywords:
             if not assgn:
                 continue
             key, val = [x.strip() for x in assgn.split("=")]
-            header[key] = val  
+            header.append((key.lower(),val.lower()))
         return header
 
     def __repr__(self):
@@ -142,28 +180,48 @@ def _load_cdbs_catalog():
         catalog.append(CdbsCat(*words))
     return catalog
 
-CDBS_CATALOG = _load_cdbs_catalog()
-
 # =============================================================================
 
-def get_filetype_to_extension(context):
+def make_filetype_to_extension():
     """Generate a map  { instrument : { filetype : suffix_ext }}
     
     This function is only known to work for acs, cos, nicmos, stis, wfc3, wfpc, 
     wfpc2.
     """
-    map = {}
-    for cat in CDBS_CATALOG:
+    table = defaultdict(dict)
+    for cat in _load_cdbs_catalog():
         instr = cat.header.get("instrument", cat.inst)
-        if instr not in map:
-            map[instr] = {}
+        if instr == "nic":
+            instr = "nicmos"
         filetype = cat.header.get("filetype", cat.reftype).lower()
-        suffix_ext = cat.reftype
-#       if cat.ext == ".fits":
-#       else:
-#            suffix_ext = cat.ext
-        map[instr][filetype] = suffix_ext
-    return map
+        table[instr][filetype] = cat.reftype # suffix_ext
+    return dict(table)
+
+def make_crds_tpn_catalog():
+    """Process cdbscatalog.dat to create a mapping { instrument : { filekind : catalog_info } }
+    """
+    table = defaultdict(dict)
+    skipped = defaultdict(set)
+    for cat in _load_cdbs_catalog():
+        instr = cat.header.get("instrument", cat.inst)
+        if instr == "nic":
+            instr = "nicmos"
+        filetype = cat.header.get("filetype", cat.reftype).lower()
+        try:
+            filekind = filetype_to_filekind(instr, filetype)
+        except:
+            skipped[instr].add(filetype)
+            continue
+        if filekind not in table[instr]:
+            table[instr][filekind] = []
+        if len(cat.header_items) > 2:
+            table[instr][filekind].append(
+                (tuple(cat.header_items[2:]), (cat.template, cat.reftype, cat.ftype, cat.ext, filetype)))
+        else:
+            table[instr][filekind] = (cat.template, cat.reftype, cat.ftype, cat.ext, filetype)
+    for instr in sorted(skipped):
+        log.info("Skipped", repr(instr), "=", repr(sorted(skipped[instr])))
+    return dict(table)
 
 # =============================================================================
 
@@ -173,6 +231,8 @@ def filetype_to_filekind(instrument, filetype):
     """
     instrument = instrument.lower()
     filetype = filetype.lower()
+    if instrument == "nic":
+        instrument = "nicmos"
     ext = FILETYPE_TO_SUFFIX[instrument][filetype]
     return SUFFIX_TO_FILEKIND[instrument][ext]
 
@@ -180,6 +240,8 @@ def extension_to_filekind(instrument, extension):
     """Map the value of an instrument and TPN extension onto it's
     associated filekind keyword name,  i.e. drk --> darkfile
     """
+    if instrument == "nic":
+        instrument = "nicmos"
     return SUFFIX_TO_FILEKIND[instrument][extension]
 
 # =============================================================================
@@ -222,6 +284,7 @@ def _fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
+
 def _load_tpn(fname):
     """Load a TPN file and return it as a list of TpnInfo objects
     describing keyword requirements including acceptable values.
@@ -240,6 +303,12 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
+@utils.cached
+def load_tpn(fname):
+    return _load_tpn(fname)
+
+
+# =============================================================================
 
 # Correspondence between instrument names and TPN file name <instrument> field.
 INSTRUMENT_TO_TPN = {
@@ -250,7 +319,6 @@ INSTRUMENT_TO_TPN = {
     "wfpc2" : "wp2",
     "nicmos" : "nic",
 }
-
 
 WFPC2_HACK = {'atodfile': 'a2d',
            'biasfile': 'bas',
@@ -265,25 +333,29 @@ WFPC2_HACK = {'atodfile': 'a2d',
            'wf4tfile': 'w4t'
 }
 
-def _tpn_filepath(instrument, filekind):
+TPN_DIR_PATH = os.path.join(HERE, "cdbs", "cdbs_tpns")
+
+def _implicit_tpn_filepath(instrument, filekind):
     """Return the full path for the .tpn file corresponding to `instrument` and 
     `filekind`,  the CRDS name for the header keyword which refers to this 
     reference.
     """
-    rootpath = os.path.join(
-        HERE, "cdbs", "cdbs_tpns", INSTRUMENT_TO_TPN[instrument])
     if instrument == "wfpc2":
         file_suffix = WFPC2_HACK[filekind]
     else:
         file_suffix = FILEKIND_TO_SUFFIX[instrument][filekind]
-    path = rootpath + "_" + file_suffix + ".tpn"
-    return path
+    return os.path.join(TPN_DIR_PATH, INSTRUMENT_TO_TPN[instrument] + "_" + file_suffix + ".tpn")
 
-def get_tpninfos(instrument, filekind):
-    """Load the map of TPN_info tuples corresponding to `instrument` and 
-    `extension` from it's .tpn file.
+def get_tpninfos(*args):
+    """Load the list of TPN_info tuples corresponding to *args from it's .tpn file.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
     """
-    return _load_tpn(_tpn_filepath(instrument, filekind))
+    if len(args) == 2:  # hackish,  should be (instrument, filekind)
+        return load_tpn(_implicit_tpn_filepath(*args))
+    else:  # should be explicit filename
+        return load_tpn(os.path.join(TPN_DIR_PATH, args[0]))
 
 # =============================================================================
 
@@ -296,9 +368,24 @@ def reference_name_to_validator_key(filename):
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
-    extension = FILETYPE_TO_SUFFIX[instrument][filetype]
-    filekind = SUFFIX_TO_FILEKIND[instrument][extension]
-    return (instrument, filekind)
+    filekind = filetype_to_filekind(instrument, filetype)
+    cat_info = TPN_CATALOG[instrument][filekind]
+    if isinstance(cat_info, tuple):
+        key = (cat_info[0],)  # tpn filename
+    else:
+        for (condition, cat) in cat_info:
+            for (cvar, cval) in condition:
+                hval = header.get(cvar.upper(), None)
+                if hval != cval.upper():
+                    break
+            else:
+                key = (cat[0],)  # tpn filename
+                break
+        else:
+            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'" % \
+                                 (os.path.basename(filename), instrument, filekind))
+    log.verbose("Validator key for", repr(filename), instrument, filekind, "=", key)
+    return key
 
 # =============================================================================
 
@@ -310,15 +397,22 @@ def reference_name_to_tpninfos(key):
 
 # =============================================================================
 
-INSTRUMENTS = FILEKIND_TO_SUFFIX.keys()
-
-FILEKINDS = set()
-for instr in FILEKIND_TO_SUFFIX:
-    FILEKINDS.update(FILEKIND_TO_SUFFIX[instr].keys())
-FILEKINDS = list(FILEKINDS)
-
-# =============================================================================
-
+def _update_tpn_data(pipeline_context):
+    """Update the data files which relate reftypes, filekinds, and tpn
+    extensions,  all somewhat redundant ways of saying the same thing,
+    but the way HST is.
+    """
+    # XXX temporary for refactoring tpn_filetypes.dat
+    log.info("Computing TPN filetype map")    
+    tpn_filetypes = make_filetype_to_extension()
+    open("tpn_filetypes.dat", "w+").write(pprint.pformat(tpn_filetypes))
+                                          
+    log.info("Computing CRDS catalog from CDBS catalog.dat")
+    catalog = make_crds_tpn_catalog()
+    open("crds_tpn_catalog.dat", "w+").write(pprint.pformat(catalog, width=200))
+    
+    log.standard_status()
+    
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         _update_tpn_data(sys.argv[1])

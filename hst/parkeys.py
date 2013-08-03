@@ -1,6 +1,7 @@
 """This module extracts information about instruments, filekinds, filekind
-relevance, parkeys, and parkey relevance out of the CDBS configuration file
-reference_file_defs.xml.
+relevance, parkeys, and parkey relevance out of the CDBS configuration file:
+
+              reference_file_defs.xml
 """
 import pprint
 import os.path

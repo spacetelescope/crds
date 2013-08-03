@@ -14,14 +14,4 @@ setup(name="crds.client",
       package_dir = {
         'crds.client':'.',
         },
-
-      package_data = {
-
-        # '': ['acs/*.rmap',
-        #     'cos/*.rmap' ,
-        #     'stis/*.rmap',
-        #     'wfc3/*.rmap',
-        #     'cdbs_data/*.tpn'
-        #     ],
-        },
     )
