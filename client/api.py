@@ -363,7 +363,7 @@ class FileCacher(object):
         if downloads:
             self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
         else:
-            log.verbose("Skipping download for cached files", names, verbosity=10)
+            log.verbose("Skipping download for cached files", names, verbosity=30)
         return localpaths
 
     def observatory_from_context(self, pipeline_context):
@@ -565,6 +565,15 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_e
             baserefs.remove(refname)
     return FILE_CACHER.get_local_files(
         pipeline_context, baserefs, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
+    
+def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=True):
+    """Unified interface to dump any file in `files`, mapping or reference."""
+    mappings = [ os.path.basename(file) for file in files if config.is_mapping(file) ]
+    references = [ os.path.basename(file) for file in files if not config.is_mapping(file) ]
+    if mappings:
+        dump_mappings(pipeline_context, mappings=mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
+    if references:
+        dump_references(pipeline_context, baserefs=references, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
     
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
