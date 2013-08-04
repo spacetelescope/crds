@@ -100,6 +100,17 @@ class SyncScript(cmdline.ContextsScript):
                           help="Download sync'ed files even if they're already in the cache.")
         self.add_argument('--dry-run', action="store_true",
                           help= "Don't remove purged files,  just print out their names.")
+        
+        self.add_argument('-k', '--check-files', action='store_true', dest='check_files',
+                          help='Check cached files against the CRDS database and report anomalies.')
+        self.add_argument('-s', '--check-sha1sum', action='store_true', dest='check_sha1sum',
+                          help='For --check-files,  also verify file sha1sums.')
+        self.add_argument('-r', '--repair-files', action='store_true', dest='repair_files',
+                          help='Repair or re-download files noted as bad by --check-files')
+        self.add_argument('--purge-rejected', action='store_true', dest='purge_rejected',
+                          help='Purge files noted as rejected by --check-files')
+        self.add_argument('--purge-blacklisted', action='store_true', dest='purge_blacklisted',
+                          help='Purge files (and their anscestors) noted as blacklisted by --check-files')
 
     # ------------------------------------------------------------------------------------------
     
@@ -118,11 +129,15 @@ class SyncScript(cmdline.ContextsScript):
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
+            verify_file_list = [] + active_references
         elif self.args.files:
             self.sync_explicit_files()
+            verify_file_list = self.args.files
         else:
-            log.error("Define --contexts and/or --datasets,  or explicitly list particular files to sync.")
+            log.error("Define --contexts, --datasets,  or --files to sync.")
             sys.exit(-1)
+        if self.args.check_files:
+            self.verify_files(verify_file_list)
         log.standard_status()
 
     # ------------------------------------------------------------------------------------------
@@ -222,6 +237,65 @@ class SyncScript(cmdline.ContextsScript):
             api.dump_references(self.default_context, baserefs=references, ignore_cache=self.args.ignore_cache,
                                 raise_exceptions=self.args.pdb)
 
+    # ------------------------------------------------------------------------------------------
+    
+    def verify_files(self, files):
+        """Check `files` against the CRDS server database to ensure integrity and check reject status."""
+        basenames = [os.path.basename(file) for file in files]
+        try:
+            log.verbose("Downloading verification info for", len(basenames), "files.", verbosity=10)
+            info = api.get_file_info_map(observatory=self.observatory, files=basenames, 
+                                         fields=["size","rejected","blacklisted","state","sha1sum"])
+        except Exception, Exc:
+            log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
+            return
+        for file in files:
+            if info[file] == "NOT FOUND":
+                log.error("CRDS has no record of file", repr(file))
+            self.verify_file(file, info[file])
+        
+    def verify_file(self, file, info):
+        """Check one `file` against the provided CRDS database `info` dictionary."""
+        path = rmap.locate_file(file, observatory=self.observatory)
+        base = os.path.basename(file)
+        log.verbose("Verifying", repr(base), "at", repr(path), verbosity=10)
+        if not os.path.exists(path):
+            log.error("File", repr(base), "doesn't exist at", repr(path))
+            return
+        size = os.stat(path).st_size
+        if int(info["size"]) != size:
+            self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + repr(size), "CRDS size=" + repr(info["size"]))
+        elif self.args.check_sha1sum:
+            log.verbose("Computing checksum for", repr(base), "of size", repr(size))
+            sha1sum = utils.checksum(path)
+            if info["sha1sum"] == "none":
+                log.warning("CRDS doesn't know the checksum for", repr(base))
+            elif info["sha1sum"] != sha1sum:
+                self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), "LOCAL=" + repr(sha1sum))
+#        elif info["state"] not in ["delivered", "operational"]:
+#            self.log_and_purge(path, "File", repr(base), "has a strange server state", repr(info["state"]))
+        elif info["rejected"] != "false":
+            log.error("File", repr(base), "has been explicitly rejected.")
+            if self.args.purge_rejected:
+                self.purge_files([path], "files")
+            return
+        elif info["blacklisted"] != "false":
+            log.error("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
+            if self.args.purge_blacklisted:
+                self.purge_files([path], "files")
+            return
+        return
+
+    def error_and_repair(self, file, *args, **keys):
+        """Issue an error message and repair `file` if requested by command line args."""
+        log.error(*args, **keys)
+        if self.args.repair_files:
+            if not self.args.dry_run:
+                log.info("Repairing file", repr(file))
+                api.dump_files(self.default_context, [file], ignore_cache=True, raise_exceptions=self.args.pdb) 
+            else:
+                log.info("Without --dry-run would repair", repr(file))
+                
 # ==============================================================================================================
 
 if __name__ == "__main__":
