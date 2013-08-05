@@ -437,7 +437,7 @@ class Mapping(object):
         for key in self.selections:
             if key not in other.selections:
                 diff = selectors.DiffTuple((self.filename, other.filename), (key,), "deleted " + repr(self.selections[key].filename), 
-                    parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
+                    parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
             else:
                 diffs = self.selections[key].difference( other.selections[key],  
@@ -452,7 +452,7 @@ class Mapping(object):
         for key in other.selections:
             if key not in self.selections:
                 diff = selectors.DiffTuple((self.filename, other.filename), (key,), "added " + repr(other.selections[key].filename),
-                                parameter_names = pars + ((self.diff_name, self.parkey, "DIFFERENCE",),))
+                                parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
     
