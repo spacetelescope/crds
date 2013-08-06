@@ -896,9 +896,6 @@ class ReferenceMapping(Mapping):
                         values = range(limits[0], limits[1]+1)
                 if condition:
                     values = tuple([utils.condition_value(val) for val in values])
-                    if values in [('-999.0',)]:   # XXXX temporary,  for validating reffile submissions
-                        log.verbose_warning("get_valid_values_map() interpreting -999.0 as * for", repr(info.name))
-                        values = ('*',)
                 valid_values[info.name] = values
         return valid_values
 
