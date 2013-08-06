@@ -22,7 +22,7 @@ FILTNAM1            H        C         R
 FILTNAM2            H        C         P    
 FILTER1             H        I         R    0:71
 FILTER2             H        I         R    0:71
-IMAGETYP            H        C         R    SPECIAL,CDBS,EXT
+IMAGETYP            H        C         R    SPECIAL,CDBS
 CDBSFILE            H        C         R    FLAT
 EXPTIME             H        R         R    0.:5000.00
 PEDIGREE            H        C         R    &PEDIGREE

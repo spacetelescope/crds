@@ -31,22 +31,27 @@ their purpose using the FILETYPE keyword.
 There are several additional complications not forseen at the time this was 
 originally written:
 
-1. CRDS/CDBS rules have a different keyword value vocabulary than reference files.
+1. The CDBS reference file database has a different matching value
+vocabulary than reference files described by the _ld.tpn files.
+The _ld.tpn files describe the keyword values of expanded
+reference file keywords which are to be loaded into the CDBS database.
 
-These keyword values are defined in _ld.tpn files.  These describe
-what reference file keyword values are legal to use in a CRDS mapping
-file.  The values in CRDS mapping files for HST are the discrete
-parameter settings a particular dataset might have been using.  In
-contrast, the values in reference files describe the sets of dataset
-values to which the reference applies.  (There is an additional
-subtlety that dataset keywords are not always matched to identically
-named reference file keywords; e.g.  DATE-OBS, TIME-OBS matches to
-USEAFTER.)  Further, the values in reference files are subject to
-substitution rules described in the CDBS .rules files and captured in
-crds.hst's substitutions.dat file.  CRDS reference file keywords are
-described in the CDBS .tpn files.  CRDS mapping keyword values are
-described in CDBS _ld.tpn files; effectively, mapping values are also
-described using a combination of the .tpn files and substitutions.dat.
+In CRDS,  these could describe the valid values for .rmaps,   but
+in practice they are redundant with a combination of the .tpn files
+and the .rules/substitutions.dat file.   The CRDS rmap valid values
+maps should eventually be computed from these.
+
+
+The values in CRDS mapping files for HST are the discrete parameter
+settings a particular dataset might have been using.  In contrast, the
+values in reference files describe the sets of dataset values to which
+the reference applies.  (There is an additional subtlety that dataset
+keywords are not always matched to identically named reference file
+keywords; e.g.  DATE-OBS, TIME-OBS matches to USEAFTER.)  Further, the
+values in reference files are subject to substitution rules described
+in the CDBS .rules files and captured in crds.hst's substitutions.dat
+file.  CRDS reference file keywords are described in the CDBS .tpn
+files.  
 
 It should be noted that the initial CRDS mappings for HST were derived
 from the CDBS database.  The CDBS database lists only discrete
@@ -68,8 +73,8 @@ specialization is keyed off values in the reference file itself,
 currently OBSTYPE=IMAGING or OBSTYPE=SPECTROSCOPIC mapping to
 stis_ipfl.tpn, stis_ilfl.tpn, stis_spfl.tpn, stis_lpfl.tpn.  In CRDS
 these should be referred to as "subtypes".  Note that there's an
-asymmetry here (mapping's / _ld.tpn's don't currrently support subtype
-values)
+asymmetry here and mapping's / _ld.tpn's don't currrently support
+subtype values.
 
 """
 import sys

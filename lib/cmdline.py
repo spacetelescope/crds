@@ -128,6 +128,7 @@ class Script(object):
         raise NotImplementedError("Script subclasses have to define add_args().")
     
     @property
+    @utils.cached
     def observatory(self):
         """Return either the command-line override observatory,  or the one determined
         by the client/server exchange.
@@ -149,15 +150,16 @@ class Script(object):
             files = self.args.files if self.args.files else []
             for file in files:
                 if file.startswith("hst"):
-                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
                     obs = "hst"
+                    break
                 if file.startswith("jwst"):
-                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
                     obs = "jwst"
+                    break
             if obs is None:
                 for file in files:
                     with log.verbose_on_exception("Failed file_to_observatory for", repr(file)):
                         obs = utils.file_to_observatory(file)
+                        break
         if obs is None:
             obs = api.get_default_observatory()
         return obs

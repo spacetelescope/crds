@@ -52,6 +52,13 @@ class KeywordValidator(object):
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values(info)
 
+    def verbose(self, filename, value, *args, **keys):
+        return log.verbose("File=" + repr(filename), 
+                           "Class=" + repr(self.__class__.__name__[:-len("Validator")]), 
+                           "keyword=" + repr(self.name), 
+                           "value =" + repr(value), 
+                           *args, **keys)
+
     def condition(self, value):
         """Condition `value` to standard format for this Validator."""
         return value
@@ -80,26 +87,30 @@ class KeywordValidator(object):
         """Check a single header or column value against the legal values
         for this Validator.
         """
-        log.verbose("Checking ", repr(filename), "keyword", repr(self.name), "=", repr(value))
         if value is None: # missing optional or excluded keyword
+            self.verbose(filename, value, "is optional or excluded.")
             return True
         if self.condition is not None:
             value = self.condition(value)
         if not self._values:
+            self.verbose(filename, value, "no .tpn values defined.")
             return True
-        self._check_value(value)
+        self._check_value(filename, value)
         # If no exception was raised, consider it validated successfully
         return True
 
-    def _check_value(self, value):
-        if value not in self._values and tuple(self._values) != ('*',):
+    def _check_value(self, filename, value):
+        if value not in self._values:  # and tuple(self._values) != ('*',):
             if isinstance(value, str):
                 for pat in self._values:
                     if re.match(pat, value):
+                        self.verbose(filename, value, "matches", repr(pat))
                         return
             raise ValueError("Value(s) for " + repr(self.name) + " of " +
                             str(log.PP(value)) + " is not one of " +
                             str(log.PP(self._values)))
+        else:
+            self.verbose(filename, value, "is in", repr(self._values))
 
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
@@ -118,7 +129,7 @@ class KeywordValidator(object):
         try:
             values = self._get_column_values(filename)
         except Exception, exc:
-            log.error("Can't read column values : " + str(exc))
+            log.error("Can't read column values:", str(exc))
             return
         check_val = True
 
@@ -131,8 +142,8 @@ class KeywordValidator(object):
         if context: # If context has been specified, compare against previous reffile
             current = refmatch.find_current_reffile(filename, context)
             if current: # Only do comparison if current ref file can be found
-                log.verbose("Checking values for column", repr(self.name),
-                            " against values found in ",current)
+                log.verbose("Checking", repr(filename), "values for column", repr(self.name),
+                            " against values found in ", current)
                 current_values = self._get_column_values(current)
                 return self._check_column_values(values, current_values)
 
@@ -254,7 +265,7 @@ class ModeValidator(CharacterValidator):
             try:
                 values = self._get_column_values(filename)
             except Exception, exc:
-                raise RuntimeError("Can't read column values from " + filename + ": " + str(exc))
+                raise RuntimeError("Can't read column values from " + repr(filename) + ": " + str(exc))
             new_values.append(values)
 
         # convert these values into 'modes' by transposing the separate columns
@@ -267,7 +278,7 @@ class ModeValidator(CharacterValidator):
                 log.warning("No comparison reference for", repr(filename),
                             "in context", repr(context))
             else:
-                log.verbose("Checking values for mode", repr(self.names),
+                log.verbose("Checking", repr(filename), "values for mode", repr(self.names),
                             " against values found in ",current)
 
                 current_values = []
@@ -305,36 +316,34 @@ class NumericalValidator(KeywordValidator):
             values = KeywordValidator.condition_values(self, info)
         return values
 
-    def _check_value(self, value):
+    def _check_value(self, filename, value):
         if self.is_range:
             if value < self.min or value > self.max:
                 raise ValueError("Value for " + repr(self.name) + " of " +
                     repr(value) + " is outside acceptable range " +
                     self.info.values[0])
+            else:
+                self.verbose(filename, value, "is in range", self.info.values[0])
         else:   # First try a simple exact string match check
-            KeywordValidator._check_value(self, value)
+            KeywordValidator._check_value(self, filename, value)
 
 # ----------------------------------------------------------------------------
 
 class IntValidator(NumericalValidator):
     """Validates integer values."""
-
-    def condition(self, value):
-        val = float(value)
-        if val == -999:
-            val = '*'
-        return val
+    condition = int
 
 # ----------------------------------------------------------------------------
 
 class FloatValidator(NumericalValidator):
     """Validates floats of any precision."""
-    condition = float
     epsilon = 1e-7
+    
+    condition = float
 
-    def _check_value(self, value):
+    def _check_value(self, filename, value):
         try:
-            NumericalValidator._check_value(self, value)
+            NumericalValidator._check_value(self, filename, value)
         except ValueError:   # not a range or exact match,  handle fp fuzz
             if self.is_range: # XXX bug: boundary values don't handle fuzz
                 raise
@@ -347,14 +356,9 @@ class FloatValidator(NumericalValidator):
                     continue
                 # print "considering", possible, value, err
                 if abs(err) < self.epsilon:
+                    self.verbose(filename, value, "is within +-", repr(self.epsilon), "of", repr(possible))
                     return
             raise
-
-    def condition(self, value):
-        val = float(value)
-        if val == -999.0:
-            val = '*'
-        return val
 
 # ----------------------------------------------------------------------------
 
@@ -399,6 +403,7 @@ class PedigreeValidator(KeywordValidator):
 class SybdateValidator(KeywordValidator):
     """Check &SYBDATE Sybase date fields."""
     def check_value(self, filename, value):
+        self.verbose(filename, value)
         timestamp.Sybdate.get_datetime(value)
 
 # ----------------------------------------------------------------------------
@@ -406,6 +411,7 @@ class SybdateValidator(KeywordValidator):
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
     def check_value(self, filename, value):
+        self.verbose(filename, value)
         timestamp.Slashdate.get_datetime(value)
 
 # ----------------------------------------------------------------------------
@@ -413,6 +419,7 @@ class SlashdateValidator(KeywordValidator):
 class AnydateValidator(KeywordValidator):
     """Validates &ANYDATE fields."""
     def check_value(self, filename, value):
+        self.verbose(filename, value)
         timestamp.Anydate.get_datetime(value)
 
 # ----------------------------------------------------------------------------
@@ -420,7 +427,9 @@ class AnydateValidator(KeywordValidator):
 class FilenameValidator(KeywordValidator):
     """Validates &FILENAME fields."""
     def check_value(self, filename, value):
-        return (value == "(initial)") or not os.path.dirname(value)
+        self.verbose(filename, value)
+        result = (value == "(initial)") or not os.path.dirname(value)
+        return result
 
 # ----------------------------------------------------------------------------
 
@@ -447,25 +456,26 @@ def validator(info):
 
 # ============================================================================
 
-def get_validators(filename):
+def get_validators(filename, observatory):
     """Given a reference file `filename`,  return the observatory specific
     list of Validators used to check that reference file type.
     """
-    # Find the observatory's locator module based on the reference file.
-    locator = utils.reference_to_locator(filename)
+    locator = utils.get_locator_module(observatory)
     # Get the cache key for this filetype.
     key = locator.reference_name_to_validator_key(filename)
-    return validators_by_typekey(locator, key)
+    return validators_by_typekey(key, observatory)
 
 @utils.cached
-def validators_by_typekey(locator, key):
+def validators_by_typekey(key, observatory):
     """Load and return the list of validators associated with reference type 
-    validator `key`.
+    validator `key`.   Factored out because it is cached on parameters.
     """
-    tpninfos = tuple(locator.get_tpninfos(*key))
+    locator = utils.get_locator_module(observatory)
     # Make and cache Validators for `filename`s reference file type.
-    return [validator(x) for x in tpninfos]
-        
+    validators = [validator(x) for x in locator.get_tpninfos(*key)]
+    log.verbose("Validators for", repr(key), "=", log.PP(validators))
+    return validators
+
 # ============================================================================
 
 class Certifier(object):
@@ -483,7 +493,12 @@ class Certifier(object):
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
-        
+        if self.script:
+            observatory = self.script.observatory
+        else:
+            observatory = utils.reference_to_observatory(filename)
+        self.observatory = observatory
+    
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
     
@@ -572,7 +587,7 @@ class ReferenceCertifier(Certifier):
 
     def certify_simple_parameters(self, header):
         """Check non-column parameters."""
-        for checker in get_validators(self.filename):
+        for checker in get_validators(self.filename, self.observatory):
             if checker.info.keytype != 'C':
                 self.trap("checking " + repr(checker.info.name),
                           checker.check, self.filename, header=header)
@@ -580,7 +595,7 @@ class ReferenceCertifier(Certifier):
     def certify_reference_modes(self, header):
         """Check column parameters row-by-row."""
         mode_checker = None # Initialize mode validation
-        for checker in get_validators(self.filename):
+        for checker in get_validators(self.filename, self.observatory):
             # Treat column validations together as a 'mode'
             if checker.info.keytype == 'C':
                 checker.check(self.filename, header=header) # validate values against TPN valid values
