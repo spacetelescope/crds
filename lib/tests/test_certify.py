@@ -18,7 +18,7 @@ class TestHSTTpninfoClass(CRDSTestCase):
     def setup(self):
         CRDSTestCase.setup(self)
         hstlocator = utils.get_locator_module("hst")
-        self.tpninfos = hstlocator.get_tpninfos('acs','idctab')
+        self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn')
         self.validators = [certify.validator(info) for info in self.tpninfos]
         os.environ['CRDS_SERVER_URL'] = 'http://not-a-crds-server.stsci.edu'
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
@@ -43,47 +43,27 @@ class TestHSTTpninfoClass(CRDSTestCase):
                 if mode_checker is None:
                     mode_checker = certify.ModeValidator(checker.info)
                 mode_checker.add_column(checker)
-        mode_pass = True
-        try:
-            mode_checker.check(self.data('acs_new_idc.fits'),context='hst.pmap')
-        except:
-            mode_pass = False
-        assert_true(mode_pass)
+        mode_checker.check(self.data('acs_new_idc.fits'),context='hst.pmap')
 
 class TestValidatorClasses(CRDSTestCase):
     def test_character_validator(self):
         """Test the constructor with default argument values."""
-
         tinfo = certify.TpnInfo('DETECTOR','H','C','R',('WFC','HRC','SBC'))
         cval = certify.validator(tinfo)
-
         assert_true(isinstance(cval, certify.CharacterValidator))
-
-        test_pass = True
-        try:
-            cval.check(self.data('acs_new_idc.fits'))
-        except:
-            test_pass = False
-        assert_true(test_pass)
+        cval.check(self.data('acs_new_idc.fits'))
 
     def test_sybdate_validator(self):
         tinfo = certify.TpnInfo('USEAFTER','H','C','R',('&SYBDATE',))
         cval = certify.validator(tinfo)
-
         assert_true(isinstance(cval,certify.SybdateValidator))
-
-        test_pass = True
-        try:
-            cval.check(self.data('acs_new_idc.fits'))
-        except:
-            test_pass = False
-        assert_true(test_pass)
+        cval.check(self.data('acs_new_idc.fits'))
 
     def test_check_dduplicates(self):
         from crds import certify
-        certify.certify_files([self.data("hst.pmap")])
-        certify.certify_files([self.data("hst_acs.imap")])
-        certify.certify_files([self.data("hst_acs_darkfile.rmap")])
+        certify.certify_files([self.data("hst.pmap")], trap_exceptions=False, observatory="hst")
+        certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
+        certify.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
 
 def test():
     import doctest

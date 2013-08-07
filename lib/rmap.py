@@ -291,18 +291,12 @@ class Mapping(object):
             raise FormatError("selector must be a dict or a Selector.")
 
     def missing_references(self):
-        """Get the references mentioned by the closure of this mapping but not
-        known to CRDS.
-        """
-        return [ ref for ref in self.reference_names() \
-                    if not self.locate.reference_exists(ref) ]
+        """Get the references mentioned by the closure of this mapping but not in the cache."""
+        return [ ref for ref in self.reference_names() if not config.file_in_cache(self.name, self.observatory) ]
 
     def missing_mappings(self):
-        """Get the mappings mentioned by the closure of this mapping but not
-        known to CRDS.
-        """
-        return [ mapping for mapping in self.mapping_names() \
-                if not config.mapping_exists(mapping) ]
+        """Get the mappings mentioned by the closure of this mapping but not in the cache."""
+        return [ mapping for mapping in self.mapping_names() if not config.file_in_cache(self.name, self.observatory) ]
 
     @property
     def locate(self):
@@ -880,7 +874,8 @@ class ReferenceMapping(Mapping):
 
         return { parkey : [ valid values ] }
         """
-        tpninfos = self.locate.get_tpninfos(self.instrument, self.filekind)
+        key = self.locate.mapping_validator_key(self)
+        tpninfos = self.locate.get_tpninfos(*key)
         required_keys = self.get_required_parkeys()
         valid_values = {}
         for info in tpninfos:

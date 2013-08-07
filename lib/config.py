@@ -229,6 +229,11 @@ def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""
     return os.path.exists(locate_mapping(mapping))
 
+def file_in_cache(filename, observatory):
+    """Return True IFF `filename` is in the local cache."""
+    path = locate_file(os.path.basename(filename), observatory)
+    return os.path.exists(path)
+
 
 # These are name based but could be written as slower check-the-mapping
 # style functions.

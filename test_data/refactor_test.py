@@ -81,7 +81,7 @@ def do_refactoring(context, new_rmap_path, old_rmap_path, new_refpath, old_refpa
 
     separator("=")
     log.info("Certifying reference", os.path.basename(old_rmap_path), old_refpath)
-    certify.certify_files([old_refpath], skip_banner=True, context=context, compare_old_reference=True)
+    certify.certify_files([old_refpath], skip_banner=True, context=context, compare_old_reference=True, observatory="hst")
     log.info("Inserting reference", os.path.basename(old_rmap_path), old_refpath)
 
     pysh.sh("rm -f ${new_rmap_path}")

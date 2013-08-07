@@ -44,7 +44,7 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.tobs.tpn import reference_name_to_validator_key, get_tpninfos
+from crds.tobs.tpn import reference_name_to_validator_key, mapping_validator_key, get_tpninfos
 from crds.tobs.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
