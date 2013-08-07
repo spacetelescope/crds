@@ -2,6 +2,9 @@
 describe reference parameters and their values.   The .tpn files are used to
 validate headers or tables and list the parameters each filekind must define
 in an rmap.
+
+See the HST tpn.py and locator.py modules,  as well as crds.certify
+and crds.rmap,  for more information.
 """
 import sys
 import os.path
@@ -84,8 +87,7 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
-
-def _tpn_filepath(instrument, filekind):
+def _tpn_filepath(instrument, filekind, kind):
     """Return the full path for the .tpn file corresponding to `instrument` and 
     `filekind`,  the CRDS name for the header keyword which refers to this 
     reference.
@@ -94,23 +96,16 @@ def _tpn_filepath(instrument, filekind):
     path = os.path.join(HERE, "tpns", tpn_filename)
     return path
 
-def get_tpninfos(instrument, filekind):
+@utils.cached
+def get_tpninfos(*key):
     """Load the listof TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
     try:
-        return _load_tpn(_tpn_filepath(instrument, filekind))
+        return _load_tpn(_tpn_filepath(*key))
     except IOError:
-        log.verbose_warning("no TPN for", instrument, filekind)
+        log.verbose_warning("no TPN for", key)
         return []
-
-# =============================================================================
-
-def reference_name_to_tpninfos(key):
-    """Given a reference cache `key` for a reference's Validator,  return the 
-    TpnInfo object which can be used to construct a Validator.
-    """
-    return get_tpninfos(*key)
 
 # =============================================================================
 

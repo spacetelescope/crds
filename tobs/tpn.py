@@ -84,21 +84,25 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
-
-def _tpn_filepath(instrument, filekind):
+def _tpn_filepath(instrument, filekind, kind):
     """Return the full path for the .tpn file corresponding to `instrument` and 
     `filekind`,  the CRDS name for the header keyword which refers to this 
     reference.
     """
-    tpn_filename = instrument + "_" + filekind + ".tpn"
+    tpn_filename = instrument + "_" + filekind + kind
     path = os.path.join(HERE, "tpns", tpn_filename)
     return path
 
-def get_tpninfos(instrument, filekind):
-    """Load the map of TPN_info tuples corresponding to `instrument` and 
-    `extension` from it's .tpn file.
+@utils.cached
+def get_tpninfos(*key):
+    """Load the listof TPN info tuples corresponding to `instrument` and 
+    `filekind` from it's .tpn file.
     """
-    return _load_tpn(_tpn_filepath(instrument, filekind))
+    try:
+        return _load_tpn(_tpn_filepath(*key))
+    except IOError:
+        log.verbose_warning("no TPN for", key)
+        return []
 
 # =============================================================================
 
@@ -111,16 +115,13 @@ def reference_name_to_validator_key(filename):
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filekind = header["FILEKIND"].lower()
-    return (instrument, filekind)
+    return (instrument, filekind, ".tpn")
 
-# =============================================================================
-
-def reference_name_to_tpninfos(key):
-    """Given a reference cache `key` for a reference's Validator,  return the 
-    TpnInfo object which can be used to construct a Validator.
-    """
-    return get_tpninfos(*key)
-
+def mapping_validator_key(mapping):
+    """Return the TPN key for ReferenceMapping `mapping`."""
+    return (mapping.instrument, mapping.filekind, "_ld.tpn")
+    
+    
 # =============================================================================
 
 def main():

@@ -9,7 +9,8 @@ import re
 import pyfits
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
-from crds import mapping_parser, refmatch
+from crds import client
+from crds import mapping_parser
 from crds.compat import namedtuple
 from crds.rmap import ValidationError
 
@@ -53,6 +54,7 @@ class KeywordValidator(object):
             self._values = self.condition_values(info)
 
     def verbose(self, filename, value, *args, **keys):
+        """Prefix log.verbose() with standard info about this Validator.  Unique message is in *args, **keys"""
         return log.verbose("File=" + repr(filename), 
                            "Class=" + repr(self.__class__.__name__[:-len("Validator")]), 
                            "keyword=" + repr(self.name), 
@@ -140,7 +142,7 @@ class KeywordValidator(object):
                     check_val = False
 
         if context: # If context has been specified, compare against previous reffile
-            current = refmatch.find_current_reffile(filename, context)
+            current = find_current_reffile(filename, context)
             if current: # Only do comparison if current ref file can be found
                 log.verbose("Checking", repr(filename), "values for column", repr(self.name),
                             " against values found in ", current)
@@ -273,13 +275,13 @@ class ModeValidator(CharacterValidator):
         modes = map(tuple, transposed(new_values))
 
         if context: # If context has been specified, compare against previous reffile
-            current = refmatch.find_current_reffile(filename, context)
+            current = find_current_reffile(filename, context)
             if not current: # Only do comparison if current ref file can be found
                 log.warning("No comparison reference for", repr(filename),
                             "in context", repr(context))
             else:
                 log.verbose("Checking", repr(filename), "values for mode", repr(self.names),
-                            " against values found in ",current)
+                            " against values found in ", repr(current))
 
                 current_values = []
                 for name in self.names:
@@ -483,7 +485,8 @@ class Certifier(object):
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
-                 dont_parse=False, script=None):
+                 dont_parse=False, script=None, observatory=None):
+        
         self.filename = filename
         self.context = context
         self.trap_exceptions = trap_exceptions
@@ -493,10 +496,6 @@ class Certifier(object):
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
-        if self.script:
-            observatory = self.script.observatory
-        else:
-            observatory = utils.reference_to_observatory(filename)
         self.observatory = observatory
     
         assert self.check_references in [False, None, "exist", "contents"], \
@@ -528,8 +527,7 @@ class Certifier(object):
         if self.script:
             try:
                 instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
-            except:
-                raise
+            except Exception:
                 instrument = filekind = "unknown"
             self.script.log_and_track_error(self.filename, instrument, filekind, msg)
         else:
@@ -683,6 +681,54 @@ def get_existing_path(reference, observatory):
     if not os.path.exists(path):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
+
+# ============================================================================
+
+def find_current_reffile(reffile, pmap):
+    """Returns the name of the current reference file(s) that the new reffile would replace,  or None.
+    """
+    with log.info_on_exception("Failed resolving prior reference for '{}' in '{}'".format(reffile, pmap)):
+        return _find_current_reffile(reffile, pmap)
+    return None
+
+def _find_current_reffile(reffile, pmap):
+    """Returns the name of the current reference file(s) that the new reffile would replace."""
+    
+    ctx = rmap.fetch_mapping(pmap)
+    instrument, filekind = utils.get_file_properties(ctx.observatory, reffile)
+    reference_mapping = ctx.get_imap(instrument).get_rmap(filekind)
+
+    # Determine the corresponding reference by attempting to add reffile to the old context.
+    new_r = reference_mapping.insert_reference(reffile)
+    
+    # Examine the differences and treat the replaced file as the prior reference.
+    diffs = reference_mapping.difference(new_r)
+    match_refname = None
+    for diff_tup in diffs:
+        if diff.diff_action(diff_tup) == "replace":
+            match_refname, dummy = diff.diff_replace_old_new(diff_tup)
+            assert dummy == os.path.basename(reffile), "Bad replacement inserting '{}' into '{}'".format(reffile, pmap)
+            break   # XXX it may be possible to have more than one corresponding prior reference
+    else:
+        log.info("No file corresponding to", repr(reffile), "in context", repr(pmap))
+        return None
+    
+    # grab match_file from server and copy it to a local disk, if network
+    # connection is available and configured properly
+    # Note: this call works in both networked and non-networked modes of operation.
+    # Non-networked mode requires access to /grp/crds/[hst|jwst] or a copy of it.
+    try:
+        match_files = client.dump_references(pmap, baserefs=[match_refname], ignore_cache=False)
+        match_file = match_files[match_refname]
+        if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
+            raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")
+        log.info("Comparing reference", repr(reffile), "against", repr(match_file))
+    except Exception, exc:
+        log.warning("Failed to obtain reference comparison file", repr(match_refname), ":", str(exc))
+        match_file = None
+
+    return match_file
+
 # ============================================================================
 
 class MissingReferenceError(RuntimeError):
@@ -690,7 +736,7 @@ class MissingReferenceError(RuntimeError):
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False, script=None):
+                  dont_parse=False, skip_banner=False, script=None, observatory=None):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.
     
@@ -707,12 +753,15 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
 
     if not isinstance(files, list):
         files = [files]
-
+        
+    assert observatory is not None, "Undefined observatory in certify_files."
+        
     for fnum, filename in enumerate(files):
         if not skip_banner:
             log.info('#' * 40)  # Serves as demarkation for each file's report
             log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
                      "relative to context", repr(context))
+            # log.info("certify_files locals():", log.PP(locals()))
         try:
             if is_mapping or rmap.is_mapping(filename):
                 klass = MappingCertifier
@@ -722,7 +771,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
-                              dont_parse=dont_parse, script=script)
+                              dont_parse=dont_parse, script=script, observatory=observatory)
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
@@ -804,7 +853,7 @@ Checks a CRDS reference or mapping file.
                       is_mapping=self.args.mapping, 
                       trap_exceptions=self.args.trap_exceptions,
                       dont_parse=self.args.dont_parse,
-                      script=self)
+                      script=self, observatory=self.observatory)
     
         self.dump_unique_errors()
         log.standard_status()

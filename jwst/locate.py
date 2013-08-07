@@ -5,14 +5,12 @@ specific policies for JWST:
 
 2. How to manage parameters for reference file Validator objects used
 in the certification of reference files. 
-
 """
 import os.path
-import gzip
 import re
 
 # import crds.pysh as pysh
-from crds import (log, rmap, pysh, data_file, config, utils)
+from crds import (log, rmap, data_file, config, utils)
 from . import tpn
 
 # =======================================================================
@@ -55,7 +53,7 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.jwst.tpn import get_tpninfos
+from crds.jwst.tpn import get_tpninfos   #  reference_name_to_validator_key, mapping_validator_key  defined here.
 from crds.jwst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 # =======================================================================
@@ -271,10 +269,12 @@ def reference_name_to_validator_key(filename):
     
     Return (instrument, filekind)
     """
-    path, obsv, instrument, filekind, serial, ext = \
-        get_reference_properties(filename)
-    return (instrument, filekind)
+    _path, _obsv, instrument, filekind, _serial, _ext = get_reference_properties(filename)
+    return (instrument, filekind, ".tpn")
 
+def mapping_validator_key(mapping):
+    """Return the TPN key for ReferenceMapping `mapping`."""
+    return (mapping.instrument, mapping.filekind, "_ld.tpn")
 # =============================================================================
 
 def reference_keys_to_dataset_keys(instrument, filekind, header):
