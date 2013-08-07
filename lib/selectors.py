@@ -209,20 +209,26 @@ class Selector(object):
                 }
 
     def todict_flat(self):
+        """Return a flat representation of this Selector hierarchy where the path to each terminal node (file)
+        is enumerated as one long tuple of key values.   Return a dictionary with one tuple of parameter names
+        and a list of tuples of parameter values / files.
+        """
         flat = []
         for key,val in self._raw_selections:
             if isinstance(val, Selector):
                 nested = val.todict_flat()
                 subpars = nested["parameters"]
+                # XXX hack!  convert or-globs to comma separated strings for web rendering
+                key = tuple([", ".join(str(parval).split("|")) for parval in key])
                 flat.extend([key + row for row in nested["selections"]])
             else:
                 subpars = ["REFERENCE"]
                 flat.extend([(key, val)])
         pars = list(self.todict_parameters()) + subpars
         return {
-                "parameters" : pars,
-                "selections" : flat,
-                }
+            "parameters" : pars,
+            "selections" : flat,
+            }
         
     def todict_parameters(self):
         return self._parameters
