@@ -410,8 +410,7 @@ class UniqueErrorsMixin(object):
         if self.args.dump_unique_errors:
             log.info("Unique error types:", len(self.ue_mixin.messages))
             for key in sorted(self.ue_mixin.messages):
-                log.info("First instance of error::", self.ue_mixin.messages[key])
-                log.info(self.ue_mixin.count[key], "total errors like::", repr(self.ue_mixin.messages[key]))
+                log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
         if self.args.all_errors_file:
             self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
         if self.args.unique_errors_file:

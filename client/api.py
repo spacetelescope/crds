@@ -5,16 +5,13 @@ cache them locally.
 import os
 import os.path
 import base64
-import re
 import urllib2
-import traceback
 import tarfile
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
-import crds
 from crds import utils, log, config
 
 # ==============================================================================
@@ -48,6 +45,7 @@ __all__ = [
            
            "dump_references",
            "dump_mappings",
+           "dump_files",
 
            "get_best_references",
            "cache_best_references",
@@ -207,53 +205,6 @@ def get_best_references(pipeline_context, header, reftypes=None):
                                       str(refname)[len("NOT FOUND"):])
     return bestrefs
 
-'''
-def get_best_references_by_header_map(pipeline_context, header_map, reftypes=None):
-    """Get best references for each dataset in a map of ids to headers,  `header_map`,  
-    relative to `pipeline_context`.
-    
-    pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
-    header_map       { name: { lookup_parameter : value } } dictionary of named headers
-    reftypes         If None,  return all reference types;  otherwise return 
-                     best refs for the specified list of reftypes. 
-
-    Returns          { name : { reftype : reference_basename ... } }
-    
-    Raises           CrdsLookupError,  typically for problems with header values
-    """
-    try:
-        bestrefs = S.get_best_references_by_header_map(pipeline_context, dict(header_map), reftypes)
-    except Exception, exc:
-        raise CrdsLookupError(str(exc))
-    # Due to limitations of jsonrpc,  exception handling is kludged in here.
-    for filetype, refname in bestrefs.items():
-        if "NOT FOUND" in refname:
-            if "NOT FOUND n/a" == refname:
-                log.verbose("Reference type", srepr(filetype), "not applicable.")
-            else:
-                raise CrdsLookupError("Error determining best reference for " + 
-                                      srepr(filetype) + " = " + 
-                                      str(refname)[len("NOT FOUND"):])
-    return bestrefs
-
-def get_best_references_by_ids(pipeline_context, datasets, reftypes=None):
-    """Get best references for list of `datasets` ids relative to `pipeline_context`.
-    
-    pipeline_context  CRDS context for lookup,   e.g.   'hst_0001.pmap'
-    datasets         [ dataset_id, ... ]   e.g. ["I9ZF01010", "I9MF01012"]
-    reftypes         If None,  return all reference types;  otherwise return 
-                     best refs for the specified list of reftypes. 
-
-    Returns          { id: { reftype : reference_basename ... } }
-    
-    Raises           CrdsLookupError,  typically for problems with header values
-    """
-    try:
-        bestrefs = S.get_best_references_by_ids(pipeline_context, datasets, reftypes)
-    except Exception, exc:
-        raise CrdsLookupError(str(exc))
-    return bestrefs
-'''
 
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
@@ -284,7 +235,7 @@ def get_server_info():
         info["server"] = get_crds_server()
         return info
     except ServiceError, exc:
-        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()))
+        raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
 
 def get_dataset_headers_by_id(context, dataset_ids):
     """Return { dataset_id : { header } } for `dataset_ids`."""
@@ -376,8 +327,8 @@ class FileCacher(object):
         elif "hst" in pipeline_context:
             observatory = "hst"
         else:
-            import crds
-            observatory = crds.fetch_mapping(pipeline_context).observatory
+            import crds.rmap
+            observatory = crds.rmap.get_cached_mapping(pipeline_context).observatory
         return observatory
 
     def locate(self, pipeline_context, name):
@@ -469,7 +420,7 @@ class FileCacher(object):
         else:
             url = info["reference_url"][checking][observatory]
         if not url.endswith("/"):
-            ur +=+ "/"
+            url += "/"
         return url + file
 
     def verify_file(self, pipeline_context, filename, localpath):
