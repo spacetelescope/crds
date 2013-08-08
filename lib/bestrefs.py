@@ -389,10 +389,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         for dataset in self.new_headers:
             with log.error_on_exception("Failed processing", repr(dataset)):
                 log.verbose("===> Processing", dataset, verbosity=25)
+                self.increment_stat("datasets", 1)
                 self.updates[dataset] = self.process(dataset)
             
         self.post_processing()
 
+        self.report_stats()
         log.standard_status()
         return log.errors()
 
