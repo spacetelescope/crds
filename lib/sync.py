@@ -138,6 +138,7 @@ class SyncScript(cmdline.ContextsScript):
             sys.exit(-1)
         if self.args.check_files:
             self.verify_files(verify_file_list)
+        self.report_stats()
         log.standard_status()
 
     # ------------------------------------------------------------------------------------------
@@ -153,7 +154,7 @@ class SyncScript(cmdline.ContextsScript):
             return
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
-            api.dump_mappings(context, ignore_cache=self.args.ignore_cache, raise_exceptions=self.args.pdb)
+            self.dump_files(context, files=None)  # all mappings for context
             
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
@@ -175,8 +176,7 @@ class SyncScript(cmdline.ContextsScript):
             fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
             log.info("Would fetch references:", repr(fetched))
         else:
-            api.dump_references(self.contexts[0], references, ignore_cache=self.args.ignore_cache, 
-                                raise_exceptions=self.args.pdb)
+            self.dump_files(self.contexts[0], references)
 
     def purge_references(self, keep=None):
         """Remove all references not references under pmaps `self.contexts`."""
@@ -228,14 +228,7 @@ class SyncScript(cmdline.ContextsScript):
     def sync_explicit_files(self):
         """Cache `self.args.files`."""
         log.info("Syncing explicitly listed files.")
-        mappings = [os.path.basename(mapping) for mapping in self.args.files if rmap.is_mapping(mapping)]
-        references = [os.path.basename(ref) for ref in self.args.files if not rmap.is_mapping(ref)]
-        if mappings:
-            api.dump_mappings(self.default_context, mappings=mappings, ignore_cache=self.args.ignore_cache,
-                              raise_exceptions=self.args.pdb)
-        if references:
-            api.dump_references(self.default_context, baserefs=references, ignore_cache=self.args.ignore_cache,
-                                raise_exceptions=self.args.pdb)
+        self.dump_files(self.default_context, self.args.files)
 
     # ------------------------------------------------------------------------------------------
     
@@ -286,13 +279,20 @@ class SyncScript(cmdline.ContextsScript):
             return
         return
 
+    def dump_files(self, context, files, stats_name="files"):
+        """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        _localpaths, downloads, bytes = api.dump_files(
+            context, files, ignore_cache=self.args.ignore_cache, raise_exceptions=self.args.pdb)
+        self.increment_stat(stats_name, downloads)
+        self.increment_stat(stats_name + "-bytes", bytes)
+
     def error_and_repair(self, file, *args, **keys):
         """Issue an error message and repair `file` if requested by command line args."""
         log.error(*args, **keys)
         if self.args.repair_files:
             if not self.args.dry_run:
                 log.info("Repairing file", repr(file))
-                api.dump_files(self.default_context, [file], ignore_cache=True, raise_exceptions=self.args.pdb) 
+                self.dump_files(self.default_context, [file]) 
             else:
                 log.info("Without --dry-run would repair", repr(file))
                 

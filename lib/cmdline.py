@@ -7,6 +7,8 @@ import argparse
 import pdb
 import cProfile as profile
 import re
+from collections import Counter, defaultdict
+import datetime
 
 from argparse import RawTextHelpFormatter
 
@@ -86,6 +88,67 @@ def nrange(string):
 
 # =============================================================================
 
+class TimingStats(object):
+    """Track and compute counts and counts per second."""
+    def __init__(self):
+        self.counts = Counter()
+        self.started = None
+        self.stopped = None
+        self.elapsed = None
+
+    def increment(self, name, amount=1):
+        """Add `amount` to stat count for `name`."""
+        if not self.started:
+            self.start()
+        self.counts[name] += amount
+        
+    def start(self):
+        """Start the timing interval."""
+        self.started = datetime.datetime.now()
+        return self
+     
+    def stop(self):
+        """Stop the timing interval."""
+        self.stopped = datetime.datetime.now()
+        self.elapsed = self.stopped - self.started
+
+    def report(self):
+        """Output all stats."""
+        if not self.stopped:
+            self.stop()
+        self.msg("STARTED", str(self.started)[:-4])
+        self.msg("STOPPED", str(self.stopped)[:-4])
+        self.msg("ELAPSED", str(self.elapsed)[:-4])
+        for kind in self.counts:
+            self._report(kind)
+
+    def _report(self, name):
+        """Output stats on `name`."""
+        self.msg(self._human_format(self.counts[name]), name)
+        self.msg(self._human_format(self.counts[name] / self.elapsed.total_seconds()), name+"-per-second")
+        
+    def _human_format(self, number):
+        """Format `number` roughly in engineering units."""
+        convert = {
+            1e12 : "T",
+            1e9 : "G",
+            1e6 : "M",
+            1e3 : "K",
+            }
+        for limit, sym in convert.items():
+            if number > limit:
+                number /= limit
+                break
+        else:
+            sym = ""
+        return "%0.2f %s" % (number, sym)
+    
+    def msg(self, *args, **keys):
+        """Output a stats message."""
+        log.info(*args, **keys)            
+
+# =============================================================================
+
 class Script(object):
     """Base class for CRDS command line scripts with standard properties.
     
@@ -99,6 +162,8 @@ class Script(object):
     formatter_class = RawTextHelpFormatter
     
     def __init__(self, argv=None, parser_pars=None):
+        self.stats = TimingStats()
+        self.stats.start()
         if isinstance(argv, basestring):
             argv = argv.split()
         elif argv is None:
@@ -191,6 +256,8 @@ class Script(object):
             help="Output profile stats to the specified file.", type=str, default="")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
+        self.add_argument("--stats", action="store_true",
+            help="Track and print timing statistics.")
     
     def test_server_connection(self):
         """Check the server connection and remember the server_info."""
@@ -272,6 +339,15 @@ class Script(object):
             pdb.runctx("self.main()", locals(), locals())
         else:
             self.main()
+    
+    def report_stats(self):
+        """Print out collected statistics."""
+        if self.args.stats:
+            self.stats.report()
+    
+    def increment_stat(self, name, amount):
+        """Add `amount` to the statistics counter for `name`."""
+        self.stats.increment(name, amount)
 
     def run(self, *args, **keys):
         """script.run() is the same thing as script() but more explicit."""
@@ -289,16 +365,27 @@ class Script(object):
             context = resolved_context
         return context
     
+# =============================================================================
+
 class UniqueErrorsMixin(object):
-    """This mixin supports tracking certain errors messages and
-    """
+    """This mixin supports tracking certain errors messages."""
     def __init__(self, *args, **keys):
-        self.unique_errors = {}
-    
+        class Struct(object):
+            pass
+        self.ue_mixin = Struct()
+        self.ue_mixin.messages = {}
+        self.ue_mixin.count = Counter()
+        self.ue_mixin.unique_data_names = set()
+        self.ue_mixin.all_data_names = set()
+
     def add_args(self):
         """Add command line parameters to Script arg parser."""
         self.add_argument("--dump-unique-errors", action="store_true",
             help="Record and dump the first instance of each kind of error.")
+        self.add_argument("--unique-errors-file", 
+            help="Write out data names (ids or filenames) for first instance of unique errors to specified file.")
+        self.add_argument("--all-errors-file", 
+            help="Write out all err'ing data names (ids or filenames) to specified file.")
 
     def log_and_track_error(self, data, instrument, filekind, *params, **keys):
         """Issue an error message and record the first instance of each unique kind of error,  where "unique"
@@ -306,22 +393,34 @@ class UniqueErrorsMixin(object):
         """
         msg = self.format_prefix(data, instrument, filekind, *params, **keys)
         log.error(msg)
-        if self.args.dump_unique_errors:
-            key = log.format(instrument, filekind, params, **keys)
-            if key not in self.unique_errors:
-                self.unique_errors[key] = msg
-    
-    def dump_unique_errors(self):
-        """Print out the first instance of errors recorded by log_and_track_error()."""
-        if self.args.dump_unique_errors:
-            log.info("Unique error types:", len(self.unique_errors))
-            for message in sorted(self.unique_errors.values()):
-                log.info("First instance of error::", message)
+        key = log.format(instrument, filekind, params, **keys)
+        if key not in self.ue_mixin.messages:
+            self.ue_mixin.messages[key] = msg
+            self.ue_mixin.unique_data_names.add(data)
+        self.ue_mixin.count[key] += 1
+        self.ue_mixin.all_data_names.add(data)
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""
         return log.format("instrument="+repr(instrument), "type="+repr(filekind), "data="+repr(data), ":: ",
                           *params, end="", **keys)
+
+    def dump_unique_errors(self, error_list_data_file=None):
+        """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
+        if self.args.dump_unique_errors:
+            log.info("Unique error types:", len(self.ue_mixin.messages))
+            for key in sorted(self.ue_mixin.messages):
+                log.info("First instance of error::", self.ue_mixin.messages[key])
+                log.info(self.ue_mixin.count[key], "total errors like::", repr(self.ue_mixin.messages[key]))
+        if self.args.all_errors_file:
+            self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
+        if self.args.unique_errors_file:
+            self.dump_error_data(self.args.unique_errors_file, self.ue_mixin.unique_data_names)
+
+    def dump_error_data(self, filename, error_list):
+        "Write out list of err'ing filenames or dataset ids to `filename`."""
+        with open(filename, "w+") as err_file:
+            err_file.write("\n".join(sorted(error_list))+"\n")            
 
 # =============================================================================
 
