@@ -577,25 +577,39 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     
     Returns:   { reference_keyword :  reference_local_filepath ... }   
     """
-    bestrefs2 = dict(bestrefs)
-    for filetype, refname in bestrefs2.items():
-        if "NOT FOUND" in refname:
-            if "n/a" in refname.lower():
-                log.verbose("Reference type", repr(filetype), 
-                            "NOT FOUND.  Ignoring.")
-                del bestrefs2[filetype]
+    wanted = []
+    for filetype, refname in bestrefs.items():
+        if isinstance(refname, tuple):
+            wanted.extend(list(refname))
+        elif isinstance(refname, dict):
+            wanted.extend(refname.values())
+        elif isinstance(refname, basestring):
+            if "NOT FOUND" in refname:
+                if "n/a" in refname.lower():
+                    log.verbose("Reference type", repr(filetype), 
+                                "NOT FOUND.  Ignoring.")
+                else:
+                    raise CrdsLookupError("Error determining best reference for " + 
+                                          repr(str(filetype)) + " = " + 
+                                          str(refname)[len("NOT FOUND"):])
             else:
-                raise CrdsLookupError("Error determining best reference for " + 
-                                      repr(str(filetype)) + " = " + 
-                                      str(refname)[len("NOT FOUND"):])
-    localrefs = FILE_CACHER.get_local_files(
-        pipeline_context, bestrefs2, ignore_cache=ignore_cache)
+                wanted.append(refname)
+        else:
+            raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
+    localrefs = FILE_CACHER.get_local_files(pipeline_context, wanted, ignore_cache=ignore_cache)
     refs = {}
     for filetype, refname in bestrefs.items():
-        if "NOT FOUND" in refname:
-            refs[str(filetype)] = str(refname)
-        else:
-            refs[str(filetype)] = str(localrefs[refname])
+        if isinstance(refname, tuple):
+            refs[str(filetype)] = tuple([str(localrefs[name]) for name in refname])
+        elif isinstance(refname, dict):
+            refs[str(filetype)] = { name : str(localrefs[name]) for name in refname }
+        elif isinstance(refname, basestring):
+            if "NOT FOUND" in refname:
+                refs[str(filetype)] = str(refname)
+            else:
+                refs[str(filetype)] = str(localrefs[refname])
+        else:  # can't really get here.
+            raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
     return refs
 
 def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):

@@ -32,7 +32,13 @@ class Test_00_Selectors(unittest.TestCase):
         self._selector_testcase('USE_AFTER', '2005-12-20', 'o9f15549j_bia.fits')
 
     def test_use_after_nominal(self):
-        self._selector_testcase('USE_AFTER', '2005-12-20', 'o9f15549j_bia.fits')
+        self._selector_testcase('USE_AFTER', '2005-12-20 12:00:00', 'o9f15549j_bia.fits')
+
+    def test_use_after_tuple(self):
+        self._selector_testcase('USE_AFTER',  '2004-04-25 21:31:01', ('foo_bia.fits', 'bar_bia.fits'))
+
+    def test_use_after_dict(self):
+        self._selector_testcase('USE_AFTER',  '2004-04-25 21:31:02', {'foo':'foo_bia1.fits', 'bar':'bar_bia2.fits'})
 
     def test_use_after_missing_parameter(self):
         header = { "TEST_CASE": "USE_AFTER" }  # no PARAMETER
@@ -99,6 +105,15 @@ class Test_00_Selectors(unittest.TestCase):
     def test_geometrically_nearest8(self):
         self._selector_testcase("GEOMETRICALLY_NEAREST", '5.1', 'cref_flatfield_137.fits')
         
+    def test_reference_names(self):
+        assert self.rmap.reference_names() == ['bar_bia.fits', 'bar_bia2.fits', 'cref_flatfield_120.fits', 
+                                               'cref_flatfield_123.fits', 'cref_flatfield_124.fits', 
+                                               'cref_flatfield_137.fits', 'cref_flatfield_222.fits', 
+                                               'cref_flatfield_65.fits', 'cref_flatfield_73.fits', 
+                                               'foo_bia.fits', 'foo_bia1.fits', 'nal1503ij_bia.fits', 
+                                               'o3913216j_bia.fits', 'o5d10135j_bia.fits', 'o9f15549j_bia.fits', 
+                                               'o9s16388j_bia.fits', 'o9t1525sj_bia.fits']
+
 # =============================================================================
 
 class Test_01_Insert(unittest.TestCase):
