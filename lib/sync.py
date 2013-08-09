@@ -110,7 +110,7 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument('--purge-rejected', action='store_true', dest='purge_rejected',
                           help='Purge files noted as rejected by --check-files')
         self.add_argument('--purge-blacklisted', action='store_true', dest='purge_blacklisted',
-                          help='Purge files (and their anscestors) noted as blacklisted by --check-files')
+                          help='Purge files (and their mapping anscestors) noted as blacklisted by --check-files')
 
     # ------------------------------------------------------------------------------------------
     
@@ -239,7 +239,7 @@ class SyncScript(cmdline.ContextsScript):
             log.verbose("Downloading verification info for", len(basenames), "files.", verbosity=10)
             info = api.get_file_info_map(observatory=self.observatory, files=basenames, 
                                          fields=["size","rejected","blacklisted","state","sha1sum"])
-        except Exception, Exc:
+        except Exception, exc:
             log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
             return
         for file in files:
@@ -257,34 +257,36 @@ class SyncScript(cmdline.ContextsScript):
             return
         size = os.stat(path).st_size
         if int(info["size"]) != size:
-            self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + repr(size), "CRDS size=" + repr(info["size"]))
+            self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + repr(size), 
+                                  "CRDS size=" + repr(info["size"]))
         elif self.args.check_sha1sum:
             log.verbose("Computing checksum for", repr(base), "of size", repr(size))
             sha1sum = utils.checksum(path)
             if info["sha1sum"] == "none":
                 log.warning("CRDS doesn't know the checksum for", repr(base))
             elif info["sha1sum"] != sha1sum:
-                self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), "LOCAL=" + repr(sha1sum))
+                self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), 
+                                      "LOCAL=" + repr(sha1sum))
 #        elif info["state"] not in ["delivered", "operational"]:
 #            self.log_and_purge(path, "File", repr(base), "has a strange server state", repr(info["state"]))
         elif info["rejected"] != "false":
             log.error("File", repr(base), "has been explicitly rejected.")
             if self.args.purge_rejected:
-                self.purge_files([path], "files")
+                self.remove_files([path], "files")
             return
         elif info["blacklisted"] != "false":
             log.error("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
             if self.args.purge_blacklisted:
-                self.purge_files([path], "files")
+                self.remove_files([path], "files")
             return
         return
-
-    def dump_files(self, context, files, stats_name="files"):
+    
+    def dump_files(self, context, files):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
         _localpaths, downloads, bytes = api.dump_files(
             context, files, ignore_cache=self.args.ignore_cache, raise_exceptions=self.args.pdb)
-        self.increment_stat(stats_name, downloads)
-        self.increment_stat(stats_name + "-bytes", bytes)
+        self.increment_stat("total-files", downloads)
+        self.increment_stat("total-bytes", bytes)
 
     def error_and_repair(self, file, *args, **keys):
         """Issue an error message and repair `file` if requested by command line args."""
@@ -292,6 +294,7 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.repair_files:
             if not self.args.dry_run:
                 log.info("Repairing file", repr(file))
+                os.remove(file)
                 self.dump_files(self.default_context, [file]) 
             else:
                 log.info("Without --dry-run would repair", repr(file))
