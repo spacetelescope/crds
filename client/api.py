@@ -349,8 +349,7 @@ class FileCacher(object):
             try:
                 if "NOT FOUND" in self.info_map[name]:
                     raise CrdsDownloadError("file is not known to CRDS server.")
-                self.download(pipeline_context, name, localpaths[name])
-                bytes += long(self.info_map[name]["size"])
+                bytes += self.download(pipeline_context, name, localpaths[name])
             except Exception, exc:
                 if raise_exceptions:
                     raise
@@ -367,10 +366,13 @@ class FileCacher(object):
                 generator = self.get_data_http(pipeline_context, name)
             else:
                 generator = self.get_data_rpc(pipeline_context, name)
+            bytes = 0
             with open(localpath, "wb+") as outfile:
                 for data in generator:
                     outfile.write(data)
+                    bytes += len(data)
             self.verify_file(pipeline_context, name, localpath)
+            return bytes
         except Exception, exc:
             # traceback.print_exc()
             try:
@@ -468,6 +470,8 @@ class BundleCacher(FileCacher):
     """
     def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
         """Download a list of files as an archive bundle and unpack it."""
+        obs = self.observatory_from_context(pipeline_context)
+        self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
         bundlepath = config.get_crds_config_path() 
         bundlepath += "/" + "crds_bundle.tar.gz"
         utils.ensure_dir_exists(bundlepath, 0700)
@@ -475,8 +479,11 @@ class BundleCacher(FileCacher):
             if name not in downloads:
                 log.verbose("Skipping existing file", repr(name), verbosity=10)
         self.fetch_bundle(bundlepath, downloads)
-        return self.unpack_bundle(bundlepath, downloads, localpaths)
-        
+        bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
+        for name in localpaths:
+            self.verify_file(pipeline_context, name, localpaths[name])
+        return bytes
+
     def fetch_bundle(self, bundlepath, downloads):
         """Ask the CRDS server for an archive of the files listed in `downloads`
         and store the archive in filename `bundlepath`.
@@ -487,7 +494,7 @@ class BundleCacher(FileCacher):
             url = url + "file" + str(i) + "=" + name + "&"
             log.verbose("Adding", repr(name), "to download request.", verbosity=60)
         url = url[:-1]
-        generator = self._get_data_http(url)
+        generator = self._get_data_http(url, name)
         with open(bundlepath, "wb+") as outfile:
             for data in generator:
                 outfile.write(data)
