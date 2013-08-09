@@ -6,6 +6,8 @@ import re
 import sha
 import cStringIO
 import functools
+from collections import Counter, defaultdict
+import datetime
 
 # from crds import data_file,  import deferred until required
 
@@ -234,6 +236,75 @@ def capture_output(func):
             return func(*args, **keys)
 
     return CapturedFunction()
+
+
+# ===================================================================
+
+class TimingStats(object):
+    """Track and compute counts and counts per second."""
+    def __init__(self, output=None):
+        self.counts = Counter()
+        self.started = None
+        self.stopped = None
+        self.elapsed = None
+        self.output = log.info if output is None else output
+        self.start()
+
+    def increment(self, name, amount=1):
+        """Add `amount` to stat count for `name`."""
+        self.counts[name] += amount
+        
+    def start(self):
+        """Start the timing interval."""
+        self.started = datetime.datetime.now()
+        return self
+     
+    def stop(self):
+        """Stop the timing interval."""
+        self.stopped = datetime.datetime.now()
+        self.elapsed = self.stopped - self.started
+
+    def report(self):
+        """Output all stats."""
+        if not self.stopped:
+            self.stop()
+        self.msg("STARTED", str(self.started)[:-4])
+        self.msg("STOPPED", str(self.stopped)[:-4])
+        self.msg("ELAPSED", str(self.elapsed)[:-4])
+        for kind in self.counts:
+            self.report_stat(kind)
+
+    def report_stat(self, name):
+        """Output stats on `name`."""
+        rate, count = self.status(name)
+        self.msg(count, "at", rate)
+        
+    def status(self, name):
+        """Return human readable (count, rate) for `name`."""
+        self.stop()
+        count = self._human_format(self.counts[name]) + " " + name
+        rate = self._human_format(self.counts[name] / self.elapsed.total_seconds()) + " " + name+"-per-second"
+        return count, rate
+        
+    def _human_format(self, number):
+        """Format `number` roughly in engineering units."""
+        convert = {
+            1e12 : "T",
+            1e9 : "G",
+            1e6 : "M",
+            1e3 : "K",
+            }
+        for limit, sym in convert.items():
+            if number > limit:
+                number /= limit
+                break
+        else:
+            sym = ""
+        return "%0.2f %s" % (number, sym)
+    
+    def msg(self, *args):
+        """Format (*args, **keys) using log.format() and call output()."""
+        self.output(*args, eol="")
 
 # ===================================================================
 

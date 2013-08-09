@@ -87,66 +87,6 @@ def nrange(string):
     
 
 # =============================================================================
-
-class TimingStats(object):
-    """Track and compute counts and counts per second."""
-    def __init__(self):
-        self.counts = Counter()
-        self.started = None
-        self.stopped = None
-        self.elapsed = None
-
-    def increment(self, name, amount=1):
-        """Add `amount` to stat count for `name`."""
-        if not self.started:
-            self.start()
-        self.counts[name] += amount
-        
-    def start(self):
-        """Start the timing interval."""
-        self.started = datetime.datetime.now()
-        return self
-     
-    def stop(self):
-        """Stop the timing interval."""
-        self.stopped = datetime.datetime.now()
-        self.elapsed = self.stopped - self.started
-
-    def report(self):
-        """Output all stats."""
-        if not self.stopped:
-            self.stop()
-        self.msg("STARTED", str(self.started)[:-4])
-        self.msg("STOPPED", str(self.stopped)[:-4])
-        self.msg("ELAPSED", str(self.elapsed)[:-4])
-        for kind in self.counts:
-            self._report(kind)
-
-    def _report(self, name):
-        """Output stats on `name`."""
-        self.msg(self._human_format(self.counts[name]), name)
-        self.msg(self._human_format(self.counts[name] / self.elapsed.total_seconds()), name+"-per-second")
-        
-    def _human_format(self, number):
-        """Format `number` roughly in engineering units."""
-        convert = {
-            1e12 : "T",
-            1e9 : "G",
-            1e6 : "M",
-            1e3 : "K",
-            }
-        for limit, sym in convert.items():
-            if number > limit:
-                number /= limit
-                break
-        else:
-            sym = ""
-        return "%0.2f %s" % (number, sym)
-    
-    def msg(self, *args, **keys):
-        """Output a stats message."""
-        log.info(*args, **keys)            
-
 # =============================================================================
 
 class Script(object):
@@ -162,8 +102,7 @@ class Script(object):
     formatter_class = RawTextHelpFormatter
     
     def __init__(self, argv=None, parser_pars=None):
-        self.stats = TimingStats()
-        self.stats.start()
+        self.stats = utils.TimingStats()
         if isinstance(argv, basestring):
             argv = argv.split()
         elif argv is None:
