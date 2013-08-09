@@ -204,7 +204,7 @@ class Selector(object):
         suitable for conversion to json.
         """
         return {
-                "parameters" : self._parameters,
+                "parameters" : self.todict_parameters(),
                 "selections" : [ (key, val.todict()) if isinstance(val, Selector) else (key, val) for key,val in self._raw_selections ]
                 }
 
@@ -223,7 +223,9 @@ class Selector(object):
                 flat.extend([key + row for row in nested["selections"]])
             else:
                 subpars = ["REFERENCE"]
-                flat.extend([(key, val)])
+                if isinstance(key, basestring):  # Fix non-tuple keys
+                    key = (key,)
+                flat.extend([key + (val,)])
         pars = list(self.todict_parameters()) + subpars
         return {
             "parameters" : pars,
@@ -231,6 +233,7 @@ class Selector(object):
             }
         
     def todict_parameters(self):
+        """Overridable,  generally self._parameters."""
         return self._parameters
 
     def condition_selections(self, selections):
@@ -324,15 +327,18 @@ class Selector(object):
         Assume any choice that is a string is a reference file.  Recursively
         search for reference files in nested selectors.
         """ 
-        files = set()
+        files = []
         for choice in self.choices():
             if isinstance(choice, Selector):
                 new_files = choice.reference_names()
-            else:
+            elif isinstance(choice, basestring):
                 new_files = [choice]
-            for reffile in new_files:
-                files.add(reffile)
-        return sorted(list(files))
+            elif isinstance(choice, tuple):
+                new_files = list(choice)
+            elif isinstance(choice, dict):
+                new_files = choice.values()
+            files.extend(new_files)
+        return sorted(set(files))
     
     def format(self, indent=0):
         """Recursively pretty-format the Selector tree rooted in `self` 
@@ -379,6 +385,21 @@ class Selector(object):
         for choice in self.choices():
             if isinstance(choice, Selector):
                 choice.validate_selector(valid_values_map, trap_exceptions)
+            elif isinstance(choice, basestring):
+                pass
+            elif isinstance(choice, tuple):
+                for val in choice:
+                    if not isinstance(val, basestring): 
+                        raise ValidationError("Non-string tuple value for choice at " + repr(key))
+            elif isinstance(choice, dict):
+                for val in choice:
+                    if not isinstance(val, basestring):
+                        raise ValidationError("Non-string dictionary key for choice at " + repr(key))
+                for val in choice.values():
+                    if not isinstance(val, basestring):
+                        raise ValidationError("Non-string dictionary value for choice at " + repr(key))
+            else:
+                raise ValidationError
 
     def _validate_header(self, header):
         """Check self._parameters in `header` against the values found in the
@@ -472,6 +493,7 @@ class Selector(object):
         return sorted(matches)
     
     def match_item(self, key):
+        """Return ((parkey, key_field), ...) for match key `key`.   Fix string `key`s to unary tuples."""
         if not isinstance(key, tuple):
             key = (key,)
         return tuple(zip(self._parameters, key))
@@ -737,6 +759,7 @@ class DiffTuple(tuple):
         return DiffTuple(*vals2, parameter_names=pars2)
     
     def items(self):
+        """Return [ (param_name, val), ... ]"""
         return [ (str(x), str(y)) for (x, y) in zip(self.parameter_names, self) ]
  
 
