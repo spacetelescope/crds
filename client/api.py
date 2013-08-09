@@ -7,6 +7,7 @@ import os.path
 import base64
 import urllib2
 import tarfile
+import math
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
@@ -398,10 +399,11 @@ class FileCacher(object):
     def get_data_http(self, pipeline_context, file):
         """Yield the data returned from `file` of `pipeline_context` in manageable chunks."""
         url = self.get_url(pipeline_context, file)
-        return self._get_data_http(url)
+        return self._get_data_http(url, file)
 
-    def _get_data_http(self, url):
+    def _get_data_http(self, url, file):
         """Yield the data returned from `url` in manageable chunks."""
+        chunks = int(math.ceil(long(self.info_map[file]["size"]) / CRDS_DATA_CHUNK_SIZE))
         log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
@@ -411,7 +413,7 @@ class FileCacher(object):
             data = infile.read(CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
-                log.verbose("Transferred HTTP", repr(file), "chunk", chunk, "at", status[1])
+                log.verbose("Transferred HTTP", repr(file), "chunk", chunk, "of", chunks, "at", status[1])
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
