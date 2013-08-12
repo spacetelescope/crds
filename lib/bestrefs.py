@@ -7,6 +7,7 @@ For more details on the several modes of operations and command line parameters 
 """
 import os
 from collections import namedtuple
+import cPickle
 
 import pyfits
 
@@ -22,6 +23,14 @@ class UnsupportedUpdateMode(CrdsError):
     """Database modes don't currently support updating best references recommendations on the server."""
 
 # ===================================================================
+# There's a problem with using CDBS as a gold standard in getting consistent results between
+# DADSOPS DB (fast) and running command line OPUS bestrefs (slow but definitive).   This is kludged
+# around here with a two tiered scheme for getting dataset headers:  first load headers from a primary
+# source:  files or DADSOPS.  Next update headers from a pickle file computed "elsewhere".   Elsewhere
+# is a script that ssh'es to a DMS machine for each dataset and runs OPUS bestrefs,  then eventually
+# saves a pickle.
+# It is also possible to run solely off of a pickle file(s) (which decouples from the database,  useful for
+# both consistency/control and to take a load off the database.)
 
 class HeaderGenerator(object):
     """Generic source for lookup parameters and historical comparison results."""
@@ -57,13 +66,24 @@ class HeaderGenerator(object):
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
         raise UnsupportedUpdateMode("This dataset access mode doesn't support updates.")
+    
+    def save_pickle(self, pickle):
+        """Write out headers to `pickle` file."""
+        with open(pickle, "wb+") as pick:
+            cPickle.dump(self.headers, pick)
+
+# FileHeaderGenerator uses a deferred header loading scheme which incrementally reads each header
+# from a file as processing is going on via header().   The "pickle correction" scheme works by 
+# pre-loading the FileHeaderGenerator with pickled headers...  which prevents the file from ever being
+# accessed (except possibly to update the headers).
 
 class FileHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and old bestrefs from dataset files."""
-    @utils.cached
     def header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
-        return data_file.get_header(filename, observatory=self.pmap.observatory)
+        if filename not in self.headers:
+            self.headers[filename] = data_file.get_header(filename, observatory=self.pmap.observatory)
+        return self.headers[filename]
 
     def handle_updates(self, all_updates):
         """Write best reference updates back to dataset file headers."""
@@ -82,6 +102,20 @@ class DatasetHeaderGenerator(HeaderGenerator):
         self.headers = api.get_dataset_headers_by_id(context, datasets)
         log.verbose("Dumped", len(self.headers), "of", len(datasets), 
                     "dataset parameters from CRDS server.", verbosity=25)
+    
+class PickleHeaderGenerator(HeaderGenerator):
+    """Generates lookup parameters and historical best references from a list of pickle files
+    using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
+    """
+    def __init__(self, context, pickles):
+        """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
+        super(PickleHeaderGenerator, self).__init__(context, pickles)
+        for pickle in pickles:
+            log.verbose("Loading pickle file", repr(pickle), verbosity=25)
+            with open(pickle, "rb") as pick:
+                self.headers.update(cPickle.load(pick))
+                log.verbose("Loaded", len(self.headers), "from pickle", repr(pickle), verbosity=25)
+        self.sources = self.headers.keys()
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
@@ -248,9 +282,13 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         # do one time startup outside profiler.
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
 
+         # headers corresponding to the new context
         self.new_headers = self.init_headers(self.new_context)
-        
+
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
+        
+        # any headers loaded from pickle files
+        self.pickle_headers = None
         
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
@@ -278,6 +316,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         
         self.add_argument("--all-instruments", action="store_true", default=None,
             help="Compute best references for cataloged datasets for all supported instruments.")
+        
+        self.add_argument("-p", "--load-pickles", nargs="*", default=None,
+            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best order.")
+        
+        self.add_argument("-a", "--save-pickle", default=None,
+            help="Write out the combined dataset headers to the specified pickle file.")
         
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
             help="A list of reference types to process,  defaulting to all types.")
@@ -342,23 +386,34 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         """Create header a header generator for `context`,  interpreting command line parameters."""
         source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
                         self.args.all_instruments].count(None)
-        assert 4 - source_modes == 1, \
-            "Must specify one and only one of: --files, --datasets, --instruments, --all."
+        assert (4 - source_modes <= 1) and (source_modes + int(bool(self.args.load_pickles)) >= 1), \
+            "Must specify one and only one of: --files, --datasets, --instruments, --all,  and/or --load-pickles."
         if self.args.files:
             new_headers = FileHeaderGenerator(context, self.args.files)
             log.info("Computing bestrefs for dataset files", self.args.files)
         elif self.args.datasets:
             self.test_server_connection()
             new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
-            log.info("Computing bestrefs for all datasets", repr(self.args.datasets))
+            log.info("Computing bestrefs for datasets", repr(self.args.datasets))
         elif self.args.instruments or self.args.all_instruments:
             self.test_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
             log.info("Computing bestrefs for all cataloged datasets of", repr(instruments))
             new_headers = InstrumentHeaderGenerator(context, instruments)
+        elif self.args.load_pickles:
+            # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
+            new_headers = {}
         else:
             raise RuntimeError("Invalid header source configuration.   "
-                               "Specify --files, --datasets, --instruments, or --all.")
+                               "Specify --files, --datasets, --instruments, --all, or --load-pickles.")
+        if self.args.load_pickles:
+            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles)
+            if new_headers:
+                log.info("Loaded pickle updates for", repr(self.pickle_headers.headers.keys()))
+                new_headers.headers.update(self.pickle_headers.headers)
+            else:
+                log.info("Loaded pickles for", repr(self.pickle_headers.headers.keys()))                
+                new_headers = self.pickle_headers
         return new_headers
     
     def init_comparison(self):
@@ -427,7 +482,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         try:
             if self.args.remote_bestrefs:
                 os.environ["CRDS_MODE"] = "remote"    
-                bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=header_gen.pmap.name)
+                bestrefs = crds.getrecommendations(
+                    header, reftypes=self.process_filekinds, context=header_gen.pmap.name)
             else:
                 bestrefs = header_gen.pmap.get_best_references(header, include=self.process_filekinds)
         except Exception, exc:
@@ -530,6 +586,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
             api.dump_references(self.new_context, references, ignore_cache=self.args.ignore_cache, 
                                 raise_exceptions=self.args.pdb)
+        if self.args.save_pickle:
+            self.new_headers.save_pickle(self.args.save_pickle)
         self.dump_unique_errors()
 
 # ===================================================================
