@@ -2,16 +2,16 @@
 mappings required to support a set of contexts from the CRDS server:
 
 Old references and mappings which are no longer needed can be automatically
-removed by specifying --purge:
+removed by specifying --purge-mappings or --purge-references:
 
-  % python -m crds.sync --range 1:2 --purge
+  % python -m crds.sync --range 1:2 --purge-mappings --purge-references
 
 will remove references or mappings not required by hst_0001.pmap or 
 hst_0002.pmap in addition to downloading the required files.
 
 Or explicitly list the files you want cached:
 
-  % python -m crds.sync <references or mappings to cache>
+  % python -m crds.sync --files <references or mappings to cache>
 
 Synced datasets can be explicitly listed:
 
@@ -81,6 +81,22 @@ class SyncScript(cmdline.ContextsScript):
           % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
           this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
           this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
+          
+    * Checking the cache:
+    
+          % python -m crds.sync --contextst hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
+          would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+          be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
+          would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
+          sync download process is a null operation which just determines the list of files to check.
+          
+          % python -m crds.sync --contextst hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+          would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+          be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
+          would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
+          sync download process is a null operation which just determines the list of files to check.
+          
+          
     """
     
     # ------------------------------------------------------------------------------------------
@@ -118,7 +134,7 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         self.test_server_connection()
         if self.contexts:
-            self.fetch_mappings()
+            active_mappings = self.fetch_mappings()
             if self.args.datasets:
                 active_references = self.sync_datasets()
             else:
@@ -129,7 +145,7 @@ class SyncScript(cmdline.ContextsScript):
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
-            verify_file_list = [] + active_references
+            verify_file_list = active_mappings + active_references
         elif self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
@@ -152,9 +168,13 @@ class SyncScript(cmdline.ContextsScript):
         """
         if not self.contexts:
             return
+        mappings = set()
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
             self.dump_files(context, files=None)  # all mappings for context
+            mapping = rmap.fetch_mapping(context)
+            mappings = mappings.union(set(mapping.mapping_names()))
+        return sorted(mappings)
             
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
