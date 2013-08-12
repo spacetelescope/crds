@@ -20,6 +20,7 @@ Synced datasets can be explicitly listed:
 import sys
 import os
 import os.path
+import re
 
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils)
@@ -213,6 +214,10 @@ class SyncScript(cmdline.ContextsScript):
         """
         if not files:
             log.verbose("No " + kind + "s to remove.")
+        files2 = set(files)
+        for filename in files:
+            if re.match("\w+\.r[0-9]h", filename):
+                files2.add(filename[:-1] + "d")
         for filename in files:
             where = rmap.locate_file(filename, self.observatory)
             # instrument, filekind = utils.get_file_properties(self.observatory, where)
