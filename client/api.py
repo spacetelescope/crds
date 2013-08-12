@@ -8,6 +8,7 @@ import base64
 import urllib2
 import tarfile
 import math
+import re
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
@@ -310,6 +311,13 @@ class FileCacher(object):
         if isinstance(names, dict):
             names = names.values()
         localpaths = {}
+        
+        # Add in GEIS format "conjugate" data files,  .rmaps specify only .rXh
+        names2 = names[:]
+        for refname in names2:
+            if re.match("\w+\.r[0-9]h$", refname):
+                names.append(refname[:-1]+"d")
+
         downloads = []
         for i, name in enumerate(names):
             localpath = self.locate(pipeline_context, name)
