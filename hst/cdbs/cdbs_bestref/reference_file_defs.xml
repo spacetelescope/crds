@@ -62,6 +62,8 @@
 <!-- 09/06/12 72156  MSwam     ACS BIAS, add APERTURE field select-->
 <!-- 10/01/12 72278  Sherbert  WFC3 image photometry table        -->
 <!-- 10/02/12 72278  MSwam     WFC3 IMPHTTAB, make not required for now -->
+<!-- 05/23/13 74167  MSwam     remove COS FLAT OPT_ELEM selection -->
+<!-- 06/06/13 74559  Mary      add WFC3 D2IMFILE                  -->
 <!--==============================================================-->
 <REFERENCE_FILES>
 <INSTRUMENT>
@@ -1145,7 +1147,7 @@
        <ROW_SELECTION_FIELD> CENWAVE </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
     <RESTRICTION>
-      <RESTRICTION_TEST> ((aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') and (aSource._keywords['DETECTOR'][0] == 'CCD'))</RESTRICTION_TEST>
+      <RESTRICTION_TEST> (aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') </RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
 <!--====================================-->
@@ -1196,9 +1198,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> OBSMODE </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['SAMP_SEQ'][0] not in ['SPARS4','SPARS16','SPARS32','SPARS128'])</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1220,9 +1219,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1235,9 +1231,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1362,9 +1355,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
 </INSTRUMENT>
@@ -1600,9 +1590,6 @@
       <FILE_SELECTION_FIELD> BINAXIS2 </FILE_SELECTION_FIELD>
       <FILE_SELECTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </FILE_SELECTION_TEST>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK') </RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1682,7 +1669,7 @@
       <FILE_SELECTION_FIELD> SHUTRPOS </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
     <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FLASHCUR'][0] !=  'NONE') </RESTRICTION_TEST>
+      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS' and aSource._keywords['FLASHCUR'][0] != 'OFF') </RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
   <!--====================================-->
@@ -1850,6 +1837,17 @@
       <ROW_SELECTION_FIELD> MEANEXP </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
   </REFFILE>
+  <!--====================================-->
+  <REFFILE>
+    <REFFILE_TYPE> D2I </REFFILE_TYPE>
+    <REFFILE_KEYWORD> D2IMFILE </REFFILE_KEYWORD>
+    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
+    <REFFILE_REQUIRED> NO </REFFILE_REQUIRED>
+    <REFFILE_SWITCH> DRIZCORR </REFFILE_SWITCH>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </RESTRICTION_TEST>
+    </RESTRICTION>
+  </REFFILE>
 <!--====================================-->
   <REFFILE>
     <REFFILE_TYPE> MDZ </REFFILE_TYPE>
@@ -1887,9 +1885,6 @@
     <REFFILE_REQUIRED> NO </REFFILE_REQUIRED>
     <FILE_SELECTION>
         <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
-    </FILE_SELECTION>
-    <FILE_SELECTION>
-        <FILE_SELECTION_FIELD> OPT_ELEM </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
   </REFFILE>
 <!--====================================-->
