@@ -273,23 +273,34 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         cmdline.Script.__init__(self, *args, **keys)
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
-        self.updates = {}
-        self.parameter_cache = {}
-        self.old_bestrefs_cache = {}
+        self.updates = {}                  # map of reference updates
+        self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
+        
+        # See also complex_init()
+        self.new_context = None     # Mapping filename
+        self.old_context = None     # Mapping filename
+        self.newctx = None          # loaded Mapping
+        self.oldctx = None          # loaded Mapping
+        
+        # headers corresponding to the new context
+        self.new_headers = None     # HeaderGenerator subclass
+        
+        # comparison variables
+        self.compare_prior = None       # bool
+        self.old_headers = None         # HeaderGenerator subclass,  comparison context
+        self.old_bestrefs_name = None   # info str identifying comparison header source,  filename or text
+        
+        self.pickle_headers = None  # any headers loaded from pickle files
     
-        self.process_filekinds = [typ.lower() for typ in self.args.types ]
-
-        # do one time startup outside profiler.
+    def complex_init(self):
+        """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
 
          # headers corresponding to the new context
         self.new_headers = self.init_headers(self.new_context)
 
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
-        
-        # any headers loaded from pickle files
-        self.pickle_headers = None
-        
+                
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         
@@ -376,7 +387,11 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         """Recursively cache the new and comparison mappings."""
         if context:
             log.verbose("Syncing context", repr(context), verbosity=25)
-            api.dump_mappings(context)
+            try:
+                rmap.get_cached_mapping(context)   # if it loads,  it's cached.
+                return
+            except IOError:
+                api.dump_mappings(context)   # otherwise fetch it.
 
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
@@ -392,11 +407,11 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             new_headers = FileHeaderGenerator(context, self.args.files)
             log.info("Computing bestrefs for dataset files", self.args.files)
         elif self.args.datasets:
-            self.test_server_connection()
+            self.require_server_connection()
             new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
             log.info("Computing bestrefs for datasets", repr(self.args.datasets))
         elif self.args.instruments or self.args.all_instruments:
-            self.test_server_connection()
+            self.require_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
             log.info("Computing bestrefs for all cataloged datasets of", repr(instruments))
             new_headers = InstrumentHeaderGenerator(context, instruments)
@@ -408,11 +423,13 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                                "Specify --files, --datasets, --instruments, --all, or --load-pickles.")
         if self.args.load_pickles:
             self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles)
+            pickled = self.pickle_headers.headers.keys()
+            log.info("Loaded pickle updates for", len(pickled), "datasets.")
             if new_headers:
-                log.info("Loaded pickle updates for", repr(self.pickle_headers.headers.keys()))
+                log.verbose("Loaded pickle updates for", repr(pickled))
                 new_headers.headers.update(self.pickle_headers.headers)
             else:
-                log.info("Loaded pickles for", repr(self.pickle_headers.headers.keys()))                
+                log.verbose("Loaded pickles for", repr(pickled))                
                 new_headers = self.pickle_headers
         return new_headers
     
@@ -437,6 +454,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     
     def main(self):
         """Compute bestrefs for datasets."""
+        
+        self.complex_init()   # Finish __init__() inside --pdb
         
         if not self.compare_prior:
             log.info("No comparison context or source comparison requested.")

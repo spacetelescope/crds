@@ -198,20 +198,19 @@ class Script(object):
         self.add_argument("--stats", action="store_true",
             help="Track and print timing statistics.")
     
-    def test_server_connection(self):
-        """Check the server connection and remember the server_info."""
-        connected, server_info = heavy_client.get_config_info(self.observatory)
-        log.verbose("CRDS server info", server_info)
-        if not connected:
+    def require_server_connection(self):
+        """Check a *required* server connection and ERROR/exit if offline."""
+        info = self.server_info  # for side effects
+        if not self._connected:
             log.error("Failed connecting to CRDS server at", repr(api.get_crds_server()))
             sys.exit(-1)
-        return server_info
+        return info
             
     @property
     def server_info(self):
-        """Return the server_info dict from the CRDS server."""
+        """Return the server_info dict from the CRDS server *or* cache config for non-networked use where possible."""
         if self._server_info is None:
-            self._server_info = self.test_server_connection()
+            self._connected, self._server_info = heavy_client.get_config_info(self.observatory)
         return self._server_info
 
     @property
@@ -418,8 +417,3 @@ class ContextsScript(Script):
         for context in self.contexts:
             files = files.union(api.get_reference_names(context))
         return sorted(files)
-
-    def main(self):
-        """Write a main method to perform the actions of the script using self.args."""
-        raise NotImplementedError("ScriptWithContexts subclasses have to define main().")
-    
