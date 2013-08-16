@@ -276,7 +276,7 @@ class TimingStats(object):
 
     def report_stat(self, name):
         """Output stats on `name`."""
-        rate, count = self.status(name)
+        count, rate = self.status(name)
         self.msg(count, "at", rate)
         
     def status(self, name):
@@ -288,19 +288,22 @@ class TimingStats(object):
         
     def _human_format(self, number):
         """Format `number` roughly in engineering units."""
-        convert = {
-            1e12 : "T",
-            1e9 : "G",
-            1e6 : "M",
-            1e3 : "K",
-            }
-        for limit, sym in convert.items():
-            if number > limit:
+        convert = [
+            (1e12, "T"),
+            (1e9 , "G"),
+            (1e6 , "M"),
+            (1e3 , "K"),
+            ]
+        for limit, sym in convert:
+            if isinstance(number, float) and number > limit:
                 number /= limit
                 break
         else:
             sym = ""
-        return "%0.2f %s" % (number, sym)
+        if isinstance(number, (int, long)):
+            return "%d" % number
+        else:
+            return "%0.2f %s" % (number, sym)
     
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
