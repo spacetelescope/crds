@@ -133,7 +133,7 @@ class SyncScript(cmdline.ContextsScript):
     
     def main(self):
         """Synchronize files."""
-        self.test_server_connection()
+        self.require_server_connection()
         if self.contexts:
             active_mappings = self.fetch_mappings()
             if self.args.datasets:
