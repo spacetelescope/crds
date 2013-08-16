@@ -52,7 +52,7 @@ class HeaderGenerator(object):
         hdr = self.header(source)
         min_hdr = self.pmap.minimize_header(hdr)
         min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
-        log.verbose("Bestref parameters for", repr(source), "with respect to", repr(self.context), "=", min_hdr)
+        log.verbose("Bestref parameters for", repr(source), "with respect to", repr(self.context), "=", log.PP(min_hdr))
         return min_hdr
 
     def get_old_bestrefs(self, source):
@@ -60,7 +60,7 @@ class HeaderGenerator(object):
         hdr = self.header(source)
         filekinds = self.pmap.get_filekinds(hdr) #  XXX only includes filekinds in .pmap
         old_bestrefs = { key.lower(): val for (key, val) in hdr.items() if key.upper() in filekinds }
-        log.verbose("Old best reference recommendations from", repr(source), "=", repr(old_bestrefs))
+        log.verbose("Old best reference recommendations from", repr(source), "=", log.PP(old_bestrefs))
         return hdr, old_bestrefs
     
     def handle_updates(self, updates):
@@ -71,6 +71,21 @@ class HeaderGenerator(object):
         """Write out headers to `pickle` file."""
         with open(pickle, "wb+") as pick:
             cPickle.dump(self.headers, pick)
+            
+    def update_headers(self, headers2):
+        """Incorporate `headers2` updated values into `self.headers`.  Since `headers2` may be incomplete,
+        do param-by-param update.   Nominally,  this is to add OPUS bestrefs corrections (definitive) to DADSOPS
+        database bestrefs (fast but not definitive).
+        """
+        # Munge for consistent case and value formatting regardless of source
+        headers2 = { dataset_id.upper() : 
+                        { key.upper():utils.condition_value(val) for (key,val) in headers2[dataset_id].items() } 
+                        for dataset_id in headers2 }
+        # replace param-by-param,  not id-by-id, since headers2[id] may be partial
+        for dataset_id in headers2:
+            if dataset_id in self.headers:
+                log.verbose("Applying header updates", log.PP(headers2[dataset_id]), "for", repr(dataset_id), verbosity=30)
+                self.headers[dataset_id].update(headers2[dataset_id])   
 
 # FileHeaderGenerator uses a deferred header loading scheme which incrementally reads each header
 # from a file as processing is going on via header().   The "pickle correction" scheme works by 
@@ -98,23 +113,29 @@ class DatasetHeaderGenerator(HeaderGenerator):
     def __init__(self, context, datasets):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(DatasetHeaderGenerator, self).__init__(context, datasets)
-        log.verbose("Dumping dataset parameters from CRDS server for", repr(datasets), verbosity=25)
+        log.info("Dumping dataset parameters from CRDS server for", repr(datasets), verbosity=25)
         self.headers = api.get_dataset_headers_by_id(context, datasets)
-        log.verbose("Dumped", len(self.headers), "of", len(datasets), 
+        log.info("Dumped", len(self.headers), "of", len(datasets), 
                     "dataset parameters from CRDS server.", verbosity=25)
     
 class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
     using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
     """
-    def __init__(self, context, pickles):
+    def __init__(self, context, pickles, correct):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(PickleHeaderGenerator, self).__init__(context, pickles)
         for pickle in pickles:
-            log.verbose("Loading pickle file", repr(pickle), verbosity=25)
+            log.info("Loading pickle file", repr(pickle))
             with open(pickle, "rb") as pick:
-                self.headers.update(cPickle.load(pick))
-                log.verbose("Loaded", len(self.headers), "from pickle", repr(pickle), verbosity=25)
+                pick_headers = cPickle.load(pick)
+                if correct and self.headers:   # "OPUS corrections mode"
+                    log.verbose("Combining with headers from pickle" , repr(pickle))
+                    self.update_headers(pick_headers)   # only do *parameter/result* overrides if dataset_id already exists
+                else:  # "Complete dataset pickles mode"
+                    log.verbose("Replacing with headers from pickle", repr(pickle))
+                    self.headers.update(pick_headers)   # replace all of dataset_id
+                log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), verbosity=25)
         self.sources = self.headers.keys()
     
 class InstrumentHeaderGenerator(HeaderGenerator):
@@ -125,9 +146,9 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         self.instruments = instruments
         sorted_sources = []
         for instrument in instruments:
-            log.verbose("Dumping dataset parameters for", repr(instrument), "from CRDS server.", verbosity=25)
+            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server.", verbosity=25)
             more = api.get_dataset_headers_by_instrument(context, instrument)
-            log.verbose("Dumped", len(more), "dataset parameters for", repr(instrument), 
+            log.info("Dumped", len(more), "dataset parameters for", repr(instrument), 
                         "from CRDS server.", verbosity=25)
             self.headers.update(more)
             sorted_sources.extend(sorted(more.keys()))
@@ -153,7 +174,7 @@ def update_file_bestrefs(pmap, dataset, updates):
         new_ref = update.new_reference.upper()
 #        XXX what to do here for failed startswith("NOT FOUND") lookups?
         if new_ref.startswith("NOT FOUND"):
-            if "N/A" in new_ref.upper():
+            if "N/A" in new_ref or "NO MATCH" in new_ref:
                 new_ref = "N/A"
         else:
             new_ref = (prefix + new_ref).lower()
@@ -320,16 +341,16 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             help="Dataset files to compute best references for.")
         
         self.add_argument("-d", "--datasets", nargs="+", metavar="IDs", default=None,
-            help="Dataset ids to compute best references for.")
+            help="Dataset ids to consult database for matching parameters and old results.")
         
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
-            help="Instruments to compute best references for, all historical datasets.")
+            help="Instruments to compute best references for, all historical datasets in database.")
         
         self.add_argument("--all-instruments", action="store_true", default=None,
-            help="Compute best references for cataloged datasets for all supported instruments.")
+            help="Compute best references for cataloged datasets for all supported instruments in database.")
         
         self.add_argument("-p", "--load-pickles", nargs="*", default=None,
-            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best order.")
+            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.")
         
         self.add_argument("-a", "--save-pickle", default=None,
             help="Write out the combined dataset headers to the specified pickle file.")
@@ -422,17 +443,18 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             raise RuntimeError("Invalid header source configuration.   "
                                "Specify --files, --datasets, --instruments, --all, or --load-pickles.")
         if self.args.load_pickles:
-            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles)
+            # Pickle init has two modes,  basically "correct other Header" or "use entire Pickle",  governed by "replace"
+            # Both modes are a kind of dict update.  
+            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles, correct=bool(new_headers))
             pickled = self.pickle_headers.headers.keys()
-            log.info("Loaded pickle updates for", len(pickled), "datasets.")
             if new_headers:
-                log.verbose("Loaded pickle updates for", repr(pickled))
-                new_headers.headers.update(self.pickle_headers.headers)
+                log.verbose("Pickles are updates.")
+                new_headers.update_headers(self.pickle_headers.headers)    # HeaderGenerator.update
             else:
-                log.verbose("Loaded pickles for", repr(pickled))                
+                log.verbose("Pickles are standalone.")                
                 new_headers = self.pickle_headers
         return new_headers
-    
+        
     def init_comparison(self):
         """Interpret command line parameters to determine comparison mode."""
         assert not (self.args.old_context and self.args.compare_source_bestrefs), \
@@ -513,7 +535,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     def screen_bestrefs(self, instrument, dataset, bestrefs1):
         """Screen one set of best references for `dataset` taken from context named `ctx1`."""
     
-        # XXX  This is closely related to compare_bestrefs, maintain both!!
+        # XXX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
     
         updates = []
         
@@ -526,23 +548,22 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             if new.startswith("NOT FOUND N/A"):
                 log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
                             "Filetype N/A for dataset.", verbosity=55)
-                continue
+            elif new.startswith("NOT FOUND no match"):
+                log.warning(self.format_prefix(dataset, instrument, u_filekind), new)
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, u_filekind, 
                                          "Bestref FAILED:", new_org[len("NOT FOUND"):])
-                continue
             else:
                 log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
                             "Bestref FOUND:", repr(new), verbosity=55)
-            
-            updates.append(UpdateTuple(instrument, filekind, None, new))
+                updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
     
     def compare_bestrefs(self, instrument, dataset, bestrefs1, bestrefs2):
         """Compare two sets of best references for `dataset` taken from contexts named `ctx1` and `ctx2`."""
     
-        # XXX  This is closely related to screen_bestrefs,  maintain both!!
+        # XXX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
     
         updates = []
         
@@ -559,15 +580,18 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                             "No comparison.  Old bestref marked as", repr(old), 
                             verbosity=55)
                 continue    
-            if new.startswith("NOT FOUND N/A"):
+            elif new.startswith("NOT FOUND N/A"):
                 log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
                             "Filetype N/A for dataset.", verbosity=55)
                 continue
-            if new.startswith("NOT FOUND"):
+            elif new.startswith("NOT FOUND no match"):
+                log.warning(self.format_prefix(dataset, instrument, u_filekind), new)
+                continue
+            elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, u_filekind, 
                                          "Bestref FAILED:", new_org[len("NOT FOUND"):])
                 continue
-            if filekind not in bestrefs2:
+            elif filekind not in bestrefs2:
                 log.warning(self.format_prefix(dataset, instrument, u_filekind), 
                             "No comparison bestref for data; recommending -->", repr(new))
                 updates.append(UpdateTuple(instrument, filekind, None, new))
@@ -583,7 +607,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "Lookup MATCHES for data:", repr(old), verbosity=30)
+                            "Lookup MATCHES:", repr(old), verbosity=30)
             
         return updates
     

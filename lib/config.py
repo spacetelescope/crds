@@ -151,7 +151,7 @@ CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
 CONTEXT_DATETIME_RE = re.compile(CONTEXT_DATETIME_RE_STR)
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?(?P<date>" + CONTEXT_DATETIME_RE_STR + r")"
+CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
 CONTEXT_RE = re.compile(CONTEXT_RE_STR)
 
 def is_mapping_spec(mapping):
@@ -181,6 +181,15 @@ def is_mapping_spec(mapping):
     
     >>> is_mapping_spec("2040-01-29T12:00:00")
     True
+    
+    >>> is_mapping_spec("hst-edit")
+    True
+    
+    >>> is_mapping_spec("jwst-operational")
+    True
+    
+    >>> is_mapping_spec("hst-foo")
+    False
     """
     return is_mapping(mapping) or (isinstance(mapping, basestring) and bool(CONTEXT_RE.match(mapping)))
 
