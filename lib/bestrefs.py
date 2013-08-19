@@ -129,12 +129,12 @@ class PickleHeaderGenerator(HeaderGenerator):
             log.info("Loading pickle file", repr(pickle))
             with open(pickle, "rb") as pick:
                 pick_headers = cPickle.load(pick)
-                if correct and self.headers:   # "OPUS corrections mode"
-                    log.verbose("Combining with headers from pickle" , repr(pickle))
-                    self.update_headers(pick_headers)   # only do *parameter/result* overrides if dataset_id already exists
-                else:  # "Complete dataset pickles mode"
-                    log.verbose("Replacing with headers from pickle", repr(pickle))
-                    self.headers.update(pick_headers)   # replace all of dataset_id
+                log.info("Combining with headers from pickle" , repr(pickle))
+                self.update_headers(pick_headers)   # only do *parameter/result* overrides if dataset_id already exists
+                # if correct and self.headers:   # "OPUS corrections mode"
+                # else:  # "Complete dataset pickles mode"
+                #     log.info("Replacing with headers from pickle", repr(pickle))
+                #    self.headers.update(pick_headers)   # replace all of dataset_id
                 log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), verbosity=25)
         self.sources = self.headers.keys()
     
