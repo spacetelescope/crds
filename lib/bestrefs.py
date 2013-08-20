@@ -81,10 +81,12 @@ class HeaderGenerator(object):
         headers2 = { dataset_id.upper() : 
                         { key.upper():utils.condition_value(val) for (key,val) in headers2[dataset_id].items() } 
                         for dataset_id in headers2 }
+
         # replace param-by-param,  not id-by-id, since headers2[id] may be partial
         for dataset_id in headers2:
             if dataset_id in self.headers:
-                log.verbose("Applying header updates", log.PP(headers2[dataset_id]), "for", repr(dataset_id), verbosity=30)
+                log.verbose("For", repr(dataset_id), "updating", log.PP(self.headers[dataset_id]), 
+                            "with corrections", log.PP(headers2[dataset_id]), verbosity=100)
                 self.headers[dataset_id].update(headers2[dataset_id])   
 
 # FileHeaderGenerator uses a deferred header loading scheme which incrementally reads each header
@@ -122,20 +124,19 @@ class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
     using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
     """
-    def __init__(self, context, pickles, correct):
+    def __init__(self, context, pickles):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(PickleHeaderGenerator, self).__init__(context, pickles)
         for pickle in pickles:
             log.info("Loading pickle file", repr(pickle))
             with open(pickle, "rb") as pick:
                 pick_headers = cPickle.load(pick)
-                log.info("Combining with headers from pickle" , repr(pickle))
-                self.update_headers(pick_headers)   # only do *parameter/result* overrides if dataset_id already exists
-                # if correct and self.headers:   # "OPUS corrections mode"
-                # else:  # "Complete dataset pickles mode"
-                #     log.info("Replacing with headers from pickle", repr(pickle))
-                #    self.headers.update(pick_headers)   # replace all of dataset_id
-                log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), verbosity=25)
+                if not self.headers:
+                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), "completely replacing existing pickles.")
+                    self.headers.update(pick_headers)   # replace all of dataset_id
+                else:  # OPUS bestrefs don't include the original matching parameters,  so full replacement doesn't work.
+                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), "augmenting existing pickles.")
+                    self.update_headers(pick_headers)
         self.sources = self.headers.keys()
     
 class InstrumentHeaderGenerator(HeaderGenerator):
@@ -316,8 +317,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
-
-         # headers corresponding to the new context
+        
+        # headers corresponding to the new context
         self.new_headers = self.init_headers(self.new_context)
 
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
@@ -354,6 +355,9 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         
         self.add_argument("-a", "--save-pickle", default=None,
             help="Write out the combined dataset headers to the specified pickle file.")
+        
+        self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
+            help="If specified, process only the listed dataset ids.")
         
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
             help="A list of reference types to process,  defaulting to all types.")
@@ -443,15 +447,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             raise RuntimeError("Invalid header source configuration.   "
                                "Specify --files, --datasets, --instruments, --all, or --load-pickles.")
         if self.args.load_pickles:
-            # Pickle init has two modes,  basically "correct other Header" or "use entire Pickle",  governed by "replace"
-            # Both modes are a kind of dict update.  
-            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles, correct=bool(new_headers))
-            pickled = self.pickle_headers.headers.keys()
-            if new_headers:
-                log.verbose("Pickles are updates.")
-                new_headers.update_headers(self.pickle_headers.headers)    # HeaderGenerator.update
-            else:
-                log.verbose("Pickles are standalone.")                
+            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles)
+            if new_headers:   # combine partial correction headers field-by-field 
+                new_headers.update_headers(self.pickle_headers.headers)
+            else:   # assume pickles-only sources are all complete snapshots
                 new_headers = self.pickle_headers
         return new_headers
         
@@ -483,6 +482,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             log.info("No comparison context or source comparison requested.")
 
         for dataset in self.new_headers:
+            if self.args.only_ids and dataset not in self.args.only_ids:
+                continue
             with log.error_on_exception("Failed processing", repr(dataset)):
                 log.verbose("===> Processing", dataset, verbosity=25)
                 self.increment_stat("datasets", 1)
