@@ -8,6 +8,7 @@ For more details on the several modes of operations and command line parameters 
 import os
 from collections import namedtuple
 import cPickle
+import gc
 
 import pyfits
 
@@ -115,11 +116,25 @@ class DatasetHeaderGenerator(HeaderGenerator):
     def __init__(self, context, datasets):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(DatasetHeaderGenerator, self).__init__(context, datasets)
-        log.info("Dumping dataset parameters from CRDS server for", repr(datasets), verbosity=25)
+        log.info("Dumping dataset parameters from CRDS server for", repr(datasets))
         self.headers = api.get_dataset_headers_by_id(context, datasets)
-        log.info("Dumped", len(self.headers), "of", len(datasets), 
-                    "dataset parameters from CRDS server.", verbosity=25)
+        log.info("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server.")
     
+class InstrumentHeaderGenerator(HeaderGenerator):
+    """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
+    def __init__(self, context, instruments):
+        """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
+        super(InstrumentHeaderGenerator, self).__init__(context, instruments)
+        self.instruments = instruments
+        sorted_sources = []
+        for instrument in instruments:
+            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server.")
+            more = api.get_dataset_headers_by_instrument(context, instrument)
+            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server.")
+            self.headers.update(more)
+            sorted_sources.extend(sorted(more.keys()))
+        self.sources = sorted_sources
+
 class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
     using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
@@ -139,22 +154,6 @@ class PickleHeaderGenerator(HeaderGenerator):
                     self.update_headers(pick_headers)
         self.sources = self.headers.keys()
     
-class InstrumentHeaderGenerator(HeaderGenerator):
-    """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
-    def __init__(self, context, instruments):
-        """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
-        super(InstrumentHeaderGenerator, self).__init__(context, instruments)
-        self.instruments = instruments
-        sorted_sources = []
-        for instrument in instruments:
-            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server.", verbosity=25)
-            more = api.get_dataset_headers_by_instrument(context, instrument)
-            log.info("Dumped", len(more), "dataset parameters for", repr(instrument), 
-                        "from CRDS server.", verbosity=25)
-            self.headers.update(more)
-            sorted_sources.extend(sorted(more.keys()))
-        self.sources = sorted_sources
-
 # ===================================================================
 
 def update_file_bestrefs(pmap, dataset, updates):
@@ -476,12 +475,16 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     def main(self):
         """Compute bestrefs for datasets."""
         
+        # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
+        
         self.complex_init()   # Finish __init__() inside --pdb
         
         if not self.compare_prior:
             log.info("No comparison context or source comparison requested.")
-
-        for dataset in self.new_headers:
+            
+        for i, dataset in enumerate(self.new_headers):
+            if i % 5000 == 0:
+                gc.collect()
             if self.args.only_ids and dataset not in self.args.only_ids:
                 continue
             with log.error_on_exception("Failed processing", repr(dataset)):
