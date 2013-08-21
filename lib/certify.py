@@ -102,6 +102,7 @@ class KeywordValidator(object):
         return True
 
     def _check_value(self, filename, value):
+        """Raises ValueError if `value` is not valid."""
         if value not in self._values:  # and tuple(self._values) != ('*',):
             if isinstance(value, str):
                 for pat in self._values:
@@ -124,33 +125,40 @@ class KeywordValidator(object):
         return self.check_value(filename, value)
 
     def check_column(self, filename, context=None):
-        """Extract a column of values from `filename` and check them all against
+        """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.
         """
-        values = None
         try:
-            values = self._get_column_values(filename)
+            new_values = self._get_column_values(filename)
+            if new_values is None: # Ignore missing optional columns
+                return True 
         except Exception, exc:
             log.error("Can't read column values:", str(exc))
-            return
-        check_val = True
+            return False
 
-        if values is not None: # Only check for non-optional columns
-            for i, value in enumerate(values): # compare to TPN default values
-                valid = self.check_value(filename + "[" + str(i) +"]", value)
-                if not valid:
-                    check_val = False
+        # new_values must not be None,  check all, waiting to fail later
+        bad_vals = False
+        for i, value in enumerate(new_values): # compare to TPN values
+            try:
+                self.check_value(filename + "[" + str(i) +"]", value)
+            except ValueError, exc:
+                bad_vals = True
 
-        if context: # If context has been specified, compare against previous reffile
-            current = find_current_reffile(filename, context)
-            if current: # Only do comparison if current ref file can be found
-                log.verbose("Checking", repr(filename), "values for column", repr(self.name),
-                            " against values found in ", current)
-                current_values = self._get_column_values(current)
-                return self._check_column_values(values, current_values)
+        if bad_vals:   # Fail prior to context comparison if values simply bad.
+            return False
+        
+        if not context:  # If no comparison context,  nothing to fail against.
+            return True
 
-        # If no context, report results of check_value anyway if not an Exception
-        return check_val
+        # If context has been specified, compare against previous reffile
+        old = find_old_reffile(filename, context)
+        if old: # Only do comparison if old ref file can be found
+            log.verbose("Checking", repr(filename), "values for column", repr(self.name),
+                        "against values found in", old)
+            old_values = self._get_column_values(old)
+            return self._check_column_values(new_values, old_values)
+        else:
+            return True
 
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
@@ -171,48 +179,45 @@ class KeywordValidator(object):
         `filename` and return it.   Handle missing and excluded cases.
         """
         hdu = pyfits.open(filename)
+        
         # make sure table(s) are in extension(s) not the PRIMARY extension
         assert len(hdu) >1, "table file with only primary extension: " + repr(filename)
 
         # start by finding the extension which contains the requested column
-        col_extn = None
         for extn in hdu:
             if (hasattr(extn,'_extension') and 'table' in extn._extension.lower() and self.name in extn.data.names):
                 col_extn = extn
                 break
-        # If no extension could be found with that column, report as missing
-        if col_extn is None:
-            # close FITS handle
+        else:  # If no extension could be found with that column, report as missing
             hdu.close()
             return self.__handle_missing()
 
         # If it was found, return the values
         tbdata = col_extn.data
         values = tbdata.field(self.name)
-
-        # close FITS handle
         hdu.close()
         return self.__handle_excluded(values)
 
-    def _check_column_values(self, new_values, current_values):
-        """ Check column values from new table against values from current table"""
+    def _check_column_values(self, new_values, old_values):
+        """ Check column values from new table against values from old table"""
+        
         # Use sets to perform comparisons more efficiently
-        current_set = set(current_values)
-        new_set = set(new_values)
+        old_set = set(list(old_values))
+        new_set = set(list(new_values))
 
         # find values which are uniq to each set/file
-        uniq_new = new_set.difference(current_set)
-        uniq_current = current_set.difference(new_set)
+        uniq_new = new_set.difference(old_set)
+        uniq_old = old_set.difference(new_set)
 
-        # report how input values compare to current values, if different
+        # report how input values compare to old values, if different
         if len(uniq_new) > 0:
-            log.warning("Value(s) for", repr(self.name), "of", log.PP(list(uniq_new)),
-                "is/are not one of", log.PP(current_values), sep='\n')
-            return True
+            log.warning("Column value(s) for", repr(self.name), "of", log.PP(list(uniq_new)),
+                "are not in:", log.PP(old_values))
 
-        if len(uniq_current) > 0:
-            log.warning("These values for "+repr(self.name)+ " were not present in new input:\n"+
-                        str(log.PP(list(uniq_current))))
+        if len(uniq_old) > 0:
+            log.warning("Column value(s) for", repr(self.name), "omitted",
+                        str(log.PP(list(uniq_old))))
+
         # if no differences, return True
         return True
 
@@ -248,55 +253,46 @@ class CharacterValidator(KeywordValidator):
 
 class ModeValidator(CharacterValidator):
     """ Validates values from multiple columns as a single mode value"""
+    
     def add_column(self, column):
         """ Add column validator to be used as basis for mode."""
-        log.verbose('Adding column '+column.name+' to ModeValidator')
+        log.verbose('Adding column', repr(column.name), 'to ModeValidator')
         self.names.append(column.name)
 
-    def check_column(self, filename, context=None):
-        """Extract a column of values from `filename` and check them all against
+    def check_column(self, new_file, context=None):
+        """Extract a column of values from `new_file` and check them all against
         the legal values for this Validator.
         """
-        #
-        # TODO: Expand to concatenate all columns values
-        #
-        new_values = []
+        if context is None: # If context has been specified, compare against previous reffile
+            log.verbose("No comparison context,  no mode comparison possible for", repr(new_file))
+            return
+
+        new_modes = self.get_modes(new_file)
+        
+        old_file = find_old_reffile(new_file, context)
+        if not old_file: # Only do comparison if old ref file can be found
+            log.warning("No comparison reference for", repr(new_file),
+                        "in context", repr(context))
+        else:
+            log.verbose("Checking", repr(new_file), "values for mode", repr(self.names),
+                        " against values found in ", repr(old_file))
+            old_modes = self.get_modes(old_file)
+            # find values which are uniq to each set/file
+            self.name = self.names
+            self._check_column_values(new_modes, old_modes)
+                
+    def get_modes(self, filename):
+        """Extract the "mode" columns from `filename` and zip them together into a list of mode tuples."""
+        columns = []
         for name in self.names:
             self.name = name
-            values = None
             try:
-                values = self._get_column_values(filename)
+                col_values = self._get_column_values(filename)
             except Exception, exc:
                 raise RuntimeError("Can't read column values from " + repr(filename) + ": " + str(exc))
-            new_values.append(values)
-
-        # convert these values into 'modes' by transposing the separate columns
-        # of values into sets of values with one set per row.
-        modes = map(tuple, transposed(new_values))
-
-        if context: # If context has been specified, compare against previous reffile
-            current = find_current_reffile(filename, context)
-            if not current: # Only do comparison if current ref file can be found
-                log.warning("No comparison reference for", repr(filename),
-                            "in context", repr(context))
-            else:
-                log.verbose("Checking", repr(filename), "values for mode", repr(self.names),
-                            " against values found in ", repr(current))
-
-                current_values = []
-                for name in self.names:
-                    self.name = name
-                    current_values.append(self._get_column_values(current))
-                current_modes = map(tuple, transposed(current_values))
-                # find values which are uniq to each set/file
-                self.name = self.names
-                self._check_column_values(modes, current_modes)
-
-def transposed(lists):
-    if not lists: 
-        return []
-    return map(lambda *row: list(row), *lists)
-
+            columns.append(col_values)        
+        return zip(*columns)   # zip columns together into "mode" tuples.
+    
 # ----------------------------------------------------------------------------
 
 class LogicalValidator(KeywordValidator):
@@ -684,15 +680,15 @@ def get_existing_path(reference, observatory):
 
 # ============================================================================
 
-def find_current_reffile(reffile, pmap):
-    """Returns the name of the current reference file(s) that the new reffile would replace,  or None.
+def find_old_reffile(reffile, pmap):
+    """Returns the name of the old reference file(s) that the new reffile would replace,  or None.
     """
     with log.info_on_exception("Failed resolving prior reference for '{}' in '{}'".format(reffile, pmap)):
-        return _find_current_reffile(reffile, pmap)
+        return _find_old_reffile(reffile, pmap)
     return None
 
-def _find_current_reffile(reffile, pmap):
-    """Returns the name of the current reference file(s) that the new reffile would replace."""
+def _find_old_reffile(reffile, pmap):
+    """Returns the name of the old reference file(s) that the new reffile would replace."""
     
     ctx = rmap.fetch_mapping(pmap)
     instrument, filekind = utils.get_file_properties(ctx.observatory, reffile)
