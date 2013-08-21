@@ -1147,7 +1147,7 @@
        <ROW_SELECTION_FIELD> CENWAVE </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
     <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') </RESTRICTION_TEST>
+      <RESTRICTION_TEST> ((aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') and (aSource._keywords['DETECTOR'][0] == 'CCD'))</RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
 <!--====================================-->
@@ -1198,6 +1198,9 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> OBSMODE </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['SAMP_SEQ'][0] not in ['SPARS4','SPARS16','SPARS32','SPARS128'])</RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1219,6 +1222,9 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1231,6 +1237,9 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1355,6 +1364,9 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
 </INSTRUMENT>
@@ -1590,6 +1602,9 @@
       <FILE_SELECTION_FIELD> BINAXIS2 </FILE_SELECTION_FIELD>
       <FILE_SELECTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </FILE_SELECTION_TEST>
     </FILE_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK') </RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1669,7 +1684,7 @@
       <FILE_SELECTION_FIELD> SHUTRPOS </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
     <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS' and aSource._keywords['FLASHCUR'][0] != 'OFF') </RESTRICTION_TEST>
+      <RESTRICTION_TEST> (aSource._keywords['FLASHCUR'][0] !=  'NONE') </RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
   <!--====================================-->
