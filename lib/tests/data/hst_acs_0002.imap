@@ -5,7 +5,7 @@ header = {
     'name' : 'hst_acs.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '8e50001b5fca02bbc5af0aaf800e0a50a422b383',
+    'sha1sum' : 'c9da5420754763fd217c970ed4b4ea0111a0d351',
 }
 
 selector = {

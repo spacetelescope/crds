@@ -5,6 +5,7 @@ For more details on the several modes of operations and command line parameters 
 
 % python -m crds.bestrefs --help
 """
+import sys
 import os
 from collections import namedtuple
 import cPickle
@@ -646,4 +647,6 @@ def cleanpath(name):
 # ============================================================================
 
 if __name__ == "__main__":
-    BestrefsScript()()
+    errors = BestrefsScript()() 
+    exit_status = int(errors > 0)  # no errors = 0,  errors = 1
+    sys.exit(exit_status)

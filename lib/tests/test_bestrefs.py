@@ -72,7 +72,7 @@ OUTPUT MODES
 
 crds.bestrefs supports several output modes for bestrefs and comparison results.
 
-If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
+If --print-affected is specified,  crds.bestrefs will print out the name of any file (or dataset id) for which at least one update for
 one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits --compare-source-bestrefs --print-affected
@@ -84,73 +84,82 @@ one reference type was recommended.   This is essentially a list of files to be 
 TEST CASES
 ----------
 
->>> import os
->>> os.environ["CRDS_PATH"] = os.path.join(os.getcwd(), "test_cache")
->>> os.environ["CRDS_SERVER_URL"] = "http://hst-crds.stsci.edu"
->>> from crds import log
->>> log.set_test_mode()
+>>> import test_config
+>>> test_config.setup()
 
 >>> from crds.bestrefs import BestrefsScript
 
 Compute simple bestrefs for 3 files:
 
     >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
-    >>> case.files
-    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
-    >>> case.new_context
-    'hst.pmap'
-    >>> case.run()
+    >>> status = case.run()
+    CRDS  : INFO     Computing bestrefs for dataset files ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     1 infos
+    CRDS  : INFO     2 infos
+    >>> status == 0
+    True
 
 Compute and print files with at least one reference change:
 
-    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected")
-    >>> case.files
-    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
-    >>> case.run()
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt05njq_raw.fits' type 'IMPHTTAB' recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt05njq_raw.fits' type 'NPOLFILE' recommending --> 'V9718263J_NPL.FITS'
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt06o6q_raw.fits' type 'IMPHTTAB' recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt06o6q_raw.fits' type 'NPOLFILE' recommending --> 'V9718264J_NPL.FITS'
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt09jcq_raw.fits' type 'IMPHTTAB' recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  No comparison bestref for data 'data/j8bt09jcq_raw.fits' type 'NPOLFILE' recommending --> 'V9718260J_NPL.FITS'
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")
+    >>> status = case.run()
+    CRDS  : INFO     Computing bestrefs for dataset files ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
+    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
+    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718263J_NPL.FITS'
+    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
+    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718264J_NPL.FITS'
+    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
+    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718260J_NPL.FITS'
     data/j8bt05njq_raw.fits
     data/j8bt09jcq_raw.fits
     data/j8bt06o6q_raw.fits
     CRDS  : INFO     0 errors
     CRDS  : INFO     6 warnings
-    CRDS  : INFO     4 infos
+    CRDS  : INFO     1 infos
+    >>> status == 0
+    True
 
 Compute simple bestrefs for 3 files using the default context from the server:
 
     >>> case = BestrefsScript(argv="bestrefs.py --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
-    >>> case.files
-    ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
-
-    Can't really know what the default context will be over time, so check vaguely.
-    
-    >>> case.new_context.startswith("hst") and case.new_context.endswith(".pmap")
-    True
-    >>> case.run()
+    >>> status = case.run()
+    CRDS  : INFO     Computing bestrefs for dataset files ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     0 errors
-    CRDS  : INFO     6 warnings
-    CRDS  : INFO     8 infos
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     2 infos
+    >>> status == 0
+    True
 
-Compute simple bestrefs for 3 catalog datasets using hst.pmap:
+Compute simple bestrefs for 1 catalog datasets using hst.pmap:
 
-    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets j59l54010 j6d508010 j6d508011")
-    >>> case.args.datasets
-    ['j59l54010', 'j6d508010', 'j6d508011']
-    >>> case.run()
-    
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets I9ZF01010")
+    >>> status = case.run()
+    CRDS  : INFO     Dumping dataset parameters from CRDS server for ['I9ZF01010']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server.
+    CRDS  : INFO     Computing bestrefs for datasets ['I9ZF01010']
+    CRDS  : INFO     No comparison context or source comparison requested.
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     4 infos
+    >>> status
+    0
+
 Compute comparison bestrefs between two contexts:
 
-    >>> case = BestrefsScript(argv="bestrefs.py --new-context data/hst_9999.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --verbose")
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
     >>> case.run()
+    CRDS  : INFO     Computing bestrefs for dataset files ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     1 infos
+    0
+
+CLEANUP: blow away the test cache
+
+    >>> test_config.cleanup()
 
 """
 
