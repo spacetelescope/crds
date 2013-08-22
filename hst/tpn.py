@@ -122,12 +122,49 @@ SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
 # 'acs': {'analog-to-digital': 'a2d',
 #         'bad pixels': 'bpx',
 FILETYPE_TO_SUFFIX = _evalfile_with_fail(HERE + "/tpn_filetypes.dat")
+SUFFIX_TO_FILETYPE = _invert_instr_dict(FILETYPE_TO_SUFFIX)
 
 # CRDS encoding of most of CDBS catalog.dat
 TPN_CATALOG = _evalfile_with_fail(HERE + "/crds_tpn_catalog.dat")
 
 # CRDS encoding of most of CDBS catalog.dat,  _ld records
 LD_TPN_CATALOG = _evalfile_with_fail(HERE + "/crds_ld_tpn_catalog.dat")
+
+# =============================================================================
+def get_filekind_metadata(instr):
+    """Used at rmap generation time to generate the "tpn_map" field of meta
+    data mappings.
+    """
+    extra_pars = ()
+    for filekind in TPN_CATALOG[instr]:
+        tpn_src = TPN_CATALOG[instr][filekind]
+        if isinstance(tpn_src, list):
+            tpn_0 = tpn_src[0]
+            conditions, cat_tuple = tpn_0
+            extra_pars = tuple([condition[0].upper() for condition in conditions])
+            break
+    typenames = {}
+    filekind_meta = {}    
+    for filekind in TPN_CATALOG[instr]:
+        suffix = FILEKIND_TO_SUFFIX[instr][filekind]
+        filetype = SUFFIX_TO_FILETYPE[instr][suffix]
+        typenames[filekind] = (suffix, filetype)
+        tpn_src = TPN_CATALOG[instr][filekind]
+        ld_tpn = LD_TPN_CATALOG[instr][filekind][0]
+        if isinstance(tpn_src, list):   # handle .tpn sub-types per filekind
+            for item in tpn_src:
+                conditions, cat_tuple = item
+                tpn = cat_tuple[0]
+                match = (filekind,) + tuple([condition[1] for condition in conditions])
+                filekind_meta[match] = (tpn, ld_tpn)
+        else:   # norm where filekind:tpn == 1:1
+            tpn = tpn_src[0]
+            if len(extra_pars):
+                match = (filekind,) + len(extra_pars) * ("*",)
+            else:
+                match = filekind
+            filekind_meta[match] = (tpn, ld_tpn)
+    return typenames, ("REFTYPE",) + extra_pars, filekind_meta
 
 # =============================================================================
 #  CRDS Parser for CDBS cdbscatlog.dat
