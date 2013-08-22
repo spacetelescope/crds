@@ -36,6 +36,7 @@
 # 02/07/12 69213  Mary        Add COS:gsag
 # 02/07/12 70397  Mary        Add COS:hv
 # 06/14/12 71537  MSwam       Add WFC3:imp
+# 05/17/13 74558  MSwam       Add WFC3:d2i
 #
 #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT	HEADER KEYWORDS
 #----------------------------------------------------------------------
@@ -412,6 +413,7 @@ wfc3   	lfl     image   wfc3_lfl.tpn   	   .fits   "instrume=wfc3,filetype=LARGE
 wfc3   	shd     image   wfc3_shd.tpn   	   .fits   "instrume=wfc3,filetype=SHUTTER SHADING"
 wfc3    fls     image   wfc3_fls.tpn       .fits   "instrume=wfc3,filetype=POST FLASH"
 wfc3	lin     image   wfc3_lin.tpn       .fits   "instrume=wfc3,filetype=LINEARITY COEFFICIENTS"
+wfc3    d2i     image   wfc3_d2i.tpn       .fits   "instrume=wfc3,filetype=UVIS D2I FILE"
 #----------------------------------------------------------------------
 wfc3	a2d     table   wfc3_a2d.tpn       .fits   "instrume=wfc3,filetype=ANALOG-TO-DIGITAL"
 wfc3	bpx     table   wfc3_bpx.tpn       .fits   "instrume=wfc3,filetype=BAD PIXELS"
@@ -438,6 +440,7 @@ wfc3    fls     load    wfc3_fls_ld.tpn     .lod    instrument=wfc3,reference_fi
 wfc3    idc     load    wfc3_idc_ld.tpn     .lod    instrument=wfc3,reference_file_type=idc
 wfc3    imp     load    wfc3_imp_ld.tpn     .lod    instrument=wfc3,reference_file_type=imp
 wfc3    mdz     load    wfc3_mdz_ld.tpn     .lod    instrument=wfc3,reference_file_type=mdz
+wfc3	d2i	load	wfc3_d2i_ld.tpn     .lod    instrument=wfc3,reference_file_type=d2i
 #-----------------------------------------------------------------------------
 cos   	flat    image   cos_flat.tpn   	   .fits   "instrume=cos,filetype=FLAT FIELD REFERENCE IMAGE"
 cos   	geo     image   cos_geo.tpn   	   .fits   "instrume=cos,filetype=GEOMETRIC DISTORTION REFERENCE IMAGE"
