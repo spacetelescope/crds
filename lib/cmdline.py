@@ -119,6 +119,7 @@ class Script(object):
         self.args = self.parser.parse_args(argv[1:])
         log.set_verbose(self.args.verbosity or self.args.verbose)
         self.contexts = self.determine_contexts()
+        log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
@@ -191,12 +192,13 @@ class Script(object):
             help="Force observatory to JWST for determining header conventions.""")
         self.add_argument("-H", "--hst",  dest="hst", action="store_true",
             help="Force observatory to HST for determining header conventions.""")
+        self.add_argument("--stats", action="store_true",
+            help="Track and print timing statistics.")
         self.add_argument("--profile", 
             help="Output profile stats to the specified file.", type=str, default="")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
-        self.add_argument("--stats", action="store_true",
-            help="Track and print timing statistics.")
+
     
     def require_server_connection(self):
         """Check a *required* server connection and ERROR/exit if offline."""
@@ -276,7 +278,7 @@ class Script(object):
         elif self.args.pdb:
             pdb.runctx("self.main()", locals(), locals())
         else:
-            self.main()
+            return self.main()
     
     def report_stats(self):
         """Print out collected statistics."""
@@ -289,7 +291,7 @@ class Script(object):
 
     def run(self, *args, **keys):
         """script.run() is the same thing as script() but more explicit."""
-        self.__call__(*args, **keys)
+        return self.__call__(*args, **keys)
         
     def resolve_context(self, context):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting

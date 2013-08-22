@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'BIASCORR',
     'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    'sha1sum' : 'a740e8171ecd8f5506d1062b1e2dd35cb18770d7',
+    'sha1sum' : '4c2b073254eb2527693494052df50f611d418782',
 }
 
 selector = Match({
