@@ -342,7 +342,7 @@ class UniqueErrorsMixin(object):
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""
-        return log.format("instrument="+repr(instrument), "type="+repr(filekind), "data="+repr(data), ":: ",
+        return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
                           *params, end="", **keys)
 
     def dump_unique_errors(self, error_list_data_file=None):
