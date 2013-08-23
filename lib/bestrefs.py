@@ -50,12 +50,16 @@ class HeaderGenerator(object):
         return self.headers[source]
     
     def get_lookup_parameters(self, source):
-        """Return the parameters corresponding to `source` used to drive a best references lookup.""" 
-        hdr = self.header(source)
-        min_hdr = self.pmap.minimize_header(hdr)
-        min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
-        log.verbose("Bestref parameters for", repr(source), "with respect to", repr(self.context), "=", log.PP(min_hdr))
-        return min_hdr
+        """Return the parameters corresponding to `source` used to drive a best references lookup."""
+        try:
+            hdr = self.header(source)
+            min_hdr = self.pmap.minimize_header(hdr)
+            min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
+            log.verbose("Bestref parameters for", repr(source), "with respect to", repr(self.context), "=", log.PP(min_hdr))
+            return min_hdr
+        except Exception, exc:
+            raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
+                                 source, self.context, str(exc)))            
 
     def get_old_bestrefs(self, source):
         """Return the historical best references corresponding to `source`."""
@@ -63,7 +67,7 @@ class HeaderGenerator(object):
         filekinds = self.pmap.get_filekinds(hdr) #  XXX only includes filekinds in .pmap
         old_bestrefs = { key.lower(): val for (key, val) in hdr.items() if key.upper() in filekinds }
         log.verbose("Old best reference recommendations from", repr(source), "=", log.PP(old_bestrefs))
-        return hdr, old_bestrefs
+        return old_bestrefs
     
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
@@ -168,18 +172,14 @@ def update_file_bestrefs(pmap, dataset, updates):
     # Here we use the dataset file because we know we have the full path, 
     # whereas the reference we'd have to locate.
     instrument = utils.file_to_instrument(dataset)
-    prefix = pmap.locate.get_env_prefix(instrument)
-    
+    prefix = pmap.locate.get_env_prefix(instrument)    
+    log.verbose("Setting", repr(dataset), "CRDS_CTX =", repr(new_ref))
     pyfits.setval(dataset, "CRDS_CTX", value=pmap.basename, ext=0)
     for update in sorted(updates):
         new_ref = update.new_reference.upper()
-#        XXX what to do here for failed startswith("NOT FOUND") lookups?
-        if new_ref.startswith("NOT FOUND"):
-            if "N/A" in new_ref or "NO MATCH" in new_ref:
-                new_ref = "N/A"
-        else:
+        if new_ref != "N/A":
             new_ref = (prefix + new_ref).lower()
-        log.verbose("Setting data", repr(dataset), "type", repr(update.filekind), "=", repr(new_ref))
+        log.verbose("Setting", repr(dataset), "type", repr(update.filekind), "=", repr(new_ref))
         pyfits.setval(dataset, update.filekind, value=new_ref, ext=0)            
 
 # ============================================================================
@@ -310,9 +310,12 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         # comparison variables
         self.compare_prior = None       # bool
         self.old_headers = None         # HeaderGenerator subclass,  comparison context
-        self.old_bestrefs_name = None   # info str identifying comparison header source,  filename or text
+        self.old_bestrefs_name = None   # info str identifying comparison results source,  .pmap filename or text
         
         self.pickle_headers = None  # any headers loaded from pickle files
+
+        if self.args.remote_bestrefs:
+            os.environ["CRDS_MODE"] = "remote"
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -466,11 +469,15 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
-                # XXX  old_headers = self.init_headers(self.args.old_context)  # ,  potentially different but slow
+                # XXXX back in the day,  matching parameters and expected result types might have been different.
+                # XXXX for now,  just ensure they're the same,  lesser likelihood of error.
+                # old_headers = self.init_headers(self.args.old_context)
+                log.verbose_warning("Assuming matching parameter names and expected references types are the same across contexts.")
+                old_headers = self.new_headers
                 old_fname = self.args.old_context
             else:
                 old_fname = "recorded bestrefs"
-            old_headers = self.new_headers
+                old_headers = self.new_headers
         return compare_prior, old_headers, old_fname
     
     def main(self):
@@ -488,11 +495,15 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 gc.collect()
             if self.args.only_ids and dataset not in self.args.only_ids:
                 continue
-            with log.error_on_exception("Failed processing", repr(dataset)):
+            try:
                 log.verbose("===> Processing", dataset, verbosity=25)
                 self.increment_stat("datasets", 1)
                 self.updates[dataset] = self.process(dataset)
-            
+            except Exception, exc:
+                if self.args.pdb:
+                    raise
+                log.error("Failed processing", repr(dataset))
+                
         self.post_processing()
 
         self.report_stats()
@@ -504,116 +515,119 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         returns (dataset, new_context, new_bestrefs) or 
                 (dataset, new_context, new_bestrefs, old_context, old_bestrefs)
         """
-        new_header, new_bestrefs = self.get_bestrefs(self.new_headers, dataset)
+        new_header = self.new_headers.get_lookup_parameters(dataset)
         instrument = self.newctx.get_instrument(new_header)
-        log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
-                    "with respect to", repr(self.new_context), "=", repr(new_bestrefs))
+        new_bestrefs = self.get_bestrefs(instrument, dataset, self.newctx, new_header)
         if self.compare_prior:
             if self.args.old_context:
-                _old_header, old_bestrefs = self.get_bestrefs(self.old_headers, dataset)
+                old_header = self.old_headers.get_lookup_parameters(dataset)
+                old_bestrefs = self.get_bestrefs(instrument, dataset, self.oldctx, old_header)
             else:
-                _old_header, old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
+                old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
             updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
         else:
             updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
         return updates
     
-    def get_bestrefs(self, header_gen, dataset):
-        """Compute the bestrefs for `dataset` with respect to the `context`."""
+    def get_bestrefs(self, instrument, dataset, ctx, header):
+        """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         try:
-            header = header_gen.get_lookup_parameters(dataset)
+            bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=ctx.name)
         except Exception, exc:
-            raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
-                                dataset, header_gen.context, str(exc)))            
-        try:
-            if self.args.remote_bestrefs:
-                os.environ["CRDS_MODE"] = "remote"    
-                bestrefs = crds.getrecommendations(
-                    header, reftypes=self.process_filekinds, context=header_gen.pmap.name)
-            else:
-                bestrefs = header_gen.pmap.get_best_references(header, include=self.process_filekinds)
-        except Exception, exc:
+            if self.args.pdb:
+                raise
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
-                                dataset, header_gen.context, str(exc)))
-        return header, bestrefs
+                                dataset, ctx.name, str(exc)))
+        else:
+            log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
+                        "with respect to", repr(ctx.name), "=", repr(bestrefs))
+            return bestrefs
+    
+    def screen_bestrefs(self, instrument, dataset, newrefs):
+        """Scan best references dict `newrefs` for atypical results and issue errors and warnings.
 
-    def screen_bestrefs(self, instrument, dataset, bestrefs1):
-        """Screen one set of best references for `dataset` taken from context named `ctx1`."""
+        Returns [UpdateTuple(), ...]
+        """
     
         # XXX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
     
         updates = []
         
-        for filekind in (self.process_filekinds or bestrefs1):
+        for filekind in (self.process_filekinds or newrefs):
             
-            new_org = cleanpath(bestrefs1.get(filekind, "UNDEFINED"))
+            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
             new = new_org.upper()
-            u_filekind = filekind.upper()
             
             if new.startswith("NOT FOUND N/A"):
-                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "Filetype N/A for dataset.", verbosity=55)
-            elif new.startswith("NOT FOUND no match"):
-                log.warning(self.format_prefix(dataset, instrument, u_filekind), new)
+                log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                            "Filetype N/A for dataset.  Would/will update.", verbosity=55)
+                updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
+            elif new.startswith("NOT FOUND NO MATCH"):
+                log.warning(self.format_prefix(dataset, instrument, filekind), new_org, "No update.")
             elif new.startswith("NOT FOUND"):
-                self.log_and_track_error(dataset, instrument, u_filekind, 
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):])
+                self.log_and_track_error(dataset, instrument, filekind,
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], "No update.")
             else:
-                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "Bestref FOUND:", repr(new), verbosity=55)
+                log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                            "Bestref FOUND:", repr(new_org), "Would/will update.", verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
     
-    def compare_bestrefs(self, instrument, dataset, bestrefs1, bestrefs2):
-        """Compare two sets of best references for `dataset` taken from contexts named `ctx1` and `ctx2`."""
+    def compare_bestrefs(self, instrument, dataset, newrefs, oldrefs):
+        """Compare best references dicts `newrefs` and `oldrefs` for `instrument` and `dataset`.
+        
+        Returns [UpdateTuple(), ...]
+        """
     
         # XXX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
     
         updates = []
         
-        for filekind in (self.process_filekinds or bestrefs1):
+        for filekind in (self.process_filekinds or newrefs):
             
-            new_org = cleanpath(bestrefs1.get(filekind, "UNDEFINED"))
+            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
             new = new_org.upper()
-            u_filekind = filekind.upper()
             
-            old = cleanpath(bestrefs2.get(filekind, "UNDEFINED")).strip().upper()
+            old = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip().upper()
         
             if old in ("N/A", "NONE", "", "*"):
-                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "No comparison.  Old bestref marked as", repr(old), 
-                            verbosity=55)
-                continue    
-            elif new.startswith("NOT FOUND N/A"):
-                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "Filetype N/A for dataset.", verbosity=55)
-                continue
-            elif new.startswith("NOT FOUND no match"):
-                log.warning(self.format_prefix(dataset, instrument, u_filekind), new)
+                old = "N/A"
+            if new.startswith("NOT FOUND N/A"):
+                new = "N/A"
+            elif new.startswith("NOT FOUND NO MATCH"):
+                log.error(self.format_prefix(dataset, instrument, filekind), 
+                            "No best reference found. Type not known to be irrelevant for dataset.  No update.")
+                new = "UNDEFINED"
                 continue
             elif new.startswith("NOT FOUND"):
-                self.log_and_track_error(dataset, instrument, u_filekind, 
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):])
+                self.log_and_track_error(dataset, instrument, filekind, 
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], "No update.")
                 continue
-            elif filekind not in bestrefs2:
-                log.warning(self.format_prefix(dataset, instrument, u_filekind), 
-                            "No comparison bestref for data; recommending -->", repr(new))
-                updates.append(UpdateTuple(instrument, filekind, None, new))
-                continue
+            elif filekind not in oldrefs:
+                old = "UNDEFINED"
             
             if new != old:
                 if self.args.differences_are_errors:
-                    self.log_and_track_error(dataset, instrument, u_filekind, 
-                             "Comparison difference:", repr(old), "-->", repr(new))
+                    self.log_and_track_error(dataset, instrument, filekind, 
+                             "Comparison difference:", repr(old), "-->", repr(new), "Would/will update.")
                 elif self.args.print_new_references or log.get_verbose():
-                    log.info(self.format_prefix(dataset, instrument, u_filekind), 
-                             "New Reference for data:", repr(old), "-->", repr(new))
+                    log.info(self.format_prefix(dataset, instrument, filekind), 
+                             "New best reference:", repr(old), "-->", repr(new), "Would/will update.")
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
-                log.verbose(self.format_prefix(dataset, instrument, u_filekind), 
-                            "Lookup MATCHES:", repr(old), verbosity=30)
-            
+                log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                            "Lookup MATCHES:", repr(old), "No update.",  verbosity=30)
+        
+        # Check for missing references in `newrefs`.
+        for filekind in oldrefs:
+            if filekind not in newrefs:
+                if self.args.differences_are_errors:
+                    self.log_and_track_error(dataset, instrument, filekind, 
+                        "No new reference recommended. Old reference was", repr(old), "No update.", verbosity=30)
+                else:
+                    log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                        "No new reference recommended. Old reference was", repr(old), "No update.", verbosity=30)            
         return updates
     
     def post_processing(self):
