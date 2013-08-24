@@ -106,17 +106,11 @@ Compute and print files with at least one reference change:
     >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")
     >>> status = case.run()
     CRDS  : INFO     Computing bestrefs for dataset files ['data/j8bt05njq_raw.fits', 'data/j8bt06o6q_raw.fits', 'data/j8bt09jcq_raw.fits']
-    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718263J_NPL.FITS'
-    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718264J_NPL.FITS'
-    CRDS  : WARNING  instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  No comparison bestref for data; recommending --> 'W3M1716TJ_IMP.FITS'
-    CRDS  : WARNING  instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  No comparison bestref for data; recommending --> 'V9718260J_NPL.FITS'
     data/j8bt05njq_raw.fits
     data/j8bt09jcq_raw.fits
     data/j8bt06o6q_raw.fits
     CRDS  : INFO     0 errors
-    CRDS  : INFO     6 warnings
+    CRDS  : INFO     0 warnings
     CRDS  : INFO     1 infos
     >>> status == 0
     True
