@@ -30,7 +30,7 @@ parameters_name = ('Match' | 'UseAfter' | 'SelectVersion' | 'Bracket' | 'Geometr
 
 # NOTE:  dict is returned as an item-list to preserve duplicates (considered errors)
 dict = ws '{' items:m '}' ws -> m
-items = ws (pair:first (ws ',' pair)*:rest ws ','? ws -> [first] + rest) | -> []
+items = ws (pair:first (ws ',' pair)*:rest ws ','? ws -> [first] + rest) | ws -> []
 pair = ws immutable:k ws ':' ws value:v ws -> (k, v)
 immutable = (string | immutable_tuple | number | true | false | none):i -> i
 
