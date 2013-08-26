@@ -388,6 +388,9 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
         
+        self.add_argument("--na-differences-matter", action="store_true",
+            help="If not set,  either CDBS or CRDS scoring reference type as N/A is OK to mismatch.")
+        
         cmdline.UniqueErrorsMixin.add_args(self)
     
     def setup_contexts(self):
@@ -562,8 +565,9 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Filetype N/A for dataset.  Would/will update.", verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
-            elif new.startswith("NOT FOUND NO MATCH"):
-                log.warning(self.format_prefix(dataset, instrument, filekind), new_org, "No update.")
+            elif new.error("NOT FOUND NO MATCH"):
+                log.error(self.format_prefix(dataset, instrument, filekind), 
+                            "No best reference found. Type not known to be irrelevant for dataset.  No update.")
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind,
                                          "Bestref FAILED:", new_org[len("NOT FOUND"):], "No update.")
@@ -596,8 +600,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             if new.startswith("NOT FOUND N/A"):
                 new = "N/A"
             elif new.startswith("NOT FOUND NO MATCH"):
+                # XXX set to warning prior to delivery
                 log.error(self.format_prefix(dataset, instrument, filekind), 
                             "No best reference found. Type not known to be irrelevant for dataset.  No update.")
+                # XXX don't update,  not sure pipeline can handle UNDEFINED
                 new = "UNDEFINED"
                 continue
             elif new.startswith("NOT FOUND"):
@@ -609,8 +615,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
             if new != old:
                 if self.args.differences_are_errors:
-                    self.log_and_track_error(dataset, instrument, filekind, 
-                             "Comparison difference:", repr(old), "-->", repr(new), "Would/will update.")
+                    #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
+                    if self.args.na_differences_matter or (old != "N/A" and new != "N/A"):
+                        self.log_and_track_error(dataset, instrument, filekind, 
+                                 "Comparison difference:", repr(old), "-->", repr(new), "Would/will update.")
                 elif self.args.print_new_references or log.get_verbose():
                     log.info(self.format_prefix(dataset, instrument, filekind), 
                              "New best reference:", repr(old), "-->", repr(new), "Would/will update.")
