@@ -99,6 +99,7 @@
           'bpixtab': ('wfc3_bpx.tpn', 'bpx', 'table', '.fits', 'bad pixels'),
           'ccdtab': ('wfc3_ccd.tpn', 'ccd', 'table', '.fits', 'ccd parameters'),
           'crrejtab': ('wfc3_crr.tpn', 'crr', 'table', '.fits', 'cosmic ray rejection'),
+          'd2imfile': ('wfc3_d2i.tpn', 'd2i', 'image', '.fits', 'uvis d2i file'),
           'darkfile': ('wfc3_drk.tpn', 'drk', 'image', '.fits', 'dark'),
           'dfltfile': ('wfc3_dfl.tpn', 'dfl', 'image', '.fits', 'delta flat'),
           'flshfile': ('wfc3_fls.tpn', 'fls', 'image', '.fits', 'post flash'),

@@ -97,6 +97,7 @@
           'bpixtab': ('wfc3_bpx_ld.tpn', 'bpx', 'load', '.lod', 'bpx'),
           'ccdtab': ('wfc3_ccd_ld.tpn', 'ccd', 'load', '.lod', 'ccd'),
           'crrejtab': ('wfc3_crr_ld.tpn', 'crr', 'load', '.lod', 'crr'),
+          'd2imfile': ('wfc3_d2i_ld.tpn', 'd2i', 'load', '.lod', 'd2i'),
           'darkfile': ('wfc3_drk_ld.tpn', 'drk', 'load', '.lod', 'drk'),
           'dfltfile': ('wfc3_dfl_ld.tpn', 'dfl', 'load', '.lod', 'dfl'),
           'flshfile': ('wfc3_fls_ld.tpn', 'fls', 'load', '.lod', 'fls'),
