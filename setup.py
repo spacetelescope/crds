@@ -15,7 +15,10 @@ subpkgs = {
             },
         "package_data" : {
             'crds.tests' : ['data/*.fits','data/*.*map'],
-            }
+            },
+        "scripts" : [ 
+            "lib/scripts/pipeline_bestref",
+            ],
         },
     "client" :{
         "packages" : [
