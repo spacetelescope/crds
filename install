@@ -1,7 +1,5 @@
 #! /bin/sh
 
-# source ~/normal.csh
-
 cd `dirname $0`
 
 ./clean
@@ -10,30 +8,12 @@ rm -f install.log
 
 st=0
 
-for dir in lib client hst jwst tobs third_party/Parsley-1.1
-do
-    if (test -e $dir)
-    then
-    	echo "Installing $dir"
-		echo "=====================================================" >>install.log
-    	echo "Installing $dir" >> install.log
-		echo "=====================================================" >>install.log
-	(cd $dir;  
-	    if (test -e ../save_version) 
-	    then 
-		../save_version >svn_version.py;  
-	    fi
-	    python setup.py install $* --force)  >> install.log
-	st=$st$?
-    else
-		echo "Skipping $dir"
-		echo "=====================================================" >>install.log
-		echo "Skipping $dir" >>install.log
-		echo "=====================================================" >>install.log
-	# is it an error for a directory to be missing?  For the nightly builds I assume it is
-	st=${st}1
-    fi
-done
+if (test -e save_version) 
+then 
+    ./save_version >lib/svn_version.py;  
+fi
+python setup.py install $* --force  >> install.log
+st=$st$?
 
 ./clean
 

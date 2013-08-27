@@ -292,7 +292,10 @@ files into their CRDS ingest directory manually.   The nominal approach
 for doing this is to use the cp or scp commands.   For instance,  from my home,
 having already set up ssh and scp access, I might say::
 
-  % scp /this_delivery/*.fits   thor.stsci.edu:/grp/crds/hst/ingest/test
+  % scp /this_delivery/*.fits   thor.stsci.edu:/crds/hst/production/server_files/ingest
+
+to copy references into my ingest directory *as-if* I had uploaded them through
+the uploads panel.
 
 Abstractly this is::
 
@@ -477,21 +480,6 @@ submitted this way must also pass through crds.certify.
    :scale: 50 %
    :alt: create contexts inputs
    
-Create Contexts
-...............
-
-*Create Contexts* provides a basic interface for automatically generating pipeline
-and instrument context mappings which refer to the specified reference mapping
-files.   
-
-.. figure:: images/web_create_contexts.png
-   :scale: 50 %
-   :alt: create contexts inputs
-   
-Using *Create Contexts* the upper level mappings can be modified to refer to a
-number of (most likely hand-edited) reference mappings.   Rmaps referred to by
-create contexts must already be known to CRDS.   *Create Contexts*
-
 
 Set File Enable
 ...............
