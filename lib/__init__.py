@@ -1,6 +1,6 @@
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 # ============================================================================
 
