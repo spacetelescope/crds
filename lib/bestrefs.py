@@ -548,7 +548,11 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     def get_bestrefs(self, instrument, dataset, ctx, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         try:
-            bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=ctx.name)
+            if self.args.remote_bestrefs:
+                bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=ctx.name,
+                                                   observatory=self.observatory)
+            else:
+                bestrefs = ctx.get_best_references(header, include=self.process_filekinds)
         except Exception, exc:
             if self.args.pdb:
                 raise
@@ -558,6 +562,15 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
                         "with respect to", repr(ctx.name), "=", repr(bestrefs))
             return bestrefs
+        
+    @property
+    def update_promise(self):
+        if self.args.update_bestrefs:
+            return ":: Updating."
+        else:
+            return ":: Would update."
+        
+    no_update = ":: No update."
     
     def screen_bestrefs(self, instrument, dataset, newrefs):
         """Scan best references dict `newrefs` for atypical results and issue errors and warnings.
@@ -576,17 +589,17 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
             if new.startswith("NOT FOUND N/A"):
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Filetype N/A for dataset.  Would/will update.", verbosity=55)
+                            "Filetype N/A for dataset.", self.update_promise, verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
             elif new.startswith(("NOT FOUND NO MATCH", "UNDEFINED")):
                 log.error(self.format_prefix(dataset, instrument, filekind), 
-                            "No best reference found. Type not known to be irrelevant for dataset.  No update.")
+                            "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind,
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], "No update.")
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Bestref FOUND:", repr(new_org), "Would/will update.", verbosity=55)
+                            "Bestref FOUND:", repr(new_org),  self.update_promise, verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
@@ -612,23 +625,24 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 old = "N/A"
             if new.startswith("NOT FOUND N/A"):
                 new = "N/A"
-            elif new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
+            
+            if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 # XXX set to warning prior to delivery
                 log.error(self.format_prefix(dataset, instrument, filekind), 
-                            "No best reference found. Type not known to be irrelevant for dataset.  No update.")
+                            "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
                 # XXX don't update,  not sure pipeline can handle UNDEFINED
                 new = "UNDEFINED"
                 continue
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind, 
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], "No update.")
+                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
                 continue
             elif filekind not in oldrefs:
                 old = "UNDEFINED"
             
             if old == "UNDEFINED" and new == "N/A" and not self.args.na_differences_matter:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
-                    "New best reference: 'UNDEFINED' --> 'N/A',  Special case, No update.", verbosity=30)
+                    "New best reference: 'UNDEFINED' --> 'N/A',  Special case.", self.no_update, verbosity=30)
                 continue
 
             if new != old:
@@ -636,24 +650,24 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
                     if self.args.na_differences_matter or (old != "N/A" and new != "N/A"):
                         self.log_and_track_error(dataset, instrument, filekind, 
-                                 "Comparison difference:", repr(old), "-->", repr(new), "Would/will update.")
+                                 "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
-                             "New best reference:", repr(old), "-->", repr(new), "Would/will update.")
+                             "New best reference:", repr(old), "-->", repr(new), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Lookup MATCHES:", repr(old), "No update.",  verbosity=30)
+                            "Lookup MATCHES:", repr(old), self.no_update,  verbosity=30)
         
         # Check for missing references in `newrefs`.
         for filekind in oldrefs:
             if filekind not in newrefs:
                 if self.args.differences_are_errors:
                     self.log_and_track_error(dataset, instrument, filekind, 
-                        "No new reference recommended. Old reference was", repr(old), "No update.", verbosity=30)
+                        "No new reference recommended. Old reference was", repr(old), self.no_update, verbosity=30)
                 else:
                     log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                        "No new reference recommended. Old reference was", repr(old), "No update.", verbosity=30)            
+                        "No new reference recommended. Old reference was", repr(old), self.no_update, verbosity=30)            
 
         return updates
     
