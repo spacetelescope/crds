@@ -121,21 +121,23 @@ class DatasetHeaderGenerator(HeaderGenerator):
     def __init__(self, context, datasets):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(DatasetHeaderGenerator, self).__init__(context, datasets)
-        log.info("Dumping dataset parameters from CRDS server for", repr(datasets))
+        server = api.get_crds_server()
+        log.info("Dumping dataset parameters from CRDS server at", repr(server), "for", repr(datasets))
         self.headers = api.get_dataset_headers_by_id(context, datasets)
-        log.info("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server.")
+        log.info("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server at", repr(server))
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
     def __init__(self, context, instruments):
         """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
         super(InstrumentHeaderGenerator, self).__init__(context, instruments)
+        server = api.get_crds_server()
         self.instruments = instruments
         sorted_sources = []
         for instrument in instruments:
-            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server.")
+            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server))
             more = api.get_dataset_headers_by_instrument(context, instrument)
-            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server.")
+            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server at", repr(server))
             self.headers.update(more)
             sorted_sources.extend(sorted(more.keys()))
         self.sources = sorted_sources
@@ -592,7 +594,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                             "Filetype N/A for dataset.", self.update_promise, verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
             elif new.startswith(("NOT FOUND NO MATCH", "UNDEFINED")):
-                self.log_and_track_error(self.format_prefix(dataset, instrument, filekind), 
+                self.log_and_track_error(dataset, instrument, filekind,
                             "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind,
@@ -628,7 +630,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 # XXX set to warning prior to delivery
-                self.log_and_track_error(self.format_prefix(dataset, instrument, filekind), 
+                self.log_and_track_error(dataset, instrument, filekind, 
                             "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
                 # XXX don't update,  not sure pipeline can handle UNDEFINED
                 new = "UNDEFINED"
