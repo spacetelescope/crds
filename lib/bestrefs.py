@@ -592,7 +592,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                             "Filetype N/A for dataset.", self.update_promise, verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
             elif new.startswith(("NOT FOUND NO MATCH", "UNDEFINED")):
-                log.error(self.format_prefix(dataset, instrument, filekind), 
+                self.log_and_track_error(self.format_prefix(dataset, instrument, filekind), 
                             "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind,
@@ -628,7 +628,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 # XXX set to warning prior to delivery
-                log.error(self.format_prefix(dataset, instrument, filekind), 
+                self.log_and_track_error(self.format_prefix(dataset, instrument, filekind), 
                             "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
                 # XXX don't update,  not sure pipeline can handle UNDEFINED
                 new = "UNDEFINED"
