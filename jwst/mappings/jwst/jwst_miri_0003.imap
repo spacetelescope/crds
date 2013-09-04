@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-04',
+    'instrument' : 'MIRI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_miri_0003.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'a03a6e5d2a9438ff8062fab75e3a05a3589fc8ce',
+}
+
+selector = {
+    'AMPLIFIER' : 'jwst_miri_amplifier_0000.rmap',
+    'DARK' : 'jwst_miri_dark_0002.rmap',
+    'FLAT' : 'jwst_miri_flat_0001.rmap',
+    'LINEARITY' : 'jwst_miri_linearity_0001.rmap',
+    'MASK' : 'jwst_miri_mask_0002.rmap',
+    'PHOTOM' : 'jwst_miri_photom_0001.rmap',
+}

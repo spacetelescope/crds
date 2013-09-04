@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-04',
+    'instrument' : 'NIRISS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_niriss_0003.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '545fe641eedb3983f6d35cebbfea99891370643b',
+}
+
+selector = {
+    'AMPLIFIER' : 'jwst_niriss_amplifier_0000.rmap',
+    'DARK' : 'jwst_niriss_dark_0002.rmap',
+    'FLAT' : 'jwst_niriss_flat_0000.rmap',
+    'LINEARITY' : 'jwst_niriss_linearity_0001.rmap',
+    'MASK' : 'jwst_niriss_mask_0001.rmap',
+    'PHOTOM' : 'jwst_niriss_photom_0002.rmap',
+}
