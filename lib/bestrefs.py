@@ -55,7 +55,8 @@ class HeaderGenerator(object):
             hdr = self.header(source)
             min_hdr = self.pmap.minimize_header(hdr)
             min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
-            log.verbose("Bestref parameters for", repr(source), "with respect to", repr(self.context), "=", log.PP(min_hdr))
+            log.verbose("Bestref parameters for", repr(source), "with respect to", 
+                        repr(self.context), "=", log.PP(min_hdr))
             return min_hdr
         except Exception, exc:
             raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
@@ -75,8 +76,10 @@ class HeaderGenerator(object):
     
     def save_pickle(self, pickle):
         """Write out headers to `pickle` file."""
+        log.info("Writing all headers to", repr(pickle))
         with open(pickle, "wb+") as pick:
             cPickle.dump(self.headers, pick)
+        log.info("Done writing", repr(pickle))
             
     def update_headers(self, headers2):
         """Incorporate `headers2` updated values into `self.headers`.  Since `headers2` may be incomplete,
@@ -154,10 +157,12 @@ class PickleHeaderGenerator(HeaderGenerator):
             with open(pickle, "rb") as pick:
                 pick_headers = cPickle.load(pick)
                 if not self.headers:
-                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), "completely replacing existing pickles.")
+                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), 
+                             "completely replacing existing pickles.")
                     self.headers.update(pick_headers)   # replace all of dataset_id
-                else:  # OPUS bestrefs don't include the original matching parameters,  so full replacement doesn't work.
-                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), "augmenting existing pickles.")
+                else:  # OPUS bestrefs don't include original matching parameters,  so full replacement doesn't work.
+                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), 
+                             "augmenting existing pickles.")
                     self.update_headers(pick_headers)
         self.sources = self.headers.keys()
     
@@ -289,7 +294,8 @@ crds.bestrefs initially supports one mode for updating the best reference recomm
 Verbosity
 .........
 
-crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational and debug output.
+crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational 
+and debug output.
 
     """
     
@@ -437,7 +443,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
                         self.args.all_instruments].count(None)
         assert (4 - source_modes <= 1) and (source_modes + int(bool(self.args.load_pickles)) >= 1), \
-            "Must specify one and only one of: --files, --datasets, --instruments, --all-instruments,  and/or --load-pickles."
+            "Must specify one and only one of: --files, --datasets, --instruments, --all-instruments, --load-pickles."
         if self.args.files:
             new_headers = FileHeaderGenerator(context, self.args.files)
             # log.info("Computing bestrefs for dataset files", self.args.files)
@@ -476,10 +482,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
-                # XXXX back in the day,  matching parameters and expected result types might have been different.
+                # XXXX in old contexts, matching parameters and expected result types might have been different.
                 # XXXX for now,  just ensure they're the same,  lesser likelihood of error.
                 # old_headers = self.init_headers(self.args.old_context)
-                log.verbose_warning("Assuming matching parameter names and expected references types are the same across contexts.")
+                log.verbose_warning("Assuming parameter names and required types are the same across contexts.")
                 old_headers = self.new_headers
                 old_fname = self.args.old_context
             else:
@@ -567,6 +573,7 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
         
     @property
     def update_promise(self):
+        """Return a string identifying that and update would or will occurr, depending on --update-bestrefs."""
         if self.args.update_bestrefs:
             return ":: Updating."
         else:
@@ -592,17 +599,23 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             if new.startswith("NOT FOUND N/A"):
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Filetype N/A for dataset.", self.update_promise, verbosity=55)
-                updates.append(UpdateTuple(instrument, filekind, None, "N/A"))
+                new = "N/A"
             elif new.startswith(("NOT FOUND NO MATCH", "UNDEFINED")):
-                self.log_and_track_error(dataset, instrument, filekind,
-                            "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
+                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
+                    self.log_and_track_error(dataset, instrument, filekind, 
+                        "No CRDS match found => 'N/A'.", self.update_promise)
+                else:
+                    log.verbose(self.format_prefix(dataset, instrument, filekind),
+                        "No CRDS match found => 'N/A'.", self.update_promise)
+                new = "N/A"
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind,
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+                            "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+                continue
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Bestref FOUND:", repr(new_org),  self.update_promise, verbosity=55)
-                updates.append(UpdateTuple(instrument, filekind, None, new))
+            updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
     
@@ -629,22 +642,22 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                 new = "N/A"
             
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
-                # XXX set to warning prior to delivery
-                self.log_and_track_error(dataset, instrument, filekind, 
-                            "No best reference found. Type not known to be irrelevant for dataset.", self.no_update)
-                # XXX don't update,  not sure pipeline can handle UNDEFINED
-                new = "UNDEFINED"
-                continue
+                new = "N/A"
+                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
+                    self.log_and_track_error(dataset, instrument, filekind, 
+                        "No CRDS match found => 'N/A'.")
+                else:
+                    log.verbose(self.format_prefix(dataset, instrument, filekind),
+                        "No CRDS match found => 'N/A'.")
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind, 
-                                         "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+                    "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
                 continue
-            elif filekind not in oldrefs:
-                old = "UNDEFINED"
-            
+
             if old == "UNDEFINED" and new == "N/A" and not self.args.na_differences_matter:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
-                    "New best reference: 'UNDEFINED' --> 'N/A',  Special case.", self.no_update, verbosity=30)
+                    "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
+                    self.no_update, verbosity=30)
                 continue
 
             if new != old:
@@ -652,10 +665,10 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
                     if self.args.na_differences_matter or (old != "N/A" and new != "N/A"):
                         self.log_and_track_error(dataset, instrument, filekind, 
-                                 "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
+                            "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
-                             "New best reference:", repr(old), "-->", repr(new), self.update_promise)
+                            "New best reference:", repr(old), "-->", repr(new), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -676,6 +689,8 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
         # (dataset, filekind, old, new)
+        if self.args.save_pickle:
+            self.new_headers.save_pickle(self.args.save_pickle)
         if self.args.print_affected:
             for dataset in self.updates:
                 if self.updates[dataset]:
@@ -691,8 +706,6 @@ crds.bestrefs has --verbose and --verbosity=N parameters which can increase the 
             references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
             api.dump_references(self.new_context, references, ignore_cache=self.args.ignore_cache, 
                                 raise_exceptions=self.args.pdb)
-        if self.args.save_pickle:
-            self.new_headers.save_pickle(self.args.save_pickle)
         self.dump_unique_errors()
 
 # ===================================================================
