@@ -407,6 +407,8 @@ class ContextsScript(Script):
         """
         files = set()
         for context in self.contexts:
+            with log.warn_on_exception("Failed dumping mappings for", repr(context)):
+                api.dump_mappings(context)
             pmap = rmap.get_cached_mapping(context)
             files = files.union(pmap.mapping_names())
         return sorted(files)
