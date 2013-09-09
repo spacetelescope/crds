@@ -10,7 +10,7 @@ if "-d" in sys.argv:
     sys.argv.remove("-d")
     DRY_RUN = True
 
-pars = "--print-affected --compare-source-bestrefs --new-context {} --files {} ".format(*sys.argv[1:3]) + " ".join(sys.argv[3:])
+pars = "--print-affected --new-context {} --files {} ".format(*sys.argv[1:3]) + " ".join(sys.argv[3:])
 if not DRY_RUN:
     pars += " --update-bestrefs"
 
