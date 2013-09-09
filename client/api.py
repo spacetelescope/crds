@@ -67,13 +67,18 @@ __all__ = [
 
 CRDS_DATA_CHUNK_SIZE = 2**23   # 8M, HTTP, sha1sum,  but maybe not RPC.
 
+# ============================================================================
+
 # Server for CRDS services and mappings
 
 URL_SUFFIX = "/json/"
 
-JWST_TEST_SERVER = 'http://jwst-crds.stsci.edu'
-HST_TEST_SERVER = 'http://hst-crds.stsci.edu'
-URL = os.environ.get("CRDS_SERVER_URL", "http://not-a-crds-server.stsci.edu")
+JWST_OPS_SERVER = 'https://jwst-crds.stsci.edu'
+HST_OPS_SERVER = 'https://hst-crds.stsci.edu'
+JWST_TEST_SERVER = 'https://jwst-crds-test.stsci.edu'
+HST_TEST_SERVER = 'https://hst-crds-test.stsci.edu'
+
+URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
 
 S = None    # Proxy server
 
@@ -81,19 +86,25 @@ def set_crds_server(url):
     """Configure the CRDS JSON services server to `url`,  
     e.g. 'http://localhost:8000'
     """
+    if not url.startswith("https://") and "localhost" not in url:
+        log.warning("CRDS_SERVER_URL does not start with https://")
     if url.endswith("/"):
         url = url[:-1]
     global URL, S
     URL = url + URL_SUFFIX
     S = CheckingProxy(URL, version="1.0")
-
     
 def get_crds_server():
     """Return the base URL for the CRDS JSON RPC server.
     """
-    return URL[:-len(URL_SUFFIX)]
+    url = URL[:-len(URL_SUFFIX)]
+    if not url.startswith("https://") and "localhost" not in url:
+        log.warning("CRDS_SERVER_URL does not start with https://")
+    return url
 
 set_crds_server(URL)
+
+# ============================================================================
 
 def get_download_mode():
     """Return the mode used to download references and mappings,  either normal
