@@ -676,10 +676,9 @@ class Selector(object):
         for key, choice in self._selections:
             pkey = self._diff_key(key)
             if key not in other_keys:
+                differences.append(msg(key, "deleted", repr(choice)))
                 if isinstance(choice, Selector):
                     differences.extend(choice._flat_diff("deleted", path + (pkey,), pars + (self._parameters,)))
-                else:
-                    differences.append(msg(key, "deleted", repr(choice)))
             else:
                 other_choice = other_map[key]
                 if isinstance(choice, Selector):
@@ -690,10 +689,9 @@ class Selector(object):
             pkey = self._diff_key(key)
             if key not in self_keys:
                 other_choice = other_map[key]
+                differences.append(msg(key, "added", repr(other_choice)))
                 if isinstance(other_choice, Selector):
                     differences.extend(other_choice._flat_diff("added", path + (pkey,), pars + (self._parameters,)))
-                else:
-                    differences.append(msg(key, "added", repr(other_choice)))
         return differences
     
     def _flat_diff(self, change, path, pars):
