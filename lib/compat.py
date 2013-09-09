@@ -152,7 +152,7 @@ except ImportError:
 
 try:
     from collections import OrderedDict
-except:
+except ImportError:
     class OrderedDict(dict):
         """Fake ordered dictionary."""
     tell_fake("OrderedDict.  OrderedDict's will be unordered.")

@@ -156,7 +156,7 @@ def process_reference_file_defs():
 HERE = os.path.dirname(__file__) or "."
 try:
     PARKEYS = eval(open(HERE + "/parkeys.dat").read())
-except:
+except Exception:
     PARKEYS = {}
 
 FLOAT_RE = r"[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?"

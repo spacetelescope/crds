@@ -437,7 +437,7 @@ on nested selectors.
       if (exposure_start_compare > SM4_YYYYDDDHHMMSS): beyond_SM4 = True
       else:                                            beyond_SM4 = False
 
-    except:
+    except Exception:
       traceback.print_exc()
       opusutil.PrintMsg("E","Failed time conversion for exposure start.")
       raise FailedTimeConversion

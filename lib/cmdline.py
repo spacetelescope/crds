@@ -414,10 +414,14 @@ class ContextsScript(Script):
         return sorted(files)
     
     def get_context_references(self):
-        """Return the set of mappings which are pointed to by the mappings
+        """Return the set of references which are pointed to by the references
         in `contexts`.
         """
         files = set()
         for context in self.contexts:
-            files = files.union(api.get_reference_names(context))
+            try:
+                pmap = rmap.get_cached_mapping(context)
+                files = files.union(pmap.mapping_names())
+            except Exception, exc:  # only ask the server if loading context fails
+                files = files.union(api.get_reference_names(context))
         return sorted(files)

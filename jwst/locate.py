@@ -18,7 +18,7 @@ from . import tpn
 try:
     from jwstlib.models import DataModel
     MODEL = DataModel()
-except:
+except Exception:
     log.warning("JWST data model is not installed.   Cannot fits_to_parkeys().")
 
 # =======================================================================
