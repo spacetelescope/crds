@@ -90,7 +90,7 @@ def get_observatory(filepath, original_name=None):
     if original_name.endswith(".fits"):
         try:
             observatory = pyfits.getval(filepath, "TELESCOP")
-        except:
+        except Exception:
             observatory = "hst"
         return observatory.lower()
     elif original_name.endswith(".finf"):

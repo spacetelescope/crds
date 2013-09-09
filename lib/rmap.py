@@ -603,7 +603,7 @@ class PipelineContext(ContextMapping):
             except KeyError:
                 try: # This hack makes FITS headers work prior to back-mapping to data model names.
                     return header["INSTRUME"].lower()
-                except:
+                except KeyError:
                     raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
 
     def get_item_key(self, filename):
@@ -885,7 +885,7 @@ class ReferenceMapping(Mapping):
                     limits = values[0].split(":")
                     try:
                         limits = [int(float(x)) for x in limits]
-                    except:
+                    except Exception:
                         sys.exc_clear()
                     else:
                         values = range(limits[0], limits[1]+1)

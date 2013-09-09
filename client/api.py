@@ -396,7 +396,7 @@ class FileCacher(object):
             # traceback.print_exc()
             try:
                 os.remove(localpath)
-            except:
+            except Exception:
                 pass
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 

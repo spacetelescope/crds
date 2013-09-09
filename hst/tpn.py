@@ -282,10 +282,10 @@ def make_crds_tpn_catalog(kind):
         filetype = cat.header.get("filetype", cat.reftype).lower()
         try:
             filekind = filetype_to_filekind(instr, filetype)
-        except:
+        except Exception:
             try:
                 filekind = extension_to_filekind(instr, filetype)
-            except:
+            except Exception:
                 skipped[instr].add(filetype)
                 continue
         if filekind not in table[instr]:
