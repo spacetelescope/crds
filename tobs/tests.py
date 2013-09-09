@@ -294,6 +294,7 @@ class RecursiveModify(object):
         result.write(self.result_filename)
         diffs = r.difference(result)
         log.verbose("diffs:", diffs)
+        diffs = [diff for diff in diffs if "Selector" not in diff[-1]]
         assert len(diffs) == 1, "Fewer/more differences than expected: " + repr(diffs)
         log.verbose("recursive insert result rmap:")
         log.verbose(open(self.result_filename).read())
