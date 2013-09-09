@@ -266,8 +266,8 @@ class Mapping(object):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        code = MAPPING_VALIDATOR.compile_and_check(text)
         try:
+            code = MAPPING_VALIDATOR.compile_and_check(text)
             header, selector = cls._interpret(code)
         except Exception, exc:
             raise MappingError("Can't load file " + where + " : " + str(exc))
