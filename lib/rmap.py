@@ -757,7 +757,7 @@ class ReferenceMapping(Mapping):
         self._row_keys = self.header.get("row_keys", ())
 
         # header precondition method, e.g. crds.hst.acs.precondition_header  # TPNs define the static definitive possibilities for parameter choices
-        self._tpn_valid_values = self.get_valid_values_map()
+        
         # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()
@@ -778,6 +778,13 @@ class ReferenceMapping(Mapping):
         self._precondition_header = getattr(self.instr_package, "precondition_header", (lambda self, header: header))
         self._fallback_header = getattr(self.instr_package, "fallback_header", (lambda self, header: None))
         self._reference_match_fallback_header = getattr(self.instr_package, "reference_match_fallback_header", (lambda self, header: None))
+
+    @property
+    @utils.cached
+    def tpn_valid_values(self):
+        """Property, dictionary of valid values for each parameter loaded from .tpn files or equivalent."""
+        return self.get_valid_values_map()
+
 
     def get_best_ref(self, header_in):
         """Return the single reference file basename appropriate for
@@ -901,7 +908,7 @@ class ReferenceMapping(Mapping):
         """
         log.verbose("Validating", repr(self.basename))
         try:
-            self.selector.validate_selector(self._tpn_valid_values, trap_exceptions)
+            self.selector.validate_selector(self.tpn_valid_values, trap_exceptions)
         except Exception, exc:
             if trap_exceptions == mapping_type(self):
                 log.error("invalid mapping:", self.instrument, self.filekind, ":", str(exc))
@@ -987,7 +994,7 @@ class ReferenceMapping(Mapping):
         of this rmap and return it.
         """
         new = self.copy()
-        new.selector.modify(header, value, self._tpn_valid_values)
+        new.selector.modify(header, value, self.tpn_valid_values)
         return new
 
     def get_matching_header(self, header):
