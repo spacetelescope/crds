@@ -307,10 +307,10 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         for action, diff in categorized:
             if action == "add":
                 added = diff_added_new(diff)
-                print self.instrument_filekind(added), added
+                print added, self.instrument_filekind(added)
             elif action == "replace":
                 _old_val, replacement = map(os.path.basename, diff_replace_old_new(diff))
-                print self.instrument_filekind(replacement), replacement
+                print replacement, self.instrument_filekind(replacement)
     
     def instrument_filekind(self, filename):
         """Return the instrument and filekind of `filename` as a space separated string."""
