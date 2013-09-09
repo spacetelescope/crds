@@ -5,7 +5,7 @@ a full path.   Currently it operates on mapping, FITS, or text files.
 import os
 import sys
 
-from crds import rmap, log, pysh, cmdline
+from crds import rmap, log, pysh, cmdline, utils
 
 from pyfits import FITSDiff
 
@@ -99,6 +99,11 @@ def diff_replace_old_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
     _replaced, old, _with, new = diff[-1].split()
     return unquote(old), unquote(new)
+
+def diff_added_new(diff):
+    """Return the (old, new) filenames from difference tuple `diff`."""
+    _added, new = diff[-1].split()
+    return unquote(new)
     
 # ============================================================================
 
@@ -156,6 +161,8 @@ def _diff_tail(msg):
         else:
             tail.append(part)
     return tuple(reversed(tail))
+
+# =============================================================================================================
 
 def newstyle_name(name):
     """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
@@ -274,18 +281,43 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
             help="Fitsdiff replaced reference files when diffing mappings.", 
             action="store_true")
-        self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs",
-            help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.",
-            action="store_true")
-        self.add_argument("-K", "--check-diffs", dest="check_diffs",
-            help="Issue warnings about new rules, deletions, or reversions.",
-            action="store_true")
+        self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs", action="store_true",
+            help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.")
+        self.add_argument("-K", "--check-diffs", dest="check_diffs", action="store_true",
+            help="Issue warnings about new rules, deletions, or reversions.")
+        self.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
+            help="Rather than printing diffs for mappings,  print the names of new or replacement files.")
 
     def main(self):
         """Perform the differencing."""
-        difference(self.observatory, self.args.old_file, self.args.new_file, 
+        if self.args.print_new_files:
+            return self.print_new_files()
+        else:
+            return difference(self.observatory, self.args.old_file, self.args.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
                    mapping_text_diffs=self.args.mapping_text_diffs)
+    
+    def print_new_files(self):
+        """Print the references or mappings which are new additions or replacements when comparing mappings."""
+        if not rmap.is_mapping(self.args.old_file) or not rmap.is_mapping(self.args.new_file):
+            log.error("--print-new-files really only works for mapping differences.")
+            return -1
+        diffs = mapping_diffs(self.args.old_file, self.args.new_file)
+        categorized = sorted([ (diff_action(d), d) for d in diffs ])
+        for action, diff in categorized:
+            if action == "add":
+                added = diff_added_new(diff)
+                print self.instrument_filekind(added), added
+            elif action == "replace":
+                _old_val, replacement = map(os.path.basename, diff_replace_old_new(diff))
+                print self.instrument_filekind(replacement), replacement
+    
+    def instrument_filekind(self, filename):
+        """Return the instrument and filekind of `filename` as a space separated string."""
+        instrument, filekind = utils.get_file_properties(self.observatory, filename)
+        return instrument + " " + filekind 
 
+        
+        
 if __name__ == "__main__":
     DiffScript()()
