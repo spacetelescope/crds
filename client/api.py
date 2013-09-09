@@ -499,7 +499,7 @@ class BundleCacher(FileCacher):
                 log.verbose("Skipping existing file", repr(name), verbosity=10)
         self.fetch_bundle(bundlepath, downloads)
         bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
-        for name in localpaths:
+        for name in downloads:
             self.verify_file(pipeline_context, name, localpaths[name])
         return bytes
 
