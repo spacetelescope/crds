@@ -135,18 +135,18 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         self.require_server_connection()
         if self.contexts:
-            active_mappings = self.fetch_mappings()
+            verify_file_list = active_mappings = self.fetch_mappings()
             if self.args.datasets:
                 active_references = self.sync_datasets()
             else:
                 active_references = self.get_context_references()
             if self.args.fetch_references:
                 self.fetch_references(active_references)
+                verify_file_list += active_references
             if self.args.purge_references:
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
-            verify_file_list = active_mappings + active_references
         elif self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
