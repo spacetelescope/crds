@@ -421,7 +421,7 @@ class ContextsScript(Script):
         for context in self.contexts:
             try:
                 pmap = rmap.get_cached_mapping(context)
-                files = files.union(pmap.mapping_names())
-            except Exception, exc:  # only ask the server if loading context fails
+                files = files.union(pmap.reference_names())
+            except Exception:  # only ask the server if loading context fails
                 files = files.union(api.get_reference_names(context))
         return sorted(files)
