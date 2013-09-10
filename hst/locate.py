@@ -61,17 +61,24 @@ def setup_path_map(cdbs=CDBS_REFPATH, rebuild_cache=False):
         if not line:
             continue
         dirname, filename = os.path.split(line)
-#        if filename in REFNAME_TO_PATH:
-#            log.warning("Reference file " + repr(filename) + " found more than once. Using first.")
-        REFNAME_TO_PATH[filename] = line        
+        if filename in REFNAME_TO_PATH:
+            if "linux" in dirname:
+                log.verbose_warning("Reference file " + repr(filename) + " found more than once.  Overriding with Linux version.")
+                REFNAME_TO_PATH[filename] = line
+            else:
+                log.verbose_warning("Reference file " + repr(filename) + " found more than once.  Keeping original version since 'linux' not in new path.")
+        else:
+            REFNAME_TO_PATH[filename] = line
 
 def main():
     """Regenerate the CDBS path cache."""
+    # log.set_verbose()
     setup_path_map(rebuild_cache=True)
 
 def test():
     """Run the module doctests."""
-    import doctest, locate
+    import doctest
+    from crds.hst import locate
     return doctest.testmod(locate)
 
 # =======================================================================
@@ -299,5 +306,3 @@ def fits_to_parkeys(header):
 
 if __name__ == "__main__":
     main()
-
-    
