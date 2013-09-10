@@ -36,7 +36,8 @@ def dataset(filename):
 
 def reference_file(filename):
     """Ensure `filename` is a reference file."""
-    assert filename.endswith((".fits", ".finf")), "A .fits or .finf file is required but got: '%s'" % filename
+    assert re.match(".*(.fits|.finf|.r[0-9][hd])", filename), \
+        "A .fits or .finf file is required but got: '%s'" % filename
     return filename
 
 def mapping(filename):
@@ -422,6 +423,7 @@ class ContextsScript(Script):
             try:
                 pmap = rmap.get_cached_mapping(context)
                 files = files.union(pmap.reference_names())
+                log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails
                 files = files.union(api.get_reference_names(context))
         return sorted(files)
