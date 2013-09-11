@@ -39,65 +39,74 @@ class SyncScript(cmdline.ContextsScript):
     """
     
     epilog = """    
-    * Primitive syncing can be done by explicitly listing the files you wish to cache:
+    * Primitive syncing can be done by explicitly listing the files you wish to cache::
+        
+                % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
     
-         % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
-         this will download only those two files.
-    
+      this will download only those two files.
+        
     * Typically syncing CRDS files is done with respect to particular CRDS contexts:
-    
-        Synced contexts can be explicitly listed:
         
-          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
-          this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
-        
-        Synced contexts can be specified as a numerical range:
-        
-          % python -m crds.sync --range 1:3
-          this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
-        
-        Synced contexts can be specified as --all contexts:
-        
-          % python -m crds.sync --all
-          this will recursively download all CRDS mappings for all time.
-          
-        NOTE:  Fetching references required to support contexts has to be done explicitly:
-        
-          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references    
-          will download all the references mentioned by contexts 0001 and 0002.   
-          this can be a huge undertaking and should be done with care.
-        
-    * Removing files:
-          
-        Files from unspecified contexts can be removed like this:
-        
-          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
-          this would remove mappings which are *not* in contexts 4 or 5.
-    
-          % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
-          this would remove reference files which are *not* in 4 or 5.
-    
-    * References for particular datasets can be cached like this:
+            Synced contexts can be explicitly listed::
             
-          % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
-          this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
-          this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
-          
-    * Checking the cache:
+                % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+              
+            this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
+            
+            Synced contexts can be specified as a numerical range::
+            
+                % python -m crds.sync --range 1:3
     
-          % python -m crds.sync --contextst hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
-          would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
-          be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
-          would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
-          sync download process is a null operation which just determines the list of files to check.
-          
-          % python -m crds.sync --contextst hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
-          would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
-          be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
-          would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
-          sync download process is a null operation which just determines the list of files to check.
-          
-          
+            this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
+            
+            Synced contexts can be specified as --all contexts::
+            
+                % python -m crds.sync --all
+    
+            this will recursively download all CRDS mappings for all time.
+              
+            NOTE:  Fetching references required to support contexts has to be done explicitly::
+            
+                % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
+     
+            will download all the references mentioned by contexts 0001 and 0002.   
+            this can be a huge undertaking and should be done with care.
+            
+    * Removing files:
+              
+            Files from unspecified contexts can be removed like this::
+            
+                % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
+    
+            this would remove mappings which are *not* in contexts 4 or 5.
+        
+                % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
+    
+            this would remove reference files which are *not* in 4 or 5.
+        
+    * References for particular datasets can be cached like this::
+                
+         % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
+    
+      this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+      this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
+              
+    * Checking the cache::
+        
+        % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
+    
+      would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+      be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
+      would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
+      sync download process is a null operation which just determines the list of files to check.
+      
+    * Removing blacklisted or rejected files::
+              
+        % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+    
+      would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+      be checked for correct length, and reject and blacklist status.   Files reported as rejected or blacklisted by 
+      the server would be removed.
     """
     
     # ------------------------------------------------------------------------------------------
@@ -116,7 +125,7 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
                           help="Download sync'ed files even if they're already in the cache.")
         self.add_argument('--dry-run', action="store_true",
-                          help= "Don't remove purged files,  just print out their names.")
+                          help= "Don't remove purged files, or repair files,  just print out their names.")
         
         self.add_argument('-k', '--check-files', action='store_true', dest='check_files',
                           help='Check cached files against the CRDS database and report anomalies.')
@@ -135,19 +144,20 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         self.require_server_connection()
         if self.contexts:
-            verify_file_list = active_mappings = self.fetch_mappings()
+            active_mappings = self.fetch_mappings()
             if self.args.datasets:
                 active_references = self.sync_datasets()
             else:
                 active_references = self.get_context_references()
+            active_references += self.get_conjugates(active_references)
+            active_references = sorted(set(active_references))
             if self.args.fetch_references:
                 self.fetch_references(active_references)
-                active_conjugates = [data_file.get_conjugate(ref) for ref in active_references if data_file.get_conjugate(ref)]
-                verify_file_list += active_references + active_conjugates
             if self.args.purge_references:
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
+            verify_file_list = active_mappings + active_references
         elif self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
