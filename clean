@@ -8,7 +8,7 @@ if (-e ../CRDS_server) then
 	set dirs="$dirs ../CRDS_server"
 endif
 
-foreach pat ('*.orig' '*.pyc' 'build' 'svn_version.py*')
+foreach pat ('*.orig' '*.pyc' 'build')
 	find ${dirs} -name "${pat}" | xargs rm -rf
 end
 
