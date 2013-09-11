@@ -301,6 +301,13 @@ and debug output.
     
     def __init__(self, *args, **keys):
         cmdline.Script.__init__(self, *args, **keys)
+
+        if self.args.compare_cdbs:
+            self.args.compare_source_bestrefs = True
+            self.args.differences_are_errors = True
+            self.args.stats = True
+            self.args.dump_unique_errors = True
+                
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
         self.updates = {}                  # map of reference updates
@@ -329,6 +336,7 @@ and debug output.
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
+        
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
         
         # headers corresponding to the new context
@@ -400,6 +408,9 @@ and debug output.
         
         self.add_argument("--na-differences-matter", action="store_true",
             help="If not set,  either CDBS or CRDS scoring reference type as N/A is OK to mismatch.")
+        
+        self.add_argument("--compare-cdbs", action="store_true",
+            help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         cmdline.UniqueErrorsMixin.add_args(self)
     
