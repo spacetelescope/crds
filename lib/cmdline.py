@@ -305,6 +305,10 @@ class Script(object):
             log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
             context = resolved_context
         return context
+
+    def get_conjugates(file_list):
+        """Given a list of references,  return any GEIS data files associated with them."""
+        return [ data_file.conjugate(ref) for ref in file_list if data_file.conjugate(ref) is not None]
     
 # =============================================================================
 

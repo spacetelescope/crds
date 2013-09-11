@@ -272,6 +272,11 @@ def is_geis_data(name):
     name = os.path.basename(name)
     return bool(re.match(r"r[0-9]d", name[-3:]))
 
+def is_geis_header(name):
+    """Return True IFF `name` identifies a GEIS data file."""
+    name = os.path.basename(name)
+    return bool(re.match(r"r[0-9]h", name[-3:]))
+
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
@@ -321,6 +326,17 @@ def get_geis_header(name, needed_keys=()):
         header["HISTORY"] = history
     
     return header
+
+def get_conjugate(reference):
+    """Return any file associated with `reference`,  nominally GEIS data from header,
+    e.g.  'something.r3h' --> 'something.r3d'
+    If there is no file associated with reference,  return None.
+    """
+    if is_geis_data(reference):
+        return reference[:-1] + "h"
+    elif is_geis_header(reference):
+        return reference[:-1] + "d"
+    return None
 
 def test():
     """Run doctest on data_file module."""

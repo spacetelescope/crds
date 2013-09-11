@@ -142,7 +142,8 @@ class SyncScript(cmdline.ContextsScript):
                 active_references = self.get_context_references()
             if self.args.fetch_references:
                 self.fetch_references(active_references)
-                verify_file_list += active_references
+                active_conjugates = [data_file.get_conjugate(ref) for ref in active_references if data_file.get_conjugate(ref)]
+                verify_file_list += active_references + active_conjugates
             if self.args.purge_references:
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
