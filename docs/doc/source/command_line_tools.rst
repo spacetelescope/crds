@@ -151,12 +151,12 @@ crds.sync
 
 The CRDS sync tool is used to download CRDS rules and references from the CRDS server::
     
-    usage: python -m crds.sync
-    
+    usage: /Users/jmiller/work/normal/lib/python2.7/site-packages/crds/sync.py
            [-h] [--contexts [CONTEXT [CONTEXT ...]]] [--range MIN:MAX] [--all]
            [--files [FILES [FILES ...]]] [--datasets [DATASET [DATASET ...]]]
            [--fetch-references] [--purge-references] [--purge-mappings] [-i]
-           [--dry-run] [-v] [--verbosity VERBOSITY] [-V] [-J] [-H]
+           [--dry-run] [-k] [-s] [-r] [--purge-rejected] [--purge-blacklisted]
+           [-v] [--verbosity VERBOSITY] [-V] [-J] [-H] [--stats]
            [--profile PROFILE] [--pdb]
     
         Synchronize local mapping and reference caches for the given contexts by
@@ -166,7 +166,7 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
     optional arguments:
       -h, --help            show this help message and exit
       --contexts [CONTEXT [CONTEXT ...]]
-                            Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap
+                            Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
       --range MIN:MAX       Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.
       --all                 Operate with respect to all known CRDS contexts.
       --files [FILES [FILES ...]]
@@ -178,70 +178,90 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
       --purge-mappings      Remove mapping files not referred to by contexts from the cache.
       -i, --ignore-cache    Download sync'ed files even if they're already in the cache.
       --dry-run             Don't remove purged files,  just print out their names.
+      -k, --check-files     Check cached files against the CRDS database and report anomalies.
+      -s, --check-sha1sum   For --check-files,  also verify file sha1sums.
+      -r, --repair-files    Repair or re-download files noted as bad by --check-files
+      --purge-rejected      Purge files noted as rejected by --check-files
+      --purge-blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by --check-files
       -v, --verbose         Set log verbosity to True,  nominal debug level.
       --verbosity VERBOSITY
                             Set log verbosity to a specific level: 0..100.
       -V, --version         Print the software version and exit.
       -J, --jwst            Force observatory to JWST for determining header conventions.
       -H, --hst             Force observatory to HST for determining header conventions.
+      --stats               Track and print timing statistics.
       --profile PROFILE     Output profile stats to the specified file.
       --pdb                 Run under pdb.
     
         
 * Primitive syncing can be done by explicitly listing the files you wish to cache::
+    
+            % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
 
-        % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
-     
-     this will download only those two files.
-
+  this will download only those two files.
+    
 * Typically syncing CRDS files is done with respect to particular CRDS contexts:
-
-    Synced contexts can be explicitly listed::
     
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
-      
-    this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
-    
-    Synced contexts can be specified as a numerical range::
-    
-        % python -m crds.sync --range 1:3
-    
-    this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
-    
-    Synced contexts can be specified as --all contexts::
-    
-        % python -m crds.sync --all
-    
-    this will recursively download all CRDS mappings for all time.
-      
-    *NOTE*:  Fetching references required to support contexts has to be done explicitly::
-    
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references    
-    
-    will download all the references mentioned by contexts 0001 and 0002.   
-    this can be a huge undertaking and should be done with care.
-    
-* Removing files:
-      
-    Rules/mappings from specified contexts can be removed like this::
-    
-        % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
-    
-    this would remove mapping files which are *not* in 4 or 5.
-
-    References from specified contexts can be removed like this::
-
-      % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
-    
-    this would remove reference files which are *not* in 4 or 5.
-
-* References for particular datasets can be cached like this::
+        Synced contexts can be explicitly listed::
         
-            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
+            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+          
+        this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
+        
+        Synced contexts can be specified as a numerical range::
+        
+            % python -m crds.sync --range 1:3
 
-      this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
-      this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
+        this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
+        
+        Synced contexts can be specified as --all contexts::
+        
+            % python -m crds.sync --all
 
+        this will recursively download all CRDS mappings for all time.
+          
+        NOTE:  Fetching references required to support contexts has to be done explicitly::
+        
+            % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
+ 
+        will download all the references mentioned by contexts 0001 and 0002.   
+        this can be a huge undertaking and should be done with care.
+        
+* Removing files:
+          
+        Files from unspecified contexts can be removed like this::
+        
+            % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
+
+        this would remove mappings which are *not* in contexts 4 or 5.
+    
+            % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
+
+        this would remove reference files which are *not* in 4 or 5.
+    
+* References for particular datasets can be cached like this::
+            
+     % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  <dataset_files...>
+
+  this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+  this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
+          
+* Checking the cache::
+    
+    % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
+
+  would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+  be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
+  would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
+  sync download process is a null operation which just determines the list of files to check.
+  
+* Removing blacklisted or rejected files::
+          
+    % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+
+  would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+  be checked for correct length, and reject and blacklist status.   Files reported as rejected or blacklisted by the 
+  server would be removed.
     
 crds.bestrefs
 -------------
@@ -396,6 +416,29 @@ Verbosity
 .........
 
 crds.bestrefs has ``--verbose`` and ``--verbosity=N`` parameters which can increase the amount of informational and debug output.
+
+
+pipeline_bestrefs
+-----------------
+
+The pipeline_bestrefs script is a shim around crds.bestrefs which simplifies the command line interface,
+tuning it to the more limited case of updating FITS dataset headers with best references::
+
+    usage: pipeline_bestref [-d] [-v] [-h] [--print-affected] <crds_context> <dataset_file(s)>...
+    
+    -d                     dry run,  do not update file headers
+    -v                     verbose,  output additional diagnostic messages
+    -h                     help,  print this help
+    --print-affected       print files with updated bestrefs
+    
+    Updates dataset FITS files with best references recommended by <crds_context>.
+    
+    <crds_context> is a CRDS context file, explicitly named e.g. hst_0004.pmap
+    <crds_context> can be specified abstractly,  e.g.  hst-edit or hst-operational
+    <crds_context> can be specified by date,  e.g.  hst-2013-01-29T12:00:00
+    
+    <dataset_file(s)> are raw dataset files for which best references are
+    computed and updated.
 
 
 
