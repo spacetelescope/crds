@@ -14,16 +14,69 @@ functions which require a CRDS login account.
    :scale: 50 %
    :alt: home page of CRDS website
 
-
 Functions annotated with the word (alpha) are partially completed components of
 a future build which may prove useful now.
 
-Public Functions
-----------------
+Operational References
+----------------------
+
+The *Operational References* table displays the references which are currently in use
+by the pipeline associated with this web site.   The operational context is displayed
+as a link '(under context <link>)' immediately below Operational References.  Clicking
+the link opens a details browser for that CRDS .pmap reference assignment rules file.   
+The operational context is the latest context in the Context History,  the one in 
+active use for pipeline processing by default.
+
+Each instrument accordion opens into reference type accordions for that instrument.
+
+Each type accordion opens into a table of reference files and the dataset parameters 
+they apply to.   Each reference file link opens into a details browser for that reference
+file.
+
+Open Services
+-------------
 
 The following functions are available for anyone with access to the CRDS web
 server and basically serve to distribute information about CRDS files and
 recommendations.   Initially,  the CRDS sites are only visible within the Institute.
+
+Context History
+...............
+
+The *Context History* displays the record of CRDS contexts which were in operational use by
+the pipeline associated with a CRDS server.
+
+.. figure:: images/web_context_history.png
+   :scale: 50 %
+   :alt: History of CRDS operational contexts
+
+Clicking on a *context* link opens a a table of the historical references which were in use under
+that context:
+
+.. figure:: images/web_context_table.png
+   :scale: 50 %
+   :alt: CRDS historical references display
+   
+References are displayed in accordion panels for each instrument.   Opening the panel for
+an instrument displays the reference types of that instrument.  Opening the panel for a type
+displays particular reference files and matching parameters for that type.   Clicking on a particular
+reference file brings up the CRDS browser page with the known details for that reference.
+
+Differencing contexts
++++++++++++++++++++++
+
+Click the *diff* checkbox for any two contexts in the history and then click the diff button
+at the top of the diff column.   This will display a difference page with an accorion panel
+for each file which differed between the two contexts:
+    
+.. figure:: images/web_context_difference.png
+   :scale: 50 %
+   :alt: CRDS context differences
+
+Each file accordion opens into two accordions which display different views of the differences,
+logical or textual.  The logical differences display a table of matching parameters and files
+which were added, deleted, or replaced.   The textual differences show raw UNIX diffs of the
+two rules files.
 
 Dataset Best References (alpha)
 ...............................
@@ -225,7 +278,104 @@ Private Functions
 
 The following functions are restricted to users with accounts on the CRDS website
 and support the submission of new reference and mapping files and maintenance
-of the overall site.
+of the overall site.   Private functions are only visible to users who have 
+successfully logged in.
+
+Login and Instrument Locking
+............................
+
+Typical batch file submissions automatically generate instrument and pipeline context
+files,  as well as .rmaps.   To preclude the possibility of multiple users submitting
+files from the same instrument at the same time,  and possibly creating conflicting
+rules,  users lock instruments when they log in.
+
+.. figure:: images/web_login.png
+   :scale: 50 %
+   :alt: login page with instrument locking
+
+When a user logs in,  the instrument they've locked and the time remaining on the 
+lock are displayed below the login (now logout) button:
+
+.. figure:: images/web_logged_in.png
+   :scale: 50 %
+   :alt: logged in page with count down timer
+
+The time displayed is the relative time remaining on the lock reservation,  nominally
+around 4 hours with the current server configuration.
+
+When the user performs an action on the website,  their lock timer is reset to its maximum value.
+As time passes without action,  the lock timer counts down.  When the lock timer reaches zero, 
+the lock is automatically released and any on-going file submission is cancelled.   Files which 
+have been uploaded for a cancelled submission are left in the upload area.
+
+Other users who attempt to login while an instrument is locked will be denied.
+
+When a file submission is being performed,  it must be *confirmed* within the timeout period
+or the file submission will be cancelled.
+
+Care should be taken with the locking mechanism and file submissions.  **DO NOT**:
+
+* Don't login from multiple browsers or sites.   The last browser/site you log in from will steal the
+  lock from the original login, cancel any original file submission,  and force a logout in the original browser.
+
+* Don't leave the page during an ongoing file submission,  wait for it to finish.   Opening other browser
+  tabs should be fine.
+
+* Don't attempt to login for more than one instrument at a time.  One user is assigned one and only one lock.
+
+* Don't attempt to perform multiple file submissions for the same instrument at the same time.  Finish
+  and confirm or cancel each file submission before proceeding with the next.
+
+Certify Files
+.............
+
+*Certify File* runs crds.certify on the files in the ingest directory.
+
+.. figure:: images/web_certify_file.png
+   :scale: 50 %
+   :alt: certify file inputs
+   
+If the certified file is a reference table,  the specified context is used to
+locate a comparison file. 
+
+
+Enable/Disable File
+...................
+
+*Enable/Disable File* provides control over the Blacklist and Reject 
+attributes of a file.   
+
+.. figure:: images/web_set_file_enable.png
+   :scale: 50 %
+   :alt: set file enable inputs
+   
+Rejecting a file is used to signal that the file should no longer be
+used.   Rejecting a file affects only that file.   Blacklisting a file marks
+the file as unusable,  but it also blacklists all files which directly or
+indirectly refer to the original blacklisted file.   So,  blacklisting is
+transitive, rejection is intransitive.   Either blacklisting or rejection
+can be undone by marking the file as OK again using *Enable/Disable File*.  
+Only files which are already known to CRDS can be rejected or blacklisted.
+
+Set Context
+...........
+
+*Set Context* enables setting the operational and edit contexts.  
+
+.. figure:: images/web_set_context.png
+   :scale: 50 %
+   :alt: set context inputs
+
+CRDS enables contexts to be pre-positioned before their adoption as the default
+for processing by the pipeline.  Only by using Set Context will an available 
+context become the default for processing.
+   
+Setting the operational context makes the specified context the default for
+processing coordinated by this server.  Setting the operational context creates
+a new entry at the top of the Context History.
+
+Setting the edit context makes the specified context the default starting point
+for future contexts created during file submission.
 
 Batch Submit References
 .......................
@@ -292,35 +442,30 @@ files into their CRDS ingest directory manually.   The nominal approach
 for doing this is to use the cp or scp commands.   For instance,  from my home,
 having already set up ssh and scp access, I might say::
 
-  % scp /this_delivery/*.fits   thor.stsci.edu:/crds/hst/production/server_files/ingest
+  % scp /this_delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/test/server_files/ingest/mcmaster
 
 to copy references into my ingest directory *as-if* I had uploaded them through
 the uploads panel.
 
 Abstractly this is::
 
-  % scp <submitted reference files...>   <host>:/grp/crds/<observatory>/ingest/<crds_username>
+  % scp <submitted reference files...>   <host>:/ifs/crds/hst/<pipeline>/server_files/ingest<crds_username>
+  
+where pipeline is 'test' or 'ops'.
 
-The submitted reference files should now be in the ingest directory for *HST*
-user *test*.   Once the files are in the ingest directory,  the CRDS web server
+The submitted reference files should now be in the ingest directory for *HST* test server
+user *mcmaster*.   Once the files are in the ingest directory,  the CRDS web server
 will behave as if they had been uploaded through web interface.  Refreshing the
 file submission web page should make manually copied files show up in the
 *Upload Files* accordion.
 
 The purpose of using cp or scp is to improve the efficiency and reliability of
-the file transfers.  Files transferred to the ingest directory via shell should
+the file transfers should those become an issue.  Telecommuters working offsite by VPN
+would face a situation where submitted files are downloaded to their home computer via
+VPN and then uploaded to the CRDS server via their browser. 
+
+Files transferred to the ingest directory via shell should
 still be removeable using the *Upload Files* delete buttons.
-
-Cleaning Up
-!!!!!!!!!!!
-
-No matter which file transfer approach you use,  transferring many large
-references to the CRDS ingest directories can take a long time.   As long as the
-files remain in the ingest directory,  it is possible to submit them more than
-once (if things go wrong) without uploading again.   Consequently,  for build-2,
-file removal from the ingest directory is left as a user directed activity.   To
-remove files from your ingest directory,  either use "rm" in the shell,  or use
-the delete buttons in *Upload Files*.
 
 Derive From Context 
 +++++++++++++++++++
@@ -443,25 +588,12 @@ Following any CRDS pipeline mapping submission,  the default *edit* context
 is updated to that pipeline mapping making it the default starting point for
 future submissions.
 
-Certify File
-............
-
-*Certify File* runs crds.certify on the files in the ingest directory.
-
-.. figure:: images/web_certify_file.png
-   :scale: 50 %
-   :alt: certify file inputs
-   
-If the certified file is a reference table,  the specified context is used to
-locate a comparison file. 
-
 Submit References
 .................
 
 *Submit References* provides a lower level interface for submitting a list of 
-references which don't have to be of the same instrument and filetype.   No 
-context mappings are generated to refer to the submitted files.   Submitted 
-references must still pass through crds.certify.
+references.   No mappings are generated to refer to the submitted files.
+Submitted references must still pass through crds.certify.
 
 .. figure:: images/web_submit_references.png
    :scale: 50 %
@@ -480,23 +612,5 @@ submitted this way must also pass through crds.certify.
    :scale: 50 %
    :alt: create contexts inputs
    
-
-Set File Enable
-...............
-
-*Set File Enable* provides control over the Blacklist and Reject attributes of
-a file.   
-
-.. figure:: images/web_set_file_enable.png
-   :scale: 50 %
-   :alt: set file enable inputs
-   
-Rejecting a file is used to signal that the file should no longer be
-used.   Rejecting a file affects only that file.   Blacklisting a file marks
-the file as unusable,  but it also blacklists all files which directly or
-indirectly refer to the original blacklisted file.   So,  blacklisting is
-transitive,  but rejection is intransitive.   Either blacklisting or rejection
-can be undone by marking the file as OK again using *Set File Enable*.  Only
-files which are already known to CRDS can be rejected or blacklisted.
 
   
