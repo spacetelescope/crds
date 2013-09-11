@@ -432,7 +432,11 @@ and debug output.
                 rmap.get_cached_mapping(context)   # if it loads,  it's cached.
                 return
             except IOError:
-                api.dump_mappings(context)   # otherwise fetch it.
+                try:
+                    api.dump_mappings(context)   # otherwise fetch it.
+                except Exception, exc:
+                    log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()))
+                    sys.exit(-1)
 
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""

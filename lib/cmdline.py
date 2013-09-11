@@ -7,8 +7,7 @@ import argparse
 import pdb
 import cProfile as profile
 import re
-from collections import Counter, defaultdict
-import datetime
+from collections import Counter
 
 from argparse import RawTextHelpFormatter
 
@@ -301,14 +300,14 @@ class Script(object):
         assert config.is_mapping_spec(context), \
             "Invalid .pmap, .imap, or .imap filename or date based context specification."
         if config.is_date_based_mapping_spec(context):
-            resolved_context = api.get_context_by_date(context)
-            log.verbose("Date based context", repr(context), "resolves to", repr(resolved_context))
-            context = resolved_context
+            mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
+            log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
+            context = final_context
         return context
 
-    def get_conjugates(file_list):
+    def get_conjugates(self, file_list):
         """Given a list of references,  return any GEIS data files associated with them."""
-        return [ data_file.conjugate(ref) for ref in file_list if data_file.conjugate(ref) is not None]
+        return [ data_file.get_conjugate(ref) for ref in file_list if data_file.get_conjugate(ref) is not None]
     
 # =============================================================================
 
