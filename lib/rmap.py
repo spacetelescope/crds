@@ -610,6 +610,20 @@ class PipelineContext(ContextMapping):
         """Given `filename` nominally to insert, return the instrument it corresponds to."""
         instrument, _filekind = utils.get_file_properties(self.observatory, filename)
         return instrument.upper()
+    
+    def get_equivalent_mapping(self, mapping):
+        """Return the Mapping equivalent to name `mapping` in pmap `self`,  or None."""
+        if mapping.endswith(".pmap"):
+            return self
+        else:
+            instrument, _filekind = utils.get_file_properties(self.observatory, mapping)
+            try:
+                imap = self.get_imap(instrument)
+            except Exception:
+                log.warning("No equivalent instrument in", repr(self.name), "corresponding to", repr(mapping))
+                return None
+            else:
+                return imap.get_equivalent_mapping(mapping)
 
 # ===================================================================
 
@@ -729,6 +743,23 @@ class InstrumentContext(ContextMapping):
         """Given `filename` nominally to insert, return the filekind it corresponds to."""
         _instrument, filekind = utils.get_file_properties(self.observatory, filename)
         return filekind.upper()
+
+    def get_equivalent_mapping(self, mapping):
+        """Return the Mapping equivalent to name `mapping` in imap `self`, or None."""
+        if mapping.endswith(".pmap"):
+            log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
+            return None
+        if mapping.endswith(".imap"):
+            return self
+        else:
+            _instrument, filekind = utils.get_file_properties(self.observatory, mapping)
+            try:
+                rmap = self.get_rmap(filekind)
+            except Exception:
+                log.warning("No equivalent filekind in", repr(self.name), "corresponding to", repr(mapping))
+                return None
+            else:  # I think it's always just "rmap".
+                return rmap.get_equivalent_mapping(mapping)
 
 # ===================================================================
 
@@ -1047,7 +1078,12 @@ class ReferenceMapping(Mapping):
                 "selections" : nested["selections"]
                 }
         
-
+    def get_equivalent_mapping(self, mapping):
+        """Return `self` for comparison if `mapping` name specifies an rmap, otherwise None."""
+        if not mapping.endswith(".rmap"):
+            log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
+            return None
+        return self
 
 # ===================================================================
 

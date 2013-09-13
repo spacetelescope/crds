@@ -551,12 +551,21 @@ def reference_to_observatory(filename):
     """Return the name of the observatory corresponding to reference `filename`."""
     return instrument_to_observatory(reference_to_instrument(filename))
 
+def file_to_observatory(filename):
+    """Return the observatory corresponding to reference or mapping `filename`."""
+    if "hst" in filename:
+        return "hst"
+    elif "jwst" in filename:
+        return "jwst"
+    elif "tobs" in filename:
+        return tobs
+    else:
+        return reference_to_observatory(filename)
 
 # These functions should actually be general,  working on both references and
 # dataset files.
 file_to_instrument = reference_to_instrument
 file_to_locator = reference_to_locator
-file_to_observatory = reference_to_observatory
 
 def test():
     """Run doctests."""

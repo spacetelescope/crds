@@ -309,6 +309,10 @@ class Script(object):
         """Given a list of references,  return any GEIS data files associated with them."""
         return [ data_file.get_conjugate(ref) for ref in file_list if data_file.get_conjugate(ref) is not None]
     
+    def get_file_properties(self, filename):
+        """Return (instrument, filekind) corresponding to `file`, and '' for none."""
+        return utils.get_file_properties(self.observatory, filename)
+    
 # =============================================================================
 
 class UniqueErrorsMixin(object):
