@@ -639,12 +639,16 @@ class MappingCertifier(Certifier):
         mapping = rmap.fetch_mapping(self.filename, ignore_checksum="warn")
         mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
     
-        derived_from = mapping.get_derived_from()
+        # derived_from = mapping.get_derived_from()
+        derived_from = find_old_mapping(self.context, self.filename)
         if derived_from is not None:
-            log.info("Comparing", repr(mapping.name), "against parent", repr(derived_from.name))
-            diff.mapping_check_diffs(mapping, derived_from)
+            if derived_from.name ==self.filename:
+                log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
+            else:
+                diff.mapping_check_diffs(mapping, derived_from)
         else:
-            log.info("No parent for", repr(mapping.name))
+            if self.context is not None:
+                log.info("No parent for", repr(mapping.name), "relative to context", repr(self.context))
             
         # Optionally check nested references,  only for rmaps.
         if not isinstance(mapping, rmap.ReferenceMapping) or not self.check_references: # Accept None or False
@@ -677,6 +681,19 @@ def get_existing_path(reference, observatory):
     if not os.path.exists(path):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
+
+# ============================================================================
+
+def find_old_mapping(comparison_context, new_mapping):
+    """Find the mapping in pmap `comparison_context` corresponding to `new_mapping`,  if there is one.
+    This call will cache `comparison_context` so it should only be called on "official" mappings,  not
+    trial mappings.
+    """
+    if comparison_context:
+        comparison_mapping = rmap.get_cached_mapping(comparison_context)
+        return comparison_mapping.get_equivalent_mapping(new_mapping)
+    else:
+        return None
 
 # ============================================================================
 
