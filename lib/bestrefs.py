@@ -691,7 +691,7 @@ and debug output.
         
         # Check for missing references in `newrefs`.
         for filekind in oldrefs:
-            if filekind not in newrefs:
+            if filekind not in newrefs and filekind in self.process_filekinds:
                 if self.args.differences_are_errors:
                     self.log_and_track_error(dataset, instrument, filekind, 
                         "No new reference recommended. Old reference was", repr(old), self.no_update, verbosity=30)
