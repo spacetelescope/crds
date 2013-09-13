@@ -157,7 +157,9 @@ class SyncScript(cmdline.ContextsScript):
                 self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
-            verify_file_list = active_mappings + active_references
+            verify_file_list = active_mappings
+            if self.args.fetch_references:
+                verify_file_list += active_references
         elif self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
