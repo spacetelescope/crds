@@ -660,7 +660,8 @@ class MappingCertifier(Certifier):
             certify_files(references, context=self.context, 
                           check_references=self.check_references,
                           trap_exceptions=self.trap_exceptions, 
-                          compare_old_reference=self.compare_old_reference)
+                          compare_old_reference=self.compare_old_reference,
+                          observatory=self.observatory)
     
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
