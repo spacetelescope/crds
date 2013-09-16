@@ -142,6 +142,8 @@ class SyncScript(cmdline.ContextsScript):
     
     def main(self):
         """Synchronize files."""
+        if self.args.repair_files:
+            self.args.check_files = True
         self.require_server_connection()
         if self.contexts:
             active_mappings = self.fetch_mappings()
