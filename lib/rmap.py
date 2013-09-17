@@ -422,12 +422,12 @@ class Mapping(object):
         """
         log.verbose("Validating", repr(self.basename))
 
-    def difference(self, other, path=(), pars=()):
+    def difference(self, other, path=(), pars=(), include_header_diffs=False):
         """Compare `self` with `other` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
         other = asmapping(other, cache="readonly")
-        differences = []
+        differences = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:
             if key not in other.selections:
                 diff = selectors.DiffTuple((self.filename, other.filename), (key,), "deleted " + repr(self.selections[key].filename), 
@@ -436,7 +436,7 @@ class Mapping(object):
             else:
                 diffs = self.selections[key].difference( other.selections[key],  
                     path = path + ((self.filename, other.filename,),), 
-                    pars = pars + (self.diff_name,))
+                    pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
                 differences.extend(diffs)
                 if diffs:
                     diff = selectors.DiffTuple((self.filename, other.filename), (key,), 
@@ -447,6 +447,31 @@ class Mapping(object):
             if key not in self.selections:
                 diff = selectors.DiffTuple((self.filename, other.filename), (key,), "added " + repr(other.selections[key].filename),
                                 parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                differences.append(diff)
+        return sorted(differences)
+    
+    def difference_header(self, other, path=(), pars=()):
+        """Compare `self` with `other` and return a list of difference
+        tuples,  prefixing each tuple with context `path`.
+        """
+        other = asmapping(other, cache="readonly")
+        differences = []
+        for key in self.header:
+            if key not in other.header:
+                diff = selectors.DiffTuple((self.filename, other.filename), 
+                    "deleted header " + repr(key) + " = " + repr(self.header[key]),
+                    parameter_names = pars + (self.diff_name, "DIFFERENCE",))
+                differences.append(diff)
+            elif self.header[key] != other.header[key]:
+                diff = selectors.DiffTuple((self.filename, other.filename), 
+                    "header replaced " + repr(key) + " = " + repr(self.header[key]) + " with " + repr(other.header[key]),
+                    parameter_names = pars + (self.diff_name, "DIFFERENCE",))
+                differences.append(diff)
+        for key in other.header:
+            if key not in self.header:
+                diff = selectors.DiffTuple((self.filename, other.filename), 
+                    "header added " + repr(key) + " = " + repr(other.header[key]),
+                    parameter_names = pars + (self.diff_name, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
     
@@ -955,16 +980,18 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
-    def difference(self, other, path=(), pars=()):
+    def difference(self, other, path=(), pars=(), include_header_diffs=False):
         """Return the list of difference tuples between `self` and `other`,
         prefixing each tuple with context `path`.   Elements of `path` are
         named by correspnding elements of `pars`.
         """
         other = asmapping(other, cache="readonly")
-        return self.selector.difference(other.selector, 
+        header_diffs = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
+        body_diffs = self.selector.difference(other.selector, 
                 path = path + ((self.filename, other.filename),),
                 pars = pars + (self.diff_name,))
-
+        return header_diffs + body_diffs
+    
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated
         in the context of `header` returns False.

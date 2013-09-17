@@ -11,7 +11,7 @@ from pyfits import FITSDiff
 
 # ============================================================================
         
-def mapping_diffs(file1, file2):
+def mapping_diffs(file1, file2, include_header_diffs=False):
     """Return the logical differences between CRDS mappings named `file1` 
     and `file2`.
     """
@@ -24,7 +24,7 @@ def mapping_diffs(file1, file2):
         " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
     map1 = rmap.fetch_mapping(file1, ignore_checksum=True)
     map2 = rmap.fetch_mapping(file2, ignore_checksum=True)
-    differences = map1.difference(map2)
+    differences = map1.difference(map2, include_header_diffs=include_header_diffs)
     return differences
 
 def diff_action(diff):
@@ -45,10 +45,12 @@ def diff_action(diff):
         raise ValueError("Bad difference action: "  + repr(diff))
     if "Selector" in diff[-1]:
         result += "_rule"
+    elif "header" in diff[-1]:
+        result += "_header"
     return result
 
 def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False,
-                       mapping_text_diffs=False):
+                       mapping_text_diffs=False, include_header_diffs=True):
     """Print the logical differences between CRDS mappings named `file1` 
     and `file2`.  
     
@@ -58,7 +60,7 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
     IFF check_diffs, issue warnings about critical differences.   See
     mapping_check_diffs().
     """
-    differences = mapping_diffs(file1, file2)
+    differences = mapping_diffs(file1, file2, include_header_diffs=include_header_diffs)
     if mapping_text_diffs:   # only banner when there's two kinds to differentiate
         log.write("="*20, "logical differences",  repr(file1), "vs.", repr(file2), "="*20)
     for diff in differences:
@@ -66,7 +68,7 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
         if primitive_diffs:
             log.write("="*80)
         log.write(diff)
-        if primitive_diffs:
+        if primitive_diffs and "header" not in diff_action(diff):
             if "replaced" in diff[-1]:
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
@@ -90,7 +92,7 @@ def mapping_pairs(differences):
         
 def unquote_diff(diff):
     """Remove repr str quoting in `diff` tuple."""
-    return diff[:-1] + (diff[-1].replace("'",""),)
+    return diff[:-1] + (diff[-1].replace("'",""),) if "header" not in diff[-1] else diff
 
 def unquote(name):
     """Remove string quotes from simple `name` repr."""
@@ -128,7 +130,9 @@ def mapping_check_diffs_core(diffs):
     """Perform the core difference checks on difference tuples `diffs`."""
     categorized = sorted([ (diff_action(d), d) for d in diffs ])
     for action, msg in categorized:
-        if action == "add":
+        if "header" in action:
+            log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+        elif action == "add":
             log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
         elif "rule" in action:
             log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
@@ -291,6 +295,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
 
     def main(self):
         """Perform the differencing."""
+        self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
         if self.args.print_new_files:
             return self.print_new_files()
         else:
