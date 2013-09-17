@@ -71,7 +71,8 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
     if mapping_text_diffs:
-        for (d1, d2) in mapping_pairs(differences):
+        pairs = sorted(set(mapping_pairs(differences) +  [(file1, file2)]))
+        for (d1, d2) in pairs:
             log.write("="*20, "text difference", repr(d1), "vs.", repr(d2), "="*20)
             text_difference(observatory, d1, d2)
         log.write("="*80)
