@@ -1684,7 +1684,7 @@
       <FILE_SELECTION_FIELD> SHUTRPOS </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
     <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FLASHCUR'][0] !=  'NONE') </RESTRICTION_TEST>
+      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS' and aSource._keywords['FLASHCUR'][0] != 'OFF') </RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
   <!--====================================-->
