@@ -17,6 +17,6 @@ VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R    
-OPT_ELEM            H        C         R    G130M,G160M,G140L,\
+OPT_ELEM            H        C         O    G130M,G160M,G140L,\
                                             G185M,G225M,G285M,G230L, \
                                             MIRRORA,MIRRORB,ANY
