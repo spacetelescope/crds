@@ -767,7 +767,7 @@ class InstrumentContext(ContextMapping):
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the filekind it corresponds to."""
         _instrument, filekind = utils.get_file_properties(self.observatory, filename)
-        return filekind.upper()
+        return filekind.lower()
 
     def get_equivalent_mapping(self, mapping):
         """Return the Mapping equivalent to name `mapping` in imap `self`, or None."""
