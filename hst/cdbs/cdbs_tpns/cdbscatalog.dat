@@ -37,6 +37,7 @@
 # 02/07/12 70397  Mary        Add COS:hv
 # 06/14/12 71537  MSwam       Add WFC3:imp
 # 05/17/13 74558  MSwam       Add WFC3:d2i
+# 09/19/13 75694  MSwam       Add STIS:imp
 #
 #INST   REFTYPE FTYPE   TEMPLATE FILE   EXT	HEADER KEYWORDS
 #----------------------------------------------------------------------
@@ -317,6 +318,7 @@ stis	tel	table	stis_tel.tpn	.fits	"instrume=stis,filetype=TELESCOPE PSF TABLE"
 stis	tds	table	stis_tds.tpn	.fits	"instrume=stis,filetype=TIME DEPENDENT SENSITIVITY TABLE"
 stis	tdc	table	stis_tdc.tpn	.fits	"instrume=stis,filetype=DARK CORRECTION TABLE"
 stis    gac     table   stis_gac.tpn    .fits   "instrume=stis,filetype=GRATING-APERTURE CORRECTION TABLE"
+stis   	imp     table   stis_imp.tpn  	.fits   "instrume=stis,filetype=IMAGE PHOTOMETRY TABLE"
 #----------------------------------------------------------------------
 stis    1dt     load    stis_1dt_ld.tpn    .lod    instrument=stis,reference_file_type=1dt
 stis    1dx     load    stis_1dx_ld.tpn    .lod    instrument=stis,reference_file_type=1dx
@@ -353,6 +355,7 @@ stis	tel	load	stis_tel_ld.tpn	   .lod    instrument=stis,reference_file_type=tel
 stis	tdc	load	stis_tdc_ld.tpn	   .lod    instrument=stis,reference_file_type=tdc  
 stis	tds	load	stis_tds_ld.tpn	   .lod    instrument=stis,reference_file_type=tds  
 stis    gac     load    stis_gac_ld.tpn    .lod    instrument=stis,reference_file_type=gac  
+stis    imp     load    stis_imp_ld.tpn    .lod    instrument=stis,reference_file_type=imp
 #----------------------------------------------------------------------
 acs    	bia     image   acs_bia.tpn    	   .fits   "instrume=acs,filetype=BIAS"
 acs    	cfl     image   acs_cfl.tpn    	   .fits   "instrume=acs,filetype=SPOT FLAT"
