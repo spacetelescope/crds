@@ -73,6 +73,7 @@
           'gactab': ('stis_gac_ld.tpn', 'gac', 'load', '.lod', 'gac'),
           'halotab': ('stis_hal_ld.tpn', 'hal', 'load', '.lod', 'hal'),
           'idctab': ('stis_idc_ld.tpn', 'idc', 'load', '.lod', 'idc'),
+          'imphttab': ('stis_imp_ld.tpn', 'imp', 'load', '.lod', 'imp'),
           'inangtab': ('stis_iac_ld.tpn', 'iac', 'load', '.lod', 'iac'),
           'lamptab': ('stis_lmp_ld.tpn', 'lmp', 'load', '.lod', 'lmp'),
           'lfltfile': ('stis_lfl_ld.tpn', 'lfl', 'load', '.lod', 'lfl'),

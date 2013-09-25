@@ -75,6 +75,7 @@
           'gactab': 'gac',
           'halotab': 'hal',
           'idctab': 'idc',
+          'imphttab': 'imp',
           'inangtab': 'iac',
           'lamptab': 'lmp',
           'lfltfile': 'lfl',

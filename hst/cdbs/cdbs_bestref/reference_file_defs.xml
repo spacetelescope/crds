@@ -594,6 +594,12 @@
     </RESTRICTION>
   </REFFILE>
 <!--====================================-->
+ <REFFILE>
+    <REFFILE_TYPE> IMP </REFFILE_TYPE>
+    <REFFILE_KEYWORD> IMPHTTAB </REFFILE_KEYWORD>
+    <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
+  </REFFILE>
+<!--====================================-->
   <REFFILE>
     <REFFILE_TYPE> LFL </REFFILE_TYPE> 
     <REFFILE_KEYWORD> LFLTFILE </REFFILE_KEYWORD>

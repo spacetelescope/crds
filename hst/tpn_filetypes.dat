@@ -144,6 +144,7 @@
           'echelle ripple table': 'rip',
           'grating-aperture correction table': 'gac',
           'image distortion correction table': 'idc',
+          'image photometry table': 'imp',
           'incidence angle correction table': 'iac',
           'low-order flatfield image': 'lfl',
           'mama linearity table': 'lin',
