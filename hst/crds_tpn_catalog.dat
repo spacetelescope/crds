@@ -73,6 +73,7 @@
           'gactab': ('stis_gac.tpn', 'gac', 'table', '.fits', 'grating-aperture correction table'),
           'halotab': ('stis_hal.tpn', 'hal', 'table', '.fits', 'detector halo table'),
           'idctab': ('stis_idc.tpn', 'idc', 'table', '.fits', 'image distortion correction table'),
+          'imphttab': ('stis_imp.tpn', 'imp', 'table', '.fits', 'image photometry table'),
           'inangtab': ('stis_iac.tpn', 'iac', 'table', '.fits', 'incidence angle correction table'),
           'lamptab': ('stis_lmp.tpn', 'lmp', 'table', '.fits', 'template cal lamp spectra table'),
           'lfltfile': [((('obstype', 'imaging'),), ('stis_ilfl.tpn', 'lfl', 'image', '.fits', 'low-order flatfield image')),
