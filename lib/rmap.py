@@ -355,8 +355,9 @@ class Mapping(object):
         else:
             self.filename = filename
         self.header["sha1sum"] = self._get_checksum(self.format())
-        with open(filename, "w+") as file:
-            file.write(self.format())
+        file = open(filename, "w+")
+        file.write(self.format())
+        file.close()
 
     def _check_hash(self, text):
         """Verify that the mapping header has a checksum and that it is
