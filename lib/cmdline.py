@@ -144,13 +144,14 @@ class Script(object):
         if self.args.hst:
             assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
             obs = "hst"
-        for file in self.contexts:
-            if file.startswith("hst"):
-                assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                obs = "hst"
-            if file.startswith("jwst"):
-                assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                obs = "jwst"
+        if hasattr(self, "contexts"):
+            for file in self.contexts:
+                if file.startswith("hst"):
+                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "hst"
+                if file.startswith("jwst"):
+                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
+                    obs = "jwst"
         if hasattr(self.args, "files"):
             files = self.args.files if self.args.files else []
             for file in files:
@@ -208,7 +209,7 @@ class Script(object):
                 raise RuntimeError("Required server connection unavailable.")
         except Exception, exc:
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
-                             repr(api.get_crds_server()))
+                             repr(api.get_crds_server()), "::", str(exc))
         return info
             
     @property
