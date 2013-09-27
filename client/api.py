@@ -332,8 +332,13 @@ class FileCacher(object):
         downloads = []
         for i, name in enumerate(names):
             localpath = self.locate(pipeline_context, name)
-            if (not os.path.exists(localpath)) or ignore_cache:
+            if (not os.path.exists(localpath)):
                 downloads.append(name)
+            elif ignore_cache:
+                downloads.append(name)
+                with log.error_on_exception("Ignore_cache=True and Failed removing existing", repr(name)):
+                    os.chmod(localpath, 0666)
+                    os.remove(localpath)
             localpaths[name] = localpath
         if downloads:
             bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)

@@ -177,10 +177,6 @@ class SyncScript(cmdline.ContextsScript):
     
     def fetch_mappings(self):
         """Gets all mappings required to support `self.contexts`.  
-        if purge:  
-            Remove all mappings from the CRDS mapping cache which are not required for `self.contexts`.
-        if ignore_cache:
-            Re-download all required files.
         """
         if not self.contexts:
             return
@@ -188,7 +184,13 @@ class SyncScript(cmdline.ContextsScript):
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
             self.dump_files(context, files=None)  # all mappings for context
-            mapping = rmap.fetch_mapping(context)
+            try:
+                mapping = rmap.fetch_mapping(context)
+            except rmap.MappingError, exc:
+                log.warning("Load of existing mapping", repr(context), 
+                            "FAILED. Resyncing", repr(context), "ignoring cache.")
+                self.dump_files(context, files=None, ignore_cache=True)
+                mapping = rmap.fetch_mapping(context)
             mappings = mappings.union(set(mapping.mapping_names()))
         return sorted(mappings)
             
@@ -321,10 +323,12 @@ class SyncScript(cmdline.ContextsScript):
             return
         return
     
-    def dump_files(self, context, files):
+    def dump_files(self, context, files, ignore_cache=None):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        if ignore_cache is None:
+            ignore_cache = self.args.ignore_cache
         _localpaths, downloads, bytes = api.dump_files(
-            context, files, ignore_cache=self.args.ignore_cache, raise_exceptions=self.args.pdb)
+            context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
         self.increment_stat("total-files", downloads)
         self.increment_stat("total-bytes", bytes)
 

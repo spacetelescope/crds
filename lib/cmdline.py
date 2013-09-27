@@ -202,10 +202,13 @@ class Script(object):
     
     def require_server_connection(self):
         """Check a *required* server connection and ERROR/exit if offline."""
-        info = self.server_info  # for side effects
-        if not self._connected:
-            log.error("Failed connecting to CRDS server at", repr(api.get_crds_server()))
-            sys.exit(-1)
+        try:
+            info = self.server_info  # for side effects
+            if not self._connected:
+                raise RuntimeError("Required server connection unavailable.")
+        except Exception, exc:
+            self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
+                             repr(api.get_crds_server()))
         return info
             
     @property
@@ -312,6 +315,12 @@ class Script(object):
     def get_file_properties(self, filename):
         """Return (instrument, filekind) corresponding to `file`, and '' for none."""
         return utils.get_file_properties(self.observatory, filename)
+
+    def fatal_error(self, *args, **keys):
+        """Issue an error message and terminate the program."""
+        status = keys.pop("status", -1)
+        log.error(*args, **keys)
+        sys.exit(status)
     
 # =============================================================================
 
@@ -394,11 +403,11 @@ class ContextsScript(Script):
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
             assert not self.args.range, "Cannot specify --all and --range"
-            contexts = api.list_mappings(glob_pattern="*.pmap")
+            contexts = self._list_mappings()
         elif self.args.range:
             rmin, rmax = self.args.range
             contexts = []
-            all_contexts = api.list_mappings(glob_pattern="*.pmap")
+            all_contexts = self._list_mappings()
             for context in all_contexts:
                 match = re.match(r"\w+_(\d+).pmap", context)
                 if match:
@@ -408,6 +417,11 @@ class ContextsScript(Script):
         else:
             contexts = []
         return sorted(contexts)
+
+    def _list_mappings(self):
+        """Return a list of all the .pmap's on the CRDS Server."""
+        self.require_server_connection()
+        return api.list_mappings(glob_pattern="*.pmap")
     
     def get_context_mappings(self):
         """Return the set of mappings which are pointed to by the mappings
