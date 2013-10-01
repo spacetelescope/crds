@@ -27,28 +27,6 @@ def mapping_diffs(old_file, new_file, include_header_diffs=False):
     differences = old_map.difference(new_map, include_header_diffs=include_header_diffs)
     return differences
 
-def diff_action(diff):
-    """Return 'add', 'replace', or 'delete' based on action represented by
-    difference tuple `d`.   Append "_rule" if the change is a Selector.
-    """
-    if "replace" in diff[-1]:
-        result = "replace"
-    elif "add" in diff[-1]:
-        result = "add"
-    elif "delete" in diff[-1]:
-        result = "delete"
-    elif "different classes" in diff[-1]:
-        result = "class_difference"
-    elif "different parameter" in diff[-1]:
-        result = "parkey_difference"
-    else:
-        raise ValueError("Bad difference action: "  + repr(diff))
-    if "rule" in diff[-1]:
-        result += "_rule"
-    elif "header" in diff[-1]:
-        result += "_header"
-    return result
-
 def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False,
                        mapping_text_diffs=False, include_header_diffs=True):
     """Print the logical differences between CRDS mappings named `old_file` 
@@ -69,6 +47,7 @@ def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, c
             log.write("="*80)
         log.write(diff)
         if primitive_diffs and "header" not in diff_action(diff):
+            # XXXX fragile, coordinate with selector.py and rmap.py
             if "replaced" in diff[-1]:
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
@@ -91,23 +70,48 @@ def mapping_pairs(differences):
     return sorted(pairs)
         
 def unquote_diff(diff):
-    """Remove repr str quoting in `diff` tuple."""
+    """Remove repr str quoting in `diff` tuple,  don't change header diffs."""
     return diff[:-1] + (diff[-1].replace("'",""),) if "header" not in diff[-1] else diff
 
 def unquote(name):
     """Remove string quotes from simple `name` repr."""
     return name.replace("'","").replace('"','')
 
+# XXXX fragile,  coordinate with selector.py and rmap.py
 def diff_replace_old_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
     _replaced, old, _with, new = diff[-1].split()
     return unquote(old), unquote(new)
 
+# XXXX fragile,  coordinate with selector.py and rmap.py
 def diff_added_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
-    _added, new = diff[-1].split()
+    new = diff[-1].split()[-1]
     return unquote(new)
     
+# XXXX fragile,  coordinate with selector.py and rmap.py
+def diff_action(diff):
+    """Return 'add', 'replace', or 'delete' based on action represented by
+    difference tuple `d`.   Append "_rule" if the change is a Selector.
+    """
+    if "replace" in diff[-1]:
+        result = "replace"
+    elif "add" in diff[-1]:
+        result = "add"
+    elif "delete" in diff[-1]:
+        result = "delete"
+    elif "different classes" in diff[-1]:
+        result = "class_difference"
+    elif "different parameter" in diff[-1]:
+        result = "parkey_difference"
+    else:
+        raise ValueError("Bad difference action: "  + repr(diff))
+    if "rule" in diff[-1]:
+        result += "_rule"
+    elif "header" in diff[-1]:
+        result += "_header"
+    return result
+
 # ============================================================================
 
 def mapping_check_diffs(mapping, derived_from):

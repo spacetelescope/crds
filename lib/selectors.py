@@ -652,6 +652,9 @@ class Selector(object):
         return {} # Not really relevant for UseAfter
     
 
+    # XXXX changes to the format of difference messages need to be coordinated with
+    # crds.diff,  crds.rmap and the website interative application (crds.server.interactive.web_certify).
+    # IOW,  the messages are part of the software API,  don't change without review.
     def difference(self, new_selector, path=(), pars=()):
         """Return the list of differences between `self` and `new_selector` where 
         `path` names the
@@ -750,7 +753,7 @@ class DiffTuple(tuple):
         
     @property
     def flat(self):
-        """Removes the Selector nesting structure and return and equivalent tuple."""
+        """Removes the Selector nesting structure and return an equivalent tuple."""
         pars2 = []
         vals2 = []
         for i, par in enumerate(self.parameter_names):
