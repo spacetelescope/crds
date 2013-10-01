@@ -423,31 +423,33 @@ class Mapping(object):
         """
         log.verbose("Validating", repr(self.basename))
 
-    def difference(self, other, path=(), pars=(), include_header_diffs=False):
-        """Compare `self` with `other` and return a list of difference
+    def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False):
+        """Compare `self` with `new_mapping` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
-        other = asmapping(other, cache="readonly")
-        differences = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
+        new_mapping = asmapping(new_mapping, cache="readonly")
+        differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:
-            if key not in other.selections:
-                diff = selectors.DiffTuple((self.filename, other.filename), (key,), "deleted " + repr(self.selections[key].filename), 
+            if key not in new_mapping.selections:
+                diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
+                    "deleted " + repr(self.selections[key].filename), 
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
             else:
-                diffs = self.selections[key].difference( other.selections[key],  
-                    path = path + ((self.filename, other.filename,),), 
+                diffs = self.selections[key].difference( new_mapping.selections[key],  
+                    path = path + ((self.filename, new_mapping.filename,),), 
                     pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
                 differences.extend(diffs)
                 if diffs:
-                    diff = selectors.DiffTuple((self.filename, other.filename), (key,), 
-                        "replaced " + repr(self.selections[key].filename) + " with " + repr(other.selections[key].filename),
+                    diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
+                        "replaced " + repr(self.selections[key].filename) + " with " + repr(new_mapping.selections[key].filename),
                         parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                     differences.append(diff)
-        for key in other.selections:
+        for key in new_mapping.selections:
             if key not in self.selections:
-                diff = selectors.DiffTuple((self.filename, other.filename), (key,), "added " + repr(other.selections[key].filename),
-                                parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
+                    "added " + repr(new_mapping.selections[key].filename),
+                    parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
     
