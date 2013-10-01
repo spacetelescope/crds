@@ -652,8 +652,8 @@ class Selector(object):
         return {} # Not really relevant for UseAfter
     
 
-    def difference(self, other, path=(), pars=()):
-        """Return the list of differences between `self` and `other` where 
+    def difference(self, new_selector, path=(), pars=()):
+        """Return the list of differences between `self` and `new_selector` where 
         `path` names the
         """
         msg = self._get_msg(path, pars)
@@ -661,41 +661,43 @@ class Selector(object):
         def short_name(obj):
             return obj.short_name if isinstance(obj, Selector) else obj.__class__.__name__
         
-        if self.__class__ != other.__class__:
-            return [msg(None, "different classes", short_name(self), ":", short_name(other))]
-        if self._parameters != other._parameters:
+        if self.__class__ != new_selector.__class__:
+            return [msg(None, "different classes", short_name(self), ":", short_name(new_selector))]
+        if self._parameters != new_selector._parameters:
             return [msg(None, "different parameter lists ", 
-                    repr(self._parameters), ":", repr(other._parameters))]
+                    repr(self._parameters), ":", repr(new_selector._parameters))]
 
         differences = []
-        other_keys = other.keys()
+        new_selector_keys = new_selector.keys()
         self_keys = self.keys()
-        other_map = dict_wo_dups(other._selections)
+        new_selector_map = dict_wo_dups(new_selector._selections)
         # Warning:  the message formats here are important to client code.
         # don't change without doing a survey. e.g. replaced blank1 with blank2.
         for key, choice in self._selections:
             pkey = self._diff_key(key)
-            if key not in other_keys:
+            if key not in new_selector_keys:
                 if isinstance(choice, Selector):
-                    differences.append(msg(key, "deleted rule", repr(choice)))
-                    differences.extend(choice._flat_diff("deleted terminal", path + (pkey,), pars + (self._parameters,)))
+                    differences.extend(choice._flat_diff("deleted {} rule for".format(self.short_name), 
+                                                         path + (pkey,), pars + (self._parameters,)))
                 else:
-                    differences.append(msg(key, "deleted", repr(choice)))
+                    differences.append(msg(key, "deleted terminal", repr(choice)))
             else:
-                other_choice = other_map[key]
+                new_selector_choice = new_selector_map[key]
                 if isinstance(choice, Selector):
-                    differences.extend(choice.difference(other_choice, path + (pkey,), pars + (self._parameters,)))
-                elif choice != other_choice:
-                    differences.append(msg(key, "replaced", repr(choice), "with", repr(other_choice)))
-        for key in other_keys:
+                    differences.extend(
+                        choice.difference(new_selector_choice, path + (pkey,), pars + (self._parameters,)))
+                elif choice != new_selector_choice:
+                    differences.append(msg(key, "replaced", repr(choice), "with", repr(new_selector_choice)))
+        for key in new_selector_keys:
             pkey = self._diff_key(key)
             if key not in self_keys:
-                other_choice = other_map[key]
-                if isinstance(other_choice, Selector):
-                    differences.append(msg(key, "added rule", repr(other_choice)))
-                    differences.extend(other_choice._flat_diff("added", path + (pkey,), pars + (self._parameters,)))
+                new_selector_choice = new_selector_map[key]
+                if isinstance(new_selector_choice, Selector):
+                    differences.extend(
+                        new_selector_choice._flat_diff("added {} rule for".format(self.short_name), 
+                                                       path + (pkey,), pars + (self._parameters,)))
                 else:
-                    differences.append(msg(key, "added", repr(other_choice)))
+                    differences.append(msg(key, "added terminal", repr(new_selector_choice)))
         return differences
     
     def _flat_diff(self, change, path, pars):

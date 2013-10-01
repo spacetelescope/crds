@@ -11,20 +11,20 @@ from pyfits import FITSDiff
 
 # ============================================================================
         
-def mapping_diffs(file1, file2, include_header_diffs=False):
-    """Return the logical differences between CRDS mappings named `file1` 
-    and `file2`.
+def mapping_diffs(old_file, new_file, include_header_diffs=False):
+    """Return the logical differences between CRDS mappings named `old_file` 
+    and `new_file`.
     """
-    assert rmap.is_mapping(file1), \
-        "File " + repr(file1) + " is not a CRDS mapping."
-    assert rmap.is_mapping(file2), \
-        "File " + repr(file2) + " is not a CRDS mapping."
-    assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
-        "Files " + repr(file1) + " and " + repr(file2) + \
+    assert rmap.is_mapping(old_file), \
+        "File " + repr(old_file) + " is not a CRDS mapping."
+    assert rmap.is_mapping(new_file), \
+        "File " + repr(new_file) + " is not a CRDS mapping."
+    assert os.path.splitext(old_file)[-1] == os.path.splitext(new_file)[-1], \
+        "Files " + repr(old_file) + " and " + repr(new_file) + \
         " are not the same kind of CRDS mapping:  .pmap, .imap, .rmap"
-    map1 = rmap.fetch_mapping(file1, ignore_checksum=True)
-    map2 = rmap.fetch_mapping(file2, ignore_checksum=True)
-    differences = map1.difference(map2, include_header_diffs=include_header_diffs)
+    old_map = rmap.fetch_mapping(old_file, ignore_checksum=True)
+    new_map = rmap.fetch_mapping(new_file, ignore_checksum=True)
+    differences = old_map.difference(new_map, include_header_diffs=include_header_diffs)
     return differences
 
 def diff_action(diff):
@@ -43,16 +43,16 @@ def diff_action(diff):
         result = "parkey_difference"
     else:
         raise ValueError("Bad difference action: "  + repr(diff))
-    if "Selector" in diff[-1]:
+    if "rule" in diff[-1]:
         result += "_rule"
     elif "header" in diff[-1]:
         result += "_header"
     return result
 
-def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False,
+def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False,
                        mapping_text_diffs=False, include_header_diffs=True):
-    """Print the logical differences between CRDS mappings named `file1` 
-    and `file2`.  
+    """Print the logical differences between CRDS mappings named `old_file` 
+    and `new_file`.  
     
     IFF primitive_differences,  recursively difference any replaced files found
     in the top level logical differences.
@@ -60,9 +60,9 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
     IFF check_diffs, issue warnings about critical differences.   See
     mapping_check_diffs().
     """
-    differences = mapping_diffs(file1, file2, include_header_diffs=include_header_diffs)
+    differences = mapping_diffs(old_file, new_file, include_header_diffs=include_header_diffs)
     if mapping_text_diffs:   # only banner when there's two kinds to differentiate
-        log.write("="*20, "logical differences",  repr(file1), "vs.", repr(file2), "="*20)
+        log.write("="*20, "logical differences",  repr(old_file), "vs.", repr(new_file), "="*20)
     for diff in differences:
         diff = unquote_diff(diff)
         if primitive_diffs:
@@ -73,10 +73,10 @@ def mapping_difference(observatory, file1, file2, primitive_diffs=False, check_d
                 old, new = diff_replace_old_new(diff)
                 difference(observatory, old, new, primitive_diffs=primitive_diffs)
     if mapping_text_diffs:
-        pairs = sorted(set(mapping_pairs(differences) +  [(file1, file2)]))
-        for (d1, d2) in pairs:
-            log.write("="*20, "text difference", repr(d1), "vs.", repr(d2), "="*20)
-            text_difference(observatory, d1, d2)
+        pairs = sorted(set(mapping_pairs(differences) +  [(old_file, new_file)]))
+        for (old, new) in pairs:
+            log.write("="*20, "text difference", repr(old), "vs.", repr(new), "="*20)
+            text_difference(observatory, old, new)
         log.write("="*80)
     if check_diffs:
         mapping_check_diffs_core(differences)
@@ -214,40 +214,41 @@ def newer(name1, name2):
 
 # ============================================================================
         
-def fits_difference(observatory, file1, file2):
-    """Run fitsdiff on files named `file1` and `file2`.
+def fits_difference(observatory, old_file, new_file):
+    """Run fitsdiff on files named `old_file` and `new_file`.
     """
-    assert file1.endswith(".fits"), \
-        "File " + repr(file1) + " is not a FITS file."
-    assert file2.endswith(".fits"), \
-        "File " + repr(file2) + " is not a FITS file."
-    loc_file1 = rmap.locate_file(file1, observatory)
-    loc_file2 = rmap.locate_file(file2, observatory)
-    fd = FITSDiff(loc_file1, loc_file2)
+    assert old_file.endswith(".fits"), \
+        "File " + repr(old_file) + " is not a FITS file."
+    assert new_file.endswith(".fits"), \
+        "File " + repr(new_file) + " is not a FITS file."
+    loc_old_file = rmap.locate_file(old_file, observatory)
+    loc_new_file = rmap.locate_file(new_file, observatory)
+    fd = FITSDiff(loc_old_file, loc_new_file)
     if not fd.identical:
         fd.report(fileobj=sys.stdout)
 
-def text_difference(observatory, file1, file2):
-    """Run UNIX diff on two text files named `file1` and `file2`.
+def text_difference(observatory, old_file, new_file):
+    """Run UNIX diff on two text files named `old_file` and `new_file`.
     """
-    assert os.path.splitext(file1)[-1] == os.path.splitext(file2)[-1], \
-        "Files " + repr(file1) + " and " + repr(file2) + " are of different types."
-    _loc_file1 = rmap.locate_file(file1, observatory)
-    _loc_file2 = rmap.locate_file(file2, observatory)
-    pysh.sh("diff -b -c ${_loc_file1} ${_loc_file2}")
+    assert os.path.splitext(old_file)[-1] == os.path.splitext(new_file)[-1], \
+        "Files " + repr(old_file) + " and " + repr(new_file) + " are of different types."
+    _loc_old_file = rmap.locate_file(old_file, observatory)
+    _loc_new_file = rmap.locate_file(new_file, observatory)
+    pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}")
 
-def difference(observatory, file1, file2, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False):
+def difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
+               include_header_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
-    named `file1` and `file2` against one another and print out the results 
+    named `old_file` and `new_file` against one another and print out the results 
     on stdout.
     """
-    if rmap.is_mapping(file1):
-        mapping_difference(observatory, file1, file2, primitive_diffs=primitive_diffs, check_diffs=check_diffs,
-                           mapping_text_diffs=mapping_text_diffs)
-    elif file1.endswith(".fits"):
-        fits_difference(observatory, file1, file2)
+    if rmap.is_mapping(old_file):
+        mapping_difference(observatory, old_file, new_file, primitive_diffs=primitive_diffs, check_diffs=check_diffs,
+                           mapping_text_diffs=mapping_text_diffs, include_header_diffs=include_header_diffs)
+    elif old_file.endswith(".fits"):
+        fits_difference(observatory, old_file, new_file)
     else:
-        text_difference(observatory, file1, file2)
+        text_difference(observatory, old_file, new_file)
 
 # =============================================================================
  
@@ -292,6 +293,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Issue warnings about new rules, deletions, or reversions.")
         self.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
             help="Rather than printing diffs for mappings,  print the names of new or replacement files.")
+        self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
+            help="Include differences in mapping headers in logical diffs: sha1sum, derived_from, etc.")
 
     def main(self):
         """Perform the differencing."""
@@ -301,7 +304,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         else:
             return difference(self.observatory, self.args.old_file, self.args.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
-                   mapping_text_diffs=self.args.mapping_text_diffs)
+                   mapping_text_diffs=self.args.mapping_text_diffs,
+                   include_header_diffs=self.args.include_header_diffs)
     
     def print_new_files(self):
         """Print the references or mappings which are new additions or replacements when comparing mappings."""
