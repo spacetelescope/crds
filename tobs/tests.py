@@ -145,7 +145,7 @@ class Test_01_Insert(unittest.TestCase):
         assert diffs[0][0] == ('tobs_tinstr_tfilekind.rmap', 'tobs_tinstr_tfilekind.rmap'), "unexpected file names in diff"
         assert diffs[0][1] == (selector_name,), "unexpected match case in diff"
         assert diffs[0][2] == (str(param),), "unexpected parameter value in diff"
-        assert diffs[0][3] == "added " + repr(value), "diff is not an addition " + repr(diffs[0])
+        assert diffs[0][3] == "added terminal " + repr(value), "diff is not an addition " + repr(diffs[0])
 
     def terminal_replace(self, selector_name, param, value):
         """Check the bottom level replace functionality."""
