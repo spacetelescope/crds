@@ -406,8 +406,11 @@ and debug output.
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
         
+        self.add_argument("--undefined-differences-matter", action="store_true",
+            help="If not set, a transition from UNDEFINED to anything else is not considered a difference error.")
+        
         self.add_argument("--na-differences-matter", action="store_true",
-            help="If not set,  either CDBS or CRDS scoring reference type as N/A is OK to mismatch.")
+            help="If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.")
         
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
@@ -678,9 +681,10 @@ and debug output.
             if new != old:
                 if self.args.differences_are_errors:
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
-                    if self.args.na_differences_matter or (old != "N/A" and new != "N/A"):
-                        self.log_and_track_error(dataset, instrument, filekind, 
-                            "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
+                    if (old != "UNDEFINED") or self.args.undefined_differences_matter:
+                        if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
+                            self.log_and_track_error(dataset, instrument, filekind, 
+                                "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
                             "New best reference:", repr(old), "-->", repr(new), self.update_promise)
