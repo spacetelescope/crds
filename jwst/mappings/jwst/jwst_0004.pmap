@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-30',
+    'description' : 'rules from clone_directive.txt',
+    'mapping' : 'PIPELINE',
+    'name' : 'jwst_0004.pmap',
+    'observatory' : 'JWST',
+    'parkey' : ('META.INSTRUMENT.TYPE',),
+    'sha1sum' : '5bb1c71ba729e34013a5c8c03095b8fe43a7347d',
+}
+
+selector = {
+    'FGS' : 'jwst_fgs_0002.imap',
+    'MIRI' : 'jwst_miri_0004.imap',
+    'NIRCAM' : 'jwst_nircam_0003.imap',
+    'NIRISS' : 'jwst_niriss_0003.imap',
+    'NIRSPEC' : 'jwst_nirspec_0004.imap',
+}
