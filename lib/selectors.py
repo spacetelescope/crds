@@ -125,14 +125,11 @@ class ModificationError(crds.CrdsError):
     """Failed attempt to modify rmap, e.g. replacement vs. addition.
     """
 
-class CrdsLookupError(crds.CrdsError, LookupError):
-    """A lookup which failed on otherwise valid parameters."""
-    
-class MatchingError(CrdsLookupError):
+class MatchingError(crds.CrdsLookupError):
     """Represents a MatchSelector lookup which failed.
     """
 
-class UseAfterError(CrdsLookupError):
+class UseAfterError(crds.CrdsLookupError):
     """None of the dates in the selector precedes the processing date.
     """
     
@@ -275,10 +272,10 @@ class Selector(object):
             try:
                 log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
-            except CrdsLookupError, exc:
+            except crds.CrdsLookupError, exc:
                 continue
         more_info = " last exception: " + str(exc) if exc else ""
-        raise CrdsLookupError("All lookup attempts failed." + more_info)
+        raise crds.CrdsLookupError("All lookup attempts failed." + more_info)
                 
     def get_selection(self, lookup_key):
         """Most selectors are based on a sorted items list which represents a
@@ -503,8 +500,27 @@ class Selector(object):
             self.short_name + " does not support merging.")
         
     # ------------------------------------------------------------------------
-
-    def modify(self, header, value, valid_values_map):
+    
+    def delete(self, terminal):
+        """Remove all instances of `terminal` from `self`."""
+        deleted = 0
+        for i, choice in enumerate(self.choices()):
+            if choice == terminal:
+                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][1], terminal))
+                self._del_item(i, terminal)
+                deleted += 1
+            elif isinstance(choice, Selector):
+                deleted += choice.delete(terminal)
+        return deleted
+    
+    def _del_item(self, i, terminal):
+        """Actually remove the `i`th selection of `self` which should have `terminal` as it's choice."""
+        assert self._selections[i][1]== terminal
+        assert self._raw_selections[i][1] == terminal
+        del self._selections[i]
+        del self._raw_selections[i]
+        
+    def insert(self, header, value, valid_values_map):
         """Based on `header` recursively insert `value` into the Selector hierarchy,
         either adding it as a new choice or replacing the existing choice with 
         the same parameter set.   Add nested Selectors as required.
@@ -515,9 +531,9 @@ class Selector(object):
         at all levels of the hierarchy.
         
         This call defines the starting point for parkeys and classes,  whereas
-        _modify has diminishing lists passed down to nested Selectors.
+        _insert has diminishing lists passed down to nested Selectors.
         """
-        self._modify(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
+        self._insert(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
 
     @property
     def class_list(self):
@@ -533,12 +549,12 @@ class Selector(object):
     def parkey(self):
         return self._rmap_header["parkey"]
     
-    def _modify(self, header, value, parkey, classes, valid_values_map):
+    def _insert(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
         key = self._make_key(header, parkey[0])
         self._validate_key(key, valid_values_map)
         i = self._find_key(key)
-        if len(classes) > 1:   # add or modify nested selector
+        if len(classes) > 1:   # add or insert nested selector
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new selector.")
                 new_value = self._create_path(header, value, parkey[1:], classes[1:])
@@ -546,7 +562,7 @@ class Selector(object):
             else:
                 old_key, old_value = self._raw_selections[i]
                 log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
-                old_value._modify(header, value, parkey[1:], classes[1:], valid_values_map)
+                old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))

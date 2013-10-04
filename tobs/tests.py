@@ -6,6 +6,7 @@ import os
 import unittest
 
 from crds import rmap, log
+import crds
 
 log.set_test_mode()
 
@@ -546,7 +547,77 @@ selector = Bracket({
 })
 '''
     
+class Test_13_DeleteTest(unittest.TestCase):
+    result_filename = "./delete.rmap"
+    lookup_header = { 
+          "MATCH_PAR1" : "MP1",
+          "MATCH_PAR2" : "99.9",
+          "BRACKET_PAR" : "0.5",
+        }
+    rmap_str = '''
+header = {
+    'derived_from' : 'Hand written 01-15-2013',
+    'filekind' : 'TFILEKIND',
+    'instrument' : 'TINSTR',
+    'mapping' : 'REFERENCE',
+    'name' : 'test.rmap',
+    'observatory' : 'TOBS',
+    'parkey' : (('BRACKET_PAR',), ('MATCH_PAR1','MATCH_PAR2'),),
+    'sha1sum' : 'd412b94d1af1a0871fe39d7096e65aea1187c3b7',
+    'classes' : ('Bracket','Match',)
+}
 
+selector = Bracket({
+    0.1: Match({
+        ('MP1', '99.9') : 'bar.fits',
+    }),
+    2.8 : Match({
+        ('MP1', '99.9') : 'bar.fits',
+    }),
+    99.0 : Match({    
+    }),
+})
+'''
+    def test_0_recursive_modify_rmap(self): # , header, value, classes):
+        # Load the test rmap from a string.   The top level selector must exist.
+        # This is not a "realistic" test case.   It's a test of the recursive
+        # insertion capabilities of all the Selector classes in one go.
+        log.verbose("-"*60)
+        r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
+        result = r.delete("bar.fits")
+        result.write(self.result_filename)
+        diffs = r.difference(result)
+        log.verbose("diffs:", diffs)
+        diffs = [diff for diff in diffs if "Selector" not in diff[-1]]
+        assert len(diffs) == 2, "Fewer/more differences than expected: " + repr(diffs)
+        for diff in diffs:
+            assert "deleted terminal" in diff[-1], "Bad difference " + repr(diff)
+        log.verbose("recursive delete result rmap:")
+        log.verbose(open(self.result_filename).read())
+    
+    def test_1_recursive_use_rmap(self):
+        r = rmap.load_mapping(self.result_filename)
+        try:
+            r.get_best_ref(self.lookup_header)
+        except crds.CrdsLookupError:
+            pass
+        else:
+            assert False, "Expected lookup to fail."
+            
+    def test_2_delete_fails(self):
+        log.verbose("-"*60)
+        r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
+        try:
+            result = r.delete("shazaam.fits")
+        except ValueError:
+            pass
+        else:
+            assert False, "Expected delete to fail."    
+        
+    
+    def test_9_recursive_tear_down(self):
+        os.remove(self.result_filename)
+    
         
 if __name__ == '__main__':
     unittest.main()
