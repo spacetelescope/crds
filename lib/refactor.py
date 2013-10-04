@@ -62,6 +62,27 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
             "  May be identical match with other submitted references."
     return new
 
+def rmap_delete_references(old_rmap, new_rmap, deleted_references):
+    """Given the full path of starting rmap `old_rmap`,  modify it by deleting 
+    all files in `deleted_references` and write out the result to
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
+    
+    Return new ReferenceMapping named `new_rmap`
+    """
+    new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
+    for reference in deleted_references:
+        log.info("Deleting", repr(reference), "from", repr(new.name))
+        new = new.delete(reference)
+    new.header["derived_from"] = old.basename
+    log.verbose("Writing", repr(new_rmap))
+    new.write(new_rmap)
+    formatted = new.format()
+    for reference in deleted_references:
+        reference = os.path.basename(reference)
+        assert reference not in formatted, \
+            "Rules update failure.  Deleted" + repr(reference) + " still appears in new rmap."
+    return new
+
 def rmap_check_modifications(old_rmap, new_rmap, expected=("add",)):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
     limited to the types listed in `expected`.
@@ -95,18 +116,24 @@ class RefactorScript(cmdline.Script):
     """
     
     def add_args(self):
-        self.add_argument("command", nargs=1, choices=("insert","set_header"),
+        self.add_argument("command", choices=("insert","delete","set_header"),
             help="Name of refactoring command to perform.")
         self.add_argument('old_rmap', type=cmdline.reference_mapping,
             help="Reference mapping to modify by inserting references.")
         self.add_argument('new_rmap', type=cmdline.reference_mapping,
             help="Name of modified reference mapping output file.")        
-        self.add_argument('references', type=cmdline.reference_file, nargs="+",
-            help="Reference files to insert into `old_rmap` to produce `new_rmap`.")
+        self.add_argument('references', type=str, nargs="+",
+            help="Reference files to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
         
     def main(self):
-        rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
-
+        if self.args.command == "insert":
+            rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+        elif self.args.command == "delete":
+            rmap_delete_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+        elif self.args.command == "set_header":
+            set_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0], self.args.references[1])
+        else:
+            raise ValueError("Unknown refactoring command: " + repr(self.args.command))
 
 if __name__ == "__main__":
     RefactorScript()()
