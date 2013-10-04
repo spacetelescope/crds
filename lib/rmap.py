@@ -1055,7 +1055,15 @@ class ReferenceMapping(Mapping):
         of this rmap and return it.
         """
         new = self.copy()
-        new.selector.modify(header, value, self.tpn_valid_values)
+        new.selector.insert(header, value, self.tpn_valid_values)
+        return new
+    
+    def delete(self, terminal):
+        """Remove all instances of `terminal` (nominally a filename) from `self`."""
+        new = self.copy()
+        deleted_count = new.selector.delete(terminal)
+        if deleted_count == 0:
+           raise ValueError("Terminal '%s' could not be found and deleted." % terminal)
         return new
 
     def get_matching_header(self, header):

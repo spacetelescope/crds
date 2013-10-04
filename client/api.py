@@ -21,8 +21,8 @@ from crds import utils, log, config
 class CrdsNetworkError(CrdsError):
     """First network service call failed, nominally connection refused."""
     
-class CrdsLookupError(CrdsError):
-    """Filekind NOT FOUND but applicable according to current parameters."""
+class CrdsLookupError(CrdsError, LookupError):
+    """Filekind NOT FOUND for some reason defined in the exception string."""
     
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
