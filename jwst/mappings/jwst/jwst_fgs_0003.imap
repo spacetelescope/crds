@@ -1,0 +1,16 @@
+header = {
+    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-10-04',
+    'instrument' : 'FGS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_fgs_0003.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '8f11b284bcd324175f06f2badaa0e1e099257090',
+}
+
+selector = {
+    'GAIN' : 'jwst_fgs_gain_0000.rmap',
+    'LINEARITY' : 'jwst_fgs_linearity_0001.rmap',
+    'MASK' : 'jwst_fgs_mask_0001.rmap',
+    'READNOISE' : 'jwst_fgs_readnoise_0000.rmap',
+}
