@@ -9,6 +9,8 @@ TEXT_DESCR = {
     "linearity" : "Detector Linearity Correction Coefficients",
     "mask" : "Bad Pixel Mask",
     "amplifier" : "Detector Amplifier Readout Parameters",
+    "readnoise" : "Read Noise",
+    "gain" : "Gain",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
