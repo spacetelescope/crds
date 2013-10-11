@@ -5,6 +5,8 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
+# 10/11/2013 76052 MSwam   remove DESCRIP
+#
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #--------------------------------------------------------------------------
 USEAFTER_DATE       H        C         R    &SYBDATE
@@ -14,8 +16,8 @@ COMMENT             H        C         R
 INSTRUMENT          H        C         R    STIS
 REFERENCE_FILE_TYPE H        C         R    TDC
 DETECTOR            C        C         R    NUV-MAMA
+PEDIGREE	    C        C	       R    INFLIGHT,GROUND,MODEL,DUMMY
 CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
-PEDIGREE            C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
 OBSERVATION_END_DATE    C    C         O    &SYBDATE
 COMMENT             C        C         P
