@@ -11,5 +11,5 @@ INSTRUME            H        C         R    STIS
 FILETYPE            H        C         R    "DARK CORRECTION TABLE"
 DETECTOR            H        C         R    NUV-MAMA
 USEAFTER            H        C         R    &SYBDATE
-PEDIGREE            C        C         R    &PEDIGREE
-DESCRIP             C        C         R
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
