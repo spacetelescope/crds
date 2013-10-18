@@ -253,9 +253,26 @@ def difference(observatory, old_file, new_file, primitive_diffs=False, check_dif
         fits_difference(observatory, old_file, new_file)
     else:
         text_difference(observatory, old_file, new_file)
+        
+def get_affected(observatory, old_pmap, new_pmap, include_header_diffs=True):
+    """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
+    
+    Returns ( [instrument, ...],   [(instrument, filekind), ...])
+    """
+    instruments, types = set(), set()
+    diffs = mapping_diffs(old_pmap, new_pmap, include_header_diffs=include_header_diffs)
+    for diff in diffs:
+        for step in diff:
+            if len(step) == 2 and rmap.is_mapping(step[0]):
+                instrument, filekind = utils.get_file_properties(observatory, step[0])
+                if instrument:
+                    instruments.add(instrument)
+                if filekind:
+                    types.add((instrument, filekind))
+    return sorted(list(instruments)), sorted(list(types))
 
-# =============================================================================
- 
+# ==============================================================================================================
+    
 class DiffScript(cmdline.Script):
     """Python command line script to difference mappings or references."""
     
@@ -299,12 +316,20 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Rather than printing diffs for mappings,  print the names of new or replacement files.")
         self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
             help="Include differences in mapping headers in logical diffs: sha1sum, derived_from, etc.")
+        self.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
+            help="Print out the names of instruments which appear in diffs,  rather than diffs.")
+        self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
+            help="Print out the names of instruments and types which appear in diffs,  rather than diffs.")
 
     def main(self):
         """Perform the differencing."""
         self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
         if self.args.print_new_files:
             return self.print_new_files()
+        elif self.args.print_affected_instruments:
+            return self.print_affected_instruments()
+        elif self.args.print_affected_types:
+            return self.print_affected_types()
         else:
             return difference(self.observatory, self.args.old_file, self.args.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
@@ -331,7 +356,19 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         instrument, filekind = utils.get_file_properties(self.observatory, filename)
         return instrument + " " + filekind 
 
-        
+    def print_affected_instruments(self):
+        """Print the instruments affected in a switch from `old_pmap` to `new_pmap`."""
+        affected_instruments, _affected_types = get_affected(
+            self.observatory, self.args.old_file, self.args.new_file, self.args.include_header_diffs)
+        for instrument in sorted(affected_instruments):
+            print(instrument)
+
+    def print_affected_types(self):
+        """Print the (instrument, filekind) pairs affected in a switch from `old_pmap` to `new_pmap`."""
+        _affected_instruments, affected_types = get_affected(
+            self.observatory, self.args.old_file, self.args.new_file, self.args.include_header_diffs)
+        for instr_type in sorted(affected_types):
+            print("%-10s %-10s" % instr_type)
         
 if __name__ == "__main__":
     DiffScript()()
