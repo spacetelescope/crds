@@ -273,6 +273,11 @@ INSTRUMENT_FIXERS = {
     "wfii": "wfpc2",
 }
 
+TYPE_FIXERS = {
+    ("wfpc2","dark") : "drk", 
+}
+
+
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
@@ -283,8 +288,13 @@ def ref_properties_from_header(filename):
     instrument = header["INSTRUME"].lower()
     if instrument in INSTRUMENT_FIXERS:
         instrument = INSTRUMENT_FIXERS[instrument]
-    filetype = header["FILETYPE"].lower()
-    filekind = tpn.filetype_to_filekind(instrument, filetype)
+    try:
+        filetype = header["FILETYPE"].lower()
+        filekind = tpn.filetype_to_filekind(instrument, filetype)
+    except KeyError:
+        filetype = header["CDBSFILE"].lower()
+        filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
+        filekind = tpn.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================

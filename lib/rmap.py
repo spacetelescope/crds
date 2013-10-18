@@ -601,8 +601,12 @@ class PipelineContext(ContextMapping):
 
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
+        instrument_hacks = {
+                "wfii" : "wfpc2",
+            }
+        instrument = instrument_hacks.get(instrument.lower(), instrument.lower())
         try:
-            return self.selections[instrument.lower()]
+            return self.selections[instrument]
         except KeyError:
             raise crds.CrdsError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.basename))
