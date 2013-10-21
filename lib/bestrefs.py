@@ -312,6 +312,7 @@ and debug output.
             
         self.updates = {}                  # map of reference updates
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
+        self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         
         # See also complex_init()
         self.new_context = None     # Mapping filename
@@ -382,6 +383,9 @@ and debug output.
         
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
             help="A list of reference types to process,  defaulting to all types.")
+        
+        self.add_argument("-k", "--skip-types", nargs="+",  metavar="SKIPPED_REFERENCE_TYPES",  default=(),
+            help="A list of reference types which should be skipped,  defaulting to nothing.")
         
         self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs",
             help="Update dataset headers with new best reference recommendations.", 
@@ -611,6 +615,11 @@ and debug output.
         
         for filekind in (self.process_filekinds or newrefs):
             
+            if filekind in self.skip_filekinds:
+                log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                            "Skipping type.", verbosity=55)
+                continue
+            
             new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
             new = new_org.upper()
             
@@ -648,6 +657,11 @@ and debug output.
         updates = []
         
         for filekind in (self.process_filekinds or newrefs):
+            
+            if filekind in self.skip_filekinds:
+                log.verbose(self.format_prefix(dataset, instrument, filekind), 
+                            "Skipping type.", verbosity=55)
+                continue
             
             new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
             new = new_org.upper()
