@@ -11,7 +11,7 @@ import datetime
 
 # from crds import data_file,  import deferred until required
 
-from crds import compat, log
+from crds import compat, log, config
 
 CRDS_CHECKSUM_BLOCK_SIZE = 2**26
 
@@ -384,7 +384,8 @@ def str_checksum(data):
 
 def get_file_properties(observatory, filename):
     """Return instrument,filekind fields associated with filename."""
-    return get_locator_module(observatory).get_file_properties(filename)        
+    path = config.locate_file(filename, observatory)
+    return get_locator_module(observatory).get_file_properties(path)        
 
 # ===================================================================
 
