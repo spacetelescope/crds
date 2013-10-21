@@ -356,7 +356,7 @@
          'fluxtab': {'db_translations': {},
                      'not_in_db': (),
                      'parkey_relevance': {},
-                     'parkeys': ('detector', 'obstype'),
+                     'parkeys': ('detector', 'obstype', 'life_adj'),
                      'reffile_format': 'table',
                      'reffile_required': 'none',
                      'reffile_switch': 'fluxcorr',
