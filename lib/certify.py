@@ -7,6 +7,7 @@ import os
 import re
 
 import pyfits
+import numpy as np
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
 from crds import client
@@ -39,15 +40,12 @@ class IllegalKeywordError(Exception):
     """A keyword which should not be defined was present."""
 
 # ----------------------------------------------------------------------------
-
-class KeywordValidator(object):
-    """Validates one field described in a .tpn file,  initialized with
-    a TpnInfo object.
+class Validator(object):
+    """Validator is an Abstract class which applies TpnInfo objects to reference files.
     """
     def __init__(self, info):
         self.info = info
         self.name = info.name
-        self.names = []
         if self.info.presence not in ["R", "P", "E", "O"]:
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
         if not hasattr(self.__class__, "_values"):
@@ -71,7 +69,7 @@ class KeywordValidator(object):
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self.info) + ")"
 
-    def check(self, filename, header=None, context=None):
+    def check(self, filename, header=None):
         """Pull the value(s) corresponding to this Validator out of it's
         `header` or the contents of the file.   Check them against the
         requirements defined by this Validator.
@@ -79,7 +77,7 @@ class KeywordValidator(object):
         if self.info.keytype == "H":
             return self.check_header(filename, header)
         elif self.info.keytype == "C":
-            return self.check_column(filename, context=context)
+            return self.check_column(filename)
         elif self.info.keytype == "G":
             return self.check_group(filename)
         else:
@@ -101,20 +99,6 @@ class KeywordValidator(object):
         # If no exception was raised, consider it validated successfully
         return True
 
-    def _check_value(self, filename, value):
-        """Raises ValueError if `value` is not valid."""
-        if value not in self._values:  # and tuple(self._values) != ('*',):
-            if isinstance(value, str):
-                for pat in self._values:
-                    if re.match(pat, value):
-                        self.verbose(filename, value, "matches", repr(pat))
-                        return
-            raise ValueError("Value(s) for " + repr(self.name) + " of " +
-                            str(log.PP(value)) + " is not one of " +
-                            str(log.PP(self._values)))
-        else:
-            self.verbose(filename, value, "is in", repr(self._values))
-
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
@@ -126,10 +110,10 @@ class KeywordValidator(object):
 
     def check_column(self, filename, context=None):
         """Extract a column of new_values from `filename` and check them all against
-        the legal values for this Validator.
+        the legal values for this Validator.   This checks a single column,  not a row/mode.
         """
         try:
-            new_values = self._get_column_values(filename)
+            new_values = self.get_column_values(filename)
             if new_values is None: # Ignore missing optional columns
                 return True 
         except Exception, exc:
@@ -137,29 +121,14 @@ class KeywordValidator(object):
             return False
 
         # new_values must not be None,  check all, waiting to fail later
-        bad_vals = False
+        ok = True
         for i, value in enumerate(new_values): # compare to TPN values
             try:
                 self.check_value(filename + "[" + str(i) +"]", value)
             except ValueError, exc:
-                bad_vals = True
-
-        if bad_vals:   # Fail prior to context comparison if values simply bad.
-            return False
+                bad_vals = False 
+        return ok
         
-        if not context:  # If no comparison context,  nothing to fail against.
-            return True
-
-        # If context has been specified, compare against previous reffile
-        old = find_old_reffile(filename, context)
-        if old: # Only do comparison if old ref file can be found
-            log.verbose("Checking", repr(filename), "values for column", repr(self.name),
-                        "against values found in", old)
-            old_values = self._get_column_values(old)
-            return self._check_column_values(new_values, old_values)
-        else:
-            return True
-
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
         assert False, "Group keys are not currently supported by CRDS."
@@ -174,14 +143,14 @@ class KeywordValidator(object):
             return self.__handle_missing()
         return self.__handle_excluded(value)
 
-    def _get_column_values(self, filename):
+    def get_column_values(self, filename):
         """Pull the column of values corresponding to this Validator out of
         `filename` and return it.   Handle missing and excluded cases.
         """
         hdu = pyfits.open(filename)
         
         # make sure table(s) are in extension(s) not the PRIMARY extension
-        assert len(hdu) >1, "table file with only primary extension: " + repr(filename)
+        assert len(hdu) > 1, "table file with only primary extension: " + repr(filename)
 
         # start by finding the extension which contains the requested column
         for extn in hdu:
@@ -193,33 +162,9 @@ class KeywordValidator(object):
             return self.__handle_missing()
 
         # If it was found, return the values
-        tbdata = col_extn.data
-        values = tbdata.field(self.name)
+        values = col_extn.data.field(self.name)
         hdu.close()
         return self.__handle_excluded(values)
-
-    def _check_column_values(self, new_values, old_values):
-        """ Check column values from new table against values from old table"""
-        
-        # Use sets to perform comparisons more efficiently
-        old_set = set(list(old_values))
-        new_set = set(list(new_values))
-
-        # find values which are uniq to each set/file
-        uniq_new = new_set.difference(old_set)
-        uniq_old = old_set.difference(new_set)
-
-        # report how input values compare to old values, if different
-        if len(uniq_new) > 0:
-            log.warning("Column value(s) for", repr(self.name), "of", log.PP(list(uniq_new)),
-                "are not in:", log.PP(old_values))
-
-        if len(uniq_old) > 0:
-            log.warning("Column value(s) for", repr(self.name), "omitted",
-                        str(log.PP(list(uniq_old))))
-
-        # if no differences, return True
-        return True
 
     def __handle_missing(self):
         """This Validator's key is missing.   Either raise an exception or
@@ -239,6 +184,24 @@ class KeywordValidator(object):
             raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
 
+
+class KeywordValidator(Validator):
+    """Checks that a value is one of the literal TpnInfo values."""
+
+    def _check_value(self, filename, value):
+        """Raises ValueError if `value` is not valid."""
+        if value not in self._values:  # and tuple(self._values) != ('*',):
+            if isinstance(value, str):
+                for pat in self._values:
+                    if re.match(pat, value):
+                        self.verbose(filename, value, "matches", repr(pat))
+                        return
+            raise ValueError("Value for " + repr(self.name) + " of " +
+                            str(log.PP(value)) + " is not one of " +
+                            str(log.PP(self._values)))
+        else:
+            self.verbose(filename, value, "is in", repr(self._values))
+
 # ----------------------------------------------------------------------------
 
 class CharacterValidator(KeywordValidator):
@@ -249,50 +212,6 @@ class CharacterValidator(KeywordValidator):
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
 
-# ----------------------------------------------------------------------------
-
-class ModeValidator(CharacterValidator):
-    """ Validates values from multiple columns as a single mode value"""
-    
-    def add_column(self, column):
-        """ Add column validator to be used as basis for mode."""
-        log.verbose('Adding column', repr(column.name), 'to ModeValidator')
-        self.names.append(column.name)
-
-    def check_column(self, new_file, context=None):
-        """Extract a column of values from `new_file` and check them all against
-        the legal values for this Validator.
-        """
-        if context is None: # If context has been specified, compare against previous reffile
-            log.verbose("No comparison context,  no mode comparison possible for", repr(new_file))
-            return
-
-        new_modes = self.get_modes(new_file)
-        
-        old_file = find_old_reffile(new_file, context)
-        if not old_file: # Only do comparison if old ref file can be found
-            log.warning("No comparison reference for", repr(new_file),
-                        "in context", repr(context))
-        else:
-            log.verbose("Checking", repr(new_file), "values for mode", repr(self.names),
-                        " against values found in ", repr(old_file))
-            old_modes = self.get_modes(old_file)
-            # find values which are uniq to each set/file
-            self.name = self.names
-            self._check_column_values(new_modes, old_modes)
-                
-    def get_modes(self, filename):
-        """Extract the "mode" columns from `filename` and zip them together into a list of mode tuples."""
-        columns = []
-        for name in self.names:
-            self.name = name
-            try:
-                col_values = self._get_column_values(filename)
-            except Exception, exc:
-                raise RuntimeError("Can't read column values from " + repr(filename) + ": " + str(exc))
-            columns.append(col_values)        
-        return zip(*columns)   # zip columns together into "mode" tuples.
-    
 # ----------------------------------------------------------------------------
 
 class LogicalValidator(KeywordValidator):
@@ -540,16 +459,23 @@ class ReferenceCertifier(Certifier):
     """Support certifying reference files:
     
     1. Check simple keywords against TPN files using the reftype's validators.
-    2. Check mode tables against prior reference of context.
+    2. Check mode tables against prior reference of comparison_context.
     3. Dump out keywords of interest.
     """
+    def __init__(self, *args, **keys):
+        super(ReferenceCertifier, self).__init__(*args, **keys)
+        self.simple_validators = get_validators(self.filename, self.observatory)
+        self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
+        self.basefile = os.path.basename(self.filename)
+        self.mode_columns = self.get_mode_column_names()
+
     def certify(self):
         """Certify a reference file."""
         if not self.trap("File does not comply with FITS format", self.fits_verify):
             return
-        header = data_file.get_header(self.filename)
-        self.certify_simple_parameters(header)
-        self.certify_reference_modes(header)
+        self.certify_simple_parameters()
+        if self.mode_columns:
+            self.certify_reference_modes()
         if self.dump_provenance:
             dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys, 
                            self.provenance_keys)
@@ -557,7 +483,7 @@ class ReferenceCertifier(Certifier):
     def fits_verify(self):
         """Use pyfits to verify the FITS format of self.filename."""
         if not self.filename.endswith(".fits"):
-            log.verbose("Skipping FITS verify for '%s'" % self.filename)
+            log.verbose("Skipping FITS verify for '%s'" % self.basefile)
             return
         fits = pyfits.open(self.filename)
         fits.verify(option='exception') # validates all keywords
@@ -579,27 +505,94 @@ class ReferenceCertifier(Certifier):
             log.verbose_warning("Failed retrieving required parkeys:", str(exc))
             return []
 
-    def certify_simple_parameters(self, header):
-        """Check non-column parameters."""
-        for checker in get_validators(self.filename, self.observatory):
-            if checker.info.keytype != 'C':
-                self.trap("checking " + repr(checker.info.name),
-                          checker.check, self.filename, header=header)
+    def certify_simple_parameters(self):
+        """Check simple parameter values,  column and non-column."""
+        header = data_file.get_header(self.filename)
+        for checker in self.simple_validators:
+            self.trap("checking " + repr(checker.info.name), checker.check, self.filename)
+
+    def get_mode_column_names(self):
+        """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
         
-    def certify_reference_modes(self, header):
-        """Check column parameters row-by-row."""
-        mode_checker = None # Initialize mode validation
-        for checker in get_validators(self.filename, self.observatory):
-            # Treat column validations together as a 'mode'
-            if checker.info.keytype == 'C':
-                checker.check(self.filename, header=header) # validate values against TPN valid values
-                if mode_checker is None:
-                    mode_checker = ModeValidator(checker.info)
-                mode_checker.add_column(checker)    
-        if mode_checker: # Run validation on all collected modes
-            context = self.context if self.compare_old_reference else None
-            self.trap("checking " + repr(mode_checker.names),
-                      mode_checker.check, self.filename, context=context, header=header)
+        Only tables whose rmaps define row_keys will have mode checking performed.
+        """
+        if not self.context or not self.compare_old_reference:
+            log.verbose("No context specified or no comparison requested. Table checking skipped.")
+            return []
+        g_rmap = {}
+        with log.verbose_on_exception("Error finding governing rmap for", repr(self.basefile), 
+                                      "under", repr(self.context)):
+            g_rmap = find_governing_rmap(self.context, self.filename)
+        return getattr(g_rmap, "row_keys", [])
+
+    def certify_reference_modes(self):
+        """Check column parameters row-by-row, using mode groups."""
+        old_reference = find_old_reference(self.context, self.filename)
+        if old_reference is None:
+            log.warning("Skipping table comparison.  No comparison reference for", repr(self.basefile), 
+                        "in context", repr(self.context))
+            return
+        if old_reference == self.basefile:
+            log.warning("Skipping table comparison. Reference", repr(self.basefile), 
+                        "was already in context", repr(self.context))
+            return
+        n_old_hdus = len(pyfits.open(self.filename))
+        n_new_hdus = len(pyfits.open(self.filename))
+        if n_old_hdus != n_new_hdus:
+            log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basefile))
+            return
+        for i in range(1, n_new_hdus):
+            self.trap("checking table modes", self.check_table_modes, old_reference, ext=i)
+    
+    def check_table_modes(self, old_reference, ext):
+        """Check the table modes of extension `ext` of `old_reference` versus self.filename"""
+        old_modes = table_mode_dictionary(old_reference, self.mode_columns, ext=ext)
+        if not old_modes:
+            log.info("No modes defined in comparison reference for keys", repr(self.mode_columns))
+            return
+        new_modes = table_mode_dictionary(self.filename, self.mode_columns, ext=ext)
+        if not new_modes:
+            log.info("No modes defined in new reference for keys", repr(self.mode_columns))
+            return
+        old_sample = old_modes.values()[0]
+        new_sample = new_modes.values()[1]
+        if len(old_sample) != len(new_sample):
+             log.warning("Change in row format betwween", repr(old_reference,"and", repr(self.basefile)))
+             return
+        for mode in old_modes:
+            if mode not in new_modes:
+                log.warning("Table mode", repr(mode), "from comparison reference", repr(old_reference),
+                            "is not in new reference", repr(self.basefile))
+                continue
+            diff = self.compare_mode_values(mode, old_modes[mode], new_modes[mode])
+            if diff == 0:
+                log.verbose("Mode", repr(mode), "of", repr(self.basefile), 
+                            "has the same values as", repr(old_reference))
+            else:
+                log.verbose("Mode change", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
+                log.verbose("from:", repr(old_modes[mode]), verbosity=60)
+                log.verbose("to:", repr(new_modes[mode]), verbosity=60)
+        for mode in new_modes:
+            if mode not in old_modes:
+                log.verbose("New mode", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
+                log.verbose("is:", repr(new_modes[mode]), verbosity=60)
+                
+    def compare_mode_values(self, mode, old_row, new_row):
+        """Compare key value tuple list `old_row` to `new_row` for key value tuple list `mode`.
+        Handle array value comparisons.   
+        
+        Return 0 if old_row == new_row,  non-0 otherwise.
+        """
+        different = 0
+        for i, (old_key, old_value) in enumerate(old_row):
+            new_key, new_value = new_row[i]
+            if old_key != new_key:
+                raise ValueError(log.format("Column key mismatch at mode", mode, "old_key", repr(old_key), 
+                                            "new_key", new_key))
+                different += 1
+            if np.any(old_value != new_value):
+                different += 1
+        return different
 
 def dump_multi_key(fitsname, keys, warn_keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
@@ -696,21 +689,44 @@ def find_old_mapping(comparison_context, new_mapping):
     else:
         return None
 
+def find_governing_rmap(context, reference):
+    """Given mapping `context`,  return the loaded rmap which governs `reference`.   Typically this will
+    be the rmap which contains the predecessor to `reference`,  not `reference` itself.
+    """
+    mapping = rmap.asmapping(context, cached="readonly")
+    instrument, filekind = mapping.locate.get_file_properties(reference)
+    if mapping.name.endswith(".pmap"):
+        governing_rmap = mapping.get_imap(instrument).get_rmap(filekind)
+    elif mapping.name.endswith(".imap"):
+        governing_rmap = mapping.get_rmap(filekind)
+    elif mapping.name.endswith(".rmap"):
+        governing_rmap = mapping
+    else:
+        raise ValueError("Invalid comparison context " + repr(context))
+    g_instrument, g_filekind = mapping.locate.get_file_properties(governing_rmap.name)
+    assert instrument == g_instrument, "Comparison context inconsistent with reference file."
+    assert filekind == g_filekind, "Comparison context inconsistent with reference type."
+    log.verbose("Reference '{}' corresponds to rmap '{}' in context '{}'".format(
+                reference, governing_rmap.name, mapping.name))
+    return governing_rmap
+
 # ============================================================================
 
-def find_old_reffile(reffile, pmap):
-    """Returns the name of the old reference file(s) that the new reffile would replace,  or None.
+def find_old_reference(context, reffile):
+    """Returns the name of the old reference file(s) that the new reffile would replace in `context`,  or None.
     """
-    with log.info_on_exception("Failed resolving prior reference for '{}' in '{}'".format(reffile, pmap)):
-        return _find_old_reffile(reffile, pmap)
+    with log.info_on_exception("Failed resolving prior reference for '{}' in '{}'".format(reffile, context)):
+        return _find_old_reference(context, reffile)
     return None
 
-def _find_old_reffile(reffile, pmap):
+def _find_old_reference(context, reffile):
     """Returns the name of the old reference file(s) that the new reffile would replace."""
     
-    ctx = rmap.fetch_mapping(pmap)
-    instrument, filekind = utils.get_file_properties(ctx.observatory, reffile)
-    reference_mapping = ctx.get_imap(instrument).get_rmap(filekind)
+    reference_mapping = find_governing_rmap(context, reffile)
+    
+    refname = os.path.basename(reffile)
+    if refname in reference_mapping.reference_names():
+        return refname
 
     # Determine the corresponding reference by attempting to add reffile to the old context.
     new_r = reference_mapping.insert_reference(reffile)
@@ -721,10 +737,10 @@ def _find_old_reffile(reffile, pmap):
     for diff_tup in diffs:
         if diff.diff_action(diff_tup) == "replace":
             match_refname, dummy = diff.diff_replace_old_new(diff_tup)
-            assert dummy == os.path.basename(reffile), "Bad replacement inserting '{}' into '{}'".format(reffile, pmap)
+            assert dummy == refname, "Bad replacement inserting '{}' into '{}'".format(reffile, reference_mapping.name)
             break   # XXX it may be possible to have more than one corresponding prior reference
     else:
-        log.info("No file corresponding to", repr(reffile), "in context", repr(pmap))
+        log.info("No file corresponding to", repr(reffile), "in context", repr(reference_mapping.name))
         return None
     
     # grab match_file from server and copy it to a local disk, if network
@@ -732,16 +748,31 @@ def _find_old_reffile(reffile, pmap):
     # Note: this call works in both networked and non-networked modes of operation.
     # Non-networked mode requires access to /grp/crds/[hst|jwst] or a copy of it.
     try:
-        match_files = client.dump_references(pmap, baserefs=[match_refname], ignore_cache=False)
+        match_files = client.dump_references(reference_mapping.name, baserefs=[match_refname], ignore_cache=False)
         match_file = match_files[match_refname]
         if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
             raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")
-        log.info("Comparing reference", repr(reffile), "against", repr(match_file))
+        log.info("Comparing reference", repr(refname), "against", repr(os.path.basename(match_file)))
     except Exception, exc:
         log.warning("Failed to obtain reference comparison file", repr(match_refname), ":", str(exc))
         match_file = None
 
     return match_file
+
+def table_mode_dictionary(filename, mode_keys, ext=1):
+    """Returns { (mode_values,...) : (all_values, ...) }."""
+    table = pyfits.getdata(filename, ext=ext)
+    modes = dict()
+    for i, row in enumerate(table):
+        rowdict = dict(zip(table.names, row))
+        # Table row keys can vary by extension.  Have CRDS support a simple model of using
+        # whichever mode_keys are present in a given row.
+        mode = tuple([ (key, rowdict.get(key)) for key in mode_keys if key in rowdict ])
+        if mode in modes:
+            log.warning("Duplicate mode for", repr(mode), "in", repr(filename + "[%d]") % ext, "at row", i) 
+        else:
+            modes[mode] = tuple(zip(table.names, row))
+    return modes
 
 # ============================================================================
 
@@ -752,7 +783,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
-    references or mappings.
+    references or mappings.   This function primarily provides an interface for web code.
     
     files:                  list of file paths to certify.
     context:                .pmap name to certify relative to
@@ -792,6 +823,8 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                 log.error("Validation error in " + repr(filename) + " : " + str(exc))
             else:
                 raise
+
+    log.info('#' * 40)  # Serves as demarkation for each file's report
 
 def test():
     """Run doctests in this module.  See also certify unittests."""
@@ -837,7 +870,7 @@ Checks a CRDS reference or mapping file.
         self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", 
             type=str, default="selector",
             help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
-        self.add_argument("-x", "--comparison-context", dest="context", type=str, default=None,
+        self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
             help="Pipeline context defining comparison files.")
         cmdline.UniqueErrorsMixin.add_args(self)
 
@@ -852,8 +885,8 @@ Checks a CRDS reference or mapping file.
         if self.args.trap_exceptions == "none":
             self.args.trap_exceptions = False
     
-        assert (self.args.context is None) or rmap.is_mapping(self.args.context), \
-            "Specified --context file " + repr(self.args.context) + " is not a CRDS mapping."
+        assert (self.args.comparison_context is None) or rmap.is_mapping(self.args.comparison_context), \
+            "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
             
         if (not self.args.dont_recurse_mappings):
             all_files = self.mapping_closure(self.files)
@@ -861,7 +894,8 @@ Checks a CRDS reference or mapping file.
             all_files = set(self.files)
             
         certify_files(sorted(all_files), 
-                      context=self.args.context, 
+                      context=self.args.comparison_context, 
+                      compare_old_reference=self.args.comparison_context is not None,
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 

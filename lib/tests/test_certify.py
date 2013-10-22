@@ -35,15 +35,7 @@ class TestHSTTpninfoClass(CRDSTestCase):
         """ Test that all modes in ref file match those from previously checked
             in reference file
         """
-        mode_checker = None # Initialize mode validation
-        for checker in self.validators:
-            # Treat column validations together as a 'mode'
-            if checker.info.keytype == 'C':
-                checker.check(self.data('acs_new_idc.fits')) # validate values against TPN valid values
-                if mode_checker is None:
-                    mode_checker = certify.ModeValidator(checker.info)
-                mode_checker.add_column(checker)
-        mode_checker.check(self.data('acs_new_idc.fits'),context='hst.pmap')
+        # XXXX Add mode test here
 
 class TestValidatorClasses(CRDSTestCase):
     def test_character_validator(self):
