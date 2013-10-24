@@ -185,15 +185,15 @@ class SyncScript(cmdline.ContextsScript):
             log.verbose("Syncing mapping", repr(context))
             self.dump_files(context, files=None)  # all mappings for context
             try:
-                mapping = rmap.fetch_mapping(context)
+                mapping = rmap.get_cached_mapping(context)
             except rmap.MappingError, exc:
                 log.warning("Load of existing mapping", repr(context), 
                             "FAILED. Resyncing", repr(context), "ignoring cache.")
                 self.dump_files(context, files=None, ignore_cache=True)
-                mapping = rmap.fetch_mapping(context)
+                mapping = rmap.get_cached_mapping(context)
             mappings = mappings.union(set(mapping.mapping_names()))
         return sorted(mappings)
-            
+
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
         purge_maps = set(rmap.list_mappings('*.[pir]map', self.observatory))
