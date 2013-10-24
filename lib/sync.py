@@ -176,22 +176,23 @@ class SyncScript(cmdline.ContextsScript):
     # ------------------------------------------------------------------------------------------
     
     def fetch_mappings(self):
-        """Gets all mappings required to support `self.contexts`.  
-        """
+        """Gets all mappings required to support `self.contexts`."""
         if not self.contexts:
             return
         mappings = set()
         for context in self.contexts:
             log.verbose("Syncing mapping", repr(context))
-            self.dump_files(context, files=None)  # all mappings for context
-            try:
-                mapping = rmap.get_cached_mapping(context)
-            except rmap.MappingError, exc:
-                log.warning("Load of existing mapping", repr(context), 
-                            "FAILED. Resyncing", repr(context), "ignoring cache.")
-                self.dump_files(context, files=None, ignore_cache=True)
-                mapping = rmap.get_cached_mapping(context)
-            mappings = mappings.union(set(mapping.mapping_names()))
+            with log.error_on_exception("Failed downloading context", repr(context)):
+                self.dump_files(context, files=None)  # all mappings for context
+                try:
+                    mapping = rmap.get_cached_mapping(context)
+                except rmap.MappingError, exc:
+                    log.warning("Load of existing mapping", repr(context), 
+                                "FAILED. Resyncing", repr(context), "ignoring cache.")
+                    with log.error_on_exception("Failed downloading context", repr(context)):
+                        self.dump_files(context, files=None, ignore_cache=True)
+                    mapping = rmap.get_cached_mapping(context)
+                mappings = mappings.union(set(mapping.mapping_names()))
         return sorted(mappings)
 
     def purge_mappings(self):
@@ -279,15 +280,16 @@ class SyncScript(cmdline.ContextsScript):
         basenames = [os.path.basename(file) for file in files]
         try:
             log.verbose("Downloading verification info for", len(basenames), "files.", verbosity=10)
-            info = api.get_file_info_map(observatory=self.observatory, files=basenames, 
+            infos = api.get_file_info_map(observatory=self.observatory, files=basenames, 
                                          fields=["size","rejected","blacklisted","state","sha1sum"])
         except Exception, exc:
             log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
             return
         for file in files:
-            if info[file] == "NOT FOUND":
+            if infos[file] == "NOT FOUND":
                 log.error("CRDS has no record of file", repr(file))
-            self.verify_file(file, info[file])
+            else:
+                self.verify_file(file, infos[file])
         
     def verify_file(self, file, info):
         """Check one `file` against the provided CRDS database `info` dictionary."""
@@ -309,18 +311,18 @@ class SyncScript(cmdline.ContextsScript):
             elif info["sha1sum"] != sha1sum:
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), 
                                       "LOCAL=" + repr(sha1sum))
-#        elif info["state"] not in ["delivered", "operational"]:
-#            self.log_and_purge(path, "File", repr(base), "has a strange server state", repr(info["state"]))
-        elif info["rejected"] != "false":
+        if info["rejected"] != "false":
             log.error("File", repr(base), "has been explicitly rejected.")
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
-        elif info["blacklisted"] != "false":
+        if info["blacklisted"] != "false":
             log.error("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
             if self.args.purge_blacklisted:
                 self.remove_files([path], "files")
             return
+        if info["state"] not in ["archived", "operational"]:
+            log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
         return
     
     def dump_files(self, context, files, ignore_cache=None):
