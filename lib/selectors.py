@@ -211,6 +211,7 @@ class Selector(object):
         and a list of tuples of parameter values / files.
         """
         flat = []
+        subpars = []
         for key, val in self._raw_selections:
             if isinstance(val, Selector):
                 nested = val.todict_flat()
