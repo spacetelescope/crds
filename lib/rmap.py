@@ -1067,7 +1067,7 @@ class ReferenceMapping(Mapping):
         new = self.copy()
         deleted_count = new.selector.delete(terminal)
         if deleted_count == 0:
-           raise ValueError("Terminal '%s' could not be found and deleted." % terminal)
+           raise crds.CrdsError("Terminal '%s' could not be found and deleted." % terminal)
         return new
 
     def get_matching_header(self, header):
