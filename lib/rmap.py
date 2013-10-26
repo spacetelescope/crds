@@ -1065,6 +1065,7 @@ class ReferenceMapping(Mapping):
     def delete(self, terminal):
         """Remove all instances of `terminal` (nominally a filename) from `self`."""
         new = self.copy()
+        terminal = os.path.basename(terminal)
         deleted_count = new.selector.delete(terminal)
         if deleted_count == 0:
            raise crds.CrdsError("Terminal '%s' could not be found and deleted." % terminal)
