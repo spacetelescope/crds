@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import glob
 
 from distutils.core import setup
 
@@ -16,9 +17,7 @@ subpkgs = {
         "package_data" : {
             'crds.tests' : ['data/*.fits','data/*.*map'],
             },
-        "scripts" : [ 
-            "lib/scripts/pipeline_bestref",
-            ],
+        "scripts" : glob.glob("lib/scripts/*"),
         },
     "client" :{
         "packages" : [

@@ -533,8 +533,8 @@ class ReferenceCertifier(Certifier):
                         "in context", repr(self.context))
             return
         if old_reference == self.basefile:
-            log.warning("Skipping table comparison. Reference", repr(self.basefile), 
-                        "was already in context", repr(self.context))
+            log.verbose("Skipping table comparison. Reference", repr(self.basefile), 
+                                "was already in context", repr(self.context))
             return
         n_old_hdus = len(pyfits.open(self.filename))
         n_new_hdus = len(pyfits.open(self.filename))
@@ -548,16 +548,17 @@ class ReferenceCertifier(Certifier):
         """Check the table modes of extension `ext` of `old_reference` versus self.filename"""
         old_modes = table_mode_dictionary(old_reference, self.mode_columns, ext=ext)
         if not old_modes:
-            log.info("No modes defined in comparison reference for keys", repr(self.mode_columns))
+            log.info("No modes defined in comparison reference", repr(old_reference), 
+                     "for keys", repr(self.mode_columns))
             return
         new_modes = table_mode_dictionary(self.filename, self.mode_columns, ext=ext)
         if not new_modes:
-            log.info("No modes defined in new reference for keys", repr(self.mode_columns))
+            log.info("No modes defined in new reference", repr(self.basefile), "for keys", repr(self.mode_columns))
             return
         old_sample = old_modes.values()[0]
         new_sample = new_modes.values()[1]
         if len(old_sample) != len(new_sample):
-             log.warning("Change in row format betwween", repr(old_reference,"and", repr(self.basefile)))
+             log.warning("Change in row format betwween", repr(old_reference, "and", repr(self.basefile)))
              return
         for mode in old_modes:
             if mode not in new_modes:
@@ -641,7 +642,7 @@ class MappingCertifier(Certifier):
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
             if self.context is not None:
-                log.info("No parent for", repr(mapping.name), "relative to context", repr(self.context))
+                log.info("No predecessor for", repr(mapping.name), "relative to context", repr(self.context))
             
         # Optionally check nested references,  only for rmaps.
         if not isinstance(mapping, rmap.ReferenceMapping) or not self.check_references: # Accept None or False
@@ -760,7 +761,10 @@ def _find_old_reference(context, reffile):
     return match_file
 
 def table_mode_dictionary(filename, mode_keys, ext=1):
-    """Returns { (mode_values,...) : (all_values, ...) }."""
+    """Returns { (mode_values,...) : (entire_row_values, ...) } 
+    for FITS data table `filename` at extension `ext` where column names `mode_keys` define the 
+    columns to select for mode values.
+    """
     table = pyfits.getdata(filename, ext=ext)
     modes = dict()
     for i, row in enumerate(table):
