@@ -1199,6 +1199,15 @@ def asmapping(filename_or_mapping, cached=False, **keys):
     """Return the Mapping object corresponding to `filename_or_mapping`.
     filename_or_mapping must either be a string (filename to be loaded) or 
     a Mapping subclass which is simply returned.
+    
+    cached can be set to:
+    
+    False, "uncached"   ignore the mappings cache,  always reload,  don't add to cache
+    "readonly"          load the mapping from the cache if possible,  don't add to the cache if not present
+    True, "cached"      load the mapping from the cache if possible, add it to the cache if not present
+    
+    'readonly' is for experimental/proposed mappings which should not permanently exist in the
+    cache because they may later be rejected and/or redefined.
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping

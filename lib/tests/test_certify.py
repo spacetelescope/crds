@@ -31,12 +31,6 @@ class TestHSTTpninfoClass(CRDSTestCase):
     def test_column_validator(self):
         assert self.validators[-2].check(self.data('acs_new_idc.fits'))
 
-    def test_mode_validator(self):
-        """ Test that all modes in ref file match those from previously checked
-            in reference file
-        """
-        # XXXX Add mode test here
-
 class TestValidatorClasses(CRDSTestCase):
     def test_character_validator(self):
         """Test the constructor with default argument values."""
@@ -56,6 +50,11 @@ class TestValidatorClasses(CRDSTestCase):
         certify.certify_files([self.data("hst.pmap")], trap_exceptions=False, observatory="hst")
         certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
         certify.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
+        
+    def test_table_mode_checks(self):
+        from crds import certify
+        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", 
+                               context="hst.pmap", compare_old_reference=True)
 
 def test():
     import doctest
