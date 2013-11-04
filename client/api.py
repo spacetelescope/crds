@@ -429,7 +429,6 @@ class FileCacher(object):
 
     def _get_data_http(self, url, file):
         """Yield the data returned from `url` in manageable chunks."""
-        chunks = int(math.ceil(long(self.info_map[file]["size"]) / CRDS_DATA_CHUNK_SIZE))
         log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
@@ -439,7 +438,7 @@ class FileCacher(object):
             data = infile.read(CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
-                log.verbose("Transferred HTTP", repr(file), "chunk", chunk, "of", chunks, "at", status[1])
+                log.verbose("Transferred HTTP", repr(file), "chunk", chunk, "at", status[1])
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
@@ -518,7 +517,7 @@ class BundleCacher(FileCacher):
             url = url + "file" + str(i) + "=" + name + "&"
             log.verbose("Adding", repr(name), "to download request.", verbosity=60)
         url = url[:-1]
-        generator = self._get_data_http(url, name)
+        generator = self._get_data_http(url, bundle)
         with open(bundlepath, "wb+") as outfile:
             for data in generator:
                 outfile.write(data)
