@@ -122,8 +122,6 @@ class SyncScript(cmdline.ContextsScript):
                           help='Remove reference files not referred to by contexts from the cache.')
         self.add_argument('--purge-mappings', action='store_true', dest="purge_mappings",
                           help='Remove mapping files not referred to by contexts from the cache.')
-        self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
-                          help="Download sync'ed files even if they're already in the cache.")
         self.add_argument('--dry-run', action="store_true",
                           help= "Don't remove purged files, or repair files,  just print out their names.")
         
@@ -146,7 +144,7 @@ class SyncScript(cmdline.ContextsScript):
             self.args.check_files = True
         self.require_server_connection()
         if self.contexts:
-            active_mappings = self.fetch_mappings()
+            active_mappings = self.get_context_mappings()
             if self.args.datasets:
                 active_references = self.sync_datasets()
             else:
@@ -175,28 +173,10 @@ class SyncScript(cmdline.ContextsScript):
 
     # ------------------------------------------------------------------------------------------
     
-    def fetch_mappings(self):
-        """Gets all mappings required to support `self.contexts`."""
-        if not self.contexts:
-            return
-        mappings = set()
-        for context in self.contexts:
-            log.verbose("Syncing mapping", repr(context))
-            with log.error_on_exception("Failed downloading context", repr(context)):
-                self.dump_files(context, files=None)  # all mappings for context
-                try:
-                    mapping = rmap.get_cached_mapping(context)
-                except rmap.MappingError, exc:
-                    log.warning("Load of existing mapping", repr(context), 
-                                "FAILED. Resyncing", repr(context), "ignoring cache.")
-                    with log.error_on_exception("Failed downloading context", repr(context)):
-                        self.dump_files(context, files=None, ignore_cache=True)
-                    mapping = rmap.get_cached_mapping(context)
-                mappings = mappings.union(set(mapping.mapping_names()))
-        return sorted(mappings)
-
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
+        # rmap.list_mappings lists all mappings in the *local* cache.
+        # in contrast,  client.list_mappings globs available mappings in the server cache.
         purge_maps = set(rmap.list_mappings('*.[pir]map', self.observatory))
         keep = set(self.get_context_mappings())
         self.remove_files(sorted(purge_maps-keep), "mapping")
@@ -311,29 +291,20 @@ class SyncScript(cmdline.ContextsScript):
             elif info["sha1sum"] != sha1sum:
                 self.error_and_repair(path, "File", repr(base), "checksum mismatch CRDS=" + repr(info["sha1sum"]), 
                                       "LOCAL=" + repr(sha1sum))
+        if info["state"] not in ["archived", "operational"]:
+            log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
         if info["rejected"] != "false":
-            log.error("File", repr(base), "has been explicitly rejected.")
+            log.warning("File", repr(base), "has been explicitly rejected.")
             if self.args.purge_rejected:
                 self.remove_files([path], "files")
             return
         if info["blacklisted"] != "false":
-            log.error("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
+            log.warning("File", repr(base), "has been blacklisted or is dependent on a blacklisted file.")
             if self.args.purge_blacklisted:
                 self.remove_files([path], "files")
             return
-        if info["state"] not in ["archived", "operational"]:
-            log.warning("File", repr(base), "has an unusual CRDS file state", repr(info["state"]))
         return
     
-    def dump_files(self, context, files, ignore_cache=None):
-        """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
-        if ignore_cache is None:
-            ignore_cache = self.args.ignore_cache
-        _localpaths, downloads, bytes = api.dump_files(
-            context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
-        self.increment_stat("total-files", downloads)
-        self.increment_stat("total-bytes", bytes)
-
     def error_and_repair(self, file, *args, **keys):
         """Issue an error message and repair `file` if requested by command line args."""
         log.error(*args, **keys)

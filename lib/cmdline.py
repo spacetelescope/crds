@@ -394,6 +394,10 @@ class ContextsScript(Script):
             help='Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.')
         self.add_argument('--all', action='store_true',
             help='Operate with respect to all known CRDS contexts.')
+        self.add_argument('--last', metavar="N", type=int, default=None,
+            help='Operate with respect to the last N contexts.')
+        self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
+                          help="Download required files even if they're already in the cache.")
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
@@ -403,9 +407,13 @@ class ContextsScript(Script):
             # permit instrument and reference mappings,  not just pipelines:
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
-            assert not self.args.range, "Cannot specify --all and --range"
+            assert not self.args.range or self.args.last, "Cannot specify --all and --range or --last"
             contexts = self._list_mappings()
+        elif self.args.last:
+            assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
+            contexts = self._list_mappings()[-self.args.last:]
         elif self.args.range:
+            assert not self.args.all or self.args.last, "Cannot specify --range and --last or --all"
             rmin, rmax = self.args.range
             contexts = []
             all_contexts = self._list_mappings()
@@ -424,16 +432,28 @@ class ContextsScript(Script):
         self.require_server_connection()
         return api.list_mappings(glob_pattern="*.pmap")
     
+    def dump_files(self, context, files=None, ignore_cache=None):
+        """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        if ignore_cache is None:
+            ignore_cache = self.args.ignore_cache
+        _localpaths, downloads, bytes = api.dump_files(
+            context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
+        self.increment_stat("total-files", downloads)
+        self.increment_stat("total-bytes", bytes)
+
     def get_context_mappings(self):
         """Return the set of mappings which are pointed to by the mappings
         in `contexts`.
         """
         files = set()
+        useable_contexts = []
         for context in self.contexts:
             with log.warn_on_exception("Failed dumping mappings for", repr(context)):
-                api.dump_mappings(context)
-            pmap = rmap.get_cached_mapping(context)
-            files = files.union(pmap.mapping_names())
+                self.dump_files(context)
+                pmap = rmap.get_cached_mapping(context)
+                files = files.union(pmap.mapping_names())
+                useable_contexts.append(context)
+        self.contexts = useable_contexts  # XXXX reset self.contexts
         return sorted(files)
     
     def get_context_references(self):
