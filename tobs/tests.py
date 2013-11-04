@@ -609,7 +609,7 @@ selector = Bracket({
         r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
         try:
             result = r.delete("shazaam.fits")
-        except ValueError:
+        except crds.CrdsError:
             pass
         else:
             assert False, "Expected delete to fail."    
