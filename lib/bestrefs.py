@@ -410,6 +410,9 @@ and debug output.
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
         
+        self.add_argument("-e", "--bad-files-are-errors", action="store_true",
+            help="Treat recommendations of known bad/invalid files as errors, not warnings.")
+        
         self.add_argument("--undefined-differences-matter", action="store_true",
             help="If not set, a transition from UNDEFINED to anything else is not considered a difference error.")
         
@@ -440,8 +443,43 @@ and debug output.
             old_context = None
         newctx = rmap.get_cached_mapping(new_context)
         oldctx = rmap.get_cached_mapping(old_context)  if old_context else None
+        self.warn_bad_context("New-context", new_context)
+        self.warn_bad_context("Old-context", old_context)
         return new_context, old_context, newctx, oldctx
+    
+    def warn_bad_context(self, name, context):
+        """Issue a warning if `context` of named `name` is a known bad file."""
+        if context is None:
+            return
+        if context in self.bad_files:
+            if self.args.bad_files_are_errors:
+                self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
+                        "is bad.  Use is not recommended,  results may not be scientifically valid.")
+            else:                 
+                log.warning(name, "=", repr(context), 
+                            "is bad.  Use is not recommended,  results may not be scientifically valid.")
 
+    def warn_bad_reference(self, dataset, instrument, filekind, reference):
+        if reference.lower() in self.bad_files:
+            if self.args.bad_files_are_errors:
+                self.log_and_track_error(dataset, instrument, filekind, "File", repr(reference), 
+                    "is bad. Use is not recommended,  results may not be scientifically valid.")
+            else:
+                log.warning("For", dataset, instrument, filekind, "File", repr(reference), 
+                    "is bad. Use is not recommended,  results may not be scientifically valid.")
+            return 1
+        else:
+            return 0
+
+    def warn_bad_updates(self):
+        """Issue warnings for each bad file in the updates map."""
+        log.verbose("Checking updates for bad files.")
+        bad_files = 0
+        for (dataset, updates) in sorted(self.updates.items()):
+            for update in sorted(updates):
+                bad_files += self.warn_bad_reference(dataset, update.instrument, update.filekind, update.new_reference)
+        log.verbose("Total bad files =", bad_files)
+        
     def sync_context(self, context):
         """Recursively cache the new and comparison mappings."""
         if context:
@@ -724,6 +762,7 @@ and debug output.
         # (dataset, filekind, old, new)
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle)
+        self.warn_bad_updates()
         if self.args.print_affected:
             for dataset in self.updates:
                 if self.updates[dataset]:

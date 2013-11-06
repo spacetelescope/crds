@@ -110,7 +110,6 @@ class Script(object):
         self._argv = argv
         if parser_pars is None:
             parser_pars = {}
-        self._server_info = None
         for key in ["description", "epilog", "usage", "formatter_class"]: 
             self._add_key(key, parser_pars)
         self.parser = argparse.ArgumentParser(prog=argv[0], **parser_pars)
@@ -204,8 +203,8 @@ class Script(object):
     def require_server_connection(self):
         """Check a *required* server connection and ERROR/exit if offline."""
         try:
-            info = self.server_info  # for side effects
-            if not self._connected:
+            connected, info = heavy_client.get_config_info(self.observatory)
+            if not connected:
                 raise RuntimeError("Required server connection unavailable.")
         except Exception, exc:
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
@@ -215,9 +214,12 @@ class Script(object):
     @property
     def server_info(self):
         """Return the server_info dict from the CRDS server *or* cache config for non-networked use where possible."""
-        if self._server_info is None:
-            self._connected, self._server_info = heavy_client.get_config_info(self.observatory)
-        return self._server_info
+        return heavy_client.get_config_info(self.observatory)[1]
+
+    @property
+    def bad_files(self):
+        """Return the current list of known bad mappings and references."""
+        return heavy_client.get_bad_files(self.observatory)
 
     @property
     def default_context(self):
@@ -304,7 +306,7 @@ class Script(object):
         assert config.is_mapping_spec(context), \
             "Invalid .pmap, .imap, or .imap filename or date based context specification."
         if config.is_date_based_mapping_spec(context):
-            mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
+            _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
             log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
             context = final_context
         return context
