@@ -558,7 +558,7 @@ class ReferenceCertifier(Certifier):
         old_sample = old_modes.values()[0]
         new_sample = new_modes.values()[1]
         if len(old_sample) != len(new_sample):
-             log.warning("Change in row format betwween", repr(old_reference, "and", repr(self.basefile)))
+             log.warning("Change in row format betwween", repr(old_reference), "and", repr(self.basefile))
              return
         for mode in old_modes:
             if mode not in new_modes:
