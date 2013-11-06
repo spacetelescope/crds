@@ -148,16 +148,36 @@ def _initial_recommendations(
 
     mode, final_context = get_processing_mode(observatory, context)
 
+    warn_bad_context(observatory, final_context)
+
     if mode == "local":
         bestrefs = local_bestrefs(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
     else:
         log.verbose("Computing best references remotely.")
         bestrefs = light_client.get_best_references(final_context, parameters, reftypes=reftypes)
+    
+    warn_bad_references(observatory, bestrefs)
         
     return final_context, bestrefs
 
+# ============================================================================
 
+def warn_bad_context(observatory, context):
+    """Issue a warning if `context` is a known bad file,  most likely blacklisted."""
+    if context in get_bad_files(observatory):
+        log.warning("Final context", repr(context), 
+                    "is bad or contains bad rules.  It may produce scientifically invalid results.")
+
+def warn_bad_references(observatory, bestrefs):
+    """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
+    bad_files = get_bad_files(observatory)
+    base_bestrefs = { reftype:os.path.basename(ref) for (reftype, ref) in bestrefs.items() }
+    for reftype, ref in base_bestrefs.items():
+        if ref in bad_files:
+            log.warning("Recommended reference", repr(ref), "for type", repr(reftype), 
+                        "is a known bad file.  It may produce scientifically invalid results.")
+    
 # ============================================================================
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
@@ -322,6 +342,15 @@ def minor_version(vers):
  
 # ============================================================================
 
+@utils.cached
+def get_bad_files(observatory):
+    """Return the set of known bad files.   This encapsulates one implementation of a bad files
+    set based on the server info.
+    """
+    info = get_config_info(observatory)[1]
+    return set(info.get("bad_files", "").split())
+
+@utils.cached
 def get_config_info(observatory):
     """Get the operational context and server s/w version from (in order of priority):
     
@@ -353,7 +382,7 @@ def cache_server_info(observatory, info):
             file_.write(pprint.pformat(info))
     except IOError, exc:
         log.warning("Couldn't save CRDS server info:", repr(exc))
- 
+        
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
     server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
