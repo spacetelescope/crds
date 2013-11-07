@@ -218,7 +218,7 @@ class Script(object):
 
     @property
     def bad_files(self):
-        """Return the current list of known bad mappings and references."""
+        """Return the current list of ALL known bad mappings and references, not context-specific."""
         return heavy_client.get_bad_files(self.observatory)
 
     @property

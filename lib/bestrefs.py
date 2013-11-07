@@ -14,7 +14,7 @@ import gc
 import pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError)
+from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client)
 from crds.client import api
 
 # ===================================================================
@@ -451,13 +451,16 @@ and debug output.
         """Issue a warning if `context` of named `name` is a known bad file."""
         if context is None:
             return
-        if context in self.bad_files:
+        # Get subset of bad files contained by this context.
+        bad_contained = heavy_client.get_bad_mappings_in_context(context)
+        if bad_contained:
             if self.args.bad_files_are_errors:
                 self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
-                        "is bad.  Use is not recommended,  results may not be scientifically valid.")
+                        "is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.")
             else:                 
                 log.warning(name, "=", repr(context), 
-                            "is bad.  Use is not recommended,  results may not be scientifically valid.")
+                            "is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.")
+            log.verbose(name, "=", repr(context), "contains bad rules", repr(bad_contained))
 
     def warn_bad_reference(self, dataset, instrument, filekind, reference):
         if reference.lower() in self.bad_files:

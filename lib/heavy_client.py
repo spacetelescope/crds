@@ -148,7 +148,7 @@ def _initial_recommendations(
 
     mode, final_context = get_processing_mode(observatory, context)
 
-    warn_bad_context(observatory, final_context)
+    warn_bad_context(final_context)
 
     if mode == "local":
         bestrefs = local_bestrefs(
@@ -163,11 +163,20 @@ def _initial_recommendations(
 
 # ============================================================================
 
-def warn_bad_context(observatory, context):
-    """Issue a warning if `context` is a known bad file,  most likely blacklisted."""
-    if context in get_bad_files(observatory):
+def warn_bad_context(context):
+    """Issue a warning if `context` is a known bad file, or contains bad files."""
+    bad_contained = get_bad_mappings_in_context(context)
+    if bad_contained:
         log.warning("Final context", repr(context), 
                     "is bad or contains bad rules.  It may produce scientifically invalid results.")
+        log.verbose("Final context", repr(context), "contains bad files:", repr(bad_contained))
+
+def get_bad_mappings_in_context(context):
+    """Return the list of bad files (defined by the server) contained by `context`."""
+    mapping = crds.get_cached_mapping(context)
+    contained_mappings = set(mapping.mapping_names())
+    bad_mappings = get_bad_files(mapping.observatory)
+    return sorted(list(contained_mappings.intersection(bad_mappings)))
 
 def warn_bad_references(observatory, bestrefs):
     """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
