@@ -498,7 +498,7 @@ class Mapping(object):
     def mapping_names(self, full_path=False):
         """Returns a list of mapping files associated with this Mapping"""
         name = self.filename if full_path else self.basename
-        return sorted([name] + [name for selector in self.selections.values() for name in selector.mapping_names(full_path)])
+        return sorted([name] + [nam for selector in self.selections.values() for nam in selector.mapping_names(full_path)])
  
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
