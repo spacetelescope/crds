@@ -656,7 +656,15 @@ class PipelineContext(ContextMapping):
                 return None
             else:
                 return imap.get_equivalent_mapping(mapping)
-
+            
+    def get_required_parkeys(self):
+        """Return a dictionary of matching parameters for each instrument:
+        
+            { instrument : [ matching_parkey_name, ... ], }
+        """
+        return { instrument : self.selections[instrument].get_required_parkeys() 
+                 for instrument in self.selections }
+        
 # ===================================================================
 
 class InstrumentContext(ContextMapping):
