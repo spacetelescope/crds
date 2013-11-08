@@ -6,7 +6,7 @@ import re
 import sha
 import cStringIO
 import functools
-from collections import Counter, defaultdict
+from collections import Counter
 import datetime
 
 # from crds import data_file,  import deferred until required
@@ -559,7 +559,7 @@ def file_to_observatory(filename):
     elif "jwst" in filename:
         return "jwst"
     elif "tobs" in filename:
-        return tobs
+        return "tobs"
     else:
         return reference_to_observatory(filename)
 
