@@ -58,6 +58,8 @@ __all__ = [
            "CrdsDownloadError",
            "ServiceError",
            
+           "get_required_parkeys",
+           
            # deprecated
            "cache_best_references_for_dataset",
            "get_minimum_header",           
@@ -265,6 +267,16 @@ def get_dataset_headers_by_instrument(context, instrument):
 def get_dataset_ids(context, instrument):
     """Return [ dataset_id, ...] for `instrument`."""
     return S.get_dataset_ids(context, instrument)
+
+def get_required_parkeys(context):
+    """Return a mapping from instruments to lists of parameter names required to
+    compute bestrefs under `context`,  i.e. matching header keys.
+    
+    { instrument : [ matching_parkey_name, ... ], ... }
+    """
+    return S.get_required_parkeys(context)
+
+
 
 # ==============================================================================
 
