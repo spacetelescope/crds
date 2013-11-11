@@ -259,7 +259,7 @@ class Sybdate(DateParser):
     """
     _format = re.compile(
                 r"(?P<month>[A-Za-z]+)\s+" + \
-                r"(?P<day>\d+)\s+" + \
+                r"(?P<day>\d+),?\s+" + \
                 r"(?P<year>\d+)" + \
                 r"(\s+(?P<hour>\d+):" + \
                     r"(?P<minute>\d+):" + \
