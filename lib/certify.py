@@ -5,6 +5,7 @@ files define required parameters and that they have legal values.
 import sys
 import os
 import re
+from collections import defaultdict
 
 import pyfits
 import numpy as np
@@ -98,7 +99,10 @@ class Validator(object):
         self._check_value(filename, value)
         # If no exception was raised, consider it validated successfully
         return True
-
+    
+    def _check_value(self, filename, value):
+        raise NotImplementedError("Validator is an abstract class.  Sub-class and define _check_value().")
+    
     def check_header(self, filename, header=None):
         """Extract the value for this Validator's keyname,  either from `header`
         or from `filename`'s header if header is None.   Check the value.
@@ -126,7 +130,7 @@ class Validator(object):
             try:
                 self.check_value(filename + "[" + str(i) +"]", value)
             except ValueError, exc:
-                bad_vals = False 
+                ok = False 
         return ok
         
     def check_group(self, _filename):
@@ -400,7 +404,7 @@ class Certifier(object):
     def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
-                 dont_parse=False, script=None, observatory=None):
+                 dont_parse=False, script=None, observatory=None, comparison_reference=None):
         
         self.filename = filename
         self.context = context
@@ -412,9 +416,12 @@ class Certifier(object):
         self.dont_parse = dont_parse     # mapping only
         self.script = script
         self.observatory = observatory
+        self.comparison_reference = comparison_reference
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
+        assert not comparison_reference or context, \
+            "specifying a comparison reference also requires a comparison context."
     
     @property
     def basename(self):
@@ -498,7 +505,7 @@ class ReferenceCertifier(Certifier):
         if self.context is None:
             return []
         try:
-            pmap = rmap.fetch_mapping(self.context, ignore_checksum="warn")
+            pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
             instrument, filekind = pmap.locate.get_file_properties(self.filename)
             return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
         except Exception, exc:
@@ -509,32 +516,41 @@ class ReferenceCertifier(Certifier):
         """Check simple parameter values,  column and non-column."""
         header = data_file.get_header(self.filename)
         for checker in self.simple_validators:
-            self.trap("checking " + repr(checker.info.name), checker.check, self.filename)
+            self.trap("checking " + repr(checker.info.name), checker.check, self.filename, header)
 
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
         
         Only tables whose rmaps define row_keys will have mode checking performed.
         """
-        if not self.context or not self.compare_old_reference:
-            log.verbose("No context specified or no comparison requested. Table checking skipped.")
+        if not self.context:
+            log.info("Table mode checking requires a comparison context.   Skipping.")
             return []
         g_rmap = {}
         with log.verbose_on_exception("Error finding governing rmap for", repr(self.basefile), 
                                       "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
-        return getattr(g_rmap, "row_keys", [])
-
+        try:
+            mode_columns = g_rmap.row_keys
+            log.info("In governing rmap", repr(g_rmap.basename), "row keys defined as", repr(mode_columns))
+        except AttributeError:
+            mode_columns = []
+            log.warning("In governing rmap", repr(g_rmap.basename), "row keys NOT DEFINED.")
+        return mode_columns
+            
     def certify_reference_modes(self):
         """Check column parameters row-by-row, using mode groups."""
-        old_reference = find_old_reference(self.context, self.filename)
-        if old_reference is None:
-            log.warning("Skipping table comparison.  No comparison reference for", repr(self.basefile), 
-                        "in context", repr(self.context))
-            return
+        if self.comparison_reference:
+            old_reference = self.comparison_reference
+        else:
+            old_reference = find_old_reference(self.context, self.filename)
+            if old_reference is None:
+                log.warning("Skipping table comparison.  No comparison reference for", repr(self.basefile), 
+                            "in context", repr(self.context))
+                return
         if old_reference == self.basefile:
             log.verbose("Skipping table comparison. Reference", repr(self.basefile), 
-                                "was already in context", repr(self.context))
+                        "was already in context", repr(self.context))
             return
         n_old_hdus = len(pyfits.open(self.filename))
         n_new_hdus = len(pyfits.open(self.filename))
@@ -546,37 +562,39 @@ class ReferenceCertifier(Certifier):
     
     def check_table_modes(self, old_reference, ext):
         """Check the table modes of extension `ext` of `old_reference` versus self.filename"""
-        old_modes = table_mode_dictionary(old_reference, self.mode_columns, ext=ext)
+        log.verbose("Checking table modes of '{}[{}]' against comparison reference '{}'".format(
+            self.basefile, ext, old_reference))
+        old_modes, old_all_cols = table_mode_dictionary(old_reference, self.mode_columns, ext=ext)
         if not old_modes:
             log.info("No modes defined in comparison reference", repr(old_reference), 
                      "for keys", repr(self.mode_columns))
             return
-        new_modes = table_mode_dictionary(self.filename, self.mode_columns, ext=ext)
+        new_modes, new_all_cols = table_mode_dictionary(self.filename, self.mode_columns, ext=ext)
         if not new_modes:
             log.info("No modes defined in new reference", repr(self.basefile), "for keys", repr(self.mode_columns))
             return
         old_sample = old_modes.values()[0]
-        new_sample = new_modes.values()[1]
-        if len(old_sample) != len(new_sample):
-             log.warning("Change in row format betwween", repr(old_reference), "and", repr(self.basefile))
-             return
+        new_sample = new_modes.values()[0]
+        if len(old_sample) != len(new_sample) or old_all_cols != new_all_cols:
+            log.warning("Change in row format betwween", repr(old_reference), "and", repr(self.basefile))
+            return
         for mode in old_modes:
             if mode not in new_modes:
                 log.warning("Table mode", repr(mode), "from comparison reference", repr(old_reference),
-                            "is not in new reference", repr(self.basefile))
+                            "is NOT IN new reference", repr(self.basefile))
                 continue
-            diff = self.compare_mode_values(mode, old_modes[mode], new_modes[mode])
+            diff = self.compare_mode_values(mode, old_modes[mode][1], new_modes[mode][1])
             if diff == 0:
                 log.verbose("Mode", repr(mode), "of", repr(self.basefile), 
-                            "has the same values as", repr(old_reference))
+                            "has the same values as", repr(old_reference),  verbosity=50)
             else:
                 log.verbose("Mode change", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
-                log.verbose("from:", repr(old_modes[mode]), verbosity=60)
-                log.verbose("to:", repr(new_modes[mode]), verbosity=60)
+                log.verbose("from:", repr(old_modes[mode][1]), verbosity=60)
+                log.verbose("to:", repr(new_modes[mode][1]), verbosity=60)
         for mode in new_modes:
             if mode not in old_modes:
                 log.verbose("New mode", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
-                log.verbose("is:", repr(new_modes[mode]), verbosity=60)
+                log.verbose("is:", repr(new_modes[mode][1]), verbosity=60)
                 
     def compare_mode_values(self, mode, old_row, new_row):
         """Compare key value tuple list `old_row` to `new_row` for key value tuple list `mode`.
@@ -636,7 +654,7 @@ class MappingCertifier(Certifier):
         # derived_from = mapping.get_derived_from()
         derived_from = find_old_mapping(self.context, self.filename)
         if derived_from is not None:
-            if derived_from.name ==self.filename:
+            if derived_from.name == self.filename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
                 diff.mapping_check_diffs(mapping, derived_from)
@@ -694,7 +712,7 @@ def find_governing_rmap(context, reference):
     """Given mapping `context`,  return the loaded rmap which governs `reference`.   Typically this will
     be the rmap which contains the predecessor to `reference`,  not `reference` itself.
     """
-    mapping = rmap.asmapping(context, cached="readonly")
+    mapping = rmap.asmapping(context, cached=True)
     instrument, filekind = mapping.locate.get_file_properties(reference)
     if mapping.name.endswith(".pmap"):
         governing_rmap = mapping.get_imap(instrument).get_rmap(filekind)
@@ -761,22 +779,28 @@ def _find_old_reference(context, reffile):
     return match_file
 
 def table_mode_dictionary(filename, mode_keys, ext=1):
-    """Returns { (mode_values,...) : (entire_row_values, ...) } 
+    """Returns ({ (mode_values,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
     for FITS data table `filename` at extension `ext` where column names `mode_keys` define the 
     columns to select for mode values.
     """
     table = pyfits.getdata(filename, ext=ext)
-    modes = dict()
+    modes = defaultdict(list)
+    all_cols = [name.upper() for name in table.names]
+    basename = repr(os.path.basename(filename) + "[{}]".format(ext))
+    log.info("Mode columns for", basename, "are:", repr(mode_keys))
+    log.info("All column names in", basename, "are:", repr(all_cols))
     for i, row in enumerate(table):
-        rowdict = dict(zip(table.names, row))
+        rowdict = dict(zip(all_cols, row))
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
         # whichever mode_keys are present in a given row.
         mode = tuple([ (key, rowdict.get(key)) for key in mode_keys if key in rowdict ])
-        if mode in modes:
-            log.warning("Duplicate mode for", repr(mode), "in", repr(filename + "[%d]") % ext, "at row", i) 
-        else:
-            modes[mode] = tuple(zip(table.names, row))
-    return modes
+        new_row = tuple(zip(all_cols, row))
+        modes[mode].append((i, new_row))
+    for mode in sorted(modes.keys()):
+        if len(modes[mode]) > 1:
+            log.warning("Duplicate definitions in", basename, "for mode:", repr(mode), ":\n", 
+                        "\n".join([repr(row) for row in modes[mode]]))
+    return {mode:modes[mode][0] for mode in modes}, all_cols
 
 # ============================================================================
 
@@ -785,7 +809,8 @@ class MissingReferenceError(RuntimeError):
 
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False, script=None, observatory=None):
+                  dont_parse=False, skip_banner=False, script=None, observatory=None,
+                  comparison_reference=None):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
@@ -808,9 +833,12 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     for fnum, filename in enumerate(files):
         if not skip_banner:
             log.info('#' * 40)  # Serves as demarkation for each file's report
+        if comparison_reference:
+            log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
+                     "relative to context", repr(context), "and comparison reference", repr(comparison_reference))
+        else:
             log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
                      "relative to context", repr(context))
-            # log.info("certify_files locals():", log.PP(locals()))
         try:
             if is_mapping or rmap.is_mapping(filename):
                 klass = MappingCertifier
@@ -820,7 +848,8 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
-                              dont_parse=dont_parse, script=script, observatory=observatory)
+                              dont_parse=dont_parse, script=script, observatory=observatory,
+                              comparison_reference=comparison_reference)
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
@@ -871,11 +900,13 @@ Checks a CRDS reference or mapping file.
             help="Ignore extensions, the files being certified are mappings.")
         self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
             help="Dump provenance keywords.")
-        self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", 
-            type=str, default="selector",
+        self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", type=str, default="selector",
             help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
             help="Pipeline context defining comparison files.")
+        self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
+            help="Comparison reference for table certification.")
+        
         cmdline.UniqueErrorsMixin.add_args(self)
 
     def main(self):
@@ -891,6 +922,11 @@ Checks a CRDS reference or mapping file.
     
         assert (self.args.comparison_context is None) or rmap.is_mapping(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
+        assert (self.args.comparison_reference is None) or not rmap.is_mapping(self.args.comparison_reference), \
+            "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
+        if self.args.comparison_reference:
+            assert len(self.files) == 1 and not rmap.is_mapping(self.files[0]), \
+                "Only one reference can be certified if --comparison-reference is specified."
             
         if (not self.args.dont_recurse_mappings):
             all_files = self.mapping_closure(self.files)
@@ -898,8 +934,9 @@ Checks a CRDS reference or mapping file.
             all_files = set(self.files)
             
         certify_files(sorted(all_files), 
-                      context=self.args.comparison_context, 
-                      compare_old_reference=self.args.comparison_context is not None,
+                      context=self.args.comparison_context,
+                      comparison_reference=self.args.comparison_reference,
+                      compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 
