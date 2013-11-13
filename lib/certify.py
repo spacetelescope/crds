@@ -545,69 +545,84 @@ class ReferenceCertifier(Certifier):
         else:
             old_reference = find_old_reference(self.context, self.filename)
             if old_reference is None:
-                log.warning("Skipping table comparison.  No comparison reference for", repr(self.basefile), 
-                            "in context", repr(self.context))
+                # Load table modes anyway,  looking for duplicate modes.
+                _new_modes, _new_all_cols = table_mode_dictionary(
+                    "new reference", self.filename, self.mode_columns, ext=ext)
+                log.warning("No comparison reference for", repr(self.basefile), 
+                            "in context", repr(self.context) + ". Skipping table comparison.")
                 return
         if old_reference == self.basefile:
-            log.verbose("Skipping table comparison. Reference", repr(self.basefile), 
+            log.warning("Skipping table comparison. Reference", repr(self.basefile), 
                         "was already in context", repr(self.context))
             return
         n_old_hdus = len(pyfits.open(self.filename))
         n_new_hdus = len(pyfits.open(self.filename))
         if n_old_hdus != n_new_hdus:
             log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basefile))
-            return
-        for i in range(1, n_new_hdus):
+
+        for i in range(1, min(n_new_hdus, n_old_hdus)):
             self.trap("checking table modes", self.check_table_modes, old_reference, ext=i)
     
     def check_table_modes(self, old_reference, ext):
         """Check the table modes of extension `ext` of `old_reference` versus self.filename"""
-        log.verbose("Checking table modes of '{}[{}]' against comparison reference '{}'".format(
-            self.basefile, ext, old_reference))
-        old_modes, old_all_cols = table_mode_dictionary(old_reference, self.mode_columns, ext=ext)
+        ext_suffix = "[" + str(ext) + "]"
+        new_reference_ex = self.basefile + ext_suffix
+        old_reference_ex = old_reference + ext_suffix
+        log.verbose("Checking table modes of '{}' against comparison reference '{}'".format(
+                new_reference_ex, old_reference_ex))
+        old_modes, old_all_cols = table_mode_dictionary(
+            "old reference", old_reference, self.mode_columns, ext=ext)
         if not old_modes:
-            log.info("No modes defined in comparison reference", repr(old_reference), 
+            log.info("No modes defined in comparison reference", repr(old_reference_ex), 
                      "for keys", repr(self.mode_columns))
             return
-        new_modes, new_all_cols = table_mode_dictionary(self.filename, self.mode_columns, ext=ext)
+        new_modes, new_all_cols = table_mode_dictionary(
+            "new reference", self.filename, self.mode_columns, ext=ext)
         if not new_modes:
-            log.info("No modes defined in new reference", repr(self.basefile), "for keys", repr(self.mode_columns))
+            log.info("No modes defined in new reference", repr(new_reference_ex), "for keys", 
+                     repr(self.mode_columns))
             return
         old_sample = old_modes.values()[0]
         new_sample = new_modes.values()[0]
         if len(old_sample) != len(new_sample) or old_all_cols != new_all_cols:
-            log.warning("Change in row format betwween", repr(old_reference), "and", repr(self.basefile))
+            log.warning("Change in row format betwween", repr(old_reference_ex), "and", repr(new_reference_ex))
+            log.verbose("Old sample:", repr(old_sample))
+            log.verbose("New sample:", repr(new_sample))
             return
         for mode in old_modes:
             if mode not in new_modes:
-                log.warning("Table mode", repr(mode), "from comparison reference", repr(old_reference),
-                            "is NOT IN new reference", repr(self.basefile))
+                log.warning("Table mode", mode, "from old reference", repr(old_reference_ex),
+                            "is NOT IN new reference", repr(new_reference_ex))
+                log.verbose("Old:", repr(old_modes[mode]), verbosity=60)
                 continue
-            diff = self.compare_mode_values(mode, old_modes[mode][1], new_modes[mode][1])
-            if diff == 0:
-                log.verbose("Mode", repr(mode), "of", repr(self.basefile), 
-                            "has the same values as", repr(old_reference),  verbosity=50)
+            # modes[mode][0] is row_no,  modes[mode][1] is row value
+            diff = self.compare_row_values(mode, old_modes[mode][1], new_modes[mode][1])
+            if not diff:
+                log.verbose("Mode", mode, "of", repr(new_reference_ex), 
+                            "has same values as", repr(old_reference_ex),  verbosity=60)
             else:
-                log.verbose("Mode change", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
-                log.verbose("from:", repr(old_modes[mode][1]), verbosity=60)
-                log.verbose("to:", repr(new_modes[mode][1]), verbosity=60)
+                log.verbose("Mode change", mode, "between", repr(old_reference_ex), "and", 
+                            repr(new_reference_ex))
+                log.verbose("Old:", repr(old_modes[mode]), verbosity=60)
+                log.verbose("New:", repr(new_modes[mode]), verbosity=60)
         for mode in new_modes:
             if mode not in old_modes:
-                log.verbose("New mode", repr(mode), "between", repr(old_reference), "and", repr(self.basefile))
-                log.verbose("is:", repr(new_modes[mode][1]), verbosity=60)
+                log.info("Table mode", mode, "of new reference", repr(new_reference_ex),
+                         "is NOT IN old reference", repr(old_reference))
+                log.verbose("New:", repr(new_modes[mode]), verbosity=60)
                 
-    def compare_mode_values(self, mode, old_row, new_row):
+    def compare_row_values(self, mode, old_row, new_row):
         """Compare key value tuple list `old_row` to `new_row` for key value tuple list `mode`.
         Handle array value comparisons.   
         
         Return 0 if old_row == new_row,  non-0 otherwise.
         """
         different = 0
-        for i, (old_key, old_value) in enumerate(old_row):
-            new_key, new_value = new_row[i]
+        for field_no, (old_key, old_value) in enumerate(old_row):
+            new_key, new_value = new_row[field_no]
             if old_key != new_key:
-                raise ValueError(log.format("Column key mismatch at mode", mode, "old_key", repr(old_key), 
-                                            "new_key", new_key))
+                log.warning("Column key mismatch at mode", mode, "old_key", repr(old_key), 
+                            "new_key", new_key)
                 different += 1
             if np.any(old_value != new_value):
                 different += 1
@@ -778,8 +793,8 @@ def _find_old_reference(context, reffile):
 
     return match_file
 
-def table_mode_dictionary(filename, mode_keys, ext=1):
-    """Returns ({ (mode_values,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
+def table_mode_dictionary(generic_name, filename, mode_keys, ext=1):
+    """Returns ({ (mode_val,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
     for FITS data table `filename` at extension `ext` where column names `mode_keys` define the 
     columns to select for mode values.
     """
@@ -787,8 +802,8 @@ def table_mode_dictionary(filename, mode_keys, ext=1):
     modes = defaultdict(list)
     all_cols = [name.upper() for name in table.names]
     basename = repr(os.path.basename(filename) + "[{}]".format(ext))
-    log.info("Mode columns for", basename, "are:", repr(mode_keys))
-    log.info("All column names in", basename, "are:", repr(all_cols))
+    log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
+    log.info("All column names for", generic_name, basename, "are:", repr(all_cols))
     for i, row in enumerate(table):
         rowdict = dict(zip(all_cols, row))
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
@@ -798,9 +813,10 @@ def table_mode_dictionary(filename, mode_keys, ext=1):
         modes[mode].append((i, new_row))
     for mode in sorted(modes.keys()):
         if len(modes[mode]) > 1:
-            log.warning("Duplicate definitions in", basename, "for mode:", repr(mode), ":\n", 
+            log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
                         "\n".join([repr(row) for row in modes[mode]]))
-    return {mode:modes[mode][0] for mode in modes}, all_cols
+    # modes[mode][0] is first instance of multiply defined mode.
+    return { mode:modes[mode][0] for mode in modes }, all_cols
 
 # ============================================================================
 
