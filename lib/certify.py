@@ -526,16 +526,16 @@ class ReferenceCertifier(Certifier):
         if not self.context:
             log.info("Table mode checking requires a comparison context.   Skipping.")
             return []
-        g_rmap = {}
+        mode_columns = []
         with log.verbose_on_exception("Error finding governing rmap for", repr(self.basefile), 
                                       "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
-        try:
-            mode_columns = g_rmap.row_keys
-            log.info("In governing rmap", repr(g_rmap.basename), "row keys defined as", repr(mode_columns))
-        except AttributeError:
-            mode_columns = []
-            log.warning("In governing rmap", repr(g_rmap.basename), "row keys NOT DEFINED.")
+            try:
+                mode_columns = g_rmap.row_keys
+                log.info("In governing rmap", repr(g_rmap.basename), "row keys defined as", repr(mode_columns))
+            except:
+                log.warning("In governing rmap", repr(g_rmap.basename), "for", 
+                            repr(self.filename), "row keys NOT DEFINED.")
         return mode_columns
             
     def certify_reference_modes(self):
@@ -544,17 +544,13 @@ class ReferenceCertifier(Certifier):
             old_reference = self.comparison_reference
         else:
             old_reference = find_old_reference(self.context, self.filename)
-            if old_reference is None:
+            if old_reference is None or old_reference == self.basefile:
                 # Load table modes anyway,  looking for duplicate modes.
                 _new_modes, _new_all_cols = table_mode_dictionary(
-                    "new reference", self.filename, self.mode_columns, ext=ext)
+                    "new reference", self.filename, self.mode_columns)
                 log.warning("No comparison reference for", repr(self.basefile), 
                             "in context", repr(self.context) + ". Skipping table comparison.")
                 return
-        if old_reference == self.basefile:
-            log.warning("Skipping table comparison. Reference", repr(self.basefile), 
-                        "was already in context", repr(self.context))
-            return
         n_old_hdus = len(pyfits.open(self.filename))
         n_new_hdus = len(pyfits.open(self.filename))
         if n_old_hdus != n_new_hdus:
