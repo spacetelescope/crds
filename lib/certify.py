@@ -531,11 +531,17 @@ class ReferenceCertifier(Certifier):
                                       "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
             try:
+                if g_rmap.reffile_format != "table":
+                    log.verbose("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
+                    return []
+            except:
+                log.warning("Rmap reffile_format NOT DEFINED,  assuming it's a table.")
+            try:
                 mode_columns = g_rmap.row_keys
-                log.info("In governing rmap", repr(g_rmap.basename), "row keys defined as", repr(mode_columns))
+                log.info("In governing rmap", repr(g_rmap.basename), "row_keys defined as", repr(mode_columns))
             except:
                 log.warning("In governing rmap", repr(g_rmap.basename), "for", 
-                            repr(self.filename), "row keys NOT DEFINED.")
+                            repr(self.filename), "row_keys NOT DEFINED.")
         return mode_columns
             
     def certify_reference_modes(self):
