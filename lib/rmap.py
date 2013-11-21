@@ -417,7 +417,7 @@ class Mapping(object):
         return self.minimize_header(header)
 
     def validate_mapping(self,  trap_exceptions=False):
-        """Validate `self` only implementing any checks to be performced by
+        """Validate `self` only implementing any checks to be performed by
         crds.certify.   ContextMappings are mostly validated at load time.
         Stick extra checks for context mappings here.
         """
@@ -983,7 +983,7 @@ class ReferenceMapping(Mapping):
         except Exception, exc:
             if trap_exceptions == mapping_type(self):
                 log.error("invalid mapping:", self.instrument, self.filekind, ":", str(exc))
-            elif trap_exceptions == "debug":
+            elif trap_exceptions in ["debug", "none", None, False]:
                 raise
             else:
                 raise ValidationError(repr(self) + " : " + str(exc))
