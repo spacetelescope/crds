@@ -811,6 +811,9 @@ def table_mode_dictionary(generic_name, filename, mode_keys, ext=1):
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
         # whichever mode_keys are present in a given row.
         mode = tuple([ (key, rowdict.get(key)) for key in mode_keys if key in rowdict ])
+        if not mode:
+            log.info("Empty actual mode in", generic_name, basename, "with candidate mode columns", mode_keys)
+            return {}, []
         new_row = tuple(zip(all_cols, row))
         modes[mode].append((i, new_row))
     for mode in sorted(modes.keys()):
