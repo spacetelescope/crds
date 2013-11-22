@@ -130,6 +130,12 @@ def locate_file(filepath, observatory):
     else:
         return locate_reference(filepath, observatory)
 
+def locate_config(cfg, observatory):
+    """Return the absolute path where reference `ref` should be located."""
+    if os.path.dirname(cfg):
+        return cfg
+    return os.path.join(get_crds_refpath(), observatory, cfg)
+
 def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
@@ -141,6 +147,11 @@ def is_mapping(mapping):
     file.
     """
     return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
+
+def get_sqlite3_db_path(observatory):
+    return locate_config("crds_db.sqlite3", observatory)
+
+# -------------------------------------------------------------------------------------
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
 CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
@@ -242,7 +253,6 @@ def file_in_cache(filename, observatory):
     """Return True IFF `filename` is in the local cache."""
     path = locate_file(os.path.basename(filename), observatory)
     return os.path.exists(path)
-
 
 # These are name based but could be written as slower check-the-mapping
 # style functions.

@@ -9,6 +9,7 @@ import urllib2
 import tarfile
 import math
 import re
+import zlib
 
 from .proxy import CheckingProxy, ServiceError, CrdsError
 
@@ -41,6 +42,7 @@ __all__ = [
            "get_url",
            "get_file_info",
            "get_file_info_map",
+           "get_sqlite_db",
            
            "get_mapping_names",
            "get_reference_names",
@@ -189,6 +191,15 @@ def get_file_info_map(observatory, files=None, fields=None):
     """
     infos = S.get_file_info_map(observatory, files, fields)
     return infos
+
+def get_sqlite_db(observatory):
+    """Download the CRDS database as a SQLite database."""
+    encoded_compressed_data = S.get_sqlite_db(observatory)
+    data = zlib.decompress(base64.b64decode(encoded_compressed_data))
+    path = config.get_sqlite3_db_path(observatory)
+    with open(path, "wb+") as f:
+        f.write(data)
+    return path
 
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
