@@ -134,7 +134,7 @@ def locate_config(cfg, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(cfg):
         return cfg
-    return os.path.join(get_crds_refpath(), observatory, cfg)
+    return os.path.join(get_crds_config_path(), observatory, cfg)
 
 def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
