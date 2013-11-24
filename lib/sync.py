@@ -135,6 +135,8 @@ class SyncScript(cmdline.ContextsScript):
                           help='Purge files noted as rejected by --check-files')
         self.add_argument('--purge-blacklisted', action='store_true', dest='purge_blacklisted',
                           help='Purge files (and their mapping anscestors) noted as blacklisted by --check-files')
+        self.add_argument('--fetch-sqlite-db', action='store_true', dest='fetch_sqlite_db',
+                          help='Download a sqlite3 version of the CRDS file catalog.')
 
     # ------------------------------------------------------------------------------------------
     
@@ -168,6 +170,8 @@ class SyncScript(cmdline.ContextsScript):
             sys.exit(-1)
         if self.args.check_files:
             self.verify_files(verify_file_list)
+        if self.args.fetch_sqlite_db:
+            self.fetch_sqlite_db()
         self.report_stats()
         log.standard_status()
 
@@ -315,7 +319,11 @@ class SyncScript(cmdline.ContextsScript):
                 self.dump_files(self.default_context, [file]) 
             else:
                 log.info("Without --dry-run would repair", repr(file))
-                
+    
+    def fetch_sqlite_db(self):
+        path = api.get_sqlite_db(self.observatory)
+        log.info("SQLite database file downloaded to:", path)
+
 # ==============================================================================================================
 
 if __name__ == "__main__":
