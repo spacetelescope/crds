@@ -165,13 +165,13 @@ class SyncScript(cmdline.ContextsScript):
         elif self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
+        elif self.args.fetch_sqlite_db:
+            self.fetch_sqlite_db()
         else:
-            log.error("Define --contexts, --datasets,  or --files to sync.")
+            log.error("Define --contexts, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
         if self.args.check_files:
             self.verify_files(verify_file_list)
-        if self.args.fetch_sqlite_db:
-            self.fetch_sqlite_db()
         self.report_stats()
         log.standard_status()
 

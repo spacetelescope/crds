@@ -366,7 +366,7 @@ class FileCacher(object):
         if downloads:
             bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
         else:
-            log.verbose("Skipping download for cached files", names, verbosity=30)
+            log.verbose("Skipping download for cached files", names, verbosity=60)
             bytes = 0
         if api == 1:
             return localpaths
@@ -523,7 +523,7 @@ class BundleCacher(FileCacher):
         utils.ensure_dir_exists(bundlepath, 0700)
         for name in localpaths:
             if name not in downloads:
-                log.verbose("Skipping existing file", repr(name), verbosity=10)
+                log.verbose("Skipping existing file", repr(name), verbosity=60)
         self.fetch_bundle(bundlepath, downloads)
         bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
         for name in downloads:
