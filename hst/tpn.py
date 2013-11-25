@@ -397,9 +397,12 @@ def get_tpninfos(*args):
 
 def mapping_validator_key(mapping):
     """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
-    cat_info = LD_TPN_CATALOG[mapping.instrument][mapping.filekind]
-    assert isinstance(cat_info, tuple), "Unexpected _ld.tpn configuration."
-    return (cat_info[0],)
+    try:
+        cat_info = LD_TPN_CATALOG[mapping.instrument][mapping.filekind]
+        assert isinstance(cat_info, tuple), "Unexpected _ld.tpn configuration."
+        return (cat_info[0],)
+    except KeyError:
+        return None
 
 def reference_name_to_validator_key(filename):
     """Given a reference filename `fitsname`,  return a dictionary key
