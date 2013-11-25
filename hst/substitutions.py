@@ -236,7 +236,7 @@ if __name__ == "__main__":
     if sys.argv[1] == "test":
         print(test())
     elif sys.argv[1] == "compileall":
-        compile_all(HERE + "/cdbs/cdbs_tpns")
+        compile_all(HERE + "/tpns")
     else:
         print("unknown command '{0}'".format(sys.argv[1]))
         

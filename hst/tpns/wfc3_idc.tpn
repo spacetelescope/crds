@@ -1,0 +1,20 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 12/22/2009  64177  MSwam  remove WAVELENGTH,PARITY; add FILTER
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	WFC3
+FILETYPE	H	C	R    	"DISTORTION COEFFICIENTS"
+DETECTOR	H	C	R	UVIS,IR
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
+NORDER          H       I       R
+DETCHIP		C	I	R	1,2,-999    
+DIRECTION	C	C	R	FORWARD,INVERSE
+FILTER    	C	C	R

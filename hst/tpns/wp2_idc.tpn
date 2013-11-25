@@ -1,0 +1,18 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 07/08/04 51069  MSwam   first version
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    WFPC2
+FILETYPE            H        C         R    "DISTORTION COEFFICIENTS"
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+NORDER              H        I         R
+DETCHIP             C        I         R    1,2,3,4
+DIRECTION           C        C         R    FORWARD

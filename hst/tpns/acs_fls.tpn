@@ -1,0 +1,20 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 09/15/08 60769 MSwam    new CCDGAIN values
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"POST FLASH"
+DETECTOR	H	C	R	WFC,HRC
+CCDAMP		H	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,ANY
+CCDGAIN         H       R       R       0.5,1.0,1.4,2.0,4.0,8.0
+FLASHCUR	H	C	R	LOW,MED,HIGH
+SHUTRPOS	H	C	R	A,B
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE

@@ -1,0 +1,46 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+
+INSTRUME             ACS
+DETECTOR	     WFC,HRC,SBC
+CCDCHIP		     1,2,-999	
+CCDAMP		     A,B,C,D,AB,CD,ABCD,N/A,ANY
+CCDGAIN		     1,2,4,-999,-1
+FILTER1		     CLEAR1L,F555W,F775W,F625W,F658N,F850LP,\
+		     CLEAR1S,POL0UV,POL60UV,POL120UV,F892N,\
+		     F606W,F502N,G800L,F550M,F475W,\
+		     F122M,F115LP,F125LP,F140LP,F150LP,\
+		     F165LP,PR110L,PR130L,BLOCK1,BLOCK2,\
+		     BLOCK3,BLOCK4,ANY
+		     
+FILTER2		     CLEAR2L,F410W,F814W,FR388N,FR423N,\
+		     FR462N,F435W,FR656N,FR716N,FR782N,\
+		     CLEAR2S,POL0V,F330W,POL60V,F250W,\
+		     POL120V,PR200L,F344N,F220M,FR853N,\
+		     FR931N,FR1016N,FR459M,FR647M,FR914M,\
+		     FR505N,FR555N,FR601N,N/A,ANY
+USEAFTER  	     &SYBDATE
+PEDIGREE  	     &PEDIGREE
+DESCRIP	          
+
+
+# FILETYPES
+#===========
+# BIAS
+# PIXEL-TO-PIXEL FLAT
+# LARGE SCALE FLAT
+# DELTA FLAT
+# SHADING
+# "BAD PIXELS"
+# "CCD PARAMETERS"
+# LINEARITY
+# ANALOG-TO-DIGITAL
+# PHOTOMETRY
+# COSMIC RAY REJECTION
+# OVERSCAN
+# "POST FLASH"

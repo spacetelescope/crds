@@ -1,0 +1,15 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+INSTRUME            H        C         R    WFC3
+FILETYPE            H        C         R    "LINEARITY COEFFICIENTS"
+DETECTOR            H        C         R    IR
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &SYBDATE

@@ -1,0 +1,21 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 02/08/10 64494  MSwam  Made STATERROR, SYSERROR, FWHM optional at Rossy's
+#                        request
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DBTABLE             H        C         R    CRSPECTRUM
+TARGETID            H        C         R    
+COMMENT             H        C         R
+HISTORY             H        C         R
+WAVELENGTH	    C        R         R
+FLUX		    C        R         R
+STATERROR 	    C        R         O
+SYSERROR  	    C        R         O
+FWHM      	    C        R         O
