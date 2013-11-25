@@ -1,0 +1,18 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "WAVECAL PARAMETERS TABLE"
+DETECTOR            C        C         R    CCD,NUV-MAMA,FUV-MAMA
+OPT_ELEM            C        C         R    G140L,G140M,E140M,E140H,G230L,\
+          G230M,E230M,E230H,PRISM,G230LB,G230MB,G430L,G430M,G750L,G750M,\
+          MIRCUV,MIRFUV,MIRNUV,MIRVIS,X140H,X140M,X230H,X230M,ANY
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R    

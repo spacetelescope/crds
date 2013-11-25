@@ -1,0 +1,29 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE	H	C	R	&SYBDATE
+OPUS_FLAG	H	C	R	Y,N
+COMPARISON_FILE	H	C	R    
+COMMENT		H	C	R
+INSTRUMENT	H	C	R	WFC3
+REFERENCE_FILE_TYPE H	C	R    	CCD
+DETECTOR	C	C	R	UVIS,IR
+CCDCHIP		C	I	R	1,2,-999    
+CCDAMP		C	C	R	A,B,C,D,AB,AC,AD,BC,BD,CD,ABC,ABD,ACD,BCD,ABCD
+CCDGAIN		C	R	R	1.0,1.5,2.0,2.5,3.0,4.0
+CCDOFSTA        C       I       R
+CCDOFSTB        C       I       R
+CCDOFSTC        C       I       R
+CCDOFSTD        C       I       R
+BINAXIS1        C       I       R
+BINAXIS2        C       I       R
+CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
+PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE
+OBSERVATION_END_DATE    C	C	O	&SYBDATE

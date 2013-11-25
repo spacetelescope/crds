@@ -1,0 +1,8 @@
+# This default expload rules file is meant to be used for instruments that
+#   do not have any expload rules.  It is used by mkload for these 
+#   instruments in order to generate an expload .lod file that is unchanged
+#   from the input .lod file (the sentinel string and keywords in this fake
+#   file should never match those in a real reference file).
+#
+PHONY = FAKE =>
+PHONY = FAKE ;

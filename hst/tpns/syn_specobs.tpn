@@ -1,0 +1,22 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DBTABLE             H        C         R    CRSPECOBS
+TARGETID            H        C         R    
+OBSMODE             H        C         R    
+SOURCE              H        C         R    
+COMMENT             H        C         R
+HISTORY             H        C         R
+WAVELENGTH	    C        R         R
+FLUX		    C        R         R
+STATERROR 	    C        R         R
+SYSERROR  	    C        R         R
+FWHM      	    C        R         R
+
+

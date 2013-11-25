@@ -384,7 +384,7 @@ def _load_tpn(fname):
 # Plugin-functions for this observatory,  accessed via locator.py
 
 
-TPN_DIR_PATH = os.path.join(HERE, "cdbs", "cdbs_tpns")
+TPN_DIR_PATH = os.path.join(HERE, "tpn")
 
 @utils.cached
 def get_tpninfos(*args):
