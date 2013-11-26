@@ -71,7 +71,7 @@ setup_pars = {
 #             '*.*map',
 #             ],
         },
-    "scripts" : glob.glob("crds/scripts/*"),
+    "scripts" : glob.glob("scripts/*"),
     }
 
 setup(name="crds",
