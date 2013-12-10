@@ -12,7 +12,7 @@ class CRDSTestCase(object):
     def setup(self):
         self.data_dir = os.path.join(HERE, 'data')
         self.temp_dir = tempfile.mkdtemp(prefix='crds-test-')
-        self.hst_mappath =  os.path.join(crds.__path__[0],'mappings')
+        self.hst_mappath =  os.path.join(crds.__path__[0],'cache','mappings')
 
     def teardown(self):
         shutil.rmtree(self.temp_dir)
