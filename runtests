@@ -3,12 +3,10 @@ import sys
 import os
 import os.path
 import crds.pysh
-import crds.mappings
+import crds
 
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
-os.environ["CRDS_MAPPATH"] = os.path.dirname(crds.mappings.__file__)
+os.environ["CRDS_MAPPATH"] = os.path.join(os.path.dirname(crds.__file__), "cache", "mappings")
 
 crds.pysh.sh("nosetests --with-doctest --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
-
-
 

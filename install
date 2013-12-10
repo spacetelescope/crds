@@ -10,7 +10,7 @@ st=0
 
 if (test -e save_version) 
 then 
-    ./save_version >lib/svn_version.py;  
+    ./save_version >crds/svn_version.py;  
 fi
 python setup.py install $* --force  >> install.log
 st=$st$?

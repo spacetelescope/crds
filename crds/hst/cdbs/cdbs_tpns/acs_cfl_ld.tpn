@@ -1,0 +1,33 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 05/15/08 60017  MSwam   remove ANY from FILTER checks to enforce
+#                         use of expload
+#
+# NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE	H	C	R	&SYBDATE
+OPUS_FLAG	H	C	R	Y,N
+COMPARISON_FILE	H	C	R    
+COMMENT		H	C	R
+INSTRUMENT	H	C	R	ACS
+REFERENCE_FILE_TYPE H	C	R    	CFL
+DETECTOR	C	C	R	HRC
+OBSTYPE 	C	C	R	CORONAGRAPHIC
+FILTER1         C       C       R       F555W,F775W,F625W,F550M,F850LP,\
+                                        CLEAR1S,POL0UV,POL60UV,POL120UV,\
+                                        F892N,F606W,F502N,G800L,F658N,F475W,\
+                                        N/A
+FILTER2         C       C       R       CLEAR2L,F660N,F814W,FR388N,\
+                                        F435W,FR656N,\
+                                        CLEAR2S,POL0V,F330W,POL60V,F250W,\
+                                        POL120V,PR200L,F344N,F220W,FR914M,\
+                                        FR459M,FR505N,N/A
+CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
+PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C	C	O	&SYBDATE
+OBSERVATION_END_DATE    C	C	O	&SYBDATE

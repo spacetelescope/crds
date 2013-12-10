@@ -1,0 +1,24 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DATATYPE            H        C         R    REAL*4
+NAXIS               H        I         R    1
+NAXIS1              H        I         R    1:4000
+GCOUNT              H        I         R    2
+PCOUNT              H        I         R    1
+INSTRUME            H        C         R    HRS
+FILETYPE            H        C         R    "WAVELENGTH NET"
+HEADNAME            H        C         R    
+DATANAME            H        C         R    
+DATE                H        C         R    
+GRATING             H        C         R    G140M,G160M,G200M,G270M,G140L,ECH-A,ECH-B
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R    
+APERTURE            G        C         R    SSA,LSA

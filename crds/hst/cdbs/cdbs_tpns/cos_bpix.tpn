@@ -1,0 +1,16 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "DATA QUALITY INITIALIZATION TABLE"
+DETECTOR            H        C         R    FUV,NUV
+VCALCOS             H        C         R    
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R    

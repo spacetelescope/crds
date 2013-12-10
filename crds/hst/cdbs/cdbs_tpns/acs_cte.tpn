@@ -1,0 +1,42 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NOTE:  There was a file here that was totally different.
+#        I deleted that file and started new per PR 68331
+#
+# HISTORY:
+# 02/06/12  68331  mary   initial file 
+#
+# NAME       KEYTYPE  DATATYPE   PRESENCE      VALUES
+#----------------------------------------------------------
+INSTRUME        H       C        R       ACS
+FILETYPE        H       C        R       PIXCTE
+DETECTOR        H       C        R       WFC
+NCHGLEAK        H       I        R
+SIM_NIT         H       I        R
+SHFT_NIT        H       I        R
+RN_CLIP         H       R        R
+NSEMODEL        H       I        R       0,1,2
+SUBTHRSH        H       R        R
+USEAFTER        H       C        R       &SYBDATE
+PEDIGREE        H       C        R       &PEDIGREE
+DTDE            C       R        R
+Q               C       I        R
+#LEVEL          C       I        R
+#MJD            C       R        R
+#SCALE          C       R        R
+#COLUMN         C       I        R
+#AMPA           C       R        R
+#AMPB           C       R        R
+#AMPC           C       R        R
+#AMPD           C       R        R
+#NODE           C       I        R
+#LOG_Q_1        C       R        R
+#LOG_Q_2        C       R        R
+#LOG_Q_3        C       R        R
+#LOG_Q_4        C       R        R
+

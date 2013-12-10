@@ -1,0 +1,25 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 07/30/04  51783  MSwam   add NORDER, PARITY as required
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    STIS
+FILETYPE            H        C         R    "IMAGE DISTORTION CORRECTION TABLE"
+DETECTOR            H        C         R    CCD,NUV-MAMA,FUV-MAMA
+NORDER              H        I         R    3,4
+PARITY              H        I         R    -1
+FILTER              C        C         R    182NM_MBP,191NM_NBP_(CIII),\
+          270NM_MBP,280NM_NBP(MGII),CLEAR,CRYSTAL_QUARTZ,LONG_PASS,\
+          LYMAN_ALPHA,ND_0.4,ND_0.8,ND_1.2,ND_2,ND_3,ND_5,ND_QUAD_STEP,\
+          OII,OIII,STRONTIUM_FLUORIDE,ANY
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R
+

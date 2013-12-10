@@ -1,0 +1,19 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+CAMERA              C        C         R    WF,PC
+DETECTOR            C        I         R    1:4
+FILTNAM1            C        C         R    
+FILTNAM2            C        C         R    
+FLATFIELD           C        C         R    
+PHOTMODE            C        C         R    
+PHOTFLAM            C        R         R    
+PHOTZPT             C        R         R    
+PHOTPLAM            C        R         R    
+PHOTBW              C        R         R    
