@@ -1,0 +1,20 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 10/07/10 66258 MSwam  add OPT_ELEM
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#----------------------------------------------------------
+INSTRUME            H        C         R    COS
+FILETYPE            H        C         R    "PULSE HEIGHT PARAMETERS REFERENCE TABLE"
+DETECTOR            H        C         R    FUV
+VCALCOS             H        C         R    
+USEAFTER            H        C         R    &SYBDATE
+PEDIGREE            H        C         R    &PEDIGREE
+DESCRIP             H        C         R    
+SEGMENT             C        C         R    FUVA,FUVB
+OPT_ELEM            C        C         R    G130M,G160M,G140L

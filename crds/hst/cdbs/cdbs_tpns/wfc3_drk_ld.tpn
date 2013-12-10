@@ -1,0 +1,25 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 05/09/2007  57574   MSwam   add SUBTYPE
+#
+# NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE	H	C	R	&SYBDATE
+OPUS_FLAG	H	C	R	Y,N
+COMPARISON_FILE	H	C	R    
+COMMENT		H	C	R
+INSTRUMENT	H	C	R	WFC3
+REFERENCE_FILE_TYPE H	C	R    	DRK
+DETECTOR	C	C	R	UVIS,IR
+CCDAMP		C	C	R	A,B,C,D,AB,AC,AD,BC,BD,CD,ABC,ABD,ACD,BCD,ABCD,N/A
+CCDGAIN		C	R	O	1.0,1.5,2.0,2.5,3.0,4.0
+SUBTYPE         C       C       O       FullImag,SQ64Sub,SQ128Sub,SQ256Sub,SQ512Sub,EngTest,Invalid,NoExpo
+CHANGE_LEVEL	C	C	R	TRIVIAL,MODERATE,SEVERE
+PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
+OBSERVATION_BEGIN_DATE  C   C	O	&SYBDATE
+OBSERVATION_END_DATE    C   C	O	&SYBDATE

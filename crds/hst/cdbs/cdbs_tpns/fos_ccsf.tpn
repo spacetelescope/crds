@@ -1,0 +1,30 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+PARMID              H        C         R    CYCCSFR
+CATALOG_NUM         C        I         R
+SECURITY_CLASS      C        C         R
+INTERNATIONAL_ID    C        C         R
+DATE                C        D         R
+TIME_DERIV1         C        D         R
+TIME_DERIV2         C        D         R
+TIME_DERIV2_EXPO    C        I         R
+BSTAR_DRAG          C        D         R
+BSTAR_DRAG_EXPO     C        I         R
+EPHEM_TYPE          C        I         R
+ELEM_NO             C        I         R
+CHECKSUM1           C        I         R
+INCLINATION         C        D         R
+RA_ASEN_NODE        C        D         R
+ECCENTRICITY        C        D         R
+ARG_PERIGEE         C        D         R
+MEAN_ANOMALY        C        D         R
+REV_PER_DAY         C        D         R
+REV_AT_EPOCH        C        I         R
+CHECKSUM2           C        I         R

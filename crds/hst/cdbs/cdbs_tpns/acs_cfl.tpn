@@ -1,0 +1,27 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 10/12/04  51981  MSwam   first version
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	ACS
+FILETYPE	H	C	R    	"SPOT FLAT"
+DETECTOR	H	C	R	HRC
+FILTER1		H	C	R	F555W,F775W,F625W,F550M,F850LP,\
+					CLEAR1S,POL0UV,POL60UV,POL120UV,\
+					F892N,F606W,F502N,G800L,F658N,F475W,\
+					N/A,ANY
+FILTER2		H	C	R	CLEAR2L,F660N,F814W,FR388N,\
+					F435W,FR656N,\
+					CLEAR2S,POL0V,F330W,POL60V,F250W,\
+					POL120V,PR200L,F344N,F220W,FR914M,\
+					FR459M,FR505N,N/A,ANY
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
+OBSTYPE         H       C       R       CORONAGRAPHIC

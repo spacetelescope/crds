@@ -1,0 +1,23 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 08/31/11  69084  MSwam    first version
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+USEAFTER_DATE       H        C         R    &SYBDATE
+OPUS_FLAG           H        C         R    Y,N
+COMPARISON_FILE     H        C         R
+COMMENT             H        C         R
+INSTRUMENT          H        C         R    ACS
+REFERENCE_FILE_TYPE H        C         R    D2I
+DETECTOR            C        C         R    WFC
+PEDIGREE            C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
+CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
+OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
+OBSERVATION_END_DATE    C    C         O    &SYBDATE

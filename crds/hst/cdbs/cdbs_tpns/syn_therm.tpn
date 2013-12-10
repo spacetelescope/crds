@@ -1,0 +1,19 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# 05/17/2007 58081 MSwam  add PEDIGREE by request
+#
+# NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
+#--------------------------------------------------------------------------
+DBTABLE             H        C         R    CRTHERMLIST
+DESCRIP             H        C         R
+USEAFTER            H        C         R    &ANYDATE
+INSTRUME            H        C         R    HST
+PEDIGREE            H        C         R    &PEDIGREE
+FILENAME            C        C         R
+COMPNAME            C        C         R
+TIME                C        C         R

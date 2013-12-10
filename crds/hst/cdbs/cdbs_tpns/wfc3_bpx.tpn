@@ -1,0 +1,20 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# History:
+# 07/26/06 57423 MSwam   make CCDAMP,CCDGAIN optional columns
+# 09/09/08 60788 MSwam   remove CCDAMP,CCDGAIN as table columns
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R   	WFC3
+FILETYPE	H	C	R    	"BAD PIXELS"
+DETECTOR	H	C	R	UVIS,IR
+CCDCHIP		C	I	R	1,2,-999    
+USEAFTER  	H	C	R	&SYBDATE
+PEDIGREE  	H	C	R	&PEDIGREE
+
