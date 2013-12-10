@@ -12,15 +12,6 @@ setup_pars = {
         'crds.jwst',
         'crds.tobs',
         'crds.tests',
-#         'crds.cache',
-#         'crds.cache.mappings',
-#         'crds.cache.mappings.hst',
-#         'crds.cache.mappings.jwst',
-#         'crds.cache.mappings.tobs',
-#         'crds.cache.references',
-#         'crds.cache.references.hst',
-#         'crds.cache.references.jwst',
-#         'crds.cache.references.tobs',
         ],
     "package_dir" : {
         'crds' : 'crds',
@@ -29,15 +20,6 @@ setup_pars = {
         'crds.jwst' : 'crds/jwst',
         'crds.tobs' : 'crds/tobs',
         'crds.tests' : 'crds/tests',
-#         'crds.cache' : 'crds/cache',
-#         'crds.cache.mappings' : 'crds/cache/mappings',
-#         'crds.cache.mappings.hst' : 'crds/cache/mappings/hst',
-#         'crds.cache.mappings.jwst' : 'crds/cache/mappings/jwst',
-#         'crds.cache.mappings.tobs' : 'crds/cache/mappings/tobs',
-#         'crds.cache.references' : 'crds/cache/references',
-#         'crds.cache.references.hst' : 'crds/cache/references/hst',
-#         'crds.cache.references.jwst' : 'crds/cache/references/jwst',
-#         'crds.cache.references.tobs' : 'crds/cache/references/tobs',
         },
     "package_data" : {
         'crds.tests' : [
@@ -64,12 +46,6 @@ setup_pars = {
             'cache/mappings/jwst/*.*map',
             'cache/mappings/tobs/*.*map',
             ],
-#         'crds.cache.mappings.jwst' : [
-#             '*.*map',
-#             ],
-#         'crds.cache.mappings.tobs' : [
-#             '*.*map',
-#             ],
         },
     "scripts" : glob.glob("scripts/*"),
     }
