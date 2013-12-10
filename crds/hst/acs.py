@@ -24,41 +24,47 @@ def _precondition_header_biasfile(header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
-    log.verbose("acs_biasfile_precondition_header:", header)
+
+    if "NAXIS1" not in header:
+        header["NAXIS1"] = header.get("NUMCOLS","UNDEFINED")
+    if "NAXIS2" not in header:
+        header["NAXIS2"] = header.get("NUMROWS","UNDEFINED")
+
+    log.verbose("acs_biasfile_precondition_header:", log.PP(header))
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
         log.verbose("Mapping pre-SM4 APERTURE to N/A")
         header["APERTURE"] = "N/A"
     try:
-        numcols = int(float(header["NUMCOLS"]))
+        numcols = int(float(header["NAXIS1"]))
     except ValueError:
-        log.verbose("acs_biasfile_selection: bad NUMCOLS.")
+        log.verbose("acs_biasfile_selection: bad NAXIS1.")
         sys.exc_clear()
     else:
-        header["NUMCOLS"] = utils.condition_value(str(numcols))
-        # if pre-SM4 and NUMCOLS > HALF_CHIP
+        header["NAXIS1"] = utils.condition_value(str(numcols))
+        # if pre-SM4 and NAXIS1 > HALF_CHIP
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
         if (exptime < SM4):
             if numcols > ACS_HALF_CHIP_COLS:
                 if header["CCDAMP"] in ["A","D"]: 
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
-                                "to AD for NUMCOLS = " + header["NUMCOLS"])
+                                "to AD for NAXIS1 = " + header["NAXIS1"])
                     header["CCDAMP"] = "AD"
                 elif header["CCDAMP"] in ["B","C"]:  
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
-                                "to BC for NUMCOLS = " + header["NUMCOLS"])
+                                "to BC for NAXIS1 = " + header["NAXIS1"])
                     header["CCDAMP"] = "BC"
     if header['DETECTOR'] == "WFC" and \
         header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
-        log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
+        log.verbose("acs_biasfile_selection: precondition_header halving NAXIS2")
         try:
-            numrows = int(float(header["NUMROWS"])) / 2
+            numrows = int(float(header["NAXIS2"])) / 2
         except ValueError:
-            log.verbose("acs_biasfile_selection: bad NUMROWS.")
+            log.verbose("acs_biasfile_selection: bad NAXIS2.")
             sys.exc_clear()
         else:
-            header["NUMROWS"] = utils.condition_value(str(numrows)) 
+            header["NAXIS2"] = utils.condition_value(str(numrows)) 
     return header     # XXXXXX RETURN NOW !!!!
 
 
@@ -73,25 +79,25 @@ def precondition_header(rmap, header):
 
 #   This section contains matching customizations.
 
-# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
+# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
 
 """
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
-               "NUMCOLS=" + repr(header['NUMCOLS']),
-               "NUMROWS=" + repr(header['NUMROWS']),
+               "NAXIS1=" + repr(header['NAXIS1']),
+               "NAXIS2=" + repr(header['NAXIS2']),
                "LTV1=" + repr(header['LTV1']),
                "LTV2=" + repr(header['LTV2']))
     log.verbose("Trying full-frame default search")
     if header['DETECTOR'] == "WFC":
-        header["NUMCOLS"] = "4144.0"
-        header["NUMROWS"] = "2068.0"
+        header["NAXIS1"] = "4144.0"
+        header["NAXIS2"] = "2068.0"
         header["LTV1"] = "24.0"
         header["LTV2"] = "0.0"
     else:
-        header["NUMCOLS"] = "1062.0"
-        header["NUMROWS"] = "1044.0"
+        header["NAXIS1"] = "1062.0"
+        header["NAXIS2"] = "1044.0"
         header["LTV1"] = "19.0"
         if header['CCDAMP'] in ["C","D"]:
             header["LTV2"] = "0.0"
@@ -111,26 +117,26 @@ def fallback_header(rmap, header):
 def _reference_match_fallback_header_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
 
-    if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
     return header
 
@@ -205,24 +211,24 @@ def acs_biasfile_filter(kmap):
         log.error("Dropped files:", sorted(dropped_files))
 
     kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0'),
-        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+        matches=dict(DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0'),
+        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
     kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
-        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+        matches=dict(DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'),
+        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
     kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0'),
-        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+        matches=dict(DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'),
+        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
     kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
-        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+        matches=dict(DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'),
+        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     
     kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0'),
-        dont_care=['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+        matches=dict(DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'),
+        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
 
     return kmap, header_additions
 
@@ -245,7 +251,7 @@ def total_files(kmap):
     return total
         
 def add_fallback_to_kmap(kmap, matches, dont_care,
-    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 
+    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 
              'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
     """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
     the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.

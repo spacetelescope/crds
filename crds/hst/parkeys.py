@@ -42,7 +42,7 @@ ADJUSTMENTS = {
     "acs" : {
                 "biasfile" : Adjustment(
                     ignore=["xcorner", "ycorner", "ccdchip"],
-                    translate = { "numrows" : "naxis2", "numcols": "naxis1"}),
+                    ),
              },
     "wfpc2" : {
                 "flatfile": Adjustment(
