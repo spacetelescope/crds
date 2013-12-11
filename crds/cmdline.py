@@ -117,13 +117,20 @@ class Script(object):
         self.add_standard_args()
         self.args = self.parser.parse_args(argv[1:])
         log.set_verbose(self.args.verbosity or self.args.verbose)
-        self.contexts = self.determine_contexts()
         log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
         raise NotImplementedError("Script subclasses have to define main().")
     
+    def _main(self):
+        """_main() completes any complex generic setup,  like determining contexts, and then
+        calls self.main() which does the real work of the script.   _main() defines the full
+        call tree of code which is run inside the profiler or debugger.
+        """
+        self.contexts = self.determine_contexts()
+        return self.main()
+        
     def determine_contexts(self):
         return []    
 
@@ -280,11 +287,11 @@ class Script(object):
         if self.args.version:
             _show_version()
         elif self.args.profile:
-            profile.runctx("self.main()", locals(), locals(), self.args.profile)
+            profile.runctx("self._main()", locals(), locals(), self.args.profile)
         elif self.args.pdb:
-            pdb.runctx("self.main()", locals(), locals())
+            pdb.runctx("self._main()", locals(), locals())
         else:
-            return self.main()
+            return self._main()
     
     def report_stats(self):
         """Print out collected statistics."""
