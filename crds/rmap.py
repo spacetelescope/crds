@@ -719,6 +719,8 @@ class InstrumentContext(ContextMapping):
                 refs[filekind] = self.get_best_ref(filekind, header)
             except IrrelevantReferenceTypeError:
                 refs[filekind] = "NOT FOUND n/a"
+            except OmitReferenceTypeError:
+                pass  
             except Exception, exc:
                 refs[filekind] = "NOT FOUND " + str(exc)
         return refs
@@ -806,6 +808,16 @@ class InstrumentContext(ContextMapping):
 class IrrelevantReferenceTypeError(LookupError):
     """The reference determined by this rmap does not apply to the instrument
     mode specified by the dataset header.
+    
+    Based on the "rmap_relevance" rmap header expression.
+    """
+
+class OmitReferenceTypeError(LookupError):
+    """The reference determined by this rmap does not apply to the instrument
+    mode specified by the dataset header,  and should be completely omitted from
+    the bestrefs results dictionary.
+    
+    Based on the "rmap_omit" rmap header expression.
     """
 
 class ReferenceMapping(Mapping):
@@ -833,11 +845,18 @@ class ReferenceMapping(Mapping):
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()
 
+        # For "rmap_relevance" and "rmap_omit" expressions,  the expressions are enclosed in ()
+        # to ensure no case conversions occur in LowerCaseDict.  Since ALWAYS is not in (),  it
+        # shows up here as the standard "always".
         rmap_relevance = getattr(self, "rmap_relevance", "always")
         if rmap_relevance == "always":
             rmap_relevance = "True"
         self._rmap_relevance_expr = rmap_relevance, MAPPING_VALIDATOR.compile_and_check(
             rmap_relevance, source=self.basename, mode="eval")
+
+        rmap_omit = getattr(self, "rmap_omit", "False")
+        self._rmap_omit_expr = rmap_omit, MAPPING_VALIDATOR.compile_and_check(
+            rmap_omit, source=self.basename, mode="eval")
 
         self._parkey_relevance_exprs = \
             { parkey: (expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")) \
@@ -863,6 +882,7 @@ class ReferenceMapping(Mapping):
         """
         log.verbose("Getting bestrefs for", repr(self.instrument), repr(self.filekind),
                     "parkeys", self.parkey, verbosity=55)
+        self.check_rmap_omit(header_in)     # Should this header keyword be omitted based on rmap_omit?
         self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
         # Some filekinds, .e.g. ACS biasfile, mutate the header
         header = self._precondition_header(self, header_in)
@@ -1008,10 +1028,8 @@ class ReferenceMapping(Mapping):
         return header_diffs + body_diffs
     
     def check_rmap_relevance(self, header):
-        """Raise an exception if this rmap's relevance expression evaluated
-        in the context of `header` returns False.
+        """Raise an exception if this rmap's relevance expression evaluated in the context of `header` returns False.
         """
-        # header keys and values are upper case.  rmap attrs are lower case.
         try:
             source, compiled = self._rmap_relevance_expr
             relevant = eval(compiled, {}, header)
@@ -1022,7 +1040,20 @@ class ReferenceMapping(Mapping):
         else:
             if not relevant:
                 raise IrrelevantReferenceTypeError(
-                    "Rmap does not apply to the given parameter set.")
+                    "Rmap does not apply to the given parameter set based on rmap_relevance expression.")
+                
+    def check_rmap_omit(self, header):
+        """Return True IFF this type should be omitted based on the 'rmap_omit' header expression."""
+        source, compiled = self._rmap_omit_expr
+        try:
+            omit = eval(compiled, {}, header)
+            log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
+                        "should be omitted: ", omit, repr(source), verbosity=55)
+        except Exception, exc:
+            log.warning("Keyword omit check failed: " + str(exc))
+        else:
+            if omit:
+                raise OmitReferenceTypeError("rmap_omit expression indicates this type should be omitted.")
 
     def map_irrelevant_parkeys_to_na(self, header):
         """Evaluate any relevance expression for each parkey, and if it's
