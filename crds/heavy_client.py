@@ -384,13 +384,22 @@ def get_config_info(observatory):
 
 def cache_server_info(observatory, info):
     """Write down the server `info` dictionary to help configure off-line use."""
-    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
+    path = config.get_crds_config_path() + "/" + observatory
     try:
+        server_config = path + "/server_config"
         utils.ensure_dir_exists(server_config)
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
     except IOError, exc:
         log.warning("Couldn't save CRDS server info:", repr(exc))
+    try:
+        bad_files = path + "/bad_files.txt"
+        utils.ensure_dir_exists(bad_files)
+        bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
+        with open(bad_files, "w+") as file_:
+            file_.write(bad_files_lines)
+    except IOError, exc:
+        log.warning("Couldn't save CRDS bad files list:", repr(exc))
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
