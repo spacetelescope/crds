@@ -310,8 +310,6 @@ class Script(object):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
         date based specifications against the CRDS server operational context history.
         """
-        assert config.is_mapping_spec(context), \
-            "Invalid .pmap, .imap, or .imap filename or date based context specification."
         if config.is_date_based_mapping_spec(context):
             _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
             log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
