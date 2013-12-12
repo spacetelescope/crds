@@ -19,7 +19,7 @@ try:
     from jwstlib.models import DataModel
     MODEL = DataModel()
 except Exception:
-    log.warning("JWST data model is not installed.   Cannot fits_to_parkeys().")
+    MODEL = None
 
 # =======================================================================
 
@@ -309,8 +309,13 @@ def expand_wildcards(instrument, header):
 
 # ============================================================================
 
+class MissingDependencyError(Exception):
+    """A required package is missing."""
+
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
+    if MODEL is None:
+        raise MissingDependencyError("JWST data model is not installed.   Cannot fits_to_parkeys().   Install jwstlib.")
     parkeys = {}
     for key, value in fits_header.items():
         key, value = str(key), str(value)
