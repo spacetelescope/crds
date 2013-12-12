@@ -268,7 +268,8 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
         for step in diff:
             if len(step) == 2 and rmap.is_mapping(step[0]):
                 instrument, filekind = utils.get_file_properties(observatory, step[0])
-                instrs[instrument].add(filekind)
+                if instrument.strip():
+                    instrs[instrument].add(filekind)
     return instrs
 
 # ==============================================================================================================
@@ -315,7 +316,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
             help="Rather than printing diffs for mappings,  print the names of new or replacement files.")
         self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
-            help="Include differences in mapping headers in logical diffs: sha1sum, derived_from, etc.")
+            help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
