@@ -263,7 +263,7 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
     instrs = defaultdict(set)
     diffs = mapping_diffs(old_pmap, new_pmap, include_header_diffs=include_header_diffs)
     if observatory is None:
-        observartory = rmap.get_cached_mapping(old_pmap).observatory
+        observatory = rmap.get_cached_mapping(old_pmap).observatory
     for diff in diffs:
         for step in diff:
             if len(step) == 2 and rmap.is_mapping(step[0]):
