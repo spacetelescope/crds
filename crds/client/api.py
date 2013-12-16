@@ -271,9 +271,9 @@ def get_dataset_headers_by_id(context, dataset_ids):
     """Return { dataset_id : { header } } for `dataset_ids`."""
     return S.get_dataset_headers_by_id(context, dataset_ids)
 
-def get_dataset_headers_by_instrument(context, instrument):
+def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
-    return S.get_dataset_headers_by_instrument(context, instrument)
+    return S.get_dataset_headers_by_instrument(context, instrument, datasets_since)
 
 def get_dataset_ids(context, instrument):
     """Return [ dataset_id, ...] for `instrument`."""
