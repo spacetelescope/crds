@@ -131,19 +131,28 @@ class DatasetHeaderGenerator(HeaderGenerator):
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
-    def __init__(self, context, instruments):
+    def __init__(self, context, instruments, datasets_since):
         """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
         super(InstrumentHeaderGenerator, self).__init__(context, instruments)
-        server = api.get_crds_server()
+        self.context = context
         self.instruments = instruments
+        self.datasets_since = datasets_since
+        self.sources = self.download_datasets()
+
+    def download_datasets(self):
+        """Download and filter the datasets."""
+        server = api.get_crds_server()
         sorted_sources = []
-        for instrument in instruments:
-            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server))
-            more = api.get_dataset_headers_by_instrument(context, instrument)
-            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server at", repr(server))
+        for instrument in self.instruments:
+            since_date = self.datasets_since if self.datasets_since else "forever"
+            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server),
+                     "since", repr(since_date))
+            more = api.get_dataset_headers_by_instrument(self.context, instrument, self.datasets_since)
+            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server at", repr(server),
+                     "since", repr(since_date))
             self.headers.update(more)
             sorted_sources.extend(sorted(more.keys()))
-        self.sources = sorted_sources
+        return sorted_sources
 
 class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
@@ -336,7 +345,7 @@ and debug output.
         if self.args.remote_bestrefs:
             os.environ["CRDS_MODE"] = "remote"
             
-        self.exposures_since = self.args.exposures_since or None
+        self.datasets_since = self.args.datasets_since or None
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -442,7 +451,7 @@ and debug output.
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
-        self.add_argument("--exposures-since", default = None, type=timestamp.reformat_date,
+        self.add_argument("--datasets-since", default = None, type=timestamp.reformat_date,
             help="Date prior to which datasets are not considered for context change effects.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
@@ -541,7 +550,7 @@ and debug output.
             self.require_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
             log.info("Computing bestrefs for all cataloged datasets of", repr(instruments))
-            new_headers = InstrumentHeaderGenerator(context, instruments)
+            new_headers = InstrumentHeaderGenerator(context, instruments, self.datasets_since)
         elif self.args.load_pickles:
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
@@ -619,12 +628,6 @@ and debug output.
         """Core best references,  add to update tuples."""
         self.sources_processed += 1
         new_header = self.new_headers.get_lookup_parameters(dataset)
-        if self.exposures_since:
-            expstart = new_header["DATE-OBS"] + "T" + new_header["TIME-OBS"] 
-            if expstart < self.exposures_since:
-                log.verbose("Skipping", dataset, "based on expstart=" + repr(expstart), 
-                            "and --exposures-since=" +  self.exposures_since, verbosity=25)
-                return []  # no updates
         instrument = self.newctx.get_instrument(new_header)
         new_bestrefs = self.get_bestrefs(instrument, dataset, self.newctx, new_header)
         if self.compare_prior:
