@@ -345,7 +345,7 @@ and debug output.
         if self.args.remote_bestrefs:
             os.environ["CRDS_MODE"] = "remote"
             
-        self.datasets_since = self.args.datasets_since or None
+        self.datasets_since = self.args.datasets_since or "1900-01-01T00:00:00"
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
