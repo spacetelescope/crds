@@ -455,11 +455,15 @@ class ContextsScript(Script):
         files = set()
         useable_contexts = []
         for context in self.contexts:
-            with log.warn_on_exception("Failed dumping mappings for", repr(context)):
-                self.dump_files(context)
-                pmap = rmap.get_cached_mapping(context)
-                files = files.union(pmap.mapping_names())
+            with log.warn_on_exception("Failed listing mappings for", repr(context)):
+                try:
+                    pmap = rmap.get_cached_mapping(context)
+                    files = files.union(pmap.mapping_names())
+                except:
+                    files = files.union(api.get_mapping_names(context))
                 useable_contexts.append(context)
+        with log.warn_on_exception("Failed dumping mappings for", repr(context)):
+            self.dump_files(useable_contexts[0], files)
         self.contexts = useable_contexts  # XXXX reset self.contexts
         return sorted(files)
     
