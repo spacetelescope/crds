@@ -14,7 +14,7 @@ import gc
 import pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client)
+from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp)
 from crds.client import api
 
 # ===================================================================
@@ -313,6 +313,7 @@ and debug output.
         self.updates = {}                  # map of reference updates
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
+        self.affected_instruments = None
         
         # See also complex_init()
         self.new_context = None     # Mapping filename
@@ -334,17 +335,33 @@ and debug output.
 
         if self.args.remote_bestrefs:
             os.environ["CRDS_MODE"] = "remote"
+            
+        self.exposures_since = self.args.exposures_since or None
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
         
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
         
+        if self.args.diffs_only:
+            assert self.new_context and self.old_context, "--diffs-only only works for context-to-context bestrefs."
+            assert not self.args.instruments, "--diffs-only automatically selects processed instruments."
+            self.affected_instruments = diff.get_affected(self.old_context, self.new_context)
+            log.info("Differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
+                    log.PP(self.affected_instruments))
+            self.args.instruments = self.affected_instruments.keys()
+        
         # headers corresponding to the new context
         self.new_headers = self.init_headers(self.new_context)
 
         self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
                 
+        if not self.compare_prior:
+            log.info("No comparison context or source comparison requested.")
+
+        if self.args.files and not self.args.update_bestrefs:
+            log.info("No file header updates requested;  dry run.")
+            
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         
@@ -369,6 +386,9 @@ and debug output.
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
             help="Instruments to compute best references for, all historical datasets in database.")
         
+        self.add_argument("--diffs-only", action="store_true", default=None,
+            help="For context-to-context comparison, only choose instruments and types based on diffs.")
+
         self.add_argument("--all-instruments", action="store_true", default=None,
             help="Compute best references for cataloged datasets for all supported instruments in database.")
         
@@ -421,6 +441,9 @@ and debug output.
         
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
+        
+        self.add_argument("--exposures-since", default = None, type=timestamp.reformat_date,
+            help="Date prior to which datasets are not considered for context change effects.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
     
@@ -559,34 +582,16 @@ and debug output.
     def main(self):
         """Compute bestrefs for datasets."""
         
-        # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
-        
         self.complex_init()   # Finish __init__() inside --pdb
         
-        if not self.compare_prior:
-            log.info("No comparison context or source comparison requested.")
-        if self.args.files and not self.args.update_bestrefs:
-            log.info("No file header updates requested;  dry run.")
+        datasets = [ dataset for dataset in self.new_headers 
+                     if (not self.args.only_ids) or dataset in self.args.only_ids ]
             
-        for i, dataset in enumerate(self.new_headers):
-            if i % 5000 == 0:
-                gc.collect()
-            if self.args.only_ids and dataset not in self.args.only_ids:
-                continue
-            try:
-                if self.args.files:
-                    log.info("===> Processing", dataset)
-                else:
-                    log.verbose("===> Processing", dataset, verbosity=25)
-                self.increment_stat("datasets", 1)
-                updates = self.process(dataset)
-                if updates:
-                    self.updates[dataset] = updates
-            except Exception, exc:
-                if self.args.pdb:
-                    raise
-                log.error("Failed processing", repr(dataset), ":", str(exc))
-                
+        for dataset in datasets:
+            updates = self.process(dataset)
+            if updates:
+                self.updates[dataset] = updates
+        
         self.post_processing()
 
         self.report_stats()
@@ -597,12 +602,29 @@ and debug output.
         return log.errors()
 
     def process(self, dataset):
-        """Process best references for `dataset` and return update tuples.     
-        returns (dataset, new_context, new_bestrefs) or 
-                (dataset, new_context, new_bestrefs, old_context, old_bestrefs)
-        """
+        """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
+        try:
+            if self.args.files:
+               log.info("===> Processing", dataset)
+            else:
+               log.verbose("===> Processing", dataset, verbosity=25)
+            self.increment_stat("datasets", 1)
+            return self._process(dataset)
+        except Exception, exc:
+            if self.args.pdb:
+                raise
+            log.error("Failed processing", repr(dataset), ":", str(exc))
+
+    def _process(self, dataset):
+        """Core best references,  add to update tuples."""
         self.sources_processed += 1
         new_header = self.new_headers.get_lookup_parameters(dataset)
+        if self.exposures_since:
+            expstart = new_header["DATE-OBS"] + "T" + new_header["TIME-OBS"] 
+            if expstart < self.exposures_since:
+                log.verbose("Skipping", dataset, "based on expstart=" + repr(expstart), 
+                            "and --exposures-since=" +  self.exposures_since, verbosity=25)
+                return []  # no updates
         instrument = self.newctx.get_instrument(new_header)
         new_bestrefs = self.get_bestrefs(instrument, dataset, self.newctx, new_header)
         if self.compare_prior:
@@ -619,11 +641,12 @@ and debug output.
     def get_bestrefs(self, instrument, dataset, ctx, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         try:
+            types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
             if self.args.remote_bestrefs:
-                bestrefs = crds.getrecommendations(header, reftypes=self.process_filekinds, context=ctx.name,
+                bestrefs = crds.getrecommendations(header, reftypes=types, context=ctx.name,
                                                    observatory=self.observatory)
             else:
-                bestrefs = ctx.get_best_references(header, include=self.process_filekinds)
+                bestrefs = ctx.get_best_references(header, include=types)
         except Exception, exc:
             if self.args.pdb:
                 raise
