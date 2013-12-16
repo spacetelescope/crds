@@ -268,9 +268,9 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
         for step in diff:
             if len(step) == 2 and rmap.is_mapping(step[0]):
                 instrument, filekind = utils.get_file_properties(observatory, step[0])
-                if instrument.strip():
+                if instrument.strip() and filekind.strip():
                     instrs[instrument].add(filekind)
-    return instrs
+    return { key:list(val) for (key,val) in instrs.items() }
 
 # ==============================================================================================================
     
