@@ -32,7 +32,7 @@ def get_crds_mappath():
     
     DEPRECATED:  only use in the config module.  Use locate_file() or locate_mapping() instead.
     """
-    return env_path("CRDS_MAPPATH", get_crds_path() + "/mapping")
+    return env_path("CRDS_MAPPATH", get_crds_path() + "/mappings")
 
 def get_crds_refpath():
     """get_crds_refpath returns the base path of the directory tree where CRDS 
