@@ -314,8 +314,6 @@ def fits_to_parkeys(header):
 
 # ============================================================================
 
-from crds import utils
-
 ROW_KEYS = utils.evalfile(HERE + "/row_keys.dat")
 
 def get_row_keys(mapping):
