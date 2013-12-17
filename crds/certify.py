@@ -536,8 +536,8 @@ class ReferenceCertifier(Certifier):
                     return []
             except:
                 log.warning("Rmap reffile_format NOT DEFINED,  assuming it's a table.")
-            try:
-                mode_columns = g_rmap.row_keys
+            try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
+                mode_columns = g_rmap.locate.get_row_keys(g_rmap)
                 log.info("In governing rmap", repr(g_rmap.basename), "row_keys defined as", repr(mode_columns))
             except:
                 log.warning("In governing rmap", repr(g_rmap.basename), "for", 
