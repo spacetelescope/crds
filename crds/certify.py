@@ -527,8 +527,8 @@ class ReferenceCertifier(Certifier):
             log.info("Table mode checking requires a comparison context.   Skipping.")
             return []
         mode_columns = []
-        with log.verbose_on_exception("Error finding governing rmap for", repr(self.basefile), 
-                                      "under", repr(self.context)):
+        with log.error_on_exception("Error finding governing rmap for", repr(self.basefile), 
+                                    "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
             try:
                 if g_rmap.reffile_format != "table":
@@ -538,10 +538,9 @@ class ReferenceCertifier(Certifier):
                 log.warning("Rmap reffile_format NOT DEFINED,  assuming it's a table.")
             try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
                 mode_columns = g_rmap.locate.get_row_keys(g_rmap)
-                log.info("In governing rmap", repr(g_rmap.basename), "row_keys defined as", repr(mode_columns))
+                log.info("Table row keys for", repr(g_rmap.basename), "defined as", repr(mode_columns))
             except:
-                log.warning("In governing rmap", repr(g_rmap.basename), "for", 
-                            repr(self.filename), "row_keys NOT DEFINED.")
+                log.warning("Table row keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED.")
         return mode_columns
             
     def certify_reference_modes(self):
@@ -805,7 +804,7 @@ def table_mode_dictionary(generic_name, filename, mode_keys, ext=1):
     all_cols = [name.upper() for name in table.names]
     basename = repr(os.path.basename(filename) + "[{}]".format(ext))
     log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
-    log.info("All column names for", generic_name, basename, "are:", repr(all_cols))
+    log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
     for i, row in enumerate(table):
         rowdict = dict(zip(all_cols, row))
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
