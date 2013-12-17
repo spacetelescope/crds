@@ -887,7 +887,7 @@ class ReferenceMapping(Mapping):
             hook_name = name
         hook = getattr(self.instr_package, hook_name, default)
         if hook is not default:
-            log.verbose("Using hook", repr(hook_name), "for rmap", self.basename, level=75)
+            log.verbose("Using hook", repr(hook_name), "for rmap", self.basename, verbosity=75)
         return hook
         
     @property
