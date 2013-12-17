@@ -10,9 +10,18 @@ import re
 
 DEFAULT_CRDS_DIR = "/grp/crds/jwst"
 
+def env_path(name, default):
+    """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
+    the resulting path.
+    """
+    path = os.environ.get(name, default)
+    while path.endswith("/"):
+        path = path[:-1]
+    return path
+
 def get_crds_path():
     """Return the root directory of the CRDS cache."""
-    return os.environ.get("CRDS_PATH", DEFAULT_CRDS_DIR)
+    return env_path("CRDS_PATH", DEFAULT_CRDS_DIR)
 
 # ===========================================================================
 
@@ -23,10 +32,7 @@ def get_crds_mappath():
     
     DEPRECATED:  only use in the config module.  Use locate_file() or locate_mapping() instead.
     """
-    try:
-        return os.environ["CRDS_MAPPATH"]
-    except KeyError:
-        return  get_crds_path() + "/mappings"
+    return env_path("CRDS_MAPPATH", get_crds_path() + "/mapping")
 
 def get_crds_refpath():
     """get_crds_refpath returns the base path of the directory tree where CRDS 
@@ -35,10 +41,7 @@ def get_crds_refpath():
     
     DEPRECATED: only use in config module.  Use locate_file() or locate_reference() instead.
     """
-    try:
-        return os.environ["CRDS_REFPATH"]
-    except KeyError:
-        return get_crds_path() + "/references"
+    return env_path("CRDS_REFPATH", get_crds_path() + "/references")
 
 def get_crds_config_path():
     """Return the path to a writable directory used to store configuration info
@@ -46,10 +49,7 @@ def get_crds_config_path():
     it is known.   If CRDS_PATH doesn't point to a writable directory, then
     CRDS_CFGPATH should be defined.
     """
-    try:
-        return os.environ["CRDS_CFGPATH"]
-    except KeyError:
-        return get_crds_path() + "/config"
+    return env_path("CRDS_CFGPATH", get_crds_path() + "/config")
 
 def get_crds_processing_mode():
     """Return the preferred location for computing best references when
