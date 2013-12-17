@@ -314,5 +314,26 @@ def fits_to_parkeys(header):
 
 # ============================================================================
 
+from crds import utils
+
+ROW_KEYS = utils.evalfile(HERE + "/row_keys.dat")
+
+def get_row_keys(mapping):
+    """Return the row_keys which define unique table rows corresponding to mapping.
+
+    These are used for "mode" checks to issue warnings when unique rows are deleted
+    in a certify comparison check against the preceding version of a table.
+
+    The certify mode checks have a shaky foundation since the concept of mode
+    doesn't apply to all tables and sometimes "data" parameters are required to
+    render rows unique.   The checks only issue warnings however so they can be
+    ignored by file submitters.
+
+    For HST calibration references mapping is an rmap.
+    """
+    return ROW_KEYS[mapping.instrument][mapping.filekind]
+        
+# ============================================================================
+
 if __name__ == "__main__":
     main()
