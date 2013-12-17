@@ -865,10 +865,31 @@ class ReferenceMapping(Mapping):
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
-        self._precondition_header = getattr(self.instr_package, "precondition_header", (lambda self, header: header))
-        self._fallback_header = getattr(self.instr_package, "fallback_header", (lambda self, header: None))
-        self._reference_match_fallback_header = getattr(self.instr_package, "reference_match_fallback_header", (lambda self, header: None))
+        self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
+        self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
+        self._reference_match_fallback_header = self.get_hook("reference_match_fallback_header", (lambda self, header: None))
+    
+    def get_hook(self, name, default):
+        """Return plugin hook function generically named `name` or `default` if `name` is not defined in
+        the associated instrument package or in the rmap header.   Until hooks is defined in header,  get_hook
+        will return the generically named function in the instrument package.   hooks in rmap header supports
+        future versions of hooks without breaking past rmaps.
 
+        Hooks are called basically like methods, typically as hook(self, header).   Hooks return hook-specific values.
+        
+        Nth generation hooks defined by name in rmap header "hooks" { unversioned_name : versioned_hook_name } dict.
+        To unplug a hook,  define it in rmap header "hooks" like { "precondition_header" : "none" }        
+        """
+        hooks = self.header.get("hooks", None)
+        if hooks:  # Either get the replacement name,  or use the original name if not found.
+            hook_name = hooks.get(name, name)
+        else:  # No hooks dict,  just use the original name.
+            hook_name = name
+        hook = getattr(self.instr_package, hook_name, default)
+        if hook is not default:
+            log.verbose("Using hook", repr(hook_name), "for rmap", self.basename, level=75)
+        return hook
+        
     @property
     @utils.cached
     def tpn_valid_values(self):
