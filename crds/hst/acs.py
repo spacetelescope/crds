@@ -1,3 +1,5 @@
+"""This module defines CRDS customizations for the HST ACS instrument."""
+
 import sys
 
 from crds import log, utils, timestamp
@@ -18,10 +20,67 @@ SM4 = timestamp.reformat_date("2009-05-14 00:00")
 #  the shuttle during SM4, and
 #  pre-SM4 exposures had ceased)
 
-def _precondition_header_biasfile(header_in):
+def precondition_header(rmap, header):
+    """This is the original buggy header preconditioning function for ACS which
+    applied to all types but only really affected BIASFILE.  It mutates dataset headers
+    prior to performing bestrefs matching.   It is located and called by default when
+    the rmap says nothing about hooks.
+    """
+    header = dict(header)
+    if rmap.filekind == "biasfile":
+        return precondition_header_biasfile_v1(rmap, header)
+    else:
+        return header
+    
+def precondition_header_biasfile_v1(rmap, header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.   This is an alternative to generating
     an equivalent and bulkier rmap.
+    """
+    header = dict(header_in)
+    log.verbose("acs_biasfile_precondition_header:", header)
+    exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
+    if (exptime < SM4):
+        #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
+        log.verbose("Mapping pre-SM4 APERTURE to N/A")
+        header["APERTURE"] = "N/A"
+    try:
+        numcols = int(float(header["NUMCOLS"]))
+    except ValueError:
+        log.verbose("acs_biasfile_selection: bad NUMCOLS.")
+        sys.exc_clear()
+    else:
+        header["NUMCOLS"] = utils.condition_value(str(numcols))
+        # if pre-SM4 and NUMCOLS > HALF_CHIP
+        exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
+        if (exptime < SM4):
+            if numcols > ACS_HALF_CHIP_COLS:
+                if header["CCDAMP"] in ["A","D"]: 
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
+                                "to AD for NUMCOLS = " + header["NUMCOLS"])
+                    header["CCDAMP"] = "AD"
+                elif header["CCDAMP"] in ["B","C"]:  
+                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
+                                "to BC for NUMCOLS = " + header["NUMCOLS"])
+                    header["CCDAMP"] = "BC"
+    if header['DETECTOR'] == "WFC" and \
+        header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
+        log.verbose("acs_biasfile_selection: precondition_header halving NUMROWS")
+        try:
+            numrows = int(float(header["NUMROWS"])) / 2
+        except ValueError:
+            log.verbose("acs_biasfile_selection: bad NUMROWS.")
+            sys.exc_clear()
+        else:
+            header["NUMROWS"] = utils.condition_value(str(numrows)) 
+    return header     # XXXXXX RETURN NOW !!!!
+
+def precondition_header_biasfile_v2(rmap, header_in):
+    """Preconditions ACS BIASFILE dataset matching header prior to matching.
+    
+    v2 substitutes NAXIS1, NAXIS2 for NUMCOLS, NUMROWS in the first buggy version.
+    
+    v2 is only called when explicitly added to an rmap in the "hooks" header section.
     """
     header = dict(header_in)
 
@@ -67,37 +126,29 @@ def _precondition_header_biasfile(header_in):
             header["NAXIS2"] = utils.condition_value(str(numrows)) 
     return header     # XXXXXX RETURN NOW !!!!
 
-
-def precondition_header(rmap, header):
-    header = dict(header)
-    if rmap.filekind == "biasfile":
-        return _precondition_header_biasfile(header)
-    else:
-        return header
-    
 # ===========================================================================    
 
 #   This section contains matching customizations.
 
-# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
+# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
 
 """
 def _fallback_biasfile(header_in):
     header = _precondition_header_biasfile(header_in)
     log.verbose("No matching BIAS file found for",
-               "NAXIS1=" + repr(header['NAXIS1']),
-               "NAXIS2=" + repr(header['NAXIS2']),
+               "NUMCOLS=" + repr(header['NUMCOLS']),
+               "NUMROWS=" + repr(header['NUMROWS']),
                "LTV1=" + repr(header['LTV1']),
                "LTV2=" + repr(header['LTV2']))
     log.verbose("Trying full-frame default search")
     if header['DETECTOR'] == "WFC":
-        header["NAXIS1"] = "4144.0"
-        header["NAXIS2"] = "2068.0"
+        header["NUMCOLS"] = "4144.0"
+        header["NUMROWS"] = "2068.0"
         header["LTV1"] = "24.0"
         header["LTV2"] = "0.0"
     else:
-        header["NAXIS1"] = "1062.0"
-        header["NAXIS2"] = "1044.0"
+        header["NUMCOLS"] = "1062.0"
+        header["NUMROWS"] = "1044.0"
         header["LTV1"] = "19.0"
         if header['CCDAMP'] in ["C","D"]:
             header["LTV2"] = "0.0"
@@ -114,8 +165,66 @@ def fallback_header(rmap, header):
         None
 """
 
-def _reference_match_fallback_header_biasfile(header_in):
-    header = _precondition_header_biasfile(header_in)
+# In theory,  this moves the fallback header computation to rmap insertion time.
+# This is horrendous,  a second mechanism in addition to the kmap filter for 
+# implementing fallbacks which execute in one pass via a more sophisticated rmap
+# rather than as a second call to getreferences.
+def reference_match_fallback_header(rmap, header):
+    """Called at rmap generation and update time to add a weaker "fallback" match case for certain references.
+    
+    This is the CRDS emulation of a CDBS "try, try again with different query" behaviour.
+    """
+    if rmap.filekind == "biasfile":
+        return reference_match_fallback_header_biasfile_v1(rmap, header)
+    else:
+        None
+
+def reference_match_fallback_header_biasfile_v1(rmap, header_in):
+    
+    header = precondition_header_biasfile_v1(rmap, header_in)
+
+    if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
+        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
+    
+    return header
+
+def header_matches(header, conditions):
+    for var, val in conditions.items():
+        if header[var] != val:
+            return False
+    return True
+
+def dont_care(header, vars):
+    header = dict(header)
+    for var in vars:
+        header[var] = "N/A"
+    return header
+
+def reference_match_fallback_header_biasfile_v2(rmap, header_in):
+    """Given a reference file header specifying the applicable cases for a reference,  this generates
+    a weaker match case which may apply when the primary match fails.  Called to update rmaps
+    with "fallback cases" when a file is submitted to the CRDS web site and it updates the rmap,
+    in addition to the primary match cases from the unaltered header_in.  
+    """
+    header = precondition_header_biasfile_v2(header_in)
 
     if header_matches(header, dict(DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0')):
         return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
@@ -140,34 +249,11 @@ def _reference_match_fallback_header_biasfile(header_in):
     
     return header
 
-def header_matches(header, conditions):
-    for var, val in conditions.items():
-        if header[var] != val:
-            return False
-    return True
-
-def dont_care(header, vars):
-    header = dict(header)
-    for var in vars:
-        header[var] = "N/A"
-    return header
-
-# In theory,  this moves the fallback header computation to rmap insertion time.
-# This is horrendous,  a second mechanism in addition to the kmap filter for 
-# implementing fallbacks which execute in one pass via a more sophisticated rmap
-# rather than as a second call to getreferences.
-def reference_match_fallback_header(rmap, header):
-    if rmap.filekind == "biasfile":
-        return _reference_match_fallback_header_biasfile(header)
-    else:
-        None
-
 # =============================================================================================
 
-# This section contains rmap generation code.
-
-header_additions = [   # dictionary items (ordered)
-]
+# This section contains RMAP GENERATION code. It is unversioned, plugging into hst_gentools/gen_rmap.py and
+# running only at rmap generation time during system bootstrap.  It is closely related to 
+# reference_match_fallback_header_biasfile which runs at rmap update time to add new files.
 
 def acs_biasfile_filter(kmap):
     """APERTURE was added late as a matching parameter and so many existing references
@@ -230,6 +316,13 @@ def acs_biasfile_filter(kmap):
         matches=dict(DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'),
         dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
 
+    header_additions = [
+        ("hooks",  {
+            "precondition_header" : "precondition_header_biasfile_v2",
+            "reference_match_fallback_header" : "reference_match_fallback_header_biasfile_v2",
+        }),
+    ]
+
     return kmap, header_additions
 
 #  An old example of hacking the kmap....
@@ -251,7 +344,7 @@ def total_files(kmap):
     return total
         
 def add_fallback_to_kmap(kmap, matches, dont_care,
-    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 
+    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 
              'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
     """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
     the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.
