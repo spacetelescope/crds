@@ -58,8 +58,10 @@ import re
 import glob
 import copy
 import json
+import ast
 
-from .compat import namedtuple, ast
+from collections import namedtuple
+
 
 import crds
 from . import (log, utils, selectors, data_file, config)
@@ -105,11 +107,80 @@ class AstDumper(ast.NodeVisitor):
     visit_Assign = dump
     visit_Call = dump
 
+ILLEGAL_NODES = set([
+    "visit_FunctionDef",
+    "visit_ClassDef", 
+    "visit_Return", 
+    "visit_Delete", 
+    "visit_AugAssign", 
+    "visit_Print",
+    "visit_For", 
+    "visit_While", 
+    "visit_If", 
+    "visit_With", 
+    "visit_Raise", 
+    "visit_TryExcept", 
+    "visit_TryFinally",
+    "visit_Assert", 
+    "visit_Import", 
+    "visit_ImportFrom", 
+    "visit_Exec",
+    "visit_Global",
+    "visit_Pass",
+    "visit_Repr", 
+    "visit_Yield",
+    "visit_Lambda",
+    "visit_Attribute",
+    "visit_Subscript",
+    ])
+
+LEGAL_NODES = set([
+    'visit_Module',
+    'visit_Name',
+    'visit_Str',
+    'visit_Load',
+    'visit_Store',
+    'visit_Tuple',
+    'visit_List',
+    'visit_Dict',
+    'visit_Num',
+    'visit_Expr',
+    # 'visit_And',
+    'visit_Or',
+    'visit_In',
+    'visit_Eq',
+    'visit_NotIn',
+    'visit_NotEq',
+    'visit_Compare',
+    'visit_IfExpr',
+    'visit_BoolOp',
+    'visit_BinOp',
+    'visit_UnaryOp',
+ ])
+
+CUSTOMIZED_NODES = set([
+    'visit_Call',
+    'visit_Assign',
+    'visit_Illegal',
+    'visit_Unknown',
+])
+
+ALL_CATEGORIZED_NODES = set.union(ILLEGAL_NODES, LEGAL_NODES, CUSTOMIZED_NODES)
+
 class MappingValidator(ast.NodeVisitor):
     """MappingValidator visits the parse tree of a CRDS mapping file and
     raises exceptions for invalid constructs.   MappingValidator is concerned
     with limiting rmaps to safe code,  not deep semantic checks.
     """
+    def __init__(self, *args, **keys):
+        super(MappingValidator, self).__init__(*args, **keys)
+        
+        # assert not set(self.LEGAL_NODES).intersection(self.ILLEGAL_NODES), "MappingValidator config error."       
+        for attr in LEGAL_NODES:
+            setattr(self, attr, self.generic_visit)
+        for attr in ILLEGAL_NODES:
+            setattr(self, attr, self.visit_Illegal)
+        
     def compile_and_check(self, text, source="<ast>", mode="exec"):
         """Parse `text` to verify that it's a legal mapping, and return a
         compiled code object.
@@ -118,24 +189,15 @@ class MappingValidator(ast.NodeVisitor):
             self.visit(ast.parse(text))
         return compile(text, source, mode)
 
-    illegal_nodes = [
-        "FunctionDef","ClassDef", "Return", "Delete", "AugAssign", "Print",
-        "For", "While", "If", "With", "Raise", "TryExcept", "TryFinally",
-        "Assert", "Import", "ImportFrom", "Exec","Global","Pass",
-        "Repr", "Yield","Lambda","Attribute","Subscript"
-        ]
-
-    def visit_Illegal(self, node):
-        self.assert_(False, node, "Illegal statement or expression in mapping")
-
-    def __getattr__(self, attr):
+    def __getattribute__(self, attr):
         if attr.startswith("visit_"):
-            if attr[len("visit_"):] in self.illegal_nodes:
-                return self.visit_Illegal
+            if attr in ALL_CATEGORIZED_NODES:
+                rval = ast.NodeVisitor.__getattribute__(self, attr)
             else:
-                return self.generic_visit
+                rval = ast.NodeVisitor.__getattribute__(self, "visit_Unknown")
         else:
-            return ast.NodeVisitor.__getattribute__(self, attr)
+            rval = ast.NodeVisitor.__getattribute__(self, attr)
+        return rval
 
     def assert_(self, node, flag, message):
         """Raise an appropriate FormatError exception based on `node`
@@ -147,7 +209,20 @@ class MappingValidator(ast.NodeVisitor):
             else:
                 raise FormatError(message)
 
+    def visit_Illegal(self, node):
+        """Handle explicitly forbidden node types."""
+        self.assert_(node, False, "Illegal statement or expression in mapping " + repr(node))
+
+    def visit_Unknown(self, node):
+        """Handle new / unforseen node types."""
+        self.assert_(node, False, "Unknown node type in mapping " + repr(node))
+    
+#     def generic_visit(self, node):
+#         # print "generic_visit", repr(node)
+#         return super(MappingValidator, self).generic_visit(node)
+
     def visit_Assign(self, node):
+        """Screen assignments to limit to a subset of legal assignments."""
         self.assert_(node, len(node.targets) == 1,
                      "Invalid 'header' or 'selector' definition")
         self.assert_(node, isinstance(node.targets[0], ast.Name),
@@ -159,9 +234,9 @@ class MappingValidator(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Call(self, node):
+        """Screen calls to limit to a subset of legal calls."""
         self.assert_(node, node.func.id in selectors.SELECTORS,
-            "Selector " + repr(node.func.id) +
-            " is not one of supported Selectors: " +
+            "Selector " + repr(node.func.id) + " is not one of supported Selectors: " +
             repr(sorted(selectors.SELECTORS.keys())))
         self.generic_visit(node)
 
@@ -839,8 +914,8 @@ class ReferenceMapping(Mapping):
         self._reffile_required = self.header.get("reffile_required", "NONE").upper()
         self._row_keys = self.header.get("row_keys", ())
 
-        # header precondition method, e.g. crds.hst.acs.precondition_header  # TPNs define the static definitive possibilities for parameter choices
-        
+        # header precondition method, e.g. crds.hst.acs.precondition_header  
+        # TPNs define the static definitive possibilities for parameter choices
         # rmaps define the actually appearing literal parameter values
         self._rmap_valid_values = self.selector.get_value_map()
         self._required_parkeys = self.get_required_parkeys()
@@ -848,20 +923,19 @@ class ReferenceMapping(Mapping):
         # For "rmap_relevance" and "rmap_omit" expressions,  the expressions are enclosed in ()
         # to ensure no case conversions occur in LowerCaseDict.  Since ALWAYS is not in (),  it
         # shows up here as the standard "always".
-        rmap_relevance = getattr(self, "rmap_relevance", "always")
-        if rmap_relevance == "always":
-            rmap_relevance = "True"
-        self._rmap_relevance_expr = rmap_relevance, MAPPING_VALIDATOR.compile_and_check(
-            rmap_relevance, source=self.basename, mode="eval")
-
-        rmap_omit = getattr(self, "rmap_omit", "False")
-        self._rmap_omit_expr = rmap_omit, MAPPING_VALIDATOR.compile_and_check(
-            rmap_omit, source=self.basename, mode="eval")
-
-        self._parkey_relevance_exprs = \
-            { parkey: (expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")) \
-             for (parkey,expr) in getattr(self, "parkey_relevance", {}).items() }
-
+        
+        # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
+        self._rmap_relevance_expr = self.get_expr(
+            getattr(self.header, "rmap_relevance", "always").replace("always", "True"))
+        
+        # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
+        self._rmap_omit_expr = self.get_expr(
+            getattr(self.header, "rmap_omit", "False"))
+        parkey_relv_exprs = getattr(self.header, "parkey_relevance", {}).items()
+        
+        # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
+        self._parkey_relevance_exprs = { name : self.get_expr(expr) for (name, expr) in  parkey_relv_exprs }
+        
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
@@ -869,6 +943,15 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._reference_match_fallback_header = self.get_hook("reference_match_fallback_header", (lambda self, header: None))
     
+    def get_expr(self, expr):
+        """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
+        in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
+        """
+        try:
+            return expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")
+        except FormatError as exc:
+            raise MappingError("Can't load file " + repr(self.basename) + " : " + str(exc))
+
     def get_hook(self, name, default):
         """Return plugin hook function generically named `name` or `default` if `name` is not defined in
         the associated instrument package or in the rmap header.   Until hooks is defined in header,  get_hook
@@ -905,6 +988,7 @@ class ReferenceMapping(Mapping):
         """Return the single reference file basename appropriate for
         `header_in` selected by this ReferenceMapping.
         """
+        header_in = dict(header_in)
         log.verbose("Getting bestrefs for", repr(self.instrument), repr(self.filekind),
                     "parkeys", self.parkey, verbosity=55)
         self.check_rmap_omit(header_in)     # Should this header keyword be omitted based on rmap_omit?
