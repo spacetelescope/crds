@@ -344,8 +344,8 @@ def total_files(kmap):
     return total
         
 def add_fallback_to_kmap(kmap, matches, dont_care,
-    parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 
-             'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
+                         parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 
+                                  'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
     """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
     the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.
     `parkeys` names the items of each tuple key in `kmap`,  in order.
