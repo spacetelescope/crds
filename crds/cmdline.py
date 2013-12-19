@@ -454,6 +454,8 @@ class ContextsScript(Script):
         """
         files = set()
         useable_contexts = []
+        if not self.contexts:
+            return []
         for context in self.contexts:
             with log.warn_on_exception("Failed listing mappings for", repr(context)):
                 try:
