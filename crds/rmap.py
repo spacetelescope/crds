@@ -932,15 +932,13 @@ class ReferenceMapping(Mapping):
         # shows up here as the standard "always".
         
         # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
-        self._rmap_relevance_expr = self.get_expr(
-            getattr(self.header, "rmap_relevance", "always").replace("always", "True"))
+        self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
         
         # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
-        self._rmap_omit_expr = self.get_expr(
-            getattr(self.header, "rmap_omit", "False"))
-        parkey_relv_exprs = getattr(self.header, "parkey_relevance", {}).items()
+        self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
         
         # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
+        parkey_relv_exprs = self.header.get("parkey_relevance", {}).items()
         self._parkey_relevance_exprs = { name : self.get_expr(expr) for (name, expr) in  parkey_relv_exprs }
         
         # header precondition method, e.g. crds.hst.acs.precondition_header
