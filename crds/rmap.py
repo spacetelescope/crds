@@ -277,6 +277,12 @@ class LowerCaseDict(dict):
             val = val.lower()
         return val
     
+    def get(self, key, default):
+        if key in self:
+            return self[key]
+        else:
+            return default
+    
     def __repr__(self):
         return self.__class__.__name__ + "(%s)" % super(LowerCaseDict, self).__repr__()
 
