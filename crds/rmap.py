@@ -111,6 +111,7 @@ ILLEGAL_NODES = set([
     "visit_FunctionDef",
     "visit_ClassDef", 
     "visit_Return", 
+    "visit_Yield",
     "visit_Delete", 
     "visit_AugAssign", 
     "visit_Print",
@@ -128,10 +129,17 @@ ILLEGAL_NODES = set([
     "visit_Global",
     "visit_Pass",
     "visit_Repr", 
-    "visit_Yield",
     "visit_Lambda",
     "visit_Attribute",
     "visit_Subscript",
+    "visit_Set",
+    "visit_ListComp",
+    "visit_SetComp",
+    "visit_DictComp",
+    "visit_GeneratorExp",
+    "visit_Repr",
+    "visit_AugLoad",
+    "visit_AugStore",
     ])
 
 LEGAL_NODES = set([
@@ -152,7 +160,7 @@ LEGAL_NODES = set([
     'visit_NotIn',
     'visit_NotEq',
     'visit_Compare',
-    'visit_IfExpr',
+    'visit_IfExp',
     'visit_BoolOp',
     'visit_BinOp',
     'visit_UnaryOp',
@@ -912,7 +920,6 @@ class ReferenceMapping(Mapping):
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
         self._reffile_required = self.header.get("reffile_required", "NONE").upper()
-        self._row_keys = self.header.get("row_keys", ())
 
         # header precondition method, e.g. crds.hst.acs.precondition_header  
         # TPNs define the static definitive possibilities for parameter choices
@@ -983,7 +990,6 @@ class ReferenceMapping(Mapping):
         """Property, dictionary of valid values for each parameter loaded from .tpn files or equivalent."""
         return self.get_valid_values_map()
 
-
     def get_best_ref(self, header_in):
         """Return the single reference file basename appropriate for
         `header_in` selected by this ReferenceMapping.
@@ -1034,7 +1040,7 @@ class ReferenceMapping(Mapping):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
         return [self.filename if full_path else self.basename]
 
-    def get_required_parkeys(self, include_reffile_switch=True, include_row_keys=True):
+    def get_required_parkeys(self, include_reffile_switch=True):
         """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
         for key in self.parkey:
@@ -1044,8 +1050,6 @@ class ReferenceMapping(Mapping):
                 parkeys.append(key)
         if include_reffile_switch and self._reffile_switch != "NONE":
             parkeys.append(self._reffile_switch)
-        if include_row_keys and self._row_keys:
-            parkeys.extend(list(self._row_keys))
         return parkeys
 
     def get_extra_parkeys(self):
@@ -1059,8 +1063,6 @@ class ReferenceMapping(Mapping):
         extra = list(self.extra_keys) 
         if self._reffile_switch != "NONE":
             extra.append(self._reffile_switch)
-        if self._row_keys:
-            extra.extend(list(self._row_keys))
         return tuple(extra)
 
     def get_parkey_map(self):
