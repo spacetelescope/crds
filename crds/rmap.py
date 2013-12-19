@@ -145,7 +145,7 @@ LEGAL_NODES = set([
     'visit_Dict',
     'visit_Num',
     'visit_Expr',
-    # 'visit_And',
+    'visit_And',
     'visit_Or',
     'visit_In',
     'visit_Eq',
