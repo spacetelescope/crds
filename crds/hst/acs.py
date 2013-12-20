@@ -12,7 +12,7 @@ from collections import defaultdict
 
 ACS_HALF_CHIP_COLS = 2048         #used in custom bias selection algorithm
 
-SM4 = timestamp.reformat_date("2009-05-14 00:00")
+SM4 = timestamp.reformat_date("2009-05-14 00:00:00.000000")
 # date beyond which an exposure was
 # taken in the SM4 configuration
 # (day 2009.134 = May 14 2009,
@@ -75,62 +75,9 @@ def precondition_header_biasfile_v1(rmap, header_in):
             header["NUMROWS"] = utils.condition_value(str(numrows)) 
     return header     # XXXXXX RETURN NOW !!!!
 
-def precondition_header_biasfile_v2(rmap, header_in):
-    """Preconditions ACS BIASFILE dataset matching header prior to matching.
-    
-    v2 substitutes NAXIS1, NAXIS2 for NUMCOLS, NUMROWS in the first buggy version.
-    
-    v2 is only called when explicitly added to an rmap in the "hooks" header section.
-    """
-    header = dict(header_in)
-
-    if "NAXIS1" not in header:
-        header["NAXIS1"] = header.get("NUMCOLS","UNDEFINED")
-    if "NAXIS2" not in header:
-        header["NAXIS2"] = header.get("NUMROWS","UNDEFINED")
-
-    log.verbose("acs_biasfile_precondition_header:", log.PP(header))
-    exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
-    if (exptime < SM4):
-        #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-        log.verbose("Mapping pre-SM4 APERTURE to N/A")
-        header["APERTURE"] = "N/A"
-    try:
-        numcols = int(float(header["NAXIS1"]))
-    except ValueError:
-        log.verbose("acs_biasfile_selection: bad NAXIS1.")
-        sys.exc_clear()
-    else:
-        header["NAXIS1"] = utils.condition_value(str(numcols))
-        # if pre-SM4 and NAXIS1 > HALF_CHIP
-        exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
-        if (exptime < SM4):
-            if numcols > ACS_HALF_CHIP_COLS:
-                if header["CCDAMP"] in ["A","D"]: 
-                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
-                                "to AD for NAXIS1 = " + header["NAXIS1"])
-                    header["CCDAMP"] = "AD"
-                elif header["CCDAMP"] in ["B","C"]:  
-                    log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp B or C " +
-                                "to BC for NAXIS1 = " + header["NAXIS1"])
-                    header["CCDAMP"] = "BC"
-    if header['DETECTOR'] == "WFC" and \
-        header['XCORNER'] == "0.0" and header['YCORNER'] == "0.0":
-        log.verbose("acs_biasfile_selection: precondition_header halving NAXIS2")
-        try:
-            numrows = int(float(header["NAXIS2"])) / 2
-        except ValueError:
-            log.verbose("acs_biasfile_selection: bad NAXIS2.")
-            sys.exc_clear()
-        else:
-            header["NAXIS2"] = utils.condition_value(str(numrows)) 
-    return header     # XXXXXX RETURN NOW !!!!
-
 # ===========================================================================    
 
-#   This section contains matching customizations.
-
-# (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
+#   This section contains generation and update customizations.
 
 """
 def _fallback_biasfile(header_in):
@@ -165,89 +112,115 @@ def fallback_header(rmap, header):
         None
 """
 
-# In theory,  this moves the fallback header computation to rmap insertion time.
-# This is horrendous,  a second mechanism in addition to the kmap filter for 
-# implementing fallbacks which execute in one pass via a more sophisticated rmap
-# rather than as a second call to getreferences.
-def reference_match_fallback_header(rmap, header):
-    """Called at rmap generation and update time to add a weaker "fallback" match case for certain references.
-    
-    This is the CRDS emulation of a CDBS "try, try again with different query" behaviour.
-    """
-    if rmap.filekind == "biasfile":
-        return reference_match_fallback_header_biasfile_v1(rmap, header)
-    else:
-        None
+BIASFILE_PARKEYS = ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 
+                    'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')
 
-def reference_match_fallback_header_biasfile_v1(rmap, header_in):
-    
-    header = precondition_header_biasfile_v1(rmap, header_in)
-
-    if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NUMROWS='1044.0', NUMCOLS='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NUMROWS','NUMCOLS','LTV1', 'LTV2'])
-    
-    return header
-
-def header_matches(header, conditions):
-    for var, val in conditions.items():
-        if header[var] != val:
-            return False
-    return True
-
-def dont_care(header, vars):
-    header = dict(header)
-    for var in vars:
-        header[var] = "N/A"
-    return header
-
-def reference_match_fallback_header_biasfile_v2(rmap, header_in):
+def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     """Given a reference file header specifying the applicable cases for a reference,  this generates
     a weaker match case which may apply when the primary match fails.  Called to update rmaps
     with "fallback cases" when a file is submitted to the CRDS web site and it updates the rmap,
     in addition to the primary match cases from the unaltered header_in.  
     """
-    header = precondition_header_biasfile_v2(header_in)
+    header = dict(header_in)
+    
+    header["EXPTIME"] = timestamp.reformat_date(header_in["DATE-OBS"] + " " + header_in["TIME-OBS"])
+    
+    # 1. Simulate CDBS header pre-conditioning by mutating rmap and primary match
+    
+    if matches(header, EXPTIME=("<=", SM4)):
+        header["APERTURE"] = "N/A"
+    
+    if matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="A"):
+        header["CCDAMP"] = "AD"
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="D"):
+        header["CCDAMP"] = "AD"
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="B"):
+        header["CCDAMP"] = "BC"    
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="C"):
+        header["CCDAMP"] = "BC"
+    
+    # CDBS was written from the dataset perspective,  so it halved dataset naxis2 to match reference naxis2
+    # This code is adjusting the reference file perspective,  so it doubles reference naxis2 to match dataset naxis2
+    if matches(header, DETECTOR="WFC", XCORNER="0.0", YCORNER="0.0"):
+        with log.warn_on_exception("ACS BIASFILE reference_match_fallback_header bad NAXIS2"):
+            naxis2 = int(float(header["NAXIS2"]))
+            header["NAXIS2"] = naxis2*2
+    
+    del header["EXPTIME"]
 
-    if header_matches(header, dict(DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    show_header_mutations(header_in, header)
+    yield header
+
+    # 2. Simulate full frame fallback search
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    # The inverse of jamming the dataset header with canned matching values is
+    # jamming the reference header with N/A's for those variables.   Thus,  when
+    # a dataset header appears with any value,   it is matched against N/A, and
+    # works the same as if it had been jammed to a value matching the reference.
+    # Since N/A is weighted lower than a true match,  it acts as a fall-back if a
+    # real match is also present.
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    if matches(header, DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    elif matches(header, DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    elif matches(header, DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    elif matches(header, DETECTOR='HRC', CCDAMP='C|D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])  
+    elif matches(header, DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    elif matches(header, DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    elif matches(header, DETECTOR='HRC', CCDAMP='A|B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
+        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    else:
+        header = None
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='C|D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
+    if header is not None:
+        show_header_mutations(header_in, header)
+        yield header
+
+def matches(header, **keys):
+    """Nominally check each element of **keys for equality with the same key in `header`.
     
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    if header_matches(header, dict(DETECTOR='HRC', CCDAMP='A|B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0')):
-        return dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
+    If a value in **keys is a tuple, it should be of the form (operator_str, value) and the
+    expression will be evaluated with respect to `header`.
+    """
+    header = { key:utils.condition_value(val) for (key,val) in header.items() }
+    for var, val in keys.items():
+        if isinstance(val, tuple):
+            op, val = val
+        else:
+            op = "=="
+        if not evaluate(var + op + repr(val), header, var):
+            return False
+    return True
+
+def evaluate(expr, header, var):
+    """eval `expr` with respect to `var` in `header`."""
+    rval = eval(expr, {}, header)
+    log.info("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
+    return rval
+
+def dont_care(header, vars):
+    """Set vars in header to N/A."""
+    header = dict(header)
+    for var in vars:
+        header[var] = "N/A"
     return header
+
+def show_header_mutations(header_in, header):
+    """Print out keys which changed between header_in and header."""
+    for key in header:
+        if key in header_in:
+            if header[key] != header_in[key]:
+                log.info("mutating", repr(key), header_in[key], "-->", header[key])
+        else:
+            log.info("mutating", repr(key), "added as", header[key])
+    for key in header_in:
+        if key not in header:
+            log.info("mutating", repr(key), "deleted as", header_in[key])
 
 # =============================================================================================
 
@@ -263,79 +236,32 @@ def acs_biasfile_filter(kmap):
     
     add_fallback_to_kmap() duplicates the correct filemaps to simulate the fallback header lookup.
     """
-    replacement = "*"
+    replacement = "N/A"
     log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)
     start_files = total_files(kmap)
+    
+    kmap2 = defaultdict(set)
     for match, fmaps in kmap.items():
-        new_key = na_key(match, replacement)
-        if match[3] == '':
-            if new_key not in kmap:
-                kmap[new_key] = []
-            kmap[new_key] = sorted(set(kmap[new_key] + fmaps))
-            del kmap[match]
-            for fmap in fmaps:
-                log.info("Unconditionally mapping APERTURE '' to '%s' for" % replacement, fmap)
-            continue
-        remap_fmaps = []
-        for fmap in fmaps[:]:
-            if fmap.date < SM4:
-                log.info("Remapping <SM4 APERTURE to '%s'" % replacement, repr(fmap))
-                remap_fmaps.append(fmap)
-                fmaps.remove(fmap)
-        if remap_fmaps:
-            if new_key not in kmap:
-                kmap[new_key] = []
-            kmap[new_key].extend(remap_fmaps)
-            log.info("Moving", match, "to", new_key, "for files", total_files({None:remap_fmaps}))
-            log.info("Remainder", match, "=", total_files({None:kmap[match]}))
-            # log.info("New kmap for", repr(new_key), "is", repr(kmap[new_key]))
-        if not fmaps and (new_key != match):
-            del kmap[match]
-
-    dropped_files = start_files - total_files(kmap)
-    if dropped_files:  # bummer,  bug in my code...
-        log.error("Dropped files:", sorted(dropped_files))
-
-    kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0'),
-        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'),
-        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'),
-        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'),
-        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    
-    kmap = add_fallback_to_kmap(kmap, 
-        matches=dict(DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'),
-        dont_care=['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-
+        header = dict(zip(BIASFILE_PARKEYS, match))
+        for f in fmaps:
+            header["DATE-OBS"], header["TIME-OBS"] = f.date.split()
+            for alt in rmap_update_headers_acs_biasfile_v1(None, header):
+                new_match = tuple(alt[key] for key in BIASFILE_PARKEYS)
+                kmap2[new_match].add(f)
+    kmap2 = { match:sorted(kmap2[match]) for match in kmap2 }
+                                           
     header_additions = [
         ("hooks",  {
-            "precondition_header" : "precondition_header_biasfile_v2",
-            "reference_match_fallback_header" : "reference_match_fallback_header_biasfile_v2",
+            "precondition_header" : "none",
+            "rmap_update_headers" : "rmap_update_headers_acs_biasfile_v1",
         }),
     ]
 
-    return kmap, header_additions
+    dropped_files = start_files - total_files(kmap2)
+    if dropped_files:  # bummer,  bug in my code...
+        log.error("Dropped files:", sorted(dropped_files))
 
-#  An old example of hacking the kmap....
-#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
-#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
-#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
-#    return kmap, header_additions
-
-def na_key(match, replacement='*'):
-    """Replace APERTURE with N/A or *"""
-    new = list(match)
-    new[3] = replacement
-    return tuple(new)
+    return kmap2, header_additions
 
 def total_files(kmap):
     total = set()
@@ -343,46 +269,6 @@ def total_files(kmap):
         total = total.union(set([fmap.file for fmap in fmaps]))
     return total
         
-def add_fallback_to_kmap(kmap, matches, dont_care,
-                         parkeys=('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 
-                                  'NAXIS1', 'NAXIS2', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')):
-    """Copy items in `kmap` whose keys match the parameters in `matches`,  setting
-    the key-copy values named in `dont_care` to 'N/A'.   The copy with some 'N/A's is a fallback.
-    `parkeys` names the items of each tuple key in `kmap`,  in order.
-    """
-    kmap = defaultdict(list, kmap.items())
-    for key in kmap.keys():
-        if key_matches(key, parkeys, matches):
-            new_key = set_dont_care(key, parkeys, dont_care)
-#            if new_key not in kmap:
-#                kmap[new_key] = []
-            kmap[new_key].extend(list(kmap[key]))
-            kmap[new_key].sort()
-            log.info("Creating fallback", repr(key), "-->", repr(new_key))
-    return kmap
-
-def key_matches(key, parkeys, matches):
-    """Return True IFF `key` matches all the values in dict `matches`.
-    Corresponding values in tuple `key` are named by values in `parkeys`.
-    """
-    for i, name in enumerate(parkeys):
-        if name in matches:
-            if utils.condition_value(matches[name]) != utils.condition_value(key[i]):
-                log.verbose("Exiting on", repr(name), 
-                         utils.condition_value(matches[name]),
-                         utils.condition_value(key[i]))
-                return False
-    log.verbose("Matching", repr(key))
-    return True
-
-def set_dont_care(key, parkeys, dont_care):
-    """Set the values of `key` named in `dont_care` to 'N/A'."""
-    key = list(key)
-    for i, name in enumerate(parkeys):
-        if name in dont_care:
-            key[i] = 'N/A'
-    return tuple(key)
-
 # =============================================================================================
 #
 # This section contains relevant code from cdbsquery.py and explanation,  such as it is.

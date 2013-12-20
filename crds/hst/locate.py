@@ -100,7 +100,19 @@ def reference_exists(reference):
 from crds.hst.tpn import reference_name_to_validator_key, mapping_validator_key, get_tpninfos
 from crds.hst import INSTRUMENTS, FILEKINDS, EXTENSIONS
 from crds.hst.substitutions import expand_wildcards
-from crds.hst.parkeys import reference_keys_to_dataset_keys
+
+# =======================================================================
+
+def reference_keys_to_dataset_keys(instrument, filekind, header):
+    """Given a header dictionary for a reference file,  map the header back to
+    keys relevant to datasets.
+    """
+    result = {}
+    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
+        reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
+        result["DATE-OBS"] = reformatted[0]
+        result["TIME-OBS"] = reformatted[1]
+    return result
 
 # =======================================================================
 
