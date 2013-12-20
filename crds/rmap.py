@@ -952,7 +952,7 @@ class ReferenceMapping(Mapping):
         # set to identity if not defined.
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
-        self._reference_match_fallback_header = self.get_hook("reference_match_fallback_header", (lambda self, header: None))
+        self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
     
     def get_expr(self, expr):
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
@@ -1189,9 +1189,7 @@ class ReferenceMapping(Mapping):
         return header
     
     def insert_reference(self, reffile):
-        """
-        returns new ReferenceMapping made from `self` inserting `reffile`.
-        """
+        """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         # Since expansion rules may depend on keys not used in matching,  get entire header  
         header = data_file.get_header(reffile, observatory=self.observatory)
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
@@ -1200,12 +1198,13 @@ class ReferenceMapping(Mapping):
         header = self.get_matching_header(header)
         log.verbose("insert_reference matching reffile header:", 
                     [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
-        new = self.insert(header, os.path.basename(reffile))
-        fallback = self._reference_match_fallback_header(self, header)
-        if fallback:
-            log.verbose("insert_reference fallback reffile header:", 
-                        [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
-            new = new.insert(fallback, os.path.basename(reffile))
+        if self._rmap_update_headers:
+            # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
+            for hdr in self._rmap_update_headers(self, header):
+                new = self.insert(hdr, os.path.basename(reffile))
+        else:
+            # almost all instruments/types do this.
+            new = self.insert(header, os.path.basename(reffile))
         return new
 
     def insert(self, header, value):
