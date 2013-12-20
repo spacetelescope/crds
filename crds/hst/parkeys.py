@@ -224,25 +224,6 @@ def get_db_parkeys(instrument, filekind):
         db_parkeys.append(translations.get(key, key))
     return tuple(db_parkeys)
 
-def reference_keys_to_dataset_keys(instrument, filekind, header):
-    """Given a header dictionary for a reference file,  map the header back to
-    keys relevant to datasets.   So for ACS biasfile the reference says NAXIS1
-    but the dataset says NUMCOLS.   This would convert { "NAXIS1": 1024 } to
-    { "NUMCOLS" : 1024 }.
-    
-    In general,  rmap parkeys are matched against datset values and are defined
-    as dataset header keywords.   For refactoring though,  what's initially
-    available are reference file keywords...  which need to be mapped into the
-    terms rmaps know:  dataset keywords.
-    """
-    inv_trans = utils.invert_dict(PARKEYS[instrument][filekind]["db_translations"])    
-    result = { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
-    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
-        reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
-        result["DATE-OBS"] = reformatted[0]
-        result["TIME-OBS"] = reformatted[1]
-    return result
-
 def get_rmap_relevance(instrument, filekind):
     return PARKEYS[instrument][filekind]["rmap_relevance"]
 
