@@ -10,6 +10,11 @@ import crds
 
 # =======================================================================
 
+def reformat_date(date):
+    """Reformat datestring `d` in any recognized format in CRDS standard form."""
+    parsed = parse_date(date)
+    return format_date(parsed)
+
 def format_date(date):
     """Format a datestring `d` in CRDS standard form."""
     if isinstance(date, (str, unicode)):
@@ -53,11 +58,6 @@ def parse_date(date):
         return parse_alphabetical_date(date)
     else:
         return parse_numerical_date(date)
-
-def reformat_date(date):
-    """Reformat datestring `d` in any recognized format in CRDS standard form."""
-    parsed = parse_date(date)
-    return format_date(parsed)
 
 def now():
     """Returns the timestamp for the current time."""
