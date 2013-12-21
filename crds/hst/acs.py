@@ -129,6 +129,9 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     
     if matches(header, EXPTIME=("<=", SM4)):
         header["APERTURE"] = "N/A"
+    elif header["APERTURE"].strip() == "":
+        header["APERTURE"] = "N/A"
+        log.warning("rmap_update_headers_acs_biasfile_v1:  Changing APERTURE=='' to 'N/A'.")
     
     if matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="A"):
         header["CCDAMP"] = "AD"
@@ -141,15 +144,17 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     
     # CDBS was written from the dataset perspective,  so it halved dataset naxis2 to match reference naxis2
     # This code is adjusting the reference file perspective,  so it doubles reference naxis2 to match dataset naxis2
-    if matches(header, DETECTOR="WFC", XCORNER="0.0", YCORNER="0.0"):
-        with log.warn_on_exception("ACS BIASFILE reference_match_fallback_header bad NAXIS2"):
-            naxis2 = int(float(header["NAXIS2"]))
-            header["NAXIS2"] = naxis2*2
+    # This change only applies to the first attempt.
     
-    del header["EXPTIME"]
+    del header_1["EXPTIME"]
+    header_1 = dict(header)
+    if matches(header_1, DETECTOR="WFC", XCORNER="0.0", YCORNER="0.0"):
+        with log.warn_on_exception("rmap_update_headers_acs_biasfile_v1: bad NAXIS2"):
+            naxis2 = int(float(header_1["NAXIS2"]))
+            header_1["NAXIS2"] = naxis2*2
 
-    show_header_mutations(header_in, header)
-    yield header
+    show_header_mutations(header_in, header_1)
+    yield header_1
 
     # 2. Simulate full frame fallback search
     
@@ -200,7 +205,7 @@ def matches(header, **keys):
 def evaluate(expr, header, var):
     """eval `expr` with respect to `var` in `header`."""
     rval = eval(expr, {}, header)
-    log.info("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
+    log.verbose("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
     return rval
 
 def dont_care(header, vars):
@@ -236,8 +241,6 @@ def acs_biasfile_filter(kmap):
     
     add_fallback_to_kmap() duplicates the correct filemaps to simulate the fallback header lookup.
     """
-    replacement = "N/A"
-    log.info("Hacking ACS biasfile  APERTURE macros.  Changing APERTURE='' to APERTURE='%s'" % replacement)
     start_files = total_files(kmap)
     
     kmap2 = defaultdict(set)
@@ -249,6 +252,8 @@ def acs_biasfile_filter(kmap):
                 new_match = tuple(alt[key] for key in BIASFILE_PARKEYS)
                 kmap2[new_match].add(f)
     kmap2 = { match:sorted(kmap2[match]) for match in kmap2 }
+    
+    log.verbose("Final ACS BIASFILE kmap:\n", log.PP(kmap2))
                                            
     header_additions = [
         ("hooks",  {
@@ -500,4 +505,155 @@ on nested selectors.
                  str(aSource._keywords[k._field][0]) + " ")
     #
     return querytxt
+  """
+=======================================================================
+Name: acs_biasfile
+
+Description:
+------------
+This special-purpose function composes a database query against the CDBS 
+database to find an applicable ACS BIAS reference file.   A special
+query is needed because a search is first made using the image
+dimensions of the exposure, which can indicate a sub-array.  If a
+corresponding BIAS file does not exist for those dimensions, then a 
+second search is made for the default full-frame BIAS file.
+
+Arguments:
+----------
+thereffile (I) - a Reffile object containing information about the reference
+                 file and its selection parameters
+aSource (I)   - Input source object containing a dictionary of 
+                 keyword name/value pairs.  These form the
+                 inputsource for the database query parameters.
+Returns:
+--------
+reference_filename - name of the first reference file found by the DB query
+                     (normally only one is found)
+
+History:
+--------
+10/01/02 xxxxx MSwam     Initial version
+05/27/09 62687 MSwam     add max() to filename select to ensure latest match
+03/15/11 67806 MSwam     add beyond_SM4 to acs_bias_file_selection call
+=======================================================================
+  """
+  def acs_biasfile(self, thereffile, aSource):
+    # the query templates
+    # (no need to define these outside, like those for the generic case, since
+    #  this routine is only called once per dataset)
+    query_template_a = (
+       "SELECT max(acs_file_1.file_name) "+
+       "FROM acs_file acs_file_1, acs_row acs_row_1 "+
+       "WHERE acs_file_1.useafter_date = "+
+           "(SELECT max(acs_file_2.useafter_date) "+
+           "FROM acs_file acs_file_2, acs_row acs_row_2 "+
+               "WHERE acs_file_2.reference_file_type = 'BIA' "+
+               "and acs_file_2.useafter_date <= 'EXPOSURE_START' "+
+               "and acs_file_2.reject_flag = 'N' "+
+               "and acs_file_2.opus_flag = 'Y' "+
+               "and acs_file_2.archive_date is not null "+
+               "and acs_file_2.opus_load_date is not null "+
+               "and acs_file_2.file_name =acs_row_2.file_name "+
+               "and acs_file_2.expansion_number = acs_row_2.expansion_number ")
+    #
+    query_template_b = (
+           ") and acs_file_1.reference_file_type = 'BIA' "+
+       "and acs_file_1.reject_flag = 'N' "+
+       "and acs_file_1.opus_flag = 'Y' "+
+       "and acs_file_1.archive_date is not null "+
+       "and acs_file_1.opus_load_date is not null "+
+       "and acs_file_1.file_name =acs_row_1.file_name "+
+       "and acs_file_1.expansion_number = acs_row_1.expansion_number ")
+
+    querytxt = query_template_a
+
+    # fill the exposure start time, after converting keyword value
+    # to datetime format from source format
+    #
+    exposure_start, beyond_SM4 = self.find_exposure_start(aSource)
+    querytxt = string.replace(querytxt,"EXPOSURE_START", exposure_start)                         
+    # adjust naxis2 for WFC full-array images
+    try:
+      obs_naxis2 = aSource._keywords['NUMROWS'][0]
+      if (aSource._keywords['DETECTOR'][0] == "WFC" and
+          aSource._keywords['XCORNER'][0] == 0 and
+          aSource._keywords['YCORNER'][0] == 0) :
+        #
+        # image is half of the specific size (2 chips)
+        obs_naxis2 = obs_naxis2 / 2
+    except KeyError:
+      # missing key parameters
+      opusutil.PrintMsg("E","Key parameters missing for acs_biasfile")
+      raise ZeroRowsFound, "missing one of NUMROWS, DETECTOR, XCORNER, YCORNER"
+
+    # add the file selection fields (row_2)
+    querytxt = querytxt + self.acs_bias_file_selection("2", thereffile, aSource,
+                                                       beyond_SM4)
+
+    # add second template
+    querytxt = querytxt + query_template_b
+    
+    # add the file selection fields again (row_1)
+    querytxt = querytxt + self.acs_bias_file_selection("1", thereffile, aSource,
+                                                       beyond_SM4)
+    
+    # replace the place-holders in the query with the real selection values
+    query1 = string.replace(querytxt,"OBS_NAXIS1", 
+                                       str(aSource._keywords['NUMCOLS'][0]))
+    query1 = string.replace(query1,"OBS_NAXIS2", str(obs_naxis2))
+    query1 = string.replace(query1,"OBS_LTV1",
+                                       str(aSource._keywords['LTV1'][0]))
+    query1 = string.replace(query1,"OBS_LTV2",
+                                       str(aSource._keywords['LTV2'][0]))
+
+    # replace any None values with null
+    query1 = string.replace(query1, "None", "null")                         
+
+    # get results in a list of lists
+    result = [[]]
+    self.zombie_select(query1, result)
+    if len(result) == 0 or result[0][0] == None:
+      #
+      # no matching CDBS record found for inital search, try full-frame search
+      opusutil.PrintMsg("D","No matching BIAS file found for "+
+                            "naxis1="+str(aSource._keywords['NUMCOLS'][0])+
+                            " naxis2="+str(obs_naxis2)+
+                            " ltv1="+str(aSource._keywords['LTV1'][0])+
+                            " ltv2="+str(aSource._keywords['LTV2'][0]))
+      opusutil.PrintMsg("D","Trying full-frame default search")
+      #
+      # replace the place-holders with full-frame selection values
+      if aSource._keywords['DETECTOR'][0] == "WFC":
+        obs_naxis1 = "4144"
+        obs_naxis2 = "2068"
+        obs_ltv1 = "24.0"
+        obs_ltv2 = "0.0"
+      else:
+        obs_naxis1 = "1062"
+        obs_naxis2 = "1044"
+        obs_ltv1 = "19.0"
+        if (aSource._keywords['CCDAMP'][0] == "C" or
+            aSource._keywords['CCDAMP'][0] == "D"):
+          obs_ltv2 = "0.0"
+        else: # assuming HRC with CCDAMP = A or B
+          obs_ltv2 = "20.0"
+      query2 = string.replace(querytxt,"OBS_NAXIS1", obs_naxis1)
+      query2 = string.replace(query2,"OBS_NAXIS2", obs_naxis2)
+      query2 = string.replace(query2,"OBS_LTV1", obs_ltv1)
+      query2 = string.replace(query2,"OBS_LTV2", obs_ltv2)
+      #
+      # get results in a list of lists
+      result = [[]]
+      self.zombie_select(query2, result)
+      if len(result) == 0 or result[0][0] == None:
+        #
+        # no matching CDBS record found
+        opusutil.PrintMsg("E","No full-frame default BIAS found either.")
+        raise ZeroRowsFound, query2
+    #
+    # return the first filename found
+    return result[0][0]
+
+  """
+
 '''
