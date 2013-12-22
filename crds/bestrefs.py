@@ -721,7 +721,7 @@ and debug output.
                 continue
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Bestref FOUND:", repr(new_org),  self.update_promise, verbosity=55)
+                            "Bestref FOUND:", repr(new_org).lower(),  self.update_promise, verbosity=55)
             updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
@@ -778,24 +778,24 @@ and debug output.
                     if (old != "UNDEFINED") or self.args.undefined_differences_matter:
                         if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
                             self.log_and_track_error(dataset, instrument, filekind, 
-                                "Comparison difference:", repr(old), "-->", repr(new), self.update_promise)
+                                "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
-                            "New best reference:", repr(old), "-->", repr(new), self.update_promise)
+                            "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Lookup MATCHES:", repr(old), self.no_update,  verbosity=30)
+                            "Lookup MATCHES:", repr(old).lower(), self.no_update,  verbosity=30)
         
         # Check for missing references in `newrefs`.
         for filekind in oldrefs:
             if filekind not in newrefs and filekind in self.process_filekinds:
                 if self.args.differences_are_errors:
                     self.log_and_track_error(dataset, instrument, filekind, 
-                        "No new reference recommended. Old reference was", repr(old), self.no_update, verbosity=30)
+                        "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)
                 else:
                     log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                        "No new reference recommended. Old reference was", repr(old), self.no_update, verbosity=30)            
+                        "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)            
 
         return updates
     
