@@ -74,11 +74,15 @@ class HeaderGenerator(object):
         """In general,  reject request to update best references on the source."""
         raise UnsupportedUpdateMode("This dataset access mode doesn't support updates.")
     
-    def save_pickle(self, pickle):
+    def save_pickle(self, pickle, only_ids=None):
         """Write out headers to `pickle` file."""
+        if only_ids is None:
+            only_hdrs = self.headers
+        else:
+            only_hdrs = { dataset_id:hdr for (dataset_id, hdr) in self.headers.items() if dataset_id in only_ids }
         log.info("Writing all headers to", repr(pickle))
         with open(pickle, "wb+") as pick:
-            cPickle.dump(self.headers, pick)
+            cPickle.dump(only_hdrs, pick)
         log.info("Done writing", repr(pickle))
             
     def update_headers(self, headers2, only_ids=None):
@@ -803,7 +807,7 @@ and debug output.
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
         # (dataset, filekind, old, new)
         if self.args.save_pickle:
-            self.new_headers.save_pickle(self.args.save_pickle)
+            self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
         self.warn_bad_updates()
         if self.args.print_affected:
             for dataset in self.updates:
