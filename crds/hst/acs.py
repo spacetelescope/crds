@@ -146,7 +146,7 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     # This code is adjusting the reference file perspective,  so it doubles reference naxis2 to match dataset naxis2
     # This change only applies to the first attempt.
     
-    del header_1["EXPTIME"]
+    del header["EXPTIME"]
     header_1 = dict(header)
     if matches(header_1, DETECTOR="WFC", XCORNER="0.0", YCORNER="0.0"):
         with log.warn_on_exception("rmap_update_headers_acs_biasfile_v1: bad NAXIS2"):
