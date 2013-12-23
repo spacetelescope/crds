@@ -4,7 +4,8 @@ server.   More generally it's for printing out information on CRDS files.
 """
 from __future__ import print_function
 
-from crds import cmdline, rmap
+from crds import cmdline, rmap, log
+from crds.client import api
 
 class ListScript(cmdline.ContextsScript):
     """Command line script for listing information about CRDS reference and mapping files."""
@@ -58,6 +59,8 @@ class ListScript(cmdline.ContextsScript):
             help="prints out the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
             help="prints out the full paths of files for --cached-references and --cached-mappings.""")
+        self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
+            help="prints out matching parameters for the specified dataset ids.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -70,7 +73,9 @@ class ListScript(cmdline.ContextsScript):
             self.list_cached_references()
         if self.args.cached_mappings:
             self.list_cached_mappings()
-
+        if self.args.datasets is not None:
+            self.list_datasets()
+            
     def list_references(self):
         """Consult the server and print the names of all references associated with
         the given contexts.
@@ -90,6 +95,18 @@ class ListScript(cmdline.ContextsScript):
     def list_cached_references(self):
         """List the reference paths in the local cache."""
         _print_list(rmap.list_references("*", self.observatory, full_path=self.args.full_path))
+        
+    def list_datasets(self):
+        """List dataset header info for self.args.datasets with respect to self.args.context"""
+        for context in self.contexts:
+            with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
+                                        "for", repr(self.args.datasets)):
+                pars = api.get_dataset_headers_by_id(context, self.args.datasets)
+                pmap = rmap.get_cached_mapping(context)
+                for (dataset_id, header) in pars.items():
+                    header2 = pmap.minimize_header(header)
+                    log.info("Dataset pars for", repr(dataset_id), "with respect to", repr(context) + ":\n",
+                             log.PP(header2))
     
 def _print_list(files):
     """Print `files` one file per line."""
