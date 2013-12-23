@@ -4,7 +4,7 @@ server.   More generally it's for printing out information on CRDS files.
 """
 from __future__ import print_function
 
-from crds import cmdline, rmap, log
+from crds import cmdline, rmap, log, config
 from crds.client import api
 
 class ListScript(cmdline.ContextsScript):
@@ -61,6 +61,8 @@ class ListScript(cmdline.ContextsScript):
             help="prints out the full paths of files for --cached-references and --cached-mappings.""")
         self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
             help="prints out matching parameters for the specified dataset ids.")
+        self.add_argument("--config", action="store_true", dest="config",
+            help="print out CRDS configuration information.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -75,6 +77,8 @@ class ListScript(cmdline.ContextsScript):
             self.list_cached_mappings()
         if self.args.datasets is not None:
             self.list_datasets()
+        if self.args.config:
+            self.list_config()
             
     def list_references(self):
         """Consult the server and print the names of all references associated with
@@ -107,7 +111,26 @@ class ListScript(cmdline.ContextsScript):
                     header2 = pmap.minimize_header(header)
                     log.info("Dataset pars for", repr(dataset_id), "with respect to", repr(context) + ":\n",
                              log.PP(header2))
+                    
+    def list_config(self):
+        """Print out configuration info about the current environment and server."""
+        info = config.get_crds_env_vars()
+        server = self.server_info
+        _print_dict("CRDS Environment", info)
+        _print_dict("CRDS Server Info", server, 
+                    ["observatory", "status", "operational_context", "last_synced", 
+                     "reference_url", "mapping_url",])
     
+def _print_dict(title, d, selected = None):
+    """Print out dictionary `d` with a one line `title`."""
+    if selected is None:
+        selected = d.keys()
+    print(title)
+    if not d:
+        print("\tCRDS_PATH and CRDS_SERVER_URL not set.")
+    for key in selected:
+        print("\t" + key + " = " + repr(d[key]))
+
 def _print_list(files):
     """Print `files` one file per line."""
     for filename in files:

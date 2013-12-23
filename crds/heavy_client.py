@@ -447,6 +447,9 @@ def get_installed_info(observatory):
             operational_context = pmap,
             observatory = observatory,
             crds_version = dict( str="0.0.0"),
+            last_synced = "Not connected and not cached,  using installed mappings only.",
+            reference_url = "Not connected",
+            mapping_url = "Not connected"
             )
     
 def version_info():
