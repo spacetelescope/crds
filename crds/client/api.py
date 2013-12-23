@@ -263,6 +263,8 @@ def get_server_info():
     try:
         info = S.get_server_info()
         info["server"] = get_crds_server()
+        info["reference_url"] = info.pop("reference_url")["unchecked"]
+        info["mapping_url"] = info.pop("mapping_url")["unchecked"]
         return info
     except ServiceError, exc:
         raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
@@ -476,14 +478,14 @@ class FileCacher(object):
             except UnboundLocalError:   # maybe the open failed.
                 pass
 
-    def get_url(self, pipeline_context, file, checking="unchecked"):
+    def get_url(self, pipeline_context, file):
         """Return the URL used to fetch `file` of `pipeline_context`."""
         info = get_cached_server_info()
         observatory = self.observatory_from_context(pipeline_context)
         if config.is_mapping(file):
-            url = info["mapping_url"][checking][observatory]
+            url = info["mapping_url"][observatory]
         else:
-            url = info["reference_url"][checking][observatory]
+            url = info["reference_url"][observatory]
         if not url.endswith("/"):
             url += "/"
         return url + file
