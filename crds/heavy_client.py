@@ -438,7 +438,7 @@ def get_installed_info(observatory):
         where = config.locate_mapping("*.pmap", observatory)
         pmap = os.path.basename(sorted(glob.glob(where))[-1])
         log.warning("CRDS cache failure,  using pre-installed mappings at", repr(where),
-                    "and highest numbered pipeline context", repr(pmap), "as default.")
+                    "and highest numbered pipeline context", repr(pmap), "as default. Bad file checking is disabled.")
     except IndexError, exc:
         raise crds.CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
                         repr(where) + " : " + str(exc))
@@ -446,6 +446,7 @@ def get_installed_info(observatory):
             edit_context = pmap,
             operational_context = pmap,
             observatory = observatory,
+            bad_files = "",
             crds_version = dict( str="0.0.0"),
             last_synced = "Not connected and not cached,  using installed mappings only.",
             reference_url = "Not connected",
