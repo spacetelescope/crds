@@ -40,9 +40,9 @@ def precondition_header_biasfile_v1(rmap, header_in):
     header = dict(header_in)
     log.verbose("acs_biasfile_precondition_header:", header)
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
-    if (exptime < SM4):
+    if (exptime <= SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-        log.verbose("Mapping pre-SM4 APERTURE to N/A")
+        log.info("Mapping pre-SM4 APERTURE to N/A", exptime)
         header["APERTURE"] = "N/A"
     try:
         numcols = int(float(header["NUMCOLS"]))
@@ -53,7 +53,7 @@ def precondition_header_biasfile_v1(rmap, header_in):
         header["NUMCOLS"] = utils.condition_value(str(numcols))
         # if pre-SM4 and NUMCOLS > HALF_CHIP
         exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
-        if (exptime < SM4):
+        if (exptime <= SM4):
             if numcols > ACS_HALF_CHIP_COLS:
                 if header["CCDAMP"] in ["A","D"]: 
                     log.verbose("acs_bias_file_selection: exposure is pre-SM4, converting amp A or D " +
@@ -128,19 +128,22 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     # 1. Simulate CDBS header pre-conditioning by mutating rmap and primary match
     
     if matches(header, EXPTIME=("<=", SM4)):
+        log.info("Mapping pre-SM4 APERTURE to N/A", header)
         header["APERTURE"] = "N/A"
-    elif header["APERTURE"].strip() == "":
-        header["APERTURE"] = "N/A"
-        log.warning("rmap_update_headers_acs_biasfile_v1:  Changing APERTURE=='' to 'N/A'.")
+#    elif header["APERTURE"].strip() == "":
+#        header["APERTURE"] = "N/A"
+#        log.warning("rmap_update_headers_acs_biasfile_v1:  Changing APERTURE=='' to 'N/A'.")
     
-    if matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="A"):
-        header["CCDAMP"] = "AD"
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="D"):
-        header["CCDAMP"] = "AD"
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="B"):
-        header["CCDAMP"] = "BC"    
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="C"):
-        header["CCDAMP"] = "BC"
+    # Here, the inverse of jamming dataset CCDAMP=A to AD is match references of AD and make sure
+    # they also match datasets A|D.
+    if matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="AD"):
+        header["CCDAMP"] = "A|AD|D"
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="AD"):
+        header["CCDAMP"] = "A|AD|D"
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="BC"):
+        header["CCDAMP"] = "B|BC|C"    
+    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="BC"):
+        header["CCDAMP"] = "B|BC|C"
     
     # CDBS was written from the dataset perspective,  so it halved dataset naxis2 to match reference naxis2
     # This code is adjusting the reference file perspective,  so it doubles reference naxis2 to match dataset naxis2
@@ -250,7 +253,9 @@ def acs_biasfile_filter(kmap):
             header["DATE-OBS"], header["TIME-OBS"] = f.date.split()
             for alt in rmap_update_headers_acs_biasfile_v1(None, header):
                 new_match = tuple(alt[key] for key in BIASFILE_PARKEYS)
-                kmap2[new_match].add(f)
+                for flat_match in explode(new_match):
+                    kmap2[flat_match].add(f)
+
     kmap2 = { match:sorted(kmap2[match]) for match in kmap2 }
     
     log.verbose("Final ACS BIASFILE kmap:\n", log.PP(kmap2))
@@ -273,7 +278,23 @@ def total_files(kmap):
     for match, fmaps in kmap.items():
         total = total.union(set([fmap.file for fmap in fmaps]))
     return total
-        
+
+
+def _explode(match):
+    if not match:
+        yield ()
+    else:
+        if isinstance(match[0], str):
+            for part in match[0].split("|"):
+                for remainder in _explode(match[1:]):
+                    yield (utils.condition_value(part),) + remainder
+        else:
+            for remainder in _explode(match[1:]):
+                yield (utils.condition_value(match[0]),) + remainder
+
+def explode(match):
+    return list(_explode(match))
+
 # =============================================================================================
 #
 # This section contains relevant code from cdbsquery.py and explanation,  such as it is.
