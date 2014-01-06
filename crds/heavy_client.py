@@ -434,7 +434,7 @@ def get_installed_info(observatory):
     try:
         # lexical sort of pmap names yields most recent (highest numbered) last.
         import crds
-        os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/mappings"
+        os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/cache/mappings"
         where = config.locate_mapping("*.pmap", observatory)
         pmap = os.path.basename(sorted(glob.glob(where))[-1])
         log.warning("CRDS cache failure,  using pre-installed mappings at", repr(where),
