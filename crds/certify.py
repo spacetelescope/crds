@@ -532,15 +532,15 @@ class ReferenceCertifier(Certifier):
             g_rmap = find_governing_rmap(self.context, self.filename)
             try:
                 if g_rmap.reffile_format != "table":
-                    log.verbose("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
+                    log.info("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
                     return []
             except:
                 log.warning("Rmap reffile_format NOT DEFINED,  assuming it's a table.")
             try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
                 mode_columns = g_rmap.locate.get_row_keys(g_rmap)
-                log.info("Table row keys for", repr(g_rmap.basename), "defined as", repr(mode_columns))
+                log.info("Table unique-row-keys defined as", repr(mode_columns))
             except:
-                log.warning("Table row keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED.")
+                log.warning("Table unique-row-keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED.")
         return mode_columns
             
     def certify_reference_modes(self):
@@ -590,7 +590,7 @@ class ReferenceCertifier(Certifier):
             log.verbose("Old sample:", repr(old_sample))
             log.verbose("New sample:", repr(new_sample))
             return
-        for mode in old_modes:
+        for mode in sorted(old_modes):
             if mode not in new_modes:
                 log.warning("Table mode", mode, "from old reference", repr(old_reference_ex),
                             "is NOT IN new reference", repr(new_reference_ex))
@@ -606,7 +606,7 @@ class ReferenceCertifier(Certifier):
                             repr(new_reference_ex))
                 log.verbose("Old:", repr(old_modes[mode]), verbosity=60)
                 log.verbose("New:", repr(new_modes[mode]), verbosity=60)
-        for mode in new_modes:
+        for mode in sorted(new_modes):
             if mode not in old_modes:
                 log.info("Table mode", mode, "of new reference", repr(new_reference_ex),
                          "is NOT IN old reference", repr(old_reference))
@@ -625,6 +625,8 @@ class ReferenceCertifier(Certifier):
                 log.warning("Column key mismatch at mode", mode, "old_key", repr(old_key), 
                             "new_key", new_key)
                 different += 1
+            old_value = handle_nan(old_value)
+            new_value = handle_nan(new_value)
             if np.any(old_value != new_value):
                 different += 1
         return different
@@ -800,27 +802,36 @@ def table_mode_dictionary(generic_name, filename, mode_keys, ext=1):
     columns to select for mode values.
     """
     table = pyfits.getdata(filename, ext=ext)
-    modes = defaultdict(list)
     all_cols = [name.upper() for name in table.names]
     basename = repr(os.path.basename(filename) + "[{}]".format(ext))
     log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
     log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
+    modes = defaultdict(list)
     for i, row in enumerate(table):
-        rowdict = dict(zip(all_cols, row))
+        new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
+        rowdict = dict(new_row)
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
         # whichever mode_keys are present in a given row.
-        mode = tuple([ (key, rowdict.get(key)) for key in mode_keys if key in rowdict ])
+        mode = tuple((key, rowdict[key]) for key in mode_keys if key in rowdict)
         if not mode:
             log.info("Empty actual mode in", generic_name, basename, "with candidate mode columns", mode_keys)
             return {}, []
-        new_row = tuple(zip(all_cols, row))
         modes[mode].append((i, new_row))
     for mode in sorted(modes.keys()):
         if len(modes[mode]) > 1:
             log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
-                        "\n".join([repr(row) for row in modes[mode]]))
+                        "\n".join([repr(new_row) for row in modes[mode]]))
     # modes[mode][0] is first instance of multiply defined mode.
     return { mode:modes[mode][0] for mode in modes }, all_cols
+
+def handle_nan(var):
+    """Map nan values to 'nan' so that 'nan' == 'nan'."""
+    if isinstance(var, (np.float32, np.float64, np.float128)) and np.isnan(var):
+        return 'nan'
+    elif isinstance(var, np.ndarray) and var.shape == () and np.any(np.isnan(var)):
+        return 'nan'
+    else:
+        return var
 
 # ============================================================================
 
