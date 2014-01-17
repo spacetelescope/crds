@@ -51,13 +51,13 @@ class TestValidatorClasses(CRDSTestCase):
         certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
         certify.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
         
-    def test_table_mode_checks(self):
+    def test_table_mode_checks_identical(self):
         from crds import certify
-        certify.certify_files([self.data("acs_new_idc.fits")], observatory="hst", 
-                               context="hst.pmap", compare_old_reference=True)
+        certify.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst", 
+                              context="hst.pmap", compare_old_reference=True)
 
-def test():
-    import doctest
-    from . import test_certify
-    return doctest.testmod(test_certify)
+    def test_table_mode_checks_missing_modes(self):
+        from crds import certify
+        certify.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
+                              context="hst.pmap", compare_old_reference=True)
 
