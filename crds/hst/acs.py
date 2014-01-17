@@ -2,7 +2,7 @@
 
 import sys
 
-from crds import log, utils, timestamp
+from crds import rmap, log, utils, timestamp
 
 from collections import defaultdict
 
@@ -42,7 +42,7 @@ def precondition_header_biasfile_v1(rmap, header_in):
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime <= SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
-        log.info("Mapping pre-SM4 APERTURE to N/A", exptime)
+        log.verbose("Mapping pre-SM4 APERTURE to N/A", exptime)
         header["APERTURE"] = "N/A"
     try:
         numcols = int(float(header["NUMCOLS"]))
@@ -81,7 +81,7 @@ def precondition_header_biasfile_v1(rmap, header_in):
 
 """
 def _fallback_biasfile(header_in):
-    header = _precondition_header_biasfile(header_in)
+    header = _precondition_header_biasfile_v1(rmap, header_in)
     log.verbose("No matching BIAS file found for",
                "NUMCOLS=" + repr(header['NUMCOLS']),
                "NUMROWS=" + repr(header['NUMROWS']),
@@ -115,79 +115,104 @@ def fallback_header(rmap, header):
 BIASFILE_PARKEYS = ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXIS2', 
                     'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP')
 
-def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
+def _rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     """Given a reference file header specifying the applicable cases for a reference,  this generates
     a weaker match case which may apply when the primary match fails.  Called to update rmaps
     with "fallback cases" when a file is submitted to the CRDS web site and it updates the rmap,
     in addition to the primary match cases from the unaltered header_in.  
     """
-    header = dict(header_in)
+    header_in = dict(header_in)
     
-    header["EXPTIME"] = timestamp.reformat_date(header_in["DATE-OBS"] + " " + header_in["TIME-OBS"])
+    header_in["EXPTIME"] = timestamp.reformat_date(header_in["DATE-OBS"] + " " + header_in["TIME-OBS"])
+    
+    header = fix_naxis2(header_in)
     
     # 1. Simulate CDBS header pre-conditioning by mutating rmap and primary match
+    if matches(header, EXPTIME=("<=", SM4)):    
+        # First case has hacked APERTURE and CCDAMP for pre-sm4
+        yield fix_aperture_ccdamp_pre_sm4(header)
+        
+        # Second case simulates behavior of pre-sm4 references with post-sm4 EXPTIME by jamming USEAFTER to SM4
+        # and omitting the pre-SM4 EXPTIME hacks.
+        header_2 = dict(header)
+        header_2["EXPTIME"] = SM4
+        yield header_2
+    else:  # Standard post-SM4 file is unmodified except for NAXIS2
+        if not header["APERTURE"].strip():
+            header["APERTURE"] = "FAIL"
+        yield header
+
+def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
+    # 2. Simulate full frame fallback search
     
-    if matches(header, EXPTIME=("<=", SM4)):
-        log.info("Mapping pre-SM4 APERTURE to N/A", header)
-        header["APERTURE"] = "N/A"
+    header = dict(header_in)
+    for variant in _rmap_update_headers_acs_biasfile_v1(rmap, header):
+        
+        yield variant
+        show_header_mutations(header_in, variant)
+        
+        fallback = compute_fallback_header(variant)
+        if fallback is not None:
+            show_header_mutations(header_in, fallback)
+            yield fallback
+
+def fix_aperture_ccdamp_pre_sm4(header_in):
+    header = dict(header_in)
+    log.info("Mapping pre-SM4 APERTURE to N/A", header)
+    header["APERTURE"] = "N/A"
 #    elif header["APERTURE"].strip() == "":
 #        header["APERTURE"] = "N/A"
 #        log.warning("rmap_update_headers_acs_biasfile_v1:  Changing APERTURE=='' to 'N/A'.")
-    
+
     # Here, the inverse of jamming dataset CCDAMP=A to AD is match references of AD and make sure
-    # they also match datasets A|D.
-    if matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="AD"):
+    # they also match datasets A|D.   Also,  files which matched on A|D|B|C no longer do once they're mapped to AD BC.
+    if matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="AD"):
         header["CCDAMP"] = "A|AD|D"
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="AD"):
-        header["CCDAMP"] = "A|AD|D"
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="BC"):
-        header["CCDAMP"] = "B|BC|C"    
-    elif matches(header, EXPTIME=("<=",SM4), NAXIS1=(">","2048"), CCDAMP="BC"):
+#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="A"):
+#         header["CCDAMP"] = "FAIL"
+#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="D"):
+#         header["CCDAMP"] = "FAIL"
+    elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="BC"):
         header["CCDAMP"] = "B|BC|C"
+#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="B"):
+#         header["CCDAMP"] = "FAIL"
+#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="C"):
+#         header["CCDAMP"] = "FAIL"
+    return header
     
+def fix_naxis2(header):
     # CDBS was written from the dataset perspective,  so it halved dataset naxis2 to match reference naxis2
     # This code is adjusting the reference file perspective,  so it doubles reference naxis2 to match dataset naxis2
     # This change only applies to the first attempt.
-    
-    del header["EXPTIME"]
     header_1 = dict(header)
     if matches(header_1, DETECTOR="WFC", XCORNER="0.0", YCORNER="0.0"):
         with log.warn_on_exception("rmap_update_headers_acs_biasfile_v1: bad NAXIS2"):
             naxis2 = int(float(header_1["NAXIS2"]))
             header_1["NAXIS2"] = naxis2*2
+    return header_1
 
-    show_header_mutations(header_in, header_1)
-    yield header_1
-
-    # 2. Simulate full frame fallback search
-    
+def compute_fallback_header(header_in):
     # The inverse of jamming the dataset header with canned matching values is
     # jamming the reference header with N/A's for those variables.   Thus,  when
     # a dataset header appears with any value,   it is matched against N/A, and
     # works the same as if it had been jammed to a value matching the reference.
     # Since N/A is weighted lower than a true match,  it acts as a fall-back if a
     # real match is also present.
-    
+    header = dict(header_in)
     if matches(header, DETECTOR='WFC', NAXIS1='4144.0', NAXIS2='2068.0', LTV1='24.0', LTV2='0.0'):
         header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     elif matches(header, DETECTOR='HRC', CCDAMP='C', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
         header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     elif matches(header, DETECTOR='HRC', CCDAMP='D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
         header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    elif matches(header, DETECTOR='HRC', CCDAMP='C|D', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='0.0'):
-        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])  
     elif matches(header, DETECTOR='HRC', CCDAMP='A', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
         header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     elif matches(header, DETECTOR='HRC', CCDAMP='B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
         header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
-    elif matches(header, DETECTOR='HRC', CCDAMP='A|B', NAXIS2='1044.0', NAXIS1='1062.0', LTV1='19.0', LTV2='20.0'):
-        header = dont_care(header, ['NAXIS2','NAXIS1','LTV1', 'LTV2'])
     else:
         header = None
-    
-    if header is not None:
-        show_header_mutations(header_in, header)
-        yield header
+    return header
+
 
 def matches(header, **keys):
     """Nominally check each element of **keys for equality with the same key in `header`.
@@ -201,6 +226,7 @@ def matches(header, **keys):
             op, val = val
         else:
             op = "=="
+        val = utils.condition_value(val)
         if not evaluate(var + op + repr(val), header, var):
             return False
     return True
@@ -208,7 +234,7 @@ def matches(header, **keys):
 def evaluate(expr, header, var):
     """eval `expr` with respect to `var` in `header`."""
     rval = eval(expr, {}, header)
-    log.verbose("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
+    log.info("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
     return rval
 
 def dont_care(header, vars):
@@ -254,7 +280,8 @@ def acs_biasfile_filter(kmap):
             for alt in rmap_update_headers_acs_biasfile_v1(None, header):
                 new_match = tuple(alt[key] for key in BIASFILE_PARKEYS)
                 for flat_match in explode(new_match):
-                    kmap2[flat_match].add(f)
+                    f2 = rmap.Filemap(alt["EXPTIME"], f.file, f.comment)
+                    kmap2[flat_match].add(f2)
 
     kmap2 = { match:sorted(kmap2[match]) for match in kmap2 }
     
@@ -449,7 +476,7 @@ on nested selectors.
       else:                                            beyond_SM4 = False
 
     except Exception:
-      traceback.print_exc()
+      tracebackprint_exc()
       opusutil.PrintMsg("E","Failed time conversion for exposure start.")
       raise FailedTimeConversion
     #
