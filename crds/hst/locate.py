@@ -107,7 +107,7 @@ def reference_keys_to_dataset_keys(instrument, filekind, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.
     """
-    result = {}
+    result = dict(header)
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
         result["DATE-OBS"] = reformatted[0]
