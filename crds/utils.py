@@ -417,7 +417,7 @@ DONT_CARE_RE = re.compile(r"^" + r"|".join([
     # "-999","-999\.0",
     # "4294966297.0",
     r"-2147483648.0",
-    r"\(\)","N/A","NOT APPLICABLE", "NOT_APPLICABLE"]) + "$|^$")
+    r"\(\)","N/A","NOT APPLICABLE", "NOT_APPLICABLE"]) + "$")
 
 NUMBER_RE = re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$|^[+-]?[0-9]+\.$")
 
@@ -442,8 +442,10 @@ def condition_value(value):
     'N/A'
     >>> condition_value('NOT_APPLICABLE')
     'N/A'
-    >>> condition_value('')
+
+    >> condition_value('')
     'N/A'
+
     >>> condition_value('4294967295')
     '-1.0'
     
