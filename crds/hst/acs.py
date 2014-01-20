@@ -138,15 +138,17 @@ def _rmap_update_headers_acs_biasfile_v1(rmap, header_in):
         header_2["EXPTIME"] = SM4
         yield header_2
     else:  # Standard post-SM4 file is unmodified except for NAXIS2
-        if not header["APERTURE"].strip():
-            header["APERTURE"] = "FAIL"
-        yield header
+        if header["APERTURE"].strip():
+            yield header
 
 def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     # 2. Simulate full frame fallback search
     
     header = dict(header_in)
     for variant in _rmap_update_headers_acs_biasfile_v1(rmap, header):
+
+        if variant is None:
+            continue
         
         yield variant
         show_header_mutations(header_in, variant)
@@ -158,26 +160,28 @@ def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
 
 def fix_aperture_ccdamp_pre_sm4(header_in):
     header = dict(header_in)
-    log.info("Mapping pre-SM4 APERTURE to N/A", header)
-    header["APERTURE"] = "N/A"
+    log.info("Mapping pre-SM4 APERTURE to *", header)
+    header["APERTURE"] = "*"
 #    elif header["APERTURE"].strip() == "":
 #        header["APERTURE"] = "N/A"
 #        log.warning("rmap_update_headers_acs_biasfile_v1:  Changing APERTURE=='' to 'N/A'.")
 
     # Here, the inverse of jamming dataset CCDAMP=A to AD is match references of AD and make sure
     # they also match datasets A|D.   Also,  files which matched on A|D|B|C no longer do once they're mapped to AD BC.
-    if matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="AD"):
+    if matches(header_in, CCDAMP="AD"):
+        header["NAXIS1"] = ">" + str(ACS_HALF_CHIP_COLS)
         header["CCDAMP"] = "A|AD|D"
-#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="A"):
-#         header["CCDAMP"] = "FAIL"
-#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="D"):
-#         header["CCDAMP"] = "FAIL"
-    elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="BC"):
+    elif matches(header_in, CCDAMP="A"):
+        header["NAXIS1"] = "<=" + str(ACS_HALF_CHIP_COLS)
+    elif matches(header_in, CCDAMP="D"):
+        header["NAXIS1"] = "<=" + str(ACS_HALF_CHIP_COLS)
+    elif matches(header_in, CCDAMP="BC"):
+        header["NAXIS1"] = ">" + str(ACS_HALF_CHIP_COLS)
         header["CCDAMP"] = "B|BC|C"
-#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="B"):
-#         header["CCDAMP"] = "FAIL"
-#     elif matches(header_in, NAXIS1=(">", ACS_HALF_CHIP_COLS), CCDAMP="C"):
-#         header["CCDAMP"] = "FAIL"
+    elif matches(header_in, CCDAMP="B"):
+        header["NAXIS1"] = "<=" + str(ACS_HALF_CHIP_COLS)
+    elif matches(header_in, CCDAMP="C"):
+        header["NAXIS1"] = "<=" + str(ACS_HALF_CHIP_COLS)
     return header
     
 def fix_naxis2(header):
@@ -278,6 +282,11 @@ def acs_biasfile_filter(kmap):
         for f in fmaps:
             header["DATE-OBS"], header["TIME-OBS"] = f.date.split()
             for alt in rmap_update_headers_acs_biasfile_v1(None, header):
+                if alt is None:
+                    continue
+                if not alt["APERTURE"].strip():
+                    log.warning("Dropping APERTURE='' for", repr(alt))
+                    continue
                 new_match = tuple(alt[key] for key in BIASFILE_PARKEYS)
                 for flat_match in explode(new_match):
                     f2 = rmap.Filemap(alt["EXPTIME"], f.file, f.comment)
