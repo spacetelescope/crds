@@ -5,10 +5,13 @@ reference or mapping file.
 ['hst.pmap', 'hst_acs.imap', 'hst_acs_bpixtab.rmap']
 
 """
+from __future__ import print_function
+
 import sys
 import os.path
 
-from . import rmap, pysh, config
+from . import rmap, pysh, config, cmdline, utils, log
+from crds.client import api
 
 def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention 
@@ -68,8 +71,7 @@ def test():
     return doctest.testmod(uses)
 
 def uses(files, observatory="hst"):
-    """Return the list of mappings which use any of `files`.
-    """
+    """Return the list of mappings which use any of `files`."""
     mappings = []
     for file_ in files:
         if file_.endswith(".rmap"):
@@ -85,18 +87,91 @@ def uses(files, observatory="hst"):
                 findall_mappings_using_reference(file_, observatory))
     return sorted(list(set(mappings)))
 
-def main(observatory, files):
-    """Print the "anscestor" mappings which mention each reference file,
-    rmap, or imap in `files`.
-    """
-    import crds
-    crds.handle_version()
-    mappings = uses(files, observatory)
-    for mapping in mappings:
-        print mapping
+def datasets_using(references, context):
+    """Print out the DADSOPS dataset ids which historically used the specified reference files."""
+    datasets = {}
+    using = set()
+    for reference in references:
+        if config.is_mapping(reference):
+            log.error("Used file", repr(reference), "is a mapping file.  Must be a reference file.")
+            continue
+        pmap = rmap.get_cached_mapping(context)
+        instrument, filekind = utils.get_file_properties(pmap.observatory, reference)
+        if instrument not in datasets:
+            log.verbose("Dumping dataset info for", repr(instrument), "from", repr(api.get_crds_server()))
+            datasets[instrument] = api.get_dataset_headers_by_instrument(context, instrument)
+        for (dataset_id, pars) in datasets[instrument].items():
+            if reference.upper() in pars[filekind.upper()]:  # handle things like iref$u451251ej_bpx.fits
+                using.add(dataset_id)
+    return sorted(list(using))
 
+class UsesScript(cmdline.Script):
+    """Command line script for printing rmaps using references,  or datasets using references."""
+
+    description = """
+Prints out the mappings which refer to the specified mappings or references.
+
+Prints out the datasets which historically used a particular reference as defined by DADSOPS.
+    """
+
+    epilog = """
+crds.uses can be invoked like this:
+
+% python -m crds.uses --files n3o1022ij_drk.fits --hst
+hst.pmap
+hst_0001.pmap
+hst_0002.pmap
+hst_0003.pmap
+...
+hst_0041.pmap
+hst_acs.imap
+hst_acs_0001.imap
+hst_acs_0002.imap
+hst_acs_0003.imap
+...
+hst_acs_0008.imap
+hst_acs_darkfile.rmap
+hst_acs_darkfile_0001.rmap
+hst_acs_darkfile_0002.rmap
+hst_acs_darkfile_0003.rmap
+...
+hst_acs_darkfile_0005.rmap
+
+% python -m crds.uses --files n3o1022ij_drk.fits --print-datasets --hst
+"""
+    def add_args(self):
+        """Add command line parameters unique to this script."""
+        super(UsesScript, self).add_args()
+        self.add_argument("--files", nargs="+", 
+            help="References for which to dump using mappings or datasets.")        
+        self.add_argument("-d", "--print-datasets", action="store_true", dest="print_datasets",
+            help="Print the ids of datasets last historically using a reference.")
+
+    def main(self):
+        """Process command line parameters in to a context and list of
+        reference files.   Print out the match tuples within the context
+        which contain the reference files.
+        """
+        if self.args.print_datasets:
+            self.print_datasets_using_references()
+        else:
+            self.print_mappings_using_files()
+            
+    def locate_file(self, file_):
+        """Just use basenames for identifying file references."""
+        return os.path.basename(file_)
+            
+    def print_mappings_using_files(self):
+        """Print out the mappings which refer to the specified mappings or references."""
+        mappings = uses(self.files, self.observatory)
+        for mapping in mappings:
+            print(mapping)
+            
+    def print_datasets_using_references(self):
+        """Print out the datasets which refer to the specified references."""
+        dataset_ids = datasets_using(self.files, self.default_context)
+        for dataset_id in dataset_ids:
+            print(dataset_id)
+        
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print "usage: python -m crds.uses <observatory=hst|jwst> <mapping or reference>..."
-        sys.exit(-1)
-    main(sys.argv[1], sys.argv[2:])
+    UsesScript()()
