@@ -132,11 +132,12 @@ class Script(object):
         return self.main()
         
     def determine_contexts(self):
+        """Return the list of contexts used by this invocation of the script.  Empty for Script."""
         return []    
 
     def add_args(self):
         """Add script-specific argparse add_argument calls here on self.parser"""
-        raise NotImplementedError("Script subclasses have to define add_args().")
+        # raise NotImplementedError("Script subclasses have to define add_args().")
     
     @property
     @utils.cached
