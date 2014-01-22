@@ -761,7 +761,7 @@ class RowDiff():
 
 # =========================================================================
 class RowDiffScript(cmdline.Script):
-    """RowDiffScript: command line script to perform FITS table difference by rows
+    """Command line script to perform FITS table difference by rows
 
     Parameters
     ----------
@@ -785,6 +785,11 @@ class RowDiffScript(cmdline.Script):
                      - Otherwise the tuple is described by rowdiff
       stdout: Human readable report.
 
+    """
+
+    description = """Command line script to perform FITS table difference by rows"""
+
+    epilog = """
     Modules that are based on FITSDiff, such as Diff, compare
     tabular data on a column-by-column basis. Rowdiff compares tabular data
     on a row-by-row basis, producing UNIX diff-like output instead.
