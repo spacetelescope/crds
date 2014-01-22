@@ -116,7 +116,7 @@ Compute primitive diffs for two .rmap's:
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced data/hst_acs_biasfile_0001.fits with data/hst_acs_biasfile_0002.fits')
     <BLANKLINE>
-     fitsdiff: 3.1.0
+     fitsdiff: 3.1.3.dev
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
@@ -143,6 +143,44 @@ Compute diffs checking for reversions: (invert file order to simulate reverse fi
     CRDS  : WARNING  Reversion at ('data/hst_0001.pmap', ('acs',)) replaced 'data/hst_acs_0002.imap' with 'data/hst_acs_0001.imap'
     CRDS  : WARNING  Reversion at ('data/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00')) replaced 'data/hst_acs_biasfile_0002.fits' with 'data/hst_acs_biasfile_0001.fits'
     CRDS  : WARNING  Reversion at ('data/hst_acs_0001.imap', ('biasfile',)) replaced 'data/hst_acs_biasfile_0002.rmap' with 'data/hst_acs_biasfile_0001.rmap'
+
+Row change
+    >>> case = DiffScript(argv="diff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
+    >>> case.run()
+    <BLANKLINE>
+     fitsdiff: 3.1.3.dev
+     a: data/test-source.fits
+     b: data/test-change-row1-valueLeft.fits
+     Maximum number of different data values to be reported: 10
+     Data comparison level: 0.0
+    <BLANKLINE>
+    Extension HDU 1:
+    <BLANKLINE>
+       Data contains differences:
+         Column valueLeft data differs in row 1:
+            a> 5748
+            b> -1
+         1 different table data element(s) found (2.22% different).
+    <BLANKLINE>
+    Row differences for HDU extension #1
+    <BLANKLINE>
+        Summary:
+            a rows 1-1 differ from b rows 1-1
+    <BLANKLINE>
+        Row difference, unified diff format:
+            --- Table A
+    <BLANKLINE>
+            +++ Table B
+    <BLANKLINE>
+            @@ -1,5 +1,5 @@
+    <BLANKLINE>
+             'yes', 'yes', 2988, -2779.0352, 'coquille'
+            -'yes', 'no', 5748, 6357.9727, 'ferly'
+            +'yes', 'no', -1, 6357.9727, 'ferly'
+             'yes', 'maybe', 9735, -9132.5322, 'misreliance'
+             'no', 'yes', 425, -2689.2646, 'ogeed'
+             'no', 'no', 8989, 9870.0254, 'readmittance'
+    <BLANKLINE>
 
 CLEANUP
 

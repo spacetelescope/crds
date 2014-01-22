@@ -6,7 +6,7 @@ import os
 import sys
 from collections import defaultdict
 
-from crds import rmap, log, pysh, cmdline, utils
+from crds import rmap, log, pysh, cmdline, utils, rowdiff
 
 from pyfits import FITSDiff
 
@@ -218,8 +218,9 @@ def newer(name1, name2):
     return result
 
 # ============================================================================
-        
-def fits_difference(observatory, old_file, new_file):
+
+
+def fits_difference(observatory, old_file, new_file, by_rows=False, only_fields=None):
     """Run fitsdiff on files named `old_file` and `new_file`.
     """
     assert old_file.endswith(".fits"), \
@@ -228,9 +229,16 @@ def fits_difference(observatory, old_file, new_file):
         "File " + repr(new_file) + " is not a FITS file."
     loc_old_file = rmap.locate_file(old_file, observatory)
     loc_new_file = rmap.locate_file(new_file, observatory)
+
+    # Do the standard diff.
     fd = FITSDiff(loc_old_file, loc_new_file)
+
+    # Do the diff by rows.
+    rd = rowdiff.RowDiff(loc_old_file, loc_new_file)
+
     if not fd.identical:
         fd.report(fileobj=sys.stdout)
+        print '\n', rd
 
 def text_difference(observatory, old_file, new_file):
     """Run UNIX diff on two text files named `old_file` and `new_file`.
@@ -321,6 +329,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
             help="Print out the names of instruments and types which appear in diffs,  rather than diffs.")
+
 
     def main(self):
         """Perform the differencing."""

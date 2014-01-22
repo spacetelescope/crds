@@ -90,7 +90,63 @@ invoked like::
 
   % python -m crds.diff  jwst_0001.pmap   jwst_0002.pmap
   (('hst.pmap', 'hst_0004.pmap'), ('hst_acs.imap', 'hst_acs_0004.imap'), ('hst_acs_darkfile.rmap', 'hst_acs_darkfile_0003.rmap'), ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej_drk.fits' with 'hst_acs_darkfile_0003.fits'")
- 
+
+
+crds.rowdiff
+------------
+Modules that are based on FITSDiff, such as crds.diff, compare
+tabular data on a column-by-column basis. Rowdiff compares tabular data
+on a row-by-row basis, producing UNIX diff-like output instead.
+Non-tabular extensions are ignored.
+
+    usage: rowdiff.py [-J] [-H] [--pdb]
+           [--ignore-fields IGNORE_FIELDS] 
+           [--fields FIELDS]
+           [--mode-fields MODE_FIELDS] old_file new_file
+    
+    Perform FITS table difference by rows
+    
+    positional arguments:
+      old_file                First FITS table to compare
+      new_file                Second FITS table to compare
+    
+    optional arguments:
+      --ignore-fields IGNORE_FIELDS
+                            List of fields to ignore
+      --fields FIELDS       List of fields to compare
+      --mode-fields MODE_FIELDS
+                            List of fields to do a mode compare
+      -J, --jwst            Force observatory to JWST for determining header conventions.
+      -H, --hst             Force observatory to HST for determining header conventions.
+      --pdb                 Run under pdb.
+
+The FITS data to be compared are required to be similar: they must have
+the same number of extensions and the types of extensions must match.
+
+The parameters --fields and --ignore-fields define which columns
+are compared between each table extension. These are mutually
+exclusive parameters and an error will generate if both are specified.
+
+First a summary of the changes between the table extension is given.
+Then, row-by-row difference is given, using unified diff syntax.
+
+The parameter --mode-fields initiates a different algorithm.
+Here, it is presumed the tabular data contains columns that can essentially
+be treated as keys upon with rows are selected. The fields specified are those
+key columns.
+
+All possible coombinations of values are determined be examining both
+extensions. Then, each table is compared against both this list and between
+each other, looking for multiply specified combinations, missing combinations,
+and, for the common combinations between the tables, whether the rest of the
+rows are equivalent or not.
+
+Examples:
+
+    % python -m crds.rowdiff s9m1329lu_off.fits s9518396u_off.fits 
+
+    % python -m rowdiff s9m1329lu_off.fits s9518396u_off.fits --mode-fields=detchip,obsdate
+
 
 crds.uses
 ---------
