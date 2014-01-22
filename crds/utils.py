@@ -3,7 +3,7 @@
 import sys
 import os.path
 import re
-import sha
+import hashlib
 import cStringIO
 import functools
 from collections import Counter
@@ -363,7 +363,7 @@ def ensure_dir_exists(fullpath, mode=0755):
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
-    xsum = sha.new()
+    xsum = hashlib.sha1()
     with open(pathname) as infile:
         size = 0
         insize = os.stat(pathname).st_size
@@ -376,7 +376,7 @@ def checksum(pathname):
 
 def str_checksum(data):
     """Return the CRDS hexdigest for small strings.""" 
-    xsum = sha.new()
+    xsum = hashlib.sha1()
     xsum.update(data)
     return xsum.hexdigest()
 
