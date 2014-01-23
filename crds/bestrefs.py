@@ -36,19 +36,37 @@ class UnsupportedUpdateMode(CrdsError):
 
 class HeaderGenerator(object):
     """Generic source for lookup parameters and historical comparison results."""
-    def __init__(self, context, sources):
+    def __init__(self, context, sources, datasets_since):
         self.context = context
+        self.ctx = crds.get_cached_mapping(self.context)
         self.sources = sources
         self.pmap = rmap.get_cached_mapping(context)
         self.headers = {}
+        self._datasets_since = datasets_since
 
     def __iter__(self):
-        return iter(self.sources)
+        """Return the sources from self with EXPTIME >= self.datasets_since."""
+        for source in self.sources:
+            instrument = self.ctx.get_instrument(self.header(source))
+            exptime = matches.get_exptime(self.header(source))
+            since = self.datasets_since(instrument)
+            if exptime >= since:
+                yield source
+            else:
+                log.verbose("Dropping source", repr(source), 
+                            "with EXPTIME =", repr(exptime),
+                            "< --datasets-since =", repr(since))
     
+    def datasets_since(self, instrument):
+        if isinstance(self._datasets_since, dict):
+            return self._datasets_since[instrument.lower()]
+        else:
+            return self._datasets_since
+
     def header(self, source):
         """Return the full header corresponding to `source`.   Source is a dataset id or filename."""
         return self.headers[source]
-    
+        
     def get_lookup_parameters(self, source):
         """Return the parameters corresponding to `source` used to drive a best references lookup."""
         try:
@@ -138,9 +156,9 @@ class FileHeaderGenerator(HeaderGenerator):
 
 class DatasetHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from dataset ids.   Server/DB bases"""
-    def __init__(self, context, datasets):
+    def __init__(self, context, datasets, datasets_since):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
-        super(DatasetHeaderGenerator, self).__init__(context, datasets)
+        super(DatasetHeaderGenerator, self).__init__(context, datasets, datasets_since)
         server = api.get_crds_server()
         log.info("Dumping dataset parameters from CRDS server at", repr(server), "for", repr(datasets))
         self.headers = api.get_dataset_headers_by_id(context, datasets)
@@ -150,10 +168,9 @@ class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
     def __init__(self, context, instruments, datasets_since):
         """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
-        super(InstrumentHeaderGenerator, self).__init__(context, instruments)
+        super(InstrumentHeaderGenerator, self).__init__(context, instruments, datasets_since)
         self.context = context
         self.instruments = instruments
-        self.datasets_since = datasets_since
         self.sources = self.download_datasets()
 
     def download_datasets(self):
@@ -161,10 +178,10 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         server = api.get_crds_server()
         sorted_sources = []
         for instrument in self.instruments:
-            since_date = self.datasets_since if self.datasets_since else "forever"
+            since_date = self.datasets_since(instrument)
             log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server),
                      "since", repr(since_date))
-            more = api.get_dataset_headers_by_instrument(self.context, instrument, self.datasets_since)
+            more = api.get_dataset_headers_by_instrument(self.context, instrument, since_date)
             log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server at", repr(server),
                      "since", repr(since_date))
             self.headers.update(more)
@@ -175,9 +192,9 @@ class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
     using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
     """
-    def __init__(self, context, pickles, only_ids=None):
+    def __init__(self, context, pickles, datasets_since, only_ids=None):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
-        super(PickleHeaderGenerator, self).__init__(context, pickles)
+        super(PickleHeaderGenerator, self).__init__(context, pickles, datasets_since)
         for pickle in pickles:
             log.info("Loading pickle file", repr(pickle))
             with open(pickle, "rb") as pick:
@@ -387,8 +404,7 @@ and debug output.
             self.args.instruments = self.affected_instruments.keys()
         
         if self.args.datasets_since == "auto":
-            new_references = diff.get_added_references(self.old_context, self.new_context)
-            datasets_since = exptime = matches.get_minimum_exptime(self.new_context, new_references)
+            datasets_since = self.auto_datasets_since()
         else:
             datasets_since = self.args.datasets_since
 
@@ -402,7 +418,23 @@ and debug output.
 
         if self.args.files and not self.args.update_bestrefs:
             log.info("No file header updates requested;  dry run.")
-            
+    
+    def auto_datasets_since(self):
+        """Support --datasets-since="auto" and compute min EXPTIME for all references determined by diffs.
+        
+        Returns { instrument: EXPTIME, ... }
+        """
+        datasets_since = {}
+        for instrument in self.oldctx.selections:
+            old_imap = self.oldctx.get_imap(instrument)
+            new_imap = self.newctx.get_imap(instrument)
+            new_references = diff.get_added_references(old_imap, new_imap)
+            if new_references:
+                datasets_since[instrument] = exptime = matches.get_minimum_exptime(new_imap.name, new_references)
+        log.info("Possibly affected --datasets-since determined by differences between", repr(self.old_context), "and", 
+                 repr(self.new_context), "is:\n", log.PP(datasets_since))
+        return datasets_since
+       
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         
@@ -456,6 +488,10 @@ and debug output.
             help="Print names of data sets for which the new context would assign new references.",
             action="store_true")
     
+        self.add_argument("--print-affected-details",
+            help="Include instrument and affected types in addition to names of affected datasets.",
+            action="store_true")
+    
         self.add_argument("--print-new-references",
             help="Prints messages detailing each reference file change.   If no comparison "
                 "was requested,  prints all best references.",
@@ -484,7 +520,7 @@ and debug output.
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         self.add_argument("--datasets-since", default="1900-01-01T00:00:00", type=reformat_date_or_auto,
-            help="Date prior to which datasets are not considered for context change effects.")
+            help="Date prior to which datasets are not considered for context change effects.  Use 'auto' to exploit reference USEAFTER.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
     
@@ -572,11 +608,11 @@ and debug output.
         assert (4 - source_modes <= 1) and (source_modes + int(bool(self.args.load_pickles)) >= 1), \
             "Must specify one and only one of: --files, --datasets, --instruments, --all-instruments, --load-pickles."
         if self.args.files:
-            new_headers = FileHeaderGenerator(context, self.args.files)
+            new_headers = FileHeaderGenerator(context, self.args.files, datasets_since)
             # log.info("Computing bestrefs for dataset files", self.args.files)
         elif self.args.datasets:
             self.require_server_connection()
-            new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets])
+            new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets], datasets_since)
             log.info("Computing bestrefs for datasets", repr(self.args.datasets))
         elif self.args.instruments or self.args.all_instruments:
             self.require_server_connection()
@@ -590,7 +626,8 @@ and debug output.
             raise RuntimeError("Invalid header source configuration.   "
                                "Specify --files, --datasets, --instruments, --all-instruments, or --load-pickles.")
         if self.args.load_pickles:
-            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles, only_ids=self.args.only_ids)
+            self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles, only_ids=self.args.only_ids, 
+                                                        datasets_since=datasets_since)
             if new_headers:   # combine partial correction headers field-by-field 
                 new_headers.update_headers(self.pickle_headers.headers, only_ids=self.args.only_ids)
             else:   # assume pickles-only sources are all complete snapshots
@@ -605,7 +642,8 @@ and debug output.
             self.args.old_context or \
             self.args.compare_source_bestrefs or \
             self.args.update_bestrefs or \
-            self.args.print_affected 
+            self.args.print_affected or \
+            self.args.print_affected_details
         old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
@@ -824,10 +862,14 @@ and debug output.
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
         self.warn_bad_updates()
-        if self.args.print_affected:
+        if self.args.print_affected or self.args.print_affected_details:
             for dataset in self.updates:
                 if self.updates[dataset]:
-                    print(dataset) 
+                    if self.args.print_affected_details:
+                        types = sorted([update.filekind for update in self.updates[dataset]])
+                        print("{} {} {}".format(dataset, self.updates[dataset][0].instrument.lower(), " ".join(types)))
+                    else:
+                        print(dataset) 
         if self.args.print_new_references:
             for dataset in self.updates:
                 for reftype in self.updates[dataset]:

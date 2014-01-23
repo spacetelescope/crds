@@ -639,6 +639,11 @@ class Mapping(object):
         """Return a JSON representation of this mapping and it's children."""
         return json.dumps(self.todict(recursive=recursive))
 
+    def get_instrument(self, header):
+        """Return the name of the instrument which corresponds to `header`.   Called for unknown-mapping types.
+        Overridden by PipelineMapping which figures it out from header.
+        """
+        return self.instrument
 # ===================================================================
 
 class ContextMapping(Mapping):
