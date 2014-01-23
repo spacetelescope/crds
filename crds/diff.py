@@ -280,16 +280,16 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
                     instrs[instrument].add(filekind)
     return { key:list(val) for (key,val) in instrs.items() }
 
-def get_added_files(old_pmap, new_pmap):
+def get_added_references(old_pmap, new_pmap, cached=True):
     """Return the list of references from `new_pmap` which were not in `old_pmap`."""
-    old_pmap = rmap.asmapping(old_pmap)
-    new_pmap = rmap.asmapping(new_pmap)
+    old_pmap = rmap.asmapping(old_pmap, cached=cached)
+    new_pmap = rmap.asmapping(new_pmap, cached=cached)
     return sorted(list(set(new_pmap.reference_names()) - set(old_pmap.reference_names())))
 
-def get_removed_files(old_pmap, new_pmap):
+def get_removed_references(old_pmap, new_pmap, cached=True):
     """Return the list of references from `new_pmap` which were not in `old_pmap`."""
-    old_pmap = rmap.asmapping(old_pmap)
-    new_pmap = rmap.asmapping(new_pmap)
+    old_pmap = rmap.asmapping(old_pmap, cached=cached)
+    new_pmap = rmap.asmapping(new_pmap, cached=cached)
     return sorted(list(set(old_pmap.reference_names()) - set(new_pmap.reference_names())))
 
 # ==============================================================================================================
