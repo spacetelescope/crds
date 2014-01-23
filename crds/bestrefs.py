@@ -58,8 +58,16 @@ class HeaderGenerator(object):
                             "< --datasets-since =", repr(since))
     
     def datasets_since(self, instrument):
+        """Return the earliest dataset processed cut-off date for `instrument`.
+        
+        If a universal since-date is in effect,  just return it.
+        
+        If the since-date varies by instrument, but is not defined for `instrument`, return
+        a value equivalent to the end-of-time since it means that no references for `instrument`
+        were identified by --datsets-since=auto.
+        """
         if isinstance(self._datasets_since, dict):
-            return self._datasets_since[instrument.lower()]
+            return self._datasets_since.get(instrument.lower(),  "9999 23:59:59")
         else:
             return self._datasets_since
 
@@ -431,8 +439,8 @@ and debug output.
             new_references = diff.get_added_references(old_imap, new_imap)
             if new_references:
                 datasets_since[instrument] = exptime = matches.get_minimum_exptime(new_imap.name, new_references)
-        log.info("Possibly affected --datasets-since determined by differences between", repr(self.old_context), "and", 
-                 repr(self.new_context), "is:\n", log.PP(datasets_since))
+        log.info("Possibly affected --datasets-since dates determined by differences between", 
+                 repr(self.old_context), "and", repr(self.new_context), "are:\n", log.PP(datasets_since))
         return datasets_since
        
     def add_args(self):
