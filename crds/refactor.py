@@ -83,7 +83,7 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
             "Rules update failure.  Deleted" + repr(reference) + " still appears in new rmap."
     return new
 
-def rmap_check_modifications(old_rmap, new_rmap, expected=("add",)):
+def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("add",)):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
     limited to the types listed in `expected`.
     
@@ -101,6 +101,12 @@ def rmap_check_modifications(old_rmap, new_rmap, expected=("add",)):
             log.error("Expected one of", repr(expected), "but got", repr(actual),
                       "from change", repr(difference))
             as_expected = False
+    old_count = len([line for line in open(old_rmap).readlines() if old_ref in line])
+    new_count = len([line for line in open(new_rmap).readlines() if new_ref in line])
+    if "replace" in expected and old_count != new_count:
+        log.error("Replacement COUNT DIFFERENCE replacing", repr(old_ref), "with", repr(new_ref), "in", repr(old_rmap),
+                  old_count, "vs.", new_count)
+        as_expected = False
     return as_expected
 
 # ============================================================================
