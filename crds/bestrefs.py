@@ -439,8 +439,8 @@ and debug output.
             new_references = diff.get_added_references(old_imap, new_imap)
             if new_references:
                 datasets_since[instrument] = exptime = matches.get_minimum_exptime(new_imap.name, new_references)
-        log.info("Possibly affected --datasets-since dates determined by differences between", 
-                 repr(self.old_context), "and", repr(self.new_context), "are:\n", log.PP(datasets_since))
+        log.info("Possibly affected --datasets-since dates determined by", 
+                 repr(self.old_context), "-->", repr(self.new_context), "are:\n", log.PP(datasets_since))
         return datasets_since
        
     def add_args(self):
