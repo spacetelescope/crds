@@ -7,14 +7,12 @@ lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|
 A number of command line switches control output formatting.
 
 The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
-
->>> find_full_match_paths("hst.pmap", "u451251ej_bpx.fits")
-[((('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'bpixtab')), (('DETECTOR', 'SBC'),), (('DATE-OBS', '1993-01-01'), ('TIME-OBS', '00:00:00')))]
-
 """
 import os.path
+from pprint import pprint as pp
 
 from crds import rmap, log, cmdline
+
 
 # ===================================================================
 
@@ -30,9 +28,93 @@ def find_full_match_paths(context, reffile):
     list of tuples of tuples.   Each inner tuple is a (var, value) pair.
     
     Returns [((context_tuples,),(match_tuple,),(useafter_tuple,)), ...]
+    
+    >>> pp(find_full_match_paths("hst.pmap", "q9e1206kj_bia.fits"))    
+    [((('observatory', 'hst'), ('instrument', 'acs'), ('filekind', 'biasfile')),
+      (('DETECTOR', 'HRC'),
+       ('CCDAMP', 'A'),
+       ('CCDGAIN', '4.0'),
+       ('APERTURE', '*'),
+       ('NAXIS1', '<=2048'),
+       ('NAXIS2', '1044.0'),
+       ('LTV1', '19.0'),
+       ('LTV2', '20.0'),
+       ('XCORNER', 'N/A'),
+       ('YCORNER', 'N/A'),
+       ('CCDCHIP', 'N/A')),
+      (('DATE-OBS', '2006-07-04'), ('TIME-OBS', '11:32:35')))]
     """
     ctx = rmap.get_cached_mapping(context)
     return ctx.file_matches(reffile)
+
+def find_match_paths_as_dict(context, reffile):
+    """Return the matching parameters for reffile as a list of dictionaries, one dict for
+    each match case giving the parameters of that match.
+
+    >>> pp(find_match_paths_as_dict("hst.pmap", "q9e1206kj_bia.fits"))
+    [{'APERTURE': '*',
+      'CCDAMP': 'A',
+      'CCDCHIP': 'N/A',
+      'CCDGAIN': '4.0',
+      'DATE-OBS': '2006-07-04',
+      'DETECTOR': 'HRC',
+      'LTV1': '19.0',
+      'LTV2': '20.0',
+      'NAXIS1': '<=2048',
+      'NAXIS2': '1044.0',
+      'TIME-OBS': '11:32:35',
+      'XCORNER': 'N/A',
+      'YCORNER': 'N/A',
+      'filekind': 'biasfile',
+      'instrument': 'acs',
+      'observatory': 'hst'}]
+    """
+    matches = find_full_match_paths(context, reffile)
+    return [ _flatten_items_to_dict(match) for match in matches ]
+
+def _flatten_items_to_dict(match_path):
+    """Given a `match_path` which is a sequence of parameter items and sub-paths,  return
+    a flat dictionary representation:
+    
+    returns   { matchinhg_par:  matching_par_value, ...}
+    """
+    result = {}
+    for par in match_path:
+        if len(par) == 2 and isinstance(par[0], basestring) and isinstance(par[1], basestring):
+            result[par[0]] = par[1]
+        else:
+            result.update(_flatten_items_to_dict(par))
+    return result
+
+def get_minimum_exptime(context, references):
+    """Return the minimum EXPTIME for the list of `references` with respect to `context`.
+    This is used to define the potential reprocessing impact of new references,  since
+    no dataset with an earlier EXPTIME than a reference is typically affected by the 
+    reference,  partciularly with respect to the HST USEAFTER approach.
+    
+    >>> get_minimum_exptime("hst.pmap", ["q9e1206kj_bia.fits"])
+    '2006-07-04 11:32:35'
+    """
+    return min([_get_minimum_exptime(context, ref) for ref in references])
+
+def _get_minimum_exptime(context, reffile):
+    """Given a `context` and a `reffile` in it,  return the minimum EXPTIME for all of
+    it's match paths constructed from DATE-OBS and TIME-OBS.
+    """
+    path_dicts = find_match_paths_as_dict(context, reffile)
+    exptimes = [ _get_exptime(path_dict) for path_dict in path_dicts ]
+    return min(exptimes)
+
+def _get_exptime(match_dict):
+    """Given a `match_dict` dictionary of matching parameters for one match path,
+    return the EXPTIME for it or 1900-01-01 00:00:00 if no EXPTIME can be derived.
+    """
+    if "DATE-OBS" in match_dict and "TIME-OBS" in match_dict:
+        return match_dict["DATE-OBS"] + " " + match_dict["TIME-OBS"]
+    elif "META.OBSERVATION.DATE" in match_dict:
+        return match_dict["META.OBSERVATION.DATE"]
+    else:
+        return "1900-01-01 00:00:00"        
 
 # ===================================================================
 
@@ -131,6 +213,6 @@ lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND'
         else:
             tup = tup[0], repr(tup[1])
             return "=".join(tup if not self.args.omit_parameter_names else tup[1:])
-    
+        
 if __name__ == "__main__":
     MatchesScript()()
