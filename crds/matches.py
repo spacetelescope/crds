@@ -44,7 +44,7 @@ def find_full_match_paths(context, reffile):
        ('CCDCHIP', 'N/A')),
       (('DATE-OBS', '2006-07-04'), ('TIME-OBS', '11:32:35')))]
     """
-    ctx = rmap.get_cached_mapping(context)
+    ctx = rmap.asmapping(context, cached=True)
     return ctx.file_matches(reffile)
 
 def find_match_paths_as_dict(context, reffile):
@@ -102,10 +102,10 @@ def _get_minimum_exptime(context, reffile):
     it's match paths constructed from DATE-OBS and TIME-OBS.
     """
     path_dicts = find_match_paths_as_dict(context, reffile)
-    exptimes = [ _get_exptime(path_dict) for path_dict in path_dicts ]
+    exptimes = [ get_exptime(path_dict) for path_dict in path_dicts ]
     return min(exptimes)
 
-def _get_exptime(match_dict):
+def get_exptime(match_dict):
     """Given a `match_dict` dictionary of matching parameters for one match path,
     return the EXPTIME for it or 1900-01-01 00:00:00 if no EXPTIME can be derived.
     """
