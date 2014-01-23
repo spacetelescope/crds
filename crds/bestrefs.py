@@ -14,7 +14,7 @@ import gc
 import pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp)
+from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches)
 from crds.client import api
 
 # ===================================================================
@@ -217,6 +217,15 @@ def update_file_bestrefs(pmap, dataset, updates):
 
 # ============================================================================
 
+def reformat_date_or_auto(date):
+    """Add 'auto' as an extra valid value for --datasets-since dates.  Auto means figure out dates-since
+    based on USEAFTER dates (recorded in rmaps as DATE-OBS TIME-OBS or META.OBSERVATION.DATE).
+    """
+    if date.lower() == "auto":
+        return "auto"
+    else:
+        return timestamp.reformat_date(date)
+
 class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """Command line script for determining best references for a sequence of dataset files."""
 
@@ -362,7 +371,7 @@ and debug output.
         if self.args.remote_bestrefs:
             os.environ["CRDS_MODE"] = "remote"
             
-        self.datasets_since = self.args.datasets_since or "1900-01-01T00:00:00"
+        self.datasets_since = self.args.datasets_since
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -377,10 +386,16 @@ and debug output.
                     log.PP(self.affected_instruments))
             self.args.instruments = self.affected_instruments.keys()
         
-        # headers corresponding to the new context
-        self.new_headers = self.init_headers(self.new_context)
+        if self.args.datasets_since == "auto":
+            new_references = diff.get_added_references(self.old_context, self.new_context)
+            datasets_since = exptime = matches.get_minimum_exptime(self.new_context, new_references)
+        else:
+            datasets_since = self.args.datasets_since
 
-        self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison()
+        # headers corresponding to the new context
+        self.new_headers = self.init_headers(self.new_context, datasets_since)
+
+        self.compare_prior, self.old_headers, self.old_bestrefs_name = self.init_comparison(datasets_since)
                 
         if not self.compare_prior:
             log.info("No comparison context or source comparison requested.")
@@ -468,7 +483,7 @@ and debug output.
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
-        self.add_argument("--datasets-since", default = None, type=timestamp.reformat_date,
+        self.add_argument("--datasets-since", default="1900-01-01T00:00:00", type=reformat_date_or_auto,
             help="Date prior to which datasets are not considered for context change effects.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
@@ -550,7 +565,7 @@ and debug output.
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
         return filename
     
-    def init_headers(self, context):
+    def init_headers(self, context, datasets_since):
         """Create header a header generator for `context`,  interpreting command line parameters."""
         source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
                         self.args.all_instruments].count(None)
@@ -567,7 +582,7 @@ and debug output.
             self.require_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
             log.info("Computing bestrefs for db datasets for", repr(instruments))
-            new_headers = InstrumentHeaderGenerator(context, instruments, self.datasets_since)
+            new_headers = InstrumentHeaderGenerator(context, instruments, datasets_since)
         elif self.args.load_pickles:
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
@@ -582,7 +597,7 @@ and debug output.
                 new_headers = self.pickle_headers
         return new_headers
         
-    def init_comparison(self):
+    def init_comparison(self, datasets_since):
         """Interpret command line parameters to determine comparison mode."""
         assert not (self.args.old_context and self.args.compare_source_bestrefs), \
             "Cannot specify both --old-context and --compare-source-bestrefs."
@@ -596,7 +611,7 @@ and debug output.
             if self.args.old_context:
                 # XXXX in old contexts, matching parameters and expected result types might have been different.
                 # XXXX for now,  just ensure they're the same,  lesser likelihood of error.
-                # old_headers = self.init_headers(self.args.old_context)
+                # old_headers = self.init_headers(self.args.old_context, datasets_since)
                 log.verbose_warning("Assuming parameter names and required types are the same across contexts.")
                 old_headers = self.new_headers
                 old_fname = self.args.old_context
