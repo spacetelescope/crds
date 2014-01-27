@@ -875,9 +875,9 @@ and debug output.
                 if self.updates[dataset]:
                     if self.args.print_affected_details:
                         types = sorted([update.filekind for update in self.updates[dataset]])
-                        print("{} {} {}".format(dataset, self.updates[dataset][0].instrument.lower(), " ".join(types)))
+                        print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
                     else:
-                        print(dataset) 
+                        print(dataset.lower()) 
         if self.args.print_new_references:
             for dataset in self.updates:
                 for reftype in self.updates[dataset]:
