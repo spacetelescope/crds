@@ -317,7 +317,7 @@ The CRDS sync tool is used to download CRDS rules and references from the CRDS s
 
   would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
   be checked for correct length, and reject and blacklist status.   Files reported as rejected or blacklisted by the 
-  server would be removed.
+  server would be removed.    
     
 crds.bestrefs
 -------------
@@ -390,7 +390,7 @@ The two primary modes for bestrefs involve the source of reference file matching
 lookup parameters are always associated with particular datasets and used to identify the references
 required to process those datasets.
 
-The options ``--files``, ``--datasets``, ``--instruments``, and ``--all`` determine the source of lookup parameters:
+The options ``--files``, ``--datasets``, ``--instruments``, and ``--all-instruments`` determine the source of lookup parameters:
 
 1. To find best references for a list of files do something like this::
 
@@ -408,11 +408,11 @@ the first parameter, hst.pmap,  is the context with respect to which best refere
 
 4. To do mass scale testing for all supported instruments for all cataloged datasets do::
 
-    % python -m crds.bestrefs --new-context hst.pmap --all
+    % python -m crds.bestrefs --new-context hst.pmap --all-instruments
     
 or to test for differences between two contexts do::
 
-    % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all
+    % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all-instruments
 
 ................
 Comparison Modes
@@ -472,6 +472,7 @@ Verbosity
 .........
 
 crds.bestrefs has ``--verbose`` and ``--verbosity=N`` parameters which can increase the amount of informational and debug output.
+
 
 
 pipeline_bestrefs

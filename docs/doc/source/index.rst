@@ -16,6 +16,7 @@ CRDS User Manual
    command_line_tools.rst
    web_site_use.rst
    web_services.rst
+   database.rst
  
 
 .. comment
