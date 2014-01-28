@@ -1,89 +1,9 @@
-"""
-"""
+"""Special case code for WFC3."""
 
 import crds.log as log
 import crds.rmap as rmap
 
 # =======================================================================
-
-"""
-Header substitution notes:
---------------------------
-
-The original CRDS rmap generator scraped rmap information from the CDBS web 
-pages.   The CDBS web pages displayed un-expanded aperture values.   Later
-CRDS switched to generating rmaps from the expanded rows found in the CDBS
-database reffile_ops.   The expanded rows effectively have the substitutions
-specified below already implemented.
-
-Testing with the biasfile special case code found that it gives the wrong
-answers for hundreds of cases.  Disabling the special case code reduced the
-biasfile error count against the catalog to 26 over all datasets.  Further
-refining best reference error counts using OPUS reduced the error counts
-further,  possibly to zero,  indicating that the special case handling should
-simply be turned off.
-
-** See WFC3 TIR-2009-03, Changes to CDBS expansion and selection criteria
-   for WFC3 UVIS bias reference files
-
-DETECTOR = UVIS
-
-For WFC3,  the aperture value listed in the reference file is expanded into
-many CDBS records with replacement APERTUREs.  Best Reference matches the
-APERTURE value in the dataset to the APERTURE value in CDBS records... not the
-unexpanded APERTURE from the reference file header.
-
-WFC3_EXPANDED_APERTURES as the form:
-
-  {  (BINAXIS1, BINAXIS2, APERTURE)   :  [APERTURE_EXPANSIONS]  }
-
-CRDS expands the reference file APERTURE at rmap creation time.
-
-NOTE:  since switching to database driven rmap creation,  the substitution
-source values no longer appear in the rmaps.
-
-"""
-
-header_substitutions = {
-    "APERTURE" : {
-        "FULLFRAME_4AMP" : (
-            "UVIS", "UVIS-FIX", "UVIS1", "UVIS1-FIX", "UVIS2", "UVIS2-FIX",
-            "UVIS-CENTER", "UVIS-QUAD","UVIS-QUAD-FIX","G280-REF",
-        ),
-        "QUAD_CORNER_SUBARRAYS" : (
-            "UVIS-QUAD-SUB",
-            "UVIS1-C512A-SUB", "UVIS1-C512B-SUB",
-            "UVIS2-C512C-SUB", "UVIS2-C512D-SUB",
-        ),
-        "CHIP1_SUB_NOCORNERS" : (
-            "UVIS1-2K4-SUB", "UVIS1-M512-SUB",
-        ),
-        "CHIP2_SUB_NOCORNERS" : (
-            "UVIS2-2K4-SUB", "UVIS2-M512-SUB",
-        ),
-        "FULLFRAME_2AMP" : (
-            "UVIS", "UVIS-FIX", "UVIS1", "UVIS1-FIX", "UVIS2", "UVIS2-FIX",
-            "UVIS-CENTER",
-        ),
-        "CUSTOM_SUBARRAYS" : (
-            "UVIS", "UVIS-FIX", "UVIS1", "UVIS1-FIX", "UVIS2", "UVIS2-FIX",
-            "UVIS-CENTER", "UVIS-QUAD", "UVIS-QUAD-FIX", "G280-REF"
-        ),
-        "*" : (
-            "UVIS", "UVIS-FIX", "UVIS1", "UVIS1-FIX", "UVIS2", "UVIS2-FIX",
-            "UVIS-CENTER", "UVIS-QUAD", "UVIS-QUAD-FIX", "G280-REF"
-        ),
-    },
-    'CCDAMP' : {
-        'G280_AMPS' : ('ABCD','A','B','C','D','AC','AD','BC','BD'), 
-    },
-}
-
-biasfile_header_additions = [
-    ("substitutions", header_substitutions),
-]
-
-# =========================================================================
 
 """example of adding a hard-coded rmap clause in HST:"""
 
@@ -104,27 +24,28 @@ def wfc3_flshfile_filter(kmap):
     return kmap, []
 
 # =========================================================================
+
+def wfc3_biasfile_filter(kmap):
+    header_additions = {
+        "hooks" : {
+            "precondition_header" : "precondition_header_wfc3_biasfile_v1",
+            },
+        }
+    return kmap, header_additions
+
+# =========================================================================
+
 """Example of mutating dataset header values prior to match based on header."""
 
-'''
-def precondition_header(rmap, header):
-    if rmap.filekind == "biasfile":
-        return header   # XXX do nothing
-        return _precondition_header_biasfile(header)
-    else:
-        return header
-    
-def _precondition_header_biasfile(header_in):
+def precondition_header_wfc3_biasfile_v1(header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.
     """
     header = dict(header_in)
-    subarray = header["SUBARRAY"]
-    aperture = header["APERTURE"]
-    if subarray == "T" and "SUB" not in aperture:
+    if header["SUBARRAY"] == "T" and "SUB" not in header["APERTURE"]:
         header["APERTURE"] = "*"
     return header
-'''
+
 
 '''
 This is the original CDBS code for wfc3 biasfile which generates SQL for matching
