@@ -21,15 +21,6 @@ def precondition_header(rmap, header):
         return header
 '''
 
-def fallback_header(rmap, header):
-    """If the first attempt at a match fails,  this function is called to mutate the
-    dataset header prior to a second attempt at a match.
-    """
-    if rmap.filekind == "flatfile":
-        return fallback_header_flatfile_v1(rmap, header)
-    else:
-        return None
-
 def fallback_header_flatfile_v1(rmap, header):
     """Compute a fallback header for WFPC2 BIASFILE."""
     filter1 = header["FILTER1"]
