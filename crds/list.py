@@ -3,6 +3,7 @@ mapping files associated with the specified contexts by consulting the CRDS
 server.   More generally it's for printing out information on CRDS files.
 """
 from __future__ import print_function
+import os.path
 
 from crds import cmdline, rmap, log, config
 from crds.client import api
@@ -63,10 +64,8 @@ class ListScript(cmdline.ContextsScript):
             help="prints out matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
             help="print out CRDS configuration information.")
-        self.add_argument("--cat", action="store_true", default=False, dest="cat",
-            help="print out the text of a mapping file.")
-        self.add_argument("--files", nargs="*", dest="files",
-            help="print out the text of a mapping file.")
+        self.add_argument("--cat", nargs="+", dest="cat", metavar="FILES",
+            help="print out the text of the specified mapping files.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -84,9 +83,17 @@ class ListScript(cmdline.ContextsScript):
         if self.args.config:
             self.list_config()
         if self.args.cat:
-            for name in self.files:
-                print("#"*80)
-                print(open(name).read())
+            self.cat_files()
+
+    def cat_files(self):
+        """Print out the files listed after --cat"""
+        self.args.files = self.args.cat   # determine observatory from --cat files.
+        for name in self.files:
+            print("#"*120)
+            path = os.path.abspath(name)
+            print("File: ", repr(path))
+            print("#"*120)
+            print(open(path).read())
             
     def list_references(self):
         """Consult the server and print the names of all references associated with
