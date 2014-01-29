@@ -63,6 +63,10 @@ class ListScript(cmdline.ContextsScript):
             help="prints out matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
             help="print out CRDS configuration information.")
+        self.add_argument("--cat", action="store_true", default=False, dest="cat",
+            help="print out the text of a mapping file.")
+        self.add_argument("--files", nargs="*", dest="files",
+            help="print out the text of a mapping file.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -79,6 +83,10 @@ class ListScript(cmdline.ContextsScript):
             self.list_datasets()
         if self.args.config:
             self.list_config()
+        if self.args.cat:
+            for name in self.files:
+                print("#"*80)
+                print(open(name).read())
             
     def list_references(self):
         """Consult the server and print the names of all references associated with
