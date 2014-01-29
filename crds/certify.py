@@ -540,7 +540,7 @@ class ReferenceCertifier(Certifier):
                 mode_columns = g_rmap.locate.get_row_keys(g_rmap)
                 log.info("Table unique-row-keys defined as", repr(mode_columns))
             except:
-                log.warning("Table unique-row-keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED.")
+                log.warning("Table unique-row-keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED. Skipping table mode checks.")
         return mode_columns
             
     def certify_reference_modes(self):
