@@ -1,15 +1,15 @@
-__svn_version__ = '1372M'
+__svn_version__ = '1375:1376M'
 
 __full_svn_info__ = '''
 Path: .
 URL: https://subversion.assembla.com/svn/crds/trunk
 Repository Root: https://subversion.assembla.com/svn/crds
 Repository UUID: 0d8f46c8-9b30-49d0-b470-0f6283dc92e8
-Revision: 1372
+Revision: 1375
 Node Kind: directory
 Schedule: normal
 Last Changed Author: stsci_jmiller
-Last Changed Rev: 1372
-Last Changed Date: 2014-01-27 17:20:51 -0500 (Mon, 27 Jan 2014)
+Last Changed Rev: 1375
+Last Changed Date: 2014-01-28 20:30:19 -0500 (Tue, 28 Jan 2014)
 
 '''

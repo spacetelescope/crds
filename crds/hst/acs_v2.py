@@ -8,6 +8,7 @@ Added "hooks" to newly generated rmap headers provided acs_biasfile_filter is im
 
 Simplified rmap generation process.
 """
+import copy
 
 from .acs_common import *
 
@@ -65,8 +66,7 @@ BIASFILE_PARKEYS = ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NAXIS1', 'NAXI
 # , ('DATE-OBS', 'TIME-OBS')),
 
 def fallback_header_acs_biasfile_v2(rmap, header_in):
-    """Mutates dataset header for 2nd try when primary match fails.
-    """
+    """Mutates dataset header for 2nd try when primary match fails."""
     header = precondition_header_acs_biasfile_v2(rmap, header_in)
     log.verbose("No matching BIAS file found for",
                "NAXIS1=" + repr(header['NAXIS1']),
@@ -93,7 +93,7 @@ def acs_biasfile_filter(kmap_orig):
     """
     Post-SM4 APERTURE's of '' were all replaced and cannot match,  hence dropped at CRDS rmap generation time.
     """
-    kmap = dict(kmap_orig)
+    kmap = copy.deepcopy(kmap_orig)
     header_additions = {
         "hooks" : {
             "precondition_header" : "precondition_header_acs_biasfile_v2",
@@ -103,11 +103,18 @@ def acs_biasfile_filter(kmap_orig):
     for match in kmap_orig:
         header = dict(zip(BIASFILE_PARKEYS, match))
         if header["APERTURE"] == "":
-            kmap[match] = list(kmap[match])
-            for filemap in kmap[match]:
+            for filemap in kmap_orig[match]:
                 if filemap.date > SM4:
-                    log.warning("Removing empty post-SM4 APERTURE", repr(filemap))
-                    kmap[match].remove(filemap)
+                    log.warning("Removing empty post-SM4 APERTURE for", repr(filemap))
+                else:  # conceptually,  N/A.   To prevent conincidental stronger matches: *.
+                    log.warning("Setting empty pre-SM4 APERTURE to '*' for", repr(filemap))
+                    new_match = match[0:3] + ("*",) + match[4:]
+                    if new_match not in kmap:
+                        kmap[new_match] = []
+                    if filemap not in kmap[new_match]:
+                        kmap[new_match].append(filemap)
+                        kmap[new_match].sort()
+                kmap[match].remove(filemap)
             if not kmap[match]:
                 log.warning("Removing empty match", repr(match))
                 del kmap[match]

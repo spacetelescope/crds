@@ -983,14 +983,10 @@ class ReferenceMapping(Mapping):
         if hooks:  # Either get the replacement name,  or use the original name if not found.
             hook_name = hooks.get(name, name)
         else:  # No hooks dict,  just use the original name.
-            hook_name = name
+            hook_name = "_".join([name, self.instrument, self.filekind, "v1"])
         hook = getattr(self.instr_package, hook_name, default)
         if hook is not default:
-            if hook_name is not name:
-                log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename))
-            else:
-                # Generic hooks are most likely irrelevant,  noops for the types which still show them
-                log.verbose("Using general hook", repr(hook_name), "for rmap", repr(self.basename))            
+            log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename))
         return hook
         
     @property

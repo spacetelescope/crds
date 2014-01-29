@@ -1,20 +1,17 @@
 """Special case code for WFC3."""
 
+import copy
+
 import crds.log as log
 import crds.rmap as rmap
 
 # =======================================================================
 
-"""example of adding a hard-coded rmap clause in HST:"""
-
-# def wfc3_biasfile_filter(kmap):
-#     log.info("Hacking WFC3 Biasfile  APERTURE macros.   Adding t6i1733ei_bia.fits special case.")
-#     kmap[('UVIS', 'G280_AMPS', 1.5, 1.0, 1.0, 'G280-REF', 'T')] = \
-#       [rmap.Filemap(date='1990-01-01 00:00:00', file='t6i1733ei_bia.fits',
-#               comment='Placeholder file. All values set to zero.--------------------------, 12047, Jun 18 2009 05:36PM')]
-#    return kmap, []   # biasfile_header_additions
-
 def wfc3_flshfile_filter(kmap):
+    """Filter to customize WFC3 FLSHFILE for hst_gentools/gen_rmap.py.
+    
+    Adds special case matches to rmap for ZERO|ZEROCUR|OFF.
+    """
     kmap[('N/A', 'N/A', 'N/A', 'N/A', 'ZERO|ZEROCUR|OFF', 'N/A')] = [
         rmap.Filemap(date='1990-01-01 00:00:00', file='w7j1705di_fls.fits', 
                      comment='Hack to support matching CDBS irrelevant answers to irrelevant FLASHCUR cases.'),
@@ -26,6 +23,10 @@ def wfc3_flshfile_filter(kmap):
 # =========================================================================
 
 def wfc3_biasfile_filter(kmap):
+    """Filter to customize WFC3 BIASFILE for hst_gentools/gen_rmap.py.
+    
+    Adds precondition_header() hook to rmap header.   Driven by CDBS special case code.
+    """
     header_additions = {
         "hooks" : {
             "precondition_header" : "precondition_header_wfc3_biasfile_v1",
@@ -33,9 +34,27 @@ def wfc3_biasfile_filter(kmap):
         }
     return kmap, header_additions
 
+def wfc3_darkfile_filter(kmap_orig):
+    """Filter to customize DARKFILE for hst_gentools/gen_rmap.py.
+    
+    Removes dead SUBTYPE='' darkfiles.   Driven by CDBS reffile_ops database defects.
+    """
+    darkfile_match_keys = ('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE')
+    kmap = copy.deepcopy(kmap_orig)
+    for match in kmap_orig:
+        header = dict(zip(darkfile_match_keys, match))
+        if header["SUBTYPE"] == '':
+            header["SUBTYPE"] = "N/A"
+            new_match = tuple(header[key] for key in darkfile_match_keys)
+            for filemap in kmap[match]:
+                log.warning("Re-mapping match with SUBTYPE='' to SUBTYPE='N/A' for", filemap)
+            kmap[new_match] = kmap[match]
+            del kmap[match]
+    return kmap, []
+
 # =========================================================================
 
-"""Example of mutating dataset header values prior to match based on header."""
+"""   match-time hooks """
 
 def precondition_header_wfc3_biasfile_v1(header_in):
     """Mutate the incoming dataset header based upon hard coded rules
@@ -46,6 +65,10 @@ def precondition_header_wfc3_biasfile_v1(header_in):
         header["APERTURE"] = "*"
     return header
 
+
+# =========================================================================
+
+""" CDBS special case code. """
 
 '''
 This is the original CDBS code for wfc3 biasfile which generates SQL for matching
