@@ -206,7 +206,10 @@ class Script(object):
             help="Output profile stats to the specified file.", type=str, default="")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
-
+        
+    def print_help(self):
+        """Print out command line help."""
+        self.parser.print_help()
     
     def require_server_connection(self):
         """Check a *required* server connection and ERROR/exit if offline."""
