@@ -319,7 +319,8 @@ For example:
     
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
     
-    NOTE: mapping logical differences (the default) to not compare CRDS mapping headers.
+    NOTE: mapping logical differences (the default) do not compare CRDS mapping headers,  use
+    --include-header-diffs to get those as well.
     """
     
     def add_args(self):
