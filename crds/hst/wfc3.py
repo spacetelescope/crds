@@ -56,7 +56,7 @@ def wfc3_darkfile_filter(kmap_orig):
 
 """   match-time hooks """
 
-def precondition_header_wfc3_biasfile_v1(header_in):
+def precondition_header_wfc3_biasfile_v1(rmap, header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.
     """
