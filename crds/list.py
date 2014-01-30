@@ -5,6 +5,7 @@ server.   More generally it's for printing out information on CRDS files.
 from __future__ import print_function
 import os.path
 
+import crds
 from crds import cmdline, rmap, log, config
 from crds.client import api
 
@@ -135,6 +136,7 @@ class ListScript(cmdline.ContextsScript):
         _print_dict("CRDS Server Info", server, 
                     ["observatory", "status", "operational_context", "last_synced", 
                      "reference_url", "mapping_url",])
+        _print_dict("CRDS Package", { "crds" : repr(crds) })
     
 def _print_dict(title, d, selected = None):
     """Print out dictionary `d` with a one line `title`."""
