@@ -631,8 +631,10 @@ and debug output.
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
         else:
-            raise RuntimeError("Invalid header source configuration.   "
+            log.error("Invalid header source configuration.   "
                                "Specify --files, --datasets, --instruments, --all-instruments, or --load-pickles.")
+            self.print_help()
+            sys.exit(-1)
         if self.args.load_pickles:
             self.pickle_headers = PickleHeaderGenerator(context, self.args.load_pickles, only_ids=self.args.only_ids, 
                                                         datasets_since=datasets_since)
