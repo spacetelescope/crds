@@ -106,7 +106,11 @@ class UsesScript(cmdline.Script):
 Prints out the mappings which refer to the specified mappings or references.
 
 Prints out the datasets which historically used a particular reference as defined by DADSOPS.
-    """
+
+IMPORTANT:  
+   1. You must specify references on which to operate with --files.
+   2. You must set CRDS_PATH and CRDS_SERVER_URL to give crds.uses access to CRDS mappings and databases.
+"""
 
     epilog = """
 crds.uses can be invoked like this:
@@ -142,9 +146,6 @@ J8BA0LIJQ
 vb41934lj_bia.fits JA7P21A2Q
 vb41934lj_bia.fits JA7P21A4Q
 vb41934lj_bia.fits JA7P21A6Q
-
-Note: it's critical to set CRDS_PATH and CRDS_SERVER_URL correctly.
-
 """
     def add_args(self):
         """Add command line parameters unique to this script."""
@@ -161,6 +162,9 @@ Note: it's critical to set CRDS_PATH and CRDS_SERVER_URL correctly.
         reference files.   Print out the match tuples within the context
         which contain the reference files.
         """
+        if not self.args.files:
+            self.print_help()
+            sys.exit(-1)
         if self.args.print_datasets:
             self.print_datasets_using_references()
         else:
