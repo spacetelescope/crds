@@ -42,7 +42,7 @@ def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, c
     differences = mapping_diffs(old_file, new_file, include_header_diffs=include_header_diffs)
     if mapping_text_diffs:   # only banner when there's two kinds to differentiate
         log.write("="*20, "logical differences",  repr(old_file), "vs.", repr(new_file), "="*20)
-    for diff in differences:
+    for diff in sorted(differences):
         diff = unquote_diff(diff)
         if primitive_diffs:
             log.write("="*80)
@@ -112,6 +112,68 @@ def diff_action(diff):
     elif "header" in diff[-1]:
         result += "_header"
     return result
+# ============================================================================
+
+def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
+    """Return a sorted set of flat tuples describing the matching parameters affected by the differences 
+    between old_file and new_file.
+    """
+    affected = defaultdict(int)
+    differences = mapping_diffs(old_file, new_file, include_header_diffs=include_header_diffs)
+    for diff in differences:
+        mode = affected_mode(diff)
+        if mode is not None:
+            affected[mode] += 1
+    return [ tup + (("DIFF_COUNT", str(affected[tup])),) for tup in sorted(affected) ]
+    
+DEFAULT_EXCLUDED_PARAMETERS = ["DATE-OBS","TIME-OBS","META.OBSERVATION.DATE", "DIFFERENCE", "INSTRUME", "REFTYPE"]
+
+def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
+    """Return a list of parameter items which characterize the effect of a difference in 
+    terms of instrument, type, and instrument mode.
+    """
+    instrument = filekind = None
+    affected = []
+    flat = diff.flat
+    for (i, val) in enumerate(flat):
+        var = flat.parameter_names[i]
+        if var == "PipelineContext":
+            pass
+        elif var == "InstrumentContext":
+            instrument = diff.instrument
+        elif var == "ReferenceMapping":
+            instrument = diff.instrument
+            filekind = diff.filekind
+        elif var not in excluded_parameters:
+            affected.append((var, val))
+    if not affected:
+        return None
+    if filekind:
+        affected = [("REFTYPE", filekind.upper())] + affected
+    if instrument:
+        affected = [("INSTRUMENT", instrument.upper())] + affected
+    return tuple(affected)
+
+def format_affected_mode(mode):
+    """Format an affected mode as a string."""
+    return " ".join(["=".join([item[0], repr(item[1].upper())]) for item in mode])
+
+def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None):
+    """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
+    
+    Returns { affected_instrument : { affected_type, ... } }
+    """
+    instrs = defaultdict(set)
+    diffs = mapping_diffs(old_pmap, new_pmap, include_header_diffs=include_header_diffs)
+    if observatory is None:
+        observatory = rmap.get_cached_mapping(old_pmap).observatory
+    for diff in diffs:
+        for step in diff:
+            if len(step) == 2 and rmap.is_mapping(step[0]):
+                instrument, filekind = utils.get_file_properties(observatory, step[0])
+                if instrument.strip() and filekind.strip():
+                    instrs[instrument].add(filekind)
+    return { key:list(val) for (key,val) in instrs.items() }
 
 # ============================================================================
 
@@ -263,23 +325,6 @@ def difference(observatory, old_file, new_file, primitive_diffs=False, check_dif
     else:
         text_difference(observatory, old_file, new_file)
         
-def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None):
-    """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
-    
-    Returns { affected_instrument : { affected_type, ... } }
-    """
-    instrs = defaultdict(set)
-    diffs = mapping_diffs(old_pmap, new_pmap, include_header_diffs=include_header_diffs)
-    if observatory is None:
-        observatory = rmap.get_cached_mapping(old_pmap).observatory
-    for diff in diffs:
-        for step in diff:
-            if len(step) == 2 and rmap.is_mapping(step[0]):
-                instrument, filekind = utils.get_file_properties(observatory, step[0])
-                if instrument.strip() and filekind.strip():
-                    instrs[instrument].add(filekind)
-    return { key:list(val) for (key,val) in instrs.items() }
-
 def get_added_references(old_pmap, new_pmap, cached=True):
     """Return the list of references from `new_pmap` which were not in `old_pmap`."""
     old_pmap = rmap.asmapping(old_pmap, cached=cached)
@@ -342,6 +387,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
             help="Print out the names of instruments and types which appear in diffs,  rather than diffs.")
+        self.add_argument("--print-affected-modes", dest="print_affected_modes", action="store_true",
+            help="Print out the names of instruments, types, and matching parameters,  rather than diffs.")
 
 
     def main(self):
@@ -355,6 +402,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             return self.print_affected_instruments()
         elif self.args.print_affected_types:
             return self.print_affected_types()
+        elif self.args.print_affected_modes:
+            return self.print_affected_modes()
         else:
             return difference(self.observatory, self.old_file, self.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
@@ -394,6 +443,14 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             for filekind in sorted(instrs[instrument]):
                 if filekind.strip():
                     print("%-10s %-10s" % (instrument, filekind))
+                    
+    def print_affected_modes(self):
+        """Print out all the affected mode tuples associated with the differences.""" 
+        assert rmap.is_mapping(self.old_file) and rmap.is_mapping(self.new_file), \
+            "for --print-affected-modes both files must be mappings."
+        modes = mapping_affected_modes(self.old_file, self.new_file, self.args.include_header_diffs)
+        for affected in modes:
+            print(format_affected_mode(affected))
         
 if __name__ == "__main__":
     DiffScript()()
