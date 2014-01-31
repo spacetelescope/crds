@@ -92,7 +92,7 @@ Compute diffs for two .fits's:
     >>> case = DiffScript(argv="diff.py data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
     >>> case.run()  # doctest:+ELLIPSIS
     <BLANKLINE>
-    ...
+     fitsdiff: 3.1.3.dev
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
@@ -108,6 +108,8 @@ Compute diffs for two .fits's:
              ?          ^
             b> value in 2
              ?          ^
+    <BLANKLINE>
+    No differences found.
              
 Compute primitive diffs for two .rmap's:
 
@@ -132,6 +134,8 @@ Compute primitive diffs for two .rmap's:
              ?          ^
             b> value in 2
              ?          ^
+    <BLANKLINE>
+    No differences found.
 
 Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
 
