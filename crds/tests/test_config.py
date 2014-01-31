@@ -10,6 +10,7 @@ def setup():
     # log.set_verbose()
     # os.environ["CRDS_PATH"] = os.path.join(os.getcwd(), "test_cache")
     log.set_test_mode()
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def cleanup():
     shutil.rmtree(os.environ["CRDS_PATH"])
