@@ -767,6 +767,8 @@ class DiffTuple(tuple):
         pars = keys.pop("parameter_names", None)
         super(DiffTuple, self).__init__()
         self.parameter_names = pars
+        self.instrument = keys.pop("instrument", None)
+        self.filekind = keys.pop("filekind", None)
         
     @property
     def flat(self):
@@ -780,7 +782,7 @@ class DiffTuple(tuple):
             else:
                 pars2.extend(list(par))
                 vals2.extend(list(self[i]))
-        return DiffTuple(*vals2, parameter_names=pars2)
+        return DiffTuple(*vals2, parameter_names=pars2, instrument=self.instrument, filekind=self.filekind)
     
     def items(self):
         """Return [ (param_name, val), ... ]"""

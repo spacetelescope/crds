@@ -520,24 +520,25 @@ class Mapping(object):
         differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:
             if key not in new_mapping.selections:
-                diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
-                    "deleted " + repr(self.selections[key].filename), 
+                diff = selectors.DiffTuple(
+                    * path + ((self.filename, new_mapping.filename), (key,), "deleted " + repr(self.selections[key].filename)),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
             else:
                 diffs = self.selections[key].difference( new_mapping.selections[key],  
-                    path = path + ((self.filename, new_mapping.filename,),), 
+                    path = path + ((self.filename, new_mapping.filename,), ), 
                     pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
                 differences.extend(diffs)
                 if diffs:
-                    diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
-                        "replaced " + repr(self.selections[key].filename) + " with " + repr(new_mapping.selections[key].filename),
+                    diff = selectors.DiffTuple(
+                        * (path + ((self.filename, new_mapping.filename), (key,), 
+                                  "replaced " + repr(self.selections[key].filename) + " with " + repr(new_mapping.selections[key].filename))),
                         parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                     differences.append(diff)
         for key in new_mapping.selections:
             if key not in self.selections:
-                diff = selectors.DiffTuple((self.filename, new_mapping.filename), (key,), 
-                    "added " + repr(new_mapping.selections[key].filename),
+                diff = selectors.DiffTuple(
+                    * path + ((self.filename, new_mapping.filename), (key,), "added " + repr(new_mapping.selections[key].filename)),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
@@ -550,19 +551,19 @@ class Mapping(object):
         differences = []
         for key in self.header:
             if key not in other.header:
-                diff = selectors.DiffTuple((self.filename, other.filename), 
-                    "deleted header " + repr(key) + " = " + repr(self.header[key]),
+                diff = selectors.DiffTuple(
+                    * path + ((self.filename, other.filename), "deleted header " + repr(key) + " = " + repr(self.header[key])),
                     parameter_names = pars + (self.diff_name, "DIFFERENCE",))
                 differences.append(diff)
             elif self.header[key] != other.header[key]:
-                diff = selectors.DiffTuple((self.filename, other.filename), 
-                    "header replaced " + repr(key) + " = " + repr(self.header[key]) + " with " + repr(other.header[key]),
+                diff = selectors.DiffTuple(
+                    * path + ((self.filename, other.filename), "header replaced " + repr(key) + " = " + repr(self.header[key]) + " with " + repr(other.header[key])),
                     parameter_names = pars + (self.diff_name, "DIFFERENCE",))
                 differences.append(diff)
         for key in other.header:
             if key not in self.header:
-                diff = selectors.DiffTuple((self.filename, other.filename), 
-                    "header added " + repr(key) + " = " + repr(other.header[key]),
+                diff = selectors.DiffTuple(
+                    * path + ((self.filename, other.filename), "header added " + repr(key) + " = " + repr(other.header[key])),
                     parameter_names = pars + (self.diff_name, "DIFFERENCE",))
                 differences.append(diff)
         return sorted(differences)
@@ -896,6 +897,13 @@ class InstrumentContext(ContextMapping):
                 return None
             else:  # I think it's always just "rmap".
                 return rmap.get_equivalent_mapping(mapping)
+            
+    def difference(self, *args, **keys):
+        """difference specialized to add .instrument to diff."""
+        diffs = super(InstrumentContext, self).difference(*args, **keys)
+        for diff in diffs:
+            diff.instrument = self.instrument
+        return diffs
 
 # ===================================================================
 
@@ -1141,8 +1149,12 @@ class ReferenceMapping(Mapping):
         body_diffs = self.selector.difference(other.selector, 
                 path = path + ((self.filename, other.filename),),
                 pars = pars + (self.diff_name,))
-        return header_diffs + body_diffs
-    
+        diffs = header_diffs + body_diffs
+        for diff in diffs:
+            diff.instrument = self.instrument
+            diff.filekind = self.filekind
+        return diffs
+
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated in the context of `header` returns False.
         """
