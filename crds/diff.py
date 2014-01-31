@@ -146,6 +146,12 @@ def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
             filekind = diff.filekind
         elif var not in excluded_parameters:
             affected.append((var, val))
+        elif var == "DIFFERENCE" and "header" in val:
+            for boring in ["NAME", "DERIVED_FROM", "SHA1SUM"]:
+                if "REPLACED " + repr(boring) in val.upper():
+                    break
+            else:
+                affected.append((var, val))
     if not affected:
         return None
     if filekind:
@@ -156,7 +162,7 @@ def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
 
 def format_affected_mode(mode):
     """Format an affected mode as a string."""
-    return " ".join(["=".join([item[0], repr(item[1].upper())]) for item in mode])
+    return " ".join(["=".join([item[0], repr(item[1])]) for item in mode])
 
 def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None):
     """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
