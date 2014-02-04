@@ -9,7 +9,7 @@ Match fallbacks implemented as rmap-generation-time weaker matches,  single CRDS
 
 from .acs_common import *
 
-def precondition_header_acs_biasfile_v1(header_in):
+def precondition_header_acs_biasfile_v1(rmap, header_in):
     """Mutate the incoming dataset header based upon hard coded rules
     and the header's contents.   This is an alternative to generating
     an equivalent and bulkier rmap.
@@ -93,9 +93,8 @@ def fallback_header(rmap, header):
 """
 
 #  Originally this was code used to update the ACS BIASFILE rmap with a fallback case.
-#  XXXX this is now dead code,  obsoleted by the build-6 CRDS release.
 
-def reference_match_fallback_header_acs_biasfile_v1(header_in):
+def rmap_update_headers_acs_biasfile_v1(rmap, header_in):
     header = _precondition_header_biasfile(header_in)
 
     if header_matches(header, dict(DETECTOR='WFC', NUMCOLS='4144.0', NUMROWS='2068.0', LTV1='24.0', LTV2='0.0')):

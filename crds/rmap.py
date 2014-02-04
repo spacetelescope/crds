@@ -994,7 +994,7 @@ class ReferenceMapping(Mapping):
             hook_name = "_".join([name, self.instrument, self.filekind, "v1"])
         hook = getattr(self.instr_package, hook_name, default)
         if hook is not default:
-            log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename))
+            log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename), verbosity=55)
         return hook
         
     @property

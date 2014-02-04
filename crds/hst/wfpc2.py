@@ -21,7 +21,7 @@ def precondition_header(rmap, header):
         return header
 '''
 
-def fallback_header_flatfile_v1(rmap, header):
+def fallback_header_wfpc2_flatfile_v1(rmap, header):
     """Compute a fallback header for WFPC2 BIASFILE."""
     filter1 = header["FILTER1"]
     filter2 = header["FILTER2"]
