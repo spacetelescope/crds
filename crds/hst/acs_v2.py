@@ -107,8 +107,8 @@ def acs_biasfile_filter(kmap_orig):
                 if filemap.date > SM4:
                     log.warning("Removing empty post-SM4 APERTURE for", repr(filemap))
                 else:  # conceptually,  N/A.   To prevent conincidental stronger matches: *.
-                    log.warning("Setting empty pre-SM4 APERTURE to '*' for", repr(filemap))
-                    new_match = match[0:3] + ("*",) + match[4:]
+                    log.warning("Setting empty pre-SM4 APERTURE to 'N/A' for", repr(filemap))
+                    new_match = match[0:3] + ("N/A",) + match[4:]
                     if new_match not in kmap:
                         kmap[new_match] = []
                     if filemap not in kmap[new_match]:
