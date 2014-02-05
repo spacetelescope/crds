@@ -8,6 +8,7 @@ A number of command line switches control output formatting.
 
 The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
 """
+import sys
 import os.path
 from pprint import pprint as pp
 
@@ -157,6 +158,9 @@ lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND'
         reference files.   Print out the match tuples within the context
         which contain the reference files.
         """
+        if not self.args.files:
+            self.print_help()
+            sys.exit(-1)
         for ref in self.files:
             cmdline.reference_file(ref)
         for context in self.contexts:
