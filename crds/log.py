@@ -218,10 +218,6 @@ def handle_standard_options(
 
     return options, args
 
-def standard_run(run_str, options, globals_dict, locals_dict):
-    """Use options to step run_str, profile run_str,  or just run it."""
-    exec run_str in globals_dict, locals_dict
-
 def standard_status():
     """Print out errors, warnings, and infos."""
     errors, warnings, infos = THE_LOGGER.status()
