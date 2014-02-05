@@ -89,11 +89,12 @@ import fnmatch
 import sys
 import numbers
 from collections import namedtuple
+import ast
 
 # import numpy as np
 
 import crds
-from crds import log, utils, compat
+from crds import log, utils
 
 # ==============================================================================
 
@@ -1989,7 +1990,7 @@ class VersionRelation(ComparableMixin):
                 self.relation = match.group(1).replace("==","=")
                 version = match.group(2).strip()
                 try:
-                    self.version = compat.literal_eval(version)
+                    self.version = ast.literal_eval(version)
                 except ValueError:
                     raise ValidationError("Invalid version expression in: " + repr(self.relation_str))
             else:

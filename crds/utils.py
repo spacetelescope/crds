@@ -8,10 +8,11 @@ import cStringIO
 import functools
 from collections import Counter
 import datetime
+import ast
 
 # from crds import data_file,  import deferred until required
 
-from crds import compat, log, config
+from crds import log, config
 
 CRDS_CHECKSUM_BLOCK_SIZE = 2**26
 
@@ -332,7 +333,7 @@ def evalfile(fname):
     """
     with open(fname) as sourcefile:
         contents = sourcefile.read()
-    return compat.literal_eval(contents)
+    return ast.literal_eval(contents)
 
 # ===================================================================
 
