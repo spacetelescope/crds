@@ -247,7 +247,7 @@ class Script(object):
                 files.extend(self.load_file_list(fname[1:]))
             else:
                 files.append(fname)
-        return files
+        return [file.lower() for file in files]
     
     def load_file_list(self, at_file):
         """Recursively load an @-file, returning a list of words/files.
@@ -435,7 +435,7 @@ class ContextsScript(Script):
                     if rmin <= serial <= rmax:
                         contexts.append(context)
         else:
-            contexts = []
+            contexts = [self.resolve_context(self.observatory + "-operational")]
         return sorted(contexts)
 
     def _list_mappings(self):
