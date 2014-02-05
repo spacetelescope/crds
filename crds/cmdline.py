@@ -333,6 +333,11 @@ class Script(object):
         status = keys.pop("status", -1)
         log.error(*args, **keys)
         sys.exit(status)
+
+    def format_parameter_list(self, parameters):
+        """Given an item list or dictionary of matching parameters,  return a formatted string."""
+        items = sorted(dict(parameters).items())
+        return " ".join(["=".join([key, repr(str(value))]) for (key,value) in items])
     
 # =============================================================================
 

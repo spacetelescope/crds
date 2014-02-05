@@ -8,12 +8,15 @@ A number of command line switches control output formatting.
 
 The api function find_full_match_paths() returns a list of "match paths",  lists of parkey value assignment tuples:
 """
+from __future__ import print_function
+
 import sys
 import os.path
 from pprint import pprint as pp
+from collections import defaultdict
 
 from crds import rmap, log, cmdline
-
+from crds.client import api
 
 # ===================================================================
 
@@ -128,7 +131,7 @@ with respect to a particular context.
     """
 
     epilog = """
-crds.matches can be invoked like this:
+** crds.matches can dump reference file match cases with respect to particular contexts:
 
 % python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
 lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
@@ -139,7 +142,11 @@ lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-
 % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
 lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
+** crds.matches can dump database matching parameters for specified datasets with respect to specified contexts:
 
+% python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
+JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
+JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
 """
     
     def add_args(self):
@@ -152,19 +159,55 @@ lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND'
             help="Hide the parameter names of the selection criteria,  just show the values.")
         self.add_argument("-t", "--tuple-format", action="store_true",
             help="Print the match info as Python tuples.")
+        self.add_argument("-d", "--datasets", nargs="+",
+            help="Dataset ids for which to dump matching parameters from DADSOPS or equivalent database.")
+        self.add_argument("-c", "--condition-values", action="store_true",
+            help="When dumping dataset parameters, first apply CRDS value conditioning / normalization.")
+        self.add_argument("-m", "--minimize-header", action="store_true",
+            help="When dumping dataset parameters,  limit them to matching parameters, not historical bestrefs.")
 
     def main(self):
         """Process command line parameters in to a context and list of
         reference files.   Print out the match tuples within the context
         which contain the reference files.
         """
-        if not self.args.files:
+        if self.args.files:
+            self.dump_reference_matches()
+        elif self.args.datasets:
+            self.dump_dataset_headers()
+        else:
             self.print_help()
+            log.error("Specify --files to dump reference match cases or --datasets to dump dataset matching parameters.")
             sys.exit(-1)
+
+    def dump_reference_matches(self):
+        """Print out the match paths for the reference files specified on the 
+        command line with respect to the specified contexts.
+        """
         for ref in self.files:
             cmdline.reference_file(ref)
         for context in self.contexts:
             self.dump_match_tuples(context)
+
+    def dump_dataset_headers(self):
+        """Print out the matching parameters for the --datasets specified on
+        the command line.
+        """
+        multi_context_headers = defaultdict(list)
+        for context in self.contexts:
+            headers = api.get_dataset_headers_by_id(context, self.args.datasets)
+            for dataset_id, header in headers.items():
+                multi_context_headers[dataset_id].append((context, header))
+        for dataset_id, context_headers in multi_context_headers.items():
+            for (context, header) in context_headers:
+                if self.args.condition_values:
+                    header = utils.condition_header(header)
+                if self.args.minimize_header:
+                    header = rmap.get_cached_mapping(context).minimize_header(header)
+                if len(self.contexts) == 1:
+                    print(dataset_id, ":", self.format_parameter_list(header))
+                else:
+                    print(dataset_id, ":", context, ":", self.format_parameter_list(header))
             
     def locate_file(self, file):
         """Override for self.files..."""
