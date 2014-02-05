@@ -145,7 +145,12 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.repair_files:
             self.args.check_files = True
         self.require_server_connection()
-        if self.contexts:
+        if self.args.files:
+            self.sync_explicit_files()
+            verify_file_list = self.args.files
+        elif self.args.fetch_sqlite_db:
+            self.fetch_sqlite_db()
+        elif self.contexts:
             active_mappings = self.get_context_mappings()
             verify_file_list = active_mappings
             if self.args.fetch_references or self.args.purge_references:
@@ -162,11 +167,6 @@ class SyncScript(cmdline.ContextsScript):
                     self.purge_references(active_references)    
             if self.args.purge_mappings:
                 self.purge_mappings()
-        elif self.args.files:
-            self.sync_explicit_files()
-            verify_file_list = self.args.files
-        elif self.args.fetch_sqlite_db:
-            self.fetch_sqlite_db()
         else:
             log.error("Define --contexts, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
