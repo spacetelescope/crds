@@ -229,4 +229,12 @@ def standard_status():
     info(warnings, "warnings")
     info(infos, "infos")
 
+# ==============================================================================
 
+def format_parameter_list(parameters):
+    """Given an item list or dictionary of matching parameters,  return a formatted string.
+    Typically used to format matching parameters or bestrefs dicts for debug.
+    """
+    items = sorted(dict(parameters).items())
+    return " ".join(["=".join([key, repr(str(value))]) for (key,value) in items])
+    

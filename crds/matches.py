@@ -205,9 +205,9 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
                 if self.args.minimize_header:
                     header = rmap.get_cached_mapping(context).minimize_header(header)
                 if len(self.contexts) == 1:
-                    print(dataset_id, ":", self.format_parameter_list(header))
+                    print(dataset_id, ":", log.format_parameter_list(header))
                 else:
-                    print(dataset_id, ":", context, ":", self.format_parameter_list(header))
+                    print(dataset_id, ":", context, ":", log.format_parameter_list(header))
             
     def locate_file(self, file):
         """Override for self.files..."""
