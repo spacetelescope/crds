@@ -29,9 +29,10 @@ through the network, parameter, or environment variable mechanisms.
 import os
 import pprint
 import glob
+import ast
 
 import crds.client as light_client
-from . import rmap, log, utils, compat, config
+from . import rmap, log, utils, config
 
 __all__ = ["getreferences", "getrecommendations"]
 
@@ -406,7 +407,7 @@ def load_server_info(observatory):
     server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
     try:
         with open(server_config) as file_:
-            info = compat.literal_eval(file_.read())
+            info = ast.literal_eval(file_.read())
             info["status"] = "cache"
         log.verbose_warning("Loading server context and version info from cache '%s'." % server_config, 
                             "References may be sub-optimal.")

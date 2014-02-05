@@ -5,7 +5,7 @@ files define required parameters and that they have legal values.
 import sys
 import os
 import re
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 import pyfits
 import numpy as np
@@ -13,7 +13,6 @@ import numpy as np
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
 from crds import client
 from crds import mapping_parser
-from crds.compat import namedtuple
 from crds.rmap import ValidationError
 
 NOT_FITS = -1
