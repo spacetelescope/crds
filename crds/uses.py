@@ -13,32 +13,31 @@ import os.path
 from . import rmap, pysh, config, cmdline, utils, log
 from crds.client import api
 
+def _clean_file_lines(files):
+    """Return simple filenames from paths in `files`, ignoring error messages."""
+    files = [os.path.basename(f.strip()) for f in files]
+    return  [f for f in files if config.FILE_RE.match(f)]
+
 def findall_rmaps_using_reference(filename, observatory="hst"):
-    """Return the basename of all reference mappings which mention 
-    `filename`.
-    """
+    """Return the basename of all reference mappings which mention `filename`."""
+    config.check_filename(filename)
     mapping_path = config.get_path("test.pmap", observatory)
-    rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' |"
-                       " xargs grep -l ${filename}")
-    return [os.path.basename(r.strip()) for r in rmaps]
+    rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' | xargs grep -l ${filename}")
+    return _clean_file_lines(rmaps)
 
 def findall_imaps_using_rmap(filename, observatory="hst"):
-    """Return the basenames of all instrument contexts which mention 
-    `filename`.
-    """
+    """Return the basenames of all instrument contexts which mention `filename`."""
     mapping_path = config.get_path("test.pmap", observatory)
-    imaps = pysh.lines("find ${mapping_path} -name '*.imap' |"
-                       " xargs grep -l ${filename}")
-    return [os.path.basename(imap.strip()) for imap in imaps]
+    config.check_filename(filename)
+    imaps = pysh.lines("find ${mapping_path} -name '*.imap' | xargs grep -l ${filename}")
+    return _clean_file_lines(imaps)
 
 def findall_pmaps_using_imap(filename, observatory="hst"):
-    """Return the basenames of all pipeline contexts which mention 
-    `filename`.
-    """
+    """Return the basenames of all pipeline contexts which mention `filename`."""
     mapping_path = config.get_path("test.pmap", observatory)
-    pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' |"
-                       " xargs grep -l ${filename}")
-    return [os.path.basename(pmap.strip()) for pmap in pmaps]
+    config.check_filename(filename)
+    pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' | xargs grep -l ${filename}")
+    return _clean_file_lines(pmaps)
 
 def findall_mappings_using_reference(reference, observatory="hst"):
     """Return the basenames of all mapping files in the hierarchy which
