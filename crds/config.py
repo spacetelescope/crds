@@ -153,16 +153,16 @@ def get_sqlite3_db_path(observatory):
 
 # -------------------------------------------------------------------------------------
 
-# e.g.  hst, hst-acs, hst-acs-darkfile
-CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
-
 # Standard date time format using T separator for command line use specifying contexts.
 # e.g. 2040-02-22T12:01:30.4567
 CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
-CONTEXT_DATETIME_RE = re.compile(CONTEXT_DATETIME_RE_STR)
+CONTEXT_DATETIME_RE = re.compile("^" + CONTEXT_DATETIME_RE_STR + "$")
+
+# e.g.  hst, hst-acs, hst-acs-darkfile
+CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+CONTEXT_RE_STR = r"^(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))$"
 CONTEXT_RE = re.compile(CONTEXT_RE_STR)
 
 def is_mapping_spec(mapping):
