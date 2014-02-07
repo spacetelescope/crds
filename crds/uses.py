@@ -20,23 +20,23 @@ def _clean_file_lines(files):
 
 def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention `filename`."""
-    config.check_filename(filename)
-    mapping_path = config.get_path("test.pmap", observatory)
-    rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' | xargs grep -l ${filename}")
+    config.check_filename(filename) # x
+    mapping_path = config.get_path("test.pmap", observatory)  # x
+    rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' | xargs grep -l ${filename}") # secure
     return _clean_file_lines(rmaps)
 
 def findall_imaps_using_rmap(filename, observatory="hst"):
     """Return the basenames of all instrument contexts which mention `filename`."""
     mapping_path = config.get_path("test.pmap", observatory)
     config.check_filename(filename)
-    imaps = pysh.lines("find ${mapping_path} -name '*.imap' | xargs grep -l ${filename}")
+    imaps = pysh.lines("find ${mapping_path} -name '*.imap' | xargs grep -l ${filename}")  # secure
     return _clean_file_lines(imaps)
 
 def findall_pmaps_using_imap(filename, observatory="hst"):
     """Return the basenames of all pipeline contexts which mention `filename`."""
     mapping_path = config.get_path("test.pmap", observatory)
     config.check_filename(filename)
-    pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' | xargs grep -l ${filename}")
+    pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' | xargs grep -l ${filename}")  #secure
     return _clean_file_lines(pmaps)
 
 def findall_mappings_using_reference(reference, observatory="hst"):

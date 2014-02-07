@@ -115,6 +115,7 @@ def get_path(filename, observatory):
     """Return the CRDS cache path of `filename` for `observatory`.   The path is
     similar to the one from locate_file(),  but includes dirname only,  not `filename` itself.
     """
+    assert OBSERVATORY_RE.match(observatory), "Invalid observatory " + repr(observatory)
     fullpath = locate_file(filename, observatory)
     return os.path.dirname(fullpath)
 
@@ -153,25 +154,37 @@ def get_sqlite3_db_path(observatory):
 
 # -------------------------------------------------------------------------------------
 
-FILE_RE = re.compile(r"^[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?$")
+def complete_re(regex_str):
+    """Add ^$ to `regex_str` to force match to entire string."""
+    return "^" + regex_str + "$"
+
+OBSERVATORY_RE = re.compile(complete_re("[a-zA-Z_0-9]+"))
+FILE_RE = re.compile(complete_re(r"[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?"))
+FILE_PATH_RE = re.compile(complete_re(r"([A-Za-z0-9_/]+)?([A-Za-z0-9_.]+)"))
 
 def check_filename(filename):
     """Verify that `filename` is a basename with no dangerous characters."""
     assert FILE_RE.match(filename), "Invalid file name " + repr(filename)
+
+def check_path(path):
+    """Make sure `path` has no dangerous characters."""
+    path = os.path.abspath(path)
+    assert FILE_PATH_RE.match(path), "Invalid file path " + repr(path)
+    return path
 
 # -------------------------------------------------------------------------------------
 
 # Standard date time format using T separator for command line use specifying contexts.
 # e.g. 2040-02-22T12:01:30.4567
 CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
-CONTEXT_DATETIME_RE = re.compile("^" + CONTEXT_DATETIME_RE_STR + "$")
+CONTEXT_DATETIME_RE = re.compile(complete_re(CONTEXT_DATETIME_RE_STR))
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
 CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"^(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))$"
-CONTEXT_RE = re.compile(CONTEXT_RE_STR)
+CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
