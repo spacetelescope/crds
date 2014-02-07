@@ -21,7 +21,7 @@ def format_date(date):
         date = parse_date(date)
     return date.isoformat(" ")
 
-T_SEPERATED_DATE_RE = re.compile(r"\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d:\d\d")
+T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d:\d\d$")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
 
 def parse_date(date):
@@ -153,7 +153,7 @@ MONTH_DAY_YEAR_RE = re.compile(r"^\d\d/\d\d/\d\d\d\d$")
 YEAR_MONTH_DAY_RE = re.compile(r"^\d\d\d\d/\d\d/\d\d$")
 NINETEEN_HUNDREDS_RE = re.compile(r"^\d\d/\d\d/9\d$")
 TWENTY_FIRST_CENT_RE = re.compile(r"^\d\d/\d\d/[0-3]\d$")
-DATE_COLON_TIME_RE = re.compile(r"^\d\d\d\d\d\d\d\d:\d\d\d\d\d\d")
+DATE_COLON_TIME_RE = re.compile(r"^\d\d\d\d\d\d\d\d:\d\d\d\d\d\d$")
 
 def parse_numerical_date(dstr):
     """Parse a datetime string with the month expressed as a number in various 
@@ -310,10 +310,10 @@ class Anydate(DateParser):
 
 # ============================================================================
 
-DATETIME_RE_STR = r"(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)"
+DATETIME_RE_STR = r"^(\d\d\d\d\-\d\d\-\d\d\s+\d\d:\d\d:\d\d)$"
 DATETIME_RE = re.compile(DATETIME_RE_STR)
-DATE_RE_STR = r"\d\d\d\d\-\d\d\-\d\d"
-TIME_RE_STR = r"\d\d:\d\d:\d\d"
+DATE_RE_STR = r"^\d\d\d\d\-\d\d\-\d\d$"
+TIME_RE_STR = r"^\d\d:\d\d:\d\d$"
 
 def is_datetime(datetime_str):
     """Raise an assertion error if `datetime_str` doesn't look like a CRDS date.
