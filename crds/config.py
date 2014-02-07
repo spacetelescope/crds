@@ -153,6 +153,14 @@ def get_sqlite3_db_path(observatory):
 
 # -------------------------------------------------------------------------------------
 
+FILE_RE = re.compile(r"^[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?$")
+
+def check_filename(filename):
+    """Verify that `filename` is a basename with no dangerous characters."""
+    assert FILE_RE.match(filename), "Invalid file name " + repr(filename)
+
+# -------------------------------------------------------------------------------------
+
 # Standard date time format using T separator for command line use specifying contexts.
 # e.g. 2040-02-22T12:01:30.4567
 CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
