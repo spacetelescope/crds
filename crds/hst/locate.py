@@ -23,14 +23,10 @@ HERE = os.path.dirname(__file__) or "./"
 
 # =======================================================================
 
-# CDBS_REFPATH is the location of the master server-side copy of the reference
-# file directory tree.
-CDBS_REFPATH = "/grp/hst/cdbs"
-
 # REFNAM_TO_PATH is a mapping from { reference_basename : reference_absolute_path }
 REFNAME_TO_PATH = {}
 
-def locate_server_reference(ref_filename, cdbs=CDBS_REFPATH):
+def locate_server_reference(ref_filename):
     """Effectively,  search the given  `cdbs` filetree for `ref_filename`
     and return the absolute path.
     
@@ -41,20 +37,18 @@ def locate_server_reference(ref_filename, cdbs=CDBS_REFPATH):
     # return files with paths already unchanged.
     if not os.path.basename(ref_filename) == ref_filename:
         return ref_filename
-    global CDBS_REFPATH
-    CDBS_REFPATH = cdbs
     if not REFNAME_TO_PATH:
-        setup_path_map(cdbs)
+        setup_path_map()
     return REFNAME_TO_PATH[ref_filename]
     
-def setup_path_map(cdbs=CDBS_REFPATH, rebuild_cache=False):
+def setup_path_map(rebuild_cache=False):
     """Dump the directory tree `cdbs` into a file and read the results
     into a global map from file basename to absolute path.
     """
     cachepath = HERE + "/cdbs.paths.gz"
     if not os.path.exists(cachepath) or rebuild_cache:
         log.info("Generating CDBS file path cache.")
-        pysh.sh("find  ${cdbs} | gzip -c >cdbs.paths.gz")  # , raise_on_error=True) sometimes permission is denied
+        pysh.sh("find  /grp/hst/cdbs | gzip -c >cdbs.paths.gz")  # secure.
         log.info("Done.")
     for line in gzip.open(cachepath):
         line = line.strip()
