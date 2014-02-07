@@ -6,7 +6,7 @@ import os
 import sys
 from collections import defaultdict
 
-from crds import rmap, log, pysh, cmdline, utils, rowdiff
+from crds import rmap, log, pysh, cmdline, utils, rowdiff, config
 
 from pyfits import FITSDiff
 
@@ -309,13 +309,12 @@ def fits_difference(observatory, old_file, new_file, by_rows=False, only_fields=
         print '\n', rd
 
 def text_difference(observatory, old_file, new_file):
-    """Run UNIX diff on two text files named `old_file` and `new_file`.
-    """
+    """Run UNIX diff on two text files named `old_file` and `new_file`."""
     assert os.path.splitext(old_file)[-1] == os.path.splitext(new_file)[-1], \
         "Files " + repr(old_file) + " and " + repr(new_file) + " are of different types."
-    _loc_old_file = rmap.locate_file(old_file, observatory)
-    _loc_new_file = rmap.locate_file(new_file, observatory)
-    pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}")
+    _loc_old_file = config.check_path(rmap.locate_file(old_file, observatory))
+    _loc_new_file = config.check_path(rmap.locate_file(new_file, observatory))
+    pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}")   # secure
 
 def difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                include_header_diffs=False):
