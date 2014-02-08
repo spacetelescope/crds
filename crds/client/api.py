@@ -245,6 +245,7 @@ def get_best_references_by_ids(context, dataset_ids, reftypes=None):
         bestrefs = S.get_best_references_by_ids(context, dataset_ids, reftypes)
     except Exception, exc:
         raise CrdsLookupError(str(exc))
+    return bestrefs
 
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
