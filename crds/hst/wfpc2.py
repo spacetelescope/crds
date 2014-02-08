@@ -75,7 +75,7 @@ def wfpc2_flatfile_filter(kmap):
 
     header_additions = [
         ("hooks", {
-            "fallback_header" : "fallback_header_flatfile_v1",
+            "fallback_header" : "fallback_header_wfpc2_flatfile_v1",
         }),
     ]
     
