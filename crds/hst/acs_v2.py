@@ -20,7 +20,7 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
-    log.verbose("acs_biasfile_precondition_header:", header)
+    log.verbose("acs_biasfile_precondition_header:", log.format_parameter_list(header))
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
@@ -55,8 +55,12 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
             sys.exc_clear()
         else:
             header["NAXIS2"] = utils.condition_value(str(naxis2)) 
+    dump_mutations(header_in, header)
     return header  
 
+def dump_mutations(header1, header2):
+    log.verbose("In header1 not header2:", set(dict(header1).items()) - set(dict(header2).items()))
+    log.verbose("In header2 not header1:", set(dict(header2).items()) - set(dict(header1).items()))
 
 # ===========================================================================    
 
