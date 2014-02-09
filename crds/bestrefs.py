@@ -47,16 +47,18 @@ class HeaderGenerator(object):
     def __iter__(self):
         """Return the sources from self with EXPTIME >= self.datasets_since."""
         for source in self.sources:
-            instrument = self.ctx.get_instrument(self.header(source))
-            exptime = matches.get_exptime(self.header(source))
-            since = self.datasets_since(instrument)
-            if exptime >= since:
-                yield source
-            else:
-                log.verbose("Dropping source", repr(source), 
-                            "with EXPTIME =", repr(exptime),
-                            "< --datasets-since =", repr(since))
-    
+            with log.error_on_exception("Failed loading source", repr(source), 
+                                        "from", repr(self.__class__.__name__)):
+                instrument = self.ctx.get_instrument(self.header(source))
+                exptime = matches.get_exptime(self.header(source))
+                since = self.datasets_since(instrument)
+                if exptime >= since:
+                    yield source
+                else:
+                    log.verbose("Dropping source", repr(source), 
+                                "with EXPTIME =", repr(exptime),
+                                "< --datasets-since =", repr(since))
+
     def datasets_since(self, instrument):
         """Return the earliest dataset processed cut-off date for `instrument`.
         

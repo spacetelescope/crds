@@ -15,7 +15,7 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
     an equivalent and bulkier rmap.
     """
     header = dict(header_in)
-    log.verbose("acs_biasfile_precondition_header:", header)
+    log.verbose("acs_biasfile_precondition_header:", log.format_parameter_list(header))
     exptime = timestamp.reformat_date(header["DATE-OBS"] + " " + header["TIME-OBS"])
     if (exptime < SM4):
         #if "APERTURE" not in header or header["APERTURE"] == "UNDEFINED":
