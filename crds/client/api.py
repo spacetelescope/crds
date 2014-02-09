@@ -54,6 +54,11 @@ __all__ = [
            "get_best_references",
            "cache_best_references",
            
+           "get_dataset_headers_by_id",
+           "get_dataset_headers_by_instrument",
+           "get_dataset_ids",
+           "get_best_recommendations_by_ids",
+
            "CrdsError",
            "CrdsLookupError",
            "CrdsNetworkError",
@@ -62,9 +67,6 @@ __all__ = [
            
            "get_required_parkeys",
            
-           # deprecated
-           "cache_best_references_for_dataset",
-           "get_minimum_header",           
            ]
 
 # ============================================================================
