@@ -80,6 +80,6 @@ def fix_strings(rval):
     elif isinstance(rval, list):
         return [fix_strings(x) for x in rval]
     elif isinstance(rval, dict):
-        return { fix_strings(key):fix_strings(val) for (key,val) in rval.items()}
+        return { fix_strings(key):fix_strings(val) for (key, val) in rval.items()}
     else:
         return rval

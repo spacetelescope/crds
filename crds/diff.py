@@ -126,7 +126,7 @@ def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
             affected[mode] += 1
     return [ tup + (("DIFF_COUNT", str(affected[tup])),) for tup in sorted(affected) ]
     
-DEFAULT_EXCLUDED_PARAMETERS = ["DATE-OBS","TIME-OBS","META.OBSERVATION.DATE", "DIFFERENCE", "INSTRUME", "REFTYPE"]
+DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS", "META.OBSERVATION.DATE", "DIFFERENCE", "INSTRUME", "REFTYPE")
 
 def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
     """Return a list of parameter items which characterize the effect of a difference in 
@@ -179,7 +179,7 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
                 instrument, filekind = utils.get_file_properties(observatory, step[0])
                 if instrument.strip() and filekind.strip():
                     instrs[instrument].add(filekind)
-    return { key:list(val) for (key,val) in instrs.items() }
+    return { key:list(val) for (key, val) in instrs.items() }
 
 # ============================================================================
 

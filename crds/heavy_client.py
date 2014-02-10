@@ -237,7 +237,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
     try:
         if ignore_cache:
             raise IOError("explicitly ignoring cache.")
-        pmap = rmap.get_cached_mapping(context)
+        _pmap = rmap.get_cached_mapping(context)
         log.verbose("Loading context file", srepr(context),"from cache.")
     except IOError, exc:
         log.verbose("Caching mapping files for context", srepr(context))
@@ -434,7 +434,6 @@ def get_installed_info(observatory):
     """
     try:
         # lexical sort of pmap names yields most recent (highest numbered) last.
-        import crds
         os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/cache/mappings"
         where = config.locate_mapping("*.pmap", observatory)
         pmap = os.path.basename(sorted(glob.glob(where))[-1])

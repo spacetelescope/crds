@@ -12,10 +12,10 @@ from __future__ import print_function
 
 import sys
 import os.path
-from pprint import pprint as pp
 from collections import defaultdict
+from pprint import pprint as pp
 
-from crds import rmap, log, cmdline
+from crds import rmap, log, cmdline, utils
 from crds.client import api
 
 # ===================================================================

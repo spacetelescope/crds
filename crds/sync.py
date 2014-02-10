@@ -218,7 +218,7 @@ class SyncScript(cmdline.ContextsScript):
             log.verbose("No " + kind + "s to remove.")
         files2 = set(files)
         for filename in files:
-            if re.match("\w+\.r[0-9]h", filename):
+            if re.match(r"\w+\.r[0-9]h", filename):
                 files2.add(filename[:-1] + "d")
         for filename in files:
             where = rmap.locate_file(filename, self.observatory)
@@ -321,6 +321,7 @@ class SyncScript(cmdline.ContextsScript):
                 log.info("Without --dry-run would repair", repr(file))
     
     def fetch_sqlite_db(self):
+        """Download a SQLite version of the CRDS catalog from the server."""
         path = api.get_sqlite_db(self.observatory)
         log.info("SQLite database file downloaded to:", path)
 
