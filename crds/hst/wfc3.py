@@ -62,7 +62,9 @@ def precondition_header_wfc3_biasfile_v1(rmap, header_in):
     """
     header = dict(header_in)
     if header["SUBARRAY"] == "T" and "SUB" not in header["APERTURE"]:
-        header["APERTURE"] = "*"
+        header["APERTURE"] = "N/A"
+        log.verbose("Mutated APERTURE to ", repr(header["APERTURE"]), 
+                    "based on SUBARRAY='T' and 'SUB' not in APERTURE.")
     return header
 
 
