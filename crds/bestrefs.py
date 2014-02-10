@@ -68,7 +68,7 @@ class HeaderGenerator(object):
         were identified by --datsets-since=auto.
         """
         if isinstance(self._datasets_since, dict):
-            return self._datasets_since.get(instrument.lower(),  "9999 23:59:59")
+            return self._datasets_since.get(instrument.lower(),  "9999-01-01 23:59:59")
         else:
             return self._datasets_since
 
