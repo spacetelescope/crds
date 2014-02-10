@@ -165,8 +165,8 @@ def get_reference_url(pipeline_context, reference):
     """
     return S.get_reference_url(pipeline_context, reference)
     
-def get_file_chunk(pipeline_context, file, chunk):
-    """Return the ith `chunk` of data from `file` as well as the
+def get_file_chunk(pipeline_context, filename, chunk):
+    """Return the ith `chunk` of data from `filename` as well as the
     total number of chunks.   It is assumed that every file has
     at least one chunk.
     
@@ -175,7 +175,7 @@ def get_file_chunk(pipeline_context, file, chunk):
     
     Note that `chunks` is determined by the server since it's a loading issue.
     """
-    chunks, data = S.get_file_chunk(pipeline_context, file, chunk)
+    chunks, data = S.get_file_chunk(pipeline_context, filename, chunk)
     return chunks, base64.b64decode(data)
 
 def get_url(pipeline_context, filename):
@@ -198,8 +198,8 @@ def get_sqlite_db(observatory):
     encoded_compressed_data = S.get_sqlite_db(observatory)
     data = zlib.decompress(base64.b64decode(encoded_compressed_data))
     path = config.get_sqlite3_db_path(observatory)
-    with open(path, "wb+") as f:
-        f.write(data)
+    with open(path, "wb+") as db_out:
+        db_out.write(data)
     return path
 
 def get_reference_names(pipeline_context):
@@ -345,6 +345,7 @@ def observatory_from_string(string):
 
 @utils.cached
 def get_cached_server_info():
+    """Cached version of get_server_info(),  nominally one fetch per process run."""
     return get_server_info()
 
 class FileCacher(object):
@@ -369,7 +370,7 @@ class FileCacher(object):
                 names.append(refname[:-1]+"d")
 
         downloads = []
-        for i, name in enumerate(names):
+        for name in names:
             localpath = self.locate(pipeline_context, name)
             if (not os.path.exists(localpath)):
                 downloads.append(name)
@@ -380,16 +381,17 @@ class FileCacher(object):
                     os.remove(localpath)
             localpaths[name] = localpath
         if downloads:
-            bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
+            n_bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
         else:
             log.verbose("Skipping download for cached files", names, verbosity=60)
-            bytes = 0
+            n_bytes = 0
         if api == 1:
             return localpaths
         else:
-            return localpaths, len(downloads), bytes
+            return localpaths, len(downloads), n_bytes
 
     def observatory_from_context(self, pipeline_context):
+        """Determine the observatory from `pipeline_context`,  based on name if possible."""
         if "jwst" in pipeline_context:
             observatory = "jwst"
         elif "hst" in pipeline_context:
@@ -407,18 +409,18 @@ class FileCacher(object):
         """Serial file-by-file download."""
         obs = self.observatory_from_context(pipeline_context)
         self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
-        bytes = 0
+        n_bytes = 0
         for name in downloads:
             try:
                 if "NOT FOUND" in self.info_map[name]:
                     raise CrdsDownloadError("file is not known to CRDS server.")
-                bytes += self.download(pipeline_context, name, localpaths[name])
+                n_bytes += self.download(pipeline_context, name, localpaths[name])
             except Exception, exc:
                 if raise_exceptions:
                     raise
                 else:
                     log.error("Failure downloading file", repr(name), ":", str(exc))
-        return bytes
+        return n_bytes
 
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
@@ -429,13 +431,13 @@ class FileCacher(object):
                 generator = self.get_data_http(pipeline_context, name)
             else:
                 generator = self.get_data_rpc(pipeline_context, name)
-            bytes = 0
+            n_bytes = 0
             with open(localpath, "wb+") as outfile:
                 for data in generator:
                     outfile.write(data)
-                    bytes += len(data)
-            self.verify_file(pipeline_context, name, localpath)
-            return bytes
+                    n_bytes += len(data)
+            self.verify_file(name, localpath)
+            return n_bytes
         except Exception, exc:
             # traceback.print_exc()
             try:
@@ -448,25 +450,25 @@ class FileCacher(object):
                                      " with mode " + srepr(get_download_mode()) +
                                      " : " + str(exc))
             
-    def get_data_rpc(self, pipeline_context, file):
+    def get_data_rpc(self, pipeline_context, filename):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""
         chunk = 0
         chunks = 1
         while chunk < chunks:
             stats = utils.TimingStats()
             stats.increment("bytes", CRDS_DATA_CHUNK_SIZE)
-            chunks, data = get_file_chunk(pipeline_context, file, chunk)
+            chunks, data = get_file_chunk(pipeline_context, filename, chunk)
             status = stats.status("bytes")
-            log.verbose("Transferred RPC", repr(file), chunk, " of ", chunks, "at", status[1])
+            log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1])
             chunk += 1
             yield data
     
-    def get_data_http(self, pipeline_context, file):
-        """Yield the data returned from `file` of `pipeline_context` in manageable chunks."""
-        url = self.get_url(pipeline_context, file)
-        return self._get_data_http(url, file)
+    def get_data_http(self, pipeline_context, filename):
+        """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
+        url = self.get_url(pipeline_context, filename)
+        return self._get_data_http(url, filename)
 
-    def _get_data_http(self, url, file):
+    def _get_data_http(self, url, filename):
         """Yield the data returned from `url` in manageable chunks."""
         log.verbose("Fetching URL ", repr(url))
         try:
@@ -477,7 +479,7 @@ class FileCacher(object):
             data = infile.read(CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
-                log.verbose("Transferred HTTP", repr(file), "chunk", chunk, "at", status[1])
+                log.verbose("Transferred HTTP", repr(filename), "chunk", chunk, "at", status[1])
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
@@ -490,24 +492,23 @@ class FileCacher(object):
             except UnboundLocalError:   # maybe the open failed.
                 pass
 
-    def get_url(self, pipeline_context, file):
-        """Return the URL used to fetch `file` of `pipeline_context`."""
+    def get_url(self, pipeline_context, filename):
+        """Return the URL used to fetch `filename` of `pipeline_context`."""
         info = get_cached_server_info()
         observatory = self.observatory_from_context(pipeline_context)
-        if config.is_mapping(file):
+        if config.is_mapping(filename):
             url = info["mapping_url"][observatory]
         else:
             url = info["reference_url"][observatory]
         if not url.endswith("/"):
             url += "/"
-        return url + file
+        return url + filename
 
-    def verify_file(self, pipeline_context, filename, localpath):
+    def verify_file(self, filename, localpath):
         """Check that the size and checksum of downloaded `filename` match the server."""
         remote_info = self.info_map[filename]
         local_length = os.stat(localpath).st_size
         original_length = long(remote_info["size"])
-        basename = os.path.basename(localpath)
         if original_length != local_length:
             raise CrdsDownloadError("downloaded file size " + str(local_length) +
                                     " does not match server size " + str(original_length))
@@ -541,10 +542,10 @@ class BundleCacher(FileCacher):
             if name not in downloads:
                 log.verbose("Skipping existing file", repr(name), verbosity=60)
         self.fetch_bundle(bundlepath, downloads)
-        bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
+        n_bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
         for name in downloads:
-            self.verify_file(pipeline_context, name, localpaths[name])
-        return bytes
+            self.verify_file(name, localpaths[name])
+        return n_bytes
 
     def fetch_bundle(self, bundlepath, downloads):
         """Ask the CRDS server for an archive of the files listed in `downloads`
@@ -565,18 +566,18 @@ class BundleCacher(FileCacher):
         """Unpack the files listed in `downloads` from the archive at `bundlepath`
         storing the extracted files at paths defined by `localpaths`.
         """
-        bytes = 0
+        n_bytes = 0
         with tarfile.open(bundlepath) as tar:
             for name in sorted(downloads):
                 member = tar.getmember(name)
-                file = tar.extractfile(member)
+                fileobj = tar.extractfile(member)
                 utils.ensure_dir_exists(localpaths[name])
                 with open(localpaths[name], "w+") as localfile:
                     log.verbose("Unpacking download", repr(name), "to", repr(localpaths[name]), verbosity=10)
-                    contents = file.read()
+                    contents = fileobj.read()
                     localfile.write(contents)
-                    bytes += len(contents)
-        return bytes
+                    n_bytes += len(contents)
+        return n_bytes
                     
 MAPPING_CACHER = BundleCacher()
 
@@ -624,8 +625,8 @@ def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=Tru
     """
     if files is None:
         files = get_mapping_names(pipeline_context)
-    mappings = [ os.path.basename(file) for file in files if config.is_mapping(file) ]
-    references = [ os.path.basename(file) for file in files if not config.is_mapping(file) ]
+    mappings = [ os.path.basename(name) for name in files if config.is_mapping(name) ]
+    references = [ os.path.basename(name) for name in files if not config.is_mapping(name) ]
     if mappings:
         m_paths, m_downloads, m_bytes = dump_mappings(
             pipeline_context, mappings=mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=2)
