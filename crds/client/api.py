@@ -7,7 +7,6 @@ import os.path
 import base64
 import urllib2
 import tarfile
-import math
 import re
 import zlib
 
@@ -57,7 +56,7 @@ __all__ = [
            "get_dataset_headers_by_id",
            "get_dataset_headers_by_instrument",
            "get_dataset_ids",
-           "get_best_recommendations_by_ids",
+           "get_best_references_by_ids",
 
            "CrdsError",
            "CrdsLookupError",
@@ -366,7 +365,7 @@ class FileCacher(object):
         # Add in GEIS format "conjugate" data files,  .rmaps specify only .rXh
         names2 = names[:]
         for refname in names2:
-            if re.match("\w+\.r[0-9]h$", refname):
+            if re.match(r"\w+\.r[0-9]h$", refname):
                 names.append(refname[:-1]+"d")
 
         downloads = []

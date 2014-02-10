@@ -1,10 +1,9 @@
 """This module defines functions for modifying rmaps in various ways,  generally
 the transformations required to automate rmap maintenance on the CRDS website.
 """
-import sys
 import os.path
 
-from crds import (rmap, data_file, timestamp, log, utils, diff, cmdline)
+from crds import (rmap, log, diff, cmdline)
 # ============================================================================
     
 class NoUseAfterError(ValueError):
@@ -122,7 +121,7 @@ class RefactorScript(cmdline.Script):
     """
     
     def add_args(self):
-        self.add_argument("command", choices=("insert","delete","set_header"),
+        self.add_argument("command", choices=("insert", "delete", "set_header"),
             help="Name of refactoring command to perform.")
         self.add_argument('old_rmap', type=cmdline.reference_mapping,
             help="Reference mapping to modify by inserting references.")

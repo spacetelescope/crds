@@ -9,7 +9,6 @@ import sys
 import os
 from collections import namedtuple
 import cPickle
-import gc
 
 import pyfits
 
@@ -696,9 +695,9 @@ and debug output.
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
         try:
             if self.args.files:
-               log.info("===> Processing", dataset)
+                log.info("===> Processing", dataset)
             else:
-               log.verbose("===> Processing", dataset, verbosity=25)
+                log.verbose("===> Processing", dataset, verbosity=25)
             self.increment_stat("datasets", 1)
             return self._process(dataset)
         except Exception, exc:

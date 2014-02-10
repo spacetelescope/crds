@@ -167,10 +167,10 @@ def _context(backup):
     return context
 
 # This could also be made to handle simple $N sys.argv
-ENV_VAR = re.compile("[$]([a-zA-Z_0-9]+)")
-ENV_VAR_NUM = re.compile("[$]([0-9]+)")
-ENV_VAR_CURLY = re.compile("[$]{([a-zA-Z_0-9]+)}")
-ENV_VAR_STAR = re.compile("([$][*])")
+ENV_VAR = re.compile(r"[$]([a-zA-Z_0-9]+)")
+ENV_VAR_NUM = re.compile(r"[$]([0-9]+)")
+ENV_VAR_CURLY = re.compile(r"[$]{([a-zA-Z_0-9]+)}")
+ENV_VAR_STAR = re.compile(r"([$][*])")
 
 def _replace_dollar(match):
     """Return the substituion for a local, global, or environment variable."""
@@ -288,7 +288,7 @@ def __rewrite_shell_statement(match):
     """
     return match.group(1) + "sh('''" + match.group(2) + "''')"
 
-SHELL_STATEMENT = re.compile("^(\s*)% (.*)$")
+SHELL_STATEMENT = re.compile(r"^(\s*)% (.*)$")
 
 def _rewrite_shell_statement(line):
     """Re-write `line` as Python code and return it."""
