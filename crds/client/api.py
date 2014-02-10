@@ -57,6 +57,7 @@ __all__ = [
            "get_dataset_headers_by_instrument",
            "get_dataset_ids",
            "get_best_references_by_ids",
+           "get_best_references_by_header_map",
 
            "CrdsError",
            "CrdsLookupError",
@@ -247,6 +248,20 @@ def get_best_references_by_ids(context, dataset_ids, reftypes=None):
     except Exception, exc:
         raise CrdsLookupError(str(exc))
     return bestrefs
+
+def get_best_references_by_header_map(context, header_map, reftypes=None):
+    """Get best references for header_map = { dataset_id : header, ...}, } and reference types
+    where a header is a dictionary of matching parameters.
+      
+    If reftypes is None,  all types are returned.
+    
+    Returns { dataset_id : { reftype: bestref, ... }, ... }
+    """
+    try:
+        bestrefs_map = S.get_best_references_by_header_map(context, header_map, reftypes)
+    except Exception, exc:
+        raise CrdsLookupError(str(exc))
+    return bestrefs_map
 
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing

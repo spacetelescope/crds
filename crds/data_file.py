@@ -176,6 +176,8 @@ def get_fits_header(fname, needed_keys=()):
     header = {}
     allheader = pyfits.getheader(fname)
     for key in needed_keys or allheader:
+        if not key:
+            continue
         try:
             header[key] = allheader[key]
         except KeyError:
@@ -191,6 +193,8 @@ def get_fits_header_union(fname, needed_keys=()):
     get_all_keys = not needed_keys
     for hdu in pyfits.open(fname):
         for key, newval in hdu.header.items():
+            if not key:
+                continue
             if get_all_keys or key in needed_keys:
                 if key in union and union[key] != newval:
                     log.verbose_warning("Header union collision on", repr(key),

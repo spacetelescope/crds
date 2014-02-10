@@ -23,6 +23,7 @@
 # setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar   
 setenv CRDS_SERVER_URL  https://localhost:8001    # development
 setenv CRDS_PATH ${HOME}/crds_cache
+setenv CRDS_DOWNLOAD_MODE rpc
 
 # --------------------------------------------------------------------------------------------------------------------
 # To override server recommendations for the operational pipeline context (.pmap)
