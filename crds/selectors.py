@@ -938,6 +938,12 @@ class GlobMatcher(RegexMatcher):
     -1
     >>> n.match("bar12")
     1
+
+    >>> p = GlobMatcher("UVIS-SUB-QUAD|UVIS-SUB-W2K")
+    >>> p.match("UVIS-SUB")
+    -1
+    >>> p.match("UVIS-SUB-QUAD")
+    1
     """
     def __init__(self, key):
         parts = key.split("|")
