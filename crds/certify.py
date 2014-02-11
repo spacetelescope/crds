@@ -359,7 +359,7 @@ def validator(info):
         if len(info.values) == 1 and len(info.values[0]) and \
             info.values[0][0] == "&":
             # This block handles &-types like &PEDIGREE and &SYBDATE
-            func = eval(info.values[0][1:].capitalize() + "Validator")
+            func = eval(info.values[0][1:].capitalize() + "Validator")  # only called on static TPN infos.
             return func(info)
         else:
             return CharacterValidator(info)

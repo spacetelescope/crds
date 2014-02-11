@@ -71,7 +71,7 @@ class HeaderExpander(object):
         self.mapping = {}
         for var, substitutes in expansion_mapping.items():
             for expr, replacement in substitutes.items():
-                self.mapping[(var, expr)] = (replacement, compile(expr, expansion_file, "eval"))
+                self.mapping[(var, expr)] = (replacement, compile(expr, expansion_file, "eval"))  # compiled code is from static file.
         self._required_keys = self.required_keys()
 
     def expand(self, header):
@@ -80,7 +80,7 @@ class HeaderExpander(object):
         log.verbose("Unexpanded header", self.required_header(header))
         for (var, expr), (expansion, compiled) in self.mapping.items():
             try:
-                applicable = eval(compiled, {}, header)
+                applicable = eval(compiled, {}, header)  # compiled code is from static file.
             except Exception, exc:
                 log.verbose_warning("Header expansion for",repr(expr), 
                             "failed for", repr(str(exc)))

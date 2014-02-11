@@ -87,7 +87,7 @@ dataset header values against the CDBS reference file database::
         # see if the restriction allows this file selection field
         opusutil.PrintMsg("D",'found a file select restricted: '+
                                k._restrictions)
-        if (not eval(k._restrictions)):
+        if (not eval(k._restrictions)):   # CDBS comment code
           opusutil.PrintMsg("D","File_selection on "+k._field+
                                 " restricted away")
           continue

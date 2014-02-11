@@ -11,8 +11,7 @@ import os.path
 import gzip
 import re
 
-# import crds.pysh as pysh
-from crds import (log, rmap, pysh, data_file, config)
+from crds import (log, rmap, data_file, config)
 from . import tpn
 
 HERE = os.path.dirname(__file__) or "./"

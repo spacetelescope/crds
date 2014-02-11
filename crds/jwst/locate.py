@@ -9,7 +9,6 @@ in the certification of reference files.
 import os.path
 import re
 
-# import crds.pysh as pysh
 from crds import (log, rmap, data_file, config, utils)
 from . import tpn
 

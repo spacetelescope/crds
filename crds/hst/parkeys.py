@@ -155,7 +155,7 @@ def process_reference_file_defs():
 
 HERE = os.path.dirname(__file__) or "."
 try:
-    PARKEYS = eval(open(HERE + "/parkeys.dat").read())
+    PARKEYS = utils.evalfile(HERE + "/parkeys.dat")
 except Exception:
     PARKEYS = {}
 
@@ -251,13 +251,14 @@ def get_reffile_format(instrument, filekind):
 def get_row_keys(instrument, filekind):
     return PARKEYS[instrument][filekind]["row_keys"]
 
+# XXXX secure,  only call from hst_gentools
 def evaluate_parkey_relevance(instrument, filekind, rowdict):
     header = dict(rowdict)
     header2 = {key.upper(): utils.condition_value(val) for (key,val) in header.items()}
     relevance = get_parkey_relevance(instrument, filekind)
     for parkey, expr in relevance.items():
         try:
-            if not eval(expr, header2, {}):
+            if not eval(expr, {}, header2):   # secure,  only called by hst_gentools
                 log.verbose("parkey relevance", repr(expr), "mapping", 
                          parkey, "to N/A")
                 header[parkey] = "N/A"
