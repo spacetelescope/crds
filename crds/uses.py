@@ -2,7 +2,7 @@
 reference or mapping file.
 
 >>> findall_mappings_using_reference("u451251ej_bpx.fits")
-['hst.pmap', 'hst_acs.imap', 'hst_acs_bpixtab.rmap']
+['hst.pmap', 'hst_0044.pmap', 'hst_0048.pmap', 'hst_acs.imap', 'hst_acs_0008.imap', 'hst_acs_0009.imap', 'hst_acs_bpixtab.rmap']
 
 """
 from __future__ import print_function

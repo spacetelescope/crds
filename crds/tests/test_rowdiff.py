@@ -302,7 +302,7 @@ Mode test: duplicate modes
 
 CLEANUP
 
-#    >>> test_config.cleanup()
+    >>> test_config.cleanup()
 
 """
 
