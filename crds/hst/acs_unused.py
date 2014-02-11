@@ -140,7 +140,7 @@ def matches(header, **keys):
 
 def evaluate(expr, header, var):
     """eval `expr` with respect to `var` in `header`."""
-    rval = eval(expr, {}, header)
+    rval = eval(expr, {}, header)  # hard coded expr
     log.info("evaluate:", repr(expr), "-->", rval, expr.replace(var, repr(header[var])))
     return rval
 

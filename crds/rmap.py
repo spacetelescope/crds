@@ -951,14 +951,14 @@ class ReferenceMapping(Mapping):
         # shows up here as the standard "always".
         
         # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
-        self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
+        self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))  # secured
         
         # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
-        self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
+        self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))  #secured
         
         # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
         parkey_relv_exprs = self.header.get("parkey_relevance", {}).items()
-        self._parkey_relevance_exprs = { name : self.get_expr(expr) for (name, expr) in  parkey_relv_exprs }
+        self._parkey_relevance_exprs = { name : self.get_expr(expr) for (name, expr) in  parkey_relv_exprs } # secured
         
         # header precondition method, e.g. crds.hst.acs.precondition_header
         # this is optional code which pre-processes and mutates header inputs
@@ -967,7 +967,7 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
     
-    def get_expr(self, expr):
+    def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
         """
@@ -1160,7 +1160,7 @@ class ReferenceMapping(Mapping):
         """
         try:
             source, compiled = self._rmap_relevance_expr
-            relevant = eval(compiled, {}, header)
+            relevant = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "is relevant: ", relevant, repr(source), verbosity=55)
         except Exception, exc:
@@ -1174,7 +1174,7 @@ class ReferenceMapping(Mapping):
         """Return True IFF this type should be omitted based on the 'rmap_omit' header expression."""
         source, compiled = self._rmap_omit_expr
         try:
-            omit = eval(compiled, {}, header)
+            omit = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "should be omitted: ", omit, repr(source), verbosity=55)
         except Exception, exc:
@@ -1194,7 +1194,7 @@ class ReferenceMapping(Mapping):
             lparkey = parkey.lower()
             if lparkey in self._parkey_relevance_exprs:
                 source, compiled = self._parkey_relevance_exprs[lparkey]
-                relevant = eval(compiled, {}, header2)
+                relevant = eval(compiled, {}, header2)  # secured
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant, repr(source), verbosity=55)
                 if not relevant:
