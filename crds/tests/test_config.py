@@ -13,5 +13,7 @@ def setup():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def cleanup():
-    shutil.rmtree(os.environ["CRDS_PATH"])
-
+    try:
+        shutil.rmtree(os.environ["CRDS_PATH"])
+    except:
+        pass
