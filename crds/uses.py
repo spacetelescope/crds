@@ -1,8 +1,19 @@
 """uses.py defines functions which will list the files which use a given 
 reference or mapping file.
 
->>> findall_mappings_using_reference("u451251ej_bpx.fits")
-['hst.pmap', 'hst_acs.imap', 'hst_acs_bpixtab.rmap']
+>>> from pprint import pprint as pp
+>>> pp(findall_mappings_using_reference("v2e20129l_flat.fits"))
+['hst.pmap',
+ 'hst_0001.pmap',
+ 'hst_0002.pmap',
+ 'hst_0003.pmap',
+ 'hst_0004.pmap',
+ 'hst_0005.pmap',
+ 'hst_0006.pmap',
+ 'hst_cos.imap',
+ 'hst_cos_0001.imap',
+ 'hst_cos_flatfile.rmap',
+ 'hst_cos_flatfile_0002.rmap']
 
 """
 from __future__ import print_function

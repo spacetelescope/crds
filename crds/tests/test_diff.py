@@ -91,8 +91,7 @@ Compute diffs for two .fits's:
 
     >>> case = DiffScript(argv="diff.py data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
     >>> case.run()  # doctest:+ELLIPSIS
-    <BLANKLINE>
-     fitsdiff: 3.1.3.dev
+    -etc-
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
@@ -114,11 +113,10 @@ Compute diffs for two .fits's:
 Compute primitive diffs for two .rmap's:
 
     >>> case = DiffScript(argv="diff.py data/hst_acs_biasfile_0001.rmap data/hst_acs_biasfile_0002.rmap --primitive-diffs")
-    >>> case.run()
+    >>> case.run()  #doctest:+ELLIPSIS
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced data/hst_acs_biasfile_0001.fits with data/hst_acs_biasfile_0002.fits')
-    <BLANKLINE>
-     fitsdiff: 3.1.3.dev
+    -etc-
      a: data/hst_acs_biasfile_0001.fits
      b: data/hst_acs_biasfile_0002.fits
      Maximum number of different data values to be reported: 10
@@ -150,9 +148,8 @@ Compute diffs checking for reversions: (invert file order to simulate reverse fi
 
 Row change
     >>> case = DiffScript(argv="diff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
-    >>> case.run()
-    <BLANKLINE>
-     fitsdiff: 3.1.3.dev
+    >>> case.run()  #doctest:+ELLIPSIS
+    -etc-
      a: data/test-source.fits
      b: data/test-change-row1-valueLeft.fits
      Maximum number of different data values to be reported: 10
@@ -195,7 +192,8 @@ CLEANUP
 def test():
     """Run module tests,  for now just doctests only."""
     import test_diff, doctest
-    return doctest.testmod(test_diff)
+    doctest.ELLIPSIS_MARKER = '-etc-'
+    return doctest.testmod(test_diff, optionflags=doctest.ELLIPSIS)
 
 if __name__ == "__main__":
     print(test())
