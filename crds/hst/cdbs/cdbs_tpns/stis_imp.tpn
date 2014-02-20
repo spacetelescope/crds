@@ -7,11 +7,13 @@
 #
 # History:
 # 09/19/13  75694  MSwam   first version
+#   NOTE: DETECTOR should ALWAYS be wild-carded to ANY
 #
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #----------------------------------------------------------
 INSTRUME            H        C         R    STIS
 FILETYPE            H        C         R    "IMAGE PHOTOMETRY TABLE"
+DETECTOR            H        C         R    ANY,CCD,FUV-MAMA,NUV-MAMA
 ORIGIN              H        C         R
 PARNUM              H        I         R
 USEAFTER            H        C         R    &SYBDATE
