@@ -8,6 +8,7 @@
 # 08/31/06 56455 MSwam    add ABCDALL (but NOT for .lod file)
 # 09/15/08 60769 MSwam    new CCDGAIN values
 # 09/06/12 72157 MSwam    add APERTURE
+# 02/20/14 77246 MSwam    add APERTURE=NONE
 #
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
@@ -17,7 +18,7 @@ DETECTOR	H	C	R	WFC,HRC
 CCDAMP		H	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,ABCDALL,ANY
 CCDGAIN		H	R	R	0.5,1.0,1.4,2.0,4.0,8.0,-1
 APERTURE        H       C       R       ANY_FULL,ANY_WFC1_2K,ANY_WFC2_2K,\
-					SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
+					NONE,SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
                                         WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
                                         WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
                                         WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\
