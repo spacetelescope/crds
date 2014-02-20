@@ -159,8 +159,8 @@ def complete_re(regex_str):
     return "^" + regex_str + "$"
 
 OBSERVATORY_RE = re.compile(complete_re("[a-zA-Z_0-9]+"))
-FILE_RE = re.compile(complete_re(r"[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?"))
-FILE_PATH_RE = re.compile(complete_re(r"([A-Za-z0-9_/]+)?([A-Za-z0-9_.]+)"))
+FILE_RE = re.compile(complete_re(r"[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?"))          # at min *cannot* contain % < > \
+FILE_PATH_RE = re.compile(complete_re(r"([A-Za-z0-9_/]+)?([A-Za-z0-9_.]+)"))     # at min *cannot* contain % < > \
 
 def check_filename(filename):
     """Verify that `filename` is a basename with no dangerous characters."""
