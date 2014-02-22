@@ -631,7 +631,7 @@ class Mapping(object):
         """
         return {
                 "header" : copy.copy(self.header),
-                "parameters" : self.parkey,
+                "parameters" : tuple(self.parkey),
                 "selections" : sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
                                        for key,val in self.selections.items() ])
                 }
@@ -1283,7 +1283,7 @@ class ReferenceMapping(Mapping):
         return {
                 "header" : copy.copy(self.header),
                 "text_descr" : self.obs_package.TEXT_DESCR[self.filekind],
-                "parameters" : nested["parameters"],
+                "parameters" : tuple(nested["parameters"]),
                 "selections" : nested["selections"]
                 }
         
