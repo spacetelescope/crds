@@ -543,8 +543,8 @@ def reference_to_instrument(filename):
         header = data_file.get_conditioned_header(filename, needed_keys=["INSTRUME"])
         return header["INSTRUME"].lower()
     except KeyError:
-        header = data_file.get_conditioned_header(filename, needed_keys=["META.INSTRUMENT.TYPE"])
-        return header["META.INSTRUMENT.TYPE"]
+        header = data_file.get_conditioned_header(filename, needed_keys=["META.INSTRUMENT.NAME"])
+        return header["META.INSTRUMENT.NAME"]
     
 def reference_to_locator(filename):
     """Given reference file `filename`,  return the associated observatory locator module."""
