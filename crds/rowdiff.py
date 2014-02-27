@@ -674,12 +674,8 @@ class RowDiff():
         # Initialize the result string.
         result = ''
 
-        # Report if there are no diffs.
-        if len(self.diffs) == 0:
-            result += 'No differences found.'
-
-        # Else, loop through the diffs and report results.
-        else:
+        # Save time, see if there are any diffs.
+        if len(self.diffs) > 0:
             
             # Mode difference reporting
             if self.mode_fields:

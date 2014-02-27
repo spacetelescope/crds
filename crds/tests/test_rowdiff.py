@@ -59,6 +59,11 @@ TEST CASES
 
 >>> from crds.rowdiff import RowDiffScript
 
+Only should work with Table extensions
+    >>> case = RowDiffScript(argv="rowdiff.py data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
+    >>> case.run()
+    <BLANKLINE>
+
 Basic functionality: No differences
     >>> case = RowDiffScript(argv="rowdiff.py data/test-source.fits data/test-source.fits")
     >>> case.run()
