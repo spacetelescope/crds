@@ -233,13 +233,15 @@ def update_file_bestrefs(pmap, dataset, updates):
     instrument = utils.file_to_instrument(dataset)
     prefix = pmap.locate.get_env_prefix(instrument)    
     log.verbose("Setting", repr(dataset), "CRDS_CTX =", repr(pmap.name))
-    pyfits.setval(dataset, "CRDS_CTX", value=pmap.basename, ext=0)
+    hdulist = pyfits.open(dataset, mode="update")
+    hdulist[0].header["CRDS_CTX"] = pmap.basename
     for update in sorted(updates):
         new_ref = update.new_reference.upper()
         if new_ref != "N/A":
             new_ref = (prefix + new_ref).lower()
         log.verbose("Setting", repr(dataset), update.filekind.upper(), "=", repr(new_ref))
-        pyfits.setval(dataset, update.filekind, value=new_ref, ext=0)            
+        hdulist[0].header[update.filekind] = new_ref
+    hdulist.close()
 
 # ============================================================================
 
