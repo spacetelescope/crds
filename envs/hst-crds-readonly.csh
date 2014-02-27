@@ -21,7 +21,7 @@
 # setenv CRDS_SERVER_URL  http://hst-crds.stsci.edu
 # setenv CRDS_SERVER_URL  http://jwst-crds.stsci.edu
 # setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar   
-setenv CRDS_SERVER_URL  https://hst-crds.stsci.edu    # development
+setenv CRDS_SERVER_URL  https://hst-crds.stsci.edu
 setenv CRDS_PATH /grp/crds/hst
 
 # --------------------------------------------------------------------------------------------------------------------
