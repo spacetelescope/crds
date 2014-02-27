@@ -22,7 +22,7 @@
 # setenv CRDS_SERVER_URL  http://jwst-crds.stsci.edu
 # setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar   
 setenv CRDS_SERVER_URL  https://localhost:8001    # development
-setenv CRDS_PATH ${HOME}/crds_cache
+setenv CRDS_PATH ${HOME}/crds_cache_forwarded
 setenv CRDS_DOWNLOAD_MODE rpc
 
 # --------------------------------------------------------------------------------------------------------------------
