@@ -757,7 +757,7 @@ class PipelineContext(ContextMapping):
         
             { instrument : [ matching_parkey_name, ... ], }
         """
-        return { instrument : self.selections[instrument].get_required_parkeys() 
+        return { instrument : list(self.parkey) + self.selections[instrument].get_required_parkeys() 
                  for instrument in self.selections }
         
 # ===================================================================
