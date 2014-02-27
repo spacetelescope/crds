@@ -108,7 +108,7 @@ Compute diffs for two .fits's:
             b> value in 2
              ?          ^
     <BLANKLINE>
-    No differences found.
+    <BLANKLINE>
              
 Compute primitive diffs for two .rmap's:
 
@@ -133,7 +133,7 @@ Compute primitive diffs for two .rmap's:
             b> value in 2
              ?          ^
     <BLANKLINE>
-    No differences found.
+    <BLANKLINE>
 
 Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
 
