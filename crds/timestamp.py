@@ -258,12 +258,12 @@ class Sybdate(DateParser):
     datetime.datetime(2001, 3, 21, 13, 0)
     """
     _format = re.compile(
-                r"(?P<month>[A-Za-z]+)\s+" + \
-                r"(?P<day>\d+),?\s+" + \
-                r"(?P<year>\d+)" + \
-                r"(\s+(?P<hour>\d+):" + \
-                    r"(?P<minute>\d+):" + \
-                    r"(?P<second>\d+)\s*" + \
+                r"(?P<month>[A-Za-z]{1,10})\s+" + \
+                r"(?P<day>\d{1,2}),?\s+" + \
+                r"(?P<year>\d{1,4})" + \
+                r"(\s+(?P<hour>\d{1,2}):" + \
+                    r"(?P<minute>\d{1,2}):" + \
+                    r"(?P<second>\d{1,2})\s*" + \
                     r"(?P<meridian>am|pm|AM|PM)?" + \
                 r")?")
 
