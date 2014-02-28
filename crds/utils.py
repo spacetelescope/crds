@@ -389,7 +389,7 @@ def get_file_properties(observatory, filename):
 
 # ===================================================================
 
-MODULE_PATH_RE = re.compile(r"^crds(\.\w+)+$")
+MODULE_PATH_RE = re.compile(r"^crds(\.\w{1,32}){0,10}$")
 
 def get_object(*args):
     """Import the given `dotted_name` and return the object.

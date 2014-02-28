@@ -158,11 +158,11 @@ def complete_re(regex_str):
     """Add ^$ to `regex_str` to force match to entire string."""
     return "^" + regex_str + "$"
 
-OBSERVATORY_RE_STR = complete_re("[a-zA-Z_0-9]+")
+OBSERVATORY_RE_STR = complete_re("[a-zA-Z_0-9]{1,8}")
 OBSERVATORY_RE = re.compile(OBSERVATORY_RE_STR)
-FILE_RE_STR = complete_re(r"[A-Za-z0-9_ ]+(\.[A-Za-z0-9_ ]+)?")
+FILE_RE_STR = complete_re(r"[A-Za-z0-9_ ]{1,128}(\.[A-Za-z0-9_ ]{1,8})?")
 FILE_RE = re.compile(FILE_RE_STR)          # at min *cannot* contain % < > \
-FILE_PATH_RE_STR = complete_re(r"([A-Za-z0-9_/]+)?([A-Za-z0-9_.]+)")
+FILE_PATH_RE_STR = complete_re(r"([A-Za-z0-9_/]{1,256})?([A-Za-z0-9_.]{1,8})")
 FILE_PATH_RE = re.compile(FILE_PATH_RE_STR)     # at min *cannot* contain % < > \
 
 def check_filename(filename):
@@ -183,7 +183,7 @@ CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\dT\d\d:\d\d:\d\d(\.\d+)?"
 CONTEXT_DATETIME_RE = re.compile(complete_re(CONTEXT_DATETIME_RE_STR))
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
-CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]+(\-[a-z]+(\-[a-z]+)?)?" 
+CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z]{1,32}(\-[a-z]{1,32})?)?" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
 CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
