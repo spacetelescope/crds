@@ -13,13 +13,7 @@ from crds import rmap, log
 def update_checksum(file_):
     """Rewrite the checksum of a single mapping, in place."""
     mapping = rmap.Mapping.from_file(file_, ignore_checksum=True)
-    sha1sum = mapping._get_checksum(open(file_).read())
-    result = []
-    for line in open(file_):
-        if line.strip().startswith("'sha1sum'"):
-            line = " "*4 + "'sha1sum' : " + repr(sha1sum) + ",\n"
-        result.append(line)
-    open(file_, "w+").write("".join(result))
+    mapping.write()
 
 def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
