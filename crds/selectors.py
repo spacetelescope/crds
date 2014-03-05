@@ -899,17 +899,15 @@ class Matcher(object):
 class RegexMatcher(Matcher):
     """Matcher for raw regular expressions."""
     def __init__(self, key):
-        Matcher.__init__(self, key)
+        super(RegexMatcher, self).__init__(key)
         self._regex = re.compile(key)
         self._exceptional_matches = ["*"]
         
     def match(self, value):
-        if value == "N/A":
-            return 0
-        elif value in self._exceptional_matches or self._regex.match(value):
-            return 1
-        else:
-            return -1
+        result = super(RegexMatcher, self).match(value)
+        if result != -1:
+            return result
+        return 1 if self._regex.match(value) else -1
     
 class GlobMatcher(RegexMatcher):
     """Matcher for |-joined or *-containing expressions which basically work
@@ -944,12 +942,17 @@ class GlobMatcher(RegexMatcher):
     -1
     >>> p.match("UVIS-SUB-QUAD")
     1
+    
+    >>> p.match("*")
+    1
+    >>> p.match("N/A")
+    0
     """
     def __init__(self, key):
         parts = key.split("|")
         exprs = [fnmatch.translate(part) for part in parts]
-        all = "^(" + "|".join(exprs) + ")$"
-        RegexMatcher.__init__(self, all)
+        new_key = "^(" + "|".join(exprs) + ")$"
+        super(GlobMatcher, self).__init__(new_key)
         # To support automatic refactoring in the refactor module,  also
         # match on the original key such as A|B|C|D
         self._exceptional_matches.append(key)
@@ -971,17 +974,22 @@ class InequalityMatcher(Matcher):
     -1
     >>> m.match("-100")
     1
+    >>> m.match("*")
+    1
+    >>> m.match("N/A")
+    0
     """
     def __init__(self, key):
-        Matcher.__init__(self, key)
+        super(InequalityMatcher, self).__init__(key)
         parts = re.match(
             r"^([><]=?)\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", key)
         self._operator = parts.group(1)
         self._value =  float(parts.group(2))
         
     def match(self, value):
-        if value == "*":
-            return 1
+        result = super(InequalityMatcher, self).match(value)
+        if result != -1:
+            return result
         return { 
             ">" : lambda m, n :  1 if m > n else -1,
             "<" : lambda m, n :  1 if m < n else -1,
@@ -994,7 +1002,7 @@ class BinaryMatcher(Matcher):
     expressions.
     """
     def __init__(self, key, operator):
-        Matcher.__init__(self, key)
+        super(BinaryMatcher, self).__init__(key)
         self._operator = operator.strip()
         assert self._operator in ["and","or"], "bad binary operator"
         parts = [x.strip() for x in key.split(operator)]
@@ -1002,6 +1010,9 @@ class BinaryMatcher(Matcher):
         self._matcher2 = matcher(parts[1])
         
     def match(self, value):
+        result = super(BinaryMatcher, self).match(value)
+        if result != -1:
+            return result
         if self._operator == "and" :
             return 1 if ((self._matcher1.match(value)==1) and \
                     (self._matcher2.match(value)==1)) else -1
@@ -1009,10 +1020,10 @@ class BinaryMatcher(Matcher):
             return 1 if ((self._matcher1.match(value)==1) or \
                     (self._matcher2.match(value)==1)) else -1
 
-class WildcardMatcher(Matcher):
+class NaMatcher(Matcher):
     """Matcher that always matches,  simplifies/speeds code elsewhere."""
-    def __init__(self, key="*"):
-        Matcher.__init__(self, key)
+    def __init__(self, key="N/A"):
+        super(NaMatcher, self).__init__(key)
         
     def match(self, value):
         """Always match with "don't care" status."""
@@ -1084,6 +1095,10 @@ def matcher(key):
     1
     >>> b.match("21")
     -1
+    >>> b.match("*")
+    1
+    >>> b.match("N/A")
+    0
     
     >>> c = matcher("#>20 or <5#")
     >>> c.match("4")
@@ -1112,6 +1127,10 @@ def matcher(key):
     1
     >>> d.match("3200")
     -1
+    >>> d.match("*")
+    1
+    >>> d.match("N/A")
+    0
     >>> matcher("between 42 39")
     Traceback (most recent call last):
     ...
@@ -1151,7 +1170,7 @@ def matcher(key):
     elif "|" in key or "*" in key:
         return GlobMatcher(key)
     elif key == "N/A":
-        return WildcardMatcher("N/A")
+        return NaMatcher("N/A")
     elif key.startswith((">","<")):
         return InequalityMatcher(key)
     else:
@@ -1256,7 +1275,7 @@ of uniform rmap structure for HST:
         self._substitutions = rmap_header.get("substitutions", {})
         selects = self.do_substitutions(parameters, selections, self._substitutions)
 
-        Selector.__init__(self, parameters, selects, rmap_header)  # largely overridden
+        super(MatchSelector, self).__init__(parameters, selects, rmap_header)  # largely overridden
         self._raw_selections = sorted(selections.items())  # override __init__ using selects
 
         self._match_selections = self.get_matcher_selections(dict_wo_dups(self._selections))

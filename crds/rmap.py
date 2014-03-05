@@ -83,7 +83,7 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 class MappingError(crds.CrdsError):
     """Exception in load_rmap."""
     def __init__(self, *args):
-        crds.CrdsError.__init__(self, " ".join([str(x) for x in args]))
+        super(MappingError, self).__init__(" ".join([str(x) for x in args]))
 
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
@@ -674,7 +674,7 @@ class PipelineContext(ContextMapping):
                       "name", "derived_from"]
 
     def __init__(self, filename, header, selector, **keys):
-        ContextMapping.__init__(self, filename, header, selector, **keys)
+        super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
         self.selections = {}
         self._check_type("pipeline")
@@ -770,7 +770,7 @@ class InstrumentContext(ContextMapping):
     type = "instrument"
 
     def __init__(self, filename, header, selector, **keys):
-        ContextMapping.__init__(self, filename, header, selector)
+        super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.selections = {}
@@ -930,7 +930,7 @@ class ReferenceMapping(Mapping):
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
 
     def __init__(self, *args, **keys):
-        Mapping.__init__(self, *args, **keys)
+        super(ReferenceMapping, self).__init__(*args, **keys)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
