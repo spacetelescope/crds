@@ -990,12 +990,16 @@ class InequalityMatcher(Matcher):
         result = super(InequalityMatcher, self).match(value)
         if result != -1:
             return result
+        try:
+            float_value = float(value)
+        except Exception:
+            return -1
         return { 
             ">" : lambda m, n :  1 if m > n else -1,
             "<" : lambda m, n :  1 if m < n else -1,
             ">=" : lambda m, n :  1 if m >= n else -1,
             "<=" : lambda m, n :  1 if m <= n else -1,
-         }[self._operator](float(value), self._value)
+         }[self._operator](float_value, self._value)
 
 class BinaryMatcher(Matcher):
     """A matcher which supports logical "or" and "and" for relational
@@ -1004,21 +1008,26 @@ class BinaryMatcher(Matcher):
     def __init__(self, key, operator):
         super(BinaryMatcher, self).__init__(key)
         self._operator = operator.strip()
-        assert self._operator in ["and","or"], "bad binary operator"
+        assert self._operator in ["AND","OR"], "bad binary operator"
+        if key.strip().startswith("#"):
+            key = key.strip()[1:-1]
         parts = [x.strip() for x in key.split(operator)]
         self._matcher1 = matcher(parts[0])
         self._matcher2 = matcher(parts[1])
         
     def match(self, value):
+        value = value.upper()
         result = super(BinaryMatcher, self).match(value)
         if result != -1:
             return result
-        if self._operator == "and" :
+        if self._operator == "AND" :
             return 1 if ((self._matcher1.match(value)==1) and \
                     (self._matcher2.match(value)==1)) else -1
-        elif self._operator == "or":
+        elif self._operator == "OR":
             return 1 if ((self._matcher1.match(value)==1) or \
                     (self._matcher2.match(value)==1)) else -1
+        else:
+            raise RuntimeError("BinaryMatcher logic error.")
 
 class NaMatcher(Matcher):
     """Matcher that always matches,  simplifies/speeds code elsewhere."""
@@ -1113,6 +1122,13 @@ def matcher(key):
     1
     >>> c.match("20.1")
     1
+
+    For simple support of ranges displayed as parameter choices,  match them literally as well:
+
+    >>> c.match("#>20 OR <5#")
+    1
+    >>> c.match("#>20 or <27#")
+    -1
     
     A simplified special relation,  between,  defines a slice range:
     
@@ -1153,20 +1169,20 @@ def matcher(key):
     elif key.startswith("{") and key.endswith("}"):
         return Matcher(key[1:-1])
     elif key.startswith("#") and key.endswith("#"):
-        key = key.lower()
-        if " and " in key:
-            return BinaryMatcher(key[1:-1], "and")
-        elif " or " in key:
-            return BinaryMatcher(key[1:-1], "or")
+        key = key.upper()
+        if " AND " in key:
+            return BinaryMatcher(key, "AND")
+        elif " OR " in key:
+            return BinaryMatcher(key, "OR")
         else:
             return matcher(key[1:-1])
-    elif key.lower().startswith("between"):
+    elif key.upper().startswith("BETWEEN"):
         parts = key.split()
         assert len(parts) == 3, "Invalid between relation " + repr(key)
         assert float(parts[1]) <= float(parts[2]), \
             "Invalid between relation " + repr(key) + \
             " should be 'between lower_bound upper_bound'"
-        return BinaryMatcher(">=" + parts[1]+ " and <" + parts[2], "and")
+        return BinaryMatcher(">=" + parts[1]+ " AND <" + parts[2], "AND")
     elif "|" in key or "*" in key:
         return GlobMatcher(key)
     elif key == "N/A":
