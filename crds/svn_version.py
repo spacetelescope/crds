@@ -1,17 +1,15 @@
-__svn_version__ = '1445M'
+__svn_version__ = '1449M'
 
 __full_svn_info__ = '''
 Path: .
-Working Copy Root Path: /Users/eisenham/Documents/ssbdev/crds
-URL: http://subversion.assembla.com/svn/crds/trunk
-Relative URL: ^/trunk
-Repository Root: http://subversion.assembla.com/svn/crds
+URL: https://subversion.assembla.com/svn/crds/trunk
+Repository Root: https://subversion.assembla.com/svn/crds
 Repository UUID: 0d8f46c8-9b30-49d0-b470-0f6283dc92e8
-Revision: 1445
+Revision: 1449
 Node Kind: directory
 Schedule: normal
-Last Changed Author: stsci_jmiller
-Last Changed Rev: 1445
-Last Changed Date: 2014-02-28 09:52:51 -0500 (Fri, 28 Feb 2014)
+Last Changed Author: stscieisenhamer
+Last Changed Rev: 1449
+Last Changed Date: 2014-03-05 11:28:03 -0500 (Wed, 05 Mar 2014)
 
 '''
