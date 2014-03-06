@@ -124,3 +124,19 @@ def acs_biasfile_filter(kmap_orig):
                 del kmap[match]
     return kmap, header_additions
 
+def acs_darkfile_filter(kmap_orig):
+    """
+    Post-SM4 APERTURE's of '' were all replaced and cannot match,  hence dropped at CRDS rmap generation time.
+    """
+    kmap = copy.deepcopy(kmap_orig)
+    header_additions = {}
+    for match in kmap_orig:
+        header = dict(zip(BIASFILE_PARKEYS, match))
+        try:
+            if float(header["CCDGAIN"]) == -999.0:
+                log.warning("CCDGAIN=-999.0 Deleting match", match, "with", kmap[match])
+                del kmap[match]
+        except Exception:
+            pass
+    return kmap, header_additions
+
