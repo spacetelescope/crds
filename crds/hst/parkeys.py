@@ -89,7 +89,7 @@ def process_reference_file_defs():
     from BeautifulSoup import BeautifulStoneSoup
 
     xml = BeautifulStoneSoup(
-            open("cdbs/cdbs_bestref/reference_file_defs.xml").read())
+            open(HERE + "/reference_file_defs.xml").read())
     rdefs = {}
     for node in xml.findAll("instrument"):
         instr = ccontents(node.instrument_name)
