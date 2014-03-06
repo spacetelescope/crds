@@ -18,6 +18,7 @@
 # 03/08/12  MSwam   added CCDGAIN=-999 rule to allow pre-SM4 expansion of
 #                   gain values for WFC
 # 09/06/12  72157   MSwam  added APERTURE expansions  
+# 02/20/14  77246   MSwam  add APERTURE=NONE to ANY_FULL expansion
 #-------------------------------------------------------------------------
 DETECTOR = WFC && CCDAMP = ABCDALL =>
 CCDAMP = A || CCDAMP = B || CCDAMP = C || CCDAMP = D || CCDAMP = ABCD ;
@@ -35,6 +36,7 @@ CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 0.5 || CCDGAIN = 1.4 ;
 
 DETECTOR = WFC && CCDGAIN = -999 =>
 CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;
+
 # For CRDS
 DETECTOR = WFC && CCDGAIN = -999.0 =>
 CCDGAIN = 1.0 || CCDGAIN = 2.0 || CCDGAIN = 4.0 || CCDGAIN = 8.0 ;
@@ -92,7 +94,7 @@ OBSTYPE = IMAGING || OBSTYPE = CORONAGRAPHIC ;
 DETECTOR = WFC && APERTURE = ANY_FULL =>
 APERTURE = WFC || APERTURE = WFC-FIX   || APERTURE = WFCENTER ||
 APERTURE = WFC1 || APERTURE = WFC1-FIX || APERTURE = WFC1-CTE ||
-APERTURE = WFC2 || APERTURE = WFC2-FIX ||
+APERTURE = WFC2 || APERTURE = WFC2-FIX || APERTURE = NONE ||
 APERTURE = WFC1-IRAMP || APERTURE = WFC1-MRAMP ||
 APERTURE = WFC2-MRAMP || APERTURE = WFC2-ORAMP;
 

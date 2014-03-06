@@ -224,7 +224,7 @@ def _load_cdbs_catalog(kind):
     
     Note that there can be more than one CdbsCat per (instrument, filekind).
     """
-    catpath = os.path.join(HERE, "cdbs", "cdbs_tpns","cdbscatalog.dat")
+    catpath = os.path.join(HERE, "tpns","cdbscatalog.dat")
     catalog = []
     for line in open(catpath):
         line = line.strip()

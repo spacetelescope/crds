@@ -15,6 +15,13 @@
 # reference file type.  If not, the expansion rule won't have access to
 # the keyword value when evaluating the rule, and the rule will not trigger.
 #
+# History:
+# ????/??/?? nnnnn  ???      original version
+# 2013/09/27 75694  MSwam    add DETECTOR for STIS:IMP
+#--------------------------------------------------------------------------
+DETECTOR = ANY =>
+DETECTOR=CCD || DETECTOR=NUV-MAMA || DETECTOR=FUV-MAMA ;
+
 OBSTYPE = ANY =>
 OBSTYPE=IMAGING || OBSTYPE=SPECTROSCOPIC ;
 

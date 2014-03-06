@@ -142,9 +142,9 @@ def compile_files(files):
     expansions = {}
     for f in files:
         instrument = os.path.basename(f).replace(".rule","")
-        log.info("Compiling expansion rules for", instrument)
+        log.info("Compiling expansion rules for", instrument, "from", f)
         expansions[instrument] = compile_rules(f)
-    open(HERE + "/substitutions.dat", "w+").write(pprint.pformat(expansions))
+    open("./substitutions.dat", "w+").write(pprint.pformat(expansions))
 
 def get_substitutions(instr):
     return utils.evalfile(HERE+"/substitutions.dat").get(instr.lower(), {})
