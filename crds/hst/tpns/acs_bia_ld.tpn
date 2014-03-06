@@ -7,6 +7,7 @@
 #
 # 09/15/08 60769 MSwam    new CCDGAIN values
 # 09/06/12 72157 MSwam    add APERTURE
+# 02/20/14 77246 MSwam    add APERTURE = NONE
 #
 # NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
 #--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ REFERENCE_FILE_TYPE H	C	R    	BIA
 DETECTOR	C	C	R	WFC,HRC
 CCDAMP		C	C	R	A,B,C,D,AC,AD,BC,BD,ABCD
 CCDGAIN         C       R       R       0.5,1.0,1.4,2.0,4.0,8.0
-APERTURE        C       C       R       SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
+APERTURE        C       C       R       NONE,SBC,SBC-FIX,WFC,WFC-FIX,WFC1,\
                                         WFC1-1K,WFC1-2K,WFC1-512,WFC1-CTE,\
                                         WFC1-FIX,WFC1-IRAMP,WFC1-IRAMPQ,\
                                         WFC1-MRAMP,WFC1-MRAMPQ,WFC2,WFC2-2K,\

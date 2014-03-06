@@ -16,6 +16,7 @@ COMPARISON_FILE     H        C         R
 COMMENT             H        C         R
 INSTRUMENT          H        C         R    STIS
 REFERENCE_FILE_TYPE H        C         R    IMP
+DETECTOR            C        C         R    CCD,FUV-MAMA,NUV-MAMA
 PEDIGREE            C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
