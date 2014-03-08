@@ -2,10 +2,17 @@
 w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
 call returns the jsonrpc "result" field.
 """
+import sys
 import urllib2 as urllib
 import uuid
 
 from json import loads, dumps
+
+if sys.version_info < (3,0,0):
+    import HTMLParser as parser_mod
+else:
+    import html.parser as parser_mod
+PARSER = parser_mod.HTMLParser()
 
 from crds import log
 
@@ -66,8 +73,9 @@ class CheckingProxy(object):
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            log.verbose("FAILED", jsonrpc["error"]["message"], verbosity=55)
-            raise ServiceError(jsonrpc["error"]["message"])
+            decoded = PARSER.unescape(jsonrpc["error"]["message"])
+            log.verbose("FAILED", decoded, verbosity=55)
+            raise ServiceError(decoded)
         log.verbose("SUCCEEDED", verbosity=55)
         return jsonrpc["result"]
     
