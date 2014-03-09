@@ -120,11 +120,17 @@ class HeaderGenerator(object):
         if only_ids is None:
             only_ids = headers2.keys()
             
+        items = headers2.items()
+        for dataset_id, header in items:
+            if isinstance(header, basestring):
+                log.warning("Skipping bad dataset", dataset_id, ":", headers2[dataset_id])
+                del headers2[dataset_id]
+
         # Munge for consistent case and value formatting regardless of source
         headers2 = { dataset_id.upper() : 
                         { key.upper():utils.condition_value(val) for (key,val) in headers2[dataset_id].items() } 
                         for dataset_id in headers2 if dataset_id in only_ids }
-
+        
         # replace param-by-param,  not id-by-id, since headers2[id] may be partial
         for dataset_id in headers2:
             if dataset_id not in self.headers:
