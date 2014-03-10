@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'jwst_nirspec_linearity_0001.rmap',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_linearity_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'ca2a8ff797f66a0f7de113d916b1817c34915e3a',
+}
+
+selector = Match({
+    ('NRS1', 'ANY') : 'jwst_nirspec_linearity_0004.fits',
+    ('NRS2', 'ANY') : 'jwst_nirspec_linearity_0005.fits',
+})
