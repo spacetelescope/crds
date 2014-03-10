@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'jwst_fgs_linearity_0001.rmap',
+    'filekind' : 'LINEARITY',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_linearity_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '2011b7b58f2111177feef71af2adcde0ff3d8d95',
+}
+
+selector = Match({
+    ('FGS1', 'ANY') : 'jwst_fgs_linearity_0004.fits',
+    ('FGS2', 'ANY') : 'jwst_fgs_linearity_0005.fits',
+})
