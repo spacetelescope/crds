@@ -149,11 +149,10 @@ def _initial_recommendations(
 
     mode, final_context = get_processing_mode(observatory, context)
 
-    warn_bad_context(final_context)
-
     if mode == "local":
         bestrefs = local_bestrefs(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
+        warn_bad_context(final_context)
     else:
         log.verbose("Computing best references remotely.")
         bestrefs = light_client.get_best_references(final_context, parameters, reftypes=reftypes)
