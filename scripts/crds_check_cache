@@ -1,0 +1,23 @@
+#! /bin/csh
+#
+# e.g.  source envs/jwst-crds-readonly.csh;   crds_check_cache jwst [--verbose]
+#
+# Check that the file closure of all pmaps certifies and that all mappings and references
+# exist in the cache.   Another approach to this is the sync tool,  but this approach
+# does not attempt to alter the cache.   closure == every reachable file.
+#
+# NOTE:  as of this writing,  changes to certification criteria are not required to be
+# backward compatible,  so,  what "certifies now",  may not "certify later".   Hence,
+# a blanket view of ERROR messages may include extraneous info not relevant to the
+# original ceritification of a mapping or reference,  or more importantly,  to the
+# existence of files in the cache.  It should also be noted that the existence check
+# performed here is bare bones,  and does not currently include file size or checksum
+# as can be done by the sync tool.   Nevertheless, this is a redundant check with a
+# somewhat simpler implementation than is found in the crds.sync tool,  and one which 
+# can be performed without a network connection.
+#
+foreach pmap (${CRDS_PATH}/mappings/$1/$1*.pmap)
+    echo "==================================================================================" |& cat
+    python -m crds.certify --$1 $pmap --exist $2 $3 $4 $5 $6
+end
+
