@@ -416,8 +416,8 @@ and debug output.
             assert self.new_context and self.old_context, "--diffs-only only works for context-to-context bestrefs."
             assert not self.args.instruments, "--diffs-only automatically selects processed instruments."
             self.affected_instruments = diff.get_affected(self.old_context, self.new_context)
-            log.info("Differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
-                    log.PP(self.affected_instruments))
+            log.info("Mapping differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
+                     log.PP(self.affected_instruments))
             self.args.instruments = self.affected_instruments.keys()
         
         if self.args.datasets_since == "auto":
@@ -473,14 +473,23 @@ and debug output.
         self.add_argument("-d", "--datasets", nargs="+", metavar="IDs", default=None,
             help="Dataset ids to consult database for matching parameters and old results.")
         
+        self.add_argument("--all-instruments", action="store_true", default=None,
+            help="Compute best references for cataloged datasets for all supported instruments in database.")
+        
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
             help="Instruments to compute best references for, all historical datasets in database.")
         
+        self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
+            help="A list of reference types to process,  defaulting to all types.")
+        
+        self.add_argument("-k", "--skip-types", nargs="+",  metavar="SKIPPED_REFERENCE_TYPES",  default=(),
+            help="A list of reference types which should not be processed,  defaulting to nothing.")
+        
         self.add_argument("--diffs-only", action="store_true", default=None,
-            help="For context-to-context comparison, only choose instruments and types based on diffs.")
+            help="For context-to-context comparison, choose only instruments and types from context differences.")
 
-        self.add_argument("--all-instruments", action="store_true", default=None,
-            help="Compute best references for cataloged datasets for all supported instruments in database.")
+        self.add_argument("--datasets-since", default="1900-01-01T00:00:00", type=reformat_date_or_auto,
+            help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.")
         
         self.add_argument("-p", "--load-pickles", nargs="*", default=None,
             help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.")
@@ -491,35 +500,26 @@ and debug output.
         self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
             help="If specified, process only the listed dataset ids.")
         
-        self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
-            help="A list of reference types to process,  defaulting to all types.")
-        
-        self.add_argument("-k", "--skip-types", nargs="+",  metavar="SKIPPED_REFERENCE_TYPES",  default=(),
-            help="A list of reference types which should be skipped,  defaulting to nothing.")
-        
-        self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs",
-            help="Update dataset headers with new best reference recommendations.", 
-            action="store_true")
-        
-        self.add_argument("--print-affected",
-            help="Print names of data sets for which the new context would assign new references.",
-            action="store_true")
+        self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true", 
+            help="Update dataset headers with new best reference recommendations.")
+                    
+        self.add_argument("--print-affected", dest="print_affected", action="store_true",
+            help="Print names of products for which the new context would assign new references for some exposure.")
     
-        self.add_argument("--print-affected-details",
-            help="Include instrument and affected types in addition to names of affected datasets.",
-            action="store_true")
+        self.add_argument("--print-affected-details", action="store_true",
+            help="Include instrument and affected types in addition to compound names of affected exposures.")
     
-        self.add_argument("--print-new-references",
-            help="Prints messages detailing each reference file change.   If no comparison "
-                "was requested,  prints all best references.",
-            action="store_true")
+        self.add_argument("--print-new-references", action="store_true",
+            help="Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.")
     
-        self.add_argument("-r", "--remote-bestrefs",
-            help="Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'",
-            action="store_true")
+        self.add_argument("-r", "--remote-bestrefs", action="store_true",
+            help="Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'")
         
-        self.add_argument("-s", "--sync-references", action="store_true",
-            help="Fetch the refefences recommended by new context to the local cache.")
+        self.add_argument("-m", "--sync-mappings", default="1", dest="sync_mappings", type=int,
+            help="Fetch the required context mappings to the local cache.  Defaults TRUE.")
+
+        self.add_argument("-s", "--sync-references", default="0", dest="sync_references", type=int,
+            help="Fetch the refefences recommended by new context to the local cache. Defaults FALSE.")
         
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
@@ -535,9 +535,6 @@ and debug output.
         
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
-        
-        self.add_argument("--datasets-since", default="1900-01-01T00:00:00", type=reformat_date_or_auto,
-            help="Date prior to which datasets are not considered for context change effects.  Use 'auto' to exploit reference USEAFTER.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
     
@@ -580,6 +577,7 @@ and debug output.
             log.verbose(name, "=", repr(context), "contains bad rules", repr(bad_contained))
 
     def warn_bad_reference(self, dataset, instrument, filekind, reference):
+        """Issue a warning if `reference` is a known bad file."""
         if reference.lower() in self.bad_files:
             if self.args.bad_files_are_errors:
                 self.log_and_track_error(dataset, instrument, filekind, "File", repr(reference), 
@@ -603,16 +601,19 @@ and debug output.
     def sync_context(self, context):
         """Recursively cache the new and comparison mappings."""
         if context:
-            log.verbose("Syncing context", repr(context), verbosity=25)
             try:
                 rmap.get_cached_mapping(context)   # if it loads,  it's cached.
                 return
             except IOError:
-                try:
-                    api.dump_mappings(context)   # otherwise fetch it.
-                except Exception, exc:
-                    log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()))
-                    sys.exit(-1)
+                if self.args.sync_mappings:
+                    try:
+                        log.verbose("Syncing context", repr(context), verbosity=25)
+                        api.dump_mappings(context)   # otherwise fetch it.
+                    except Exception, exc:
+                        log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()))
+                        sys.exit(-1)
+                else:
+                    raise RuntimeError("Context '{}' is not available in the local cache and --sync-mappings=False.".format(context))
 
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
@@ -881,26 +882,55 @@ and debug output.
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
         self.warn_bad_updates()
-        if self.args.print_affected or self.args.print_affected_details:
-            for dataset in self.updates:
-                if self.updates[dataset]:
-                    if self.args.print_affected_details:
-                        types = sorted([update.filekind for update in self.updates[dataset]])
-                        print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
-                    else:
-                        print(dataset.lower()) 
+        if self.args.print_affected:
+            self.print_affected()
+        if self.args.print_affected_details:
+            self.print_affected_details()
         if self.args.print_new_references:
-            for dataset in self.updates:
-                for reftype in self.updates[dataset]:
-                    print(dataset.lower() + " " + " ".join([str(val).lower() for val in reftype]))
+            self.print_new_references()
         if self.args.update_bestrefs:
             log.verbose("Performing best references updates.")
             self.new_headers.handle_updates(self.updates)
         if self.args.sync_references:
-            references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
-            api.dump_references(self.new_context, references, ignore_cache=self.args.ignore_cache, 
-                                raise_exceptions=self.args.pdb)
+            self.sync_references()
         self.dump_unique_errors()
+        
+    def print_affected(self):
+        """Print the product id for any product which has new bestrefs for any
+        of its component exposures.   All components share a common product id.
+        """
+        for product in sorted(set([self.dataset_to_product_id(dataset) 
+                                   for dataset in self.updates 
+                                   if self.updates[dataset]])):
+            print(product)
+
+    def dataset_to_product_id(self, dataset):
+        """CRDS manages products and associations using : separated compound IDs of indeterminate
+        complexity.  The only thing guaranteed is that the first colon-section of the dataset ID is the
+        product (for possible reprocessing) which is reported whenever any bestref changes for any
+        dataset ID beginning with that prefix.
+        """
+        return dataset.split(":")[0].lower()
+    
+    def print_affected_details(self):
+        """Print compound ID, instrument, and affected reference types for every exposure with new best references,
+        one line per exposure.
+        """
+        for dataset in self.updates:
+            if self.updates[dataset]:
+                types = sorted([update.filekind for update in self.updates[dataset]])
+                print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
+
+    def print_new_references(self):
+        """Print the compound id and update tuple for each exposure with updates."""
+        for dataset in sorted(self.updates):
+            for update in self.updates[dataset]:
+                print(dataset.lower() + " " + " ".join([str(val).lower() for val in update]))
+                
+    def sync_references(self):
+        """Locally cache the new references referred to by updates."""
+        references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
+        api.dump_references(self.new_context, references, raise_exceptions=self.args.pdb)
 
 # ===================================================================
 
