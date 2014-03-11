@@ -30,6 +30,7 @@ import os
 import pprint
 import glob
 import ast
+import traceback
 
 import crds.client as light_client
 from . import rmap, log, utils, config
@@ -152,30 +153,34 @@ def _initial_recommendations(
     if mode == "local":
         bestrefs = local_bestrefs(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
-        warn_bad_context(final_context)
     else:
         log.verbose("Computing best references remotely.")
         bestrefs = light_client.get_best_references(final_context, parameters, reftypes=reftypes)
     
+    warn_bad_context(observatory, final_context)
     warn_bad_references(observatory, bestrefs)
         
     return final_context, bestrefs
 
 # ============================================================================
 
-def warn_bad_context(context):
+def warn_bad_context(observatory, context):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
-    bad_contained = get_bad_mappings_in_context(context)
+    bad_contained = get_bad_mappings_in_context(observatory, context)
     if bad_contained:
         log.warning("Final context", repr(context), 
                     "is bad or contains bad rules.  It may produce scientifically invalid results.")
         log.verbose("Final context", repr(context), "contains bad files:", repr(bad_contained))
 
-def get_bad_mappings_in_context(context):
+def get_bad_mappings_in_context(observatory, context):
     """Return the list of bad files (defined by the server) contained by `context`."""
-    mapping = crds.get_cached_mapping(context)
-    contained_mappings = set(mapping.mapping_names())
-    bad_mappings = get_bad_files(mapping.observatory)
+    mode, _jnk = get_processing_mode(observatory, context)
+    if mode == "remote":
+        contained_mappings = set(light_client.get_mapping_names(context))
+    else:
+        mapping = crds.get_cached_mapping(context)
+        contained_mappings = set(mapping.mapping_names())
+    bad_mappings = get_bad_files(observatory)
     return sorted(list(contained_mappings.intersection(bad_mappings)))
 
 def warn_bad_references(observatory, bestrefs):
@@ -243,9 +248,8 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         try:
             light_client.dump_mappings(context, ignore_cache=ignore_cache)
         except crds.CrdsError, exc:
-            import traceback
             traceback.print_exc()
-            raise crds.CrdsNetworkError("Network failure caching mapping files: " + str(exc))
+            raise crds.CrdsNetworkError("Failed caching mapping files: " + str(exc))
     # Finally do the best refs computation using pmap methods from local code.
     bestrefs = rmap.get_best_references(context, parameters, reftypes)
     return bestrefs
@@ -391,7 +395,7 @@ def cache_server_info(observatory, info):
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
     except IOError, exc:
-        log.warning("Couldn't save CRDS server info:", repr(exc))
+        log.verbose_warning("Couldn't save CRDS server info:", repr(exc))
     try:
         bad_files = path + "/bad_files.txt"
         utils.ensure_dir_exists(bad_files)
@@ -399,7 +403,7 @@ def cache_server_info(observatory, info):
         with open(bad_files, "w+") as file_:
             file_.write(bad_files_lines)
     except IOError, exc:
-        log.warning("Couldn't save CRDS bad files list:", repr(exc))
+        log.verbose_warning("Couldn't save CRDS bad files list:", repr(exc))
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
