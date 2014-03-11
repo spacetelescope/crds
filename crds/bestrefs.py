@@ -37,7 +37,6 @@ class HeaderGenerator(object):
     """Generic source for lookup parameters and historical comparison results."""
     def __init__(self, context, sources, datasets_since):
         self.context = context
-        self.ctx = crds.get_cached_mapping(self.context)
         self.sources = sources
         self.pmap = rmap.get_cached_mapping(context)
         self.headers = {}
@@ -48,7 +47,7 @@ class HeaderGenerator(object):
         for source in self.sources:
             with log.error_on_exception("Failed loading source", repr(source), 
                                         "from", repr(self.__class__.__name__)):
-                instrument = self.ctx.get_instrument(self.header(source))
+                instrument = self.pmap.get_instrument(self.header(source))
                 exptime = matches.get_exptime(self.header(source))
                 since = self.datasets_since(instrument)
                 if since is None or exptime >= since:
