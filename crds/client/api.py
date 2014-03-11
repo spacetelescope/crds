@@ -303,8 +303,9 @@ def get_dataset_headers_by_id(context, dataset_ids):
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
     if datasets_since is None:
-        datasets_since = "1900-01-01T00:00:00"
-    return S.get_dataset_headers_by_instrument(context, instrument, datasets_since)
+        return S.get_dataset_headers_by_instrument(context, instrument)
+    else:
+        return S.get_dataset_headers_by_instrument(context, instrument, datasets_since)
 
 def get_dataset_ids(context, instrument):
     """Return [ dataset_id, ...] for `instrument`."""

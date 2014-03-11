@@ -51,7 +51,7 @@ class HeaderGenerator(object):
                 instrument = self.ctx.get_instrument(self.header(source))
                 exptime = matches.get_exptime(self.header(source))
                 since = self.datasets_since(instrument)
-                if exptime >= since:
+                if since is None or exptime >= since:
                     yield source
                 else:
                     log.verbose("Dropping source", repr(source), 
@@ -194,11 +194,13 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         sorted_sources = []
         for instrument in self.instruments:
             since_date = self.datasets_since(instrument)
-            log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server),
-                     "since", repr(since_date))
+            if since_date:
+                log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server),
+                         "since", repr(since_date))
+            else:
+                log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server))
             more = api.get_dataset_headers_by_instrument(self.context, instrument, since_date)
-            log.info("Dumped", len(more), "datasets for", repr(instrument), "from CRDS server at", repr(server),
-                     "since", repr(since_date))
+            log.info("Dumped", len(more), "datasets for", repr(instrument))
             self.headers.update(more)
             sorted_sources.extend(sorted(more.keys()))
         return sorted_sources
@@ -255,7 +257,9 @@ def reformat_date_or_auto(date):
     """Add 'auto' as an extra valid value for --datasets-since dates.  Auto means figure out dates-since
     based on USEAFTER dates (recorded in rmaps as DATE-OBS TIME-OBS or META.OBSERVATION.DATE).
     """
-    if date.lower() == "auto":
+    if date is None:
+        return date
+    elif date.lower() == "auto":
         return "auto"
     else:
         return timestamp.reformat_date(date)
@@ -488,7 +492,7 @@ and debug output.
         self.add_argument("--diffs-only", action="store_true", default=None,
             help="For context-to-context comparison, choose only instruments and types from context differences.")
 
-        self.add_argument("--datasets-since", default="1900-01-01T00:00:00", type=reformat_date_or_auto,
+        self.add_argument("--datasets-since", default=None, type=reformat_date_or_auto,
             help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.")
         
         self.add_argument("-p", "--load-pickles", nargs="*", default=None,
@@ -566,7 +570,7 @@ and debug output.
         if context is None:
             return
         # Get subset of bad files contained by this context.
-        bad_contained = heavy_client.get_bad_mappings_in_context(context)
+        bad_contained = heavy_client.get_bad_mappings_in_context(self.observatory, context)
         if bad_contained:
             if self.args.bad_files_are_errors:
                 self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
