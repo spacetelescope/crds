@@ -138,7 +138,7 @@ Compute and print files with at least one reference change:
 
 Compute simple bestrefs for 3 files using the default context from the server:
 
-    >>> case = BestrefsScript(argv="bestrefs.py --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context=hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
     >>> status = case.run()
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
@@ -153,7 +153,7 @@ Compute simple bestrefs for 3 files using the default context from the server:
 
 Same + one broken file to test shell error status
 
-    >>> case = BestrefsScript(argv="bestrefs.py --files data/j8bt05njq_raw.fits data/j8bt05njq_raw_broke.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt05njq_raw_broke.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
     >>> status = case.run()
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
