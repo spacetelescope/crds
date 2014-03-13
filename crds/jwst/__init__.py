@@ -11,6 +11,7 @@ TEXT_DESCR = {
     "amplifier" : "Detector Amplifier Readout Parameters",
     "readnoise" : "Read Noise",
     "gain" : "Gain",
+    "saturation" : "Saturation",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
