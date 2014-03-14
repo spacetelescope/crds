@@ -5,7 +5,7 @@ import os.path
 
 import pyfits
 
-from crds import rmap, timestamp, pysh, log, data_file, refactor
+from crds import rmap, timestamp, pysh, log, data_file
 
 RMAP_STUB = """
 header = {
