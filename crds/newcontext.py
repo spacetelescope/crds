@@ -5,7 +5,7 @@ import os.path
 import shutil
 import re
 
-from crds import (rmap, utils, log, cmdline)
+from crds import (rmap, utils, log, cmdline, refactor)
 
 # =============================================================================
 
@@ -128,7 +128,18 @@ def fake_name(old_map):
         if not new_map.startswith("./"):
             new_map = "./" + new_map
         return new_map
-        
+
+def update_header_names(name_map):
+    """Update the .name and .derived_from fields in mapping new_path.header
+    to reflect derivation from old_path and name new_path.
+    """
+    for old_path, new_path in name_map.items():
+        old_base, new_base = os.path.basename(old_path), os.path.basename(new_path)
+        refactor.update_derivation(new_path, old_base)
+        log.info("Adjusting name", repr(new_base), "derived_from", repr(old_base), 
+                 "in", repr(new_path))
+    return name_map # no change
+
 # ============================================================================
 
 class NewContextScript(cmdline.Script):
@@ -143,7 +154,8 @@ fake names and are for local test purposes only,  not formal distribution.
         self.add_argument("new_rmap", nargs="+", help="Names of new rmaps to insert into the new context.""")
         
     def main(self):
-        new_context(self.args.old_pmap, self.args.new_rmap)
-        
+        name_map = new_context(self.args.old_pmap, self.args.new_rmap)
+        update_header_names(name_map)
+
 if __name__ == "__main__":
     NewContextScript()()
