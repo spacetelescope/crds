@@ -5,7 +5,7 @@ import os.path
 
 import pyfits
 
-from crds import rmap, timestamp, pysh, log, data_file
+from crds import rmap, timestamp, pysh, log, data_file, utils
 
 RMAP_STUB = """
 header = {
@@ -39,8 +39,8 @@ def generate_new_rmap(reference_context, parkey, new_references):
         old_instrument, old_filekind = instrument, filekind
         
         header = pyfits.getheader(ref)
-        assert header["REFTYPE"] ==  pmap.locate.filekind_to_reftype(filekind)
-        assert header["FILETYPE"] == pmap.locate.filekind_to_reftype(filekind)
+        assert header["FILETYPE"] == pmap.locate.filekind_to_filetype(filekind)
+        assert header["REFTYPE"] ==  filekind.upper()
 
     assert instrument in pmap.obs_package.INSTRUMENTS, "Invalid instrument " + repr(instrument)
     assert filekind in pmap.obs_package.FILEKINDS, "Invalid filekind at " + repr(filekind)
@@ -79,7 +79,7 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
     pmap = rmap.get_cached_mapping(reference_context)
     rmaps = []
     for instr in pmap.obs_package.INSTRUMENTS:
-        added_references = [ref for ref in all_references if instr.lower() in ref]
+        added_references = [ref for ref in all_references if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
         path = generate_new_rmap(reference_context, parkey, added_references)
         rmaps.append(path)
         pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)

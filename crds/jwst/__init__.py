@@ -12,6 +12,7 @@ TEXT_DESCR = {
     "readnoise" : "Read Noise",
     "gain" : "Gain",
     "saturation" : "Saturation",
+    "ipc" : "Interpixel Capacitance",
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
