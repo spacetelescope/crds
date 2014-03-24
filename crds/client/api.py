@@ -37,6 +37,8 @@ __all__ = [
            "get_crds_server",
          
            "list_mappings",
+           "list_references",
+
            "get_file_chunk",
            "get_url",
            "get_file_info",
@@ -141,6 +143,12 @@ def list_mappings(observatory=None, glob_pattern="*"):
     which match `glob_pattern`.
     """
     return [str(x) for x in S.list_mappings(observatory, glob_pattern)]
+
+def list_references(observatory=None, glob_pattern="*"):
+    """Return the list of references associated with `observatory`
+    which match `glob_pattern`.
+    """
+    return [str(x) for x in S.list_references(observatory, glob_pattern)]
 
 def get_mapping_url(pipeline_context, mapping):
     """Returns a URL for the specified pmap, imap, or rmap file.
