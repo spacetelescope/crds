@@ -222,25 +222,26 @@ def ref_properties_from_cdbs_path(filename):
 
 # =======================================================================
 
-REFTYPE_TO_FILEKIND = {
+FILETYPE_TO_FILEKIND = {
     "DETECTOR PARAMETERS" : "AMPLIFIER",
     "PIXEL-TO-PIXEL FLAT" : "FLAT",
     "PHOTOMETRIC CALIBRATION" : "PHOTOM",
+    "INTERPIXEL CAPACITANCE" : "IPC",
 }
 
-FILEKIND_TO_REFTYPE = utils.invert_dict(REFTYPE_TO_FILEKIND)
+FILEKIND_TO_FILETYPE = utils.invert_dict(FILETYPE_TO_FILEKIND)
 
-def reftype_to_filekind(reftype):
-    reftype = reftype.upper()
-    if reftype in REFTYPE_TO_FILEKIND:
-        return REFTYPE_TO_FILEKIND[reftype].lower()
+def filetype_to_filekind(filetype):
+    filetype = filetype.upper()
+    if filetype in FILETYPE_TO_FILEKIND:
+        return FILETYPE_TO_FILEKIND[filetype].lower()
     else:
-        return reftype.lower()
+        return filetype.lower()
 
-def filekind_to_reftype(filekind):
+def filekind_to_filetype(filekind):
     filekind = filekind.upper()
-    if filekind in FILEKIND_TO_REFTYPE:
-        return FILEKIND_TO_REFTYPE[filekind]
+    if filekind in FILEKIND_TO_FILETYPE:
+        return FILEKIND_TO_FILETYPE[filekind]
     else:
         return filekind
 
@@ -254,8 +255,8 @@ def ref_properties_from_header(filename):
     instrument = header.get("INSTRUME", "UNDEFINED").lower()
     assert instrument in INSTRUMENTS, \
         "Invalid instrument " + repr(instrument) + " in file " + repr(filename)
-    reftype = header.get("REFTYPE", "UNDEFINED").lower()
-    filekind = reftype_to_filekind(reftype)
+    filetype = header.get("FILETYPE", "UNDEFINED").lower()
+    filekind = filetype_to_filekind(filetype)
     assert filekind in FILEKINDS, \
         "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
