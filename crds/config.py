@@ -158,12 +158,12 @@ def complete_re(regex_str):
     """Add ^$ to `regex_str` to force match to entire string."""
     return "^" + regex_str + "$"
 
-OBSERVATORY_RE_STR = complete_re("[a-zA-Z_0-9]{1,8}")
-OBSERVATORY_RE = re.compile(OBSERVATORY_RE_STR)
-FILE_RE_STR = complete_re(r"[A-Za-z0-9_ ]{1,128}(\.[A-Za-z0-9_ ]{1,8})?")
-FILE_RE = re.compile(FILE_RE_STR)          # at min *cannot* contain % < > \
-FILE_PATH_RE_STR = complete_re(r"([A-Za-z0-9_/]{1,256})?([A-Za-z0-9_.]{1,8})")
-FILE_PATH_RE = re.compile(FILE_PATH_RE_STR)     # at min *cannot* contain % < > \
+OBSERVATORY_RE_STR = r"[a-zA-Z_0-9]{1,8}"
+OBSERVATORY_RE = re.compile(complete_re(OBSERVATORY_RE_STR))
+FILE_RE_STR = r"[A-Za-z0-9_\- ]{1,128}(\.[A-Za-z0-9_\-]{1,8})?"
+FILE_RE = re.compile(complete_re(FILE_RE_STR)) # at min *should not* contain % < > \ { }
+FILE_PATH_RE_STR = r"([/A-Za-z0-9_\- ]{1,256})?(\.[A-Za-z0-9_\-]{1,8})?"
+FILE_PATH_RE = re.compile(complete_re(FILE_PATH_RE_STR))  # at min *should not* contain % < > \ { }
 
 def check_filename(filename):
     """Verify that `filename` is a basename with no dangerous characters."""
