@@ -231,15 +231,14 @@ def update_file_bestrefs(pmap, dataset, updates):
     """Update the header of `dataset` with best reference recommendations
     `bestrefs` determined by context named `pmap`.
     """
+    if not updates:
+        return
     pmap = rmap.asmapping(pmap)
+    log.verbose("Setting", repr(dataset), "CRDS_CTX =", repr(pmap.name))
     # XXX TODO switch pyfits.setval to data_file.setval if a data model equivalent
     # is defined for CRDS_CTX
-    
-    # Here we use the dataset file because we know we have the full path, 
-    # whereas the reference we'd have to locate.
-    instrument = utils.file_to_instrument(dataset)
+    instrument = updates[0].instrument
     prefix = pmap.locate.get_env_prefix(instrument)    
-    log.verbose("Setting", repr(dataset), "CRDS_CTX =", repr(pmap.name))
     hdulist = pyfits.open(dataset, mode="update")
     hdulist[0].header["CRDS_CTX"] = pmap.basename
     for update in sorted(updates):
