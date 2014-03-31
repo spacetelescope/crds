@@ -77,7 +77,7 @@ class CheckingProxy(object):
             log.verbose("FAILED", decoded, verbosity=55)
             raise ServiceError(decoded)
         log.verbose("SUCCEEDED", verbosity=55)
-        return jsonrpc["result"]
+        return crds_decode(jsonrpc["result"])
     
 def fix_strings(rval):
     """Convert unicode to strings."""
@@ -91,3 +91,31 @@ def fix_strings(rval):
         return { fix_strings(key):fix_strings(val) for (key, val) in rval.items()}
     else:
         return rval
+
+# ============================================================================
+
+# These operate transparently in the proxy and are optionally used by the server.
+#
+# This makes a new client with crds_decoder compatible with both encoding and 
+# unencoding servers.
+#
+# An older client without crds_decoder will not work with a new server which is encoding.
+# That could be achieved,  but wasn't because the function where the feature was
+# needed would not work without compression anyway.
+
+def crds_encode(obj):
+    """Return a JSON-compatible encoding of `obj`,  nominally json-ified, compressed,
+    and base64 encooded.   This is nominally to be called on the server.
+    """
+    return dict(crds_encoded = "1.0",
+                crds_payload = dumps(obj).encode('zlib').encode('base64'))
+
+def crds_decode(s):
+    """Decode something which was crds_encode'd,  or return it unaltered if
+    it wasn't.
+    """
+    if isinstance(s, dict) and "crds_encoded" in s:
+        json_str = s["crds_payload"].decode('base64').decode('zlib')
+        return loads(json_str)
+    else:
+        return s
