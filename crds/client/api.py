@@ -308,15 +308,18 @@ def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
     return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
 
-IDS_PER_RPC = 5000
-
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
-    ids = get_dataset_ids(context, instrument, datasets_since)
+    max_ids_per_rpc = get_cached_server_info().get("max_headers_per_rpc", 5000)
+    try:
+        ids = get_dataset_ids(context, instrument, datasets_since)
+    except Exception, exc:
+        log.verbose_warning("get_dataset_ids failed.  ignoring datasets_since = ", repr(datasets_since))
+        ids = get_dataset_ids(context, instrument)        
     headers = {}
-    for i in range(0, len(ids), IDS_PER_RPC):
-        id_slice = ids[i : i + IDS_PER_RPC]
-        log.verbose("Dumping datasets for", repr(instrument), "ids", i , "of", len(ids), verbosity=30)
+    for i in range(0, len(ids), max_ids_per_rpc):
+        id_slice = ids[i : i + max_ids_per_rpc]
+        log.verbose("Dumping datasets for", repr(instrument), "ids", i , "of", len(ids), verbosity=20)
         header_slice = get_dataset_headers_by_id(context, id_slice)
         headers.update(header_slice)
     return headers
