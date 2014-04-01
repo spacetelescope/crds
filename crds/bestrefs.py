@@ -201,8 +201,19 @@ class InstrumentHeaderGenerator(HeaderGenerator):
             more = api.get_dataset_headers_by_instrument(self.context, instrument, since_date)
             log.info("Dumped", len(more), "datasets for", repr(instrument))
             self.headers.update(more)
-            sorted_sources.extend(sorted(more.keys()))
+            sorted_sources.extend(more.keys())        
+        sorted_sources = sorted(self.remove_failed_sources(sorted_sources))
         return sorted_sources
+
+    def remove_failed_sources(self, sources):
+        """Check `sources` ids list for failures,  removing any failed ids and issuing an error."""
+        sources_all = sources[:]
+        for source in sources_all:
+            header = self.header(source)
+            if isinstance(header, str):
+                log.error("Failed fetching header info for", repr(source), ":", header)
+                sources.remove(source)
+        return sources
 
 class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
