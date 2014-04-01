@@ -308,12 +308,18 @@ def get_dataset_headers_by_id(context, dataset_ids):
     """Return { dataset_id : { header } } for `dataset_ids`."""
     return S.get_dataset_headers_by_id(context, dataset_ids)
 
+IDS_PER_RPC = 5000
+
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
-    if datasets_since is None:
-        return S.get_dataset_headers_by_instrument(context, instrument)
-    else:
-        return S.get_dataset_headers_by_instrument(context, instrument, datasets_since)
+    ids = get_dataset_ids(context, instrument)
+    headers = {}
+    for i in range(0, len(ids), IDS_PER_RPC):
+        id_slice = ids[i : i + IDS_PER_RPC]
+        log.verbose("Dumping datasets for", repr(instrument), "ids", i , "of", len(ids), verbosity=30)
+        header_slice = get_dataset_headers_by_id(context, id_slice)
+        headers.update(header_slice)
+    return headers
 
 def get_dataset_ids(context, instrument):
     """Return [ dataset_id, ...] for `instrument`."""
