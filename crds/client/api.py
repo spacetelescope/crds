@@ -304,15 +304,15 @@ def get_server_info():
     except ServiceError, exc:
         raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
 
-def get_dataset_headers_by_id(context, dataset_ids):
+def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
-    return S.get_dataset_headers_by_id(context, dataset_ids)
+    return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
 
 IDS_PER_RPC = 5000
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
-    ids = get_dataset_ids(context, instrument)
+    ids = get_dataset_ids(context, instrument, datasets_since)
     headers = {}
     for i in range(0, len(ids), IDS_PER_RPC):
         id_slice = ids[i : i + IDS_PER_RPC]
@@ -321,9 +321,9 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
         headers.update(header_slice)
     return headers
 
-def get_dataset_ids(context, instrument):
+def get_dataset_ids(context, instrument, datasets_since=None):
     """Return [ dataset_id, ...] for `instrument`."""
-    return S.get_dataset_ids(context, instrument)
+    return S.get_dataset_ids(context, instrument, datasets_since)
 
 def get_required_parkeys(context):
     """Return a mapping from instruments to lists of parameter names required to
