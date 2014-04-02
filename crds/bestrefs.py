@@ -180,17 +180,21 @@ class DatasetHeaderGenerator(HeaderGenerator):
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
-    def __init__(self, context, instruments, datasets_since):
+    def __init__(self, context, instruments, datasets_since, save_pickles):
         """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
-        super(InstrumentHeaderGenerator, self).__init__(context, instruments, datasets_since)
-        self.context = context
+        super(InstrumentHeaderGenerator, self).__init__(context, [], datasets_since)
         self.instruments = instruments
-        self.sources = self.download_datasets()
-
-    def download_datasets(self):
-        """Download and filter the datasets."""
+        self.sources = self.determine_source_ids()
+        self.save_pickles = save_pickles
+        try:
+            self.segment_size = heavy_client.get_config_info(self.pmap.observatory)[1]["max_headers_per_rpc"]
+        except:
+            self.segment_size = 5000
+            
+    def determine_source_ids(self):
+        """Return the dataset ids for all instruments."""
         server = api.get_crds_server()
-        sorted_sources = []
+        source_ids = []
         for instrument in self.instruments:
             since_date = self.datasets_since(instrument)
             if since_date:
@@ -198,22 +202,35 @@ class InstrumentHeaderGenerator(HeaderGenerator):
                          "since", repr(since_date))
             else:
                 log.info("Dumping dataset parameters for", repr(instrument), "from CRDS server at", repr(server))
-            more = api.get_dataset_headers_by_instrument(self.context, instrument, since_date)
-            log.info("Dumped", len(more), "datasets for", repr(instrument))
-            self.headers.update(more)
-            sorted_sources.extend(more.keys())        
-        sorted_sources = sorted(self.remove_failed_sources(sorted_sources))
-        return sorted_sources
-
-    def remove_failed_sources(self, sources):
-        """Check `sources` ids list for failures,  removing any failed ids and issuing an error."""
-        sources_all = sources[:]
-        for source in sources_all:
-            header = self.header(source)
-            if isinstance(header, str):
-                log.error("Failed fetching header info for", repr(source), ":", header)
-                sources.remove(source)
-        return sources
+            instr_ids = api.get_dataset_ids(self.context, instrument, self.datasets_since(instrument))
+            log.info("Downloaded ", len(instr_ids), "dataset ids for", repr(instrument), "since", repr(since_date)) 
+            source_ids.extend(instr_ids)
+        return source_ids
+    
+    def header(self, source):
+        """Return the header associated with dataset id `source`,  fetching the surround segment of
+        headers if `source` is not already in the cached set of headers.
+        """
+        if source not in self.headers:
+            self.fetch_source_segment(source)
+        return self.headers[source]
+    
+    def fetch_source_segment(self, source):
+        """Return the segment of dataset ids which surrounds id `source`."""
+        try:
+            index = self.sources.index(source) // self.segment_size
+        except ValueError:
+            raise CrdsError("Unknown dataset id " + repr(source))
+        lower = index * self.segment_size
+        upper = (index +1) * self.segment_size
+        segment_ids = self.sources[lower:upper]
+        log.verbose("Dumping", len(segment_ids), "datasets from indices", lower, "to", upper, verbosity=20)
+        dumped_headers = api.get_dataset_headers_by_id(self.context, segment_ids)
+        log.verbose("Dumped", len(dumped_headers), "datasets.", verbosity=20)
+        if self.save_pickles:  #  keep all headers,  causes memory problems with multiple instruments on ~8G ram.
+            self.headers.update(dumped_headers)
+        else:  # conserve memory by keeping only the last N headers
+            self.headers = dumped_headers
 
 class PickleHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of pickle files
@@ -626,8 +643,9 @@ and debug output.
                 return
             except IOError:
                 if self.args.sync_mappings:
+                    log.verbose("Syncing context", repr(context), verbosity=25)
+                    self.require_server_connection()
                     try:
-                        log.verbose("Syncing context", repr(context), verbosity=25)
                         api.dump_mappings(context)   # otherwise fetch it.
                     except Exception, exc:
                         log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()))
@@ -656,7 +674,9 @@ and debug output.
             self.require_server_connection()
             instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
             log.info("Computing bestrefs for db datasets for", repr(instruments))
-            new_headers = InstrumentHeaderGenerator(context, instruments, datasets_since)
+            if self.args.save_pickle and len(instruments) > 1:
+                log.warning("--save-pickle with multiple instruments may require > 8G ram.")
+            new_headers = InstrumentHeaderGenerator(context, instruments, datasets_since, self.args.save_pickle)
         elif self.args.load_pickles:
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
@@ -703,10 +723,10 @@ and debug output.
         
         self.complex_init()   # Finish __init__() inside --pdb
         
-        datasets = [ dataset for dataset in self.new_headers 
-                     if (not self.args.only_ids) or dataset in self.args.only_ids ]
-            
-        for dataset in datasets:
+        for dataset in self.new_headers:
+            if self.args.only_ids and dataset not in self.args.only_ids:
+                log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
+                continue
             updates = self.process(dataset)
             if updates:
                 self.updates[dataset] = updates
@@ -844,11 +864,9 @@ and debug output.
             new = new_org.upper()
             
             old = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip().upper()
-        
-            if old in ("N/A", "NONE", "", "*"):
-                old = "N/A"
-            if new.startswith("NOT FOUND N/A"):
-                new = "N/A"
+            
+            old = clean_na(old)
+            new = clean_na(new)
             
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 new = "N/A"
@@ -957,6 +975,14 @@ and debug output.
 def cleanpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
     return name.split("$")[-1].strip()
+
+def clean_na(ref):
+    """Convert different N/A forms into N/A."""
+    ref2 = ref.upper()
+    if ref2 in ("N/A", "NONE", "", "*") or ref2.startswith("NOT FOUND N/A"):
+        return "N/A"
+    else:
+        return ref
 
 # ============================================================================
 
