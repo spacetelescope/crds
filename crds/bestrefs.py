@@ -72,6 +72,14 @@ class HeaderGenerator(object):
             return self._datasets_since
 
     def header(self, source):
+        """Return the full header corresponding to `source`.   If header is a string, raise an exception."""
+        header = self._header(source)
+        if isinstance(header, str):
+            raise RuntimeError("Failed to fetch header: " + header)
+        else:
+            return header
+
+    def _header(self, source):
         """Return the full header corresponding to `source`.   Source is a dataset id or filename."""
         return self.headers[source]
         
@@ -154,7 +162,7 @@ class HeaderGenerator(object):
 
 class FileHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and old bestrefs from dataset files."""
-    def header(self, filename):
+    def _header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
         if filename not in self.headers:
             self.headers[filename] = data_file.get_header(filename, observatory=self.pmap.observatory)
@@ -207,14 +215,14 @@ class InstrumentHeaderGenerator(HeaderGenerator):
             source_ids.extend(instr_ids)
         return source_ids
     
-    def header(self, source):
+    def _header(self, source):
         """Return the header associated with dataset id `source`,  fetching the surround segment of
         headers if `source` is not already in the cached set of headers.
         """
         if source not in self.headers:
             self.fetch_source_segment(source)
         return self.headers[source]
-    
+
     def fetch_source_segment(self, source):
         """Return the segment of dataset ids which surrounds id `source`."""
         try:
