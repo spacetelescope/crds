@@ -306,7 +306,10 @@ def get_server_info():
 
 def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
-    return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
+    if datasets_since is None:
+        return S.get_dataset_headers_by_id(context, dataset_ids)
+    else:
+        return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
@@ -326,8 +329,11 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
 
 def get_dataset_ids(context, instrument, datasets_since=None):
     """Return [ dataset_id, ...] for `instrument`."""
-    return S.get_dataset_ids(context, instrument, datasets_since)
-
+    if datasets_since is None:
+        return S.get_dataset_ids(context, instrument)   # for older servers
+    else:
+        return S.get_dataset_ids(context, instrument, datasets_since)
+        
 def get_required_parkeys(context):
     """Return a mapping from instruments to lists of parameter names required to
     compute bestrefs under `context`,  i.e. matching header keys.
