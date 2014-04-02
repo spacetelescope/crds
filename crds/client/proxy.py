@@ -5,8 +5,7 @@ call returns the jsonrpc "result" field.
 import sys
 import urllib2 as urllib
 import uuid
-
-from json import loads, dumps
+import json
 
 if sys.version_info < (3,0,0):
     import HTMLParser as parser_mod
@@ -47,10 +46,10 @@ class CheckingProxy(object):
         #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
         #                  '(the default version for this client, '
         #                  'pass version="2.0" to use keyword arguments)')
-        parameters = dumps({"jsonrpc": self.__version,
-                            "method": self.__service_name,
-                            'params': params,
-                            'id': str(uuid.uuid1())})
+        parameters = json.dumps({"jsonrpc": self.__version,
+                                 "method": self.__service_name,
+                                 'params': params,
+                                 'id': str(uuid.uuid1())})
         log.verbose("CRDS JSON RPC to", repr(self.__service_url), 
                     "method", repr(self.__service_name), 
                     "parameters", params,
@@ -63,21 +62,21 @@ class CheckingProxy(object):
             log.verbose("FAILED", str(exc), verbosity=55)
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
         try:
-            rval = loads(response)
+            rval = json.loads(response)
         except Exception, exc:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
-        rval = fix_strings(rval)
         return rval
     
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = PARSER.unescape(jsonrpc["error"]["message"])
+            decoded = str(PARSER.unescape(jsonrpc["error"]["message"]))
             log.verbose("FAILED", decoded, verbosity=55)
             raise ServiceError(decoded)
         log.verbose("SUCCEEDED", verbosity=55)
-        return crds_decode(jsonrpc["result"])
+        result = crds_decode(jsonrpc["result"])
+        return fix_strings(result)
     
 def fix_strings(rval):
     """Convert unicode to strings."""
@@ -108,7 +107,7 @@ def crds_encode(obj):
     and base64 encooded.   This is nominally to be called on the server.
     """
     return dict(crds_encoded = "1.0",
-                crds_payload = dumps(obj).encode('zlib').encode('base64'))
+                crds_payload = json.dumps(obj).encode('zlib').encode('base64'))
 
 def crds_decode(s):
     """Decode something which was crds_encode'd,  or return it unaltered if
@@ -116,6 +115,6 @@ def crds_decode(s):
     """
     if isinstance(s, dict) and "crds_encoded" in s:
         json_str = s["crds_payload"].decode('base64').decode('zlib')
-        return loads(json_str)
+        return json.loads(json_str)
     else:
         return s
