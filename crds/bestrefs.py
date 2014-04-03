@@ -457,14 +457,27 @@ and debug output.
         
         self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
         
+        # Support 0 to 1 mutually exclusive source modes and/or any number of pickles
+        exclusive_source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
+                                  self.args.diffs_only, self.args.all_instruments]
+        source_modes = len(exclusive_source_modes) - exclusive_source_modes.count(None)
+        using_pickles = int(bool(self.args.load_pickles))
+        assert source_modes <= 1 and (source_modes + using_pickles) >= 1, \
+            "Must specify one of: --files, --datasets, --instruments, --all-instruments, --diffs-only and/or --load-pickles."
+
         if self.args.diffs_only:
             assert self.new_context and self.old_context, "--diffs-only only works for context-to-context bestrefs."
-            assert not self.args.instruments, "--diffs-only automatically selects processed instruments."
             self.affected_instruments = diff.get_affected(self.old_context, self.new_context)
             log.info("Mapping differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
                      log.PP(self.affected_instruments))
-            self.args.instruments = self.affected_instruments.keys()
-        
+            self.instruments = self.affected_instruments.keys()
+        elif self.args.instruments:
+            self.instruments = self.args.instruments
+        elif self.args.all_instruments:
+            self.instruments = self.newctx.locate.INSTRUMENTS
+        else:
+            self.instruments = []
+
         if self.args.datasets_since == "auto":
             datasets_since = self.auto_datasets_since()
         else:
@@ -667,10 +680,6 @@ and debug output.
     
     def init_headers(self, context, datasets_since):
         """Create header a header generator for `context`,  interpreting command line parameters."""
-        source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
-                        self.args.all_instruments].count(None)
-        assert (4 - source_modes <= 1) and (source_modes + int(bool(self.args.load_pickles)) >= 1), \
-            "Must specify one and only one of: --files, --datasets, --instruments, --all-instruments, --load-pickles."
         if self.args.files:
             new_headers = FileHeaderGenerator(context, self.args.files, datasets_since)
             # log.info("Computing bestrefs for dataset files", self.args.files)
@@ -678,13 +687,12 @@ and debug output.
             self.require_server_connection()
             new_headers = DatasetHeaderGenerator(context, [dset.upper() for dset in self.args.datasets], datasets_since)
             log.info("Computing bestrefs for datasets", repr(self.args.datasets))
-        elif self.args.instruments or self.args.all_instruments:
+        elif self.instruments:
             self.require_server_connection()
-            instruments = self.newctx.locate.INSTRUMENTS if self.args.all_instruments else self.args.instruments
-            log.info("Computing bestrefs for db datasets for", repr(instruments))
-            if self.args.save_pickle and len(instruments) > 1:
+            log.info("Computing bestrefs for db datasets for", repr(self.instruments))
+            if self.args.save_pickle and len(self.instruments) > 1:
                 log.warning("--save-pickle with multiple instruments may require > 8G ram.")
-            new_headers = InstrumentHeaderGenerator(context, instruments, datasets_since, self.args.save_pickle)
+            new_headers = InstrumentHeaderGenerator(context, self.instruments, datasets_since, self.args.save_pickle)
         elif self.args.load_pickles:
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
