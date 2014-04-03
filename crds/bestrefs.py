@@ -881,9 +881,11 @@ and debug output.
             
             old = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip().upper()
             
-            old = clean_na(old)
-            new = clean_na(new)
-            
+            if old in ("N/A", "NONE", "", "*"):
+                old = "N/A"
+            if new.startswith("NOT FOUND N/A"):
+                new = "N/A"
+             
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 new = "N/A"
                 if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
@@ -991,14 +993,6 @@ and debug output.
 def cleanpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
     return name.split("$")[-1].strip()
-
-def clean_na(ref):
-    """Convert different N/A forms into N/A."""
-    ref2 = ref.upper()
-    if ref2 in ("N/A", "NONE", "", "*") or ref2.startswith("NOT FOUND N/A"):
-        return "N/A"
-    else:
-        return ref
 
 # ============================================================================
 
