@@ -304,9 +304,39 @@ def get_server_info():
     except ServiceError, exc:
         raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
 
+@utils.cached
+def get_cached_server_info():
+    """Cached version of get_server_info(),  nominally one fetch per process run."""
+    return get_server_info()
+
+def get_server_version():
+    """Return the API version of the current CRDS server."""
+    info = get_cached_server_info()
+    return info["crds_version"]["str"]
+
 def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
-    return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
+    if get_server_version() >= "1.0":
+        return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
+    else:
+        assert datasets_since is None, "datasets_since not supported by this server."
+        return S.get_dataset_headers_by_id(context, dataset_ids)
+    
+def get_dataset_ids(context, instrument, datasets_since=None):
+    """Return [ dataset_id, ...] for `instrument`."""
+    if get_server_version() >= "1.0":
+        return S.get_dataset_ids(context, instrument, datasets_since)
+    else:
+        assert datasets_since is None, "datasets_since not supported by this server."
+        return S.get_dataset_ids(context, instrument)
+
+def get_required_parkeys(context):
+    """Return a mapping from instruments to lists of parameter names required to
+    compute bestrefs under `context`,  i.e. matching header keys.
+    
+    { instrument : [ matching_parkey_name, ... ], ... }
+    """
+    return S.get_required_parkeys(context)
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
@@ -323,20 +353,6 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
         header_slice = get_dataset_headers_by_id(context, id_slice)
         headers.update(header_slice)
     return headers
-
-def get_dataset_ids(context, instrument, datasets_since=None):
-    """Return [ dataset_id, ...] for `instrument`."""
-    return S.get_dataset_ids(context, instrument, datasets_since)
-
-def get_required_parkeys(context):
-    """Return a mapping from instruments to lists of parameter names required to
-    compute bestrefs under `context`,  i.e. matching header keys.
-    
-    { instrument : [ matching_parkey_name, ... ], ... }
-    """
-    return S.get_required_parkeys(context)
-
-
 
 # ==============================================================================
 
