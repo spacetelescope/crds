@@ -18,6 +18,11 @@ from crds.client import api
 
 # ===================================================================
 
+MIN_DATE = "1900-01-01 00:00:00"
+MAX_DATE = "9999-01-01 23:59:59"
+    
+# ===================================================================
+
 UpdateTuple = namedtuple("UpdateTuple", ["instrument", "filekind", "old_reference", "new_reference"])
 
 class UnsupportedUpdateMode(CrdsError):
@@ -50,6 +55,7 @@ class HeaderGenerator(object):
                 instrument = self.pmap.get_instrument(self.header(source))
                 exptime = matches.get_exptime(self.header(source))
                 since = self.datasets_since(instrument)
+                # since == None when no command line argument given.
                 if since is None or exptime >= since:
                     yield source
                 else:
@@ -67,7 +73,7 @@ class HeaderGenerator(object):
         were identified by --datsets-since=auto.
         """
         if isinstance(self._datasets_since, dict):
-            return self._datasets_since.get(instrument.lower(),  "9999-01-01 23:59:59")
+            return self._datasets_since.get(instrument.lower(),  MIN_DATE)
         else:
             return self._datasets_since
 
@@ -262,7 +268,7 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         segment_ids = self.sources[lower:upper]
         log.verbose("Dumping", len(segment_ids), "datasets from indices", lower, "to", upper, verbosity=20)
         dumped_headers = api.get_dataset_headers_by_id(self.context, segment_ids)
-        log.verbose("Dumped", len(dumped_headers), "datasets.", verbosity=20)
+        log.verbose("Dumped", len(dumped_headers), "datasets", verbosity=20)
         if self.save_pickles:  #  keep all headers,  causes memory problems with multiple instruments on ~8G ram.
             self.headers.update(dumped_headers)
         else:  # conserve memory by keeping only the last N headers
@@ -521,7 +527,7 @@ and debug output.
 
         if self.args.files and not self.args.update_bestrefs:
             log.info("No file header updates requested;  dry run.")
-    
+
     def auto_datasets_since(self):
         """Support --datasets-since="auto" and compute min EXPTIME for all references determined by diffs.
         
@@ -531,9 +537,16 @@ and debug output.
         for instrument in self.oldctx.selections:
             old_imap = self.oldctx.get_imap(instrument)
             new_imap = self.newctx.get_imap(instrument)
-            new_references = diff.get_added_references(old_imap, new_imap)
-            if new_references:
-                datasets_since[instrument] = exptime = matches.get_minimum_exptime(new_imap.name, new_references)
+            added_references = diff.get_added_references(old_imap, new_imap)
+            deleted_references = diff.get_deleted_references(old_imap, new_imap)
+            added_exp_time = deleted_exp_time = MAX_DATE
+            if added_references:
+                added_exp_time = matches.get_minimum_exptime(new_imap.name, added_references)
+            if deleted_references:
+                deleted_exp_time = matches.get_minimum_exptime(old_imap.name, deleted_references)
+            exp_time = min(added_exp_time, deleted_exp_time)
+            if exp_time != MAX_DATE: # if a USEAFTER min found,  remember it.
+                datasets_since[instrument] = exp_time
         log.info("Possibly affected --datasets-since dates determined by", 
                  repr(self.old_context), "-->", repr(self.new_context), "are:\n", log.PP(datasets_since))
         return datasets_since
