@@ -70,7 +70,8 @@ class SyncScript(cmdline.ContextsScript):
                 % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
      
             will download all the references mentioned by contexts 0001 and 0002.   
-            this can be a huge undertaking and should be done with care.
+            this can be a huge (1T+) network download and should generally only be used by
+            institutions,  not individual researchers.
             
     * Removing files:
               
@@ -96,17 +97,15 @@ class SyncScript(cmdline.ContextsScript):
         % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
     
       would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
-      be checked for correct length, sha1sum, and reject and blacklist status.   Any files with bad length or checksum
-      would then be deleted and re-downloaded.   This is really intended for an *existing* cache,  where the actual
-      sync download process is a null operation which just determines the list of files to check.
+      be checked for correct length, sha1sum, and status.   Any files with bad length or checksum
+      would then be deleted and re-downloaded.   This is really intended for an *existing* cache.
       
     * Removing blacklisted or rejected files::
               
         % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
     
       would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
-      be checked for correct length, and reject and blacklist status.   Files reported as rejected or blacklisted by 
-      the server would be removed.
+      be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
     """
     
     # ------------------------------------------------------------------------------------------
@@ -168,7 +167,7 @@ class SyncScript(cmdline.ContextsScript):
             if self.args.purge_mappings:
                 self.purge_mappings()
         else:
-            log.error("Define --contexts, --files, or --fetch-sqlite-db to sync.")
+            log.error("Define --all, --contexts, --last, --range, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
         if self.args.check_files:
             self.verify_files(verify_file_list)

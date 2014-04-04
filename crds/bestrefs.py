@@ -185,6 +185,34 @@ class DatasetHeaderGenerator(HeaderGenerator):
         log.info("Dumping dataset parameters from CRDS server at", repr(server), "for", repr(datasets))
         self.headers = api.get_dataset_headers_by_id(context, datasets)
         log.info("Dumped", len(self.headers), "of", len(datasets), "datasets from CRDS server at", repr(server))
+
+        # every command line id should correspond to 1 or more headers
+        for source in self.sources:
+            if self.matching_two_part_id(source) not in self.headers.keys():
+                log.warning("Dataset", repr(source), "isn't represented by downloaded parameters.")
+
+        # Process according to downloaded 2-part ids,  not command line ids.
+        self.sources = self.headers.keys()
+
+    def matching_two_part_id(self, source):
+        """Convert any command line dataset id into it's matching two part id.
+        
+        matching_two_part_id(<association>)                  -->  <association>  : <first_member>
+
+        matching_two_part_id(<association>:<member>)         -->  <association>  : <member>
+        matching_two_part_id(<unassociated>)                 -->  <unassociated> : <unassociated>
+        matching_two_part_id(<unassociated>:<unassociated>)  -->  <unassociated> : <unassociated>
+        """
+        parts = source.split(":")
+        assert 1 <= len(parts) <= 2, "Invalid dataset id " + repr(source)
+        try:   # when specifying datasets with 1-part id, return first of "associated ids"
+               # when specifying datasets with 2-part id,
+            if len(parts) == 1:
+                return sorted(id for id in self.headers if parts[0] in id)[0]
+            else:
+                return source
+        except:
+            return source
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
