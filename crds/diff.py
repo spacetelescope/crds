@@ -127,6 +127,7 @@ def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
     return [ tup + (("DIFF_COUNT", str(affected[tup])),) for tup in sorted(affected) ]
     
 DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS", "META.OBSERVATION.DATE", "DIFFERENCE", "INSTRUME", "REFTYPE")
+BORING_VARS = ["NAME", "DERIVED_FROM", "SHA1SUM", "ROW_KEYS"]  # XXX ROW_KEYS obsolete
 
 def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
     """Return a list of parameter items which characterize the effect of a difference in 
@@ -147,7 +148,7 @@ def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
         elif var not in excluded_parameters:
             affected.append((var, val))
         elif var == "DIFFERENCE" and "header" in val:
-            for boring in ["NAME", "DERIVED_FROM", "SHA1SUM"]:
+            for boring in BORING_VARS:
                 if "REPLACED " + repr(boring) in val.upper():
                     break
             else:
@@ -164,6 +165,15 @@ def format_affected_mode(mode):
     """Format an affected mode as a string."""
     return " ".join(["=".join([item[0], repr(item[1])]) for item in mode])
 
+def remove_boring(diffs):
+    """Remove routine differences from a list of diff tuples."""
+    result = diffs[:]
+    for diff in diffs:
+        for var in BORING_VARS:
+            if var.lower() in diff[-1]:
+                result.remove(diff)
+    return result
+
 def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None):
     """Examine the diffs between `old_pmap` and `new_pmap` and return sorted lists of affected instruments and types.
     
@@ -171,6 +181,7 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
     """
     instrs = defaultdict(set)
     diffs = mapping_diffs(old_pmap, new_pmap, include_header_diffs=include_header_diffs)
+    diffs = remove_boring(diffs)
     if observatory is None:
         observatory = rmap.get_cached_mapping(old_pmap).observatory
     for diff in diffs:
@@ -178,7 +189,9 @@ def get_affected(old_pmap, new_pmap, include_header_diffs=True, observatory=None
             if len(step) == 2 and rmap.is_mapping(step[0]):
                 instrument, filekind = utils.get_file_properties(observatory, step[0])
                 if instrument.strip() and filekind.strip():
-                    instrs[instrument].add(filekind)
+                    if filekind not in instrs[instrument]:
+                        log.verbose("Affected", (instrument, filekind), "based on diff", diff, verbosity=20)
+                        instrs[instrument].add(filekind)
     return { key:list(val) for (key, val) in instrs.items() }
 
 # ============================================================================
