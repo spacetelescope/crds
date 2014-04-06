@@ -979,6 +979,7 @@ and debug output.
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
         self.warn_bad_updates()
+        self.print_update_stats()
         if self.args.print_affected:
             self.print_affected()
         if self.args.print_affected_details:
@@ -1017,6 +1018,20 @@ and debug output.
             if self.updates[dataset]:
                 types = sorted([update.filekind for update in self.updates[dataset]])
                 print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
+
+    def print_update_stats(self):
+        """Print compound ID, instrument, and affected reference types for every exposure with new best references,
+        one line per exposure.
+        """
+        stats = dict()
+        for dataset in self.updates:
+            for update in self.updates[dataset]:
+                if update.instrument not in stats:
+                    stats[update.instrument] = dict()
+                if update.filekind not in stats[update.instrument]:
+                    stats[update.instrument][update.filekind] = 0
+                stats[update.instrument][update.filekind] += 1
+        log.info("Update counts:", log.PP(stats))
 
     def print_new_references(self):
         """Print the compound id and update tuple for each exposure with updates."""
