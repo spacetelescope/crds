@@ -134,9 +134,9 @@ def get_checksum_flag():
     return bool(os.environ.get("CRDS_DOWNLOAD_CHECKSUMS", "1"))
 
 # =============================================================================
-def srepr(o):
+def srepr(obj):
     """Return the repr() of the str() of `o`"""
-    return repr(str(o))
+    return repr(str(obj))
 
 def list_mappings(observatory=None, glob_pattern="*"):
     """Return the list of mappings associated with `observatory`
@@ -391,11 +391,6 @@ def observatory_from_string(string):
         return None
 
 # ==============================================================================
-
-@utils.cached
-def get_cached_server_info():
-    """Cached version of get_server_info(),  nominally one fetch per process run."""
-    return get_server_info()
 
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
