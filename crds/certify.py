@@ -555,10 +555,11 @@ class ReferenceCertifier(Certifier):
                 log.warning("No comparison reference for", repr(self.basefile), 
                             "in context", repr(self.context) + ". Skipping table comparison.")
                 return
-        n_old_hdus = len(pyfits.open(self.filename))
+        n_old_hdus = len(pyfits.open(old_reference))
         n_new_hdus = len(pyfits.open(self.filename))
         if n_old_hdus != n_new_hdus:
-            log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basefile))
+            log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basefile), ":",
+                        n_old_hdus, "vs.", n_new_hdus)
 
         for i in range(1, min(n_new_hdus, n_old_hdus)):
             self.trap("checking table modes", self.check_table_modes, old_reference, ext=i)
