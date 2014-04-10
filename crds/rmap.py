@@ -645,6 +645,24 @@ class Mapping(object):
         Overridden by PipelineMapping which figures it out from header.
         """
         return self.instrument
+
+    def apply(self, func, *args, **kargs):
+        """Apply a function recursively to this mapping and
+        all child mappings.
+        """
+
+        # Do the function on this object.
+        results = func(self, *args, **kargs)
+
+        # Now for each submapping, do the same
+        if hasattr(self, 'selections'):
+            for name, context in self.selections.items():
+                if isinstance(context, Mapping):
+                    results.extend(context.apply(func, *args, **kargs))
+
+        # that's all folks
+        return results
+
 # ===================================================================
 
 class ContextMapping(Mapping):
