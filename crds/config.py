@@ -109,6 +109,14 @@ def get_crds_env_vars():
             vars[var] = os.environ[var]
     return vars
 
+def get_crds_actual_paths():
+    """Return a dictionary of the critical paths CRDS configuration resolves to."""
+    return {
+        "mapping root" : get_crds_mappath(),
+        "reference root" : get_crds_refpath(),
+        "config root" : get_crds_config_path(),
+        }
+
 # ===========================================================================
 
 def get_path(filename, observatory):
