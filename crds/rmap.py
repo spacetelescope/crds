@@ -1081,6 +1081,7 @@ class ReferenceMapping(Mapping):
                 parkeys.append(key)
         if include_reffile_switch and self._reffile_switch != "NONE":
             parkeys.append(self._reffile_switch)
+        parkeys.extend(list(self.extra_keys))
         return parkeys
 
     def get_extra_parkeys(self):
