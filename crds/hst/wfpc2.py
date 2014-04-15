@@ -45,32 +45,24 @@ def fallback_header_wfpc2_flatfile_v1(rmap, header):
 def wfpc2_flatfile_filter(kmap):
     log.info("Hacking WFPC2 Flatfile.")
     # :  ('MODE', 'FILTER1', 'FILTER2', 'IMAGETYP', 'FILTNAM1', 'FILTNAM2', 'LRFWAVE'), ('DATE-OBS', 'TIME-OBS')),
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >3000 and <=4200 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >3000 and <=4200 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'NONE',      '# >3000 and <=4200 #')] = \
-           [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'NONE',     'FR*',      '# >3000 and <=4200 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >3000 and <=4200 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10045u.r4h', comment='')]
     
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >4200 and <=5800 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >4200 and <=5800 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'NONE',      '# >4200 and <=5800 #')] = \
-           [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'NONE',     'FR*',      '# >4200 and <=5800 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >4200 and <=5800 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004fu.r4h', comment='')]
     
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >5800 and <=7600 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >5800 and <=7600 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'NONE',      '# >5800 and <=7600 #')] = \
-           [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'NONE',     'FR*',      '# >5800 and <=7600 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >5800 and <=7600 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c1004nu.r4h', comment='')]
     
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'FR*',      '# >7600 and <=10000 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       'FR*',     '*',      '# >7600 and <=10000 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10052u.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'FR*',     'NONE',      '# >7600 and <=10000 #')] = \
-           [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10052u.r4h', comment='')]
-    kmap[('*',    '*',       '*',       'EXT',       'NONE',     'FR*',      '# >7600 and <=10000 #')] = \
+    kmap[('*',    '*',       '*',       'EXT',       '*',     'FR*',      '# >7600 and <=10000 #')] = \
            [rmap.Filemap(date='1990-01-01 00:00:00', file='m3c10052u.r4h', comment='')]
 
     header_additions = [
