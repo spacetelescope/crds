@@ -1026,8 +1026,7 @@ class ReferenceMapping(Mapping):
         `header_in` selected by this ReferenceMapping.
         """
         header_in = dict(header_in)
-        log.verbose("Getting bestrefs for", repr(self.instrument), repr(self.filekind),
-                    "parkeys", self.parkey, verbosity=55)
+        log.verbose("Getting bestrefs for", self.basename, "parkeys", self.parkey, verbosity=55)
         self.check_rmap_omit(header_in)     # Should this header keyword be omitted based on rmap_omit?
         self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
         # Some filekinds, .e.g. ACS biasfile, mutate the header
