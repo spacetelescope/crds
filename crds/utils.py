@@ -250,7 +250,11 @@ class TimingStats(object):
         self.elapsed = None
         self.output = log.info if output is None else output
         self.start()
-
+    
+    def get_stat(self, name):
+        """Return the value of statistic `name`."""
+        return self.counts[name]
+    
     def increment(self, name, amount=1):
         """Add `amount` to stat count for `name`."""
         self.counts[name] += amount

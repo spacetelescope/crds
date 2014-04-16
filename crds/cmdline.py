@@ -302,9 +302,13 @@ class Script(object):
         if self.args.stats:
             self.stats.report()
     
-    def increment_stat(self, name, amount):
+    def increment_stat(self, name, amount=1):
         """Add `amount` to the statistics counter for `name`."""
         self.stats.increment(name, amount)
+        
+    def get_stat(self, name):
+        """Return statistic `name`."""
+        return self.stats.get_stat(name)
 
     def run(self, *args, **keys):
         """script.run() is the same thing as script() but more explicit."""
