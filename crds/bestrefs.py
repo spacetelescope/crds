@@ -479,8 +479,6 @@ and debug output.
         
         self.pickle_headers = None  # any headers loaded from pickle files
         
-        self.sources_processed = 0     # datasets actually processed,  particulary when restricted by id
-
         if self.args.remote_bestrefs:
             os.environ["CRDS_MODE"] = "remote"
             
@@ -792,7 +790,7 @@ and debug output.
 
         self.report_stats()
 
-        log.verbose(self.sources_processed, "sources processed", verbosity=30)
+        log.verbose(self.get_stat("datasets"), "sources processed", verbosity=30)
         log.verbose(len(self.updates), "source updates", verbosity=30)
         log.standard_status()
         return log.errors()
@@ -813,7 +811,6 @@ and debug output.
 
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
-        self.sources_processed += 1
         new_header = self.new_headers.get_lookup_parameters(dataset)
         instrument = self.newctx.get_instrument(new_header)
         new_bestrefs = self.get_bestrefs(instrument, dataset, self.newctx, new_header)
