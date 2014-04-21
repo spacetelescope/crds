@@ -1,0 +1,24 @@
+#! /bin/tcsh
+
+# usage:  safe_bestrefs  <crds.bestrefs parameters>
+#   nominal options:  --new-context hst-operational or   --new-context hst_0010.pmap
+#                     --files <FITS files to update...>
+
+# This script is intended to be run in parallel with multiple pipeline bestrefs
+# and a concurrent cron "safe_sync".  The config.lock is intended to provide
+# exclusion from the "unsafe_sync" which updates the default operational
+# context and CRDS cache configuration area.
+
+# CRDS_LOCKS has to be set to a file system and directory where flock actually
+# works, possibly not CRDS_PATH.
+
+setenv CRDS_LOCKS  $CRDS_PATH
+
+# Make CRDS cache config area readonly before bestrefs to ensure that
+# bestrefs does not update the config area itself.
+
+flock ${CRDS_LOCKS}/config.lock --exclusive --command ( \
+    chmod 444 ${CRDS_LOCKS}/config/{hst,jwst}/*
+    python -m crds.bestrefs $* --update-bestrefs
+);
+

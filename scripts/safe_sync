@@ -1,0 +1,33 @@
+#! /bin/tcsh
+
+# usage:  safe_sync 
+
+# This script is intended to be run in a cron job at a relatively high rate,
+# say once every 10 minutes.  It renders the config area of the CRDS cache
+# readonly, so it will not update the config area, and any bestrefs running in
+# parallel processses won't see partial updates to the config area or perform
+# their own (successful) updates either.
+
+# The main purpose of this script is to perform bulk data transfers of new
+# references and rules which are not yet in operational use.  This script will
+# not update the operational context so running it will not put the newly
+# downloaded files into effect, it just pre-caches them. New files should
+# become sync'able as soon as they are archived at STScI.  The default
+# operational context is changed by running unsafe_sync.
+
+#
+# Use an flock to prevent multiple concurrent syncs, safe or unsafe.  Even
+# though sync starts only every 10 minutes, it may continue to run for hours if
+# a large batch of files simultaenously becomes available.  Prevent concurrent
+# syncs from messing up *referece and rules* transfers with a lock.  
+#
+# Make CRDS cache config area read-only before syncing to prevent asynchronouns
+# (with respect to other syncs or bestrefs) updates.  Leave it that way on
+# script exit.
+#
+
+flock ${CRDS_PATH}/sync.lock --exclusive --command ( \
+    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* ; \
+    python -m crds.sync --all --fetch-references --check-files --verbose --stats $* ; \
+)
+
