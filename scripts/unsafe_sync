@@ -1,0 +1,44 @@
+#! /bin/tcsh
+
+# usage:  unsafe_sync <options for crds.sync>
+#   nominal options:  --all  --stats --check-files --verbose
+
+# This script is intended to be run manually,  paradoxically at 
+# points which are known to be "safe".  Safe is when:
+#
+# 1. It's OK for the default operational context to change.
+#
+# 2. It's OK for the CRDS cache config area to change because
+#    there is little chance of observing a partial update with
+#    bestefs or another sync.
+#
+# 3. This script won't conflict data transfers in  another 
+#    crob-based sync.
+
+# Make CRDS cache config area writable before syncing to allow an update
+# This will update the default context as well as awareness of bad files.
+chmod 666 ${CRDS_PATH}/config/{hst,jwst}/*
+
+# Use an flock to prevent multiple concurrent syncs, safe or unsafe.  
+
+# The intent of this organization is that "safe_sync" (elsewhere in a cron)
+# does the heavy lifting of data transfer, and consequently, since no new rules
+# or references are downloaded during unsafe_sync, unsafe_sync should update
+# configuration in 10-20 seconds.  This is not however guaranteed, it's
+# possible new files can be archived between the last safe_sync and this
+# unsafe_sync...  in which case they'll download here, possibly taking minutes
+# or hours.  So unsafe_sync has to be run with some awareness that it is safe
+# with respect to local pipeline operation and new remote archive deliveries...
+# or addditional undesired latenencies will be introduced.
+
+flock ${CRDS_PATH}/sync.lock --exclusive --command ( \
+    flock ${CRDS_PATH}/config.lock --exclusive --command ( \
+        python -m crds.sync --all --fetch-references --check-files --verbose --stats $* ; \
+    ); \
+)
+
+# Make CRDS cache config area read-only before syncing to prevent asynchronous
+# updates.  Leave it that way on script exit.
+
+chmod 444 ${CRDS_PATH}/config/{hst,jwst}/*
+
