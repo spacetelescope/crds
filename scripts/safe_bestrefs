@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/sh 
 
 # usage:  safe_bestrefs  <crds.bestrefs parameters>
 #   nominal options:  --new-context hst-operational or   --new-context hst_0010.pmap
@@ -20,9 +20,7 @@ export CRDS_LOCKS="$CRDS_PATH"
 # programs do either.   unsafe_sync,  which does update the config area
 # and chmod's it read-write,  is blocked by config.lock.
 
-flock ${CRDS_LOCKS}/config.lock --exclusive --command $( \
+( flock -s 201 ; \
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null ; \
-    status=`python -m crds.bestrefs $*` ; \
-    exit $status
-);
-
+    python -m crds.bestrefs $* ; \
+) 201> ${CRDS_LOCKS}/config.lock ;

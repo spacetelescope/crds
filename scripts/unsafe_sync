@@ -34,15 +34,15 @@ export CRDS_LOCKS="$CRDS_PATH"
 # Make CRDS cache config area writable before syncing to allow an update
 # This will update the default context as well as awareness of bad files.
 
-flock ${CRDS_LOCKS}/sync.lock --exclusive --command $( \
+( flock -s 200 ; \
     chmod 666 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
-    flock ${CRDS_LOCKS}/config.lock --exclusive --command $( \
-        exit `python -m crds.sync --all --verbose --stats $*` ; \
-    ); \
+    ( flock -s 201 ; \
+      python -m crds.sync --all --verbose --stats $* ; \
+    ) 201>${CRDS_LOCKS}/config.lock; \
     status=$? ; \
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
     exit $status ; \
-);
+) 200> ${CRDS_LOCKS}/sync.lock ; 
 
 # Make CRDS cache config area read-only before syncing to prevent asynchronous
 # updates.  Leave it that way on script exit.
