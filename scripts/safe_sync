@@ -1,6 +1,8 @@
-#! /bin/tcsh
+#! /bin/sh
 
 # usage:  safe_sync 
+
+#  nominal options:  --fetch-references 
 
 # This script is intended to be run in a cron job at a relatively high rate,
 # say once every 10 minutes.  It renders the config area of the CRDS cache
@@ -15,6 +17,10 @@
 # become sync'able as soon as they are archived at STScI.  The default
 # operational context is changed by running unsafe_sync.
 
+# CRDS_LOCKS has to be set to a file system and directory where flock actually
+# works, possibly not CRDS_PATH.
+export CRDS_LOCKS="$CRDS_PATH"
+
 #
 # Use an flock to prevent multiple concurrent syncs, safe or unsafe.  Even
 # though sync starts only every 10 minutes, it may continue to run for hours if
@@ -26,8 +32,8 @@
 # script exit.
 #
 
-flock ${CRDS_PATH}/sync.lock --exclusive --command ( \
-    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* ; \
-    python -m crds.sync --all --fetch-references --check-files --verbose --stats $* ; \
+flock ${CRDS_LOCKS}/sync.lock --exclusive --command $( \
+    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null ; \
+    status=`python -m crds.sync --all --verbose --stats --check-files $*` ; \
+    exit $status ; \
 )
-

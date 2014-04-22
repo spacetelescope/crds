@@ -1,7 +1,7 @@
-#! /bin/tcsh
+#! /bin/sh
 
 # usage:  unsafe_sync <options for crds.sync>
-#   nominal options:  --all  --stats --check-files --verbose
+#   nominal options:  --fetch-references  --check-files
 
 # This script is intended to be run manually,  paradoxically at 
 # points which are known to be "safe".  Safe is when:
@@ -15,9 +15,9 @@
 # 3. This script won't conflict data transfers in  another 
 #    crob-based sync.
 
-# Make CRDS cache config area writable before syncing to allow an update
-# This will update the default context as well as awareness of bad files.
-chmod 666 ${CRDS_PATH}/config/{hst,jwst}/*
+# CRDS_LOCKS has to be set to a file system and directory where flock actually
+# works, possibly not CRDS_PATH.
+export CRDS_LOCKS="$CRDS_PATH"
 
 # Use an flock to prevent multiple concurrent syncs, safe or unsafe.  
 
@@ -31,14 +31,19 @@ chmod 666 ${CRDS_PATH}/config/{hst,jwst}/*
 # with respect to local pipeline operation and new remote archive deliveries...
 # or addditional undesired latenencies will be introduced.
 
-flock ${CRDS_PATH}/sync.lock --exclusive --command ( \
-    flock ${CRDS_PATH}/config.lock --exclusive --command ( \
-        python -m crds.sync --all --fetch-references --check-files --verbose --stats $* ; \
+# Make CRDS cache config area writable before syncing to allow an update
+# This will update the default context as well as awareness of bad files.
+
+flock ${CRDS_LOCKS}/sync.lock --exclusive --command $( \
+    chmod 666 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
+    flock ${CRDS_LOCKS}/config.lock --exclusive --command $( \
+        exit `python -m crds.sync --all --verbose --stats $*` ; \
     ); \
-)
+    status=$? ; \
+    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
+    exit $status ; \
+);
 
 # Make CRDS cache config area read-only before syncing to prevent asynchronous
 # updates.  Leave it that way on script exit.
-
-chmod 444 ${CRDS_PATH}/config/{hst,jwst}/*
 
