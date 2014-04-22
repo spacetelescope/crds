@@ -1,8 +1,14 @@
-#! /bin/sh
+#! /bin/sh 
 
 # usage:  unsafe_sync <options for crds.sync>
-#   nominal options:  --fetch-references  --check-files
-
+#
+#   options:  --fetch-references --verbose --check-files 
+#
+#   requires:  
+#        CRDS_PATH        (cache directory)
+#        CRDS_SERVER_URL  (server synced from)
+#        CRDS_LOCKS       (locks directory)
+#
 # This script is intended to be run manually,  paradoxically at 
 # points which are known to be "safe".  Safe is when:
 #
@@ -14,10 +20,6 @@
 #
 # 3. This script won't conflict data transfers in  another 
 #    crob-based sync.
-
-# CRDS_LOCKS has to be set to a file system and directory where flock actually
-# works, possibly not CRDS_PATH.
-export CRDS_LOCKS="$CRDS_PATH"
 
 # Use an flock to prevent multiple concurrent syncs, safe or unsafe.  
 
@@ -34,16 +36,11 @@ export CRDS_LOCKS="$CRDS_PATH"
 # Make CRDS cache config area writable before syncing to allow an update
 # This will update the default context as well as awareness of bad files.
 
-( flock -s 200 ; \
-    chmod 666 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
-    ( flock -s 201 ; \
-      python -m crds.sync --all --verbose --stats $* ; \
-    ) 201>${CRDS_LOCKS}/config.lock; \
-    status=$? ; \
-    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null; \
-    exit $status ; \
-) 200> ${CRDS_LOCKS}/sync.lock ; 
-
-# Make CRDS cache config area read-only before syncing to prevent asynchronous
-# updates.  Leave it that way on script exit.
+( flock --exclusive 200
+  ( flock --exclusive 201
+    chmod 666 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+    python -m crds.sync --all --stats $* 
+    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
+  ) 201> ${CRDS_LOCKS}/crds.config.lock 
+) 200> ${CRDS_LOCKS}/crds.sync.lock 
 
