@@ -1,8 +1,9 @@
-#! /bin/tcsh
+#! /bin/sh
 
 # usage:  safe_bestrefs  <crds.bestrefs parameters>
 #   nominal options:  --new-context hst-operational or   --new-context hst_0010.pmap
 #                     --files <FITS files to update...>
+#                     --update-bestrefs   (fill in FITS headers,  otherwise just run.)
 
 # This script is intended to be run in parallel with multiple pipeline bestrefs
 # and a concurrent cron "safe_sync".  The config.lock is intended to provide
@@ -10,15 +11,18 @@
 # context and CRDS cache configuration area.
 
 # CRDS_LOCKS has to be set to a file system and directory where flock actually
-# works, possibly not CRDS_PATH.
-
-setenv CRDS_LOCKS  $CRDS_PATH
+# works, possibly not CRDS_PATH which might point to a network file system with
+# broken support for locking.
+export CRDS_LOCKS="$CRDS_PATH"
 
 # Make CRDS cache config area readonly before bestrefs to ensure that
-# bestrefs does not update the config area itself.
+# bestrefs does not update the config area itself...  and no outside 
+# programs do either.   unsafe_sync,  which does update the config area
+# and chmod's it read-write,  is blocked by config.lock.
 
-flock ${CRDS_LOCKS}/config.lock --exclusive --command ( \
-    chmod 444 ${CRDS_LOCKS}/config/{hst,jwst}/*
-    python -m crds.bestrefs $* --update-bestrefs
+flock ${CRDS_LOCKS}/config.lock --exclusive --command $( \
+    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null ; \
+    status=`python -m crds.bestrefs $*` ; \
+    exit $status
 );
 
