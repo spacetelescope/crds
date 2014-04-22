@@ -1,26 +1,30 @@
-#! /bin/sh 
-
-# usage:  safe_bestrefs  <crds.bestrefs parameters>
-#   nominal options:  --new-context hst-operational or   --new-context hst_0010.pmap
-#                     --files <FITS files to update...>
-#                     --update-bestrefs   (fill in FITS headers,  otherwise just run.)
-
+#! /bin/sh
+#
+# usage:  safe_bestrefs  --new-context hst-operational --files <dataset FITS...>  --update-bestrefs
+#
+#   options:  
+#          --files <FITS files to update...>
+#          --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
+#
+#   requires:  
+#        CRDS_PATH        (cache directory)
+#        *not* CRDS_SERVER_URL  (server synced from, clears this to be disconnected)
+#        CRDS_LOCKS       (locks directory)
+#
 # This script is intended to be run in parallel with multiple pipeline bestrefs
 # and a concurrent cron "safe_sync".  The config.lock is intended to provide
 # exclusion from the "unsafe_sync" which updates the default operational
 # context and CRDS cache configuration area.
-
-# CRDS_LOCKS has to be set to a file system and directory where flock actually
-# works, possibly not CRDS_PATH which might point to a network file system with
-# broken support for locking.
-export CRDS_LOCKS="$CRDS_PATH"
 
 # Make CRDS cache config area readonly before bestrefs to ensure that
 # bestrefs does not update the config area itself...  and no outside 
 # programs do either.   unsafe_sync,  which does update the config area
 # and chmod's it read-write,  is blocked by config.lock.
 
-( flock -s 201 ; \
-    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null ; \
-    python -m crds.bestrefs $* ; \
-) 201> ${CRDS_LOCKS}/config.lock ;
+export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
+
+( flock --shared 200
+  chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+  python -m crds.bestrefs $* 
+) 200> ${CRDS_LOCKS}/crds.config.lock 
+
