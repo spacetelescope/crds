@@ -32,8 +32,9 @@ export CRDS_LOCKS="$CRDS_PATH"
 # script exit.
 #
 
-flock ${CRDS_LOCKS}/sync.lock --exclusive --command $( \
+(   flock -s 200 ; \
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null ; \
-    status=`python -m crds.sync --all --verbose --stats --check-files $*` ; \
-    exit $status ; \
-)
+    python -m crds.sync --all --verbose --stats --check-files $* ; \
+) 200>${CRDS_LOCKS}/sync.lock
+
+
