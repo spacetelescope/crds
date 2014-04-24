@@ -382,7 +382,7 @@ def get_config_info(observatory):
                     srepr(light_client.get_crds_server()))
         info = load_server_info(observatory)
         connected = False
-    else:
+    if connected:
         cache_server_info(observatory, info)  # save locally
     return connected, info
 
