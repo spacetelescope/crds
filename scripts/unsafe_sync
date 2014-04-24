@@ -36,11 +36,17 @@
 # Make CRDS cache config area writable before syncing to allow an update
 # This will update the default context as well as awareness of bad files.
 
-( flock --exclusive 200
-  ( flock --exclusive 201
-    chmod 666 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-    python -m crds.sync --all --stats $* 
-    chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
-  ) 201> ${CRDS_LOCKS}/crds.config.lock 
+( flock --exclusive 200 --noblock
+  if [[ $? == 1 ]]
+  then  
+     echo "unsafe_sync:  can't obtain crds.sync.lock"
+     exit 1
+  else # fail immediately if lock unavailable
+      ( flock --exclusive 201  # wait indefinitely for bestrefs
+	chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+	python -m crds.sync --all --stats $* 
+	chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
+      ) 201> ${CRDS_LOCKS}/crds.config.lock 
+  fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
-
+exit 0
