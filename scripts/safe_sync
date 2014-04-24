@@ -2,7 +2,7 @@
 
 # usage:  safe_sync 
 #
-#    options:  --fetch-references --verbose --check-files --check-sha1sum
+#    options:  --fetch-references --verbose --check-files
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
@@ -12,39 +12,23 @@
 # This script is intended to be run in a cron job at a relatively high rate,
 # say once every 10 minutes.
 
+# The main purpose of safe_sync is to perform bulk data transfers of
+# new references and rules which are not yet in operational use.  This
+# script will not update the operational context so running it will
+# not put the newly downloaded files into effect, it just pre-caches
+# them. New files should become sync'able as soon as they are archived
+# at STScI.  The default operational context is changed by running
+# unsafe_sync.   The default context is controlled by the STScI pipeline
+# and updated at some point after files are archived.
+
 # safe_sync renders the config area of the CRDS cache readonly, so it
 # will not update the config area, and any bestrefs running in
 # parallel processses won't see partial updates to the config area or
-# perform their own (successful) updates either.  safe_sync does not 
-# block safe_bestefs with a lock,  except for the (theoretically brief)
-# 
+# perform their own (successful) updates either.  safe_sync does not
+# block safe_bestefs with a lock.  safe_sync blocks itself and
+# unsafe_sync from concurrent runs using crds.sync.lock.
 
-# The main purpose of this script is to perform bulk data transfers of new
-# references and rules which are not yet in operational use.  This script will
-# not update the operational context so running it will not put the newly
-# downloaded files into effect, it just pre-caches them. New files should
-# become sync'able as soon as they are archived at STScI.  The default
-# operational context is changed by running unsafe_sync.
-
-#
-# Use an flock to prevent multiple concurrent syncs, safe or unsafe.  Even
-# though sync starts only every 10 minutes, it may continue to run for hours if
-# a large batch of files simultaenously becomes available.  Prevent concurrent
-# syncs from messing up *referece and rules* transfers with a lock;  the config
-# area is protected by chmod.  Since the sync lock is really just to prevent
-# overlapping cron's or manual commands,  use --noblock so it fails immediately,
-# 10 minutes later the next cron will pick it up,  assuming the last one has
-# even finished yet.
-#
-
-#  
-#
-# Make CRDS cache config area read-only before syncing to prevent asynchronouns
-# (with respect to other syncs or bestrefs) updates.  Leave it that way on
-# script exit.
-#
-
-( flock --exclusive 200 --noblock
+( flock --exclusive 200 --noblock   # --noblock means fail on unavailable locks
   if [[ $? == 1 ]]
   then
     echo "safe_sync failed to obtain crds.sync.lock"
@@ -54,17 +38,5 @@
     python -m crds.sync --all --stats $* 
   fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
+exit 0
 
-# Now the above has done the heavy lifting of transferring references + rules,
-# do the bestrefs-blocking unsafe_sync which updates the config area.
-# leave it as a separate concern in case we ever want to (easily) decouple 
-# changing config (e.g. hst-operational) from safe_sync
-#
-# The timing of this is pretty critical, since references archived
-# during or after the above sync will be downloaded during
-# unsafe_sync...  during which time bestrefs is blocked and not all
-# the references required to support any new hst-operational are
-# available.  One approach to mitigating that is turning the above sync
-# into a while loop which only exits when no new files are sync'ed.
-
-exit `unsafe_sync`
