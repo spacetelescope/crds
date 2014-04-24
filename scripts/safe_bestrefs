@@ -3,27 +3,56 @@
 # usage:  safe_bestrefs  --new-context hst-operational --files <dataset FITS...>  --update-bestrefs
 #
 #   options:  
-#          --files <FITS files to update...>
-#          --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
+#        --files <FITS files to update...>
+#        --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
-#        *not* CRDS_SERVER_URL  (server synced from, clears this to be disconnected)
+#        *not* CRDS_SERVER_URL  (server synced from, safe_bestrefs clears this to be disconnected)
 #        CRDS_LOCKS       (locks directory)
 #
-# This script is intended to be run in parallel with multiple pipeline bestrefs
-# and a concurrent cron "safe_sync".  The config.lock is intended to provide
-# exclusion from the "unsafe_sync" which updates the default operational
-# context and CRDS cache configuration area.
+# This script is intended to be run in parallel with multiple pipeline
+# bestrefs and a concurrent cron "safe_sync".
+#
+#  To control when information is received from the server,  and to
+#  prevent pipeline stall when the CRDS server is unavailable,
+#  safe_bestrefs is configured with a bad server IP address.
 
-# Make CRDS cache config area readonly before bestrefs to ensure that
-# bestrefs does not update the config area itself...  and no outside 
-# programs do either.   unsafe_sync,  which does update the config area
-# and chmod's it read-write,  is blocked by config.lock.
+#  Summarizing overall design of sync + bestrefs at remote sites:
+#
+#   crds.sync.lock ensures that no two syncs run concurrently.
+#   The nominal safe_sync rate for background reference transfer,
+#   i.e. reference pre-positioning, is once every 10 minutes.  If
+#   there's nothing new,  not much happens.   If there are new files,
+#   safe_sync might run longer than 10 minutes.  So there is latency,
+#   and there is duration.  10 minutes,  maybe several hours but
+#   but essentially indeterminate.
+#
+#   crds.config.lock ensures that unsafe_sync and safe_bestrefs
+#   do not concurrently use or modify the cache config area.
+#
+#   chmod'ing the config area readonly ensures that neither cron'ed
+#   safe_sync nor parallel safe_bestrefs can modify the config area,
+#   without using a lock which would also serialize parallel bestrefs.
+#   both attempt to update the config area and fail silently unless
+#   --verbose is used,  which emits warnings.
+#
+#   chmod'ing the config area read-write enables unsafe_sync to modify
+#   it, but safe_sync and safe_bestrefs are both excluded by
+#   crds.sync.lock (immediate fail) and crds.config.lock (5 minute
+#   timeout) respectively.  unsafe_sync fails immediately for
+#   crds.sync.lock (vs. safe_sync) and blocks on crds.config.lock
+#   (vs. safe_bestrefs) indefinitely.
+#
+#   As a fail-safe measure,  presuming a "little concurrency risk"
+#   is better than a total fail,  safe_bestrefs only waits on the
+#   crds.config.lock for 5 minutes... then proceeds unconcerned.
+#
 
+# break server connection:
 export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
 
-( flock --shared 200
+( flock --shared 200 --wait 300
   chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
   python -m crds.bestrefs $* 
 ) 200> ${CRDS_LOCKS}/crds.config.lock 
