@@ -2,12 +2,12 @@
 
 # usage:  safe_sync 
 #
-#    options:  --fetch-references --verbose --check-files
+#   options:  --all --fetch-references --verbose --check-files
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
+#        CRDS_LOCKS       (locks directory, defaults CRDS_PATH)
 #        CRDS_SERVER_URL  (server synced from)
-#        CRDS_LOCKS       (locks directory)
 #
 # This script is intended to be run in a cron job at a relatively high rate,
 # say once every 10 minutes.
@@ -40,7 +40,7 @@
   else
     echo "safe_sync: INFO: obtained crds.sync.lock"
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-    python -m crds.sync --all --stats $* 
+    python -m crds.sync $* 
   fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
 exit 0

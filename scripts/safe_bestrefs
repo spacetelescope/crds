@@ -3,13 +3,14 @@
 # usage:  safe_bestrefs  --new-context hst-operational --files <dataset FITS...>  --update-bestrefs
 #
 #   options:  
+#        --new-context [hst-operational | e.g. hst_0042.pmap] (optional)
 #        --files <FITS files to update...>
 #        --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
 #        *not* CRDS_SERVER_URL  (server synced from, safe_bestrefs clears this to be disconnected)
-#        CRDS_LOCKS       (locks directory)
+#        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #
 # This script is intended to be run in parallel with multiple pipeline
 # bestrefs and a concurrent cron "safe_sync".

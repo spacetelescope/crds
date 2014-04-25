@@ -609,6 +609,9 @@ and debug output.
         self.add_argument("--print-new-references", action="store_true",
             help="Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.")
     
+        self.add_argument("--print-update-counts", action="store_true",
+            help="Prints dictionary of update counts by instrument and type,  status on updated files.")
+    
         self.add_argument("-r", "--remote-bestrefs", action="store_true",
             help="Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'")
         
@@ -976,7 +979,8 @@ and debug output.
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
         self.warn_bad_updates()
-        self.print_update_stats()
+        if self.args.print_update_counts:
+            self.print_update_stats()
         if self.args.print_affected:
             self.print_affected()
         if self.args.print_affected_details:

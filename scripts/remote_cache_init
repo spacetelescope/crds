@@ -1,0 +1,20 @@
+#! /bin/sh
+
+# setenv CRDS_PATH
+# setenv CRDS_SERVER_URL  hst-crds-.stsci.edu
+
+# First create the cache mappings and config areas and download all
+# mappings and config.
+
+python -m crds.sync --all --verbose
+
+# Next create the references area by downloading one reference:
+
+python -m crds.sync --files y1s1839rl_hv.fits
+rm ${CRDS_PATH}/references/hst/y1s1839rl_hv.fits
+
+echo "A CRDS cache is set up at ${CRDS_PATH}."
+echo "To save download time,  copy or link existing references to the"
+echo "project directory at ${CRDS_PATH}/references/[hst|jwst]."
+
+
