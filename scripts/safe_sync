@@ -28,12 +28,17 @@
 # block safe_bestefs with a lock.  safe_sync blocks itself and
 # unsafe_sync from concurrent runs using crds.sync.lock.
 
-( flock --exclusive 200 --noblock   # --noblock means fail on unavailable locks
+# To prevent a long queue of blocked sync cron jobs,  cron jobs which
+# trigger during an on-going cron_sync fail immediately.  Subsequent
+# cron jobs resume normally.
+
+( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks
   if [[ $? == 1 ]]
   then
-    echo "safe_sync failed to obtain crds.sync.lock"
+    echo "safe_sync: WARNING: failed to obtain crds.sync.lock"
     exit 1
   else
+    echo "safe_sync: INFO: obtained crds.sync.lock"
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
     python -m crds.sync --all --stats $* 
   fi
