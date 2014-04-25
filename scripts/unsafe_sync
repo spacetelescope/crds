@@ -2,7 +2,7 @@
 
 # usage:  unsafe_sync <options for crds.sync>
 #
-#   options:  --fetch-references --verbose --check-files 
+#   options:  --all --fetch-references --verbose --check-files 
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
@@ -52,7 +52,7 @@ fi
       echo "unsafe_sync: INFO: obtained crds.sync.lock"
       ( flock --exclusive 201  # wait indefinitely for bestrefs
 	chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-	python -m crds.sync --all --stats $* 
+	python -m crds.sync $* 
 	chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
       ) 201> ${CRDS_LOCKS}/crds.config.lock 
   fi
