@@ -26,6 +26,7 @@
 
 # safe_sync does bulk reference and mappings transfers without blocking
 # parallel pipeline bestrefs.  It may run for hours.
+
 safe_sync $*
 if [[ $? != 1 ]]
 then
@@ -33,6 +34,7 @@ then
     # it should only run for 30 seconds to update the config area.
     unsafe_sync  $*
 fi
+exit $?
 
 #  Summarizing overall design of sync + bestrefs at remote sites:
 #

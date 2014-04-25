@@ -6,8 +6,8 @@
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
+#        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #        CRDS_SERVER_URL  (server synced from)
-#        CRDS_LOCKS       (locks directory)
 #
 # This script is intended to be run manually,  paradoxically at 
 # points which are known to be "safe".  Safe is when:
@@ -19,7 +19,7 @@
 #    bestefs or another sync.
 #
 # 3. This script won't conflict data transfers in  another 
-#    crob-based sync.
+#    cron-based sync.
 
 # Use an flock to prevent multiple concurrent syncs, safe or unsafe.  
 
@@ -36,12 +36,20 @@
 # Make CRDS cache config area writable before syncing to allow an update
 # This will update the default context as well as awareness of bad files.
 
-( flock --exclusive 200 --noblock
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+
+( flock --exclusive --nonblock 200 
   if [[ $? == 1 ]]
   then # fail immediately if lock unavailable 
-     echo "unsafe_sync:  can't obtain crds.sync.lock"
-     exit 1
+      echo "unsafe_sync: WARNING: failed to obtain crds.sync.lock"
+      exit 1
   else 
+      echo "unsafe_sync: INFO: obtained crds.sync.lock"
       ( flock --exclusive 201  # wait indefinitely for bestrefs
 	chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
 	python -m crds.sync --all --stats $* 
@@ -50,3 +58,4 @@
   fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
 exit 0
+

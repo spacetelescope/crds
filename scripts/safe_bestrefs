@@ -14,14 +14,39 @@
 # This script is intended to be run in parallel with multiple pipeline
 # bestrefs and a concurrent cron "safe_sync".
 #
+
 #  To control when information is received from the server,  and to
 #  prevent pipeline stall when the CRDS server is unavailable,
 #  safe_bestrefs is configured with a bad server IP address.
 
+#  To prevent multiple bestrefs or safe_sync from modifying the
+#  cache config area,  it is chmod'ed to read-only.  unsafe_sync
+#  is used to rapidly modify config when safe_bestrefs is blocked.
+
+#  To prevent multiple bestrefs from blocking one another,
+#  they share crds.config.lock as a "read lock".
+
+#  To prevent a pipeline stall on crds.config.lock in the
+#  event the sync system fails,  safe_bestrefs only waits 3 
+#  minutes on crds.config.lock and then proceeds anyway.
+
 # break server connection:
 export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
 
-( flock --shared 200 --wait 180
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+
+( flock --shared --wait 180 200
+  if [[ $? == 1 ]] 
+  then
+      echo "safe_bestrefs: WARNING: failed to obtain shared crds.config.lock"
+  else
+      echo "safe_bestrefs: INFO: obtained shared crds.config.lock"
+  fi
   chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
   python -m crds.bestrefs $* 
 ) 200> ${CRDS_LOCKS}/crds.config.lock 
