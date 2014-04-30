@@ -998,9 +998,11 @@ and debug output.
         """Print the product id for any product which has new bestrefs for any
         of its component exposures.   All components share a common product id.
         """
-        for product in sorted(set([self.dataset_to_product_id(dataset) 
-                                   for dataset in self.updates 
-                                   if self.updates[dataset]])):
+        affected_products = set([self.dataset_to_product_id(dataset) 
+                                 for dataset in self.updates 
+                                 if self.updates[dataset]])
+        log.info("Affected products =", len(affected_products))
+        for product in sorted(affected_products):
             print(product)
 
     def dataset_to_product_id(self, dataset):
@@ -1032,7 +1034,7 @@ and debug output.
                 if update.filekind not in stats[update.instrument]:
                     stats[update.instrument][update.filekind] = 0
                 stats[update.instrument][update.filekind] += 1
-        log.info("Update counts:", log.PP(stats))
+        log.info("Updated exposure counts:", log.PP(stats))
 
     def print_new_references(self):
         """Print the compound id and update tuple for each exposure with updates."""
