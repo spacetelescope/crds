@@ -52,7 +52,7 @@ import re
 
 from crds import utils, log
 
-import pyfits
+from astropy.io import fits as pyfits
 
 # =============================================================================
 

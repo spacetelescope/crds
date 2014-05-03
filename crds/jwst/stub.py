@@ -3,7 +3,7 @@
 import sys
 import os.path
 
-import pyfits
+from astropy.io import fits as pyfits
 
 from crds import rmap, timestamp, pysh, log, data_file, utils
 

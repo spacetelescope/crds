@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config
 
-from pyfits import FITSDiff
+from astropy.io.fits import FITSDiff
 
 # ============================================================================
         
