@@ -5,10 +5,12 @@ script. Written to add this functionality to crds.diff.
 import difflib
 from itertools import product
 import numpy as np
+
 from astropy.table import Table
-from pyfits import TableDataDiff
-from pyfits.hdu.hdulist import fitsopen
-from pyfits.hdu.table import _TableLikeHDU
+from astropy.io.fits import TableDataDiff
+from astropy.io.fits.hdu.hdulist import fitsopen
+from astropy.io.fits.hdu.table import _TableLikeHDU
+
 from crds import rmap, cmdline
 
 

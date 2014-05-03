@@ -10,7 +10,7 @@ import os
 from collections import namedtuple
 import cPickle
 
-import pyfits
+from astropy.io import fits as pyfits
 
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches)

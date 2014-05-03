@@ -7,7 +7,7 @@ import os
 import re
 from collections import defaultdict, namedtuple
 
-import pyfits
+from astropy.io import fits as pyfits
 import numpy as np
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
