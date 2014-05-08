@@ -126,12 +126,13 @@ Compute and print files with at least one reference change:
     CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'v9718260j_npl.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS  : INFO     Affected products = 3
     data/j8bt05njq_raw.fits
     data/j8bt06o6q_raw.fits
     data/j8bt09jcq_raw.fits
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     18 infos
+    CRDS  : INFO     19 infos
 
     >>> status == 0
     True
