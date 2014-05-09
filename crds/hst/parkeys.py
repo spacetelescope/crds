@@ -40,9 +40,12 @@ class Adjustment(object):
           
 ADJUSTMENTS = {
     "acs" : {
-                "biasfile" : Adjustment(
-                    ignore=["xcorner", "ycorner", "ccdchip"],
-                    ),
+        "biasfile" : Adjustment(
+            ignore=["xcorner", "ycorner", "ccdchip"],
+            ),
+        "crrejtab" : Adjustment(
+            extra=["rptcorr"],
+            ),
              },
     "wfpc2" : {
                 "flatfile": Adjustment(
