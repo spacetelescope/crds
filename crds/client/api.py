@@ -416,6 +416,8 @@ class FileCacher(object):
         downloads = []
         for name in names:
             localpath = self.locate(pipeline_context, name)
+            if name.lower() in ["n/a", "undefined"]:
+                continue
             if (not os.path.exists(localpath)):
                 downloads.append(name)
             elif ignore_cache:
