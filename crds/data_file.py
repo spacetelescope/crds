@@ -124,7 +124,7 @@ def setval(filepath, key, value):
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
-    from jwstlib import models
+    from jwst_lib import models
     with models.open(filepath) as dm:
         dm[key.lower()] = value
         dm.save(filepath)
@@ -161,7 +161,7 @@ get_unconditioned_header = get_header
 @utils.capture_output
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
-    from jwstlib import models
+    from jwst_lib import models
     with models.open(filepath) as dm:
         d = dm.to_flat_dict(include_arrays=False)
         needed_keys = [key.upper() for key in needed_keys]

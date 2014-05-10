@@ -15,7 +15,7 @@ from . import tpn
 # =======================================================================
 
 try:
-    from jwstlib.models import DataModel
+    from jwst_lib.models import DataModel
     MODEL = DataModel()
 except Exception:
     MODEL = None
@@ -315,7 +315,7 @@ class MissingDependencyError(Exception):
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
     if MODEL is None:
-        raise MissingDependencyError("JWST data model is not installed.   Cannot fits_to_parkeys().   Install jwstlib.")
+        raise MissingDependencyError("JWST data model is not installed.   Cannot fits_to_parkeys().   Install jwst_lib.")
     parkeys = {}
     for key, value in fits_header.items():
         key, value = str(key), str(value)
