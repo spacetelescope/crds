@@ -29,7 +29,7 @@ def mapping_diffs(old_file, new_file, include_header_diffs=False):
     return differences
 
 def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False,
-                       mapping_text_diffs=False, include_header_diffs=True):
+                       mapping_text_diffs=False, include_header_diffs=True, hide_boring_diffs=False):
     """Print the logical differences between CRDS mappings named `old_file` 
     and `new_file`.  
     
@@ -42,6 +42,8 @@ def mapping_difference(observatory, old_file, new_file, primitive_diffs=False, c
     differences = mapping_diffs(old_file, new_file, include_header_diffs=include_header_diffs)
     if mapping_text_diffs:   # only banner when there's two kinds to differentiate
         log.write("="*20, "logical differences",  repr(old_file), "vs.", repr(new_file), "="*20)
+    if hide_boring_diffs:
+        differences = remove_boring(differences)
     for diff in sorted(differences):
         diff = unquote_diff(diff)
         if primitive_diffs:
@@ -330,14 +332,15 @@ def text_difference(observatory, old_file, new_file):
     pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}")   # secure
 
 def difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
-               include_header_diffs=False):
+               include_header_diffs=False, hide_boring_diffs=False):
     """Difference different kinds of CRDS files (mappings, FITS references, etc.)
     named `old_file` and `new_file` against one another and print out the results 
     on stdout.
     """
     if rmap.is_mapping(old_file):
         mapping_difference(observatory, old_file, new_file, primitive_diffs=primitive_diffs, check_diffs=check_diffs,
-                           mapping_text_diffs=mapping_text_diffs, include_header_diffs=include_header_diffs)
+                           mapping_text_diffs=mapping_text_diffs, include_header_diffs=include_header_diffs,
+                           hide_boring_diffs=hide_boring_diffs)
     elif old_file.endswith(".fits"):
         fits_difference(observatory, old_file, new_file)
     else:
@@ -428,6 +431,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Print the names of every new or replacement file in diffs between old and new.  Includes intermediaries.")
         self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
             help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
+        self.add_argument("-B", "--hide-boring-diffs", dest="hide_boring_diffs", action="store_true",
+            help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
@@ -455,7 +460,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             return difference(self.observatory, self.old_file, self.new_file, 
                    primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
                    mapping_text_diffs=self.args.mapping_text_diffs,
-                   include_header_diffs=self.args.include_header_diffs)
+                   include_header_diffs=self.args.include_header_diffs,
+                   hide_boring_diffs=self.args.hide_boring_diffs)
     
     def print_new_files(self):
         """Print the references or mappings which are new additions or replacements when comparing mappings."""
