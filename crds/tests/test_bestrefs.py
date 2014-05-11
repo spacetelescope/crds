@@ -174,7 +174,7 @@ Compute simple bestrefs for 1 catalog datasets using hst.pmap:
     >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets I9ZF01010")
     >>> status = case.run()
     CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['I9ZF01010']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
+    CRDS  : INFO     Dumped 4 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
     CRDS  : INFO     Computing bestrefs for datasets ['I9ZF01010']
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     0 errors
@@ -189,40 +189,11 @@ Compute comparison bestrefs between two contexts:
     >>> case.run()
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     instrument='ACS' type='PCTETAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='DRKCFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='D2IMFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SPOTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='MLINTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='FLSHFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CFLTFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     instrument='ACS' type='PCTETAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='DRKCFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='D2IMFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SPOTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='MLINTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='FLSHFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CFLTFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     instrument='ACS' type='PCTETAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='DRKCFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='D2IMFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SPOTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='MLINTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='FLSHFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CFLTFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'not found n/a' --> 'n/a' :: Would update.
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     33 infos
+    CRDS  : INFO     4 infos
     0
 
 CLEANUP: blow away the test cache
