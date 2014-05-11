@@ -924,6 +924,10 @@ and debug output.
             
             if old in ("N/A", "NONE", "", "*"):
                 old = "N/A"
+            if new in ("N/A", "NONE", "", "*"):
+                new = "N/A"
+            if old.startswith("NOT FOUND N/A"):
+                old = "N/A"
             if new.startswith("NOT FOUND N/A"):
                 new = "N/A"
              
@@ -1034,7 +1038,7 @@ and debug output.
                 if update.filekind not in stats[update.instrument]:
                     stats[update.instrument][update.filekind] = 0
                 stats[update.instrument][update.filekind] += 1
-        log.info("Updated exposure counts:", log.PP(stats))
+        log.info("Updated exposure counts:\n", log.PP(stats))
 
     def print_new_references(self):
         """Print the compound id and update tuple for each exposure with updates."""
