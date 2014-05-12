@@ -1185,7 +1185,7 @@
                        'reffile_required': 'none',
                        'reffile_switch': 'flshcorr',
                        'reftype': 'fls',
-                       'rmap_relevance': '((DETECTOR == "UVIS" and FLASHCUR != "OFF") and (FLSHCORR != "OMIT"))',
+                       'rmap_relevance': '((DETECTOR == "UVIS" and FLASHCUR != "ZERO") and (FLSHCORR != "OMIT"))',
                        'row_keys': ()},
           'graphtab': {'db_translations': {},
                        'not_in_db': (),
