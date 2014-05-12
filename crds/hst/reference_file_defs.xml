@@ -677,6 +677,9 @@
     <ROW_SELECTION>
       <ROW_SELECTION_FIELD> APERTURE </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
+    <RESTRICTION>
+      <RESTRICTION_TEST> (aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') </RESTRICTION_TEST>
+    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
