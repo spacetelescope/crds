@@ -874,7 +874,7 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
+            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED")).strip()
             new = new_org.upper()
             
             if new.startswith("NOT FOUND N/A"):
@@ -917,10 +917,11 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED"))
+            old_org = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip()
+            old = old_org.upper()
+
+            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED")).strip()
             new = new_org.upper()
-            
-            old = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip().upper()
             
             if old in ("N/A", "NONE", "", "*"):
                 old = "N/A"
