@@ -942,7 +942,8 @@ and debug output.
                         "Old: No CRDS match found => 'N/A'.")
             elif old.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind, 
-                    "Old: Bestref FAILED:", old_org[len("NOT FOUND"):], self.no_update)
+                    "Old: Bestref FAILED:", old_org[len("NOT FOUND"):])
+                # XXXX continue
 
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 new = "N/A"
