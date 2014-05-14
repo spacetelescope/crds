@@ -931,17 +931,29 @@ and debug output.
             if new.startswith("NOT FOUND N/A"):
                 new = "N/A"
              
+            if old.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
+                old = "N/A"
+                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
+                    self.log_and_track_error(dataset, instrument, filekind, 
+                        "Old: No CRDS match found => 'N/A'.")
+                else:
+                    log.verbose(self.format_prefix(dataset, instrument, filekind),
+                        "Old: No CRDS match found => 'N/A'.")
+            elif old.startswith("NOT FOUND"):
+                self.log_and_track_error(dataset, instrument, filekind, 
+                    "Old: Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+
             if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
                 new = "N/A"
                 if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
                     self.log_and_track_error(dataset, instrument, filekind, 
-                        "No CRDS match found => 'N/A'.")
+                        "New: No CRDS match found => 'N/A'.")
                 else:
                     log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "No CRDS match found => 'N/A'.")
+                        "New: No CRDS match found => 'N/A'.")
             elif new.startswith("NOT FOUND"):
                 self.log_and_track_error(dataset, instrument, filekind, 
-                    "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+                    "New: Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
                 continue
 
             if old == "UNDEFINED" and new == "N/A" and not self.args.na_differences_matter:
