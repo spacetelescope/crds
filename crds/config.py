@@ -103,11 +103,11 @@ def get_ignore_checksum():
 
 def get_crds_env_vars():
     """Return a dictionary of all env vars starting with 'CRDS'."""
-    vars = {}
+    env_vars = {}
     for var in os.environ:
         if var.upper().startswith("CRDS"):
-            vars[var] = os.environ[var]
-    return vars
+            env_vars[var] = os.environ[var]
+    return env_vars
 
 def get_crds_actual_paths():
     """Return a dictionary of the critical paths CRDS configuration resolves to."""
@@ -116,6 +116,20 @@ def get_crds_actual_paths():
         "reference root" : get_crds_refpath(),
         "config root" : get_crds_config_path(),
         }
+
+# ===========================================================================
+
+_CRDS_CACHE_READONLY = False
+
+def set_cache_readonly(readonly=True):
+    """Set the flag controlling writes to the CRDS cache."""
+    global _CRDS_CACHE_READONLY
+    _CRDS_CACHE_READONLY = readonly
+    return _CRDS_CACHE_READONLY
+
+def get_cache_readonly():
+    """Read the flag controlling writes to the CRDS cache.  When True,  no write to cache should occur."""
+    return _CRDS_CACHE_READONLY or bool(os.environ.get("CRDS_READONLY_CACHE", False))
 
 # ===========================================================================
 
@@ -158,6 +172,7 @@ def is_mapping(mapping):
     return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def get_sqlite3_db_path(observatory):
+    """Return the path to the downloadable CRDS catalog + history SQLite3 database file."""
     return locate_config("crds_db.sqlite3", observatory)
 
 # -------------------------------------------------------------------------------------
@@ -267,7 +282,7 @@ def is_reference(reference):
 
     """
     extension = os.path.splitext(reference)[-1]
-    return re.match(".fits|.finf|.r\dh", extension) is not None
+    return re.match(r".fits|.finf|.r\dh", extension) is not None
 
 def locate_mapping(mappath, observatory=None):
     """Return the path where CRDS mapping `mappath` should be."""
@@ -314,6 +329,7 @@ def mapping_to_filekind(context_file):
     return os.path.basename(context_file).split("_")[2].split(".")[0]
 
 def test():
+    """Run doctests on crds.config module."""
     import doctest
     from . import config
     return doctest.testmod(config)
