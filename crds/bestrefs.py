@@ -312,7 +312,7 @@ def update_file_bestrefs(pmap, dataset, updates):
 
     # XXX TODO switch pyfits.setval to data_file.setval
     def set_key(keyword, value):
-        log.verbose("Setting", repr(dataset), keyword, "=", value), 
+        log.verbose("Setting", repr(dataset), keyword, "=", value)
         hdulist[0].header[keyword] = value
 
     set_key("CRDS_CTX", pmap.basename)
@@ -873,30 +873,13 @@ and debug output.
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Skipping type.", verbosity=55)
                 continue
-            
-            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED")).strip()
-            new = new_org.upper()
-            
-            if new.startswith("NOT FOUND N/A"):
-                log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Filetype N/A for dataset.", self.update_promise, verbosity=55)
-                new = "N/A"
-            elif new.startswith(("NOT FOUND NO MATCH", "UNDEFINED")):
-                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
-                    self.log_and_track_error(dataset, instrument, filekind, 
-                        "No CRDS match found => 'N/A'.", self.update_promise)
-                else:
-                    log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "No CRDS match found => 'N/A'.", self.update_promise)
-                new = "N/A"
-            elif new.startswith("NOT FOUND"):
-                self.log_and_track_error(dataset, instrument, filekind,
-                            "Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
-                continue
-            else:
+
+            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
+                                                       ("NOT FOUND NO MATCH","UNDEFINED"))
+            if new_ok:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Bestref FOUND:", repr(new_org).lower(),  self.update_promise, verbosity=55)
-            updates.append(UpdateTuple(instrument, filekind, None, new))
+                updates.append(UpdateTuple(instrument, filekind, None, new))
 
         return updates
     
@@ -917,63 +900,28 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            old_org = cleanpath(oldrefs.get(filekind, "UNDEFINED")).strip()
-            old = old_org.upper()
-
-            new_org = cleanpath(newrefs.get(filekind, "UNDEFINED")).strip()
-            new = new_org.upper()
-            
-            if old in ("N/A", "NONE", "", "*"):
-                old = "N/A"
-            if new in ("N/A", "NONE", "", "*"):
-                new = "N/A"
-            if old.startswith("NOT FOUND N/A"):
-                old = "N/A"
-            if new.startswith("NOT FOUND N/A"):
-                new = "N/A"
-             
-            if old.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
-                old = "N/A"
-                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
-                    self.log_and_track_error(dataset, instrument, filekind, 
-                        "Old: No CRDS match found => 'N/A'.")
-                else:
-                    log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "Old: No CRDS match found => 'N/A'.")
-            elif old.startswith("NOT FOUND"):
-                self.log_and_track_error(dataset, instrument, filekind, 
-                    "Old: Bestref FAILED:", old_org[len("NOT FOUND"):])
-                # XXXX continue
-
-            if new.startswith(("NOT FOUND NO MATCH","UNDEFINED")):
-                new = "N/A"
-                if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
-                    self.log_and_track_error(dataset, instrument, filekind, 
-                        "New: No CRDS match found => 'N/A'.")
-                else:
-                    log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "New: No CRDS match found => 'N/A'.")
-            elif new.startswith("NOT FOUND"):
-                self.log_and_track_error(dataset, instrument, filekind, 
-                    "New: Bestref FAILED:", new_org[len("NOT FOUND"):], self.no_update)
+            _ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
+                                                        ("NOT FOUND NO MATCH",)) # omit UNDEFINED for useless update check.
+            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
+                                                       ("NOT FOUND NO MATCH","UNDEFINED"))
+            if not new_ok:
                 continue
-
-            if old == "UNDEFINED" and new == "N/A" and not self.args.na_differences_matter:
+            
+            if old == "UNDEFINED" and new == "N/A" and not self.args.undefined_differences_matter:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
-                    "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
-                    self.no_update, verbosity=30)
+                            "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
+                            self.no_update, verbosity=30)
                 continue
 
             if new != old:
                 if self.args.differences_are_errors:
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
-                    if (old != "UNDEFINED") or self.args.undefined_differences_matter:
-                        if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
-                            self.log_and_track_error(dataset, instrument, filekind, 
-                                "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
+                    if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
+                        self.log_and_track_error(dataset, instrument, filekind, 
+                                                 "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
-                            "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
+                             "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -981,7 +929,7 @@ and debug output.
         
         # Check for missing references in `newrefs`.
         for filekind in oldrefs:
-            if filekind not in newrefs and filekind in self.process_filekinds:
+            if new_org == "UNDEFINED" and new_org != old_org and filekind in self.process_filekinds:
                 if self.args.differences_are_errors:
                     self.log_and_track_error(dataset, instrument, filekind, 
                         "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)
@@ -990,7 +938,42 @@ and debug output.
                         "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)            
 
         return updates
-    
+
+    def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind, na_conversions):
+        """Fetch the bestref for `filekind` from `bestrefs`, and handle conversions to N/A
+        and CRDS NOT FOUND errors.
+        
+        `name` is a string identifier for this conversion, Old or New.
+        `bestrefs` is a dictionary { filekind : bestref, }
+        na_conversions is a tuple of string prefixes which convert the raw bestref to N/A.
+        
+        Return (ref_ok, raw_ref, ref)  where:
+            raw_ref is the original name of the reference,  stripped of any iref$ prefix.
+            ref is the fully normalized name of the reference, converted to N/A as needed.
+            ref_ok is True IFF bestrefs did not fail altogether.
+        """
+        ref_org = cleanpath(bestrefs.get(filekind, "UNDEFINED")).strip()
+        ref = ref_org.upper()
+        if ref in ("N/A", "NONE", "", "*") or ref.startswith("NOT FOUND N/A"):
+            log.verbose(self.format_prefix(dataset, instrument, filekind),
+                        "Bestref is natural N/A.", verbosity=55)
+            ref = "N/A"
+        ref_ok = True
+        if ref.startswith(na_conversions):   
+            ref = "N/A"
+            if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
+                self.log_and_track_error(dataset, instrument, filekind, 
+                                         name,  "No match found => 'N/A'.")
+            else:
+                log.verbose(self.format_prefix(dataset, instrument, filekind),
+                            name, "No match found => 'N/A'.")
+        elif ref.startswith("NOT FOUND"):
+            self.log_and_track_error(dataset, instrument, filekind, 
+                                     name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
+            ref_ok = False
+        return ref_ok, ref_org, ref
+
+
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
         # (dataset, filekind, old, new)
