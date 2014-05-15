@@ -13,7 +13,7 @@ import cPickle
 from astropy.io import fits as pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches)
+from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
 from crds.client import api
 
 # ===================================================================
@@ -222,14 +222,14 @@ class DatasetHeaderGenerator(HeaderGenerator):
     
 class InstrumentHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from a list of instrument names.  Server/DB based."""
-    def __init__(self, context, instruments, datasets_since, save_pickles):
+    def __init__(self, context, instruments, datasets_since, save_pickles, server_info):
         """"Contact the CRDS server and get headers for the list of `instruments` names with respect to `context`."""
         super(InstrumentHeaderGenerator, self).__init__(context, [], datasets_since)
         self.instruments = instruments
         self.sources = self.determine_source_ids()
         self.save_pickles = save_pickles
         try:
-            self.segment_size = heavy_client.get_config_info(self.pmap.observatory)[1]["max_headers_per_rpc"]
+            self.segment_size = server_info.max_headers_per_rpc
         except:
             self.segment_size = 5000
             
@@ -705,6 +705,7 @@ and debug output.
                 rmap.get_cached_mapping(context)   # if it loads,  it's cached.
                 return
             except IOError:
+                assert not config.get_cache_readonly(), "Failed loading " + repr(context) + "but CRDS cache is readonly."
                 if self.args.sync_mappings:
                     log.verbose("Syncing context", repr(context), verbosity=25)
                     self.require_server_connection()
@@ -734,7 +735,7 @@ and debug output.
             log.info("Computing bestrefs for db datasets for", repr(self.instruments))
             if self.args.save_pickle and len(self.instruments) > 1:
                 log.warning("--save-pickle with multiple instruments may require > 8G ram.")
-            new_headers = InstrumentHeaderGenerator(context, self.instruments, datasets_since, self.args.save_pickle)
+            new_headers = InstrumentHeaderGenerator(context, self.instruments, datasets_since, self.args.save_pickle, self.server_info)
         elif self.args.load_pickles:
             # log.info("Computing bestrefs solely from pickle files:", repr(self.args.load_pickles))
             new_headers = {}
@@ -918,7 +919,7 @@ and debug output.
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
                     if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
                         self.log_and_track_error(dataset, instrument, filekind, 
-                                                 "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
+                            "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 elif self.args.print_new_references or log.get_verbose() or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
                              "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
@@ -1045,6 +1046,7 @@ and debug output.
                 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
+        assert not self.readonly_cache, "Readonly cache,  cannot fetch references."
         references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
         api.dump_references(self.new_context, references, raise_exceptions=self.args.pdb)
 

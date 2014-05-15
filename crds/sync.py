@@ -23,7 +23,7 @@ import os.path
 import re
 
 import crds.client.api as api
-from crds import (rmap, log, data_file, cmdline, utils)
+from crds import (rmap, log, data_file, cmdline, utils, config)
 import crds
 
 # ============================================================================
@@ -143,6 +143,8 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         if self.args.repair_files:
             self.args.check_files = True
+        assert not (self.args.repair_files and self.readonly_cache), \
+            "--repair-files and readonly cache are mutually exclusive."
         self.require_server_connection()
         if self.args.files:
             self.sync_explicit_files()

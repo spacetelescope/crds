@@ -116,6 +116,8 @@ class Script(object):
         self.add_args()
         self.add_standard_args()
         self.args = self.parser.parse_args(argv[1:])
+        if self.args.readonly_cache:
+            config.set_cache_readonly(True)
         log.set_verbose(self.args.verbosity or self.args.verbose)
         log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
@@ -140,43 +142,39 @@ class Script(object):
         # raise NotImplementedError("Script subclasses have to define add_args().")
     
     @property
+    def readonly_cache(self):
+        """Return True of the cache is readonly."""
+        return config.get_cache_readonly()
+    
+    @property
     @utils.cached
     def observatory(self):
         """Return either the command-line override observatory,  or the one determined
         by the client/server exchange.
         """
-        obs = None
         if self.args.jwst:
-            obs = "jwst"
+            return "jwst"
         if self.args.hst:
-            assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-            obs = "hst"
-        if hasattr(self, "contexts"):
-            for file in self.contexts:
-                if file.startswith("hst"):
-                    assert obs in [None, "hst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                    obs = "hst"
-                if file.startswith("jwst"):
-                    assert obs in [None, "jwst"], "Ambiguous observatory. Only work on HST or JWST files at one time."
-                    obs = "jwst"
-        if hasattr(self.args, "files"):
-            files = self.args.files if self.args.files else []
-            for file in files:
-                if file.startswith("hst"):
-                    obs = "hst"
-                    break
-                if file.startswith("jwst"):
-                    obs = "jwst"
-                    break
-            if obs is None:
-                for file in files:
-                    with log.verbose_on_exception("Failed file_to_observatory for", repr(file)):
-                        obs = utils.file_to_observatory(file)
-                        break
-        if obs is None:
-            obs = api.get_default_observatory()
-        return obs
+            return "hst"
         
+        files = []
+        if hasattr(self, "contexts"):
+            files += self.contexts
+        if hasattr(self.args, "files"):
+            files += self.args.files if self.args.files else []
+            
+        for file_ in files:
+            if file_.startswith("hst"):
+                return "hst"
+            if file_.startswith("jwst"):
+                return "jwst"
+
+        for file_ in files:
+            with log.verbose_on_exception("Failed file_to_observatory for", repr(file_)):
+                return utils.file_to_observatory(file_)
+
+        return api.get_default_observatory()
+    
     def _add_key(self, key, parser_pars):
         """Add any defined class attribute for `key` to dict `parser_pars`."""
         inlined = getattr(self, key, parser_pars)
@@ -194,6 +192,8 @@ class Script(object):
             help="Set log verbosity to True,  nominal debug level.", action="store_true")
         self.add_argument("--verbosity", 
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
+        self.add_argument("-R", "--readonly-cache", action="store_true",
+            help="Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.")
         self.add_argument("-V", "--version", 
             help="Print the software version and exit.", action="store_true")
         self.add_argument("-J", "--jwst", dest="jwst", action="store_true",
@@ -214,23 +214,21 @@ class Script(object):
     def require_server_connection(self):
         """Check a *required* server connection and ERROR/exit if offline."""
         try:
-            connected, info = heavy_client.get_config_info(self.observatory)
-            if not connected:
+            if not self.server_info.connected:
                 raise RuntimeError("Required server connection unavailable.")
         except Exception, exc:
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
                              repr(api.get_crds_server()), "::", str(exc))
-        return info
             
     @property
     def server_info(self):
         """Return the server_info dict from the CRDS server *or* cache config for non-networked use where possible."""
-        return heavy_client.get_config_info(self.observatory)[1]
+        return heavy_client.get_config_info(self.observatory)
 
     @property
     def bad_files(self):
         """Return the current list of ALL known bad mappings and references, not context-specific."""
-        return heavy_client.get_bad_files(self.observatory)
+        return self.server_info.bad_files_set
 
     @property
     def default_context(self):
@@ -247,7 +245,7 @@ class Script(object):
                 files.extend(self.load_file_list(fname[1:]))
             else:
                 files.append(fname)
-        return [file.lower() for file in files]
+        return [fname.lower() for fname in files]
     
     def load_file_list(self, at_file):
         """Recursively load an @-file, returning a list of words/files.
