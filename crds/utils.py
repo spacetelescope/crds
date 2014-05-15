@@ -17,6 +17,16 @@ from crds import log, config
 CRDS_CHECKSUM_BLOCK_SIZE = 2**26
 
 # ===================================================================
+
+class Struct(dict):
+    """A dictionary which supports dotted access to members."""
+    def __getattr__(self, name):
+        return self[name]
+
+    def __setattr__(self, name, val):
+        self[name] = val
+
+# ===================================================================
 def cached(func):
     """The cached decorator embeds a dictionary in a function wrapper to
     capture prior results.   
