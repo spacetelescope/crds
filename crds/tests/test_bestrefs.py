@@ -160,7 +160,7 @@ Same + one broken file to test shell error status
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw_broke.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D'] :: No update.
+    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
     CRDS  : INFO     1 errors

@@ -204,6 +204,7 @@ def get_file_info_map(observatory, files=None, fields=None):
 
 def get_sqlite_db(observatory):
     """Download the CRDS database as a SQLite database."""
+    assert not config.get_cache_readonly(), "Readonly cache, updating the SQLite database cannot be done."""
     encoded_compressed_data = S.get_sqlite_db(observatory)
     data = zlib.decompress(base64.b64decode(encoded_compressed_data))
     path = config.get_sqlite3_db_path(observatory)
@@ -421,6 +422,7 @@ class FileCacher(object):
             if (not os.path.exists(localpath)):
                 downloads.append(name)
             elif ignore_cache:
+                assert not config.get_cache_readonly(), "Readonly cache,  cannot ignore cache and re-fetch."
                 downloads.append(name)
                 with log.error_on_exception("Ignore_cache=True and Failed removing existing", repr(name)):
                     os.chmod(localpath, 0666)
@@ -455,6 +457,9 @@ class FileCacher(object):
         """Serial file-by-file download."""
         obs = self.observatory_from_context(pipeline_context)
         self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
+        if config.get_cache_readonly():
+            log.verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70)
+            return 0
         n_bytes = 0
         for name in downloads:
             try:
@@ -470,6 +475,7 @@ class FileCacher(object):
 
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
+        assert not config.get_cache_readonly(), "Readonly cache,  cannot download files."
         log.verbose("Fetching", repr(name), "to", repr(localpath), verbosity=10)
         try:
             utils.ensure_dir_exists(localpath)
@@ -587,16 +593,21 @@ class BundleCacher(FileCacher):
         for name in localpaths:
             if name not in downloads:
                 log.verbose("Skipping existing file", repr(name), verbosity=60)
-        self.fetch_bundle(bundlepath, downloads)
-        n_bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
+        if self.fetch_bundle(bundlepath, downloads):
+            n_bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
+        else:
+            n_bytes = 0
         for name in downloads:
             self.verify_file(name, localpaths[name])
         return n_bytes
 
     def fetch_bundle(self, bundlepath, downloads):
         """Ask the CRDS server for an archive of the files listed in `downloads`
-        and store the archive in filename `bundlepath`.
+        and store the archive in filename `bundlepath`.  Returns `need_unpack`.
         """
+        if config.get_cache_readonly():
+            log.verbose("Readonly cache, skipping bundle download for (first 5):", repr(downloads[:5]), verbosity=70)
+            return False
         bundle = os.path.basename(bundlepath)
         url = get_crds_server() + "/get_archive/" + bundle + "?"
         for i, name in enumerate(sorted(downloads)):
@@ -607,11 +618,15 @@ class BundleCacher(FileCacher):
         with open(bundlepath, "wb+") as outfile:
             for data in generator:
                 outfile.write(data)
-        
+        return True
+    
     def unpack_bundle(self, bundlepath, downloads, localpaths):
         """Unpack the files listed in `downloads` from the archive at `bundlepath`
         storing the extracted files at paths defined by `localpaths`.
         """
+        if config.get_cache_readonly():
+            log.verbose("Readonly cache, skipping bundle unpack for (first 5):", repr(downloads[:5]), verbosity=70)
+            return 0
         n_bytes = 0
         with tarfile.open(bundlepath) as tar:
             for name in sorted(downloads):
