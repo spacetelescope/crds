@@ -53,7 +53,7 @@ def reference_exists(reference):
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from crds.jwst.tpn import get_tpninfos   #  reference_name_to_validator_key, mapping_validator_key  defined here.
-from crds.jwst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
+from crds.jwst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS, FILETYPE_TO_FILEKIND, FILEKIND_TO_FILETYPE
 
 # =======================================================================
 
@@ -222,16 +222,6 @@ def ref_properties_from_cdbs_path(filename):
 
 # =======================================================================
 
-FILETYPE_TO_FILEKIND = {
-    "DETECTOR PARAMETERS" : "AMPLIFIER",
-    "PIXEL-TO-PIXEL FLAT" : "FLAT",
-    "PHOTOMETRIC CALIBRATION" : "PHOTOM",
-    "INTERPIXEL CAPACITANCE" : "IPC",
-    "SPECTRAL FRINGING CORRECTION FACTORS" : "FRINGE",
-}
-
-FILEKIND_TO_FILETYPE = utils.invert_dict(FILETYPE_TO_FILEKIND)
-
 def filetype_to_filekind(filetype):
     filetype = filetype.upper()
     if filetype in FILETYPE_TO_FILEKIND:
@@ -256,8 +246,7 @@ def ref_properties_from_header(filename):
     instrument = header.get("INSTRUME", "UNDEFINED").lower()
     assert instrument in INSTRUMENTS, \
         "Invalid instrument " + repr(instrument) + " in file " + repr(filename)
-    filetype = header.get("FILETYPE", "UNDEFINED").lower()
-    filekind = filetype_to_filekind(filetype)
+    filekind = header.get("REFTYPE", "UNDEFINED").lower()
     assert filekind in FILEKINDS, \
         "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
@@ -290,6 +279,7 @@ def reference_keys_to_dataset_keys(instrument, filekind, header):
     terms rmaps know:  dataset keywords.
     """
     return dict(header)    # NOOP for JWST for now.
+
 #   See hst/locate.py
 #    inv_trans = utils.invert_dict(
 #        PARKEYS[instrument][filekind]["db_translations"])

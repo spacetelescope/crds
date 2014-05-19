@@ -1,4 +1,8 @@
-"""This module generates rmaps from pre-cloned (or complete) references and an rmap stub."""
+"""This module generates rmaps from pre-cloned (or complete) references and an rmap stub.
+
+e.g.  python -m crds.jwst.stub jwst_0013.pmap "(('META.INSTRUMENT.DETECTOR','META.INSTRUMENT.GRATING14'),)" *.fits
+
+"""
 
 import sys
 import os.path
@@ -39,8 +43,8 @@ def generate_new_rmap(reference_context, parkey, new_references):
         old_instrument, old_filekind = instrument, filekind
         
         header = pyfits.getheader(ref)
-        assert header["FILETYPE"] == pmap.locate.filekind_to_filetype(filekind)
-        assert header["REFTYPE"] ==  filekind.upper()
+        assert header["FILETYPE"].upper() == pmap.locate.filekind_to_filetype(filekind).upper()
+        assert header["REFTYPE"].upper() ==  filekind.upper()
 
     assert instrument in pmap.obs_package.INSTRUMENTS, "Invalid instrument " + repr(instrument)
     assert filekind in pmap.obs_package.FILEKINDS, "Invalid filekind at " + repr(filekind)
@@ -80,9 +84,10 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
     rmaps = []
     for instr in pmap.obs_package.INSTRUMENTS:
         added_references = [ref for ref in all_references if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
-        path = generate_new_rmap(reference_context, parkey, added_references)
-        rmaps.append(path)
-        pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
+        if added_references:
+            path = generate_new_rmap(reference_context, parkey, added_references)
+            rmaps.append(path)
+            pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
     
     rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
     pysh.sh("python -m crds.newcontext ${reference_context} ${rmaps_str} --verbose", trace_commands=True, raise_on_error=True)
