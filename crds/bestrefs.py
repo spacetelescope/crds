@@ -829,6 +829,8 @@ and debug output.
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
             updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
+            if self.args.optimize_tables:
+                updates = self.optimize_tables(dataset, updates)
         else:
             updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
         return updates
@@ -981,14 +983,8 @@ and debug output.
 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
-
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
-            
-        # reduce self.updates prior to use,  SHOULD BE FIRST or know why not
-        if self.args.optimize_tables:   
-            self.optimize_tables()
-
         self.warn_bad_updates()
         if self.args.print_update_counts:
             self.print_update_stats()
@@ -1005,20 +1001,20 @@ and debug output.
             self.sync_references()
         self.dump_unique_errors()
         
-    def optimize_tables(self):
+    def optimize_tables(self, dataset, updates):
         """Drop table updates for which the reference change doesn't matter based upon examining the
         selected rows.
         """
-        for dataset in self.updates:
-            for update in self.updates[dataset]:
-                new_header = self.new_headers.get_lookup_parameters(dataset)
-                if not table_effects.is_reprocessing_required(
-                    dataset, new_header, self.old_context, self.new_context, 
-                    update.old_reference, update.new_reference):
-                    self.updates[dataset].remove(update) # reprocessing not required, ignore update.
-                    log.verbose("Removing table update for", update.instrument, update.filekind, dataset, 
-                                "no effective change from reference", repr(update.old_reference),
-                                "-->", repr(update.new_reference), verbosity=25)
+        for update in updates:
+            new_header = self.new_headers.get_lookup_parameters(dataset)
+            if not table_effects.is_reprocessing_required(
+                dataset, new_header, self.old_context, self.new_context, 
+                update.old_reference, update.new_reference):
+                updates.remove(update) # reprocessing not required, ignore update.
+                log.verbose("Removing table update for", update.instrument, update.filekind, dataset, 
+                            "no effective change from reference", repr(update.old_reference),
+                            "-->", repr(update.new_reference), verbosity=25)
+        return updates
 
     def print_affected(self):
         """Print the product id for any product which has new bestrefs for any
