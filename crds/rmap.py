@@ -662,6 +662,10 @@ class Mapping(object):
 
         # that's all folks
         return results
+    
+    def locate_file(self, filename):
+        """Return the full path (in cache or absolute) of `filename` as determined by the current environment."""
+        return locate_file(filename, self.observatory)
 
 # ===================================================================
 

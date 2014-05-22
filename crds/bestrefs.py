@@ -7,13 +7,14 @@ For more details on the several modes of operations and command line parameters 
 """
 import sys
 import os
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 import cPickle
 
 from astropy.io import fits as pyfits
 
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
+from crds import (table_effects,)
 from crds.client import api
 
 # ===================================================================
@@ -266,7 +267,8 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         lower = index * self.segment_size
         upper = (index +1) * self.segment_size
         segment_ids = self.sources[lower:upper]
-        log.verbose("Dumping", len(segment_ids), "datasets from indices", lower, "to", upper, verbosity=20)
+        log.verbose("Dumping", len(segment_ids), "datasets from indices", lower, "to", 
+                    lower + len(segment_ids), verbosity=20)
         dumped_headers = api.get_dataset_headers_by_id(self.context, segment_ids)
         log.verbose("Dumped", len(dumped_headers), "datasets", verbosity=20)
         if self.save_pickles:  #  keep all headers,  causes memory problems with multiple instruments on ~8G ram.
@@ -458,7 +460,7 @@ and debug output.
                 
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
-        self.updates = {}                  # map of reference updates
+        self.updates = OrderedDict()  # map of reference updates
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         self.affected_instruments = None
@@ -636,6 +638,8 @@ and debug output.
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
+        self.add_argument("-z", "--optimize-tables", action="store_true", 
+            help="If set, apply row-based optimizations to screen out inconsequential table updates.")
         cmdline.UniqueErrorsMixin.add_args(self)
     
     def setup_contexts(self):
@@ -920,7 +924,7 @@ and debug output.
                     if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
                         self.log_and_track_error(dataset, instrument, filekind, 
                             "Comparison difference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
-                elif self.args.print_new_references or log.get_verbose() or self.args.files:
+                elif self.args.print_new_references or log.get_verbose() >= 30 or self.args.files:
                     log.info(self.format_prefix(dataset, instrument, filekind), 
                              "New best reference:", repr(old).lower(), "-->", repr(new).lower(), self.update_promise)
                 updates.append(UpdateTuple(instrument, filekind, old, new))
@@ -977,9 +981,14 @@ and debug output.
 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
-        # (dataset, filekind, old, new)
+
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
+            
+        # reduce self.updates prior to use,  SHOULD BE FIRST or know why not
+        if self.args.optimize_tables:   
+            self.optimize_tables()
+
         self.warn_bad_updates()
         if self.args.print_update_counts:
             self.print_update_stats()
@@ -996,6 +1005,21 @@ and debug output.
             self.sync_references()
         self.dump_unique_errors()
         
+    def optimize_tables(self):
+        """Drop table updates for which the reference change doesn't matter based upon examining the
+        selected rows.
+        """
+        for dataset in self.updates:
+            for update in self.updates[dataset]:
+                new_header = self.new_headers.get_lookup_parameters(dataset)
+                if not table_effects.is_reprocessing_required(
+                    dataset, new_header, self.old_context, self.new_context, 
+                    update.old_reference, update.new_reference):
+                    self.updates[dataset].remove(update) # reprocessing not required, ignore update.
+                    log.verbose("Removing table update for", update.instrument, update.filekind, dataset, 
+                                "no effective change from reference", repr(update.old_reference),
+                                "-->", repr(update.new_reference), verbosity=25)
+
     def print_affected(self):
         """Print the product id for any product which has new bestrefs for any
         of its component exposures.   All components share a common product id.
