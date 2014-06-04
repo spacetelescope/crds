@@ -582,23 +582,15 @@
   </REFFILE>
 <!--====================================-->
   <REFFILE>
-    <REFFILE_TYPE> DFL </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> DFLTFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <FILE_SELECTION> 
-        <FILE_SELECTION_FIELD>DETECTOR </FILE_SELECTION_FIELD>
-    </FILE_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
- <REFFILE>
-    <REFFILE_TYPE> IMP </REFFILE_TYPE>
-    <REFFILE_KEYWORD> IMPHTTAB </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
-  </REFFILE>
+   <REFFILE_TYPE> IMP </REFFILE_TYPE>
+   <REFFILE_KEYWORD> IMPHTTAB </REFFILE_KEYWORD>
+   <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
+   <REFFILE_SWITCH> PHOTCORR </REFFILE_SWITCH>
+   <REFFILE_REQUIRED> YES </REFFILE_REQUIRED>
+   <ROW_SELECTION> 
+     <ROW_SELECTION_FIELD> OBSMODE</ROW_SELECTION_FIELD>
+   </ROW_SELECTION> 
+ </REFFILE>
 <!--====================================-->
   <REFFILE>
     <REFFILE_TYPE> LFL </REFFILE_TYPE> 
@@ -647,30 +639,6 @@
   </REFFILE>
 <!--====================================-->
   <REFFILE>
-    <REFFILE_TYPE> SSC </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> SHADFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <!-- the real one is (aSource._keywords['DETECTOR'][0] == 'CCD') -->
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
-    <REFFILE_TYPE> SSD </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> SDSTFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <FILE_SELECTION> 
-       <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
-    </FILE_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
     <REFFILE_TYPE> APD </REFFILE_TYPE> 
     <REFFILE_KEYWORD> APDESTAB </REFFILE_KEYWORD>
     <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
@@ -689,23 +657,6 @@
     <ROW_SELECTION>
       <ROW_SELECTION_FIELD> APERTURE </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
-    <REFFILE_TYPE> A2D </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> ATODTAB </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
-    <ROW_SELECTION>
-      <ROW_SELECTION_FIELD> CCDAMP </ROW_SELECTION_FIELD>
-    </ROW_SELECTION>
-    <ROW_SELECTION>
-      <ROW_SELECTION_FIELD> CCDGAIN </ROW_SELECTION_FIELD>
-    </ROW_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <!-- the real one is (aSource._keywords['DETECTOR'][0] == 'CCD') -->
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1207,9 +1158,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> OBSMODE </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['SAMP_SEQ'][0] not in ['SPARS4','SPARS16','SPARS32','SPARS128'])</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1231,9 +1179,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1246,9 +1191,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1373,9 +1315,6 @@
     <FILE_SELECTION> 
        <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK')</RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
 </INSTRUMENT>
@@ -1611,9 +1550,6 @@
       <FILE_SELECTION_FIELD> BINAXIS2 </FILE_SELECTION_FIELD>
       <FILE_SELECTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </FILE_SELECTION_TEST>
     </FILE_SELECTION>
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['FILTER'][0] != 'BLANK') </RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -1896,6 +1832,23 @@
       <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
   </REFFILE>
+ <!--====================================-->
+  <REFFILE>
+   <REFFILE_TYPE> NPL </REFFILE_TYPE>
+   <REFFILE_KEYWORD> NPOLFILE </REFFILE_KEYWORD>
+   <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
+   <REFFILE_REQUIRED> NO </REFFILE_REQUIRED>
+   <REFFILE_SWITCH> DRIZCORR </REFFILE_SWITCH>
+   <FILE_SELECTION> 
+     <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
+   </FILE_SELECTION> 
+   <FILE_SELECTION>
+     <FILE_SELECTION_FIELD> FILTER </FILE_SELECTION_FIELD>
+   </FILE_SELECTION>
+   <RESTRICTION>
+     <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </RESTRICTION_TEST>
+   </RESTRICTION>
+ </REFFILE>
 <!--====================================-->
  </INSTRUMENT>
  <INSTRUMENT>
