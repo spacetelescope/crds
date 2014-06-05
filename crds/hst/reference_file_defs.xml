@@ -64,6 +64,13 @@
 <!-- 10/02/12 72278  MSwam     WFC3 IMPHTTAB, make not required for now -->
 <!-- 05/23/13 74167  MSwam     remove COS FLAT OPT_ELEM selection -->
 <!-- 06/06/13 74559  Mary      add WFC3 D2IMFILE                  -->
+<!-- 09/20/13 74706  Mary      COS add LIFE_ADJ to FLUXTAB select -->
+<!-- 09/23/13 75695  Mary      add STIS IMPHTTAB                  -->
+<!-- 02/26/14 76474  Mary      remove STIS ATODTAB and DFLTFILE   -->
+<!-- 02/26/14 76474  Mary      remove STIS SHADFILE and SDSTFILE  -->
+<!-- 04/10/14 76474  MSwam     add WFPC-2 comments for types (e.g. r4h) -->
+<!-- 05/12/14 78002  MSwam     fix WFC3 FLASHCUR test to use ZERO -->
+<!-- 06/03/14 78135  MSwam     add WFC3 NPOLFILE  -->
 <!--==============================================================-->
 <REFERENCE_FILES>
 <INSTRUMENT>
@@ -582,19 +589,6 @@
   </REFFILE>
 <!--====================================-->
   <REFFILE>
-    <REFFILE_TYPE> DFL </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> DFLTFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <FILE_SELECTION> 
-        <FILE_SELECTION_FIELD>DETECTOR </FILE_SELECTION_FIELD>
-    </FILE_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
     <REFFILE_TYPE> LFL </REFFILE_TYPE> 
     <REFFILE_KEYWORD> LFLTFILE </REFFILE_KEYWORD>
     <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
@@ -641,30 +635,6 @@
   </REFFILE>
 <!--====================================-->
   <REFFILE>
-    <REFFILE_TYPE> SSC </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> SHADFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <!-- the real one is (aSource._keywords['DETECTOR'][0] == 'CCD') -->
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
-    <REFFILE_TYPE> SSD </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> SDSTFILE </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
-    <FILE_SELECTION> 
-       <FILE_SELECTION_FIELD> DETECTOR </FILE_SELECTION_FIELD>
-    </FILE_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
     <REFFILE_TYPE> APD </REFFILE_TYPE> 
     <REFFILE_KEYWORD> APDESTAB </REFFILE_KEYWORD>
     <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
@@ -683,23 +653,6 @@
     <ROW_SELECTION>
       <ROW_SELECTION_FIELD> APERTURE </ROW_SELECTION_FIELD>
     </ROW_SELECTION>
-  </REFFILE>
-<!--====================================-->
-  <REFFILE>
-    <REFFILE_TYPE> A2D </REFFILE_TYPE> 
-    <REFFILE_KEYWORD> ATODTAB </REFFILE_KEYWORD>
-    <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
-    <ROW_SELECTION>
-      <ROW_SELECTION_FIELD> CCDAMP </ROW_SELECTION_FIELD>
-    </ROW_SELECTION>
-    <ROW_SELECTION>
-      <ROW_SELECTION_FIELD> CCDGAIN </ROW_SELECTION_FIELD>
-    </ROW_SELECTION>
-    <!-- This phony restriction should be lifted if files ever exist -->
-    <RESTRICTION>
-      <!-- the real one is (aSource._keywords['DETECTOR'][0] == 'CCD') -->
-      <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'D0H') </RESTRICTION_TEST>
-    </RESTRICTION>
   </REFFILE>
 <!--====================================-->
   <REFFILE>
@@ -880,8 +833,8 @@
        <ROW_SELECTION_TEST> (aSource._keywords['OBSTYPE'][0] == 'SPECTROSCOPIC') </ROW_SELECTION_TEST>
     </ROW_SELECTION>
   </REFFILE>
- <!--====================================-->
-   <REFFILE>
+<!--====================================-->
+  <REFFILE>
     <REFFILE_TYPE> IMP </REFFILE_TYPE>
     <REFFILE_KEYWORD> IMPHTTAB </REFFILE_KEYWORD>
     <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
@@ -1400,7 +1353,7 @@
     <REFFILE_FORMAT> TABLE </REFFILE_FORMAT>
     <REFFILE_FUNCTION> filename = cdbs_db.multi_tab( reff) </REFFILE_FUNCTION>
   </REFFILE>
-<!--====================================-->
+<!--===============r2h==================-->
   <REFFILE>
     <REFFILE_TYPE> BAS </REFFILE_TYPE> 
     <REFFILE_KEYWORD> BIASFILE </REFFILE_KEYWORD>
@@ -1412,7 +1365,7 @@
         <FILE_SELECTION_FIELD> ATODGAIN </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
   </REFFILE>
-<!--====================================-->
+<!--===============r3h==================-->
   <REFFILE>
     <REFFILE_TYPE> DRK </REFFILE_TYPE> 
     <REFFILE_KEYWORD> DARKFILE </REFFILE_KEYWORD>
@@ -1427,7 +1380,7 @@
         <FILE_SELECTION_FIELD> SERIALS </FILE_SELECTION_FIELD>
     </FILE_SELECTION> 
   </REFFILE>
-<!--====================================-->
+<!--===============r4h==================-->
   <REFFILE>
     <REFFILE_TYPE> FLT </REFFILE_TYPE> 
     <REFFILE_KEYWORD> FLATFILE </REFFILE_KEYWORD>
@@ -1455,7 +1408,7 @@
         <FILE_SELECTION_FIELD> LRFWAVE </FILE_SELECTION_FIELD>
     </FILE_SELECTION> 
   </REFFILE>
-<!--====================================-->
+<!--===============r1h==================-->
   <REFFILE>
     <REFFILE_TYPE> A2D </REFFILE_TYPE> 
     <REFFILE_KEYWORD> ATODFILE </REFFILE_KEYWORD>
@@ -1467,7 +1420,7 @@
         <FILE_SELECTION_FIELD> ATODGAIN </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
   </REFFILE>
-<!--====================================-->
+<!--===============r5h==================-->
   <REFFILE>
     <REFFILE_TYPE> SHD </REFFILE_TYPE> 
     <REFFILE_KEYWORD> SHADFILE </REFFILE_KEYWORD>
@@ -1479,7 +1432,7 @@
         <FILE_SELECTION_FIELD> SHUTTER </FILE_SELECTION_FIELD>
     </FILE_SELECTION>
   </REFFILE>
-<!--====================================-->
+<!--===============r0h==================-->
   <REFFILE>
     <REFFILE_TYPE> MSK </REFFILE_TYPE> 
     <REFFILE_KEYWORD> MASKFILE </REFFILE_KEYWORD>
@@ -1877,8 +1830,8 @@
       <RESTRICTION_TEST> (aSource._keywords['DETECTOR'][0] == 'UVIS') </RESTRICTION_TEST>
     </RESTRICTION>
   </REFFILE>
- <!--====================================-->
-   <REFFILE>
+<!--====================================-->
+  <REFFILE>
     <REFFILE_TYPE> NPL </REFFILE_TYPE>
     <REFFILE_KEYWORD> NPOLFILE </REFFILE_KEYWORD>
     <REFFILE_FORMAT> IMAGE </REFFILE_FORMAT>
