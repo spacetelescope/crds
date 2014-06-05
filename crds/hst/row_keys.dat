@@ -52,6 +52,7 @@
         'gactab': ('APERTURE', 'OPT_ELEM', 'CENWAVE'),
         'halotab': ('OPT_ELEM', 'HALOWAVE'),
         'idctab': ('FILTER', 'DIRECTION'),
+        'imphttab':('OBSMODE',),
         'inangtab': ('OPT_ELEM', 'SPORDER', 'CENWAVE'),
         'lamptab': ('LAMPSET', 'OPT_ELEM', 'SCLAMP'),
         'mlintab': ('DETECTOR',),

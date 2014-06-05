@@ -175,6 +175,7 @@
           'dark': 'drk',
           'delta flat': 'dfl',
           'distortion coefficients': 'idc',
+          'dxy grid': 'npl',
           'image photometry table': 'imp',
           'large scale flat': 'lfl',
           'linearity coefficients': 'lin',
