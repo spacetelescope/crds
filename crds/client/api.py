@@ -131,7 +131,8 @@ def get_download_mode():
 
 def get_checksum_flag():
     """Return True if the environment is configured for checksums."""
-    return bool(os.environ.get("CRDS_DOWNLOAD_CHECKSUMS", "1"))
+    rval = config.env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
+    return rval
 
 # =============================================================================
 def srepr(obj):

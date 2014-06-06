@@ -25,6 +25,30 @@ def get_crds_path():
 
 # ===========================================================================
 
+def env_to_bool(varname, default=False):
+    """Convert the specified environment variable `varname` into a Python bool
+    defaulting to `default` if it's not defined in os.environ.
+    """
+    env_str = os.environ.get(varname, default)
+    return env_str_to_bool(varname, env_str)
+
+def env_str_to_bool(varname, val):
+    """Convert the boolean environment value string `val` to a Python bool
+    on behalf of environment variable `varname`.
+    """
+    if val in ["False", "false", "True", "true"]:
+        rval = bool(val.capitalize())
+    elif val in ["F","f","0", False, 0]:
+        rval = False
+    elif val in ["T", "t", "1", True, 1]:
+        rval = True
+    else:
+        raise ValueError("Invalid value " +  repr(val) + 
+                         " for boolean env var " + repr(varname))
+    return rval
+
+# ===========================================================================
+
 def get_crds_mappath():
     """get_crds_mappath() returns the base path of the CRDS mapping directory 
     tree where CRDS rules files (mappings) are stored.   This is extended by
@@ -97,7 +121,7 @@ def get_crds_env_context():
 
 def get_ignore_checksum():
     """Returns environment override for disabling mapping checksums during development."""
-    return bool(os.environ.get("CRDS_IGNORE_MAPPING_CHECKSUM", False))
+    return env_to_bool("CRDS_IGNORE_MAPPING_CHECKSUM", False)
 
 # ===========================================================================
 
@@ -129,7 +153,7 @@ def set_cache_readonly(readonly=True):
 
 def get_cache_readonly():
     """Read the flag controlling writes to the CRDS cache.  When True,  no write to cache should occur."""
-    return _CRDS_CACHE_READONLY or bool(os.environ.get("CRDS_READONLY_CACHE", False))
+    return _CRDS_CACHE_READONLY or env_to_bool("CRDS_READONLY_CACHE", False)
 
 # ===========================================================================
 
