@@ -14,8 +14,6 @@ import ast
 
 from crds import log, config
 
-CRDS_CHECKSUM_BLOCK_SIZE = 2**26
-
 # ===================================================================
 
 class Struct(dict):
@@ -383,7 +381,7 @@ def checksum(pathname):
         size = 0
         insize = os.stat(pathname).st_size
         while size < insize:
-            block = infile.read(CRDS_CHECKSUM_BLOCK_SIZE)
+            block = infile.read(config.CRDS_CHECKSUM_BLOCK_SIZE)
             size += len(block)
             xsum.update(block)
     return xsum.hexdigest()

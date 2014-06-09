@@ -73,10 +73,6 @@ __all__ = [
 
 # ============================================================================
 
-CRDS_DATA_CHUNK_SIZE = 2**23   # 8M, HTTP, sha1sum,  but maybe not RPC.
-
-# ============================================================================
-
 # Server for CRDS services and mappings
 
 URL_SUFFIX = "/json/"
@@ -111,28 +107,6 @@ def get_crds_server():
     return url
 
 set_crds_server(URL)
-
-# ============================================================================
-
-def get_download_mode():
-    """Return the mode used to download references and mappings,  either normal
-    "http" file transfer or json "rpc" based.   In theory HTTP optimizes better 
-    with direct support for static files from Apache,  but RPC is more flexible
-    and works through firewalls.   The key distinction is that HTTP mode can
-    work with a server which is not the same as the CRDS server (perhaps an
-    archive server).   Once/if a public archive server is available with normal 
-    URLs,  that wopuld be the preferred means to get references and mappings.
-    """
-    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "http").lower()
-    assert mode in ["http","rpc"], \
-        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (preferred) " + \
-        "or 'rpc' (through firewall)."
-    return mode
-
-def get_checksum_flag():
-    """Return True if the environment is configured for checksums."""
-    rval = config.env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
-    return rval
 
 # =============================================================================
 def srepr(obj):
@@ -480,7 +454,7 @@ class FileCacher(object):
         log.verbose("Fetching", repr(name), "to", repr(localpath), verbosity=10)
         try:
             utils.ensure_dir_exists(localpath)
-            if get_download_mode() == "http":
+            if config.get_download_mode() == "http":
                 generator = self.get_data_http(pipeline_context, name)
             else:
                 generator = self.get_data_rpc(pipeline_context, name)
@@ -500,7 +474,7 @@ class FileCacher(object):
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) + 
-                                     " with mode " + srepr(get_download_mode()) +
+                                     " with mode " + srepr(config.get_download_mode()) +
                                      " : " + str(exc))
             
     def get_data_rpc(self, pipeline_context, filename):
@@ -509,7 +483,7 @@ class FileCacher(object):
         chunks = 1
         while chunk < chunks:
             stats = utils.TimingStats()
-            stats.increment("bytes", CRDS_DATA_CHUNK_SIZE)
+            stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
             chunks, data = get_file_chunk(pipeline_context, filename, chunk)
             status = stats.status("bytes")
             log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1])
@@ -528,16 +502,16 @@ class FileCacher(object):
             infile = urllib2.urlopen(url)
             chunk = 0
             stats = utils.TimingStats()
-            stats.increment("bytes", CRDS_DATA_CHUNK_SIZE)
-            data = infile.read(CRDS_DATA_CHUNK_SIZE)
+            stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
+            data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
                 log.verbose("Transferred HTTP", repr(filename), "chunk", chunk, "at", status[1])
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
-                stats.increment("bytes", CRDS_DATA_CHUNK_SIZE)
-                data = infile.read(CRDS_DATA_CHUNK_SIZE)
+                stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
+                data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
                 status = stats.status("bytes")
         finally:
             try:
@@ -565,7 +539,7 @@ class FileCacher(object):
         if original_length != local_length:
             raise CrdsDownloadError("downloaded file size " + str(local_length) +
                                     " does not match server size " + str(original_length))
-        if not get_checksum_flag():
+        if not config.get_checksum_flag():
             log.verbose("Skipping sha1sum with CRDS_DOWNLOAD_CHECKSUMS=False")
         elif remote_info["sha1sum"] not in ["", "none"]:
             original_sha1sum = remote_info["sha1sum"]
