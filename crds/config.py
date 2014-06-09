@@ -6,6 +6,12 @@ import os
 import os.path
 import re
 
+# ============================================================================
+
+CRDS_DATA_CHUNK_SIZE = 2**23   # file download transfer block size, 8M.  HTTP, but maybe not RPC.
+
+CRDS_CHECKSUM_BLOCK_SIZE = 2**23   # size of block for utils.checksum(), also 8M
+
 # ===========================================================================
 
 DEFAULT_CRDS_DIR = "/grp/crds/jwst"
@@ -38,7 +44,7 @@ def env_str_to_bool(varname, val):
     """
     if val in ["False", "false", "True", "true"]:
         rval = bool(val.capitalize())
-    elif val in ["F","f","0", False, 0]:
+    elif val in ["F", "f", "0", False, 0]:
         rval = False
     elif val in ["T", "t", "1", True, 1]:
         rval = True
@@ -140,6 +146,30 @@ def get_crds_actual_paths():
         "reference root" : get_crds_refpath(),
         "config root" : get_crds_config_path(),
         }
+
+# ============================================================================
+
+# client API related settings.
+
+def get_download_mode():
+    """Return the mode used to download references and mappings,  either normal
+    "http" file transfer or json "rpc" based.   In theory HTTP optimizes better 
+    with direct support for static files from Apache,  but RPC is more flexible
+    and works through firewalls.   The key distinction is that HTTP mode can
+    work with a server which is not the same as the CRDS server (perhaps an
+    archive server).   Once/if a public archive server is available with normal 
+    URLs,  that wopuld be the preferred means to get references and mappings.
+    """
+    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "http").lower()
+    assert mode in ["http","rpc"], \
+        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (preferred) " + \
+        "or 'rpc' (through firewall)."
+    return mode
+
+def get_checksum_flag():
+    """Return True if the environment is configured for checksums."""
+    rval = env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
+    return rval
 
 # ===========================================================================
 
