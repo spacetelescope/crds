@@ -6,6 +6,7 @@ import sys
 import urllib2 as urllib
 import uuid
 import json
+import time
 
 if sys.version_info < (3,0,0):
     import HTMLParser as parser_mod
@@ -13,13 +14,27 @@ else:
     import html.parser as parser_mod
 PARSER = parser_mod.HTMLParser()
 
-from crds import log
+from crds import log, config
 
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
 
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
+    
+def apply_with_retries(f, *pars, **keys):
+    """Apply function f() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
+    retries = config.get_client_retry_count()
+    delay = config.get_client_retry_delay_seconds()
+    for retry in range(retries):
+        try:
+            return f(*pars, **keys)
+        except Exception, exc:
+            log.verbose("FAILED: Attempt", str(retry), "of", retries, "with:", str(exc))
+            log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
+            time.sleep(delay)
+    else:
+        raise exc
         
 class CheckingProxy(object):
     """CheckingProxy converts calls to undefined methods into JSON RPC service 
@@ -55,19 +70,25 @@ class CheckingProxy(object):
                     "parameters", params,
                     "-->",
                     verbosity=55, end="")
-        try:
-            channel = urllib.urlopen(self.__service_url, parameters)
-            response = channel.read()        
-        except Exception, exc:
-            log.verbose("FAILED", str(exc), verbosity=55)
-            raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+
+        response = apply_with_retries(self._call_service, parameters)
+
         try:
             rval = json.loads(response)
         except Exception, exc:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
+        
         return rval
-    
+
+    def _call_service(self, parameters):
+        """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
+        try:
+            channel = urllib.urlopen(self.__service_url, parameters)
+            return channel.read()
+        except Exception, exc:
+            raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:

@@ -15,6 +15,7 @@ from .proxy import CheckingProxy, ServiceError, CrdsError
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
 from crds import utils, log, config
+from crds.client import proxy
 
 # ==============================================================================
 
@@ -454,17 +455,7 @@ class FileCacher(object):
         log.verbose("Fetching", repr(name), "to", repr(localpath), verbosity=10)
         try:
             utils.ensure_dir_exists(localpath)
-            if config.get_download_mode() == "http":
-                generator = self.get_data_http(pipeline_context, name)
-            else:
-                generator = self.get_data_rpc(pipeline_context, name)
-            n_bytes = 0
-            with open(localpath, "wb+") as outfile:
-                for data in generator:
-                    outfile.write(data)
-                    n_bytes += len(data)
-            self.verify_file(name, localpath)
-            return n_bytes
+            return proxy.apply_with_retries(self.download_core, pipeline_context, name, localpath)
         except Exception, exc:
             # traceback.print_exc()
             try:
@@ -476,6 +467,20 @@ class FileCacher(object):
                                      " at server " + srepr(get_crds_server()) + 
                                      " with mode " + srepr(config.get_download_mode()) +
                                      " : " + str(exc))
+
+    def download_core(self, pipeline_context, name, localpath):
+        """Download and verify file `name` under context `pipeline_context` to `localpath`."""
+        if config.get_download_mode() == "http":
+            generator = self.get_data_http(pipeline_context, name)
+        else:
+            generator = self.get_data_rpc(pipeline_context, name)
+        n_bytes = 0
+        with open(localpath, "wb+") as outfile:
+            for data in generator:
+                outfile.write(data)
+                n_bytes += len(data)
+        self.verify_file(name, localpath)
+        return n_bytes
             
     def get_data_rpc(self, pipeline_context, filename):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""

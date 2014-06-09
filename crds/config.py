@@ -53,6 +53,21 @@ def env_str_to_bool(varname, val):
                          " for boolean env var " + repr(varname))
     return rval
 
+def env_to_int(varname, default):
+    """Convert the specified environment variable `varname` into a Python int
+    defaulting to `default` if it's not defined in os.environ.
+    """
+    env_str = os.environ.get(varname, default)
+    return env_str_to_int(varname, env_str)
+
+def env_str_to_int(varname, val):
+    """Convert environment variable decimal value `val` from `varname` to an int and return it."""
+    try:
+        return int(val)
+    except Exception:
+        raise ValueError("Invalid value for " + repr(varname) + 
+                         " should have a decimal integer value but is " + repr(str(val)))
+
 # ===========================================================================
 
 def get_crds_mappath():
@@ -168,8 +183,13 @@ def get_download_mode():
 
 def get_checksum_flag():
     """Return True if the environment is configured for checksums."""
-    rval = env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
-    return rval
+    return env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
+
+def get_client_retry_count():
+    return env_to_int("CRDS_CLIENT_RETRY_COUNT", 20)
+
+def get_client_retry_delay_seconds():
+    return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 10)
 
 # ===========================================================================
 
