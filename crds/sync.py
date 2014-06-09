@@ -171,7 +171,7 @@ class SyncScript(cmdline.ContextsScript):
         else:
             log.error("Define --all, --contexts, --last, --range, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
-        if self.args.check_files:
+        if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
         self.report_stats()
         log.standard_status()
