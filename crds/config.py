@@ -186,10 +186,10 @@ def get_checksum_flag():
     return env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
 
 def get_client_retry_count():
-    return env_to_int("CRDS_CLIENT_RETRY_COUNT", 20)
+    return env_to_int("CRDS_CLIENT_RETRY_COUNT", 1)
 
 def get_client_retry_delay_seconds():
-    return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 10)
+    return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 0)
 
 # ===========================================================================
 

@@ -30,7 +30,7 @@ def apply_with_retries(f, *pars, **keys):
         try:
             return f(*pars, **keys)
         except Exception, exc:
-            log.verbose("FAILED: Attempt", str(retry), "of", retries, "with:", str(exc))
+            log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
     else:
