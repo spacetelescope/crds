@@ -330,3 +330,7 @@ def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return ""
 
+def load_all_type_constraints():
+    """Load all the JWST type constraint files."""
+    raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
+

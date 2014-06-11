@@ -392,8 +392,11 @@ def validators_by_typekey(key, observatory):
     """
     locator = utils.get_locator_module(observatory)
     # Make and cache Validators for `filename`s reference file type.
-    validators = [validator(x) for x in locator.get_tpninfos(*key)]
-    log.verbose("Validators for", repr(key), "=", log.PP(validators))
+    try:
+        validators = [validator(x) for x in locator.get_tpninfos(*key)]
+        log.verbose("Validators for", repr(key), "=", log.PP(validators))
+    except Exception, exc:
+        raise RuntimeError("FAILED loading type contraints for " + repr(key) + " with " + repr(exc))
     return validators
 
 # ============================================================================
