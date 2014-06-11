@@ -60,4 +60,14 @@ class TestValidatorClasses(CRDSTestCase):
         from crds import certify
         certify.certify_files([self.data("v8q1445xx_idc.fits")], observatory="hst", 
                               context="hst.pmap", compare_old_reference=True)
+        
+    def test_loadall_type_constraints_hst(self):
+        """Prove the HST constraint files are loadable."""
+        from crds.hst import locate
+        locate.load_all_type_constraints()
+
+    def test_loadall_type_constraints_jwst(self):
+        """Prove the JWST constraint files are loadable."""
+        from crds.jwst import locate
+        locate.load_all_type_constraints()
 

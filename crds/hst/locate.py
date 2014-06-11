@@ -14,6 +14,7 @@ be implemented for JWST.
 import os.path
 import gzip
 import re
+import glob
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
@@ -359,6 +360,15 @@ def get_row_keys_by_instrument(instrument):
         keyset = keyset.union(typeset)
     return sorted([key.lower() for key in keyset])
 
+
+def load_all_type_constraints():
+    """Make sure that all HST .tpn files are loadable."""
+    from crds import certify
+    tpns = glob.glob(os.path.join(HERE, "tpns", "*.tpn"))
+    for tpn_path in tpns:
+        tpn = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
+        log.verbose("Loading", repr(tpn))
+        certify.validators_by_typekey((tpn,), "hst")
 
 # ============================================================================
 
