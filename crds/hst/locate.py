@@ -328,6 +328,16 @@ def get_row_keys(mapping):
     These are used for "mode" checks to issue warnings when unique rows are deleted
     in a certify comparison check against the preceding version of a table.
 
+    row_keys are now also utlized to perform "affected datasets" table row
+    lookups which essentially requires emulating that aspect of the calibration
+    software.  Consequently, row_keys now have a requirement for a higher level
+    of fidelity since they were originally defined for mode checks, since the
+    consequences of inadequate row keys becomes failed "affects checks" and not
+    merely an extraneous warning.  In their capacity as affected datasets 
+    parameters,  row_keys must be supported by the interface which connects the
+    CRDS server to the appropriate system dataset parameter database,  DADSOPS
+    for HST.   That interface must be updated when row_keys.dat is changed.
+
     The certify mode checks have a shaky foundation since the concept of mode
     doesn't apply to all tables and sometimes "data" parameters are required to
     render rows unique.   The checks only issue warnings however so they can be
@@ -336,7 +346,20 @@ def get_row_keys(mapping):
     For HST calibration references mapping is an rmap.
     """
     return ROW_KEYS[mapping.instrument][mapping.filekind]
-        
+
+def get_row_keys_by_instrument(instrument):
+    """To support defining the CRDS server interface to DADSOPS, return the
+    sorted list of row keys necessary to perform all the table lookups
+    of an instrument.   These (FITS) keywords will be used to instrospect
+    DADSOPS and identify table fields which provide the necessary parameters.    
+    """
+    keyset = set()
+    for filekind in ROW_KEYS[instrument]:
+        typeset = set(ROW_KEYS[instrument][filekind])
+        keyset = keyset.union(typeset)
+    return sorted([key.lower() for key in keyset])
+
+
 # ============================================================================
 
 if __name__ == "__main__":
