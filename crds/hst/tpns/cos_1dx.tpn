@@ -23,7 +23,7 @@ VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 DESCRIP             H        C         R    
 PEDIGREE            H        C         R    &PEDIGREE
-LIFE_ADJ            H        I         R    -1,0,1,2,3-11
+LIFE_ADJ            H        I         R    -1,0,1,2,3,-11
 SEGMENT             C        C         R    FUVA,FUVB,NUVA,NUVB,NUVC
 OPT_ELEM            C        C         R    G130M,G160M,G140L,\
           G185M,G225M,G285M,G230L
