@@ -22,7 +22,7 @@ COMMENT             C        C         P
 PXFORMT		    C	     C         R    NORMAL,ZOOM
 OPTCRLY		    C	     C         R    F48,F96
 SAMPPLN		    C	     I         R    64,128,256,512
-LINEPFM		    C	     I         R    64,128,256.512,1024
+LINEPFM		    C	     I         R    64,128,256,512,1024
 SAMPOFF		    C	     R         R    0.:1023.75
 LINEOFF		    C	     R         R    0.:1023.75
 
