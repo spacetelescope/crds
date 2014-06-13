@@ -407,7 +407,7 @@ class FileCacher(object):
         if downloads:
             n_bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
         else:
-            log.verbose("Skipping download for cached files", names, verbosity=60)
+            log.verbose("Skipping download for cached files", sorted(names), verbosity=60)
             n_bytes = 0
         if api == 1:
             return localpaths
