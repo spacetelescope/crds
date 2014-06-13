@@ -421,7 +421,8 @@ class ContextsScript(Script):
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
             assert not self.args.range or self.args.last, "Cannot specify --all and --range or --last"
-            contexts = self._list_mappings()
+            self._all_mappings = self._list_mappings("*.*map")
+            contexts = [ file for file in self._all_mappings if file.endswith(".pmap") ]
         elif self.args.last:
             assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
             contexts = self._list_mappings()[-self.args.last:]
@@ -440,10 +441,10 @@ class ContextsScript(Script):
             contexts = [self.resolve_context(self.observatory + "-operational")]
         return sorted(contexts)
 
-    def _list_mappings(self):
+    def _list_mappings(self, glob_pattern="*.pmap"):
         """Return a list of all the .pmap's on the CRDS Server."""
         self.require_server_connection()
-        return api.list_mappings(glob_pattern="*.pmap")
+        return api.list_mappings(glob_pattern=glob_pattern)
     
     def dump_files(self, context, files=None, ignore_cache=None):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
@@ -456,22 +457,34 @@ class ContextsScript(Script):
 
     def get_context_mappings(self):
         """Return the set of mappings which are pointed to by the mappings
-        in `contexts`.
+        in `self.contexts`.
         """
         files = set()
         useable_contexts = []
         if not self.contexts:
             return []
-        for context in self.contexts:
-            with log.warn_on_exception("Failed listing mappings for", repr(context)):
-                try:
+
+        if self.args.all:
+            files = self._all_mappings
+            useable_contexts = []
+            with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):
+                self.dump_files(useable_contexts[0], files)
+            for context in self.contexts:
+                with log.warn_on_exception("Failed loading context", repr(context)):
                     pmap = rmap.get_cached_mapping(context)
-                    files = files.union(pmap.mapping_names())
-                except:
-                    files = files.union(api.get_mapping_names(context))
-                useable_contexts.append(context)
-        with log.warn_on_exception("Failed dumping mappings for", repr(context)):
-            self.dump_files(useable_contexts[0], files)
+                    useable_contexts.append(context)
+        else:
+            for context in self.contexts:
+                with log.warn_on_exception("Failed listing mappings for", repr(context)):
+                    try:
+                        pmap = rmap.get_cached_mapping(context)
+                        files = files.union(pmap.mapping_names())
+                    except:
+                        files = files.union(api.get_mapping_names(context))
+                    useable_contexts.append(context)
+            with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):
+                self.dump_files(useable_contexts[0], files)
+
         self.contexts = useable_contexts  # XXXX reset self.contexts
         return sorted(files)
     
