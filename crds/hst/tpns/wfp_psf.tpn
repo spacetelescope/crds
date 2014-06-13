@@ -27,8 +27,8 @@ MJD                 H        C         R    48000.0:100000.
 SPECTRAL            H        C         R    
 XCORNER             H        I         R    0:800
 YCORNER             H        I         R    0:800
-XCENTER             H        I         R    0.:800.000
-YCENTER             H        I         R    0.:800.000
+XCENTER             H        C         R    0.:800.000
+YCENTER             H        C         R    0.:800.000
 CALIBRAT            H        C         R    
 ORIGIN              H        C         R    
 FLATFILE            H        C         R    
