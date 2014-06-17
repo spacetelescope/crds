@@ -20,7 +20,7 @@ class TestHSTTpninfoClass(CRDSTestCase):
         hstlocator = utils.get_locator_module("hst")
         self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn')
         self.validators = [certify.validator(info) for info in self.tpninfos]
-        os.environ['CRDS_SERVER_URL'] = 'http://not-a-crds-server.stsci.edu'
+        os.environ['CRDS_SERVER_URL'] = 'https://crds-serverless-mode.stsci.edu'
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
         os.environ['CRDS_PATH'] = "/grp/crds/hst"
         os.environ["CRDS_CONTEXT"] ="hst.pmap"
