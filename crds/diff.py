@@ -443,9 +443,10 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
 
     def main(self):
         """Perform the differencing."""
+        self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
         self.old_file = self.resolve_context(self.args.old_file)
         self.new_file = self.resolve_context(self.args.new_file)
-        self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
+        # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
         if self.args.print_new_files:
             return self.print_new_files()
         elif self.args.print_all_new_files:

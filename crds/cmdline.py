@@ -3,6 +3,7 @@
 MAYBE integrate rc, environment, and command line parameters.
 """
 import sys
+import os
 import argparse
 import pdb
 import cProfile as profile
@@ -36,7 +37,7 @@ def dataset(filename):
 def reference_file(filename):
     """Ensure `filename` is a reference file."""
     assert re.match(".*(.fits|.finf|.r[0-9][hd])", filename), \
-        "A .fits or .finf file is required but got: '%s'" % filename
+        "A .fits or .finf reference file is required but got: '%s'" % filename
     return filename
 
 def mapping(filename):
@@ -153,9 +154,13 @@ class Script(object):
         by the client/server exchange.
         """
         if self.args.jwst:
-            return "jwst"
+            return self.set_server("jwst")
         if self.args.hst:
-            return "hst"
+            return self.set_server("hst")
+        
+        obs = os.environ.get("CRDS_OBSERVATORY", None)
+        if obs:
+            self.set_server(obs.lower())
         
         files = []
         if hasattr(self, "contexts"):
@@ -165,15 +170,24 @@ class Script(object):
             
         for file_ in files:
             if file_.startswith("hst"):
-                return "hst"
+                return self.set_server("hst")
             if file_.startswith("jwst"):
-                return "jwst"
+                return self.set_server("jwst")
 
         for file_ in files:
             with log.verbose_on_exception("Failed file_to_observatory for", repr(file_)):
-                return utils.file_to_observatory(file_)
+                return self.set_server(utils.file_to_observatory(file_))
 
         return api.get_default_observatory()
+
+    def set_server(self, observatory):
+        """Based on `observatory`,  set the CRDS server to an appropriate default,  particularly
+        for the case where CRDS_SERVER_URL is not set.
+        """
+        url = config.get_server_url(observatory)
+        if url is not None:
+            api.set_crds_server(url)
+        return observatory
     
     def _add_key(self, key, parser_pars):
         """Add any defined class attribute for `key` to dict `parser_pars`."""

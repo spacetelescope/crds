@@ -14,7 +14,7 @@ CRDS_CHECKSUM_BLOCK_SIZE = 2**23   # size of block for utils.checksum(), also 8M
 
 # ===========================================================================
 
-DEFAULT_CRDS_DIR = "/grp/crds/jwst"
+DEFAULT_CRDS_DIR = "/grp/crds/cache"
 
 def env_path(name, default):
     """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
@@ -190,6 +190,15 @@ def get_client_retry_count():
 
 def get_client_retry_delay_seconds():
     return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 0)
+
+CRDS_DEFAULT_SERVERS = {
+    "hst" : "https://hst-crds.stsci.edu",
+    "jwst" : "https://jwst-crds.stsci.edu",
+}
+
+def get_server_url(observatory):
+    """Return either the value of CRDS_SERVER_URL or an appropriate default server for `observatory`."""
+    return os.environ.get("CRDS_SERVER_URL", CRDS_DEFAULT_SERVERS.get(observatory, None))
 
 # ===========================================================================
 

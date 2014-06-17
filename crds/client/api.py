@@ -92,7 +92,7 @@ def set_crds_server(url):
     e.g. 'http://localhost:8000'
     """
     if not url.startswith("https://") and "localhost" not in url:
-        log.warning("CRDS_SERVER_URL does not start with https://")
+        log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
     if url.endswith("/"):
         url = url[:-1]
     global URL, S
@@ -104,7 +104,7 @@ def get_crds_server():
     """
     url = URL[:-len(URL_SUFFIX)]
     if not url.startswith("https://") and "localhost" not in url:
-        log.warning("CRDS_SERVER_URL does not start with https://")
+        log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
     return url
 
 set_crds_server(URL)
