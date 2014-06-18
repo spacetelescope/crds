@@ -480,9 +480,10 @@ class ContextsScript(Script):
 
         if self.args.all:
             files = self._all_mappings
+            pmaps = sorted([file for file in files if file.endswith(".pmap")])
             useable_contexts = []
             with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):
-                self.dump_files(useable_contexts[0], files)
+                self.dump_files(pmaps[-1], files)
             for context in self.contexts:
                 with log.warn_on_exception("Failed loading context", repr(context)):
                     pmap = rmap.get_cached_mapping(context)
