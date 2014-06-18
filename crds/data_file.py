@@ -164,12 +164,27 @@ def get_data_model_header(filepath, needed_keys=()):
     from jwst_lib import models
     with models.open(filepath) as dm:
         d = dm.to_flat_dict(include_arrays=False)
+        d = sanitize_data_model_dict(d)
         needed_keys = [key.upper() for key in needed_keys]
         header = {}
         for key, val in d.items():
             if (not needed_keys) or (key.upper() in needed_keys):
                 header[str(key).upper()] = str(val)    
     return header
+
+def sanitize_data_model_dict(d):
+    """Given data model keyword dict `d`,  sanitize the keys and values to
+    strings, upper case the keys,  and add fake keys for FITS keywords.
+    """
+    cleaned = {}
+    for key, val in d.items():
+        skey = str(key).upper()
+        sval = str(val)
+        fits_magx = "_EXTRA_FITS.PRIMARY."
+        if key.upper().startswith(fits_magx):
+            cleaned[skey[len(fits_magx):]] = sval
+        cleaned[skey] = sval
+    return cleaned
 
 def get_fits_header(fname, needed_keys=()):
     """Return `needed_keys` or all from FITS file `fname`s primary header."""
