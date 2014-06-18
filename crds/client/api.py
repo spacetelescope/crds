@@ -491,7 +491,7 @@ class FileCacher(object):
             stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
             chunks, data = get_file_chunk(pipeline_context, filename, chunk)
             status = stats.status("bytes")
-            log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1])
+            log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1], verbosity=20)
             chunk += 1
             yield data
     
@@ -511,7 +511,7 @@ class FileCacher(object):
             data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
-                log.verbose("Transferred HTTP", repr(filename), "chunk", chunk, "at", status[1])
+                log.verbose("Transferred HTTP", repr(filename), "chunk", chunk, "at", status[1], verbosity=20)
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
