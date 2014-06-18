@@ -30,6 +30,13 @@
 setenv CRDS_CLIENT_RETRY_COUNT 20
 setenv CRDS_CLIENT_RETRY_DELAY_SECONDS 10
 
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+
 safe_sync $*
 if [[ $? != 1 ]]
 then
