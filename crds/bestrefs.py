@@ -1026,6 +1026,7 @@ and debug output.
         log.info("Affected products =", len(affected_products))
         for product in sorted(affected_products):
             print(product)
+        sys.stdout.flush()
 
     def dataset_to_product_id(self, dataset):
         """CRDS manages products and associations using : separated compound IDs of indeterminate
@@ -1043,6 +1044,7 @@ and debug output.
             if self.updates[dataset]:
                 types = sorted([update.filekind for update in self.updates[dataset]])
                 print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
+        sys.stdout.flush()
 
     def print_update_stats(self):
         """Print compound ID, instrument, and affected reference types for every exposure with new best references,
@@ -1063,6 +1065,7 @@ and debug output.
         for dataset in sorted(self.updates):
             for update in self.updates[dataset]:
                 print(dataset.lower() + " " + " ".join([str(val).lower() for val in update]))
+        sys.stdout.flush()
                 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
