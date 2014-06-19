@@ -40,6 +40,10 @@ class CheckingProxy(object):
     """CheckingProxy converts calls to undefined methods into JSON RPC service 
     calls.   If the JSON rpc returns an error,  CheckingProxy raises a 
     ServiceError exception containing the error's message.
+    
+    XXX NOTE: Always underscore new methods or you may hide a real JSONRPC method
+    which also appears in the proxy object's namespace with the same name.
+    
     """
     def __init__(self, service_url, service_name=None, version='1.0'):
         self.__version = str(version)
@@ -61,17 +65,18 @@ class CheckingProxy(object):
         #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
         #                  '(the default version for this client, '
         #                  'pass version="2.0" to use keyword arguments)')
-        parameters = json.dumps({"jsonrpc": self.__version,
-                                 "method": self.__service_name,
-                                 'params': params,
-                                 'id': str(uuid.uuid1())})
-        log.verbose("CRDS JSON RPC to", repr(self.__service_url), 
-                    "method", repr(self.__service_name), 
-                    "parameters", params,
-                    "-->",
-                    verbosity=55, end="")
+        jsonrpc_params = {"jsonrpc": self.__version,
+                          "method": self.__service_name,
+                          'params': params,
+                          'id': str(uuid.uuid1())}
+        
+        parameters = json.dumps(jsonrpc_params)
+        
+        url = self._get_url(jsonrpc_params)
 
-        response = apply_with_retries(self._call_service, parameters)
+        log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->", verbosity=55)
+        
+        response = apply_with_retries(self._call_service, parameters, url)
 
         try:
             rval = json.loads(response)
@@ -80,11 +85,18 @@ class CheckingProxy(object):
             raise
         
         return rval
+    
+    def _get_url(self, jsonrpc_params):
+        """Return the JSONRPC URL used to perform a method call.   Since post parameters are not visible in the
+        log,  annotate the URL with additional method id paths which are functionally ignored but visible in
+        the log.
+        """
+        return self.__service_url + jsonrpc_params["method"] + "/" + jsonrpc_params["id"] + "/"
 
-    def _call_service(self, parameters):
+    def _call_service(self, parameters, url):
         """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
         try:
-            channel = urllib.urlopen(self.__service_url, parameters)
+            channel = urllib.urlopen(url, parameters)
             return channel.read()
         except Exception, exc:
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
