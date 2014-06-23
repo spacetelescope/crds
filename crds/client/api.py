@@ -452,7 +452,8 @@ class FileCacher(object):
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
         assert not config.get_cache_readonly(), "Readonly cache,  cannot download files."
-        log.verbose("Fetching", repr(name), "to", repr(localpath), verbosity=10)
+        log.info("Fetching", repr(name), "to", repr(localpath), "of size", 
+                 utils.human_format_number(int(self.info_map[name]["size"])), "bytes.")
         try:
             utils.ensure_dir_exists(localpath)
             return proxy.apply_with_retries(self.download_core, pipeline_context, name, localpath)

@@ -295,32 +295,31 @@ class TimingStats(object):
     def status(self, name):
         """Return human readable (count, rate) for `name`."""
         self.stop()
-        count = self._human_format(self.counts[name]) + " " + name
-        rate = self._human_format(self.counts[name] / self.elapsed.total_seconds()) + " " + name+"-per-second"
+        count = human_format_number(self.counts[name]) + " " + name
+        rate = human_format_number(self.counts[name] / self.elapsed.total_seconds()) + " " + name+"-per-second"
         return count, rate
         
-    def _human_format(self, number):
-        """Format `number` roughly in engineering units."""
-        convert = [
-            (1e12, "T"),
-            (1e9 , "G"),
-            (1e6 , "M"),
-            (1e3 , "K"),
-            ]
-        for limit, sym in convert:
-            if isinstance(number, float) and number > limit:
-                number /= limit
-                break
-        else:
-            sym = ""
-        if isinstance(number, (int, long)):
-            return "%d" % number
-        else:
-            return "%0.2f %s" % (number, sym)
-    
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
+
+def human_format_number(number):
+    convert = [
+        (1e12, "T"),
+        (1e9 , "G"),
+        (1e6 , "M"),
+        (1e3 , "K"),
+        ]
+    for limit, sym in convert:
+        if isinstance(number, (float,int,long)) and number > limit:
+            number /= limit
+            break
+    else:
+        sym = ""
+    if isinstance(number, (int, long)):
+        return "%d" % number
+    else:
+        return "%0.2f %s" % (number, sym)
 
 # ===================================================================
 
