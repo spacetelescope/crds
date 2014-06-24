@@ -28,8 +28,8 @@ setup_pars = {
             ],
         'crds.hst': [
             '*.dat',
-            'tpns/*.tpn',
             'cdbs.paths.gz',
+            'tpns/*.tpn',
             'tpns/*.rule',
             'tpns/cdbscatalog.dat',
             ],
@@ -51,9 +51,23 @@ setup_pars = {
     }
 
 setup(name="crds",
-      version= "1.0",
-      description="Python based Calibration Reference Data System,  best reference file",
+      provides=["crds","crds.hst","crds.jwst","crds.client","crds.tobs"],
+      version="1.1",
+      description="Calibration Reference Data System,  HST/JWST reference file management",
+      long_description=open('README.rst').read(),
       author="Todd Miller",
       author_email="jmiller@stsci.edu",
+      url="https://hst-crds.stsci.edu",
+      license="BSD",
+      requires=["numpy","astropy"],
+      classifiers=[
+          'Intended Audience :: Science/Research',
+          'License :: OSI Approved :: BSD License',
+          'Operating System :: OS-X, Linux', 
+          'Programming Language :: Python :: 2.7',
+          # 'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: Implementation :: CPython',
+          'Topic :: Scientific/Engineering :: Astronomy',
+      ],
       **setup_pars
       )
