@@ -1,0 +1,29 @@
+header = {
+    'derived_from' : 'jwst_miri_flat_0005.rmap',
+    'filekind' : 'FLAT',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_flat_0006.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.GRATINGA', 'META.INSTRUMENT.GRATINGB', 'META.EXPOSURE.READPATT'),),
+    'sha1sum' : '4d2966ded517c22b4c3dfa5f4599a9c7bba54dc2',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'N/A', 'LONG', 'LONG', '*') : 'jwst_miri_flat_0018.fits',
+    ('MIRIFULONG', 'N/A', 'MEDIUM', 'MEDIUM', '*') : 'jwst_miri_flat_0017.fits',
+    ('MIRIFULONG', 'N/A', 'SHORT', 'SHORT', '*') : 'jwst_miri_flat_0016.fits',
+    ('MIRIFUSHORT', 'N/A', 'LONG', 'LONG', '*') : 'jwst_miri_flat_0021.fits',
+    ('MIRIFUSHORT', 'N/A', 'MEDIUM', 'MEDIUM', '*') : 'jwst_miri_flat_0020.fits',
+    ('MIRIFUSHORT', 'N/A', 'SHORT', 'SHORT', '*') : 'jwst_miri_flat_0019.fits',
+    ('MIRIMAGE', 'F1000W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0006.fits',
+    ('MIRIMAGE', 'F1130W', 'N/A', 'N/A', 'FAST') : 'jwst_miri_flat_0007.fits',
+    ('MIRIMAGE', 'F1130W', 'N/A', 'N/A', 'SLOW') : 'jwst_miri_flat_0008.fits',
+    ('MIRIMAGE', 'F1280W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0009.fits',
+    ('MIRIMAGE', 'F1500W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0010.fits',
+    ('MIRIMAGE', 'F1800W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0011.fits',
+    ('MIRIMAGE', 'F2100W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0012.fits',
+    ('MIRIMAGE', 'F2550W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0013.fits',
+    ('MIRIMAGE', 'F560W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0014.fits',
+    ('MIRIMAGE', 'F770W', 'N/A', 'N/A', '*') : 'jwst_miri_flat_0015.fits',
+})

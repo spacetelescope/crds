@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_miri_fringe_0000.rmap',
+    'filekind' : 'FRINGE',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_fringe_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.GRATING14'),),
+    'sha1sum' : '1396fd23286ee418cf522d9938a6b6885e630511',
+}
+
+selector = Match({
+})

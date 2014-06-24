@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'jwst_fgs_0004.imap',
+    'instrument' : 'FGS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_fgs_0005.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '8864cca36eac556f4135d377458f10df38910597',
+}
+
+selector = {
+    'GAIN' : 'jwst_fgs_gain_0000.rmap',
+    'LINEARITY' : 'jwst_fgs_linearity_0002.rmap',
+    'MASK' : 'jwst_fgs_mask_0001.rmap',
+    'READNOISE' : 'jwst_fgs_readnoise_0000.rmap',
+    'SATURATION' : 'jwst_fgs_saturation_0000.rmap',
+}
