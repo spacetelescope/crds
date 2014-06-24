@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'generated as stub rmap on 2014-03-14 07:15:25.063422',
+    'filekind' : 'SATURATION',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_saturation_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '269b7fa012f464161de6484160af95fa11b0a997',
+}
+
+selector = Match({
+    ('NIRISS', '*') : 'jwst_niriss_saturation_0003.fits',
+})

@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'jwst_miri_0010.imap',
+    'instrument' : 'MIRI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_miri_0011.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'b79fb9c6dd1fd031aa6fb525419000253c643345',
+}
+
+selector = {
+    'DARK' : 'jwst_miri_dark_0003.rmap',
+    'FLAT' : 'jwst_miri_flat_0002.rmap',
+    'FRINGE' : 'jwst_miri_fringe_0002.rmap',
+    'GAIN' : 'jwst_miri_gain_0000.rmap',
+    'IPC' : 'jwst_miri_ipc_0000.rmap',
+    'LINEARITY' : 'jwst_miri_linearity_0002.rmap',
+    'MASK' : 'jwst_miri_mask_0002.rmap',
+    'PHOTOM' : 'jwst_miri_photom_0001.rmap',
+    'READNOISE' : 'jwst_miri_readnoise_0000.rmap',
+    'SATURATION' : 'jwst_miri_saturation_0000.rmap',
+}

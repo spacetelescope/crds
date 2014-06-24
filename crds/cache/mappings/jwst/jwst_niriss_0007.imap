@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'jwst_niriss_0006.imap',
+    'instrument' : 'NIRISS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_niriss_0007.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'ea4271c082ccba90c77ce4391a417bb05d825ec2',
+}
+
+selector = {
+    'DARK' : 'jwst_niriss_dark_0002.rmap',
+    'FLAT' : 'jwst_niriss_flat_0000.rmap',
+    'GAIN' : 'jwst_niriss_gain_0000.rmap',
+    'IPC' : 'jwst_niriss_ipc_0000.rmap',
+    'LINEARITY' : 'jwst_niriss_linearity_0002.rmap',
+    'MASK' : 'jwst_niriss_mask_0001.rmap',
+    'PHOTOM' : 'jwst_niriss_photom_0002.rmap',
+    'READNOISE' : 'jwst_niriss_readnoise_0000.rmap',
+    'SATURATION' : 'jwst_niriss_saturation_0000.rmap',
+}
