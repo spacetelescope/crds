@@ -12,3 +12,4 @@ foreach pat ('*.orig' '*.pyc' 'build')
 	find ${dirs} -name "${pat}" | xargs rm -rf
 end
 
+rm -rf dist MANIFEST
