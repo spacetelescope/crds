@@ -1,0 +1,3 @@
+include README.rst install runtests setup.py setup.cfg
+recursive-include envs *
+exclude crds/hst/cdbs.paths.gz
