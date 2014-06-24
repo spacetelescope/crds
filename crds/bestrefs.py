@@ -764,9 +764,9 @@ and debug output.
         compare_prior = \
             self.args.old_context or \
             self.args.compare_source_bestrefs or \
-            self.args.update_bestrefs or \
             self.args.print_affected or \
             self.args.print_affected_details
+            # self.args.update_bestrefs or \
         old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
@@ -961,9 +961,13 @@ and debug output.
         """
         ref_org = cleanpath(bestrefs.get(filekind, "UNDEFINED")).strip()
         ref = ref_org.upper()
-        if ref in ("N/A", "NONE", "", "*") or ref.startswith("NOT FOUND N/A"):
+        if ref == "N/A" or ref.startswith("NOT FOUND N/A"):
             log.verbose(self.format_prefix(dataset, instrument, filekind),
                         "Bestref is natural N/A.", verbosity=55)
+            ref = "N/A"
+        elif ref in ("NONE", "", "*"):
+            log.verbose(self.format_prefix(dataset, instrument, filekind),
+                        "Mapping", repr(ref), "to N/A.", verbosity=55)
             ref = "N/A"
         ref_ok = True
         if ref.startswith(na_conversions):   
