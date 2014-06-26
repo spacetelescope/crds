@@ -391,16 +391,16 @@ def cache_server_info(info, observatory):
     if config.get_cache_readonly():
         log.verbose("Readonly cache, skipping cache config write.", verbosity=70)
         return
-    path = config.get_crds_config_path() + "/" + observatory
+    path = config.get_crds_config_path(observatory)
     try:
-        server_config = path + "/server_config"
+        server_config = os.path.join(path, "server_config")
         utils.ensure_dir_exists(server_config)
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
     except IOError, exc:
         log.verbose_warning("Couldn't save CRDS server info:", repr(exc))
     try:
-        bad_files = path + "/bad_files.txt"
+        bad_files = os.path.join(path, "bad_files.txt")
         utils.ensure_dir_exists(bad_files)
         bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
         with open(bad_files, "w+") as file_:
@@ -410,7 +410,7 @@ def cache_server_info(info, observatory):
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
-    server_config = config.get_crds_config_path() + "/" + observatory + "/server_config"
+    server_config = os.path.join(config.get_crds_config_path(observatory), "server_config")
     try:
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))

@@ -131,7 +131,7 @@ class ListScript(cmdline.ContextsScript):
     def list_config(self):
         """Print out configuration info about the current environment and server."""
         info = config.get_crds_env_vars()
-        real_paths = config.get_crds_actual_paths()
+        real_paths = config.get_crds_actual_paths(self.observatory)
         server = self.server_info
         current_server_url = api.get_crds_server()
         _print_dict("CRDS Environment", info)
