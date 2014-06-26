@@ -88,17 +88,16 @@ def _std_cache_path(observatory, root_env, subdir):
 def get_crds_path():
     """
     >>> temp = dict(os.environ)
-    >>> os.environ = {}
 
     >>> get_crds_path()
     '/grp/crds/cache'
     
-    >>> import os
+    >>> os.environ = {}
     >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere"
     >>> get_crds_path()
     '/somewhere'
-    
-    >>> del os.environ["CRDS_PATH_SINGLE"]
+
+    >>> os.environ = {}
     >>> os.environ["CRDS_PATH"] = "/somewhere_else"
     >>> get_crds_path()
     '/somewhere_else'
