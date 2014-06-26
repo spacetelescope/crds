@@ -14,23 +14,6 @@ CRDS_CHECKSUM_BLOCK_SIZE = 2**23   # size of block for utils.checksum(), also 8M
 
 # ===========================================================================
 
-DEFAULT_CRDS_DIR = "/grp/crds/cache"
-
-def env_path(name, default):
-    """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
-    the resulting path.
-    """
-    path = os.environ.get(name, default)
-    while path.endswith("/"):
-        path = path[:-1]
-    return path
-
-def get_crds_path():
-    """Return the root directory of the CRDS cache."""
-    return env_path("CRDS_PATH", DEFAULT_CRDS_DIR)
-
-# ===========================================================================
-
 def env_to_bool(varname, default=False):
     """Convert the specified environment variable `varname` into a Python bool
     defaulting to `default` if it's not defined in os.environ.
@@ -70,31 +53,111 @@ def env_str_to_int(varname, val):
 
 # ===========================================================================
 
-def get_crds_mappath():
+DEFAULT_CRDS_DIR = "/grp/crds/cache"
+
+def _clean_path(path):
+    """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
+    the resulting path.
+    """
+    while path.endswith("/"):
+        path = path[:-1]
+    return path
+
+def _std_cache_path(observatory, root_env, subdir):
+    """Do standard interpretation of environment variables for CRDS cache component location.
+    
+    Evaluated in order,  with first definition winning:  e.g. for mappings
+    
+    CRDS_MAPPATH_SINGLE  -->   <env path for mappings>
+    CRDS_MAPPATH         -->   <env path for mappings for both observatories> + / + <observatory>
+    CRDS_PATH_SINGLE     -->   <env path for overall cache for one observatory> + "/mappings/"
+    CRDS_PATH            -->   <env path for overall cache for all observatories> + "/mappings/" + <observatory>
+    """
+    if root_env + "_SINGLE" in os.environ:
+        path = os.environ[root_env + "_SINGLE"]
+    elif root_env in os.environ:
+        path = os.path.join(os.environ[root_env], observatory)
+    elif "CRDS_PATH_SINGLE" in os.environ:
+        path = os.path.join(os.environ["CRDS_PATH_SINGLE"], subdir)
+    elif "CRDS_PATH" in os.environ:
+        path = os.path.join(os.environ["CRDS_PATH"], subdir, observatory)
+    else:
+        path = os.path.join(DEFAULT_CRDS_DIR, subdir, observatory)
+    return _clean_path(path)
+    
+def get_crds_path():
+    """
+    >>> temp = dict(os.environ)
+    >>> os.environ = {}
+
+    >>> get_crds_path()
+    '/grp/crds/cache'
+    
+    >>> import os
+    >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere"
+    >>> get_crds_path()
+    '/somewhere'
+    
+    >>> del os.environ["CRDS_PATH_SINGLE"]
+    >>> os.environ["CRDS_PATH"] = "/somewhere_else"
+    >>> get_crds_path()
+    '/somewhere_else'
+    
+    >>> os.environ = temp
+    """
+    return _std_cache_path("", "*not-in-crds-environment*", "")
+
+def get_crds_mappath(observatory):
     """get_crds_mappath() returns the base path of the CRDS mapping directory 
     tree where CRDS rules files (mappings) are stored.   This is extended by
     <observatory> once it is known.
     
     DEPRECATED:  only use in the config module.  Use locate_file() or locate_mapping() instead.
+    
+    >>> temp = dict(os.environ)
+    >>> os.environ = {}
+    
+    >>> get_crds_mappath('jwst')
+    '/grp/crds/cache/mappings/jwst'
+    
+    >>> os.environ["CRDS_PATH"] = '/somewhere'
+    >>> get_crds_mappath('jwst')
+    '/somewhere/mappings/jwst'
+    
+    >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere2"
+    >>> get_crds_mappath('jwst')
+    '/somewhere2/mappings'
+    
+    >>> os.environ["CRDS_MAPPATH"] = "/somewhere3/mappings2"
+    >>> get_crds_mappath('jwst')
+    '/somewhere3/mappings2/jwst'
+    
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = "/somewhere4/mappings3"
+    >>> get_crds_mappath('jwst')
+    '/somewhere4/mappings3'
+    
+    >>> os.environ = temp
     """
-    return env_path("CRDS_MAPPATH", get_crds_path() + "/mappings")
+    return _std_cache_path(observatory, "CRDS_MAPPATH", "mappings")
 
-def get_crds_refpath():
+def get_crds_refpath(observatory):
     """get_crds_refpath returns the base path of the directory tree where CRDS 
     reference files are stored.   This is extended by <observatory> once it is
     known.
     
     DEPRECATED: only use in config module.  Use locate_file() or locate_reference() instead.
     """
-    return env_path("CRDS_REFPATH", get_crds_path() + "/references")
+    return _std_cache_path(observatory, "CRDS_REFPATH", "references")
 
-def get_crds_config_path():
+def get_crds_config_path(observatory):
     """Return the path to a writable directory used to store configuration info
     such as last known server status.   This is extended by <observatory> once
     it is known.   If CRDS_PATH doesn't point to a writable directory, then
     CRDS_CFGPATH should be defined.
     """
-    return env_path("CRDS_CFGPATH", get_crds_path() + "/config")
+    return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
+
+# ===========================================================================
 
 def get_crds_processing_mode():
     """Return the preferred location for computing best references when
@@ -154,12 +217,12 @@ def get_crds_env_vars():
             env_vars[var] = os.environ[var]
     return env_vars
 
-def get_crds_actual_paths():
+def get_crds_actual_paths(observatory):
     """Return a dictionary of the critical paths CRDS configuration resolves to."""
     return {
-        "mapping root" : get_crds_mappath(),
-        "reference root" : get_crds_refpath(),
-        "config root" : get_crds_config_path(),
+        "mapping root" : get_crds_mappath(observatory),
+        "reference root" : get_crds_refpath(observatory),
+        "config root" : get_crds_config_path(observatory),
         }
 
 # ============================================================================
@@ -186,11 +249,24 @@ def get_checksum_flag():
     return env_to_bool("CRDS_DOWNLOAD_CHECKSUMS", True)
 
 def get_client_retry_count():
+    """Return the integer number of times a network transaction should be attempted.  No retries == 1."""
     return env_to_int("CRDS_CLIENT_RETRY_COUNT", 1)
 
 def get_client_retry_delay_seconds():
+    """Return the integer number of seconds CRDS should wait between retrying failed network transactions."""
     return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 0)
 
+def enable_retries():
+    """Set reasonable defaults for CRDS retries"""
+    os.environ["CRDS_CLIENT_RETRY_COUNT"] = 20
+    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = 10
+    
+def disable_retries():
+    """Set the defaults for only one try for each network transaction."""
+    os.environ["CRDS_CLIENT_RETRY_COUNT"] = 1
+    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = 0
+
+    
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",
     "jwst" : "https://jwst-crds.stsci.edu",
@@ -240,13 +316,13 @@ def locate_config(cfg, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(cfg):
         return cfg
-    return os.path.join(get_crds_config_path(), observatory, cfg)
+    return os.path.join(get_crds_config_path(observatory), cfg)
 
 def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
         return ref
-    return os.path.join(get_crds_refpath(), observatory, ref)
+    return os.path.join(get_crds_refpath(observatory), ref)
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 
@@ -373,7 +449,7 @@ def locate_mapping(mappath, observatory=None):
         return mappath
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
-    return os.path.join(get_crds_mappath(), observatory, mappath)
+    return os.path.join(get_crds_mappath(observatory), mappath)
 
 def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""

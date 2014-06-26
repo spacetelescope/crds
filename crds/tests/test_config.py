@@ -17,3 +17,8 @@ def cleanup():
         shutil.rmtree(os.environ["CRDS_PATH"])
     except:
         pass
+    try:
+        del os.environ["CRDS_PATH"]
+        del os.environ["CRDS_SERVER_URL"]
+    except:
+        pass

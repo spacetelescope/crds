@@ -11,12 +11,13 @@ CRDS is available on pypi and explicitly installable using pip::
 
 % pip install crds
 
-Since CRDS is pure Python, CRDS-proper should be an easy install.
-
 Installing from Source
 ----------------------
 
-CRDS source code can be downloaded from the CRDS subversion repository like this::
+Subversion Checkout
+++++++++++++++++++++++
+
+Alternately, CRDS source code can be downloaded from the CRDS subversion repository like this::
 
   % svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  crds
   
@@ -45,22 +46,6 @@ Test errors will result if the CRDS server at https://hst-crds.stsci.edu or Cent
 file system /grp/crds/hst are not accessible from your network or host.
 
 
-Package Overview
-----------------
-
-CRDS consists of 3 or more Python packages which implement different capabilities:
-
-   * crds
-       - core package enabling local use and development of mappings
-         and reference files.  contains command line utility programs.
-   * crds.client
-       - network client library for interacting with the central CRDS server.
-   * crds.hst
-       - observatory personality package for HST, defining how HST types, reference file
-       certification constraints, and naming works.
-   * crds.jwst
-       - analogous to crds.hst,  for JWST.
-
 Dependencies
 ------------
 
@@ -81,12 +66,31 @@ OPTIONAL: For executing the unit tests (runtests) add:
    
 OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
 
-   * Parsley-1.1  (included in the CRDS source distribution under third_party)
+   * Parsley-1.1  (included in CRDS subversion under third_party)
    
 OPTIONAL: For building documentation add:
-
+   * docutils
+   * sphinx
    * stsci.sphinxext   
 
+
+Package Overview
+----------------
+
+CRDS consists of 3 or more Python packages which implement different capabilities:
+
+   * crds
+       - core package enabling local use and development of mappings
+         and reference files.  contains command line utility programs.
+   * crds.client
+       - network client library for interacting with the central CRDS server.
+   * crds.hst
+       - observatory personality package for HST, defining how HST types, reference file
+       certification constraints, and naming works.
+   * crds.jwst
+       - analogous to crds.hst,  for JWST.
+   * crds.tobs
+       - test observatory supporting artificial rules cases and tests.
 
 Setting up your Environment
 ===========================
@@ -96,7 +100,7 @@ Basic Environment
 
 CRDS supports HST and JWST projects using project-specific servers and an explicit cache of CRDS rules and reference
 files.   CRDS has two environment variables which define basic setup.   These variables control the server where CRDS 
-obtains rules and references from and where CRDS caches files to on your local system::
+obtains rules and references and where CRDS caches files to on your local system::
 
     % setenv CRDS_SERVER_URL  <some_crds_server>
     % setenv CRDS_PATH        <some_crds_reference_and_rules_cache_directory>
@@ -132,6 +136,8 @@ Server Selection (CRDS_SERVER_URL)
 Since each project is supported by a different operational server, CRDS must determine which (if any)
 server to use.  
 
+Starting with OPUS 2014.3 and crds-1.1,  CRDS does a reasonable job guessing what project you're working on.
+
 CRDS can guess the project you're working on by:
     
 * Looking for the string 'hst' or 'jwst' in the file names you're operating on.
@@ -142,6 +148,12 @@ You can tell CRDS which project you're working on by:
 
 * Using command line switches in CRDS utility programs:  ----hst or ----jwst
 * Setting CRDS_OBSERVATORY to 'hst' or 'jwst'
+
+If you're working on both projects frequently,  using the command line hints,  e.g. ----hst,  is probably
+preferred whenever CRDS has trouble guessing.
+
+If you're primarily working on one project,  definining **CRDS_OBSERVATORY** is probably most convenient
+since then you won't need to provide command line hints.
     
 If CRDS can determine the project,  and you don't specify CRDS_SERVER_URL,  CRDS will use the default
 operational server for your project:
@@ -162,23 +174,55 @@ rules and reference updates,  CRDS knowledge of the current operational context,
 references determined to be bad.   On the other hand,  in serverless-mode you're guaranteed to be working with 
 a static system, and no warnings will  be issued because the server is not reachable.
 
+Onsite CRDS Testing
++++++++++++++++++++
+
+For reference type development,  updates are generally made and tested in the test pipelines at STScI.  For
+coordinating with those tests,  **CRDS_PATH** and **CRDS_SERVER_URL** must be explicitly set to a test cache and server
+similar to this::
+
+    % setenv CRDS_PATH  ${HOME}/crds_cache_test
+    % setenv CRDS_SERVER_URL https://hst-crds-test.stsci.edu
+
+After syncing this will provide access to CRDS test files and rules in a local cache::
+
+    # Fetch all the test rules
+    % python -m crds.sync --all
+    # Fetch specifically listed test references
+    % python -m crds.sync --files <test_references_only_the_test_server_has...>   
+
+Testing reference type changes (new keywords,  new values or value restrictions, etc) may also require access to 
+development versions of CRDS code.   In particular,  when adding parameters or changing legal parameter values,  
+the certify tool is modified as "code" on the servers first.   Hence distributed versions of CRDS will not reflect 
+ongoing type changes.
+
+It should be noted that the test server is only visible on site,  not on the open internet.  Without VPN,  the test
+servers are not usable off site.
+
 Setup for Offsite Use
 ---------------------
 
-For offsite users without VPN access,  it may make sense to create a small personal cache of rules and references
-supporting only the datasets you care about::
+CRDS has been designed to (optionally) automatically fetch and cache references you need to process your datasets.
+Rather than going to a website and downloading a tarball of recommended references,  the CRDS tools,  which know
+the references you need,  can go to the website for you and download the files you need to your cache.  Once you've
+cached a file,  unless you delete it,  you never have to download it again.
 
-% setenv CRDS_PATH  ${HOME}/crds_cache
+For offsite users without VPN access who are running local calibrations,  you can create a small personal 
+cache of rules and references supporting only the datasets you care about::
 
+    % setenv CRDS_PATH  ${HOME}/crds_cache
+    
 For **HST**, to fetch the latest CRDS rules and references for some FITS datasets::
 
-% python -m crds.bestrefs --files dataset*.fits --sync-references=1 
-
-If you also wish to update your dataset FITS headers with best references,  add --update-bestrefs
+    % python -m crds.bestrefs --files dataset*.fits --sync-references=1
+    
+By default crds.bestrefs does not alter your dataset FITS files.   If you also wish to update your dataset FITS 
+headers with best references,  add --update-bestrefs.
     
 For **JWST**,  CRDS is directly integrated with the calibration step code and will automatically download
 rules and references as needed.   Downloads will only be an issue when you set CRDS_PATH and don't already
-have the files you need in your cache.
+have the files you need in your cache.   By default CRDS modifies JWST datasets with new best references
+which serve as a processing history in the dataset header.
 
 
 Additional HST Settings
@@ -208,20 +252,17 @@ JWST Setup for STScI
 The nominal setup for someone operating on site at STScI for JWST will use a common shared read-only cache 
 which contains all of the current CRDS rules and references.   This cache will be automatically synchronized
 by CRDS with the CRDS server, pipeline, and archive.     CRDS users cannot modify these references.   
-CRDS users are not required to download these references.   Offsite without VPN,  these references are 
-presumed to be unavailable since /grp/crds/jwst will not be visible::
+On site CRDS users are not required to download these references. CRDS configuration to use the default
+CRDS cache is automatic.
 
-% setenv CRDS_SERVER_URL  https://jwst-crds.stsci.edu
-% setenv CRDS_PATH        /grp/crds/jwst
-    
 JWST Setup for Offsite Use
 ++++++++++++++++++++++++++
 
-Within the JWST pipeline,  use of CRDS is transparent/built-in to calibration steps.  If you choose to
-use a personal cache, do the following::
+Offsite without VPN,  /grp/crds/cache is presumed to be unavailable.   If you choose to
+create a personal local CRDS cache, do the following::
 
-% setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
-% setenv CRDS_PATH  ${HOME}/crds_cache
+    % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
+    % setenv CRDS_PATH  ${HOME}/crds_cache
 
 It should be noted that this configuration can potentially lead to transparent downloads of gigabytes of 
 references required to process your datasets,  resulting in long delays until you have the required files in your 
@@ -241,26 +282,27 @@ to the latest context which is sufficiently mature for broad use.  Use of jwst-o
 The context used for JWST can be overridden to some specific historical or experimental context by setting
 the **CRDS_CONTEXT** environment variable::
 
-% setenv CRDS_CONTEXT jwst_0057.pmap
+    % setenv CRDS_CONTEXT jwst_0057.pmap
 
 **CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to crds.getreferences().
+
+
 
 Advanced Environment
 ....................
 
-Developers may find these useful:
-    
-    **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
-    integer,  nominally 50.   Higher values output more information,  lower
-    values less information.   Leave it 0 for non-verbose.
-    
-Institutional pipelines may find these useful:
+**CRDS_PATH_SINGLE** supports a cache structure for a single project.  It's
+an error to use such a cache for more than one project.   The component paths
+implied by **CRDS_PATH_SINGLE** omit the observatory subdirectory,  giving a
+simpler and shallower cache structure::
 
-    **CRDS_MODE** defines whether CRDS should compute best references using
-    installed client software only (local),  on the server (remote),  or 
-    intelligently "fall up" to the server (when the installed client is deemed
-    obsolete relative to the server) or "fall down" to the local installation 
-    (when the server cannot be reached) (auto).   The default is auto.
+    /cache
+        /mappings
+            mapping_files...
+        /references
+            reference files...
+        /config
+            config files...
     
 These variables support caches with parts under different root directories:
 
@@ -277,5 +319,52 @@ These variables support caches with parts under different root directories:
     only server configuration information is cached.   The directory
     pointed to by CRDS_CFGPATH should be writable.
     CRDS_CFGPATH defaults to ${CRDS_PATH}/config.
+    
+    Each of these paths points to a directory containing observatory subdirectories
+    which contain actual files.  For example:
+    
+    Specifying CRDS_MAPPATH = /somewhere when CRDS_OBSERVATORY = hst means that
+    mapping files will be located in /somewhere/hst
+    
+These variables support caches with parts under different root directories, but
+supporting only a single observatory.  Hence there is no observatory suffix 
+and the given path points directly to a directory containing files,  not one
+containing observatory sub-directories.
+
+    **CRDS_MAPPATH_SINGLE** can be used to override CRDS_PATH and 
+    define where only mapping files are stored. CRDS_MAPPATH_SINGLE defaults to 
+    ${CRDS_PATH}/mappings and is presumed to support only one observatory.
+          
+    **CRDS_REFPATH_SINGLE** can be used to override CRDS_PATH and define where 
+    only reference files are stored.  CRDS_REFPATH_SINGLE defaults to 
+    ${CRDS_PATH}/references and is presumed to support only one observatory.
+      
+    **CRDS_CFGPATH_SINGLE** can be used to override CRDS_PATH and define where 
+    only server configuration information is cached.  CRDS_CFGPATH defaults to 
+    ${CRDS_PATH}/config.   CRDS_CFGPATH_SINGLE defaults to 
+    ${CRDS_PATH}/config and is presumed to support only one observatory.
+    
+    Each of these paths points to a directory directly containing files of the 
+    appropriate kind with no observatory subdirectory implied. For example:
+    
+    Specifying CRDS_MAPPATH_SINGLE = /somewhere when CRDS_OBSERVATORY = hst means that
+    mapping files will be located in /somewhere,  not in /somewhere/hst.
+    
+    
+Developers may find these useful:
+    
+    **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
+    integer,  nominally 50.   Higher values output more information,  lower
+    values less information.   Leave it 0 for non-verbose.
+    
+Institutional pipelines may find these useful:
+
+    **CRDS_MODE** defines whether CRDS should compute best references using
+    installed client software only (local),  on the server (remote),  or 
+    intelligently "fall up" to the server (when the installed client is deemed
+    obsolete relative to the server) or "fall down" to the local installation 
+    (when the server cannot be reached) (auto).   The default is auto.
+    
+
       
 
