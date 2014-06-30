@@ -159,7 +159,7 @@ class SyncScript(cmdline.ContextsScript):
                     active_references = self.sync_datasets()
                 else:
                     active_references = self.get_context_references()
-                active_references += self.get_conjugates(active_references)
+                active_references = active_references.union(set(self.get_conjugates(active_references)))
                 active_references = sorted(set(active_references))
                 if self.args.fetch_references:
                     self.fetch_references(active_references)
@@ -249,6 +249,8 @@ class SyncScript(cmdline.ContextsScript):
                         bestrefs = crds.getrecommendations(header, context=context, observatory=self.observatory, 
                                                            ignore_cache=self.args.ignore_cache)
                         active_references.extend(bestrefs.values())
+        active_references = [ ref for ref in active_references if not ref.startswith("NOT FOUND") ]
+        log.verbose("Syncing references for datasets:", repr(active_references))
         return set(active_references)
         
     # ------------------------------------------------------------------------------------------
