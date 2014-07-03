@@ -377,6 +377,7 @@ def get_config_info(observatory):
         info = ConfigInfo(light_client.get_server_info())
         info.status = "server"
         info.connected = True
+        log.verbose("Connected to server at", repr(light_client.get_crds_server()))
     except light_client.CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(light_client.get_crds_server()))
         info = load_server_info(observatory)
