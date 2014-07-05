@@ -8,7 +8,7 @@ import uuid
 import json
 import time
 
-if sys.version_info < (3,0,0):
+if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
 else:
     import html.parser as parser_mod
@@ -60,6 +60,7 @@ class CheckingProxy(object):
             (self.__service_url, self.__service_name)
         
     def _call(self, *args, **kwargs):
+        """Core of RPC dispatch without error interpretation, logging, or return value decoding."""
         params = kwargs if len(kwargs) else args
         # if Any.kind(params) == Object and self.__version != '2.0':
         #   raise Exception('Unsupport arg type for JSON-RPC 1.0 '
@@ -80,7 +81,7 @@ class CheckingProxy(object):
 
         try:
             rval = json.loads(response)
-        except Exception, exc:
+        except Exception:
             log.warning("Invalid CRDS jsonrpc response:\n", response)
             raise
         
