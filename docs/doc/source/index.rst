@@ -10,10 +10,10 @@ CRDS User Manual
    :maxdepth: 3
    
    installation.rst
+   command_line_tools.rst
    top_level_use.rst
    non_networked_use.rst
    rmap_syntax.rst
-   command_line_tools.rst
    web_site_use.rst
    web_services.rst
    database.rst

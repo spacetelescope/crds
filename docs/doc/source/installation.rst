@@ -1,3 +1,26 @@
+Package Overview
+================
+
+The CRDS client and command line software is distributed as a single package with
+several sub-packages:
+
+   * crds
+       - core package enabling local use and development of mappings
+         and reference files.  contains command line utility programs.
+
+   * crds.client
+       - network client library for interacting with the central CRDS server.
+   
+   * crds.hst
+       - observatory personality package for HST, defining how HST types, reference file
+       certification constraints, and naming works.
+   
+   * crds.jwst
+       - analogous to crds.hst,  for JWST.
+   
+   * crds.tobs
+       - test observatory supporting artificial rules cases and tests.
+
 Installation
 ============
 
@@ -74,26 +97,11 @@ OPTIONAL: For building documentation add:
    * stsci.sphinxext   
 
 
-Package Overview
-----------------
-
-CRDS consists of 3 or more Python packages which implement different capabilities:
-
-   * crds
-       - core package enabling local use and development of mappings
-         and reference files.  contains command line utility programs.
-   * crds.client
-       - network client library for interacting with the central CRDS server.
-   * crds.hst
-       - observatory personality package for HST, defining how HST types, reference file
-       certification constraints, and naming works.
-   * crds.jwst
-       - analogous to crds.hst,  for JWST.
-   * crds.tobs
-       - test observatory supporting artificial rules cases and tests.
-
 Setting up your Environment
 ===========================
+
+CRDS is used in a number of different contexts and consequently is configurable.   The defaults for 
+CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration.
 
 Basic Environment
 -----------------
@@ -289,12 +297,68 @@ the **CRDS_CONTEXT** environment variable::
 
 
 Advanced Environment
-....................
+--------------------
 
-**CRDS_PATH_SINGLE** supports a cache structure for a single project.  It's
-an error to use such a cache for more than one project.   The component paths
-implied by **CRDS_PATH_SINGLE** omit the observatory subdirectory,  giving a
-simpler and shallower cache structure::
+A number of things in CRDS are configurable with envionment variables,  most important of which is the
+location and structure of the file cache.
+
+Multi-Project Caches
+++++++++++++++++++++
+
+**CRDS_PATH** defines a cache structure for multiple projects. Each major branch of a multi-project cache 
+contains project specific subdirectories::
+
+    /cache
+        /mappings
+            /hst
+                hst mapping files...
+            /jwst
+                jwst mapping files...
+        /references
+            /hst
+                hst reference files...
+            /jwst
+                jwst reference files...
+        /config
+            /hst
+                hst config files...
+            /jwst
+                jwst config files...
+                
+- *mappings* contains versioned rules files for CRDS reference file assignments
+
+- *references* contains reference files themselves
+
+- *config* contains system configuration information like operational context and bad files
+
+Inidivdual branches of a cache can be overriden to locate that branch outside the directory
+tree specified by CRDS_PATH.   The remaining directories can be overriden as well or derived 
+from CRDS_PATH.
+
+**CRDS_MAPPATH** can be used to override CRDS_PATH and define where 
+only mapping files are stored.  CRDS_MAPPATH defaults to ${CRDS_PATH}/mappings
+which contains multiple observatory-specific subdirectories.
+      
+**CRDS_REFPATH** can be used to override CRDS_PATH and define where 
+only reference files are stored.  CRDS_REFPATH defaults to ${CRDS_PATH}/references
+which contains multiple observatory specific subdirectoriers.
+  
+**CRDS_CFGPATH** can be used to override CRDS_PATH and define where 
+only configuration information is cached. CRDS_CFGPATH defaults to ${CRDS_PATH}/config
+which can contain multiple observatory-spefific subdirectories.
+
+Specifying CRDS_MAPPATH = /somewhere when CRDS_OBSERVATORY = hst means that
+mapping files will be located in /somewhere/hst.
+
+While it can be done,  it's generally considered an error to use a multi-project cache
+with different servers for the *same observatory*, e.g. both hst-test and hst-ops.
+
+Single Project Caches
++++++++++++++++++++++    
+
+**CRDS_PATH_SINGLE** defines a cache structure for a single project.  The component paths 
+implied by **CRDS_PATH_SINGLE**  omit the observatory subdirectory,  giving a simpler and 
+shallower cache structure::
 
     /cache
         /mappings
@@ -304,67 +368,51 @@ simpler and shallower cache structure::
         /config
             config files...
     
-These variables support caches with parts under different root directories:
+It's an error to use a single project cache with more than one project or server.  It is
+inadvisable to mix multi-project (no _SINGLE) and single-project (_SINGLE) configuration
+variables,  set one or the other form,  not both.
 
-    **CRDS_MAPPATH** can be used to override CRDS_PATH and define where 
-    only mapping files are stored.   The directory pointed to by 
-    CRDS_MAPPATH can be readonly.  CRDS_MAPPATH defaults to 
-    ${CRDS_PATH}/mappings.
-          
-    **CRDS_REFPATH** can be used to override CRDS_PATH and define where 
-    only reference files are stored.  The directory pointed to by CRDS_REFPATH
-    can be readonly.   CRDS_REFPATH defaults to ${CRDS_PATH}/references.
+As with **CRDS_PATH**,  there are overrides for each cache branch which can locate it
+independently.
+
+**CRDS_MAPPATH_SINGLE** can be used to override CRDS_PATH and define where only 
+mapping files are stored. CRDS_MAPPATH_SINGLE defaults to ${CRDS_PATH}/mappings
+but is presumed to support only one observatory.
       
-    **CRDS_CFGPATH** can be used to override CRDS_PATH and define where 
-    only server configuration information is cached.   The directory
-    pointed to by CRDS_CFGPATH should be writable.
-    CRDS_CFGPATH defaults to ${CRDS_PATH}/config.
-    
-    Each of these paths points to a directory containing observatory subdirectories
-    which contain actual files.  For example:
-    
-    Specifying CRDS_MAPPATH = /somewhere when CRDS_OBSERVATORY = hst means that
-    mapping files will be located in /somewhere/hst
-    
-These variables support caches with parts under different root directories, but
-supporting only a single observatory.  Hence there is no observatory suffix 
-and the given path points directly to a directory containing files,  not one
-containing observatory sub-directories.
+**CRDS_REFPATH_SINGLE** can be used to override CRDS_PATH and define where 
+only reference files are stored.  CRDS_REFPATH_SINGLE defaults to ${CRDS_PATH}/references
+but is presumed to support only one observatory.
+  
+**CRDS_CFGPATH_SINGLE** can be used to override CRDS_PATH and define where 
+only server configuration information is cached.   CRDS_CFGPATH_SINGLE defaults to 
+${CRDS_PATH}/config but is presumed to support only one observatory.
 
-    **CRDS_MAPPATH_SINGLE** can be used to override CRDS_PATH and 
-    define where only mapping files are stored. CRDS_MAPPATH_SINGLE defaults to 
-    ${CRDS_PATH}/mappings and is presumed to support only one observatory.
-          
-    **CRDS_REFPATH_SINGLE** can be used to override CRDS_PATH and define where 
-    only reference files are stored.  CRDS_REFPATH_SINGLE defaults to 
-    ${CRDS_PATH}/references and is presumed to support only one observatory.
-      
-    **CRDS_CFGPATH_SINGLE** can be used to override CRDS_PATH and define where 
-    only server configuration information is cached.  CRDS_CFGPATH defaults to 
-    ${CRDS_PATH}/config.   CRDS_CFGPATH_SINGLE defaults to 
-    ${CRDS_PATH}/config and is presumed to support only one observatory.
+Specifying CRDS_MAPPATH_SINGLE = /somewhere when CRDS_OBSERVATORY = hst means that
+mapping files will be located in /somewhere,  not in /somewhere/hst.
     
-    Each of these paths points to a directory directly containing files of the 
-    appropriate kind with no observatory subdirectory implied. For example:
+Miscellaneous Variables
++++++++++++++++++++++++    
     
-    Specifying CRDS_MAPPATH_SINGLE = /somewhere when CRDS_OBSERVATORY = hst means that
-    mapping files will be located in /somewhere,  not in /somewhere/hst.
-    
-    
-Developers may find these useful:
-    
-    **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
-    integer,  nominally 50.   Higher values output more information,  lower
-    values less information.   Leave it 0 for non-verbose.
-    
-Institutional pipelines may find these useful:
+**CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
+integer,  nominally 50.   Higher values output more information,  lower
+values less information.   Leave it 0 for non-verbose.
 
-    **CRDS_MODE** defines whether CRDS should compute best references using
-    installed client software only (local),  on the server (remote),  or 
-    intelligently "fall up" to the server (when the installed client is deemed
-    obsolete relative to the server) or "fall down" to the local installation 
-    (when the server cannot be reached) (auto).   The default is auto.
-    
+**CRDS_IGNORE_MAPPING_CHECKSUM** causes CRDS to waive mapping checksums 
+when set to True,  useful when you're editing them.
 
-      
+**CRDS_READONLY_CACHE** limits tools to readonly access to the cache when set 
+to True.  Eliminates cache writes which occur implicitly.
+
+**CRDS_MODE** defines whether CRDS should compute best references using
+installed client software only (local),  on the server (remote),  or 
+intelligently "fall up" to the server (when the installed client is deemed
+obsolete relative to the server) or "fall down" to the local installation 
+(when the server cannot be reached) (auto).   The default is auto.
+
+**CRDS_CLIENT_RETRY_COUNT** number of times CRDS will attempt a network 
+transaction with the CRDS server.  Defaults to 1 meaning 1 try with no retries.
+
+**CRDS_CLIENT_RETRY_DELAY_SECONDS** number of seconds CRDS waits after a failed
+network transaction before trying again.  Defaults to 0 seconds,  meaning 
+proceed immediately after fail.
 
