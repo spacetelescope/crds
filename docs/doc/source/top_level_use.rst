@@ -1,5 +1,5 @@
-Top Level Use
-=============
+Library Use
+===========
 
 This section describes the formal top level interfaces for CRDS intended as the
 main entry points for the calibration software or basic use.  Functions
@@ -11,7 +11,7 @@ environment variables CRDS_SERVER_URL and CRDS_PATH.   See the section on
 *Installation* for more details.
 
 crds.getreferences()
----------------------------
+--------------------
 
 Given  dataset header containing parameters required to determine best
 references, and optionally a specific .pmap to use as the best references
