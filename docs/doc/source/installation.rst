@@ -8,8 +8,13 @@ several sub-packages:
        - core package enabling local use and development of mappings
          and reference files.  contains command line utility programs.
 
+   * crds.cache
+        - prototype cache which contains the original baseline CRDS mappings generated
+        for HST and JWST,  also demonstrating cache structure for a dual project cache.
+
    * crds.client
-       - network client library for interacting with the central CRDS server.
+       - network client library for interacting with the central CRDS server.  This is
+       primarily for internal use in CRDS,  encapsulating JSONRPC interfaces with Python.
    
    * crds.hst
        - observatory personality package for HST, defining how HST types, reference file
@@ -20,6 +25,36 @@ several sub-packages:
    
    * crds.tobs
        - test observatory supporting artificial rules cases and tests.
+       
+CRDS also contains a number of command line tools:
+
+    * crds.bestrefs
+        - Best references utility for HST FITS files and context-to-context affected datasets computations.
+    
+    * crds.sync
+        - Cache download and maintenance tool, fetches, removes, checks, and repairs rules and references.
+        
+    * crds.certify
+        - Checks constraints and format for CRDS rules and references. 
+    
+    * crds.diff, crds.rowdiff
+        - Difference utility for rules and references,  also FITS table differences.
+    
+    * crds.matches
+        - Prints out parameter matches for particular references,  or database matching parameters with
+        respect to particular dataset IDs.
+    
+    * crds.uses
+        - Lists files which refer to (are dependent on) some CRDS rules or reference file.
+        
+    * crds.list
+        - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
+        
+More information can be found on each tool using the command line -- --help switch,  e.g.::
+
+    % python -m crds.bestrefs --help
+    
+or in the command line tools section of this document.
 
 Installation
 ============
@@ -204,7 +239,7 @@ development versions of CRDS code.   In particular,  when adding parameters or c
 the certify tool is modified as "code" on the servers first.   Hence distributed versions of CRDS will not reflect 
 ongoing type changes.
 
-It should be noted that the test server is only visible on site,  not on the open internet.  Without VPN,  the test
+**NOTE:** the test server is only visible on-site,  not on the internet.  Without VPN or port forwarding,  the test
 servers are not usable off site.
 
 Setup for Offsite Use
@@ -220,7 +255,7 @@ cache of rules and references supporting only the datasets you care about::
 
     % setenv CRDS_PATH  ${HOME}/crds_cache
     
-For **HST**, to fetch the latest CRDS rules and references for some FITS datasets::
+For **HST**, to fetch the references required to process some FITS datasets::
 
     % python -m crds.bestrefs --files dataset*.fits --sync-references=1
     
@@ -231,6 +266,10 @@ For **JWST**,  CRDS is directly integrated with the calibration step code and wi
 rules and references as needed.   Downloads will only be an issue when you set CRDS_PATH and don't already
 have the files you need in your cache.   By default CRDS modifies JWST datasets with new best references
 which serve as a processing history in the dataset header.
+
+Users of */grp/crds/cache* cannot update the readonly cache so they should not attempt to run crds.sync or
+fetch references with crds.bestrefs.  */grp/crds/cache* should always be complete within a few hours of archiving
+any new reference or rules delivery,  changing the operational context,  or marking files bad.
 
 
 Additional HST Settings
@@ -251,35 +290,6 @@ Currently the CRDS cache is structured so that references from all instruments o
 directory.
 
 
-JWST Setups
------------
-
-JWST Setup for STScI
-++++++++++++++++++++
-
-The nominal setup for someone operating on site at STScI for JWST will use a common shared read-only cache 
-which contains all of the current CRDS rules and references.   This cache will be automatically synchronized
-by CRDS with the CRDS server, pipeline, and archive.     CRDS users cannot modify these references.   
-On site CRDS users are not required to download these references. CRDS configuration to use the default
-CRDS cache is automatic.
-
-JWST Setup for Offsite Use
-++++++++++++++++++++++++++
-
-Offsite without VPN,  /grp/crds/cache is presumed to be unavailable.   If you choose to
-create a personal local CRDS cache, do the following::
-
-    % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
-    % setenv CRDS_PATH  ${HOME}/crds_cache
-
-It should be noted that this configuration can potentially lead to transparent downloads of gigabytes of 
-references required to process your datasets,  resulting in long delays until you have the required files in your 
-cache.
-
-NOTE:  sites without access to the appropriate CRDS server will not be notified of new references,
-assignment changes, or invalid files.   Disconnected sites continue to operate using the last 
-information cached from the CRDS server.
-
 JWST Context
 ++++++++++++
 
@@ -293,7 +303,6 @@ the **CRDS_CONTEXT** environment variable::
     % setenv CRDS_CONTEXT jwst_0057.pmap
 
 **CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to crds.getreferences().
-
 
 
 Advanced Environment
@@ -395,13 +404,17 @@ Miscellaneous Variables
     
 **CRDS_VERBOSITY** enables output of CRDS debug messages.   Set to an
 integer,  nominally 50.   Higher values output more information,  lower
-values less information.   Leave it 0 for non-verbose.
+values less information.   CRDS also has command line switches 
+--verbose (level=50) and --verbosity=<level>.   Verbosity level 
+ranges from 0 to 100 and defaults to 0 (no verbose output).
 
 **CRDS_IGNORE_MAPPING_CHECKSUM** causes CRDS to waive mapping checksums 
 when set to True,  useful when you're editing them.
 
 **CRDS_READONLY_CACHE** limits tools to readonly access to the cache when set 
-to True.  Eliminates cache writes which occur implicitly.
+to True.  Eliminates cache writes which occur implicitly.  This is mostly 
+useful in CRDS server user cases which want to ensure not modifying the server
+CRDS cache but cannot write protect it effectively.
 
 **CRDS_MODE** defines whether CRDS should compute best references using
 installed client software only (local),  on the server (remote),  or 
