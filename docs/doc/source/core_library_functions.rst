@@ -1,5 +1,5 @@
-Non-Networked Use
-=================
+Core Library Functions
+======================
 
 This section describes using the core crds package without access to the
 network.  Using the crds package in isolation it is possible to develop and use
@@ -193,55 +193,6 @@ Here it is critical to call get_minimum_header on the pipeline context, hst,
 because this will make it include the "INSTRUME" parameter needed to choose
 the ACS instrument.
 
-Certifying Files
-----------------
-
-CRDS has a module which will certify that a mapping or reference file is
-valid,  for some limited definition of *valid*.   By design only valid files can
-be submitted to the CRDS server and archive.
-
-Certifying Mappings
-~~~~~~~~~~~~~~~~~~~
-
-For Mappings,  crds.certify will ensure that:
-
-  * the mapping and it's descendents successfully load
-  * the mapping checksum is valid
-  * the mapping does not contain hostile code
-  * the mapping defines certain generic parameters
-  * references required by the mapping exist on the local file system
-  
-You can check the validity of your mapping or reference file like this::
-
-  % python -m crds.certify /where/it/really/is/hst_acs_my_masterpiece.rmap
-  0 errors 
-  0 warnings 
-  0 infos 
-
-By default, running certify on a mapping *does not* verify that the required
-reference files are valid,  only that they exist.
-
-Later versions of CRDS may have additional semantic checks on the correctness of
-Mappings but these are not yet implemented and hence fall to the developer to
-verify in some other fashion.
-
-Certifying Reference Files
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For reference files certify has better semantic checks.   For reference files,
-crds.certify currently ensures that:
-
-  * the FITS format is valid
-  * critical reference file header parameters have acceptable values
-
-You can certify reference files the same way as mappings,  like this::
-
-  % python -m crds.certify /where/it/is/my_reference_file.fits
-  0 errors 
-  0 warnings 
-  0 infos 
-
-
 Mapping Checksums
 -----------------
 
@@ -259,6 +210,11 @@ the checksum while you load a mapping you've edited::
 
   >>> pipeline = rmap.load_mapping("hst.pmap", ignore_checksum=True)
 
+Alternately you can set an environment variable to ignore the mapping checksum
+while you iterate on new versions of the mapping::
+
+   % setenv CRDS_IGNORE_MAPPING_CHECKSUM 1
+
 Adding Checksums
 ~~~~~~~~~~~~~~~~
 
@@ -268,68 +224,3 @@ a checksum like this::
    % python -m crds.checksum /where/it/really/is/hst_acs_my_masterpiece.rmap
 
 
-Which Mappings Use this File?
------------------------------
-
-Particularly in legacy contexts,  such as HST,  reference file names can be
-rather cryptic.   Further,  by design CRDS will have a complex set of fluid
-and versioned mappings.   Hence it may become rather difficult for a human to
-discern which mappings refer to a particular mapping or reference file.   CRDS
-has the crds.uses module to help answer this question::
-
-   % python -m crds.uses hst kcb1734ij_a2d.fits
-   hst.pmap
-   hst_acs.imap
-   hst_acs_atodtab.rmap
-   
-The first parameter indicates the observatory for which files should be
-considered.   Additional parameters specify mapping or reference files which are
-used.   The printed result consists of those mappings which directly or 
-indirectly refer to the used files.
-
-Note that the above results represent the highly simplified context of the
-current HST prototype,  prior to the introduction of mapping evolution and
-version numbering.   In practice,  each of the above files might include several
-numbered versions,  and some versions of the above files might not require
-kcb1734ij_a2d.fits.
-
-crds.uses knows about only the mappings cached locally.  Hence the official CRDS
-server will have a more definitive answer than someone's development machine.
-The CRDS web site has a link for running crds.uses over all known "official"
-mappings.   crds.uses is especially applicable for understanding the implications
-of blacklisting a particular file;  when a file is blacklisted,   all files
-indicated by crds.uses are also blacklisted.
-
-Finding Matches for a Reference in a Context
---------------------------------------------
-
-Given a particular context and reference file name,  CRDS can also determine all
-possible matches for the reference within that context::
-
-  % python -m crds.matches hst.pmap kcb1734ij_a2d.fits
-
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'A')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'ABCD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'AD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'B')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'BC')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'C')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '1.0'), ('CCDAMP', 'D')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'A')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'ABCD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'AD')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'B')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'BC')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'C')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ((('observatory', 'hst'), ('INSTRUME', 'acs'), ('filekind', 'atodtab')), (('DETECTOR', 'HRC'), ('CCDGAIN', '2.0'), ('CCDAMP', 'D')), (('DATE-OBS', '1992-01-01'), ('TIME-OBS', '00:00:00'))) 
-  ...
-   
-What is printed out is a sequence of match tuples,  with each tuple nominally
-consisting of three parts::
-
-  (pmap_imap_rmap_path, match, use_after)
-  
-Each part in turn consists of nested tuples of the form::
-
-  (parkey, value)
-  

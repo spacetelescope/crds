@@ -78,8 +78,8 @@ logical or textual.  The logical differences display a table of matching paramet
 which were added, deleted, or replaced.   The textual differences show raw UNIX diffs of the
 two rules files.
 
-Dataset Best References (alpha)
-...............................
+Dataset Best References
+.......................
 
 The *Dataset Best References* page supports determining the best references for
 a single dataset with respect to one CRDS context.   Best references are based 
@@ -135,8 +135,8 @@ were extracted from the dataset header on the right side of the page.
 Best reference recommendations are displayed on the left side of the page.
 
 
-Explore Best References (alpha)
-...............................
+Explore Best References
+.......................
 
 Explore Best References supports entering best references parameters directly
 rather than extracting them from a dataset or catalog.   Explore best references
