@@ -12,7 +12,7 @@ CRDS User Manual
    installation.rst
    command_line_tools.rst
    top_level_use.rst
-   core_library_use.rst
+   core_library_functions.rst
    rmap_syntax.rst
    web_site_use.rst
    web_services.rst
