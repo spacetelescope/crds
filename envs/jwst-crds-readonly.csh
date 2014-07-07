@@ -23,6 +23,7 @@
 # setenv CRDS_SERVER_URL  http://crds-non-networked.foo.bar   
 setenv CRDS_SERVER_URL  https://jwst-crds.stsci.edu    # ops
 setenv CRDS_PATH /grp/crds/jwst
+setenv CRDS_READONLY_CACHE 1
 
 # --------------------------------------------------------------------------------------------------------------------
 # To override server recommendations for the operational pipeline context (.pmap)
