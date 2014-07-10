@@ -11,7 +11,7 @@ CRDS mappings are written in a subset of Python and given the proper global
 definitions can be parsed directly by the Python interpreter.   Nothing 
 precludes writing a parser for CRDS mappings in some other language.
 
-.. figure:: file_relationships.png
+.. figure:: images/file_relationships.png
    :scale: 50 %
    :alt: diagram of file relationships, .pmap -> .imap -> .rmap -> .reference
    
