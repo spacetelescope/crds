@@ -215,6 +215,25 @@ Compute comparison bestrefs between two contexts:
     CRDS  : INFO     4 infos
     6
 
+Test for affected data sets.
+    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst_0024.pmap  --old-context hst_0018.pmap --datasets lb6m01030 -z --verbosity 25")
+    >>> case.run()
+    CRDS  : DEBUG    Using explicit new context 'hst_0024.pmap' for computing updated best references.
+    CRDS  : DEBUG    Using explicit old context 'hst_0018.pmap'
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
+    CRDS  : INFO     Computing bestrefs for datasets ['lb6m01030']
+    CRDS  : DEBUG    ===> Processing LB6M01030:LB6M01AVQ
+    CRDS  : DEBUG    Deep examination of references instantiated.
+    CRDS  : DEBUG    Instantiating rules for reference type cos_wcptab.
+    CRDS  : WARNING  Deep examination error: Not all mode fields are defined in the dataset.
+    CRDS  : WARNING  Deep examination failed, presuming reprocessing.
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     2 warnings
+    CRDS  : INFO     3 infos
+    0
+
+
 CLEANUP: blow away the test cache
 
     >>> test_config.cleanup()

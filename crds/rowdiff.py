@@ -361,19 +361,13 @@ class RowDiff():
                  fields=[],
                  ignore_fields=[],
                  mode_fields=[]):
-        """Setup and peform the row differencing
-
-        Notes
-        -----
-        See docstring for the class.
-
-        """
 
         self.a_hdulist = a_fits
         self.b_hdulist = b_fits
         self.fields = [field.lower() for field in fields]
         self.ignore_fields = [field.lower() for field in ignore_fields]
         self.mode_fields = mode_fields
+        self.summary_only = False
 
         # Check that fields and ignore_fields are not both
         # specified.
@@ -435,10 +429,12 @@ class RowDiff():
         # If that is the case, we need to first separate out the
         # fields from the list
         if isinstance(self.mode_fields, dict):
-            print 'Error: mode field values are not fully implemented. Carry on at own risk.\n'
             mode_field_names = dict.keys(self.mode_fields)
+
+            mode_constraints = {key: value for key, value in self.mode_fields.iteritems() if value is not None}
         else:
             mode_field_names = self.mode_fields
+            mode_constraints = {}
 
         # Do a full FITS Table Data diff
         data_diff = TableDataDiff(a_fitstable, b_fitstable,
@@ -466,9 +462,37 @@ class RowDiff():
         a_table = Table(a_fitstable)
         b_table = Table(b_fitstable)
 
+        #**DEBUG**
+        # If doing masks, use the below
+        """
+        a_table = Table(a_fitstable, masked=True)
+        b_table = Table(b_fitstable, masked=True)
+        """
+
         # Rename the columns to lowercase.
         column_name_lower(a_table)
         column_name_lower(b_table)
+
+        # If mode_fields is presented as a dictionary,
+        # mask the tables based on the values.
+        #**DEBUG**
+        # All below may or may not be used. Currently commented.
+        """
+        a_mode_mask = None
+        b_mode_mask = None
+        for mode_field in mode_constraints:
+            a_mask = ~ (a_table[mode_field] == mode_constraints[mode_field])
+            b_mask = ~ (b_table[mode_field] == mode_constraints[mode_field])
+            if a_mode_mask is not None:
+                a_mode_mask = a_mode_mask | a_mask
+                b_mode_mask = b_mode_mask | b_mask
+            else:
+                a_mode_mask = a_mask
+                b_mode_mask = b_mask
+        if a_mode_mask is not None:
+            a_table.mask = a_mode_mask
+            b_table.mask = b_mode_mask
+        """
 
         # Sort on the mode fields. We do this on the full tables
         # because later on we are going to examin the full tables
@@ -543,9 +567,9 @@ class RowDiff():
                 for index in range(len(a_table_common_fields.dtype)):
                     dtypes.append(a_table_common_fields.dtype[index])
                 a_table_values = Table(names=a_table_common_fields.colnames,
-                                       dtypes=dtypes)
+                                       dtype=dtypes)
                 b_table_values = Table(names=a_table_common_fields.colnames,
-                                       dtypes=dtypes)
+                                       dtype=dtypes)
 
                 for block in matching_blocks:
                     (a_row, b_row, n_rows) = block
@@ -745,9 +769,10 @@ class RowDiff():
                                 else:
                                     pass
 
-                            result_temp += '\n    Row difference, unified diff format:\n'
-                            for unified_diff_row in unified_diff:
-                                result_temp += '        %s\n' % unified_diff_row
+                            if not self.summary_only:
+                                result_temp += '\n    Row difference, unified diff format:\n'
+                                for unified_diff_row in unified_diff:
+                                    result_temp += '        %s\n' % unified_diff_row
                                 
                 if result_temp:
                     result += result_temp
