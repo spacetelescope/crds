@@ -14,7 +14,7 @@ from astropy.io import fits as pyfits
 
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
-from crds import (table_effects,)
+from crds import table_effects
 from crds.client import api
 
 # ===================================================================
@@ -1011,10 +1011,13 @@ and debug output.
         selected rows.
         """
         for update in updates:
-            new_header = self.new_headers.get_lookup_parameters(dataset)
+
+            #new_header = self.new_headers.get_lookup_parameters(dataset)
+            new_header = self.new_headers.header(dataset)
             if not table_effects.is_reprocessing_required(
-                dataset, new_header, self.old_context, self.new_context, 
-                update.old_reference, update.new_reference):
+                dataset, new_header,
+                self.old_context, self.new_context, 
+                update):
                 updates.remove(update) # reprocessing not required, ignore update.
                 log.verbose("Removing table update for", update.instrument, update.filekind, dataset, 
                             "no effective change from reference", repr(update.old_reference),
