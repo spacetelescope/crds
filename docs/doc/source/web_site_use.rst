@@ -339,23 +339,35 @@ If the certified file is a reference table,  the specified context is used to
 locate a comparison file. 
 
 
-Enable/Disable File
-...................
+Mark Files Bad
+..............
 
-*Enable/Disable File* provides control over the Blacklist and Reject 
-attributes of a file.   
+*Mark Files Bad* supports marking a file as scientifically invalid and
+also supoports reversing the decision and marking it good once more.
 
-.. figure:: images/web_set_file_enable.png
+The CRDS procedure for marking files bad requires three steps:
+
+1. Create a clean context which does not contain any prospective bad files.
+2. Make the clean context operational using Set Context.
+3. Mark the prospective bad files actually bad using Mark Bad Files.
+
+Following this procedure maintains the invariant that the operational context
+contains no known bad files.
+
+.. figure:: images/web_mark_files_bad.png
    :scale: 50 %
-   :alt: set file enable inputs
-   
-Rejecting a file is used to signal that the file should no longer be
-used.   Rejecting a file affects only that file.   Blacklisting a file marks
-the file as unusable,  but it also blacklists all files which directly or
-indirectly refer to the original blacklisted file.   So,  blacklisting is
-transitive, rejection is intransitive.   Either blacklisting or rejection
-can be undone by marking the file as OK again using *Enable/Disable File*.  
-Only files which are already known to CRDS can be rejected or blacklisted.
+   :alt: mark files bad inputs
+
+Marking a rules file (mapping) as bad implicitly marks all the files
+which refer to it as bad.  Hence,  marking a .rmap as bad will make
+any .imap which refers to it bad as well,  and will also taint all .pmaps
+which refer to the bad .imaps.   Whenever a rules file is marked bad,
+a warning is issued when the containing context is used.
+
+Marking a reference file as bad is a more precise technique which invalidates
+only that reference in every context that includes it.   Warnings are issued related
+to the bad reference only when the reference is actually recommended by CRDS.  
+
 
 Set Context
 ...........
