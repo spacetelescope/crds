@@ -1,0 +1,1168 @@
+{
+    "type" : "object",
+    "title" : "root",
+    "properties" : {
+        "meta" : {
+            "title" : "Level 1b Schema Metadata",
+            "type" : "object",
+            "properties" : {
+
+                "date" : {
+                    "title" : "Date this file was created (UTC)",
+                    "type" : "string",
+                    "format" : "http://www.stsci.edu/types/fits-date-time",
+                    "fits_keyword" : "DATE"
+                },
+
+                "origin" : {
+                    "title" : "Organization responsible for creating file",
+                    "type" : "string",
+                    "fits_keyword" : "ORIGIN"
+                },
+
+                "filename" : {
+                    "title" : "Name of the file",
+                    "type" : "string",
+                    "fits_keyword" : "FILENAME"
+                },
+
+                "filetype" : {
+                    "title" : "Type of data in the file",
+                    "type" : "string",
+                    "fits_keyword" : "FILETYPE"
+                },
+
+                "data_processing_software_version" : {
+                    "title" : "Version of the data processing software used",
+                    "type" : "string",
+                    "fits_keyword" : "DPSW_VER"
+                },
+
+                "calibration_software_version" : {
+                    "title" : "Version of the calibration software used",
+                    "type" : "string",
+                    "fits_keyword" : "CAL_VER"
+                },
+
+                "telescope" : {
+                    "title" : "Telescope used to acquire the data",
+                    "type" : "string",
+                    "fits_keyword" : "TELESCOP"
+                },
+
+                "coordinates" : {
+                    "title" : "Information about the coordinates in the file",
+                    "type" : "object",
+                    "properties" : {
+                        "reference_frame" : {
+                            "title" : "Name of the coordinate reference frame",
+                            "type" : "string",
+                            "fits_keyword" : "RADESYS",
+                            "enum" : [ "ICRS" ]
+                        }
+                    }
+                },
+
+                "wcs" : {
+                    "title" : "General WCS information",
+                    "type" : "pickle"
+                },
+
+                "program" : {
+                    "title" : "Programmatic information",
+                    "type" : "object",
+                    "properties" : {
+
+                        "title" : {
+                            "title" : "Proposal title",
+                            "type" : "string",
+                            "fits_keyword" : "TITLE"
+                        },
+
+                        "pi_name" : {
+                            "title" : "Principal investigator name",
+                            "type" : "string",
+                            "fits_keyword" : "PI_NAME"
+                        },
+
+                        "category" : {
+                            "title" : "Program category",
+                            "type" : "string",
+                            "fits_keyword" : "CATEGORY"
+                        },
+
+                        "sub_category" : {
+                            "title" : "Program sub-category",
+                            "type" : "string",
+                            "fits_keyword" : "SUBCAT"
+                        },
+
+                        "science_category" : {
+                            "title" : "Science category assigned during TAC process",
+                            "type" : "string",
+                            "fits_keyword" : "SCICAT"
+                        },
+
+                        "continuation_id" : {
+                            "title" : "Continuation of previous program",
+                            "type" : "string",
+                            "fits_keyword" : "CONT_ID"
+                        }
+                    }
+                },
+
+                "observation" : {
+                    "title" : "Observation identifiers",
+                    "type" : "object",
+                    "properties" : {
+                        "date" : {
+                            "title" : "UTC date/time at the start of the exposure",
+                            "type" : "string",
+                            "format" : "http://www.stsci.edu/types/fits-date-time",
+                            "fits_keyword" : "DATE-OBS"
+                        },
+
+                        "obs_id" : {
+                            "title" : "Programmatic observation identifier",
+                            "type" : ["string", "null"],
+                            "fits_keyword" : "OBS_ID"
+                        },
+
+                        "visit_id" : {
+                            "title" : "Visit identifier",
+                            "type" : "string",
+                            "fits_keyword" : "VISIT_ID"
+                        },
+
+                        "program_number" : {
+                            "title" : "Program number",
+                            "type" : "string",
+                            "fits_keyword" : "PROGRAM"
+                        },
+
+                        "observation_number" : {
+                            "title" : "Observation number",
+                            "type" : "string",
+                            "fits_keyword" : "OBSERVTN"
+                        },
+
+                        "visit_number" : {
+                            "title" : "Visit number",
+                            "type" : "string",
+                            "fits_keyword" : "VISIT"
+                        },
+
+                        "visit_group" : {
+                            "title" : "Visit group identifier",
+                            "type" : "string",
+                            "fits_keyword" : "VISITGRP"
+                        },
+
+                        "sequence_id" : {
+                            "title" : "Parallel sequence identifier",
+                            "type" : "string",
+                            "fits_keyword" : "SEQ_ID"
+                        },
+
+                        "activity_id" : {
+                            "title" : "Activity identifier",
+                            "type" : "string",
+                            "fits_keyword" : "ACT_ID"
+                        },
+
+                        "exposure_number" : {
+                            "title" : "Exposure request number",
+                            "type" : "string",
+                            "fits_keyword" : "EXPOSURE"
+                        },
+
+                        "template" : {
+                            "title" : "Proposal instruction template used",
+                            "type" : "string",
+                            "fits_keyword" : "TEMPLATE"
+                        },
+
+                        "observation_label" : {
+                            "title" : "Proposer label for the observation",
+                            "type" : "string",
+                            "fits_keyword" : "OBSLABEL"
+                        }
+                    }
+                },
+
+                "visit" : {
+                    "title" : "Visit information",
+                    "type" : "object",
+                    "properties" : {
+
+                        "type" : {
+                            "title" : "Visit type",
+                            "type" : "string",
+                            "fits_keyword" : "VISITYPE"
+                        },
+
+                        "start_time" : {
+                            "title" : "UTC visit start time",
+                            "type" : "string",
+                            "fits_keyword" : "VSTSTART"
+                        },
+
+                        "wfs_visit_indicator" : {
+                            "title" : "Wavefront sensing and control visit indicator",
+                            "type" : "string",
+                            "fits_keyword" : "WFSVISIT"
+                        },
+
+                        "total_exposures" : {
+                            "title" : "Total number of planned exposures in visit",
+                            "type" : "integer",
+                            "fits_keyword" : "NEXPOSUR"
+                        },
+
+                        "internal_target" : {
+                            "title" : "At least one exposure in visit is internal",
+                            "type" : "boolean",
+                            "fits_keyword" : "INTARGET"
+                        },
+
+                        "external_target" : {
+                            "title" : "At least one exposure in visit is external",
+                            "type" : "boolean",
+                            "fits_keyword" : "EXTARGET"
+                        },
+
+                        "too_visit" : {
+                            "title" : "Visit scheduled as target of opportunity",
+                            "type" : "boolean",
+                            "fits_keyword" : "TARGOOPP"
+                        }
+                    }
+                },
+
+                "target" : {
+                    "title" : "Target information",
+                    "type" : "object",
+                    "properties" : {
+                        "proposer_name" : {
+                            "title" : "Proposer's name for the target",
+                            "type" : "string",
+                            "fits_keyword" : "TARGPROP"
+                        },
+
+                        "catalog_name" : {
+                            "title" : "Standard astronomical catalog name for target",
+                            "type" : "string",
+                            "fits_keyword" : "TARGNAME"
+                        },
+
+                        "type" : {
+                            "title" : "Type of target (fixed, moving, generic)",
+                            "type" : "string",
+                            "fits_keyword" : "TARGTYPE"
+                        },
+
+                        "ra" : {
+                            "title" : "Target RA at mid time of exposure",
+                            "type" : "number",
+                            "fits_keyword" : "TARG_RA"
+                        },
+
+                        "dec" : {
+                            "title" : "Target Dec at mid time of exposure",
+                            "type" : "number",
+                            "fits_keyword" : "TARG_DEC"
+                        },
+
+                        "ra_uncertainty" : {
+                            "title" : "Target RA uncertainty",
+                            "type" : "number",
+                            "fits_keyword" : "TARGURA"
+                        },
+
+                        "dec_uncertainty" : {
+                            "title" : "Target Dec uncertainty",
+                            "type" : "number",
+                            "fits_keyword" : "TARGUDEC"
+                        },
+
+                        "proposer_ra" : {
+                            "title" : "Proposer specified RA for the target",
+                            "type" : "number",
+                            "fits_keyword" : "PROP_RA"
+                        },
+
+                        "proposer_dec" : {
+                            "title" : "Proposer specified Dec for the target",
+                            "type" : "number",
+                            "fits_keyword" : "PROP_DEC"
+                        },
+
+                        "proposer_epoch" : {
+                            "title" : "Proposer specified epoch for RA and Dec",
+                            "type" : "number",
+                            "fits_keyword" : "PROPEPOC"
+                        }
+                    }
+                },
+
+                "instrument" : {
+                    "title" : "Instrument configuration information",
+                    "type" : "object",
+                    "properties" : {
+                        "name" : {
+                            "title" : "Instrument used to acquire the data",
+                            "type" : "string",
+                            "enum" :  ["NIRCAM", "NIRSPEC", "MIRI", "TFI", "FGS", "NIRISS"],
+                            "fits_keyword" : "INSTRUME"
+                        },
+
+                        "detector" : {
+                            "title" : "Name of detector used to acquire the data",
+                            "type" : "string",
+                            "fits_keyword" : "DETECTOR"
+                        },
+
+                        "module" : {
+                            "title" : "NIRCam module: A or B",
+                            "type" : "string",
+                            "fits_keyword" : "MODULE"
+                        },
+
+                        "channel" : {
+                            "title" : "NIRCam channel: long or short",
+                            "type" : "string",
+                            "fits_keyword" : "CHANNEL"
+                        },
+
+                        "filter" : {
+                            "title" : "Name of the filter element used",
+                            "type" : "string",
+                            "fits_keyword" : "FILTER"
+                        },
+
+                        "pupil" : {
+                            "title" : "Name of the pupil element used",
+                            "type" : "string",
+                            "fits_keyword" : "PUPIL"
+                        },
+
+                        "pupil_imaging_lens" : {
+                            "title" : "Pupil imaging lens in the optical path?",
+                            "type" : "boolean",
+                            "fits_keyword" : "PILIN"
+                        },
+
+                        "grating" : {
+                            "title" : "Name of the grating element used",
+                            "type" : "string",
+                            "enum" : ["G140M", "G235M", "G395M", "G140H",
+                                      "G235H", "G395H", "PRISM", "MIRROR",
+                                      "N/A", "ANY"],
+                            "fits_keyword" : "GRATING"
+                        },
+
+                        "grating14" : {
+                            "title" : "Grating position for IFU channels 1 and 4",
+                            "type" : "string",
+                            "enum" : ["SHORT", "MEDIUM", "LONG", "N/A", "ANY"],
+                            "fits_keyword" : "GRATNG14"
+                        },
+
+                        "grating23" : {
+                            "title" : "Grating position for IFU channels 2 and 3",
+                            "type" : "string",
+                            "enum": ["SHORT", "MEDIUM", "LONG", "N/A", "ANY"],
+                            "fits_keyword" : "GRATNG23"
+                        },
+
+                        "gratinga" : {
+                            "title" : "MRS grating position for channels 1 and 4",
+                            "type" : "string",
+                            "enum" : ["SHORT", "MEDIUM", "LONG", "N/A", "ANY"],
+                            "fits_keyword" : "GRATINGA"
+                        },
+
+                        "gratingb" : {
+                            "title" : "MRS grating position for channels 2 and 3",
+                            "type" : "string",
+                            "enum": ["SHORT", "MEDIUM", "LONG", "N/A", "ANY"],
+                            "fits_keyword" : "GRATINGB"
+                        },
+
+                        "fixed_slit" : {
+                            "title" : "Name of fixed slit aperture used",
+                            "type" : "string",
+                            "fits_keyword" : "FXD_SLIT"
+                        },
+
+                        "focus_position" : {
+                            "title" : "Focus position",
+                            "type" : "number",
+                            "fits_keyword" : "FOCUSPOS"
+                        },
+
+                        "ccc_state" : {
+                            "title" : "Contamination control cover state",
+                            "type" : "string",
+                            "enum" : ["OPEN", "CLOSED"],
+                            "fits_keyword" : "CCCSTATE"
+                        },
+
+                        "msa_state" : {
+                            "title" : "State of the MSA",
+                            "type" : "string",
+                            "enum" : ["ALL OPEN", "ALL CLOSED", "CONFIGURED"],
+                            "fits_keyword" : "MSASTATE"
+                        },
+
+                        "msa_configuration_file" : {
+                            "title" : "MSA configuration file name",
+                            "type" : "string",
+                            "fits_keyword" : "MSACONFG"
+                        },
+
+                        "lamp_state" : {
+                            "title" : "Internal lamp state",
+                            "type" : "string",
+                            "fits_keyword" : "LAMP"
+                        }
+                    }
+                },
+
+                "exposure" : {
+                    "title" : "Exposure parameters",
+                    "type" : "object",
+                    "properties" : {
+
+                        "pointing_sequence" : {
+                            "title" : "Pointing sequence number",
+                            "type" : "integer",
+                            "fits_keyword" : "PNTG_SEQ"
+                        },
+
+                        "count" : {
+                            "title" : "Running count of exposures in visit",
+                            "type" : "integer",
+                            "fits_keyword" : "EXPCOUNT"
+                        },
+
+                        "type" : {
+                            "title" : "Type of data in the exposure",
+                            "type" : "string",
+                            "fits_keyword" : "EXPTYPE"
+                        },
+
+                        "start_time" : {
+                            "title" : "UTC exposure start time",
+                            "type" : "string",
+                            "format" : "http://www.stsci.edu/types/fits-date-time",
+                            "fits_keyword" : "EXPSTART"
+                        },
+
+                        "mid_time" : {
+                            "title" : "UTC exposure mid time",
+                            "type" : "string",
+                            "format" : "http://www.stsci.edu/types/fits-date-time",
+                            "fits_keyword" : "EXPMID"
+                        },
+
+                        "end_time" : {
+                            "title" : "UTC exposure end time",
+                            "type" : "string",
+                            "format" : "http://www.stsci.edu/types/fits-date-time",
+                            "fits_keyword" : "EXPEND"
+                        },
+
+                        "readpatt" : {
+                            "title" : "Readout pattern",
+                            "type" : "string",
+                            "fits_keyword" : "READPATT"
+                        },
+
+                        "nints" : {
+                            "title" : "Number of integrations in exposure",
+                            "type" : "integer",
+                            "fits_keyword" : "NINTS"
+                        },
+
+                        "ngroups" : {
+                            "title" : "Number of groups in integration",
+                            "type" : "integer",
+                            "fits_keyword" : "NGROUPS"
+                        },
+
+                        "nframes" : {
+                            "title" : "Number of frames per group",
+                            "type" : "number",
+                            "fits_keyword" : "NFRAMES"
+                        },
+
+                        "groupgap" : {
+                            "title" : "Number of frames dropped between groups",
+                            "type" : "integer",
+                            "fits_keyword" : "GROUPGAP"
+                        },
+
+                        "nsamples" : {
+                            "title" : "Number of A/D samples per pixel",
+                            "type" : "integer",
+                            "fits_keyword" : "NSAMPLES"
+                        },
+
+                        "sample_time" : {
+                            "title" : "Time between samples (microsec)",
+                            "type" : "number",
+                            "fits_keyword" : "TSAMPLE"
+                        },
+
+                        "frame_time" : {
+                            "title" : "Time between frames (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "TFRAME"
+                        },
+
+                        "group_time" : {
+                            "title" : "Time between groups (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "TGROUP"
+                        },
+
+                        "integration_time" : {
+                            "title" : "Effective integration time (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "EFFINTTM"
+                        },
+
+                        "exposure_time" : {
+                            "title" : "Effective exposure time (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "EFFEXPTM"
+                        },
+
+                        "charge_time" : {
+                            "title" : "Charge accumulation time per integration (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "CHRGTIME"
+                        },
+
+                        "duration" : {
+                            "title" : "Total duration of exposure (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "DURATION"
+                        },
+
+                        "nresets_at_start" : {
+                            "title" : "Number of resets at start of exposure",
+                            "type" : "integer",
+                            "fits_keyword" : "NRSTSTRT"
+                        },
+
+                        "nresets_between_ints" : {
+                            "title" : "Number of resets between integrations",
+                            "type" : "integer",
+                            "fits_keyword" : "NRESETS"
+                        },
+
+                        "zero_frame" : {
+                            "title" : "Zero frame was downlinked separately",
+                            "type" : "boolean",
+                            "fits_keyword" : "ZEROFRAM"
+                        },
+
+                        "data_problem" : {
+                            "title" : "Science telemetry indicated a problem",
+                            "type" : "boolean",
+                            "fits_keyword" : "DATAPROB"
+                        }
+                    }
+                },
+
+                "subarray" : {
+                    "title" : "Subarray parameters",
+                    "type" : "object",
+                    "properties" : {
+                        "name" : {
+                            "title" : "Subarray used",
+                            "type" : "string",
+                            "fits_keyword" : "SUBARRAY"
+                        },
+                        "xstart" : {
+                            "title" : "Starting pixel in axis 1 direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBSTRT1"
+                        },
+                        "ystart" : {
+                            "title" : "Starting pixel in axis 2 direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBSTRT2"
+                        },
+                        "xsize" : {
+                            "title" : "Number of pixels in axis 1 direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBSIZE1"
+                        },
+                        "ysize" : {
+                            "title" : "Number of pixels in axis 2 direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBSIZE2"
+                        },
+                        "fastaxis" : {
+                            "title" : "Fast readout axis direction",
+                            "type" : "integer",
+                            "fits_keyword" : "FASTAXIS"
+                        },
+                        "slowaxis" : {
+                            "title" : "Slow readout axis direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SLOWAXIS"
+                        }
+                    },
+                    "additionalProperties" : false
+                },
+
+                "dither" : {
+                    "title" : "Dither information",
+                    "type" : "object",
+                    "properties" : {
+                        "primary_type" : {
+                            "title" : "Primary dither pattern type",
+                            "type" : "string",
+                            "fits_keyword" : "PATTYPE"
+                        },
+
+                        "position_number" : {
+                            "title" : "Position number in primary pattern",
+                            "type" : "integer",
+                            "fits_keyword" : "PATT_NUM"
+                        },
+
+                        "starting_point" : {
+                            "title" : "Starting point in pattern",
+                            "type" : "integer",
+                            "fits_keyword" : "PATTSTRT"
+                        },
+
+                        "total_points" : {
+                            "title" : "Total number of point in pattern",
+                            "type" : "integer",
+                            "fits_keyword" : "NUMDTHPT"
+                        },
+
+                        "pattern_size" : {
+                            "title" : "Primary dither pattern size (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "PATTSIZE"
+                        },
+
+                        "subpixel_type" : {
+                            "title" : "Subpixel dither type",
+                            "type" : "string",
+                            "fits_keyword" : "SUBPXTYP"
+                        },
+
+                        "subpixel_sampling" : {
+                            "title" : "Subpixel sampling performed",
+                            "type" : "boolean",
+                            "fits_keyword" : "SUBPIXEL"
+                        },
+
+                        "subpixel_number" : {
+                            "title" : "Subpixel pattern number",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBPXNUM"
+                        },
+
+                        "subpixel_total_points" : {
+                            "title" : "Total number of points in subpixel pattern",
+                            "type" : "integer",
+                            "fits_keyword" : "SUBPXPNS"
+                        },
+
+                        "xoffset" : {
+                            "title" : "X offset from starting position (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "XOFFSET"
+                        },
+
+                        "yoffset" : {
+                            "title" : "Y offset from starting position (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "YOFFSET"
+                        },
+
+                        "spectral_position_number" : {
+                            "title" : "Position number within spectral steps",
+                            "type" : "integer",
+                            "fits_keyword" : "SPEC_NUM"
+                        },
+
+                        "spectral_total_points" : {
+                            "title" : "Total number of steps in spectral direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SPECNSTP"
+                        },
+
+                        "spectral_step_size" : {
+                            "title" : "Size of steps in spectral direction",
+                            "type" : "number",
+                            "fits_keyword" : "SPECSTEP"
+                        },
+
+                        "spectral_offset" : {
+                            "title" : "Spectral offset from pattern start (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "SPCOFFST"
+                        },
+
+                        "spatial_position_number" : {
+                            "title" : "Position number within spatial steps",
+                            "type" : "integer",
+                            "fits_keyword" : "SPAT_NUM"
+                        },
+
+                        "spatial_total_points" : {
+                            "title" : "Total number of steps in spatial direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SPATNSTP"
+                        },
+
+                        "spatial_step_size" : {
+                            "title" : "Size of steps in spatial direction",
+                            "type" : "number",
+                            "fits_keyword" : "SPATSTEP"
+                        },
+
+                        "spatial_offset" : {
+                            "title" : "Spatial offset from pattern start (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "SPTOFFST"
+                        },
+
+                        "slitlet_points" : {
+                            "title" : "Number of slitlet offsets in spectral direction",
+                            "type" : "integer",
+                            "fits_keyword" : "SLIT_OFF"
+                        },
+
+                        "ifu_spectral_offset" : {
+                            "title" : "Spectral offset from IFU center (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "SPEC_OFF"
+                        },
+
+                        "ifu_spatial_offset" : {
+                            "title" : "Spatial offset from IFU center (arcsec)",
+                            "type" : "number",
+                            "fits_keyword" : "SPAT_OFF"
+                        }
+                    }
+                },
+
+                "ephemeris" : {
+                    "title" : "JWST ephemeris information",
+                    "type" : "object",
+                    "properties" : {
+                        "coord_system" : {
+                            "title" : "Ephemeris coordinate system",
+                            "type" : "string",
+                            "fits_keyword" : "COORDSYS"
+                        },
+
+                        "time" : {
+                            "title" : "UTC time from ephemeris start time (sec)",
+                            "type" : "number",
+                            "fits_keyword" : "EPH_TIME"
+                        },
+
+                        "spatial_x" : {
+                            "title" : "X spatial coordinate of JWST (km)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_X"
+                        },
+
+                        "spatial_y" : {
+                            "title" : "Y spatial coordinate of JWST (km)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_X"
+                        },
+
+                        "spatial_z" : {
+                            "title" : "Z spatial coordinate of JWST (km)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_Z"
+                        },
+
+                        "velocity_x" : {
+                            "title" : "X component of JWST velocity (km/sec)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_DX"
+                        },
+
+                        "velocity_y" : {
+                            "title" : "Y component of JWST velocity (km/sec)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_DY"
+                        },
+
+                        "velocity_z" : {
+                            "title" : "Z component of JWST velocity (km/sec)",
+                            "type" : "number",
+                            "fits_keyword" : "JWST_DZ"
+                        }
+                    }
+                },
+
+                "aperture" : {
+                    "title" : "Aperture information",
+                    "type" : "object",
+                    "properties" : {
+                        "name" : {
+                            "title" : "PRD science aperture used",
+                            "type" : "string",
+                            "fits_keyword" : "APERNAME"
+                        },
+
+                        "position_angle" : {
+                            "title" : "Position angle of aperture used (deg)",
+                            "type" : "number",
+                            "fits_keyword" : "PA_APER"
+                        }
+                    }
+                },
+
+                "velocity_aberration" : {
+                    "title" : "Velocity aberration correction information",
+                    "type" : "object",
+                    "properties" : {
+                        "ra_offset" : {
+                            "title" : "Velocity aberration correction RA offset (rad)",
+                            "type" : "number",
+                            "fits_keyword" : "DVA_RA"
+                        },
+
+                        "dec_offset" : {
+                            "title" : "Velocity aberration correction Dec offset (rad)",
+                            "type" : "number",
+                            "fits_keyword" : "DVA_DEC"
+                        },
+
+                        "scale_factor" : {
+                            "title" : "Velocity aberration scale factor",
+                            "type" : "number",
+                            "fits_keyword" : "VA_SCALE"
+                        }
+                    }
+                },
+
+                "time" : {
+                    "title" : "Time information",
+                    "type" : "object",
+                    "properties" : {
+                        "barycentric_correction" : {
+                            "title" : "Barycentric time correction",
+                            "type" : "number",
+                            "fits_keyword" : "BARTDELT"
+                        },
+
+                        "barycentric_expstart" : {
+                            "title" : "Barycentric exposure start time",
+                            "type" : "number",
+                            "fits_keyword" : "BSTRTIME"
+                        },
+
+                        "barycentric_expend" : {
+                            "title" : "Barycentric exposure end time",
+                            "type" : "number",
+                            "fits_keyword" : "BENDTIME"
+                        },
+
+                        "barycentric_expmid" : {
+                            "title" : "Barycentric exposure mid time",
+                            "type" : "number",
+                            "fits_keyword" : "BMIDTIME"
+                        },
+
+                        "heliocentric_correction" : {
+                            "title" : "Heliocentric time correction",
+                            "type" : "number",
+                            "fits_keyword" : "HELIDELT"
+                        },
+
+                        "heliocentric_expstart" : {
+                            "title" : "Heliocentric exposure start time",
+                            "type" : "number",
+                            "fits_keyword" : "HSTRTIME"
+                        },
+
+                        "heliocentric_expend" : {
+                            "title" : "Heliocentric exposure end time",
+                            "type" : "number",
+                            "fits_keyword" : "HENDTIME"
+                        },
+
+                        "heliocentric_expmid" : {
+                            "title" : "Heliocentric exposure mid time",
+                            "type" : "number",
+                            "fits_keyword" : "HMIDTIME"
+                        }
+                    }
+                },
+
+                "photometry" : {
+                    "title" : "Photometry information",
+                    "type" : "object",
+                    "properties" : {
+                        "flux_density" : {
+                            "title" : "Flux density (ergs/cm^2/s/ang) producing 1 cps",
+                            "type" : "number",
+                            "fits_keyword" : "PHOTFLAM"
+                        }
+                    }
+                },
+
+                "ref_file" : {
+                    "title" : "Reference file information",
+                    "type" : "object",
+                    "properties" : {
+                        "crds" : {
+                            "title" : "CRDS parameters",
+                            "type" : "object",
+                            "properties" : {
+                                "sw_version" : {
+                                    "title" : "Version of CRDS file selection software used",
+                                    "type" : "string",
+                                    "fits_keyword" : "CRDS_VER"
+                                    },
+                                "context_used" : {
+                                    "title" : "CRDS context (.pmap) used to select ref files",
+                                    "type" : "string",
+                                    "fits_keyword" : "CRDS_CTX"
+                                }
+                            }
+                        },
+                        "amplifier" : {
+                            "title" : "Amplifier reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Amplifier reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_AMPLIF"
+                                }
+                            }
+                        },
+                        "dark" : {
+                            "title" : "Dark reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Dark reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_DARK"
+                                }
+                            }
+                        },
+                        "flat" : {
+                            "title" : "Flat reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Flat reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_FLAT"
+                                }
+                            }
+                        },
+                        "fringe" : {
+                            "title" : "Fringe reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Fringe reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_FRINGE"
+                                }
+                            }
+                        },
+                        "gain" : {
+                            "title" : "Gain reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Gain reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_GAIN"
+                                }
+                            }
+                        },
+                        "ipc" : {
+                            "title" : "IPC reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "IPC reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_IPC"
+                                }
+                            }
+                        },
+                        "reset" : {
+                            "title" : "Reset reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Reset reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_RESET"
+                                }
+                            }
+                        },
+                        "lastframe" : {
+                            "title" : "Last frame reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Last Frame reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_LASTFR"
+                                }
+                            }
+                        },
+                        "linearity" : {
+                            "title" : "Linearity reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Linearity reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_LINEAR"
+                                }
+                            }
+                        },
+                        "mask" : {
+                            "title" : "Mask reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Mask reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_MASK"
+                                }
+                            }
+                        },
+                        "photom" : {
+                            "title" : "Photometric reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Photometric reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_PHOTOM"
+                                }
+                            }
+                        },
+                        "readnoise" : {
+                            "title" : "Read noise reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Read noise reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_READNO"
+                                }
+                            }
+                        },
+                        "saturation" : {
+                            "title" : "Saturation reference file information",
+                            "type" : "object",
+                            "properties" : {
+                                "name" : {
+                                    "title" : "Saturation reference file name",
+                                    "type" : "string",
+                                    "fits_keyword" : "R_SATURA"
+                                }
+                            }
+                        }
+                    }
+                },
+
+                "cal_step" : {
+                    "title" : "Calibration step information",
+                    "type" : "object",
+                    "properties" : {
+                        "ipc" : {
+                            "title" : "Interpixel Capacitance Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_IPC"
+                        },
+                        "reset" : {
+                            "title" : "Reset Anomaly Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_RESET"
+                        },
+                        "lastframe" : {
+                            "title" : "Last Frame Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_LASTFR"
+                        },
+                        "dq_init" : {
+                            "title" : "Data Quality Initialization",
+                            "type" : "string",
+                            "fits_keyword" : "S_DQINIT"
+                        },
+                        "bias_drift" : {
+                            "title" : "Refernce Pixel Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_REFPIX"
+                        },
+                        "err_init" : {
+                            "title" : "Error Initialization",
+                            "type" : "string",
+                            "fits_keyword" : "S_ERRINI"
+                        },
+                        "dark_sub" : {
+                            "title" : "Dark Subtraction",
+                            "type" : "string",
+                            "fits_keyword" : "S_DARK"
+                        },
+                        "saturation" : {
+                            "title" : "Saturation Checking",
+                            "type" : "string",
+                            "fits_keyword" : "S_SATURA"
+                        },
+                        "linearity" : {
+                            "title" : "Linearity Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_LINEAR"
+                        },
+                        "jump" : {
+                            "title" : "Jump Detection",
+                            "type" : "string",
+                            "fits_keyword" : "S_JUMP"
+                        },
+                        "ramp_fit" : {
+                            "title" : "Ramp Fitting",
+                            "type" : "string",
+                            "fits_keyword" : "S_RAMP"
+                        },
+                        "flat_field" : {
+                            "title" : "Flat Field Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_FLAT"
+                        },
+                        "persistence" : {
+                            "title" : "Persistence Correction",
+                            "type" : "string",
+                            "fits_keyword" : "S_PERSIS"
+                        },
+                        "photom" : {
+                            "title" : "Photometric Calibration",
+                            "type" : "string",
+                            "fits_keyword" : "S_PHOTOM"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

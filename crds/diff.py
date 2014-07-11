@@ -337,14 +337,17 @@ def difference(observatory, old_file, new_file, primitive_diffs=False, check_dif
     named `old_file` and `new_file` against one another and print out the results 
     on stdout.
     """
-    if rmap.is_mapping(old_file):
+    filetype = config.filetype(old_file)
+    if filetype == "mapping":
         mapping_difference(observatory, old_file, new_file, primitive_diffs=primitive_diffs, check_diffs=check_diffs,
                            mapping_text_diffs=mapping_text_diffs, include_header_diffs=include_header_diffs,
                            hide_boring_diffs=hide_boring_diffs)
-    elif old_file.endswith(".fits"):
+    elif filetype == "fits":
         fits_difference(observatory, old_file, new_file)
-    else:
+    elif filetype in ["yaml", "json", "text"]:
         text_difference(observatory, old_file, new_file)
+    else:
+        log.warning("Cannot difference file of type", repr(filetype), ":", repr(old_file), repr(new_file))
         
 def get_added_references(old_pmap, new_pmap, cached=True):
     """Return the list of references from `new_pmap` which were not in `old_pmap`."""
