@@ -94,8 +94,7 @@ class HeaderGenerator(object):
         """Return the parameters corresponding to `source` used to drive a best references lookup."""
         try:
             hdr = self.header(source)
-            # min_hdr = self.pmap.minimize_header(hdr)
-            min_hdr = hdr  # rmap parameter minimization excludes table row parameters
+            min_hdr = self.pmap.minimize_header(hdr)
             min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
             log.verbose("Bestref parameters for", repr(source), "with respect to", 
                         repr(self.context) + ":\n", log.PP(min_hdr))
