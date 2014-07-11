@@ -441,7 +441,26 @@ def is_reference(reference):
 
     """
     extension = os.path.splitext(reference)[-1]
-    return re.match(r".fits|.finf|.r\dh", extension) is not None
+    return re.match(r"\.fits|\.finf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
+
+def filetype(filename):
+    """Classify `filename`'s type so it can be processed or displayed."""
+    if is_mapping(filename):
+        return "mapping"
+    elif filename.endswith(".fits"):
+        return "fits"
+    elif filename.endswith(".yaml"):
+        return "yaml"
+    elif filename.endswith(".json"):
+        return "json"
+    elif filename.endswith(".finf"):
+        return "finf"
+    elif filename.endswith(".txt"):
+        return "text"
+    elif re.match(".*\,r[0-9]h$", filename): # GEIS header
+        return "text"
+    else:
+        return "unknown"
 
 def locate_mapping(mappath, observatory=None):
     """Return the path where CRDS mapping `mappath` should be."""

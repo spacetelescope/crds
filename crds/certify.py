@@ -5,12 +5,13 @@ files define required parameters and that they have legal values.
 import sys
 import os
 import re
+import json
 from collections import defaultdict, namedtuple
 
 from astropy.io import fits as pyfits
 import numpy as np
 
-from crds import rmap, log, timestamp, utils, data_file, diff, cmdline
+from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import client
 from crds import mapping_parser
 from crds.rmap import ValidationError
@@ -464,7 +465,7 @@ class Certifier(object):
         raise NotImplementedError("Certify is an abstract class.")
 # ============================================================================
 
-class ReferenceCertifier(Certifier):
+class FitsCertifier(Certifier):
     """Support certifying reference files:
     
     1. Check simple keywords against TPN files using the reftype's validators.
@@ -472,14 +473,14 @@ class ReferenceCertifier(Certifier):
     3. Dump out keywords of interest.
     """
     def __init__(self, *args, **keys):
-        super(ReferenceCertifier, self).__init__(*args, **keys)
+        super(FitsCertifier, self).__init__(*args, **keys)
         self.simple_validators = get_validators(self.filename, self.observatory)
         self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
         self.basefile = os.path.basename(self.filename)
         self.mode_columns = self.get_mode_column_names()
 
     def certify(self):
-        """Certify a reference file."""
+        """Certify a FITS reference file."""
         if not self.trap("File does not comply with FITS format", self.fits_verify):
             return
         self.certify_simple_parameters()
@@ -705,12 +706,72 @@ def interesting_value(value):
         return False
     return True
 
+class JsonCertifier(Certifier):
+    """Certifier for a .json file,  currently basic parsing only."""
+    
+    def certify(self):
+        """Certify a .json file."""
+        self.trap("File does not parse as valid JSON", self.load)
+        
+    def load(self):
+        """Load and parse the .json in self.filename"""
+        import json
+        with open(self.filename) as handle:
+            contents = handle.read()
+        return json.loads(contents)
+            
+class YamlCertifier(Certifier):
+    """Certifier for a .yaml file,  currently basic parsing only."""
+    
+    def certify(self):
+        """Certify a .yaml file."""
+        self.trap("File does not parse as valid YAML", self.load)
+        
+    def load(self):
+        """Load and parse the .yaml in self.filename"""
+        try:
+            import yaml
+        except Exception:
+            log.warning("Cannot import yaml (PyYAML) for", repr(self.basename), "no YAML checking possible.")
+            return
+        with open(self.filename) as handle:
+            contents = handle.read()
+        return yaml.load(contents)
+
+class TextCertifier(Certifier):
+    """Certifier for a text file,  currently a pass through with a warning."""
+    
+    def certify(self):
+        """Certify a .text file."""
+        self.trap("File does not parse as valid text", self.load)
+        
+    def load(self):
+        """Load and parse the .json in self.filename"""
+        log.warning("No certification checks for text file", repr(self.basename))
+        with open(self.filename) as handle:
+            contents = handle.read()
+        return contents
+
+class UnknownCertifier(Certifier):
+    """Certifier for unknown type,  currently a pass through with a warning."""
+    
+    def certify(self):
+        """Certify an unknown format file."""
+        self.trap("File does not load", self.load)
+        
+    def load(self):
+        """Load file of unknown type."""
+        log.warning("No certification checks for unknown file type of", repr(self.basename))
+        with open(self.filename) as handle:
+            contents = handle.read()
+        return contents
+    
 # ============================================================================
 class MappingCertifier(Certifier):
     """Parameter container for certifying a mapping file,  and possibly it's references."""
 
     def certify(self):
-        """Certify mapping `self.filename` relative to `self.context`."""        
+        """Certify mapping `self.filename` relative to `self.context`."""
         if not self.dont_parse:
             parsing = mapping_parser.parse_mapping(self.filename)
             mapping_parser.check_duplicates(parsing)
@@ -913,23 +974,35 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     for fnum, filename in enumerate(files):
         if not skip_banner:
             log.info('#' * 40)  # Serves as demarkation for each file's report
+
+            klasses = {
+                "mapping" : MappingCertifier,
+                "fits" : FitsCertifier,
+                "json" : JsonCertifier,
+                "yaml" : YamlCertifier,
+                "text" : TextCertifier,
+                "unknown" : UnknownCertifier,
+            }
+            filetype = config.filetype(filename)
+            
+            klass = klasses.get(filetype, UnknownCertifier)
+            certifier_name = klass.__name__[:-len("Certifier")].lower()
+            
         if comparison_reference:
             log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
-                     "relative to context", repr(context), "and comparison reference", repr(comparison_reference))
+                     "as", repr(certifier_name), "relative to context", repr(context), 
+                     "and comparison reference", repr(comparison_reference))
         else:
             log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
-                     "relative to context", repr(context))
+                     "as", repr(certifier_name), "relative to context", repr(context))
         try:
-            if is_mapping or rmap.is_mapping(filename):
-                klass = MappingCertifier
-            else:
-                klass = ReferenceCertifier
             certifier = klass(filename, context=context, check_references=check_references,
                               trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
                               dont_parse=dont_parse, script=script, observatory=observatory,
                               comparison_reference=comparison_reference)
+            
             certifier.certify()
         except Exception, exc:
             if trap_exceptions:
