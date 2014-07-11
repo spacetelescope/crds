@@ -398,7 +398,7 @@ def cache_server_info(info, observatory):
         utils.ensure_dir_exists(server_config)
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
-    except IOError, exc:
+    except Exception, exc:
         log.verbose_warning("Couldn't save CRDS server info:", repr(exc))
     try:
         bad_files = os.path.join(path, "bad_files.txt")
@@ -406,7 +406,7 @@ def cache_server_info(info, observatory):
         bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
         with open(bad_files, "w+") as file_:
             file_.write(bad_files_lines)
-    except IOError, exc:
+    except Exception, exc:
         log.verbose_warning("Couldn't save CRDS bad files list:", repr(exc))
         
 def load_server_info(observatory):
@@ -465,7 +465,8 @@ def version_info():
     try:
         from . import svn_version
         lines = svn_version.__full_svn_info__.strip().split("\n")
-        return ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
+        svn = ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
+        return crds.__version__ + ", " + svn
     except Exception:
         return "unknown"
 # ============================================================================
