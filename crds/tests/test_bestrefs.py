@@ -96,71 +96,59 @@ Compute simple bestrefs for 3 files:
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
-    CRDS  : INFO     3 errors
+    CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     5 infos
 
-    >>> status == 3
+    >>> status == 0
     True
 
 Compute and print files with at least one reference change:
 
     >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")
-    >>> status = case.run()
+    >>> case.run()
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
     CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'v9718263j_npl.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
     CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'v9718264j_npl.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
     CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'v9718260j_npl.fits' :: Would update.
     CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
     CRDS  : INFO     Affected products = 3
     data/j8bt05njq_raw.fits
     data/j8bt06o6q_raw.fits
     data/j8bt09jcq_raw.fits
-    CRDS  : INFO     3 errors
+    CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     19 infos
-
-    >>> status == 3
-    True
+    0
 
 Compute simple bestrefs for 3 files using the default context from the server:
 
     >>> case = BestrefsScript(argv="bestrefs.py --new-context=hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")
-    >>> status = case.run()
+    >>> case.run()
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
-    CRDS  : INFO     3 errors
+    CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     5 infos
-    >>> status == 3
-    True
+    0
 
 Same + one broken file to test shell error status
 
@@ -169,17 +157,15 @@ Same + one broken file to test shell error status
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw_broke.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:  'NUMCOLS'
+    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
-    CRDS  : INFO     4 errors
+    CRDS  : INFO     1 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     6 infos
-    >>> status == 4
+
+    >>> status == 1
     True
 
 Compute simple bestrefs for 1 catalog datasets using hst.pmap:
@@ -202,37 +188,12 @@ Compute comparison bestrefs between two contexts:
     >>> case.run()
     CRDS  : INFO     No file header updates requested;  dry run.
     CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  Old: Bestref FAILED:  'NUMCOLS'
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  Old: Bestref FAILED:  'NUMCOLS'
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt06o6q_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
     CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  Old: Bestref FAILED:  'NUMCOLS'
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt09jcq_raw.fits' ::  New: Bestref FAILED:  'NUMCOLS'
-    CRDS  : INFO     6 errors
+    CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     4 infos
-    6
-
-Test for affected data sets.
-    >>> case = BestrefsScript(argv="bestrefs.py --new-context hst_0024.pmap  --old-context hst_0018.pmap --datasets lb6m01030 -z --verbosity 25")
-    >>> case.run()
-    CRDS  : DEBUG    Using explicit new context 'hst_0024.pmap' for computing updated best references.
-    CRDS  : DEBUG    Using explicit old context 'hst_0018.pmap'
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
-    CRDS  : INFO     Computing bestrefs for datasets ['lb6m01030']
-    CRDS  : DEBUG    ===> Processing LB6M01030:LB6M01AVQ
-    CRDS  : DEBUG    Deep examination of references instantiated.
-    CRDS  : DEBUG    Instantiating rules for reference type cos_wcptab.
-    CRDS  : WARNING  Deep examination error: Not all mode fields are defined in the dataset.
-    CRDS  : WARNING  Deep examination failed, presuming reprocessing.
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     2 warnings
-    CRDS  : INFO     3 infos
     0
-
 
 CLEANUP: blow away the test cache
 
