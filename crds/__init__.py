@@ -1,6 +1,6 @@
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "1.1"   # see also setup.py
+__version__ = "1.1.2"   # see also setup.py
 
 # ============================================================================
 
