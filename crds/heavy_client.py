@@ -460,12 +460,15 @@ def get_installed_info(observatory):
             mapping_url = "Not connected"
             )
     
+# XXXX Careful with version string length here, FITS has a 68 char limit which degrades to CONTINUE records
+# XXXX which cause problems for other systems.
 def version_info():
     """Return CRDS checkout URL and revision."""
     try:
         from . import svn_version
         lines = svn_version.__full_svn_info__.strip().split("\n")
         svn = ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
+        svn = svn.replace("URL: ", "").replace("Revision: ", "")
         return crds.__version__ + ", " + svn
     except Exception:
         return "unknown"
