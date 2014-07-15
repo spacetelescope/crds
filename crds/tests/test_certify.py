@@ -71,3 +71,33 @@ class TestValidatorClasses(CRDSTestCase):
         from crds.jwst import locate
         locate.load_all_type_constraints()
 
+    def test_JsonCertifier_valid(self):
+        cert = certify.JsonCertifier(self.data("core.schema.json"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        cert.certify()
+            
+    def test_JsonCertifier_invalid(self):
+        cert = certify.JsonCertifier(self.data("core.invalid.json"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        assert_raises(certify.InvalidFormatError, cert.certify)
+        
+    def test_YamlCertifier_valid(self):
+        cert = certify.YamlCertifier(self.data("valid.yaml"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        cert.certify()
+            
+    def test_YamlCertifier_invalid(self):
+        cert = certify.YamlCertifier(self.data("invalid.yaml"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        assert_raises(certify.InvalidFormatError, cert.certify)
+        
+    def test_TextCertifier_valid(self):
+        cert = certify.TextCertifier(self.data("valid.text"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        cert.certify()
+            
+    def test_TextCertifier_missing(self):
+        cert = certify.TextCertifier(self.data("non-existent-file.txt"), trap_exceptions=None,
+                                     observatory="jwst",context="jwst.pmap")
+        assert_raises(IOError, cert.certify)
+        
