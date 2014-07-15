@@ -40,6 +40,9 @@ class MissingKeywordError(Exception):
 class IllegalKeywordError(Exception):
     """A keyword which should not be defined was present."""
 
+class InvalidFormatError(Exception):
+    """The given file was not loadable."""
+
 # ----------------------------------------------------------------------------
 class Validator(object):
     """Validator is an Abstract class which applies TpnInfo objects to reference files.
@@ -718,8 +721,11 @@ class JsonCertifier(Certifier):
         import json
         with open(self.filename) as handle:
             contents = handle.read()
-        return json.loads(contents)
-            
+        try:
+            return json.loads(contents)
+        except Exception as exc:
+            raise InvalidFormatError(str(exc))
+
 class YamlCertifier(Certifier):
     """Certifier for a .yaml file,  currently basic parsing only."""
     
@@ -736,7 +742,10 @@ class YamlCertifier(Certifier):
             return
         with open(self.filename) as handle:
             contents = handle.read()
-        return yaml.load(contents)
+        try:
+            return yaml.load(contents)
+        except Exception as exc:
+            raise InvalidFormatError(str(exc))
 
 class TextCertifier(Certifier):
     """Certifier for a text file,  currently a pass through with a warning."""
