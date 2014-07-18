@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Command Line Tools &mdash; crds 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/stsci_sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="crds 1.1 documentation" href="index.html" />
+    <link rel="next" title="Library Use" href="top_level_use.html" />
+    <link rel="prev" title="Package Overview" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="top_level_use.html" title="Library Use"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Package Overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">crds 1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/stsci_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Command Line Tools</a><ul>
+<li><a class="reference internal" href="#specifying-files">Specifying Files</a></li>
+<li><a class="reference internal" href="#crds-certify">crds.certify</a></li>
+<li><a class="reference internal" href="#crds-diff">crds.diff</a></li>
+<li><a class="reference internal" href="#crds-rowdiff">crds.rowdiff</a></li>
+<li><a class="reference internal" href="#crds-uses">crds.uses</a></li>
+<li><a class="reference internal" href="#crds-matches">crds.matches</a></li>
+<li><a class="reference internal" href="#crds-sync">crds.sync</a></li>
+<li><a class="reference internal" href="#crds-bestrefs">crds.bestrefs</a><ul>
+<li><a class="reference internal" href="#new-context">New Context</a></li>
+<li><a class="reference internal" href="#lookup-parameter-sources">Lookup Parameter Sources</a></li>
+<li><a class="reference internal" href="#comparison-modes">Comparison Modes</a><ul>
+<li><a class="reference internal" href="#context-to-context">Context-to-Context</a></li>
+<li><a class="reference internal" href="#prior-source-recommendations">Prior Source Recommendations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-modes">Output Modes</a></li>
+<li><a class="reference internal" href="#update-modes">Update Modes</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pipeline-bestrefs">pipeline_bestrefs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Package Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="top_level_use.html"
+                        title="next chapter">Library Use</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/command_line_tools.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="command-line-tools">
+<h1>Command Line Tools<a class="headerlink" href="#command-line-tools" title="Permalink to this headline">¶</a></h1>
+<p>Using the command line tools requires a local installation of the CRDS library.
+Some of the command line tools also interact with the CRDS server in order to
+implement their functionality.</p>
+<div class="section" id="specifying-files">
+<h2>Specifying Files<a class="headerlink" href="#specifying-files" title="Permalink to this headline">¶</a></h2>
+<p>The command line tools operate on CRDS reference and mapping files in various
+ways.  To specify a file in your local CRDS file cache,  as defined by CRDS_PATH,
+use no path on the file:</p>
+<div class="highlight-python"><pre>% python -m crds.diff hst.pmap  hst_0001.pmap  # assumes paths in CRDS cache</pre>
+</div>
+<p>To specify a particular file which is not located in your cache,  give at least
+a relative path to the file, ./ will do:</p>
+<div class="highlight-python"><pre>% python -m crds.diff /some/path/hst.pmap ./hst_0002.pmap   # uses given paths</pre>
+</div>
+</div>
+<div class="section" id="crds-certify">
+<h2>crds.certify<a class="headerlink" href="#crds-certify" title="Permalink to this headline">¶</a></h2>
+<p>crds.certify checks a reference or mapping file against constraints on legal
+matching parameter values.   For reference files,  crds.certify also performs checks
+of the FITS format and when given a context,  and will compare the given file against
+the file it replaces looking for new or missing table rows.</p>
+<p>crds.certify &#8211;help yields:</p>
+<div class="highlight-python"><pre>Checks a CRDS reference or mapping file.
+
+positional arguments:
+  files
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --deep            Certify reference files referred to by mappings have valid contents.
+  -r, --dont-recurse-mappings
+                        Do not load and validate mappings recursively,  checking only directly specified files.
+  -a, --dont-parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
+  -e, --exist           Certify reference files referred to by mappings exist.
+  -m, --mapping         Ignore extensions, the files being certified are mappings.
+  -p, --dump-provenance
+                        Dump provenance keywords.
+  -t TRAP_EXCEPTIONS, --trap-exceptions TRAP_EXCEPTIONS
+                        Capture exceptions at level: pmap, imap, rmap, selector, debug, none
+  -x COMPARISON_CONTEXT, --comparison-context COMPARISON_CONTEXT
+                        Pipeline context defining comparison files.
+  -y COMPARISON_REFERENCE, --comparison-reference COMPARISON_REFERENCE
+                        Comparison reference for table certification.
+  --dump-unique-errors  Record and dump the first instance of each kind of error.
+  --unique-errors-file UNIQUE_ERRORS_FILE
+                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
+  --all-errors-file ALL_ERRORS_FILE
+                        Write out all err'ing data names (ids or filenames) to specified file.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.</pre>
+</div>
+<p>crds.certify is invoked as, e.g.:</p>
+<div class="highlight-python"><pre>% python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits
+
+% python -m crds.certify hst.pmap</pre>
+</div>
+<p>Invoking crds.certify on a context mapping recursively certifies all sub-mappings.</p>
+</div>
+<div class="section" id="crds-diff">
+<h2>crds.diff<a class="headerlink" href="#crds-diff" title="Permalink to this headline">¶</a></h2>
+<p>crds.diff compares two reference or mapping files and reports differences.  For
+references crds.diff is currently a thin wrapper around fitsdiff but may expand.</p>
+<p>For CRDS mappings crds.diff performs a recursive logical difference which shows
+the full match path to each bottom level change.   crds.diff &#8211;help yields:</p>
+<div class="highlight-python"><pre>Difference CRDS mapping or reference files.
+
+positional arguments:
+  old_file              Prior file of difference.
+  new_file              New file of difference.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -P, --primitive-diffs
+                        Fitsdiff replaced reference files when diffing mappings.
+  -T, --mapping-text-diffs
+                        In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.
+  -K, --check-diffs     Issue warnings about new rules, deletions, or reversions.
+  -N, --print-new-files
+                        Rather than printing diffs for mappings,  print the names of new or replacement files.  Excludes intermediaries.
+  -A, --print-all-new-files
+                        Print the names of every new or replacement file in diffs between old and new.  Includes intermediaries.
+  -i, --include-header-diffs
+                        Include mapping header differences in logical diffs: sha1sum, derived_from, etc.
+  -B, --hide-boring-diffs
+                        Include mapping header differences in logical diffs: sha1sum, derived_from, etc.
+  --print-affected-instruments
+                        Print out the names of instruments which appear in diffs,  rather than diffs.
+  --print-affected-types
+                        Print out the names of instruments and types which appear in diffs,  rather than diffs.
+  --print-affected-modes
+                        Print out the names of instruments, types, and matching parameters,  rather than diffs.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.
+
+Reference files are nominally differenced using FITS-diff or diff.
+
+Mapping files are differenced using CRDS machinery to recursively compare too mappings and
+their sub-mappings.
+
+Differencing two mappings will find all the logical differences between the two contexts
+and any nested mappings.
+
+By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to
+CRDS logical diffs.
+
+By specifying --primitive-diffs,  FITS diff will be run on all references which are replaced
+in the logical differences between two mappings.
+
+For example:
+
+    % python -m crds.diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
+
+Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
+
+    NOTE: mapping logical differences (the default) do not compare CRDS mapping headers,  use
+    --include-header-diffs to get those as well.</pre>
+</div>
+<p>For standard CRDS filenames,  crds.diff can guess the observatory.   For
+non-standard names,  the observatory needs to be specified.  crds.diff can be
+invoked like:</p>
+<div class="highlight-python"><pre>% python -m crds.diff   jwst_nircam_dark_0010.fits  jwst_nircam_dark_0011.fits
+
+% python -m crds.diff  jwst_0001.pmap   jwst_0002.pmap
+(('hst.pmap', 'hst_0004.pmap'), ('hst_acs.imap', 'hst_acs_0004.imap'), ('hst_acs_darkfile.rmap', 'hst_acs_darkfile_0003.rmap'), ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej_drk.fits' with 'hst_acs_darkfile_0003.fits'")</pre>
+</div>
+</div>
+<div class="section" id="crds-rowdiff">
+<h2>crds.rowdiff<a class="headerlink" href="#crds-rowdiff" title="Permalink to this headline">¶</a></h2>
+<p>Modules that are based on FITSDiff, such as crds.diff, compare
+tabular data on a column-by-column basis. Rowdiff compares tabular data
+on a row-by-row basis, producing UNIX diff-like output instead.
+Non-tabular extensions are ignored.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>usage: rowdiff.py [-J] [-H]</dt>
+<dd>[&#8211;ignore-fields IGNORE_FIELDS]
+[&#8211;fields FIELDS]
+[&#8211;mode-fields MODE_FIELDS] old_file new_file</dd>
+</dl>
+<p>Perform FITS table difference by rows</p>
+<dl class="docutils">
+<dt>positional arguments:</dt>
+<dd>old_file                First FITS table to compare
+new_file                Second FITS table to compare</dd>
+<dt>optional arguments:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ignore-fields <var>IGNORE_FIELDS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>List of fields to ignore</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--fields <var>FIELDS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>List of fields to compare</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--mode-fields <var>MODE_FIELDS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>List of fields to do a mode compare</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-J</span>, <span class="option">--jwst</span></kbd></td>
+<td>Force observatory to JWST for determining header conventions.</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-H</span>, <span class="option">--hst</span></kbd></td>
+<td>Force observatory to HST for determining header conventions.</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div></blockquote>
+<p>The FITS data to be compared are required to be similar: they must have
+the same number of extensions and the types of extensions must match.</p>
+<p>The parameters &#8211;fields and &#8211;ignore-fields define which columns
+are compared between each table extension. These are mutually
+exclusive parameters and an error will generate if both are specified.</p>
+<p>First a summary of the changes between the table extension is given.
+Then, row-by-row difference is given, using unified diff syntax.</p>
+<p>The parameter &#8211;mode-fields initiates a different algorithm.
+Here, it is presumed the tabular data contains columns that can essentially
+be treated as keys upon with rows are selected. The fields specified are those
+key columns.</p>
+<p>All possible coombinations of values are determined be examining both
+extensions. Then, each table is compared against both this list and between
+each other, looking for multiply specified combinations, missing combinations,
+and, for the common combinations between the tables, whether the rest of the
+rows are equivalent or not.</p>
+<p>Examples:</p>
+<blockquote>
+<div><p>% python -m crds.rowdiff s9m1329lu_off.fits s9518396u_off.fits</p>
+<p>% python -m rowdiff s9m1329lu_off.fits s9518396u_off.fits &#8211;mode-fields=detchip,obsdate</p>
+</div></blockquote>
+</div>
+<div class="section" id="crds-uses">
+<h2>crds.uses<a class="headerlink" href="#crds-uses" title="Permalink to this headline">¶</a></h2>
+<p>crds.uses searches the files in the local cache for mappings which refer to the
+specified files.  Since the <strong>local cache</strong> is used only mappings present in the
+local cache will be included in the results given.  crds.uses is invoked as:</p>
+<div class="highlight-python"><pre>% python -m crds.uses &lt;observatory=hst|jwst&gt; &lt;mapping or reference&gt;...</pre>
+</div>
+<p>e.g.:</p>
+<div class="highlight-python"><pre>Prints out the mappings which refer to the specified mappings or references.
+
+Prints out the datasets which historically used a particular reference as defined by DADSOPS.
+
+IMPORTANT:
+   1. You must specify references on which to operate with --files.
+   2. You must set CRDS_PATH and CRDS_SERVER_URL to give crds.uses access to CRDS mappings and databases.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --files FILES [FILES ...]
+                        References for which to dump using mappings or datasets.
+  -d, --print-datasets  Print the ids of datasets last historically using a reference.
+  -i, --include-used    Include the used file in the output as the first column.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.
+
+crds.uses can be invoked like this:
+
+% python -m crds.uses --files n3o1022ij_drk.fits --hst
+hst.pmap
+hst_0001.pmap
+hst_0002.pmap
+hst_0003.pmap
+...
+hst_0041.pmap
+hst_acs.imap
+hst_acs_0001.imap
+hst_acs_0002.imap
+hst_acs_0003.imap
+...
+hst_acs_0008.imap
+hst_acs_darkfile.rmap
+hst_acs_darkfile_0001.rmap
+hst_acs_darkfile_0002.rmap
+hst_acs_darkfile_0003.rmap
+...
+hst_acs_darkfile_0005.rmap
+
+% python -m crds.uses --files n3o1022ij_drk.fits --print-datasets --hst
+J8BA0HRPQ
+J8BA0IRTQ
+J8BA0JRWQ
+J8BA0KT4Q
+J8BA0LIJQ
+
+% python -m crds.uses --files @dropped --hst --print-datasets --include-used
+vb41934lj_bia.fits JA7P21A2Q
+vb41934lj_bia.fits JA7P21A4Q
+vb41934lj_bia.fits JA7P21A6Q</pre>
+</div>
+</div>
+<div class="section" id="crds-matches">
+<h2>crds.matches<a class="headerlink" href="#crds-matches" title="Permalink to this headline">¶</a></h2>
+<p>crds.matches reports the match patterns which are associated with the given
+reference files:</p>
+<div class="highlight-python"><pre>usage: matches.py
+       [-h] [--contexts [CONTEXT [CONTEXT ...]]]
+       [--files FILES [FILES ...]] [-b] [-o] [-t]
+
+Prints out the selection criteria by which the specified references are matched
+with respect to a particular context.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --contexts [CONTEXT [CONTEXT ...]]
+                        Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
+  --range MIN:MAX       Operate for pipeline context ids (.pmaps) between &lt;MIN&gt; and &lt;MAX&gt;.
+  --all                 Operate with respect to all known CRDS contexts.
+  --last N              Operate with respect to the last N contexts.
+  -i, --ignore-cache    Download required files even if they're already in the cache.
+  --files FILES [FILES ...]
+                        References for which to dump selection criteria.
+  -b, --brief-paths     Don't the instrument and filekind.
+  -o, --omit-parameter-names
+                        Hide the parameter names of the selection criteria,  just show the values.
+  -t, --tuple-format    Print the match info as Python tuples.
+  -d DATASETS [DATASETS ...], --datasets DATASETS [DATASETS ...]
+                        Dataset ids for which to dump matching parameters from DADSOPS or equivalent database.
+  -c, --condition-values
+                        When dumping dataset parameters, first apply CRDS value conditioning / normalization.
+  -m, --minimize-header
+                        When dumping dataset parameters,  limit them to matching parameters, not historical bestrefs.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY
+                        Set log verbosity to a specific level: 0..100.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  -V, --version         Print the software version and exit.
+  -J, --jwst            Force observatory to JWST for determining header conventions.
+  -H, --hst             Force observatory to HST for determining header conventions.</pre>
+</div>
+<p>crds.matches can dump reference file match cases with respect to particular contexts:</p>
+<div class="highlight-python"><pre>% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))</pre>
+</div>
+<p>crds.matches can dump database matching parameters for specified datasets with respect to specified contexts:</p>
+<div class="highlight-python"><pre>% python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
+JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
+JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'</pre>
+</div>
+<p>crds.matches can be invoked in various ways with different output formatting:</p>
+<div class="highlight-python"><pre>% python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+
+% python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))</pre>
+</div>
+</div>
+<div class="section" id="crds-sync">
+<h2>crds.sync<a class="headerlink" href="#crds-sync" title="Permalink to this headline">¶</a></h2>
+<p>The CRDS sync tool is used to download CRDS rules and references from the CRDS server:</p>
+<div class="highlight-python"><pre>usage: python -m crds.sync
+   [-h] [--contexts [CONTEXT [CONTEXT ...]]] [--range MIN:MAX] [--all]
+   [--last N] [-i] [--files [FILES [FILES ...]]]
+   [--datasets [DATASET [DATASET ...]]] [--fetch-references]
+   [--purge-references] [--purge-mappings] [--dry-run] [-k] [-s] [-r]
+   [--purge-rejected] [--purge-blacklisted] [--fetch-sqlite-db] [-v]
+   [--verbosity VERBOSITY] [-R] [-V] [-J] [-H]
+
+Synchronize local mapping and reference caches for the given contexts by
+downloading missing files from the CRDS server and/or archive.</pre>
+</div>
+<p>optional arguments:</p>
+<div class="highlight-python"><pre>-h, --help            show this help message and exit
+--contexts [CONTEXT [CONTEXT ...]]
+                      Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
+--range MIN:MAX       Operate for pipeline context ids (.pmaps) between &lt;MIN&gt; and &lt;MAX&gt;.
+--all                 Operate with respect to all known CRDS contexts.
+--last N              Operate with respect to the last N contexts.
+-i, --ignore-cache    Download required files even if they're already in the cache.
+--files [FILES [FILES ...]]
+                      Explicitly list files to be synced.
+--datasets [DATASET [DATASET ...]]
+                      Cache references for the specified datasets.
+--fetch-references    Cache all the references for the specified contexts.
+--purge-references    Remove reference files not referred to by contexts from the cache.
+--purge-mappings      Remove mapping files not referred to by contexts from the cache.
+--dry-run             Don't remove purged files, or repair files,  just print out their names.
+-k, --check-files     Check cached files against the CRDS database and report anomalies.
+-s, --check-sha1sum   For --check-files,  also verify file sha1sums.
+-r, --repair-files    Repair or re-download files noted as bad by --check-files
+--purge-rejected      Purge files noted as rejected by --check-files
+--purge-blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by --check-files
+--fetch-sqlite-db     Download a sqlite3 version of the CRDS file catalog.
+-v, --verbose         Set log verbosity to True,  nominal debug level.
+--verbosity VERBOSITY
+                      Set log verbosity to a specific level: 0..100.
+-R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+-V, --version         Print the software version and exit.
+-J, --jwst            Force observatory to JWST for determining header conventions.
+-H, --hst             Force observatory to HST for determining header conventions.</pre>
+</div>
+<ul>
+<li><p class="first">Primitive syncing can be done by explicitly listing the files you wish to cache:</p>
+<div class="highlight-python"><pre>% python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits</pre>
+</div>
+</li>
+</ul>
+<p>this will download only those two files.</p>
+<ul class="simple">
+<li>Typically syncing CRDS files is done with respect to particular CRDS contexts:</li>
+</ul>
+<p>Synced contexts can be explicitly listed:</p>
+<div class="highlight-python"><pre>% python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap</pre>
+</div>
+<p>this will recursively download all the mappings referred to by .pmaps 0001 and 0002.</p>
+<p>Synced contexts can be specified as a numerical range:</p>
+<div class="highlight-python"><pre>% python -m crds.sync --range 1:3</pre>
+</div>
+<p>this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.</p>
+<p>Synced contexts can be specified as &#8211;all contexts:</p>
+<div class="highlight-python"><pre>% python -m crds.sync --all</pre>
+</div>
+<p>this will recursively download all CRDS mappings for all time.</p>
+<p>NOTE:  Fetching references required to support contexts has to be done explicitly:</p>
+<div class="highlight-python"><pre>% python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references</pre>
+</div>
+<p>will download all the references mentioned by contexts 0001 and 0002.
+this can be a huge (1T+) network download and should generally only be used by
+institutions,  not individual researchers.</p>
+<ul class="simple">
+<li>Removing files:</li>
+</ul>
+<p>Files from unspecified contexts can be removed like this:</p>
+<div class="highlight-python"><pre>% python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings</pre>
+</div>
+<p>this would remove mappings which are <em>not</em> in contexts 4 or 5.</p>
+<blockquote>
+<div>% python -m crds.sync  &#8211;contexts hst_0004.pmap hst_0005.pmap &#8211;purge-references</div></blockquote>
+<p>this would remove reference files which are <em>not</em> in 4 or 5.</p>
+<ul>
+<li><p class="first">References for particular datasets can be cached like this:</p>
+<div class="highlight-python"><pre>% python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --datasets  &lt;dataset_files...&gt;</pre>
+</div>
+</li>
+</ul>
+<p>this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+this mode does not update dataset file headers.  See also crds.bestrefs for header updates.</p>
+<ul>
+<li><p class="first">Checking the cache:</p>
+<div class="highlight-python"><pre>% python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files</pre>
+</div>
+</li>
+</ul>
+<p>would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+be checked for correct length, sha1sum, and status.   Any files with bad length or checksum
+would then be deleted and re-downloaded.   This is really intended for an <em>existing</em> cache.</p>
+<p>Removing blacklisted or rejected files:</p>
+<div class="highlight-python"><pre>% python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted</pre>
+</div>
+<p>would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
+be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.</p>
+</div>
+<div class="section" id="crds-bestrefs">
+<h2>crds.bestrefs<a class="headerlink" href="#crds-bestrefs" title="Permalink to this headline">¶</a></h2>
+<p>crds.bestrefs computes the best references with respect to a particular context or contexts
+for a set of FITS files, dataset ids,  or instruments:</p>
+<div class="highlight-python"><pre>usage: python -m crds.bestrefs
+       [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [-c] [-f FILES [FILES ...]]
+       [-d IDs [IDs ...]] [--all-instruments]
+       [-i INSTRUMENTS [INSTRUMENTS ...]]
+       [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
+       [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
+       [--diffs-only] [--datasets-since DATASETS_SINCE]
+       [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
+       [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
+       [--print-affected-details] [--print-new-references]
+       [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
+       [--differences-are-errors] [-e] [--undefined-differences-matter]
+       [--na-differences-matter] [--compare-cdbs] [-z] [--dump-unique-errors]
+       [--unique-errors-file UNIQUE_ERRORS_FILE]
+       [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
+       [-V] [-J] [-H]</pre>
+</div>
+<ul>
+<li><p class="first">Determines best references with respect to a context or contexts.</p>
+</li>
+<li><p class="first">Optionally compares new results to prior results.</p>
+</li>
+<li><p class="first">Optionally prints source data names affected by the new context.</p>
+</li>
+<li><p class="first">Optionally updates the headers of file-based data with new recommendations.</p>
+</li>
+<li><p class="first">optional arguments:</p>
+<div class="highlight-python"><pre>-h, --help            show this help message and exit
+-n NEW_CONTEXT, --new-context NEW_CONTEXT
+                      Compute the updated best references using this context. Uses current operational context by default.
+-o OLD_CONTEXT, --old-context OLD_CONTEXT
+                      Compare bestrefs recommendations from two contexts.
+-c, --compare-source-bestrefs
+                      Compare new bestrefs recommendations to recommendations from data source,  files or database.
+-f FILES [FILES ...], --files FILES [FILES ...]
+                      Dataset files to compute best references for.
+-d IDs [IDs ...], --datasets IDs [IDs ...]
+                      Dataset ids to consult database for matching parameters and old results.
+--all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
+-i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
+                      Instruments to compute best references for, all historical datasets in database.
+-t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
+                      A list of reference types to process,  defaulting to all types.
+-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
+                      A list of reference types which should not be processed,  defaulting to nothing.
+--diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
+--datasets-since DATASETS_SINCE
+                      Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
+-p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
+                      Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.
+-a SAVE_PICKLE, --save-pickle SAVE_PICKLE
+                      Write out the combined dataset headers to the specified pickle file.
+--only-ids [IDS [IDS ...]]
+                      If specified, process only the listed dataset ids.
+-u, --update-bestrefs
+                      Update dataset headers with new best reference recommendations.
+--print-affected      Print names of products for which the new context would assign new references for some exposure.
+--print-affected-details
+                      Include instrument and affected types in addition to compound names of affected exposures.
+--print-new-references
+                      Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
+--print-update-counts
+                      Prints dictionary of update counts by instrument and type,  status on updated files.
+-r, --remote-bestrefs
+                      Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
+-m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
+                      Fetch the required context mappings to the local cache.  Defaults TRUE.
+-s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
+                      Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
+--differences-are-errors
+                      Treat recommendation differences between new context and original source as errors.
+-e, --bad-files-are-errors
+                      Treat recommendations of known bad/invalid files as errors, not warnings.
+--undefined-differences-matter
+                      If not set, a transition from UNDEFINED to anything else is not considered a difference error.
+--na-differences-matter
+                      If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
+--compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
+-z, --optimize-tables
+                      If set, apply row-based optimizations to screen out inconsequential table updates.
+--dump-unique-errors  Record and dump the first instance of each kind of error.
+--unique-errors-file UNIQUE_ERRORS_FILE
+                      Write out data names (ids or filenames) for first instance of unique errors to specified file.
+--all-errors-file ALL_ERRORS_FILE
+                      Write out all err'ing data names (ids or filenames) to specified file.
+-v, --verbose         Set log verbosity to True,  nominal debug level.
+--verbosity VERBOSITY
+                      Set log verbosity to a specific level: 0..100.
+-R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+-V, --version         Print the software version and exit.
+-J, --jwst            Force observatory to JWST for determining header conventions.
+-H, --hst             Force observatory to HST for determining header conventions.</pre>
+</div>
+</li>
+</ul>
+<p>Bestrefs has a number of command line parameters which make it operate in different modes.</p>
+<div class="section" id="new-context">
+<h3>New Context<a class="headerlink" href="#new-context" title="Permalink to this headline">¶</a></h3>
+<p>crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the
+&#8211;new-context parameter.    If &#8211;new-context is not specified,  the default operational context is determined by
+consulting the CRDS server or looking in the local cache.</p>
+</div>
+<div class="section" id="lookup-parameter-sources">
+<h3>Lookup Parameter Sources<a class="headerlink" href="#lookup-parameter-sources" title="Permalink to this headline">¶</a></h3>
+<p>The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually
+lookup parameters are always associated with particular datasets and used to identify the references
+required to process those datasets.</p>
+<p>The options &#8211;files, &#8211;datasets, &#8211;instruments, and &#8211;all-instruments determine the source of lookup parameters:</p>
+<ol class="arabic">
+<li><p class="first">To find best references for a list of files do something like this:</p>
+<blockquote>
+<div><p>% python -m crds.bestrefs &#8211;new-context hst.pmap &#8211;files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits</p>
+</div></blockquote>
+</li>
+</ol>
+<p>the first parameter, hst.pmap,  is the context with respect to which best references are determined.</p>
+<ol class="arabic" start="2">
+<li><p class="first">To find best references for a list of catalog dataset ids do something like this:</p>
+<blockquote>
+<div><p>% python -m crds.bestrefs &#8211;new-context hst.pmap &#8211;datasets j8bt05njq j8bt06o6q j8bt09jcq</p>
+</div></blockquote>
+</li>
+<li><p class="first">To do mass scale testing for all cataloged datasets for a particular instrument(s) do:</p>
+<blockquote>
+<div><p>% python -m crds.bestrefs &#8211;new-context hst.pmap &#8211;instruments acs</p>
+</div></blockquote>
+</li>
+<li><p class="first">To do mass scale testing for all supported instruments for all cataloged datasets do:</p>
+<blockquote>
+<div><p>% python -m crds.bestrefs &#8211;new-context hst.pmap &#8211;all-instruments</p>
+<p>or to test for differences between two contexts</p>
+<p>% python -m crds.bestrefs &#8211;new-context hst_0002.pmap &#8211;old-context hst_0001.pmap &#8211;all-instruments</p>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="comparison-modes">
+<h3>Comparison Modes<a class="headerlink" href="#comparison-modes" title="Permalink to this headline">¶</a></h3>
+<p>The &#8211;old-context and &#8211;compare-source-bestrefs parameters define the best references comparison mode.  Each names
+the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from
+the newly computed bestrefs determined by &#8211;new-context.</p>
+<div class="section" id="context-to-context">
+<h4>Context-to-Context<a class="headerlink" href="#context-to-context" title="Permalink to this headline">¶</a></h4>
+<p>&#8211;old-context can be used to specify a second context for which bestrefs are dynamically computed; &#8211;old-context
+implies that a bestrefs comparison will be made with &#8211;new-context.   If &#8211;old-context is not specified,  it
+defaults to None.</p>
+</div>
+<div class="section" id="prior-source-recommendations">
+<h4>Prior Source Recommendations<a class="headerlink" href="#prior-source-recommendations" title="Permalink to this headline">¶</a></h4>
+<p>&#8211;compare-source-bestrefs requests that the bestrefs from &#8211;new-context be compared to the bestrefs which are
+recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
+cases the prior best references are recorded static values,  not dynamically computed bestrefs.</p>
+</div>
+</div>
+<div class="section" id="output-modes">
+<h3>Output Modes<a class="headerlink" href="#output-modes" title="Permalink to this headline">¶</a></h3>
+<p>crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.</p>
+<p>If &#8211;print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
+one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.:</p>
+<div class="highlight-python"><pre>% python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
+    --compare-source-bestrefs --print-affected
+j8bt05njq_raw.fits
+j8bt06o6q_raw.fits
+j8bt09jcq_raw.fits</pre>
+</div>
+</div>
+<div class="section" id="update-modes">
+<h3>Update Modes<a class="headerlink" href="#update-modes" title="Permalink to this headline">¶</a></h3>
+<p>crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:</p>
+<div class="highlight-python"><pre>% python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
+    --compare-source-bestrefs --update-bestrefs</pre>
+</div>
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<p>crds.bestrefs has &#8211;verbose and &#8211;verbosity=N parameters which can increase the amount of informational
+and debug output.</p>
+</div>
+</div>
+<div class="section" id="pipeline-bestrefs">
+<h2>pipeline_bestrefs<a class="headerlink" href="#pipeline-bestrefs" title="Permalink to this headline">¶</a></h2>
+<p>The pipeline_bestrefs script is a shim around crds.bestrefs which simplifies the command line interface,
+tuning it to the more limited case of updating FITS dataset headers with best references:</p>
+<div class="highlight-python"><pre>usage: pipeline_bestref [-d] [-v] [-h] [--print-affected] &lt;crds_context&gt; &lt;dataset_file(s)&gt;...
+
+-d                     dry run,  do not update file headers
+-v                     verbose,  output additional diagnostic messages
+-h                     help,  print this help
+--print-affected       print files with updated bestrefs
+
+Updates dataset FITS files with best references recommended by &lt;crds_context&gt;.
+
+&lt;crds_context&gt; is a CRDS context file, explicitly named e.g. hst_0004.pmap
+&lt;crds_context&gt; can be specified abstractly,  e.g.  hst-edit or hst-operational
+&lt;crds_context&gt; can be specified by date,  e.g.  hst-2013-01-29T12:00:00
+
+&lt;dataset_file(s)&gt; are raw dataset files for which best references are
+computed and updated.</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="top_level_use.html" title="Library Use"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Package Overview"
+             >previous</a> |</li>
+        <li><a href="index.html">crds 1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, STScI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
