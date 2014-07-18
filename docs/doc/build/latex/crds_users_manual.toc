@@ -1,0 +1,146 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Package Overview}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Installation}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Installing with PIP}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Installing from Source}{3}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Subversion Checkout}{3}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Run the Install Script}{3}{subsection.2.2.2}
+\contentsline {section}{\numberline {2.3}Test the installation}{3}{section.2.3}
+\contentsline {section}{\numberline {2.4}Dependencies}{4}{section.2.4}
+\contentsline {chapter}{\numberline {3}Setting up your Environment}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}Basic Environment}{5}{section.3.1}
+\contentsline {section}{\numberline {3.2}Setup for On Site Operartional Use (HST or JWST)}{5}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}File Cache Location (CRDS\_PATH)}{5}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Server Selection (CRDS\_SERVER\_URL)}{6}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Onsite CRDS Testing}{6}{subsection.3.2.3}
+\contentsline {section}{\numberline {3.3}Setup for Offsite Use}{7}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Additional HST Settings}{7}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}JWST Context}{7}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Advanced Environment}{8}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Multi-Project Caches}{8}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Single Project Caches}{9}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Miscellaneous Variables}{9}{subsection.3.4.3}
+\contentsline {chapter}{\numberline {4}Command Line Tools}{11}{chapter.4}
+\contentsline {section}{\numberline {4.1}Specifying Files}{11}{section.4.1}
+\contentsline {section}{\numberline {4.2}crds.certify}{11}{section.4.2}
+\contentsline {section}{\numberline {4.3}crds.diff}{12}{section.4.3}
+\contentsline {section}{\numberline {4.4}crds.rowdiff}{13}{section.4.4}
+\contentsline {section}{\numberline {4.5}crds.uses}{14}{section.4.5}
+\contentsline {section}{\numberline {4.6}crds.matches}{15}{section.4.6}
+\contentsline {section}{\numberline {4.7}crds.sync}{16}{section.4.7}
+\contentsline {section}{\numberline {4.8}crds.bestrefs}{18}{section.4.8}
+\contentsline {subsection}{\numberline {4.8.1}New Context}{20}{subsection.4.8.1}
+\contentsline {subsection}{\numberline {4.8.2}Lookup Parameter Sources}{20}{subsection.4.8.2}
+\contentsline {subsection}{\numberline {4.8.3}Comparison Modes}{21}{subsection.4.8.3}
+\contentsline {subsubsection}{Context-to-Context}{21}{subsubsection*.3}
+\contentsline {subsubsection}{Prior Source Recommendations}{21}{subsubsection*.4}
+\contentsline {subsection}{\numberline {4.8.4}Output Modes}{21}{subsection.4.8.4}
+\contentsline {subsection}{\numberline {4.8.5}Update Modes}{21}{subsection.4.8.5}
+\contentsline {subsection}{\numberline {4.8.6}Verbosity}{21}{subsection.4.8.6}
+\contentsline {section}{\numberline {4.9}pipeline\_bestrefs}{22}{section.4.9}
+\contentsline {chapter}{\numberline {5}Library Use}{23}{chapter.5}
+\contentsline {section}{\numberline {5.1}crds.getreferences()}{23}{section.5.1}
+\contentsline {section}{\numberline {5.2}crds.get\_default\_context()}{24}{section.5.2}
+\contentsline {chapter}{\numberline {6}Core Library Functions}{25}{chapter.6}
+\contentsline {section}{\numberline {6.1}Overview of Features}{25}{section.6.1}
+\contentsline {section}{\numberline {6.2}Important Modules}{25}{section.6.2}
+\contentsline {section}{\numberline {6.3}Basic Operations on Mappings}{26}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}Loading Rmaps}{26}{subsection.6.3.1}
+\contentsline {subsection}{\numberline {6.3.2}Seeing Referenced Names}{26}{subsection.6.3.2}
+\contentsline {subsection}{\numberline {6.3.3}Computing Best References}{27}{subsection.6.3.3}
+\contentsline {section}{\numberline {6.4}Mapping Checksums}{28}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1}Ignoring Checksums!}{28}{subsection.6.4.1}
+\contentsline {subsection}{\numberline {6.4.2}Adding Checksums}{29}{subsection.6.4.2}
+\contentsline {chapter}{\numberline {7}About Mappings}{31}{chapter.7}
+\contentsline {section}{\numberline {7.1}Naming}{31}{section.7.1}
+\contentsline {section}{\numberline {7.2}Basic Structure}{32}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}header}{32}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}selector}{32}{subsection.7.2.2}
+\contentsline {section}{\numberline {7.3}Pipeline Mappings (.pmap)}{32}{section.7.3}
+\contentsline {section}{\numberline {7.4}Instrument Mappings (.imap)}{32}{section.7.4}
+\contentsline {section}{\numberline {7.5}Reference Mappings (.rmap)}{33}{section.7.5}
+\contentsline {section}{\numberline {7.6}Active Header Fields}{34}{section.7.6}
+\contentsline {subsection}{\numberline {7.6.1}Required Parameters}{34}{subsection.7.6.1}
+\contentsline {subsubsection}{parkey}{34}{subsubsection*.5}
+\contentsline {subsubsection}{extra\_keys}{35}{subsubsection*.6}
+\contentsline {subsubsection}{reffile\_switch}{35}{subsubsection*.7}
+\contentsline {subsection}{\numberline {7.6.2}Logical Header Expressions}{35}{subsection.7.6.2}
+\contentsline {subsection}{\numberline {7.6.3}reffile\_required}{35}{subsection.7.6.3}
+\contentsline {subsection}{\numberline {7.6.4}rmap\_relevance}{36}{subsection.7.6.4}
+\contentsline {subsection}{\numberline {7.6.5}parkey\_relevance}{36}{subsection.7.6.5}
+\contentsline {subsection}{\numberline {7.6.6}hooks}{36}{subsection.7.6.6}
+\contentsline {subsubsection}{precondition\_header}{36}{subsubsection*.8}
+\contentsline {subsubsection}{fallback\_header}{36}{subsubsection*.9}
+\contentsline {section}{\numberline {7.7}Selectors}{37}{section.7.7}
+\contentsline {subsection}{\numberline {7.7.1}Match}{37}{subsection.7.7.1}
+\contentsline {subsubsection}{Parameter Tuples and Simple Matches}{37}{subsubsection*.10}
+\contentsline {subsubsection}{Single Parameter Values}{37}{subsubsection*.11}
+\contentsline {subsubsection}{Or \textbar {}}{37}{subsubsection*.12}
+\contentsline {subsubsection}{Wild Cards *}{37}{subsubsection*.13}
+\contentsline {subsubsection}{Regular Expressions}{38}{subsubsection*.14}
+\contentsline {subsubsection}{Literal Expressions}{38}{subsubsection*.15}
+\contentsline {subsubsection}{Relational Expressions}{38}{subsubsection*.16}
+\contentsline {subsubsection}{Between}{38}{subsubsection*.17}
+\contentsline {subsubsection}{N/A}{39}{subsubsection*.18}
+\contentsline {subsubsection}{Substitution Parameters}{39}{subsubsection*.19}
+\contentsline {subsubsection}{Match Weighting}{39}{subsubsection*.20}
+\contentsline {subsection}{\numberline {7.7.2}UseAfter}{40}{subsection.7.7.2}
+\contentsline {subsection}{\numberline {7.7.3}SelectVersion}{40}{subsection.7.7.3}
+\contentsline {subsection}{\numberline {7.7.4}ClosestTime}{40}{subsection.7.7.4}
+\contentsline {subsection}{\numberline {7.7.5}GeometricallyNearest}{40}{subsection.7.7.5}
+\contentsline {subsection}{\numberline {7.7.6}Bracket}{41}{subsection.7.7.6}
+\contentsline {chapter}{\numberline {8}Using the CRDS Web Site}{43}{chapter.8}
+\contentsline {section}{\numberline {8.1}Operational References}{43}{section.8.1}
+\contentsline {section}{\numberline {8.2}Open Services}{43}{section.8.2}
+\contentsline {subsection}{\numberline {8.2.1}Context History}{44}{subsection.8.2.1}
+\contentsline {subsubsection}{Differencing contexts}{44}{subsubsection*.21}
+\contentsline {subsection}{\numberline {8.2.2}Dataset Best References}{44}{subsection.8.2.2}
+\contentsline {subsubsection}{Context}{46}{subsubsection*.22}
+\contentsline {subsubsection}{Dataset}{46}{subsubsection*.23}
+\contentsline {paragraph}{Upload FITS header}{46}{paragraph*.24}
+\contentsline {paragraph}{Upload Dataset}{46}{paragraph*.25}
+\contentsline {paragraph}{Archived Dataset}{46}{paragraph*.26}
+\contentsline {subsubsection}{Dataset Best References Results}{46}{subsubsection*.27}
+\contentsline {subsection}{\numberline {8.2.3}Explore Best References}{46}{subsection.8.2.3}
+\contentsline {subsection}{\numberline {8.2.4}Difference Files}{47}{subsection.8.2.4}
+\contentsline {subsubsection}{Mapping Differences}{47}{subsubsection*.28}
+\contentsline {subsubsection}{Reference Differences}{47}{subsubsection*.29}
+\contentsline {subsection}{\numberline {8.2.5}Browse Database}{49}{subsection.8.2.5}
+\contentsline {subsection}{\numberline {8.2.6}Recent Activity}{50}{subsection.8.2.6}
+\contentsline {section}{\numberline {8.3}Private Functions}{50}{section.8.3}
+\contentsline {subsection}{\numberline {8.3.1}Login and Instrument Locking}{50}{subsection.8.3.1}
+\contentsline {subsection}{\numberline {8.3.2}Certify Files}{51}{subsection.8.3.2}
+\contentsline {subsection}{\numberline {8.3.3}Mark Files Bad}{52}{subsection.8.3.3}
+\contentsline {subsection}{\numberline {8.3.4}Set Context}{52}{subsection.8.3.4}
+\contentsline {subsection}{\numberline {8.3.5}Batch Submit References}{53}{subsection.8.3.5}
+\contentsline {subsubsection}{Upload Files}{53}{subsubsection*.30}
+\contentsline {paragraph}{Web Approach}{53}{paragraph*.31}
+\contentsline {paragraph}{Shell Approach}{54}{paragraph*.32}
+\contentsline {subsubsection}{Derive From Context}{54}{subsubsection*.33}
+\contentsline {paragraph}{Edit Context}{54}{paragraph*.34}
+\contentsline {paragraph}{Operational Context}{55}{paragraph*.35}
+\contentsline {paragraph}{Recent}{55}{paragraph*.36}
+\contentsline {paragraph}{User Specified}{55}{paragraph*.37}
+\contentsline {subsubsection}{Auto Rename}{55}{subsubsection*.38}
+\contentsline {subsubsection}{Compare Old Reference}{55}{subsubsection*.39}
+\contentsline {subsubsection}{Results}{55}{subsubsection*.40}
+\contentsline {subsubsection}{Collisions}{56}{subsubsection*.41}
+\contentsline {subsubsection}{Confirm or Discard}{56}{subsubsection*.42}
+\contentsline {subsection}{\numberline {8.3.6}Submit References}{57}{subsection.8.3.6}
+\contentsline {subsection}{\numberline {8.3.7}Submit Mappings}{57}{subsection.8.3.7}
+\contentsline {chapter}{\numberline {9}Web Services}{59}{chapter.9}
+\contentsline {section}{\numberline {9.1}Supported Methods}{59}{section.9.1}
+\contentsline {subsection}{\numberline {9.1.1}get\_default\_context(observatory)}{59}{subsection.9.1.1}
+\contentsline {subsection}{\numberline {9.1.2}get\_best\_references(context, header, reftypes)}{59}{subsection.9.1.2}
+\contentsline {section}{\numberline {9.2}JSONRPC URL}{60}{section.9.2}
+\contentsline {subsection}{\numberline {9.2.1}JWST}{60}{subsection.9.2.1}
+\contentsline {subsection}{\numberline {9.2.2}HST}{60}{subsection.9.2.2}
+\contentsline {section}{\numberline {9.3}JSONRPC Request}{60}{section.9.3}
+\contentsline {section}{\numberline {9.4}JSONRPC Response}{60}{section.9.4}
+\contentsline {section}{\numberline {9.5}Error Handling}{61}{section.9.5}
+\contentsline {section}{\numberline {9.6}JSONRPC Demo Page}{61}{section.9.6}
+\contentsline {chapter}{\numberline {10}CRDS Database Access}{63}{chapter.10}
+\contentsline {section}{\numberline {10.1}JSON RPC Access}{63}{section.10.1}
+\contentsline {subsection}{\numberline {10.1.1}Metadata for a single file}{63}{subsection.10.1.1}
+\contentsline {subsection}{\numberline {10.1.2}Metadata for several / all files}{63}{subsection.10.1.2}
+\contentsline {section}{\numberline {10.2}Download CRDS catalog for SQLite queries}{64}{section.10.2}

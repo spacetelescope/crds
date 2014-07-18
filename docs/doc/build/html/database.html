@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CRDS Database Access &mdash; crds 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/stsci_sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="crds 1.1 documentation" href="index.html" />
+    <link rel="prev" title="Web Services" href="web_services.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="web_services.html" title="Web Services"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">crds 1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/stsci_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CRDS Database Access</a><ul>
+<li><a class="reference internal" href="#json-rpc-access">JSON RPC Access</a><ul>
+<li><a class="reference internal" href="#metadata-for-a-single-file">Metadata for a single file</a></li>
+<li><a class="reference internal" href="#metadata-for-several-all-files">Metadata for several / all files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#download-crds-catalog-for-sqlite-queries">Download CRDS catalog for SQLite queries</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="web_services.html"
+                        title="previous chapter">Web Services</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/database.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="crds-database-access">
+<h1>CRDS Database Access<a class="headerlink" href="#crds-database-access" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="json-rpc-access">
+<h2>JSON RPC Access<a class="headerlink" href="#json-rpc-access" title="Permalink to this headline">¶</a></h2>
+<p>CRDS supports JSON RPC access to the CRDS catalog via the crds.client API.</p>
+<div class="section" id="metadata-for-a-single-file">
+<h3>Metadata for a single file<a class="headerlink" href="#metadata-for-a-single-file" title="Permalink to this headline">¶</a></h3>
+<p>The JSON RPC call get_file_info() will return the avalailble info for a single reference
+or mapping file from the specified observatory:</p>
+<div class="highlight-python"><pre>def get_file_info(observatory, filename):
+     """Return a dictionary of CRDS information about `filename`."""
+
+ &gt;&gt;&gt; from crds.client import api
+
+ &gt;&gt;&gt; api.get_file_info("hst", file="lcb12060j_drk.fits")
+ {'activation_date': '2001-12-14 20:47:00',
+  'blacklisted': 'false',
+  'change_level': 'severe',
+  'delivery_date': '2013-07-10 11:26:23',
+  'derived_from': 'none',
+  'filekind': 'darkfile',
+  'instrument': 'acs',
+  'name': 'lcb12060j_drk.fits',
+  'observatory': 'hst',
+  'pedigree': 'ground',
+  'rejected': 'false',
+  'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
+  'size': '10549440',
+  'state': 'operational',
+  'type': 'reference',
+  'useafter_date': '1992-01-01 00:00:00'}</pre>
+</div>
+</div>
+<div class="section" id="metadata-for-several-all-files">
+<h3>Metadata for several / all files<a class="headerlink" href="#metadata-for-several-all-files" title="Permalink to this headline">¶</a></h3>
+<p>The JSON RPC call get_file_info_map() will return the info for multiple (or all) files
+and the specified (or all) fields as a dictionary of dictionaries mapping filename onto info:</p>
+<div class="highlight-python"><pre>def get_file_info_map(observatory, files=None, fields=None):
+    """Return the info { filename : { info } } on `files` of `observatory`.
+    `fields` can be used to limit info returned to specified keys.
+    """
+
+% setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+
+&gt;&gt;&gt; from crds.client import api
+
+&gt;&gt;&gt; api.get_file_info_map("hst", ["lcb12060j_drk.fits", "n3o1022fj_drk.fits"], fields=["state","size","sha1sum"])
+{'lcb12060j_drk.fits': {'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
+  'size': '10549440',
+  'state': 'operational'},
+ 'n3o1022fj_drk.fits': {'sha1sum': 'cecf11300015df8f39913b638138d8c67de77a02',
+  'size': '10526400',
+  'state': 'operational'}}</pre>
+</div>
+<p>If files is specified as <em>None</em>,  info on all files is returned.</p>
+<p>If fields are specified as <em>None</em>,  info on all available fields is returned.</p>
+</div>
+</div>
+<div class="section" id="download-crds-catalog-for-sqlite-queries">
+<h2>Download CRDS catalog for SQLite queries<a class="headerlink" href="#download-crds-catalog-for-sqlite-queries" title="Permalink to this headline">¶</a></h2>
+<p>The CRDS catalog stores metadata about references not captured in the .rmap files.   It also contains
+the history of CRDS context use,  the effective dates at which particular contexts where operational in
+the pipeline.</p>
+<p>You can download a SQLite-3 snapshot of the CRDS catalog like this:</p>
+<div class="highlight-python"><pre>% setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+% setenv CRDS_PATH /home/jmiller/crds_cache
+% python -m crds.sync --fetch-sqlite-db
+CRDS  : INFO     SQLite database file downloaded to: /home/jmiller/crds_cache/config/hst/crds_db.sqlite3</pre>
+</div>
+<p>will snapshot the current CRDS catalog on the CRDS server and download it to your local CRDS cache as a
+SQLite3 database file.  The SQLite database can typically be accessed like this:</p>
+<div class="highlight-python"><pre>% sqlite3 /home/jmiller/crds_cache_dev/config/hst/crds_db.sqlite3
+
+sqlite&gt; .tables
+crds_hst_catalog       crds_hst_context_history
+
+sqlite&gt; .mode tabs
+sqlite&gt; .headers on
+sqlite&gt; select * from crds_hst_context_history where state="operational" limit 1;
+id    name    start_date        context     state          description
+2        2013-07-02 15:44:53    hst.pmap    operational    set by system
+\.\.\.</pre>
+</div>
+<p>The CRDS catalog contains the following meta-data:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="10%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Catalog Fields</th>
+<th class="head">type</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>name</td>
+<td>str</td>
+<td>CRDS filename</td>
+</tr>
+<tr class="row-odd"><td>uploaded_as</td>
+<td>str</td>
+<td>Name of file at time of upload / generation</td>
+</tr>
+<tr class="row-even"><td>state</td>
+<td>str</td>
+<td>uploaded, delivered, submitted, archiving, archived, archiving-failed, bad</td>
+</tr>
+<tr class="row-odd"><td>blacklisted</td>
+<td>bool/int</td>
+<td>True/1 == this mapping,  and all mappings referring to it, are invalid.</td>
+</tr>
+<tr class="row-even"><td>rejected</td>
+<td>bool/int</td>
+<td>True/1 == this file is considered scientifically invalid</td>
+</tr>
+<tr class="row-odd"><td>replaced_by_filename</td>
+<td>str</td>
+<td>Succeeding reference file in chain of contexts.  Weakly defined.</td>
+</tr>
+<tr class="row-even"><td>instrument</td>
+<td>str</td>
+<td>instrument name file applies to</td>
+</tr>
+<tr class="row-odd"><td>filekind</td>
+<td>str</td>
+<td>reference type. For HST,  also keyword name for dataset headers</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>str</td>
+<td>reference or mapping</td>
+</tr>
+<tr class="row-odd"><td>description</td>
+<td>str</td>
+<td>description given at time of delivery</td>
+</tr>
+<tr class="row-even"><td>comment</td>
+<td>str</td>
+<td>COMMENT from reference file</td>
+</tr>
+<tr class="row-odd"><td>aperture</td>
+<td>str</td>
+<td>APERTURE from reference file</td>
+</tr>
+<tr class="row-even"><td>derived_from</td>
+<td>str</td>
+<td>Name of mapping this one was derived from</td>
+</tr>
+<tr class="row-odd"><td>sha1sum</td>
+<td>str</td>
+<td>sha1sum of file to verify file integrity</td>
+</tr>
+<tr class="row-even"><td>size</td>
+<td>int</td>
+<td>length of file in bytes</td>
+</tr>
+<tr class="row-odd"><td>creator_name</td>
+<td>str</td>
+<td>author of reference or mapping file</td>
+</tr>
+<tr class="row-even"><td>deliverer_user</td>
+<td>str</td>
+<td>person who submitted the reference or mapping to CRDS</td>
+</tr>
+<tr class="row-odd"><td>deliverer_email</td>
+<td>str</td>
+<td>e-mail of person who submitted reference</td>
+</tr>
+</tbody>
+</table>
+<p><em>NOTE:</em> Reference file assignment criteria are encoded in the CRDS rules / mappings and displayed as tables on
+the web site context display.   See also crds.matches for information on displaying matching criteria based on rmaps
+at the command line.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="web_services.html" title="Web Services"
+             >previous</a> |</li>
+        <li><a href="index.html">crds 1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, STScI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
