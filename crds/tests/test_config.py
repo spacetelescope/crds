@@ -2,7 +2,7 @@ import os, tempfile, shutil
 
 # must set env before crds import,  even package __init___
 os.environ["CRDS_PATH"] = os.path.join(tempfile.mkdtemp(), "test_cache")
-os.environ["CRDS_SERVER_URL"] = "https://hst-crds.stsci.edu"
+os.environ["CRDS_SERVER_URL"] = "https://hst-crds-dev.stsci.edu"
 
 from crds import log
 
