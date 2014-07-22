@@ -44,8 +44,14 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
     True        IFF reprocessing should be done as a consequence of the table change.
     """
 
-    # Log that deep examination is occuring.
-    log.verbose('Deep examination of references instantiated.', verbosity=25)
+    log.verbose('is_reprocessing_required: Called with:\n',
+                dataset, '\n',
+                dataset_parameters, '\n',
+                old_context, '\n',
+                new_context, '\n',
+                update,
+                verbosity=100)
+                
 
     # What do we have as parameters
     #log.verbose('Dataset is ', dataset, verbosity=25)
@@ -79,6 +85,9 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
     old_reference = old_context.locate_file(update.old_reference.lower())
     new_reference = new_context.locate_file(update.new_reference.lower())
     
+    # Log that deep examination is occuring.
+    log.verbose('Deep Reference examination between {} and {} initiated.'.format(old_reference, new_reference), 
+                verbosity=25)
 
     # See if deep checking into the reference is possible.
     try:
@@ -91,10 +100,9 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
         #log.verbose_warning('Forcing use of LBYX01010, regardless...', verbosity=25)
         #dataset_id = 'LBYX01010'           #***DEBUG: force headers regardless of actua data
         if dataset_id in deep_look.stub_input:
-            log.verbose_warning('Substituting header for dataset "{}"'.format(dataset), verbosity=25)
+            log.verbose_warning('Substituting header for dataset "{}"'.format(dataset))
             dataset_parameters = deep_look.stub_input[dataset_id]['headers']
             log.verbose_warning('headers = ', dataset_parameters, verbosity=25)
-
 
         log.verbose(deep_look.preamble, 'Dataset headers = {}'.format(dataset_parameters), verbosity=75)
         log.verbose(deep_look.preamble, 'Comparing references {} and {}.'.format(old_reference, new_reference), verbosity=75)
@@ -244,6 +252,12 @@ class DeepLook(object):
 
     def __init__(self):
 
+        # **DEBUG**
+        # Define dummy data.
+        # Remove when proper headers are retrievable
+        self.stub_input = { # dataset => headers
+        }
+
         # Preamble for log messages
         self.preamble = 'Rule {}:'.format(self.__class__.__name__)
 
@@ -260,6 +274,7 @@ class DeepLook(object):
         # proven otherwise.
         self.is_different = True
         self.message = 'Comparision not done, presuming references are different.'
+
 
     @classmethod
     def from_filekind(cls, instrument, filekind):
@@ -321,6 +336,8 @@ class DeepLook(object):
         for field in self.mode_fields:
             constraints[field] = (constraint_values[field],) + self.mode_fields[field]
 
+        log.verbose(self.preamble, 'Constraints are:\n', constraints, verbosity=75)
+
         # Reduce the tables to just those rows that match the mode
         # specifications.
         mode_rows_old = [repr(row) for row in mode_select(data_old, constraints)]
@@ -330,6 +347,9 @@ class DeepLook(object):
         mode_rows_old.sort()
         mode_rows_new.sort()
 
+        log.verbose(self.preamble, 'Old reference matching rows:\n', mode_rows_old, verbosity=75)
+        log.verbose(self.preamble, 'New reference matching rows:\n', mode_rows_new, verbosity=75)
+
         # Check on equality.
         # That's all folks.
         self.is_different = not mode_equality(mode_rows_old, mode_rows_new)
@@ -338,6 +358,20 @@ class DeepLook(object):
             self.message = 'Selection rules have excuted and the selected rows are different.'
         else:
             self.message = 'Selection rules have executed and the selected rows are the same.'
+
+
+################################
+#
+# Rule for tables that cannot be examined
+#
+################################
+
+
+class DeepLook_Default(DeepLook):
+    def are_different(self, headers, old_reference, new_reference):
+
+        self.is_different = True
+        self.message = 'Reference type cannot be examined, by definition.'
 
 
 #############################
@@ -481,11 +515,6 @@ class DeepLook_STIS(DeepLook):
     def __init__(self):
         super(DeepLook_STIS, self).__init__()
 
-        # **DEBUG**
-        # Define dummy data.
-        # Remove when proper headers are retrievable
-        self.stub_input = { # dataset => headers
-        }
 
 class DeepLook_STISopt_elem(DeepLook_STIS):
     def __init__(self):
@@ -562,14 +591,89 @@ class DeepLook_STISWCPTAB(DeepLook_STIS):
         }
 
 
+#############################
+#
+# Rules for ACS
+#
+#############################
 
+
+class DeepLook_ACS(DeepLook):
+    """Generic class for all STIS rules
+    """
+
+    def __init__(self):
+        super(DeepLook_ACS, self).__init__()
+
+class DeepLook_ACSCCDpars(DeepLook_ACS):
+    def __init__(self):
+        super(DeepLook_ACSCCDpars, self).__init__()
+
+        self.mode_fields = {
+            'ccdamp':   self.cmp_equal_parameters,
+            'ccdchip':  self.cmp_equal_parameters,
+            'ccdgain':  self.cmp_equal_parameters,
+        }
+
+
+class DeepLook_ACSDetector(DeepLook_ACS):
+    def __init__(self):
+        super(DeepLook_ACSCCDTAB, self).__init__()
+
+        self.mode_fields = {
+            'detector': self.cmp_equal_parameters,
+        }
+
+
+class DeepLook_ACSCCDTAB(DeepLook_ACSCCDpars):
+    def __init__(self):
+        super(DeepLook_ACSCCDTAB, self).__init__()
+
+        self.mode_fields.update({
+            'binaxis1': self.cmp_equal_parameters,
+            'binaxis2': self.cmp_equal_parameters,
+        })
+
+#############################
+#
+# Rules for WFC3
+#
+#############################
+
+
+class DeepLook_WFC3(DeepLook):
+    """Generic class for all STIS rules
+    """
+
+    def __init__(self):
+        super(DeepLook_WFC3, self).__init__()
+
+
+class DeepLook_WFC3BPIXTAB(DeepLook_WFC3):
+    def __init__(self):
+        super(DeepLook_WFC3BPIXTAB, self).__init__()
+
+        self.mode_fields = {
+            'ccdchip':  self.cmp_equal_parameters,
+        }
+
+
+###############
+#
+# Rule lookup  table
+#
+################
 
 DeepLook.rules = {
+    'cos_badttab':   DeepLook_Default,
     'cos_bpixtab':   DeepLook_COSSegment,
+    'cos_brftab':    DeepLook_Default,
     'cos_brsttab':   DeepLook_COSSegment,
     'cos_deadtab':   DeepLook_COSSegment,
     'cos_disptab':   DeepLook_COSDISPTAB,
     'cos_fluxtab':   DeepLook_COSFullmode,
+    'cos_gsagtab':   DeepLook_Default,
+    'cos_hvtab':     DeepLook_Default,
     'cos_lamptab':   DeepLook_COSLAMPTAB,
     'cos_phatab':    DeepLook_COSOpt_elem,
     'cos_spwcstab':  DeepLook_COSFullmode,
@@ -577,24 +681,53 @@ DeepLook.rules = {
     'cos_walktab':   DeepLook_COSSegment,
     'cos_wcptab':    DeepLook_COSOpt_elem,
     'cos_xtractab':  DeepLook_COSFullmode,
+
     'stis_apdestab': DeepLook_STISaperture,
     'stis_apertab':  DeepLook_STISaperture,
     'stis_bpixtab':  DeepLook_STISopt_elem,
     'stis_ccdtab':   DeepLook_STISCCDTAB,
     'stis_cdstab':   DeepLook_STISopt_elem,
+    'stis_crrejtab': DeepLook_Default,
     'stis_disptab':  DeepLook_STIScenwave,
     'stis_echsctab': DeepLook_STISopt_elem,
     'stis_exstab':   DeepLook_STISopt_elem,
+    'stis_gactab':   DeepLook_Default,
     'stis_halotab':  DeepLook_STISopt_elem,
+    'stis_idctab':   DeepLook_Default,
+    'stis_inangtab': DeepLook_Default,
     'stis_lamptab':  DeepLook_STISLAMPTAB,
     'stis_mlintab':  DeepLook_STISMLINTAB,
+    'stis_mofftab':  DeepLook_Default,
+    'stis_pctab':    DeepLook_Default,
     'stis_phottab':  DeepLook_STIScenwave,
     'stis_riptab':   DeepLook_STISopt_elem,
     'stis_sdctab':   DeepLook_STISfullmode,
     'stis_sptrctab': DeepLook_STIScenwave,
     'stis_srwtab':   DeepLook_STISopt_elem,
+    'stis_tdctab':   DeepLook_Default,
     'stis_tdstab':   DeepLook_STISopt_elem,
     'stis_teltab':   DeepLook_STISopt_elem,
     'stis_wcptab':   DeepLook_STISWCPTAB,
     'stis_xtractab': DeepLook_STISfullmode,
+
+    'acs_atodtab':   DeepLook_ACSCCDpars,
+    'acs_bpixtab':   DeepLook_ACSCCDpars,
+    'acs_ccdtab':    DeepLook_ACSCCDTAB,
+    'acs_crrejtab':  DeepLook_Default,
+    'acs_idctab':    DeepLook_Default,
+    'acs_imphttab':  DeepLook_Default,
+    'acs_mdriztab':  DeepLook_Default,
+    'acs_mlintab':   DeepLook_ACSDetector,
+    'acs_oscntab':   DeepLook_Default,
+    'acs_pctetab':   DeepLook_Default,
+    'acs_spottab':   DeepLook_Default,
+
+    'wfc3_atodtab':  DeepLook_ACSCCDpars,
+    'wfc3_bpixtab':  DeepLook_WFC3BPIXTAB,
+    'wfc3_ccdtab':   DeepLook_ACSCCDTAB,
+    'wfc3_crrejtab': DeepLook_Default,
+    'wfc3_idctab':   DeepLook_Default,
+    'wfc3_imphttab': DeepLook_Default,
+    'wfc3_mdriztab': DeepLook_Default,
+    'wfc3_oscntab':  DeepLook_Default,
 }
