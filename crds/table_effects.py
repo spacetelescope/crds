@@ -61,29 +61,26 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
     #log.verbose('old_reference is ', old_reference, verbosity=25)
     #log.verbose('new_reference is ', new_reference, verbosity=25)
 
-    # Although the basic premise of the module is a table-based optimization,  if it could be
-    # done for other references with benefit,  we'd want to rename the module and do it.   
-    # So conceptually and practically,  these are references,  not necessarily tables.   
-    # If non-tables are not  optimized,  that should be detected here and non-table-references 
-    # reduced to True:  reprocess.
-    
     # no old_context means "single context" mode,  always reprocess.
     if old_context == None:   
         return True
     
-    # reprocess on transition from meaningless assignment (no comparison possible) to defined reference
-    meaningless = ("n/a", "undefined", "not found",)
-    if (update.old_reference.lower().startswith(meaningless) and 
-        not update.new_reference.lower().startswith(meaningless)):
+    # NOTE: non-tables are treated in DeepLook as filekinds which aren't (or maybe someday are) handled,  
+    # hence reprocessed for now.
+    
+    # Reprocess for non-file special values.  Other code will decide what to do with the updates,
+    # the point here is that table comparison isn't possible so filtering shouldn't be done.
+    old_ref = update.old_reference.lower()
+    new_ref = update.new_reference.lower()
+    incomparable = ('n/a', 'undefined', 'not found')
+    if old_ref.startswith(incomparable) or new_ref.startswith(incomparable):
         return True
 
     # mostly debug wrappers here,  allows simple string parameters to work and resolves cache paths.
-    #old_context = rmap.asmapping(old_context, cached=True)   
-    #new_context = rmap.asmapping(new_context, cached=True)   
     old_context = rmap.asmapping(old_context, cached=True)   
-    new_context = rmap.asmapping(new_context, cached=True)   
-    old_reference = old_context.locate_file(update.old_reference.lower())
-    new_reference = new_context.locate_file(update.new_reference.lower())
+    new_context = rmap.asmapping(new_context, cached=True)
+    old_reference = old_context.locate_file(old_ref)
+    new_reference = new_context.locate_file(new_ref)
     
     # Log that deep examination is occuring.
     log.verbose('Deep Reference examination between {} and {} initiated.'.format(old_reference, new_reference), 
