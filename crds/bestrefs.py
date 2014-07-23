@@ -562,6 +562,8 @@ and debug output.
         self.add_argument("-o", "--old-context", dest="old_context",
             help="Compare bestrefs recommendations from two contexts.", 
             metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
+        self.add_argument("-", "--fetch-old-headers", dest="fetch_old_headers", action="store_true",
+            help="Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.")
         
         self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
             help="Compare new bestrefs recommendations to recommendations from data source,  files or database.")
@@ -767,18 +769,20 @@ and debug output.
             self.args.print_affected or \
             self.args.print_affected_details
             # self.args.update_bestrefs or \
-        old_headers = old_fname = None
         if compare_prior:
             if self.args.old_context:
-                # XXXX in old contexts, matching parameters and expected result types might have been different.
-                # XXXX for now,  just ensure they're the same,  lesser likelihood of error.
-                # old_headers = self.init_headers(self.args.old_context, datasets_since)
-                log.verbose_warning("Assuming parameter names and required types are the same across contexts.")
-                old_headers = self.new_headers
                 old_fname = self.args.old_context
+                if self.args.fetch_old_headers:
+                    log.verbose("Fetching old headers independently allowing them to differ from new headers.")
+                    old_headers = self.init_headers(self.old_context, datasets_since)    
+                else:
+                    log.verbose_warning("Assuming parameter names and required types are the same across contexts.")
+                    old_headers = self.new_headers
             else:
                 old_fname = "recorded bestrefs"
                 old_headers = self.new_headers
+        else:
+            old_headers = old_fname = None
         return compare_prior, old_headers, old_fname
     
     def main(self):

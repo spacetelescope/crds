@@ -2,7 +2,7 @@
 
 cd `dirname $0`
 
-set dirs="."
+set dirs="crds"
 
 if (-e ../CRDS_server) then
 	set dirs="$dirs ../CRDS_server"
