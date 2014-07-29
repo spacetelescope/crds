@@ -101,3 +101,8 @@ class TestValidatorClasses(CRDSTestCase):
                                      observatory="jwst",context="jwst.pmap")
         assert_raises(IOError, cert.certify)
         
+    def test_FitsCertifier_bad_value(self):
+        cert = certify.FitsCertifier(self.data("s7g1700gm_dead_broken.fits"), trap_exceptions=None,
+                                     observatory="hst",context="hst.pmap")
+        assert_raises(ValueError, cert.certify)
+
