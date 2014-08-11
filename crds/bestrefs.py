@@ -9,6 +9,7 @@ import sys
 import os
 from collections import namedtuple, OrderedDict
 import cPickle
+import json
 
 from astropy.io import fits as pyfits
 
@@ -115,16 +116,20 @@ class HeaderGenerator(object):
         """In general,  reject request to update best references on the source."""
         raise UnsupportedUpdateMode("This dataset access mode doesn't support updates.")
     
-    def save_pickle(self, pickle, only_ids=None):
-        """Write out headers to `pickle` file."""
+    def save_pickle(self, outpath, only_ids=None):
+        """Write out headers to `outpath` file which can be a Python pickle or .json"""
         if only_ids is None:
             only_hdrs = self.headers
         else:
             only_hdrs = { dataset_id:hdr for (dataset_id, hdr) in self.headers.items() if dataset_id in only_ids }
-        log.info("Writing all headers to", repr(pickle))
-        with open(pickle, "wb+") as pick:
-            cPickle.dump(only_hdrs, pick)
-        log.info("Done writing", repr(pickle))
+        log.info("Writing all headers to", repr(outpath))
+        if outpath.endswith(".json"):
+            saver = json.dump
+        elif outpath.endswith(".pkl"):
+            saver = cPickle.dump
+        with open(outpath, "wb+") as pick:
+            saver(only_hdrs, pick)
+        log.info("Done writing", repr(outpath))
             
     def update_headers(self, headers2, only_ids=None):
         """Incorporate `headers2` updated values into `self.headers`.  Since `headers2` may be incomplete,
@@ -277,26 +282,36 @@ class InstrumentHeaderGenerator(HeaderGenerator):
             self.headers = dumped_headers
 
 class PickleHeaderGenerator(HeaderGenerator):
-    """Generates lookup parameters and historical best references from a list of pickle files
+    """Generates lookup parameters and historical best references from a list of pickle files (or .json files)
     using successive updates to sets of header dictionaries.  Trailing pickles override leading pickles.
     """
     def __init__(self, context, pickles, datasets_since, only_ids=None):
         """"Contact the CRDS server and get headers for the list of `datasets` ids with respect to `context`."""
         super(PickleHeaderGenerator, self).__init__(context, pickles, datasets_since)
         for pickle in pickles:
-            log.info("Loading pickle file", repr(pickle))
-            with open(pickle, "rb") as pick:
-                pick_headers = cPickle.load(pick)
-                if not self.headers:
-                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), 
-                             "completely replacing existing pickles.")
-                    self.headers.update(pick_headers)   # replace all of dataset_id
-                else:  # OPUS bestrefs don't include original matching parameters,  so full replacement doesn't work.
-                    log.info("Loaded", len(pick_headers), "datasets from pickle", repr(pickle), 
-                             "augmenting existing pickles.")
-                    self.update_headers(pick_headers, only_ids=only_ids)
+            log.info("Loading file", repr(pickle))
+            pick_headers = self.load_headers(pickle)
+            if not self.headers:
+                log.info("Loaded", len(pick_headers), "datasets from file", repr(pickle), 
+                         "completely replacing existing headers.")
+                self.headers.update(pick_headers)   # replace all of dataset_id
+            else:  # OPUS bestrefs don't include original matching parameters,  so full replacement doesn't work.
+                log.info("Loaded", len(pick_headers), "datasets from file", repr(pickle), 
+                         "augmenting existing headers.")
+                self.update_headers(pick_headers, only_ids=only_ids)
         self.sources = only_ids or self.headers.keys()
     
+    def load_headers(self, path):
+        """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
+        with open(path, "rb") as pick:
+            if path.endswith(".json"):
+                loader = json.load
+            elif path.endswith(".pkl"):
+                loader = cPickle.load
+            else:
+                raise ValueError("Valid serialization formats are .json and .pkl")
+            headers = loader(pick)
+        return headers
 # ===================================================================
 
 def update_file_bestrefs(pmap, dataset, updates):
@@ -562,7 +577,7 @@ and debug output.
         self.add_argument("-o", "--old-context", dest="old_context",
             help="Compare bestrefs recommendations from two contexts.", 
             metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
-        self.add_argument("-", "--fetch-old-headers", dest="fetch_old_headers", action="store_true",
+        self.add_argument("--fetch-old-headers", dest="fetch_old_headers", action="store_true",
             help="Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.")
         
         self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
@@ -593,10 +608,13 @@ and debug output.
             help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.")
         
         self.add_argument("-p", "--load-pickles", nargs="*", default=None,
-            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.")
+            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.")
         
         self.add_argument("-a", "--save-pickle", default=None,
-            help="Write out the combined dataset headers to the specified pickle file.")
+            help="Write out the combined dataset headers to the specified pickle file.  Can also store .json file.")
+        
+        self.add_argument("--update-pickle", action="store_true",
+            help="Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.")        
         
         self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
             help="If specified, process only the listed dataset ids.")
@@ -642,6 +660,7 @@ and debug output.
         
         self.add_argument("-z", "--optimize-tables", action="store_true", 
             help="If set, apply row-based optimizations to screen out inconsequential table updates.")
+        
         cmdline.UniqueErrorsMixin.add_args(self)
     
     def setup_contexts(self):
@@ -837,6 +856,8 @@ and debug output.
                 updates = self.optimize_tables(dataset, updates)
         else:
             updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
+        if self.args.update_pickle:  # XXXXX mutating input bestrefs to support updated pickles
+            self.new_headers.update_headers( { dataset : new_bestrefs })
         return updates
     
     def get_bestrefs(self, instrument, dataset, ctx, header):
@@ -1051,7 +1072,7 @@ and debug output.
         """Print compound ID, instrument, and affected reference types for every exposure with new best references,
         one line per exposure.
         """
-        for dataset in self.updates:
+        for dataset in sorted(self.updates):
             if self.updates[dataset]:
                 types = sorted([update.filekind for update in self.updates[dataset]])
                 print("{} {} {}".format(dataset.lower(), self.updates[dataset][0].instrument.lower(), " ".join(types)))
