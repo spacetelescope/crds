@@ -855,7 +855,9 @@ class InstrumentContext(ContextMapping):
                     pkmap[parkey] = set()
                 pkmap[parkey] = pkmap[parkey].union(choices)
         for parkey, choices in pkmap.items():
-            pkmap[parkey] = sorted(list(pkmap[parkey]))
+            pkmap[parkey] = list(pkmap[parkey])
+            if "CORR" not in parkey:
+                pkmap[parkey].sort()
         return pkmap
 
     def get_valid_values_map(self, condition=False, remove_special=True):
@@ -1019,6 +1021,7 @@ class ReferenceMapping(Mapping):
             log.verbose("Using hook", repr(hook_name), "for rmap", repr(self.basename), verbosity=55)
         return hook
         
+    # Unusual caching style implements deferred loading of .tpn files,  fairly slow.
     @property
     @utils.cached
     def tpn_valid_values(self):
@@ -1108,7 +1111,15 @@ class ReferenceMapping(Mapping):
 
         Return { parkey : [match values, ...], ... }
         """
-        return self.selector.get_parkey_map()
+        parkey_map = self.selector.get_parkey_map()
+        tpn_values = self.tpn_valid_values
+        for key in self.get_extra_parkeys():
+            if key in parkey_map and "CORR" not in key:
+                continue
+            parkey_map[key] = tpn_values.get(key, [])
+            if key.endswith("CORR"):  #  and parkey_map[key] == []:
+                parkey_map[key] = ["PERFORM", "OMIT", "NONE"]
+        return parkey_map
 
     def get_valid_values_map(self, condition=True):
         """Based on the TPNs,  return a mapping from each of the required
