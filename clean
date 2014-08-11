@@ -2,10 +2,14 @@
 
 cd `dirname $0`
 
-set dirs="crds"
+if ( "$*" == "" ) then
+    set dirs="crds"
+else
+    set dirs="$*"
+endif 
 
 if (-e ../CRDS_server) then
-	set dirs="$dirs ../CRDS_server"
+    set dirs="$dirs ../CRDS_server/sources"
 endif
 
 foreach pat ('*.orig' '*.pyc' 'build')
