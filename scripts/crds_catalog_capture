@@ -1,0 +1,31 @@
+#! /usr/bin/env python
+import sys
+
+from crds import pysh
+
+pysh.usage("<context>  [--no-update] [--strict] [--compare-cdbs] [bestrefs parameters...]", 1, help="""
+
+This script captures catalog parameters and bestrefs to .json files for regression testing.
+
+Unless --no-update is specified,  catalog bestrefs are replaced by CRDS bestrefs from the specified context.
+
+--strict is equivalent to --compare-cdbs --na-differences-matter --undefined-differences-matter.
+""")
+
+if "--no-update" in sys.argv:
+    sys.argv.remove("--no-update")
+    update = ""
+else:
+    update = "--update-pickle --save-pickle INSTRUMENT.json"
+
+if "--strict" in sys.argv:
+    sys.argv.remove("--strict")
+    strict = "--compare-cdbs --na-differences-matter --undefined-differences-matter"
+else:
+    strict = ""
+    
+pysh.sh("crds_instrument_iter 'python -m crds.bestrefs' " + " ".join(sys.argv[1:]) + 
+    " --instrument INSTRUMENT --save-pickle INSTRUMENT.json")
+
+
+

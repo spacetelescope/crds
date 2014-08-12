@@ -620,7 +620,7 @@ and debug output.
             help="If specified, process only the listed dataset ids.")
         
         self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true", 
-            help="Update dataset headers with new best reference recommendations.")
+            help="Update sources with new best reference recommendations.")
                     
         self.add_argument("--print-affected", dest="print_affected", action="store_true",
             help="Print names of products for which the new context would assign new references for some exposure.")
