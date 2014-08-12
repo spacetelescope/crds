@@ -1,0 +1,34 @@
+#! /usr/bin/env python
+#-*-python-*-
+
+import sys
+
+from crds import pysh
+
+pysh.usage("<context> [--update] [--strict] [bestrefs parameters...]", min_args=1, help="""
+
+This script is used to run a bestrefs regression using prior results serialized in .json files.   This is a stricter
+test than a context-to-context comparison because it can detect differences produced by changes to CRDS library code.
+
+--update will replace the historical results in the .json files with results from the current context.
+
+--strict is equivalent to --compare-cdbs --na-differences-matter --undefined-differences-matter.
+""")
+
+context = sys.argv[1]
+
+if "--update" in sys.argv:
+    sys.argv.remove("--update")
+    update = "--update-pickle --save-pickle INSTRUMENT.json"
+else:
+    update = ""
+
+if "--strict" in sys.argv:
+    sys.argv.remove("--strict")
+    strict = "--compare-cdbs --na-differences-matter --undefined-differences-matter"
+else:
+    strict = ""
+
+pysh.sh("crds_instrument_iter 'python -m crds.bestrefs' ${context} --load-pickle INSTRUMENT.json ${update} ${strict} --compare-cdbs " + 
+        " ".join(sys.argv[2:]))
+

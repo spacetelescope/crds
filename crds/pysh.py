@@ -268,7 +268,7 @@ def fail(*args, **keys):
     print >> sys.stderr, " ".join(args)
     sys.exit(keys.pop("status", -1))
 
-def usage(description, min_args, max_args=sys.maxint):
+def usage(description, min_args, max_args=sys.maxint, help=""):
     """Emit a standard program usage message based on the min and max
     command line parameter counts.   If the program takes at least
     one parameter,  min_args should be 1.   If the program takes at most
@@ -276,7 +276,7 @@ def usage(description, min_args, max_args=sys.maxint):
     """
     progname = os.path.split(sys.argv[0])[1]
     if not (min_args <= len(sys.argv)-1 <= max_args):
-        fail("usage: " + progname + " "  + description)
+        fail("usage: " + progname + " "  + description + help)
 
 # =========================================================================
 
@@ -317,8 +317,6 @@ def pysh_execfile(fname, globals=None, locals=None):
 # The execution sequence for when pysh is used as a program shell.
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        sys.argv = sys.argv[1:]
-        pysh_execfile(sys.argv[0], globals(), locals())
-    else:
-        print >> sys.stderr, "usage: pysh <pysh-scriptname>"
+    usage("<pysh-scriptname> [parameters...]", 1)
+    sys.argv = sys.argv[1:]
+    pysh_execfile(sys.argv[0], globals(), locals())
