@@ -57,14 +57,6 @@ TEST CASES
 >>> test_config.setup()
 
 >>> from crds.diff import DiffScript
->>> from crds.sync import SyncScript
-
-DiffScript doesn't do network,  create cache:
-
-    >>> SyncScript(argv="sync.py --contexts hst.pmap").run()
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     0 infos
 
 Compute diffs for two .pmap's:
 
