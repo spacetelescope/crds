@@ -585,10 +585,9 @@ class Mapping(object):
         """Returns { filekind : set( ref_file_name... ) }"""
         return { filekind:selector.reference_names() for (filekind, selector) in self.selections.items() }
 
-    def mapping_names(self, full_path=False):
+    def mapping_names(self):
         """Returns a list of mapping files associated with this Mapping"""
-        name = self.filename if full_path else self.basename
-        return sorted([name] + [nam for selector in self.selections.values() for nam in selector.mapping_names(full_path)])
+        return sorted([self.basename] + [name for selector in self.selections.values() for name in selector.mapping_names()])
  
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
@@ -1073,9 +1072,9 @@ class ReferenceMapping(Mapping):
         """
         return self.selector.reference_names()
 
-    def mapping_names(self, full_path=False):
+    def mapping_names(self):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
-        return [self.filename if full_path else self.basename]
+        return [self.basename]
 
     def get_required_parkeys(self, include_reffile_switch=True):
         """Return the list of parkey names needed to select from this rmap."""

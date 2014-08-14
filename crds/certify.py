@@ -1119,7 +1119,7 @@ Checks a CRDS reference or mapping file.
         for file_ in files:
             if rmap.is_mapping(file_):
                 mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                more_files = mapping.mapping_names(full_path=True)
+                more_files = [rmap.locate_mapping(name) for name in mapping.mapping_names()]
             else:
                 more_files = [file_]
             closure_files = closure_files.union(more_files)
