@@ -1117,7 +1117,7 @@ class ReferenceMapping(Mapping):
                 continue
             parkey_map[key] = tpn_values.get(key, [])
             if key.endswith("CORR"):  #  and parkey_map[key] == []:
-                parkey_map[key] = ["PERFORM", "OMIT", "NONE", "COMPLETE"]
+                parkey_map[key] = ["PERFORM", "OMIT", "NONE", "COMPLETE", "UNDEFINED"]
         return parkey_map
 
     def get_valid_values_map(self, condition=True):
