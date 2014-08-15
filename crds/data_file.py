@@ -207,7 +207,9 @@ def get_fits_header_union(fname, needed_keys=()):
     union = {}
     get_all_keys = not needed_keys
     for hdu in pyfits.open(fname):
-        for key, newval in hdu.header.items():
+        for card in hdu.header.cards:
+            card.verify('fix')
+            key, newval = card.keyword, card.value
             if not key:
                 continue
             if get_all_keys or key in needed_keys:
