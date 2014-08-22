@@ -119,7 +119,7 @@ class Script(object):
         self.args = self.parser.parse_args(argv[1:])
         if self.args.readonly_cache:
             config.set_cache_readonly(True)
-        log.set_verbose(self.args.verbosity or self.args.verbose)
+        log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
         log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
