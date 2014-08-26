@@ -32,6 +32,7 @@ __all__ = [
            "get_default_context",
            "get_context_by_date",
            "get_server_info",
+           "get_cached_server_info",
            "cache_references",
            
            "set_crds_server", 
