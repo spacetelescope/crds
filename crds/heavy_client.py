@@ -374,7 +374,7 @@ def get_config_info(observatory):
     Return ConfigInfo
     """
     try:
-        info = ConfigInfo(light_client.get_server_info())
+        info = ConfigInfo(light_client.get_cached_server_info())
         info.status = "server"
         info.connected = True
         log.verbose("Connected to server at", repr(light_client.get_crds_server()))
