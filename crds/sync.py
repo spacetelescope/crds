@@ -253,6 +253,8 @@ class SyncScript(cmdline.ContextsScript):
         active_references = []
         for context in self.contexts:
             if self.args.dataset_ids:
+                if len(self.args.dataset_ids) == 1 and self.args.dataset_ids[0].startswith("@"):
+                    self.args.dataset_ids = open(self.args.dataset_ids[0][1:]).read().splitlines()
                 with log.error_on_exception("Failed to get matching parameters for", self.args.dataset_ids):
                     id_headers = api.get_dataset_headers_by_id(context, self.args.dataset_ids)
             for dataset in self.args.dataset_files or self.args.dataset_ids:
@@ -262,7 +264,7 @@ class SyncScript(cmdline.ContextsScript):
                         headers = { dataset : data_file.get_conditioned_header(dataset, observatory=self.observatory) }
                     else:
                         headers = { dataset_id : header for (dataset_id, header) in id_headers.items() if
-                                    dataset in dataset_id }
+                                    dataset.upper() in dataset_id }
                     for assc_dataset, header in headers.items():
                         with log.error_on_exception("Failed syncing references for dataset", repr(assc_dataset), 
                                                     "under context", repr(context)):   
@@ -271,7 +273,7 @@ class SyncScript(cmdline.ContextsScript):
                             log.verbose("Best references for", repr(assc_dataset), "are", bestrefs)
                             active_references.extend(bestrefs.values())
         active_references = [ ref for ref in active_references if not ref.startswith("NOT FOUND") ]
-        log.verbose("Syncing references for datasets:", repr(active_references))
+        log.verbose("Syncing references:", repr(active_references))
         return list(set(active_references))
         
     # ------------------------------------------------------------------------------------------
