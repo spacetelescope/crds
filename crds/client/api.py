@@ -32,7 +32,7 @@ __all__ = [
            "get_default_context",
            "get_context_by_date",
            "get_server_info",
-           "get_cached_server_info",
+           "get_cached_server_info",  # deprecated
            "cache_references",
            
            "set_crds_server", 
@@ -115,12 +115,14 @@ def srepr(obj):
     """Return the repr() of the str() of `o`"""
     return repr(str(obj))
 
+@utils.cached
 def list_mappings(observatory=None, glob_pattern="*"):
     """Return the list of mappings associated with `observatory`
     which match `glob_pattern`.
     """
     return [str(x) for x in S.list_mappings(observatory, glob_pattern)]
 
+@utils.cached
 def list_references(observatory=None, glob_pattern="*"):
     """Return the list of references associated with `observatory`
     which match `glob_pattern`.
@@ -138,7 +140,8 @@ def is_known_mapping(mapping):
         return len(get_mapping_url(mapping, mapping)) > 0
     except ServiceError:
         return False
-    
+
+@utils.cached
 def get_mapping_names(pipeline_context):
     """Get the complete set of pmap, imap, and rmap basenames required
     for the specified pipeline_context.   context can be an observatory, 
@@ -189,6 +192,7 @@ def get_sqlite_db(observatory):
         db_out.write(data)
     return path
 
+@utils.cached
 def get_reference_names(pipeline_context):
     """Get the complete set of reference file basenames required
     for the specified pipeline_context.
@@ -249,16 +253,19 @@ def get_best_references_by_header_map(context, header_map, reftypes=None):
         raise CrdsLookupError(str(exc))
     return bestrefs_map
 
+@utils.cached
 def get_default_context(observatory=None):
     """Return the name of the latest pipeline mapping in use for processing
     files for `observatory`.  
     """
     return str(S.get_default_context(observatory))
 
+@utils.cached
 def get_context_by_date(date, observatory=None):
     """Return the name of the first operational context which precedes `date`."""
     return str(S.get_context_by_date(date, observatory))
-    
+
+@utils.cached
 def get_server_info():
     """Return a dictionary of critical parameters about the server such as:
     
@@ -282,14 +289,11 @@ def get_server_info():
     except ServiceError, exc:
         raise CrdsNetworkError("network connection failed: " + srepr(get_crds_server()) + " : " + str(exc))
 
-@utils.cached
-def get_cached_server_info():
-    """Cached version of get_server_info(),  nominally one fetch per process run."""
-    return get_server_info()
+get_cached_server_info = get_server_info
 
 def get_server_version():
     """Return the API version of the current CRDS server."""
-    info = get_cached_server_info()
+    info = get_server_info()
     return info["crds_version"]["str"]
 
 def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
@@ -308,6 +312,7 @@ def get_dataset_ids(context, instrument, datasets_since=None):
         assert datasets_since is None, "datasets_since not supported by this server."
         return S.get_dataset_ids(context, instrument)
 
+@utils.cached
 def get_required_parkeys(context):
     """Return a mapping from instruments to lists of parameter names required to
     compute bestrefs under `context`,  i.e. matching header keys.
@@ -318,7 +323,7 @@ def get_required_parkeys(context):
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
     """Return { dataset_id : { header } } for `instrument`."""
-    max_ids_per_rpc = get_cached_server_info().get("max_headers_per_rpc", 5000)
+    max_ids_per_rpc = get_server_info().get("max_headers_per_rpc", 5000)
     try:
         ids = get_dataset_ids(context, instrument, datasets_since)
     except Exception, exc:
@@ -528,7 +533,7 @@ class FileCacher(object):
 
     def get_url(self, pipeline_context, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
-        info = get_cached_server_info()
+        info = get_server_info()
         observatory = self.observatory_from_context(pipeline_context)
         if config.is_mapping(filename):
             url = info["mapping_url"][observatory]
