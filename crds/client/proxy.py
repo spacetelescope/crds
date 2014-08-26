@@ -75,7 +75,7 @@ class CheckingProxy(object):
         
         url = self._get_url(jsonrpc_params)
 
-        log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->", verbosity=55)
+        log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->")
         
         response = apply_with_retries(self._call_service, parameters, url)
 
@@ -106,12 +106,13 @@ class CheckingProxy(object):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
             decoded = str(PARSER.unescape(jsonrpc["error"]["message"]))
-            log.verbose("FAILED", decoded, verbosity=55)
+            log.verbose("RPC FAILED", decoded)
             raise ServiceError(decoded)
-        log.verbose("SUCCEEDED", verbosity=55)
         result = crds_decode(jsonrpc["result"])
-        return fix_strings(result)
-    
+        result = fix_strings(result)
+        log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 60 else "OK")
+        return result
+
 def fix_strings(rval):
     """Convert unicode to strings."""
     if isinstance(rval, basestring):
