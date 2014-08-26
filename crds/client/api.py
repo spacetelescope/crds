@@ -637,6 +637,7 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None, raise_exc
     assert isinstance(ignore_cache, bool)
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
+    mappings = sorted(set(mappings))
     return FILE_CACHER.get_local_files(
         pipeline_context, mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=api)
   
@@ -657,6 +658,7 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_e
         if "NOT FOUND" in refname:
             log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
+    baserefs = sorted(set(baserefs))
     return FILE_CACHER.get_local_files(
         pipeline_context, baserefs, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=api)
     
