@@ -127,7 +127,7 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument('--dataset-files', metavar='DATASET', type=cmdline.dataset, nargs='*',
                           help='Cache references for the specified datasets FITS files.')
         self.add_argument('--dataset-ids', metavar='DATASET', type=str, nargs='*',
-                          help='Cache references for the specified datasets FITS files.')
+                          help='Cache references for the specified dataset ids.')
         self.add_argument('--fetch-references', action='store_true', dest="fetch_references",
                           help='Cache all the references for the specified contexts.')        
         self.add_argument('--purge-references', action='store_true', dest="purge_references",
