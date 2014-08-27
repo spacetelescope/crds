@@ -34,7 +34,7 @@ was performed for the specified context switch, and error occurs.
 
     def main(self):
         try:
-            s = api.get_affected_datasets(self.observatory, self.args.old_context, self.args.new_context)
+            s = get_affected_datasets(self.observatory, self.args.old_context, self.args.new_context)
         except Exception as exc:
             self.fatal_error("Query failed: ", str(exc).replace("OtherError:",""))
         print >>sys.stderr, s.bestrefs_err_summary
