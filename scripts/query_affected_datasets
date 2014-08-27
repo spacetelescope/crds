@@ -1,0 +1,44 @@
+#! /usr/bin/env python
+#-*-python-*-
+
+import sys
+
+from crds import cmdline, log, utils
+from crds.client import api
+
+try:
+    from crds.client.api import get_affected_datasets
+except:
+    def get_affected_datasets(observatory, old_context=None, new_context=None):
+        """Return a structure describing the ids affected by the last context change."""
+        return utils.Struct(api.S.get_affected_datasets(observatory, old_context, new_context))
+
+class QueryAffectedDatasetsScript(cmdline.Script):
+
+    description = """
+Queries the CRDS server for datasets affected by the specified context switch,
+defaulting to the latest context switch.  If no server-side bestrefs computation
+was performed for the specified context switch, and error occurs.
+"""
+
+    def add_args(self):
+        """Add diff-specific command line parameters."""
+
+        self.add_argument("-n", "--new-context", dest="new_context", 
+            help="Look for affected datasets computation with this new context.",
+            metavar="NEW_CONTEXT", default=None, type=cmdline.mapping_spec)
+        
+        self.add_argument("-o", "--old-context", dest="old_context",
+            help="Look for affected datasets computation with this old context.", 
+            metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
+
+    def main(self):
+        try:
+            s = api.get_affected_datasets(self.observatory, self.args.old_context, self.args.new_context)
+        except Exception as exc:
+            self.fatal_error("Query failed: ", str(exc).replace("OtherError:",""))
+        print >>sys.stderr, s.bestrefs_err_summary
+        print "\n".join(s.affected_ids)
+
+if __name__ == "__main__":
+    QueryAffectedDatasetsScript()()
