@@ -70,7 +70,8 @@ __all__ = [
            "ServiceError",
            
            "get_required_parkeys",
-           
+           "get_affected_datasets"
+
            ]
 
 # ============================================================================
@@ -336,6 +337,10 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
         header_slice = get_dataset_headers_by_id(context, id_slice)
         headers.update(header_slice)
     return headers
+
+def get_affected_datasets(observatory, old_context=None, new_context=None):
+    """Return a structure describing the ids affected by the last context change."""
+    return utils.Struct(S.get_affected_datasets(observatory, old_context, new_context))
 
 # ==============================================================================
 
