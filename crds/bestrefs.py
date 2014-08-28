@@ -500,6 +500,8 @@ and debug output.
             os.environ["CRDS_MODE"] = "remote"
             
         self.datasets_since = self.args.datasets_since
+
+        self.synced_references = set()
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -912,6 +914,8 @@ and debug output.
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Bestref FOUND:", repr(new_org).lower(),  self.update_promise, verbosity=55)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
+            
+                self._add_synced_reference(new)
 
         return updates
     
@@ -936,6 +940,8 @@ and debug output.
                                                         ("NOT FOUND NO MATCH",)) # omit UNDEFINED for useless update check.
             new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
                                                        ("NOT FOUND NO MATCH","UNDEFINED"))
+            self._add_synced_reference(new)
+
             if not new_ok:
                 continue
             
@@ -1009,6 +1015,10 @@ and debug output.
             ref_ok = False
         return ref_ok, ref_org, ref
 
+    def _add_synced_reference(self, ref):
+        """Add reference `ref` to the set of synced references if it is not a special value."""
+        if ref.upper() not in ["N/A", "UNDEFINED"]:
+            self.synced_references.add(ref.lower())
 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
@@ -1102,8 +1112,7 @@ and debug output.
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
         assert not self.readonly_cache, "Readonly cache,  cannot fetch references."
-        references = [ tup.new_reference.lower() for dataset in self.updates for tup in self.updates[dataset]]
-        api.dump_references(self.new_context, references, raise_exceptions=self.args.pdb)
+        api.dump_references(self.new_context, sorted(self.synced_references), raise_exceptions=self.args.pdb)
 
 # ===================================================================
 
