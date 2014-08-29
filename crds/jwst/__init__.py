@@ -16,6 +16,7 @@ TEXT_DESCR = {
     "gain" : "Gain",
     "saturation" : "Saturation",
     "ipc" : "Interpixel Capacitance",
+    "drizpars" : "Drizzle Parameters used in Image Distortion Correction and Combination"
 }
 
 # Type names in rmaps, written down as REFTYPE in FITS

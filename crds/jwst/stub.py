@@ -114,13 +114,12 @@ def generate_new_rmap(reference_context, parkey, new_references):
 
     old_instrument, old_filekind = None, None
     for ref in new_references:
-        instrument, filekind = pmap.locate.get_file_properties(ref)
+        instrument, filekind = pmap.locate.get_file_properties(ref)          # works from filename
         assert not old_instrument or instrument == old_instrument, "Multiple instruments deteted at " + repr(ref)
         assert not old_filekind or filekind == old_filekind, "Multiple filekinds detected at " + repr(ref)
         old_instrument, old_filekind = instrument, filekind
         
         header = pyfits.getheader(ref)
-        assert header["FILETYPE"].upper() == pmap.locate.filekind_to_filetype(filekind).upper()
         assert header["REFTYPE"].upper() ==  filekind.upper()
 
     assert instrument in pmap.obs_package.INSTRUMENTS, "Invalid instrument " + repr(instrument)
@@ -132,7 +131,7 @@ def generate_new_rmap(reference_context, parkey, new_references):
     new_rmap = rmap.ReferenceMapping.from_string(RMAP_STUB, name, ignore_checksum=True)
     new_rmap.header["instrument"] = instrument.upper()
     new_rmap.header["filekind"] = filekind.upper()
-    new_rmap.header["parkey"] = eval(parkey.upper())
+    new_rmap.header["parkey"] = eval(parkey.upper()) if parkey.strip() else ((),)
     new_rmap.header["name"] = name
     new_rmap.header["observatory"] = pmap.observatory.upper()
     
