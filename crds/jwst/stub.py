@@ -88,6 +88,27 @@ from astropy.io import fits as pyfits
 from crds import rmap, timestamp, pysh, log, data_file, utils
 from crds.client import api
 
+def generate_rmaps_and_context(reference_context, parkey, all_references):
+    """Generate rmaps for complete (non-stub) references in `all_references` and then
+    generate a higher level context derived from `reference_context` by inserting the
+    new .rmaps.
+    """
+    reference_context = api.get_context_by_date(reference_context, "jwst")
+    
+    pmap = rmap.get_cached_mapping(reference_context)
+    rmaps = []
+    for instr in pmap.obs_package.INSTRUMENTS:
+        added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
+                             if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
+        if added_references:
+            path = generate_new_rmap(reference_context, parkey, added_references)
+            rmaps.append(path)
+            pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
+    
+    rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
+    pysh.sh("python -m crds.newcontext ${reference_context} ${rmaps_str} --verbose", trace_commands=True, raise_on_error=True)
+    
+
 RMAP_STUB = """
 header = {
     'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-04',
@@ -107,7 +128,7 @@ selector = Match({
 def generate_new_rmap(reference_context, parkey, new_references):
     """Create an entirely .rmap given a reference context and a list of new files
     of the same type.
-    """
+    """    
     log.info("context:", reference_context, "parkey:", parkey, "references:", new_references)
 
     pmap = rmap.get_cached_mapping(reference_context)
@@ -150,25 +171,6 @@ def generate_new_rmap(reference_context, parkey, new_references):
     new_rmap.validate_mapping()
     
     return path
-
-def generate_rmaps_and_context(reference_context, parkey, all_references):
-    """Generate rmaps for complete (non-stub) references in `all_references` and then
-    generate a higher level context derived from `reference_context` by inserting the
-    new .rmaps.
-    """
-    pmap = rmap.get_cached_mapping(reference_context)
-    rmaps = []
-    for instr in pmap.obs_package.INSTRUMENTS:
-        added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
-                             if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
-        if added_references:
-            path = generate_new_rmap(reference_context, parkey, added_references)
-            rmaps.append(path)
-            pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
-    
-    rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
-    pysh.sh("python -m crds.newcontext ${reference_context} ${rmaps_str} --verbose", trace_commands=True, raise_on_error=True)
-    
 
 def link_reference_to_crds_name(reference):
     """Generate a unique CRDS name for `reference`."""
