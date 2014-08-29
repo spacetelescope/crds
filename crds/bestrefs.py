@@ -732,7 +732,7 @@ and debug output.
                 rmap.get_cached_mapping(context)   # if it loads,  it's cached.
                 return
             except IOError:
-                assert not config.get_cache_readonly(), "Failed loading " + repr(context) + "but CRDS cache is readonly."
+                assert not config.get_cache_readonly(), "Failed loading " + repr(context) + " but CRDS cache is readonly."
                 if self.args.sync_mappings:
                     log.verbose("Syncing context", repr(context), verbosity=25)
                     self.require_server_connection()
