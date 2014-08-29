@@ -192,10 +192,6 @@ def get_reference_properties(filename):
         return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
         pass
-    try:   # or maybe a recognizable HST legacy path/filename, fast
-        return ref_properties_from_cdbs_path(filename)
-    except AssertionError:
-        pass
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
