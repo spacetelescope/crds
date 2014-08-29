@@ -60,7 +60,7 @@
 
 
 \title{crds Documentation}
-\date{July 18, 2014}
+\date{August 29, 2014}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -2626,25 +2626,19 @@ they apply to.   Each reference file link opens into a details browser for that 
 file.
 
 
-\section{Open Services}
-\label{web_site_use:open-services}
-The following functions are available for anyone with access to the CRDS web
-server and basically serve to distribute information about CRDS files and
-recommendations.   Initially,  the CRDS sites are only visible within the Institute.
-
-
-\subsection{Context History}
-\label{web_site_use:context-history}
-The \emph{Context History} displays the record of CRDS contexts which were in operational use by
-the pipeline associated with a CRDS server.
+\section{Context History (more)}
+\label{web_site_use:context-history-more}
+The \emph{Context History} displays the last 4 CRDS contexts which were in operational use by
+the pipeline associated with a CRDS server. Clicking on the \emph{(more)} link will bring up
+the entire context history as a separate page as shown below:
 \begin{figure}[htbp]
 \centering
 
 \scalebox{0.500000}{\includegraphics{web_context_history.png}}
 \end{figure}
 
-Clicking on a \emph{context} link opens a a table of the historical references which were in use under
-that context:
+Clicking on a \emph{context} link (the .pmap name) opens a page containing the Historical References
+for some point in the past,  similar to the Operational References display:
 \begin{figure}[htbp]
 \centering
 
@@ -2657,7 +2651,7 @@ displays particular reference files and matching parameters for that type.   Cli
 reference file brings up the CRDS browser page with the known details for that reference.
 
 
-\subsubsection{Differencing contexts}
+\subsection{Differencing contexts}
 \label{web_site_use:differencing-contexts}
 Click the \emph{diff} checkbox for any two contexts in the history and then click the diff button
 at the top of the diff column.   This will display a difference page with an accorion panel
@@ -2672,6 +2666,13 @@ Each file accordion opens into two accordions which display different views of t
 logical or textual.  The logical differences display a table of matching parameters and files
 which were added, deleted, or replaced.   The textual differences show raw UNIX diffs of the
 two rules files.
+
+
+\section{Open Services}
+\label{web_site_use:open-services}
+The following functions are available for anyone with access to the CRDS web
+server and basically serve to distribute information about CRDS files and
+recommendations.   Initially,  the CRDS sites are only visible within the Institute.
 
 
 \subsection{Dataset Best References}
@@ -2706,11 +2707,6 @@ server where best references are computed based on dataset parameters.   This
 function is implemented in Javascript and reliant on HTML5;  it supports only
 parameters present in the FITS primary header.   It avoids uploading most of the
 dataset.   It is known to work in Firefox and Chrome but not IE or Safari-5.
-
-
-\paragraph{Upload Dataset}
-\label{web_site_use:upload-dataset}
-A user's dataset can be uploaded to the server for best references evaluation.
 
 
 \paragraph{Archived Dataset}
@@ -2760,57 +2756,6 @@ to best references selection.
 The entered parameters are evaluated with respect to the given pipeline context
 and best references are determined.   The results are similar or identical to
 the \emph{Dataset Best References} results.
-
-
-\subsection{Difference Files}
-\label{web_site_use:difference-files}
-Difference Files can be used to compare two reference or mapping files.   Either
-the name of a file already in CRDS can be specified (known) or any file can be
-uploaded via the web (uploaded).
-\begin{figure}[htbp]
-\centering
-
-\scalebox{0.500000}{\includegraphics{web_difference.png}}
-\end{figure}
-
-
-\subsubsection{Mapping Differences}
-\label{web_site_use:mapping-differences}
-For mappings,  \emph{Difference Files} displays two kinds of information:
-\begin{figure}[htbp]
-\centering
-
-\scalebox{0.500000}{\includegraphics{web_difference_summary.png}}
-\end{figure}
-\begin{itemize}
-\item {} 
-logical differences where CRDS analyzes the mappings and reports the
-parameter trail and effect of the difference (add, delete, replace).
-
-\end{itemize}
-\begin{figure}[htbp]
-\centering
-
-\scalebox{0.500000}{\includegraphics{web_difference_logical.png}}
-\end{figure}
-\begin{itemize}
-\item {} 
-textual differences which show the context difference (diff -c) of the
-two mapping files.
-
-\end{itemize}
-\begin{figure}[htbp]
-\centering
-
-\scalebox{0.500000}{\includegraphics{web_difference_text.png}}
-\end{figure}
-
-
-\subsubsection{Reference Differences}
-\label{web_site_use:reference-differences}
-For references,  \emph{Difference Files} is a thin wrapper around the pyfits
-script \emph{fitsdiff}.   Potentially this is useful where a user doesn't have access
-to pyfits or wants to compare existing reference files without downloading them.
 
 
 \subsection{Browse Database}

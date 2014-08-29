@@ -33,25 +33,19 @@ Each type accordion opens into a table of reference files and the dataset parame
 they apply to.   Each reference file link opens into a details browser for that reference
 file.
 
-Open Services
--------------
+Context History (more)
+----------------------
 
-The following functions are available for anyone with access to the CRDS web
-server and basically serve to distribute information about CRDS files and
-recommendations.   Initially,  the CRDS sites are only visible within the Institute.
-
-Context History
-...............
-
-The *Context History* displays the record of CRDS contexts which were in operational use by
-the pipeline associated with a CRDS server.
+The *Context History* displays the last 4 CRDS contexts which were in operational use by
+the pipeline associated with a CRDS server. Clicking on the *(more)* link will bring up 
+the entire context history as a separate page as shown below:
 
 .. figure:: images/web_context_history.png
    :scale: 50 %
    :alt: History of CRDS operational contexts
-
-Clicking on a *context* link opens a a table of the historical references which were in use under
-that context:
+   
+Clicking on a *context* link (the .pmap name) opens a page containing the Historical References
+for some point in the past,  similar to the Operational References display:
 
 .. figure:: images/web_context_table.png
    :scale: 50 %
@@ -63,7 +57,7 @@ displays particular reference files and matching parameters for that type.   Cli
 reference file brings up the CRDS browser page with the known details for that reference.
 
 Differencing contexts
-+++++++++++++++++++++
+.....................
 
 Click the *diff* checkbox for any two contexts in the history and then click the diff button
 at the top of the diff column.   This will display a difference page with an accorion panel
@@ -77,6 +71,13 @@ Each file accordion opens into two accordions which display different views of t
 logical or textual.  The logical differences display a table of matching parameters and files
 which were added, deleted, or replaced.   The textual differences show raw UNIX diffs of the
 two rules files.
+
+Open Services
+-------------
+
+The following functions are available for anyone with access to the CRDS web
+server and basically serve to distribute information about CRDS files and
+recommendations.   Initially,  the CRDS sites are only visible within the Institute.
 
 Dataset Best References
 .......................
@@ -111,11 +112,6 @@ function is implemented in Javascript and reliant on HTML5;  it supports only
 parameters present in the FITS primary header.   It avoids uploading most of the
 dataset.   It is known to work in Firefox and Chrome but not IE or Safari-5.
   
-Upload Dataset
-!!!!!!!!!!!!!!
-
-A user's dataset can be uploaded to the server for best references evaluation.
-
 Archived Dataset
 !!!!!!!!!!!!!!!!
 
@@ -162,49 +158,6 @@ to best references selection.
 The entered parameters are evaluated with respect to the given pipeline context
 and best references are determined.   The results are similar or identical to
 the *Dataset Best References* results.
-
-Difference Files
-................
-
-Difference Files can be used to compare two reference or mapping files.   Either
-the name of a file already in CRDS can be specified (known) or any file can be
-uploaded via the web (uploaded).
-
-.. figure:: images/web_difference.png
-   :scale: 50 %
-   :alt: file difference input
-
-Mapping Differences
-+++++++++++++++++++
-
-For mappings,  *Difference Files* displays two kinds of information:
-
-.. figure:: images/web_difference_summary.png
-   :scale: 50 %
-   :alt: file difference summary
-
-* logical differences where CRDS analyzes the mappings and reports the
-  parameter trail and effect of the difference (add, delete, replace).
-
-.. figure:: images/web_difference_logical.png
-   :scale: 50 %
-   :alt: file difference logical
-
-* textual differences which show the context difference (diff -c) of the
-  two mapping files.
-
-.. figure:: images/web_difference_text.png
-   :scale: 50 %
-   :alt: file difference textual
-
-
-Reference Differences
-+++++++++++++++++++++
-
-For references,  *Difference Files* is a thin wrapper around the pyfits
-script *fitsdiff*.   Potentially this is useful where a user doesn't have access 
-to pyfits or wants to compare existing reference files without downloading them.
-
 
 Browse Database
 ...............

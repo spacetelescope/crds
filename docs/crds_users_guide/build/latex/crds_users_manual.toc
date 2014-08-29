@@ -91,43 +91,39 @@
 \contentsline {subsection}{\numberline {7.7.6}Bracket}{41}{subsection.7.7.6}
 \contentsline {chapter}{\numberline {8}Using the CRDS Web Site}{43}{chapter.8}
 \contentsline {section}{\numberline {8.1}Operational References}{43}{section.8.1}
-\contentsline {section}{\numberline {8.2}Open Services}{43}{section.8.2}
-\contentsline {subsection}{\numberline {8.2.1}Context History}{44}{subsection.8.2.1}
-\contentsline {subsubsection}{Differencing contexts}{44}{subsubsection*.21}
-\contentsline {subsection}{\numberline {8.2.2}Dataset Best References}{44}{subsection.8.2.2}
-\contentsline {subsubsection}{Context}{46}{subsubsection*.22}
-\contentsline {subsubsection}{Dataset}{46}{subsubsection*.23}
-\contentsline {paragraph}{Upload FITS header}{46}{paragraph*.24}
-\contentsline {paragraph}{Upload Dataset}{46}{paragraph*.25}
-\contentsline {paragraph}{Archived Dataset}{46}{paragraph*.26}
-\contentsline {subsubsection}{Dataset Best References Results}{46}{subsubsection*.27}
-\contentsline {subsection}{\numberline {8.2.3}Explore Best References}{46}{subsection.8.2.3}
-\contentsline {subsection}{\numberline {8.2.4}Difference Files}{47}{subsection.8.2.4}
-\contentsline {subsubsection}{Mapping Differences}{47}{subsubsection*.28}
-\contentsline {subsubsection}{Reference Differences}{47}{subsubsection*.29}
-\contentsline {subsection}{\numberline {8.2.5}Browse Database}{49}{subsection.8.2.5}
-\contentsline {subsection}{\numberline {8.2.6}Recent Activity}{50}{subsection.8.2.6}
-\contentsline {section}{\numberline {8.3}Private Functions}{50}{section.8.3}
-\contentsline {subsection}{\numberline {8.3.1}Login and Instrument Locking}{50}{subsection.8.3.1}
-\contentsline {subsection}{\numberline {8.3.2}Certify Files}{51}{subsection.8.3.2}
-\contentsline {subsection}{\numberline {8.3.3}Mark Files Bad}{52}{subsection.8.3.3}
-\contentsline {subsection}{\numberline {8.3.4}Set Context}{52}{subsection.8.3.4}
-\contentsline {subsection}{\numberline {8.3.5}Batch Submit References}{53}{subsection.8.3.5}
-\contentsline {subsubsection}{Upload Files}{53}{subsubsection*.30}
-\contentsline {paragraph}{Web Approach}{53}{paragraph*.31}
-\contentsline {paragraph}{Shell Approach}{54}{paragraph*.32}
-\contentsline {subsubsection}{Derive From Context}{54}{subsubsection*.33}
-\contentsline {paragraph}{Edit Context}{54}{paragraph*.34}
-\contentsline {paragraph}{Operational Context}{55}{paragraph*.35}
-\contentsline {paragraph}{Recent}{55}{paragraph*.36}
-\contentsline {paragraph}{User Specified}{55}{paragraph*.37}
-\contentsline {subsubsection}{Auto Rename}{55}{subsubsection*.38}
-\contentsline {subsubsection}{Compare Old Reference}{55}{subsubsection*.39}
-\contentsline {subsubsection}{Results}{55}{subsubsection*.40}
-\contentsline {subsubsection}{Collisions}{56}{subsubsection*.41}
-\contentsline {subsubsection}{Confirm or Discard}{56}{subsubsection*.42}
-\contentsline {subsection}{\numberline {8.3.6}Submit References}{57}{subsection.8.3.6}
-\contentsline {subsection}{\numberline {8.3.7}Submit Mappings}{57}{subsection.8.3.7}
+\contentsline {section}{\numberline {8.2}Context History (more)}{44}{section.8.2}
+\contentsline {subsection}{\numberline {8.2.1}Differencing contexts}{44}{subsection.8.2.1}
+\contentsline {section}{\numberline {8.3}Open Services}{45}{section.8.3}
+\contentsline {subsection}{\numberline {8.3.1}Dataset Best References}{45}{subsection.8.3.1}
+\contentsline {subsubsection}{Context}{46}{subsubsection*.21}
+\contentsline {subsubsection}{Dataset}{46}{subsubsection*.22}
+\contentsline {paragraph}{Upload FITS header}{46}{paragraph*.23}
+\contentsline {paragraph}{Archived Dataset}{46}{paragraph*.24}
+\contentsline {subsubsection}{Dataset Best References Results}{46}{subsubsection*.25}
+\contentsline {subsection}{\numberline {8.3.2}Explore Best References}{46}{subsection.8.3.2}
+\contentsline {subsection}{\numberline {8.3.3}Browse Database}{47}{subsection.8.3.3}
+\contentsline {subsection}{\numberline {8.3.4}Recent Activity}{49}{subsection.8.3.4}
+\contentsline {section}{\numberline {8.4}Private Functions}{50}{section.8.4}
+\contentsline {subsection}{\numberline {8.4.1}Login and Instrument Locking}{50}{subsection.8.4.1}
+\contentsline {subsection}{\numberline {8.4.2}Certify Files}{51}{subsection.8.4.2}
+\contentsline {subsection}{\numberline {8.4.3}Mark Files Bad}{51}{subsection.8.4.3}
+\contentsline {subsection}{\numberline {8.4.4}Set Context}{52}{subsection.8.4.4}
+\contentsline {subsection}{\numberline {8.4.5}Batch Submit References}{53}{subsection.8.4.5}
+\contentsline {subsubsection}{Upload Files}{53}{subsubsection*.26}
+\contentsline {paragraph}{Web Approach}{53}{paragraph*.27}
+\contentsline {paragraph}{Shell Approach}{54}{paragraph*.28}
+\contentsline {subsubsection}{Derive From Context}{54}{subsubsection*.29}
+\contentsline {paragraph}{Edit Context}{55}{paragraph*.30}
+\contentsline {paragraph}{Operational Context}{55}{paragraph*.31}
+\contentsline {paragraph}{Recent}{55}{paragraph*.32}
+\contentsline {paragraph}{User Specified}{55}{paragraph*.33}
+\contentsline {subsubsection}{Auto Rename}{55}{subsubsection*.34}
+\contentsline {subsubsection}{Compare Old Reference}{55}{subsubsection*.35}
+\contentsline {subsubsection}{Results}{55}{subsubsection*.36}
+\contentsline {subsubsection}{Collisions}{56}{subsubsection*.37}
+\contentsline {subsubsection}{Confirm or Discard}{56}{subsubsection*.38}
+\contentsline {subsection}{\numberline {8.4.6}Submit References}{56}{subsection.8.4.6}
+\contentsline {subsection}{\numberline {8.4.7}Submit Mappings}{57}{subsection.8.4.7}
 \contentsline {chapter}{\numberline {9}Web Services}{59}{chapter.9}
 \contentsline {section}{\numberline {9.1}Supported Methods}{59}{section.9.1}
 \contentsline {subsection}{\numberline {9.1.1}get\_default\_context(observatory)}{59}{subsection.9.1.1}
