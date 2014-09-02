@@ -1107,6 +1107,7 @@ Checks a CRDS reference or mapping file.
                       script=self, observatory=self.observatory)
     
         self.dump_unique_errors()
+        self.report_stats()
         log.standard_status()
         
         return log.errors()
