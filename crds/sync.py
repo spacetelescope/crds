@@ -2,7 +2,7 @@
 mappings required to support a set of contexts from the CRDS server:
 
 Old references and mappings which are no longer needed can be automatically
-removed by specifying --purge-mappings or --purge-references:
+removed by specifying --purge-mappingshttps://aeon.stsci.edu/ssb/svn/crds/trunk/crds/hst/tpns or --purge-references:
 
   % python -m crds.sync --range 1:2 --purge-mappings --purge-references
 
@@ -295,17 +295,17 @@ class SyncScript(cmdline.ContextsScript):
         except Exception, exc:
             log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
             return
-        for file in files:
+        for n, file in enumerate(files):
             if infos[file] == "NOT FOUND":
                 log.error("CRDS has no record of file", repr(file))
             else:
-                self.verify_file(file, infos[file])
+                self.verify_file(file, infos[file], n, len(files))
         
-    def verify_file(self, file, info):
+    def verify_file(self, file, info, nth_file, total_files):
         """Check one `file` against the provided CRDS database `info` dictionary."""
         path = rmap.locate_file(file, observatory=self.observatory)
         base = os.path.basename(file)
-        log.verbose("Verifying", repr(base), "at", repr(path), verbosity=10)
+        log.verbose("Verifying", repr(base), "at", repr(path), nth_file, "of", total_files, verbosity=10)
         if not os.path.exists(path):
             log.error("File", repr(base), "doesn't exist at", repr(path))
             return
