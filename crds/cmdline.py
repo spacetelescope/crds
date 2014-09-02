@@ -104,6 +104,7 @@ class Script(object):
     
     def __init__(self, argv=None, parser_pars=None):
         self.stats = utils.TimingStats()
+        self._already_reported_stats = False
         if isinstance(argv, basestring):
             argv = argv.split()
         elif argv is None:
@@ -132,7 +133,9 @@ class Script(object):
         call tree of code which is run inside the profiler or debugger.
         """
         self.contexts = self.determine_contexts()
-        return self.main()
+        result = self.main()
+        self.report_stats()  # here if not called already
+        return result
         
     def determine_contexts(self):
         """Return the list of contexts used by this invocation of the script.  Empty for Script."""
@@ -303,16 +306,20 @@ class Script(object):
         if self.args.version:
             _show_version()
         elif self.args.profile:
-            profile.runctx("self._main()", locals(), locals(), self.args.profile)
+            if self.args.profile == "console":
+                profile.runctx("self._main()", locals(), locals())
+            else:
+                profile.runctx("self._main()", locals(), locals(), self.args.profile)
         elif self.args.pdb:
             pdb.runctx("self._main()", locals(), locals())
         else:
             return self._main()
-    
+
     def report_stats(self):
         """Print out collected statistics."""
-        if self.args.stats:
+        if self.args.stats and not self._already_reported_stats:
             self.stats.report()
+            self._already_reported_stats = True
     
     def increment_stat(self, name, amount=1):
         """Add `amount` to the statistics counter for `name`."""
