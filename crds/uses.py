@@ -3,7 +3,12 @@ reference or mapping file.
 
 >>> from pprint import pprint as pp
 >>> pp(findall_mappings_using_reference("v2e20129l_flat.fits"))
-['hst.pmap', 'hst_cos.imap', 'hst_cos_flatfile.rmap']
+['hst.pmap',
+ 'hst_0003.pmap',
+ 'hst_cos.imap',
+ 'hst_cos_0001.imap',
+ 'hst_cos_flatfile.rmap',
+ 'hst_cos_flatfile_0002.rmap']
 """
 from __future__ import print_function
 
