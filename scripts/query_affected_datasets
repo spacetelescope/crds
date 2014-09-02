@@ -9,9 +9,21 @@ from crds.client import api
 try:
     from crds.client.api import get_affected_datasets
 except:
+# ===================================================================                                                                                   
+    try:
+        from crds.utils import Struct
+    except:
+        class Struct(dict):
+            """A dictionary which supports dotted access to members."""
+            def __getattr__(self, name):
+                return self[name]
+            
+            def __setattr__(self, name, val):
+                self[name] = val
+
     def get_affected_datasets(observatory, old_context=None, new_context=None):
         """Return a structure describing the ids affected by the last context change."""
-        return utils.Struct(api.S.get_affected_datasets(observatory, old_context, new_context))
+        return Struct(api.S.get_affected_datasets(observatory, old_context, new_context))
 
 class QueryAffectedDatasetsScript(cmdline.Script):
 
