@@ -11,14 +11,16 @@ import logging
 import pprint
 import contextlib
 
+
 DEFAULT_VERBOSITY_LEVEL = 50
 
 class CrdsLogger(object):
-    def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG):
+    def __init__(self, name="CRDS", enable_console=True, level=logging.DEBUG, enable_time=True):
         self.name = name
+        self.handlers = []
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
-        self.formatter = logging.Formatter('%(name)-6s: %(levelname)-8s %(message)s')
+        self.formatter = self.set_formatter()
         self.console = None
         if enable_console:
             self.add_console_handler(level)
@@ -32,6 +34,14 @@ class CrdsLogger(object):
         except Exception:
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
             
+    def set_formatter(self, enable_time=False):
+        """Set the formatter attribute of `self` to a logging.Formatter and return it."""
+        self.formatter = logging.Formatter(
+            '%(name)-6s: %(levelname)-5s {}  %(message)s'.format(" %(asctime)s " if enable_time else ""))
+        for handler in self.handlers:
+            handler.setFormatter(self.formatter)
+        return self.formatter
+        
     def format(self, *args, **keys):
         end = keys.get("end", "\n")
         sep = keys.get("sep", " ")
@@ -111,10 +121,12 @@ class CrdsLogger(object):
         handler = logging.StreamHandler(filelike)
         handler.setLevel(level)
         handler.setFormatter(self.formatter)
+        self.handlers.append(handler)
         self.logger.addHandler(handler)
         return handler
     
     def remove_stream_handler(self, handler):
+        self.handlers.remove(handler)
         self.logger.removeHandler(handler)
     
 THE_LOGGER = CrdsLogger("CRDS")
@@ -144,6 +156,11 @@ def set_test_mode():
     """Route log messages to standard output for testing with doctest."""
     remove_console_handler()
     add_console_handler(stream=sys.stdout)
+    set_log_time(False)
+    
+def set_log_time(enable_time=False):
+    """Set the flag for including time in log messages.  Ignore CRDS_LOG_TIME."""
+    THE_LOGGER.set_formatter(enable_time)
 
 # ===========================================================================
 

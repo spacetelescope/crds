@@ -122,6 +122,7 @@ class Script(object):
             config.set_cache_readonly(True)
         log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
         # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
+        log.set_log_time(config.get_log_time() or self.args.log_time)
         log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
@@ -222,6 +223,8 @@ class Script(object):
             help="Track and print timing statistics.")
         self.add_argument("--profile", 
             help="Output profile stats to the specified file.", type=str, default="")
+        self.add_argument("--log-time", action="store_true",
+            help="Add date/time to log messages.")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
         
@@ -447,6 +450,7 @@ class ContextsScript(Script):
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
+        log.verbose("Determining contexts.", verbosity=55)
         if self.args.contexts:
             assert not self.args.range, 'Cannot specify explicit contexts and --range'
             assert not self.args.all, 'Cannot specify explicit contexts and --all'
@@ -472,6 +476,7 @@ class ContextsScript(Script):
                         contexts.append(context)
         else:
             contexts = [self.resolve_context(self.observatory + "-operational")]
+        log.verbose("Determined contexts: ", contexts, verbosity=55)
         return sorted(contexts)
 
     def _list_mappings(self, glob_pattern="*.pmap"):
@@ -496,7 +501,7 @@ class ContextsScript(Script):
         useable_contexts = []
         if not self.contexts:
             return []
-
+        log.verbose("Getting all mappings for specified contexts.", verbosity=55)
         if self.args.all:
             files = self._all_mappings
             pmaps = sorted([file for file in files if file.endswith(".pmap")])
@@ -523,6 +528,7 @@ class ContextsScript(Script):
                     self.dump_files(useable_contexts[-1], files)
 
         self.contexts = useable_contexts  # XXXX reset self.contexts
+        log.verbose("Got mappings from specified (usable) contexts: ", files, verbosity=55)
         return sorted(files)
     
     def get_context_references(self):

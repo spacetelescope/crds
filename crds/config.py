@@ -207,6 +207,10 @@ def get_ignore_checksum():
     """Returns environment override for disabling mapping checksums during development."""
     return env_to_bool("CRDS_IGNORE_MAPPING_CHECKSUM", False)
 
+def get_log_time():
+    """Returns override flag for outputting time in log messages."""
+    return env_to_bool("CRDS_LOG_TIME", False)
+
 # ===========================================================================
 
 def get_crds_env_vars():
