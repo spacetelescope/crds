@@ -406,7 +406,8 @@ def get_tpn_text(*args):
 
 def reference_name_to_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding .tpn"""
-    key = reference_name_to_validator_key(filename)
+    path = rmap.locate_file(filename, "hst")
+    key = reference_name_to_validator_key(path)
     return get_tpn_text(*key)
 
 def mapping_validator_key(mapping):
