@@ -105,7 +105,7 @@ class SyncScript(cmdline.ContextsScript):
               
     * Checking the cache::
         
-        % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
+        % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
     
       would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
       be checked for correct length, sha1sum, and status.   Any files with bad length or checksum
@@ -295,17 +295,22 @@ class SyncScript(cmdline.ContextsScript):
         except Exception, exc:
             log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
             return
-        for n, file in enumerate(files):
+        bytes_so_far = 0
+        total_bytes = api.get_total_bytes(infos)
+        for nth_file, file in enumerate(files):
             if infos[file] == "NOT FOUND":
                 log.error("CRDS has no record of file", repr(file))
             else:
-                self.verify_file(file, infos[file], n, len(files))
+                self.verify_file(file, infos[file], bytes_so_far, total_bytes, nth_file, len(files))
+                bytes_so_far += int(infos[file]["size"])
         
-    def verify_file(self, file, info, nth_file, total_files):
+    def verify_file(self, file, info, bytes_so_far, total_bytes, nth_file, total_files):
         """Check one `file` against the provided CRDS database `info` dictionary."""
         path = rmap.locate_file(file, observatory=self.observatory)
         base = os.path.basename(file)
-        log.verbose("Verifying", repr(base), "at", repr(path), nth_file, "of", total_files, verbosity=10)
+        n_bytes = int(info["size"])
+        log.verbose(api.file_progress("Verifying", base, path, n_bytes, bytes_so_far, total_bytes, nth_file, total_files),
+                    verbosity=10)
         if not os.path.exists(path):
             log.error("File", repr(base), "doesn't exist at", repr(path))
             return
@@ -314,7 +319,7 @@ class SyncScript(cmdline.ContextsScript):
             self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + repr(size), 
                                   "CRDS size=" + repr(info["size"]))
         elif self.args.check_sha1sum:
-            log.verbose("Computing checksum for", repr(base), "of size", repr(size))
+            log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=100)
             sha1sum = utils.checksum(path)
             if info["sha1sum"] == "none":
                 log.warning("CRDS doesn't know the checksum for", repr(base))

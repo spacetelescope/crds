@@ -528,8 +528,9 @@ class ContextsScript(Script):
                     self.dump_files(useable_contexts[-1], files)
 
         self.contexts = useable_contexts  # XXXX reset self.contexts
+        files = sorted(files)
         log.verbose("Got mappings from specified (usable) contexts: ", files, verbosity=55)
-        return sorted(files)
+        return files
     
     def get_context_references(self):
         """Return the set of references which are pointed to by the references
