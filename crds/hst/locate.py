@@ -93,6 +93,7 @@ def reference_exists(reference):
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from crds.hst.tpn import reference_name_to_validator_key, mapping_validator_key, get_tpninfos
+from crds.hst.tpn import get_tpn_text, reference_name_to_tpn_text
 from crds.hst import INSTRUMENTS, FILEKINDS, EXTENSIONS
 from crds.hst.substitutions import expand_wildcards
 
