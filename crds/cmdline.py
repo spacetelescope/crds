@@ -6,7 +6,7 @@ import sys
 import os
 import argparse
 import pdb
-import cProfile as profile
+import cProfile, pstats, StringIO
 import re
 from collections import Counter
 
@@ -121,6 +121,7 @@ class Script(object):
         if self.args.readonly_cache:
             config.set_cache_readonly(True)
         log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
+        # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
         log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
@@ -307,13 +308,24 @@ class Script(object):
             _show_version()
         elif self.args.profile:
             if self.args.profile == "console":
-                profile.runctx("self._main()", locals(), locals())
+                self._console_profile(self._main)
             else:
-                profile.runctx("self._main()", locals(), locals(), self.args.profile)
+                cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
         elif self.args.pdb:
             pdb.runctx("self._main()", locals(), locals())
         else:
             return self._main()
+    
+    def _console_profile(self, function, sort_by="cumulative", top_n=100):
+        """Run `function` under the profiler and print results to console."""
+        pr = cProfile.Profile()
+        pr.enable()
+        function()
+        pr.disable()
+        s = StringIO.StringIO()
+        ps = pstats.Stats(pr, stream=s).sort_stats(sort_by)
+        ps.print_stats(top_n)
+        print(s.getvalue())
 
     def report_stats(self):
         """Print out collected statistics."""
