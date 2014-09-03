@@ -395,6 +395,20 @@ def get_tpninfos(*args):
     """
     return _load_tpn(os.path.join(TPN_DIR_PATH, args[0]))
 
+@utils.cached
+def get_tpn_text(*args):
+    """Return the .tpn text corresponding to *args.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
+    """
+    return open(os.path.join(TPN_DIR_PATH, args[0])).read()
+
+def reference_name_to_tpn_text(filename):
+    """Given reference `filename`,  return the text of the corresponding .tpn"""
+    key = reference_name_to_validator_key(filename)
+    return get_tpn_text(*key)
+
 def mapping_validator_key(mapping):
     """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
     cat_info = LD_TPN_CATALOG[mapping.instrument][mapping.filekind]
