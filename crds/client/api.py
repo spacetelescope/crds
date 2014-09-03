@@ -180,8 +180,24 @@ def get_file_info_map(observatory, files=None, fields=None):
     """Return the info { filename : { info } } on `files` of `observatory`.
     `fields` can be used to limit info returned to specified keys.
     """
+    if files:
+        files = tuple(sorted(files))
+    if fields:
+        fields = tuple(sorted(fields))
+    return _get_file_info_map(observatory, files, fields)
+
+@utils.cached
+def _get_file_info_map(observatory, files, fields):
     infos = S.get_file_info_map(observatory, files, fields)
     return infos
+
+def get_total_bytes(info_map):
+    """Return the total byte count of file info map `info_map`."""
+    try:
+        return sum([int(info_map[name]["size"]) for name in info_map if "NOT FOUND" not in info_map[name]])
+    except Exception, exc:
+        log.error("Error computing total byte count: ", str(exc))
+        return -1
 
 def get_sqlite_db(observatory):
     """Download the CRDS database as a SQLite database."""
@@ -380,6 +396,15 @@ def observatory_from_string(string):
 
 # ==============================================================================
 
+def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files):
+    """Output progress information for `activity` on file `name` at `path`."""
+    return log.format(activity, repr(name), "-->", repr(path), utils.human_format_number(bytes), "bytes.",
+                      "({} / {} files) ({} / {} bytes)".format(utils.human_format_number(nth_file+1), 
+                                                               utils.human_format_number(total_files), 
+                                                               utils.human_format_number(bytes_so_far), 
+                                                               utils.human_format_number(total_bytes)),
+                      end="")
+
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache.
     """
@@ -443,28 +468,30 @@ class FileCacher(object):
     def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
         """Serial file-by-file download."""
         obs = self.observatory_from_context(pipeline_context)
-        self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
+        self.info_map = get_file_info_map(obs, downloads, ["size","rejected","blacklisted","state","sha1sum"])
         if config.get_cache_readonly():
             log.verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70)
             return 0
-        n_bytes = 0
-        for name in downloads:
+        bytes_so_far = 0
+        total_files = len(downloads)
+        total_bytes = get_total_bytes(self.info_map)
+        for nth_file, name in enumerate(downloads):
             try:
                 if "NOT FOUND" in self.info_map[name]:
                     raise CrdsDownloadError("file is not known to CRDS server.")
-                n_bytes += self.download(pipeline_context, name, localpaths[name])
+                bytes, path = int(self.info_map[name]["size"]), localpaths[name]
+                log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
+                bytes_so_far += self.download(pipeline_context, name, path)
             except Exception, exc:
                 if raise_exceptions:
                     raise
                 else:
                     log.error("Failure downloading file", repr(name), ":", str(exc))
-        return n_bytes
-
+        return bytes_so_far
+    
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
-        assert not config.get_cache_readonly(), "Readonly cache,  cannot download files."
-        log.info("Fetching", repr(name), "to", repr(localpath), "of size", 
-                 utils.human_format_number(int(self.info_map[name]["size"])), "bytes.")
+        assert not config.get_cache_readonly(), "Readonly cache,  cannot download files " + repr(name)
         try:
             utils.ensure_dir_exists(localpath)
             return proxy.apply_with_retries(self.download_core, pipeline_context, name, localpath)
@@ -514,7 +541,6 @@ class FileCacher(object):
 
     def _get_data_http(self, url, filename):
         """Yield the data returned from `url` in manageable chunks."""
-        log.verbose("Fetching URL ", repr(url))
         try:
             infile = urllib2.urlopen(url)
             chunk = 0
@@ -523,7 +549,7 @@ class FileCacher(object):
             data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
             status = stats.status("bytes")
             while data:
-                log.verbose("Transferred HTTP", repr(filename), "chunk", chunk, "at", status[1], verbosity=20)
+                log.verbose("Transferred HTTP", repr(url), "chunk", chunk, "at", status[1], verbosity=20)
                 yield data
                 chunk += 1
                 stats = utils.TimingStats()
