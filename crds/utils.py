@@ -366,9 +366,7 @@ def create_path(path, mode=int("755", 8)):
     """Recursively traverses directory path creating directories as
     needed so that the entire path exists.
     """
-    path = path.replace("//","/")
-    if path.startswith("./"):
-        path = path[2:]
+    path = os.path.abspath(path)
     if os.path.exists(path):
         return
     current = []
@@ -377,8 +375,7 @@ def create_path(path, mode=int("755", 8)):
             current.append("/")
             continue
         current.append(str(part))
-        subdir = os.path.join(*current)
-        subdir.replace("//","/")
+        subdir = os.path.abspath(os.path.join(*current))
         if not os.path.exists(subdir):
             log.verbose("Creating", repr(subdir))
             os.mkdir(subdir, mode)
