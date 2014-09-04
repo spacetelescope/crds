@@ -7,6 +7,7 @@
 #
 # History:
 # 02/06/12  69213  mary   initial file
+# 08/18/14  78534  MSwam  changes for multi-extension FITS keywords
 #
 # NAME          KEYTYPE  DATATYPE  PRESENCE VALUES
 #----------------------------------------------------------
@@ -17,3 +18,9 @@ VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE
 DESCRIP             H        C         R
+DATE                C        D         R
+LX                  C        I         R
+LY                  C        I         R
+DX                  C        I         R
+DY                  C        I         R
+DQ                  C        I         R
