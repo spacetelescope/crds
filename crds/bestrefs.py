@@ -739,7 +739,8 @@ and debug output.
                     try:
                         api.dump_mappings(context)   # otherwise fetch it.
                     except Exception, exc:
-                        log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()))
+                        log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()), 
+                                  ":", str(exc))
                         sys.exit(-1)
                 else:
                     raise RuntimeError("Context '{}' is not available in the local cache and --sync-mappings=False.".format(context))
