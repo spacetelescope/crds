@@ -10,6 +10,7 @@
 #
 # HISTORY:
 # 02/06/12  68331  mary   initial file 
+# 08/15/14  78534  MSwam  changes requested by ACS team
 #
 # NAME       KEYTYPE  DATATYPE   PRESENCE      VALUES
 #----------------------------------------------------------
@@ -26,17 +27,16 @@ USEAFTER        H       C        R       &SYBDATE
 PEDIGREE        H       C        R       &PEDIGREE
 DTDE            C       R        R
 Q               C       I        R
-#LEVEL          C       I        R
-#MJD            C       R        R
-#SCALE          C       R        R
-#COLUMN         C       I        R
-#AMPA           C       R        R
-#AMPB           C       R        R
-#AMPC           C       R        R
-#AMPD           C       R        R
-#NODE           C       I        R
-#LOG_Q_1        C       R        R
-#LOG_Q_2        C       R        R
-#LOG_Q_3        C       R        R
-#LOG_Q_4        C       R        R
-
+LEVEL           C       I        O
+MJD             C       R        O
+SCALE           C       R        O
+COLUMN          C       I        O
+AMPA            C       R        O
+AMPB            C       R        O
+AMPC            C       R        O
+AMPD            C       R        O
+NODE            C       I        O
+LOG_Q_1         C       R        O
+LOG_Q_2         C       R        O
+LOG_Q_3         C       R        O
+LOG_Q_4         C       R        O

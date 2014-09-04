@@ -443,7 +443,7 @@ class ContextsScript(Script):
             help='Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.')
         self.add_argument('--all', action='store_true',
             help='Operate with respect to all known CRDS contexts.')
-        self.add_argument('--last', metavar="N", type=int, default=None,
+        self.add_argument('--last-n-contexts', metavar="N", type=int, default=None,
             help='Operate with respect to the last N contexts.')
         self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
                           help="Download required files even if they're already in the cache.")
@@ -457,14 +457,14 @@ class ContextsScript(Script):
             # permit instrument and reference mappings,  not just pipelines:
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
-            assert not self.args.range or self.args.last, "Cannot specify --all and --range or --last"
+            assert not self.args.range or self.args.last_n_contexts, "Cannot specify --all and --range or --last"
             self._all_mappings = self._list_mappings("*.*map")
             contexts = [ file for file in self._all_mappings if file.endswith(".pmap") ]
-        elif self.args.last:
+        elif self.args.last_n_contexts:
             assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
-            contexts = self._list_mappings()[-self.args.last:]
+            contexts = self._list_mappings()[-self.args.last_n_contexts:]
         elif self.args.range:
-            assert not self.args.all or self.args.last, "Cannot specify --range and --last or --all"
+            assert not self.args.all or self.args.last_n_contexts, "Cannot specify --range and --last or --all"
             rmin, rmax = self.args.range
             contexts = []
             all_contexts = self._list_mappings()
