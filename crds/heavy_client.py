@@ -399,7 +399,7 @@ def cache_server_info(info, observatory):
         with open(server_config, "w+") as file_:
             file_.write(pprint.pformat(info))
     except Exception, exc:
-        log.verbose_warning("Couldn't save CRDS server info:", repr(exc))
+        log.verbose_warning("Couldn't save CRDS server info to local CRDS cache:", repr(exc))
     try:
         bad_files = os.path.join(path, "bad_files.txt")
         utils.ensure_dir_exists(bad_files)
@@ -407,7 +407,7 @@ def cache_server_info(info, observatory):
         with open(bad_files, "w+") as file_:
             file_.write(bad_files_lines)
     except Exception, exc:
-        log.verbose_warning("Couldn't save CRDS bad files list:", repr(exc))
+        log.verbose_warning("Couldn't save CRDS bad files list to local CRDS cache:", repr(exc))
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
