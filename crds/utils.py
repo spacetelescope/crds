@@ -141,10 +141,14 @@ class CachedFunction(object):
     """Class to support the @cached function decorator.   Called at runtime
     for typical caching version of function.
     """
+    
+    cache_set = set()
+    
     def __init__(self, func, omit_from_key=None):
         self.cache = dict()
         self.uncached = func
         self.omit_from_key = [] if omit_from_key is None else omit_from_key
+        self.cache_set.add(self)
     
     def cache_key(self, *args, **keys):
         """Compute the cache key for the given parameters."""
@@ -180,6 +184,17 @@ class CachedFunction(object):
     def __get__(self, obj, objtype):
         '''Support instance methods.'''
         return functools.partial(self.__call__, obj)
+
+def clear_function_caches():
+    "Clear all the caches created using @utils.cached or @utils.xcached."""
+    for cache_func in CachedFunction.cache_set:
+        log.verbose("Clearing cache for", repr(cache_func.uncached))
+        cache_func.cache = dict()
+        
+def list_cached_functions():
+    """List all the functions supporting caching under @utils.cached or @utils.xcached."""
+    for cache_func in sorted(CachedFunction.cache_set):
+        print repr(cache_func.uncached)
 
 # ===================================================================
 
