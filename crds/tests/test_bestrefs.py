@@ -172,8 +172,8 @@ Compute simple bestrefs for 1 catalog datasets using hst.pmap:
 
     >>> case = BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets I9ZF01010")
     >>> status = case.run()
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['I9ZF01010']
-    CRDS  : INFO     Dumped 4 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['I9ZF01010']
+    CRDS  : INFO     Dumped 4 of 1 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
     CRDS  : INFO     Computing bestrefs for datasets ['I9ZF01010']
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     0 errors

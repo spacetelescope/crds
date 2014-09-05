@@ -5,6 +5,7 @@ import shutil
 import tempfile
 
 import crds
+from crds import utils
 
 HERE = os.path.dirname(__file__) or "."
 
@@ -13,6 +14,7 @@ class CRDSTestCase(object):
         self.data_dir = os.path.join(HERE, 'data')
         self.temp_dir = tempfile.mkdtemp(prefix='crds-test-')
         self.hst_mappath =  os.path.join(crds.__path__[0],'cache','mappings')
+        utils.clear_function_caches()
 
     def teardown(self):
         shutil.rmtree(self.temp_dir)
