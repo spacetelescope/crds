@@ -832,6 +832,21 @@ def get_existing_path(reference, observatory):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
 
+def mapping_closure(files):
+    """Traverse the mappings in `files` and return a list of all mappings
+    referred to by `files` as well as any references in `files`.
+    """
+    closure_files = set()
+    for file_ in files:
+        if rmap.is_mapping(file_):
+            mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
+            more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
+            more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
+        else:
+            more_files = set([file_])
+        closure_files = closure_files.union(more_files)
+    return sorted(closure_files)
+
 # ============================================================================
 
 def find_old_mapping(comparison_context, new_mapping):
@@ -1091,7 +1106,7 @@ Checks a CRDS reference or mapping file.
                 "Only one reference can be certified if --comparison-reference is specified."
             
         if (not self.args.dont_recurse_mappings):
-            all_files = self.mapping_closure(self.files)
+            all_files = mapping_closure(self.files)
         else:
             all_files = set(self.files)
             
@@ -1111,20 +1126,6 @@ Checks a CRDS reference or mapping file.
         log.standard_status()
         
         return log.errors()
-    
-    def mapping_closure(self, files):
-        """Traverse the mappings in `files` and return a list of all mappings
-        referred to by `files` as well as any references in `files`.
-        """
-        closure_files = set()
-        for file_ in files:
-            if rmap.is_mapping(file_):
-                mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                more_files = [rmap.locate_mapping(name) for name in mapping.mapping_names()]
-            else:
-                more_files = [file_]
-            closure_files = closure_files.union(more_files)
-        return sorted(closure_files)
 
 if __name__ == "__main__":
     CertifyScript()()
