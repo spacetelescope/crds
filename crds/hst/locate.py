@@ -210,9 +210,9 @@ def properties_inside_mapping(filename):
     return (instrument, filekind).
     """
     map = rmap.fetch_mapping(filename)
-    if map.filekind == "PIPELINE":
+    if map.mapping == "pipeline":
         result = "", ""
-    elif map.filekind == "INSTRUMENT":
+    elif map.mapping == "instrument":
         result = map.instrument, ""
     else:
         result = map.instrument, map.filekind
