@@ -481,7 +481,8 @@ class FileCacher(object):
                     raise CrdsDownloadError("file is not known to CRDS server.")
                 bytes, path = int(self.info_map[name]["size"]), localpaths[name]
                 log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
-                bytes_so_far += self.download(pipeline_context, name, path)
+                self.download(pipeline_context, name, path)
+                bytes_so_far += os.stat(path).st_size
             except Exception, exc:
                 if raise_exceptions:
                     raise
@@ -509,18 +510,30 @@ class FileCacher(object):
 
     def download_core(self, pipeline_context, name, localpath):
         """Download and verify file `name` under context `pipeline_context` to `localpath`."""
-        if config.get_download_mode() == "http":
+        if config.get_download_plugin():
+            self.plugin_download(pipeline_context, name, localpath)
+        elif config.get_download_mode() == "http":
             generator = self.get_data_http(pipeline_context, name)
+            self.generator_download(generator, localpath)
         else:
             generator = self.get_data_rpc(pipeline_context, name)
-        n_bytes = 0
+            self.generator_download(generator, localpath)
+        self.verify_file(name, localpath)
+        
+    def generator_download(self, generator, localpath):
+        """Read all bytes from `generator` until file is downloaded to `localpath.`"""
         with open(localpath, "wb+") as outfile:
             for data in generator:
                 outfile.write(data)
-                n_bytes += len(data)
-        self.verify_file(name, localpath)
-        return n_bytes
-            
+                
+    def plugin_download(self, pipeline_context, filename, localpath):
+        url = self.get_url(pipeline_context, filename)
+        plugin_cmd = config.get_download_plugin()
+        plugin_cmd = plugin_cmd.replace("${SOURCE_URL}", url)
+        plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
+        log.verbose("Running download plugin:", repr(plugin_cmd))
+        os.system(plugin_cmd)
+        
     def get_data_rpc(self, pipeline_context, filename):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""
         chunk = 0
