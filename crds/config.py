@@ -244,8 +244,7 @@ def get_download_mode():
     """
     mode = os.environ.get("CRDS_DOWNLOAD_MODE", "http").lower()
     assert mode in ["http", "rpc", "plugin"], \
-        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (preferred) " + \
-        "or 'rpc' (through firewall) or 'plugin'."
+        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (default), 'rpc' (port forwarding), or 'plugin' (fastest)."
     return mode
 
 def get_download_plugin():
@@ -256,7 +255,7 @@ def get_download_plugin():
         return None
     elif "CRDS_DOWNLOAD_PLUGIN" in os.environ:
         return os.environ["CRDS_DOWNLOAD_PLUGIN"]
-    else:
+    elif get_download_mode() == "plugin":
         for path in ["/usr/local/bin", "/usr/bin", "/sw/bin"]:
             program = os.path.join(path, "wget")
             if os.path.exists(program):
