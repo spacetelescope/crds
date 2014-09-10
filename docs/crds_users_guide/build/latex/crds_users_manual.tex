@@ -3,6 +3,7 @@
 \documentclass[letterpaper,10pt,english]{sphinxmanual}
 \usepackage[utf8]{inputenc}
 \DeclareUnicodeCharacter{00A0}{\nobreakspace}
+\usepackage{cmap}
 \usepackage[T1]{fontenc}
 \usepackage{babel}
 \usepackage{times}
@@ -10,9 +11,6 @@
 \usepackage{longtable}
 \usepackage{sphinx}
 \usepackage{multirow}
-
-\usepackage{enumitem}
-\setlistdepth{15}
 
 \usepackage{amsmath}
 \DeclareUnicodeCharacter{00A0}{\nobreakspace}
@@ -60,7 +58,7 @@
 
 
 \title{crds Documentation}
-\date{August 29, 2014}
+\date{September 10, 2014}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -78,75 +76,81 @@
     \PYG@it{\PYG@bf{\PYG@ff{#1}}}}}}}
 \def\PYG#1#2{\PYG@reset\PYG@toks#1+\relax+\PYG@do{#2}}
 
-\def\PYG@tok@gd{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
-\def\PYG@tok@gu{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
-\def\PYG@tok@gt{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
-\def\PYG@tok@gs{\let\PYG@bf=\textbf}
-\def\PYG@tok@gr{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\def\PYG@tok@cm{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@vg{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@m{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mh{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@cs{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\colorbox[rgb]{1.00,0.94,0.94}{##1}}}
-\def\PYG@tok@ge{\let\PYG@it=\textit}
-\def\PYG@tok@vc{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@il{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@go{\def\PYG@tc##1{\textcolor[rgb]{0.19,0.19,0.19}{##1}}}
-\def\PYG@tok@cp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@gi{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\def\PYG@tok@gh{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\def\PYG@tok@ni{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
-\def\PYG@tok@nl{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
-\def\PYG@tok@nn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@no{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
-\def\PYG@tok@na{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@nb{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@nd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
-\def\PYG@tok@ne{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nf{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
-\def\PYG@tok@si{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
-\def\PYG@tok@s2{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@vi{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@nt{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
-\def\PYG@tok@nv{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@s1{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@gp{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@sh{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@ow{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@sx{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@bp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c1{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@kc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@mf{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@err{\def\PYG@bc##1{\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{##1}}}
-\def\PYG@tok@kd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@ss{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
-\def\PYG@tok@sr{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
-\def\PYG@tok@mo{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mi{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@kn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@o{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\def\PYG@tok@kr{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@s{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@kp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@w{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\def\PYG@tok@kt{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
-\def\PYG@tok@sc{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sb{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@k{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@se{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sd{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gd\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gu\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@gt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PYG@tok@gs\endcsname{\let\PYG@bf=\textbf}
+\expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
+\expandafter\def\csname PYG@tok@vc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@il\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@go\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.20,0.20,0.20}{##1}}}
+\expandafter\def\csname PYG@tok@cp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@gi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gh\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@ni\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
+\expandafter\def\csname PYG@tok@nl\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
+\expandafter\def\csname PYG@tok@nn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@no\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@na\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@nb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@nd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
+\expandafter\def\csname PYG@tok@ne\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
+\expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
+\expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
+\expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@err\endcsname{\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@ss\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
+\expandafter\def\csname PYG@tok@sr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
+\expandafter\def\csname PYG@tok@mo\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@w\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PYG@tok@kt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@sc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@k\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@se\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sd\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 
 \def\PYGZbs{\char`\\}
 \def\PYGZus{\char`\_}
 \def\PYGZob{\char`\{}
 \def\PYGZcb{\char`\}}
 \def\PYGZca{\char`\^}
+\def\PYGZam{\char`\&}
+\def\PYGZlt{\char`\<}
+\def\PYGZgt{\char`\>}
 \def\PYGZsh{\char`\#}
 \def\PYGZpc{\char`\%}
 \def\PYGZdl{\char`\$}
+\def\PYGZhy{\char`\-}
+\def\PYGZsq{\char`\'}
+\def\PYGZdq{\char`\"}
 \def\PYGZti{\char`\~}
 % for compatibility with earlier versions
 \def\PYGZat{@}
@@ -302,7 +306,7 @@ Lists cache files and configuration,  prints rules files,  dumps database datase
 More information can be found on each tool using the command line -- --help switch,  e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.bestrefs --help
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}help
 \end{Verbatim}
 
 or in the command line tools section of this document.
@@ -310,17 +314,24 @@ or in the command line tools section of this document.
 
 \chapter{Installation}
 \label{installation:installation}
-Most people will encounter CRDS as software distributed side-by-side with calibration code,
-and consequently CRDS will be pre-installed.
 
+\section{Installation via Ureka}
+\label{installation:installation-via-ureka}
+Ureka is a collection of astronomy software that provides everything you need to run the data reduction packages
+provided by STScI.   Most people install CRDS as part of Ureka which is found here:
+\begin{quote}
 
-\section{Installing with PIP}
-\label{installation:installing-with-pip}
-CRDS is available on pypi and explicitly installable using pip:
+\href{http://ssb.stsci.edu/ureka/}{http://ssb.stsci.edu/ureka/}
+\end{quote}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\% pip install crds
-\end{Verbatim}
+Follow the instructions for installing Ureka and afterward you should be able to do the following:
+\begin{quote}
+
+\% python -m crds.list --version
+CRDS  : INFO     crds version 1.1.1 revision 1784M
+\end{quote}
+
+and get similar output reflecting your installed CRDS version.
 
 
 \section{Installing from Source}
@@ -331,7 +342,7 @@ CRDS is available on pypi and explicitly installable using pip:
 Alternately, CRDS source code can be downloaded from the CRDS subversion repository like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  crds
+\PYGZpc{} svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  crds
 \end{Verbatim}
 
 
@@ -340,29 +351,10 @@ Alternately, CRDS source code can be downloaded from the CRDS subversion reposit
 Installing from source,  run the install script in the root source code directory:
 
 \begin{Verbatim}[commandchars=\\\{\}]
- \% cd crds
- \% ./install
+ \PYGZpc{} cd crds
+ \PYGZpc{} ./install
 final status 000000
 \end{Verbatim}
-
-
-\section{Test the installation}
-\label{installation:test-the-installation}
-Basic CRDS client testing can be performed onsite at STScI from the source code directory as follows:
-
-\begin{Verbatim}[commandchars=\\\{\}]
- \% cd crds
- \% source envs/hst-crds-readonly.csh
- \% ./runtests
-........... lots of dots ....
-----------------------------------------------------------------------
-Ran 157 tests in 41.232s
-
-OK
-\end{Verbatim}
-
-Test errors will result if the CRDS server at \href{https://hst-crds.stsci.edu}{https://hst-crds.stsci.edu} or Central Store
-file system /grp/crds/hst are not accessible from your network or host.
 
 
 \section{Dependencies}
@@ -399,6 +391,9 @@ OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
 \item {} 
 Parsley-1.1  (included in CRDS subversion under third\_party)
 
+\item {} 
+pyaml  (for certifying yaml references)
+
 \end{itemize}
 \begin{description}
 \item[{OPTIONAL: For building documentation add:}] \leavevmode\begin{itemize}
@@ -419,7 +414,8 @@ stsci.sphinxext
 \chapter{Setting up your Environment}
 \label{installation:setting-up-your-environment}
 CRDS is used in a number of different contexts and consequently is configurable.   The defaults for
-CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration.
+CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration onsite.
+Subsequent instructions are provided for setting up more personalized or offsite environments.
 
 
 \section{Basic Environment}
@@ -429,14 +425,14 @@ files.   CRDS has two environment variables which define basic setup.   These va
 obtains rules and references and where CRDS caches files to on your local system:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_SERVER\_URL  \textless{}some\_crds\_server\textgreater{}
-\% setenv CRDS\_PATH        \textless{}some\_crds\_reference\_and\_rules\_cache\_directory\textgreater{}
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL  \PYGZlt{}some\PYGZus{}crds\PYGZus{}server\PYGZgt{}
+\PYGZpc{} setenv CRDS\PYGZus{}PATH        \PYGZlt{}some\PYGZus{}crds\PYGZus{}reference\PYGZus{}and\PYGZus{}rules\PYGZus{}cache\PYGZus{}directory\PYGZgt{}
 \end{Verbatim}
 
 If you are currently working on only a single project,  it may be helpful to declare that project:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_OBSERVATORY   hst (or jwst)
+\PYGZpc{} setenv CRDS\PYGZus{}OBSERVATORY   hst (or jwst)
 \end{Verbatim}
 
 
@@ -504,22 +500,22 @@ operational server for your project:
 
 \begin{tabulary}{\linewidth}{|L|L|}
 \hline
-\textbf{
+\textsf{\relax 
 Project
-} & \textbf{
+} & \textsf{\relax 
 Implicit CRDS\_SERVER\_URL
-}\\\hline
-
+}\\
+\hline
 hst
  & 
 \href{https://hst-crds.stsci.edu}{https://hst-crds.stsci.edu}
-\\\hline
+\\
 
 jwst
  & 
 \href{https://jwst-crds.stsci.edu}{https://jwst-crds.stsci.edu}
-\\\hline
-\end{tabulary}
+\\
+\hline\end{tabulary}
 
 
 If CRDS cannot determine your project,  and you did not specify CRDS\_SERVER\_URL,  it will be defaulted to:
@@ -539,23 +535,25 @@ coordinating with those tests,  \textbf{CRDS\_PATH} and \textbf{CRDS\_SERVER\_UR
 similar to this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_PATH  \$\PYGZob{}HOME\PYGZcb{}/crds\_cache\_test
-\% setenv CRDS\_SERVER\_URL https://hst-crds-test.stsci.edu
+\PYGZpc{} setenv CRDS\PYGZus{}PATH  \PYGZdl{}\PYGZob{}HOME\PYGZcb{}/crds\PYGZus{}cache\PYGZus{}test
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://hst\PYGZhy{}crds\PYGZhy{}test.stsci.edu
 \end{Verbatim}
 
 After syncing this will provide access to CRDS test files and rules in a local cache:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# Fetch all the test rules
-\% python -m crds.sync --all
-\# Fetch specifically listed test references
-\% python -m crds.sync --files \textless{}test\_references\_only\_the\_test\_server\_has...\textgreater{}
+\PYGZsh{} Fetch all the test rules
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}all
+\PYGZsh{} Fetch specifically listed test references
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}files \PYGZlt{}test\PYGZus{}references\PYGZus{}only\PYGZus{}the\PYGZus{}test\PYGZus{}server\PYGZus{}has...\PYGZgt{}
 \end{Verbatim}
 
 Testing reference type changes (new keywords,  new values or value restrictions, etc) may also require access to
 development versions of CRDS code.   In particular,  when adding parameters or changing legal parameter values,
 the certify tool is modified as ``code'' on the servers first.   Hence distributed versions of CRDS will not reflect
-ongoing type changes.
+ongoing type changes.   The test server Certify Files function should generally reflect the most up-to-date knowledge
+CRDS has about ongoing type changes.  To see how new reference files stack up with changing CRDS code,  try submitting
+the files to Certify Files on the test server or ask what the status is on \href{mailto:crds\_team@stsci.edu}{crds\_team@stsci.edu}.
 
 \textbf{NOTE:} the test server is only visible on-site,  not on the internet.  Without VPN or port forwarding,  the test
 servers are not usable off site.
@@ -572,13 +570,13 @@ For offsite users without VPN access who are running local calibrations,  you ca
 cache of rules and references supporting only the datasets you care about:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_PATH  \$\PYGZob{}HOME\PYGZcb{}/crds\_cache
+\PYGZpc{} setenv CRDS\PYGZus{}PATH  \PYGZdl{}\PYGZob{}HOME\PYGZcb{}/crds\PYGZus{}cache
 \end{Verbatim}
 
 For \textbf{HST}, to fetch the references required to process some FITS datasets:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.bestrefs --files dataset*.fits --sync-references=1
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}files dataset*.fits \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references=1
 \end{Verbatim}
 
 By default crds.bestrefs does not alter your dataset FITS files.   If you also wish to update your dataset FITS
@@ -600,13 +598,13 @@ HST calibration steps access reference files indirectly through environment vari
 should be set to point to the appropriate directory under CRDS\_PATH:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv iref \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
-\% setenv jref \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
-\% setenv oref \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
-\% setenv lref \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
-\% setenv nref \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
-\% setenv uref \$\PYGZob{}uref\_linux\PYGZcb{}
-\% setenv uref\_linux \$\PYGZob{}CRDS\_PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+\PYGZpc{} setenv uref \PYGZdl{}\PYGZob{}uref\PYGZus{}linux\PYGZcb{}
+\PYGZpc{} setenv uref\PYGZus{}linux \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
 \end{Verbatim}
 
 Currently the CRDS cache is structured so that references from all instruments of a project reside in one common
@@ -623,7 +621,7 @@ The context used for JWST can be overridden to some specific historical or exper
 the \textbf{CRDS\_CONTEXT} environment variable:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_CONTEXT jwst\_0057.pmap
+\PYGZpc{} setenv CRDS\PYGZus{}CONTEXT jwst\PYGZus{}0057.pmap
 \end{Verbatim}
 
 \textbf{CRDS\_CONTEXT} does not override command line switches or parameters passed explicitly to crds.getreferences().
@@ -702,7 +700,7 @@ shallower cache structure:
 \begin{Verbatim}[commandchars=\\\{\}]
 /cache
     /mappings
-        mapping\_files...
+        mapping\PYGZus{}files...
     /references
         reference files...
     /config
@@ -776,14 +774,14 @@ ways.  To specify a file in your local CRDS file cache,  as defined by CRDS\_PAT
 use no path on the file:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.diff hst.pmap  hst\_0001.pmap  \# assumes paths in CRDS cache
+\PYGZpc{} python \PYGZhy{}m crds.diff hst.pmap  hst\PYGZus{}0001.pmap  \PYGZsh{} assumes paths in CRDS cache
 \end{Verbatim}
 
 To specify a particular file which is not located in your cache,  give at least
 a relative path to the file, ./ will do:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.diff /some/path/hst.pmap ./hst\_0002.pmap   \# uses given paths
+\PYGZpc{} python \PYGZhy{}m crds.diff /some/path/hst.pmap ./hst\PYGZus{}0002.pmap   \PYGZsh{} uses given paths
 \end{Verbatim}
 
 
@@ -803,41 +801,41 @@ positional arguments:
   files
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -d, --deep            Certify reference files referred to by mappings have valid contents.
-  -r, --dont-recurse-mappings
+  \PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+  \PYGZhy{}d, \PYGZhy{}\PYGZhy{}deep            Certify reference files referred to by mappings have valid contents.
+  \PYGZhy{}r, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}recurse\PYGZhy{}mappings
                         Do not load and validate mappings recursively,  checking only directly specified files.
-  -a, --dont-parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
-  -e, --exist           Certify reference files referred to by mappings exist.
-  -m, --mapping         Ignore extensions, the files being certified are mappings.
-  -p, --dump-provenance
+  \PYGZhy{}a, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
+  \PYGZhy{}e, \PYGZhy{}\PYGZhy{}exist           Certify reference files referred to by mappings exist.
+  \PYGZhy{}m, \PYGZhy{}\PYGZhy{}mapping         Ignore extensions, the files being certified are mappings.
+  \PYGZhy{}p, \PYGZhy{}\PYGZhy{}dump\PYGZhy{}provenance
                         Dump provenance keywords.
-  -t TRAP\_EXCEPTIONS, --trap-exceptions TRAP\_EXCEPTIONS
+  \PYGZhy{}t TRAP\PYGZus{}EXCEPTIONS, \PYGZhy{}\PYGZhy{}trap\PYGZhy{}exceptions TRAP\PYGZus{}EXCEPTIONS
                         Capture exceptions at level: pmap, imap, rmap, selector, debug, none
-  -x COMPARISON\_CONTEXT, --comparison-context COMPARISON\_CONTEXT
+  \PYGZhy{}x COMPARISON\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context COMPARISON\PYGZus{}CONTEXT
                         Pipeline context defining comparison files.
-  -y COMPARISON\_REFERENCE, --comparison-reference COMPARISON\_REFERENCE
+  \PYGZhy{}y COMPARISON\PYGZus{}REFERENCE, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}reference COMPARISON\PYGZus{}REFERENCE
                         Comparison reference for table certification.
-  --dump-unique-errors  Record and dump the first instance of each kind of error.
-  --unique-errors-file UNIQUE\_ERRORS\_FILE
+  \PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors  Record and dump the first instance of each kind of error.
+  \PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE
                         Write out data names (ids or filenames) for first instance of unique errors to specified file.
-  --all-errors-file ALL\_ERRORS\_FILE
-                        Write out all err'ing data names (ids or filenames) to specified file.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
+  \PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE
+                        Write out all err\PYGZsq{}ing data names (ids or filenames) to specified file.
+  \PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+  \PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                         Set log verbosity to a specific level: 0..100.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
+  \PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  \PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+  \PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+  \PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 \end{Verbatim}
 
 crds.certify is invoked as, e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.certify --comparison-context=hst\_0027.pmap   some\_reference.fits
+\PYGZpc{} python \PYGZhy{}m crds.certify \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context=hst\PYGZus{}0027.pmap   some\PYGZus{}reference.fits
 
-\% python -m crds.certify hst.pmap
+\PYGZpc{} python \PYGZhy{}m crds.certify hst.pmap
 \end{Verbatim}
 
 Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
@@ -855,60 +853,60 @@ the full match path to each bottom level change.   crds.diff --help yields:
 Difference CRDS mapping or reference files.
 
 positional arguments:
-  old\_file              Prior file of difference.
-  new\_file              New file of difference.
+  old\PYGZus{}file              Prior file of difference.
+  new\PYGZus{}file              New file of difference.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -P, --primitive-diffs
+  \PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+  \PYGZhy{}P, \PYGZhy{}\PYGZhy{}primitive\PYGZhy{}diffs
                         Fitsdiff replaced reference files when diffing mappings.
-  -T, --mapping-text-diffs
+  \PYGZhy{}T, \PYGZhy{}\PYGZhy{}mapping\PYGZhy{}text\PYGZhy{}diffs
                         In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.
-  -K, --check-diffs     Issue warnings about new rules, deletions, or reversions.
-  -N, --print-new-files
+  \PYGZhy{}K, \PYGZhy{}\PYGZhy{}check\PYGZhy{}diffs     Issue warnings about new rules, deletions, or reversions.
+  \PYGZhy{}N, \PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}files
                         Rather than printing diffs for mappings,  print the names of new or replacement files.  Excludes intermediaries.
-  -A, --print-all-new-files
+  \PYGZhy{}A, \PYGZhy{}\PYGZhy{}print\PYGZhy{}all\PYGZhy{}new\PYGZhy{}files
                         Print the names of every new or replacement file in diffs between old and new.  Includes intermediaries.
-  -i, --include-header-diffs
-                        Include mapping header differences in logical diffs: sha1sum, derived\_from, etc.
-  -B, --hide-boring-diffs
-                        Include mapping header differences in logical diffs: sha1sum, derived\_from, etc.
-  --print-affected-instruments
+  \PYGZhy{}i, \PYGZhy{}\PYGZhy{}include\PYGZhy{}header\PYGZhy{}diffs
+                        Include mapping header differences in logical diffs: sha1sum, derived\PYGZus{}from, etc.
+  \PYGZhy{}B, \PYGZhy{}\PYGZhy{}hide\PYGZhy{}boring\PYGZhy{}diffs
+                        Include mapping header differences in logical diffs: sha1sum, derived\PYGZus{}from, etc.
+  \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}instruments
                         Print out the names of instruments which appear in diffs,  rather than diffs.
-  --print-affected-types
+  \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}types
                         Print out the names of instruments and types which appear in diffs,  rather than diffs.
-  --print-affected-modes
+  \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}modes
                         Print out the names of instruments, types, and matching parameters,  rather than diffs.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
+  \PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+  \PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                         Set log verbosity to a specific level: 0..100.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
+  \PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  \PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+  \PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+  \PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 
-Reference files are nominally differenced using FITS-diff or diff.
+Reference files are nominally differenced using FITS\PYGZhy{}diff or diff.
 
 Mapping files are differenced using CRDS machinery to recursively compare too mappings and
-their sub-mappings.
+their sub\PYGZhy{}mappings.
 
 Differencing two mappings will find all the logical differences between the two contexts
 and any nested mappings.
 
-By specifying --mapping-text-diffs,  UNIX diff will be run on mapping files in addition to
+By specifying \PYGZhy{}\PYGZhy{}mapping\PYGZhy{}text\PYGZhy{}diffs,  UNIX diff will be run on mapping files in addition to
 CRDS logical diffs.
 
-By specifying --primitive-diffs,  FITS diff will be run on all references which are replaced
+By specifying \PYGZhy{}\PYGZhy{}primitive\PYGZhy{}diffs,  FITS diff will be run on all references which are replaced
 in the logical differences between two mappings.
 
 For example:
 
-    \% python -m crds.diff hst\_0001.pmap  hst\_0005.pmap  --mapping-text-diffs --primitive-diffs
+    \PYGZpc{} python \PYGZhy{}m crds.diff hst\PYGZus{}0001.pmap  hst\PYGZus{}0005.pmap  \PYGZhy{}\PYGZhy{}mapping\PYGZhy{}text\PYGZhy{}diffs \PYGZhy{}\PYGZhy{}primitive\PYGZhy{}diffs
 
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
 
     NOTE: mapping logical differences (the default) do not compare CRDS mapping headers,  use
-    --include-header-diffs to get those as well.
+    \PYGZhy{}\PYGZhy{}include\PYGZhy{}header\PYGZhy{}diffs to get those as well.
 \end{Verbatim}
 
 For standard CRDS filenames,  crds.diff can guess the observatory.   For
@@ -916,10 +914,10 @@ non-standard names,  the observatory needs to be specified.  crds.diff can be
 invoked like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.diff   jwst\_nircam\_dark\_0010.fits  jwst\_nircam\_dark\_0011.fits
+\PYGZpc{} python \PYGZhy{}m crds.diff   jwst\PYGZus{}nircam\PYGZus{}dark\PYGZus{}0010.fits  jwst\PYGZus{}nircam\PYGZus{}dark\PYGZus{}0011.fits
 
-\% python -m crds.diff  jwst\_0001.pmap   jwst\_0002.pmap
-(('hst.pmap', 'hst\_0004.pmap'), ('hst\_acs.imap', 'hst\_acs\_0004.imap'), ('hst\_acs\_darkfile.rmap', 'hst\_acs\_darkfile\_0003.rmap'), ('WFC', 'A\textbar{}ABCD\textbar{}AD\textbar{}B\textbar{}BC\textbar{}C\textbar{}D', '0.5\textbar{}1.0\textbar{}1.4\textbar{}2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej\_drk.fits' with 'hst\_acs\_darkfile\_0003.fits'")
+\PYGZpc{} python \PYGZhy{}m crds.diff  jwst\PYGZus{}0001.pmap   jwst\PYGZus{}0002.pmap
+((\PYGZsq{}hst.pmap\PYGZsq{}, \PYGZsq{}hst\PYGZus{}0004.pmap\PYGZsq{}), (\PYGZsq{}hst\PYGZus{}acs.imap\PYGZsq{}, \PYGZsq{}hst\PYGZus{}acs\PYGZus{}0004.imap\PYGZsq{}), (\PYGZsq{}hst\PYGZus{}acs\PYGZus{}darkfile.rmap\PYGZsq{}, \PYGZsq{}hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0003.rmap\PYGZsq{}), (\PYGZsq{}WFC\PYGZsq{}, \PYGZsq{}A\textbar{}ABCD\textbar{}AD\textbar{}B\textbar{}BC\textbar{}C\textbar{}D\PYGZsq{}, \PYGZsq{}0.5\textbar{}1.0\textbar{}1.4\textbar{}2.0\PYGZsq{}), \PYGZsq{}2011\PYGZhy{}03\PYGZhy{}16 23:34:35\PYGZsq{}, \PYGZdq{}replaced \PYGZsq{}v441434ej\PYGZus{}drk.fits\PYGZsq{} with \PYGZsq{}hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0003.fits\PYGZsq{}\PYGZdq{})
 \end{Verbatim}
 
 
@@ -997,7 +995,7 @@ specified files.  Since the \textbf{local cache} is used only mappings present i
 local cache will be included in the results given.  crds.uses is invoked as:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.uses \textless{}observatory=hst\textbar{}jwst\textgreater{} \textless{}mapping or reference\textgreater{}...
+\PYGZpc{} python \PYGZhy{}m crds.uses \PYGZlt{}observatory=hst\textbar{}jwst\PYGZgt{} \PYGZlt{}mapping or reference\PYGZgt{}...
 \end{Verbatim}
 
 e.g.:
@@ -1008,56 +1006,56 @@ Prints out the mappings which refer to the specified mappings or references.
 Prints out the datasets which historically used a particular reference as defined by DADSOPS.
 
 IMPORTANT:
-   1. You must specify references on which to operate with --files.
-   2. You must set CRDS\_PATH and CRDS\_SERVER\_URL to give crds.uses access to CRDS mappings and databases.
+   1. You must specify references on which to operate with \PYGZhy{}\PYGZhy{}files.
+   2. You must set CRDS\PYGZus{}PATH and CRDS\PYGZus{}SERVER\PYGZus{}URL to give crds.uses access to CRDS mappings and databases.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --files FILES [FILES ...]
+  \PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+  \PYGZhy{}\PYGZhy{}files FILES [FILES ...]
                         References for which to dump using mappings or datasets.
-  -d, --print-datasets  Print the ids of datasets last historically using a reference.
-  -i, --include-used    Include the used file in the output as the first column.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
+  \PYGZhy{}d, \PYGZhy{}\PYGZhy{}print\PYGZhy{}datasets  Print the ids of datasets last historically using a reference.
+  \PYGZhy{}i, \PYGZhy{}\PYGZhy{}include\PYGZhy{}used    Include the used file in the output as the first column.
+  \PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+  \PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                         Set log verbosity to a specific level: 0..100.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
+  \PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  \PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+  \PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+  \PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 
 crds.uses can be invoked like this:
 
-\% python -m crds.uses --files n3o1022ij\_drk.fits --hst
+\PYGZpc{} python \PYGZhy{}m crds.uses \PYGZhy{}\PYGZhy{}files n3o1022ij\PYGZus{}drk.fits \PYGZhy{}\PYGZhy{}hst
 hst.pmap
-hst\_0001.pmap
-hst\_0002.pmap
-hst\_0003.pmap
+hst\PYGZus{}0001.pmap
+hst\PYGZus{}0002.pmap
+hst\PYGZus{}0003.pmap
 ...
-hst\_0041.pmap
-hst\_acs.imap
-hst\_acs\_0001.imap
-hst\_acs\_0002.imap
-hst\_acs\_0003.imap
+hst\PYGZus{}0041.pmap
+hst\PYGZus{}acs.imap
+hst\PYGZus{}acs\PYGZus{}0001.imap
+hst\PYGZus{}acs\PYGZus{}0002.imap
+hst\PYGZus{}acs\PYGZus{}0003.imap
 ...
-hst\_acs\_0008.imap
-hst\_acs\_darkfile.rmap
-hst\_acs\_darkfile\_0001.rmap
-hst\_acs\_darkfile\_0002.rmap
-hst\_acs\_darkfile\_0003.rmap
+hst\PYGZus{}acs\PYGZus{}0008.imap
+hst\PYGZus{}acs\PYGZus{}darkfile.rmap
+hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0001.rmap
+hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0002.rmap
+hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0003.rmap
 ...
-hst\_acs\_darkfile\_0005.rmap
+hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0005.rmap
 
-\% python -m crds.uses --files n3o1022ij\_drk.fits --print-datasets --hst
+\PYGZpc{} python \PYGZhy{}m crds.uses \PYGZhy{}\PYGZhy{}files n3o1022ij\PYGZus{}drk.fits \PYGZhy{}\PYGZhy{}print\PYGZhy{}datasets \PYGZhy{}\PYGZhy{}hst
 J8BA0HRPQ
 J8BA0IRTQ
 J8BA0JRWQ
 J8BA0KT4Q
 J8BA0LIJQ
 
-\% python -m crds.uses --files @dropped --hst --print-datasets --include-used
-vb41934lj\_bia.fits JA7P21A2Q
-vb41934lj\_bia.fits JA7P21A4Q
-vb41934lj\_bia.fits JA7P21A6Q
+\PYGZpc{} python \PYGZhy{}m crds.uses \PYGZhy{}\PYGZhy{}files @dropped \PYGZhy{}\PYGZhy{}hst \PYGZhy{}\PYGZhy{}print\PYGZhy{}datasets \PYGZhy{}\PYGZhy{}include\PYGZhy{}used
+vb41934lj\PYGZus{}bia.fits JA7P21A2Q
+vb41934lj\PYGZus{}bia.fits JA7P21A4Q
+vb41934lj\PYGZus{}bia.fits JA7P21A6Q
 \end{Verbatim}
 
 
@@ -1068,73 +1066,73 @@ reference files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 usage: matches.py
-       [-h] [--contexts [CONTEXT [CONTEXT ...]]]
-       [--files FILES [FILES ...]] [-b] [-o] [-t]
+       [\PYGZhy{}h] [\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]]
+       [\PYGZhy{}\PYGZhy{}files FILES [FILES ...]] [\PYGZhy{}b] [\PYGZhy{}o] [\PYGZhy{}t]
 
 Prints out the selection criteria by which the specified references are matched
 with respect to a particular context.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --contexts [CONTEXT [CONTEXT ...]]
-                        Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
-  --range MIN:MAX       Operate for pipeline context ids (.pmaps) between \textless{}MIN\textgreater{} and \textless{}MAX\textgreater{}.
-  --all                 Operate with respect to all known CRDS contexts.
-  --last N              Operate with respect to the last N contexts.
-  -i, --ignore-cache    Download required files even if they're already in the cache.
-  --files FILES [FILES ...]
+  \PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+  \PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]
+                        Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date\PYGZhy{}based specification
+  \PYGZhy{}\PYGZhy{}range MIN:MAX       Operate for pipeline context ids (.pmaps) between \PYGZlt{}MIN\PYGZgt{} and \PYGZlt{}MAX\PYGZgt{}.
+  \PYGZhy{}\PYGZhy{}all                 Operate with respect to all known CRDS contexts.
+  \PYGZhy{}\PYGZhy{}last N              Operate with respect to the last N contexts.
+  \PYGZhy{}i, \PYGZhy{}\PYGZhy{}ignore\PYGZhy{}cache    Download required files even if they\PYGZsq{}re already in the cache.
+  \PYGZhy{}\PYGZhy{}files FILES [FILES ...]
                         References for which to dump selection criteria.
-  -b, --brief-paths     Don't the instrument and filekind.
-  -o, --omit-parameter-names
+  \PYGZhy{}b, \PYGZhy{}\PYGZhy{}brief\PYGZhy{}paths     Don\PYGZsq{}t the instrument and filekind.
+  \PYGZhy{}o, \PYGZhy{}\PYGZhy{}omit\PYGZhy{}parameter\PYGZhy{}names
                         Hide the parameter names of the selection criteria,  just show the values.
-  -t, --tuple-format    Print the match info as Python tuples.
-  -d DATASETS [DATASETS ...], --datasets DATASETS [DATASETS ...]
+  \PYGZhy{}t, \PYGZhy{}\PYGZhy{}tuple\PYGZhy{}format    Print the match info as Python tuples.
+  \PYGZhy{}d DATASETS [DATASETS ...], \PYGZhy{}\PYGZhy{}datasets DATASETS [DATASETS ...]
                         Dataset ids for which to dump matching parameters from DADSOPS or equivalent database.
-  -c, --condition-values
+  \PYGZhy{}c, \PYGZhy{}\PYGZhy{}condition\PYGZhy{}values
                         When dumping dataset parameters, first apply CRDS value conditioning / normalization.
-  -m, --minimize-header
+  \PYGZhy{}m, \PYGZhy{}\PYGZhy{}minimize\PYGZhy{}header
                         When dumping dataset parameters,  limit them to matching parameters, not historical bestrefs.
-  -v, --verbose         Set log verbosity to True,  nominal debug level.
-  --verbosity VERBOSITY
+  \PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+  \PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                         Set log verbosity to a specific level: 0..100.
-  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  -V, --version         Print the software version and exit.
-  -J, --jwst            Force observatory to JWST for determining header conventions.
-  -H, --hst             Force observatory to HST for determining header conventions.
+  \PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+  \PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+  \PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+  \PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 \end{Verbatim}
 
 crds.matches can dump reference file match cases with respect to particular contexts:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.matches  --contexts hst\_0001.pmap --files lc41311jj\_pfl.fits
-lc41311jj\_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+\PYGZpc{} python \PYGZhy{}m crds.matches  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits
+lc41311jj\PYGZus{}pfl.fits : ACS PFLTFILE DETECTOR=\PYGZsq{}WFC\PYGZsq{} CCDAMP=\PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{} FILTER1=\PYGZsq{}F625W\PYGZsq{} FILTER2=\PYGZsq{}POL0V\PYGZsq{} DATE\PYGZhy{}OBS=\PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{} TIME\PYGZhy{}OBS=\PYGZsq{}00:00:00\PYGZsq{}
 
-\% python -m crds.matches --contexts hst.pmap --files lc41311jj\_pfl.fits --omit-parameter-names --brief-paths
-lc41311jj\_pfl.fits :  'WFC' 'A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+\PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}contexts hst.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits \PYGZhy{}\PYGZhy{}omit\PYGZhy{}parameter\PYGZhy{}names \PYGZhy{}\PYGZhy{}brief\PYGZhy{}paths
+lc41311jj\PYGZus{}pfl.fits :  \PYGZsq{}WFC\PYGZsq{} \PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{} \PYGZsq{}F625W\PYGZsq{} \PYGZsq{}POL0V\PYGZsq{} \PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{} \PYGZsq{}00:00:00\PYGZsq{}
 
-\% python -m crds.matches --contexts hst.pmap --files lc41311jj\_pfl.fits --tuple-format
-lc41311jj\_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
+\PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}contexts hst.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits \PYGZhy{}\PYGZhy{}tuple\PYGZhy{}format
+lc41311jj\PYGZus{}pfl.fits : ((\PYGZsq{}OBSERVATORY\PYGZsq{}, \PYGZsq{}HST\PYGZsq{}), (\PYGZsq{}INSTRUMENT\PYGZsq{}, \PYGZsq{}ACS\PYGZsq{}), (\PYGZsq{}FILEKIND\PYGZsq{}, \PYGZsq{}PFLTFILE\PYGZsq{}), (\PYGZsq{}DETECTOR\PYGZsq{}, \PYGZsq{}WFC\PYGZsq{}), (\PYGZsq{}CCDAMP\PYGZsq{}, \PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{}), (\PYGZsq{}FILTER1\PYGZsq{}, \PYGZsq{}F625W\PYGZsq{}), (\PYGZsq{}FILTER2\PYGZsq{}, \PYGZsq{}POL0V\PYGZsq{}), (\PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{}), (\PYGZsq{}TIME\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}00:00:00\PYGZsq{}))
 \end{Verbatim}
 
 crds.matches can dump database matching parameters for specified datasets with respect to specified contexts:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst\_0048.pmap hst\_0044.pmap
-JBANJOF3Q : hst\_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
-JBANJOF3Q : hst\_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
+\PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}datasets JBANJOF3Q \PYGZhy{}\PYGZhy{}minimize\PYGZhy{}headers \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0048.pmap hst\PYGZus{}0044.pmap
+JBANJOF3Q : hst\PYGZus{}0044.pmap : APERTURE=\PYGZsq{}WFC1\PYGZhy{}2K\PYGZsq{} ATODCORR=\PYGZsq{}NONE\PYGZsq{} BIASCORR=\PYGZsq{}NONE\PYGZsq{} CCDAMP=\PYGZsq{}B\PYGZsq{} CCDCHIP=\PYGZsq{}1.0\PYGZsq{} CCDGAIN=\PYGZsq{}2.0\PYGZsq{} CRCORR=\PYGZsq{}NONE\PYGZsq{} DARKCORR=\PYGZsq{}NONE\PYGZsq{} DATE\PYGZhy{}OBS=\PYGZsq{}2010\PYGZhy{}01\PYGZhy{}31\PYGZsq{} DETECTOR=\PYGZsq{}WFC\PYGZsq{} DQICORR=\PYGZsq{}NONE\PYGZsq{} DRIZCORR=\PYGZsq{}NONE\PYGZsq{} FILTER1=\PYGZsq{}F502N\PYGZsq{} FILTER2=\PYGZsq{}F660N\PYGZsq{} FLASHCUR=\PYGZsq{}OFF\PYGZsq{} FLATCORR=\PYGZsq{}NONE\PYGZsq{} FLSHCORR=\PYGZsq{}NONE\PYGZsq{} FW1OFFST=\PYGZsq{}0.0\PYGZsq{} FW2OFFST=\PYGZsq{}0.0\PYGZsq{} FWSOFFST=\PYGZsq{}0.0\PYGZsq{} GLINCORR=\PYGZsq{}NONE\PYGZsq{} INSTRUME=\PYGZsq{}ACS\PYGZsq{} LTV1=\PYGZsq{}\PYGZhy{}2048.0\PYGZsq{} LTV2=\PYGZsq{}\PYGZhy{}1.0\PYGZsq{} NUMCOLS=\PYGZsq{}UNDEFINED\PYGZsq{} NUMROWS=\PYGZsq{}UNDEFINED\PYGZsq{} OBSTYPE=\PYGZsq{}INTERNAL\PYGZsq{} PCTECORR=\PYGZsq{}NONE\PYGZsq{} PHOTCORR=\PYGZsq{}NONE\PYGZsq{} REFTYPE=\PYGZsq{}UNDEFINED\PYGZsq{} SHADCORR=\PYGZsq{}NONE\PYGZsq{} SHUTRPOS=\PYGZsq{}B\PYGZsq{} TIME\PYGZhy{}OBS=\PYGZsq{}01:07:14.960000\PYGZsq{} XCORNER=\PYGZsq{}1.0\PYGZsq{} YCORNER=\PYGZsq{}2072.0\PYGZsq{}
+JBANJOF3Q : hst\PYGZus{}0048.pmap : APERTURE=\PYGZsq{}WFC1\PYGZhy{}2K\PYGZsq{} ATODCORR=\PYGZsq{}NONE\PYGZsq{} BIASCORR=\PYGZsq{}NONE\PYGZsq{} CCDAMP=\PYGZsq{}B\PYGZsq{} CCDCHIP=\PYGZsq{}1.0\PYGZsq{} CCDGAIN=\PYGZsq{}2.0\PYGZsq{} CRCORR=\PYGZsq{}NONE\PYGZsq{} DARKCORR=\PYGZsq{}NONE\PYGZsq{} DATE\PYGZhy{}OBS=\PYGZsq{}2010\PYGZhy{}01\PYGZhy{}31\PYGZsq{} DETECTOR=\PYGZsq{}WFC\PYGZsq{} DQICORR=\PYGZsq{}NONE\PYGZsq{} DRIZCORR=\PYGZsq{}NONE\PYGZsq{} FILTER1=\PYGZsq{}F502N\PYGZsq{} FILTER2=\PYGZsq{}F660N\PYGZsq{} FLASHCUR=\PYGZsq{}OFF\PYGZsq{} FLATCORR=\PYGZsq{}NONE\PYGZsq{} FLSHCORR=\PYGZsq{}NONE\PYGZsq{} FW1OFFST=\PYGZsq{}0.0\PYGZsq{} FW2OFFST=\PYGZsq{}0.0\PYGZsq{} FWSOFFST=\PYGZsq{}0.0\PYGZsq{} GLINCORR=\PYGZsq{}NONE\PYGZsq{} INSTRUME=\PYGZsq{}ACS\PYGZsq{} LTV1=\PYGZsq{}\PYGZhy{}2048.0\PYGZsq{} LTV2=\PYGZsq{}\PYGZhy{}1.0\PYGZsq{} NAXIS1=\PYGZsq{}2070.0\PYGZsq{} NAXIS2=\PYGZsq{}2046.0\PYGZsq{} OBSTYPE=\PYGZsq{}INTERNAL\PYGZsq{} PCTECORR=\PYGZsq{}NONE\PYGZsq{} PHOTCORR=\PYGZsq{}NONE\PYGZsq{} REFTYPE=\PYGZsq{}UNDEFINED\PYGZsq{} SHADCORR=\PYGZsq{}NONE\PYGZsq{} SHUTRPOS=\PYGZsq{}B\PYGZsq{} TIME\PYGZhy{}OBS=\PYGZsq{}01:07:14.960000\PYGZsq{} XCORNER=\PYGZsq{}1.0\PYGZsq{} YCORNER=\PYGZsq{}2072.0\PYGZsq{}
 \end{Verbatim}
 
 crds.matches can be invoked in various ways with different output formatting:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.matches  --contexts hst\_0001.pmap --files lc41311jj\_pfl.fits
-lc41311jj\_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
+\PYGZpc{} python \PYGZhy{}m crds.matches  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits
+lc41311jj\PYGZus{}pfl.fits : ACS PFLTFILE DETECTOR=\PYGZsq{}WFC\PYGZsq{} CCDAMP=\PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{} FILTER1=\PYGZsq{}F625W\PYGZsq{} FILTER2=\PYGZsq{}POL0V\PYGZsq{} DATE\PYGZhy{}OBS=\PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{} TIME\PYGZhy{}OBS=\PYGZsq{}00:00:00\PYGZsq{}
 
-\% python -m crds.matches --contexts hst.pmap --files lc41311jj\_pfl.fits --omit-parameter-names --brief-paths
-lc41311jj\_pfl.fits :  'WFC' 'A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
+\PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}contexts hst.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits \PYGZhy{}\PYGZhy{}omit\PYGZhy{}parameter\PYGZhy{}names \PYGZhy{}\PYGZhy{}brief\PYGZhy{}paths
+lc41311jj\PYGZus{}pfl.fits :  \PYGZsq{}WFC\PYGZsq{} \PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{} \PYGZsq{}F625W\PYGZsq{} \PYGZsq{}POL0V\PYGZsq{} \PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{} \PYGZsq{}00:00:00\PYGZsq{}
 
-\% python -m crds.matches --contexts hst.pmap --files lc41311jj\_pfl.fits --tuple-format
-lc41311jj\_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
+\PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}contexts hst.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits \PYGZhy{}\PYGZhy{}tuple\PYGZhy{}format
+lc41311jj\PYGZus{}pfl.fits : ((\PYGZsq{}OBSERVATORY\PYGZsq{}, \PYGZsq{}HST\PYGZsq{}), (\PYGZsq{}INSTRUMENT\PYGZsq{}, \PYGZsq{}ACS\PYGZsq{}), (\PYGZsq{}FILEKIND\PYGZsq{}, \PYGZsq{}PFLTFILE\PYGZsq{}), (\PYGZsq{}DETECTOR\PYGZsq{}, \PYGZsq{}WFC\PYGZsq{}), (\PYGZsq{}CCDAMP\PYGZsq{}, \PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{}), (\PYGZsq{}FILTER1\PYGZsq{}, \PYGZsq{}F625W\PYGZsq{}), (\PYGZsq{}FILTER2\PYGZsq{}, \PYGZsq{}POL0V\PYGZsq{}), (\PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{}), (\PYGZsq{}TIME\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}00:00:00\PYGZsq{}))
 \end{Verbatim}
 
 
@@ -1143,13 +1141,13 @@ lc41311jj\_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND
 The CRDS sync tool is used to download CRDS rules and references from the CRDS server:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-usage: python -m crds.sync
-   [-h] [--contexts [CONTEXT [CONTEXT ...]]] [--range MIN:MAX] [--all]
-   [--last N] [-i] [--files [FILES [FILES ...]]]
-   [--datasets [DATASET [DATASET ...]]] [--fetch-references]
-   [--purge-references] [--purge-mappings] [--dry-run] [-k] [-s] [-r]
-   [--purge-rejected] [--purge-blacklisted] [--fetch-sqlite-db] [-v]
-   [--verbosity VERBOSITY] [-R] [-V] [-J] [-H]
+usage: python \PYGZhy{}m crds.sync
+   [\PYGZhy{}h] [\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]] [\PYGZhy{}\PYGZhy{}range MIN:MAX] [\PYGZhy{}\PYGZhy{}all]
+   [\PYGZhy{}\PYGZhy{}last N] [\PYGZhy{}i] [\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]]
+   [\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references]
+   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings] [\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run] [\PYGZhy{}k] [\PYGZhy{}s] [\PYGZhy{}r]
+   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db] [\PYGZhy{}v]
+   [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R] [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H]
 
 Synchronize local mapping and reference caches for the given contexts by
 downloading missing files from the CRDS server and/or archive.
@@ -1158,41 +1156,41 @@ downloading missing files from the CRDS server and/or archive.
 optional arguments:
 
 \begin{Verbatim}[commandchars=\\\{\}]
--h, --help            show this help message and exit
---contexts [CONTEXT [CONTEXT ...]]
-                      Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification
---range MIN:MAX       Operate for pipeline context ids (.pmaps) between \textless{}MIN\textgreater{} and \textless{}MAX\textgreater{}.
---all                 Operate with respect to all known CRDS contexts.
---last N              Operate with respect to the last N contexts.
--i, --ignore-cache    Download required files even if they're already in the cache.
---files [FILES [FILES ...]]
+\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]
+                      Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date\PYGZhy{}based specification
+\PYGZhy{}\PYGZhy{}range MIN:MAX       Operate for pipeline context ids (.pmaps) between \PYGZlt{}MIN\PYGZgt{} and \PYGZlt{}MAX\PYGZgt{}.
+\PYGZhy{}\PYGZhy{}all                 Operate with respect to all known CRDS contexts.
+\PYGZhy{}\PYGZhy{}last N              Operate with respect to the last N contexts.
+\PYGZhy{}i, \PYGZhy{}\PYGZhy{}ignore\PYGZhy{}cache    Download required files even if they\PYGZsq{}re already in the cache.
+\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]
                       Explicitly list files to be synced.
---datasets [DATASET [DATASET ...]]
+\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]
                       Cache references for the specified datasets.
---fetch-references    Cache all the references for the specified contexts.
---purge-references    Remove reference files not referred to by contexts from the cache.
---purge-mappings      Remove mapping files not referred to by contexts from the cache.
---dry-run             Don't remove purged files, or repair files,  just print out their names.
--k, --check-files     Check cached files against the CRDS database and report anomalies.
--s, --check-sha1sum   For --check-files,  also verify file sha1sums.
--r, --repair-files    Repair or re-download files noted as bad by --check-files
---purge-rejected      Purge files noted as rejected by --check-files
---purge-blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by --check-files
---fetch-sqlite-db     Download a sqlite3 version of the CRDS file catalog.
--v, --verbose         Set log verbosity to True,  nominal debug level.
---verbosity VERBOSITY
+\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references    Cache all the references for the specified contexts.
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references    Remove reference files not referred to by contexts from the cache.
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings      Remove mapping files not referred to by contexts from the cache.
+\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run             Don\PYGZsq{}t remove purged files, or repair files,  just print out their names.
+\PYGZhy{}k, \PYGZhy{}\PYGZhy{}check\PYGZhy{}files     Check cached files against the CRDS database and report anomalies.
+\PYGZhy{}s, \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum   For \PYGZhy{}\PYGZhy{}check\PYGZhy{}files,  also verify file sha1sums.
+\PYGZhy{}r, \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files    Repair or re\PYGZhy{}download files noted as bad by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected      Purge files noted as rejected by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db     Download a sqlite3 version of the CRDS file catalog.
+\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                       Set log verbosity to a specific level: 0..100.
--R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
--V, --version         Print the software version and exit.
--J, --jwst            Force observatory to JWST for determining header conventions.
--H, --hst             Force observatory to HST for determining header conventions.
+\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 \end{Verbatim}
 \begin{itemize}
 \item {} 
 Primitive syncing can be done by explicitly listing the files you wish to cache:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync  --files hst\_0001.pmap hst\_acs\_darkfile\_0037.fits
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}files hst\PYGZus{}0001.pmap hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0037.fits
 \end{Verbatim}
 
 \end{itemize}
@@ -1207,7 +1205,7 @@ Typically syncing CRDS files is done with respect to particular CRDS contexts:
 Synced contexts can be explicitly listed:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync  --contexts hst\_0001.pmap hst\_0002.pmap
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap
 \end{Verbatim}
 
 this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
@@ -1215,7 +1213,7 @@ this will recursively download all the mappings referred to by .pmaps 0001 and 0
 Synced contexts can be specified as a numerical range:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync --range 1:3
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}range 1:3
 \end{Verbatim}
 
 this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
@@ -1223,7 +1221,7 @@ this will also recursively download all the mappings referred to by .pmaps 0001,
 Synced contexts can be specified as --all contexts:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync --all
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}all
 \end{Verbatim}
 
 this will recursively download all CRDS mappings for all time.
@@ -1231,7 +1229,7 @@ this will recursively download all CRDS mappings for all time.
 NOTE:  Fetching references required to support contexts has to be done explicitly:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync  --contexts hst\_0001.pmap hst\_0002.pmap  --fetch-references
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap  \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references
 \end{Verbatim}
 
 will download all the references mentioned by contexts 0001 and 0002.
@@ -1246,7 +1244,7 @@ Removing files:
 Files from unspecified contexts can be removed like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync  --contexts hst\_0004.pmap hst\_0005.pmap --purge-mappings
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0004.pmap hst\PYGZus{}0005.pmap \PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings
 \end{Verbatim}
 
 this would remove mappings which are \emph{not} in contexts 4 or 5.
@@ -1261,7 +1259,7 @@ this would remove reference files which are \emph{not} in 4 or 5.
 References for particular datasets can be cached like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync  --contexts hst\_0001.pmap hst\_0002.pmap --datasets  \textless{}dataset\_files...\textgreater{}
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap \PYGZhy{}\PYGZhy{}datasets  \PYGZlt{}dataset\PYGZus{}files...\PYGZgt{}
 \end{Verbatim}
 
 \end{itemize}
@@ -1273,7 +1271,7 @@ this mode does not update dataset file headers.  See also crds.bestrefs for head
 Checking the cache:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync --contexts hst\_0001.pmap --fetch-references --check-files --check-sha1sum --repair-files
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files
 \end{Verbatim}
 
 \end{itemize}
@@ -1285,7 +1283,7 @@ would then be deleted and re-downloaded.   This is really intended for an \emph{
 Removing blacklisted or rejected files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.sync --contexts hst\_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected \PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted
 \end{Verbatim}
 
 would first sync the cache downloading all the files in hst\_0001.pmap.  Both mappings and references would then
@@ -1298,22 +1296,22 @@ crds.bestrefs computes the best references with respect to a particular context 
 for a set of FITS files, dataset ids,  or instruments:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-usage: python -m crds.bestrefs
-       [-h] [-n NEW\_CONTEXT] [-o OLD\_CONTEXT] [-c] [-f FILES [FILES ...]]
-       [-d IDs [IDs ...]] [--all-instruments]
-       [-i INSTRUMENTS [INSTRUMENTS ...]]
-       [-t REFERENCE\_TYPES [REFERENCE\_TYPES ...]]
-       [-k SKIPPED\_REFERENCE\_TYPES [SKIPPED\_REFERENCE\_TYPES ...]]
-       [--diffs-only] [--datasets-since DATASETS\_SINCE]
-       [-p [LOAD\_PICKLES [LOAD\_PICKLES ...]]] [-a SAVE\_PICKLE]
-       [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
-       [--print-affected-details] [--print-new-references]
-       [--print-update-counts] [-r] [-m SYNC\_MAPPINGS] [-s SYNC\_REFERENCES]
-       [--differences-are-errors] [-e] [--undefined-differences-matter]
-       [--na-differences-matter] [--compare-cdbs] [-z] [--dump-unique-errors]
-       [--unique-errors-file UNIQUE\_ERRORS\_FILE]
-       [--all-errors-file ALL\_ERRORS\_FILE] [-v] [--verbosity VERBOSITY] [-R]
-       [-V] [-J] [-H]
+usage: python \PYGZhy{}m crds.bestrefs
+       [\PYGZhy{}h] [\PYGZhy{}n NEW\PYGZus{}CONTEXT] [\PYGZhy{}o OLD\PYGZus{}CONTEXT] [\PYGZhy{}c] [\PYGZhy{}f FILES [FILES ...]]
+       [\PYGZhy{}d IDs [IDs ...]] [\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments]
+       [\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...]]
+       [\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]]
+       [\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]]
+       [\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only] [\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE]
+       [\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]] [\PYGZhy{}a SAVE\PYGZus{}PICKLE]
+       [\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]] [\PYGZhy{}u] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected]
+       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references]
+       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts] [\PYGZhy{}r] [\PYGZhy{}m SYNC\PYGZus{}MAPPINGS] [\PYGZhy{}s SYNC\PYGZus{}REFERENCES]
+       [\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors] [\PYGZhy{}e] [\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter]
+       [\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter] [\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs] [\PYGZhy{}z] [\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors]
+       [\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE]
+       [\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE] [\PYGZhy{}v] [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R]
+       [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H]
 \end{Verbatim}
 \begin{itemize}
 \item {} 
@@ -1332,71 +1330,71 @@ Optionally updates the headers of file-based data with new recommendations.
 optional arguments:
 
 \begin{Verbatim}[commandchars=\\\{\}]
--h, --help            show this help message and exit
--n NEW\_CONTEXT, --new-context NEW\_CONTEXT
+\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+\PYGZhy{}n NEW\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}new\PYGZhy{}context NEW\PYGZus{}CONTEXT
                       Compute the updated best references using this context. Uses current operational context by default.
--o OLD\_CONTEXT, --old-context OLD\_CONTEXT
+\PYGZhy{}o OLD\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}old\PYGZhy{}context OLD\PYGZus{}CONTEXT
                       Compare bestrefs recommendations from two contexts.
--c, --compare-source-bestrefs
+\PYGZhy{}c, \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs
                       Compare new bestrefs recommendations to recommendations from data source,  files or database.
--f FILES [FILES ...], --files FILES [FILES ...]
+\PYGZhy{}f FILES [FILES ...], \PYGZhy{}\PYGZhy{}files FILES [FILES ...]
                       Dataset files to compute best references for.
--d IDs [IDs ...], --datasets IDs [IDs ...]
+\PYGZhy{}d IDs [IDs ...], \PYGZhy{}\PYGZhy{}datasets IDs [IDs ...]
                       Dataset ids to consult database for matching parameters and old results.
---all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
--i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
+\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments     Compute best references for cataloged datasets for all supported instruments in database.
+\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...], \PYGZhy{}\PYGZhy{}instruments INSTRUMENTS [INSTRUMENTS ...]
                       Instruments to compute best references for, all historical datasets in database.
--t REFERENCE\_TYPES [REFERENCE\_TYPES ...], --types REFERENCE\_TYPES [REFERENCE\_TYPES ...]
+\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}types REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]
                       A list of reference types to process,  defaulting to all types.
--k SKIPPED\_REFERENCE\_TYPES [SKIPPED\_REFERENCE\_TYPES ...], --skip-types SKIPPED\_REFERENCE\_TYPES [SKIPPED\_REFERENCE\_TYPES ...]
+\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}skip\PYGZhy{}types SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]
                       A list of reference types which should not be processed,  defaulting to nothing.
---diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
---datasets-since DATASETS\_SINCE
-                      Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
--p [LOAD\_PICKLES [LOAD\_PICKLES ...]], --load-pickles [LOAD\_PICKLES [LOAD\_PICKLES ...]]
-                      Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.
--a SAVE\_PICKLE, --save-pickle SAVE\_PICKLE
+\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only          For context\PYGZhy{}to\PYGZhy{}context comparison, choose only instruments and types from context differences.
+\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE
+                      Cut\PYGZhy{}off date for datasets, none earlier than this.  Use \PYGZsq{}auto\PYGZsq{} to exploit reference USEAFTER.
+\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]], \PYGZhy{}\PYGZhy{}load\PYGZhy{}pickles [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]
+                      Load dataset headers and prior bestrefs from pickle files,  in worst\PYGZhy{}to\PYGZhy{}best update order.
+\PYGZhy{}a SAVE\PYGZus{}PICKLE, \PYGZhy{}\PYGZhy{}save\PYGZhy{}pickle SAVE\PYGZus{}PICKLE
                       Write out the combined dataset headers to the specified pickle file.
---only-ids [IDS [IDS ...]]
+\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]
                       If specified, process only the listed dataset ids.
--u, --update-bestrefs
+\PYGZhy{}u, \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
                       Update dataset headers with new best reference recommendations.
---print-affected      Print names of products for which the new context would assign new references for some exposure.
---print-affected-details
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected      Print names of products for which the new context would assign new references for some exposure.
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details
                       Include instrument and affected types in addition to compound names of affected exposures.
---print-new-references
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references
                       Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
---print-update-counts
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts
                       Prints dictionary of update counts by instrument and type,  status on updated files.
--r, --remote-bestrefs
-                      Compute best references on CRDS server,  convenience for env var CRDS\_MODE='remote'
--m SYNC\_MAPPINGS, --sync-mappings SYNC\_MAPPINGS
+\PYGZhy{}r, \PYGZhy{}\PYGZhy{}remote\PYGZhy{}bestrefs
+                      Compute best references on CRDS server,  convenience for env var CRDS\PYGZus{}MODE=\PYGZsq{}remote\PYGZsq{}
+\PYGZhy{}m SYNC\PYGZus{}MAPPINGS, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}mappings SYNC\PYGZus{}MAPPINGS
                       Fetch the required context mappings to the local cache.  Defaults TRUE.
--s SYNC\_REFERENCES, --sync-references SYNC\_REFERENCES
+\PYGZhy{}s SYNC\PYGZus{}REFERENCES, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references SYNC\PYGZus{}REFERENCES
                       Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
---differences-are-errors
+\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors
                       Treat recommendation differences between new context and original source as errors.
--e, --bad-files-are-errors
+\PYGZhy{}e, \PYGZhy{}\PYGZhy{}bad\PYGZhy{}files\PYGZhy{}are\PYGZhy{}errors
                       Treat recommendations of known bad/invalid files as errors, not warnings.
---undefined-differences-matter
+\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter
                       If not set, a transition from UNDEFINED to anything else is not considered a difference error.
---na-differences-matter
+\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter
                       If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
---compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
--z, --optimize-tables
-                      If set, apply row-based optimizations to screen out inconsequential table updates.
---dump-unique-errors  Record and dump the first instance of each kind of error.
---unique-errors-file UNIQUE\_ERRORS\_FILE
+\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs        Abbreviation for \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors \PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors \PYGZhy{}\PYGZhy{}stats
+\PYGZhy{}z, \PYGZhy{}\PYGZhy{}optimize\PYGZhy{}tables
+                      If set, apply row\PYGZhy{}based optimizations to screen out inconsequential table updates.
+\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors  Record and dump the first instance of each kind of error.
+\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE
                       Write out data names (ids or filenames) for first instance of unique errors to specified file.
---all-errors-file ALL\_ERRORS\_FILE
-                      Write out all err'ing data names (ids or filenames) to specified file.
--v, --verbose         Set log verbosity to True,  nominal debug level.
---verbosity VERBOSITY
+\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE
+                      Write out all err\PYGZsq{}ing data names (ids or filenames) to specified file.
+\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
                       Set log verbosity to a specific level: 0..100.
--R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
--V, --version         Print the software version and exit.
--J, --jwst            Force observatory to JWST for determining header conventions.
--H, --hst             Force observatory to HST for determining header conventions.
+\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
 \end{Verbatim}
 
 \end{itemize}
@@ -1488,11 +1486,11 @@ If --print-affected is specified,  crds.bestrefs will print out the name of any 
 one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq\_raw.fits j8bt06o6q\_raw.fits j8bt09jcq\_raw.fits \PYGZbs{}
-    --compare-source-bestrefs --print-affected
-j8bt05njq\_raw.fits
-j8bt06o6q\_raw.fits
-j8bt09jcq\_raw.fits
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
+    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected
+j8bt05njq\PYGZus{}raw.fits
+j8bt06o6q\PYGZus{}raw.fits
+j8bt09jcq\PYGZus{}raw.fits
 \end{Verbatim}
 
 
@@ -1501,8 +1499,8 @@ j8bt09jcq\_raw.fits
 crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq\_raw.fits j8bt06o6q\_raw.fits j8bt09jcq\_raw.fits \PYGZbs{}
-    --compare-source-bestrefs --update-bestrefs
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
+    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
 \end{Verbatim}
 
 
@@ -1518,20 +1516,20 @@ The pipeline\_bestrefs script is a shim around crds.bestrefs which simplifies th
 tuning it to the more limited case of updating FITS dataset headers with best references:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-usage: pipeline\_bestref [-d] [-v] [-h] [--print-affected] \textless{}crds\_context\textgreater{} \textless{}dataset\_file(s)\textgreater{}...
+usage: pipeline\PYGZus{}bestref [\PYGZhy{}d] [\PYGZhy{}v] [\PYGZhy{}h] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected] \PYGZlt{}crds\PYGZus{}context\PYGZgt{} \PYGZlt{}dataset\PYGZus{}file(s)\PYGZgt{}...
 
--d                     dry run,  do not update file headers
--v                     verbose,  output additional diagnostic messages
--h                     help,  print this help
---print-affected       print files with updated bestrefs
+\PYGZhy{}d                     dry run,  do not update file headers
+\PYGZhy{}v                     verbose,  output additional diagnostic messages
+\PYGZhy{}h                     help,  print this help
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected       print files with updated bestrefs
 
-Updates dataset FITS files with best references recommended by \textless{}crds\_context\textgreater{}.
+Updates dataset FITS files with best references recommended by \PYGZlt{}crds\PYGZus{}context\PYGZgt{}.
 
-\textless{}crds\_context\textgreater{} is a CRDS context file, explicitly named e.g. hst\_0004.pmap
-\textless{}crds\_context\textgreater{} can be specified abstractly,  e.g.  hst-edit or hst-operational
-\textless{}crds\_context\textgreater{} can be specified by date,  e.g.  hst-2013-01-29T12:00:00
+\PYGZlt{}crds\PYGZus{}context\PYGZgt{} is a CRDS context file, explicitly named e.g. hst\PYGZus{}0004.pmap
+\PYGZlt{}crds\PYGZus{}context\PYGZgt{} can be specified abstractly,  e.g.  hst\PYGZhy{}edit or hst\PYGZhy{}operational
+\PYGZlt{}crds\PYGZus{}context\PYGZgt{} can be specified by date,  e.g.  hst\PYGZhy{}2013\PYGZhy{}01\PYGZhy{}29T12:00:00
 
-\textless{}dataset\_file(s)\textgreater{} are raw dataset files for which best references are
+\PYGZlt{}dataset\PYGZus{}file(s)\PYGZgt{} are raw dataset files for which best references are
 computed and updated.
 \end{Verbatim}
 
@@ -1559,8 +1557,8 @@ reference file paths:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k}{def} \PYG{n+nf}{getreferences}\PYG{p}{(}\PYG{n}{parameters}\PYG{p}{,} \PYG{n}{reftypes}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{context}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}cache}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,}
-                  \PYG{n}{observatory}\PYG{o}{=}\PYG{l+s}{"}\PYG{l+s}{jwst}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{:}
-    \PYG{l+s+sd}{"""Return the mapping from the requested {}`reftypes{}` to their}
+                  \PYG{n}{observatory}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return the mapping from the requested {}`reftypes{}` to their}
 \PYG{l+s+sd}{    corresponding best reference file paths appropriate for a dataset}
 \PYG{l+s+sd}{    described by {}`parameters{}` with CRDS rules defined by {}`context{}`::}
 
@@ -1570,9 +1568,9 @@ reference file paths:
 \PYG{l+s+sd}{            \PYGZob{} str  :   str, int, float, bool \PYGZcb{}}
 
 \PYG{l+s+sd}{           e.g.  \PYGZob{}}
-\PYG{l+s+sd}{                   'INSTRUME' : 'ACS',}
-\PYG{l+s+sd}{                   'CCDAMP' : 'ABCD',}
-\PYG{l+s+sd}{                   'CCDGAIN' : '2.0',}
+\PYG{l+s+sd}{                   \PYGZsq{}INSTRUME\PYGZsq{} : \PYGZsq{}ACS\PYGZsq{},}
+\PYG{l+s+sd}{                   \PYGZsq{}CCDAMP\PYGZsq{} : \PYGZsq{}ABCD\PYGZsq{},}
+\PYG{l+s+sd}{                   \PYGZsq{}CCDGAIN\PYGZsq{} : \PYGZsq{}2.0\PYGZsq{},}
 \PYG{l+s+sd}{                   ...}
 \PYG{l+s+sd}{                \PYGZcb{}}
 
@@ -1581,7 +1579,7 @@ reference file paths:
 \PYG{l+s+sd}{                 are the identifiers which will appear in instrument contexts and}
 \PYG{l+s+sd}{                 reference mappings.}
 
-\PYG{l+s+sd}{                e.g.  [ 'darkfile', 'biasfile']}
+\PYG{l+s+sd}{                e.g.  [ \PYGZsq{}darkfile\PYGZsq{}, \PYGZsq{}biasfile\PYGZsq{}]}
 
 \PYG{l+s+sd}{                If reftypes is None,  return all reference types defined by}
 \PYG{l+s+sd}{                the instrument mapping for the instrument specified in}
@@ -1593,26 +1591,26 @@ reference file paths:
 
 \PYG{l+s+sd}{            str}
 
-\PYG{l+s+sd}{            e.g. 'hst\PYGZus{}0037.pmap'}
+\PYG{l+s+sd}{            e.g. \PYGZsq{}hst\PYGZus{}0037.pmap\PYGZsq{}}
 
 \PYG{l+s+sd}{    ignore\PYGZus{}cache :   If True,  download all required mappings and references}
 \PYG{l+s+sd}{            from the CRDS server.  If False,  download only those files not}
 \PYG{l+s+sd}{            already in the local caches.}
 
 \PYG{l+s+sd}{    observatory :  The name of the observatory this query applies to,  needed}
-\PYG{l+s+sd}{            to support both 'hst' and 'jwst' from a single server.}
+\PYG{l+s+sd}{            to support both \PYGZsq{}hst\PYGZsq{} and \PYGZsq{}jwst\PYGZsq{} from a single server.}
 
 \PYG{l+s+sd}{    Returns}
-\PYG{l+s+sd}{    -------}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
 \PYG{l+s+sd}{            a mapping from reftypes to cached best reference file paths.}
 
 \PYG{l+s+sd}{            \PYGZob{} str : str \PYGZcb{}}
 
 \PYG{l+s+sd}{            e.g.   \PYGZob{}}
-\PYG{l+s+sd}{                'biasfile' : '/path/to/file/hst\PYGZus{}acs\PYGZus{}biasfile\PYGZus{}0042.fits',}
-\PYG{l+s+sd}{                'darkfile' : '/path/to/file/hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0056.fits',}
+\PYG{l+s+sd}{                \PYGZsq{}biasfile\PYGZsq{} : \PYGZsq{}/path/to/file/hst\PYGZus{}acs\PYGZus{}biasfile\PYGZus{}0042.fits\PYGZsq{},}
+\PYG{l+s+sd}{                \PYGZsq{}darkfile\PYGZsq{} : \PYGZsq{}/path/to/file/hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0056.fits\PYGZsq{},}
 \PYG{l+s+sd}{                \PYGZcb{}}
-\PYG{l+s+sd}{    """}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
 \end{Verbatim}
 
 
@@ -1626,15 +1624,15 @@ reference files for a given set of parameters:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}default\PYGZus{}context}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-    \PYG{l+s+sd}{"""Return the name of the latest pipeline mapping in use for processing}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return the name of the latest pipeline mapping in use for processing}
 \PYG{l+s+sd}{    files.}
 
 \PYG{l+s+sd}{    Returns}
-\PYG{l+s+sd}{    -------}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
 \PYG{l+s+sd}{    pipeline context name}
 
-\PYG{l+s+sd}{        e.g.   'hst\PYGZus{}0007.pmap'}
-\PYG{l+s+sd}{    """}
+\PYG{l+s+sd}{        e.g.   \PYGZsq{}hst\PYGZus{}0007.pmap\PYGZsq{}}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
 \end{Verbatim}
 
 
@@ -1745,9 +1743,9 @@ Perhaps the most fundamental thing you can do with a CRDS mapping is create an
 active object version by loading the file:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python
-\textgreater{}\textgreater{}\textgreater{} import crds.rmap as rmap
-\textgreater{}\textgreater{}\textgreater{} hst = rmap.load\_mapping("hst.pmap")
+\PYGZpc{} python
+\PYGZgt{}\PYGZgt{}\PYGZgt{} import crds.rmap as rmap
+\PYGZgt{}\PYGZgt{}\PYGZgt{} hst = rmap.load\PYGZus{}mapping(\PYGZdq{}hst.pmap\PYGZdq{})
 \end{Verbatim}
 
 The load\_mapping() function will take any mapping and instantiate it and all of
@@ -1763,7 +1761,7 @@ the same Mapping,  there's a mapping cache maintained by the rmap module and
 accessed like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{hst} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{hst.pmap}\PYG{l+s}{"}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hst} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 The behavior of the cached mapping is identical to the ``loaded'' mapping and
@@ -1777,34 +1775,34 @@ and their descendents.   The ACS instrument context has a reference mapping for
 each of it's associated file kinds:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{"}\PYG{p}{)}
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs}\PYG{o}{.}\PYG{n}{mapping\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
-\PYG{g+go}{['hst\PYGZus{}acs.imap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}idctab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}darkfile.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}atodtab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}cfltfile.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}spottab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}mlintab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}dgeofile.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}bpixtab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}oscntab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}ccdtab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}crrejtab.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}pfltfile.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}biasfile.rmap',}
-\PYG{g+go}{ 'hst\PYGZus{}acs\PYGZus{}mdriztab.rmap']}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs}\PYG{o}{.}\PYG{n}{mapping\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{[\PYGZsq{}hst\PYGZus{}acs.imap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}idctab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}darkfile.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}atodtab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}cfltfile.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}spottab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}mlintab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}dgeofile.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}bpixtab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}oscntab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}ccdtab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}crrejtab.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}pfltfile.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}biasfile.rmap\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}mdriztab.rmap\PYGZsq{}]}
 \end{Verbatim}
 
 The ACS atod reference mapping (rmap) refers to 4 different reference files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs\PYGZus{}atod} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{hst\PYGZus{}acs\PYGZus{}atodtab.rmap}\PYG{l+s}{"}\PYG{p}{)}
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{reference\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
-\PYG{g+go}{['j4d1435hj\PYGZus{}a2d.fits',}
-\PYG{g+go}{ 'kcb1734hj\PYGZus{}a2d.fits',}
-\PYG{g+go}{ 'kcb1734ij\PYGZus{}a2d.fits',}
-\PYG{g+go}{ 't3n1116mj\PYGZus{}a2d.fits']}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst\PYGZus{}acs\PYGZus{}atodtab.rmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{reference\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{[\PYGZsq{}j4d1435hj\PYGZus{}a2d.fits\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}kcb1734hj\PYGZus{}a2d.fits\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}kcb1734ij\PYGZus{}a2d.fits\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}t3n1116mj\PYGZus{}a2d.fits\PYGZsq{}]}
 \end{Verbatim}
 
 
@@ -1817,7 +1815,7 @@ upon a parameter dictionary.   It's possible define a header as any Python
 dictionary provided you have sufficient knowledge of the parameters:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} } \PYG{n}{hdr} \PYG{o}{=} \PYG{p}{\PYGZob{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{n}{what} \PYG{n}{matters} \PYG{n}{most} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{p}{\PYGZcb{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} } \PYG{n}{hdr} \PYG{o}{=} \PYG{p}{\PYGZob{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{n}{what} \PYG{n}{matters} \PYG{n}{most} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 On the other hand,  if your dataset is a FITS file and you want to do something
@@ -1825,22 +1823,22 @@ quick and dirty,  you can ask CRDS what dataset metadata may matter for
 determining best references:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{"}\PYG{p}{)}
-\PYG{g+go}{\PYGZob{}'CCDAMP': 'C',}
-\PYG{g+go}{ 'CCDGAIN': '2.0',}
-\PYG{g+go}{ 'DATE-OBS': '2002-04-13',}
-\PYG{g+go}{ 'DETECTOR': 'HRC',}
-\PYG{g+go}{ 'FILTER1': 'F555W',}
-\PYG{g+go}{ 'FILTER2': 'CLEAR2S',}
-\PYG{g+go}{ 'FW1OFFST': '0.0',}
-\PYG{g+go}{ 'FW2OFFST': '0.0',}
-\PYG{g+go}{ 'FWSOFFST': '0.0',}
-\PYG{g+go}{ 'LTV1': '19.0',}
-\PYG{g+go}{ 'LTV2': '0.0',}
-\PYG{g+go}{ 'NAXIS1': '1062.0',}
-\PYG{g+go}{ 'NAXIS2': '1044.0',}
-\PYG{g+go}{ 'OBSTYPE': 'IMAGING',}
-\PYG{g+go}{ 'TIME-OBS': '18:16:35'\PYGZcb{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{\PYGZob{}\PYGZsq{}CCDAMP\PYGZsq{}: \PYGZsq{}C\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}CCDGAIN\PYGZsq{}: \PYGZsq{}2.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}: \PYGZsq{}2002\PYGZhy{}04\PYGZhy{}13\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}DETECTOR\PYGZsq{}: \PYGZsq{}HRC\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}FILTER1\PYGZsq{}: \PYGZsq{}F555W\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}FILTER2\PYGZsq{}: \PYGZsq{}CLEAR2S\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}FW1OFFST\PYGZsq{}: \PYGZsq{}0.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}FW2OFFST\PYGZsq{}: \PYGZsq{}0.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}FWSOFFST\PYGZsq{}: \PYGZsq{}0.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}LTV1\PYGZsq{}: \PYGZsq{}19.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}LTV2\PYGZsq{}: \PYGZsq{}0.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}NAXIS1\PYGZsq{}: \PYGZsq{}1062.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}NAXIS2\PYGZsq{}: \PYGZsq{}1044.0\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}OBSTYPE\PYGZsq{}: \PYGZsq{}IMAGING\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}TIME\PYGZhy{}OBS\PYGZsq{}: \PYGZsq{}18:16:35\PYGZsq{}\PYGZcb{}}
 \end{Verbatim}
 
 Here I say \emph{may matter} because CRDS is currently dumb about specific instrument
@@ -1851,24 +1849,24 @@ Once you have your dataset parameters,  you can ask an InstrumentContext for
 the best references for \emph{all} filekinds for that instrument:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
-\PYG{g+go}{\PYGZob{}'atodtab': 'kcb1734ij\PYGZus{}a2d.fits',}
-\PYG{g+go}{'biasfile': 'm4r1753rj\PYGZus{}bia.fits',}
-\PYG{g+go}{'bpixtab': 'm8r09169j\PYGZus{}bpx.fits',}
-\PYG{g+go}{'ccdtab': 'o1515069j\PYGZus{}ccd.fits',}
-\PYG{g+go}{'cfltfile': 'NOT FOUND n/a',}
-\PYG{g+go}{'crrejtab': 'n4e12510j\PYGZus{}crr.fits',}
-\PYG{g+go}{'darkfile': 'n3o1059hj\PYGZus{}drk.fits',}
-\PYG{g+go}{'dgeofile': 'o8u2214mj\PYGZus{}dxy.fits',}
-\PYG{g+go}{'flshfile': 'NOT FOUND n/a',}
-\PYG{g+go}{'idctab': 'p7d1548qj\PYGZus{}idc.fits',}
-\PYG{g+go}{'imphttab': 'vbb18105j\PYGZus{}imp.fits',}
-\PYG{g+go}{'mdriztab': 'ub215378j\PYGZus{}mdz.fits',}
-\PYG{g+go}{'mlintab': 'NOT FOUND n/a',}
-\PYG{g+go}{'oscntab': 'm2j1057pj\PYGZus{}osc.fits',}
-\PYG{g+go}{'pfltfile': 'o3u1448rj\PYGZus{}pfl.fits',}
-\PYG{g+go}{'shadfile': 'kcb1734pj\PYGZus{}shd.fits',}
-\PYG{g+go}{'spottab': 'NOT FOUND n/a'\PYGZcb{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
+\PYG{g+go}{\PYGZob{}\PYGZsq{}atodtab\PYGZsq{}: \PYGZsq{}kcb1734ij\PYGZus{}a2d.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}biasfile\PYGZsq{}: \PYGZsq{}m4r1753rj\PYGZus{}bia.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}bpixtab\PYGZsq{}: \PYGZsq{}m8r09169j\PYGZus{}bpx.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}ccdtab\PYGZsq{}: \PYGZsq{}o1515069j\PYGZus{}ccd.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}cfltfile\PYGZsq{}: \PYGZsq{}NOT FOUND n/a\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}crrejtab\PYGZsq{}: \PYGZsq{}n4e12510j\PYGZus{}crr.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}darkfile\PYGZsq{}: \PYGZsq{}n3o1059hj\PYGZus{}drk.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}dgeofile\PYGZsq{}: \PYGZsq{}o8u2214mj\PYGZus{}dxy.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}flshfile\PYGZsq{}: \PYGZsq{}NOT FOUND n/a\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}idctab\PYGZsq{}: \PYGZsq{}p7d1548qj\PYGZus{}idc.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}imphttab\PYGZsq{}: \PYGZsq{}vbb18105j\PYGZus{}imp.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}mdriztab\PYGZsq{}: \PYGZsq{}ub215378j\PYGZus{}mdz.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}mlintab\PYGZsq{}: \PYGZsq{}NOT FOUND n/a\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}oscntab\PYGZsq{}: \PYGZsq{}m2j1057pj\PYGZus{}osc.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}pfltfile\PYGZsq{}: \PYGZsq{}o3u1448rj\PYGZus{}pfl.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}shadfile\PYGZsq{}: \PYGZsq{}kcb1734pj\PYGZus{}shd.fits\PYGZsq{},}
+\PYG{g+go}{\PYGZsq{}spottab\PYGZsq{}: \PYGZsq{}NOT FOUND n/a\PYGZsq{}\PYGZcb{}}
 \end{Verbatim}
 
 In the above results,  FITS files are the recommended best references,  while
@@ -1881,8 +1879,8 @@ You can ask a ReferenceMapping for the best reference for single the filekind
 it manages:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}ref}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{l+s}{'}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{'}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}ref}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}
 \end{Verbatim}
 
 Often it is convenient to simply refer to a pipeline/observatory context file,
@@ -1891,8 +1889,8 @@ but this is really just shorthand for returning the best references for the
 instrument of that dataset:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{"}\PYG{p}{)}
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
 \PYG{g+gp}{... }\PYG{k}{for} \PYG{n}{this} \PYG{n}{hdr}\PYG{p}{,} \PYG{n}{same} \PYG{k}{as} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
@@ -1916,14 +1914,14 @@ Ironically though,  the first thing you may want to do as a developer is ignore
 the checksum while you load a mapping you've edited:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{pipeline} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{load\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{hst.pmap}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}checksum}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{pipeline} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{load\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}checksum}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
 \end{Verbatim}
 
 Alternately you can set an environment variable to ignore the mapping checksum
 while you iterate on new versions of the mapping:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_IGNORE\_MAPPING\_CHECKSUM 1
+\PYGZpc{} setenv CRDS\PYGZus{}IGNORE\PYGZus{}MAPPING\PYGZus{}CHECKSUM 1
 \end{Verbatim}
 
 
@@ -1933,7 +1931,7 @@ Once you've finished your masterpiece ReferenceMapping,  it can be sealed with
 a checksum like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% python -m crds.checksum /where/it/really/is/hst\_acs\_my\_masterpiece.rmap
+\PYGZpc{} python \PYGZhy{}m crds.checksum /where/it/really/is/hst\PYGZus{}acs\PYGZus{}my\PYGZus{}masterpiece.rmap
 \end{Verbatim}
 
 
@@ -1961,17 +1959,17 @@ The CRDS HST mapping prototypes which are generated from information scraped fro
 the CDBS web site are named with the forms:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\textless{}observatory\textgreater{} .pmap                               .e.g. hst.pmap
-\textless{}observatory\textgreater{} \_ \textless{}instrument\textgreater{} .imap                .e.g. hst\_acs.imap
-\textless{}observatory\textgreater{} \_ \textless{}instrument\textgreater{} \_ \textless{}filekind\textgreater{} .rmap   .e.g. hst\_acs\_darkfile.rmap
+\PYGZlt{}observatory\PYGZgt{} .pmap                               .e.g. hst.pmap
+\PYGZlt{}observatory\PYGZgt{} \PYGZus{} \PYGZlt{}instrument\PYGZgt{} .imap                .e.g. hst\PYGZus{}acs.imap
+\PYGZlt{}observatory\PYGZgt{} \PYGZus{} \PYGZlt{}instrument\PYGZgt{} \PYGZus{} \PYGZlt{}filekind\PYGZgt{} .rmap   .e.g. hst\PYGZus{}acs\PYGZus{}darkfile.rmap
 \end{Verbatim}
 
 The names of subsequent derived mappings include a version number:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\textless{}observatory\textgreater{} \_ \textless{}version\textgreater{} .pmap                               .e.g. hst\_00001.pmap
-\textless{}observatory\textgreater{} \_ \textless{}instrument\textgreater{} \_ \textless{}version\textgreater{} .imap                .e.g. hst\_acs\_00047.imap
-\textless{}observatory\textgreater{} \_ \textless{}instrument\textgreater{} \_ \textless{}filekind\textgreater{} \_ \textless{}version\textgreater{} .rmap  .e.g. hst\_acs\_darkfile\_00012.rmap
+\PYGZlt{}observatory\PYGZgt{} \PYGZus{} \PYGZlt{}version\PYGZgt{} .pmap                               .e.g. hst\PYGZus{}00001.pmap
+\PYGZlt{}observatory\PYGZgt{} \PYGZus{} \PYGZlt{}instrument\PYGZgt{} \PYGZus{} \PYGZlt{}version\PYGZgt{} .imap                .e.g. hst\PYGZus{}acs\PYGZus{}00047.imap
+\PYGZlt{}observatory\PYGZgt{} \PYGZus{} \PYGZlt{}instrument\PYGZgt{} \PYGZus{} \PYGZlt{}filekind\PYGZgt{} \PYGZus{} \PYGZlt{}version\PYGZgt{} .rmap  .e.g. hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}00012.rmap
 \end{Verbatim}
 
 
@@ -1999,22 +1997,22 @@ A sample pipeline mapping for HST looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{'}\PYG{l+s}{name}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst.pmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{created by hand 12-23-2011}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{mapping}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{PIPELINE}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{observatory}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{HST}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{parkey}\PYG{l+s}{'} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{INSTRUME}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{description}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{Initially generated on 12-23-2011}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{sha1sum}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{e2c6392fd2731df1e8d933bd990f3fd313a813db}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{created by hand 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PIPELINE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e2c6392fd2731df1e8d933bd990f3fd313a813db}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{'}\PYG{l+s}{ACS}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{COS}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{NICMOS}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}nicmos.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{STIS}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}stis.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{WFC3}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}wfc3.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{WFPC2}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}wfpc2.imap}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ACS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NICMOS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}nicmos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{STIS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}stis.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFC3}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}wfc3.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFPC2}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}wfpc2.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -2028,33 +2026,33 @@ A sample instrument mapping for HST's COS instrument looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{'}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{scraped 2011-12-23 11:57:10}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{description}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{Initially generated on 2011-12-23 11:57:10}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{instrument}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{COS}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{mapping}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{INSTRUMENT}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{name}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{observatory}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{HST}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{parkey}\PYG{l+s}{'} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{REFTYPE}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{sha1sum}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{800fb1567cb5bed4031402c7396aeb86c5e1db61}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{source\PYGZus{}url}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUMENT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{800fb1567cb5bed4031402c7396aeb86c5e1db61}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{source\PYGZus{}url}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{'}\PYG{l+s}{badttab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}badttab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{bpixtab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}bpixtab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{brftab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brftab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{brsttab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brsttab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{deadtab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{disptab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}disptab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{flatfile}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}flatfile.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{fluxtab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}fluxtab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{geofile}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}geofile.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{lamptab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}lamptab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{phatab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}phatab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{spwcstab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}spwcstab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{tdstab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}tdstab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{wcptab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}wcptab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{xtractab}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}xtractab.rmap}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{badttab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}badttab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{bpixtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}bpixtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{brftab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brftab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{brsttab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brsttab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{deadtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{disptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}disptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{flatfile}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}flatfile.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fluxtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}fluxtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{geofile}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}geofile.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lamptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}lamptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{phatab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}phatab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{spwcstab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}spwcstab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tdstab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}tdstab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wcptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}wcptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{xtractab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}xtractab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -2071,23 +2069,23 @@ A sample reference mapping for HST COS DEADTAB looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{'}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{scraped 2011-12-23 11:54:56}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{description}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{Initially generated on 2011-12-23 11:54:56}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{filekind}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{DEADTAB}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{instrument}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{COS}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{mapping}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{REFERENCE}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{name}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{observatory}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{HST}\PYG{l+s}{'}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{parkey}\PYG{l+s}{'} \PYG{p}{:} \PYG{p}{(}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{DETECTOR}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{DATE-OBS}\PYG{l+s}{'}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{TIME-OBS}\PYG{l+s}{'}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{'}\PYG{l+s}{sha1sum}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{e27984a6441d8aaa7cd28ead2267a6be4c3a153b}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{filekind}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DEADTAB}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFERENCE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e27984a6441d8aaa7cd28ead2267a6be4c3a153b}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Match}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{FUV}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-        \PYG{l+s}{'}\PYG{l+s}{1996-10-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{s7g1700gl\PYGZus{}dead.fits}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FUV}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{s7g1700gl\PYGZus{}dead.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
     \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
-    \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{NUV}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-        \PYG{l+s}{'}\PYG{l+s}{1996-10-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{s7g1700ql\PYGZus{}dead.fits}\PYG{l+s}{'}\PYG{p}{,}
+    \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NUV}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{s7g1700ql\PYGZus{}dead.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
     \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
@@ -2105,28 +2103,28 @@ best reference lookups and results:
 header = \PYGZob{}
           ...,
 
-    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    \PYGZsq{}parkey\PYGZsq{} : ((\PYGZsq{}DETECTOR\PYGZsq{},), (\PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}TIME\PYGZhy{}OBS\PYGZsq{})),
 
-    'extra\_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
+    \PYGZsq{}extra\PYGZus{}keys\PYGZsq{} : (\PYGZsq{}XCORNER\PYGZsq{}, \PYGZsq{}YCORNER\PYGZsq{}, \PYGZsq{}CCDCHIP\PYGZsq{}),
 
-    'reffile\_switch' : 'BIASCORR',
+    \PYGZsq{}reffile\PYGZus{}switch\PYGZsq{} : \PYGZsq{}BIASCORR\PYGZsq{},
 
-    'reffile\_required' : 'YES',
+    \PYGZsq{}reffile\PYGZus{}required\PYGZsq{} : \PYGZsq{}YES\PYGZsq{},
 
-    'rmap\_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    'rmap\_omit' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+    \PYGZsq{}rmap\PYGZus{}relevance\PYGZsq{} : \PYGZsq{}((DETECTOR != \PYGZdq{}SBC\PYGZdq{}) and (BIASCORR != \PYGZdq{}OMIT\PYGZdq{}))\PYGZsq{},
+    \PYGZsq{}rmap\PYGZus{}omit\PYGZsq{} : \PYGZsq{}((DETECTOR != \PYGZdq{}SBC\PYGZdq{}) and (BIASCORR != \PYGZdq{}OMIT\PYGZdq{}))\PYGZsq{},
 
-    'parkey\_relevance' : \PYGZob{}
-        'binaxis1' : '(DETECTOR == "UVIS")',
-        'binaxis2' : '(DETECTOR == "UVIS")',
-        'ccdgain' : '(DETECTOR == "IR")',
-        'samp\_seq' : '(DETECTOR == "IR")',
-        'subtype' : '(DETECTOR == "IR")',
+    \PYGZsq{}parkey\PYGZus{}relevance\PYGZsq{} : \PYGZob{}
+        \PYGZsq{}binaxis1\PYGZsq{} : \PYGZsq{}(DETECTOR == \PYGZdq{}UVIS\PYGZdq{})\PYGZsq{},
+        \PYGZsq{}binaxis2\PYGZsq{} : \PYGZsq{}(DETECTOR == \PYGZdq{}UVIS\PYGZdq{})\PYGZsq{},
+        \PYGZsq{}ccdgain\PYGZsq{} : \PYGZsq{}(DETECTOR == \PYGZdq{}IR\PYGZdq{})\PYGZsq{},
+        \PYGZsq{}samp\PYGZus{}seq\PYGZsq{} : \PYGZsq{}(DETECTOR == \PYGZdq{}IR\PYGZdq{})\PYGZsq{},
+        \PYGZsq{}subtype\PYGZsq{} : \PYGZsq{}(DETECTOR == \PYGZdq{}IR\PYGZdq{})\PYGZsq{},
     \PYGZcb{},
 
-    'hooks' : \PYGZob{}
-        'fallback\_header' : 'fallback\_header\_acs\_biasfile\_v2',
-        'precondition\_header' : 'precondition\_header\_acs\_biasfile\_v2',
+    \PYGZsq{}hooks\PYGZsq{} : \PYGZob{}
+        \PYGZsq{}fallback\PYGZus{}header\PYGZsq{} : \PYGZsq{}fallback\PYGZus{}header\PYGZus{}acs\PYGZus{}biasfile\PYGZus{}v2\PYGZsq{},
+        \PYGZsq{}precondition\PYGZus{}header\PYGZsq{} : \PYGZsq{}precondition\PYGZus{}header\PYGZus{}acs\PYGZus{}biasfile\PYGZus{}v2\PYGZsq{},
     \PYGZcb{},
 
           ...,
@@ -2292,15 +2290,15 @@ The CRDS Match operator typically matches a dataset header against a tuple which
 names are specified in the rmap header \code{parkey}:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("UVIS", "F122LP")   :  'some\_file\_or\_nested\_selection'
+(\PYGZdq{}UVIS\PYGZdq{}, \PYGZdq{}F122LP\PYGZdq{})   :  \PYGZsq{}some\PYGZus{}file\PYGZus{}or\PYGZus{}nested\PYGZus{}selection\PYGZsq{}
 \end{Verbatim}
 
 Alternately,  for simple use cases the Match operator can match against single
 strings,  which is a simplified syntax for a 1-tuple:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-'UVIS'  :  'some\_file\_or\_nested\_selection'
-('UVIS',) : 'this\_is\_the\_equivalent\_one\_tuple'
+\PYGZsq{}UVIS\PYGZsq{}  :  \PYGZsq{}some\PYGZus{}file\PYGZus{}or\PYGZus{}nested\PYGZus{}selection\PYGZsq{}
+(\PYGZsq{}UVIS\PYGZsq{},) : \PYGZsq{}this\PYGZus{}is\PYGZus{}the\PYGZus{}equivalent\PYGZus{}one\PYGZus{}tuple\PYGZsq{}
 \end{Verbatim}
 
 
@@ -2317,19 +2315,19 @@ Many CRDS match expressions consist of a series of match patterns separated by v
 as ``or'' and means that a match occurs if either pattern matches that dataset header.   For example, the expression:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("either\_this\textbar{}that","1\textbar{}2\textbar{}3")  : "some\_file.fits"
+(\PYGZdq{}either\PYGZus{}this\textbar{}that\PYGZdq{},\PYGZdq{}1\textbar{}2\textbar{}3\PYGZdq{})  : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 will match:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{either\PYGZus{}this}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{2}\PYG{l+s}{"}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{either\PYGZus{}this}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 and also:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{that}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{1}\PYG{l+s}{"}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{that}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 
@@ -2339,7 +2337,7 @@ By default,  * is interpreted in CRDS as a glob pattern,  much like UNIX shell f
 sequence of characters.  The expression:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("F*122",) : "some\_file.fits"
+(\PYGZdq{}F*122\PYGZdq{},) : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 will match any value starting with ``F'' and ending with ``122''.
@@ -2351,7 +2349,7 @@ CRDS can match on true regular expressions.   A true regular expression match is
 triggered by bracketing the match in parentheses ():
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("(\textasciicircum{}F[\textasciicircum{}13]22\$)",)  : "some\_file.fits"
+(\PYGZdq{}(\PYGZca{}F[\PYGZca{}13]22\PYGZdl{})\PYGZdq{},)  : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 The above corresponds to matching the regular expression ``\textasciicircum{}F{[}\textasciicircum{}1234{]}22\$'' (note that the bracketing parentheses within the
@@ -2366,7 +2364,7 @@ any interpretation whatsoever.   Hence,  special characters like * or \textbar{}
 interpreted literally rather than as ors or wildcards.  The expression:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("\PYGZob{}F\textbar{}*G\PYGZcb{}",) : "some\_file.fits"
+(\PYGZdq{}\PYGZob{}F\textbar{}*G\PYGZcb{}\PYGZdq{},) : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 matches the value ``F\textbar{}*G'' as opposed to ``F'' or anything ending with ``G''.
@@ -2379,13 +2377,13 @@ expressions do numerical comparisons on the header value to determine a match.
 Relational expressions have implicit variables and support the operators:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\textgreater{} \textgreater{}= \textless{} \textless{}= == and or
+\PYGZgt{} \PYGZgt{}= \PYGZlt{} \PYGZlt{}= == and or
 \end{Verbatim}
 
 The expression:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("\# \textgreater{}1 and \textless{}37 \#",)  : "some\_file.fits"
+(\PYGZdq{}\PYGZsh{} \PYGZgt{}1 and \PYGZlt{}37 \PYGZsh{}\PYGZdq{},)  : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 will match any number greater than 1 and less than 37.
@@ -2398,21 +2396,21 @@ of numbers \textgreater{}= to the lower bound and \textless{} the upper bound,  
 slicing:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("between 1  47",) : "some\_file.fits"
+(\PYGZdq{}between 1  47\PYGZdq{},) : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 will match any number greater than or equal to 1 and less than 47.   This is
 equivalent to:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("\# \textgreater{}=1 and \textless{}47 \#",) : "some\_file.fits"
+(\PYGZdq{}\PYGZsh{} \PYGZgt{}=1 and \PYGZlt{}47 \PYGZsh{}\PYGZdq{},) : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 Note that ``between'' matches sensibly stack into a complete range.  The expressions:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-("between 1 47",) : "some\_file.fits"
-("between 47 90", ) : "another\_file.fits"
+(\PYGZdq{}between 1 47\PYGZdq{},) : \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
+(\PYGZdq{}between 47 90\PYGZdq{}, ) : \PYGZdq{}another\PYGZus{}file.fits\PYGZdq{}
 \end{Verbatim}
 
 provide complete coverage for the range between 1 and 90.
@@ -2446,9 +2444,9 @@ actual dataset header values. For instance,  when an rmap header contains a
 ``substitutions'' field like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-'substitutions' : \PYGZob{}
-    'CCDAMP' : \PYGZob{}
-        'G280\_AMPS' : ('ABCD', 'A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD'),
+\PYGZsq{}substitutions\PYGZsq{} : \PYGZob{}
+    \PYGZsq{}CCDAMP\PYGZsq{} : \PYGZob{}
+        \PYGZsq{}G280\PYGZus{}AMPS\PYGZsq{} : (\PYGZsq{}ABCD\PYGZsq{}, \PYGZsq{}A\PYGZsq{}, \PYGZsq{}B\PYGZsq{}, \PYGZsq{}C\PYGZsq{}, \PYGZsq{}D\PYGZsq{}, \PYGZsq{}AC\PYGZsq{}, \PYGZsq{}AD\PYGZsq{}, \PYGZsq{}BC\PYGZsq{}, \PYGZsq{}BD\PYGZsq{}),
     \PYGZcb{},
 \PYGZcb{},
 \end{Verbatim}
@@ -2456,7 +2454,7 @@ actual dataset header values. For instance,  when an rmap header contains a
 then a match tuple line like the following could be written:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-('UVIS', 'G280\_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T') : UseAfter(\PYGZob{}
+(\PYGZsq{}UVIS\PYGZsq{}, \PYGZsq{}G280\PYGZus{}AMPS\PYGZsq{}, \PYGZsq{}1.5\PYGZsq{}, \PYGZsq{}1.0\PYGZsq{}, \PYGZsq{}1.0\PYGZsq{}, \PYGZsq{}G280\PYGZhy{}REF\PYGZsq{}, \PYGZsq{}T\PYGZsq{}) : UseAfter(\PYGZob{}
 \end{Verbatim}
 
 Here the value of G280\_AMPS works like this:  first,   reference files listed
@@ -2505,13 +2503,13 @@ the single format shown in the rmap example below:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Match}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-   \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{HRC}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-       \PYG{l+s}{'}\PYG{l+s}{1991-01-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{j4d1435hj\PYGZus{}a2d.fits}\PYG{l+s}{'}\PYG{p}{,}
-       \PYG{l+s}{'}\PYG{l+s}{1992-01-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{'}\PYG{p}{,}
+   \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HRC}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{j4d1435hj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1992\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
    \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
-   \PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{WFC}\PYG{l+s}{'}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-       \PYG{l+s}{'}\PYG{l+s}{1991-01-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{kcb1734hj\PYGZus{}a2d.fits}\PYG{l+s}{'}\PYG{p}{,}
-       \PYG{l+s}{'}\PYG{l+s}{2008-01-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{t3n1116mj\PYGZus{}a2d.fits}\PYG{l+s}{'}\PYG{p}{,}
+   \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFC}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734hj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2008\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{t3n1116mj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
    \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
@@ -2530,9 +2528,9 @@ to make a selection:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{SelectVersion}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-   \PYG{l+s}{'}\PYG{l+s}{\textless{}3.1}\PYG{l+s}{'}\PYG{p}{:}    \PYG{l+s}{'}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}65.fits}\PYG{l+s}{'}\PYG{p}{,}
-   \PYG{l+s}{'}\PYG{l+s}{\textless{}5}\PYG{l+s}{'}\PYG{p}{:}      \PYG{l+s}{'}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}73.fits}\PYG{l+s}{'}\PYG{p}{,}
-   \PYG{l+s}{'}\PYG{l+s}{default}\PYG{l+s}{'}\PYG{p}{:} \PYG{l+s}{'}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{'}\PYG{p}{,}
+   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZlt{}3.1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}65.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZlt{}5}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}73.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{default}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2548,9 +2546,9 @@ the closest time which either precedes or follows the given parameter value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{ClosestTime}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-     \PYG{l+s}{'}\PYG{l+s}{2017-04-24 00:00:00}\PYG{l+s}{'}\PYG{p}{:}  \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{"}\PYG{p}{,}
-     \PYG{l+s}{'}\PYG{l+s}{2018-02-01 00:00:00}\PYG{l+s}{'} \PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}222.fits}\PYG{l+s}{"}\PYG{p}{,}
-     \PYG{l+s}{'}\PYG{l+s}{2019-04-15 00:00:00}\PYG{l+s}{'}\PYG{p}{:}  \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{"}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2017\PYGZhy{}04\PYGZhy{}24 00:00:00}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2018\PYGZhy{}02\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}222.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2019\PYGZhy{}04\PYGZhy{}15 00:00:00}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2565,9 +2563,9 @@ the supplied parameter is chosen:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{GeomtricallyNearest}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{l+m+mf}{1.2} \PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{"}\PYG{p}{,}
-    \PYG{l+m+mf}{1.5} \PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{"}\PYG{p}{,}
-    \PYG{l+m+mf}{5.0} \PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{"}\PYG{p}{,}
+    \PYG{l+m+mf}{1.2} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.5} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{5.0} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2581,16 +2579,16 @@ enclose the supplied parameter value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Bracket}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{l+m+mf}{1.2}\PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{"}\PYG{p}{,}
-    \PYG{l+m+mf}{1.5}\PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{"}\PYG{p}{,}
-    \PYG{l+m+mf}{5.0}\PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{"}\PYG{p}{,}
+    \PYG{l+m+mf}{1.2}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.5}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{5.0}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
 Here,  a parameter value of 1.3 returns the value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{'}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{'}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
 \end{Verbatim}
 
 
@@ -3047,7 +3045,7 @@ for doing this is to use the cp or scp commands.   For instance,  from my home,
 having already set up ssh and scp access, I might say:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% scp /this\_delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/test/server\_files/ingest/mcmaster
+\PYGZpc{} scp /this\PYGZus{}delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/test/server\PYGZus{}files/ingest/mcmaster
 \end{Verbatim}
 
 to copy references into my ingest directory \emph{as-if} I had uploaded them through
@@ -3056,7 +3054,7 @@ the uploads panel.
 Abstractly this is:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% scp \textless{}submitted reference files...\textgreater{}   \textless{}host\textgreater{}:/ifs/crds/hst/\textless{}pipeline\textgreater{}/server\_files/ingest\textless{}crds\_username\textgreater{}
+\PYGZpc{} scp \PYGZlt{}submitted reference files...\PYGZgt{}   \PYGZlt{}host\PYGZgt{}:/ifs/crds/hst/\PYGZlt{}pipeline\PYGZgt{}/server\PYGZus{}files/ingest\PYGZlt{}crds\PYGZus{}username\PYGZgt{}
 \end{Verbatim}
 
 where pipeline is `test' or `ops'.
@@ -3270,18 +3268,18 @@ as JWST stpipe data model dotted identifiers.  Example JSON for the get\_best\_r
 \emph{header} parameter for JWST is:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}} \PYG{l+s}{"}\PYG{l+s}{meta.instrument.type}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{fgs}\PYG{l+s}{"}\PYG{p}{,}
-  \PYG{l+s}{"}\PYG{l+s}{meta.instrument.detector}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{fgs1}\PYG{l+s}{"}\PYG{p}{,}
-  \PYG{l+s}{"}\PYG{l+s}{meta.instrument.filter}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{any}\PYG{l+s}{"} \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.type}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.detector}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.filter}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{any}\PYG{l+s}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 For JWST,  it is also possible to use the equivalent FITS header keyword,  as
 defined by the data model schema, to determine best references:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}} \PYG{l+s}{"}\PYG{l+s}{instrume}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{fgs}\PYG{l+s}{"}\PYG{p}{,}
-  \PYG{l+s}{"}\PYG{l+s}{detector}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{fgs1}\PYG{l+s}{"}\PYG{p}{,}
-  \PYG{l+s}{"}\PYG{l+s}{filter}\PYG{l+s}{"}\PYG{p}{:}\PYG{l+s}{"}\PYG{l+s}{any}\PYG{l+s}{"} \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{instrume}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{detector}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{filter}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{any}\PYG{l+s}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 For HST,  GEIS or FITS header keyword names are supported.
@@ -3295,7 +3293,7 @@ returned with the value \emph{NOT FOUND n/a}.
 Example JSON for \emph{reftypes} might be:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{[}\PYG{l+s}{"}\PYG{l+s}{amplifier}\PYG{l+s}{"}\PYG{p}{,}\PYG{l+s}{"}\PYG{l+s}{mask}\PYG{l+s}{"}\PYG{p}{]}
+\PYG{p}{[}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{amplifier}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{mask}\PYG{l+s}{\PYGZdq{}}\PYG{p}{]}
 \end{Verbatim}
 
 
@@ -3326,14 +3324,14 @@ An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% curl -i -X POST -d '\PYGZob{}"jsonrpc": "1.0", "method": "get\_default\_context", "params": ["jwst"], "id": 1\PYGZcb{}' http://jwst-crds.stsci.edu/json/
+\PYGZpc{} curl \PYGZhy{}i \PYGZhy{}X POST \PYGZhy{}d \PYGZsq{}\PYGZob{}\PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}method\PYGZdq{}: \PYGZdq{}get\PYGZus{}default\PYGZus{}context\PYGZdq{}, \PYGZdq{}params\PYGZdq{}: [\PYGZdq{}jwst\PYGZdq{}], \PYGZdq{}id\PYGZdq{}: 1\PYGZcb{}\PYGZsq{} http://jwst\PYGZhy{}crds.stsci.edu/json/
 HTTP/1.1 200 OK
 Date: Fri, 12 Oct 2012 17:29:46 GMT
-Server: Apache/2.2.3 (Red Hat) mod\_python/3.3.1 Python/2.7.2
+Server: Apache/2.2.3 (Red Hat) mod\PYGZus{}python/3.3.1 Python/2.7.2
 Vary: Cookie
-Content-Type: application/json-rpc
+Content\PYGZhy{}Type: application/json\PYGZhy{}rpc
 Connection: close
-Transfer-Encoding: chunked
+Transfer\PYGZhy{}Encoding: chunked
 \end{Verbatim}
 
 The \emph{jsonrpc} attribute is used to specify the version of the JSONRPC standard
@@ -3353,7 +3351,7 @@ environments.
 The reponse returned by the server for the above request is the following JSON:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}}\PYG{l+s}{"}\PYG{l+s}{error}\PYG{l+s}{"}\PYG{p}{:} \PYG{n}{null}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{jsonrpc}\PYG{l+s}{"}\PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{1.0}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{id}\PYG{l+s}{"}\PYG{p}{:} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{result}\PYG{l+s}{"}\PYG{p}{:} \PYG{l+s}{"}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{"}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{error}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{null}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jsonrpc}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{1.0}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{id}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{result}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 
@@ -3384,23 +3382,23 @@ An example dialog for get\_best\_references from the CRDS jsonrpc demo page is
 shown here with FITS parkey names:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{"}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{'}\PYG{l+s}{INSTRUME}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{FGS}\PYG{l+s}{'}\PYG{p}{,}\PYG{l+s}{'}\PYG{l+s}{DETECTOR}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{FGS1}\PYG{l+s}{'}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{FILTER}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{ANY}\PYG{l+s}{'}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
-\PYG{g+go}{Requesting -\textgreater{}}
-\PYG{g+go}{\PYGZob{}"id":"jsonrpc", "params":["jwst\PYGZus{}0000.pmap", \PYGZob{}"INSTRUME":"FGS", "DETECTOR":"FGS1", "FILTER":"ANY"\PYGZcb{}, null], "method":"get\PYGZus{}best\PYGZus{}references", "jsonrpc":"1.0"\PYGZcb{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ANY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
+\PYG{g+go}{Requesting \PYGZhy{}\PYGZgt{}}
+\PYG{g+go}{\PYGZob{}\PYGZdq{}id\PYGZdq{}:\PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}params\PYGZdq{}:[\PYGZdq{}jwst\PYGZus{}0000.pmap\PYGZdq{}, \PYGZob{}\PYGZdq{}INSTRUME\PYGZdq{}:\PYGZdq{}FGS\PYGZdq{}, \PYGZdq{}DETECTOR\PYGZdq{}:\PYGZdq{}FGS1\PYGZdq{}, \PYGZdq{}FILTER\PYGZdq{}:\PYGZdq{}ANY\PYGZdq{}\PYGZcb{}, null], \PYGZdq{}method\PYGZdq{}:\PYGZdq{}get\PYGZus{}best\PYGZus{}references\PYGZdq{}, \PYGZdq{}jsonrpc\PYGZdq{}:\PYGZdq{}1.0\PYGZdq{}\PYGZcb{}}
 \PYG{g+go}{Deferred(12, unfired)}
-\PYG{g+go}{Got -\textgreater{}}
-\PYG{g+go}{\PYGZob{}"error": null, "jsonrpc": "1.0", "id": "jsonrpc", "result": \PYGZob{}"linearity": "jwst\PYGZus{}fgs\PYGZus{}linearity\PYGZus{}0000.fits", "amplifier": "jwst\PYGZus{}fgs\PYGZus{}amplifier\PYGZus{}0000.fits", "mask": "jwst\PYGZus{}fgs\PYGZus{}mask\PYGZus{}0000.fits"\PYGZcb{}\PYGZcb{}}
+\PYG{g+go}{Got \PYGZhy{}\PYGZgt{}}
+\PYG{g+go}{\PYGZob{}\PYGZdq{}error\PYGZdq{}: null, \PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}id\PYGZdq{}: \PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}result\PYGZdq{}: \PYGZob{}\PYGZdq{}linearity\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}linearity\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}amplifier\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}amplifier\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}mask\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}mask\PYGZus{}0000.fits\PYGZdq{}\PYGZcb{}\PYGZcb{}}
 \end{Verbatim}
 
 And the same query is here with JWST data model parkey names:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{"}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{'}\PYG{l+s}{META.INSTRUMENT.TYPE}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{FGS}\PYG{l+s}{'}\PYG{p}{,}\PYG{l+s}{'}\PYG{l+s}{META.INSTRUMENT.DETECTOR}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{FGS1}\PYG{l+s}{'}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{META.INSTRUMENT.FILTER}\PYG{l+s}{'}\PYG{p}{:}\PYG{l+s}{'}\PYG{l+s}{ANY}\PYG{l+s}{'}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
-\PYG{g+go}{Requesting -\textgreater{}}
-\PYG{g+go}{\PYGZob{}"id":"jsonrpc", "params":["jwst\PYGZus{}0000.pmap", \PYGZob{}"META.INSTRUMENT.TYPE":"FGS", "META.INSTRUMENT.DETECTOR":"FGS1", "META.INSTRUMENT.FILTER":"ANY"\PYGZcb{}, null], "method":"get\PYGZus{}best\PYGZus{}references", "jsonrpc":"1.0"\PYGZcb{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.TYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ANY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
+\PYG{g+go}{Requesting \PYGZhy{}\PYGZgt{}}
+\PYG{g+go}{\PYGZob{}\PYGZdq{}id\PYGZdq{}:\PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}params\PYGZdq{}:[\PYGZdq{}jwst\PYGZus{}0000.pmap\PYGZdq{}, \PYGZob{}\PYGZdq{}META.INSTRUMENT.TYPE\PYGZdq{}:\PYGZdq{}FGS\PYGZdq{}, \PYGZdq{}META.INSTRUMENT.DETECTOR\PYGZdq{}:\PYGZdq{}FGS1\PYGZdq{}, \PYGZdq{}META.INSTRUMENT.FILTER\PYGZdq{}:\PYGZdq{}ANY\PYGZdq{}\PYGZcb{}, null], \PYGZdq{}method\PYGZdq{}:\PYGZdq{}get\PYGZus{}best\PYGZus{}references\PYGZdq{}, \PYGZdq{}jsonrpc\PYGZdq{}:\PYGZdq{}1.0\PYGZdq{}\PYGZcb{}}
 \PYG{g+go}{Deferred(14, unfired)}
-\PYG{g+go}{Got -\textgreater{}}
-\PYG{g+go}{\PYGZob{}"error": null, "jsonrpc": "1.0", "id": "jsonrpc", "result": \PYGZob{}"linearity": "jwst\PYGZus{}fgs\PYGZus{}linearity\PYGZus{}0000.fits", "amplifier": "jwst\PYGZus{}fgs\PYGZus{}amplifier\PYGZus{}0000.fits", "mask": "jwst\PYGZus{}fgs\PYGZus{}mask\PYGZus{}0000.fits"\PYGZcb{}\PYGZcb{}}
+\PYG{g+go}{Got \PYGZhy{}\PYGZgt{}}
+\PYG{g+go}{\PYGZob{}\PYGZdq{}error\PYGZdq{}: null, \PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}id\PYGZdq{}: \PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}result\PYGZdq{}: \PYGZob{}\PYGZdq{}linearity\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}linearity\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}amplifier\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}amplifier\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}mask\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}mask\PYGZus{}0000.fits\PYGZdq{}\PYGZcb{}\PYGZcb{}}
 \end{Verbatim}
 
 \textbf{NOTE:} An apparent bug in the demo interpreter makes it impossible to pass
@@ -3422,28 +3420,28 @@ The JSON RPC call get\_file\_info() will return the avalailble info for a single
 or mapping file from the specified observatory:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-def get\_file\_info(observatory, filename):
-     """Return a dictionary of CRDS information about {}`filename{}`."""
+def get\PYGZus{}file\PYGZus{}info(observatory, filename):
+     \PYGZdq{}\PYGZdq{}\PYGZdq{}Return a dictionary of CRDS information about {}`filename{}`.\PYGZdq{}\PYGZdq{}\PYGZdq{}
 
- \textgreater{}\textgreater{}\textgreater{} from crds.client import api
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} from crds.client import api
 
- \textgreater{}\textgreater{}\textgreater{} api.get\_file\_info("hst", file="lcb12060j\_drk.fits")
- \PYGZob{}'activation\_date': '2001-12-14 20:47:00',
-  'blacklisted': 'false',
-  'change\_level': 'severe',
-  'delivery\_date': '2013-07-10 11:26:23',
-  'derived\_from': 'none',
-  'filekind': 'darkfile',
-  'instrument': 'acs',
-  'name': 'lcb12060j\_drk.fits',
-  'observatory': 'hst',
-  'pedigree': 'ground',
-  'rejected': 'false',
-  'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
-  'size': '10549440',
-  'state': 'operational',
-  'type': 'reference',
-  'useafter\_date': '1992-01-01 00:00:00'\PYGZcb{}
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} api.get\PYGZus{}file\PYGZus{}info(\PYGZdq{}hst\PYGZdq{}, file=\PYGZdq{}lcb12060j\PYGZus{}drk.fits\PYGZdq{})
+ \PYGZob{}\PYGZsq{}activation\PYGZus{}date\PYGZsq{}: \PYGZsq{}2001\PYGZhy{}12\PYGZhy{}14 20:47:00\PYGZsq{},
+  \PYGZsq{}blacklisted\PYGZsq{}: \PYGZsq{}false\PYGZsq{},
+  \PYGZsq{}change\PYGZus{}level\PYGZsq{}: \PYGZsq{}severe\PYGZsq{},
+  \PYGZsq{}delivery\PYGZus{}date\PYGZsq{}: \PYGZsq{}2013\PYGZhy{}07\PYGZhy{}10 11:26:23\PYGZsq{},
+  \PYGZsq{}derived\PYGZus{}from\PYGZsq{}: \PYGZsq{}none\PYGZsq{},
+  \PYGZsq{}filekind\PYGZsq{}: \PYGZsq{}darkfile\PYGZsq{},
+  \PYGZsq{}instrument\PYGZsq{}: \PYGZsq{}acs\PYGZsq{},
+  \PYGZsq{}name\PYGZsq{}: \PYGZsq{}lcb12060j\PYGZus{}drk.fits\PYGZsq{},
+  \PYGZsq{}observatory\PYGZsq{}: \PYGZsq{}hst\PYGZsq{},
+  \PYGZsq{}pedigree\PYGZsq{}: \PYGZsq{}ground\PYGZsq{},
+  \PYGZsq{}rejected\PYGZsq{}: \PYGZsq{}false\PYGZsq{},
+  \PYGZsq{}sha1sum\PYGZsq{}: \PYGZsq{}56cfd1107bda5d82cb49a301a50edb45cb64ded6\PYGZsq{},
+  \PYGZsq{}size\PYGZsq{}: \PYGZsq{}10549440\PYGZsq{},
+  \PYGZsq{}state\PYGZsq{}: \PYGZsq{}operational\PYGZsq{},
+  \PYGZsq{}type\PYGZsq{}: \PYGZsq{}reference\PYGZsq{},
+  \PYGZsq{}useafter\PYGZus{}date\PYGZsq{}: \PYGZsq{}1992\PYGZhy{}01\PYGZhy{}01 00:00:00\PYGZsq{}\PYGZcb{}
 \end{Verbatim}
 
 
@@ -3453,22 +3451,22 @@ The JSON RPC call get\_file\_info\_map() will return the info for multiple (or a
 and the specified (or all) fields as a dictionary of dictionaries mapping filename onto info:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-def get\_file\_info\_map(observatory, files=None, fields=None):
-    """Return the info \PYGZob{} filename : \PYGZob{} info \PYGZcb{} \PYGZcb{} on {}`files{}` of {}`observatory{}`.
+def get\PYGZus{}file\PYGZus{}info\PYGZus{}map(observatory, files=None, fields=None):
+    \PYGZdq{}\PYGZdq{}\PYGZdq{}Return the info \PYGZob{} filename : \PYGZob{} info \PYGZcb{} \PYGZcb{} on {}`files{}` of {}`observatory{}`.
     {}`fields{}` can be used to limit info returned to specified keys.
-    """
+    \PYGZdq{}\PYGZdq{}\PYGZdq{}
 
-\% setenv CRDS\_SERVER\_URL https://hst-crds.stsci.edu
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://hst\PYGZhy{}crds.stsci.edu
 
-\textgreater{}\textgreater{}\textgreater{} from crds.client import api
+\PYGZgt{}\PYGZgt{}\PYGZgt{} from crds.client import api
 
-\textgreater{}\textgreater{}\textgreater{} api.get\_file\_info\_map("hst", ["lcb12060j\_drk.fits", "n3o1022fj\_drk.fits"], fields=["state","size","sha1sum"])
-\PYGZob{}'lcb12060j\_drk.fits': \PYGZob{}'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
-  'size': '10549440',
-  'state': 'operational'\PYGZcb{},
- 'n3o1022fj\_drk.fits': \PYGZob{}'sha1sum': 'cecf11300015df8f39913b638138d8c67de77a02',
-  'size': '10526400',
-  'state': 'operational'\PYGZcb{}\PYGZcb{}
+\PYGZgt{}\PYGZgt{}\PYGZgt{} api.get\PYGZus{}file\PYGZus{}info\PYGZus{}map(\PYGZdq{}hst\PYGZdq{}, [\PYGZdq{}lcb12060j\PYGZus{}drk.fits\PYGZdq{}, \PYGZdq{}n3o1022fj\PYGZus{}drk.fits\PYGZdq{}], fields=[\PYGZdq{}state\PYGZdq{},\PYGZdq{}size\PYGZdq{},\PYGZdq{}sha1sum\PYGZdq{}])
+\PYGZob{}\PYGZsq{}lcb12060j\PYGZus{}drk.fits\PYGZsq{}: \PYGZob{}\PYGZsq{}sha1sum\PYGZsq{}: \PYGZsq{}56cfd1107bda5d82cb49a301a50edb45cb64ded6\PYGZsq{},
+  \PYGZsq{}size\PYGZsq{}: \PYGZsq{}10549440\PYGZsq{},
+  \PYGZsq{}state\PYGZsq{}: \PYGZsq{}operational\PYGZsq{}\PYGZcb{},
+ \PYGZsq{}n3o1022fj\PYGZus{}drk.fits\PYGZsq{}: \PYGZob{}\PYGZsq{}sha1sum\PYGZsq{}: \PYGZsq{}cecf11300015df8f39913b638138d8c67de77a02\PYGZsq{},
+  \PYGZsq{}size\PYGZsq{}: \PYGZsq{}10526400\PYGZsq{},
+  \PYGZsq{}state\PYGZsq{}: \PYGZsq{}operational\PYGZsq{}\PYGZcb{}\PYGZcb{}
 \end{Verbatim}
 
 If files is specified as \emph{None},  info on all files is returned.
@@ -3485,26 +3483,26 @@ the pipeline.
 You can download a SQLite-3 snapshot of the CRDS catalog like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% setenv CRDS\_SERVER\_URL https://hst-crds.stsci.edu
-\% setenv CRDS\_PATH /home/jmiller/crds\_cache
-\% python -m crds.sync --fetch-sqlite-db
-CRDS  : INFO     SQLite database file downloaded to: /home/jmiller/crds\_cache/config/hst/crds\_db.sqlite3
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://hst\PYGZhy{}crds.stsci.edu
+\PYGZpc{} setenv CRDS\PYGZus{}PATH /home/jmiller/crds\PYGZus{}cache
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db
+CRDS  : INFO     SQLite database file downloaded to: /home/jmiller/crds\PYGZus{}cache/config/hst/crds\PYGZus{}db.sqlite3
 \end{Verbatim}
 
 will snapshot the current CRDS catalog on the CRDS server and download it to your local CRDS cache as a
 SQLite3 database file.  The SQLite database can typically be accessed like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% sqlite3 /home/jmiller/crds\_cache\_dev/config/hst/crds\_db.sqlite3
+\PYGZpc{} sqlite3 /home/jmiller/crds\PYGZus{}cache\PYGZus{}dev/config/hst/crds\PYGZus{}db.sqlite3
 
-sqlite\textgreater{} .tables
-crds\_hst\_catalog       crds\_hst\_context\_history
+sqlite\PYGZgt{} .tables
+crds\PYGZus{}hst\PYGZus{}catalog       crds\PYGZus{}hst\PYGZus{}context\PYGZus{}history
 
-sqlite\textgreater{} .mode tabs
-sqlite\textgreater{} .headers on
-sqlite\textgreater{} select * from crds\_hst\_context\_history where state="operational" limit 1;
-id    name    start\_date        context     state          description
-2        2013-07-02 15:44:53    hst.pmap    operational    set by system
+sqlite\PYGZgt{} .mode tabs
+sqlite\PYGZgt{} .headers on
+sqlite\PYGZgt{} select * from crds\PYGZus{}hst\PYGZus{}context\PYGZus{}history where state=\PYGZdq{}operational\PYGZdq{} limit 1;
+id    name    start\PYGZus{}date        context     state          description
+2        2013\PYGZhy{}07\PYGZhy{}02 15:44:53    hst.pmap    operational    set by system
 \PYGZbs{}.\PYGZbs{}.\PYGZbs{}.
 \end{Verbatim}
 
@@ -3512,140 +3510,140 @@ The CRDS catalog contains the following meta-data:
 
 \begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
-\textbf{
+\textsf{\relax 
 Catalog Fields
-} & \textbf{
+} & \textsf{\relax 
 type
-} & \textbf{
+} & \textsf{\relax 
 description
-}\\\hline
-
+}\\
+\hline
 name
  & 
 str
  & 
 CRDS filename
-\\\hline
+\\
 
 uploaded\_as
  & 
 str
  & 
 Name of file at time of upload / generation
-\\\hline
+\\
 
 state
  & 
 str
  & 
 uploaded, delivered, submitted, archiving, archived, archiving-failed, bad
-\\\hline
+\\
 
 blacklisted
  & 
 bool/int
  & 
 True/1 == this mapping,  and all mappings referring to it, are invalid.
-\\\hline
+\\
 
 rejected
  & 
 bool/int
  & 
 True/1 == this file is considered scientifically invalid
-\\\hline
+\\
 
 replaced\_by\_filename
  & 
 str
  & 
 Succeeding reference file in chain of contexts.  Weakly defined.
-\\\hline
+\\
 
 instrument
  & 
 str
  & 
 instrument name file applies to
-\\\hline
+\\
 
 filekind
  & 
 str
  & 
 reference type. For HST,  also keyword name for dataset headers
-\\\hline
+\\
 
 type
  & 
 str
  & 
 reference or mapping
-\\\hline
+\\
 
 description
  & 
 str
  & 
 description given at time of delivery
-\\\hline
+\\
 
 comment
  & 
 str
  & 
 COMMENT from reference file
-\\\hline
+\\
 
 aperture
  & 
 str
  & 
 APERTURE from reference file
-\\\hline
+\\
 
 derived\_from
  & 
 str
  & 
 Name of mapping this one was derived from
-\\\hline
+\\
 
 sha1sum
  & 
 str
  & 
 sha1sum of file to verify file integrity
-\\\hline
+\\
 
 size
  & 
 int
  & 
 length of file in bytes
-\\\hline
+\\
 
 creator\_name
  & 
 str
  & 
 author of reference or mapping file
-\\\hline
+\\
 
 deliverer\_user
  & 
 str
  & 
 person who submitted the reference or mapping to CRDS
-\\\hline
+\\
 
 deliverer\_email
  & 
 str
  & 
 e-mail of person who submitted reference
-\\\hline
-\end{tabulary}
+\\
+\hline\end{tabulary}
 
 
 \emph{NOTE:} Reference file assignment criteria are encoded in the CRDS rules / mappings and displayed as tables on

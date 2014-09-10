@@ -56,18 +56,25 @@ More information can be found on each tool using the command line -- --help swit
     
 or in the command line tools section of this document.
 
+
 Installation
 ============
 
-Most people will encounter CRDS as software distributed side-by-side with calibration code,
-and consequently CRDS will be pre-installed.
+Installation via Ureka
+----------------------
 
-Installing with PIP
--------------------
+Ureka is a collection of astronomy software that provides everything you need to run the data reduction packages 
+provided by STScI.   Most people install CRDS as part of Ureka which is found here:
 
-CRDS is available on pypi and explicitly installable using pip::
+    http://ssb.stsci.edu/ureka/
 
-% pip install crds
+Follow the instructions for installing Ureka and afterward you should be able to do the following:
+
+    % python -m crds.list --version
+    CRDS  : INFO     crds version 1.1.1 revision 1784M
+    
+and get similar output reflecting your installed CRDS version.
+   
 
 Installing from Source
 ----------------------
@@ -86,23 +93,6 @@ Installing from source,  run the install script in the root source code director
      % cd crds
      % ./install
     final status 000000
-
-Test the installation
----------------------
-Basic CRDS client testing can be performed onsite at STScI from the source code directory as follows::
-
-     % cd crds
-     % source envs/hst-crds-readonly.csh
-     % ./runtests
-    ........... lots of dots ....
-    ----------------------------------------------------------------------
-    Ran 157 tests in 41.232s
-    
-    OK
-    
-Test errors will result if the CRDS server at https://hst-crds.stsci.edu or Central Store
-file system /grp/crds/hst are not accessible from your network or host.
-
 
 Dependencies
 ------------
@@ -125,6 +115,7 @@ OPTIONAL: For executing the unit tests (runtests) add:
 OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
 
    * Parsley-1.1  (included in CRDS subversion under third_party)
+   * pyaml  (for certifying yaml references)
    
 OPTIONAL: For building documentation add:
    * docutils
@@ -136,7 +127,8 @@ Setting up your Environment
 ===========================
 
 CRDS is used in a number of different contexts and consequently is configurable.   The defaults for 
-CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration.
+CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration onsite.
+Subsequent instructions are provided for setting up more personalized or offsite environments.
 
 Basic Environment
 -----------------
@@ -237,7 +229,9 @@ After syncing this will provide access to CRDS test files and rules in a local c
 Testing reference type changes (new keywords,  new values or value restrictions, etc) may also require access to 
 development versions of CRDS code.   In particular,  when adding parameters or changing legal parameter values,  
 the certify tool is modified as "code" on the servers first.   Hence distributed versions of CRDS will not reflect 
-ongoing type changes.
+ongoing type changes.   The test server Certify Files function should generally reflect the most up-to-date knowledge
+CRDS has about ongoing type changes.  To see how new reference files stack up with changing CRDS code,  try submitting
+the files to Certify Files on the test server or ask what the status is on crds_team@stsci.edu.
 
 **NOTE:** the test server is only visible on-site,  not on the internet.  Without VPN or port forwarding,  the test
 servers are not usable off site.
