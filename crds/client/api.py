@@ -2,6 +2,7 @@
 remote service calls to the CRDS server to obtain mapping or reference files and
 cache them locally.
 """
+import sys
 import os
 import os.path
 import base64
@@ -483,7 +484,7 @@ class FileCacher(object):
                 log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
                 self.download(pipeline_context, name, path)
                 bytes_so_far += os.stat(path).st_size
-            except Exception, exc:
+            except Exception as exc:
                 if raise_exceptions:
                     raise
                 else:
@@ -492,21 +493,32 @@ class FileCacher(object):
     
     def download(self, pipeline_context, name, localpath):
         """Download a single file."""
+        # This code is complicated by the desire to blow away failed downloads.  For the specific
+        # case of KeyboardInterrupt,  the file needs to be blown away,  but the interrupt should not
+        # be re-characterized so it is still un-trapped elsewhere under normal idioms which try *not*
+        # to trap KeyboardInterrupt.
         assert not config.get_cache_readonly(), "Readonly cache,  cannot download files " + repr(name)
         try:
             utils.ensure_dir_exists(localpath)
             return proxy.apply_with_retries(self.download_core, pipeline_context, name, localpath)
-        except Exception, exc:
-            # traceback.print_exc()
-            try:
-                os.remove(localpath)
-            except Exception:
-                pass
+        except Exception as exc:
+            self.remove_file(localpath)
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) + 
                                      " with mode " + srepr(config.get_download_mode()) +
                                      " : " + str(exc))
+        except:
+            self.remove_file(localpath)
+            raise
+        
+    def remove_file(self, localpath):
+        """Removes file at `localpath`."""
+        log.verbose("Removing file", repr(localpath))
+        try:
+            os.remove(localpath)
+        except:
+            pass
 
     def download_core(self, pipeline_context, name, localpath):
         """Download and verify file `name` under context `pipeline_context` to `localpath`."""
