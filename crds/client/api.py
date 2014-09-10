@@ -2,12 +2,10 @@
 remote service calls to the CRDS server to obtain mapping or reference files and
 cache them locally.
 """
-import sys
 import os
 import os.path
 import base64
 import urllib2
-import tarfile
 import re
 import zlib
 
@@ -407,12 +405,16 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
                       end="")
 
 class FileCacher(object):
-    """FileCacher gets remote files with simple names into a local cache.
-    """
-    def __init__(self):
+    """FileCacher gets remote files with simple names into a local cache."""
+    def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True, api=1):
+        self.pipeline_context = pipeline_context
+        self.observatory = self.observatory_from_context()
+        self.ignore_cache = ignore_cache
+        self.raise_exceptions = raise_exceptions
+        self.api = api
         self.info_map = {}
     
-    def get_local_files(self, pipeline_context, names, ignore_cache=False, raise_exceptions=True, api=1):
+    def get_local_files(self, names):
         """Given a list of basename `mapping_names` which are pertinent to the 
         given `pipeline_context`,   cache the mappings locally where they can 
         be used by CRDS.
@@ -429,12 +431,12 @@ class FileCacher(object):
 
         downloads = []
         for name in names:
-            localpath = self.locate(pipeline_context, name)
+            localpath = self.locate(name)
             if name.lower() in ["n/a", "undefined"]:
                 continue
             if (not os.path.exists(localpath)):
                 downloads.append(name)
-            elif ignore_cache:
+            elif self.ignore_cache:
                 assert not config.get_cache_readonly(), "Readonly cache,  cannot ignore cache and re-fetch."
                 downloads.append(name)
                 with log.error_on_exception("Ignore_cache=True and Failed removing existing", repr(name)):
@@ -442,34 +444,34 @@ class FileCacher(object):
                     os.remove(localpath)
             localpaths[name] = localpath
         if downloads:
-            n_bytes = self.download_files(pipeline_context, downloads, localpaths, raise_exceptions)
+            n_bytes = self.download_files(downloads, localpaths)
         else:
             log.verbose("Skipping download for cached files", sorted(names), verbosity=60)
             n_bytes = 0
-        if api == 1:
+        if self.api == 1:
             return localpaths
         else:
             return localpaths, len(downloads), n_bytes
 
-    def observatory_from_context(self, pipeline_context):
+    def observatory_from_context(self):
         """Determine the observatory from `pipeline_context`,  based on name if possible."""
-        if "jwst" in pipeline_context:
+        if "jwst" in self.pipeline_context:
             observatory = "jwst"
-        elif "hst" in pipeline_context:
+        elif "hst" in self.pipeline_context:
             observatory = "hst"
         else:
             import crds.rmap
-            observatory = crds.rmap.get_cached_mapping(pipeline_context).observatory
+            observatory = crds.rmap.get_cached_mapping(self.pipeline_context).observatory
         return observatory
 
-    def locate(self, pipeline_context, name):
-        observatory = self.observatory_from_context(pipeline_context)
-        return config.locate_file(name, observatory=observatory)
+    def locate(self, name):
+        """Return the standard CRDS cache location for file `name`."""
+        return config.locate_file(name, observatory=self.observatory)
 
-    def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
+    def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
-        obs = self.observatory_from_context(pipeline_context)
-        self.info_map = get_file_info_map(obs, downloads, ["size","rejected","blacklisted","state","sha1sum"])
+        self.info_map = get_file_info_map(
+                self.observatory, downloads, ["size", "rejected", "blacklisted", "state", "sha1sum", "instrument"])
         if config.get_cache_readonly():
             log.verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70)
             return 0
@@ -482,16 +484,16 @@ class FileCacher(object):
                     raise CrdsDownloadError("file is not known to CRDS server.")
                 bytes, path = int(self.info_map[name]["size"]), localpaths[name]
                 log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
-                self.download(pipeline_context, name, path)
+                self.download(name, path)
                 bytes_so_far += os.stat(path).st_size
             except Exception as exc:
-                if raise_exceptions:
+                if self.raise_exceptions:
                     raise
                 else:
                     log.error("Failure downloading file", repr(name), ":", str(exc))
         return bytes_so_far
     
-    def download(self, pipeline_context, name, localpath):
+    def download(self, name, localpath):
         """Download a single file."""
         # This code is complicated by the desire to blow away failed downloads.  For the specific
         # case of KeyboardInterrupt,  the file needs to be blown away,  but the interrupt should not
@@ -500,15 +502,15 @@ class FileCacher(object):
         assert not config.get_cache_readonly(), "Readonly cache,  cannot download files " + repr(name)
         try:
             utils.ensure_dir_exists(localpath)
-            return proxy.apply_with_retries(self.download_core, pipeline_context, name, localpath)
+            return proxy.apply_with_retries(self.download_core, name, localpath)
         except Exception as exc:
             self.remove_file(localpath)
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
-                                     " from context " + srepr(pipeline_context) + 
+                                     " from context " + srepr(self.pipeline_context) + 
                                      " at server " + srepr(get_crds_server()) + 
                                      " with mode " + srepr(config.get_download_mode()) +
                                      " : " + str(exc))
-        except:
+        except:  #  mainly for control-c,  catch it and throw it.
             self.remove_file(localpath)
             raise
         
@@ -518,17 +520,17 @@ class FileCacher(object):
         try:
             os.remove(localpath)
         except:
-            pass
+            log.verbose("Exception during file removal of", repr(localpath))
 
-    def download_core(self, pipeline_context, name, localpath):
+    def download_core(self, name, localpath):
         """Download and verify file `name` under context `pipeline_context` to `localpath`."""
         if config.get_download_plugin():
-            self.plugin_download(pipeline_context, name, localpath)
-        elif config.get_download_mode() == "http":
-            generator = self.get_data_http(pipeline_context, name)
+            self.plugin_download(name, localpath)
+        elif config.get_download_mode() == "rpc":
+            generator = self.get_data_rpc(name)
             self.generator_download(generator, localpath)
         else:
-            generator = self.get_data_rpc(pipeline_context, name)
+            generator = self.get_data_http(name)
             self.generator_download(generator, localpath)
         self.verify_file(name, localpath)
         
@@ -538,34 +540,36 @@ class FileCacher(object):
             for data in generator:
                 outfile.write(data)
                 
-    def plugin_download(self, pipeline_context, filename, localpath):
-        url = self.get_url(pipeline_context, filename)
+    def plugin_download(self, filename, localpath):
+        """Run an external program defined by CRDS_DOWNLOAD_PLUGIN to download filename to localpath."""
+        url = self.get_url(filename)
         plugin_cmd = config.get_download_plugin()
         plugin_cmd = plugin_cmd.replace("${SOURCE_URL}", url)
         plugin_cmd = plugin_cmd.replace("${OUTPUT_PATH}", localpath)
         log.verbose("Running download plugin:", repr(plugin_cmd))
-        os.system(plugin_cmd)
+        status = os.system(plugin_cmd)
+        if status != 0:
+            if status == 2:
+                raise KeyboardInterrupt("Interrupted plugin.")
+            else:
+                raise CrdsDownloadError("Plugin download fail status = {}".format(status))
         
-    def get_data_rpc(self, pipeline_context, filename):
+    def get_data_rpc(self, filename):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""
         chunk = 0
         chunks = 1
         while chunk < chunks:
             stats = utils.TimingStats()
             stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
-            chunks, data = get_file_chunk(pipeline_context, filename, chunk)
+            chunks, data = get_file_chunk(self.pipeline_context, filename, chunk)
             status = stats.status("bytes")
             log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1], verbosity=20)
             chunk += 1
             yield data
     
-    def get_data_http(self, pipeline_context, filename):
+    def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
-        url = self.get_url(pipeline_context, filename)
-        return self._get_data_http(url, filename)
-
-    def _get_data_http(self, url, filename):
-        """Yield the data returned from `url` in manageable chunks."""
+        url = self.get_url(filename)
         try:
             infile = urllib2.urlopen(url)
             chunk = 0
@@ -587,14 +591,13 @@ class FileCacher(object):
             except UnboundLocalError:   # maybe the open failed.
                 pass
 
-    def get_url(self, pipeline_context, filename):
+    def get_url(self, filename):
         """Return the URL used to fetch `filename` of `pipeline_context`."""
         info = get_server_info()
-        observatory = self.observatory_from_context(pipeline_context)
         if config.is_mapping(filename):
-            url = info["mapping_url"][observatory]
+            url = info["mapping_url"][self.observatory]
         else:
-            url = info["reference_url"][observatory]
+            url = info["reference_url"][self.observatory]
         if not url.endswith("/"):
             url += "/"
         return url + filename
@@ -618,73 +621,6 @@ class FileCacher(object):
         else:
             log.verbose("Skipping sha1sum check since server doesn't know it.")
 
-FILE_CACHER = FileCacher()
-
-# ==============================================================================
-
-class BundleCacher(FileCacher):
-    """BundleCacher gets remote files into a local cache by requesting a bundle
-    of any missing files and then unpacking it.
-    """
-    def download_files(self, pipeline_context, downloads, localpaths, raise_exceptions=True):
-        """Download a list of files as an archive bundle and unpack it."""
-        obs = self.observatory_from_context(pipeline_context)
-        self.info_map = get_file_info_map(obs, downloads, ["sha1sum", "size"])
-        bundlepath = config.get_crds_config_path() 
-        bundlepath += "/" + "crds_bundle.tar.gz"
-        utils.ensure_dir_exists(bundlepath, 0700)
-        for name in localpaths:
-            if name not in downloads:
-                log.verbose("Skipping existing file", repr(name), verbosity=60)
-        if self.fetch_bundle(bundlepath, downloads):
-            n_bytes = self.unpack_bundle(bundlepath, downloads, localpaths)
-        else:
-            n_bytes = 0
-        for name in downloads:
-            self.verify_file(name, localpaths[name])
-        return n_bytes
-
-    def fetch_bundle(self, bundlepath, downloads):
-        """Ask the CRDS server for an archive of the files listed in `downloads`
-        and store the archive in filename `bundlepath`.  Returns `need_unpack`.
-        """
-        if config.get_cache_readonly():
-            log.verbose("Readonly cache, skipping bundle download for (first 5):", repr(downloads[:5]), verbosity=70)
-            return False
-        bundle = os.path.basename(bundlepath)
-        url = get_crds_server() + "/get_archive/" + bundle + "?"
-        for i, name in enumerate(sorted(downloads)):
-            url = url + "file" + str(i) + "=" + name + "&"
-            log.verbose("Adding", repr(name), "to download request.", verbosity=60)
-        url = url[:-1]
-        generator = self._get_data_http(url, bundle)
-        with open(bundlepath, "wb+") as outfile:
-            for data in generator:
-                outfile.write(data)
-        return True
-    
-    def unpack_bundle(self, bundlepath, downloads, localpaths):
-        """Unpack the files listed in `downloads` from the archive at `bundlepath`
-        storing the extracted files at paths defined by `localpaths`.
-        """
-        if config.get_cache_readonly():
-            log.verbose("Readonly cache, skipping bundle unpack for (first 5):", repr(downloads[:5]), verbosity=70)
-            return 0
-        n_bytes = 0
-        with tarfile.open(bundlepath) as tar:
-            for name in sorted(downloads):
-                member = tar.getmember(name)
-                fileobj = tar.extractfile(member)
-                utils.ensure_dir_exists(localpaths[name])
-                with open(localpaths[name], "w+") as localfile:
-                    log.verbose("Unpacking download", repr(name), "to", repr(localpaths[name]), verbosity=10)
-                    contents = fileobj.read()
-                    localfile.write(contents)
-                    n_bytes += len(contents)
-        return n_bytes
-                    
-MAPPING_CACHER = BundleCacher()
-
 # ==============================================================================
 
 def dump_mappings(pipeline_context, ignore_cache=False, mappings=None, raise_exceptions=True, api=1):
@@ -699,10 +635,10 @@ def dump_mappings(pipeline_context, ignore_cache=False, mappings=None, raise_exc
     assert isinstance(ignore_cache, bool)
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
-    mappings = sorted(set(mappings))
-    return FILE_CACHER.get_local_files(
-        pipeline_context, mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=api)
+    mappings = list(reversed(sorted(set(mappings))))
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(mappings)
   
+
 def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True, api=1):
     """Given a pipeline `pipeline_context` and list of `baserefs` reference 
     file basenames,  obtain the set of reference files and cache them on the
@@ -721,9 +657,9 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_e
             log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
     baserefs = sorted(set(baserefs))
-    return FILE_CACHER.get_local_files(
-        pipeline_context, baserefs, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=api)
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(baserefs)
     
+
 def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=True):
     """Unified interface to dump any file in `files`, mapping or reference.
     
@@ -772,7 +708,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
                 wanted.append(refname)
         else:
             raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
-    localrefs = FILE_CACHER.get_local_files(pipeline_context, wanted, ignore_cache=ignore_cache)
+    localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False, api=1).get_local_files(wanted)
     refs = {}
     for filetype, refname in bestrefs.items():
         if isinstance(refname, tuple):
