@@ -307,18 +307,24 @@ class Script(object):
 
     def __call__(self):
         """Run the script's main() according to command line parameters."""
-        if self.args.version:
-            _show_version()
-        elif self.args.profile:
-            if self.args.profile == "console":
-                self._console_profile(self._main)
+        try:
+            if self.args.version:
+                _show_version()
+            elif self.args.profile:
+                if self.args.profile == "console":
+                    self._console_profile(self._main)
+                else:
+                    cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
+            elif self.args.pdb:
+                pdb.runctx("self._main()", locals(), locals())
             else:
-                cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
-        elif self.args.pdb:
-            pdb.runctx("self._main()", locals(), locals())
-        else:
-            return self._main()
-    
+                return self._main()
+        except KeyboardInterrupt:
+            if self.args.pdb:
+                raise
+            else:
+                raise KeyboardInterrupt("Interrupted... quitting.")
+
     def _console_profile(self, function, sort_by="cumulative", top_n=100):
         """Run `function` under the profiler and print results to console."""
         pr = cProfile.Profile()
