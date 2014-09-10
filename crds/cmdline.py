@@ -519,7 +519,7 @@ class ContextsScript(Script):
                     try:
                         pmap = rmap.get_cached_mapping(context)
                         files = files.union(pmap.mapping_names())
-                    except:
+                    except Exception:
                         files = files.union(api.get_mapping_names(context))
                     useable_contexts.append(context)
             useable_contexts = sorted(useable_contexts)
