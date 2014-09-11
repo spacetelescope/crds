@@ -302,7 +302,7 @@ def get_final_context(info, context):
     Returns   a .pmap name
     """
     env_context = config.get_crds_env_context()
-    if context and not context.endswith("-operational"):    # context parameter trumps all, <observatory>-operational is default
+    if context:  # context parameter trumps all, <observatory>-operational is default
         input_context = context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by caller.")
         info.status = "getreferences() context parameter"

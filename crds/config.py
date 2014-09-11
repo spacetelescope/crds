@@ -140,6 +140,14 @@ def get_crds_mappath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_MAPPATH", "mappings")
 
+def get_crds_config_path(observatory):
+    """Return the path to a writable directory used to store configuration info
+    such as last known server status.   This is extended by <observatory> once
+    it is known.   If CRDS_PATH doesn't point to a writable directory, then
+    CRDS_CFGPATH should be defined.
+    """
+    return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
+
 def get_crds_refpath(observatory):
     """get_crds_refpath returns the base path of the directory tree where CRDS 
     reference files are stored.   This is extended by <observatory> once it is
@@ -149,13 +157,25 @@ def get_crds_refpath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_REFPATH", "references")
 
-def get_crds_config_path(observatory):
-    """Return the path to a writable directory used to store configuration info
-    such as last known server status.   This is extended by <observatory> once
-    it is known.   If CRDS_PATH doesn't point to a writable directory, then
-    CRDS_CFGPATH should be defined.
-    """
-    return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
+# ===========================================================================
+
+def get_crds_ref_subdir_mode():
+    """Return the mode value defining how reference files are located."""
+    mode = os.environ.get("CRDS_REF_SUBDIR_MODE", "cached_instr")
+    _check_subdir_mode(mode)
+    return mode
+
+def set_crds_ref_subdir_mode(mode):
+    """Set the reference file location subdirectory `mode`."""
+    _check_subdir_mode(mode)
+    old_val = get_crds_ref_subdir_mode()
+    os.environ["CRDS_REF_SUBDIR_MODE"] = mode
+    return old_val
+
+def _check_subdir_mode(mode):
+    """Check for valid reference location subdirectory `mode`."""
+    assert mode in ["ref$", "cached_ref$", "cached_instr", "cached_flat"], \
+        "Invalid CRDS_REF_SUBDIR_MODE = " + repr(mode)
 
 # ===========================================================================
 
@@ -340,7 +360,8 @@ def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
         return ref
-    return os.path.join(get_crds_refpath(observatory), ref)
+    from crds import utils
+    return utils.get_locator_module(observatory).locate_file(ref)
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 

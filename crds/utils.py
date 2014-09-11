@@ -604,6 +604,12 @@ def file_to_observatory(filename):
         return "tobs"
     else:
         return reference_to_observatory(filename)
+    
+def get_reference_paths(observatory):
+    """Return the list of subdirectories involved with storing references of all instruments."""
+    pkg = get_observatory_package(observatory)
+    locate = get_locator_module(observatory)
+    return sorted(set([locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS]))
 
 # These functions should actually be general,  working on both references and
 # dataset files.
