@@ -1427,8 +1427,11 @@ def asmapping(filename_or_mapping, cached=False, **keys):
 
 def list_references(glob_pattern, observatory, full_path=False):
     """Return the list of cached references for `observatory` which match `glob_pattern`."""
-    pattern = config.locate_reference(glob_pattern, observatory)
-    return _glob_list(pattern, full_path)
+    references = []
+    for path in utils.get_reference_paths(observatory):
+        pattern = os.path.join(path, glob_pattern)
+        references.extend(_glob_list(pattern, full_path))
+    return sorted(set(references))
 
 def list_mappings(glob_pattern, observatory, full_path=False):
     """Return the list of cached mappings for `observatory` which match `glob_pattern`."""

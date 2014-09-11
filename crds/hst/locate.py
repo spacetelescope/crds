@@ -248,8 +248,7 @@ CDBS_DIRS_TO_INSTR = {
 }
 
 def get_reference_properties(filename):
-    """Figure out FITS (instrument, filekind, serial) based on `filename`.
-    """
+    """Figure out FITS (instrument, filekind, serial) based on `filename`."""
     try:   # Hopefully it's a nice new standard filename, easy
         return decompose_newstyle_name(filename)
     except AssertionError:  # cryptic legacy paths & names, i.e. reality
@@ -287,8 +286,7 @@ TYPE_FIXERS = {
 
 
 def ref_properties_from_header(filename):
-    """Look inside FITS `filename` header to determine instrument, filekind.
-    """
+    """Look inside FITS `filename` header to determine instrument, filekind."""
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
@@ -313,6 +311,40 @@ def ref_properties_from_header(filename):
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return siname.add_IRAF_prefix(instrument.upper())
+
+def locate_file(refname):
+    """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
+    The aspect of this which is complicated is determining instrument and an instrument
+    specific sub-directory for it based on the filename alone,  not the file contents.
+    """
+    path,  observatory, instrument, filekind, serial, ext = get_reference_properties(refname)
+    rootdir = locate_dir(instrument)
+    return  os.path.join(rootdir, refname)
+
+def locate_dir(instrument):
+    """Locate the instrument specific directory for a reference file."""
+    mode = config.get_crds_ref_subdir_mode()
+    crds_refpath = config.get_crds_refpath("hst")
+    if mode == "ref$":   # Locate cached files at the appropriate CDBS-style  iref$ locations
+        prefix = get_env_prefix(instrument)
+        try:
+            rootdir = os.environ[prefix]
+        except KeyError:
+            try:
+                rootdir = os.environ[prefix[:-1]]
+            except KeyError:
+                raise KeyError("Reference location not defined for " + repr(instrument) + 
+                               ".  Did you configure " + repr(prefix) + "?")
+    elif mode == "cached_ref$":    # use CDBS iref$ subdirectories inside CRDS cache.
+        prefix = get_env_prefix(instrument)
+        rootdir = os.path.join(crds_refpath, prefix[:-1])
+    elif mode == "cached_instr":   # use simple names inside CRDS cache.
+        rootdir = os.path.join(crds_refpath, instrument)
+    elif mode == "cached_flat":    # use original flat cache structure,  all instruments in same directory.
+        rootdir = crds_refpath
+    else:
+        raise ValueError("Unhandled reference file location mode " + repr(mode))
+    return rootdir
 
 # ============================================================================
 
