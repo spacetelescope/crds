@@ -400,7 +400,7 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
     return log.format(activity, repr(name), "-->", repr(path), utils.human_format_number(bytes), "bytes.",
                       "({} / {} files) ({} / {} bytes)".format(utils.human_format_number(nth_file+1), 
                                                                utils.human_format_number(total_files), 
-                                                               utils.human_format_number(bytes_so_far), 
+                                                               utils.human_format_number(bytes_so_far+bytes), 
                                                                utils.human_format_number(total_bytes)),
                       end="")
 
