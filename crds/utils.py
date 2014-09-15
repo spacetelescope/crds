@@ -12,7 +12,7 @@ import ast
 
 # from crds import data_file,  import deferred until required
 
-from crds import log, config
+from crds import log, config, pysh
 
 # ===================================================================
 
@@ -400,7 +400,15 @@ def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """Creates dirs from `fullpath` if they don't already exist.
     """
     create_path(os.path.dirname(fullpath), mode)
-    
+
+def remove_dir(path):
+    """Wipe out directory at 'path'."""
+    with log.error_on_exception("Failed removing", repr(path)):
+        abs_path = os.path.abspath(path)
+        abs_cache = os.path.abspath(config.get_crds_path())
+        assert abs_path.startswith(abs_cache), "remove_dir() only works on files in CRDS cache. not: " + repr(path)
+        log.verbose("Removing: ", repr(path))
+        pysh.sh("rm -rf ${path}")    
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
