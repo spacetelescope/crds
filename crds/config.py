@@ -5,6 +5,9 @@ it is used to define CRDS file cache paths and file location functions.
 import os
 import os.path
 import re
+import glob
+
+from crds import log
 
 # ============================================================================
 
@@ -159,23 +162,40 @@ def get_crds_refpath(observatory):
 
 # ===========================================================================
 
-def get_crds_ref_subdir_mode():
+CRDS_SUBDIR_TAG_FILE = "ref_cache_subdir_mode"
+CRDS_REF_SUBDIR_MODES = ["instrument", "flat", "legacy"]
+
+def get_crds_ref_subdir_mode(observatory):
     """Return the mode value defining how reference files are located."""
-    mode = os.environ.get("CRDS_REF_SUBDIR_MODE", "cached_instr")
-    _check_subdir_mode(mode)
+    mode_path = os.path.join(get_crds_config_path(observatory),  CRDS_SUBDIR_TAG_FILE)
+    try:
+        mode = open(mode_path).read().strip()
+        # log.verbose("Determined cache format from", repr(mode_path), "as", repr(mode))
+    except IOError:
+        set_crds_ref_subdir_mode("flat", observatory, update_tag=False)
+        if len(glob.glob(os.path.join(get_crds_refpath(observatory), "*"))) > 20:
+            mode = "flat"
+            log.verbose("No cache config tag found, looks like a 'flat' cache based on existing references.")
+        else:
+            mode = "instrument"
+            log.verbose("No cache config tag found, defaulting to 'instrument' based cache.")
+        set_crds_ref_subdir_mode(mode, observatory)
+    check_crds_ref_subdir_mode(mode)
     return mode
 
-def set_crds_ref_subdir_mode(mode):
+def set_crds_ref_subdir_mode(mode, observatory, update_tag=True):
     """Set the reference file location subdirectory `mode`."""
-    _check_subdir_mode(mode)
-    old_val = get_crds_ref_subdir_mode()
-    os.environ["CRDS_REF_SUBDIR_MODE"] = mode
-    return old_val
+    check_crds_ref_subdir_mode(mode)
+    mode_path = os.path.join(get_crds_config_path(observatory), CRDS_SUBDIR_TAG_FILE)
+    if update_tag:
+        from crds import utils  # XXXX gross, I know.  Dependency to be fixed.
+        utils.ensure_dir_exists(mode_path)
+        open(mode_path, "w+").write(mode)
 
-def _check_subdir_mode(mode):
+def check_crds_ref_subdir_mode(mode):
     """Check for valid reference location subdirectory `mode`."""
-    assert mode in ["ref$", "cached_ref$", "cached_instr", "cached_flat"], \
-        "Invalid CRDS_REF_SUBDIR_MODE = " + repr(mode)
+    assert mode in CRDS_REF_SUBDIR_MODES, "Invalid CRDS cache subdirectory mode = " + repr(mode)
+    return mode
 
 # ===========================================================================
 

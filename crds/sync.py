@@ -26,6 +26,7 @@ import sys
 import os
 import os.path
 import re
+import shutil
 
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config)
@@ -149,6 +150,10 @@ class SyncScript(cmdline.ContextsScript):
                           help='Purge files (and their mapping anscestors) noted as blacklisted by --check-files')
         self.add_argument('--fetch-sqlite-db', action='store_true', dest='fetch_sqlite_db',
                           help='Download a sqlite3 version of the CRDS file catalog.')
+        self.add_argument("--reorganize-references", metavar="NEW_SUBDIR_MODE", type=config.check_crds_ref_subdir_mode, 
+                          nargs="?", default=None, help="Migrate cache from old directory structure to specified structure, moving files. WARNING: perform only on idle caches.")
+        self.add_argument("--reorganize-delete-junk", action="store_true",
+                          help="When --reorganizing-references, delete strange files CRDS discovers.")
 
     # ------------------------------------------------------------------------------------------
     
@@ -158,6 +163,8 @@ class SyncScript(cmdline.ContextsScript):
             self.args.check_files = True
         assert not (self.args.repair_files and self.readonly_cache), \
             "--repair-files and readonly cache are mutually exclusive."
+        if self.args.reorganize_references:   # do this before syncing anything under the current mode.
+            self.reorganize_references(self.args.reorganize_references)
         self.require_server_connection()
         if self.args.files:
             self.sync_explicit_files()
@@ -355,6 +362,36 @@ class SyncScript(cmdline.ContextsScript):
         """Download a SQLite version of the CRDS catalog from the server."""
         path = api.get_sqlite_db(self.observatory)
         log.info("SQLite database file downloaded to:", path)
+        
+    def reorganize_references(self, new_mode):
+        """Find all references in the CRDS cache,  in all directory modes,  and relink them to the
+        paths which are implied by the current directory mode.   This is used to reroganize existing
+        file caches into new layouts,  e.g. flat -->  by instrument.
+        """
+        old_refpaths = rmap.list_references("*", observatory=self.observatory, full_path=True)
+        old_mode = config.get_crds_ref_subdir_mode(self.observatory)
+        log.info("Reorganizing", len(old_refpaths), "references from", repr(old_mode), "to", repr(new_mode))
+        config.set_crds_ref_subdir_mode(new_mode, observatory=self.observatory)
+        for refpath in old_refpaths:
+            desired_loc = rmap.locate_file(os.path.basename(refpath), observatory=self.observatory)
+            if desired_loc != refpath:
+                if os.path.exists(desired_loc):
+                    if not self.args.reorganize_delete_junk:
+                        log.warning("Link or directory already exists at", repr(desired_loc), "Skipping", repr(refpath))
+                        continue
+                    else:
+                        log.info("Deleting --reorganize-delete-junk file", repr(desired_loc))
+                        try:
+                            pysh.sh("rm -rf ${desired_loc}", raise_on_error=False)
+                        except Exception:
+                            log.error("Failed deleting junk", repr(desired_loc))
+                            continue
+                log.info("Relocating old reference", repr(refpath), "to new", repr(desired_loc))
+                shutil.move(refpath, desired_loc)
+            else:
+                log.verbose("Keeping existing cached file, already in target mode", repr(desired_loc))
+        if new_mode == "flat" and old_mode == "instrument":
+            self.locator.remove_instrument_dirs()
 
 # ==============================================================================================================
 
