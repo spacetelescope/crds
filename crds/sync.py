@@ -150,10 +150,11 @@ class SyncScript(cmdline.ContextsScript):
                           help='Purge files (and their mapping anscestors) noted as blacklisted by --check-files')
         self.add_argument('--fetch-sqlite-db', action='store_true', dest='fetch_sqlite_db',
                           help='Download a sqlite3 version of the CRDS file catalog.')
-        self.add_argument("--reorganize-references", metavar="NEW_SUBDIR_MODE", type=config.check_crds_ref_subdir_mode, 
-                          nargs="?", default=None, help="Migrate cache from old directory structure to specified structure, moving files. WARNING: perform only on idle caches.")
-        self.add_argument("--reorganize-delete-junk", action="store_true",
-                          help="When --reorganizing-references, delete strange files CRDS discovers.")
+        self.add_argument("--organize", metavar="NEW_SUBDIR_MODE", type=config.check_crds_ref_subdir_mode, 
+                          nargs="?", default=None, 
+                          help="Migrate cache to specified structure, 'flat' or 'instrument'. WARNING: perform only on idle caches.")
+        self.add_argument("--organize-delete-junk", action="store_true",
+                          help="When --organize'ing, delete obstructing files or directories CRDS discovers.")
 
     # ------------------------------------------------------------------------------------------
     
@@ -161,10 +162,8 @@ class SyncScript(cmdline.ContextsScript):
         """Synchronize files."""
         if self.args.repair_files:
             self.args.check_files = True
-        assert not (self.args.repair_files and self.readonly_cache), \
-            "--repair-files and readonly cache are mutually exclusive."
-        if self.args.reorganize_references:   # do this before syncing anything under the current mode.
-            self.reorganize_references(self.args.reorganize_references)
+        if self.args.organize:   # do this before syncing anything under the current mode.
+            self.organize_references(self.args.organize)
         self.require_server_connection()
         if self.args.files:
             self.sync_explicit_files()
@@ -243,12 +242,10 @@ class SyncScript(cmdline.ContextsScript):
         for filename in files:
             where = rmap.locate_file(filename, self.observatory)
             # instrument, filekind = utils.get_file_properties(self.observatory, where)
-            if not self.args.dry_run:
-                log.verbose("Removing", filename, "from", where)
-                with log.error_on_exception("File removal failed for", repr(where)):
-                    os.remove(where)
+            if self.args.dry_run:
+                log.info("Would remove", kind + "s:", repr(where))
             else:
-                log.info("Without --dry-run would remove", repr(where))
+                utils.remove(where)
 
     # ------------------------------------------------------------------------------------------
     
@@ -351,19 +348,17 @@ class SyncScript(cmdline.ContextsScript):
         """Issue an error message and repair `file` if requested by command line args."""
         log.error(*args, **keys)
         if self.args.repair_files:
-            if not self.args.dry_run:
+            if config.writable_cache_or_info("Skipping remove and dump of", repr(file)):
                 log.info("Repairing file", repr(file))
-                os.remove(file)
+                utils.remove(file)
                 self.dump_files(self.default_context, [file]) 
-            else:
-                log.info("Without --dry-run would repair", repr(file))
     
     def fetch_sqlite_db(self):
         """Download a SQLite version of the CRDS catalog from the server."""
         path = api.get_sqlite_db(self.observatory)
         log.info("SQLite database file downloaded to:", path)
         
-    def reorganize_references(self, new_mode):
+    def organize_references(self, new_mode):
         """Find all references in the CRDS cache,  in all directory modes,  and relink them to the
         paths which are implied by the current directory mode.   This is used to reroganize existing
         file caches into new layouts,  e.g. flat -->  by instrument.
@@ -372,25 +367,26 @@ class SyncScript(cmdline.ContextsScript):
         old_mode = config.get_crds_ref_subdir_mode(self.observatory)
         log.info("Reorganizing", len(old_refpaths), "references from", repr(old_mode), "to", repr(new_mode))
         config.set_crds_ref_subdir_mode(new_mode, observatory=self.observatory)
+        new_mode = config.get_crds_ref_subdir_mode(self.observatory)  # did it really change.
         for refpath in old_refpaths:
             desired_loc = rmap.locate_file(os.path.basename(refpath), observatory=self.observatory)
             if desired_loc != refpath:
                 if os.path.exists(desired_loc):
-                    if not self.args.reorganize_delete_junk:
+                    if not self.args.organize_delete_junk:
                         log.warning("Link or directory already exists at", repr(desired_loc), "Skipping", repr(refpath))
                         continue
-                    else:
-                        log.info("Deleting --reorganize-delete-junk file", repr(desired_loc))
-                        try:
-                            pysh.sh("rm -rf ${desired_loc}", raise_on_error=False)
-                        except Exception:
-                            log.error("Failed deleting junk", repr(desired_loc))
-                            continue
-                log.info("Relocating old reference", repr(refpath), "to new", repr(desired_loc))
-                shutil.move(refpath, desired_loc)
+                    utils.remove(desired_loc)
+                if config.writable_cache_or_info("Skipping file relocation from", repr(refpath), "to", repr(desired_loc)):
+                    log.info("Relocating", repr(refpath), "to", repr(desired_loc))
+                    shutil.move(refpath, desired_loc)
             else:
-                log.verbose("Keeping existing cached file, already in target mode", repr(desired_loc))
+                if old_mode != new_mode:
+                    log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
+                else:
+                    log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
+                    
         if new_mode == "flat" and old_mode == "instrument":
+            log.info("Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.")
             self.locator.remove_instrument_dirs()
 
 # ==============================================================================================================

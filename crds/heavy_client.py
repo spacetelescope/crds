@@ -326,7 +326,10 @@ def translate_date_based_context(info, context):
         return context
     else:
         if not info.connected:
-            raise crds.CrdsError("Specified CRDS context by date and CRDS server is not reachable.")
+            if context == info.observatory + "-operational":
+                return info["operational_context"]
+            else:
+                raise crds.CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
         try:
             translated = light_client.get_context_by_date(context, observatory=info.observatory)
         except Exception, exc:
@@ -336,11 +339,11 @@ def translate_date_based_context(info, context):
         return translated
 
 def local_version_obsolete(server_version):
-    """Compare `server_version` to the minor version number of the locally 
-    installed CRDS client,  e.g. 1.2 vs. 1.1.
+    """Return True IFF major_version(server) > major_version(client).  Use to force client to call-up instead
+    of computing locally.
     """
-    server_version = minor_version(server_version)
-    client_version = minor_version(crds.__version__)
+    server_version = major_version(server_version)
+    client_version = major_version(crds.__version__)
     obsolete = client_version < server_version
     log.verbose("CRDS client version=", srepr(client_version),
                 " server version=", srepr(server_version),
@@ -348,11 +351,13 @@ def local_version_obsolete(server_version):
                 sep="")
     return obsolete
 
-def minor_version(vers):
+def major_version(vers):
     """Strip the revision number off of `vers` and conver to float.
-     e.g. "1.1.7"  --> 1.1
-     """
-    return float(".".join(vers.split(".")[:2]))
+    
+    >>> major_version('1.2.7')
+    1.0
+    """
+    return float(".".join(vers.split(".")[0]))
  
 # ============================================================================
 
@@ -378,36 +383,35 @@ def get_config_info(observatory):
         info.status = "server"
         info.connected = True
         log.verbose("Connected to server at", repr(light_client.get_crds_server()))
+        if config.get_cache_readonly():
+            log.verbose_warning("READONLY CACHE: using cached configuration and default context.")
+            info = load_server_info(observatory)
+        else:
+            cache_server_info(info, observatory)  # save locally
     except light_client.CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(light_client.get_crds_server()))
         info = load_server_info(observatory)
-        info.connected = False
-    if info.connected:
-        cache_server_info(info, observatory)  # save locally
-    info.readonly = config.get_cache_readonly()
     return info
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
-    if config.get_cache_readonly():
-        log.verbose("Readonly cache, skipping cache config write.", verbosity=70)
-        return
-    path = config.get_crds_config_path(observatory)
-    try:
-        server_config = os.path.join(path, "server_config")
-        utils.ensure_dir_exists(server_config)
-        with open(server_config, "w+") as file_:
-            file_.write(pprint.pformat(info))
-    except Exception, exc:
-        log.verbose_warning("Couldn't save CRDS server info to local CRDS cache:", repr(exc))
-    try:
-        bad_files = os.path.join(path, "bad_files.txt")
-        utils.ensure_dir_exists(bad_files)
-        bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
-        with open(bad_files, "w+") as file_:
-            file_.write(bad_files_lines)
-    except Exception, exc:
-        log.verbose_warning("Couldn't save CRDS bad files list to local CRDS cache:", repr(exc))
+    if config.writable_cache_or_verbose("Skipping cache config write.", verbosity=70):
+        path = config.get_crds_config_path(observatory)
+        try:
+            server_config = os.path.join(path, "server_config")
+            utils.ensure_dir_exists(server_config)
+            with open(server_config, "w+") as file_:
+                file_.write(pprint.pformat(info))
+        except Exception, exc:
+            log.verbose_warning("Couldn't save CRDS server info to local CRDS cache:", repr(exc))
+        try:
+            bad_files = os.path.join(path, "bad_files.txt")
+            utils.ensure_dir_exists(bad_files)
+            bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
+            with open(bad_files, "w+") as file_:
+                file_.write(bad_files_lines)
+        except Exception, exc:
+            log.verbose_warning("Couldn't save CRDS bad files list to local CRDS cache:", repr(exc))
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
@@ -416,12 +420,13 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
-        log.verbose_warning("Loading server context and version info from cache '%s'." % server_config, 
-                            "References may be sub-optimal.")
+        log.verbose_warning("Loading configuration from cache '%s'." % server_config, 
+                            "References may be out-of-date unless CRDS cache is sync'ed elsewhere.")
     except IOError:
         log.verbose_warning("Couldn't load cached server info from '%s'." % server_config,
                             "Using pre-installed CRDS context.  References may be sub-optimal." )
         info = get_installed_info(observatory)
+    info.connected = False
     return info
 
 def get_installed_info(observatory):
@@ -463,7 +468,7 @@ def get_installed_info(observatory):
 # XXXX Careful with version string length here, FITS has a 68 char limit which degrades to CONTINUE records
 # XXXX which cause problems for other systems.
 def version_info():
-    """Return CRDS checkout URL and revision."""
+    """Return CRDS checkout URL and revision,  client side."""
     try:
         from . import svn_version
         lines = svn_version.__full_svn_info__.strip().split("\n")

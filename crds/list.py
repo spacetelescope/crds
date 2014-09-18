@@ -138,7 +138,8 @@ class ListScript(cmdline.ContextsScript):
         _print_dict("CRDS Environment", info)
         _print_dict("CRDS Client Config", { 
                 "server_url" : current_server_url, 
-                "cache_mode": mode 
+                "cache_mode": mode,
+                "readonly_cache": self.readonly_cache,
                 })
         _print_dict("CRDS Actual Paths", real_paths)
         _print_dict("CRDS Server Info", server, 

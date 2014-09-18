@@ -134,14 +134,14 @@ def get_file_properties(filename):
     if config.is_mapping(filename):
         try:
             return decompose_newstyle_name(filename)[2:4]
-        except Exception, exc:
+        except Exception:
             return properties_inside_mapping(filename)
     elif REF_EXT_RE.search(filename):
         result = get_reference_properties(filename)[2:4]
     else:
         try:
             result = properties_inside_mapping(filename)
-        except Exception, exc:
+        except Exception:
             result = get_reference_properties(filename)[2:4]
     assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)
@@ -180,16 +180,16 @@ def decompose_newstyle_name(filename):
     serial = list_get(parts, 3, "")
 
     if ext == ".pmap":
-        assert len(parts) in [1,2], "Invalid .pmap filename " + repr(filename)
+        assert len(parts) in [1, 2], "Invalid .pmap filename " + repr(filename)
         instrument, filekind = "", ""
         serial = list_get(parts, 1, "")
     elif ext == ".imap":
-        assert len(parts) in [2,3], "Invalid .imap filename " + repr(filename)
+        assert len(parts) in [2, 3], "Invalid .imap filename " + repr(filename)
         instrument = parts[1]
         filekind = ""
         serial = list_get(parts, 2, "")
     else:
-        assert len(parts) in [3,4], "Invalid filename " + repr(filename)
+        assert len(parts) in [3, 4], "Invalid filename " + repr(filename)
         instrument = parts[1]
         filekind = parts[2]
         serial = list_get(parts, 3, "")
@@ -209,25 +209,27 @@ def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and 
     return (instrument, filekind).
     """
-    map = rmap.fetch_mapping(filename)
-    if map.mapping == "pipeline":
+    loaded = rmap.fetch_mapping(filename)
+    if loaded.mapping == "pipeline":
         result = "", ""
-    elif map.mapping == "instrument":
-        result = map.instrument, ""
+    elif loaded.mapping == "instrument":
+        result = loaded.instrument, ""
     else:
-        result = map.instrument, map.filekind
+        result = loaded.instrument, loaded.filekind
     return result
 
 def _get_fields(filename):
+    """Break CRDS-style filename down into: path, underscore-separated-parts, extension."""
     path = os.path.dirname(filename)
     name = os.path.basename(filename)
     name, ext = os.path.splitext(name)
     parts = name.split("_")
     return path, parts, ext
 
-def list_get(l, index, default):
+def list_get(the_list, index, default):
+    """Fetch the `index` item from `the_list`, or return `default` on IndexError.  Like dict.get()."""
     try:
-        return l[index]
+        return the_list[index]
     except IndexError:
         return default
 
@@ -288,7 +290,7 @@ TYPE_FIXERS = {
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind."""
     # For legacy files,  just use the root filename as the unique id
-    path, parts, ext = _get_fields(filename)
+    path, _parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
@@ -317,7 +319,7 @@ def locate_file(refname, mode=None):
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
-    path,  observatory, instrument, filekind, serial, ext = get_reference_properties(refname)
+    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, refname)
 
@@ -342,9 +344,10 @@ def locate_dir(instrument, mode=None):
         rootdir = os.path.join(crds_refpath, instrument)
         refdir = os.path.join(crds_refpath, prefix[:-1])
         if not os.path.exists(refdir):
-            utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
-            log.verbose("Creating legacy cache link", repr(refdir), "-->", repr(rootdir))
-            os.symlink(rootdir, refdir)
+            if config.writable_cache_or_verbose("Skipping making instrument directory link for", repr(instrument)):
+                log.verbose("Creating legacy cache link", repr(refdir), "-->", repr(rootdir))
+                utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+                os.symlink(rootdir, refdir)
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
         rootdir = crds_refpath
     else:
@@ -358,16 +361,17 @@ def remove_instrument_dirs():
         
 def remove_dir(instrument):
     """Remove an instrument cache directory and any associated legacy link."""
-    crds_refpath = config.get_crds_refpath("hst")
-    prefix = get_env_prefix(instrument)
-    rootdir = os.path.join(crds_refpath, instrument)
-    refdir = os.path.join(crds_refpath, prefix[:-1])
-    if len(glob.glob(os.path.join(rootdir, "*"))):
-        log.info("Residual files in '{}'. Not removing.".format(rootdir))
-        return
-    if os.path.exists(refdir):
-        utils.remove_dir(refdir)
-    utils.remove_dir(rootdir)
+    if config.writable_cache_or_verbose("Skipping remove instrument", repr(instrument), "directory."):
+        crds_refpath = config.get_crds_refpath("hst")
+        prefix = get_env_prefix(instrument)
+        rootdir = os.path.join(crds_refpath, instrument)
+        refdir = os.path.join(crds_refpath, prefix[:-1])
+        if len(glob.glob(os.path.join(rootdir, "*"))):
+            log.info("Residual files in '{}'. Not removing.".format(rootdir))
+            return
+        if os.path.exists(refdir):
+            utils.remove(refdir)
+        utils.remove(rootdir)
 
 # ============================================================================
 
@@ -422,9 +426,9 @@ def load_all_type_constraints():
     from crds import certify
     tpns = glob.glob(os.path.join(HERE, "tpns", "*.tpn"))
     for tpn_path in tpns:
-        tpn = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
-        log.verbose("Loading", repr(tpn))
-        certify.validators_by_typekey((tpn,), "hst")
+        tpn_name = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
+        log.verbose("Loading", repr(tpn_name))
+        certify.validators_by_typekey((tpn_name,), "hst")
 
 # ============================================================================
 
