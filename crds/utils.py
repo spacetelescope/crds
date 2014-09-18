@@ -29,6 +29,7 @@ class Struct(dict):
 def traced(func):
     """Issue a verbose message showing parameters and possibly return val."""
     def func2(*args, **keys):
+        "Decoration wrapper for @trace."
         log.verbose("trace:", func.__name__, args if args else "", keys if keys else "", verbosity=55)
         result = func(*args, **keys)
         log.verbose("trace result:", func.__name__, ":", result, verbosity=55)
@@ -332,6 +333,9 @@ class TimingStats(object):
         self.output(*args, eol="")
 
 def human_format_number(number):
+    """Reformat `number` by switching to engineering units and dropping to two fractional digits,
+    10s of megs for G-scale files.
+    """
     convert = [
         (1e12, "T"),
         (1e9 , "G"),
@@ -339,7 +343,7 @@ def human_format_number(number):
         (1e3 , "K"),
         ]
     for limit, sym in convert:
-        if isinstance(number, (float,int,long)) and number > limit:
+        if isinstance(number, (float, int, long)) and number > limit:
             number /= limit
             break
     else:
@@ -401,14 +405,19 @@ def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """
     create_path(os.path.dirname(fullpath), mode)
 
-def remove_dir(path):
+def remove(path):
     """Wipe out directory at 'path'."""
-    with log.error_on_exception("Failed removing", repr(path)):
-        abs_path = os.path.abspath(path)
-        abs_cache = os.path.abspath(config.get_crds_path())
-        assert abs_path.startswith(abs_cache), "remove_dir() only works on files in CRDS cache. not: " + repr(path)
-        log.verbose("Removing: ", repr(path))
-        pysh.sh("rm -rf ${path}")    
+    if config.writable_cache_or_verbose("Skipped removing", repr(path)):
+        with log.error_on_exception("Failed removing", repr(path)):
+            abs_path = os.path.abspath(path)
+            abs_cache = os.path.abspath(config.get_crds_path())
+            assert abs_path.startswith(abs_cache), "remove() only works on files in CRDS cache. not: " + repr(path)
+            log.verbose("Removing: ", repr(path))
+            if os.path.isfile(path):
+                os.chmod(path, 0666)
+                os.remove(path)
+            else:
+                pysh.sh("rm -rf ${path}", raise_on_error=True)    
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
