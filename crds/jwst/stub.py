@@ -102,7 +102,9 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
                              if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
         if added_references:
             path = generate_new_rmap(reference_context, parkey, added_references)
+            path = insert_references(path, added_references)
             rmaps.append(path)
+            path = generate_new_rmap(reference_context, parkey, added_references)
             pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
     
     rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
@@ -154,23 +156,28 @@ def generate_new_rmap(reference_context, parkey, new_references):
     new_rmap.header["filekind"] = filekind.upper()
     new_rmap.header["parkey"] = eval(parkey.upper()) if parkey.strip() else ((),)
     new_rmap.header["name"] = name
-    new_rmap.header["observatory"] = pmap.observatory.upper()
-    
+    new_rmap.header["observatory"] = pmap.observatory.upper()   
     new_rmap.write(path)
-    
-    files = " ".join(["./" + ref for ref in new_references])
 
-    pysh.sh("python -m crds.refactor insert ${path} ${path} ${files} --verbose", 
-            trace_commands=True, raise_on_error=True)
-    
     new_rmap = rmap.load_mapping(path)
     new_rmap.validate_mapping()
-    new_rmap.header["derived_from"] = 'generated as stub rmap on ' + timestamp.now()
+
+    new_rmap.header["derived_from"] = 'generated as stub rmap on ' + timestamp.now().split(".")[0]
     new_rmap.write(path)
+
     new_rmap = rmap.load_mapping(path)
     new_rmap.validate_mapping()
     
     return path
+
+def insert_references(rmap_path, new_references):
+    
+    files = " ".join(["./" + ref for ref in new_references])
+
+    pysh.sh("python -m crds.refactor insert ${rmap_path} ${rmap_path} ${files} --verbose", 
+            trace_commands=True, raise_on_error=True)
+    
+    return rmap_path
 
 def link_reference_to_crds_name(reference):
     """Generate a unique CRDS name for `reference`."""
@@ -200,7 +207,7 @@ def last_serial(names):
 
 if __name__ == "__main__":
         
-    pysh.usage("<reference_context> <comma-separated-parkeys> <new_references>", 3)
+    pysh.usage("<reference_context> <comma-separated-parkeys> <new_references>", 2)
     
     reference_context = sys.argv[1]
     parkey = sys.argv[2]

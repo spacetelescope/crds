@@ -1239,10 +1239,10 @@ class ReferenceMapping(Mapping):
         header = data_file.get_header(reffile, observatory=self.observatory)
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:", 
-                    [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ]))
         header = self.get_matching_header(header)
         log.verbose("insert_reference matching reffile header:", 
-                    [ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ])
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ]))
         if self._rmap_update_headers:
             # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
             for hdr in self._rmap_update_headers(self, header):
