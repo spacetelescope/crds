@@ -97,16 +97,28 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
     
     pmap = rmap.get_cached_mapping(reference_context)
     rmaps = []
+    last_added = None
     for instr in pmap.obs_package.INSTRUMENTS:
-        added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
+        # added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
+        #                     if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
+        added_references = [ ref for ref in all_references 
                              if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
         if added_references:
+            last_added = added_references
             path = generate_new_rmap(reference_context, parkey, added_references)
             path = insert_references(path, added_references)
             rmaps.append(path)
-            path = generate_new_rmap(reference_context, parkey, added_references)
             pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
+
+    # Save last version of populated .rmap
+    final = os.path.basename(path) + ".final"
+    pysh.sh("cp $path $final", trace_commands=True, raise_on_error=True)
     
+    # Save empty .rmap for submission to server.
+    path = generate_new_rmap(reference_context, parkey, last_added)
+    empty = os.path.basename(path) + ".empty"
+    pysh.sh("cp $path $empty", trace_commands=True, raise_on_error=True)
+
     rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
     pysh.sh("python -m crds.newcontext ${reference_context} ${rmaps_str} --verbose", trace_commands=True, raise_on_error=True)
     
@@ -180,19 +192,28 @@ def insert_references(rmap_path, new_references):
     return rmap_path
 
 def link_reference_to_crds_name(reference):
+    new = new_name(reference)
+    log.info("Renaming reference", repr(reference), "to", repr(new))
+    pysh.sh("ln -s ${reference} ${new}", raise_on_error=True)
+    return new
+
+def new_name(reference):
     """Generate a unique CRDS name for `reference`."""
     observatory = utils.file_to_observatory(reference)
     instrument, filekind = utils.get_file_properties(observatory, reference)
     rootname = "_".join([observatory, instrument, filekind])
-    names = api.list_references(observatory, rootname+"*") + \
-        rmap.list_references(rootname + "*", observatory) + \
-        glob.glob(rootname + "*")
+    if rmap.is_mapping(reference):
+        names = api.list_mappings(observatory, rootname+"*") + \
+            rmap.list_mappings(rootname + "*", observatory) + \
+            glob.glob(rootname + "*")
+    else:
+        names = api.list_references(observatory, rootname+"*") + \
+            rmap.list_references(rootname + "*", observatory) + \
+            glob.glob(rootname + "*")
     old = last_serial(names)
     new = rootname + "_{:04d}".format(old+1) + os.path.splitext(reference)[-1]
-    log.info("Renaming reference", repr(reference), "to", repr(new))
-    pysh.sh("ln -s ${reference} ${new}", raise_on_error=True)
     return new
-    
+
 def last_serial(names):
     """Return the highest serial number taken from files in `names`."""
     last = -1
