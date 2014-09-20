@@ -111,12 +111,12 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
             pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
 
     # Save last version of populated .rmap
-    final = os.path.basename(path) + ".final"
+    final = os.path.basename(path)[:-len(".rmap")] + ".final.rmap"
     pysh.sh("cp $path $final", trace_commands=True, raise_on_error=True)
     
     # Save empty .rmap for submission to server.
     path = generate_new_rmap(reference_context, parkey, last_added)
-    empty = os.path.basename(path) + ".empty"
+    empty = os.path.basename(path)[:-len(".rmap")] + ".empty.rmap"
     pysh.sh("cp $path $empty", trace_commands=True, raise_on_error=True)
 
     rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
