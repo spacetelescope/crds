@@ -69,7 +69,8 @@ __all__ = [
            "ServiceError",
            
            "get_required_parkeys",
-           "get_affected_datasets"
+           "get_affected_datasets",
+           "get_context_history",
 
            ]
 
@@ -356,6 +357,14 @@ def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):
 def get_affected_datasets(observatory, old_context=None, new_context=None):
     """Return a structure describing the ids affected by the last context change."""
     return utils.Struct(S.get_affected_datasets(observatory, old_context, new_context))
+
+def get_context_history(observatory):
+    """Fetch the history of context transitions, a list of history era tuples:
+
+     Returns:  [ (start_date, context_name), ... ]
+
+    """
+    return S.get_context_history(observatory)
 
 # ==============================================================================
 
