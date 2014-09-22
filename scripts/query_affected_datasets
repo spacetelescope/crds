@@ -25,6 +25,14 @@ except:
         """Return a structure describing the ids affected by the last context change."""
         return Struct(api.S.get_affected_datasets(observatory, old_context, new_context))
 
+    def get_context_history(observatory):
+        """Fetch the history of context transitions, a list of history era tuples:
+
+        Returns:  [ (start_date, context_name), ... ]
+
+        """
+        return S.get_context_history(observatory)
+
 class QueryAffectedDatasetsScript(cmdline.Script):
 
     description = """
