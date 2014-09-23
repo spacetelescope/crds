@@ -1,0 +1,31 @@
+header = {
+    'derived_from' : 'hst_cos_disptab.rmap',
+    'filekind' : 'DISPTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_disptab_0001.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
+    'sha1sum' : 'dc4ad305d4717db9ed195e8256280508349a025e',
+}
+
+selector = Match({
+    ('FUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 't2k1224el_disp.fits',
+        '2006-10-01 00:00:00' : 't9e1307kl_disp.fits',
+        '2009-06-08 00:00:00' : 'u6s1320ql_disp.fits',
+        '2009-08-17 00:00:00' : 'v3g18194l_disp.fits',
+        '2009-08-17 00:00:01' : 'x1v17415l_disp.fits',
+        '2009-08-17 00:00:02' : 'xaa18189l_disp.fits',
+    }),
+    ('NUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g17013l_disp.fits',
+        '2006-10-01 00:00:00' : 't9e1307ll_disp.fits',
+        '2009-07-28 00:00:00' : 'u1t1616pl_disp.fits',
+    }),
+})
