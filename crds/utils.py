@@ -345,9 +345,11 @@ def human_format_number(number):
     else:
         sym = ""
     if isinstance(number, (int, long)):
-        return "%d" % number
+        # numstr = "%d" % number
+        numstr = "{}".format(number)
     else:
-        return "%0.2f %s" % (number, sym)
+        numstr = "{:0.1f} {}".format(number, sym)
+    return "{!s:>7}".format(numstr)
 
 # ===================================================================
 
