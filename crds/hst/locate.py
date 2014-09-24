@@ -99,7 +99,7 @@ from crds.hst.substitutions import expand_wildcards
 
 # =======================================================================
 
-def reference_keys_to_dataset_keys(instrument, filekind, header):
+def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.
     """

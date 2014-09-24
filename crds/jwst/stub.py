@@ -88,13 +88,17 @@ from astropy.io import fits as pyfits
 from crds import rmap, timestamp, pysh, log, data_file, utils
 from crds.client import api
 
-def generate_rmaps_and_context(reference_context, parkey, all_references):
+def generate_rmaps_and_context(reference_context, spec, all_references):
     """Generate rmaps for complete (non-stub) references in `all_references` and then
     generate a higher level context derived from `reference_context` by inserting the
     new .rmaps.
     """
     reference_context = api.get_context_by_date(reference_context, "jwst")
-    
+
+    spec = get_stub_spec(spec)
+
+    parkey_map = getattr(spec, "reference_to_dataset", None)
+
     pmap = rmap.get_cached_mapping(reference_context)
     rmaps = []
     last_added = None
@@ -105,7 +109,7 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
                              if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
         if added_references:
             last_added = added_references
-            path = generate_new_rmap(reference_context, parkey, added_references)
+            path = generate_new_rmap(reference_context, spec.parkey, added_references, parkey_map=parkey_map) 
             path = insert_references(path, added_references)
             rmaps.append(path)
             pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
@@ -115,7 +119,7 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
     pysh.sh("cp $path $final", trace_commands=True, raise_on_error=True)
     
     # Save empty .rmap for submission to server.
-    path = generate_new_rmap(reference_context, parkey, last_added)
+    path = generate_new_rmap(reference_context, spec.parkey, last_added, parkey_map=parkey_map)
     empty = os.path.basename(path)[:-len(".rmap")] + ".empty.rmap"
     pysh.sh("cp $path $empty", trace_commands=True, raise_on_error=True)
 
@@ -125,7 +129,7 @@ def generate_rmaps_and_context(reference_context, parkey, all_references):
 
 RMAP_STUB = """
 header = {
-    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-04',
+    'derived_from' : 'crds.jwst.stub tool',
     'filekind' : 'PHOTOM',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
@@ -139,11 +143,12 @@ selector = Match({
 })
 """
 
-def generate_new_rmap(reference_context, parkey, new_references):
+def generate_new_rmap(reference_context, parkey, new_references, parkey_map=None):
     """Create an entirely .rmap given a reference context and a list of new files
     of the same type.
     """    
-    log.info("context:", reference_context, "parkey:", parkey, "references:", new_references)
+    log.info("context:", reference_context, "parkey:", parkey, "parkey_map:", log.PP(parkey_map), 
+             "references:", log.PP(new_references), sep="\n")
 
     pmap = rmap.get_cached_mapping(reference_context)
 
@@ -154,7 +159,7 @@ def generate_new_rmap(reference_context, parkey, new_references):
         assert not old_filekind or filekind == old_filekind, "Multiple filekinds detected at " + repr(ref)
         old_instrument, old_filekind = instrument, filekind
         
-        header = pyfits.getheader(ref)
+        header = data_file.get_header(ref)
         assert header["REFTYPE"].upper() ==  filekind.upper()
 
     assert instrument in pmap.obs_package.INSTRUMENTS, "Invalid instrument " + repr(instrument)
@@ -167,6 +172,8 @@ def generate_new_rmap(reference_context, parkey, new_references):
     new_rmap.header["instrument"] = instrument.upper()
     new_rmap.header["filekind"] = filekind.upper()
     new_rmap.header["parkey"] = eval(parkey.upper()) if parkey.strip() else ((),)
+    if parkey_map:
+        new_rmap.header["reference_to_dataset"] = parkey_map
     new_rmap.header["name"] = name
     new_rmap.header["observatory"] = pmap.observatory.upper()   
     new_rmap.write(path)
@@ -225,6 +232,14 @@ def last_serial(names):
         if last < name_no:
             last = name_no
     return last
+
+def get_stub_spec(spec):
+    if spec.startswith("@"):
+        spec = utils.evalfile(spec[1:])
+        spec["parkey"] = str(spec["parkey"])
+    else:
+        spec = {"parkey": spec }
+    return utils.Struct(spec)
 
 if __name__ == "__main__":
         
