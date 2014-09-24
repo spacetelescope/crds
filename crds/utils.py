@@ -19,7 +19,10 @@ from crds import log, config
 class Struct(dict):
     """A dictionary which supports dotted access to members."""
     def __getattr__(self, name):
-        return self[name]
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
 
     def __setattr__(self, name, val):
         self[name] = val

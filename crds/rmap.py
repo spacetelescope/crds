@@ -1237,12 +1237,18 @@ class ReferenceMapping(Mapping):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         # Since expansion rules may depend on keys not used in matching,  get entire header  
         header = data_file.get_header(reffile, observatory=self.observatory)
+        
+        header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), define_as="N/A")
+        
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.info("insert_reference raw reffile header:\n", 
-                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ]))
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]))
+
         header = self.get_matching_header(header)
+        
         log.info("insert_reference matching reffile header:\n", 
-                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_required_parkeys() ]))
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]))
+
         if self._rmap_update_headers:
             # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
             for hdr in self._rmap_update_headers(self, header):
@@ -1251,6 +1257,18 @@ class ReferenceMapping(Mapping):
             # almost all instruments/types do this.
             new = self.insert(header, os.path.basename(reffile))
         return new
+
+    def get_reference_parkeys(self):
+        """Return parkey names from the reference file perspective."""
+        dataset_parkeys = self.get_required_parkeys()
+        reference_to_dataset = getattr(self, "reference_to_dataset", None)
+        if reference_to_dataset:
+            dataset_to_reference = utils.invert_dict(reference_to_dataset)
+            reference_parkeys = [ dataset_to_reference[key] if key in dataset_to_reference else key 
+                                  for key in dataset_parkeys ]
+            return tuple(reference_parkeys)
+        else:
+            return tuple(dataset_parkeys)
 
     def insert(self, header, value):
         """Given reference file `header` and terminal `value`, insert the value into a copy
@@ -1279,8 +1297,7 @@ class ReferenceMapping(Mapping):
         # The reference file key and dataset key matched aren't always the same!?!?
         # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
         # Also DATE-OBS, TIME-OBS  <-->  USEAFTER
-        header = self.locate.reference_keys_to_dataset_keys(
-            self.instrument, self.filekind, header)
+        header = self.locate.reference_keys_to_dataset_keys(self, header)
         
         # Reference files specify things like ANY which must be expanded to 
         # glob patterns for matching with the reference file.
@@ -1288,9 +1305,6 @@ class ReferenceMapping(Mapping):
         
         header = { key:utils.condition_value(value) for key, value in header.items() }
     
-        # Add undefined parkeys as "UNDEFINED"
-        header = data_file.ensure_keys_defined(header, self.get_required_parkeys())
-        
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
         # XXX not clear if/how this works with expanded wildcard or-patterns.
