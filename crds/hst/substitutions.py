@@ -117,11 +117,12 @@ def load_all():
     for instrument in rules:
         EXPANDERS[instrument] = HeaderExpander(rules[instrument])
 
-def expand_wildcards(instrument, header):
+def expand_wildcards(rmapping, header):
+    """Transform header values according to expansion rules."""
     if not EXPANDERS:
         load_all()
     try:
-        header = EXPANDERS[instrument].expand(header)
+        header = EXPANDERS[rmapping.instrument].expand(header)
     except KeyError:
         header = dict(header)
         # log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")

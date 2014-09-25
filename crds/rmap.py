@@ -1306,9 +1306,10 @@ class ReferenceMapping(Mapping):
         
         # Reference files specify things like ANY which must be expanded to 
         # glob patterns for matching with the reference file.
-        header = self.locate.expand_wildcards(self.instrument, header)
+        header = self.locate.expand_wildcards(self, header)
         
-        header = { key:utils.condition_value(value) for key, value in header.items() }
+        # Translate header values to .rmap normalized form,  e.g. utils.condition_value()
+        header = self.locate.condition_matching_header(self, header)
     
         # Evaluate parkey relevance rules in the context of header to map
         # mode irrelevant parameters to N/A.
