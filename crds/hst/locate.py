@@ -112,6 +112,12 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
 # =======================================================================
 
+def condition_matching_header(rmapping, header):
+    """Condition the matching header values to the normalized form of the .rmap"""
+    return utils.condition_header(header)
+
+# =======================================================================
+
 REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
 
 def get_file_properties(filename):
