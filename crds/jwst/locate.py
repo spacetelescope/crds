@@ -327,7 +327,7 @@ def fits_to_parkeys(fits_header):
 
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
-    return ""
+    return "crds://"
 
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
