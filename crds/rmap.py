@@ -74,6 +74,14 @@ from crds.selectors import ValidationError
 
 # ===================================================================
 
+class CrdsUnknownInstrumentError(crds.CrdsError):
+    """Reference to an instrument which does not exist in a context."""
+
+class CrdsUnknownReftypeError(crds.CrdsError):
+    """Reference to a filekind which does not exist in a context."""
+
+# ===================================================================
+
 Filetype = namedtuple("Filetype","header_keyword,extension,rmap")
 Failure  = namedtuple("Failure","header_keyword,message")
 Filemap  = namedtuple("Filemap","date,file,comment")
@@ -724,7 +732,7 @@ class PipelineContext(ContextMapping):
         try:
             return self.selections[instrument]
         except KeyError:
-            raise crds.CrdsError("Unknown instrument " + repr(instrument) +
+            raise crds.CrdsUnknownInstrumentError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.basename))
 
     def get_filekinds(self, dataset):
@@ -809,15 +817,12 @@ class InstrumentContext(ContextMapping):
         try:
             return self.selections[filekind.lower()]
         except KeyError:
-            raise crds.CrdsError("Unknown reference type " + repr(str(filekind)))
+            raise crds.CrdsUnknownReftypeError("Unknown reference type " + repr(str(filekind)))
 
     def get_best_ref(self, filekind, header):
         """Returns the single reference file basename appropriate for `header`
         corresponding to `filekind`.
         """
-#        if self.get_instrument(header).lower() != self.instrument:
-#            raise CrdsError("Dataset instrument value '{}' doesn't match CRDS rules instrument '{}' from file '{}'.".format(
-#                            self.get_instrument(header), self.instrument, self.filename))
         return self.get_rmap(filekind).get_best_ref(header)
 
     def get_best_references(self, header, include=None):
