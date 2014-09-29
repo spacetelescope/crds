@@ -99,7 +99,7 @@ from crds.hst.substitutions import expand_wildcards
 
 # =======================================================================
 
-def reference_keys_to_dataset_keys(instrument, filekind, header):
+def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.
     """
@@ -109,6 +109,12 @@ def reference_keys_to_dataset_keys(instrument, filekind, header):
         result["DATE-OBS"] = reformatted[0]
         result["TIME-OBS"] = reformatted[1]
     return result
+
+# =======================================================================
+
+def condition_matching_header(rmapping, header):
+    """Condition the matching header values to the normalized form of the .rmap"""
+    return utils.condition_header(header)
 
 # =======================================================================
 

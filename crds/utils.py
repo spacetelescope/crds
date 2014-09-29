@@ -19,7 +19,10 @@ from crds import log, config, pysh
 class Struct(dict):
     """A dictionary which supports dotted access to members."""
     def __getattr__(self, name):
-        return self[name]
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
 
     def __setattr__(self, name, val):
         self[name] = val
@@ -349,9 +352,11 @@ def human_format_number(number):
     else:
         sym = ""
     if isinstance(number, (int, long)):
-        return "%d" % number
+        # numstr = "%d" % number
+        numstr = "{}".format(number)
     else:
-        return "%0.2f %s" % (number, sym)
+        numstr = "{:0.1f} {}".format(number, sym)
+    return "{!s:>7}".format(numstr)
 
 # ===================================================================
 

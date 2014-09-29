@@ -69,7 +69,8 @@ __all__ = [
            "ServiceError",
            
            "get_required_parkeys",
-           "get_affected_datasets"
+           "get_affected_datasets",
+           "get_context_history",
 
            ]
 
@@ -357,6 +358,14 @@ def get_affected_datasets(observatory, old_context=None, new_context=None):
     """Return a structure describing the ids affected by the last context change."""
     return utils.Struct(S.get_affected_datasets(observatory, old_context, new_context))
 
+def get_context_history(observatory):
+    """Fetch the history of context transitions, a list of history era tuples:
+
+     Returns:  [ (start_date, context_name), ... ]
+
+    """
+    return S.get_context_history(observatory)
+
 # ==============================================================================
 
 HARD_DEFAULT_OBS = "jwst"
@@ -397,12 +406,16 @@ def observatory_from_string(string):
 
 def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files):
     """Output progress information for `activity` on file `name` at `path`."""
-    return log.format(activity, repr(name), "-->", repr(path), utils.human_format_number(bytes), "bytes.",
-                      "({} / {} files) ({} / {} bytes)".format(utils.human_format_number(nth_file+1), 
-                                                               utils.human_format_number(total_files), 
-                                                               utils.human_format_number(bytes_so_far+bytes), 
-                                                               utils.human_format_number(total_bytes)),
-                      end="")
+    return "{activity}  {path!s:<55}  {bytes} bytes  ({nth_file} / {total_files} files) ({bytes_so_far} / {total_bytes} bytes)".format(
+        activity=activity, 
+        path=path, 
+        bytes=utils.human_format_number(bytes),
+        nth_file=nth_file+1, 
+        total_files=total_files, 
+        bytes_so_far=utils.human_format_number(bytes_so_far).strip(), 
+        total_bytes=utils.human_format_number(total_bytes).strip())
+
+# ==============================================================================
 
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache."""

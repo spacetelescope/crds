@@ -49,6 +49,7 @@ False
 """
 import os.path
 import re
+import json
 
 from crds import utils, log
 
@@ -141,12 +142,15 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
-    """Return the complete unconditioned header dictionary of a reference file.
-    """
+    """Return the complete unconditioned header dictionary of a reference file."""
     if original_name is None:
         original_name = os.path.basename(filepath)
     if is_geis(original_name):
         return get_geis_header(filepath, needed_keys)
+    elif filepath.endswith(".json"):
+        return get_json_header(filepath, needed_keys)
+    elif filepath.endswith(".yaml"):
+        return get_yaml_header(".yaml")
     else:
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
@@ -164,12 +168,57 @@ def get_data_model_header(filepath, needed_keys=()):
     from jwst_lib import models
     with models.open(filepath) as dm:
         d = dm.to_flat_dict(include_arrays=False)
-        d = sanitize_data_model_dict(d)
-        needed_keys = [key.upper() for key in needed_keys]
-        header = {}
-        for key, val in d.items():
-            if (not needed_keys) or (key.upper() in needed_keys):
-                header[str(key).upper()] = str(val)    
+    d = sanitize_data_model_dict(d)
+    header = reduce_header(filepath, d, needed_keys)
+    return header
+
+def get_json_header(filepath, needed_keys=()):
+    """For now,  just treat the JSON as the header."""
+    header = json.loads(open(filepath).read())
+    return reduce_header(filepath, header, needed_keys)
+
+def get_yaml_header(filepath, needed_keys=()):
+    """For now,  just treat the YAML as the header."""
+    import yaml
+    header = yaml.loads(open(filepath).read())
+    return reduce_header(filepath, header, needed_keys)
+
+def reduce_header(filepath, old_header, needed_keys=()):
+    """Limit `header` to `needed_keys`,  converting all keys to upper case
+    and making note of any significant duplicates, and adding any missing
+    `needed_keys` as UNDEFINED.
+    
+    To detect duplicates,  use an item list for `old_header`,  not a dict.
+    """
+    needed_keys = tuple(key.upper() for key in needed_keys)
+    header = {}
+    if isinstance(old_header, dict):
+        old_header = old_header.items()
+    for (key, value) in old_header:
+        key = str(key.upper())
+        value = str(value)
+        if (not needed_keys) or key in needed_keys:
+            if key in header and header[key] != value:
+                log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
+                                    "using", repr(header[key]), "not", repr(value), verbosity=70)
+                continue
+            else:
+                header[key] = value
+                
+    return ensure_keys_defined(header)
+
+def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
+    """Define any keywords from `needed_keys` which are missing in `header`,  or defined as 'UNDEFINED',
+    as `default`.
+    
+    Normally this defines missing keys as UNDEFINED.
+    
+    It can be used to redefine UNDEFINED as something else,  like N/A.
+    """
+    header = dict(header)
+    for key in needed_keys:
+        if key not in header or header[key] == "UNDEFINED":
+            header[key] = define_as
     return header
 
 def sanitize_data_model_dict(d):
@@ -186,49 +235,26 @@ def sanitize_data_model_dict(d):
         cleaned[skey] = sval
     return cleaned
 
-def get_fits_header(fname, needed_keys=()):
+def get_fits_header(filepath, needed_keys=()):
     """Return `needed_keys` or all from FITS file `fname`s primary header."""
-    header = {}
-    allheader = pyfits.getheader(fname)
-    for key in needed_keys or allheader:
-        if not key:
-            continue
-        try:
-            header[key] = allheader[key]
-        except KeyError:
-            header[key] = "UNDEFINED"
-    return header
+    primary_header = pyfits.getheader(filepath)
+    return reduce_header(filepath, primary_header, needed_keys)
 
-def get_fits_header_union(fname, needed_keys=()):
+def get_fits_header_union(filepath, needed_keys=()):
     """Get the union of keywords from all header extensions of FITS
     file `fname`.  In the case of collisions, keep the first value
     found as extensions are loaded in numerical order.
     """
-    union = {}
-    get_all_keys = not needed_keys
-    for hdu in pyfits.open(fname):
+    union = []
+    for hdu in pyfits.open(filepath):
         for card in hdu.header.cards:
             card.verify('fix')
-            key, newval = card.keyword, card.value
+            key, value = card.keyword, str(card.value)
             if not key:
                 continue
-            if get_all_keys or key in needed_keys:
-                if key in union and union[key] != newval:
-                    log.verbose_warning("Header union collision on", repr(key),
-                                        repr(union[key]), "collides with",
-                                        repr(newval), verbosity=70)
-                else:
-                    union[key] = str(newval)
-    union = ensure_keys_defined(union, needed_keys)
-    return union
+            union.append((key, value))
+    return reduce_header(filepath, union, needed_keys)
 
-def ensure_keys_defined(header, needed_keys):
-    """If any header key in `needed_keys` is not defined,  assign it a value
-    of "UNDEFINED" in the result; return all other values.
-    """
-    result = { key:header.get(key, "UNDEFINED") for key in needed_keys }
-    result.update(header)
-    return result
 
 _GEIS_TEST_DATA = """
 SIMPLE  =                    F /

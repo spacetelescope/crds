@@ -263,36 +263,37 @@ def mapping_validator_key(mapping):
     return (mapping.instrument, mapping.filekind, "_ld.tpn")
 # =============================================================================
 
-def reference_keys_to_dataset_keys(instrument, filekind, header):
-    """Given a header dictionary for a reference file,  map the header back to
-    keys relevant to datasets.   So for ACS biasfile the reference says BINAXIS1
-    but the dataset says NUMCOLS.   This would convert { "BINAXIS1": 1024 } to
-    { "NUMCOLS" : 1024 }.
+def reference_keys_to_dataset_keys(rmapping, header):
+    """Given a header dictionary for a reference file, map the header back to keys
+    relevant to datasets.  So for ACS biasfile the reference says BINAXIS1 but
+    the dataset says NUMCOLS.  This would convert { "BINAXIS1": 1024 } to {
+    "NUMCOLS" : 1024 }.
     
     In general,  rmap parkeys are matched against datset values and are defined
     as dataset header keywords.   For refactoring though,  what's initially
     available are reference file keywords...  which need to be mapped into the
     terms rmaps know:  dataset keywords.
     """
-    return dict(header)    # NOOP for JWST for now.
-
-#   See hst/locate.py
-#    inv_trans = utils.invert_dict(
-#        PARKEYS[instrument][filekind]["db_translations"])
-#    return { inv_trans.get(key.lower(), key).upper(): header[key] for key in header }
+    header = dict(header)
+    try:
+        translations = rmapping.reference_to_dataset
+        for key in translations:
+            if key in header:
+                header[translations[key]] = header[key]
+    except AttributeError:
+        pass
+    return header
 
 # =============================================================================
 
-def expand_wildcards(instrument, header):
+def expand_wildcards(rmapping, header):
     """See hst/substitutions.py"""
     return dict(header)
-#    if not EXPANDERS:
-#        load_all()
-#    try:
-#        header = EXPANDERS[instrument].expand(header)
-#    except KeyError:
-#        log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
-#    return header
+
+
+def condition_matching_header(rmapping, header):
+    """Normalize header values for .rmap reference insertion."""
+    return dict(header)   # NOOP for JWST,  may have to revisit
 
 # ============================================================================
 
@@ -324,7 +325,7 @@ def fits_to_parkeys(fits_header):
 
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
-    return ""
+    return "crds://"
 
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
