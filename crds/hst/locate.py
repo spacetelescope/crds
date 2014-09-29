@@ -360,25 +360,6 @@ def locate_dir(instrument, mode=None):
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
 
-def remove_instrument_dirs():
-    """Remove all of the instrument cache directories (for switching to 'flat')."""
-    for instrument in INSTRUMENTS:
-        remove_dir(instrument)
-        
-def remove_dir(instrument):
-    """Remove an instrument cache directory and any associated legacy link."""
-    if config.writable_cache_or_verbose("Skipping remove instrument", repr(instrument), "directory."):
-        crds_refpath = config.get_crds_refpath("hst")
-        prefix = get_env_prefix(instrument)
-        rootdir = os.path.join(crds_refpath, instrument)
-        refdir = os.path.join(crds_refpath, prefix[:-1])
-        if len(glob.glob(os.path.join(rootdir, "*"))):
-            log.info("Residual files in '{}'. Not removing.".format(rootdir))
-            return
-        if os.path.exists(refdir):
-            utils.remove(refdir)
-        utils.remove(rootdir)
-
 # ============================================================================
 
 def fits_to_parkeys(header):
