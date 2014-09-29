@@ -27,6 +27,7 @@ import os
 import os.path
 import re
 import shutil
+import glob
 
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config)
@@ -359,9 +360,8 @@ class SyncScript(cmdline.ContextsScript):
         log.info("SQLite database file downloaded to:", path)
         
     def organize_references(self, new_mode):
-        """Find all references in the CRDS cache,  in all directory modes,  and relink them to the
-        paths which are implied by the current directory mode.   This is used to reroganize existing
-        file caches into new layouts,  e.g. flat -->  by instrument.
+        """Find all references in the CRDS cache and relink them to the paths which are implied by `new_mode`.   
+        This is used to reroganize existing file caches into new layouts,  e.g. flat -->  by instrument.
         """
         old_refpaths = rmap.list_references("*", observatory=self.observatory, full_path=True)
         old_mode = config.get_crds_ref_subdir_mode(self.observatory)
@@ -384,10 +384,24 @@ class SyncScript(cmdline.ContextsScript):
                     log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
                 else:
                     log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
-                    
         if new_mode == "flat" and old_mode == "instrument":
             log.info("Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.")
-            self.locator.remove_instrument_dirs()
+            for instrument in self.locator.INSTRUMENTS:
+                self.remove_dir(instrument)
+
+    def remove_dir(self, instrument):
+        """Remove an instrument cache directory and any associated legacy link."""
+        if config.writable_cache_or_verbose("Skipping remove instrument", repr(instrument), "directory."):
+            crds_refpath = config.get_crds_refpath(self.observatory)
+            prefix = self.locator.get_env_prefix(instrument)
+            rootdir = os.path.join(crds_refpath, instrument)
+            refdir = os.path.join(crds_refpath, prefix[:-1])
+            if len(glob.glob(os.path.join(rootdir, "*"))):
+                log.info("Residual files in '{}'. Not removing.".format(rootdir))
+                return
+            if os.path.exists(refdir):   # skip crds://  vs.  oref
+                utils.remove(refdir)
+            utils.remove(rootdir)
 
 # ==============================================================================================================
 
