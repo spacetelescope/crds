@@ -236,6 +236,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
     CRDS will only use the server for status and to transfer files.
     """
     log.verbose("Computing best references locally.")
+    parameters = utils.condition_header(parameters) # give the server the option *not* to condition.        
     # Make sure pmap_name is actually present in the local machine's cache.
     # First assume the context files are already here and try to load them.   
     # If that fails,  attempt to get them from the network, then load them.

@@ -325,7 +325,7 @@ def update_file_bestrefs(pmap, dataset, updates):
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
     prefix = pmap.locate.get_env_prefix(instrument)    
-    hdulist = pyfits.open(dataset, mode="update")
+    hdulist = pyfits.open(dataset, mode="update", do_not_scale_image_data=True)
 
     # XXX TODO switch pyfits.setval to data_file.setval
     def set_key(keyword, value):
@@ -340,6 +340,9 @@ def update_file_bestrefs(pmap, dataset, updates):
         if new_ref != "N/A":
             new_ref = (prefix + new_ref).lower()
         set_key(update.filekind.upper(), new_ref)
+
+    for hdu in hdulist:
+        hdu.data
 
     hdulist.close()
 

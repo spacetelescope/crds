@@ -1,6 +1,6 @@
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "1.1.3"   # see also setup.py
+__version__ = "1.2.0"   # see also setup.py
 
 # ============================================================================
 
@@ -14,6 +14,9 @@ __all__ = [
            "CrdsNetworkError", 
            "CrdsLookupError", 
            "CrdsDownloadError",
+           
+           "CrdsUnknownInstrumentError",
+           "CrdsUnknownRefypeError",
            ]
 
 # ============================================================================
@@ -25,6 +28,7 @@ from crds.client import get_default_context
 from .heavy_client import getreferences, getrecommendations
 
 from .rmap import get_cached_mapping, locate_mapping, locate_file
+from .rmap import CrdsUnknownInstrumentError, CrdsUnknownReftypeError
 
 # ============================================================================
 

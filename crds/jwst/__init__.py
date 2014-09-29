@@ -16,7 +16,17 @@ TEXT_DESCR = {
     "gain" : "Gain",
     "saturation" : "Saturation",
     "ipc" : "Interpixel Capacitance",
-    "drizpars" : "Drizzle Parameters used in Image Distortion Correction and Combination"
+    "drizpars" : "Drizzle Parameters used in Image Distortion Correction and Combination",
+    "reset" : "Reset Correction",
+    "lastframe" : "Last Frame",
+    "straymask" : "Stray Light Mask",
+    "distortion" : "Distortion",
+    "regions" : "Regions",
+    "specwcs" : "Spectroscopic World Coordinate System",
+    "wcsregions" : "World Coordinate System Regions",
+    
+    
+
 }
 
 # Type names in rmaps, written down as REFTYPE in FITS

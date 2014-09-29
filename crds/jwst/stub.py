@@ -88,30 +88,48 @@ from astropy.io import fits as pyfits
 from crds import rmap, timestamp, pysh, log, data_file, utils
 from crds.client import api
 
-def generate_rmaps_and_context(reference_context, parkey, all_references):
+def generate_rmaps_and_context(reference_context, spec, all_references):
     """Generate rmaps for complete (non-stub) references in `all_references` and then
     generate a higher level context derived from `reference_context` by inserting the
     new .rmaps.
     """
     reference_context = api.get_context_by_date(reference_context, "jwst")
-    
+
+    spec = get_stub_spec(spec)
+
+    parkey_map = getattr(spec, "reference_to_dataset", None)
+
     pmap = rmap.get_cached_mapping(reference_context)
     rmaps = []
+    last_added = None
     for instr in pmap.obs_package.INSTRUMENTS:
-        added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
+        # added_references = [ link_reference_to_crds_name(ref) for ref in all_references 
+        #                     if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
+        added_references = [ ref for ref in all_references 
                              if instr.lower() in pmap.locate.get_file_properties(ref)[0]]
         if added_references:
-            path = generate_new_rmap(reference_context, parkey, added_references)
+            last_added = added_references
+            path = generate_new_rmap(reference_context, spec.parkey, added_references, parkey_map=parkey_map) 
+            path = insert_references(path, added_references)
             rmaps.append(path)
             pysh.sh("cp $path .", trace_commands=True, raise_on_error=True)
+
+    # Save last version of populated .rmap
+    final = os.path.basename(path)[:-len(".rmap")] + ".final.rmap"
+    pysh.sh("cp $path $final", trace_commands=True, raise_on_error=True)
     
+    # Save empty .rmap for submission to server.
+    path = generate_new_rmap(reference_context, spec.parkey, last_added, parkey_map=parkey_map)
+    empty = os.path.basename(path)[:-len(".rmap")] + ".empty.rmap"
+    pysh.sh("cp $path $empty", trace_commands=True, raise_on_error=True)
+
     rmaps_str = " ".join([os.path.basename(mapping) for mapping in rmaps])
     pysh.sh("python -m crds.newcontext ${reference_context} ${rmaps_str} --verbose", trace_commands=True, raise_on_error=True)
     
 
 RMAP_STUB = """
 header = {
-    'derived_from' : 'cloning tool 0.05b (2013-04-12) used on 2013-09-04',
+    'derived_from' : 'crds.jwst.stub tool',
     'filekind' : 'PHOTOM',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
@@ -125,11 +143,12 @@ selector = Match({
 })
 """
 
-def generate_new_rmap(reference_context, parkey, new_references):
+def generate_new_rmap(reference_context, parkey, new_references, parkey_map=None):
     """Create an entirely .rmap given a reference context and a list of new files
     of the same type.
     """    
-    log.info("context:", reference_context, "parkey:", parkey, "references:", new_references)
+    log.info("context:", reference_context, "parkey:", parkey, "parkey_map:", log.PP(parkey_map), 
+             "references:", log.PP(new_references), sep="\n")
 
     pmap = rmap.get_cached_mapping(reference_context)
 
@@ -140,7 +159,7 @@ def generate_new_rmap(reference_context, parkey, new_references):
         assert not old_filekind or filekind == old_filekind, "Multiple filekinds detected at " + repr(ref)
         old_instrument, old_filekind = instrument, filekind
         
-        header = pyfits.getheader(ref)
+        header = data_file.get_header(ref)
         assert header["REFTYPE"].upper() ==  filekind.upper()
 
     assert instrument in pmap.obs_package.INSTRUMENTS, "Invalid instrument " + repr(instrument)
@@ -153,39 +172,55 @@ def generate_new_rmap(reference_context, parkey, new_references):
     new_rmap.header["instrument"] = instrument.upper()
     new_rmap.header["filekind"] = filekind.upper()
     new_rmap.header["parkey"] = eval(parkey.upper()) if parkey.strip() else ((),)
+    if parkey_map:
+        new_rmap.header["reference_to_dataset"] = parkey_map
     new_rmap.header["name"] = name
-    new_rmap.header["observatory"] = pmap.observatory.upper()
-    
+    new_rmap.header["observatory"] = pmap.observatory.upper()   
     new_rmap.write(path)
-    
-    files = " ".join(["./" + ref for ref in new_references])
 
-    pysh.sh("python -m crds.refactor insert ${path} ${path} ${files} --verbose", 
-            trace_commands=True, raise_on_error=True)
-    
     new_rmap = rmap.load_mapping(path)
     new_rmap.validate_mapping()
-    new_rmap.header["derived_from"] = 'generated as stub rmap on ' + timestamp.now()
+
+    new_rmap.header["derived_from"] = 'generated as stub rmap on ' + timestamp.now().split(".")[0]
     new_rmap.write(path)
+
     new_rmap = rmap.load_mapping(path)
     new_rmap.validate_mapping()
     
     return path
 
+def insert_references(rmap_path, new_references):
+    
+    files = " ".join(["./" + ref for ref in new_references])
+
+    pysh.sh("python -m crds.refactor insert ${rmap_path} ${rmap_path} ${files} --verbose", 
+            trace_commands=True, raise_on_error=True)
+    
+    return rmap_path
+
 def link_reference_to_crds_name(reference):
+    new = new_name(reference)
+    log.info("Renaming reference", repr(reference), "to", repr(new))
+    pysh.sh("ln -s ${reference} ${new}", raise_on_error=True)
+    return new
+
+def new_name(reference):
     """Generate a unique CRDS name for `reference`."""
     observatory = utils.file_to_observatory(reference)
     instrument, filekind = utils.get_file_properties(observatory, reference)
     rootname = "_".join([observatory, instrument, filekind])
-    names = api.list_references(observatory, rootname+"*") + \
-        rmap.list_references(rootname + "*", observatory) + \
-        glob.glob(rootname + "*")
+    if rmap.is_mapping(reference):
+        names = api.list_mappings(observatory, rootname+"*") + \
+            rmap.list_mappings(rootname + "*", observatory) + \
+            glob.glob(rootname + "*")
+    else:
+        names = api.list_references(observatory, rootname+"*") + \
+            rmap.list_references(rootname + "*", observatory) + \
+            glob.glob(rootname + "*")
     old = last_serial(names)
     new = rootname + "_{:04d}".format(old+1) + os.path.splitext(reference)[-1]
-    log.info("Renaming reference", repr(reference), "to", repr(new))
-    pysh.sh("ln -s ${reference} ${new}", raise_on_error=True)
     return new
-    
+
 def last_serial(names):
     """Return the highest serial number taken from files in `names`."""
     last = -1
@@ -198,9 +233,17 @@ def last_serial(names):
             last = name_no
     return last
 
+def get_stub_spec(spec):
+    if spec.startswith("@"):
+        spec = utils.evalfile(spec[1:])
+        spec["parkey"] = str(spec["parkey"])
+    else:
+        spec = {"parkey": spec }
+    return utils.Struct(spec)
+
 if __name__ == "__main__":
         
-    pysh.usage("<reference_context> <comma-separated-parkeys> <new_references>", 3)
+    pysh.usage("<reference_context> <comma-separated-parkeys> <new_references>", 2)
     
     reference_context = sys.argv[1]
     parkey = sys.argv[2]
