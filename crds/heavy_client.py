@@ -306,7 +306,7 @@ def get_final_context(info, context):
     if context:  # context parameter trumps all, <observatory>-operational is default
         input_context = context
         log.verbose("Using reference file selection rules", srepr(input_context), "defined by caller.")
-        info.status = "getreferences() context parameter"
+        info.status = "context parameter"
     elif env_context:
         input_context = env_context
         log.verbose("Using reference file selection rules", srepr(input_context), 
@@ -387,6 +387,8 @@ def get_config_info(observatory):
         if config.get_cache_readonly():
             log.verbose_warning("READONLY CACHE: using cached configuration and default context.")
             info = load_server_info(observatory)
+            info.status = "cache"
+            info.connected = True
         else:
             cache_server_info(info, observatory)  # save locally
     except light_client.CrdsError:
