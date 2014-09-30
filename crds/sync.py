@@ -391,7 +391,7 @@ class SyncScript(cmdline.ContextsScript):
 
     def remove_dir(self, instrument):
         """Remove an instrument cache directory and any associated legacy link."""
-        if config.writable_cache_or_verbose("Skipping remove instrument", repr(instrument), "directory."):
+        if config.writable_cache_or_info("Skipping remove instrument", repr(instrument), "directory."):
             crds_refpath = config.get_crds_refpath(self.observatory)
             prefix = self.locator.get_env_prefix(instrument)
             rootdir = os.path.join(crds_refpath, instrument)

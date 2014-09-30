@@ -143,7 +143,7 @@ class ListScript(cmdline.ContextsScript):
                 })
         _print_dict("CRDS Actual Paths", real_paths)
         _print_dict("CRDS Server Info", server, 
-                    ["observatory", "status", "operational_context", "last_synced", 
+                    ["observatory", "status", "connected", "operational_context", "last_synced", 
                      "reference_url", "mapping_url",])
         _print_dict("CRDS Package", { 
                 "crds" : repr(crds),
