@@ -303,7 +303,7 @@ class MissingDependencyError(Exception):
 def fits_to_parkeys(fits_header):
     """Map a FITS header onto rmap parkeys appropriate for JWST."""
     if MODEL is None:
-        raise MissingDependencyError("JWST data model is not installed.   Cannot fits_to_parkeys().   Install jwst_lib.")
+        raise MissingDependencyError("JWST data models are not installed.   Cannot fits_to_parkeys().")
     parkeys = {}
     for key, value in fits_header.items():
         key, value = str(key), str(value)
@@ -327,6 +327,33 @@ def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return "crds://"
 
+def locate_file(refname, mode=None):
+    """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
+    The aspect of this which is complicated is determining instrument and an instrument
+    specific sub-directory for it based on the filename alone,  not the file contents.
+    """
+    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
+    rootdir = locate_dir(instrument, mode)
+    return  os.path.join(rootdir, refname)
+
+def locate_dir(instrument, mode=None):
+    """Locate the instrument specific directory for a reference file."""
+    if mode is  None:
+        mode = config.get_crds_ref_subdir_mode(observatory="jwst")
+    else:
+        config.check_crds_ref_subdir_mode(mode)
+    crds_refpath = config.get_crds_refpath("jwst")
+    if mode == "instrument":   # use simple names inside CRDS cache.
+        rootdir = os.path.join(crds_refpath, instrument)
+        if not os.path.exists(rootdir):
+            utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+    elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
+        rootdir = crds_refpath
+    else:
+        raise ValueError("Unhandled reference file location mode " + repr(mode))
+    return rootdir
+
+# ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
     raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")

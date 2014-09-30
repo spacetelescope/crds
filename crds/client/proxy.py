@@ -75,7 +75,10 @@ class CheckingProxy(object):
         
         url = self._get_url(jsonrpc_params)
 
-        log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->")
+        if log.get_verbose() <= 50:
+            log.verbose("CRDS JSON RPC", self.__service_name, params if len(str(params)) <= 60 else "(...)", "-->")
+        else:
+            log.verbose("CRDS JSON RPC to", url, "parameters", params, "-->")
         
         response = apply_with_retries(self._call_service, parameters, url)
 
