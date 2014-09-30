@@ -180,9 +180,9 @@ def get_file_info_map(observatory, files=None, fields=None):
     """Return the info { filename : { info } } on `files` of `observatory`.
     `fields` can be used to limit info returned to specified keys.
     """
-    if files:
+    if files is not None:
         files = tuple(sorted(files))
-    if fields:
+    if fields is not None:
         fields = tuple(sorted(fields))
     return _get_file_info_map(observatory, files, fields)
 
