@@ -410,19 +410,23 @@ def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """
     create_path(os.path.dirname(fullpath), mode)
 
-def remove(path):
-    """Wipe out directory at 'path'."""
-    if config.writable_cache_or_verbose("Skipped removing", repr(path)):
-        with log.error_on_exception("Failed removing", repr(path)):
-            abs_path = os.path.abspath(path)
+def remove(rmpath, observatory):
+    """Wipe out directory at 'rmpath' somewhere in cache for `observatory`."""
+    if config.writable_cache_or_verbose("Skipped removing", repr(rmpath)):
+        with log.error_on_exception("Failed removing", repr(rmpath)):
+            abs_path = os.path.abspath(rmpath)
             abs_cache = os.path.abspath(config.get_crds_path())
-            assert abs_path.startswith(abs_cache), "remove() only works on files in CRDS cache. not: " + repr(path)
-            log.verbose("Removing: ", repr(path))
-            if os.path.isfile(path):
-                os.chmod(path, 0666)
-                os.remove(path)
+            abs_config = os.path.abspath(config.get_crds_cfgpath(observatory))
+            abs_references = os.path.abspath(config.get_crds_refpath(observatory))
+            abs_mappings = os.path.abspath(config.get_crds_mappath(observatory))
+            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings)), \
+                "remove() only works on files in CRDS cache. not: " + repr(rmpath)
+            log.verbose("Removing: ", repr(rmpath))
+            if os.path.isfile(rmpath):
+                os.chmod(rmpath, 0666)
+                os.remove(rmpath)
             else:
-                pysh.sh("rm -rf ${path}", raise_on_error=True)    
+                pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 

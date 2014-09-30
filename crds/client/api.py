@@ -450,9 +450,9 @@ class FileCacher(object):
             if (not os.path.exists(localpath)):
                 downloads.append(name)
             elif self.ignore_cache:
-                utils.remove(localpath)
+                utils.remove(localpath, observatory=self.observatory)
                 downloads.append(name)
-                utils.remove(localpath)
+                utils.remove(localpath, observatory=self.observatory)
             localpaths[name] = localpath
         if downloads:
             n_bytes = self.download_files(downloads, localpaths)

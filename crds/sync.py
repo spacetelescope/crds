@@ -246,7 +246,7 @@ class SyncScript(cmdline.ContextsScript):
             if self.args.dry_run:
                 log.info("Would remove", kind + "s:", repr(where))
             else:
-                utils.remove(where)
+                utils.remove(where, observatory=self.observatory)
 
     # ------------------------------------------------------------------------------------------
     
@@ -351,7 +351,7 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.repair_files:
             if config.writable_cache_or_info("Skipping remove and dump of", repr(file)):
                 log.info("Repairing file", repr(file))
-                utils.remove(file)
+                utils.remove(file, observatory=self.observatory)
                 self.dump_files(self.default_context, [file]) 
     
     def fetch_sqlite_db(self):
@@ -375,7 +375,7 @@ class SyncScript(cmdline.ContextsScript):
                     if not self.args.organize_delete_junk:
                         log.warning("Link or directory already exists at", repr(desired_loc), "Skipping", repr(refpath))
                         continue
-                    utils.remove(desired_loc)
+                    utils.remove(desired_loc, observatory=self.observatory)
                 if config.writable_cache_or_info("Skipping file relocation from", repr(refpath), "to", repr(desired_loc)):
                     log.info("Relocating", repr(refpath), "to", repr(desired_loc))
                     shutil.move(refpath, desired_loc)
@@ -400,8 +400,8 @@ class SyncScript(cmdline.ContextsScript):
                 log.info("Residual files in '{}'. Not removing.".format(rootdir))
                 return
             if os.path.exists(refdir):   # skip crds://  vs.  oref
-                utils.remove(refdir)
-            utils.remove(rootdir)
+                utils.remove(refdir, observatory=self.observatory)
+            utils.remove(rootdir, observatory=self.observatory)
 
 # ==============================================================================================================
 
