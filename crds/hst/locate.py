@@ -272,10 +272,11 @@ GEIS_EXT_TO_SUFFIX = {
     "r0" : "msk",     # Static mask
     "r1" : "a2d",     # A-to-D lookup tables
     "r2" : "bas",     # Bias
-    "r3" : "prf",     # Preflash
-    "r4" : "spg",     # Superpurge
+    "r3" : "drk",     # Preflash
+    "r4" : "flt",     # Superpurge
     "r5" : "drk",     # Dark
     "r6" : "flt",     # Flat field
+    "r7" : "w4t",     # wf4tfile
 }
 
 def ref_properties_from_cdbs_path(filename):
@@ -290,7 +291,7 @@ def ref_properties_from_cdbs_path(filename):
     if extension == ".fits":
         ext = fields[-1]
     else:
-        ext = GEIS_EXT_TO_SUFFIX[extension[:2]]
+        ext = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
         filekind = tpn.extension_to_filekind(instrument, ext)
     except KeyError:
