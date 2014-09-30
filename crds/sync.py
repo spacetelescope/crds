@@ -161,6 +161,8 @@ class SyncScript(cmdline.ContextsScript):
     
     def main(self):
         """Synchronize files."""
+        if self.args.dry_run:
+            self.args.readonly_cache = True
         if self.args.repair_files:
             self.args.check_files = True
         if self.args.organize:   # do this before syncing anything under the current mode.
@@ -214,10 +216,16 @@ class SyncScript(cmdline.ContextsScript):
         """
         if not self.contexts:
             return
-        if self.args.dry_run:
+        if self.args.readonly_cache:
             already_have = set(rmap.list_references("*", self.observatory))
             fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
-            log.info("Would fetch references:", repr(fetched))
+            if fetched:
+                log.info("Would fetch references:", repr(fetched))
+                with log.info_on_exception("Reference size information not available."):
+                    info_map = api.get_file_info_map(self.observatory, fetched, fields=["size"])
+                    total_bytes = api.get_total_bytes(info_map)
+                    log.info("Would download", len(fetched), "references totaling",  
+                             utils.human_format_number(total_bytes).strip(), "bytes.")
         else:
             self.dump_files(self.contexts[0], references)
 
@@ -242,11 +250,7 @@ class SyncScript(cmdline.ContextsScript):
                 files2.add(filename[:-1] + "d")
         for filename in files:
             where = rmap.locate_file(filename, self.observatory)
-            # instrument, filekind = utils.get_file_properties(self.observatory, where)
-            if self.args.dry_run:
-                log.info("Would remove", kind + "s:", repr(where))
-            else:
-                utils.remove(where, observatory=self.observatory)
+            utils.remove(where, observatory=self.observatory)
 
     # ------------------------------------------------------------------------------------------
     
