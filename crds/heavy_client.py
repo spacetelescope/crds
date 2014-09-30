@@ -397,7 +397,7 @@ def get_config_info(observatory):
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
     if config.writable_cache_or_verbose("Skipping cache config write.", verbosity=70):
-        path = config.get_crds_config_path(observatory)
+        path = config.get_crds_cfgpath(observatory)
         try:
             server_config = os.path.join(path, "server_config")
             utils.ensure_dir_exists(server_config)
@@ -416,7 +416,7 @@ def cache_server_info(info, observatory):
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
-    server_config = os.path.join(config.get_crds_config_path(observatory), "server_config")
+    server_config = os.path.join(config.get_crds_cfgpath(observatory), "server_config")
     try:
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))

@@ -144,7 +144,7 @@ def get_crds_mappath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_MAPPATH", "mappings")
 
-def get_crds_config_path(observatory):
+def get_crds_cfgpath(observatory):
     """Return the path to a writable directory used to store configuration info
     such as last known server status.   This is extended by <observatory> once
     it is known.   If CRDS_PATH doesn't point to a writable directory, then
@@ -172,7 +172,7 @@ def get_crds_ref_subdir_mode(observatory):
     if _CRDS_REF_SUBDIR_MODE is not None:
         mode = _CRDS_REF_SUBDIR_MODE
     else:
-        mode_path = os.path.join(get_crds_config_path(observatory),  CRDS_SUBDIR_TAG_FILE)
+        mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
         try:
             mode = open(mode_path).read().strip()
             # log.verbose("Determined cache format from", repr(mode_path), "as", repr(mode))
@@ -193,7 +193,7 @@ def set_crds_ref_subdir_mode(mode, observatory):
     global _CRDS_REF_SUBDIR_MODE
     check_crds_ref_subdir_mode(mode)
     _CRDS_REF_SUBDIR_MODE = mode
-    mode_path = os.path.join(get_crds_config_path(observatory), CRDS_SUBDIR_TAG_FILE)
+    mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
     if writable_cache_or_verbose("skipping subdir mode tag write."):
         from crds import utils  # XXXX gross, I know.  Dependency to be fixed.
         utils.ensure_dir_exists(mode_path)
@@ -273,7 +273,7 @@ def get_crds_actual_paths(observatory):
     return {
         "mapping root" : get_crds_mappath(observatory),
         "reference root" : get_crds_refpath(observatory),
-        "config root" : get_crds_config_path(observatory),
+        "config root" : get_crds_cfgpath(observatory),
         }
 
 # ============================================================================
@@ -407,7 +407,7 @@ def locate_config(cfg, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(cfg):
         return cfg
-    return os.path.join(get_crds_config_path(observatory), cfg)
+    return os.path.join(get_crds_cfgpath(observatory), cfg)
 
 def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
