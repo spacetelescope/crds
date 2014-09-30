@@ -268,21 +268,34 @@ def get_reference_properties(filename):
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
+GEIS_EXT_TO_SUFFIX = {
+    "r0" : "msk",     # Static mask
+    "r1" : "a2d",     # A-to-D lookup tables
+    "r2" : "bas",     # Bias
+    "r3" : "prf",     # Preflash
+    "r4" : "spg",     # Superpurge
+    "r5" : "drk",     # Dark
+    "r6" : "flt",     # Flat field
+}
+
 def ref_properties_from_cdbs_path(filename):
     """Based on a HST CDBS `filename`,  return (instrument, filekind, serial). 
     Raise AssertionError if it's not a good filename.
     """
-    path, fields, ext = _get_fields(filename)
+    path, fields, extension = _get_fields(filename)
     # For legacy files,  just use the root filename as the unique id
     serial = os.path.basename(os.path.splitext(filename)[0])
     # First try to figure everything out by decoding filename. fast
     instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
-    ext = fields[-1]
+    if extension == ".fits":
+        ext = fields[-1]
+    else:
+        ext = GEIS_EXT_TO_SUFFIX[extension[:2]]
     try:
         filekind = tpn.extension_to_filekind(instrument, ext)
     except KeyError:
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
-    return path, "hst", instrument, filekind, serial, ext
+    return path, "hst", instrument, filekind, serial, extension
 
 INSTRUMENT_FIXERS = {
     "wfii": "wfpc2",
