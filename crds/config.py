@@ -5,10 +5,6 @@ it is used to define CRDS file cache paths and file location functions.
 import os
 import os.path
 import re
-import glob
-import contextlib
-
-from crds import log
 
 # ============================================================================
 
@@ -144,14 +140,6 @@ def get_crds_mappath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_MAPPATH", "mappings")
 
-def get_crds_cfgpath(observatory):
-    """Return the path to a writable directory used to store configuration info
-    such as last known server status.   This is extended by <observatory> once
-    it is known.   If CRDS_PATH doesn't point to a writable directory, then
-    CRDS_CFGPATH should be defined.
-    """
-    return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
-
 def get_crds_refpath(observatory):
     """get_crds_refpath returns the base path of the directory tree where CRDS 
     reference files are stored.   This is extended by <observatory> once it is
@@ -161,48 +149,13 @@ def get_crds_refpath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_REFPATH", "references")
 
-# ===========================================================================
-
-CRDS_SUBDIR_TAG_FILE = "ref_cache_subdir_mode"
-CRDS_REF_SUBDIR_MODES = ["instrument", "flat", "legacy"]
-_CRDS_REF_SUBDIR_MODE = None
-
-def get_crds_ref_subdir_mode(observatory):
-    """Return the mode value defining how reference files are located."""
-    if _CRDS_REF_SUBDIR_MODE is not None:
-        mode = _CRDS_REF_SUBDIR_MODE
-    else:
-        mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
-        try:
-            mode = open(mode_path).read().strip()
-            # log.verbose("Determined cache format from", repr(mode_path), "as", repr(mode))
-        except IOError:
-            if len(glob.glob(os.path.join(get_crds_refpath(observatory), "*"))) > 20:
-                mode = "flat"
-                log.verbose("No cache config tag found, looks like a 'flat' cache based on existing references.")
-            else:
-                mode = "instrument"
-                log.verbose("No cache config tag found, defaulting to 'instrument' based cache.")
-            with log.verbose_on_exception("Failed saving default subdir mode to", repr(mode)):
-                set_crds_ref_subdir_mode(mode, observatory)
-        check_crds_ref_subdir_mode(mode)
-    return mode
-
-def set_crds_ref_subdir_mode(mode, observatory):
-    """Set the reference file location subdirectory `mode`."""
-    global _CRDS_REF_SUBDIR_MODE
-    check_crds_ref_subdir_mode(mode)
-    _CRDS_REF_SUBDIR_MODE = mode
-    mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
-    if writable_cache_or_verbose("skipping subdir mode write."):
-        from crds import utils  # XXXX gross, I know.  Dependency to be fixed.
-        utils.ensure_dir_exists(mode_path)
-        open(mode_path, "w+").write(mode)
-
-def check_crds_ref_subdir_mode(mode):
-    """Check for valid reference location subdirectory `mode`."""
-    assert mode in CRDS_REF_SUBDIR_MODES, "Invalid CRDS cache subdirectory mode = " + repr(mode)
-    return mode
+def get_crds_config_path(observatory):
+    """Return the path to a writable directory used to store configuration info
+    such as last known server status.   This is extended by <observatory> once
+    it is known.   If CRDS_PATH doesn't point to a writable directory, then
+    CRDS_CFGPATH should be defined.
+    """
+    return _std_cache_path(observatory, "CRDS_CFGPATH", "config")
 
 # ===========================================================================
 
@@ -273,7 +226,7 @@ def get_crds_actual_paths(observatory):
     return {
         "mapping root" : get_crds_mappath(observatory),
         "reference root" : get_crds_refpath(observatory),
-        "config root" : get_crds_cfgpath(observatory),
+        "config root" : get_crds_config_path(observatory),
         }
 
 # ============================================================================
@@ -355,32 +308,6 @@ def get_cache_readonly():
     """Read the flag controlling writes to the CRDS cache.  When True,  no write to cache should occur."""
     return _CRDS_CACHE_READONLY or env_to_bool("CRDS_READONLY_CACHE", False)
 
-def writable_cache_abort(func):
-    """Generator a filter by decorating `func`.  These call `func` and return False when the CRDS cache is 
-    readonly,  otherwise they return True.   
-    
-    Use like this:
-    
-    if writable_cache_or_info(... log message parameters...):
-        block of code requiring writable cache
-    """
-    def func_check_writable(*args, **keys):
-        """func_check_writable is a wrapper which issues a func() message when CRDS
-        is configured for a readonly cache.
-        """
-        if get_cache_readonly():  # message and quit
-            func("READONLY CACHE", *args, **keys)
-            return False
-        else:
-            return True
-        func_check_writable.__name__ = "wrapped_writable_" + func.__name__
-        func_check_writable._wrapped_writable = True
-    return func_check_writable
-
-writable_cache_or_info    = writable_cache_abort(log.info)
-writable_cache_or_verbose = writable_cache_abort(log.verbose)
-writable_cache_or_warning = writable_cache_abort(log.warning)
-
 # ===========================================================================
 
 def get_path(filename, observatory):
@@ -407,14 +334,13 @@ def locate_config(cfg, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(cfg):
         return cfg
-    return os.path.join(get_crds_cfgpath(observatory), cfg)
+    return os.path.join(get_crds_config_path(observatory), cfg)
 
 def locate_reference(ref, observatory):
     """Return the absolute path where reference `ref` should be located."""
     if os.path.dirname(ref):
         return ref
-    from crds import utils
-    return utils.get_locator_module(observatory).locate_file(ref)
+    return os.path.join(get_crds_refpath(observatory), ref)
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping 

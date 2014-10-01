@@ -12,7 +12,7 @@ import ast
 
 # from crds import data_file,  import deferred until required
 
-from crds import log, config, pysh
+from crds import log, config
 
 # ===================================================================
 
@@ -32,7 +32,6 @@ class Struct(dict):
 def traced(func):
     """Issue a verbose message showing parameters and possibly return val."""
     def func2(*args, **keys):
-        "Decoration wrapper for @trace."
         log.verbose("trace:", func.__name__, args if args else "", keys if keys else "", verbosity=55)
         result = func(*args, **keys)
         log.verbose("trace result:", func.__name__, ":", result, verbosity=55)
@@ -336,9 +335,6 @@ class TimingStats(object):
         self.output(*args, eol="")
 
 def human_format_number(number):
-    """Reformat `number` by switching to engineering units and dropping to two fractional digits,
-    10s of megs for G-scale files.
-    """
     convert = [
         (1e12, "T"),
         (1e9 , "G"),
@@ -346,7 +342,7 @@ def human_format_number(number):
         (1e3 , "K"),
         ]
     for limit, sym in convert:
-        if isinstance(number, (float, int, long)) and number > limit:
+        if isinstance(number, (float,int,long)) and number > limit:
             number /= limit
             break
     else:
@@ -409,24 +405,7 @@ def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """Creates dirs from `fullpath` if they don't already exist.
     """
     create_path(os.path.dirname(fullpath), mode)
-
-def remove(rmpath, observatory):
-    """Wipe out directory at 'rmpath' somewhere in cache for `observatory`."""
-    if config.writable_cache_or_verbose("Skipped removing", repr(rmpath)):
-        with log.error_on_exception("Failed removing", repr(rmpath)):
-            abs_path = os.path.abspath(rmpath)
-            abs_cache = os.path.abspath(config.get_crds_path())
-            abs_config = os.path.abspath(config.get_crds_cfgpath(observatory))
-            abs_references = os.path.abspath(config.get_crds_refpath(observatory))
-            abs_mappings = os.path.abspath(config.get_crds_mappath(observatory))
-            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings)), \
-                "remove() only works on files in CRDS cache. not: " + repr(rmpath)
-            log.verbose("Removing: ", repr(rmpath))
-            if os.path.isfile(rmpath):
-                os.chmod(rmpath, 0666)
-                os.remove(rmpath)
-            else:
-                pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
+    
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
@@ -630,12 +609,6 @@ def file_to_observatory(filename):
         return "tobs"
     else:
         return reference_to_observatory(filename)
-    
-def get_reference_paths(observatory):
-    """Return the list of subdirectories involved with storing references of all instruments."""
-    pkg = get_observatory_package(observatory)
-    locate = get_locator_module(observatory)
-    return sorted(set([locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS]))
 
 # These functions should actually be general,  working on both references and
 # dataset files.
