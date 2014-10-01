@@ -27,8 +27,8 @@
 # safe_sync does bulk reference and mappings transfers without blocking
 # parallel pipeline bestrefs.  It may run for hours.
 
-setenv CRDS_CLIENT_RETRY_COUNT 20
-setenv CRDS_CLIENT_RETRY_DELAY_SECONDS 10
+export CRDS_CLIENT_RETRY_COUNT=20
+export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
 
 # default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
 # file system has broken flock's
