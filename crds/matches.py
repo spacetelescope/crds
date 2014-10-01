@@ -192,7 +192,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
             help="Dataset ids for which to dump matching parameters from DADSOPS or equivalent database.")
         self.add_argument("-c", "--condition-values", action="store_true",
             help="When dumping dataset parameters, first apply CRDS value conditioning / normalization.")
-        self.add_argument("-m", "--minimize-header", action="store_true",
+        self.add_argument("-m", "--minimize-headers", action="store_true",
             help="When dumping dataset parameters,  limit them to matching parameters, not historical bestrefs.")
 
     def main(self):
