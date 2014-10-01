@@ -255,7 +255,7 @@ CDBS_DIRS_TO_INSTR = {
    
 }
 
-def check_consistency(checked_instrument=None):
+def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=False):
     """Dev function to compare the properties returned by name decomposition
     to the properties determined by file contents and make sure they're the same.
     """
@@ -263,10 +263,21 @@ def check_consistency(checked_instrument=None):
 
     for ref in rmap.list_references("*", observatory="hst", full_path=True):
         with log.error_on_exception("Failed processing:", repr(ref)):
+
             _path, _observ, instrument, filekind, _serial, _ext = ref_properties_from_cdbs_path(ref)
+
             if checked_instrument is not None and instrument != checked_instrument:
+
                 continue
-            log.info("Processing:", instrument, filekind, ref)
+
+            if data_file.is_geis_data(ref):
+                if os.path.exists(data_file.get_conjugate(ref)):
+                    continue
+                else:
+                    log.warning("No GEIS header for", repr(ref))
+
+            log.verbose("Processing:", instrument, filekind, ref)
+            
             _path2, _observ2, instrument2, filekind2, _serial2, _ext2 = ref_properties_from_header(ref)
             if instrument != instrument2:
                 log.error("Inconsistent instruments", repr(instrument), "vs.", repr(instrument2), 
@@ -274,9 +285,16 @@ def check_consistency(checked_instrument=None):
             if filekind != filekind2:
                 log.error("Inconsistent filekinds", repr(filekind), "vs.", repr(filekind2), 
                           "for", repr(ref))
+
             for pmap_name in rmap.list_mappings("*", observatory="hst"):
+
                 pmap = rmap.get_cached_mapping(pmap_name)
+
                 r = certify.find_governing_rmap(pmap_name, ref)
+
+                if not r:
+                    continue
+
                 if r.instrument != instrument:
                     log.error("Rmap instrument", repr(r.instrument), 
                               "inconsistent with name derived instrument", repr(instrument), "for", repr(ref), "in", repr(pmap_name))
@@ -288,7 +306,13 @@ def check_consistency(checked_instrument=None):
                               "inconsistent with content derived instrument", repr(instrument2), "for", repr(ref), "in", repr(pmap_name))
                 if r.filekind != filekind2:
                     log.error("Rmap filekind", repr(r.filekind), 
-                              "inconsistent with contentderived filekind", repr(filekind2), "for", repr(ref), "in", repr(pmap_name))
+                              "inconsistent with content derived filekind", repr(filekind2), "for", repr(ref), "in", repr(pmap_name))
+                
+                if not exhaustive_mapping_check:
+                    break
+
+            else:
+                log.error("Orphan reference", repr(ref), "not found under any context.")
             
 def get_reference_properties(filename):
     """Figure out FITS (instrument, filekind, serial) based on `filename`."""
