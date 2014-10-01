@@ -138,7 +138,17 @@ class Script(object):
         result = self.main()
         self.report_stats()  # here if not called already
         return result
-        
+    
+    @property
+    def locator(self):
+        """Return the module for observatory specific file locations and plugins functions."""
+        return utils.get_locator_module(self.observatory)
+    
+    @property
+    def obs_pkg(self):
+        """Return the package __init__ for observatory specific constants."""
+        return utils.get_observatory_package(self.observatory)
+    
     def determine_contexts(self):
         """Return the list of contexts used by this invocation of the script.  Empty for Script."""
         return []    

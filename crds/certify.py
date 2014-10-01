@@ -875,8 +875,8 @@ def find_governing_rmap(context, reference):
     else:
         raise ValueError("Invalid comparison context " + repr(context))
     g_instrument, g_filekind = mapping.locate.get_file_properties(governing_rmap.name)
-    assert instrument == g_instrument, "Comparison context inconsistent with reference file."
-    assert filekind == g_filekind, "Comparison context inconsistent with reference type."
+    assert instrument == g_instrument, "Comparison context inconsistent with reference file: " + repr(instrument) + " vs. " + repr(g_instrument)
+    assert filekind == g_filekind, "Comparison context inconsistent with reference type: " + repr(filekind) + " vs. " + repr(g_filekind)
     log.verbose("Reference '{}' corresponds to rmap '{}' in context '{}'".format(
                 reference, governing_rmap.name, mapping.name))
     return governing_rmap

@@ -134,11 +134,16 @@ class ListScript(cmdline.ContextsScript):
         real_paths = config.get_crds_actual_paths(self.observatory)
         server = self.server_info
         current_server_url = api.get_crds_server()
+        mode = config.get_crds_ref_subdir_mode(self.observatory)
         _print_dict("CRDS Environment", info)
-        _print_dict("CRDS Server Url Used", { "url" : current_server_url })
+        _print_dict("CRDS Client Config", { 
+                "server_url" : current_server_url, 
+                "cache_mode": mode,
+                "readonly_cache": self.readonly_cache,
+                })
         _print_dict("CRDS Actual Paths", real_paths)
         _print_dict("CRDS Server Info", server, 
-                    ["observatory", "status", "operational_context", "last_synced", 
+                    ["observatory", "status", "connected", "operational_context", "last_synced", 
                      "reference_url", "mapping_url",])
         _print_dict("CRDS Package", { 
                 "crds" : repr(crds),
