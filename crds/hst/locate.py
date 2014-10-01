@@ -205,9 +205,11 @@ def decompose_newstyle_name(filename):
         repr(instrument) + " in name " + repr(filename)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + \
         repr(filekind) + " in name " + repr(filename)
-    assert re.match("\d*", serial), "Invalid id field " + \
-        repr(id) + " in name " + repr(filename)
-    # extension may vary for upload temporary files.
+
+    # assert re.match("\d*", serial), "Invalid id field " + \
+    #     repr(id) + " in name " + repr(filename)
+    
+# extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
 
@@ -258,6 +260,7 @@ CDBS_DIRS_TO_INSTR = {
 def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=False):
     """Dev function to compare the properties returned by name decomposition
     to the properties determined by file contents and make sure they're the same.
+    Also checks rmap membership.
     """
     from crds import certify
 
@@ -286,7 +289,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
                 log.error("Inconsistent filekinds", repr(filekind), "vs.", repr(filekind2), 
                           "for", repr(ref))
 
-            for pmap_name in rmap.list_mappings("*", observatory="hst"):
+            for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
 
                 pmap = rmap.get_cached_mapping(pmap_name)
 
