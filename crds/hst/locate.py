@@ -333,7 +333,7 @@ GEIS_EXT_TO_SUFFIX = {
     "r2" : "bas",     # Bias
     "r3" : "drk",     # Preflash
     "r4" : "flt",     # Superpurge
-    "r5" : "drk",     # Dark
+    "r5" : "shd",     # Shutter Shading Reference
     "r6" : "flt",     # Flat field
     "r7" : "w4t",     # wf4tfile
 }
