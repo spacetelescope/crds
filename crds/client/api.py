@@ -180,9 +180,9 @@ def get_file_info_map(observatory, files=None, fields=None):
     """Return the info { filename : { info } } on `files` of `observatory`.
     `fields` can be used to limit info returned to specified keys.
     """
-    if files is not None:
+    if files:
         files = tuple(sorted(files))
-    if fields is not None:
+    if fields:
         fields = tuple(sorted(fields))
     return _get_file_info_map(observatory, files, fields)
 
@@ -415,8 +415,6 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
         bytes_so_far=utils.human_format_number(bytes_so_far).strip(), 
         total_bytes=utils.human_format_number(total_bytes).strip())
 
-# ==============================================================================
-
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache."""
     def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True, api=1):
@@ -450,9 +448,11 @@ class FileCacher(object):
             if (not os.path.exists(localpath)):
                 downloads.append(name)
             elif self.ignore_cache:
-                utils.remove(localpath, observatory=self.observatory)
+                assert not config.get_cache_readonly(), "Readonly cache,  cannot ignore cache and re-fetch."
                 downloads.append(name)
-                utils.remove(localpath, observatory=self.observatory)
+                with log.error_on_exception("Ignore_cache=True and Failed removing existing", repr(name)):
+                    os.chmod(localpath, 0666)
+                    os.remove(localpath)
             localpaths[name] = localpath
         if downloads:
             n_bytes = self.download_files(downloads, localpaths)
@@ -483,25 +483,26 @@ class FileCacher(object):
         """Serial file-by-file download."""
         self.info_map = get_file_info_map(
                 self.observatory, downloads, ["size", "rejected", "blacklisted", "state", "sha1sum", "instrument"])
-        if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70):
-            bytes_so_far = 0
-            total_files = len(downloads)
-            total_bytes = get_total_bytes(self.info_map)
-            for nth_file, name in enumerate(downloads):
-                try:
-                    if "NOT FOUND" in self.info_map[name]:
-                        raise CrdsDownloadError("file is not known to CRDS server.")
-                    bytes, path = int(self.info_map[name]["size"]), localpaths[name]
-                    log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
-                    self.download(name, path)
-                    bytes_so_far += os.stat(path).st_size
-                except Exception as exc:
-                    if self.raise_exceptions:
-                        raise
-                    else:
-                        log.error("Failure downloading file", repr(name), ":", str(exc))
-            return bytes_so_far
-        return 0
+        if config.get_cache_readonly():
+            log.verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70)
+            return 0
+        bytes_so_far = 0
+        total_files = len(downloads)
+        total_bytes = get_total_bytes(self.info_map)
+        for nth_file, name in enumerate(downloads):
+            try:
+                if "NOT FOUND" in self.info_map[name]:
+                    raise CrdsDownloadError("file is not known to CRDS server.")
+                bytes, path = int(self.info_map[name]["size"]), localpaths[name]
+                log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
+                self.download(name, path)
+                bytes_so_far += os.stat(path).st_size
+            except Exception as exc:
+                if self.raise_exceptions:
+                    raise
+                else:
+                    log.error("Failure downloading file", repr(name), ":", str(exc))
+        return bytes_so_far
     
     def download(self, name, localpath):
         """Download a single file."""
