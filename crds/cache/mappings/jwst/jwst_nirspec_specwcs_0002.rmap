@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'jwst_nirspec_specwcs_0001.rmap',
+    'filekind' : 'SPECWCS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_specwcs_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+    },
+    'sha1sum' : 'f336c58e13faf27f64a1d38ecbdd5acc7d692597',
+}
+
+selector = Match({
+    'NRS1|NRS2' : 'jwst_nirspec_specwcs_0001.json',
+})

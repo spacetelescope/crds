@@ -1,0 +1,19 @@
+header = {
+    'derived_from' : 'jwst_nirspec_regions_0000.rmap',
+    'filekind' : 'REGIONS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_regions_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.GRATING', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'FILTER' : 'META.INSTRUMENT.FILTER',
+        'GRATING' : 'META.INSTRUMENT.GRATING',
+    },
+    'sha1sum' : 'ea6477b2141ac07159d89f6e42f28da0f439032f',
+}
+
+selector = Match({
+})

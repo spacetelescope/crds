@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'jwst_miri_wcsregions_0001.rmap',
+    'filekind' : 'WCSREGIONS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_wcsregions_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+    },
+    'sha1sum' : '2499c0a9d3a55ae0205438c6ee105ce79a3ad63a',
+}
+
+selector = Match({
+    'MIRIFUSHORT|MIRIFULONG' : 'jwst_miri_wcsregions_0001.json',
+})

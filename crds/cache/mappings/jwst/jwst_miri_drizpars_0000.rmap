@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'generated as stub rmap on 2014-08-29 15:33:50.917285',
+    'filekind' : 'DRIZPARS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_drizpars_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : ((),),
+    'sha1sum' : '01859bb63de2f65b43aa3d72f2204141c3dabbcf',
+}
+
+selector = Match({
+    () : 'jwst_miri_drizpars_0001.fits',
+})
