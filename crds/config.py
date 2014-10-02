@@ -377,7 +377,7 @@ def writable_cache_abort(func):
         func_check_writable._wrapped_writable = True
     return func_check_writable
 
-writable_cache_or_info    = writable_cache_abort(log.info)
+writable_cache_or_info = writable_cache_abort(log.info)
 writable_cache_or_verbose = writable_cache_abort(log.verbose)
 writable_cache_or_warning = writable_cache_abort(log.warning)
 
@@ -536,7 +536,29 @@ def is_reference(reference):
     return re.match(r"\.fits|\.finf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
 
 def filetype(filename):
-    """Classify `filename`'s type so it can be processed or displayed."""
+    """Classify `filename`'s type so it can be processed or displayed.
+    
+    >>> filetype("foo.fits")
+    'fits'
+
+    >>> filetype("foo.yaml")
+    'yaml'
+
+    >>> filetype("foo.pmap")
+    'mapping'
+
+    >>> filetype("foo.json")
+    'json'
+
+    >>> filetype("foo.txt")
+    'text'
+
+    >>> filetype("foo.r0h")
+    'text'
+
+    >>> filetype('foo.exe')
+    'unknown'
+    """
     if is_mapping(filename):
         return "mapping"
     elif filename.endswith(".fits"):
@@ -549,7 +571,7 @@ def filetype(filename):
         return "finf"
     elif filename.endswith(".txt"):
         return "text"
-    elif re.match(".*\,r[0-9]h$", filename): # GEIS header
+    elif re.match(r".*\.r[0-9]h$", filename): # GEIS header
         return "text"
     else:
         return "unknown"
