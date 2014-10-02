@@ -354,7 +354,7 @@ def ref_properties_from_cdbs_path(filename):
     # First try to figure everything out by decoding filename. fast
     instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
     if extension == ".fits":
-        ext = fields[-1]
+        ext = fields[1]
     else:
         ext = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
