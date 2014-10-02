@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'jwst_miri_distortion_0000.rmap',
+    'filekind' : 'DISTORTION',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_distortion_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND'),),
+    'reference_to_dataset' : {
+        'BAND' : 'META.INSTRUMENT.BAND',
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+    },
+    'sha1sum' : '72c99f0598573979b87a55e3b517e64d5e4f005b',
+}
+
+selector = Match({
+})

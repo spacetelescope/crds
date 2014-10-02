@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_miri_reset_0000.rmap',
+    'filekind' : 'RESET',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_reset_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.EXPOSURE.READPATT'),),
+    'sha1sum' : 'bee28a6ea04a2697349fe77fa7d8dd3f2ea7445a',
+}
+
+selector = Match({
+})

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'jwst_0024.pmap',
+    'description' : 'changed INSTRUMENT.TYPE to INSTRUMENT.NAME',
+    'mapping' : 'PIPELINE',
+    'name' : 'jwst_0025.pmap',
+    'observatory' : 'JWST',
+    'parkey' : ('META.INSTRUMENT.NAME',),
+    'sha1sum' : '4dda9fc87d368bb1e71788a2144cc4a87db82eda',
+}
+
+selector = {
+    'FGS' : 'jwst_fgs_0006.imap',
+    'MIRI' : 'jwst_miri_0018.imap',
+    'NIRCAM' : 'jwst_nircam_0007.imap',
+    'NIRISS' : 'jwst_niriss_0008.imap',
+    'NIRSPEC' : 'jwst_nirspec_0009.imap',
+}

@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'jwst_miri_dark_0003.rmap',
+    'filekind' : 'DARK',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_dark_0004.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : '1e6576c36b59c6977796277375c47e70753683da',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'ANY', 'FAST', 'FULL') : 'jwst_miri_dark_0027.fits',
+    ('MIRIFULONG', 'ANY', 'SLOW', 'FULL') : 'jwst_miri_dark_0019.fits',
+    ('MIRIFUSHORT', 'ANY', 'FAST', 'FULL') : 'jwst_miri_dark_0028.fits',
+    ('MIRIFUSHORT', 'ANY', 'SLOW', 'FULL') : 'jwst_miri_dark_0021.fits',
+    ('MIRIMAGE', 'ANY', 'FAST', 'FULL') : 'jwst_miri_dark_0026.fits',
+    ('MIRIMAGE', 'ANY', 'FAST', 'SLITLESSPRISM') : 'jwst_miri_dark_0024.fits',
+    ('MIRIMAGE', 'ANY', 'SLOW', 'FULL') : 'jwst_miri_dark_0023.fits',
+    ('MIRIMAGE', 'ANY', 'SLOW', 'SLITLESSPRISM') : 'jwst_miri_dark_0025.fits',
+})

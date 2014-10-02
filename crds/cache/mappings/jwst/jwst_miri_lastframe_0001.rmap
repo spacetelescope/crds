@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_miri_lastframe_0000.rmap',
+    'filekind' : 'LASTFRAME',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_lastframe_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.EXPOSURE.READPATT'),),
+    'sha1sum' : '5c25b43197022191f50c37dc00e6cb04b7c9a91f',
+}
+
+selector = Match({
+})

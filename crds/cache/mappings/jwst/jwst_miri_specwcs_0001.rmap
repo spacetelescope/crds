@@ -1,0 +1,19 @@
+header = {
+    'derived_from' : 'jwst_miri_specwcs_0000.rmap',
+    'filekind' : 'SPECWCS',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_specwcs_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),),
+    'reference_to_dataset' : {
+        'BAND' : 'META.INSTRUMENT.BAND',
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'SUBARRAY' : 'META.SUBARRAY.NAME',
+    },
+    'sha1sum' : '94e666c4099b5839dcba90c60da10137704ff40a',
+}
+
+selector = Match({
+})

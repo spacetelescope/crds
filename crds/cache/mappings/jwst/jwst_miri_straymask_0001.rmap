@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_miri_straymask_0000.rmap',
+    'filekind' : 'STRAYMASK',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_straymask_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.BAND'),),
+    'sha1sum' : '20d6412f17e3b3ad85f723732476bab7d9a4fda2',
+}
+
+selector = Match({
+})
