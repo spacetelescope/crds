@@ -31,6 +31,7 @@ import pprint
 import glob
 import ast
 import traceback
+import uuid
 
 import crds.client as light_client
 from . import rmap, log, utils, config
@@ -343,10 +344,10 @@ def local_version_obsolete(server_version):
     """Return True IFF major_version(server) > major_version(client).  Use to force client to call-up instead
     of computing locally.
     """
-    server_version = major_version(server_version)
-    client_version = major_version(crds.__version__)
-    obsolete = client_version < server_version
-    log.verbose("CRDS client version=", srepr(client_version),
+    _server_version = major_version(server_version)
+    _client_version = major_version(crds.__version__)
+    obsolete = _client_version < _server_version
+    log.verbose("CRDS client version=", srepr(crds.__version__),
                 " server version=", srepr(server_version),
                 " client is ", srepr("obsolete" if obsolete else "up-to-date"),
                 sep="")
@@ -384,13 +385,12 @@ def get_config_info(observatory):
         info.status = "server"
         info.connected = True
         log.verbose("Connected to server at", repr(light_client.get_crds_server()))
-        if config.get_cache_readonly():
-            log.verbose_warning("READONLY CACHE: using cached configuration and default context.")
+        if config.writable_cache_or_verbose("using cached configuration and default context."):
+            cache_server_info(info, observatory)  # save locally
+        else:
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
-        else:
-            cache_server_info(info, observatory)  # save locally
     except light_client.CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(light_client.get_crds_server()))
         info = load_server_info(observatory)
@@ -398,23 +398,33 @@ def get_config_info(observatory):
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
-    if config.writable_cache_or_verbose("Skipping cache config write.", verbosity=70):
-        path = config.get_crds_cfgpath(observatory)
-        try:
-            server_config = os.path.join(path, "server_config")
-            utils.ensure_dir_exists(server_config)
-            with open(server_config, "w+") as file_:
-                file_.write(pprint.pformat(info))
-        except Exception, exc:
-            log.verbose_warning("Couldn't save CRDS server info to local CRDS cache:", repr(exc))
-        try:
-            bad_files = os.path.join(path, "bad_files.txt")
-            utils.ensure_dir_exists(bad_files)
-            bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
-            with open(bad_files, "w+") as file_:
-                file_.write(bad_files_lines)
-        except Exception, exc:
-            log.verbose_warning("Couldn't save CRDS bad files list to local CRDS cache:", repr(exc))
+    path = config.get_crds_cfgpath(observatory)
+    server_config_path = os.path.join(path, "server_config")
+    cache_atomic_write(server_config_path, pprint.pformat(info), "SERVER INFO")
+    bad_files_path = os.path.join(path, "bad_files.txt")
+    bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
+    cache_atomic_write(bad_files_path, bad_files_lines, "BAD FILES LIST")
+
+def cache_atomic_write(replace_path, contents, fail_warning):
+    """Write string `contents` to cache file `replace_path` as an atomic action,
+    issuing string `fail_warning` as a verbose exception warning if some aspect
+    fails.   This is intended to support multiple processes using the CRDS
+    cache in parallel,  as in parallel bestrefs in the pipeline.
+    
+    NOTE:  All writes to the cache configuration area should use this function
+    to avoid concurrency issues with parallel processing.   Potentially this should
+    be expanded to other non-config cache writes but is currently inappropriate
+    for large data volumes (G's) since they're required to be in memory.
+    """
+    log.verbose("Cache atomic write:", replace_path)
+    try:
+        utils.ensure_dir_exists(replace_path)
+        temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
+        with open(temp_path, "w+") as file_:
+            file_.write(contents)
+        os.rename(temp_path, replace_path)
+    except Exception, exc:
+        log.verbose_warning("Failed writing {} to CRDS cache".format(fail_warning), ":", repr(exc))
         
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
@@ -423,11 +433,9 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
-        log.verbose_warning("Loading configuration from cache '%s'." % server_config, 
-                            "References may be out-of-date unless CRDS cache is sync'ed elsewhere.")
+        log.verbose_warning("Using cached CRDS reference assignment rules last updated on", repr(info.last_synced))
     except IOError:
-        log.verbose_warning("Couldn't load cached server info from '%s'." % server_config,
-                            "Using pre-installed CRDS context.  References may be sub-optimal." )
+        log.warning("CRDS server connection and cache load FAILED.  Using pre-installed TEST RULES; NOT FOR CALIBRATION USE." )
         info = get_installed_info(observatory)
     info.connected = False
     return info
@@ -451,8 +459,8 @@ def get_installed_info(observatory):
         os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/cache/mappings"
         where = config.locate_mapping("*.pmap", observatory)
         pmap = os.path.basename(sorted(glob.glob(where))[-1])
-        log.warning("CRDS cache failure,  using pre-installed mappings at", repr(where),
-                    "and highest numbered pipeline context", repr(pmap), "as default. Bad file checking is disabled.")
+        log.warning("Using highest numbered pipeline context", repr(pmap), 
+                    "as default. Bad file checking is disabled.")
     except IndexError, exc:
         raise crds.CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
                         repr(where) + " : " + str(exc))
