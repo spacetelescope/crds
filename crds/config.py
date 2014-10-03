@@ -195,9 +195,8 @@ def set_crds_ref_subdir_mode(mode, observatory):
     _CRDS_REF_SUBDIR_MODE = mode
     mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
     if writable_cache_or_verbose("skipping subdir mode write."):
-        from crds import utils  # XXXX gross, I know.  Dependency to be fixed.
-        utils.ensure_dir_exists(mode_path)
-        open(mode_path, "w+").write(mode)
+        from crds import heavy_client as hv   #  yeah,  kinda gross
+        hv.cache_atomic_write(mode_path, mode, "Couldn't save sub-directory mode config")
 
 def check_crds_ref_subdir_mode(mode):
     """Check for valid reference location subdirectory `mode`."""
