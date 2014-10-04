@@ -398,8 +398,9 @@ def get_config_info(observatory):
 
 def update_config_info(observatory):
     """Write out any server update to the CRDS configuration information."""
+    log.verbose("Updating CRDS cache config and operational context.")
     if config.writable_cache_or_verbose("skipping config update."):
-        info = get_cache_info(observatory)
+        info = get_config_info(observatory)
         if info.connected and info.status == "server":
             cache_server_info(info, observatory)  # save locally
         else:
@@ -425,7 +426,7 @@ def cache_atomic_write(replace_path, contents, fail_warning):
     be expanded to other non-config cache writes but is currently inappropriate
     for large data volumes (G's) since they're required to be in memory.
     """
-    log.verbose("Cache atomic write:", replace_path)
+    log.verbose("Cache atomic write:", replace_path, verbosity=80)
     try:
         utils.ensure_dir_exists(replace_path)
         temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
