@@ -161,6 +161,8 @@ def _initial_recommendations(
     
     warn_bad_context(observatory, final_context)
     warn_bad_references(observatory, bestrefs)
+    
+    update_config_info(observatory)
         
     return final_context, bestrefs
 
@@ -385,9 +387,7 @@ def get_config_info(observatory):
         info.status = "server"
         info.connected = True
         log.verbose("Connected to server at", repr(light_client.get_crds_server()))
-        if config.writable_cache_or_verbose("using cached configuration and default context."):
-            cache_server_info(info, observatory)  # save locally
-        else:
+        if not config.writable_cache_or_verbose("Using cached configuration and default context."):
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
@@ -395,6 +395,15 @@ def get_config_info(observatory):
         log.verbose_warning("Couldn't contact CRDS server:", srepr(light_client.get_crds_server()))
         info = load_server_info(observatory)
     return info
+
+def update_config_info(observatory):
+    """Write out any server update to the CRDS configuration information."""
+    if config.writable_cache_or_verbose("skipping config update."):
+        info = get_cache_info(observatory)
+        if info.connected and info.status == "server":
+            cache_server_info(info, observatory)  # save locally
+        else:
+            log.verbose("Not connected to CRDS server,  skipping cache config update.")
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""

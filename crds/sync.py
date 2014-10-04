@@ -30,7 +30,7 @@ import shutil
 import glob
 
 import crds.client.api as api
-from crds import (rmap, log, data_file, cmdline, utils, config)
+from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
 import crds
 
 # ============================================================================
@@ -194,6 +194,7 @@ class SyncScript(cmdline.ContextsScript):
             sys.exit(-1)
         if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
+        heavy_client.update_config_info(self.observatory)
         self.report_stats()
         log.standard_status()
 
