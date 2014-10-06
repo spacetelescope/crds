@@ -9,20 +9,21 @@
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
-#        *not* CRDS_SERVER_URL  (server synced from, safe_bestrefs clears this to be disconnected)
+#        *not* CRDS_SERVER_URL  (safe_bestrefs clears this to be disconnected from CRDS servers)
 #        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #
-# This script is intended to be run in parallel with multiple pipeline
-# bestrefs and a concurrent cron "safe_sync".
+# This script is intended to be run in parallel with multiple pipeline bestrefs
+# and a concurrent cron_sync.  The "safe" aspect refers to not modifying the
+# CRDS cache itself, and to not stumbling into inconsistent cache states while
+# another process is updating the cache.
 #
 
 #  To control when information is received from the server,  and to
 #  prevent pipeline stall when the CRDS server is unavailable,
 #  safe_bestrefs is configured with a bad server IP address.
 
-#  To prevent multiple bestrefs or safe_sync from modifying the
-#  cache config area,  it is chmod'ed to read-only.  unsafe_sync
-#  is used to rapidly modify config when safe_bestrefs is blocked.
+#  To prevent multiple bestrefs or cron_sync from modifying the
+#  cache config area,  it is chmod'ed to read-only.
 
 #  To prevent multiple bestrefs from blocking one another,
 #  they share crds.config.lock as a "read lock".
@@ -31,16 +32,18 @@
 #  event the sync system fails,  safe_bestrefs only waits 3 
 #  minutes on crds.config.lock and then proceeds anyway.
 
-# break server connection:
+# Common code and settings between safe and unsafe_sync, safe_bestrefs
+. crds_sync_env
+
+# safe_bestrefs should not receive updates from the server
 export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
 
-# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
-# file system has broken flock's
-if [[ -z "$CRDS_LOCKS" ]]
-then
-    export CRDS_LOCKS="$CRDS_PATH"
-fi
+# safe_bestrefs should not modify the cache.
+export CRDS_READONLY_CACHE=1
 
+# 180 seconds == 3 minute bestrefs timeout for failed locking or sync.
+# --shared means bestrefs doesn't block bestrefs
+# crds.config.lock means this locking only excludes unsafe_sync
 ( flock --shared --wait 180 200
   if [[ $? == 1 ]] 
   then
