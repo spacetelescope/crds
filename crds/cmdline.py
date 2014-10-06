@@ -252,9 +252,11 @@ class Script(object):
                              repr(api.get_crds_server()), "::", str(exc))
             
     @property
-    def server_info(self):
+    def server_info(self):   # see also crds.sync server_info which does not update.
         """Return the server_info dict from the CRDS server *or* cache config for non-networked use where possible."""
-        return heavy_client.get_config_info(self.observatory)
+        info = heavy_client.get_config_info(self.observatory)
+        heavy_client.update_config_info(self.observatory)
+        return info
 
     @property
     def bad_files(self):
