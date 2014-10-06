@@ -32,6 +32,23 @@
 # trigger during an on-going cron_sync fail immediately.  Subsequent
 # cron jobs resume normally.
 
+# Common code and settings between safe and unsafe_sync
+. crds_sync_env
+
+# Since  reference syncs take a  long time,  try to  make them  robust against
+# simple server reboots.  Let it try for 10 minutes, maybe someone had to patch
+# the CRDS  server VM or something.   (Simple server restarts  are usually only
+# 1-2 minutes, rebooting Linux and doing something might take more time.)
+# A reboot will kill any download,  but retries will make sync attempt it
+# again,  making a good sync more likely without requiring --repair-files
+# or --check-sha1sum.
+export CRDS_CLIENT_RETRY_COUNT=60
+export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
+
+# Single locking tier just excludes unsafe_sync or cron backlog
+# --nonblock means immediate fail
+# --exclusive means safe to write to cache,  no reference or mapping update collisions.
+# chmod below means no config area updates,  operational context, etc.  won't change.
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks
   if [[ $? == 1 ]]
   then

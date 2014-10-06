@@ -2,47 +2,43 @@
 
 # usage:  unsafe_sync <options for crds.sync>
 #
-#   options:  --all --fetch-references --verbose --check-files 
+#   options:  --all --verbose --check-files 
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
 #        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #        CRDS_SERVER_URL  (server synced from)
+# 
+#   note: using --fetch-references would be self-defeating here,
+#         it will make sync block safe_bestrefs longer than 
+#         is desirable.
 #
-# This script is intended to be run manually,  paradoxically at 
-# points which are known to be "safe".  Safe is when:
-#
-# 1. It's OK for the default operational context to change.
-#
-# 2. It's OK for the CRDS cache config area to change because
-#    there is little chance of observing a partial update with
-#    bestefs or another sync.
-#
-# 3. This script won't conflict data transfers in  another 
-#    cron-based sync.
+# The "unsafe" aspect of this script is that it blocks safe_bestrefs,
+# potentially stalling the pipeline.  To minimize the time safe_bestrefs
+# is blocked, this script should be run immediately after safe_sync
+# which is intended to do reference fetching without changing contexts.
 
-# Use an flock to prevent multiple concurrent syncs, safe or unsafe.  
+# Use an flock to prevent multiple concurrent syncs, safe or unsafe.  This
+# is important for "cron collisions" when say reference transfers might
+# take longer than the cron period.
 
-# The intent of this organization is that "safe_sync" (elsewhere in a cron)
-# does the heavy lifting of data transfer, and consequently, since no new rules
-# or references are downloaded during unsafe_sync, unsafe_sync should update
-# configuration in 10-20 seconds.  This is not however guaranteed, it's
-# possible new files can be archived between the last safe_sync and this
-# unsafe_sync...  in which case they'll download here, possibly taking minutes
-# or hours.  So unsafe_sync has to be run with some awareness that it is safe
-# with respect to local pipeline operation and new remote archive deliveries...
-# or addditional undesired latenencies will be introduced.
+# Use another flock to prevent concurrent unsafe_syncs and safe_bestrefs.
+# This is important to keep safe_bestrefs from seeing an inconsistent cache.
 
-# Make CRDS cache config area writable before syncing to allow an update
-# This will update the default context as well as awareness of bad files.
+# The intent of this organization is that safe_sync (elsewhere in a cron job)
+# does the heavy lifting of data transfer.  With references and mappings
+# already sync'ed, unsafe_sync should be able to rapidly update the cache
+# config area, 20 seconds or so.  The "config-only" nature of unsafe_sync is
+# circumstantial, depending on the orchestration of safe_sync and unsafe_sync
+# by the all encompassing cron_sync.  If configured to transfer references,
+# and new references become available, unsafe_sync will transfer them
+# while blocking safe_bestrefs.  So don't run it with --fetch-references
+# unless you have a special reason to do so.
 
-# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
-# file system has broken flock's
-if [[ -z "$CRDS_LOCKS" ]]
-then
-    export CRDS_LOCKS="$CRDS_PATH"
-fi
+# Common code and settings between safe and unsafe_sync
+. crds_sync_env
 
+# First tier is sync-to-sync blocking
 ( flock --exclusive --nonblock 200 
   if [[ $? == 1 ]]
   then # fail immediately if lock unavailable 
@@ -50,6 +46,7 @@ fi
       exit 1
   else 
       echo "unsafe_sync: INFO: obtained crds.sync.lock"
+      # Second tier is unsafe_sync-to-safe_bestrefs blocking
       ( flock --exclusive 201  # wait indefinitely for bestrefs
 	chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
 	python -m crds.sync $* 
