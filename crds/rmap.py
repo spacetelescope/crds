@@ -1038,11 +1038,11 @@ class ReferenceMapping(Mapping):
         """
         header_in = dict(header_in)
         log.verbose("Getting bestrefs for", self.basename, "parkeys", self.parkey, verbosity=55)
-        self.check_rmap_omit(header_in)     # Should this header keyword be omitted based on rmap_omit?
-        self.check_rmap_relevance(header_in)  # Is this rmap appropriate for header
+        self.check_rmap_omit(header_in)     # Should bestref be omitted based on rmap_omit expr?
+        self.check_rmap_relevance(header_in)  # Should bestref be set N/A based on rmap_relevance expr?
         # Some filekinds, .e.g. ACS biasfile, mutate the header
-        header = self._precondition_header(self, header_in)
-        header = self.map_irrelevant_parkeys_to_na(header)
+        header = self._precondition_header(self, header_in) # Execute type-specific plugin if applicable
+        header = self.map_irrelevant_parkeys_to_na(header)  # Execute rmap parkey_relevance conditions
         try:
             bestref = self.selector.choose(header)
             log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=",
@@ -1050,12 +1050,12 @@ class ReferenceMapping(Mapping):
             return bestref
         except Exception, exc:
             log.verbose("First selection failed:", str(exc), verbosity=55)
-            header = self._fallback_header(self, header_in)
+            header = self._fallback_header(self, header_in) # Execute type-specific plugin if applicable
             try:
                 if header:
                     header = self.minimize_header(header)
                     log.verbose("Fallback lookup on", repr(header), verbosity=55)
-                    header = self.map_irrelevant_parkeys_to_na(header)
+                    header = self.map_irrelevant_parkeys_to_na(header) # Execute rmap parkey_relevance conditions
                     bestref = self.selector.choose(header)
                     log.verbose("Found bestref_fallback", repr(self.instrument), repr(self.filekind), "=",
                                 repr(bestref), verbosity=55)
