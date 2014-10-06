@@ -409,10 +409,13 @@ def update_config_info(observatory):
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
     path = config.get_crds_cfgpath(observatory)
+
+    bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
+
     server_config_path = os.path.join(path, "server_config")
     cache_atomic_write(server_config_path, pprint.pformat(info), "SERVER INFO")
+
     bad_files_path = os.path.join(path, "bad_files.txt")
-    bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
     cache_atomic_write(bad_files_path, bad_files_lines, "BAD FILES LIST")
 
 def cache_atomic_write(replace_path, contents, fail_warning):
@@ -426,16 +429,19 @@ def cache_atomic_write(replace_path, contents, fail_warning):
     be expanded to other non-config cache writes but is currently inappropriate
     for large data volumes (G's) since they're required to be in memory.
     """
-    log.verbose("Cache atomic write:", replace_path, verbosity=80)
-    try:
-        utils.ensure_dir_exists(replace_path)
-        temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
-        with open(temp_path, "w+") as file_:
-            file_.write(contents)
-        os.rename(temp_path, replace_path)
-    except Exception, exc:
-        log.verbose_warning("Failed writing {} to CRDS cache".format(fail_warning), ":", repr(exc))
-        
+    if utils.is_writable(replace_path, no_exist=True):
+        try:
+            log.verbose("CACHE updating:", repr(replace_path))
+            utils.ensure_dir_exists(replace_path)
+            temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
+            with open(temp_path, "w+") as file_:
+                file_.write(contents)
+            os.rename(temp_path, replace_path)
+        except Exception, exc:
+            log.verbose_warning("CACHE Failed writing", repr(replace_path), ":", repr(exc))
+    else:
+        log.verbose("CACHE Skipped update of readonly", repr(replace_path))
+
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
     server_config = os.path.join(config.get_crds_cfgpath(observatory), "server_config")

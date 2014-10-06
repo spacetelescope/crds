@@ -156,6 +156,8 @@ class SyncScript(cmdline.ContextsScript):
                           help="Migrate cache to specified structure, 'flat' or 'instrument'. WARNING: perform only on idle caches.")
         self.add_argument("--organize-delete-junk", action="store_true",
                           help="When --organize'ing, delete obstructing files or directories CRDS discovers.")
+        self.add_argument("--dont-update-config", action="store_true",
+                          help="Don't update CRDS configuration, operational context, etc;  for sync + bestrefs coordination.")
 
     # ------------------------------------------------------------------------------------------
     
@@ -194,12 +196,20 @@ class SyncScript(cmdline.ContextsScript):
             sys.exit(-1)
         if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
-        heavy_client.update_config_info(self.observatory)
+        if not self.args.dont_update_config:
+            heavy_client.update_config_info(self.observatory)
         self.report_stats()
         log.standard_status()
 
     # ------------------------------------------------------------------------------------------
     
+    @property
+    def server_info(self):
+        """Return the server_info dict from the CRDS server.  Do not call update_config_info() until sync complete."""
+        return heavy_client.get_config_info(self.observatory)
+
+    # ------------------------------------------------------------------------------------------
+
     def purge_mappings(self):
         """Remove all mappings not under pmaps `self.contexts`."""
         # rmap.list_mappings lists all mappings in the *local* cache.

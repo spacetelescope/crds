@@ -1,7 +1,9 @@
 """Generic utility routines used by a variety of modules.
 """
 import sys
+import os
 import os.path
+import stat
 import re
 import sha
 import cStringIO
@@ -410,6 +412,23 @@ def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """
     create_path(os.path.dirname(fullpath), mode)
 
+# ===================================================================
+
+def is_writable(filepath, no_exist=True):
+    """Interpret the mode bits of `filepath` in terms of the current user and it's groups,
+    returning True if any of user, group, or other have write permission on the path.
+    
+    If `filepath` doesn't exist,  return `no_exist` if the directory is writable.
+    """
+    if not os.path.exists(filepath):   # If file doesn't exist,  make sure directory is writable.
+        return no_exist and is_writable(os.path.dirname(filepath))
+    stats = os.stat(filepath)
+    return bool((stats.st_mode & stat.S_IWUSR) and (stats.st_uid == os.geteuid()) or 
+                (stats.st_mode & stat.S_IWGRP) and (stats.st_gid in os.getgroups()) or
+                (stats.st_mode & stat.S_IWOTH))
+
+# ===================================================================
+
 def remove(rmpath, observatory):
     """Wipe out directory at 'rmpath' somewhere in cache for `observatory`."""
     if config.writable_cache_or_verbose("Skipped removing", repr(rmpath)):
@@ -427,6 +446,8 @@ def remove(rmpath, observatory):
                 os.remove(rmpath)
             else:
                 pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
+
+# ===================================================================
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
