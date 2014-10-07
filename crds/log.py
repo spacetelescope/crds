@@ -36,6 +36,8 @@ class CrdsLogger(object):
             
     def set_formatter(self, enable_time=False):
         """Set the formatter attribute of `self` to a logging.Formatter and return it."""
+        # self.formatter = logging.Formatter(
+        #    '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
         self.formatter = logging.Formatter(
             '%(name)-6s: %(levelname)-8s{} %(message)s'.format(" [%(asctime)s] " if enable_time else ""))
         for handler in self.handlers:
