@@ -397,11 +397,13 @@ def get_config_info(observatory):
     return info
 
 def update_config_info(observatory):
-    """Write out any server update to the CRDS configuration information."""
-    log.verbose("Updating CRDS cache config and operational context.")
+    """Write out any server update to the CRDS configuration information.
+    Skip the update if: not connected to server, readonly cache, write protected config files.
+    """
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
-        if info.connected and info.status == "server":
+        if info.connected:
+            log.verbose("Connected to server, updating CRDS cache config and operational context.")
             cache_server_info(info, observatory)  # save locally
         else:
             log.verbose("Not connected to CRDS server,  skipping cache config update.")

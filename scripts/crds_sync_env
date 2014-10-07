@@ -6,14 +6,14 @@ export CRDS_LOG_TIME=1
 # Make the cache writable by default,  most common.
 export CRDS_READONLY_CACHE=0
 
-# Use a plugin downloader,  defaults to wget
-export CRDS_DOWNLOAD_MODE=plugin
-
 # Number of times to try again for CRDS client network fails: 1 == 1 try, no retries
 export CRDS_CLIENT_RETRY_COUNT=1
 
 # Seconds to wait between retries
 export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
+
+# Use a plugin downloader,  defaults to wget
+export CRDS_DOWNLOAD_MODE=plugin
 
 #
 # CUSTOM PLUGINS: CRDS will run another program like this filling in for
@@ -29,6 +29,5 @@ if [[ -z "$CRDS_LOCKS" ]]
 then
     export CRDS_LOCKS="$CRDS_PATH"
 fi
-
 mkdir -p $CRDS_LOCKS
 

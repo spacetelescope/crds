@@ -2,7 +2,7 @@
 
 # usage:  safe_sync 
 #
-#   options:  --all --fetch-references --verbose --check-files
+#   options:  --fetch-references --verbose --check-files [recommended --last 5]
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
@@ -57,7 +57,7 @@ export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
   else
     echo "safe_sync: INFO: obtained crds.sync.lock"
     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-    python -m crds.sync $* 
+    python -m crds.sync $* --verbose --stats --dont-update-config
   fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
 exit 0

@@ -1,9 +1,9 @@
 #! /bin/sh
 #
-# usage:  safe_bestrefs  --new-context hst-operational --files <dataset FITS...>  --update-bestrefs
+# usage:  safe_bestrefs  --files <dataset FITS...>  --update-bestrefs
 #
 #   options:  
-#        --new-context [hst-operational | e.g. hst_0042.pmap] (optional)
+#        --new-context [hst-operational | e.g. hst_0042.pmap] (optional, defaults hst-operational)
 #        --files <FITS files to update...>
 #        --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
 #
@@ -51,7 +51,9 @@ export CRDS_READONLY_CACHE=1
   else
       echo "safe_bestrefs: INFO: obtained shared crds.config.lock"
   fi
+  
   chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-  python -m crds.bestrefs $* 
+  python -m crds.bestrefs $* --readonly-cache
+
 ) 200> ${CRDS_LOCKS}/crds.config.lock 
 
