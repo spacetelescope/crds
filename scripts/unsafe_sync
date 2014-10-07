@@ -2,21 +2,17 @@
 
 # usage:  unsafe_sync <options for crds.sync>
 #
-#   options:  --all --verbose --check-files 
+#   options:  none
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
 #        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #        CRDS_SERVER_URL  (server synced from)
-# 
-#   note: using --fetch-references would be self-defeating here,
-#         it will make sync block safe_bestrefs longer than 
-#         is desirable.
 #
 # The "unsafe" aspect of this script is that it blocks safe_bestrefs,
-# potentially stalling the pipeline.  To minimize the time safe_bestrefs
-# is blocked, this script should be run immediately after safe_sync
-# which is intended to do reference fetching without changing contexts.
+# potentially stalling the pipeline.  To mitigate,  unsafe_sync is
+# run immediately following safe_sync,  without --fetch-references,
+# and a fixed set of parameters.
 
 # Use an flock to prevent multiple concurrent syncs, safe or unsafe.  This
 # is important for "cron collisions" when say reference transfers might
@@ -48,9 +44,9 @@
       echo "unsafe_sync: INFO: obtained crds.sync.lock"
       # Second tier is unsafe_sync-to-safe_bestrefs blocking
       ( flock --exclusive 201  # wait indefinitely for bestrefs
-	chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-	python -m crds.sync $* 
-	chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
+    	   chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+	       python -m crds.sync --last 1 --verbose --stats
+	       chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
       ) 201> ${CRDS_LOCKS}/crds.config.lock 
   fi
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 

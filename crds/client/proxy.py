@@ -74,6 +74,9 @@ class CheckingProxy(object):
         parameters = json.dumps(jsonrpc_params)
         
         url = self._get_url(jsonrpc_params)
+        
+        if "serverless" in url or "server-less" in url:
+            raise ServiceError("Configured for server-less mode.  Skipping JSON RPC " + repr(self.__service_name))
 
         if log.get_verbose() <= 50:
             log.verbose("CRDS JSON RPC", self.__service_name, params if len(str(params)) <= 60 else "(...)", "-->")
