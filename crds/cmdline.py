@@ -251,8 +251,8 @@ class Script(object):
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
                              repr(api.get_crds_server()), "::", str(exc))
     
-    @utils.cached        
     @property
+    @utils.cached        
     def server_info(self):   # see also crds.sync server_info which does not update.
         """Return the server_info dict from the CRDS server *or* cache config for non-networked use where possible."""
         info = heavy_client.get_config_info(self.observatory)
