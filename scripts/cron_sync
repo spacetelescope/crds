@@ -42,12 +42,13 @@
   else
      echo "cron_sync: INFO: obtained crds.sync.lock"
     
-     # safe_sync doesn't block bestrefs, syncs rules and references,  updates context / config
+     # safe_sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
      safe_sync $*
     
-     # unsafe_sync blocks bestrefs, shouldn't sync rules,  doesn't update context, fail here for cron collision
+     # fail here for cron collision
      if [[ $? != 1 ]]
      then
+        # unsafe_sync blocks bestrefs, shouldn't sync rules, doesn't sync references, updates context / config.
         unsafe_sync
      fi
   fi
