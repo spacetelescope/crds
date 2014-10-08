@@ -119,6 +119,20 @@ class SyncScript(cmdline.ContextsScript):
     
       would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
       be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
+      
+    * Reorganizing cache structure::
+    
+    CRDS now supports two cache structures for organizing references.   The new default cache directory structure
+    for reference files includes a sub-directory for each instrument.  To migrate a legacy cache with a flat single
+    directory layout to the new structure,  use the --organize=instrument.  To use the flat structure,  use --organize=flat.
+        
+       % python -m crds.sync --all --organize=instrument --fetch-references --verbose
+       
+    If CRDS makes note of "junk files" in your cache which are obstructing the process of reorganizing,  you can
+    allow CRDS to delete the junk by adding --organize-delete-junk.
+    
+    The --organize switches are intended to be used only on inactive file caches when calibration software is not 
+    running and actively using CRDS.
     """
     
     # ------------------------------------------------------------------------------------------
@@ -260,8 +274,9 @@ class SyncScript(cmdline.ContextsScript):
             if re.match(r"\w+\.r[0-9]h", filename):
                 files2.add(filename[:-1] + "d")
         for filename in files:
-            where = rmap.locate_file(filename, self.observatory)
-            utils.remove(where, observatory=self.observatory)
+            with log.error_on_exception("Failed purging", kind, repr(filename)):
+                where = rmap.locate_file(filename, self.observatory)
+                utils.remove(where, observatory=self.observatory)
 
     # ------------------------------------------------------------------------------------------
     
@@ -384,21 +399,22 @@ class SyncScript(cmdline.ContextsScript):
         config.set_crds_ref_subdir_mode(new_mode, observatory=self.observatory)
         new_mode = config.get_crds_ref_subdir_mode(self.observatory)  # did it really change.
         for refpath in old_refpaths:
-            desired_loc = rmap.locate_file(os.path.basename(refpath), observatory=self.observatory)
-            if desired_loc != refpath:
-                if os.path.exists(desired_loc):
-                    if not self.args.organize_delete_junk:
-                        log.warning("Link or directory already exists at", repr(desired_loc), "Skipping", repr(refpath))
-                        continue
-                    utils.remove(desired_loc, observatory=self.observatory)
-                if config.writable_cache_or_info("Skipping file relocation from", repr(refpath), "to", repr(desired_loc)):
-                    log.info("Relocating", repr(refpath), "to", repr(desired_loc))
-                    shutil.move(refpath, desired_loc)
-            else:
-                if old_mode != new_mode:
-                    log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
+            with log.error_on_exception("Failed relocating:", repr(refpath)):
+                desired_loc = rmap.locate_file(os.path.basename(refpath), observatory=self.observatory)
+                if desired_loc != refpath:
+                    if os.path.exists(desired_loc):
+                        if not self.args.organize_delete_junk:
+                            log.warning("Link or directory already exists at", repr(desired_loc), "Skipping", repr(refpath))
+                            continue
+                        utils.remove(desired_loc, observatory=self.observatory)
+                    if config.writable_cache_or_info("Skipping file relocation from", repr(refpath), "to", repr(desired_loc)):
+                        log.info("Relocating", repr(refpath), "to", repr(desired_loc))
+                        shutil.move(refpath, desired_loc)
                 else:
-                    log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
+                    if old_mode != new_mode:
+                        log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
+                    else:
+                        log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
         if new_mode == "flat" and old_mode == "instrument":
             log.info("Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.")
             for instrument in self.locator.INSTRUMENTS:
