@@ -361,7 +361,7 @@ def get_affected_datasets(observatory, old_context=None, new_context=None):
 def get_context_history(observatory):
     """Fetch the history of context transitions, a list of history era tuples:
 
-     Returns:  [ (start_date, context_name), ... ]
+     Returns:  [ (start_date, context_name, description), ... ]
 
     """
     return S.get_context_history(observatory)

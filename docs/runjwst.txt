@@ -1,0 +1,34 @@
+Running the pipeline is not that difficult (Nadia and I can do it, so it can’t
+be too tough …). You probably already have everything available in your
+environment (you do have access to CRDS, right?!). You can do a quick check
+with just “which strun”. If it returns something like:
+
+/usr/stsci/ssbdev/python/bin/strun
+
+you’re pretty much all set. All you need in addition to that is some pipeline
+and step configuration (.cfg) files in a working directory, along with a few
+test data sets (in the same working directory). You can find everything you
+need currently sitting in the directory /grp/jwst/ssb/test_build3/. I populated
+that directory for the DMS folks to use if they want to test out their
+installation of Build 3. It has all the necessary .cfg and FITS files. To run a
+pipeline you just do:
+
+$ strun calwebb_sloper.cfg jw…_uncal.fits —v
+
+(I like the —v option to show more verbose output). The "*_uncal.fits" files
+are used as the “raw” input to the “sloper” pipelines. Use calmiri_sloper.cfg
+for any MIRI file, and use calwebb_sloper.cfg for anything that isn’t MIRI
+(MIRI is special, as we’ve all seen).
+
+That just runs the Level-2a (ramps to slopes) part of the pipeline. To run
+Level-2b (which is where all the nasty assign_wcs stuff comes into play) you
+have to use one of the instrument-specific “2” pipelines, like
+calmiri_ifu2.cfg, calmiri_lrs2.cfg, calnirspec_fslits2.cfg,
+calnirspec_ifu2.cfg. Or for a simple imaging exposure, just use
+calwebb_image2.cfg. We can give you details as to which pipeline to use for any
+particular dataset.
+
+You can always just run an individual step too, if you want, but of course you
+have to have the appropriately processed file to use as input to a step that
+comes somewhere in the middle of the pipeline.
+
