@@ -407,7 +407,13 @@ def get_tpn_text(*args):
 def reference_name_to_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding .tpn"""
     path = rmap.locate_file(filename, "hst")
-    key = reference_name_to_validator_key(path)
+    key = reference_name_to_tpn_key(path)
+    return get_tpn_text(*key)
+
+def reference_name_to_ld_tpn_text(filename):
+    """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
+    path = rmap.locate_file(filename, "hst")
+    key = reference_name_to_ld_tpn_key(path)
     return get_tpn_text(*key)
 
 def mapping_validator_key(mapping):
@@ -449,6 +455,16 @@ def reference_name_to_validator_key(filename):
                                  (os.path.basename(filename), instrument, filekind))
     log.verbose("Validator key for", repr(filename), instrument, filekind, "=", key)
     return key
+
+reference_name_to_tpn_key = reference_name_to_validator_key
+
+def reference_name_to_ld_tpn_key(filename):
+    """Return the _ld.tpn file key associated with reference `filename`.
+    Strictly speaking this should be driven by mapping_validator_key...  but the interface
+    for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
+    one-for-one.
+    """
+    return (reference_name_to_tpn_key(filename)[0].replace(".tpn", "_ld.tpn"),)
 
 # =============================================================================
 
