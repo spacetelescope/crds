@@ -18,6 +18,7 @@ import glob
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
+from crds import CrdsError
 from crds.hst import (tpn, siname)
 
 HERE = os.path.dirname(__file__) or "./"
@@ -389,9 +390,13 @@ def ref_properties_from_header(filename):
         filetype = header["FILETYPE"].lower()
         filekind = tpn.filetype_to_filekind(instrument, filetype)
     except KeyError:
-        filetype = header["CDBSFILE"].lower()
-        filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
-        filekind = tpn.filetype_to_filekind(instrument, filetype)
+        try:
+            filetype = header["CDBSFILE"].lower()
+        except KeyError:
+            raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
+        else:
+            filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
+            filekind = tpn.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================
