@@ -106,7 +106,7 @@ TEXT_DESCR = {
     'tdstab': 'Time Dependent Sensitivity Table',
     'teltab': 'Telescope Point Spread Function Table',
     'tracetab': '1D Spectral Trace Table',
-    'twozxtab': 'Two-Zone Spectral Extraction Table',
+    'twozxtab': 'Two-Zone Spectral Extraction Parameters Table',
     'tempfile': 'Temperature-dependent Dark Reference File',
     'walktab': 'Walk Correction Reference Table',
     'wcptab': 'Wavecal Parameters Reference Table',
