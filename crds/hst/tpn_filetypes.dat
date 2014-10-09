@@ -40,7 +40,7 @@
          'spectroscopic wcs parameters table': 'spwcs',
          'template cal lamp spectra table': 'lamp',
          'time dependent sensitivity table': 'tds',
-         'two-zone spectral extraction' : '2zx',
+         'two-zone spectral extraction parameters table' : '2zx',
          'walk correction table': 'walk',
          'wavecal parameters reference table': 'wcp'},
  'foc': {'bac': 'bac',

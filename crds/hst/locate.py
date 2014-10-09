@@ -388,15 +388,16 @@ def ref_properties_from_header(filename):
         instrument = INSTRUMENT_FIXERS[instrument]
     try:
         filetype = header["FILETYPE"].lower()
-        filekind = tpn.filetype_to_filekind(instrument, filetype)
     except KeyError:
         try:
             filetype = header["CDBSFILE"].lower()
         except KeyError:
             raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
-        else:
-            filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
-            filekind = tpn.filetype_to_filekind(instrument, filetype)
+    filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
+    try:
+        filekind = tpn.filetype_to_filekind(instrument, filetype)
+    except KeyError:
+        raise CrdsError("Invalid FILETYPE (or CDBSFILE) for '{}' of instrument '{}'." .format(filetype, instrument))
     return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================
