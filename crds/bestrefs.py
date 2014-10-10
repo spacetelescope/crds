@@ -525,6 +525,9 @@ and debug output.
             log.info("Mapping differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
                      log.PP(self.affected_instruments))
             self.instruments = self.affected_instruments.keys()
+            if not self.instruments:
+                log.info("No instruments were affected.")
+                return False
         elif self.args.instruments:
             self.instruments = self.args.instruments
         elif self.args.all_instruments:
@@ -547,6 +550,7 @@ and debug output.
 
         if self.args.files and not self.args.update_bestrefs:
             log.info("No file header updates requested;  dry run.")
+        return True
 
     def auto_datasets_since(self):
         """Support --datasets-since="auto" and compute min EXPTIME for all references determined by diffs.
@@ -813,20 +817,17 @@ and debug output.
     def main(self):
         """Compute bestrefs for datasets."""
         
-        self.complex_init()   # Finish __init__() inside --pdb
-        
-        for dataset in self.new_headers:
-            if self.args.only_ids and dataset not in self.args.only_ids:
-                log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
-                continue
-            updates = self.process(dataset)
-            if updates:
-                self.updates[dataset] = updates
-        
-        self.post_processing()
-
+        # Finish __init__() inside --pdb
+        if self.complex_init():
+            for dataset in self.new_headers:
+                if self.args.only_ids and dataset not in self.args.only_ids:
+                    log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
+                    continue
+                updates = self.process(dataset)
+                if updates:
+                    self.updates[dataset] = updates
+            self.post_processing()
         self.report_stats()
-
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=30)
         log.verbose(len(self.updates), "source updates", verbosity=30)
         log.standard_status()
