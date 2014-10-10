@@ -616,42 +616,47 @@ def get_observatory_package(observatory):
     """Return the base observatory package."""
     return get_object("crds." + observatory)
     
+def file_to_locator(filename):
+    """Given reference or dataset `filename`,  return the associated observatory locator module."""
+    return instrument_to_locator(file_to_instrument(filename))
+
 def instrument_to_locator(instrument):
     """Given an instrument,  return the locator module associated with the
     observatory associated with the instrument.
     """
     return get_locator_module(instrument_to_observatory(instrument))
 
+ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]   #   XXXX brittle
 
-def reference_to_instrument(filename):
-    """Given reference file `filename`,  return the associated instrument."""
+def file_to_instrument(filename):
+    """Given reference or dataset `filename`,  return the associated instrument."""
+    for observatory in ALL_OBSERVATORIES:
+        obs_pkg = get_observatory_package(observatory)
+        for instr in obs_pkg.INSTRUMENTS:
+            if "_" + instr + "_" in filename.lower():
+                return instr
     from crds import data_file
+    header = data_file.get_unconditioned_header(filename, needed_keys=["INSTRUME", "META.INSTRUMENT.NAME", "INSTRUMENT"])
+    return header_to_instrument(header)
+    
+def header_to_instrument(header):
+    """Given reference or dataset `header`, return the associated instrument."""
     try:
-        header = data_file.get_conditioned_header(filename, needed_keys=["INSTRUME"])
         return header["INSTRUME"].lower()
     except KeyError:
-        header = data_file.get_conditioned_header(filename, needed_keys=["META.INSTRUMENT.NAME"])
-        return header["META.INSTRUMENT.NAME"]
+        try:
+            return header["META.INSTRUMENT.NAME"].lower()
+        except KeyError:
+            return header["INSTRUMENT"].lower()
     
-def reference_to_locator(filename):
-    """Given reference file `filename`,  return the associated observatory locator module."""
-    return instrument_to_locator(reference_to_instrument(filename))
-
-def reference_to_observatory(filename):
-    """Return the name of the observatory corresponding to reference `filename`."""
-    return instrument_to_observatory(reference_to_instrument(filename))
-
 def file_to_observatory(filename):
-    """Return the observatory corresponding to reference or mapping `filename`."""
-    if "hst" in filename:
-        return "hst"
-    elif "jwst" in filename:
-        return "jwst"
-    elif "tobs" in filename:
-        return "tobs"
+    """Return the observatory corresponding to reference, mapping, or dataset `filename`."""
+    for instr in ALL_OBSERVATORIES:
+        if instr + "_" in filename.lower():
+            return instr
     else:
-        return reference_to_observatory(filename)
-    
+        return instrument_to_observatory(file_to_instrument(filename))
+
 def get_reference_paths(observatory):
     """Return the list of subdirectories involved with storing references of all instruments."""
     pkg = get_observatory_package(observatory)
@@ -660,8 +665,8 @@ def get_reference_paths(observatory):
 
 # These functions should actually be general,  working on both references and
 # dataset files.
-file_to_instrument = reference_to_instrument
-file_to_locator = reference_to_locator
+reference_to_instrument = file_to_instrument
+reference_to_locator = file_to_locator
 
 def test():
     """Run doctests."""
