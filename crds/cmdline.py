@@ -324,9 +324,8 @@ class Script(object):
             if self.args.version:
                 _show_version()
             elif self.args.profile:
-                self.args._profile()
-            elif self.args.pdb:
-                pdb.runctx("self._main()", locals(), locals())
+                self._profile()
+            elif self.args.pdb:                pdb.runctx("self._main()", locals(), locals())
             else:
                 return self._main()
         except KeyboardInterrupt:
