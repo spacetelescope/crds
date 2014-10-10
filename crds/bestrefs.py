@@ -16,6 +16,7 @@ from astropy.io import fits as pyfits
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
+from crds.sync import SyncScript
 from crds.client import api
 
 # ===================================================================
@@ -44,8 +45,8 @@ class HeaderGenerator(object):
     """Generic source for lookup parameters and historical comparison results."""
     def __init__(self, context, sources, datasets_since):
         self.context = context
+        self.observatory = utils.file_to_observatory(context)
         self.sources = sources
-        self.pmap = rmap.get_cached_mapping(context)
         self.headers = {}
         self._datasets_since = datasets_since
 
@@ -54,7 +55,7 @@ class HeaderGenerator(object):
         for source in self.sources:
             with log.error_on_exception("Failed loading source", repr(source), 
                                         "from", repr(self.__class__.__name__)):
-                instrument = self.pmap.get_instrument(self.header(source))
+                instrument = utils.header_to_instrument(self.header(source))
                 exptime = matches.get_exptime(self.header(source))
                 since = self.datasets_since(instrument)
                 # since == None when no command line argument given.
@@ -83,34 +84,29 @@ class HeaderGenerator(object):
         """Return the full header corresponding to `source`.   If header is a string, raise an exception."""
         header = self._header(source)
         if isinstance(header, str):
-            raise RuntimeError("Failed to fetch header: " + header)
+            raise crds.CrdsError("Failed to fetch header for " + repr(source) + ": " + repr(header))
         else:
-            return header
+            return dict(header)
 
     def _header(self, source):
         """Return the full header corresponding to `source`.   Source is a dataset id or filename."""
         return self.headers[source]
-        
+    
+    def clean_parameters(self, header):
+        """Remove extraneous non-bestrefs parameters from header."""
+        instrument = utils.header_to_instrument(header)
+        cleaned = { key.upper() : header.get(key, "UNDEFINED").upper() 
+                   for key in heavy_client.get_context_parkeys(self.context, instrument) }
+        cleaned["INSTRUME"] = instrument
+        return cleaned
+            
     def get_lookup_parameters(self, source):
         """Return the parameters corresponding to `source` used to drive a best references lookup."""
-        try:
-            hdr = self.header(source)
-            min_hdr = self.pmap.minimize_header(hdr)
-            min_hdr = { key.upper():utils.condition_value(val) for (key, val) in min_hdr.items() }
-            log.verbose("Bestref parameters for", repr(source), "with respect to", 
-                        repr(self.context) + ":\n", log.PP(min_hdr))
-            return min_hdr
-        except Exception, exc:
-            raise crds.CrdsError("Failed getting lookup parameters for data '{}' with respect to '{}' : {}" .format(
-                                 source, self.context, str(exc)))            
+        return self.clean_parameters(self.header(source))
 
     def get_old_bestrefs(self, source):
         """Return the historical best references corresponding to `source`."""
-        hdr = self.header(source)
-        filekinds = self.pmap.get_filekinds(hdr) #  XXX only includes filekinds in .pmap
-        old_bestrefs = { key.lower(): val for (key, val) in hdr.items() if key.upper() in filekinds }
-        log.verbose("Old best reference recommendations from", repr(source) + ":\n", log.PP(old_bestrefs), verbosity=80)
-        return old_bestrefs
+        return self.header(source)
     
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
@@ -177,7 +173,7 @@ class FileHeaderGenerator(HeaderGenerator):
     def _header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
         if filename not in self.headers:
-            self.headers[filename] = data_file.get_header(filename, observatory=self.pmap.observatory)
+            self.headers[filename] = data_file.get_header(filename, observatory=self.observatory)
         return self.headers[filename]
 
     def handle_updates(self, all_updates):
@@ -186,7 +182,7 @@ class FileHeaderGenerator(HeaderGenerator):
             updates = all_updates[source]
             if updates:
                 log.verbose("Updating data", repr(source), "==>", repr(updates), verbosity=25)
-                update_file_bestrefs(self.pmap, source, updates)
+                update_file_bestrefs(self.context, source, updates)
 
 class DatasetHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from dataset ids.   Server/DB bases"""
@@ -314,17 +310,16 @@ class PickleHeaderGenerator(HeaderGenerator):
         return headers
 # ===================================================================
 
-def update_file_bestrefs(pmap, dataset, updates):
+def update_file_bestrefs(context, dataset, updates):
     """Update the header of `dataset` with best reference recommendations
     `bestrefs` determined by context named `pmap`.
     """
     if not updates:
         return
 
-    pmap = rmap.asmapping(pmap)
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
-    prefix = pmap.locate.get_env_prefix(instrument)    
+    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)    
     hdulist = pyfits.open(dataset, mode="update", do_not_scale_image_data=True)
 
     # XXX TODO switch pyfits.setval to data_file.setval
@@ -332,7 +327,7 @@ def update_file_bestrefs(pmap, dataset, updates):
         log.verbose("Setting", repr(dataset), keyword, "=", value)
         hdulist[0].header[keyword] = value
 
-    set_key("CRDS_CTX", pmap.basename)
+    set_key("CRDS_CTX", context)
     set_key("CRDS_VER", version_info)
 
     for update in sorted(updates):
@@ -486,8 +481,6 @@ and debug output.
         # See also complex_init()
         self.new_context = None     # Mapping filename
         self.old_context = None     # Mapping filename
-        self.newctx = None          # loaded Mapping
-        self.oldctx = None          # loaded Mapping
         
         # headers corresponding to the new context
         self.new_headers = None     # HeaderGenerator subclass
@@ -509,7 +502,7 @@ and debug output.
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
         
-        self.new_context, self.old_context, self.newctx, self.oldctx = self.setup_contexts()
+        self.new_context, self.old_context = self.setup_contexts()
         
         # Support 0 to 1 mutually exclusive source modes and/or any number of pickles
         exclusive_source_modes = [self.args.files, self.args.datasets, self.args.instruments, 
@@ -531,7 +524,7 @@ and debug output.
         elif self.args.instruments:
             self.instruments = self.args.instruments
         elif self.args.all_instruments:
-            self.instruments = self.newctx.locate.INSTRUMENTS
+            self.instruments = self.obs_pkg.INSTRUMENTS
         else:
             self.instruments = []
 
@@ -558,6 +551,9 @@ and debug output.
         Returns { instrument: EXPTIME, ... }
         """
         datasets_since = {}
+        self.dump_mappings([self.old_context, self.new_context])
+        self.oldctx = rmap.get_cached_mapping(self.old_context)
+        self.newctx = rmap.get_cached_mapping(self.new_context)
         for instrument in self.oldctx.selections:
             old_imap = self.oldctx.get_imap(instrument)
             new_imap = self.newctx.get_imap(instrument)
@@ -574,7 +570,7 @@ and debug output.
         log.info("Possibly affected --datasets-since dates determined by", 
                  repr(self.old_context), "-->", repr(self.new_context), "are:\n", log.PP(datasets_since))
         return datasets_since
-       
+    
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         
@@ -682,18 +678,14 @@ and debug output.
             log.verbose("Using explicit new context", repr(self.args.new_context), 
                         "for computing updated best references.", verbosity=25)
             new_context = self.resolve_context(self.args.new_context)
-        self.sync_context(new_context)
         if self.args.old_context is not None:
             log.verbose("Using explicit old context", repr(self.args.old_context), verbosity=25)
             old_context = self.resolve_context(self.args.old_context)
-            self.sync_context(old_context)
         else:
             old_context = None
-        newctx = rmap.get_cached_mapping(new_context)
-        oldctx = rmap.get_cached_mapping(old_context)  if old_context else None
         self.warn_bad_context("New-context", new_context)
         self.warn_bad_context("Old-context", old_context)
-        return new_context, old_context, newctx, oldctx
+        return new_context, old_context
     
     def warn_bad_context(self, name, context):
         """Issue a warning if `context` of named `name` is a known bad file."""
@@ -735,22 +727,7 @@ and debug output.
     def sync_context(self, context):
         """Recursively cache the new and comparison mappings."""
         if context:
-            try:
-                rmap.get_cached_mapping(context)   # if it loads,  it's cached.
-                return
-            except IOError:
-                assert not config.get_cache_readonly(), "Failed loading " + repr(context) + " but CRDS cache is readonly."
-                if self.args.sync_mappings:
-                    log.verbose("Syncing context", repr(context), verbosity=25)
-                    self.require_server_connection()
-                    try:
-                        api.dump_mappings(context)   # otherwise fetch it.
-                    except Exception, exc:
-                        log.error("Failed to download context", repr(context), "from CRDS server", repr(api.get_crds_server()), 
-                                  ":", str(exc))
-                        sys.exit(-1)
-                else:
-                    raise RuntimeError("Context '{}' is not available in the local cache and --sync-mappings=False.".format(context))
+            SyncScript("crds.sync --contexts {}".format(context))
 
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
@@ -850,12 +827,12 @@ and debug output.
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
         new_header = self.new_headers.get_lookup_parameters(dataset)
-        instrument = self.newctx.get_instrument(new_header)
-        new_bestrefs = self.get_bestrefs(instrument, dataset, self.newctx, new_header)
+        instrument = utils.header_to_instrument(new_header)
+        new_bestrefs = self.get_bestrefs(instrument, dataset, self.new_context, new_header)
         if self.compare_prior:
             if self.args.old_context:
                 old_header = self.old_headers.get_lookup_parameters(dataset)
-                old_bestrefs = self.get_bestrefs(instrument, dataset, self.oldctx, old_header)
+                old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
             updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
@@ -867,23 +844,21 @@ and debug output.
             self.new_headers.update_headers( { dataset : new_bestrefs })
         return updates
     
-    def get_bestrefs(self, instrument, dataset, ctx, header):
+    def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         try:
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
-            if self.args.remote_bestrefs:
-                bestrefs = crds.getrecommendations(header, reftypes=types, context=ctx.name,
-                                                   observatory=self.observatory)
-            else:
-                bestrefs = ctx.get_best_references(header, include=types)
+            bestrefs = crds.getrecommendations(
+                header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 55)
         except Exception, exc:
             if self.args.pdb:
                 raise
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
-                                dataset, ctx.name, str(exc)))
+                                dataset,context, str(exc)))
         else:
+            bestrefs = { key.upper() : value.upper() for (key, value) in bestrefs.items() }
             log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
-                        "with respect to", repr(ctx.name) + ":\n", repr(bestrefs), verbosity=80)
+                        "with respect to", repr(context) + ":\n", repr(bestrefs), verbosity=80)
             return bestrefs
         
     @property
@@ -995,7 +970,7 @@ and debug output.
             ref is the fully normalized name of the reference, converted to N/A as needed.
             ref_ok is True IFF bestrefs did not fail altogether.
         """
-        ref_org = cleanpath(bestrefs.get(filekind, "UNDEFINED")).strip()
+        ref_org = cleanpath(bestrefs.get(filekind.upper(), "UNDEFINED")).strip()
         ref = ref_org.upper()
         if ref == "N/A" or ref.startswith("NOT FOUND N/A"):
             log.verbose(self.format_prefix(dataset, instrument, filekind),

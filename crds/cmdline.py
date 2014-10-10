@@ -324,10 +324,7 @@ class Script(object):
             if self.args.version:
                 _show_version()
             elif self.args.profile:
-                if self.args.profile == "console":
-                    self._console_profile(self._main)
-                else:
-                    cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
+                self.args._profile()
             elif self.args.pdb:
                 pdb.runctx("self._main()", locals(), locals())
             else:
@@ -337,6 +334,13 @@ class Script(object):
                 raise
             else:
                 raise KeyboardInterrupt("Interrupted... quitting.")
+    
+    def _profile(self):
+        """Run _main() under the Python profiler."""
+        if self.args.profile == "console":
+            self._console_profile(self._main)
+        else:
+            cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
 
     def _console_profile(self, function, sort_by="cumulative", top_n=100):
         """Run `function` under the profiler and print results to console."""
@@ -390,6 +394,22 @@ class Script(object):
         status = keys.pop("status", -1)
         log.error(*args, **keys)
         sys.exit(status)
+
+    def dump_files(self, context, files=None, ignore_cache=None):
+        """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        if ignore_cache is None:
+            ignore_cache = self.args.ignore_cache
+        _localpaths, downloads, bytes = api.dump_files(
+            context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
+        self.increment_stat("total-files", downloads)
+        self.increment_stat("total-bytes", bytes)
+        
+    def dump_mappings(self, mappings):
+        """Download all `mappings` and their dependencies if not already cached.."""
+        for mapping in mappings:
+             _localpaths, downloads, bytes = api.dump_mappings(mapping, ignore_cache=self.args.ignore_cache)
+             self.increment_stat("total-files", downloads)
+             self.increment_stat("total-bytes", bytes)
 
 # =============================================================================
 

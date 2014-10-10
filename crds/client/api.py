@@ -237,7 +237,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
             if "NOT FOUND n/a" == refname:
-                log.verbose("Reference type", srepr(filetype), "not applicable.")
+                log.verbose("Reference type", srepr(filetype), "not applicable.", verbosity=80)
             else:
                 raise CrdsLookupError("Error determining best reference for " + 
                                       srepr(filetype) + " = " + 
