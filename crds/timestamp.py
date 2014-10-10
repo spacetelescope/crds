@@ -233,6 +233,10 @@ class DateParser(object):
         return datetime.datetime(**cls._get_date_dict(match))
 
 class Slashdate(DateParser):
+    """
+    >>> Slashdate.get_datetime("25 / 12 / 2014")
+    datetime.datetime(2014, 12, 25, 0, 0)
+    """
     _format = re.compile(r"(?P<day>\d+)\s*/\s*(?P<month>\d+)\s*/\s*(?P<year>\d+)")
     @classmethod
     def _get_date_dict(cls, match):    
