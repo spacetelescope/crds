@@ -145,7 +145,7 @@ has pre-computed results for historical switches.
                 if self.args.since_context in hist[1]:
                     break
             else:
-                self.fatal_error("--since-context='{}' not found in history".format(context))
+                self.fatal_error("--since-context='{}' not found in history".format(self.args.since_context))
         else:  # read the start from the file recording the last successful processing index.
             if os.path.exists(self.last_processed_path):
                 try:
