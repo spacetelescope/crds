@@ -32,8 +32,17 @@
 #  event the sync system fails,  safe_bestrefs only waits 3 
 #  minutes on crds.config.lock and then proceeds anyway.
 
-# Common code and settings between safe and unsafe_sync, safe_bestrefs
-. crds_sync_env
+# -------------------------------------------------------------------------
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+mkdir -p $CRDS_LOCKS
+
+# Add time to log messages
+export CRDS_LOG_TIME=1
 
 # safe_bestrefs should not receive updates from the server
 export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
@@ -41,6 +50,13 @@ export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
 # safe_bestrefs should not modify the cache.
 export CRDS_READONLY_CACHE=1
 
+# Number of times to try again for CRDS client network fails: 1 == 1 try, no retries
+export CRDS_CLIENT_RETRY_COUNT=1
+
+# Seconds to wait between retries
+export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
+
+# -------------------------------------------------------------------------
 # 180 seconds == 3 minute bestrefs timeout for failed locking or sync.
 # --shared means bestrefs doesn't block bestrefs
 # crds.config.lock means this locking only excludes unsafe_sync
@@ -52,7 +68,6 @@ export CRDS_READONLY_CACHE=1
       echo "safe_bestrefs: INFO: obtained shared crds.config.lock"
   fi
   
-  chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
   python -m crds.bestrefs $* --readonly-cache
 
 ) 200> ${CRDS_LOCKS}/crds.config.lock 

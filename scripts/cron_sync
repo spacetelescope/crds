@@ -31,8 +31,35 @@
 #                   CPU and network,  not memory or disk.   This is
 #                   the nominal case where nothing is new or changing.
 
-# Common code and settings between safe and unsafe_sync
-. crds_sync_env
+
+# -------------------------------------------------------------------------
+
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+mkdir -p $CRDS_LOCKS
+
+# Add time to log messages
+export CRDS_LOG_TIME=1
+
+# Make the cache writable by default,  most common.
+export CRDS_READONLY_CACHE=0
+
+# Use a plugin downloader,  defaults to wget
+export CRDS_DOWNLOAD_MODE=plugin
+
+#
+# CUSTOM PLUGINS: CRDS will run another program like this filling in for
+# ${SOURCE_URL} and ${OUTPUT_PATH}.  Use that syntax exactly.   You could
+# e.g. use axel instead of wget providing your own command line template.
+#
+# export CRDS_DOWNLOAD_PLUGIN="/usr/bin/wget --no-check-certificate --quiet ${SOURCE_URL}  -O ${OUTPUT_PATH}"
+#
+
+# -------------------------------------------------------------------------
 
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
   if [[ $? == 1 ]]
