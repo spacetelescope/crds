@@ -43,13 +43,21 @@
      echo "cron_sync: INFO: obtained crds.sync.lock"
     
      # safe_sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
-     safe_sync $*
+     export CRDS_CLIENT_RETRY_COUNT=60
+     export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
+     python -m crds.sync $* --verbose --stats --dont-update-config   # nominally --last 10 --fetch-references
     
      # fail here for cron collision
      if [[ $? != 1 ]]
      then
+        # Second tier is unsafe_sync-to-safe_bestrefs blocking
         # unsafe_sync blocks bestrefs, shouldn't sync rules, doesn't sync references, updates context / config.
-        unsafe_sync
+        ( flock --exclusive 201  # wait indefinitely for bestrefs
+    	       chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+	       export CRDS_CLIENT_RETRY_COUNT=1
+	       export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
+	       python -m crds.sync --last 1 --verbose --stats
+        ) 201> ${CRDS_LOCKS}/crds.config.lock 
      fi
   fi
     
