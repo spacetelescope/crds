@@ -1413,7 +1413,7 @@ of uniform rmap structure for HST:
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
                 if match_status == -1:
-                    log.verbose("Winnowing", match_tuple, verbosity=60)
+                    log.verbose("Eliminating", match_tuple, "based on", parkey + "=" + repr(value), verbosity=60)
                     del remaining[match_tuple]   # winnow!
                 else: # matched or don't care,  set weights accordingly
                     weights[match_tuple] -= match_status   
