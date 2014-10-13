@@ -724,11 +724,6 @@ and debug output.
                 bad_files += self.warn_bad_reference(dataset, update.instrument, update.filekind, update.new_reference)
         log.verbose("Total bad files =", bad_files)
         
-    def sync_context(self, context):
-        """Recursively cache the new and comparison mappings."""
-        if context:
-            SyncScript("crds.sync --contexts {}".format(context))
-
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
         return filename
