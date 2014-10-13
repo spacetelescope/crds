@@ -95,7 +95,7 @@ class HeaderGenerator(object):
     def clean_parameters(self, header):
         """Remove extraneous non-bestrefs parameters from header."""
         instrument = utils.header_to_instrument(header)
-        cleaned = { key.upper() : header.get(key, "UNDEFINED").upper() 
+        cleaned = { key.upper() : header.get(key, "UNDEFINED")
                    for key in heavy_client.get_context_parkeys(self.context, instrument) }
         cleaned["INSTRUME"] = instrument
         return cleaned
@@ -851,7 +851,7 @@ and debug output.
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
                                 dataset,context, str(exc)))
         else:
-            bestrefs = { key.upper() : value.upper() for (key, value) in bestrefs.items() }
+            bestrefs = { key.upper() : value for (key, value) in bestrefs.items() }
             log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
                         "with respect to", repr(context) + ":\n", repr(bestrefs), verbosity=80)
             return bestrefs
@@ -876,7 +876,7 @@ and debug output.
     
         updates = []
         
-        for filekind in (self.process_filekinds or newrefs):
+        for filekind in sorted(self.process_filekinds or newrefs):
             
             if filekind in self.skip_filekinds:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -904,7 +904,7 @@ and debug output.
     
         updates = []
         
-        for filekind in (self.process_filekinds or newrefs):
+        for filekind in sorted(self.process_filekinds or newrefs):
             
             if filekind in self.skip_filekinds:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -1020,13 +1020,8 @@ and debug output.
         selected rows.
         """
         for update in updates:
-
-            #new_header = self.new_headers.get_lookup_parameters(dataset)
             new_header = self.new_headers.header(dataset)
-            if not table_effects.is_reprocessing_required(
-                dataset, new_header,
-                self.old_context, self.new_context, 
-                update):
+            if not table_effects.is_reprocessing_required(dataset, new_header, self.old_context, self.new_context, update):
                 updates.remove(update) # reprocessing not required, ignore update.
                 log.verbose("Removing table update for", update.instrument, update.filekind, dataset, 
                             "no effective change from reference", repr(update.old_reference),
