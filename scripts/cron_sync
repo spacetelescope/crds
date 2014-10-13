@@ -6,7 +6,7 @@
 #
 #    example context selections:
 #        nothing ==  hst-operational
-#        --contexts hst-operational
+#        --contexts hst_0257.pmap hst_0283.pmap hst-operational
 #        --last 5
 #        --all
 #
@@ -62,6 +62,7 @@ export CRDS_DOWNLOAD_MODE=plugin
 # -------------------------------------------------------------------------
 
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
+
   if [[ $? == 1 ]]
   then
     echo "cron_sync: WARNING: failed to obtain crds.sync.lock"
@@ -69,53 +70,30 @@ export CRDS_DOWNLOAD_MODE=plugin
   else
      echo "cron_sync: INFO: obtained crds.sync.lock"
     
-     # safe_sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
+     # sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
      export CRDS_CLIENT_RETRY_COUNT=60
      export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
-     python -m crds.sync $* --verbose --stats --dont-update-config   # nominally --last 10 --fetch-references
+     # override pipeline global readonly setting.
+     export CRDS_READONLY_CACHE=0
+     chmod 644 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+     python -m crds.sync $* --verbose --stats # nominally --last 10 --fetch-references
     
-     # fail here for cron collision
-     if [[ $? != 1 ]]
-     then
-        # Second tier is unsafe_sync-to-safe_bestrefs blocking
-        # unsafe_sync blocks bestrefs, shouldn't sync rules, doesn't sync references, updates context / config.
-        ( flock --exclusive 201  # wait indefinitely for bestrefs
-    	       chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-	       export CRDS_CLIENT_RETRY_COUNT=1
-	       export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
-	       python -m crds.sync --last 1 --verbose --stats
-        ) 201> ${CRDS_LOCKS}/crds.config.lock 
-     fi
   fi
     
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
 exit 0
 
-#  Summarizing overall design of sync + bestrefs at remote sites:
 #
-#   crds.sync.lock ensures that no two syncs run concurrently.
-#   The nominal safe_sync rate for background reference transfer,
-#   i.e. reference pre-positioning, is once every 30 minutes.  If
-#   there's nothing new,  not much happens.   If there are new files,
-#   safe_sync might run longer than 30 minutes.  So there is latency
-#   of 30 minutes,  but indeterminate transfer times which may exceed
-#   30 minutes causing the periodic cron_sync to collide with itself.
-#   sync.lock manages the collisions causing the 2nd cron_sync to 
-#   immediately fail.
+#   Summarizing overall design of sync + bestrefs in pipelines:
 #
-#   crds.config.lock ensures that unsafe_sync and safe_bestrefs
-#   do not concurrently use or modify the cache config area.
-#   Additionally,  when running serverless or with a readonly cache,
-#   bestrefs will not attempt to update the configuration area.
+#   crds.sync.lock ensures that no two cron_syncs run concurrently.
 #
-#   As a redundant measure,  to avoid reading half-written files 
-#   in bestrefs should locking prove ineffective,  updates to
-#   the cache config area are designed to be atomic,  first written
-#   to temporary files,  then swapped into final locations with what
-#   should be UNIX kernel level atomicity.
+#   crds.sync does not block bestrefs
+#   bestrefs does not block bestrefs
+#   sync transfers files then updates the config area last
+#   bestrefs does not update the cache when run with --readonly-cache
 #
-#   As a fail-safe measure,  presuming a "little concurrency risk"
-#   is better than a total fail,  safe_bestrefs only waits on the
-#   crds.config.lock for 3 minutes... then proceeds unconcerned.
-#   Currently unsafe_sync runs around 30 seconds.
-
+#   To prevent a race condition where the context updates before the arrival
+#   of mappings,  all programs the default setting in the pipeline environment
+#   should be export CRDS_READONLY_CACHE=1.
+#
