@@ -51,7 +51,7 @@ class HeaderGenerator(object):
 
     def __iter__(self):
         """Return the sources from self with EXPTIME >= self.datasets_since."""
-        for source in self.sources:
+        for source in sorted(self.sources):
             with log.error_on_exception("Failed loading source", repr(source), 
                                         "from", repr(self.__class__.__name__)):
                 instrument = utils.header_to_instrument(self.header(source))
@@ -201,7 +201,7 @@ class DatasetHeaderGenerator(HeaderGenerator):
                 log.warning("Dataset", repr(source), "isn't represented by downloaded parameters.")
 
         # Process according to downloaded 2-part ids,  not command line ids.
-        self.sources = self.headers.keys()
+        self.sources = sorted(self.headers.keys())
 
     def matching_two_part_id(self, source):
         """Convert any command line dataset id into it's matching two part id.
@@ -688,10 +688,10 @@ and debug output.
         self.warn_bad_context("New-context", new_context)
         self.warn_bad_context("Old-context", old_context)
         if self.server_info.effective_mode != "remote":
-            if old_context is not None:
-                self.dump_mappings([old_context, new_context])
-            else:
-                self.dump_mappings([self.new_context])
+            if old_context is not None and not os.path.dirname(old_context):
+                self.dump_mappings([old_context])
+            if not os.path.dirname(new_context):
+                self.dump_mappings([new_context])
         return new_context, old_context
     
     def warn_bad_context(self, name, context):
@@ -1026,7 +1026,7 @@ and debug output.
         """Drop table updates for which the reference change doesn't matter based upon examining the
         selected rows.
         """
-        for update in updates:
+        for update in sorted(updates):
             new_header = self.new_headers.header(dataset)
             if not table_effects.is_reprocessing_required(dataset, new_header, self.old_context, self.new_context, update):
                 updates.remove(update) # reprocessing not required, ignore update.

@@ -378,14 +378,14 @@ class ConfigInfo(utils.Struct):
         mode = config.get_crds_processing_mode()  # local, remote, auto
         obsolete = local_version_obsolete(self.crds_version["str"])
         if mode == "auto":
-            effective_mode = "remote" if (self.connected and obsolete) else "local"
+            eff_mode = "remote" if (self.connected and obsolete) else "local"
         else:
-            effective_mode = mode   # explicitly local or remote
-            if effective_mode == "remote" and not connected:
+            eff_mode = mode   # explicitly local or remote
+            if eff_mode == "remote" and not self.connected:
                 raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
-            if effective_mode == "local" and obsolete:
+            if eff_mode == "local" and obsolete:
                 log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
-        return effective_mode
+        return eff_mode
 
 @utils.cached
 def get_config_info(observatory):
@@ -417,11 +417,11 @@ def update_config_info(observatory):
     """
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
-        if info.connected:
-            log.verbose("Connected to server, updating CRDS cache config and operational context.")
+        if info.connected and info.effective_mode == "local":
+            log.verbose("Connected to server and computing locally, updating CRDS cache config and operational context.")
             cache_server_info(info, observatory)  # save locally
         else:
-            log.verbose("Not connected to CRDS server,  skipping cache config update.")
+            log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.")
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
