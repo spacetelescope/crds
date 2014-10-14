@@ -554,7 +554,6 @@ and debug output.
         Returns { instrument: EXPTIME, ... }
         """
         datasets_since = {}
-        self.dump_mappings([self.old_context, self.new_context])
         self.oldctx = rmap.get_cached_mapping(self.old_context)
         self.newctx = rmap.get_cached_mapping(self.new_context)
         for instrument in self.oldctx.selections:
@@ -688,6 +687,11 @@ and debug output.
             old_context = None
         self.warn_bad_context("New-context", new_context)
         self.warn_bad_context("Old-context", old_context)
+        if self.server_info.effective_mode != "remote":
+            if old_context is not None:
+                self.dump_mappings([old_context, new_context])
+            else:
+                self.dump_mappings([self.new_context])
         return new_context, old_context
     
     def warn_bad_context(self, name, context):

@@ -285,32 +285,11 @@ def get_processing_mode(observatory, context=None):
     """
     info = get_config_info(observatory)
         
-    effective_mode = get_effective_mode(info.connected, info.crds_version["str"])
-
     final_context = get_final_context(info, context)
     
     warn_bad_context(observatory, final_context)
 
-    return effective_mode, final_context
-
-def get_effective_mode(connected,  server_version):
-    """Based on environment CRDS_MODE,  connection status,  server s/w version, 
-    and the installed client s/w version,  determine whether best refs should be
-    computed locally or on the server.
-    
-    returns 'local' or 'remote'
-    """
-    mode = config.get_crds_processing_mode()  # local, remote, auto
-    obsolete = local_version_obsolete(server_version)
-    if mode == "auto":
-        effective_mode = "remote" if (connected and obsolete) else "local"
-    else:
-        effective_mode = mode   # explicitly local or remote
-    if effective_mode == "remote" and not connected:
-        raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
-    if effective_mode == "local" and obsolete:
-        log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
-    return effective_mode
+    return info.effective_mode, final_context
 
 def get_final_context(info, context):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
@@ -385,6 +364,28 @@ class ConfigInfo(utils.Struct):
     def bad_files_set(self):
         """Return the set of references and mappings which are considered scientifically invalid."""
         return set(self.get("bad_files", "").split())
+
+    @property
+    def effective_mode(self):
+        """Based on environment CRDS_MODE,  connection status,  server s/w version, 
+        and the installed client s/w version,  determine whether best refs should be
+        computed locally or on the server.   Simple unless CRDS_MODE is defaulting
+        to "auto" in which case the effective mode is "remote" when connected and
+        the client is obsolete relative to the server.
+        
+        returns 'local' or 'remote'
+        """
+        mode = config.get_crds_processing_mode()  # local, remote, auto
+        obsolete = local_version_obsolete(self.crds_version["str"])
+        if mode == "auto":
+            effective_mode = "remote" if (self.connected and obsolete) else "local"
+        else:
+            effective_mode = mode   # explicitly local or remote
+            if effective_mode == "remote" and not connected:
+                raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
+            if effective_mode == "local" and obsolete:
+                log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
+        return effective_mode
 
 @utils.cached
 def get_config_info(observatory):
