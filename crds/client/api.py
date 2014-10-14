@@ -237,7 +237,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
             if "NOT FOUND n/a" == refname:
-                log.verbose("Reference type", srepr(filetype), "not applicable.")
+                log.verbose("Reference type", srepr(filetype), "not applicable.", verbosity=80)
             else:
                 raise CrdsLookupError("Error determining best reference for " + 
                                       srepr(filetype) + " = " + 
@@ -364,7 +364,7 @@ def get_context_history(observatory):
      Returns:  [ (start_date, context_name, description), ... ]
 
     """
-    return S.get_context_history(observatory)
+    return sorted(tuple(x) for x in S.get_context_history(observatory))
 
 # ==============================================================================
 

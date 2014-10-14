@@ -33,8 +33,8 @@ import ast
 import traceback
 import uuid
 
-import crds.client as light_client
 from . import rmap, log, utils, config
+from crds.client import api
 
 __all__ = ["getreferences", "getrecommendations"]
 
@@ -42,7 +42,7 @@ __all__ = ["getreferences", "getrecommendations"]
 
 # !!!!! interface to jwst_lib.stpipe.crds_client
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
-                  observatory="jwst"):
+                  observatory="jwst", fast=False):
     """
     This is the top-level get reference call for all of CRDS.  Based on
     `parameters`, getreferences() will download/cache the corresponding best
@@ -72,6 +72,10 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
     observatory     str
     
        nominally 'jwst' or 'hst'.
+       
+    fast            bool
+    
+      If fast is True, skip verbose output, parameter screening, implicit config update, and bad reference checking.
     
     Returns { reftype : cached_bestref_path }
     
@@ -79,17 +83,17 @@ def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
       cached reference file.
     """
     final_context, bestrefs = _initial_recommendations("getreferences",
-        parameters, reftypes, context, ignore_cache, observatory)
+        parameters, reftypes, context, ignore_cache, observatory, fast)
     
     # Attempt to cache the recommended references,  which unlike dump_mappings
     # should work without network access if files are already cached.
-    best_refs_paths = light_client.cache_references(
+    best_refs_paths = api.cache_references(
         final_context, bestrefs, ignore_cache=ignore_cache)
     
     return best_refs_paths
 
 def getrecommendations(parameters, reftypes=None, context=None, ignore_cache=False,
-                       observatory="jwst"):
+                       observatory="jwst", fast=False):
     """
     getrecommendations() returns the best references for the specified `parameters`
     and pipeline `context`.   Unlike getreferences(),  getrecommendations() does
@@ -119,36 +123,41 @@ def getrecommendations(parameters, reftypes=None, context=None, ignore_cache=Fal
     
        nominally 'jwst' or 'hst'.
     
+    fast            bool
+    
+      If fast is True, skip verbose output, parameter screening, implicit config update, and bad reference checking.
+    
     Returns { reftype : bestref_basename }
     
       returns a mapping from types requested in `reftypes` to the path for each
       cached reference file.
     """
     _final_context, bestrefs = _initial_recommendations("getrecommendations",
-        parameters, reftypes, context, ignore_cache, observatory)    
+        parameters, reftypes, context, ignore_cache, observatory, fast)    
 
     return bestrefs
 
 def _initial_recommendations(
-        name, parameters, reftypes=None, context=None, ignore_cache=False, observatory="jwst"):
-    """shared logic for getreferences() and getrecommendations()."""
-    
-    log.verbose(name + "() CRDS version: ", version_info())
-    log.verbose(name + "() server:", light_client.get_crds_server())
-    log.verbose(name + "() observatory:", observatory)
-    log.verbose(name + "() parameters:\n", log.PP(parameters))
-    log.verbose(name + "() reftypes:", reftypes)
-    log.verbose(name + "() context:", repr(context))
-    log.verbose(name + "() ignore_cache:", ignore_cache)
-    
-    for var in os.environ:
-        if var.upper().startswith("CRDS"):
-            log.verbose(var, "=", repr(os.environ[var]))
+        name, parameters, reftypes=None, context=None, ignore_cache=False, observatory="jwst", fast=False):
 
-    check_observatory(observatory)
-    check_parameters(parameters)
-    check_reftypes(reftypes)
-    check_context(context)  
+    """shared logic for getreferences() and getrecommendations()."""
+
+    if not fast:        
+        log.verbose(name + "() CRDS version: ", version_info())
+        log.verbose(name + "() server:", api.get_crds_server())
+        log.verbose(name + "() observatory:", observatory)
+        log.verbose(name + "() parameters:\n", log.PP(parameters))
+        log.verbose(name + "() reftypes:", reftypes)
+        log.verbose(name + "() context:", repr(context))
+        log.verbose(name + "() ignore_cache:", ignore_cache)
+        for var in os.environ:
+            if var.upper().startswith("CRDS"):
+                log.verbose(var, "=", repr(os.environ[var]))
+    
+        check_observatory(observatory)
+        check_parameters(parameters)
+        check_reftypes(reftypes)
+        check_context(context)  
 
     mode, final_context = get_processing_mode(observatory, context)
 
@@ -157,13 +166,12 @@ def _initial_recommendations(
             parameters, reftypes=reftypes, context=final_context, ignore_cache=ignore_cache)
     else:
         log.verbose("Computing best references remotely.")
-        bestrefs = light_client.get_best_references(final_context, parameters, reftypes=reftypes)
+        bestrefs = api.get_best_references(final_context, parameters, reftypes=reftypes)
     
-    warn_bad_context(observatory, final_context)
-    warn_bad_references(observatory, bestrefs)
-    
-    update_config_info(observatory)
-        
+    if not fast:
+        warn_bad_references(observatory, bestrefs)
+        update_config_info(observatory)
+        log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
     return final_context, bestrefs
 
 # ============================================================================
@@ -175,17 +183,23 @@ def warn_bad_context(observatory, context):
         log.warning("Final context", repr(context), 
                     "is bad or contains bad rules.  It may produce scientifically invalid results.")
         log.verbose("Final context", repr(context), "contains bad files:", repr(bad_contained))
+        
+def mapping_names(context):
+    """Return the full set of mapping names associated with `context`,  compute locally if possible,
+    else consult server.
+    """
+    try:
+        mapping = crds.get_cached_mapping(context)
+        contained_mappings = mapping.mapping_names()
+    except Exception:
+        contained_mappings = api.get_mapping_names(context)
+    return set(contained_mappings)
 
 def get_bad_mappings_in_context(observatory, context):
     """Return the list of bad files (defined by the server) contained by `context`."""
-    mode, _jnk = get_processing_mode(observatory, context)
-    if mode == "remote":
-        contained_mappings = set(light_client.get_mapping_names(context))
-    else:
-        mapping = crds.get_cached_mapping(context)
-        contained_mappings = set(mapping.mapping_names())
     bad_mappings = get_config_info(observatory).bad_files_set
-    return sorted(list(contained_mappings.intersection(bad_mappings)))
+    context_mappings = mapping_names(context)
+    return sorted(list(context_mappings.intersection(bad_mappings)))
 
 def warn_bad_references(observatory, bestrefs):
     """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
@@ -246,18 +260,16 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
     try:
         if ignore_cache:
             raise IOError("explicitly ignoring cache.")
-        _pmap = rmap.get_cached_mapping(context)
-        log.verbose("Loading context file", srepr(context),"from cache.")
+        # Finally do the best refs computation using pmap methods from local code.
+        return rmap.get_best_references(context, parameters, reftypes)
     except IOError, exc:
         log.verbose("Caching mapping files for context", srepr(context))
         try:
-            light_client.dump_mappings(context, ignore_cache=ignore_cache)
+            api.dump_mappings(context, ignore_cache=ignore_cache)
         except crds.CrdsError, exc:
             traceback.print_exc()
             raise crds.CrdsNetworkError("Failed caching mapping files: " + str(exc))
-    # Finally do the best refs computation using pmap methods from local code.
-    bestrefs = rmap.get_best_references(context, parameters, reftypes)
-    return bestrefs
+        return rmap.get_best_references(context, parameters, reftypes)
 
 # ============================================================================
 
@@ -273,30 +285,11 @@ def get_processing_mode(observatory, context=None):
     """
     info = get_config_info(observatory)
         
-    effective_mode = get_effective_mode(info.connected, info.crds_version["str"])
-
     final_context = get_final_context(info, context)
-
-    return effective_mode, final_context
-
-def get_effective_mode(connected,  server_version):
-    """Based on environment CRDS_MODE,  connection status,  server s/w version, 
-    and the installed client s/w version,  determine whether best refs should be
-    computed locally or on the server.
     
-    returns 'local' or 'remote'
-    """
-    mode = config.get_crds_processing_mode()  # local, remote, auto
-    obsolete = local_version_obsolete(server_version)
-    if mode == "auto":
-        effective_mode = "remote" if (connected and obsolete) else "local"
-    else:
-        effective_mode = mode   # explicitly local or remote
-    if effective_mode == "remote" and not connected:
-        raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
-    if effective_mode == "local" and obsolete:
-        log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
-    return effective_mode
+    warn_bad_context(observatory, final_context)
+
+    return info.effective_mode, final_context
 
 def get_final_context(info, context):
     """Based on env CRDS_CONTEXT, the `context` parameter, and the server's reported,
@@ -335,7 +328,7 @@ def translate_date_based_context(info, context):
             else:
                 raise crds.CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
         try:
-            translated = light_client.get_context_by_date(context, observatory=info.observatory)
+            translated = api.get_context_by_date(context, observatory=info.observatory)
         except Exception, exc:
             log.error("Failed to translate date based context", repr(context), ":", str(exc))
             raise
@@ -372,6 +365,28 @@ class ConfigInfo(utils.Struct):
         """Return the set of references and mappings which are considered scientifically invalid."""
         return set(self.get("bad_files", "").split())
 
+    @property
+    def effective_mode(self):
+        """Based on environment CRDS_MODE,  connection status,  server s/w version, 
+        and the installed client s/w version,  determine whether best refs should be
+        computed locally or on the server.   Simple unless CRDS_MODE is defaulting
+        to "auto" in which case the effective mode is "remote" when connected and
+        the client is obsolete relative to the server.
+        
+        returns 'local' or 'remote'
+        """
+        mode = config.get_crds_processing_mode()  # local, remote, auto
+        obsolete = local_version_obsolete(self.crds_version["str"])
+        if mode == "auto":
+            eff_mode = "remote" if (self.connected and obsolete) else "local"
+        else:
+            eff_mode = mode   # explicitly local or remote
+            if eff_mode == "remote" and not self.connected:
+                raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
+            if eff_mode == "local" and obsolete:
+                log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
+        return eff_mode
+
 @utils.cached
 def get_config_info(observatory):
     """Get the operational context and server s/w version from (in order of priority):
@@ -383,16 +398,16 @@ def get_config_info(observatory):
     Return ConfigInfo
     """
     try:
-        info = ConfigInfo(light_client.get_server_info())
+        info = ConfigInfo(api.get_server_info())
         info.status = "server"
         info.connected = True
-        log.verbose("Connected to server at", repr(light_client.get_crds_server()))
+        log.verbose("Connected to server at", repr(api.get_crds_server()))
         if not config.writable_cache_or_verbose("Using cached configuration and default context."):
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
-    except light_client.CrdsError:
-        log.verbose_warning("Couldn't contact CRDS server:", srepr(light_client.get_crds_server()))
+    except api.CrdsError:
+        log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
     return info
 
@@ -402,11 +417,11 @@ def update_config_info(observatory):
     """
     if config.writable_cache_or_verbose("skipping config update."):
         info = get_config_info(observatory)
-        if info.connected:
-            log.verbose("Connected to server, updating CRDS cache config and operational context.")
+        if info.connected and info.effective_mode == "local":
+            log.verbose("Connected to server and computing locally, updating CRDS cache config and operational context.")
             cache_server_info(info, observatory)  # save locally
         else:
-            log.verbose("Not connected to CRDS server,  skipping cache config update.")
+            log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.")
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
@@ -506,6 +521,24 @@ def version_info():
         return crds.__version__ + ", " + svn
     except Exception:
         return "unknown"
+    
+@utils.cached
+def get_context_parkeys(context, instrument):
+    """Return the parkeys required by `instrument` under `context`,  or the subset required by 
+    the .rmap `context`,  presumably of `instrument`.  Unlike get_required_parkeys(),  uniformly
+    returns a list regardless of context/mapping type.
+    
+    Returns [ matching_parameter, ... ]
+    """
+    try:
+        parkeys = rmap.get_cached_mapping(context).get_required_parkeys()
+    except Exception:
+        parkeys = api.get_required_parkeys(context)
+    if isinstance(parkeys, (list,tuple)):
+        return list(parkeys)
+    else:
+        return list(parkeys[instrument])
+
 # ============================================================================
 
 def srepr(obj):
