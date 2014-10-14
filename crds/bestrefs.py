@@ -16,7 +16,6 @@ from astropy.io import fits as pyfits
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
-from crds.sync import SyncScript
 from crds.client import api
 
 # ===================================================================
@@ -95,8 +94,9 @@ class HeaderGenerator(object):
     def clean_parameters(self, header):
         """Remove extraneous non-bestrefs parameters from header."""
         instrument = utils.header_to_instrument(header)
-        cleaned = { key.upper() : header.get(key, "UNDEFINED")
-                   for key in heavy_client.get_context_parkeys(self.context, instrument) }
+        # cleaned = { key.upper() : header.get(key, "UNDEFINED")
+        #            for key in heavy_client.get_context_parkeys(self.context, instrument) }
+        cleaned = header # XXXXX
         cleaned["INSTRUME"] = instrument
         return cleaned
             
@@ -106,7 +106,8 @@ class HeaderGenerator(object):
 
     def get_old_bestrefs(self, source):
         """Return the historical best references corresponding to `source`."""
-        return self.header(source)
+        return self.clean_parameters(self.header(source))
+        # return self.header(source)
     
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
@@ -178,10 +179,10 @@ class FileHeaderGenerator(HeaderGenerator):
 
     def handle_updates(self, all_updates):
         """Write best reference updates back to dataset file headers."""
-        for source in all_updates:
+        for source in sorted(all_updates):
             updates = all_updates[source]
             if updates:
-                log.verbose("Updating data", repr(source), "==>", repr(updates), verbosity=25)
+                log.verbose("-"*80)
                 update_file_bestrefs(self.context, source, updates)
 
 class DatasetHeaderGenerator(HeaderGenerator):
@@ -502,6 +503,8 @@ and debug output.
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
         
+        assert not (self.args.sync_references and self.readonly_cache), "Readonly cache,  cannot fetch references."
+
         self.new_context, self.old_context = self.setup_contexts()
         
         # Support 0 to 1 mutually exclusive source modes and/or any number of pickles
@@ -850,11 +853,7 @@ and debug output.
                 raise
             raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
                                 dataset,context, str(exc)))
-        else:
-            bestrefs = { key.upper() : value for (key, value) in bestrefs.items() }
-            log.verbose("Best references for", repr(instrument), "data", repr(dataset), 
-                        "with respect to", repr(context) + ":\n", repr(bestrefs), verbosity=80)
-            return bestrefs
+        return { key.upper() : value for (key, value) in bestrefs.items() }
         
     @property
     def update_promise(self):
@@ -877,6 +876,8 @@ and debug output.
         updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
+
+            filekind = filekind.lower()
             
             if filekind in self.skip_filekinds:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -905,6 +906,8 @@ and debug output.
         updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
+
+            filekind = filekind.lower()
             
             if filekind in self.skip_filekinds:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -1081,7 +1084,6 @@ and debug output.
                 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
-        assert not self.readonly_cache, "Readonly cache,  cannot fetch references."
         api.dump_references(self.new_context, sorted(self.synced_references), raise_exceptions=self.args.pdb)
 
 # ===================================================================
