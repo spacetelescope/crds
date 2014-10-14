@@ -1,16 +1,14 @@
 #! /bin/sh
 #
-# usage:  safe_bestrefs  --files <dataset FITS...>  --update-bestrefs
+# usage:  safe_bestrefs  --files <dataset FITS...>
 #
 #   options:  
 #        --new-context [hst-operational | e.g. hst_0042.pmap] (optional, defaults hst-operational)
 #        --files <FITS files to update...>
-#        --update-bestrefs   (fill in FITS headers,  otherwise dry-run.)
 #
 #   requires:  
 #        CRDS_PATH        (cache directory)
 #        *not* CRDS_SERVER_URL  (safe_bestrefs clears this to be disconnected from CRDS servers)
-#        CRDS_LOCKS       (locks directory,  defaults CRDS_PATH)
 #
 # This script is intended to be run in parallel with multiple pipeline bestrefs
 # and a concurrent cron_sync.  The "safe" aspect refers to not modifying the
@@ -32,8 +30,10 @@
 #  event the sync system fails,  safe_bestrefs only waits 3 
 #  minutes on crds.config.lock and then proceeds anyway.
 
-# Common code and settings between safe and unsafe_sync, safe_bestrefs
-. crds_sync_env
+# -------------------------------------------------------------------------
+
+# Add time to log messages
+export CRDS_LOG_TIME=1
 
 # safe_bestrefs should not receive updates from the server
 export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
@@ -41,19 +41,13 @@ export CRDS_SERVER_URL="https://crds-serverless-mode.stsci.edu"
 # safe_bestrefs should not modify the cache.
 export CRDS_READONLY_CACHE=1
 
-# 180 seconds == 3 minute bestrefs timeout for failed locking or sync.
-# --shared means bestrefs doesn't block bestrefs
-# crds.config.lock means this locking only excludes unsafe_sync
-( flock --shared --wait 180 200
-  if [[ $? == 1 ]] 
-  then
-      echo "safe_bestrefs: WARNING: failed to obtain shared crds.config.lock"
-  else
-      echo "safe_bestrefs: INFO: obtained shared crds.config.lock"
-  fi
-  
-  chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-  python -m crds.bestrefs $* --readonly-cache
+# Number of times to try again for CRDS client network fails: 1 == 1 try, no retries
+export CRDS_CLIENT_RETRY_COUNT=1
 
-) 200> ${CRDS_LOCKS}/crds.config.lock 
+# Seconds to wait between retries
+export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
+
+python -m crds.bestrefs --readonly-cache --update-bestrefs  $*
+
+
 

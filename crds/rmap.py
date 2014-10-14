@@ -651,7 +651,7 @@ class Mapping(object):
         """Return the name of the instrument which corresponds to `header`.   Called for unknown-mapping types.
         Overridden by PipelineMapping which figures it out from header.
         """
-        return self.instrument
+        return self.instrument.upper()
 
     def apply(self, func, *args, **kargs):
         """Apply a function recursively to this mapping and
@@ -750,17 +750,18 @@ class PipelineContext(ContextMapping):
         return self.get_imap(instrument).get_filekinds(dataset)
 
     def get_instrument(self, header):
-        """Get the instrument name defined by `header`."""
+        """Get the instrument name defined by file `header`."""
         try:
-            return header[self.instrument_key.upper()]
+            instr = header[self.instrument_key.upper()]
         except KeyError:
             try:
-                return header[self.instrument_key.lower()]
+                instr = header[self.instrument_key.lower()]
             except KeyError:
                 try: # This hack makes FITS headers work prior to back-mapping to data model names.
-                    return header["INSTRUME"].lower()
+                    instr = header["INSTRUME"]
                 except KeyError:
                     raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+        return instr.upper()
 
     def get_item_key(self, filename):
         """Given `filename` nominally to insert, return the instrument it corresponds to."""

@@ -19,6 +19,9 @@ __all__ = [
            "CrdsUnknownRefypeError",
            ]
 
+# List of all the observatory package names
+ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]
+
 # ============================================================================
 
 from . import config   # module
