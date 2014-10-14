@@ -372,7 +372,10 @@ class Script(object):
         date based specifications against the CRDS server operational context history.
         """
         if config.is_date_based_mapping_spec(context):
-            _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
+            if context.endswith("-operational"):
+                final_context = self.server_info.operational_context
+            else:
+                _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
             log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
             context = final_context
         return context
