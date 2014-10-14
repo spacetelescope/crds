@@ -652,12 +652,13 @@ def file_to_instrument(filename):
 def header_to_instrument(header):
     """Given reference or dataset `header`, return the associated instrument."""
     try:
-        return header["INSTRUME"].lower()
+        instr = header["INSTRUME"]
     except KeyError:
         try:
-            return header["META.INSTRUMENT.NAME"].lower()
+            instr = header["META.INSTRUMENT.NAME"]
         except KeyError:
-            return header["INSTRUMENT"].lower()
+            instr = header["INSTRUMENT"]
+    return instr.upper()
     
 def get_reference_paths(observatory):
     """Return the list of subdirectories involved with storing references of all instruments."""
