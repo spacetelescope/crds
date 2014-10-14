@@ -223,6 +223,8 @@ class Script(object):
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
         self.add_argument("-R", "--readonly-cache", action="store_true",
             help="Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.")
+        self.add_argument('-I', '--ignore-cache', action='store_true', dest="ignore_cache",
+                          help="Download required files even if they're already in the cache.")
         self.add_argument("-V", "--version", 
             help="Print the software version and exit.", action="store_true")
         self.add_argument("-J", "--jwst", dest="jwst", action="store_true",
@@ -324,12 +326,8 @@ class Script(object):
             if self.args.version:
                 _show_version()
             elif self.args.profile:
-                if self.args.profile == "console":
-                    self._console_profile(self._main)
-                else:
-                    cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
-            elif self.args.pdb:
-                pdb.runctx("self._main()", locals(), locals())
+                self._profile()
+            elif self.args.pdb:                pdb.runctx("self._main()", locals(), locals())
             else:
                 return self._main()
         except KeyboardInterrupt:
@@ -337,6 +335,13 @@ class Script(object):
                 raise
             else:
                 raise KeyboardInterrupt("Interrupted... quitting.")
+    
+    def _profile(self):
+        """Run _main() under the Python profiler."""
+        if self.args.profile == "console":
+            self._console_profile(self._main)
+        else:
+            cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
 
     def _console_profile(self, function, sort_by="cumulative", top_n=100):
         """Run `function` under the profiler and print results to console."""
@@ -393,6 +398,25 @@ class Script(object):
         status = keys.pop("status", -1)
         log.error(*args, **keys)
         sys.exit(status)
+
+    def dump_files(self, context, files=None, ignore_cache=None):
+        """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        if ignore_cache is None:
+            ignore_cache = self.args.ignore_cache
+        _localpaths, downloads, bytes = api.dump_files(
+            context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
+        self.increment_stat("total-files", downloads)
+        self.increment_stat("total-bytes", bytes)
+        
+    def dump_mappings(self, mappings, ignore_cache=None):
+        """Download all `mappings` and their dependencies if not already cached.."""
+        if ignore_cache is None:
+            ignore_cache = self.args.ignore_cache
+        for mapping in mappings:
+             _localpaths, downloads, bytes = api.dump_mappings(
+                 mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
+             self.increment_stat("total-files", downloads)
+             self.increment_stat("total-bytes", bytes)
 
 # =============================================================================
 
@@ -467,8 +491,6 @@ class ContextsScript(Script):
             help='Operate with respect to all known CRDS contexts.')
         self.add_argument('--last-n-contexts', metavar="N", type=int, default=None,
             help='Operate with respect to the last N contexts.')
-        self.add_argument('-i', '--ignore-cache', action='store_true', dest="ignore_cache",
-                          help="Download required files even if they're already in the cache.")
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""

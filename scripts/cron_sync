@@ -6,7 +6,7 @@
 #
 #    example context selections:
 #        nothing ==  hst-operational
-#        --contexts hst-operational
+#        --contexts hst_0257.pmap hst_0283.pmap hst-operational
 #        --last 5
 #        --all
 #
@@ -31,10 +31,38 @@
 #                   CPU and network,  not memory or disk.   This is
 #                   the nominal case where nothing is new or changing.
 
-# Common code and settings between safe and unsafe_sync
-. crds_sync_env
+
+# -------------------------------------------------------------------------
+
+# default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
+# file system has broken flock's
+if [[ -z "$CRDS_LOCKS" ]]
+then
+    export CRDS_LOCKS="$CRDS_PATH"
+fi
+mkdir -p $CRDS_LOCKS
+
+# Add time to log messages
+export CRDS_LOG_TIME=1
+
+# Make the cache writable by default,  most common.
+export CRDS_READONLY_CACHE=0
+
+# Use a plugin downloader,  defaults to wget
+export CRDS_DOWNLOAD_MODE=plugin
+
+#
+# CUSTOM PLUGINS: CRDS will run another program like this filling in for
+# ${SOURCE_URL} and ${OUTPUT_PATH}.  Use that syntax exactly.   You could
+# e.g. use axel instead of wget providing your own command line template.
+#
+# export CRDS_DOWNLOAD_PLUGIN="/usr/bin/wget --no-check-certificate --quiet ${SOURCE_URL}  -O ${OUTPUT_PATH}"
+#
+
+# -------------------------------------------------------------------------
 
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
+
   if [[ $? == 1 ]]
   then
     echo "cron_sync: WARNING: failed to obtain crds.sync.lock"
@@ -42,45 +70,30 @@
   else
      echo "cron_sync: INFO: obtained crds.sync.lock"
     
-     # safe_sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
-     safe_sync $*
+     # sync doesn't block bestrefs, syncs rules and references,  doesn't update context / config
+     export CRDS_CLIENT_RETRY_COUNT=60
+     export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
+     # override pipeline global readonly setting.
+     export CRDS_READONLY_CACHE=0
+     chmod 644 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+     python -m crds.sync $* --verbose --stats # nominally --last 10 --fetch-references
     
-     # fail here for cron collision
-     if [[ $? != 1 ]]
-     then
-        # unsafe_sync blocks bestrefs, shouldn't sync rules, doesn't sync references, updates context / config.
-        unsafe_sync
-     fi
   fi
     
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
 exit 0
 
-#  Summarizing overall design of sync + bestrefs at remote sites:
 #
-#   crds.sync.lock ensures that no two syncs run concurrently.
-#   The nominal safe_sync rate for background reference transfer,
-#   i.e. reference pre-positioning, is once every 30 minutes.  If
-#   there's nothing new,  not much happens.   If there are new files,
-#   safe_sync might run longer than 30 minutes.  So there is latency
-#   of 30 minutes,  but indeterminate transfer times which may exceed
-#   30 minutes causing the periodic cron_sync to collide with itself.
-#   sync.lock manages the collisions causing the 2nd cron_sync to 
-#   immediately fail.
+#   Summarizing overall design of sync + bestrefs in pipelines:
 #
-#   crds.config.lock ensures that unsafe_sync and safe_bestrefs
-#   do not concurrently use or modify the cache config area.
-#   Additionally,  when running serverless or with a readonly cache,
-#   bestrefs will not attempt to update the configuration area.
+#   crds.sync.lock ensures that no two cron_syncs run concurrently.
 #
-#   As a redundant measure,  to avoid reading half-written files 
-#   in bestrefs should locking prove ineffective,  updates to
-#   the cache config area are designed to be atomic,  first written
-#   to temporary files,  then swapped into final locations with what
-#   should be UNIX kernel level atomicity.
+#   crds.sync does not block bestrefs
+#   bestrefs does not block bestrefs
+#   sync transfers files then updates the config area last
+#   bestrefs does not update the cache when run with --readonly-cache
 #
-#   As a fail-safe measure,  presuming a "little concurrency risk"
-#   is better than a total fail,  safe_bestrefs only waits on the
-#   crds.config.lock for 3 minutes... then proceeds unconcerned.
-#   Currently unsafe_sync runs around 30 seconds.
-
+#   To prevent a race condition where the context updates before the arrival
+#   of mappings,  all programs the default setting in the pipeline environment
+#   should be export CRDS_READONLY_CACHE=1.
+#
