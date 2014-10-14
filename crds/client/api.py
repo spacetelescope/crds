@@ -364,7 +364,7 @@ def get_context_history(observatory):
      Returns:  [ (start_date, context_name, description), ... ]
 
     """
-    return S.get_context_history(observatory)
+    return sorted(tuple(x) for x in S.get_context_history(observatory))
 
 # ==============================================================================
 
