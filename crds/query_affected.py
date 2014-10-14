@@ -36,9 +36,6 @@ has pre-computed results for historical switches.
             help="Output affected datasets for all context switches since the last occurrence of context in the history.",
             metavar="CONTEXT_NAME", default=None, type=str)
         
-        self.add_argument("-c", "--combine-contexts", dest="combine_contexts",
-            help="Merge all affected datasets from all context transitions into a common sorted set.")
-        
         self.add_argument("-f", "--since-history-file", dest="since_history_file",
             help="File containing the tuple of the last history item successfully processed.")
 
@@ -59,7 +56,7 @@ has pre-computed results for historical switches.
             effects = self.polled()
             
         if effects:
-            self.combine_and_output(effects)
+            self.process(effects)
             self.save_last_processed(effects)
         elif effects is not None:
             log.info("No new results available.")
@@ -76,7 +73,7 @@ has pre-computed results for historical switches.
     def history(self):
         """Return the context history or fail.   Should nominally always work."""
         try:
-            return tuple(reversed(tuple(tuple(x) for x in api.get_context_history(self.observatory))))
+            return api.get_context_history(self.observatory)
         except Exception as exc:
             self.fatal_error("get_context_history failed: ", str(exc).replace("OtherError:",""))
             
@@ -93,17 +90,17 @@ has pre-computed results for historical switches.
                 self.fatal_error("get_affected_datasets failed: ", str(exc).replace("OtherError:",""))
         return s
     
-    def combine_and_output(self,  effects):
+    def process(self,  effects):
         """Output the results of all the context transitions."""
         ids = []
         for i, affected in effects:
             log.info("#"*80)
             print >>sys.stderr, affected.bestrefs_err_summary
             ids.extend(affected.affected_ids)
-        if self.args.combine_contexts:
-            ids = set(ids)
+        ids = sorted(set(ids))
         print "\n".join(ids)
         log.info("#"*80)
+        log.info("Total products affected =", len(ids))
 
     def targeted(self):
         """Output the affected datasets for the specified context(s) interval."""
@@ -121,6 +118,7 @@ has pre-computed results for historical switches.
         assert old_index >= 0, "Invalid history interval with starting index " + repr(old_index)
         effects = []
         for i in range(old_index, len(self.history)-1):
+            log.verbose("Processing starting history[{}] = ".format(i), self.history[i])
             old_context = self.history[i][1]
             new_context = self.history[i+1][1]
             affected = self.get_affected(old_context, new_context)
@@ -139,13 +137,14 @@ has pre-computed results for historical switches.
         """Return the starting item for polled-mode processing."""
         if self.args.since_history_item:
             item = self.args.since_history_item
+            assert 0 <= item <= len(self.history),  "Invalid history item " + repr(self.args.since_history_item)
         elif self.args.since_context:
             hist = self.history
             for item, hist in enumerate(hist): 
                 if self.args.since_context in hist[1]:
                     break
             else:
-                self.fatal_error("--since-context='{}' not found in history".format(context))
+                self.fatal_error("--since-context='{}' not found in history".format(self.args.since_context))
         else:  # read the start from the file recording the last successful processing index.
             if os.path.exists(self.last_processed_path):
                 try:
@@ -156,7 +155,6 @@ has pre-computed results for historical switches.
                     self.fatal_error(self.last_processed_path, "already exists but was unusable:", str(exc))
             else:
                 item = 0
-        log.verbose("Determined start of processing as", (item,) + self.history[item])
         return item
         
     def save_last_processed(self, effects):
@@ -166,6 +164,7 @@ has pre-computed results for historical switches.
             return
         hist = (last_ix+1,) + tuple(self.history[last_ix + 1])
         log.verbose("Saving last processed:", repr(hist))
+        utils.ensure_dir_exists(self.last_processed_path)
         with open(self.last_processed_path, "w+") as last:
             last.write(str(hist))
                     

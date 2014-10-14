@@ -150,7 +150,7 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     elif filepath.endswith(".json"):
         return get_json_header(filepath, needed_keys)
     elif filepath.endswith(".yaml"):
-        return get_yaml_header(".yaml")
+        return get_yaml_header(filepath, needed_keys)
     else:
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
@@ -174,13 +174,13 @@ def get_data_model_header(filepath, needed_keys=()):
 
 def get_json_header(filepath, needed_keys=()):
     """For now,  just treat the JSON as the header."""
-    header = json.loads(open(filepath).read())
+    header = json.load(open(filepath))
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
     """For now,  just treat the YAML as the header."""
     import yaml
-    header = yaml.loads(open(filepath).read())
+    header = yaml.load(open(filepath))
     return reduce_header(filepath, header, needed_keys)
 
 def reduce_header(filepath, old_header, needed_keys=()):
