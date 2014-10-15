@@ -139,7 +139,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
     @property
     @utils.cached         
     def history(self):
-        """Return the context history or fail.   Should nominally always work."""
+        """Return the context history or fail.  Should nominally always work."""
         try:
             return api.get_context_history(self.observatory)
         except Exception as exc:
@@ -163,10 +163,10 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         return affected
     
     def ignore_errors(self, i, affected):
-        """Check each context switch for errors during bestrefs run.  Fail or return False on errors."""
+        """Check each context switch for errors during bestrefs run. Fail or return False on errors."""
         ignore = False
         if affected.bestrefs_status != 0:
-            message = log.format("CRDS server-side errors for" + str(i), affected.computation_dir)
+            message = log.format("CRDS server-side errors for", i, affected.computation_dir)
             if self.args.ignore_errant_history:
                 ignore = True
             if self.args.fail_on_errant_history:
