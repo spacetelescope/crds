@@ -414,6 +414,9 @@ class Script(object):
         """Download all `mappings` and their dependencies if not already cached.."""
         if ignore_cache is None:
             ignore_cache = self.args.ignore_cache
+        if not self.server_info.connected:
+            log.verbose("Not connected to server. Skipping dump_mappings", mappings, verbosity=55)
+            return
         for mapping in mappings:
              _localpaths, downloads, bytes = api.dump_mappings(
                  mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
