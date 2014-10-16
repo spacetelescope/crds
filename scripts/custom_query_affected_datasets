@@ -1,0 +1,18 @@
+#! /usr/bin/env python                                                                                                                                                                                                                   
+#-*-python-*-                                                                                                                                                                                                                            
+
+from crds.query_affected import QueryAffectedDatasetsScript
+from crds import log
+
+class CustomQueryAffectedDatasetsScript(QueryAffectedDatasetsScript):
+
+    def use_affected(self, i, affected):
+        """PLUGIN: for doing something with each individual context switch set of effects. Default does nothing."""
+        log.info("use_affected: i =", i, "affected =", affected)
+   
+    def use_all_ids(self, effects, ids):
+        """PLUGIN: for using all ids which passed availability and error screening. Default prints ids to stdout.  All context switches as one set."""
+        log.info("use_all_ids: effects =", effects, "ids =", ids)
+
+if __name__ == "__main__":
+    CustomQueryAffectedDatasetsScript()()
