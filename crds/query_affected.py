@@ -83,6 +83,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
 
     def main(self):
         """Top level processing method."""    
+        self.require_server_connection()
         if self.args.list_history:
             return self.list_history()
         effects = self.polled()
@@ -195,7 +196,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         assert self.history_start <= self.history_stop, "Invalid history interval,  start >= stop."
         effects = []
         for i in range(self.history_start, self.history_stop):
-            log.info("Fetching effects for", self.history[i])
+            log.info("Fetching effects for", self.history[i+1])
             old_context = self.history[i][1]
             new_context = self.history[i+1][1]
             affected = self.get_affected(old_context, new_context)
