@@ -472,6 +472,15 @@ and debug output.
             self.args.stats = True
             self.args.dump_unique_errors = True
                 
+        if self.args.affected_datasets:
+            self.args.diffs_only = True
+            self.args.datasets_since = "auto"
+            self.args.optimize_tables = True
+            self.args.print_update_counts = True
+            self.args.print_affected = True
+            self.args.dump_unique_errors = True
+            self.args.stats = True
+        
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
         self.updates = OrderedDict()  # map of reference updates
@@ -665,11 +674,14 @@ and debug output.
         self.add_argument("--compare-cdbs", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
+        self.add_argument("--affected-datasets", action="store_true", 
+            help="Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats")
+        
         self.add_argument("-z", "--optimize-tables", action="store_true", 
             help="If set, apply row-based optimizations to screen out inconsequential table updates.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
-    
+        
     def setup_contexts(self):
         """Determine and cache the new and comparison .pmap's for this run."""
         if self.args.new_context is None:
