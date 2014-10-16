@@ -892,7 +892,7 @@ and debug output.
                                                        ("NOT FOUND NO MATCH","UNDEFINED"))
             if new_ok:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                            "Bestref FOUND:", repr(new_org).lower(),  self.update_promise, verbosity=55)
+                            "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
             
                 self._add_synced_reference(new)
@@ -976,11 +976,11 @@ and debug output.
         ref = ref_org.upper()
         if ref == "N/A" or ref.startswith("NOT FOUND N/A"):
             log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "Bestref is natural N/A.", verbosity=55)
+                        "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
         elif ref in ("NONE", "", "*"):
             log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "Mapping", repr(ref), "to N/A.", verbosity=55)
+                        "Mapping", repr(ref), "to N/A.", verbosity=60)
             ref = "N/A"
         ref_ok = True
         if ref.startswith(na_conversions):   
