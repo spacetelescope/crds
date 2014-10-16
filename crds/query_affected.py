@@ -83,6 +83,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
 
     def main(self):
         """Top level processing method."""    
+        self.require_server_connection()
         if self.args.list_history:
             return self.list_history()
         effects = self.polled()
