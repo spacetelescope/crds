@@ -68,7 +68,7 @@ class Validator(object):
         return value
 
     def condition_values(self, info):
-        return [self.condition(value) for value in info.values]
+        return sorted([self.condition(value) for value in info.values])
 
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(self.info) + ")"
