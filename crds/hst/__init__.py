@@ -40,7 +40,7 @@ TEXT_DESCR = {
     'backtab': 'Background Model Table',
     'badttab': 'Bad Time Interval Table',
     'biasfile': 'Bias Frame',
-    'bpixtab': 'Data Quality (bad Pixel) Initialization Table',
+    'bpixtab': 'Data Quality (Bad Pixel) Initialization Table',
     'brftab': 'Baseline Reference Frame Table',
     'brsttab': 'Burst Parameters Table',
     'ccdtab': 'Ccd Parameters Table',
