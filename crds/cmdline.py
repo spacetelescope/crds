@@ -102,7 +102,7 @@ class Script(object):
     decription = epilog = usage = None
     formatter_class = RawTextHelpFormatter
     
-    def __init__(self, argv=None, parser_pars=None):
+    def __init__(self, argv=None, parser_pars=None, reset_log=True):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
         if isinstance(argv, basestring):
@@ -123,7 +123,9 @@ class Script(object):
         log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
         # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
         log.set_log_time(config.get_log_time() or self.args.log_time)
-        log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
+        log.verbose("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
+        if reset_log:
+            log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
