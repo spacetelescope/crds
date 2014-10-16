@@ -365,8 +365,7 @@ class ConfigInfo(utils.Struct):
         """Return the set of references and mappings which are considered scientifically invalid."""
         return set(self.get("bad_files", "").split())
 
-    @property
-    def effective_mode(self):
+    def get_effective_mode(self):
         """Based on environment CRDS_MODE,  connection status,  server s/w version, 
         and the installed client s/w version,  determine whether best refs should be
         computed locally or on the server.   Simple unless CRDS_MODE is defaulting
@@ -409,6 +408,7 @@ def get_config_info(observatory):
     except api.CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
+    info.effective_mode = info.get_effective_mode()
     return info
 
 def update_config_info(observatory):
