@@ -487,6 +487,7 @@ class DeepLook_COSLAMPTAB(DeepLook_COS):
             'fpoffset': self.cmp_equal_parameters,
         }
 
+
 class DeepLook_COSTDSTAB(DeepLook_COS):
     def __init__(self):
         super(DeepLook_COSTDSTAB, self).__init__()
@@ -494,6 +495,18 @@ class DeepLook_COSTDSTAB(DeepLook_COS):
         self.mode_fields = {
             'opt_elem': self.cmp_equal_parameters,
             'aperture': self.cmp_equal_parameters,
+        }
+
+
+class DeepLook_COSFullSegment(DeepLook_COS):
+    def __init__(self):
+        super(DeepLook_COSFullmode, self).__init__()
+
+        self.mode_fields = {
+            'opt_elem': self.cmp_equal_parameters,
+            'cenwave':  self.cmp_equal_parameters,
+            'aperture': self.cmp_equal_parameters,
+            'segment': self.cmp_equal_parameters,
         }
 
 
@@ -673,8 +686,11 @@ DeepLook.rules = {
     'cos_hvtab':     DeepLook_Default,
     'cos_lamptab':   DeepLook_COSLAMPTAB,
     'cos_phatab':    DeepLook_COSOpt_elem,
+    'cos_proftab':   DeepLook_COSFullSegment,
     'cos_spwcstab':  DeepLook_COSFullmode,
     'cos_tdstab':    DeepLook_COSTDSTAB,
+    'cos_tracetab':  DeepLook_COSFullSegment,
+    'cos_twozxtab':  DeepLook_COSFullSegment,
     'cos_walktab':   DeepLook_COSSegment,
     'cos_wcptab':    DeepLook_COSOpt_elem,
     'cos_xtractab':  DeepLook_COSFullmode,
