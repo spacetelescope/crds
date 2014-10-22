@@ -535,7 +535,7 @@ class Selector(object):
         This call defines the starting point for parkeys and classes,  whereas
         _insert has diminishing lists passed down to nested Selectors.
         """
-        self._insert(header, value, self.class_list, valid_values_map)
+        self._insert(header, value, self.parkey, self.class_list, valid_values_map)
 
     @property
     def class_list(self):
@@ -547,24 +547,24 @@ class Selector(object):
         else:  # nominally HST / CDBS
             return ("Match", "UseAfter")
         
-    # @property
-    # def parkey(self):
-    #     return self._rmap_header["parkey"]
+    @property
+    def parkey(self):
+        return underscore_dotted_parkeys(self._rmap_header["parkey"])
     
-    def _insert(self, header, value, classes, valid_values_map):
+    def _insert(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
-        key = self._make_key(header, self._parameters)
+        key = self._make_key(header, parkey[0])
         self._validate_key(key, valid_values_map)
         i = self._find_key(key)
         if len(classes) > 1:   # add or insert nested selector
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new selector.")
-                new_value = self._create_path(header, value, classes[1:])
+                new_value = self._create_path(header, value, parkey[1:], classes[1:])
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
                 log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
-                old_value._insert(header, value, classes[1:], valid_values_map)
+                old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))
