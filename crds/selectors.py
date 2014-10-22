@@ -535,7 +535,7 @@ class Selector(object):
         This call defines the starting point for parkeys and classes,  whereas
         _insert has diminishing lists passed down to nested Selectors.
         """
-        self._insert(header, value, self._rmap_header["parkey"], self.class_list, valid_values_map)
+        self._insert(header, value, self.class_list, valid_values_map)
 
     @property
     def class_list(self):
@@ -547,24 +547,24 @@ class Selector(object):
         else:  # nominally HST / CDBS
             return ("Match", "UseAfter")
         
-    @property
-    def parkey(self):
-        return self._rmap_header["parkey"]
+    # @property
+    # def parkey(self):
+    #     return self._rmap_header["parkey"]
     
-    def _insert(self, header, value, parkey, classes, valid_values_map):
+    def _insert(self, header, value, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
-        key = self._make_key(header, parkey[0])
+        key = self._make_key(header, self._parameters)
         self._validate_key(key, valid_values_map)
         i = self._find_key(key)
         if len(classes) > 1:   # add or insert nested selector
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new selector.")
-                new_value = self._create_path(header, value, parkey[1:], classes[1:])
+                new_value = self._create_path(header, value, classes[1:])
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
                 log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
-                old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                old_value._insert(header, value, classes[1:], valid_values_map)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))
@@ -2185,7 +2185,7 @@ class Parameters(object):
         check_duplicates(rmap_header, ["header"])
         if not isinstance(rmap_header, dict):
             rmap_header = dict(rmap_header)   # drop header item list form here.
-        parkeys = rmap_header["parkey"]   
+        parkeys = underscore_dotted_parkeys(rmap_header["parkey"])   
         return self._instantiate(parkeys, rmap_header, ["selector"])
 
     def _instantiate(self, parkeys, rmap_header, parents=None):
@@ -2203,6 +2203,22 @@ class Parameters(object):
             else:
                 selections[key] = selpars
         return self.selector(parkeys[0], selections=selections, rmap_header=rmap_header)
+
+def underscore_dotted_parkeys(keys):
+    """Convert dotted names in tuple of parmeter names, and tuple of tuples of parameter names.
+    e.g. convert ('META.INSTRUMENT.NAME',)  --> ('META_INSTRUMENT_NAME',)
+    so internally, JWST-style parkeys are usable as simple Python variable names not attribute paths.
+    """
+    if len(keys) and isinstance(keys[0], basestring):
+        return tuple(key.replace(".","_") for key in keys)
+    else:
+        underscored = ()
+        for tup in keys:
+            utup = tuple(key.replace(".", "_") for key in tup)
+            underscored += (utup,)
+        return underscored
+            
+        return tuple(tuple(key.replace(".","_") for tup in keys for key in tup))
 
 def check_duplicates(items, parents=None):
     """Scan the `keys` list for keys which have been repeated and issue errors.
