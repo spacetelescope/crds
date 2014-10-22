@@ -827,6 +827,7 @@ and debug output.
     def process(self, dataset):
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
         try:
+            log.verbose("="*120, verbosity=55)
             if self.args.files:
                 log.info("===> Processing", dataset)
             else:
