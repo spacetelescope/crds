@@ -1515,7 +1515,7 @@ def mapping_type(mapping):
         raise ValueError("Unknown mapping type for " + repr(Mapping))
 # ===================================================================
 
-def get_best_references(context_file, header, include=None, condition=False):
+def get_best_references(context_file, header, include=None, condition=True):
     """Compute the best references for `header` for the given CRDS
     `context_file`.   This is a local computation using local rmaps and
     CPU resources.   If `include` is None,  return results for all
@@ -1523,9 +1523,12 @@ def get_best_references(context_file, header, include=None, condition=False):
     filekinds listed in `include`.
     """
     ctx = asmapping(context_file, cached=True)
-    minheader = ctx.minimize_header(header)
+    # order here is important,  but JWST which typically has large headers
+    # requires header conditioning first to convert keywords to the form
+    # which can be minimized
     if condition:
-        minheader = utils.condition_header(minheader)
+        header = utils.condition_header(header)
+    minheader = ctx.minimize_header(header)
     return ctx.get_best_references(minheader, include=include)
 
 
