@@ -62,7 +62,6 @@ import ast
 
 from collections import namedtuple
 
-
 import crds
 from . import (log, utils, selectors, data_file, config)
 
@@ -308,7 +307,7 @@ class Mapping(object):
             if name not in self.header:
                 raise MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        self.extra_keys = tuple(self.header.get("extra_keys", ()))
+        self.extra_keys = selectors.underscore_dotted_parkeys(self.header.get("extra_keys", ()))
 
     @property
     def basename(self):
@@ -334,6 +333,11 @@ class Mapping(object):
             return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
+
+    @property
+    def parkey(self):
+        # internally,  treat META.INSTRUMENT.NAME --> META_INSTRUMENT_NAME
+        return selectors.underscore_dotted_parkeys(self.header["parkey"])
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
@@ -491,7 +495,7 @@ class Mapping(object):
         """Return only those items of `header` which are required to determine
         bestrefs.   Missing keys are set to 'UNDEFINED'.
         """
-        header = self.locate.fits_to_parkeys(header)
+        header = self.locate.fits_to_parkeys(header)   # reference vocab --> dataset vocab
         if isinstance(self, PipelineContext):
             instrument = self.get_instrument(header)
             mapping = self.get_imap(instrument)
@@ -500,8 +504,8 @@ class Mapping(object):
             keys = self.get_required_parkeys()
         minimized = {}
         for key in keys:
-            minimized[key] = header.get(key.lower(), 
-                                        header.get(key.upper(), "UNDEFINED"))
+            # anything required but not present --> UNDEFINED
+            minimized[key] = header.get(key.lower(), header.get(key.upper(), "UNDEFINED"))
         return minimized
 
     def get_minimum_header(self, dataset, original_name=None):
@@ -836,6 +840,7 @@ class InstrumentContext(ContextMapping):
         if not include:
             include = self.selections
         for filekind in include:
+            log.verbose("-"*120, verbosity=55)
             filekind = filekind.lower()
             try:
                 refs[filekind] = self.get_best_ref(filekind, header)
@@ -845,6 +850,7 @@ class InstrumentContext(ContextMapping):
                 pass  
             except Exception, exc:
                 refs[filekind] = "NOT FOUND " + str(exc)
+        log.verbose("-"*120, verbosity=55)
         return refs
 
     def get_parkey_map(self):
@@ -1000,8 +1006,9 @@ class ReferenceMapping(Mapping):
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
         """
+        expr2 = re.sub(r"(\w+)\.(\w+)\.(\w+)", r"\1_\2_\3", expr)   # META.INSTRUMENT.NAME --> META_INSTRUMENT_NAME
         try:
-            return expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")
+            return expr, MAPPING_VALIDATOR.compile_and_check(expr2, source=self.basename, mode="eval")
         except FormatError as exc:
             raise MappingError("Can't load file " + repr(self.basename) + " : " + str(exc))
 
@@ -1038,7 +1045,8 @@ class ReferenceMapping(Mapping):
         `header_in` selected by this ReferenceMapping.
         """
         header_in = dict(header_in)
-        log.verbose("Getting bestrefs for", self.basename, "parkeys", self.parkey, verbosity=55)
+        log.verbose("Getting bestrefs:", self.basename, verbosity=55)
+        log.verbose("Bestrefs header:\n", log.PP(header_in), verbosity=55)
         self.check_rmap_omit(header_in)     # Should bestref be omitted based on rmap_omit expr?
         self.check_rmap_relevance(header_in)  # Should bestref be set N/A based on rmap_relevance expr?
         # Some filekinds, .e.g. ACS biasfile, mutate the header
@@ -1200,7 +1208,7 @@ class ReferenceMapping(Mapping):
             source, compiled = self._rmap_relevance_expr
             relevant = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
-                        "is relevant: ", relevant, repr(source), verbosity=55)
+                        "is relevant:", relevant, repr(source), verbosity=55)
         except Exception, exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
@@ -1507,7 +1515,7 @@ def mapping_type(mapping):
         raise ValueError("Unknown mapping type for " + repr(Mapping))
 # ===================================================================
 
-def get_best_references(context_file, header, include=None, condition=False):
+def get_best_references(context_file, header, include=None, condition=True):
     """Compute the best references for `header` for the given CRDS
     `context_file`.   This is a local computation using local rmaps and
     CPU resources.   If `include` is None,  return results for all
@@ -1515,9 +1523,12 @@ def get_best_references(context_file, header, include=None, condition=False):
     filekinds listed in `include`.
     """
     ctx = asmapping(context_file, cached=True)
-    minheader = ctx.minimize_header(header)
+    # order here is important,  but JWST which typically has large headers
+    # requires header conditioning first to convert keywords to the form
+    # which can be minimized
     if condition:
-        minheader = utils.condition_header(minheader)
+        header = utils.condition_header(header)
+    minheader = ctx.minimize_header(header)
     return ctx.get_best_references(minheader, include=include)
 
 
