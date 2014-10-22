@@ -116,7 +116,7 @@ class CheckingProxy(object):
             raise ServiceError(decoded)
         result = crds_decode(jsonrpc["result"])
         result = fix_strings(result)
-        log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 60 else "")
+        log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
         return result
 
 def fix_strings(rval):
