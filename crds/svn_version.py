@@ -1,15 +1,16 @@
-__svn_version__ = '1942M'
+__svn_version__ = '1944M'
 
 __full_svn_info__ = '''
 Path: .
+Working Copy Root Path: /Users/jmiller/work/workspace_crds/CRDS
 URL: https://aeon.stsci.edu/ssb/svn/crds/trunk
 Repository Root: https://aeon.stsci.edu/ssb/svn/crds
 Repository UUID: 0d8f46c8-9b30-49d0-b470-0f6283dc92e8
-Revision: 1942
+Revision: 1944
 Node Kind: directory
 Schedule: normal
-Last Changed Author: eisenham
-Last Changed Rev: 1935
-Last Changed Date: 2014-10-21 16:55:13 -0400 (Tue, 21 Oct 2014)
+Last Changed Author: jmiller@stsci.edu
+Last Changed Rev: 1943
+Last Changed Date: 2014-10-22 15:49:10 -0400 (Wed, 22 Oct 2014)
 
 '''
