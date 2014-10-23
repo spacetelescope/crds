@@ -112,7 +112,7 @@ def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
     ftype = get_filetype(filepath)
     if ftype == "fits":
-        if key.upper().startswith("META."):
+        if key.upper().startswith(("META.","META_")):
             return dm_setval(filepath, key, value)
         else:
             return pyfits.setval(filepath, key, value)
