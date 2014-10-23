@@ -1046,7 +1046,6 @@ class ReferenceMapping(Mapping):
         """
         header_in = dict(header_in)
         log.verbose("Getting bestrefs:", self.basename, verbosity=55)
-        log.verbose("Bestrefs header:\n", log.PP(header_in), verbosity=55)
         self.check_rmap_omit(header_in)     # Should bestref be omitted based on rmap_omit expr?
         self.check_rmap_relevance(header_in)  # Should bestref be set N/A based on rmap_relevance expr?
         # Some filekinds, .e.g. ACS biasfile, mutate the header
@@ -1529,6 +1528,7 @@ def get_best_references(context_file, header, include=None, condition=True):
     if condition:
         header = utils.condition_header(header)
     minheader = ctx.minimize_header(header)
+    log.verbose("Bestrefs header:\n", log.PP(minheader))
     return ctx.get_best_references(minheader, include=include)
 
 

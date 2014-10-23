@@ -709,7 +709,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", repr(filetype), 
-                                "NOT FOUND.  Ignoring.")
+                                "NOT FOUND.  Skipping reference caching/download.")
                 else:
                     raise CrdsLookupError("Error determining best reference for " + 
                                           repr(str(filetype)) + " = " + 
