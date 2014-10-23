@@ -144,8 +144,9 @@ def get_exptime(match_dict):
     """
     if "DATE-OBS" in match_dict and "TIME-OBS" in match_dict:
         return match_dict["DATE-OBS"] + " " + match_dict["TIME-OBS"]
-    elif "META.OBSERVATION.DATE" in match_dict:
-        return match_dict["META.OBSERVATION.DATE"]
+    for key in ["META.OBSERVATION.DATE", "META_OBSERVATION_DATE"]:
+        if key in match_dict:
+            return match_dict[key]
     else:
         return "1900-01-01 00:00:00"        
 
