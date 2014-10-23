@@ -142,11 +142,12 @@ def _initial_recommendations(
 
     """shared logic for getreferences() and getrecommendations()."""
 
-    if not fast:        
+    if not fast:
+        log.verbose("="*120)
         log.verbose(name + "() CRDS version: ", version_info())
         log.verbose(name + "() server:", api.get_crds_server())
         log.verbose(name + "() observatory:", observatory)
-        log.verbose(name + "() parameters:\n", log.PP(parameters))
+        log.verbose(name + "() parameters:\n", log.PP(parameters), verbosity=65)
         log.verbose(name + "() reftypes:", reftypes)
         log.verbose(name + "() context:", repr(context))
         log.verbose(name + "() ignore_cache:", ignore_cache)
@@ -420,7 +421,7 @@ def update_config_info(observatory):
             log.verbose("Connected to server and computing locally, updating CRDS cache config and operational context.")
             cache_server_info(info, observatory)  # save locally
         else:
-            log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.")
+            log.verbose("Not connected to CRDS server or operating in 'remote' mode,  skipping cache config update.", verbosity=65)
 
 def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""

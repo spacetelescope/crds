@@ -182,7 +182,7 @@ class FileHeaderGenerator(HeaderGenerator):
         for source in sorted(all_updates):
             updates = all_updates[source]
             if updates:
-                log.verbose("-"*80)
+                log.verbose("-"*120)
                 update_file_bestrefs(self.context, source, updates)
 
 class DatasetHeaderGenerator(HeaderGenerator):
@@ -827,7 +827,7 @@ and debug output.
     def process(self, dataset):
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
         try:
-            log.verbose("="*120, verbosity=55)
+            log.verbose("="*120)
             if self.args.files:
                 log.info("===> Processing", dataset)
             else:
@@ -864,7 +864,7 @@ and debug output.
         try:
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
             bestrefs = crds.getrecommendations(
-                header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 55)
+                header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
         except Exception, exc:
             if self.args.pdb:
                 raise
@@ -890,6 +890,8 @@ and debug output.
     
         # XXX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
     
+        log.verbose("-"*120, verbosity=55)
+
         updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
@@ -920,6 +922,8 @@ and debug output.
     
         # XXX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
     
+        log.verbose("-"*120, verbosity=55)
+
         updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
