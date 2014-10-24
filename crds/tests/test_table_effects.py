@@ -17,8 +17,8 @@ Test: STIS APERTAB: No reprocess
     >>> status = case.run()
     CRDS  : DEBUG    Using explicit new context 'hst_0268.pmap' for computing updated best references.
     CRDS  : DEBUG    Using explicit old context 'hst_0003.pmap'
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['O8EX02EFQ']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['O8EX02EFQ']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
     CRDS  : INFO     Computing bestrefs for datasets ['O8EX02EFQ']
     CRDS  : DEBUG    ===> Processing O8EX02010:O8EX02EFQ
     CRDS  : DEBUG    Deep Reference examination between /grp/crds/cache/references/hst/n7p1032ao_apt.fits and /grp/crds/cache/references/hst/y2r1559to_apt.fits initiated.
@@ -40,8 +40,8 @@ Test: COS WCPTAB, reprocess yes
     >>> status = case.run()
     CRDS  : DEBUG    Using explicit new context 'hst_0024.pmap' for computing updated best references.
     CRDS  : DEBUG    Using explicit old context 'hst_0018.pmap'
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['LB6M01030']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LB6M01030']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
     CRDS  : INFO     Computing bestrefs for datasets ['LB6M01030']
     CRDS  : DEBUG    ===> Processing LB6M01030:LB6M01AVQ
     CRDS  : DEBUG    Deep Reference examination between /grp/crds/cache/references/hst/x2i1559gl_wcp.fits and /grp/crds/cache/references/hst/xaf1429el_wcp.fits initiated.
@@ -58,8 +58,8 @@ Test: COS WCPTAB, reprocess no
     >>> status = case.run()
     CRDS  : DEBUG    Using explicit new context 'hst_0024.pmap' for computing updated best references.
     CRDS  : DEBUG    Using explicit old context 'hst_0018.pmap'
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds-dev.stsci.edu' for ['LBK617YRQ']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds-dev.stsci.edu'
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://hst-crds.stsci.edu' for ['LBK617YRQ']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at 'https://hst-crds.stsci.edu'
     CRDS  : INFO     Computing bestrefs for datasets ['LBK617YRQ']
     CRDS  : DEBUG    ===> Processing LBK617010:LBK617YRQ
     CRDS  : DEBUG    Deep Reference examination between /grp/crds/cache/references/hst/x2i1559gl_wcp.fits and /grp/crds/cache/references/hst/xaf1429el_wcp.fits initiated.
