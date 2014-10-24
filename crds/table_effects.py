@@ -11,7 +11,7 @@ If the rows are different,  then the dataset should be reprocessed.
 """
 
 from astropy.io import fits
-from crds import rmap, log
+from crds import rmap, log, utils
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
@@ -52,15 +52,6 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
                 update,
                 verbosity=100)
                 
-
-    # What do we have as parameters
-    #log.verbose('Dataset is ', dataset, verbosity=25)
-    #log.verbose('dataset_parameters is ', dataset_parameters, verbosity=25)
-    #log.verbose('old_context is ', old_context, verbosity=25)
-    #log.verbose('new_context is ', new_context, verbosity=25)
-    #log.verbose('old_reference is ', old_reference, verbosity=25)
-    #log.verbose('new_reference is ', new_reference, verbosity=25)
-
     # no old_context means "single context" mode,  always reprocess.
     if old_context == None:   
         return True
@@ -90,12 +81,14 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
     try:
         deep_look = DeepLook.from_filekind(update.instrument, update.filekind)
 
+        dataset_id = dataset.split(':')[0]
+
         # **DEBUG**
         # ** Since we are not getting full headers, if this is a test
         # ** dataset, replace the headers.
-        dataset_id = dataset.split(':')[0]
         #log.verbose_warning('Forcing use of LBYX01010, regardless...', verbosity=25)
         #dataset_id = 'LBYX01010'           #***DEBUG: force headers regardless of actua data
+
         if dataset_id in deep_look.stub_input:
             log.verbose_warning('Substituting header for dataset "{}"'.format(dataset))
             dataset_parameters = deep_look.stub_input[dataset_id]['headers']
@@ -120,6 +113,15 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
 ###########
 # Utilities
 ###########
+@utils.cached
+def fits_to_simpletable(fits_file, extension=1):
+    '''Retrieve a table from a FITS file, converting it to a simple list.'''
+    hdulist = fits.open(fits_file)
+    simple = dict()
+    simple['columns'] = [name.lower() for name in hdulist[extension].columns.names]
+    simple['data'] = [tuple(row) for row in hdulist[extension].data]
+    return simple
+
 def str_to_number(input, strip=True):
     
     types = [int, long, float, complex]
@@ -142,7 +144,7 @@ def mode_select(table, constraints):
     
     Parameters
     ----------
-    table: FITS_rec
+    table: simple table
            Table to examine
            
     constraints: {field: (value, cmpfn, **kargs}
@@ -154,11 +156,12 @@ def mode_select(table, constraints):
     -------
     The next row that matches.
     """
-    for row in table:
+    for row in table['data']:
         selected = True
         for field in constraints:
+            field_index = table['columns'].index(field)
             (value, cmpfn, args) = constraints[field]
-            selected = selected & cmpfn(str_to_number(row[field]), value, args)
+            selected = selected & cmpfn(str_to_number(row[field_index]), value, args)
 
         if selected:
             yield row
@@ -224,11 +227,15 @@ def cmp_equal(table_value, matching_values, wildcards=[]):
     return is_equal
 
 
-# **DEBUG**
+
+# ##############################
+# 
+# DeepLook
 #
-# Dummy up the definitions the examination rules
-# To be later placed into some type of file
-##############
+# The rules.
+#
+###############################
+
 
 class DeepLookError(Exception):
     """Deep Look error base class
@@ -316,14 +323,11 @@ class DeepLook(object):
                     constraint_values[key] = self.metavalues[key][constraint_values[key]]
 
         # Read the references
-        #**DEBUG
-        # Need to generalize below for specified and multiple
-        # extensions
-        data_old = fits.open(old_reference)[1].data
-        data_new = fits.open(new_reference)[1].data
+        data_old = fits_to_simpletable(old_reference)
+        data_new = fits_to_simpletable(new_reference)
 
         # Columns must be the same between tables.
-        if sorted(data_old.columns.names) != sorted(data_new.columns.names):
+        if sorted(data_old['columns']) != sorted(data_new['columns']):
             self.message = 'Columns are different between references.'
             return
 
