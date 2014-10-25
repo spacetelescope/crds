@@ -577,9 +577,9 @@ def condition_header(header, needed_keys=None):
         needed_keys = header.keys()
     else:
         needed_keys = [ key.upper() for key in needed_keys ]
-    conditioned = { key.replace(".","_") : condition_value(header[key]) for key in needed_keys }
+    conditioned = { key:condition_value(header[key]) for key in needed_keys }
     return conditioned
-    
+
 # ==============================================================================
 
 # Since this imports all observatory packages,  better to cache than put in global.
