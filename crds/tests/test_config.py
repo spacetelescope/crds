@@ -15,7 +15,8 @@ def setup():
 
 def cleanup():
     try:
-        shutil.rmtree(os.environ["CRDS_PATH"])
+        pass
+        # shutil.rmtree(os.environ["CRDS_PATH"])
     except:
         pass
     try:
