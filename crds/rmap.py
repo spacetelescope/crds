@@ -62,6 +62,7 @@ import ast
 
 from collections import namedtuple
 
+
 import crds
 from . import (log, utils, selectors, data_file, config)
 
@@ -307,7 +308,7 @@ class Mapping(object):
             if name not in self.header:
                 raise MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        self.extra_keys = selectors.underscore_dotted_parkeys(self.header.get("extra_keys", ()))
+        self.extra_keys = tuple(self.header.get("extra_keys", ()))
 
     @property
     def basename(self):
@@ -333,11 +334,6 @@ class Mapping(object):
             return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
-
-    @property
-    def parkey(self):
-        # internally,  treat META.INSTRUMENT.NAME --> META_INSTRUMENT_NAME
-        return selectors.underscore_dotted_parkeys(self.header["parkey"])
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
@@ -504,8 +500,8 @@ class Mapping(object):
             keys = self.get_required_parkeys()
         minimized = {}
         for key in keys:
-            # anything required but not present --> UNDEFINED
-            minimized[key] = header.get(key.lower(), header.get(key.upper(), "UNDEFINED"))
+            minimized[key] = header.get(key.lower(), 
+                                        header.get(key.upper(), "UNDEFINED"))
         return minimized
 
     def get_minimum_header(self, dataset, original_name=None):
@@ -1006,9 +1002,8 @@ class ReferenceMapping(Mapping):
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
         """
-        expr2 = re.sub(r"(\w+)\.(\w+)\.(\w+)", r"\1_\2_\3", expr)   # META.INSTRUMENT.NAME --> META_INSTRUMENT_NAME
         try:
-            return expr, MAPPING_VALIDATOR.compile_and_check(expr2, source=self.basename, mode="eval")
+            return expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")
         except FormatError as exc:
             raise MappingError("Can't load file " + repr(self.basename) + " : " + str(exc))
 
@@ -1522,13 +1517,10 @@ def get_best_references(context_file, header, include=None, condition=True):
     filekinds listed in `include`.
     """
     ctx = asmapping(context_file, cached=True)
-    # order here is important,  but JWST which typically has large headers
-    # requires header conditioning first to convert keywords to the form
-    # which can be minimized
-    if condition:
-        header = utils.condition_header(header)
     minheader = ctx.minimize_header(header)
     log.verbose("Bestrefs header:\n", log.PP(minheader))
+    if condition:
+        minheader = utils.condition_header(minheader)
     return ctx.get_best_references(minheader, include=include)
 
 
