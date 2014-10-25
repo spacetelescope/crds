@@ -1002,6 +1002,7 @@ class ReferenceMapping(Mapping):
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
         """
+        expr = utils.condition_source_code_keys(expr, self.get_required_parkeys())
         try:
             return expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")
         except FormatError as exc:
@@ -1041,8 +1042,9 @@ class ReferenceMapping(Mapping):
         """
         header_in = dict(header_in)
         log.verbose("Getting bestrefs:", self.basename, verbosity=55)
-        self.check_rmap_omit(header_in)     # Should bestref be omitted based on rmap_omit expr?
-        self.check_rmap_relevance(header_in)  # Should bestref be set N/A based on rmap_relevance expr?
+        expr_header = utils.condition_header_keys(header_in)
+        self.check_rmap_omit(expr_header)     # Should bestref be omitted based on rmap_omit expr?
+        self.check_rmap_relevance(expr_header)  # Should bestref be set N/A based on rmap_relevance expr?
         # Some filekinds, .e.g. ACS biasfile, mutate the header
         header = self._precondition_header(self, header_in) # Execute type-specific plugin if applicable
         header = self.map_irrelevant_parkeys_to_na(header)  # Execute rmap parkey_relevance conditions
@@ -1227,14 +1229,15 @@ class ReferenceMapping(Mapping):
         """Evaluate any relevance expression for each parkey, and if it's
         false,  then change the value to N/A.
         """
-        header2 = dict(header)
-        header2.update({parkey:"UNDEFINED" for parkey in self._required_parkeys if parkey not in header})
+        expr_header = dict(header)
+        expr_header.update({key:"UNDEFINED" for key in self._required_parkeys if key not in header})
+        expr_header = utils.condition_header_keys(expr_header)
         header = dict(header)  # copy
         for parkey in self._required_parkeys:  # Only add/overwrite irrelevant
             lparkey = parkey.lower()
             if lparkey in self._parkey_relevance_exprs:
                 source, compiled = self._parkey_relevance_exprs[lparkey]
-                relevant = eval(compiled, {}, header2)  # secured
+                relevant = eval(compiled, {}, expr_header)  # secured
                 log.verbose("Parkey", self.instrument, self.filekind, lparkey,
                             "is relevant:", relevant, repr(source), verbosity=55)
                 if not relevant:

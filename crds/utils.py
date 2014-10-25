@@ -1,5 +1,4 @@
-"""Generic utility routines used by a variety of modules.
-"""
+"""Generic utility routines used by a variety of modules."""
 import sys
 import os
 import os.path
@@ -579,6 +578,47 @@ def condition_header(header, needed_keys=None):
         needed_keys = [ key.upper() for key in needed_keys ]
     conditioned = { key:condition_value(header[key]) for key in needed_keys }
     return conditioned
+
+def _eval_keys(keys):
+    """Return the replacement mapping from rmap-visible parkeys to eval-able keys.
+
+    >>> _eval_keys(("META.INSTRUMENT.NAME",))
+    {'META.INSTRUMENT.NAME': 'META_INSTRUMENT_NAME'}
+
+    """
+    evalable_map = {}
+    for key in keys:
+        replacement = key.replace(".", "_")
+        if replacement != key:
+            evalable_map[key] = replacement
+    return evalable_map
+
+def condition_header_keys(header):
+    """Convert a matching parameter header into the form which supports eval(), ie.
+    JWST-style header keys.   Nominally for JWST data model style keys.
+
+    >>> condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"})
+    {'META.INSTRUMENT.NAME': 'NIRISS', 'META_INSTRUMENT_NAME': 'NIRISS'}
+
+    """
+    header = dict(header)
+    evalable_map = _eval_keys(header.keys())
+    if evalable_map:
+        header.update({ evalable_map[key] : header[key] for key in evalable_map })
+    return header
+
+def condition_source_code_keys(code, parkeys):
+    """Convert source code expressed in terms of parkeys into source code which works
+    with the evalable form of the parkey.   Nominally for JWST data model style keys.
+
+    >>> condition_source_code_keys('META.INSTRUMENT.NAME != "MIRI"', ('META.INSTRUMENT.NAME',))
+    'META_INSTRUMENT_NAME != "MIRI"'
+
+    """
+    evalable_map = _eval_keys(parkeys)
+    for key, replacement in evalable_map.items():
+        code = code.replace(key, replacement)
+    return code
 
 # ==============================================================================
 
