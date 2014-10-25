@@ -19,9 +19,11 @@ def update_checksums(files):
     """Rewrite the mapping checksums/hashes/sha1sums in all `files`."""
     for file_ in files:
         log.info("Updating checksum for", file_)
-        update_checksum(file_)
+        with log.error_on_exception("Failed updating checksum for", repr(file_)):
+            update_checksum(file_)
         
 if __name__ == "__main__":
     import crds
     crds.handle_version()
     update_checksums(sys.argv[1:])
+    log.standard_status()
