@@ -67,6 +67,8 @@ class ListScript(cmdline.ContextsScript):
             help="print out CRDS configuration information.")
         self.add_argument("--cat", nargs="+", dest="cat", metavar="FILES",
             help="print out the text of the specified mapping files.")
+        self.add_argument("--operational-context", action="store_true", dest="operational_context",
+            help="print out the name of the current operational context.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -85,6 +87,8 @@ class ListScript(cmdline.ContextsScript):
             self.list_config()
         if self.args.cat:
             self.cat_files()
+        if self.args.operational_context:
+            print(self.default_context)
 
     def cat_files(self):
         """Print out the files listed after --cat"""
