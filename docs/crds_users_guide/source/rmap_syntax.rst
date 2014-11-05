@@ -22,15 +22,15 @@ Naming
 The CRDS HST mapping prototypes which are generated from information scraped from 
 the CDBS web site are named with the forms::
 
-  <observatory> .pmap                               .e.g. hst.pmap
-  <observatory> _ <instrument> .imap                .e.g. hst_acs.imap 
-  <observatory> _ <instrument> _ <filekind> .rmap   .e.g. hst_acs_darkfile.rmap
+  <observatory> .pmap                               e.g. hst.pmap
+  <observatory> _ <instrument> .imap                e.g. hst_acs.imap 
+  <observatory> _ <instrument> _ <filekind> .rmap   e.g. hst_acs_darkfile.rmap
   
 The names of subsequent derived mappings include a version number::
 
-  <observatory> _ <version> .pmap                               .e.g. hst_00001.pmap
-  <observatory> _ <instrument> _ <version> .imap                .e.g. hst_acs_00047.imap 
-  <observatory> _ <instrument> _ <filekind> _ <version> .rmap  .e.g. hst_acs_darkfile_00012.rmap
+  <observatory> _ <version> .pmap                               e.g. hst_00001.pmap
+  <observatory> _ <instrument> _ <version> .imap                e.g. hst_acs_00047.imap 
+  <observatory> _ <instrument> _ <filekind> _ <version> .rmap   e.g. hst_acs_darkfile_00012.rmap
 
 Basic Structure
 ---------------
@@ -474,7 +474,7 @@ then a match tuple line like the following could be written::
 Here the value of G280_AMPS works like this:  first,   reference files listed
 under that match tuple define CCDAMP=G280_AMPS.   Second, datasets which should
 use those references define CCDAMP to a particular amplifier configuration,
-.e.g.  ABCD.   Hence,  the reference file specifies a set of applicable
+e.g.  ABCD.   Hence,  the reference file specifies a set of applicable
 amplifier configurations,  while the dataset specifies a particular
 configuration.   CRDS automatically expands substitutions into equivalent sets
 of match rules.
