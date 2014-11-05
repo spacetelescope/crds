@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +15,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -148,22 +150,20 @@ mapping is used to select a reference file.</p>
 definitions can be parsed directly by the Python interpreter.   Nothing
 precludes writing a parser for CRDS mappings in some other language.</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/file_relationships.png"><img alt="diagram of file relationships, .pmap -&gt; .imap -&gt; .rmap -&gt; .reference" src="_images/file_relationships.png" style="width: 595.5px; height: 446.5px;" /></a>
+<a class="reference internal image-reference" href="_images/file_relationships.png"><img alt="diagram of file relationships, .pmap -&gt; .imap -&gt; .rmap -&gt; .reference" src="_images/file_relationships.png" /></a>
 </div>
 <div class="section" id="naming">
 <h2>Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h2>
 <p>The CRDS HST mapping prototypes which are generated from information scraped from
 the CDBS web site are named with the forms:</p>
-<div class="highlight-python"><div class="highlight"><pre>&lt;observatory&gt; .pmap                               .e.g. hst.pmap
+<div class="highlight-python"><pre>&lt;observatory&gt; .pmap                               .e.g. hst.pmap
 &lt;observatory&gt; _ &lt;instrument&gt; .imap                .e.g. hst_acs.imap
-&lt;observatory&gt; _ &lt;instrument&gt; _ &lt;filekind&gt; .rmap   .e.g. hst_acs_darkfile.rmap
-</pre></div>
+&lt;observatory&gt; _ &lt;instrument&gt; _ &lt;filekind&gt; .rmap   .e.g. hst_acs_darkfile.rmap</pre>
 </div>
 <p>The names of subsequent derived mappings include a version number:</p>
-<div class="highlight-python"><div class="highlight"><pre>&lt;observatory&gt; _ &lt;version&gt; .pmap                               .e.g. hst_00001.pmap
+<div class="highlight-python"><pre>&lt;observatory&gt; _ &lt;version&gt; .pmap                               .e.g. hst_00001.pmap
 &lt;observatory&gt; _ &lt;instrument&gt; _ &lt;version&gt; .imap                .e.g. hst_acs_00047.imap
-&lt;observatory&gt; _ &lt;instrument&gt; _ &lt;filekind&gt; _ &lt;version&gt; .rmap  .e.g. hst_acs_darkfile_00012.rmap
-</pre></div>
+&lt;observatory&gt; _ &lt;instrument&gt; _ &lt;filekind&gt; _ &lt;version&gt; .rmap  .e.g. hst_acs_darkfile_00012.rmap</pre>
 </div>
 </div>
 <div class="section" id="basic-structure">
@@ -279,36 +279,35 @@ various dataset header keywords.</p>
 <h2>Active Header Fields<a class="headerlink" href="#active-header-fields" title="Permalink to this headline">¶</a></h2>
 <p>Many rmap header fields are passive metadata.   A number of optional rmap header fields,  however,  actively affect
 best reference lookups and results:</p>
-<div class="highlight-python"><div class="highlight"><pre>header = {
+<div class="highlight-python"><pre>header = {
           ...,
 
-    &#39;parkey&#39; : ((&#39;DETECTOR&#39;,), (&#39;DATE-OBS&#39;, &#39;TIME-OBS&#39;)),
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
 
-    &#39;extra_keys&#39; : (&#39;XCORNER&#39;, &#39;YCORNER&#39;, &#39;CCDCHIP&#39;),
+    'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
 
-    &#39;reffile_switch&#39; : &#39;BIASCORR&#39;,
+    'reffile_switch' : 'BIASCORR',
 
-    &#39;reffile_required&#39; : &#39;YES&#39;,
+    'reffile_required' : 'YES',
 
-    &#39;rmap_relevance&#39; : &#39;((DETECTOR != &quot;SBC&quot;) and (BIASCORR != &quot;OMIT&quot;))&#39;,
-    &#39;rmap_omit&#39; : &#39;((DETECTOR != &quot;SBC&quot;) and (BIASCORR != &quot;OMIT&quot;))&#39;,
+    'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
+    'rmap_omit' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
 
-    &#39;parkey_relevance&#39; : {
-        &#39;binaxis1&#39; : &#39;(DETECTOR == &quot;UVIS&quot;)&#39;,
-        &#39;binaxis2&#39; : &#39;(DETECTOR == &quot;UVIS&quot;)&#39;,
-        &#39;ccdgain&#39; : &#39;(DETECTOR == &quot;IR&quot;)&#39;,
-        &#39;samp_seq&#39; : &#39;(DETECTOR == &quot;IR&quot;)&#39;,
-        &#39;subtype&#39; : &#39;(DETECTOR == &quot;IR&quot;)&#39;,
+    'parkey_relevance' : {
+        'binaxis1' : '(DETECTOR == "UVIS")',
+        'binaxis2' : '(DETECTOR == "UVIS")',
+        'ccdgain' : '(DETECTOR == "IR")',
+        'samp_seq' : '(DETECTOR == "IR")',
+        'subtype' : '(DETECTOR == "IR")',
     },
 
-    &#39;hooks&#39; : {
-        &#39;fallback_header&#39; : &#39;fallback_header_acs_biasfile_v2&#39;,
-        &#39;precondition_header&#39; : &#39;precondition_header_acs_biasfile_v2&#39;,
+    'hooks' : {
+        'fallback_header' : 'fallback_header_acs_biasfile_v2',
+        'precondition_header' : 'precondition_header_acs_biasfile_v2',
     },
 
           ...,
-}
-</pre></div>
+}</pre>
 </div>
 <div class="section" id="required-parameters">
 <h3>Required Parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h3>
@@ -425,14 +424,12 @@ match candidates that cannot possibly match.</p>
 <h4>Parameter Tuples and Simple Matches<a class="headerlink" href="#parameter-tuples-and-simple-matches" title="Permalink to this headline">¶</a></h4>
 <p>The CRDS Match operator typically matches a dataset header against a tuple which defines multiple parameter values whose
 names are specified in the rmap header <tt class="xref py py-obj docutils literal"><span class="pre">parkey</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;UVIS&quot;, &quot;F122LP&quot;)   :  &#39;some_file_or_nested_selection&#39;
-</pre></div>
+<div class="highlight-python"><pre>("UVIS", "F122LP")   :  'some_file_or_nested_selection'</pre>
 </div>
 <p>Alternately,  for simple use cases the Match operator can match against single
 strings,  which is a simplified syntax for a 1-tuple:</p>
-<div class="highlight-python"><div class="highlight"><pre>&#39;UVIS&#39;  :  &#39;some_file_or_nested_selection&#39;
-(&#39;UVIS&#39;,) : &#39;this_is_the_equivalent_one_tuple&#39;
-</pre></div>
+<div class="highlight-python"><pre>'UVIS'  :  'some_file_or_nested_selection'
+('UVIS',) : 'this_is_the_equivalent_one_tuple'</pre>
 </div>
 </div>
 <div class="section" id="single-parameter-values">
@@ -445,8 +442,7 @@ Relationals, between, N/A, and Substitutions.</p>
 <h4>Or |<a class="headerlink" href="#or" title="Permalink to this headline">¶</a></h4>
 <p>Many CRDS match expressions consist of a series of match patterns separated by vertical bars.   The vertical bar is read
 as &#8220;or&#8221; and means that a match occurs if either pattern matches that dataset header.   For example, the expression:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;either_this|that&quot;,&quot;1|2|3&quot;)  : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("either_this|that","1|2|3")  : "some_file.fits"</pre>
 </div>
 <p>will match:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="s">&quot;either_this&quot;</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">)</span>
@@ -461,8 +457,7 @@ as &#8220;or&#8221; and means that a match occurs if either pattern matches that
 <h4>Wild Cards *<a class="headerlink" href="#wild-cards" title="Permalink to this headline">¶</a></h4>
 <p>By default,  * is interpreted in CRDS as a glob pattern,  much like UNIX shell file name matching.  * matches any
 sequence of characters.  The expression:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;F*122&quot;,) : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("F*122",) : "some_file.fits"</pre>
 </div>
 <p>will match any value starting with &#8220;F&#8221; and ending with &#8220;122&#8221;.</p>
 </div>
@@ -470,8 +465,7 @@ sequence of characters.  The expression:</p>
 <h4>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h4>
 <p>CRDS can match on true regular expressions.   A true regular expression match is
 triggered by bracketing the match in parentheses ():</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;(^F[^13]22$)&quot;,)  : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("(^F[^13]22$)",)  : "some_file.fits"</pre>
 </div>
 <p>The above corresponds to matching the regular expression &#8220;^F[^1234]22$&#8221; (note that the bracketing parentheses within the
 string are removed.)   Regular expression syntax is explained in the Python documentation for the re module. The above
@@ -482,8 +476,7 @@ expression will match values starting with &#8220;F&#8221;, followed by any char
 <p>A literal expression is bracketed with curly braces {} and is matched without
 any interpretation whatsoever.   Hence,  special characters like * or | are
 interpreted literally rather than as ors or wildcards.  The expression:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;{F|*G}&quot;,) : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("{F|*G}",) : "some_file.fits"</pre>
 </div>
 <p>matches the value &#8220;F|*G&#8221; as opposed to &#8220;F&#8221; or anything ending with &#8220;G&#8221;.</p>
 </div>
@@ -492,12 +485,10 @@ interpreted literally rather than as ors or wildcards.  The expression:</p>
 <p>Relational expressions are bracketed by the pound character #.   Relational
 expressions do numerical comparisons on the header value to determine a match.
 Relational expressions have implicit variables and support the operators:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt; &gt;= &lt; &lt;= == and or
-</pre></div>
+<div class="highlight-python"><pre>&gt; &gt;= &lt; &lt;= == and or</pre>
 </div>
 <p>The expression:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;# &gt;1 and &lt;37 #&quot;,)  : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("# &gt;1 and &lt;37 #",)  : "some_file.fits"</pre>
 </div>
 <p>will match any number greater than 1 and less than 37.</p>
 </div>
@@ -506,18 +497,15 @@ Relational expressions have implicit variables and support the operators:</p>
 <p>A special relational operator &#8220;between&#8221; is used to simply express a range
 of numbers &gt;= to the lower bound and &lt; the upper bound,  similar to Python
 slicing:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;between 1  47&quot;,) : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("between 1  47",) : "some_file.fits"</pre>
 </div>
 <p>will match any number greater than or equal to 1 and less than 47.   This is
 equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;# &gt;=1 and &lt;47 #&quot;,) : &quot;some_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("# &gt;=1 and &lt;47 #",) : "some_file.fits"</pre>
 </div>
 <p>Note that &#8220;between&#8221; matches sensibly stack into a complete range.  The expressions:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&quot;between 1 47&quot;,) : &quot;some_file.fits&quot;
-(&quot;between 47 90&quot;, ) : &quot;another_file.fits&quot;
-</pre></div>
+<div class="highlight-python"><pre>("between 1 47",) : "some_file.fits"
+("between 47 90", ) : "another_file.fits"</pre>
 </div>
 <p>provide complete coverage for the range between 1 and 90.</p>
 </div>
@@ -543,16 +531,14 @@ duplicate rmap rules.  In order to support WFC3 biasfile conventions,  CRDS
 rmaps permit the definition of meta-match-values which correspond to a set of
 actual dataset header values. For instance,  when an rmap header contains a
 &#8220;substitutions&#8221; field like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>&#39;substitutions&#39; : {
-    &#39;CCDAMP&#39; : {
-        &#39;G280_AMPS&#39; : (&#39;ABCD&#39;, &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;AC&#39;, &#39;AD&#39;, &#39;BC&#39;, &#39;BD&#39;),
+<div class="highlight-python"><pre>'substitutions' : {
+    'CCDAMP' : {
+        'G280_AMPS' : ('ABCD', 'A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD'),
     },
-},
-</pre></div>
+},</pre>
 </div>
 <p>then a match tuple line like the following could be written:</p>
-<div class="highlight-python"><div class="highlight"><pre>(&#39;UVIS&#39;, &#39;G280_AMPS&#39;, &#39;1.5&#39;, &#39;1.0&#39;, &#39;1.0&#39;, &#39;G280-REF&#39;, &#39;T&#39;) : UseAfter({
-</pre></div>
+<div class="highlight-python"><pre>('UVIS', 'G280_AMPS', '1.5', '1.0', '1.0', 'G280-REF', 'T') : UseAfter({</pre>
 </div>
 <p>Here the value of G280_AMPS works like this:  first,   reference files listed
 under that match tuple define CCDAMP=G280_AMPS.   Second, datasets which should
@@ -695,7 +681,7 @@ enclose the supplied parameter value:</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, STScI.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
