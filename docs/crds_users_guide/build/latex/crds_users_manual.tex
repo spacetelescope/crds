@@ -58,7 +58,7 @@
 
 
 \title{crds Documentation}
-\date{September 10, 2014}
+\date{November 05, 2014}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -594,21 +594,50 @@ any new reference or rules delivery,  changing the operational context,  or mark
 
 \subsection{Additional HST Settings}
 \label{installation:additional-hst-settings}
-HST calibration steps access reference files indirectly through environment variables.  Those variables
-should be set to point to the appropriate directory under CRDS\_PATH:
+HST calibration steps access reference files indirectly through environment variables.  There are two forms
+of CRDS cache reference file organization:  flat and with instrument subdirectories.   The original CRDS cache
+format was flat,  and the shared group cache at /grp/crds/cache remains flat.
+
+\textbf{Flat CRDS cache} For calibration software to use references in a CRDS cache with a flat reference file
+organization, including the default shared group readonly cache at /grp/crds/cache,  set these environment
+variables:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-\PYGZpc{} setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-\PYGZpc{} setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-\PYGZpc{} setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-\PYGZpc{} setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-\PYGZpc{} setenv uref \PYGZdl{}\PYGZob{}uref\PYGZus{}linux\PYGZcb{}
-\PYGZpc{} setenv uref\PYGZus{}linux \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv uref\PYGZus{}linux \PYGZdl{}\PYGZdl{}uref
 \end{Verbatim}
 
-Currently the CRDS cache is structured so that references from all instruments of a project reside in one common
-directory.
+\textbf{By-Instrument CRDS cache} For calibration software to use references in a CRDS cache with a by-instrument
+organization, the default for newly created caches in the future, set these environment variables:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/iref
+setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/jref
+setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/oref
+setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/lref
+setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/nref
+setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/uref
+setenv uref\PYGZus{}linux \PYGZdl{}uref
+\end{Verbatim}
+
+\textbf{Reorganizing CRDS References} The crds.sync tool can be used to reorganize the directory structure of a large
+existing CRDS cache as follows to switch from flat to by-instrument:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}organize=instrument
+
+\PYGZsh{} or to switch from by\PYGZhy{}instrument to flat
+
+python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}organize=flat
+\end{Verbatim}
+
+Another simpler approach is to delete and recreate your existing cache, more feasible for small personal caches
+than for complete terabyte-scale caches.
 
 
 \subsection{JWST Context}
@@ -767,8 +796,8 @@ Some of the command line tools also interact with the CRDS server in order to
 implement their functionality.
 
 
-\section{Specifying Files}
-\label{command_line_tools:specifying-files}
+\section{Specifying File Paths}
+\label{command_line_tools:specifying-file-paths}
 The command line tools operate on CRDS reference and mapping files in various
 ways.  To specify a file in your local CRDS file cache,  as defined by CRDS\_PATH,
 use no path on the file:
@@ -783,6 +812,409 @@ a relative path to the file, ./ will do:
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYGZpc{} python \PYGZhy{}m crds.diff /some/path/hst.pmap ./hst\PYGZus{}0002.pmap   \PYGZsh{} uses given paths
 \end{Verbatim}
+
+
+\section{crds.bestrefs}
+\label{command_line_tools:crds-bestrefs}
+crds.bestrefs computes the best references with respect to a particular context or contexts
+for a set of FITS files, dataset ids,  or instruments:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+usage: /Users/jmiller/work/workspace\PYGZus{}crds/CRDS\PYGZhy{}opus\PYGZus{}2014.4/crds/bestrefs.py
+       [\PYGZhy{}h] [\PYGZhy{}n NEW\PYGZus{}CONTEXT] [\PYGZhy{}o OLD\PYGZus{}CONTEXT] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}old\PYGZhy{}headers] [\PYGZhy{}c]
+       [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}d IDs [IDs ...]] [\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments]
+       [\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...]]
+       [\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]]
+       [\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]]
+       [\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only] [\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE]
+       [\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]] [\PYGZhy{}a SAVE\PYGZus{}PICKLE]
+       [\PYGZhy{}\PYGZhy{}update\PYGZhy{}pickle] [\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]] [\PYGZhy{}u] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected]
+       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references]
+       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts] [\PYGZhy{}r] [\PYGZhy{}m SYNC\PYGZus{}MAPPINGS] [\PYGZhy{}s SYNC\PYGZus{}REFERENCES]
+       [\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors] [\PYGZhy{}e] [\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter]
+       [\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter] [\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs] [\PYGZhy{}z] [\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors]
+       [\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE]
+       [\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE] [\PYGZhy{}v] [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R]
+       [\PYGZhy{}I] [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H] [\PYGZhy{}\PYGZhy{}stats] [\PYGZhy{}\PYGZhy{}profile PROFILE] [\PYGZhy{}\PYGZhy{}log\PYGZhy{}time] [\PYGZhy{}\PYGZhy{}pdb]
+\end{Verbatim}
+\begin{itemize}
+\item {} 
+Determines best references with respect to a context or contexts.
+
+\item {} 
+Optionally compares new results to prior results.
+
+\item {} 
+Optionally prints source data names affected by the new context.
+
+\item {} 
+Optionally updates the headers of file-based data with new recommendations.
+
+\end{itemize}
+
+Bestrefs has a number of command line parameters which make it operate in different modes.
+\begin{itemize}
+\item {} 
+optional arguments:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+\PYGZhy{}n NEW\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}new\PYGZhy{}context NEW\PYGZus{}CONTEXT
+                    Compute the updated best references using this context. Uses current operational context by default.
+\PYGZhy{}o OLD\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}old\PYGZhy{}context OLD\PYGZus{}CONTEXT
+                    Compare bestrefs recommendations from two contexts.
+\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}old\PYGZhy{}headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
+\PYGZhy{}c, \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs
+                    Compare new bestrefs recommendations to recommendations from data source,  files or database.
+\PYGZhy{}f FILES [FILES ...], \PYGZhy{}\PYGZhy{}files FILES [FILES ...]
+                    Dataset files to compute best references for.
+\PYGZhy{}d IDs [IDs ...], \PYGZhy{}\PYGZhy{}datasets IDs [IDs ...]
+                    Dataset ids to consult database for matching parameters and old results.
+\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments     Compute best references for cataloged datasets for all supported instruments in database.
+\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...], \PYGZhy{}\PYGZhy{}instruments INSTRUMENTS [INSTRUMENTS ...]
+                    Instruments to compute best references for, all historical datasets in database.
+\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}types REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]
+                    A list of reference types to process,  defaulting to all types.
+\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}skip\PYGZhy{}types SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]
+                    A list of reference types which should not be processed,  defaulting to nothing.
+\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only          For context\PYGZhy{}to\PYGZhy{}context comparison, choose only instruments and types from context differences.
+\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE
+                    Cut\PYGZhy{}off date for datasets, none earlier than this.  Use \PYGZsq{}auto\PYGZsq{} to exploit reference USEAFTER.
+\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]], \PYGZhy{}\PYGZhy{}load\PYGZhy{}pickles [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]
+                    Load dataset headers and prior bestrefs from pickle files,  in worst\PYGZhy{}to\PYGZhy{}best update order.  Can also load .json files.
+\PYGZhy{}a SAVE\PYGZus{}PICKLE, \PYGZhy{}\PYGZhy{}save\PYGZhy{}pickle SAVE\PYGZus{}PICKLE
+                    Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
+\PYGZhy{}\PYGZhy{}update\PYGZhy{}pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
+\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]
+                    If specified, process only the listed dataset ids.
+\PYGZhy{}u, \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
+                    Update sources with new best reference recommendations.
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected      Print names of products for which the new context would assign new references for some exposure.
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details
+                    Include instrument and affected types in addition to compound names of affected exposures.
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references
+                    Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
+\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts
+                    Prints dictionary of update counts by instrument and type,  status on updated files.
+\PYGZhy{}r, \PYGZhy{}\PYGZhy{}remote\PYGZhy{}bestrefs
+                    Compute best references on CRDS server,  convenience for env var CRDS\PYGZus{}MODE=\PYGZsq{}remote\PYGZsq{}
+\PYGZhy{}m SYNC\PYGZus{}MAPPINGS, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}mappings SYNC\PYGZus{}MAPPINGS
+                    Fetch the required context mappings to the local cache.  Defaults TRUE.
+\PYGZhy{}s SYNC\PYGZus{}REFERENCES, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references SYNC\PYGZus{}REFERENCES
+                    Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
+\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors
+                    Treat recommendation differences between new context and original source as errors.
+\PYGZhy{}e, \PYGZhy{}\PYGZhy{}bad\PYGZhy{}files\PYGZhy{}are\PYGZhy{}errors
+                    Treat recommendations of known bad/invalid files as errors, not warnings.
+\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter
+                    If not set, a transition from UNDEFINED to anything else is not considered a difference error.
+\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter
+                    If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
+\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs        Abbreviation for \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors \PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors \PYGZhy{}\PYGZhy{}stats
+\PYGZhy{}z, \PYGZhy{}\PYGZhy{}optimize\PYGZhy{}tables
+                    If set, apply row\PYGZhy{}based optimizations to screen out inconsequential table updates.
+\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors  Record and dump the first instance of each kind of error.
+\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE
+                    Write out data names (ids or filenames) for first instance of unique errors to specified file.
+\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE
+                    Write out all err\PYGZsq{}ing data names (ids or filenames) to specified file.
+\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
+                    Set log verbosity to a specific level: 0..100.
+\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+\PYGZhy{}I, \PYGZhy{}\PYGZhy{}ignore\PYGZhy{}cache    Download required files even if they\PYGZsq{}re already in the cache.
+\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
+\PYGZhy{}\PYGZhy{}stats               Track and print timing statistics.
+\PYGZhy{}\PYGZhy{}profile PROFILE     Output profile stats to the specified file.
+\PYGZhy{}\PYGZhy{}log\PYGZhy{}time            Add date/time to log messages.
+\PYGZhy{}\PYGZhy{}pdb                 Run under pdb.
+\end{Verbatim}
+
+\end{itemize}
+
+
+\subsection{File Oriented Best References}
+\label{command_line_tools:file-oriented-best-references}
+The most common end-user use case for crds.bestrefs is to assign best references to the header keywords of
+dataset FITS files.   This can be done as follows:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references=1 \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits ...
+\end{Verbatim}
+
+which will use the CRDS rules currently operational in the pipeline and download any required CRDS rules and reference files
+to your CRDS cache automatically.   No download should occur for previously cached files or the default group readonly reference
+cache.
+
+A specific historical set of CRDS rules can be used by specifying --new-context:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst\PYGZus{}0294.pmap \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references=1 \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits ...
+\end{Verbatim}
+
+
+\subsection{New Context}
+\label{command_line_tools:new-context}
+crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the
+--new-context parameter.    If --new-context is not specified,  the default operational context is determined by
+consulting the CRDS server or looking in the local cache.
+
+
+\subsection{Lookup Parameter Sources}
+\label{command_line_tools:lookup-parameter-sources}
+The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually
+lookup parameters are always associated with particular datasets and used to identify the references
+required to process those datasets.
+
+The options --files, --datasets, --instruments, and --all-instruments determine the source of lookup parameters:
+\begin{enumerate}
+\item {} 
+To find best references for a list of files do something like this:
+\begin{quote}
+
+\% python -m crds.bestrefs --new-context hst.pmap --file j8bt05njq\_raw.fits j8bt06o6q\_raw.fits j8bt09jcq\_raw.fits
+\end{quote}
+
+\end{enumerate}
+
+the first parameter, hst.pmap,  is the context with respect to which best references are determined.
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item {} 
+To find best references for a list of catalog dataset ids do something like this:
+\begin{quote}
+
+\% python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
+\end{quote}
+
+\item {} 
+To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
+\begin{quote}
+
+\% python -m crds.bestrefs --new-context hst.pmap --instruments acs
+\end{quote}
+
+\item {} 
+To do mass scale testing for all supported instruments for all cataloged datasets do:
+\begin{quote}
+
+\% python -m crds.bestrefs --new-context hst.pmap --all-instruments
+
+or to test for differences between two contexts
+
+\% python -m crds.bestrefs --new-context hst\_0002.pmap --old-context hst\_0001.pmap --all-instruments
+\end{quote}
+
+\end{enumerate}
+
+
+\subsection{Comparison Modes}
+\label{command_line_tools:comparison-modes}
+The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
+the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from
+the newly computed bestrefs determined by --new-context.
+
+
+\subsubsection{Context-to-Context}
+\label{command_line_tools:context-to-context}
+--old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context
+implies that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it
+defaults to None.
+
+
+\subsubsection{Prior Source Recommendations}
+\label{command_line_tools:prior-source-recommendations}
+--compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
+recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
+cases the prior best references are recorded static values,  not dynamically computed bestrefs.
+
+
+\subsection{Output Modes}
+\label{command_line_tools:output-modes}
+crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
+
+If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
+one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
+    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected
+j8bt05njq\PYGZus{}raw.fits
+j8bt06o6q\PYGZus{}raw.fits
+j8bt09jcq\PYGZus{}raw.fits
+\end{Verbatim}
+
+
+\subsection{Update Modes}
+\label{command_line_tools:update-modes}
+crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
+    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
+\end{Verbatim}
+
+
+\subsection{Verbosity}
+\label{command_line_tools:verbosity}
+crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational
+and debug output.
+
+
+\section{crds.sync}
+\label{command_line_tools:crds-sync}
+The CRDS sync tool is used to download CRDS rules and references from the CRDS server:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+usage: python \PYGZhy{}m crds.sync
+   [\PYGZhy{}h] [\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]] [\PYGZhy{}\PYGZhy{}range MIN:MAX] [\PYGZhy{}\PYGZhy{}all]
+   [\PYGZhy{}\PYGZhy{}last N] [\PYGZhy{}i] [\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]]
+   [\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references]
+   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings] [\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run] [\PYGZhy{}k] [\PYGZhy{}s] [\PYGZhy{}r]
+   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db] [\PYGZhy{}v]
+   [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R] [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H]
+
+Synchronize local mapping and reference caches for the given contexts by
+downloading missing files from the CRDS server and/or archive.
+\end{Verbatim}
+
+optional arguments:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]
+                      Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date\PYGZhy{}based specification
+\PYGZhy{}\PYGZhy{}range MIN:MAX       Operate for pipeline context ids (.pmaps) between \PYGZlt{}MIN\PYGZgt{} and \PYGZlt{}MAX\PYGZgt{}.
+\PYGZhy{}\PYGZhy{}all                 Operate with respect to all known CRDS contexts.
+\PYGZhy{}\PYGZhy{}last N              Operate with respect to the last N contexts.
+\PYGZhy{}i, \PYGZhy{}\PYGZhy{}ignore\PYGZhy{}cache    Download required files even if they\PYGZsq{}re already in the cache.
+\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]
+                      Explicitly list files to be synced.
+\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]
+                      Cache references for the specified datasets.
+\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references    Cache all the references for the specified contexts.
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references    Remove reference files not referred to by contexts from the cache.
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings      Remove mapping files not referred to by contexts from the cache.
+\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run             Don\PYGZsq{}t remove purged files, or repair files,  just print out their names.
+\PYGZhy{}k, \PYGZhy{}\PYGZhy{}check\PYGZhy{}files     Check cached files against the CRDS database and report anomalies.
+\PYGZhy{}s, \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum   For \PYGZhy{}\PYGZhy{}check\PYGZhy{}files,  also verify file sha1sums.
+\PYGZhy{}r, \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files    Repair or re\PYGZhy{}download files noted as bad by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected      Purge files noted as rejected by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
+\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db     Download a sqlite3 version of the CRDS file catalog.
+\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
+                      Set log verbosity to a specific level: 0..100.
+\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
+\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
+\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
+\end{Verbatim}
+\begin{itemize}
+\item {} 
+Primitive syncing can be done by explicitly listing the files you wish to cache:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}files hst\PYGZus{}0001.pmap hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0037.fits
+\end{Verbatim}
+
+\end{itemize}
+
+this will download only those two files.
+\begin{itemize}
+\item {} 
+Typically syncing CRDS files is done with respect to particular CRDS contexts:
+
+\end{itemize}
+
+Synced contexts can be explicitly listed:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap
+\end{Verbatim}
+
+this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
+
+Synced contexts can be specified as a numerical range:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}range 1:3
+\end{Verbatim}
+
+this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
+
+Synced contexts can be specified as --all contexts:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}all
+\end{Verbatim}
+
+this will recursively download all CRDS mappings for all time.
+
+NOTE:  Fetching references required to support contexts has to be done explicitly:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap  \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references
+\end{Verbatim}
+
+will download all the references mentioned by contexts 0001 and 0002.
+this can be a huge (1T+) network download and should generally only be used by
+institutions,  not individual researchers.
+\begin{itemize}
+\item {} 
+Removing files:
+
+\end{itemize}
+
+Files from unspecified contexts can be removed like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0004.pmap hst\PYGZus{}0005.pmap \PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings
+\end{Verbatim}
+
+this would remove mappings which are \emph{not} in contexts 4 or 5.
+\begin{quote}
+
+\% python -m crds.sync  --contexts hst\_0004.pmap hst\_0005.pmap --purge-references
+\end{quote}
+
+this would remove reference files which are \emph{not} in 4 or 5.
+\begin{itemize}
+\item {} 
+References for particular datasets can be cached like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap \PYGZhy{}\PYGZhy{}datasets  \PYGZlt{}dataset\PYGZus{}files...\PYGZgt{}
+\end{Verbatim}
+
+\end{itemize}
+
+this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
+this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
+\begin{itemize}
+\item {} 
+Checking the cache:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files
+\end{Verbatim}
+
+\end{itemize}
+
+would first sync the cache downloading all the files in hst\_0001.pmap.  Both mappings and references would then
+be checked for correct length, sha1sum, and status.   Any files with bad length or checksum
+would then be deleted and re-downloaded.   This is really intended for an \emph{existing} cache.
+
+Removing blacklisted or rejected files:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected \PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted
+\end{Verbatim}
+
+would first sync the cache downloading all the files in hst\_0001.pmap.  Both mappings and references would then
+be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
 
 
 \section{crds.certify}
@@ -1134,380 +1566,6 @@ lc41311jj\PYGZus{}pfl.fits :  \PYGZsq{}WFC\PYGZsq{} \PYGZsq{}A\textbar{}ABCD\tex
 \PYGZpc{} python \PYGZhy{}m crds.matches \PYGZhy{}\PYGZhy{}contexts hst.pmap \PYGZhy{}\PYGZhy{}files lc41311jj\PYGZus{}pfl.fits \PYGZhy{}\PYGZhy{}tuple\PYGZhy{}format
 lc41311jj\PYGZus{}pfl.fits : ((\PYGZsq{}OBSERVATORY\PYGZsq{}, \PYGZsq{}HST\PYGZsq{}), (\PYGZsq{}INSTRUMENT\PYGZsq{}, \PYGZsq{}ACS\PYGZsq{}), (\PYGZsq{}FILEKIND\PYGZsq{}, \PYGZsq{}PFLTFILE\PYGZsq{}), (\PYGZsq{}DETECTOR\PYGZsq{}, \PYGZsq{}WFC\PYGZsq{}), (\PYGZsq{}CCDAMP\PYGZsq{}, \PYGZsq{}A\textbar{}ABCD\textbar{}AC\textbar{}AD\textbar{}B\textbar{}BC\textbar{}BD\textbar{}C\textbar{}D\PYGZsq{}), (\PYGZsq{}FILTER1\PYGZsq{}, \PYGZsq{}F625W\PYGZsq{}), (\PYGZsq{}FILTER2\PYGZsq{}, \PYGZsq{}POL0V\PYGZsq{}), (\PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}1997\PYGZhy{}01\PYGZhy{}01\PYGZsq{}), (\PYGZsq{}TIME\PYGZhy{}OBS\PYGZsq{}, \PYGZsq{}00:00:00\PYGZsq{}))
 \end{Verbatim}
-
-
-\section{crds.sync}
-\label{command_line_tools:crds-sync}
-The CRDS sync tool is used to download CRDS rules and references from the CRDS server:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: python \PYGZhy{}m crds.sync
-   [\PYGZhy{}h] [\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]] [\PYGZhy{}\PYGZhy{}range MIN:MAX] [\PYGZhy{}\PYGZhy{}all]
-   [\PYGZhy{}\PYGZhy{}last N] [\PYGZhy{}i] [\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]]
-   [\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references]
-   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings] [\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run] [\PYGZhy{}k] [\PYGZhy{}s] [\PYGZhy{}r]
-   [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected] [\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted] [\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db] [\PYGZhy{}v]
-   [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R] [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H]
-
-Synchronize local mapping and reference caches for the given contexts by
-downloading missing files from the CRDS server and/or archive.
-\end{Verbatim}
-
-optional arguments:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
-\PYGZhy{}\PYGZhy{}contexts [CONTEXT [CONTEXT ...]]
-                      Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date\PYGZhy{}based specification
-\PYGZhy{}\PYGZhy{}range MIN:MAX       Operate for pipeline context ids (.pmaps) between \PYGZlt{}MIN\PYGZgt{} and \PYGZlt{}MAX\PYGZgt{}.
-\PYGZhy{}\PYGZhy{}all                 Operate with respect to all known CRDS contexts.
-\PYGZhy{}\PYGZhy{}last N              Operate with respect to the last N contexts.
-\PYGZhy{}i, \PYGZhy{}\PYGZhy{}ignore\PYGZhy{}cache    Download required files even if they\PYGZsq{}re already in the cache.
-\PYGZhy{}\PYGZhy{}files [FILES [FILES ...]]
-                      Explicitly list files to be synced.
-\PYGZhy{}\PYGZhy{}datasets [DATASET [DATASET ...]]
-                      Cache references for the specified datasets.
-\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references    Cache all the references for the specified contexts.
-\PYGZhy{}\PYGZhy{}purge\PYGZhy{}references    Remove reference files not referred to by contexts from the cache.
-\PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings      Remove mapping files not referred to by contexts from the cache.
-\PYGZhy{}\PYGZhy{}dry\PYGZhy{}run             Don\PYGZsq{}t remove purged files, or repair files,  just print out their names.
-\PYGZhy{}k, \PYGZhy{}\PYGZhy{}check\PYGZhy{}files     Check cached files against the CRDS database and report anomalies.
-\PYGZhy{}s, \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum   For \PYGZhy{}\PYGZhy{}check\PYGZhy{}files,  also verify file sha1sums.
-\PYGZhy{}r, \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files    Repair or re\PYGZhy{}download files noted as bad by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
-\PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected      Purge files noted as rejected by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
-\PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted   Purge files (and their mapping anscestors) noted as blacklisted by \PYGZhy{}\PYGZhy{}check\PYGZhy{}files
-\PYGZhy{}\PYGZhy{}fetch\PYGZhy{}sqlite\PYGZhy{}db     Download a sqlite3 version of the CRDS file catalog.
-\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
-\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
-                      Set log verbosity to a specific level: 0..100.
-\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
-\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
-\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
-\end{Verbatim}
-\begin{itemize}
-\item {} 
-Primitive syncing can be done by explicitly listing the files you wish to cache:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}files hst\PYGZus{}0001.pmap hst\PYGZus{}acs\PYGZus{}darkfile\PYGZus{}0037.fits
-\end{Verbatim}
-
-\end{itemize}
-
-this will download only those two files.
-\begin{itemize}
-\item {} 
-Typically syncing CRDS files is done with respect to particular CRDS contexts:
-
-\end{itemize}
-
-Synced contexts can be explicitly listed:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap
-\end{Verbatim}
-
-this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
-
-Synced contexts can be specified as a numerical range:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}range 1:3
-\end{Verbatim}
-
-this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
-
-Synced contexts can be specified as --all contexts:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}all
-\end{Verbatim}
-
-this will recursively download all CRDS mappings for all time.
-
-NOTE:  Fetching references required to support contexts has to be done explicitly:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap  \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references
-\end{Verbatim}
-
-will download all the references mentioned by contexts 0001 and 0002.
-this can be a huge (1T+) network download and should generally only be used by
-institutions,  not individual researchers.
-\begin{itemize}
-\item {} 
-Removing files:
-
-\end{itemize}
-
-Files from unspecified contexts can be removed like this:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0004.pmap hst\PYGZus{}0005.pmap \PYGZhy{}\PYGZhy{}purge\PYGZhy{}mappings
-\end{Verbatim}
-
-this would remove mappings which are \emph{not} in contexts 4 or 5.
-\begin{quote}
-
-\% python -m crds.sync  --contexts hst\_0004.pmap hst\_0005.pmap --purge-references
-\end{quote}
-
-this would remove reference files which are \emph{not} in 4 or 5.
-\begin{itemize}
-\item {} 
-References for particular datasets can be cached like this:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync  \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap hst\PYGZus{}0002.pmap \PYGZhy{}\PYGZhy{}datasets  \PYGZlt{}dataset\PYGZus{}files...\PYGZgt{}
-\end{Verbatim}
-
-\end{itemize}
-
-this will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
-this mode does not update dataset file headers.  See also crds.bestrefs for header updates.
-\begin{itemize}
-\item {} 
-Checking the cache:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}check\PYGZhy{}sha1sum \PYGZhy{}\PYGZhy{}repair\PYGZhy{}files
-\end{Verbatim}
-
-\end{itemize}
-
-would first sync the cache downloading all the files in hst\_0001.pmap.  Both mappings and references would then
-be checked for correct length, sha1sum, and status.   Any files with bad length or checksum
-would then be deleted and re-downloaded.   This is really intended for an \emph{existing} cache.
-
-Removing blacklisted or rejected files:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}contexts hst\PYGZus{}0001.pmap \PYGZhy{}\PYGZhy{}fetch\PYGZhy{}references \PYGZhy{}\PYGZhy{}check\PYGZhy{}files \PYGZhy{}\PYGZhy{}purge\PYGZhy{}rejected \PYGZhy{}\PYGZhy{}purge\PYGZhy{}blacklisted
-\end{Verbatim}
-
-would first sync the cache downloading all the files in hst\_0001.pmap.  Both mappings and references would then
-be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
-
-
-\section{crds.bestrefs}
-\label{command_line_tools:crds-bestrefs}
-crds.bestrefs computes the best references with respect to a particular context or contexts
-for a set of FITS files, dataset ids,  or instruments:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: python \PYGZhy{}m crds.bestrefs
-       [\PYGZhy{}h] [\PYGZhy{}n NEW\PYGZus{}CONTEXT] [\PYGZhy{}o OLD\PYGZus{}CONTEXT] [\PYGZhy{}c] [\PYGZhy{}f FILES [FILES ...]]
-       [\PYGZhy{}d IDs [IDs ...]] [\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments]
-       [\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...]]
-       [\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]]
-       [\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]]
-       [\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only] [\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE]
-       [\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]] [\PYGZhy{}a SAVE\PYGZus{}PICKLE]
-       [\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]] [\PYGZhy{}u] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected]
-       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details] [\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references]
-       [\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts] [\PYGZhy{}r] [\PYGZhy{}m SYNC\PYGZus{}MAPPINGS] [\PYGZhy{}s SYNC\PYGZus{}REFERENCES]
-       [\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors] [\PYGZhy{}e] [\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter]
-       [\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter] [\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs] [\PYGZhy{}z] [\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors]
-       [\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE]
-       [\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE] [\PYGZhy{}v] [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R]
-       [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H]
-\end{Verbatim}
-\begin{itemize}
-\item {} 
-Determines best references with respect to a context or contexts.
-
-\item {} 
-Optionally compares new results to prior results.
-
-\item {} 
-Optionally prints source data names affected by the new context.
-
-\item {} 
-Optionally updates the headers of file-based data with new recommendations.
-
-\item {} 
-optional arguments:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
-\PYGZhy{}n NEW\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}new\PYGZhy{}context NEW\PYGZus{}CONTEXT
-                      Compute the updated best references using this context. Uses current operational context by default.
-\PYGZhy{}o OLD\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}old\PYGZhy{}context OLD\PYGZus{}CONTEXT
-                      Compare bestrefs recommendations from two contexts.
-\PYGZhy{}c, \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs
-                      Compare new bestrefs recommendations to recommendations from data source,  files or database.
-\PYGZhy{}f FILES [FILES ...], \PYGZhy{}\PYGZhy{}files FILES [FILES ...]
-                      Dataset files to compute best references for.
-\PYGZhy{}d IDs [IDs ...], \PYGZhy{}\PYGZhy{}datasets IDs [IDs ...]
-                      Dataset ids to consult database for matching parameters and old results.
-\PYGZhy{}\PYGZhy{}all\PYGZhy{}instruments     Compute best references for cataloged datasets for all supported instruments in database.
-\PYGZhy{}i INSTRUMENTS [INSTRUMENTS ...], \PYGZhy{}\PYGZhy{}instruments INSTRUMENTS [INSTRUMENTS ...]
-                      Instruments to compute best references for, all historical datasets in database.
-\PYGZhy{}t REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}types REFERENCE\PYGZus{}TYPES [REFERENCE\PYGZus{}TYPES ...]
-                      A list of reference types to process,  defaulting to all types.
-\PYGZhy{}k SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...], \PYGZhy{}\PYGZhy{}skip\PYGZhy{}types SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES [SKIPPED\PYGZus{}REFERENCE\PYGZus{}TYPES ...]
-                      A list of reference types which should not be processed,  defaulting to nothing.
-\PYGZhy{}\PYGZhy{}diffs\PYGZhy{}only          For context\PYGZhy{}to\PYGZhy{}context comparison, choose only instruments and types from context differences.
-\PYGZhy{}\PYGZhy{}datasets\PYGZhy{}since DATASETS\PYGZus{}SINCE
-                      Cut\PYGZhy{}off date for datasets, none earlier than this.  Use \PYGZsq{}auto\PYGZsq{} to exploit reference USEAFTER.
-\PYGZhy{}p [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]], \PYGZhy{}\PYGZhy{}load\PYGZhy{}pickles [LOAD\PYGZus{}PICKLES [LOAD\PYGZus{}PICKLES ...]]
-                      Load dataset headers and prior bestrefs from pickle files,  in worst\PYGZhy{}to\PYGZhy{}best update order.
-\PYGZhy{}a SAVE\PYGZus{}PICKLE, \PYGZhy{}\PYGZhy{}save\PYGZhy{}pickle SAVE\PYGZus{}PICKLE
-                      Write out the combined dataset headers to the specified pickle file.
-\PYGZhy{}\PYGZhy{}only\PYGZhy{}ids [IDS [IDS ...]]
-                      If specified, process only the listed dataset ids.
-\PYGZhy{}u, \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
-                      Update dataset headers with new best reference recommendations.
-\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected      Print names of products for which the new context would assign new references for some exposure.
-\PYGZhy{}\PYGZhy{}print\PYGZhy{}affected\PYGZhy{}details
-                      Include instrument and affected types in addition to compound names of affected exposures.
-\PYGZhy{}\PYGZhy{}print\PYGZhy{}new\PYGZhy{}references
-                      Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
-\PYGZhy{}\PYGZhy{}print\PYGZhy{}update\PYGZhy{}counts
-                      Prints dictionary of update counts by instrument and type,  status on updated files.
-\PYGZhy{}r, \PYGZhy{}\PYGZhy{}remote\PYGZhy{}bestrefs
-                      Compute best references on CRDS server,  convenience for env var CRDS\PYGZus{}MODE=\PYGZsq{}remote\PYGZsq{}
-\PYGZhy{}m SYNC\PYGZus{}MAPPINGS, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}mappings SYNC\PYGZus{}MAPPINGS
-                      Fetch the required context mappings to the local cache.  Defaults TRUE.
-\PYGZhy{}s SYNC\PYGZus{}REFERENCES, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references SYNC\PYGZus{}REFERENCES
-                      Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
-\PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors
-                      Treat recommendation differences between new context and original source as errors.
-\PYGZhy{}e, \PYGZhy{}\PYGZhy{}bad\PYGZhy{}files\PYGZhy{}are\PYGZhy{}errors
-                      Treat recommendations of known bad/invalid files as errors, not warnings.
-\PYGZhy{}\PYGZhy{}undefined\PYGZhy{}differences\PYGZhy{}matter
-                      If not set, a transition from UNDEFINED to anything else is not considered a difference error.
-\PYGZhy{}\PYGZhy{}na\PYGZhy{}differences\PYGZhy{}matter
-                      If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
-\PYGZhy{}\PYGZhy{}compare\PYGZhy{}cdbs        Abbreviation for \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}differences\PYGZhy{}are\PYGZhy{}errors \PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors \PYGZhy{}\PYGZhy{}stats
-\PYGZhy{}z, \PYGZhy{}\PYGZhy{}optimize\PYGZhy{}tables
-                      If set, apply row\PYGZhy{}based optimizations to screen out inconsequential table updates.
-\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors  Record and dump the first instance of each kind of error.
-\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE
-                      Write out data names (ids or filenames) for first instance of unique errors to specified file.
-\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE
-                      Write out all err\PYGZsq{}ing data names (ids or filenames) to specified file.
-\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
-\PYGZhy{}\PYGZhy{}verbosity VERBOSITY
-                      Set log verbosity to a specific level: 0..100.
-\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-\PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
-\PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
-\PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
-\end{Verbatim}
-
-\end{itemize}
-
-Bestrefs has a number of command line parameters which make it operate in different modes.
-
-
-\subsection{New Context}
-\label{command_line_tools:new-context}
-crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the
---new-context parameter.    If --new-context is not specified,  the default operational context is determined by
-consulting the CRDS server or looking in the local cache.
-
-
-\subsection{Lookup Parameter Sources}
-\label{command_line_tools:lookup-parameter-sources}
-The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually
-lookup parameters are always associated with particular datasets and used to identify the references
-required to process those datasets.
-
-The options --files, --datasets, --instruments, and --all-instruments determine the source of lookup parameters:
-\begin{enumerate}
-\item {} 
-To find best references for a list of files do something like this:
-\begin{quote}
-
-\% python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq\_raw.fits j8bt06o6q\_raw.fits j8bt09jcq\_raw.fits
-\end{quote}
-
-\end{enumerate}
-
-the first parameter, hst.pmap,  is the context with respect to which best references are determined.
-\begin{enumerate}
-\setcounter{enumi}{1}
-\item {} 
-To find best references for a list of catalog dataset ids do something like this:
-\begin{quote}
-
-\% python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
-\end{quote}
-
-\item {} 
-To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
-\begin{quote}
-
-\% python -m crds.bestrefs --new-context hst.pmap --instruments acs
-\end{quote}
-
-\item {} 
-To do mass scale testing for all supported instruments for all cataloged datasets do:
-\begin{quote}
-
-\% python -m crds.bestrefs --new-context hst.pmap --all-instruments
-
-or to test for differences between two contexts
-
-\% python -m crds.bestrefs --new-context hst\_0002.pmap --old-context hst\_0001.pmap --all-instruments
-\end{quote}
-
-\end{enumerate}
-
-
-\subsection{Comparison Modes}
-\label{command_line_tools:comparison-modes}
-The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
-the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from
-the newly computed bestrefs determined by --new-context.
-
-
-\subsubsection{Context-to-Context}
-\label{command_line_tools:context-to-context}
---old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context
-implies that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it
-defaults to None.
-
-
-\subsubsection{Prior Source Recommendations}
-\label{command_line_tools:prior-source-recommendations}
---compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
-recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
-cases the prior best references are recorded static values,  not dynamically computed bestrefs.
-
-
-\subsection{Output Modes}
-\label{command_line_tools:output-modes}
-crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
-
-If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
-one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
-    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}print\PYGZhy{}affected
-j8bt05njq\PYGZus{}raw.fits
-j8bt06o6q\PYGZus{}raw.fits
-j8bt09jcq\PYGZus{}raw.fits
-\end{Verbatim}
-
-
-\subsection{Update Modes}
-\label{command_line_tools:update-modes}
-crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}new\PYGZhy{}context hst.pmap \PYGZhy{}\PYGZhy{}files j8bt05njq\PYGZus{}raw.fits j8bt06o6q\PYGZus{}raw.fits j8bt09jcq\PYGZus{}raw.fits \PYGZbs{}
-    \PYGZhy{}\PYGZhy{}compare\PYGZhy{}source\PYGZhy{}bestrefs \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
-\end{Verbatim}
-
-
-\subsection{Verbosity}
-\label{command_line_tools:verbosity}
-crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational
-and debug output.
 
 
 \section{pipeline\_bestrefs}

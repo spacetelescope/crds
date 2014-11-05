@@ -14,28 +14,29 @@
 \contentsline {subsection}{\numberline {3.2.3}Onsite CRDS Testing}{6}{subsection.3.2.3}
 \contentsline {section}{\numberline {3.3}Setup for Offsite Use}{7}{section.3.3}
 \contentsline {subsection}{\numberline {3.3.1}Additional HST Settings}{7}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}JWST Context}{7}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.2}JWST Context}{8}{subsection.3.3.2}
 \contentsline {section}{\numberline {3.4}Advanced Environment}{8}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Multi-Project Caches}{8}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Single Project Caches}{9}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Miscellaneous Variables}{9}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.3}Miscellaneous Variables}{10}{subsection.3.4.3}
 \contentsline {chapter}{\numberline {4}Command Line Tools}{11}{chapter.4}
-\contentsline {section}{\numberline {4.1}Specifying Files}{11}{section.4.1}
-\contentsline {section}{\numberline {4.2}crds.certify}{11}{section.4.2}
-\contentsline {section}{\numberline {4.3}crds.diff}{12}{section.4.3}
-\contentsline {section}{\numberline {4.4}crds.rowdiff}{13}{section.4.4}
-\contentsline {section}{\numberline {4.5}crds.uses}{14}{section.4.5}
-\contentsline {section}{\numberline {4.6}crds.matches}{15}{section.4.6}
-\contentsline {section}{\numberline {4.7}crds.sync}{16}{section.4.7}
-\contentsline {section}{\numberline {4.8}crds.bestrefs}{18}{section.4.8}
-\contentsline {subsection}{\numberline {4.8.1}New Context}{20}{subsection.4.8.1}
-\contentsline {subsection}{\numberline {4.8.2}Lookup Parameter Sources}{20}{subsection.4.8.2}
-\contentsline {subsection}{\numberline {4.8.3}Comparison Modes}{21}{subsection.4.8.3}
-\contentsline {subsubsection}{Context-to-Context}{21}{subsubsection*.3}
-\contentsline {subsubsection}{Prior Source Recommendations}{21}{subsubsection*.4}
-\contentsline {subsection}{\numberline {4.8.4}Output Modes}{21}{subsection.4.8.4}
-\contentsline {subsection}{\numberline {4.8.5}Update Modes}{21}{subsection.4.8.5}
-\contentsline {subsection}{\numberline {4.8.6}Verbosity}{21}{subsection.4.8.6}
+\contentsline {section}{\numberline {4.1}Specifying File Paths}{11}{section.4.1}
+\contentsline {section}{\numberline {4.2}crds.bestrefs}{11}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}File Oriented Best References}{13}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}New Context}{13}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Lookup Parameter Sources}{13}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Comparison Modes}{14}{subsection.4.2.4}
+\contentsline {subsubsection}{Context-to-Context}{14}{subsubsection*.3}
+\contentsline {subsubsection}{Prior Source Recommendations}{14}{subsubsection*.4}
+\contentsline {subsection}{\numberline {4.2.5}Output Modes}{14}{subsection.4.2.5}
+\contentsline {subsection}{\numberline {4.2.6}Update Modes}{14}{subsection.4.2.6}
+\contentsline {subsection}{\numberline {4.2.7}Verbosity}{15}{subsection.4.2.7}
+\contentsline {section}{\numberline {4.3}crds.sync}{15}{section.4.3}
+\contentsline {section}{\numberline {4.4}crds.certify}{17}{section.4.4}
+\contentsline {section}{\numberline {4.5}crds.diff}{17}{section.4.5}
+\contentsline {section}{\numberline {4.6}crds.rowdiff}{19}{section.4.6}
+\contentsline {section}{\numberline {4.7}crds.uses}{20}{section.4.7}
+\contentsline {section}{\numberline {4.8}crds.matches}{21}{section.4.8}
 \contentsline {section}{\numberline {4.9}pipeline\_bestrefs}{22}{section.4.9}
 \contentsline {chapter}{\numberline {5}Library Use}{23}{chapter.5}
 \contentsline {section}{\numberline {5.1}crds.getreferences()}{23}{section.5.1}
