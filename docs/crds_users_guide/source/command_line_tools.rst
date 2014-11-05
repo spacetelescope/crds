@@ -416,7 +416,7 @@ optional arguments::
     For smaller caches *--check-sha1sum* is likekly to be less of a performance/runtime issue and should be used
     to detect files which have changed in contents but not in length.
   
-* Removing blacklisted or rejected files
+* Removing Blacklisted or Rejected Files
 
     crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
           
@@ -425,7 +425,7 @@ optional arguments::
     would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
     be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
   
-* Reorganizing cache structure
+* Reorganizing Cache Structure
 
     CRDS now supports two cache structures for organizing references: flat and instrument.  *flat* places all references
     for a telescope in a single directory,  e.g. references/hst.   *instrument* segregates references into subdirectories
