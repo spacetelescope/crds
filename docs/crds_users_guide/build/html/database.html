@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +15,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -96,52 +98,50 @@
 <h3>Metadata for a single file<a class="headerlink" href="#metadata-for-a-single-file" title="Permalink to this headline">¶</a></h3>
 <p>The JSON RPC call get_file_info() will return the avalailble info for a single reference
 or mapping file from the specified observatory:</p>
-<div class="highlight-python"><div class="highlight"><pre>def get_file_info(observatory, filename):
-     &quot;&quot;&quot;Return a dictionary of CRDS information about `filename`.&quot;&quot;&quot;
+<div class="highlight-python"><pre>def get_file_info(observatory, filename):
+     """Return a dictionary of CRDS information about `filename`."""
 
  &gt;&gt;&gt; from crds.client import api
 
- &gt;&gt;&gt; api.get_file_info(&quot;hst&quot;, file=&quot;lcb12060j_drk.fits&quot;)
- {&#39;activation_date&#39;: &#39;2001-12-14 20:47:00&#39;,
-  &#39;blacklisted&#39;: &#39;false&#39;,
-  &#39;change_level&#39;: &#39;severe&#39;,
-  &#39;delivery_date&#39;: &#39;2013-07-10 11:26:23&#39;,
-  &#39;derived_from&#39;: &#39;none&#39;,
-  &#39;filekind&#39;: &#39;darkfile&#39;,
-  &#39;instrument&#39;: &#39;acs&#39;,
-  &#39;name&#39;: &#39;lcb12060j_drk.fits&#39;,
-  &#39;observatory&#39;: &#39;hst&#39;,
-  &#39;pedigree&#39;: &#39;ground&#39;,
-  &#39;rejected&#39;: &#39;false&#39;,
-  &#39;sha1sum&#39;: &#39;56cfd1107bda5d82cb49a301a50edb45cb64ded6&#39;,
-  &#39;size&#39;: &#39;10549440&#39;,
-  &#39;state&#39;: &#39;operational&#39;,
-  &#39;type&#39;: &#39;reference&#39;,
-  &#39;useafter_date&#39;: &#39;1992-01-01 00:00:00&#39;}
-</pre></div>
+ &gt;&gt;&gt; api.get_file_info("hst", file="lcb12060j_drk.fits")
+ {'activation_date': '2001-12-14 20:47:00',
+  'blacklisted': 'false',
+  'change_level': 'severe',
+  'delivery_date': '2013-07-10 11:26:23',
+  'derived_from': 'none',
+  'filekind': 'darkfile',
+  'instrument': 'acs',
+  'name': 'lcb12060j_drk.fits',
+  'observatory': 'hst',
+  'pedigree': 'ground',
+  'rejected': 'false',
+  'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
+  'size': '10549440',
+  'state': 'operational',
+  'type': 'reference',
+  'useafter_date': '1992-01-01 00:00:00'}</pre>
 </div>
 </div>
 <div class="section" id="metadata-for-several-all-files">
 <h3>Metadata for several / all files<a class="headerlink" href="#metadata-for-several-all-files" title="Permalink to this headline">¶</a></h3>
 <p>The JSON RPC call get_file_info_map() will return the info for multiple (or all) files
 and the specified (or all) fields as a dictionary of dictionaries mapping filename onto info:</p>
-<div class="highlight-python"><div class="highlight"><pre>def get_file_info_map(observatory, files=None, fields=None):
-    &quot;&quot;&quot;Return the info { filename : { info } } on `files` of `observatory`.
+<div class="highlight-python"><pre>def get_file_info_map(observatory, files=None, fields=None):
+    """Return the info { filename : { info } } on `files` of `observatory`.
     `fields` can be used to limit info returned to specified keys.
-    &quot;&quot;&quot;
+    """
 
 % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
 
 &gt;&gt;&gt; from crds.client import api
 
-&gt;&gt;&gt; api.get_file_info_map(&quot;hst&quot;, [&quot;lcb12060j_drk.fits&quot;, &quot;n3o1022fj_drk.fits&quot;], fields=[&quot;state&quot;,&quot;size&quot;,&quot;sha1sum&quot;])
-{&#39;lcb12060j_drk.fits&#39;: {&#39;sha1sum&#39;: &#39;56cfd1107bda5d82cb49a301a50edb45cb64ded6&#39;,
-  &#39;size&#39;: &#39;10549440&#39;,
-  &#39;state&#39;: &#39;operational&#39;},
- &#39;n3o1022fj_drk.fits&#39;: {&#39;sha1sum&#39;: &#39;cecf11300015df8f39913b638138d8c67de77a02&#39;,
-  &#39;size&#39;: &#39;10526400&#39;,
-  &#39;state&#39;: &#39;operational&#39;}}
-</pre></div>
+&gt;&gt;&gt; api.get_file_info_map("hst", ["lcb12060j_drk.fits", "n3o1022fj_drk.fits"], fields=["state","size","sha1sum"])
+{'lcb12060j_drk.fits': {'sha1sum': '56cfd1107bda5d82cb49a301a50edb45cb64ded6',
+  'size': '10549440',
+  'state': 'operational'},
+ 'n3o1022fj_drk.fits': {'sha1sum': 'cecf11300015df8f39913b638138d8c67de77a02',
+  'size': '10526400',
+  'state': 'operational'}}</pre>
 </div>
 <p>If files is specified as <em>None</em>,  info on all files is returned.</p>
 <p>If fields are specified as <em>None</em>,  info on all available fields is returned.</p>
@@ -153,26 +153,24 @@ and the specified (or all) fields as a dictionary of dictionaries mapping filena
 the history of CRDS context use,  the effective dates at which particular contexts where operational in
 the pipeline.</p>
 <p>You can download a SQLite-3 snapshot of the CRDS catalog like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>% setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+<div class="highlight-python"><pre>% setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
 % setenv CRDS_PATH /home/jmiller/crds_cache
 % python -m crds.sync --fetch-sqlite-db
-CRDS  : INFO     SQLite database file downloaded to: /home/jmiller/crds_cache/config/hst/crds_db.sqlite3
-</pre></div>
+CRDS  : INFO     SQLite database file downloaded to: /home/jmiller/crds_cache/config/hst/crds_db.sqlite3</pre>
 </div>
 <p>will snapshot the current CRDS catalog on the CRDS server and download it to your local CRDS cache as a
 SQLite3 database file.  The SQLite database can typically be accessed like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>% sqlite3 /home/jmiller/crds_cache_dev/config/hst/crds_db.sqlite3
+<div class="highlight-python"><pre>% sqlite3 /home/jmiller/crds_cache_dev/config/hst/crds_db.sqlite3
 
 sqlite&gt; .tables
 crds_hst_catalog       crds_hst_context_history
 
 sqlite&gt; .mode tabs
 sqlite&gt; .headers on
-sqlite&gt; select * from crds_hst_context_history where state=&quot;operational&quot; limit 1;
+sqlite&gt; select * from crds_hst_context_history where state="operational" limit 1;
 id    name    start_date        context     state          description
 2        2013-07-02 15:44:53    hst.pmap    operational    set by system
-\.\.\.
-</pre></div>
+\.\.\.</pre>
 </div>
 <p>The CRDS catalog contains the following meta-data:</p>
 <table border="1" class="docutils">
@@ -288,7 +286,7 @@ at the command line.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, STScI.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

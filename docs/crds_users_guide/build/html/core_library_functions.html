@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +15,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -174,10 +176,9 @@ file transfers.</li>
 <h3>Loading Rmaps<a class="headerlink" href="#loading-rmaps" title="Permalink to this headline">¶</a></h3>
 <p>Perhaps the most fundamental thing you can do with a CRDS mapping is create an
 active object version by loading the file:</p>
-<div class="highlight-python"><div class="highlight"><pre>% python
+<div class="highlight-python"><pre>% python
 &gt;&gt;&gt; import crds.rmap as rmap
-&gt;&gt;&gt; hst = rmap.load_mapping(&quot;hst.pmap&quot;)
-</pre></div>
+&gt;&gt;&gt; hst = rmap.load_mapping("hst.pmap")</pre>
 </div>
 <p>The load_mapping() function will take any mapping and instantiate it and all of
 it&#8217;s child mappings into various nested Mapping subclasses:  PipelineContext,
@@ -325,16 +326,14 @@ the checksum while you load a mapping you&#8217;ve edited:</p>
 </div>
 <p>Alternately you can set an environment variable to ignore the mapping checksum
 while you iterate on new versions of the mapping:</p>
-<div class="highlight-python"><div class="highlight"><pre>% setenv CRDS_IGNORE_MAPPING_CHECKSUM 1
-</pre></div>
+<div class="highlight-python"><pre>% setenv CRDS_IGNORE_MAPPING_CHECKSUM 1</pre>
 </div>
 </div>
 <div class="section" id="adding-checksums">
 <h3>Adding Checksums<a class="headerlink" href="#adding-checksums" title="Permalink to this headline">¶</a></h3>
 <p>Once you&#8217;ve finished your masterpiece ReferenceMapping,  it can be sealed with
 a checksum like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>% python -m crds.checksum /where/it/really/is/hst_acs_my_masterpiece.rmap
-</pre></div>
+<div class="highlight-python"><pre>% python -m crds.checksum /where/it/really/is/hst_acs_my_masterpiece.rmap</pre>
 </div>
 </div>
 </div>
@@ -363,7 +362,7 @@ a checksum like this:</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, STScI.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

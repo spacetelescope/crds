@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +15,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -175,15 +177,14 @@ POSTed using a JSON serialization scheme.   Example absolute server URLs are:</p
 <h2>JSONRPC Request<a class="headerlink" href="#jsonrpc-request" title="Permalink to this headline">¶</a></h2>
 <p>An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl:</p>
-<div class="highlight-python"><div class="highlight"><pre>% curl -i -X POST -d &#39;{&quot;jsonrpc&quot;: &quot;1.0&quot;, &quot;method&quot;: &quot;get_default_context&quot;, &quot;params&quot;: [&quot;jwst&quot;], &quot;id&quot;: 1}&#39; http://jwst-crds.stsci.edu/json/
+<div class="highlight-python"><pre>% curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' http://jwst-crds.stsci.edu/json/
 HTTP/1.1 200 OK
 Date: Fri, 12 Oct 2012 17:29:46 GMT
 Server: Apache/2.2.3 (Red Hat) mod_python/3.3.1 Python/2.7.2
 Vary: Cookie
 Content-Type: application/json-rpc
 Connection: close
-Transfer-Encoding: chunked
-</pre></div>
+Transfer-Encoding: chunked</pre>
 </div>
 <p>The <em>jsonrpc</em> attribute is used to specify the version of the JSONRPC standard
 being used,  currently 1.0 for CRDS.</p>
@@ -216,7 +217,7 @@ text about the error.</p>
 <p>The CRDS servers support demoing the JSONRPC services and calling them interactively
 by visiting the URL <em>.../json/browse/</em>.    The resulting page is shown here:</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/web_jsonrpc_browse.png"><img alt="jsonrpc browser demo page" src="_images/web_jsonrpc_browse.png" style="width: 662.0px; height: 890.0px;" /></a>
+<a class="reference internal image-reference" href="_images/web_jsonrpc_browse.png"><img alt="jsonrpc browser demo page" src="_images/web_jsonrpc_browse.png" /></a>
 </div>
 <p>An example dialog for get_best_references from the CRDS jsonrpc demo page is
 shown here with FITS parkey names:</p>
@@ -266,7 +267,7 @@ current demo reftypes can only be specified as null.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, STScI.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
