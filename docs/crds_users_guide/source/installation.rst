@@ -269,20 +269,44 @@ any new reference or rules delivery,  changing the operational context,  or mark
 Additional HST Settings
 +++++++++++++++++++++++
 
-HST calibration steps access reference files indirectly through environment variables.  Those variables
-should be set to point to the appropriate directory under CRDS_PATH::
+HST calibration steps access reference files indirectly through environment variables.  There are two forms
+of CRDS cache reference file organization:  flat and with instrument subdirectories.   The original CRDS cache
+format was flat,  and the shared group cache at /grp/crds/cache remains flat.
 
-  % setenv iref ${CRDS_PATH}/references/hst
-  % setenv jref ${CRDS_PATH}/references/hst
-  % setenv oref ${CRDS_PATH}/references/hst
-  % setenv lref ${CRDS_PATH}/references/hst
-  % setenv nref ${CRDS_PATH}/references/hst
-  % setenv uref ${uref_linux}
-  % setenv uref_linux ${CRDS_PATH}/references/hst
+**Flat CRDS cache** For calibration software to use references in a CRDS cache with a flat reference file 
+organization, including the default shared group readonly cache at /grp/crds/cache,  set these environment 
+variables::
+
+  setenv iref ${CRDS_PATH}/references/hst
+  setenv jref ${CRDS_PATH}/references/hst
+  setenv oref ${CRDS_PATH}/references/hst
+  setenv lref ${CRDS_PATH}/references/hst
+  setenv nref ${CRDS_PATH}/references/hst
+  setenv uref ${CRDS_PATH}/references/hst
+  setenv uref_linux $$uref
+
+**By-Instrument CRDS cache** For calibration software to use references in a CRDS cache with a by-instrument
+organization, the default for newly created caches in the future, set these environment variables::
   
-Currently the CRDS cache is structured so that references from all instruments of a project reside in one common 
-directory.
+  setenv iref ${CRDS_PATH}/references/hst/iref
+  setenv jref ${CRDS_PATH}/references/hst/jref
+  setenv oref ${CRDS_PATH}/references/hst/oref
+  setenv lref ${CRDS_PATH}/references/hst/lref
+  setenv nref ${CRDS_PATH}/references/hst/nref
+  setenv uref ${CRDS_PATH}/references/hst/uref
+  setenv uref_linux $uref
 
+**Reorganizing CRDS References** The crds.sync tool can be used to reorganize the directory structure of a large 
+existing CRDS cache as follows to switch from flat to by-instrument::
+
+  python -m crds.sync --organize=instrument
+
+  # or to switch from by-instrument to flat
+
+  python -m crds.sync --organize=flat
+
+Another simpler approach is to delete and recreate your existing cache, more feasible for small personal caches
+than for complete terabyte-scale caches.
 
 JWST Context
 ++++++++++++
