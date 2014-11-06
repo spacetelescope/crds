@@ -233,6 +233,10 @@ def sanitize_data_model_dict(d):
         if key.upper().startswith(fits_magx):
             cleaned[skey[len(fits_magx):]] = sval
         cleaned[skey] = sval
+    # Hack for backward incompatible model naming change.
+    if "META.INSTRUMENT.NAME" in cleaned:
+        if "META.INSTRUMENT.TYPE" not in cleaned:
+            cleaned["META.INSTRUMENT.TYPE"] = cleaned["META.INSTRUMENT.NAME"]
     return cleaned
 
 def get_fits_header(filepath, needed_keys=()):
