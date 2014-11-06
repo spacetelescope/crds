@@ -673,7 +673,7 @@ class Selector(object):
     # XXXX changes to the format of difference messages need to be coordinated with
     # crds.diff,  crds.rmap and the website interative application (crds.server.interactive.web_certify).
     # IOW,  the messages are part of the software API,  don't change without review.
-    def difference(self, new_selector, path=(), pars=()):
+    def difference(self, new_selector, path=(), pars=(), top_selector=True):
         """Return the list of differences between `self` and `new_selector` where 
         `path` names the
         """
@@ -700,13 +700,16 @@ class Selector(object):
                 if isinstance(choice, Selector):
                     differences.extend(choice._flat_diff("deleted {} rule for".format(self.short_name), 
                                                          path + (pkey,), pars + (self._parameters,)))
+                elif top_selector:
+                    differences.append(msg(key, "deleted {} rule for".format(self.short_name), repr(choice)))
                 else:
                     differences.append(msg(key, "deleted terminal", repr(choice)))
             else:
                 new_selector_choice = new_selector_map[key]
                 if isinstance(choice, Selector):
                     differences.extend(
-                        choice.difference(new_selector_choice, path + (pkey,), pars + (self._parameters,)))
+                        choice.difference(new_selector_choice, path + (pkey,), pars + (self._parameters,), 
+                                          top_selector=False))
                 elif choice != new_selector_choice:
                     differences.append(msg(key, "replaced", repr(choice), "with", repr(new_selector_choice)))
         for key in new_selector_keys:
@@ -717,6 +720,8 @@ class Selector(object):
                     differences.extend(
                         new_selector_choice._flat_diff("added {} rule for".format(self.short_name), 
                                                        path + (pkey,), pars + (self._parameters,)))
+                elif top_selector:
+                    differences.append(msg(key, "added {} rule for".format(self.short_name), repr(new_selector_choice)))
                 else:
                     differences.append(msg(key, "added terminal", repr(new_selector_choice)))
         return differences
