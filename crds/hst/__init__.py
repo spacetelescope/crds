@@ -115,6 +115,5 @@ TEXT_DESCR = {
     'zprattab': 'Nonlincor Zeropoint Scaling Table'
 }
 
-# from .tpn import FILEKINDS
 FILEKINDS = sorted(TEXT_DESCR.keys())
 

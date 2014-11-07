@@ -5,12 +5,12 @@ consolidated into the single common data structure to support future maintenance
 and the addition of new types.
 """
 
-import sys
+# import sys
+# import pprint
 import os.path
-import pprint
 
 from crds import rmap, log, utils, data_file
-from crds.certify import TpnInfo
+# from crds.certify import TpnInfo
 
 # =============================================================================
 
@@ -30,17 +30,18 @@ def _evalfile_with_fail(filename):
         result = {}
     return result
 
-def _invert_instr_dict(map):
+def _invert_instr_dict(dct):
     """Invert a set of nested dictionaries of the form {instr: {key: val}}
     to create a dict of the form {instr: {val: key}}.
     """
     inverted = {}
-    for instr in map:
-        inverted[instr] = utils.invert_dict(map[instr])
+    for instr in dct:
+        inverted[instr] = utils.invert_dict(dct[instr])
     return inverted
 
 # =============================================================================
 
+'''
 def consolidate():
     """One time generation function to consolidate piecemeal spec files."""
     from crds.hst import tpn, INSTRUMENTS, FILEKINDS
@@ -102,24 +103,28 @@ def assign_field(consolidated, instr, filekind, field, valuef):
                 value = value[0]
         except Exception, exc:
             log.warning("Skipping", instr, filekind, field, ":", exc)
-            value =None
+            value = None
     if field == "parkey_relevance" and value is None:
         value = {}
     consolidated[instr][filekind][field] = value
     return value
+'''
 
 # =============================================================================
 
 UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
 
 with log.error_on_exception("Failed determining FILEKIND_TO_SUFFIX"):
-    # .e.g. FILEKIND_TO_SUFFIX = {                 
+    # .e.g. FILEKIND_TO_SUFFIX = {
     # 'acs': {'atodtab': 'a2d',
     #         'biasfile': 'bia',
-    FILEKIND_TO_SUFFIX = { instr : { filekind : UNIFIED_DEFS[instr][filekind]["suffix" ] 
-                                     for filekind in UNIFIED_DEFS[instr] 
-                                 } 
-                           for instr in UNIFIED_DEFS }
+    FILEKIND_TO_SUFFIX = {
+        instr : {
+            filekind : UNIFIED_DEFS[instr][filekind]["suffix"]
+            for filekind in UNIFIED_DEFS[instr]
+        }
+        for instr in UNIFIED_DEFS
+    }
 
 with log.error_on_exception("Failed determining SUFFIX_TO_FILEKIND"):
     SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
@@ -128,19 +133,25 @@ with log.error_on_exception("Failed determining FILETYPE_TO_SUFFIX"):
     #.e.g. FILETYPE_TO_SUFFIX = {
     # 'acs': {'analog-to-digital': 'a2d',
     #         'bad pixels': 'bpx',
-    FILETYPE_TO_SUFFIX = { instr : { UNIFIED_DEFS[instr][filekind]["filetype"] : UNIFIED_DEFS[instr][filekind]["suffix" ] 
-                                     for filekind in UNIFIED_DEFS[instr] 
-                                 } 
-                           for instr in UNIFIED_DEFS }
+    FILETYPE_TO_SUFFIX = {
+        instr : {
+            UNIFIED_DEFS[instr][filekind]["filetype"] : UNIFIED_DEFS[instr][filekind]["suffix"]
+            for filekind in UNIFIED_DEFS[instr]
+        }
+        for instr in UNIFIED_DEFS
+    }
+
 with log.error_on_exception("Failed determining SUFFIX_TO_FILETYPE"):
     SUFFIX_TO_FILETYPE = _invert_instr_dict(FILETYPE_TO_SUFFIX)
 
 with log.error_on_exception("Failed determining ROW_KEYS"):
-    ROW_KEYS = { instr : { filekind : UNIFIED_DEFS[instr][filekind]["unique_rowkeys"] 
-                           for filekind in UNIFIED_DEFS[instr] 
-                       }
-                 for instr in UNIFIED_DEFS
-             }
+    ROW_KEYS = {
+        instr : {
+            filekind : UNIFIED_DEFS[instr][filekind]["unique_rowkeys"]
+            for filekind in UNIFIED_DEFS[instr]
+        }
+        for instr in UNIFIED_DEFS
+    }
 
 # =============================================================================
 
@@ -172,13 +183,13 @@ def mapping_validator_key(mapping):
 def reference_name_to_validator_key(filename):
     """Given a reference filename `fitsname`,  return a dictionary key
     suitable for caching the reference type's Validator.
-    
+
     This revised version supports computing "subtype" .tpn files based
     on the parameters of the reference.   Most references have unconditional
     associations based on (instrument, filekind).   A select few have
     conditional lookups which select between several .tpn's for the same
     instrument and filetype.
-    
+
     Returns (.tpn filename,)
     """
     header = data_file.get_header(filename)
@@ -194,8 +205,8 @@ def reference_name_to_validator_key(filename):
                 key = (tpn,)  # tpn filename
                 break
         else:
-            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'" % \
-                                 (os.path.basename(filename), instrument, filekind))
+            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
+                os.path.basename(filename), instrument, filekind))
     log.verbose("Validator key for", repr(filename), instrument, filekind, "=", key)
     return key
 
@@ -222,7 +233,7 @@ def get_row_keys(mapping):
     software.  Consequently, row_keys now have a requirement for a higher level
     of fidelity since they were originally defined for mode checks, since the
     consequences of inadequate row keys becomes failed "affects checks" and not
-    merely an extraneous warning.  In their capacity as affected datasets 
+    merely an extraneous warning.  In their capacity as affected datasets
     parameters,  row_keys must be supported by the interface which connects the
     CRDS server to the appropriate system dataset parameter database,  DADSOPS
     for HST.   That interface must be updated when row_keys.dat is changed.
@@ -241,7 +252,7 @@ def get_row_keys_by_instrument(instrument):
     """To support defining the CRDS server interface to DADSOPS, return the
     sorted list of row keys necessary to perform all the table lookups
     of an instrument.   These (FITS) keywords will be used to instrospect
-    DADSOPS and identify table fields which provide the necessary parameters.    
+    DADSOPS and identify table fields which provide the necessary parameters.
     """
     keyset = set()
     for filekind in ROW_KEYS[instrument]:
@@ -249,4 +260,14 @@ def get_row_keys_by_instrument(instrument):
         keyset = keyset.union(typeset)
     return sorted([key.lower() for key in keyset])
 
+# =============================================================================
+
+def check_filekinds():
+    """Make sure filekinds defined in __init__ are also defined in reftypes.dat,  and vice versa."""
+    all_filekinds = { filekind for instr in FILEKIND_TO_SUFFIX for filekind in FILEKIND_TO_SUFFIX[instr] }
+    from . import FILEKINDS
+    assert all_filekinds - set(FILEKINDS) == set(), "Type defined in reftypes.dat not represented in TEXT_DESCR"
+    assert set(FILEKINDS) - all_filekinds, "Text description for undefined filekind"
+
+check_filekinds()
 

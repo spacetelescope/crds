@@ -2,7 +2,7 @@
 mappings required to support a set of contexts from the CRDS server:
 
 Old references and mappings which are no longer needed can be automatically
-removed by specifying --purge-mappingshttps://aeon.stsci.edu/ssb/svn/crds/trunk/crds/hst/tpns or --purge-references:
+removed by specifying --purge-mappings or --purge-references:
 
   % python -m crds.sync --range 1:2 --purge-mappings --purge-references
 

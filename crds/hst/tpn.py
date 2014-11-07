@@ -84,6 +84,7 @@ from collections import defaultdict
 
 from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
+from crds.hst import reftypes
 
 # =============================================================================
 
@@ -300,27 +301,6 @@ def make_crds_tpn_catalog(kind):
     return dict(table)
 
 # =============================================================================
-
-def filetype_to_filekind(instrument, filetype):
-    """Map the value of a FILETYPE keyword onto it's associated
-    keyword name,  i.e.  'dark image' --> 'darkfile'
-    """
-    instrument = instrument.lower()
-    filetype = filetype.lower()
-    if instrument == "nic":
-        instrument = "nicmos"
-    ext = FILETYPE_TO_SUFFIX[instrument][filetype]
-    return SUFFIX_TO_FILEKIND[instrument][ext]
-
-def extension_to_filekind(instrument, extension):
-    """Map the value of an instrument and TPN extension onto it's
-    associated filekind keyword name,  i.e. drk --> darkfile
-    """
-    if instrument == "nic":
-        instrument = "nicmos"
-    return SUFFIX_TO_FILEKIND[instrument][extension]
-
-# =============================================================================
 #  HST CDBS .tpn and _ld.tpn reader
 
 def _load_tpn_lines(fname):
@@ -407,64 +387,14 @@ def get_tpn_text(*args):
 def reference_name_to_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding .tpn"""
     path = rmap.locate_file(filename, "hst")
-    key = reference_name_to_tpn_key(path)
+    key = reftypes.reference_name_to_tpn_key(path)
     return get_tpn_text(*key)
 
 def reference_name_to_ld_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
     path = rmap.locate_file(filename, "hst")
-    key = reference_name_to_ld_tpn_key(path)
+    key = reftypes.reference_name_to_ld_tpn_key(path)
     return get_tpn_text(*key)
-
-def mapping_validator_key(mapping):
-    """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
-    cat_info = LD_TPN_CATALOG[mapping.instrument][mapping.filekind]
-    assert isinstance(cat_info, tuple), "Unexpected _ld.tpn configuration."
-    return (cat_info[0],)
-
-def reference_name_to_validator_key(filename):
-    """Given a reference filename `fitsname`,  return a dictionary key
-    suitable for caching the reference type's Validator.
-    
-    This revised version supports computing "subtype" .tpn files based
-    on the parameters of the reference.   Most references have unconditional
-    associations based on (instrument, filekind).   A select few have
-    conditional lookups which select between several .tpn's for the same
-    instrument and filetype.
-    
-    Returns (.tpn filename,)
-    """
-    header = data_file.get_header(filename)
-    instrument = header["INSTRUME"].lower()
-    filetype = header["FILETYPE"].lower()
-    filekind = filetype_to_filekind(instrument, filetype)
-    cat_info = TPN_CATALOG[instrument][filekind]
-    if isinstance(cat_info, tuple):
-        key = (cat_info[0],)  # tpn filename
-    else:
-        for (condition, cat) in cat_info:
-            for (cvar, cval) in condition:
-                hval = header.get(cvar.upper(), None)
-                if hval != cval.upper():
-                    break
-            else:
-                key = (cat[0],)  # tpn filename
-                break
-        else:
-            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'" % \
-                                 (os.path.basename(filename), instrument, filekind))
-    log.verbose("Validator key for", repr(filename), instrument, filekind, "=", key)
-    return key
-
-reference_name_to_tpn_key = reference_name_to_validator_key
-
-def reference_name_to_ld_tpn_key(filename):
-    """Return the _ld.tpn file key associated with reference `filename`.
-    Strictly speaking this should be driven by mapping_validator_key...  but the interface
-    for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
-    one-for-one.
-    """
-    return (reference_name_to_tpn_key(filename)[0].replace(".tpn", "_ld.tpn"),)
 
 # =============================================================================
 

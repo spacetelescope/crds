@@ -19,7 +19,7 @@ import glob
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
 from crds import CrdsError
-from crds.hst import (tpn, siname)
+from crds.hst import siname, reftypes
 
 HERE = os.path.dirname(__file__) or "./"
 
@@ -93,8 +93,9 @@ def reference_exists(reference):
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.hst.tpn import reference_name_to_validator_key, mapping_validator_key, get_tpninfos
-from crds.hst.tpn import get_tpn_text, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
+from crds.hst.reftypes import reference_name_to_validator_key, mapping_validator_key
+from crds.hst.reftypes import get_row_keys, get_row_keys_by_instrument
+from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
 from crds.hst import INSTRUMENTS, FILEKINDS, EXTENSIONS
 from crds.hst.substitutions import expand_wildcards
 
@@ -359,7 +360,7 @@ def ref_properties_from_cdbs_path(filename):
     else:
         ext = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
-        filekind = tpn.extension_to_filekind(instrument, ext)
+        filekind = reftypes.extension_to_filekind(instrument, ext)
     except KeyError:
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
@@ -395,7 +396,7 @@ def ref_properties_from_header(filename):
             raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
-        filekind = tpn.filetype_to_filekind(instrument, filetype)
+        filekind = reftypes.filetype_to_filekind(instrument, filetype)
     except KeyError:
         raise CrdsError("Invalid FILETYPE (or CDBSFILE) for '{}' of instrument '{}'." .format(filetype, instrument))
     return path, "hst", instrument, filekind, serial, ext
@@ -457,46 +458,6 @@ def fits_to_parkeys(header):
 
 # ============================================================================
 
-ROW_KEYS = utils.evalfile(HERE + "/row_keys.dat")
-
-def get_row_keys(mapping):
-    """Return the row_keys which define unique table rows corresponding to mapping.
-
-    These are used for "mode" checks to issue warnings when unique rows are deleted
-    in a certify comparison check against the preceding version of a table.
-
-    row_keys are now also utlized to perform "affected datasets" table row
-    lookups which essentially requires emulating that aspect of the calibration
-    software.  Consequently, row_keys now have a requirement for a higher level
-    of fidelity since they were originally defined for mode checks, since the
-    consequences of inadequate row keys becomes failed "affects checks" and not
-    merely an extraneous warning.  In their capacity as affected datasets 
-    parameters,  row_keys must be supported by the interface which connects the
-    CRDS server to the appropriate system dataset parameter database,  DADSOPS
-    for HST.   That interface must be updated when row_keys.dat is changed.
-
-    The certify mode checks have a shaky foundation since the concept of mode
-    doesn't apply to all tables and sometimes "data" parameters are required to
-    render rows unique.   The checks only issue warnings however so they can be
-    ignored by file submitters.
-
-    For HST calibration references mapping is an rmap.
-    """
-    return ROW_KEYS[mapping.instrument][mapping.filekind]
-
-def get_row_keys_by_instrument(instrument):
-    """To support defining the CRDS server interface to DADSOPS, return the
-    sorted list of row keys necessary to perform all the table lookups
-    of an instrument.   These (FITS) keywords will be used to instrospect
-    DADSOPS and identify table fields which provide the necessary parameters.    
-    """
-    keyset = set()
-    for filekind in ROW_KEYS[instrument]:
-        typeset = set(ROW_KEYS[instrument][filekind])
-        keyset = keyset.union(typeset)
-    return sorted([key.lower() for key in keyset])
-
-
 def load_all_type_constraints():
     """Make sure that all HST .tpn files are loadable."""
     from crds import certify
@@ -505,6 +466,35 @@ def load_all_type_constraints():
         tpn_name = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
         log.verbose("Loading", repr(tpn_name))
         certify.validators_by_typekey((tpn_name,), "hst")
+
+# ============================================================================
+
+__all__ = [
+    "INSTRUMENTS",
+
+    "reference_name_to_validator_key",
+    "mapping_validator_key",
+    "get_tpninfos",
+    "reference_name_to_tpn_text",
+    "reference_name_to_ld_tpn_text",
+    "load_all_type_constraints",
+
+    "get_env_prefix",
+    "decompose_newstyle_name",
+    "locate_dir",
+    "get_file_properties",
+
+    "get_row_keys",
+    "get_row_keys_by_instrument",
+    
+    "fits_to_parkeys",
+    "reference_keys_to_dataset_keys",
+    "expand_wildcards",
+    "condition_matching_header",
+]
+
+for name in __all__:
+    assert name in dir()
 
 # ============================================================================
 
