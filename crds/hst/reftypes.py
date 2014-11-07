@@ -83,9 +83,9 @@ def consolidate():
             assign_field(consolidated, instr, filekind, "parkey_relevance", lambda: parkeys[instr][filekind]["parkey_relevance"])
             assign_field(consolidated, instr, filekind, "extra_keys", lambda: parkeys[instr][filekind]["not_in_db"])
     assign_field(consolidated, "stis", "lfltfile", "tpn", lambda: [("OBSTYPE == 'IMAGING'", "stis_ilflt.tpn"),
-                                                                   ("OBSTYPE == 'SPECTROSCOPIC", "stis_slflt.tpn")])
+                                                                   ("OBSTYPE == 'SPECTROSCOPIC'", "stis_slflt.tpn")])
     assign_field(consolidated, "stis", "pfltfile", "tpn", lambda: [("OBSTYPE == 'IMAGING'", "stis_ipflt.tpn"),
-                                                                   ("OBSTYPE == 'SPECTROSCOPIC", "stis_spflt.tpn")])
+                                                                   ("OBSTYPE == 'SPECTROSCOPIC'", "stis_spflt.tpn")])
                 
     open("./reftypes.dat", "wb").write(str(log.PP(consolidated)))
 
@@ -94,8 +94,14 @@ def assign_field(consolidated, instr, filekind, field, valuef):
     try:
         value = consolidated[instr][filekind][field] = valuef()
     except Exception, exc:
-        log.warning("Skipping", instr, filekind, field, ":", exc)
-        value = consolidated[instr][filekind][field] = None
+        log.warning("", instr, filekind, field, ":", exc)
+        try:
+            log.warning("Falling back to mapping 0260 for", instr, filekind, field, ":", exc)
+            mapping = rmap.get_cached_mapping("hst_{}_{}_0260.rmap".format(instr, filekind))
+            value = consolidated[instr][filekind][field] = getattr(mapping, field)
+        except Exception, exc:
+            log.warning("Skipping", instr, filekind, field, ":", exc)
+            value = consolidated[instr][filekind][field] = None
     return value
 
 # =============================================================================
