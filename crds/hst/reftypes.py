@@ -57,8 +57,8 @@ def consolidate():
                 continue
             if instr == "wfc3" and filekind == "dgeofile":  # unimplemented type
                 continue
-            if instr =="cos" and filekind in ["proftab", "tracetab", "twozxtab"]:  # first types added manually
-                continue
+#             if instr =="cos" and filekind in ["proftab", "tracetab", "twozxtab"]:  # first types added manually
+#                 continue
             if filekind not in consolidated[instr]:
                 consolidated[instr][filekind] = {}
             suffix = assign_field(consolidated, instr, filekind, "suffix", lambda: tpn.FILEKIND_TO_SUFFIX[instr][filekind])
@@ -92,15 +92,20 @@ def consolidate():
 
 def assign_field(consolidated, instr, filekind, field, valuef):
     try:
-        value = consolidated[instr][filekind][field] = valuef()
+        value = valuef()
     except Exception, exc:
         try:
             log.warning("Falling back to mapping 0260 for", instr, filekind, field, ":", exc)
             mapping = rmap.get_cached_mapping("hst_{}_{}_0260.rmap".format(instr, filekind))
-            value = consolidated[instr][filekind][field] = getattr(mapping, field)
+            value = getattr(mapping, field)
+            if field == "parkey":
+                value = value[0]
         except Exception, exc:
             log.warning("Skipping", instr, filekind, field, ":", exc)
-            value = consolidated[instr][filekind][field] = None
+            value =None
+    if field == "parkey_relevance" and value is None:
+        value = {}
+    consolidated[instr][filekind][field] = value
     return value
 
 # =============================================================================
