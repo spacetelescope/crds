@@ -282,6 +282,17 @@ def capture_output(func):
 
 # ===================================================================
 
+def compare_dicts(dict1, dict2):
+    """Compare two dictionaries and return a dictionary of added, deleted, and replaced items."""
+    if not isinstance(dict1, dict) or not isinstance(dict2, dict):
+        return (dict1, dict2)
+    deleted = { key: dict1[key] for key in dict1 if key not in dict2 }
+    added = { key: dict2[key] for key in dict2 if key not in dict1 }
+    replaced = { key: compare_dicts(dict1[key], dict2[key]) for key in dict1 if key in dict2 and dict1[key] != dict2[key] }
+    return dict(deleted=deleted, added=added, replaced=replaced)        
+        
+# ===================================================================
+
 class TimingStats(object):
     """Track and compute counts and counts per second."""
     def __init__(self, output=None):

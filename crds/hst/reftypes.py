@@ -41,77 +41,6 @@ def _invert_instr_dict(dct):
 
 # =============================================================================
 
-'''
-def consolidate():
-    """One time generation function to consolidate piecemeal spec files."""
-    from crds.hst import tpn, INSTRUMENTS, FILEKINDS
-    rowkeys = _evalfile_with_fail("./row_keys.dat")
-    tpn_cat = _evalfile_with_fail("./crds_tpn_catalog.dat")
-    ld_tpn_cat = _evalfile_with_fail("./crds_ld_tpn_catalog.dat")
-    parkeys = _evalfile_with_fail("./parkeys.dat")
-    consolidated = {}
-    for instr in tpn.FILEKIND_TO_SUFFIX:
-        if instr not in consolidated:
-            consolidated[instr] = {}
-        for filekind in tpn.FILEKIND_TO_SUFFIX[instr]:
-            if filekind in ["comptab", "graphtab"]:  # unsupported synphot types
-                continue
-            if instr == "wfc3" and filekind == "dgeofile":  # unimplemented type
-                continue
-#             if instr =="cos" and filekind in ["proftab", "tracetab", "twozxtab"]:  # first types added manually
-#                 continue
-            if filekind not in consolidated[instr]:
-                consolidated[instr][filekind] = {}
-            suffix = assign_field(consolidated, instr, filekind, "suffix", lambda: tpn.FILEKIND_TO_SUFFIX[instr][filekind])
-            assign_field(consolidated, instr, filekind, "filetype", lambda: tpn.SUFFIX_TO_FILETYPE[instr][suffix])
-            if instr == "stis" and filekind in ["lfltfile", "pfltfile"]:
-                assign_field(consolidated, instr, filekind, "tpn", lambda: tpn_cat[instr][filekind][0][1][0])
-                assign_field(consolidated, instr, filekind, "reffile_format", lambda: tpn_cat[instr][filekind][0][1][2])
-                assign_field(consolidated, instr, filekind, "file_ext", lambda: tpn_cat[instr][filekind][0][1][3])
-            else:
-                assign_field(consolidated, instr, filekind, "tpn", lambda: tpn_cat[instr][filekind][0])
-                assign_field(consolidated, instr, filekind, "reffile_format", lambda: tpn_cat[instr][filekind][2])
-                assign_field(consolidated, instr, filekind, "file_ext", lambda: tpn_cat[instr][filekind][3])
-            assign_field(consolidated, instr, filekind, "ld_tpn", lambda: ld_tpn_cat[instr][filekind][0])
-            if consolidated[instr][filekind]["reffile_format"] == "table":  # only tables have rowkeys
-                assign_field(consolidated, instr, filekind, "unique_rowkeys", lambda: rowkeys[instr][filekind])
-            else:
-                assign_field(consolidated, instr, filekind, "unique_rowkeys", lambda: None)
-            assign_field(consolidated, instr, filekind, "reffile_required", lambda: parkeys[instr][filekind]["reffile_required"])
-            assign_field(consolidated, instr, filekind, "reffile_switch", lambda: parkeys[instr][filekind]["reffile_switch"])
-            assign_field(consolidated, instr, filekind, "parkey", lambda: tuple(parkey.upper() for parkey in parkeys[instr][filekind]["parkeys"]))
-            assign_field(consolidated, instr, filekind, "rmap_relevance", lambda: parkeys[instr][filekind]["rmap_relevance"])
-            assign_field(consolidated, instr, filekind, "parkey_relevance", lambda: parkeys[instr][filekind]["parkey_relevance"])
-            assign_field(consolidated, instr, filekind, "extra_keys", lambda: parkeys[instr][filekind]["not_in_db"])
-    assign_field(consolidated, "stis", "lfltfile", "tpn", lambda: [("OBSTYPE == 'IMAGING'", "stis_ilflt.tpn"),
-                                                                   ("OBSTYPE == 'SPECTROSCOPIC'", "stis_slflt.tpn")])
-    assign_field(consolidated, "stis", "pfltfile", "tpn", lambda: [("OBSTYPE == 'IMAGING'", "stis_ipflt.tpn"),
-                                                                   ("OBSTYPE == 'SPECTROSCOPIC'", "stis_spflt.tpn")])
-                
-    open("./reftypes.dat", "wb").write(str(log.PP(consolidated)))
-
-
-def assign_field(consolidated, instr, filekind, field, valuef):
-    try:
-        value = valuef()
-    except Exception, exc:
-        try:
-            log.warning("Falling back to mapping 0260 for", instr, filekind, field, ":", exc)
-            mapping = rmap.get_cached_mapping("hst_{}_{}_0260.rmap".format(instr, filekind))
-            value = getattr(mapping, field)
-            if field == "parkey":
-                value = value[0]
-        except Exception, exc:
-            log.warning("Skipping", instr, filekind, field, ":", exc)
-            value = None
-    if field == "parkey_relevance" and value is None:
-        value = {}
-    consolidated[instr][filekind][field] = value
-    return value
-'''
-
-# =============================================================================
-
 UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
 
 with log.error_on_exception("Failed determining FILEKIND_TO_SUFFIX"):
@@ -259,6 +188,16 @@ def get_row_keys_by_instrument(instrument):
         typeset = set(ROW_KEYS[instrument][filekind] or [])
         keyset = keyset.union(typeset)
     return sorted([key.lower() for key in keyset])
+
+# =============================================================================
+
+def get_filekinds(instrument):
+    """Return the sequence of filekind strings for `instrument`."""
+    return FILEKIND_TO_SUFFIX[instrument.lower()].keys()
+
+def get_item(instrument, filekind, name):
+    """Return config item `name` for `instrument` and `filekind`"""
+    return UNIFIED_DEFS[instrument][filekind][name]
 
 # =============================================================================
 
