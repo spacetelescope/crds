@@ -78,7 +78,7 @@ def consolidate():
                 assign_field(consolidated, instr, filekind, "unique_rowkeys", lambda: None)
             assign_field(consolidated, instr, filekind, "reffile_required", lambda: parkeys[instr][filekind]["reffile_required"])
             assign_field(consolidated, instr, filekind, "reffile_switch", lambda: parkeys[instr][filekind]["reffile_switch"])
-            assign_field(consolidated, instr, filekind, "parkeys", lambda: tuple(parkey.upper() for parkey in parkeys[instr][filekind]["parkeys"]))
+            assign_field(consolidated, instr, filekind, "parkey", lambda: tuple(parkey.upper() for parkey in parkeys[instr][filekind]["parkeys"]))
             assign_field(consolidated, instr, filekind, "rmap_relevance", lambda: parkeys[instr][filekind]["rmap_relevance"])
             assign_field(consolidated, instr, filekind, "parkey_relevance", lambda: parkeys[instr][filekind]["parkey_relevance"])
             assign_field(consolidated, instr, filekind, "extra_keys", lambda: parkeys[instr][filekind]["not_in_db"])
@@ -94,7 +94,6 @@ def assign_field(consolidated, instr, filekind, field, valuef):
     try:
         value = consolidated[instr][filekind][field] = valuef()
     except Exception, exc:
-        log.warning("", instr, filekind, field, ":", exc)
         try:
             log.warning("Falling back to mapping 0260 for", instr, filekind, field, ":", exc)
             mapping = rmap.get_cached_mapping("hst_{}_{}_0260.rmap".format(instr, filekind))
