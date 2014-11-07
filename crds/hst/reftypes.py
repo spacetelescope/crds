@@ -102,23 +102,35 @@ def assign_field(consolidated, instr, filekind, field, valuef):
 
 UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
 
-# .e.g. FILEKIND_TO_SUFFIX = {                 
-# 'acs': {'atodtab': 'a2d',
-#         'biasfile': 'bia',
-FILEKIND_TO_SUFFIX = { instr : { filekind : UNIFIED_DEFS[instr][filekind]["suffix" ] 
-                                 for filekind in UNIFIED_DEFS[instr] 
-                                } 
-                      for instr in UNIFIED_DEFS }
-SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
+with log.error_on_exception("Failed determining FILEKIND_TO_SUFFIX"):
+    # .e.g. FILEKIND_TO_SUFFIX = {                 
+    # 'acs': {'atodtab': 'a2d',
+    #         'biasfile': 'bia',
+    FILEKIND_TO_SUFFIX = { instr : { filekind : UNIFIED_DEFS[instr][filekind]["suffix" ] 
+                                     for filekind in UNIFIED_DEFS[instr] 
+                                 } 
+                           for instr in UNIFIED_DEFS }
 
-#.e.g. FILETYPE_TO_SUFFIX = {
-# 'acs': {'analog-to-digital': 'a2d',
-#         'bad pixels': 'bpx',
-FILETYPE_TO_SUFFIX = { instr : { UNIFIED_DEFS[instr][filekind]["filetype"] : UNIFIED_DEFS[instr][filekind]["suffix" ] 
-                                 for filekind in UNIFIED_DEFS[instr] 
-                                } 
-                      for instr in UNIFIED_DEFS }
-SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
+with log.error_on_exception("Failed determining SUFFIX_TO_FILEKIND"):
+    SUFFIX_TO_FILEKIND = _invert_instr_dict(FILEKIND_TO_SUFFIX)
+
+with log.error_on_exception("Failed determining FILETYPE_TO_SUFFIX"):
+    #.e.g. FILETYPE_TO_SUFFIX = {
+    # 'acs': {'analog-to-digital': 'a2d',
+    #         'bad pixels': 'bpx',
+    FILETYPE_TO_SUFFIX = { instr : { UNIFIED_DEFS[instr][filekind]["filetype"] : UNIFIED_DEFS[instr][filekind]["suffix" ] 
+                                     for filekind in UNIFIED_DEFS[instr] 
+                                 } 
+                           for instr in UNIFIED_DEFS }
+with log.error_on_exception("Failed determining SUFFIX_TO_FILETYPE"):
+    SUFFIX_TO_FILETYPE = _invert_instr_dict(FILETYPE_TO_SUFFIX)
+
+with log.error_on_exception("Failed determining ROW_KEYS"):
+    ROW_KEYS = { instr : { filekind : UNIFIED_DEFS[instr][filekind]["unique_rowkeys"] 
+                           for filekind in UNIFIED_DEFS[instr] 
+                       }
+                 for instr in UNIFIED_DEFS
+             }
 
 # =============================================================================
 
@@ -186,4 +198,45 @@ def reference_name_to_ld_tpn_key(filename):
     one-for-one.
     """
     return (reference_name_to_tpn_key(filename)[0].replace(".tpn", "_ld.tpn"),)
+
+# =============================================================================
+
+def get_row_keys(mapping):
+    """Return the row_keys which define unique table rows corresponding to mapping.
+
+    These are used for "mode" checks to issue warnings when unique rows are deleted
+    in a certify comparison check against the preceding version of a table.
+
+    row_keys are now also utlized to perform "affected datasets" table row
+    lookups which essentially requires emulating that aspect of the calibration
+    software.  Consequently, row_keys now have a requirement for a higher level
+    of fidelity since they were originally defined for mode checks, since the
+    consequences of inadequate row keys becomes failed "affects checks" and not
+    merely an extraneous warning.  In their capacity as affected datasets 
+    parameters,  row_keys must be supported by the interface which connects the
+    CRDS server to the appropriate system dataset parameter database,  DADSOPS
+    for HST.   That interface must be updated when row_keys.dat is changed.
+
+    The certify mode checks have a shaky foundation since the concept of mode
+    doesn't apply to all tables and sometimes "data" parameters are required to
+    render rows unique.   The checks only issue warnings however so they can be
+    ignored by file submitters.
+
+    For HST calibration references mapping is an rmap.
+    """
+    mapping = rmap.asmapping(mapping)
+    return ROW_KEYS[mapping.instrument][mapping.filekind]
+
+def get_row_keys_by_instrument(instrument):
+    """To support defining the CRDS server interface to DADSOPS, return the
+    sorted list of row keys necessary to perform all the table lookups
+    of an instrument.   These (FITS) keywords will be used to instrospect
+    DADSOPS and identify table fields which provide the necessary parameters.    
+    """
+    keyset = set()
+    for filekind in ROW_KEYS[instrument]:
+        typeset = set(ROW_KEYS[instrument][filekind] or [])
+        keyset = keyset.union(typeset)
+    return sorted([key.lower() for key in keyset])
+
 
