@@ -109,7 +109,7 @@ def mapping_validator_key(mapping):
     """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
     return (UNIFIED_DEFS[mapping.instrument][mapping.filekind]["ld_tpn"],)
 
-def reference_name_to_validator_key(filename):
+def reference_name_to_validator_key(filename, field="tpn"):
     """Given a reference filename `fitsname`,  return a dictionary key
     suitable for caching the reference type's Validator.
 
@@ -125,7 +125,7 @@ def reference_name_to_validator_key(filename):
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     filekind = filetype_to_filekind(instrument, filetype)
-    tpnfile = UNIFIED_DEFS[instrument][filekind]["tpn"]
+    tpnfile = UNIFIED_DEFS[instrument][filekind][field]
     if isinstance(tpnfile, basestring):
         key = (tpnfile,)  # tpn filename
     else: # it's a list of conditional tpns
@@ -147,7 +147,7 @@ def reference_name_to_ld_tpn_key(filename):
     for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
     one-for-one.
     """
-    return (reference_name_to_tpn_key(filename)[0].replace(".tpn", "_ld.tpn"),)
+    return reference_name_to_tpn_key(filename, field="ld_tpn")
 
 # =============================================================================
 
