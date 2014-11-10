@@ -856,7 +856,10 @@ def find_old_mapping(comparison_context, new_mapping):
     """
     if comparison_context:
         comparison_mapping = rmap.get_cached_mapping(comparison_context)
-        return comparison_mapping.get_equivalent_mapping(new_mapping)
+        old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
+        log.info("New mapping", repr(os.path.basename(new_mapping)), "to", repr(old_mapping.name), 
+                 "under context", repr(comparison_context))
+        return old_mapping
     else:
         return None
 
