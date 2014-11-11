@@ -311,36 +311,80 @@ class PickleHeaderGenerator(HeaderGenerator):
         return headers
 # ===================================================================
 
+CRDS_BANNER_VALUE = "      / CRDS ADDED CALIBRATION KEYWORDS"
+
 def update_file_bestrefs(context, dataset, updates):
     """Update the header of `dataset` with best reference recommendations
     `bestrefs` determined by context named `pmap`.
     """
     if not updates:
         return
+    updates = list(updates)
 
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
     prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)    
+
+    # Add pseudo-updates for CRDS metadata
+    updates.append(UpdateTuple(instrument, "CRDS_CTX", "", context))
+    updates.append(UpdateTuple(instrument, "CRDS_VER", "", version_info))
+
     hdulist = pyfits.open(dataset, mode="update", do_not_scale_image_data=True)
 
     # XXX TODO switch pyfits.setval to data_file.setval
-    def set_key(keyword, value):
-        log.verbose("Setting", repr(dataset), keyword, "=", value)
-        hdulist[0].header[keyword] = value
+    update_filekinds = set([update.filekind.upper() for update in updates])
+    existing_keys = set()
+    last_key = banner_already_present = None
+    for card in hdulist[0].header.cards:
+        if card.keyword.upper() in update_filekinds:
+            last_key = card.keyword
+            existing_keys.add(card.keyword.upper())
+        if CRDS_BANNER_VALUE.strip() in card.comment:
+            banner_already_present = True
+        if card.keyword:
+            last_hdu_key = card.keyword.upper()
 
-    set_key("CRDS_CTX", context)
-    set_key("CRDS_VER", version_info)
+    if last_key is None and not banner_already_present:
+        # If there are no existing CRDS keywords,  append the banner first.
+        add_crds_banner_keys(hdulist, last_hdu_key)
 
     for update in sorted(updates):
+        keyword = update.filekind.upper()
         new_ref = update.new_reference.upper()
-        if new_ref != "N/A":
+        if keyword.startswith("CRDS_"):
+            new_ref = new_ref.lower()
+        elif new_ref != "N/A":
             new_ref = (prefix + new_ref).lower()
-        set_key(update.filekind.upper(), new_ref)
+        set_key(hdulist, last_key, keyword, new_ref, overwrite=keyword in existing_keys)
 
+    if last_key is not None and not banner_already_present and len(existing_keys) < len(updates):
+        # Since the banner will be inserted,  insert it last so that it appears first in the added section.
+        add_crds_banner_keys(hdulist, last_key)
+
+    # This seemingly inconsequential code is a work around for an astropy bug for
+    # header updates which add cards but do not make use of FITS data.
     for hdu in hdulist:
         hdu.data
 
     hdulist.close()
+    
+def set_key(hdulist, last_key, keyword, value, comment=None, overwrite=True):
+    if overwrite and last_key:
+        log.verbose("Setting keyword", repr(keyword), "=", repr(value))
+        hdulist[0].header.set(keyword, value, comment)
+    elif last_key:
+        log.verbose("Inserting keyword", repr(keyword), "=", repr(value), "after", repr(last_key))
+        hdulist[0].header.insert(last_key, (keyword, value, comment), after=True)
+    else:
+        log.verbose("Appending keyword", repr(keyword), "=", repr(value))
+        hdulist[0].header.append((keyword, value, comment), end=True)
+    return not overwrite
+
+def add_crds_banner_keys(hdulist, last_key):
+    log.verbose("Adding CRDS ADDED CALIBRATION KEYWORDS fits banner")
+    set_key(hdulist, last_key, "", "", " ", overwrite=False)
+    set_key(hdulist, last_key, "", CRDS_BANNER_VALUE, overwrite=False)
+    set_key(hdulist, last_key, "", "", " ", overwrite=False)
 
 # ============================================================================
 
