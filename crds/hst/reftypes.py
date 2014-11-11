@@ -108,6 +108,7 @@ def extension_to_filekind(instrument, extension):
 def mapping_validator_key(mapping):
     """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
     return (UNIFIED_DEFS[mapping.instrument][mapping.filekind]["ld_tpn"],)
+    # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
 
 def reference_name_to_validator_key(filename, field="tpn"):
     """Given a reference filename `fitsname`,  return a dictionary key
@@ -136,7 +137,7 @@ def reference_name_to_validator_key(filename, field="tpn"):
         else:
             raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
                 os.path.basename(filename), instrument, filekind))
-    log.verbose("Validator key for", repr(filename), instrument, filekind, "=", key)
+    log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key)
     return key
 
 reference_name_to_tpn_key = reference_name_to_validator_key
@@ -147,7 +148,7 @@ def reference_name_to_ld_tpn_key(filename):
     for that is wrong so slave it to reference_name_to_tpn_key instead,  historically
     one-for-one.
     """
-    return reference_name_to_tpn_key(filename, field="ld_tpn")
+    return reference_name_to_validator_key(filename, field="ld_tpn")
 
 # =============================================================================
 
