@@ -172,6 +172,7 @@ LEGAL_NODES = set([
     'visit_BoolOp',
     'visit_BinOp',
     'visit_UnaryOp',
+    'visit_Not',
  ])
 
 CUSTOMIZED_NODES = set([
