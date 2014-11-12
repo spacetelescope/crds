@@ -23,6 +23,15 @@ def set_header_value(old_rmap, new_rmap, key, new_value):
     mapping.header[key] = new_value
     mapping.write(new_rmap)
     
+def del_header_value(old_rmap, new_rmap, key):
+    """Set the value of `key` in `filename` to `new_value` and rewrite the rmap.
+    This is potentially lossy since rewriting the rmap may/will lose comments and 
+    formatting quirks.
+    """
+    mapping = rmap.load_mapping(old_rmap)
+    del mapping.header[key]
+    mapping.write(new_rmap)
+
 def update_derivation(new_path, old_basename=None):
     """Set the 'derived_from' and 'name' header fields of `new_path`.  
     This function works for all Mapping classes:  pmap, imap, and rmap.
