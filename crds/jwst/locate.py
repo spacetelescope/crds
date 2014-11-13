@@ -334,7 +334,7 @@ def locate_file(refname, mode=None):
     """
     _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
     rootdir = locate_dir(instrument, mode)
-    return  os.path.join(rootdir, refname)
+    return  os.path.join(rootdir, os.path.basename(refname))
 
 def locate_dir(instrument, mode=None):
     """Locate the instrument specific directory for a reference file."""
