@@ -42,6 +42,9 @@ classes, functions, lists, mappings, sets, strings, exception handling,
 etc.
 """
 
+from __future__ import print_function
+
+
 # =========================================================================
 
 import sys
@@ -66,11 +69,28 @@ __all__ = [
 
 # =========================================================================
 
-# XXX support multi-line command input
-
-
 class SubprocessFailure(RuntimeError):
     """A subprocess of this shell failed by returning a non-zero exit status."""
+
+PYSH_DEBUG = None
+
+def set_debug(flag):
+    """Set the global debug status for pysh, affecting Shell debug default
+    settings.  Nominally set to True in test/debug environments.
+
+    Since setting debug mode changes the default behavior of Shell, it should
+    only be used temporarily to ensure
+    """
+    global PYSH_DEBUG
+    old_flag = PYSH_DEBUG
+    PYSH_DEBUG = flag
+    return old_flag
+
+def get_debug():
+    """Get the global debug flag for pysh, changing default behavior for
+    test environments.
+    """
+    return PYSH_DEBUG
 
 # =========================================================================
 
@@ -84,36 +104,33 @@ class Shell:
         self.status = None  # overridden by __call__
         self._context = keys.pop("context", None)
         self._input = keys.pop("input", None)
-        self._raise_on_error = keys.pop("raise_on_error", False)
-        capture_output = keys.pop("capture_output", False)
-        independent_error = keys.pop("independent_error", False)
-        trace_commands = keys.pop("trace_commands", False)
-        
+        self._use_shell = keys.pop("use_shell", True)
+        self._raise_on_error = keys.pop("raise_on_error", get_debug())
+        self._trace_commands = keys.pop("trace_commands", get_debug())      
+        self._trace_exceptions = keys.pop("trace_exceptions", get_debug())      
+        self._capture_output = keys.pop("capture_output", get_debug())
+        self._independent_error = keys.pop("independent_error", False)
 
         if self._context is None:    
             # subclasses, were there any,  would need to pass this in
             # when calling __init__ from the subclass since it would
             # change the depth of the stack and invalidate the below.
             self._context = _context(1)  
-        # print "shell:", repr(self._context)
 
         args = self._handle_args(args)
         
-        if trace_commands:
-            sys.stderr.write("pysh: " + str(args) + "\n")
-
-        if capture_output:
-            if independent_error:
+        if self._capture_output:
+            if self._independent_error:
                 self._popen = Popen(
-                    args, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE, **keys)
+                    args, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE, **keys)
             else:                
                 self._popen = Popen(
-                    args, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **keys)
+                    args, shell=self._use_shell, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **keys)
         else:
             # The real utility of this branch is when you want to see
             # output on your terminal like an ordinary shellscript.
             # The downside is that output is no longer captured.
-            self._popen = Popen(args, shell=True, stdin=PIPE, **keys)
+            self._popen = Popen(args, shell=self._use_shell, stdin=PIPE, **keys)
 
         self._args = args
         self._keys = keys
@@ -136,9 +153,16 @@ class Shell:
         """Execute the commands in this Shell expression and either raise
         an Exception or return the subprocess error status.
         """
+        if self._trace_commands:
+            print(repr(self), file=sys.stderr)
         self.out, self.err = self._popen.communicate(self._input)
         self.status = self._popen.returncode
         if self._raise_on_error and self._popen.returncode:
+            if self._trace_exceptions and not self._trace_commands:
+                print(repr(self), file=sys.stderr)
+            if self._trace_exceptions:
+                print("exception stdout:", self.out, file=sys.stderr)
+                print("exception stderr:", self.err, file=sys.stderr)
             raise SubprocessFailure("status = " + str(self._popen.returncode))
         else:
             return self._popen.returncode
@@ -265,7 +289,7 @@ def fail(*args, **keys):
     """Quit the program,  issuing a message which is the join of *args.
     Use keyword `status` as the program exit code or -1 if unspecified.
     """
-    print >> sys.stderr, " ".join(args)
+    print(" ".join(args), file=keys.pop("file", sys.stderr))
     sys.exit(keys.pop("status", -1))
 
 def usage(description, min_args, max_args=sys.maxint, help=""):

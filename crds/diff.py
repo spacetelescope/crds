@@ -330,7 +330,7 @@ def text_difference(observatory, old_file, new_file):
         "Files " + repr(old_file) + " and " + repr(new_file) + " are of different types."
     _loc_old_file = config.check_path(rmap.locate_file(old_file, observatory))
     _loc_new_file = config.check_path(rmap.locate_file(new_file, observatory))
-    pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}")   # secure
+    pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}", raise_on_error=False)   # secure
 
 def difference(observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                include_header_diffs=False, hide_boring_diffs=False):
