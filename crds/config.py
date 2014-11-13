@@ -391,16 +391,30 @@ def get_path(filename, observatory):
     return os.path.dirname(fullpath)
 
 def locate_file(filepath, observatory):
-    """Figure out the absolute pathname where CRDS will stash a reference
-    or mapping file.  If filepath already has a directory,  return filepath
-    as-is.   Otherwise,  return the *client* path for a file.
+    """Returns CRDS cache path if `filepath` has no directory, otherwise `filepath` as-is.
+ 
+   Cannot always determine CRDS cache location for hypothetical files if not 
+   sufficiently identified in basename of `filepath`.
+
+   Used to determine cache locations for directory-less `filepaths` from CRDS rules.
+
+   Returns complex filepaths as-is for supporting operations on external files.
     """
     if os.path.dirname(filepath):
         return filepath
+    return relocate_file(filepath, observatory)
+
+def relocate_file(filepath, observatory):
+    """Returns path in CRDS cache where `filepath` would be relocated if it were
+    copied into the CRDS cache.
+
+    Able to determine CRDS cache location based on filename or file
+    contents when `filepath` points to a real file.
+    """
     if is_mapping(filepath):
-        return locate_mapping(filepath, observatory)
+        return relocate_mapping(filepath, observatory)
     else:
-        return locate_reference(filepath, observatory)
+        return relocate_reference(filepath, observatory)
 
 def locate_config(cfg, observatory):
     """Return the absolute path where reference `ref` should be located."""
@@ -409,9 +423,20 @@ def locate_config(cfg, observatory):
     return os.path.join(get_crds_cfgpath(observatory), cfg)
 
 def locate_reference(ref, observatory):
-    """Return the absolute path where reference `ref` should be located."""
+    """Returns CRDS cache path for `ref` if it specifies no directory, otherwise
+    `ref` as-is.
+    """
     if os.path.dirname(ref):
         return ref
+    return relocate_reference(ref, observatory)
+
+def relocate_reference(ref, observatory):
+    """Returns CRDS cache location where `ref` would be copied if it
+    was copied into the CRDS cache.  When `ref` specifies a path to an
+    existing file, the contents of `ref` can be exploited to determine
+    the CRDS cache location.  Otherwise, the basename of `ref` must be
+    in a standard form which implies location.
+    """
     from crds import utils
     return utils.get_locator_module(observatory).locate_file(ref)
 
@@ -576,12 +601,20 @@ def filetype(filename):
         return "unknown"
 
 def locate_mapping(mappath, observatory=None):
-    """Return the path where CRDS mapping `mappath` should be."""
+    """Return the CRDS cache path for mapping `mappath` if it has no directory,
+    otherwise returns mappath as-is.
+    """
     if os.path.dirname(mappath):
         return mappath
+    return relocate_mapping(mappath, observatory)
+
+def relocate_mapping(mappath, observatory=None):
+    """Return the CRDS cache path where CRDS mapping `mappath` should be
+    be located,  replacing the path in `mappath` with the cache path.
+    """
     if observatory is None:
         observatory = mapping_to_observatory(mappath)
-    return os.path.join(get_crds_mappath(observatory), mappath)
+    return os.path.join(get_crds_mappath(observatory), os.path.basename(mappath))
 
 def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""
