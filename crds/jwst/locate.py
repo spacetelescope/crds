@@ -354,6 +354,14 @@ def locate_dir(instrument, mode=None):
     return rootdir
 
 # ============================================================================
+
+def handle_undefined_rmap(self, filekind):
+    """Customize how JWST handles undefined types for an instrument in InstrumentContext.get_rmap(): return N/A."
+    """
+    log.verbose("Type", repr(filekind), "is undefined for", repr(self.instrument), "returning N/A.")
+    return "N/A"
+
+# ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
     raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
