@@ -469,6 +469,12 @@ def load_all_type_constraints():
 
 # ============================================================================
 
+def handle_undefined_rmap(self, filekind):
+    """Customize how HST handles undefined types for an instrument in InstrumentContext.get_rmap(): Raise exception."""
+    raise crds.CrdsUnknownReftypeError("Unknown reference type " + repr(str(filekind)))
+
+# ============================================================================
+
 __all__ = [
     "INSTRUMENTS",
 
@@ -492,6 +498,8 @@ __all__ = [
     "reference_keys_to_dataset_keys",
     "expand_wildcards",
     "condition_matching_header",
+
+    "handle_undefined_rmap",
 ]
 
 for name in __all__:

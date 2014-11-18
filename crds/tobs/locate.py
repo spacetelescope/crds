@@ -224,4 +224,7 @@ def ref_properties_from_header(filename):
     return path, "hst", instrument, filekind, serial, ext
 
 
-    
+def handle_undefined_rmap(self, filekind):
+    """Customize how TOBS handles undefined types for an instrument in InstrumentContext.get_rmap(): Raise exception."""
+    raise crds.CrdsUnknownReftypeError("Unknown reference type " + repr(str(filekind)))
+
