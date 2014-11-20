@@ -355,11 +355,13 @@ def locate_dir(instrument, mode=None):
 
 # ============================================================================
 
+
 def handle_undefined_rmap(self, filekind):
     """Customize how JWST handles undefined types for an instrument in InstrumentContext.get_rmap(): return N/A."
     """
     log.verbose("Type", repr(filekind), "is undefined for", repr(self.instrument), "returning N/A.")
-    return "N/A"
+    raise rmap.IrrelevantReferenceTypeError("Type " + repr(filekind) + " is undefined for " + 
+                                            repr(self.instrument) + " returning N/A.")
 
 # ============================================================================
 def load_all_type_constraints():
