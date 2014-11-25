@@ -544,7 +544,7 @@ def is_reference(reference):
 
     >>> is_reference("something.fits")
     True
-    >>> is_reference("something.finf")
+    >>> is_reference("something.asdf")
     True
     >>> is_reference("something.r0h")
     True
@@ -557,7 +557,7 @@ def is_reference(reference):
 
     """
     extension = os.path.splitext(reference)[-1]
-    return re.match(r"\.fits|\.finf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
+    return re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
 
 def filetype(filename):
     """Classify `filename`'s type so it can be processed or displayed.
@@ -591,8 +591,8 @@ def filetype(filename):
         return "yaml"
     elif filename.endswith(".json"):
         return "json"
-    elif filename.endswith(".finf"):
-        return "finf"
+    elif filename.endswith(".asdf"):
+        return "asdf"
     elif filename.endswith(".txt"):
         return "text"
     elif re.match(r".*\.r[0-9]h$", filename): # GEIS header

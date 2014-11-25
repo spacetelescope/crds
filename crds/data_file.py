@@ -62,8 +62,8 @@ def get_filetype(name):
     """
     if name.endswith(".fits"):
         return "fits"
-    elif name.endswith(".finf"):
-        return "finf"
+    elif name.endswith(".asdf"):
+        return "asdf"
     elif is_geis(name):
         return "geis"
     else:
@@ -94,7 +94,7 @@ def get_observatory(filepath, original_name=None):
         except Exception:
             observatory = "hst"
         return observatory.lower()
-    elif original_name.endswith(".finf"):
+    elif original_name.endswith(".asdf"):
         return "jwst"
     else:
         return "hst"
@@ -116,7 +116,7 @@ def setval(filepath, key, value):
             return dm_setval(filepath, key, value)
         else:
             return pyfits.setval(filepath, key, value)
-    elif ftype == "finf":
+    elif ftype == "asdf":
         return dm_setval(filepath, key, value)
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
