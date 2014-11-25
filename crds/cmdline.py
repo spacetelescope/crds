@@ -36,8 +36,8 @@ def dataset(filename):
 
 def reference_file(filename):
     """Ensure `filename` is a reference file."""
-    assert re.match(".*(.fits|.asdf|.r[0-9][hd])", filename), \
-        "A .fits or .asdf reference file is required but got: '%s'" % filename
+    assert config.is_reference(filename), \
+        "A reference file is required but got bad type: '%s'" % filename
     return filename
 
 def mapping(filename):
