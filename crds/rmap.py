@@ -819,7 +819,7 @@ class InstrumentContext(ContextMapping):
         try:
             return self.selections[filekind.lower()]
         except KeyError:
-            return self.locate.handle_undefined_rmap(self, filekind)
+            raise crds.CrdsUnknownReftypeError("Unknown reference type " + repr(str(filekind)))
 
     def get_best_ref(self, filekind, header):
         """Returns the single reference file basename appropriate for `header`
