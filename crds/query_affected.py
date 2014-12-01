@@ -1,48 +1,213 @@
 from __future__ import print_function
 
 import sys
-import os
 import os.path
 
-from crds import cmdline, log, utils, config
+from crds import cmdline, log, utils, config, timestamp
 from crds.client import api
 
 class QueryAffectedDatasetsScript(cmdline.Script):
 
     description = """
 query_affected_datasets (QAD) queries the CRDS server for datasets affected by the specified 
-context name(s) or indices in the context history.  QAD relies on pre-computed results on the server,
+CONTEXT(s), history INDICES, or DATES.  QAD relies on pre-computed results on the server,
 so QAD queries are only valid for historical context transitions from the context history.
+When no history interval is specified,  QAD uses the last processed context as the starting
+point,  and the end of the current history as the stopping point.
 
+Before going too far, a couple of points are in order:
+
+    1. QueryAffectedDatasetsScript is intended to be sub-classed.   By default it just prints dataset
+    IDs on STDOUT as well as log and affected datasets computation output to STDERR.   Override the
+    use_affected() and use_all_ids() methods to do something custom with the affected dataset IDs,
+    either switch-by-switch, or potentially multiple contexts at once, respectively.   Override the
+    log_affected() or log_all_ids() methods to customize most logging.   QAD provides basic interaction
+    with the context history, affected datasets service, recording state, and error handling.
+    
+    2. crds.bestrefs can be used to compute the datasets affected by arbitrary context transitions
+    when run locally.   The computation can require minutes to hours depending on number of instruments,
+    types, datasets, and tables potentially affected.    For this, the --affected-datasets switch 
+    configures crds.bestrefs to perform an affected datasets computation using the bundle of standard
+    options run on the CRDS servers.
+    
 Due to processing order on the server, new contexts appear in the context history as operational 
 before the datasets affected have been computed.   This framework helps resolve that race condition
 and provides options for handling affected datasets computations which contained errors.
 
+To support interactive experimentation, QAD supports listing the context history:
+
+    % query_affected_datasets --list
+    (0, '2013-07-02 15:44:53', 'hst.pmap', 'set by system')
+    (1, '2013-09-10 18:23:06', 'hst_0003.pmap', 'Updated hst.pmap with new references (known to reffile_ops_rep on harpo) up to 09-10-2013')
+    ...
+    (85, '2014-09-23 16:48:17', 'hst_0287.pmap', 'Delivery of new WFC3 darks.')
+    (86, '2014-10-13 11:26:40', 'hst_0288.pmap', 'Delivery of a new ACS WFC1-1K bias.')
+    (87, '2014-10-14 09:34:29', 'hst_0289.pmap', 'Delivery of a new COS FUV BPIXTAB.')
+
+See also the -x and -y parameters below for customizing interactive query ranges.
+    
 With no history range specified, QAD selects the last history item processed as the starting point 
 and the end of the current history as the stopping point.  Normally there's nothing new to report,
 the last thing processed was the end of the history and nothing has changed on the server.
 
-% query_affected_datasets
-CRDS  : INFO     No new results available.
-CRDS  : INFO     0 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     1 infos
+    % query_affected_datasets
+    CRDS  : INFO     No new results available.
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     1 infos
 
-Polling the the CRDS server by running QAD every 30 minutes, typically QAD will detect context
-transitions one-by-one.  If more than one context switch occurs within the same 30 minute period,
-QAD will combine the datasets for all transitions into one set.
+Following a context change,  by default QAD will notice a difference between the last saved context 
+and the new last context in the history.  QAD is designed to be sub-classed but by default prints log 
+information and recorded affected datasets output to STDERR.   It prints affected dataset IDs to STDOUT.
+Run periodically,  QAD will typically see at most a single context switch.
 
-To support interactive experimentation, QAD supports listing the context history:
+    % query_affected_datasets > ids
+    CRDS  : INFO     Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
+    ####################################################################################################
+    --------------------------------------------------------------------------------------------------------------
+    CRDS hst ops datasets affected hst_0299.pmap --> hst_0300.pmap on 2014-11-25-15:50:09
+    --------------------------------------------------------------------------------------------------------------
+    CRDS  : INFO     [2014-11-25 15:50:12,563]  Mapping differences from 'hst_0299.pmap' --> 'hst_0300.pmap' affect:
+     {'cos': ['hvtab']}
+    CRDS  : INFO     [2014-11-25 15:50:12,731]  Possibly affected --datasets-since dates determined by 'hst_0299.pmap' --> 'hst_0300.pmap' are:
+     {'cos': '2009-05-11 00:00:00'}
+    CRDS  : INFO     [2014-11-25 15:50:12,731]  Computing bestrefs for db datasets for ['cos']
+    CRDS  : INFO     [2014-11-25 15:50:12,731]  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu' since '2009-05-11 00:00:00'
+    CRDS  : INFO     [2014-11-25 15:50:16,457]  Downloaded  19592 dataset ids for 'cos' since '2009-05-11 00:00:00'
+    CRDS  : INFO     [2014-11-25 15:51:16,293]  Updated exposure counts:
+     {'COS': {'hvtab': 13696}}
+    CRDS  : INFO     [2014-11-25 15:51:16,309]  Affected products = 9494
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  Unique error types: 0
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  STARTED 2014-11-25 15:50:10.67
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  STOPPED 2014-11-25 15:51:16.31
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  ELAPSED 0:01:05.64
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  19.59 K datasets at 298.47  datasets-per-second
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  0 errors
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  0 warnings
+    CRDS  : INFO     [2014-11-25 15:51:16,319]  12 infos
+    --------------------------------------------------------------------------------------------------------------
+    OK: CRDS hst ops datasets affected hst_0299.pmap --> hst_0300.pmap on 2014-11-25-15:50:09 : 9494 affected
+    --------------------------------------------------------------------------------------------------------------
+    ####################################################################################################
+    CRDS  : INFO     Contributing context switches = 1
+    CRDS  : INFO     Total products affected = 9494
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     3 infos
+    
+    % cat ids 
+    i9zf01010
+    i9zf02010
+    i9zf03010
+    i9zf04010
+    i9zf05010
+    ...
 
-% query_affected_datasets --list
-(0, '2013-07-02 15:44:53', 'hst.pmap', 'set by system')
-(1, '2013-09-10 18:23:06', 'hst_0003.pmap', 'Updated hst.pmap with new references (known to reffile_ops_rep on harpo) up to 09-10-2013')
-...
-(85, '2014-09-23 16:48:17', 'hst_0287.pmap', 'Delivery of new WFC3 darks.')
-(86, '2014-10-13 11:26:40', 'hst_0288.pmap', 'Delivery of a new ACS WFC1-1K bias.')
-(87, '2014-10-14 09:34:29', 'hst_0289.pmap', 'Delivery of a new COS FUV BPIXTAB.')
+STDERR output from multiple context switches is delimited by ########## lines.
 
-The --quiet parameter suppresses the recorded log output from the affected datasets computations.
+For the sake of custom queries,  QAD supports --starting-context (-x) and --stopping-context (-y) parameters to define the 
+history starting and stopping points.  -x and -y can be specified as CONTEXTS, HISTORY INDICES, or DATES.
+
+    % query_affected_datasets -x 92 -y 94 > ids
+    CRDS  : INFO     Fetching effects for (92, '2014-11-05 13:53:15', 'hst_0296.pmap', 'Delivery of new ACS bias, dark, and cte_corrected dark reference files.')
+    CRDS  : INFO     Fetching effects for (93, '2014-11-10 13:11:02', 'hst_0297.pmap', 'The WFC3 Team delivered 3 new dark reference files.')
+    ####################################################################################################
+    --------------------------------------------------------------------------------------------------------------
+    CRDS hst ops datasets affected hst_0295.pmap --> hst_0296.pmap on 2014-11-05-13:55:08
+    --------------------------------------------------------------------------------------------------------------
+    CRDS  : INFO     [2014-11-05 13:55:12,922]  Mapping differences from 'hst_0295.pmap' --> 'hst_0296.pmap' affect:
+     {'acs': ['biasfile', 'drkcfile', 'darkfile']}
+    CRDS  : INFO     [2014-11-05 13:55:13,576]  Possibly affected --datasets-since dates determined by 'hst_0295.pmap' --> 'hst_0296.pmap' are:
+     {'acs': '2014-08-26 09:55:53'}
+    CRDS  : INFO     [2014-11-05 13:55:13,576]  Computing bestrefs for db datasets for ['acs']
+    CRDS  : INFO     [2014-11-05 13:55:13,576]  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-08-26 09:55:53'
+    CRDS  : INFO     [2014-11-05 13:55:39,323]  Downloaded  1431 dataset ids for 'acs' since '2014-08-26 09:55:53'
+    CRDS  : INFO     [2014-11-05 13:55:52,999]  Updated exposure counts:
+     {'ACS': {'biasfile': 1374, 'darkfile': 1386, 'drkcfile': 1386}}
+    CRDS  : INFO     [2014-11-05 13:55:53,001]  Affected products = 670
+    CRDS  : INFO     [2014-11-05 13:55:53,001]  Unique error types: 0
+    CRDS  : INFO     [2014-11-05 13:55:53,001]  STARTED 2014-11-05 13:55:10.62
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  STOPPED 2014-11-05 13:55:53.00
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  ELAPSED 0:00:42.37
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  1.43 K datasets at 33.77  datasets-per-second
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  0 errors
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  0 warnings
+    CRDS  : INFO     [2014-11-05 13:55:53,002]  12 infos
+    --------------------------------------------------------------------------------------------------------------
+    OK: CRDS hst ops datasets affected hst_0295.pmap --> hst_0296.pmap on 2014-11-05-13:55:08 : 670 affected
+    --------------------------------------------------------------------------------------------------------------
+    ####################################################################################################
+    --------------------------------------------------------------------------------------------------------------
+    CRDS hst ops datasets affected hst_0296.pmap --> hst_0297.pmap on 2014-11-10-13:15:07
+    --------------------------------------------------------------------------------------------------------------
+    CRDS  : INFO     [2014-11-10 13:15:10,393]  Mapping differences from 'hst_0296.pmap' --> 'hst_0297.pmap' affect:
+     {'wfc3': ['darkfile']}
+    CRDS  : INFO     [2014-11-10 13:15:10,574]  Possibly affected --datasets-since dates determined by 'hst_0296.pmap' --> 'hst_0297.pmap' are:
+     {'wfc3': '2014-10-27 00:30:40'}
+    CRDS  : INFO     [2014-11-10 13:15:10,574]  Computing bestrefs for db datasets for ['wfc3']
+    CRDS  : INFO     [2014-11-10 13:15:10,574]  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-10-27 00:30:40'
+    CRDS  : INFO     [2014-11-10 13:15:33,868]  Downloaded  714 dataset ids for 'wfc3' since '2014-10-27 00:30:40'
+    CRDS  : INFO     [2014-11-10 13:15:43,290]  Updated exposure counts:
+     {'WFC3': {'darkfile': 369}}
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  Affected products = 292
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  Unique error types: 0
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  STARTED 2014-11-10 13:15:08.58
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  STOPPED 2014-11-10 13:15:43.29
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  ELAPSED 0:00:34.70
+    CRDS  : INFO     [2014-11-10 13:15:43,291]  714 datasets at 20.57  datasets-per-second
+    CRDS  : INFO     [2014-11-10 13:15:43,292]  0 errors
+    CRDS  : INFO     [2014-11-10 13:15:43,292]  0 warnings
+    CRDS  : INFO     [2014-11-10 13:15:43,292]  12 infos
+    --------------------------------------------------------------------------------------------------------------
+    OK: CRDS hst ops datasets affected hst_0296.pmap --> hst_0297.pmap on 2014-11-10-13:15:07 : 292 affected
+    --------------------------------------------------------------------------------------------------------------
+    ####################################################################################################
+    CRDS  : INFO     Contributing context switches = 2
+    CRDS  : INFO     Total products affected = 962
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     4 infos
+
+QAD is designed to be run perdiodically,  say every 30 minutes,  to check with the CRDS server for 
+context updates.  If multiple context switches occur during one polling interval,  by default QAD
+includes IDs from all of them.   This is also true of interactive queries using -x and/or -y,  so
+it's possible to combine affected datasets from multiple switches when repeated IDs are expected.
+
+QAD also supports a --single-context-switch (-s) mode for printing results 1-by-1 in the advent of 
+multiple context switches in on polling interval.
+
+Since there is a race condition between when a context is made operational and when affected datasets results
+are available on the CRDS server,  QAD also supports a -i switch for ignoring unavailable results.  Alternately
+missing results are considered an error,  the main difference being the exit status.
+
+For initialzing,  specify -i to ignore any missing computations since QAD will attempt to process the 
+entire history the first time it is run and precomputed results don't exist for all historical context
+switches.
+
+It's possible for precomputed results to contain bestrefs errors of some sort,  most likely due to invalid
+bestrefs selection parametersin the HST DADSOPS catalog.   By default the datasets from a computation which
+contained errors are excluded from the overall results.   Use -k to include the dataset IDs from computations 
+which included errors.
+
+Conversely, to abort processing when an affected datasets computation included errors,  use -z to fail
+and quit.
+
+The --quiet (-q) parameter suppresses the recorded log output from the affected datasets computations:
+
+    % query_affected_datasets -x 94 -y 97 -q > ids
+    CRDS  : INFO     Fetching effects for (94, '2014-11-18 17:15:35', 'hst_0298.pmap', 'Delivery of new ACS DKC, DRK, and BIA files.')
+    CRDS  : INFO     Fetching effects for (95, '2014-11-20 16:12:34', 'hst_0299.pmap', 'Delivery of new WFC3 UVIS darks.')
+    CRDS  : INFO     Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
+    CRDS  : INFO     Contributing context switches = 3
+    CRDS  : INFO     Total products affected = 10356
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     5 infos
+    
+NOTE:  CRDS logging is used in both query_affected_datasets and the original server-side affected datasets computations.  The
+final errors count shown above only applies to the client-side computing in query_affected_datasets,  so server-side errors are
+not *counted*.   However,  server-side errors are tracked and reduced to a single client-side error for each server-side 
+bestrefs run with errors.
 
 The --verbose parameter includes debug output in excess of normal application logging,  possibly useful
 for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
@@ -55,13 +220,16 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             help="Print out the context history and exit.")
 
         self.add_argument("-x", "--starting-context", dest="starting_context",
-            help="Use the affected datasets computation starting with this history index integer or context name. Defaults to last processed.", 
+            help="Use the affected datasets computation starting with this history index integer, date, or context name. Defaults to last processed.", 
             metavar="INT_OR_NAME", default=None, type=str)
         
         self.add_argument("-y", "--stopping-context", dest="stopping_context", 
-            help="Use the affected datasets computation starting with this history index integer or context name. Defaults to end of history.",
+            help="Use the affected datasets computation starting with this history index integer, date, or context name. Defaults to end of history.",
             metavar="INT_OR_NAME", default=None, type=str)
         
+        self.add_argument("-s", "--single-context-switch", dest="single_context_switch", action="store_true",
+            help="For default indexing, if multiple new contexts are available,  just process one new context and stop.")
+
         self.add_argument("-i", "--ignore-missing-results", dest="ignore_missing_results", action="store_true",
             help="Skip over any requested context switch which has no pre-computed results on the CRDS server.  Otherwise fatal.")
 
@@ -72,7 +240,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             help="If bestrefs status indicates errors occurred, quit processing.  (fix the server and rerun).")
         
         self.add_argument("-f", "--last-processed-file", dest="last_processed_file",
-            help="File containing the tuple of the last history item successfully processed. Defaults to CRDS cache file.")
+            help="File containing the tuple of the last history item successfully processed. Defaults to file in CRDS cache.")
 
         self.add_argument("-q", "--quiet", dest="quiet", action="store_true",
             help="Terser log output.")
@@ -87,12 +255,11 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         if self.args.list_history:
             return self.list_history()
         effects = self.polled()
+        ids = self.process(effects)
+        self.use_all_ids(effects, ids)
+        self.log_all_ids(effects, ids)
         if effects:
-            self.process(effects)
             self.save_last_processed(effects)
-        elif effects is not None:
-            log.info("No new results available.")
-        log.standard_status()
         
     def process(self,  effects):
         """Output the results of all the context transitions."""
@@ -103,20 +270,27 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                 ids.extend(affected.affected_ids)
                 self.use_affected(i, affected)
                 self.contributing_context_switches += 1
-        ids = sorted(set(ids))
-        self.use_all_ids(effects, ids)
-        self.log_total_affected(effects, ids)
+        return sorted(set(ids))
         
     def use_affected(self, i, affected):
-        """PLUGIN: for doing something with each individual context switch set of effects. Default does nothing."""
+        """PLUGIN: for doing something with each individual context switch set of effects. Default does nothing.
+        i         -- the ending history index of the transition
+        affected  -- dictionary of effects info
+        """
         pass
     
     def use_all_ids(self, effects, ids):
-        """PLUGIN: for using all ids which passed availability and error screening. Default prints ids to stdout."""
-        print("\n".join(ids))
+        """PLUGIN: for using all ids which passed availability and error screening. Default prints ids to stdout.
+        
+        effects :    [ (history_index, affects info), ...]
+        
+        ids :  sorted set of all ids affected by specified or implied contexts
+        """
+        if ids:
+            print("\n".join(ids))
         
     def log_affected(self, i, affected):
-        """Banner log and debug output for each context switch."""
+        """PLUGIN: Banner log and debug output for each context switch."""
         if log.get_verbose():
             print("#"*100, file=sys.stderr)
             log.debug("History:", i, "Effects:\n", log.PP(affected))
@@ -125,17 +299,22 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                 print("#"*100, file=sys.stderr)
                 print(affected.bestrefs_err_summary, file=sys.stderr)
 
-    def log_total_affected(self, effects, ids):
-        """Summary output after all contexts processed."""
-        if not self.args.quiet:
+    def log_all_ids(self, effects, ids):
+        """PLUGIN: Summary output after all contexts processed."""
+        if self.args.quiet:
+            return 
+        if not effects:
+            log.info("No new results are available.")
+        else:
             print("#"*100, file=sys.stderr)
-        log.info("Contributing context switches =", len(effects))
-        log.info("Total products affected =", len(ids))
+            log.info("Contributing context switches =", len(effects))
+            log.info("Total products affected =", len(ids))
+        log.standard_status()
         
     def list_history(self):
         """Print out the context history."""
-        for i, hist in enumerate(self.history):
-            print((i,) + hist)
+        for i in range(self.history_start, self.history_stop+1):
+            print((i,) + self.history[i])
    
     @property
     @utils.cached         
@@ -176,16 +355,6 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                 log.error(message)
         return ignore          
 
-    def targeted(self):
-        """Output the affected datasets for the specified context(s) interval."""
-        s = self.get_affected(self.args.old_context, self.args.new_context)
-        if s:
-            print(s.bestrefs_err_summary, file=sys.stderr)
-            print("\n".join(s.affected_ids))
-            return [(-1, s)]
-        else:
-            return []
-
     def polled(self):
         """Output the latest affected datasets taken from the history starting item onward.
         Since the history drives and ultimately precedes any affected datasets computation,  there's
@@ -196,7 +365,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         assert self.history_start <= self.history_stop, "Invalid history interval,  start >= stop."
         effects = []
         for i in range(self.history_start, self.history_stop):
-            log.info("Fetching effects for", self.history[i+1])
+            log.info("Fetching effects for", (i,) + self.history[i+1])
             old_context = self.history[i][1]
             new_context = self.history[i+1][1]
             affected = self.get_affected(old_context, new_context)
@@ -207,11 +376,11 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
     @property
     @utils.cached
     def history_start(self):
-        """Return the starting item for polled-mode processing."""
+        """Return the starting item for processing."""
         if self.args.starting_context:
             item = self.convert_context(self.args.starting_context)
         else:  # read the start from the file recording the last successful processing index.
-            if os.path.exists(self.last_processed_path):
+            if os.path.exists(self.last_processed_path) and not self.args.list_history:
                 try:
                     last_tuple = utils.evalfile(self.last_processed_path)
                     item = int(last_tuple[0])
@@ -225,23 +394,37 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
     @property
     @utils.cached
     def history_stop(self):
+        """Return the stopping item for processing."""
         if self.args.stopping_context:
             item = self.convert_context(self.args.stopping_context)
         else:  # read the start from the file recording the last successful processing index.
-            item = len(self.history)-1
+            if self.args.single_context_switch:
+                item = self.history_start + 1
+                if item >= len(self.history) - 1:
+                    item = len(self.history) - 1
+            else:
+                item = len(self.history) - 1
         return item
         
     def convert_context(self, context):
         """Convert an integer or context name into a history index."""
         try:
-            item = int(context)
+            return int(context)
         except ValueError:
-            hist = self.history
-            for item, hist in enumerate(hist): 
-                if context in hist[1]:
-                    break
-            else:
-                self.fatal_error("Context = '{}' not found in history".format(context))
+            pass
+        try:
+            date = timestamp.reformat_date(context)
+            is_date = True
+        except:
+            is_date = False
+        hist = self.history
+        for item, hist in enumerate(hist):
+            if is_date and hist[0] >= date:
+                break
+            elif context in hist[1]:
+                break
+        else:
+            self.fatal_error("Context = '{}' not found in history".format(context))
         assert 0 <= item < len(self.history),  "Invalid history item " + repr(item)
         return item
     
@@ -252,6 +435,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             return
         hist = (last_ix+1,) + tuple(self.history[last_ix + 1])
         log.verbose("Saving last processed:", repr(hist))
+        log.verbose("Storing last processed state at", repr(self.last_processed_path))
         utils.ensure_dir_exists(self.last_processed_path)
         with open(self.last_processed_path, "w+") as last:
             last.write(str(hist))
