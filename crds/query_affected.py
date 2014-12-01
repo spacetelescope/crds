@@ -245,6 +245,9 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         self.add_argument("-q", "--quiet", dest="quiet", action="store_true",
             help="Terser log output.")
 
+        self.add_argument("-r", "--reset", dest="reset", action="store_true",
+            help="Reset the last-context-processed file to the end of the current history.  Useful for init and reinit.")
+
     def __init__(self, *args, **keys):
         super(QueryAffectedDatasetsScript, self).__init__(*args, **keys)
         self.contributing_context_switches = 0
@@ -254,6 +257,8 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         self.require_server_connection()
         if self.args.list_history:
             return self.list_history()
+        if self.args.reset:
+            return self.reset_last_processed()
         effects = self.polled()
         ids = self.process(effects)
         self.use_all_ids(effects, ids)
@@ -434,12 +439,21 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         if last_ix == -1:
             return
         hist = (last_ix+1,) + tuple(self.history[last_ix + 1])
+        self._write_last_processed(hist)
+
+    def reset_last_processed(self):
+        """Reset the state of the last context processed marker to the end of the current history."""
+        hist = (len(self.history)-1,) + tuple(self.history[-1])
+        self._write_last_processed(hist)
+
+    def _write_last_processed(self, hist):
+        """Write down the history tuple of the last context processed."""
         log.verbose("Saving last processed:", repr(hist))
         log.verbose("Storing last processed state at", repr(self.last_processed_path))
         utils.ensure_dir_exists(self.last_processed_path)
         with open(self.last_processed_path, "w+") as last:
             last.write(str(hist))
-                    
+
     @property
     def last_processed_path(self):
         """Path of file recording last processed context."""
