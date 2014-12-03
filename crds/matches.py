@@ -191,6 +191,8 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
             help="Print the match info as Python tuples.")
         self.add_argument("-d", "--datasets", nargs="+",
             help="Dataset ids for which to dump matching parameters from DADSOPS or equivalent database.")
+        self.add_argument("-i", "--instrument", type=str,
+            help="Instrument for which to dump matching parameters from DADSOPS or equivalent database.")
         self.add_argument("-c", "--condition-values", action="store_true",
             help="When dumping dataset parameters, first apply CRDS value conditioning / normalization.")
         self.add_argument("-m", "--minimize-headers", action="store_true",
@@ -203,7 +205,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         """
         if self.args.files:
             self.dump_reference_matches()
-        elif self.args.datasets:
+        elif self.args.datasets or self.args.instrument:
             self.dump_dataset_headers()
         else:
             self.print_help()
@@ -225,20 +227,23 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         """
         multi_context_headers = defaultdict(list)
         for context in self.contexts:
-            headers = api.get_dataset_headers_by_id(context, self.args.datasets)
+            if self.args.datasets:
+                headers = api.get_dataset_headers_by_id(context, self.args.datasets)
+            elif self.args.instrument:
+                headers = api.get_dataset_headers_by_instrument(context, self.args.instrument)
             for dataset_id, header in headers.items():
                 multi_context_headers[dataset_id].append((context, header))
         for dataset_id, context_headers in multi_context_headers.items():
             for (context, header) in context_headers:
                 if self.args.condition_values:
                     header = utils.condition_header(header)
-                if self.args.minimize_header:
+                if self.args.minimize_headers:
                     header = rmap.get_cached_mapping(context).minimize_header(header)
                 if len(self.contexts) == 1:
                     print(dataset_id, ":", log.format_parameter_list(header))
                 else:
                     print(dataset_id, ":", context, ":", log.format_parameter_list(header))
-            
+
     def locate_file(self, file):
         """Override for self.files..."""
         return os.path.basename(file)
