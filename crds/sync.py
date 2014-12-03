@@ -376,7 +376,7 @@ class SyncScript(cmdline.ContextsScript):
     def sync_explicit_files(self):
         """Cache `self.args.files`."""
         log.info("Syncing explicitly listed files.")
-        self.dump_files(self.default_context, self.args.files)
+        self.dump_files(self.default_context, self.get_files(self.args.files))
 
     # ------------------------------------------------------------------------------------------
     
