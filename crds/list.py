@@ -104,13 +104,17 @@ class ListScript(cmdline.ContextsScript):
         """Consult the server and print the names of all references associated with
         the given contexts.
         """
-        _print_list(self.get_context_references())
+        references = [ rmap.locate_file(file, self.observatory) if self.args.full_path else file
+                       for file in self.get_context_references() ]
+        _print_list(references)
     
     def list_mappings(self):
         """Consult the server and print the names of all CRDS mappings associated 
         with the given contexts.
         """
-        _print_list(self.get_context_mappings())
+        mappings = [ rmap.locate_file(file, self.observatory) if self.args.full_path else file
+                       for file in self.get_context_mappings() ]
+        _print_list(mappings)
     
     def list_cached_mappings(self):
         """List the mapping paths in the local cache."""
