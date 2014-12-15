@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'filekind' : 'BIACFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_biacfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'APERTURE', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'PCTECORR',
+    'rmap_relevance' : '((PCTECORR != "OMIT") and (DETECTOR  != "IR"))',
+    'sha1sum' : 'ecbf5245c77a5cac56beb3c8b2b3f05ce1cfa977',
+}
+
+selector = Match({
+})
