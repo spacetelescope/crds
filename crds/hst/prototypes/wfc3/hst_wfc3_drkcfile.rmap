@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'filekind' : 'DRKCFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_drkcfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CHINJECT'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR  != "IR")',
+    'sha1sum' : 'b6cd9e4c883923baa504772775d763098ab6b245',
+}
+
+selector = Match({
+})
