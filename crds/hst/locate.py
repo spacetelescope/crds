@@ -19,7 +19,7 @@ import glob
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
 from crds import CrdsError
-from crds.hst import siname, reftypes
+from crds.hst import siname
 
 # =======================================================================
 
@@ -306,7 +306,7 @@ def ref_properties_from_cdbs_path(filename):
     else:
         ext = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
-        filekind = reftypes.extension_to_filekind(instrument, ext)
+        filekind = TYPES.extension_to_filekind(instrument, ext)
     except KeyError:
         assert False, "Couldn't map extension " + repr(ext) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
@@ -342,7 +342,7 @@ def ref_properties_from_header(filename):
             raise CrdsError("File '{}' missing FILETYPE and CDBSFILE,  type not identifiable.".format(os.path.basename(filename)))
     filetype = TYPE_FIXERS.get((instrument, filetype), filetype)
     try:
-        filekind = reftypes.filetype_to_filekind(instrument, filetype)
+        filekind = TYPES.filetype_to_filekind(instrument, filetype)
     except KeyError:
         raise CrdsError("Invalid FILETYPE (or CDBSFILE) for '{}' of instrument '{}'." .format(filetype, instrument))
     return path, "hst", instrument, filekind, serial, ext
