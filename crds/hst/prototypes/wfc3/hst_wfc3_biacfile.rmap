@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'BIACFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '((PCTECORR != "OMIT") and (DETECTOR  != "IR"))',
-    'sha1sum' : 'ecbf5245c77a5cac56beb3c8b2b3f05ce1cfa977',
+    'sha1sum' : 'bfa380dd68a19be4f197f076760571716c11e328',
 }
 
 selector = Match({

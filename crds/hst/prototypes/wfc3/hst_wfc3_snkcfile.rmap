@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'SNKCFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '(PCTECORR != "OMIT")',
-    'sha1sum' : '7cc84852d48f9aaee4bed81ea5f11c750c899188',
+    'sha1sum' : 'a28ce2f16d0e05152d642356012fabcfe7ee1447',
 }
 
 selector = Match({

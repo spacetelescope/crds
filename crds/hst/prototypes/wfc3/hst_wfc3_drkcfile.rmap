@@ -1,5 +1,5 @@
 header = {
-    'derived_from' : 'Initial hand made version.  2014-10-09',
+    'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'DRKCFILE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
@@ -8,9 +8,9 @@ header = {
     'parkey' : (('DETECTOR', 'CCDAMP', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CHINJECT'), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
-    'reffile_switch' : 'NONE',
-    'rmap_relevance' : '(DETECTOR  != "IR")',
-    'sha1sum' : 'b6cd9e4c883923baa504772775d763098ab6b245',
+    'reffile_switch' : 'PCTECORR',
+    'rmap_relevance' : '((PCTECORR != "OMIT") and (DETECTOR  != "IR"))',
+    'sha1sum' : 'd6399ec91b8b60c034b8f22f8546ef69401bfc9c',
 }
 
 selector = Match({
