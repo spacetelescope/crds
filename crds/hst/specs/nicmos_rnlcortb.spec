@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'nlc',
+    'ld_tpn': 'nic_nlc_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'nlc',
+    'text_descr': 'Nonlinearity Power Law Table',
+    'tpn': 'nic_nlc.tpn',
+    'unique_rowkeys': ('WAVELENGTH',),
+}

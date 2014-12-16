@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'wavecal parameters reference table',
+    'ld_tpn': 'cos_wcp_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'wcp',
+    'text_descr': 'Wavecal Parameters Reference Table',
+    'tpn': 'cos_wcp.tpn',
+    'unique_rowkeys': ('OPT_ELEM',),
+}

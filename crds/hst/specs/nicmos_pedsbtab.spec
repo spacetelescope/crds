@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'psb',
+    'ld_tpn': 'nic_psb_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'psb',
+    'text_descr': 'pedsbtab',
+    'tpn': 'nic_psb.tpn',
+    'unique_rowkeys': ('CAMERA',),
+}

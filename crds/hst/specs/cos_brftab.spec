@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'baseline reference frame table',
+    'ld_tpn': 'cos_brf_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "FUV")',
+    'suffix': 'brf',
+    'text_descr': 'Baseline Reference Frame Table',
+    'tpn': 'cos_brf.tpn',
+    'unique_rowkeys': ('SEGMENT',),
+}

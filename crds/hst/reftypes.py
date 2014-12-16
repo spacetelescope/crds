@@ -6,8 +6,10 @@ and the addition of new types.
 """
 
 # import sys
-# import pprint
+import pprint
 import os.path
+import collections
+import glob
 
 from crds import rmap, log, utils, data_file
 # from crds.certify import TpnInfo
@@ -41,7 +43,67 @@ def _invert_instr_dict(dct):
 
 # =============================================================================
 
-UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
+# UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
+
+SPEC_PATH = os.path.join(HERE, "specs")
+# SPEC_PATH = "specs"
+
+def write_specs():
+    from .__init__ import TEXT_DESCR
+    for instr in UNIFIED_DEFS:
+        for reftype in UNIFIED_DEFS[instr]:
+            specname = os.path.join(SPEC_PATH, instr + "_" + reftype + ".spec")
+            with open(specname, "w+") as spec:
+                UNIFIED_DEFS[instr][reftype]["text_descr"] = TEXT_DESCR[reftype]
+                write_spec(spec, UNIFIED_DEFS[instr][reftype])
+
+def write_spec(spec, spec_dict):
+    spec.write("{\n")
+    for name, value in sorted(spec_dict.iteritems()):
+        spec.write("    " + repr(name) + ": ")
+        if isinstance(value, basestring) and "\n" in value:
+            spec.write("'''\n")
+            for line in value.splitlines():
+                spec.write(line + "\n")
+            spec.write("''',\n")
+        else:
+            spec.write(repr(value) + ",\n")
+    spec.write("}\n")
+
+def load_specs():
+    with log.error_on_exception("Failed loading type specs."):
+        specs = collections.defaultdict(dict)
+        for spec in glob.glob(os.path.join(SPEC_PATH, "*.spec")):
+            instr, reftype = os.path.splitext(os.path.basename(spec))[0].split("_")
+            with log.error_on_exception("Failed loading", repr(spec)):
+                specs[instr][reftype] = utils.evalfile(spec)
+        return specs
+    return {}
+
+UNIFIED_DEFS = load_specs()
+
+# =============================================================================
+
+with log.error_on_exception("Can't determine instruments from spces."):
+    INSTRUMENTS = sorted(UNIFIED_DEFS.keys())
+
+with log.error_on_exception("Can't determine types from specs."):
+    FILEKINDS = sorted(set(reftype for instr, reftypes in UNIFIED_DEFS.items()
+                           for reftype in reftypes))
+
+with log.error_on_exception("Can't determine extensions from specs."):
+    EXTENSIONS = sorted(set(params.get("file_ext", ".fits") 
+                            for instr, reftypes in UNIFIED_DEFS.items()
+                            for reftype, params in reftypes.items()))
+    
+with log.error_on_exception("Can't determine type text descriptions from specs."):
+    TEXT_DESCR = {
+        reftype : params["text_descr"] 
+        for instr, reftypes in UNIFIED_DEFS.items()
+        for reftype, params in reftypes.items()
+        }
+
+# =============================================================================
 
 with log.error_on_exception("Failed determining FILEKIND_TO_SUFFIX"):
     # .e.g. FILEKIND_TO_SUFFIX = {
@@ -202,6 +264,8 @@ def get_item(instrument, filekind, name):
 
 # =============================================================================
 
+# =============================================================================
+
 def check_filekinds():
     """Make sure filekinds defined in __init__ are also defined in reftypes.dat,  and vice versa."""
     all_filekinds = { filekind for instr in FILEKIND_TO_SUFFIX for filekind in FILEKIND_TO_SUFFIX[instr] }
@@ -209,5 +273,5 @@ def check_filekinds():
     assert all_filekinds - set(FILEKINDS) == set(), "Type defined in reftypes.dat not represented in TEXT_DESCR"
     assert set(FILEKINDS) - all_filekinds, "Text description for undefined filekind"
 
-check_filekinds()
+# check_filekinds()
 

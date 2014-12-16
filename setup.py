@@ -31,7 +31,7 @@ setup_pars = {
             'cdbs.paths.gz',
             'tpns/*.tpn',
             'tpns/*.rule',
-            'tpns/cdbscatalog.dat',
+            'specs/*.spec',
             ],
         'crds.jwst': [
             '*.dat',

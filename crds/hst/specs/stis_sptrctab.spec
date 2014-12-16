@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': '1-d spectrum trace table',
+    'ld_tpn': 'stis_1dt_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': '1dt',
+    'text_descr': '1-d Spectrum Trace Table',
+    'tpn': 'stis_1dt.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'CENWAVE', 'A2CENTER'),
+}

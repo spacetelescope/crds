@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'aperture description table',
+    'ld_tpn': 'stis_apd_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'apd',
+    'text_descr': 'Aperture Description Table',
+    'tpn': 'stis_apd.tpn',
+    'unique_rowkeys': ('APERTURE',),
+}

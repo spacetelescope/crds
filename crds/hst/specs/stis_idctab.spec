@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'image distortion correction table',
+    'ld_tpn': 'stis_idc_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "IMAGING")',
+    'suffix': 'idc',
+    'text_descr': 'Image Distortion Correction File',
+    'tpn': 'stis_idc.tpn',
+    'unique_rowkeys': ('FILTER', 'DIRECTION'),
+}

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'ccd bias image',
+    'ld_tpn': 'stis_bia_ld.tpn',
+    'parkey': ('CCDAMP', 'CCDGAIN', 'CCDOFFST', 'BINAXIS1', 'BINAXIS2'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "CCD")',
+    'suffix': 'bia',
+    'text_descr': 'Bias Frame',
+    'tpn': 'stis_bia.tpn',
+    'unique_rowkeys': None,
+}

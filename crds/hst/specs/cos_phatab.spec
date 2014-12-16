@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pulse height parameters reference table',
+    'ld_tpn': 'cos_pha_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "FUV")',
+    'suffix': 'pha',
+    'text_descr': 'Pulse Height Parameters Table',
+    'tpn': 'cos_pha.tpn',
+    'unique_rowkeys': ('SEGMENT', 'OPT_ELEM'),
+}

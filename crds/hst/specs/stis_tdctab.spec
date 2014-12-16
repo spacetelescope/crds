@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'dark correction table',
+    'ld_tpn': 'stis_tdc_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "NUV-MAMA")',
+    'suffix': 'tdc',
+    'text_descr': 'Nuv Dark Correction Table',
+    'tpn': 'stis_tdc.tpn',
+    'unique_rowkeys': (),
+}

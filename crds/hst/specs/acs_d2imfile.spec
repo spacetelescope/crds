@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'wfc d2i file',
+    'ld_tpn': 'acs_d2i_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'drizcorr',
+    'rmap_relevance': '((DETECTOR == "WFC") and (DRIZCORR != "OMIT"))',
+    'suffix': 'd2i',
+    'text_descr': 'Column Correction File',
+    'tpn': 'acs_d2i.tpn',
+    'unique_rowkeys': None,
+}

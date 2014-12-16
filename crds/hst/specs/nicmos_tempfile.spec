@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'tdd',
+    'ld_tpn': 'nic_tdd_ld.tpn',
+    'parkey': ('CAMERA',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'tdd',
+    'text_descr': 'Temperature-dependent Dark Reference File',
+    'tpn': 'nic_tdd.tpn',
+    'unique_rowkeys': None,
+}

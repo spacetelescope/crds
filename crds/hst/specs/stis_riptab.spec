@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'echelle ripple table',
+    'ld_tpn': 'stis_rip_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'rip',
+    'text_descr': 'Echelle Ripple Table',
+    'tpn': 'stis_rip.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'SPORDER', 'CENWAVE'),
+}

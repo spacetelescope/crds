@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'distortion correction',
+    'ld_tpn': 'acs_dxy_ld.tpn',
+    'parkey': ('DETECTOR', 'FILTER1', 'FILTER2'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'dxy',
+    'text_descr': 'Geometric Distortion Correction File',
+    'tpn': 'acs_dxy.tpn',
+    'unique_rowkeys': None,
+}

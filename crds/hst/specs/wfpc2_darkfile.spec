@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.r3h',
+    'filetype': 'drk',
+    'ld_tpn': 'wp2_drk_ld.tpn',
+    'parkey': ('MODE', 'ATODGAIN', 'SERIALS'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'drk',
+    'text_descr': 'Dark Frame',
+    'tpn': 'wp2_drk.tpn',
+    'unique_rowkeys': None,
+}

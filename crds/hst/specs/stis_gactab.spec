@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'grating-aperture correction table',
+    'ld_tpn': 'stis_gac_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '((OBSTYPE == "SPECTROSCOPIC") and (DETECTOR == "CCD"))',
+    'suffix': 'gac',
+    'text_descr': 'Grating-Aperture Correction Table',
+    'tpn': 'stis_gac.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'CENWAVE'),
+}
