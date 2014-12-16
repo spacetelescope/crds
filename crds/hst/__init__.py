@@ -1,5 +1,14 @@
 # To avoid circular imports,  limit this file to inline definitions,  not imports
 
+from crds.hst import reftypes
+
+TYPES = reftypes.from_package_file(__file__)
+
+INSTRUMENTS = TYPES.instruments
+EXTENSIONS = TYPES.extensions
+TEXT_DESCR = TYPES.text_descr
+FILEKINDS = TYPES.filekinds
+
 """
 INSTRUMENTS = ["acs","cos","nicmos","stis","wfc3","wfpc2"]
 
@@ -122,5 +131,5 @@ TEXT_DESCR = {
 FILEKINDS = sorted(TEXT_DESCR.keys())
 """
 
-from crds.hst.reftypes import INSTRUMENTS, EXTENSIONS, TEXT_DESCR, FILEKINDS
+# from crds.hst.reftypes import INSTRUMENTS, EXTENSIONS, TEXT_DESCR, FILEKINDS
 
