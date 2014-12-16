@@ -21,55 +21,7 @@ from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
 from crds import CrdsError
 from crds.hst import siname, reftypes
 
-HERE = os.path.dirname(__file__) or "./"
-
 # =======================================================================
-
-# REFNAM_TO_PATH is a mapping from { reference_basename : reference_absolute_path }
-REFNAME_TO_PATH = {}
-
-def locate_server_reference(ref_filename):
-    """Effectively,  search the given  `cdbs` filetree for `ref_filename`
-    and return the absolute path.
-    
-    This translates a name like 'v4q2144qj_bia.fits' into an absolute path
-    which most likely depends on instrument.
-    
-    """
-    # return files with paths already unchanged.
-    if not os.path.basename(ref_filename) == ref_filename:
-        return ref_filename
-    if not REFNAME_TO_PATH:
-        setup_path_map()
-    return REFNAME_TO_PATH[ref_filename]
-    
-def setup_path_map(rebuild_cache=False):
-    """Dump the directory tree `cdbs` into a file and read the results
-    into a global map from file basename to absolute path.
-    """
-    cachepath = HERE + "/cdbs.paths.gz"
-    if not os.path.exists(cachepath) or rebuild_cache:
-        log.info("Generating CDBS file path cache.")
-        pysh.sh("find  /grp/hst/cdbs | gzip -c >cdbs.paths.gz")  # secure.
-        log.info("Done.")
-    for line in gzip.open(cachepath):
-        line = line.strip()
-        if not line:
-            continue
-        dirname, filename = os.path.split(line)
-        if filename in REFNAME_TO_PATH:
-            if "linux" in dirname:
-                log.verbose_warning("Reference file " + repr(filename) + " found more than once.  Overriding with Linux version.")
-                REFNAME_TO_PATH[filename] = line
-            else:
-                log.verbose_warning("Reference file " + repr(filename) + " found more than once.  Keeping original version since 'linux' not in new path.")
-        else:
-            REFNAME_TO_PATH[filename] = line
-
-def main():
-    """Regenerate the CDBS path cache."""
-    # log.set_verbose()
-    setup_path_map(rebuild_cache=True)
 
 def test():
     """Run the module doctests."""
@@ -79,24 +31,18 @@ def test():
 
 # =======================================================================
 
-def reference_exists(reference):
-    """Return True iff basename `reference` is known/exists in CRDS.
-    """
-    try:
-        where = locate_server_reference(reference)
-    except KeyError:
-        return False
-    return os.path.exists(where)
-
-# =======================================================================
-
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.hst.reftypes import reference_name_to_validator_key, mapping_validator_key
-from crds.hst.reftypes import get_row_keys, get_row_keys_by_instrument, get_item
+from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
+
+reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
+mapping_validator_key = TYPES.mapping_validator_key
+get_row_keys = TYPES.get_row_keys
+get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
+get_item = TYPES.get_item
+
 from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
-from crds.hst import INSTRUMENTS, FILEKINDS, EXTENSIONS
 from crds.hst.substitutions import expand_wildcards
 
 # =======================================================================
@@ -457,6 +403,8 @@ def fits_to_parkeys(header):
     return dict(header)
 
 # ============================================================================
+
+HERE = os.path.dirname(__file__) or "."
 
 def load_all_type_constraints():
     """Make sure that all HST .tpn files are loadable."""
