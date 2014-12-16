@@ -1,4 +1,4 @@
-__svn_version__ = '2022:2025M'
+__svn_version__ = '2022:2026M'
 
 __full_svn_info__ = '''
 Path: .
