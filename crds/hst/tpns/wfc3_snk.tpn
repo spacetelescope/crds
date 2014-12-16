@@ -10,7 +10,7 @@
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
 INSTRUME	H	C	R   WFC3
-FILETYPE	H	C	R   'SINK PIXELS'
+FILETYPE	H	C	R   "SINK PIXELS"
 DETECTOR	H	C	R	UVIS
 BINAXIS1    H   I   R   1,2,3
 BINAXIS2    H   I   R   1,2,3
