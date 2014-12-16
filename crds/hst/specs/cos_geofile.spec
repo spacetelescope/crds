@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'geometric distortion reference image',
+    'ld_tpn': 'cos_geo_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "FUV")',
+    'suffix': 'geo',
+    'text_descr': 'Geometric Distortion Correction',
+    'tpn': 'cos_geo.tpn',
+    'unique_rowkeys': None,
+}

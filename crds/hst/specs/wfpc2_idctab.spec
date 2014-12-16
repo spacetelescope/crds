@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'distortion coefficients',
+    'ld_tpn': 'wp2_idc_ld.tpn',
+    'parkey': (),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'idc',
+    'text_descr': 'Image Distortion Correction File',
+    'tpn': 'wp2_idc.tpn',
+    'unique_rowkeys': ('DETCHIP', 'DIRECTION', 'FILTER', 'FILTER1', 'FILTER2'),
+}

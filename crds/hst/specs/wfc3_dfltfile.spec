@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'delta flat',
+    'ld_tpn': 'wfc3_dfl_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'FILTER', 'BINAXIS1', 'BINAXIS2'),
+    'parkey_relevance': {'binaxis1': '(DETECTOR == "UVIS")', 'binaxis2': '(DETECTOR == "UVIS")'},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'flatcorr',
+    'rmap_relevance': '(FLATCORR != "OMIT")',
+    'suffix': 'dfl',
+    'text_descr': 'Delta Flat Field Image',
+    'tpn': 'wfc3_dfl.tpn',
+    'unique_rowkeys': None,
+}

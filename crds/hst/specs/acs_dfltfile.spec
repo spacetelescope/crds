@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'delta flat',
+    'ld_tpn': 'acs_dfl_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'dfl',
+    'text_descr': 'Delta Flat Field Image',
+    'tpn': 'acs_dfl.tpn',
+    'unique_rowkeys': None,
+}

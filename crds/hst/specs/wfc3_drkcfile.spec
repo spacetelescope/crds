@@ -1,0 +1,15 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'CTEDARK',
+    'ld_tpn': 'wfc3_drc_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CHINJECT'),
+    'reffile_format': 'IMAGE',
+    'reffile_required': 'none',
+    'reffile_switch': 'PCTECORR',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
+    'suffix': 'drc',
+    'text_descr': 'Cte Corrected Dark',
+    'tpn': 'wfc3_drc.tpn',
+    'unique_rowkeys': None,
+}

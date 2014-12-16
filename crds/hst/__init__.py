@@ -1,5 +1,6 @@
 # To avoid circular imports,  limit this file to inline definitions,  not imports
 
+"""
 INSTRUMENTS = ["acs","cos","nicmos","stis","wfc3","wfpc2"]
 
 EXTENSIONS = [
@@ -119,4 +120,7 @@ TEXT_DESCR = {
 }
 
 FILEKINDS = sorted(TEXT_DESCR.keys())
+"""
+
+from crds.hst.reftypes import INSTRUMENTS, EXTENSIONS, TEXT_DESCR, FILEKINDS
 

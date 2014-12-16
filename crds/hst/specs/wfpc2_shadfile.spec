@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.r5h',
+    'filetype': 'shd',
+    'ld_tpn': 'wp2_shd_ld.tpn',
+    'parkey': ('MODE', 'SHUTTER'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'shd',
+    'text_descr': 'Shutter Shading Correction Image',
+    'tpn': 'wp2_shd.tpn',
+    'unique_rowkeys': None,
+}

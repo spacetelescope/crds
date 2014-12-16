@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pixel-to-pixel flat',
+    'ld_tpn': 'wfc3_pfl_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'FILTER', 'BINAXIS1', 'BINAXIS2'),
+    'parkey_relevance': {'binaxis1': '(DETECTOR == "UVIS")', 'binaxis2': '(DETECTOR == "UVIS")'},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'flatcorr',
+    'rmap_relevance': '((FILTER != "BLANK") and (FLATCORR != "OMIT"))',
+    'suffix': 'pfl',
+    'text_descr': 'Pixel To Pixel Flat Field Image',
+    'tpn': 'wfc3_pfl.tpn',
+    'unique_rowkeys': None,
+}

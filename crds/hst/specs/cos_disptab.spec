@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'dispersion relation reference table',
+    'ld_tpn': 'cos_disp_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'disp',
+    'text_descr': 'Dispersion Relation Table',
+    'tpn': 'cos_disp.tpn',
+    'unique_rowkeys': ('APERTURE', 'OPT_ELEM', 'CENWAVE', 'SEGMENT'),
+}

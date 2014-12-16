@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'linearity coefficients',
+    'ld_tpn': 'wfc3_lin_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR == "IR")',
+    'suffix': 'lin',
+    'text_descr': 'Detector Linearity Correction File',
+    'tpn': 'wfc3_lin.tpn',
+    'unique_rowkeys': None,
+}

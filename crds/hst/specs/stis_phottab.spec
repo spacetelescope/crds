@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'photometric conversion table',
+    'ld_tpn': 'stis_pht_ld.tpn',
+    'parkey': ('DETECTOR', 'OBSTYPE'),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'pht',
+    'text_descr': 'Phototmetric Calibration Table',
+    'tpn': 'stis_pht.tpn',
+    'unique_rowkeys': ('OPT_ELEM', 'CENWAVE', 'SPORDER'),
+}

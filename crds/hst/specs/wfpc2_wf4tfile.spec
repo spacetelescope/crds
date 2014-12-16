@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.r7h',
+    'filetype': 'w4t',
+    'ld_tpn': 'wp2_w4t_ld.tpn',
+    'parkey': ('ATODGAIN',),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'no',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'w4t',
+    'text_descr': 'WF4 Correction Table',
+    'tpn': 'wp2_w4t.tpn',
+    'unique_rowkeys': None,
+}

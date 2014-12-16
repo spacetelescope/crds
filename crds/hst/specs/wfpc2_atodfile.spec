@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.r1h',
+    'filetype': 'a2d',
+    'ld_tpn': 'wp2_a2d_ld.tpn',
+    'parkey': ('MODE', 'ATODGAIN'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': 'ALWAYS',
+    'suffix': 'a2d',
+    'text_descr': 'Analog To Digital Converter Lookup Table',
+    'tpn': 'wp2_a2d.tpn',
+    'unique_rowkeys': None,
+}

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'SINK PIXELS',
+    'ld_tpn': 'wfc3_snk_ld.tpn',
+    'parkey': ('DETECTOR', 'BINAXIS1', 'BINAXIS2'),
+    'parkey_relevance': {},
+    'reffile_format': 'IMAGE',
+    'reffile_required': 'YES',
+    'reffile_switch': 'PCTECORR',
+    'rmap_relevance': '(PCTECORR != "OMIT")',
+    'suffix': 'snk',
+    'text_descr': 'Sink Pixel Correction Image',
+    'tpn': 'wfc3_snk.tpn',
+    'unique_rowkeys': None,
+}

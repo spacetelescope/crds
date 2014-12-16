@@ -1,0 +1,15 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'pixcte',
+    'ld_tpn': 'wfc3_cte_ld.tpn',
+    'parkey': ('DETECTOR', 'BINAXIS1', 'BINAXIS2'),
+    'reffile_format': 'TABLE',
+    'reffile_required': 'none',
+    'reffile_switch': 'PCTECORR',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (PCTECORR != "OMIT"))',
+    'suffix': 'cte',
+    'text_descr': 'Pixel CTE Correction Table',
+    'tpn': 'wfc3_cte.tpn',
+    'unique_rowkeys': None,
+}

@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'post flash',
+    'ld_tpn': 'acs_fls_ld.tpn',
+    'parkey': ('DETECTOR', 'CCDAMP', 'CCDGAIN', 'FLASHCUR', 'SHUTRPOS'),
+    'parkey_relevance': {},
+    'reffile_format': 'image',
+    'reffile_required': 'yes',
+    'reffile_switch': 'flshcorr',
+    'rmap_relevance': '((DETECTOR != "SBC" and FLASHCUR != "OFF") and (FLSHCORR != "OMIT"))',
+    'suffix': 'fls',
+    'text_descr': 'Post-flash Image',
+    'tpn': 'acs_fls.tpn',
+    'unique_rowkeys': None,
+}

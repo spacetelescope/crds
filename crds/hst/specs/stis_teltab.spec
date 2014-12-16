@@ -1,0 +1,16 @@
+{
+    'extra_keys': (),
+    'file_ext': '.fits',
+    'filetype': 'telescope psf table',
+    'ld_tpn': 'stis_tel_ld.tpn',
+    'parkey': ('DETECTOR',),
+    'parkey_relevance': {},
+    'reffile_format': 'table',
+    'reffile_required': 'none',
+    'reffile_switch': 'none',
+    'rmap_relevance': '(DETECTOR != "CCD" and OBSTYPE == "SPECTROSCOPIC")',
+    'suffix': 'tel',
+    'text_descr': 'Telescope Point Spread Function Table',
+    'tpn': 'stis_tel.tpn',
+    'unique_rowkeys': ('PSFWAVE',),
+}
