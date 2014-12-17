@@ -379,7 +379,7 @@ class Script(object):
         date based specifications against the CRDS server operational context history.
         """
         if config.is_date_based_mapping_spec(context):
-            if context.endswith("-operational"):
+            if re.match(config.OBSERVATORY_RE_STR + r"-operational", context):
                 final_context = self.server_info.operational_context
             else:
                 _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
