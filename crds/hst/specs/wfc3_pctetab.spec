@@ -43,7 +43,7 @@ Required additional keywords: FILETYPE = 'PIXCTE'
     'reffile_format': 'TABLE',
     'reffile_required': 'none',
     'reffile_switch': 'PCTECORR',
-    'rmap_relevance': '((DETECTOR == "UVIS") and (PCTECORR != "OMIT"))',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
     'suffix': 'cte',
     'text_descr': 'Pixel CTE Correction Table',
     'tpn': 'wfc3_cte.tpn',

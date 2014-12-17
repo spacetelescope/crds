@@ -34,7 +34,7 @@ Required additional keywords: FILETYPE = 'SINK PIXELS'
     'reffile_format': 'IMAGE',
     'reffile_required': 'YES',
     'reffile_switch': 'PCTECORR',
-    'rmap_relevance': '(PCTECORR != "OMIT")',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
     'suffix': 'snk',
     'text_descr': 'Sink Pixel Correction Image',
     'tpn': 'wfc3_snk.tpn',
