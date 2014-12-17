@@ -13,7 +13,7 @@ import os.path
 
 from crds import rmap, utils
 from crds.certify import TpnInfo
-from crds.hst import reftypes
+from crds.hst import TYPES
 
 # =============================================================================
 
@@ -104,12 +104,12 @@ def get_tpn_text(*args):
 def reference_name_to_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding .tpn"""
     path = rmap.locate_file(filename, "hst")
-    key = reftypes.reference_name_to_tpn_key(path)
+    key = TYPES.reference_name_to_tpn_key(path)
     return get_tpn_text(*key)
 
 def reference_name_to_ld_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
     path = rmap.locate_file(filename, "hst")
-    key = reftypes.reference_name_to_ld_tpn_key(path)
+    key = TYPES.reference_name_to_ld_tpn_key(path)
     return get_tpn_text(*key)
 
