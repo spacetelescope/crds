@@ -1,6 +1,7 @@
 header = {
     'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'BIACFILE',
+    'filetype': 'CTEBIAS',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_biacfile.rmap',
@@ -9,7 +10,9 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '((PCTECORR != "OMIT") and (DETECTOR  != "IR"))',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
+    'suffix': 'bic',
+    'text_descr': 'CTE Bias Frame',
     'sha1sum' : 'bfa380dd68a19be4f197f076760571716c11e328',
 }
 
