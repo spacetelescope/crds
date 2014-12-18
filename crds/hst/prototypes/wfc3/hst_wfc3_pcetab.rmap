@@ -1,6 +1,7 @@
 header = {
     'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'PCTETAB',
+    'filetype': 'PIXCTE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_pctetab.rmap',
@@ -9,7 +10,9 @@ header = {
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(PCTECORR != "OMIT")',
+    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
+    'suffix': 'cte',
+    'text_descr': 'Pixel CTE Correction Table',
     'sha1sum' : '15230222665f01f07ec49575ff0bcfc4e250a417',
 }
 
