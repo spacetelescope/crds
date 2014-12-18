@@ -1,7 +1,7 @@
 header = {
     'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'SNKCFILE',
-  	'filetype': 'SINK PIXELS',
+    'filetype' : 'SINK PIXELS',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_snkcfile.rmap',
@@ -10,12 +10,11 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
-    'suffix': 'snk',
-    'text_descr': 'Sink Pixel Correction Image',
-    'sha1sum' : 'a28ce2f16d0e05152d642356012fabcfe7ee1447',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and SUBARRAY == "FALSE")',
+    'sha1sum' : '07acda0c3eb5bf5e0c07cf6897342cd43f0c2cdb',
+    'suffix' : 'snk',
+    'text_descr' : 'Sink Pixel Correction Image',
 }
 
 selector = Match({
 })
-

@@ -1,7 +1,7 @@
 header = {
     'derived_from' : 'Initial hand made version.  2014-12-15',
     'filekind' : 'DRKCFILE',
-    'filetype': 'CTEDARK',
+    'filetype' : 'CTEDARK',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
     'name' : 'hst_wfc3_drkcfile.rmap',
@@ -10,10 +10,10 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance': '((DETECTOR == "UVIS") and (SUBARRAY == "FALSE"))',
-    'suffix': 'drc',
-    'text_descr': 'Cte Corrected Dark',
-    'sha1sum' : 'd6399ec91b8b60c034b8f22f8546ef69401bfc9c',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and SUBARRAY == "FALSE")',
+    'sha1sum' : '57d717bfec8894a9da2bd1398fbbae0a4daf1a38',
+    'suffix' : 'drc',
+    'text_descr' : 'Cte Corrected Dark',
 }
 
 selector = Match({

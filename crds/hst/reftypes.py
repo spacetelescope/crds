@@ -4,9 +4,6 @@ contained here was reverse engineered from CDBS in a piecemeal fashion,  then
 consolidated into the single common data structure to support future maintenance
 and the addition of new types.
 """
-
-# import sys
-import pprint
 import os.path
 import collections
 import glob
@@ -16,17 +13,6 @@ from crds import rmap, log, utils, data_file
 
 # =============================================================================
 #  Global table loads used at operational runtime:
-
-def _evalfile_with_fail(filename):
-    """Evaluate and return a dictionary file,  returning {} if the file
-    cannot be found.
-    """
-    if os.path.exists(filename):
-        result = utils.evalfile(filename)
-    else:
-        log.warning("Couldn't load CRDS config file", repr(filename))
-        result = {}
-    return result
 
 def _invert_instr_dict(dct):
     """Invert a set of nested dictionaries of the form {instr: {key: val}}
@@ -39,60 +25,66 @@ def _invert_instr_dict(dct):
 
 # =============================================================================
 
-# UNIFIED_DEFS = _evalfile_with_fail(os.path.join(HERE, "reftypes.dat"))
-
-# SPEC_PATH = os.path.join(HERE, "specs")
-# SPEC_PATH = "specs"
-
-# UNIFIED_DEFS = load_specs()
-
-def write_specs():
-    from .__init__ import TEXT_DESCR
-    for instr in UNIFIED_DEFS:
-        for reftype in UNIFIED_DEFS[instr]:
-            specname = os.path.join(SPEC_PATH, instr + "_" + reftype + ".spec")
-            with open(specname, "w+") as spec:
-                UNIFIED_DEFS[instr][reftype]["text_descr"] = TEXT_DESCR[reftype]
-                write_spec(spec, UNIFIED_DEFS[instr][reftype])
-
-def write_spec(spec, spec_dict):
-    spec.write("{\n")
-    for name, value in sorted(spec_dict.iteritems()):
-        spec.write("    " + repr(name) + ": ")
-        if isinstance(value, basestring) and "\n" in value:
-            spec.write("'''\n")
-            for line in value.splitlines():
-                spec.write(line + "\n")
-            spec.write("''',\n")
-        else:
-            spec.write(repr(value) + ",\n")
-    spec.write("}\n")
-
-# =============================================================================
-
 class TypeSpec(dict):
-    pass
+    """This class captures type definition parameters for a single type"""
 
-def load_specs(spec_path):
-    with log.error_on_exception("Failed loading type specs."):
-        specs = collections.defaultdict(dict)
-        for spec in glob.glob(os.path.join(spec_path, "*.spec")):
-            instr, reftype = os.path.splitext(os.path.basename(spec))[0].split("_")
-            with log.error_on_exception("Failed loading", repr(spec)):
-                specs[instr][reftype] = TypeSpec(utils.evalfile(spec))
-        return specs
-    return {}
+    def __init__(self, header):
+        """Initialize this TypeSpec from dict `header`,  enforcing requirments and creating suitable 
+        defaults for missing fields.
+        """
+        header = utils.Struct(header)
+        assert "suffix" in header
+        assert "text_descr" in header
+        if "tpn" not in header:
+            header.tpn = header.instrument.lower() + "_" + header.suffix + ".tpn"
+        if "ld_tpn" not in header:
+            header.ld_tpn = header.instrument.lower() + "_" + header.suffix + "_ld.tpn"
+        if "file_ext" not in header:
+            header.file_ext = ".fits"
+        if "unique_rowkeys" not in header:
+            header.unique_rowkeys = None
+        super(TypeSpec, self).__init__(header.items())
+
+    @classmethod
+    def from_file(cls, filename):
+        """For historical HST types,  build type info from a spec file derived from CDBS specs like
+        reference_file_defs.xml or cdbscatalog.dat.  For new CRDS-only types,  use a prototype rmap
+        with an enhanced header to define the type.   Prototypes should be submissible but should not
+        contain references.
+        """
+        log.verbose("Loading type spec", repr(filename))
+        if filename.endswith(".spec"):
+            return cls(utils.evalfile(filename))
+        else:
+            return cls(rmap.load_mapping(filename).header)
 
 # =============================================================================
 
 def from_package_file(pkg):
+    """Given the __file__ from a package,  load specs from the package's specs subdirectory."""
     here = (os.path.dirname(pkg) or ".")
     specs_path = os.path.join(here, "specs") 
     unified_defs = load_specs(specs_path)
     return TypeParameters(unified_defs)
 
-class TypeParameters(utils.Struct):
+def load_specs(spec_path):
+    """Return a dictionary of TypeSpecs loaded from directory `spec_path` of form:
+    
+    { instrument : { filetype : TypeSpec, ...}, ... }
+    """
+    with log.error_on_exception("Failed loading type specs."):
+        specs = collections.defaultdict(dict)
+        for spec in glob.glob(os.path.join(spec_path, "*.spec")) + glob.glob(os.path.join(spec_path, "*.rmap")):
+            instr, reftype = os.path.splitext(os.path.basename(spec))[0].split("_")
+            with log.error_on_exception("Failed loading", repr(spec)):
+                specs[instr][reftype] = TypeSpec.from_file(spec)
+        return specs
+    return {}
 
+class TypeParameters(object):
+    """Inialized from a dictionary of TypeSpec's from load_specs(), compute observatory enumerations
+    and type field inter-relationships and cache them as attributes.
+    """
     def __init__(self, unified_defs):
 
         self.unified_defs = unified_defs
@@ -141,7 +133,7 @@ class TypeParameters(utils.Struct):
             self.suffix_to_filetype = _invert_instr_dict(self.filetype_to_suffix)
 
         with log.error_on_exception("Failed determining unique_rowkeys"):
-            self.rowkeys = {
+            self.row_keys = {
                 instr : {
                     filekind : self.unified_defs[instr][filekind]["unique_rowkeys"]
                     for filekind in self.unified_defs[instr]
@@ -201,7 +193,7 @@ class TypeParameters(utils.Struct):
                     break
             else:
                 raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
-                        os.path.basename(filename), instrument, filekind))
+                    os.path.basename(filename), instrument, filekind))
         log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key)
         return key
 
@@ -241,7 +233,7 @@ class TypeParameters(utils.Struct):
         For HST calibration references mapping is an rmap.
         """
         mapping = rmap.asmapping(mapping)
-        return self.rowkeys[mapping.instrument][mapping.filekind]
+        return self.row_keys[mapping.instrument][mapping.filekind]
 
     def get_row_keys_by_instrument(self, instrument):
         """To support defining the CRDS server interface to DADSOPS, return the
