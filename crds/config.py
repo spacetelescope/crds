@@ -481,7 +481,7 @@ CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\d(T\d\d:\d\d:\d\d(\.\d+)?)?"
 CONTEXT_DATETIME_RE = re.compile(complete_re(CONTEXT_DATETIME_RE_STR))
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
-CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z]{1,32}(\-[a-z]{1,32})?)?" 
+CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?)?" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
 CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
