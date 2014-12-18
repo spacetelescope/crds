@@ -315,6 +315,7 @@ def get_server_version():
 
 def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
+    context = os.path.basename(context)
     if get_server_version() >= "1.0":
         return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
     else:
@@ -323,6 +324,7 @@ def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     
 def get_dataset_ids(context, instrument, datasets_since=None):
     """Return [ dataset_id, ...] for `instrument`."""
+    context = os.path.basename(context)
     if get_server_version() >= "1.0":
         return S.get_dataset_ids(context, instrument, datasets_since)
     else:
@@ -336,6 +338,7 @@ def get_required_parkeys(context):
     
     { instrument : [ matching_parkey_name, ... ], ... }
     """
+    context = os.path.basename(context)
     return S.get_required_parkeys(context)
 
 def get_dataset_headers_by_instrument(context, instrument, datasets_since=None):

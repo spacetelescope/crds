@@ -26,8 +26,9 @@ class Test_00_Selectors(unittest.TestCase):
         self.assertEqual(bestref, result)
         
     def test_use_after_bad_datetime(self):
-        with self.assertRaises(rmap.ValidationError):
-            self._selector_testcase('USE_AFTER', '4.5', 'cref_flatfield_73.fits')
+        header = { "TEST_CASE":"USE_AFTER", "PARAMETER": '4.5' }
+        bestref = self.rmap.get_best_ref(header)
+        assert bestref.startswith("NOT FOUND UseAfter Invalid date/time format")
 
     def test_use_after_no_time(self):
         self._selector_testcase('USE_AFTER', '2005-12-20', 'o9f15549j_bia.fits')
@@ -43,10 +44,8 @@ class Test_00_Selectors(unittest.TestCase):
 
     def test_use_after_missing_parameter(self):
         header = { "TEST_CASE": "USE_AFTER" }  # no PARAMETER
-        with self.assertRaisesRegexp(
-            rmap.ValidationError, 
-            "UseAfter required lookup parameter 'PARAMETER' is undefined."):
-            bestref = self.rmap.get_best_ref(header)
+        bestref = self.rmap.get_best_ref(header)
+        assert bestref.startswith("NOT FOUND UseAfter required lookup parameter 'PARAMETER' is undefined.")
 
     def test_select_version1(self): 
         self._selector_testcase('SELECT_VERSION', '4.5', 'cref_flatfield_73.fits')
@@ -597,12 +596,8 @@ selector = Bracket({
     
     def test_1_recursive_use_rmap(self):
         r = rmap.load_mapping(self.result_filename)
-        try:
-            r.get_best_ref(self.lookup_header)
-        except crds.CrdsLookupError:
-            pass
-        else:
-            assert False, "Expected lookup to fail."
+        ref = r.get_best_ref(self.lookup_header)
+        assert ref.startswith("NOT FOUND All lookup attempts failed. last exception: No match found.")
             
     def test_2_delete_fails(self):
         log.verbose("-"*60)

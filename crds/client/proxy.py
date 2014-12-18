@@ -18,6 +18,8 @@ from crds import log, config
 
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
+    def __call__(*args):
+        return super(CrdsError, self).__call__(" ".join(args))
 
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
