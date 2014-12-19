@@ -1,8 +1,13 @@
 """Generate .spec files from existing JWST mappings and original hard coded
 enumerations.
 """
-
+import glob
 import os.path
+
+import crds
+from crds import log, reftypes, rmap
+
+# ===========================================================
 
 INSTRUMENTS = ["miri","nirspec","nircam","niriss", "fgs"]
 
@@ -54,18 +59,53 @@ FILEKIND_TO_FILETYPE = { val:key for (key, val) in FILETYPE_TO_FILEKIND.items() 
 
 HERE = os.path.dirname(__file__) or "."
 
+# ===========================================================
+
 def gen_specs(context):
-    """"""
-    import crds, crds.reftypes
+    """Generate spec files corresponding to all types in `context`."""
+    log.info("Generating specs from", repr(context))
     p = crds.get_cached_mapping(context)
     for mapping in p.mapping_names():
         if mapping.endswith(".rmap"):
             r = crds.get_cached_mapping(mapping)
             specname = r.instrument + "_" + r.filekind + ".spec"
             specpath = os.path.join(HERE, "specs", specname)
+            if os.path.exists(specpath):
+                break
             spec = dict(r.header)
             spec["filetype"] = FILEKIND_TO_FILETYPE.get(
                 r.filekind.upper(), r.filekind.upper())
             spec["file_ext"] = os.path.splitext(r.reference_names()[0])[-1]
             spec["text_descr"] = TEXT_DESCR[r.filekind]
-            crds.reftypes.write_spec(specpath, spec)
+            log.write("Generating spec", repr(specpath))
+            reftypes.write_spec(specpath, spec)
+
+def check_specs():
+    instruments = set()
+    filekinds = set()
+    for spec in glob.glob(os.path.join(HERE, "specs", "*.spec")):
+        instr, filekind = os.path.basename(spec).split(".")[0].split("_")
+        instruments.add(instr)
+        filekinds.add(filekind)
+    unhandled = set(INSTRUMENTS) - instruments
+    log.info("Unhandled instruments:", unhandled)
+    unhandled = set(FILEKINDS) - filekinds
+    log.info("Unhandled filekinds:", unhandled)
+    unhandled = set(TEXT_DESCR) - filekinds
+    log.info("Unhandled text descrs:", unhandled)
+
+def gen_all_specs():
+    for context in reversed(rmap.list_mappings("*.pmap", "jwst")):
+        gen_specs(context)
+    check_specs()
+
+def all_filekinds():
+    filekinds = set()
+    for context in rmap.list_mappings("*.pmap", "jwst"):
+        p = crds.get_cached_mapping(context)
+        for i in p.selections.values():
+            for r in i.selections.values():
+                if r.filekind not in filekinds:
+                    log.info("Adding", repr(r.filekind), "from", repr(context))
+                    filekinds.add(r.filekind)
+    return sorted(filekinds)
