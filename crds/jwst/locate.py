@@ -53,7 +53,13 @@ def reference_exists(reference):
 # from observatory-unique ways of specifying and caching Validator parameters.
 
 from crds.jwst.tpn import get_tpninfos   #  reference_name_to_validator_key, mapping_validator_key  defined here.
-from crds.jwst.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS, FILETYPE_TO_FILEKIND, FILEKIND_TO_FILETYPE
+from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
+
+reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
+mapping_validator_key = TYPES.mapping_validator_key
+get_row_keys = TYPES.get_row_keys
+get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
+get_item = TYPES.get_item
 
 # =======================================================================
 
@@ -218,19 +224,8 @@ def ref_properties_from_cdbs_path(filename):
 
 # =======================================================================
 
-def filetype_to_filekind(filetype):
-    filetype = filetype.upper()
-    if filetype in FILETYPE_TO_FILEKIND:
-        return FILETYPE_TO_FILEKIND[filetype].lower()
-    else:
-        return filetype.lower()
-
-def filekind_to_filetype(filekind):
-    filekind = filekind.upper()
-    if filekind in FILEKIND_TO_FILETYPE:
-        return FILEKIND_TO_FILETYPE[filekind]
-    else:
-        return filekind
+filetype_to_filekind = TYPES.filetype_to_filekind
+filekind_to_filetype = TYPES.filekind_to_filetype
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
