@@ -71,7 +71,7 @@ def gen_specs(context):
             specname = r.instrument + "_" + r.filekind + ".spec"
             specpath = os.path.join(HERE, "specs", specname)
             if os.path.exists(specpath):
-                break
+                continue
             spec = dict(r.header)
             spec["filetype"] = FILEKIND_TO_FILETYPE.get(
                 r.filekind.upper(), r.filekind.upper())
