@@ -1,8 +1,8 @@
-"""This modules consolidates different kinds of information related to each
-instrument and reference type under one data structure. Most of the information
-contained here was reverse engineered from CDBS in a piecemeal fashion,  then
-consolidated into the single common data structure to support future maintenance
-and the addition of new types.
+"""This module consolidates a number of aspects of reference type definition which were
+originally reverse engineered from CDBS and serveral different spec files.  It is 
+organized around loading type specs or prototype rmaps from the "specs" subdirectory of 
+an observatory/subsystem package.   For HST this reduces defining new types to adding 
+a prototype rmap and defining .tpn files in the observatory package.
 """
 import os.path
 import collections
@@ -22,6 +22,16 @@ def _invert_instr_dict(dct):
     for instr in dct:
         inverted[instr] = utils.invert_dict(dct[instr])
     return inverted
+
+# =============================================================================
+
+def write_spec(specpath, spec_dict):
+    """Pretty print a spec dictionary."""
+    with open(specpath, "w+") as spec:
+        spec.write("{\n")
+        for key, value in sorted(spec_dict.items()):
+            spec.write("    {} : {},\n".format(repr(key), repr(value)))
+        spec.write("}\n")
 
 # =============================================================================
 
