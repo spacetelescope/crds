@@ -12,5 +12,6 @@
     'reference_to_dataset' : {'DETECTOR': 'META.INSTRUMENT.DETECTOR'},
     'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE"))',
     'sha1sum' : 'f0a3fb1ba255cc02307e9b33beacf371f5df991a',
+    'suffix' : 'specwcs',
     'text_descr' : 'Spectroscopic World Coordinate System',
 }

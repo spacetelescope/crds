@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : 'aef777d9dfe4b6b006f13abd262ff0cb3e77e842',
+    'suffix' : 'mask',
     'text_descr' : 'Bad Pixel Mask',
 }

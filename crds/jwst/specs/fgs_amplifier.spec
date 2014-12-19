@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : '1052a84ac061fe2ce3dd013231e46814d48fc06d',
+    'suffix' : 'amplifier',
     'text_descr' : 'Detector Amplifier Readout Parameters',
 }

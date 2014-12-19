@@ -32,14 +32,19 @@ setup_pars = {
             'tpns/*.tpn',
             'tpns/*.rule',
             'specs/*.spec',
+            'specs/*.rmap',
             ],
         'crds.jwst': [
             '*.dat',
             'tpns/*.tpn',
+            'specs/*.spec',
+            'specs/*.rmap',
             ],
         'crds.tobs': [
             '*.dat',
             'tpns/*.tpn',
+            'specs/*.spec',
+            'specs/*.rmap',
             ],
         'crds' : [
             'cache/mappings/hst/*.*map',

@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : '487389f29f8be00f51cdabd8824c097a96dc941c',
+    'suffix' : 'linearity',
     'text_descr' : 'Detector Linearity Correction Coefficients',
 }

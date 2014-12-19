@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : ((),),
     'sha1sum' : '01859bb63de2f65b43aa3d72f2204141c3dabbcf',
+    'suffix' : 'drizpars',
     'text_descr' : 'Drizzle Parameters used in Image Distortion Correction and Combination',
 }
