@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : '107e0c0fb505edc217a473627bcaadfb5c7cc6b2',
+    'suffix' : 'gain',
     'text_descr' : 'Gain',
 }

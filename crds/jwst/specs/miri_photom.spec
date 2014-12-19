@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : 'c0e025d2c45a0bc1819f96545397a1580c830810',
+    'suffix' : 'photom',
     'text_descr' : 'Absolute Calibration',
 }

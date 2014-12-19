@@ -77,6 +77,7 @@ def gen_specs(context):
                 r.filekind.upper(), r.filekind.upper())
             spec["file_ext"] = os.path.splitext(r.reference_names()[0])[-1]
             spec["text_descr"] = TEXT_DESCR[r.filekind]
+            spec["suffix"] = r.filekind
             log.write("Generating spec", repr(specpath))
             reftypes.write_spec(specpath, spec)
 

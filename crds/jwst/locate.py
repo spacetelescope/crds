@@ -143,7 +143,7 @@ def decompose_newstyle_name(filename):
         repr(instrument) + " in name " + repr(filename)
     assert filekind in FILEKINDS+[""], "Invalid filekind " + \
         repr(filekind) + " in name " + repr(filename)
-    assert re.match("\d*", serial), "Invalid id field " + \
+    assert re.match(r"\d*", serial), "Invalid id field " + \
         repr(id) + " in name " + repr(filename)
     # extension may vary for upload temporary files.
 
@@ -201,31 +201,7 @@ def get_reference_properties(filename):
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
-def ref_properties_from_cdbs_path(filename):
-    """Based on a HST CDBS `filename`,  return (instrument, filekind, serial). 
-    Raise AssertionError if it's not a good filename.
-    """
-    path, fields, ext = _get_fields(filename)
-    # For legacy files,  just use the root filename as the unique id
-    serial = os.path.basename(os.path.splitext(filename)[0])
-    # First try to figure everything out by decoding filename. fast
-    for idir in CDBS_DIRS_TO_INSTR:
-        if idir in filename:
-            instrument = CDBS_DIRS_TO_INSTR[idir]
-            break
-    else:
-        assert False, "CDBS instrument directory not found in filepath"
-    ext = fields[-1]
-    try:
-        filekind = tpn.extension_to_filekind(instrument, ext)
-    except KeyError:
-        assert False, "Couldn't map extension " + repr(ext) + " to filekind."
-    return path, "jwst", instrument, filekind, serial, ext
-
 # =======================================================================
-
-filetype_to_filekind = TYPES.filetype_to_filekind
-filekind_to_filetype = TYPES.filekind_to_filetype
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
@@ -242,20 +218,6 @@ def ref_properties_from_header(filename):
         "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
 
-# =============================================================================
-
-def reference_name_to_validator_key(filename):
-    """Given a reference filename `fitsname`,  return a dictionary key
-    suitable for caching the reference type's Validator.
-    
-    Return (instrument, filekind)
-    """
-    _path, _obsv, instrument, filekind, _serial, _ext = get_reference_properties(filename)
-    return (instrument, filekind, ".tpn")
-
-def mapping_validator_key(mapping):
-    """Return the TPN key for ReferenceMapping `mapping`."""
-    return (mapping.instrument, mapping.filekind, "_ld.tpn")
 # =============================================================================
 
 def reference_keys_to_dataset_keys(rmapping, header):

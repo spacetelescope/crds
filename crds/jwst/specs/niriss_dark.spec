@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.SUBARRAY.NAME'),),
     'sha1sum' : 'f619961f7d318a016ff56c470ba052e832766958',
+    'suffix' : 'dark',
     'text_descr' : 'Dark Frame',
 }

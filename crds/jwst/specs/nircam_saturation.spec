@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : '43d6a19bd0acc6cebdf29338c4350c565016df49',
+    'suffix' : 'saturation',
     'text_descr' : 'Saturation',
 }

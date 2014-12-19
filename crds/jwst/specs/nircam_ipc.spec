@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR',),),
     'sha1sum' : 'a52293a378962284d269925f716c3fbd73879920',
+    'suffix' : 'ipc',
     'text_descr' : 'Interpixel Capacitance',
 }

@@ -10,5 +10,6 @@
     'parkey' : (('META.INSTRUMENT.DETECTOR',),),
     'reference_to_dataset' : {'DETECTOR': 'META.INSTRUMENT.DETECTOR'},
     'sha1sum' : '1a2c18a0a523c00830af4ebf4be2d4f01573abd4',
+    'suffix' : 'distortion',
     'text_descr' : 'Distortion',
 }

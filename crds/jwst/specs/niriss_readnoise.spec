@@ -9,5 +9,6 @@
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'sha1sum' : 'c100fd63ed12a77e7dff45bb6c295bf013958e03',
+    'suffix' : 'readnoise',
     'text_descr' : 'Read Noise',
 }
