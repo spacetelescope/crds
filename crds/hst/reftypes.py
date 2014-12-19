@@ -100,7 +100,7 @@ class TypeParameters(object):
         with log.error_on_exception("Can't determine extensions from specs."):
             self.extensions = sorted(
                 set(params.get("file_ext", ".fits") for instr, reftypes in self.unified_defs.items()
-                    for reftype, params in reftypes.items()))
+                    for reftype, params in reftypes.items())) + [".pmap", ".imap", ".rmap"]
 
         with log.error_on_exception("Can't determine type text descriptions from specs."):
             self.text_descr = {
