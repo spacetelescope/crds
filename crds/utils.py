@@ -379,9 +379,10 @@ def invert_dict(dictionary):
     """
     inverse = {}
     for key, value in dictionary.items():
-        if value in inverse:
-            raise ValueError("Undefined inverse because of duplicate value " + \
-                             repr(value))
+        if value in inverse and inverse[value] != key:
+            raise ValueError("Undefined inverse because of duplicates for " +
+                             repr(value) + " of " + repr(key) + " vs. " +
+                             repr(inverse[value]))
         inverse[value] = key
     return inverse
     
