@@ -190,9 +190,8 @@ class TypeParameters(object):
         Returns (.tpn filename,)
         """
         header = data_file.get_header(filename)
-        instrument = header["INSTRUME"].lower()
-        filetype = header["FILETYPE"].lower()
-        filekind = self.filetype_to_filekind(instrument, filetype)
+        observatory = data_file.get_observatory(filename)
+        instrument, filekind = utils.get_file_properties(observatory, filename)
         tpnfile = self.unified_defs[instrument][filekind][field]
         if isinstance(tpnfile, basestring):
             key = (tpnfile,)  # tpn filename
