@@ -12,7 +12,6 @@ import gzip
 import re
 
 from crds import (log, rmap, data_file, config)
-from . import tpn
 
 HERE = os.path.dirname(__file__) or "./"
 
@@ -25,26 +24,10 @@ def test():
 
 # =======================================================================
 
-def locate_server_reference(reference):
-    """Return the absolute path for the server-side copy of a reference file. Default cache path."""
-    return config.locate_file(reference, "tobs")
-
-def reference_exists(reference):
-    """Return True iff basename `reference` is known/exists in CRDS.
-    """
-    try:
-        where = locate_server_reference(reference)
-    except KeyError:
-        return False
-    return os.path.exists(where)
-
-# =======================================================================
-
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.tobs.tpn import reference_name_to_validator_key, mapping_validator_key, get_tpninfos
-from crds.tobs.__init__ import INSTRUMENTS, FILEKINDS, EXTENSIONS
+from crds.tobs import INSTRUMENTS, FILEKINDS, EXTENSIONS, TYPES
 
 # =======================================================================
 
@@ -204,11 +187,11 @@ def ref_properties_from_cdbs_path(filename):
             break
     else:
         assert False, "CDBS instrument directory not found in filepath"
-    ext = fields[-1]
+    suffix = fields[-1]
     try:
-        filekind = tpn.extension_to_filekind(instrument, ext)
+        filekind = TYPES.suffix_to_filekind[instrument][suffix]
     except KeyError:
-        assert False, "Couldn't map extension " + repr(ext) + " to filekind."
+        assert False, "Couldn't map extension " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, ext
 
 def ref_properties_from_header(filename):
@@ -220,7 +203,7 @@ def ref_properties_from_header(filename):
     header = data_file.get_header(filename)
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
-    filekind = tpn.filetype_to_filekind(instrument, filetype)
+    filekind = TYPES.filetype_to_filekind(instrument, filetype)
     return path, "hst", instrument, filekind, serial, ext
 
 

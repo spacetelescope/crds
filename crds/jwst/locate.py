@@ -33,22 +33,6 @@ def test():
 
 # =======================================================================
 
-def locate_server_reference(reference):
-    """Return the absolute path for the server-side copy of a reference file. Default cache layout."""
-    return config.locate_file(reference, "jwst")
-
-
-def reference_exists(reference):
-    """Return True iff basename `reference` is known/exists in CRDS.
-    """
-    try:
-        where = locate_server_reference(reference)
-    except KeyError:
-        return False
-    return os.path.exists(where)
-
-# =======================================================================
-
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 

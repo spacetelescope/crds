@@ -302,13 +302,13 @@ def ref_properties_from_cdbs_path(filename):
     # First try to figure everything out by decoding filename. fast
     instrument = siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
     if extension == ".fits":
-        ext = fields[1]
+        suffix = fields[1]
     else:
-        ext = GEIS_EXT_TO_SUFFIX[extension[1:3]]
+        suffix = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
-        filekind = TYPES.extension_to_filekind(instrument, ext)
+        filekind = TYPES.suffix_to_filekind[instrument][suffix]
     except KeyError:
-        assert False, "Couldn't map extension " + repr(ext) + " to filekind."
+        assert False, "Couldn't map extension/suffix " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
 
 INSTRUMENT_FIXERS = {

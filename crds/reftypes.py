@@ -99,29 +99,32 @@ class TypeParameters(object):
 
         self.unified_defs = unified_defs
 
+        sorted_udef_items = sorted(unified_defs.items())
+
         with log.error_on_exception("Can't determine instruments from specs."):
-            self.instruments = sorted(self.unified_defs.keys())
+            self.instruments = [instr.lower() for instr in sorted(self.unified_defs.keys())]
 
         with log.error_on_exception("Can't determine types from specs."):
             self.filekinds = sorted(
-                set(reftype for instr, reftypes in self.unified_defs.items()
+                set(reftype.lower() for instr, reftypes in sorted_udef_items
                     for reftype in reftypes))
 
         with log.error_on_exception("Can't determine extensions from specs."):
             self.extensions = sorted(
-                set(params.get("file_ext", ".fits") for instr, reftypes in self.unified_defs.items()
+                set(params.get("file_ext", ".fits") for instr, reftypes in sorted_udef_items
                     for reftype, params in reftypes.items())) + [".pmap", ".imap", ".rmap"]
 
         with log.error_on_exception("Can't determine type text descriptions from specs."):
             self.text_descr = {
-                reftype : params["text_descr"] for instr, reftypes in self.unified_defs.items()
+                reftype.lower() : params["text_descr"] 
+                for instr, reftypes in sorted_udef_items
                 for reftype, params in reftypes.items()
                 }
 
         with log.error_on_exception("Failed determining filekind_to_suffix"):
             self.filekind_to_suffix = {
                 instr : {
-                    filekind : self.unified_defs[instr][filekind]["suffix"]
+                    filekind.lower() : self.unified_defs[instr][filekind]["suffix"].lower()
                     for filekind in self.unified_defs[instr]
                     }
                 for instr in self.unified_defs
@@ -133,7 +136,7 @@ class TypeParameters(object):
         with log.error_on_exception("Failed determining filetype_to_suffix"):
             self.filetype_to_suffix = {
                 instr : {
-                    self.unified_defs[instr][filekind]["filetype"] : self.unified_defs[instr][filekind]["suffix"]
+                    self.unified_defs[instr][filekind]["filetype"].lower() : self.unified_defs[instr][filekind]["suffix"].lower()
                     for filekind in self.unified_defs[instr]
                     }
                 for instr in self.unified_defs
@@ -145,7 +148,7 @@ class TypeParameters(object):
         with log.error_on_exception("Failed determining unique_rowkeys"):
             self.row_keys = {
                 instr : {
-                    filekind : self.unified_defs[instr][filekind]["unique_rowkeys"]
+                    filekind.lower() : self.unified_defs[instr][filekind]["unique_rowkeys"]
                     for filekind in self.unified_defs[instr]
                     }
                 for instr in self.unified_defs
@@ -159,16 +162,16 @@ class TypeParameters(object):
         filetype = filetype.lower()
         if instrument == "nic":
             instrument = "nicmos"
-        ext = self.filetype_to_suffix[instrument][filetype]
-        return self.suffix_to_filekind[instrument][ext]
+        suffix = self.filetype_to_suffix[instrument][filetype]
+        return self.suffix_to_filekind[instrument][suffix]
 
-    def extension_to_filekind(self, instrument, extension):
-        """Map the value of an instrument and TPN extension onto it's
+    def suffix_to_filekind(self, instrument, suffix):
+        """Map the value of an instrument and TPN suffix onto it's
         associated filekind keyword name,  i.e. drk --> darkfile
         """
         if instrument == "nic":
             instrument = "nicmos"
-        return self.suffix_to_filekind[instrument][extension]
+        return self.suffix_to_filekind[instrument][suffix]
 
 # =============================================================================
 
@@ -251,6 +254,7 @@ class TypeParameters(object):
         DADSOPS and identify table fields which provide the necessary parameters.
         """
         keyset = set()
+        instrument = instrument.lower()
         for filekind in self.row_keys[instrument]:
             typeset = set(self.row_keys[instrument][filekind] or [])
             keyset = keyset.union(typeset)
@@ -260,9 +264,12 @@ class TypeParameters(object):
 
     def get_filekinds(self, instrument):
         """Return the sequence of filekind strings for `instrument`."""
-        return self.filekind_to_suffix[instrument.lower()].keys()
+        instrument = instrument.lower()
+        return self.filekind_to_suffix[instrument].keys()
 
     def get_item(self, instrument, filekind, name):
         """Return config item `name` for `instrument` and `filekind`"""
+        instrument = instrument.lower()
+        filekind = filekind.lower()
         return self.unified_defs[instrument][filekind][name]
 
