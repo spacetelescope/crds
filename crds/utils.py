@@ -696,7 +696,7 @@ def instrument_to_locator(instrument):
 def file_to_instrument(filename):
     """Given reference or dataset `filename`,  return the associated instrument."""
     for (_obs, instr) in observatory_instrument_tuples():
-        if "_{}_".format(instr) in filename.lower() or "_{}.".format(instr) in filename.lower():
+        if "{}_".format(instr) in filename.lower() or "_{}".format(instr) in filename.lower():
             return instr.upper()
     from crds import data_file
     header = data_file.get_unconditioned_header(filename, needed_keys=["INSTRUME", "META.INSTRUMENT.NAME", "INSTRUMENT"])
