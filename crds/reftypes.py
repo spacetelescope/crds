@@ -62,7 +62,7 @@ class TypeSpec(dict):
         with an enhanced header to define the type.   Prototypes should be submissible but should not
         contain references.
         """
-        log.verbose("Loading type spec", repr(filename))
+        log.verbose("Loading type spec", repr(filename), verbosity=75)
         if filename.endswith(".spec"):
             return cls(utils.evalfile(filename))
         else:
