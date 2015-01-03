@@ -129,7 +129,6 @@ class ReferenceHeaderExpanders(dict):
         # log.warning("Unknown instrument", repr(instrument), " in expand_wildcards().")
         return header
 
-@classmethod
 def expand_wildcards(rmapping, header):
     """Expand substitution values in `header` with respect to the instrument and observatory
     defined in `rmapping`.
