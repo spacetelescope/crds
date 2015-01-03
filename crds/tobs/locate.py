@@ -24,13 +24,6 @@ def test():
 
 # =======================================================================
 
-# These two functions decouple the generic reference file certifier program 
-# from observatory-unique ways of specifying and caching Validator parameters.
-
-from crds.tobs import INSTRUMENTS, FILEKINDS, EXTENSIONS, TYPES
-
-# =======================================================================
-
 REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
 
 def get_file_properties(filename):
@@ -173,27 +166,6 @@ def get_reference_properties(filename):
     # If not, dig inside the FITS file, slow
     return ref_properties_from_header(filename)
 
-def ref_properties_from_cdbs_path(filename):
-    """Based on a HST CDBS `filename`,  return (instrument, filekind, serial). 
-    Raise AssertionError if it's not a good filename.
-    """
-    path, fields, ext = _get_fields(filename)
-    # For legacy files,  just use the root filename as the unique id
-    serial = os.path.basename(os.path.splitext(filename)[0])
-    # First try to figure everything out by decoding filename. fast
-    for idir in CDBS_DIRS_TO_INSTR:
-        if idir in filename:
-            instrument = CDBS_DIRS_TO_INSTR[idir]
-            break
-    else:
-        assert False, "CDBS instrument directory not found in filepath"
-    suffix = fields[-1]
-    try:
-        filekind = TYPES.suffix_to_filekind[instrument][suffix]
-    except KeyError:
-        assert False, "Couldn't map extension " + repr(suffix) + " to filekind."
-    return path, "hst", instrument, filekind, serial, ext
-
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine instrument, filekind.
     """
@@ -204,7 +176,137 @@ def ref_properties_from_header(filename):
     instrument = header["INSTRUME"].lower()
     filetype = header["FILETYPE"].lower()
     filekind = TYPES.filetype_to_filekind(instrument, filetype)
-    return path, "hst", instrument, filekind, serial, ext
+    return path, "tobs", instrument, filekind, serial, ext
 
 
     
+# =======================================================================
+
+# These two functions decouple the generic reference file certifier program 
+# from observatory-unique ways of specifying and caching Validator parameters.
+
+from crds.tobs import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
+
+reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
+mapping_validator_key = TYPES.mapping_validator_key
+get_row_keys = TYPES.get_row_keys
+get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
+get_item = TYPES.get_item
+
+from crds.tobs.tpn import reference_name_to_tpn_text, reference_name_to_ld_tpn_text
+from crds.tobs.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
+
+# =======================================================================
+
+def reference_keys_to_dataset_keys(rmapping, header):
+    """Given a header dictionary for a reference file,  map the header back to
+    keys relevant to datasets.
+    """
+    result = dict(header)
+    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
+        reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
+        result["DATE-OBS"] = reformatted[0]
+        result["TIME-OBS"] = reformatted[1]
+    return result
+
+# =======================================================================
+
+def condition_matching_header(rmapping, header):
+    """Condition the matching header values to the normalized form of the .rmap"""
+    return utils.condition_header(header)
+
+# =======================================================================
+
+def get_env_prefix(instrument):
+    """Return the environment variable prefix (IRAF prefix) for `instrument`."""
+    return "crds://"
+
+def locate_file(refname, mode=None):
+    """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
+    The aspect of this which is complicated is determining instrument and an instrument
+    specific sub-directory for it based on the filename alone,  not the file contents.
+    """
+    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
+    rootdir = locate_dir(instrument, mode)
+    return  os.path.join(rootdir, os.path.basename(refname))
+
+def locate_dir(instrument, mode=None):
+    """Locate the instrument specific directory for a reference file."""
+    if mode is  None:
+        mode = config.get_crds_ref_subdir_mode(observatory="tobs")
+    else:
+        config.check_crds_ref_subdir_mode(mode)
+    crds_refpath = config.get_crds_refpath("tobs")
+    prefix = get_env_prefix(instrument)
+    if mode == "legacy":   # Locate cached files at the appropriate CDBS-style  iref$ locations
+        try:
+            rootdir = os.environ[prefix]
+        except KeyError:
+            try:
+                rootdir = os.environ[prefix[:-1]]
+            except KeyError:
+                raise KeyError("Reference location not defined for " + repr(instrument) + 
+                               ".  Did you configure " + repr(prefix) + "?")
+    elif mode == "instrument":   # use simple names inside CRDS cache.
+        rootdir = os.path.join(crds_refpath, instrument)
+        refdir = os.path.join(crds_refpath, prefix[:-1])
+        if not os.path.exists(refdir):
+            if config.writable_cache_or_verbose("Skipping making instrument directory link for", repr(instrument)):
+                log.verbose("Creating legacy cache link", repr(refdir), "-->", repr(rootdir))
+                utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
+                os.symlink(rootdir, refdir)
+    elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
+        rootdir = crds_refpath
+    else:
+        raise ValueError("Unhandled reference file location mode " + repr(mode))
+    return rootdir
+
+# ============================================================================
+
+def fits_to_parkeys(header):
+    """Map a FITS header onto rmap parkeys appropriate for this observatory."""
+    return dict(header)
+
+# ============================================================================
+
+HERE = os.path.dirname(__file__) or "."
+
+def load_all_type_constraints():
+    """Make sure that all HST .tpn files are loadable."""
+    from crds import certify
+    tpns = glob.glob(os.path.join(HERE, "tpns", "*.tpn"))
+    for tpn_path in tpns:
+        tpn_name = tpn_path.split("/")[-1]  # simply lost all patience with basename and path.split
+        log.verbose("Loading", repr(tpn_name))
+        certify.validators_by_typekey((tpn_name,), "tobs")
+
+# ============================================================================
+
+__all__ = [
+    "INSTRUMENTS",
+
+    "reference_name_to_validator_key",
+    "mapping_validator_key",
+    "get_tpninfos",
+    "reference_name_to_tpn_text",
+    "reference_name_to_ld_tpn_text",
+    "load_all_type_constraints",
+    "get_item",
+
+    "get_env_prefix",
+    "decompose_newstyle_name",
+    "locate_dir",
+    "get_file_properties",
+
+    "get_row_keys",
+    "get_row_keys_by_instrument",
+    
+    "fits_to_parkeys",
+    "reference_keys_to_dataset_keys",
+    "condition_matching_header",
+]
+
+for name in __all__:
+    print "checking api for", name
+    assert name in dir()
+

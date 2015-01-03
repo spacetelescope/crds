@@ -1,32 +1,26 @@
-"""This module defines functions for loading TOBS's .tpn files which
-describe reference parameters and their values.   The .tpn files are used to
-validate headers or tables and list the parameters each filekind must define
-in an rmap.
-"""
-import sys
-import os.path
-import pprint
+"""This module defines functions for loading and using CDBS .tpn files.
 
-from crds import rmap, log, utils, data_file
+    *.tpn
+    *_ld.tpn
+    
+These files are all related to checking reference files and CRDS mappings.   This
+file is used to support crds.certify using a protocol which maps references and mappings
+onto lists of TpnInfo objects which describe parameter constraints.   The protocol
+is implemented as an observatory specific "plugin" through the locator.py module.
+
+"""
+import os.path
+
+from crds import rmap, utils
 from crds.certify import TpnInfo
+from crds.tobs import TYPES
 
 # =============================================================================
 
 HERE = os.path.dirname(__file__) or "./"
 
 # =============================================================================
-
-def _evalfile_with_fail(filename):
-    """Evaluate and return a dictionary file,  returning {} if the file
-    cannot be found.
-    """
-    if os.path.exists(filename):
-        result = utils.evalfile(filename)
-    else:
-        result = {}
-    return result
-
-# =============================================================================
+#  HST CDBS .tpn and _ld.tpn reader
 
 def _load_tpn_lines(fname):
     """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
@@ -66,6 +60,7 @@ def _fix_quoted_whitespace(line):
                 line = line[:i-1] + "_" + line[i:]
     return line
 
+
 def _load_tpn(fname):
     """Load a TPN file and return it as a list of TpnInfo objects
     describing keyword requirements including acceptable values.
@@ -84,49 +79,37 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
-def _tpn_filepath(instrument, filekind, kind):
-    """Return the full path for the .tpn file corresponding to `instrument` and 
-    `filekind`,  the CRDS name for the header keyword which refers to this 
-    reference.
-    """
-    tpn_filename = instrument + "_" + filekind + kind
-    path = os.path.join(HERE, "tpns", tpn_filename)
-    return path
+# =============================================================================
+# Plugin-functions for this observatory,  accessed via locator.py
+
 
 @utils.cached
-def get_tpninfos(*key):
-    """Load the listof TPN info tuples corresponding to `instrument` and 
-    `filekind` from it's .tpn file.
+def get_tpninfos(*args):
+    """Load the list of TPN_info tuples corresponding to *args from it's .tpn file.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
     """
-    try:
-        return _load_tpn(_tpn_filepath(*key))
-    except IOError:
-        log.verbose_warning("no TPN for", key)
-        return []
+    return _load_tpn(os.path.join(HERE, "tpns", args[0]))
 
-# =============================================================================
-
-def reference_name_to_validator_key(filename):
-    """Given a reference filename `fitsname`,  return a dictionary key
-    suitable for caching the reference type's Validator.
-    
-    Return (instrument, filekind)
+@utils.cached
+def get_tpn_text(*args):
+    """Return the .tpn text corresponding to *args.
+    Nominally args are (instrument, filekind),  but *args should be supported to 
+    handle *key for any key returned by reference_name_to_validator_key.   In particular,
+    for some subtypes,  *args will be (tpn_filename,).
     """
-    header = data_file.get_header(filename)
-    instrument = header["INSTRUME"].lower()
-    filekind = header["FILEKIND"].lower()
-    return (instrument, filekind, ".tpn")
+    return open(os.path.join(HERE, "tpns", args[0])).read()
 
-def mapping_validator_key(mapping):
-    """Return the TPN key for ReferenceMapping `mapping`."""
-    return (mapping.instrument, mapping.filekind, "_ld.tpn")
-    
-    
-# =============================================================================
+def reference_name_to_tpn_text(filename):
+    """Given reference `filename`,  return the text of the corresponding .tpn"""
+    path = rmap.locate_file(filename, "tobs")
+    key = TYPES.reference_name_to_tpn_key(path)
+    return get_tpn_text(*key)
 
-def main():
-    print "null tpn processing."
-
-if __name__ == "__main__":
-    main()
+def reference_name_to_ld_tpn_text(filename):
+    """Given reference `filename`,  return the text of the corresponding _ld.tpn"""
+    path = rmap.locate_file(filename, "tobs")
+    key = TYPES.reference_name_to_ld_tpn_key(path)
+    return get_tpn_text(*key)
 
