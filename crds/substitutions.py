@@ -109,8 +109,8 @@ def required_keys(expr):
 class ReferenceHeaderExpanders(dict):
     """Container class for all expanders for all instruments of an observatory."""
     
-    @utils.cached
     @classmethod
+    @utils.cached
     def load(cls, observatory):
         """Load the substution rules from the observatory package directory."""
         pkg = utils.get_observatory_package(observatory)
