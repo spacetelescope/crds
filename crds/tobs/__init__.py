@@ -1,10 +1,13 @@
-INSTRUMENTS = ["testinstr",]
+import os.path
 
-EXTENSIONS = [".pmap", ".imap", ".rmap", ".fits", ]
+from crds import reftypes
 
-TEXT_DESCR = {
-    "testfk" : "Test File Kind",
-}
+HERE  = os.path.dirname(__file__) or "."
 
-FILEKINDS = sorted(TEXT_DESCR.keys())
+TYPES = reftypes.from_package_file(__file__)
+
+INSTRUMENTS = TYPES.instruments
+EXTENSIONS = TYPES.extensions
+TEXT_DESCR = TYPES.text_descr
+FILEKINDS = TYPES.filekinds
 

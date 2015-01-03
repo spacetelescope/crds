@@ -227,11 +227,6 @@ def reference_keys_to_dataset_keys(rmapping, header):
 
 # =============================================================================
 
-def expand_wildcards(rmapping, header):
-    """See hst/substitutions.py"""
-    return dict(header)
-
-
 def condition_matching_header(rmapping, header):
     """Normalize header values for .rmap reference insertion."""
     return dict(header)   # NOOP for JWST,  may have to revisit

@@ -64,7 +64,7 @@ from collections import namedtuple
 
 
 import crds
-from . import (log, utils, selectors, data_file, config)
+from . import (log, utils, selectors, data_file, config, substitutions)
 
 # XXX For backward compatability until refactored away.
 from .config import locate_file, locate_mapping, locate_reference
@@ -1324,7 +1324,7 @@ class ReferenceMapping(Mapping):
         
         # Reference files specify things like ANY which must be expanded to 
         # glob patterns for matching with the reference file.
-        header = self.locate.expand_wildcards(self, header)
+        header = substitutions.expand_wildcards(self, header)
         
         # Translate header values to .rmap normalized form,  e.g. utils.condition_value()
         header = self.locate.condition_matching_header(self, header)

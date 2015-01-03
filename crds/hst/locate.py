@@ -43,7 +43,6 @@ get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 
 from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
-from crds.hst.substitutions import expand_wildcards
 
 # =======================================================================
 
@@ -438,7 +437,6 @@ __all__ = [
     
     "fits_to_parkeys",
     "reference_keys_to_dataset_keys",
-    "expand_wildcards",
     "condition_matching_header",
 ]
 
