@@ -28,9 +28,7 @@ setup_pars = {
             ],
         'crds.hst': [
             '*.dat',
-            'cdbs.paths.gz',
             'tpns/*.tpn',
-            'tpns/*.rule',
             'specs/*.spec',
             'specs/*.rmap',
             ],
