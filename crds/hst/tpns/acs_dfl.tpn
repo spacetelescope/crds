@@ -10,7 +10,7 @@
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
 INSTRUME	H	C	R   	ACS
-FILETYPE	H	C	R    	DARK
+FILETYPE	H	C	R    	"DELTA FLAT"
 DETECTOR	H	C	R	WFC,HRC,SBC
 LRFWAVE     H   C   R   3774,3880,3992,4105,4230,4362,4488,4620,4752,5038,\
                         5491,5998,6505,7205,7836

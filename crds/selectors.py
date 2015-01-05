@@ -432,7 +432,12 @@ class Selector(object):
             return
         if "*" in valid_list or "N/A" in valid_list:
             return
-        if value.replace(".0","") in valid_list:
+        if value.replace(".0","") in valid_list or value + ".0" in valid_list:
+            return
+        if value.lower().startswith("between"):
+            _btw, value1, value2 = value.split()
+            self._validate_value(name, value1, valid_list)
+            self._validate_value(name, value2, valid_list)
             return
         if not valid_list:  # some TPNs are type-only
             return
