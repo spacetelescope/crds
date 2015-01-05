@@ -58,9 +58,9 @@ class Validator(object):
     def verbose(self, filename, value, *args, **keys):
         """Prefix log.verbose() with standard info about this Validator.  Unique message is in *args, **keys"""
         return log.verbose("File=" + repr(filename), 
-                           "Class=" + repr(self.__class__.__name__[:-len("Validator")]), 
+                           "class=" + repr(self.__class__.__name__[:-len("Validator")]), 
                            "keyword=" + repr(self.name), 
-                           "value =" + repr(value), 
+                           "value=" + repr(value), 
                            *args, **keys)
 
     def condition(self, value):
