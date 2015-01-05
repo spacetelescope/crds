@@ -21,7 +21,8 @@ DETECTOR            C        C         R    FUV,NUV
 OPT_ELEM            C        C         O    G130M,G160M,G140L,\
                                             G185M,G225M,G285M,G230L,\
                                             MIRRORA,MIRRORB
-PEDIGREE	    C        C	       R    INFLIGHT,GROUND,MODEL,DUMMY
+LIFE_ADJ            C        I         R    -1,0,1,2,3
+PEDIGREE	        C        C	       R    INFLIGHT,GROUND,MODEL,DUMMY
 CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
 OBSERVATION_END_DATE    C    C         O    &SYBDATE

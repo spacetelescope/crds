@@ -21,3 +21,4 @@ DESCRIP             H        C         R
 OPT_ELEM            H        C         O    G130M,G160M,G140L,\
                                             G185M,G225M,G285M,G230L, \
                                             MIRRORA,MIRRORB,ANY
+LIFE_ADJ            H        I         R    -1,0,1,2,3,-11
