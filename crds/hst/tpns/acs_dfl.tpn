@@ -5,10 +5,16 @@
 # datatype = (Integer|Real|Logical|Double|Character)
 # presence = (Optional|Required)
 #
+# 2015-01-05  jmiller   Initial type definition
+#
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
 INSTRUME	H	C	R   	ACS
-FILETYPE	H	C	R    	"DELTA FLAT"
+FILETYPE	H	C	R    	DARK
 DETECTOR	H	C	R	WFC,HRC,SBC
+LRFWAVE     H   C   R   3774,3880,3992,4105,4230,4362,4488,4620,4752,5038,\
+                        5491,5998,6505,7205,7836
+CCDAMP		H	C	R	A,B,C,D,AC,AD,BC,BD,ABCD,N/A,ANY
+CCDGAIN         H       R       R       0.5,1.0,1.4,2.0,4.0,8.0,-1,-999.0
 USEAFTER  	H	C	R	&SYBDATE
 PEDIGREE  	H	C	R	&PEDIGREE
