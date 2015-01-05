@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'hst_cos_flatfile_0251.rmap',
+    'filekind' : 'FLATFILE',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_flatfile_0250.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OPT_ELEM', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'FLATCORR',
+    'rmap_relevance' : '(FLATCORR != "OMIT")',
+    'sha1sum' : '80cd9376729728e7b7484332dd726e36111f5345',
+}
+
+selector = Match({
+    ('FUV', 'N/A', 'N/A') : UseAfter({
+        '1996-10-01 00:00:00' : 'xab1551cl_flat.fits',
+    }),
+    ('NUV', 'N/A', 'N/A') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700tl_flat.fits',
+        '2009-05-11 00:00:00' : 'x5v1944hl_flat.fits',
+    }),
+})
