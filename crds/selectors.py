@@ -423,8 +423,19 @@ class Selector(object):
             
     def _validate_value(self, name, value, valid_list):
         """Verify that parameter `name` with `value` is in `valid_list` or
-        meets some other generic criteria for validity.   This is a generic
-        check against parameter constraints nominally from a TPN file.
+        meets some other generic criteria for validity.
+        
+        This is an overloaded method which is used to validate both runtime header values
+        and rmap match tuple values,  so it is run against two different kinds of valid lists,
+        valids which come from .rmaps,  and valids which come from .tpn files.   
+        
+        The .tpn's define what .rmaps and references *can* say,  but the .rmap defines what 
+        it *does* say.   The latter is more relevant at diagnosing runtime match failures,  
+        basically values like N/A or * are currently loopholes in rmap validation and bestrefs
+        checking.
+        
+        Note that the .tpn assumption applies primarily to HST, the valid value constraints
+        for JWST may (eventually) come from the data model schema instead.
         """
         if value in valid_list:
             return
@@ -439,16 +450,17 @@ class Selector(object):
             self._validate_value(name, value1, valid_list)
             self._validate_value(name, value2, valid_list)
             return
+        if value.startswith(("(","{","#")):   # punt on esoteric rarely used match expressions
+            return
         if not valid_list:  # some TPNs are type-only
             return
-        if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges
-            min, max = [float(x) for x in valid_list[0].split(":")]
+        if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges in .tpns as n1:n2
+            min, max = [float(x) for x in valid_list[0].split(":")]  # normalize everything as float
             if min <= float(value) <= max:
                 return
             else:
                 raise ValidationError(
-                    " parameter=" + repr(name) + " value =" + 
-                    repr(value) + " is not in range [" + 
+                    " parameter=" + repr(name) + " value =" +  repr(value) + " is not in range [" + 
                     str(min) + " .. " + str(max) + "]")     
         if name in self._substitutions and value in self._substitutions[name]:
             return
