@@ -380,7 +380,7 @@ def get_updated_files(context1, context2):
             if new <= context2:
                 new_map = rmap.get_cached_mapping(new)
                 new_files = set(new_map.mapping_names() + new_map.reference_names())
-                updated = updated.union(new_files - old_files)
+                updated |= new_files - old_files
                 old = new
                 old_files = new_files
             else:

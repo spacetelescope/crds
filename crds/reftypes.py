@@ -256,8 +256,7 @@ class TypeParameters(object):
         keyset = set()
         instrument = instrument.lower()
         for filekind in self.row_keys[instrument]:
-            typeset = set(self.row_keys[instrument][filekind] or [])
-            keyset = keyset.union(typeset)
+            keyset |= set(self.row_keys[instrument][filekind] or [])
         return sorted([key.lower() for key in keyset])
 
 # =============================================================================
