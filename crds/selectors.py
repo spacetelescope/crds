@@ -268,6 +268,7 @@ class Selector(object):
     def choose(self, header):
         """Given `header`,  operate on self.keys() to choose one of self.choices(). 
         """
+        self._check_defined(header)
         lookup_key = self._validate_header(header)  # may return header or a key
         exc = None
         for selection in self.get_selection(lookup_key):  # iterate over weighted selections, best match first.
@@ -316,7 +317,7 @@ class Selector(object):
                         self.short_name + " key=" + repr(key) + 
                         " is wrong length for parameters " + repr(self._parameters))
                 field = key[i]
-                parmap[par] = parmap[par].union(set(field.split("|")))
+                parmap[par] |= set(field.split("|"))
         for par, val in parmap.items():
             parmap[par] = sorted(val)
         return parmap
@@ -404,7 +405,6 @@ class Selector(object):
         """Check self._parameters in `header` against the values found in the
         selector's keys.  Ignore nested selectors.
         """
-        self._check_defined(header)
         for name in self._parameters:
             value = header.get(name, "UNDEFINED")
             self._validate_value(name, value, self._parkey_map[name])
@@ -676,7 +676,7 @@ class Selector(object):
                 for parkey in nested:
                     if parkey not in vmap:
                         vmap[parkey] = set()
-                    vmap[parkey] = vmap[parkey].union(nested[parkey])
+                    vmap[parkey] |= nested[parkey]
         return vmap
 
     def get_selector_value_map(self):
@@ -1657,7 +1657,6 @@ Alternate date/time formats are accepted as header parameters.
         
         Return lookup date.
         """
-        self._check_defined(header)
         date = self._raw_date(header)
         return self._validate_datetime(self._parameters, date)
         
@@ -1828,7 +1827,6 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
         self._validate_number(parname, key)
         
     def _validate_header(self, header):
-        self._check_defined(header)
         parname = self._parameters[0]
         return self._validate_number(parname, header[parname])
 
@@ -1927,7 +1925,6 @@ class BracketSelector(Selector):
         self._validate_number(name, value)
 
     def _validate_header(self, header):
-        self._check_defined(header)
         parname = self._parameters[0]
         return self._validate_number(parname, header[parname])
     
@@ -2164,7 +2161,6 @@ class SelectVersionSelector(Selector):
             self._validate_number(name, value)
     
     def _validate_header(self, header):
-        self._check_defined(header)
         parname = self._parameters[0]
         self._validate_value(parname, header[parname], [])
         return header[parname]
