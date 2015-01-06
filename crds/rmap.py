@@ -167,6 +167,10 @@ LEGAL_NODES = set([
     'visit_Eq',
     'visit_NotIn',
     'visit_NotEq',
+    'visit_Gt',
+    'visit_GtE',
+    'visit_Lt',
+    'visit_LtE',
     'visit_Compare',
     'visit_IfExp',
     'visit_BoolOp',
@@ -610,13 +614,10 @@ class Mapping(object):
             log.verbose("Skipping derivation checks for root mapping", repr(self.basename),
                       "derived_from =", repr(self.derived_from))
         elif os.path.exists(derived_path):
-            try:
+            with log.error_on_exception("Can't load parent mapping", repr(derived_path)):
                 derived_from = fetch_mapping(derived_path)
-            except Exception, exc:
-                log.error("Can't load parent mapping", repr(derived_path), ":", str(exc))
         else:
-            log.warning("Parent mapping for", repr(self.basename), "=", 
-                        repr(self.derived_from), "does not exist.")
+            log.warning("Parent mapping for", repr(self.basename), "=", repr(self.derived_from), "does not exist.")
         return derived_from
 
     def _check_type(self, expected_type):
