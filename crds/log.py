@@ -185,14 +185,33 @@ def exception_trap_logger(func):
         try:
             yield
         except Exception,  exc:
-            func(*args + (":", str(exc)), **keys)
+            msg = format(*args + (":", str(exc)), **keys)
+            reraise = func(msg)
+            if CRDS_DEBUG or reraise:
+                raise exc.__class__(msg)
     return func_on_exception
+
+# =======================================================================================================
+
+CRDS_DEBUG = False
+
+def set_debug(flag):
+    """Set the debug by-pass mode flag for log.error_on_exception() exception trap."""
+    global CRDS_DEBUG
+    CRDS_DEBUG = flag
+    
+def _reraise(*args, **keys):
+    """Signal to exception_trap_logger to unconditionally reraise the execption,  probably augmented."""
+    return True
+
+# =======================================================================================================
 
 info_on_exception = exception_trap_logger(info)
 debug_on_exception = exception_trap_logger(debug)
 verbose_on_exception = exception_trap_logger(verbose)
 warn_on_exception = exception_trap_logger(warning)
 error_on_exception = exception_trap_logger(error)
+augment_exception = exception_trap_logger(_reraise)
 
 # ===========================================================================
 

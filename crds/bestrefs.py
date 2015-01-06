@@ -826,7 +826,7 @@ and debug output.
 
     def process(self, dataset):
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
-        try:
+        with log.error_on_exception("Failed processing", repr(dataset)):
             log.verbose("="*120)
             if self.args.files:
                 log.info("===> Processing", dataset)
@@ -834,10 +834,6 @@ and debug output.
                 log.verbose("===> Processing", dataset, verbosity=25)
             self.increment_stat("datasets", 1)
             return self._process(dataset)
-        except Exception, exc:
-            if self.args.pdb:
-                raise
-            log.error("Failed processing", repr(dataset), ":", str(exc))
 
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
@@ -861,15 +857,11 @@ and debug output.
     
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
-        try:
+        with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
+                                    "with respect to", repr(context)):
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
             bestrefs = crds.getrecommendations(
                 header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
-        except Exception, exc:
-            if self.args.pdb:
-                raise
-            raise crds.CrdsError("Failed computing bestrefs for data '{}' with respect to '{}' : {}" .format(
-                                dataset,context, str(exc)))
         return { key.upper() : value for (key, value) in bestrefs.items() }
         
     @property

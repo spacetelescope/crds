@@ -506,8 +506,10 @@ def get_object(*args):
     pkgpath = ".".join(parts[:-1])
     cls = parts[-1]
     namespace = {}
-    exec "from " + pkgpath + " import " + cls in namespace, namespace
-    return namespace[cls]
+    import_cmd = "from " + pkgpath + " import " + cls
+    with log.augment_exception("Error importing", repr(import_cmd)):
+        exec import_cmd in namespace, namespace
+        return namespace[cls]
 
 # ==============================================================================
 
