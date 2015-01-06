@@ -241,6 +241,8 @@ class Script(object):
             help="Add date/time to log messages.")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
+        self.add_argument("--debug-errors", 
+            help="Bypass exception error message traps and re-raise exception.", action="store_true")
         
     def print_help(self):
         """Print out command line help."""
@@ -325,11 +327,14 @@ class Script(object):
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         try:
+            if self.args.debug_errors:
+                log.set_debug(True)
             if self.args.version:
                 _show_version()
             elif self.args.profile:
                 self._profile()
-            elif self.args.pdb:                pdb.runctx("self._main()", locals(), locals())
+            elif self.args.pdb:
+                pdb.runctx("self._main()", locals(), locals())
             else:
                 return self._main()
         except KeyboardInterrupt:
