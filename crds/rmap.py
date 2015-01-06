@@ -488,8 +488,7 @@ class Mapping(object):
         parkeys = set(self.parkey)
         if hasattr(self, "selections"):
             for selection in self.selections.values():
-                key = selection.get_required_parkeys()
-                parkeys = parkeys.union(set(key))
+                parkeys |= set(selection.get_required_parkeys())
         return sorted(parkeys)
 
     def minimize_header(self, header):
@@ -854,7 +853,7 @@ class InstrumentContext(ContextMapping):
             for parkey, choices in selection.get_parkey_map().items():
                 if parkey not in pkmap:
                     pkmap[parkey] = set()
-                pkmap[parkey] = pkmap[parkey].union(choices)
+                pkmap[parkey] |= choices
         for parkey, choices in pkmap.items():
             pkmap[parkey] = list(pkmap[parkey])
             if "CORR" not in parkey:
@@ -881,7 +880,7 @@ class InstrumentContext(ContextMapping):
             for key in rmap_pkmap:
                 if key not in pkmap:
                     pkmap[key] = set()
-                pkmap[key] = pkmap[key].union(set(rmap_pkmap[key]))
+                pkmap[key] |= set(rmap_pkmap[key])
         for key in self.get_parkey_map():
             if key not in pkmap:
                 pkmap[key] = []    # flag a need for an unconstrained input

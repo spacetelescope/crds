@@ -844,7 +844,7 @@ def mapping_closure(files):
             more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
         else:
             more_files = set([file_])
-        closure_files = closure_files.union(more_files)
+        closure_files |= more_files
     return sorted(closure_files)
 
 # ============================================================================

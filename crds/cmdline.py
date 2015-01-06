@@ -241,7 +241,7 @@ class Script(object):
             help="Add date/time to log messages.")
         self.add_argument("--pdb", 
             help="Run under pdb.", action="store_true")
-        self.add_argument("--debug-errors", 
+        self.add_argument("--debug-traps", 
             help="Bypass exception error message traps and re-raise exception.", action="store_true")
         
     def print_help(self):
@@ -327,7 +327,7 @@ class Script(object):
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         try:
-            if self.args.debug_errors:
+            if self.args.debug_traps:
                 log.set_debug(True)
             if self.args.version:
                 _show_version()
@@ -572,9 +572,9 @@ class ContextsScript(Script):
                 with log.warn_on_exception("Failed listing mappings for", repr(context)):
                     try:
                         pmap = rmap.get_cached_mapping(context)
-                        files = files.union(pmap.mapping_names())
+                        files |= set(pmap.mapping_names())
                     except Exception:
-                        files = files.union(api.get_mapping_names(context))
+                        files |= set(api.get_mapping_names(context))
                     useable_contexts.append(context)
             useable_contexts = sorted(useable_contexts)
             if useable_contexts and files:
@@ -594,8 +594,8 @@ class ContextsScript(Script):
         for context in self.contexts:
             try:
                 pmap = rmap.get_cached_mapping(context)
-                files = files.union(pmap.reference_names())
+                files |= set(pmap.reference_names())
                 log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails
-                files = files.union(api.get_reference_names(context))
+                files |= set(api.get_reference_names(context))
         return sorted(files)
