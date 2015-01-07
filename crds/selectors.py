@@ -316,8 +316,11 @@ class Selector(object):
                     raise ValidationError(
                         self.short_name + " key=" + repr(key) + 
                         " is wrong length for parameters " + repr(self._parameters))
-                field = key[i]
-                parmap[par] |= set(field.split("|"))
+                if esoteric_key(key[i]):
+                    # parmap[par] |= set([key[i]])
+                    pass  # for the consistently esoteric,  this == empty list == no checking
+                else:
+                    parmap[par] |= set(key[i].split("|"))
         for par, val in parmap.items():
             parmap[par] = sorted(val)
         return parmap
@@ -437,22 +440,16 @@ class Selector(object):
         Note that the .tpn assumption applies primarily to HST, the valid value constraints
         for JWST may (eventually) come from the data model schema instead.
         """
-        if value in valid_list:
+        if value in valid_list:   # typical |-glob valid_list membership
             return
-        if value in ["*","N/A"]:
+        if "*" in valid_list or "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
             return
-        if "*" in valid_list or "N/A" in valid_list:
-            return
-        if value.replace(".0","") in valid_list or value + ".0" in valid_list:
+        if esoteric_key(value):   # exempt
             return
         if value.lower().startswith("between"):
             _btw, value1, value2 = value.split()
             self._validate_value(name, value1, valid_list)
             self._validate_value(name, value2, valid_list)
-            return
-        if value.startswith(("(","{","#")):   # punt on esoteric rarely used match expressions
-            return
-        if not valid_list:  # some TPNs are type-only
             return
         if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges in .tpns as n1:n2
             min, max = [float(x) for x in valid_list[0].split(":")]  # normalize everything as float
@@ -461,7 +458,7 @@ class Selector(object):
             else:
                 raise ValidationError(
                     " parameter=" + repr(name) + " value =" +  repr(value) + " is not in range [" + 
-                    str(min) + " .. " + str(max) + "]")     
+                    str(min) + " .. " + str(max) + "]")
         if name in self._substitutions and value in self._substitutions[name]:
             return
         raise ValidationError(
@@ -469,6 +466,7 @@ class Selector(object):
             " is not in " + repr(valid_list))
             
     def _validate_key(self, key, valid_values_map):
+        """Abstract method used to validate a selector key as part of validating rmaps."""
         raise NotImplementedError(
             self.__class__.__name__ + " hasn't defined _validate_key.")
         
@@ -1059,6 +1057,10 @@ class NaMatcher(Matcher):
     def match(self, value):
         """Always match with "don't care" status."""
         return 0   
+
+def esoteric_key(key):
+    """Return True if `key` validation is a tautology or too complicated."""
+    return key in ["N/A","*"] or key.upper().startswith(("{","(","#","BETWEEN"))
 
 def matcher(key):
     """Factory for different matchers based on key types.
