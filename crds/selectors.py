@@ -444,7 +444,7 @@ class Selector(object):
             return
         if "*" in valid_list or "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
             return
-        if esoteric_key(value):   # exempt
+        if esoteric_key(value) or value in ["*", "N/A"]:   # exempt
             return
         if value.lower().startswith("between"):
             _btw, value1, value2 = value.split()
@@ -1060,7 +1060,8 @@ class NaMatcher(Matcher):
 
 def esoteric_key(key):
     """Return True if `key` validation is a tautology or too complicated."""
-    return key in ["N/A","*"] or key.upper().startswith(("{","(","#","BETWEEN"))
+    key = key.upper()
+    return key.startswith(("{","(","#")) and key.endswith(("}",")","#")) or key.startswith("BETWEEN")
 
 def matcher(key):
     """Factory for different matchers based on key types.
