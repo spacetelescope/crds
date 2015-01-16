@@ -469,19 +469,22 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
                    hide_boring_diffs=self.args.hide_boring_diffs)
     
     def print_new_files(self):
-        """Print the references or mappings which are new additions or replacements when comparing mappings."""
+        """Print the references or mappings which are in the second (new) context and not
+        the firtst (old) context.
+        """
         if not rmap.is_mapping(self.old_file) or not rmap.is_mapping(self.new_file):
             log.error("--print-new-files really only works for mapping differences.")
             return -1
-        diffs = mapping_diffs(self.old_file, self.new_file)
-        categorized = sorted([ (diff_action(d), d) for d in diffs ])
-        for action, diff in categorized:
-            if action == "add":
-                added = diff_added_new(diff)
-                print added, self.instrument_filekind(added)
-            elif action == "replace":
-                _old_val, replacement = map(os.path.basename, diff_replace_old_new(diff))
-                print replacement, self.instrument_filekind(replacement)
+        old = rmap.get_cached_mapping(self.old_file)
+        new = rmap.get_cached_mapping(self.new_file)
+        old_mappings = set(old.mapping_names())
+        new_mappings = set(new.mapping_names())
+        old_references = set(old.reference_names())
+        new_references = set(new.reference_names())
+        for name in sorted(new_mappings - old_mappings):
+            print(name)
+        for name in sorted(new_references - old_references):
+            print(name)
 
     def print_all_new_files(self):
         """Print the names of all files which are in `new_file` (or any intermediary context) but not
@@ -493,7 +496,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
                 print(mapping), self.instrument_filekind(mapping)
         for reference in updated:
             if not rmap.is_mapping(reference):
-                print reference, self.instrument_filekind(reference)
+                print(reference, self.instrument_filekind(reference))
     
     def instrument_filekind(self, filename):
         """Return the instrument and filekind of `filename` as a space separated string."""
