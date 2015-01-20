@@ -359,23 +359,14 @@ class Selector(object):
         lines.append(indent*4*" " + "})")
         return "\n".join(lines)
     
-    def validate_selector(self, valid_values_map, trap_exceptions=False):
+    def validate_selector(self, valid_values_map):
         """Validate the parameters and keys of `self` against the legal
-        values spec'ed in `valid_values_map`.   If trap_exceptions is True
-        or 'selector',  issue an ERROR message and continue,  otherwise
-        re-raise the exception.
+        values spec'ed in `valid_values_map`.
         """
-        try:
-            self._validate_selector(valid_values_map, trap_exceptions)
-        except ValidationError, exc:
-            if trap_exceptions in [True, "selector"]:
-                log.error(self.short_name, ":", str(exc))
-            elif trap_exceptions == "debug":
-                raise
-            else:
-                raise ValidationError(str(exc))
+        with log.error_on_exception(self.short_name, map_exception_to=ValidationError):
+            self._validate_selector(valid_values_map)
 
-    def _validate_selector(self, valid_values_map, trap_exceptions=False):
+    def _validate_selector(self, valid_values_map):
         """Iterate over this Selector's keys checking each field
         of each key against `valid_values_map`.
         
@@ -387,7 +378,7 @@ class Selector(object):
             self._validate_key(key, valid_values_map)
         for choice in self.choices():
             if isinstance(choice, Selector):
-                choice.validate_selector(valid_values_map, trap_exceptions)
+                choice.validate_selector(valid_values_map)
             elif isinstance(choice, basestring):
                 pass
             elif isinstance(choice, tuple):
@@ -1499,9 +1490,9 @@ of uniform rmap structure for HST:
                         vmap[fitsvar].add(regex_case)
         return vmap
 
-    def _validate_selector(self, valid_values_map, trap_exceptions=False):
+    def _validate_selector(self, valid_values_map):
         self._check_valid_values(valid_values_map)
-        Selector._validate_selector(self, valid_values_map, trap_exceptions)
+        Selector._validate_selector(self, valid_values_map)
             
     def _check_valid_values(self, valid_values_map):
         """Issue warnings for parkeys which aren't covered by valid_values_map."""

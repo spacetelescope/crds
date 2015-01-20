@@ -407,14 +407,13 @@ def validators_by_typekey(key, observatory):
 
 class Certifier(object):
     """Container class for parameters for a certification run."""
-    def __init__(self, filename, context=None, trap_exceptions=False, check_references=False, 
+    def __init__(self, filename, context=None, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
                  dont_parse=False, script=None, observatory=None, comparison_reference=None):
         
         self.filename = filename
         self.context = context
-        self.trap_exceptions = trap_exceptions
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
         self.dump_provenance = dump_provenance
@@ -432,23 +431,6 @@ class Certifier(object):
     @property
     def basename(self):
         return os.path.basename(self.filename)
-
-    def trap(self, message, function, *args, **keys):
-        """Execute function(*args, **keys) and log.error(message) on any exception 
-        if self.trap_exception is True,  otherwise re-raise the exception as a
-        CrdsError.
-        """
-        try:
-            return function(*args, **keys)
-        except Exception, exc:
-            msg = message + " : " + str(exc)
-            if self.trap_exceptions:
-                self.log_error(msg)
-                return None
-            else:
-                self.log_error(msg)
-                raise
-                # raise ValidationError(msg)
 
     def log_error(self, msg):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
@@ -484,8 +466,8 @@ class FitsCertifier(Certifier):
 
     def certify(self):
         """Certify a FITS reference file."""
-        if not self.trap("File does not comply with FITS format", self.fits_verify):
-            return
+        with log.augment_exception("File does not comply with FITS format"):
+            self.fits_verify()
         self.certify_simple_parameters()
         if self.mode_columns:
             self.certify_reference_modes()
@@ -522,7 +504,8 @@ class FitsCertifier(Certifier):
         """Check simple parameter values,  column and non-column."""
         header = data_file.get_header(self.filename)
         for checker in self.simple_validators:
-            self.trap("checking " + repr(checker.info.name), checker.check, self.filename, header)
+            with log.error_on_exception("checking " + repr(checker.info.name)):
+                checker.check(self.filename, header)
 
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
@@ -569,13 +552,14 @@ class FitsCertifier(Certifier):
                         n_old_hdus, "vs.", n_new_hdus)
 
         for i in range(1, min(n_new_hdus, n_old_hdus)):
-            self.trap("checking table modes", self.check_table_modes, old_reference, ext=i)
+            with log.error("checking table modes"):
+                self.check_table_modes(old_reference, ext=i)
     
     def find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace in `context`,  or None.
         """
-        return self.trap("Resolving prior reference for '{}' in '{}'".format(reffile, context), 
-                         self._find_old_reference, context, reffile) 
+        with log.error_on_exception("Resolving prior reference for", repr(reffile), "in", repr(context)):
+            return self._find_old_reference(context, reffile) 
     
     def _find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace."""
@@ -714,7 +698,8 @@ class JsonCertifier(Certifier):
     
     def certify(self):
         """Certify a .json file."""
-        self.trap("File does not parse as valid JSON", self.load)
+        with log.error_on_exception("File does not parse as valid JSON"):
+            self.load()
         
     def load(self):
         """Load and parse the .json in self.filename"""
@@ -731,7 +716,8 @@ class YamlCertifier(Certifier):
     
     def certify(self):
         """Certify a .yaml file."""
-        self.trap("File does not parse as valid YAML", self.load)
+        with log.error_on_exception("File does not parse as valid YAML"):
+            self.load()
         
     def load(self):
         """Load and parse the .yaml in self.filename"""
@@ -752,7 +738,8 @@ class TextCertifier(Certifier):
     
     def certify(self):
         """Certify a .text file."""
-        self.trap("File does not parse as valid text", self.load)
+        with log.error_on_exception("File does not parse as valid text"):
+            self.load()
         
     def load(self):
         """Load and parse the .json in self.filename"""
@@ -766,7 +753,8 @@ class UnknownCertifier(Certifier):
     
     def certify(self):
         """Certify an unknown format file."""
-        self.trap("File does not load", self.load)
+        with log.error_on_exception("File does not load"):
+            self.load()
         
     def load(self):
         """Load file of unknown type."""
@@ -786,7 +774,7 @@ class MappingCertifier(Certifier):
             mapping_parser.check_duplicates(parsing)
 
         mapping = rmap.fetch_mapping(self.filename, ignore_checksum="warn")
-        mapping.validate_mapping(trap_exceptions=self.trap_exceptions)
+        mapping.validate_mapping()
     
         # derived_from = mapping.get_derived_from()
         derived_from = find_old_mapping(self.context, self.filename)
@@ -808,7 +796,6 @@ class MappingCertifier(Certifier):
         if self.check_references == "contents":
             certify_files(references, context=self.context, 
                           check_references=self.check_references,
-                          trap_exceptions=self.trap_exceptions, 
                           compare_old_reference=self.compare_old_reference,
                           observatory=self.observatory)
     
@@ -818,8 +805,9 @@ class MappingCertifier(Certifier):
         """
         references = []
         for ref in mapping.reference_names():
-            path = self.trap("Can't locate reference file.", 
-                             get_existing_path, ref, mapping.observatory)
+            path = None
+            with log.error_on_exception("Can't locate reference file", repr(ref)):
+                path = get_existing_path(ref, mapping.observatory)
             if path:
                 log.verbose("Reference", repr(ref), "exists at", repr(path))
                 references.append(path)
@@ -838,12 +826,12 @@ def mapping_closure(files):
     """
     closure_files = set()
     for file_ in files:
+        more_files = set([file_])
         if rmap.is_mapping(file_):
-            mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-            more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
-            more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
-        else:
-            more_files = set([file_])
+            with log.error_on_exception("Problem loading submappings of", repr(file_)):
+                mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
+                more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
+                more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
         closure_files |= more_files
     return sorted(closure_files)
 
@@ -941,12 +929,26 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     dump_provenance:        for references,  log provenance keywords and rmap parkey values.
     check_references:       False, "exists", "contents"
     is_mapping:             bool  (assume mapping regardless of filename)
-    trap_exceptions:        bool   if True, issue log.error() messages, else raise.
     compare_old_reference:  bool,  if True,  attempt table mode checking.
-    dont_parse:       bool,  if True,  don't run parser to scan mappings for duplicate keys.
-    script:   command line Script instance
+    dont_parse:             bool,  if True,  don't run parser to scan mappings for duplicate keys.
+    script:                 command line Script instance
+    trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
     """
+    try:
+        old_flag = log.set_debug(not trap_exceptions)
+        _certify_files(files, context=context, dump_provenance=dump_provenance, check_references=check_references, 
+                  is_mapping=is_mapping, compare_old_reference=compare_old_reference,
+                  dont_parse=dont_parse, skip_banner=skip_banner, script=script, observatory=observatory,
+                  comparison_reference=comparison_reference)
+    finally:
+        log.set_debug(old_flag)
 
+def _certify_files(files, context=None, dump_provenance=False, check_references=False, 
+                  is_mapping=False, trap_exceptions=True, compare_old_reference=False,
+                  dont_parse=False, skip_banner=False, script=None, observatory=None,
+                  comparison_reference=None):
+    """certify_files() core function with error trapping set."""
+    
     if not isinstance(files, list):
         files = [files]
         
@@ -976,20 +978,14 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         else:
             log.info("Certifying", repr(filename) + ' (' + str(fnum+1) + '/' + str(len(files)) + ')', 
                      "as", repr(certifier_name), "relative to context", repr(context))
-        try:
+
+        with log.error_on_exception("Validation error in " + repr(filename)):
             certifier = klass(filename, context=context, check_references=check_references,
-                              trap_exceptions=trap_exceptions, 
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
                               dont_parse=dont_parse, script=script, observatory=observatory,
-                              comparison_reference=comparison_reference)
-            
+                              comparison_reference=comparison_reference)            
             certifier.certify()
-        except Exception, exc:
-            if trap_exceptions:
-                log.error("Validation error in " + repr(filename) + " : " + str(exc))
-            else:
-                raise
 
     log.info('#' * 40)  # Serves as demarkation for each file's report
 
@@ -1034,8 +1030,6 @@ Checks a CRDS reference or mapping file.
             help="Ignore extensions, the files being certified are mappings.")
         self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
             help="Dump provenance keywords.")
-        self.add_argument("-t", "--trap-exceptions", dest="trap_exceptions", type=str, default="selector",
-            help="Capture exceptions at level: pmap, imap, rmap, selector, debug, none")
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
             help="Pipeline context defining comparison files.")
         self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
@@ -1051,9 +1045,6 @@ Checks a CRDS reference or mapping file.
         else:
             check_references = None
 
-        if self.args.trap_exceptions == "none":
-            self.args.trap_exceptions = False
-    
         assert (self.args.comparison_context is None) or rmap.is_mapping(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
         assert (self.args.comparison_reference is None) or not rmap.is_mapping(self.args.comparison_reference), \
@@ -1074,8 +1065,8 @@ Checks a CRDS reference or mapping file.
                       dump_provenance=self.args.dump_provenance, 
                       check_references=check_references, 
                       is_mapping=self.args.mapping, 
-                      trap_exceptions=self.args.trap_exceptions,
                       dont_parse=self.args.dont_parse,
+                      trap_exceptions = not self.args.debug_traps,
                       script=self, observatory=self.observatory)
     
         self.dump_unique_errors()

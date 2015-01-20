@@ -187,8 +187,12 @@ def exception_trap_logger(func):
         except Exception,  exc:
             msg = format(*args + (":", str(exc)), **keys)
             reraise = func(msg)
+            map_to_exception = keys.get("map_to_exception", None)
             if CRDS_DEBUG or reraise:
-                raise exc.__class__(msg)
+                if map_to_exception:
+                    raise map_to_exception(msg)
+                else:
+                    raise
     return func_on_exception
 
 # =======================================================================================================
@@ -198,10 +202,13 @@ CRDS_DEBUG = False
 def set_debug(flag):
     """Set the debug by-pass mode flag for log.error_on_exception() exception trap."""
     global CRDS_DEBUG
-    CRDS_DEBUG = flag
+    old_flag = CRDS_DEBUG
+    if flag is not None:
+        CRDS_DEBUG = flag
+    return old_flag
     
 def _reraise(*args, **keys):
-    """Signal to exception_trap_logger to unconditionally reraise the execption,  probably augmented."""
+    """Signal to exception_trap_logger to unconditionally reraise the exception,  probably augmented."""
     return True
 
 # =======================================================================================================
