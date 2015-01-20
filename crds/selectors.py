@@ -90,6 +90,7 @@ import sys
 import numbers
 from collections import namedtuple
 import ast
+import copy
 
 # import numpy as np
 
@@ -179,12 +180,15 @@ class Selector(object):
     def __init__(self, parameters, selections=None, rmap_header=None, merge_selections=None):
         assert isinstance(parameters, (list, tuple)), \
             "parameters should be a list or tuple of header keys"
+        self._rmap_header = rmap_header or {}
         self._parameters = tuple(parameters)
         if selections is not None:
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(*s) for s in selections.items()])
-            self._selections = [Selection(*s) for s in self.condition_selections(selections)]
+            self._substitutions = dict(rmap_header.get("substitutions", {}))
+            selects = self.do_substitutions(parameters, selections)
+            self._selections = [Selection(*s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
             # UseAfter merge operation.   It's not really intended
@@ -194,9 +198,30 @@ class Selector(object):
                 "merge_selections should be a sorted item list,  not: " + repr(merge_selections)
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
-        self._rmap_header = rmap_header or {}
         self._parkey_map = self.get_parkey_map()
     
+    def do_substitutions(self, parameters, selections):
+        """Replace parkey values in `selections` which are specified
+        in mapping `substitutions` as {parkey : { old_value : new_value }}
+        """
+        selections = copy.deepcopy(selections)
+        substitutions = self._substitutions
+        for parkey in substitutions:
+            which = parameters.index(parkey)
+            for match in selections:
+                old_parvalue = match[which]
+                if old_parvalue in substitutions[parkey]:
+                    replacement = substitutions[parkey][old_parvalue]
+                    if isinstance(replacement, list):
+                        replacement = tuple(replacement)
+                    new_match = list(match)
+                    new_match[which] = replacement
+                    new_match = tuple(new_match)
+                    log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
+                                repr(match), "-->", repr(new_match), verbosity=70)
+                    selections[new_match] = selections.pop(match)
+        return selections
+
     def todict(self):
         """Return a 'pure data' dictionary representation of this selector and it's children
         suitable for conversion to json.
@@ -1304,12 +1329,7 @@ of uniform rmap structure for HST:
     rmap_name = "Match"
     
     def __init__(self, parameters, selections, rmap_header={}):
-        self._substitutions = dict(rmap_header.get("substitutions", {}))
-        selects = self.do_substitutions(parameters, selections)
-
-        super(MatchSelector, self).__init__(parameters, selects, rmap_header)  # largely overridden
-        self._raw_selections = sorted(selections.items())  # override __init__ using selects
-
+        super(MatchSelector, self).__init__(parameters, selections, rmap_header)
         self._match_selections = self.get_matcher_selections(dict_wo_dups(self._selections))
         self._value_map = self.get_value_map()
      
@@ -1337,26 +1357,6 @@ of uniform rmap structure for HST:
         else:
             elem = utils.condition_value(elem)
         return elem
-
-    def do_substitutions(self, parameters, selections):
-        """Replace parkey values in `selections` which are specified
-        in mapping `substitutions` as {parkey : { old_value : new_value }}
-        """
-        substitutions = self._substitutions
-        for parkey in substitutions:
-            which = parameters.index(parkey)
-            for match in selections:
-                old_parvalue = match[which]
-                if old_parvalue in substitutions[parkey]:
-                    replacement = substitutions[parkey][old_parvalue]
-                    if isinstance(replacement, list):
-                        replacement = tuple(replacement)
-                    new_match = list(match)
-                    new_match[which] = replacement
-                    new_match = tuple(new_match)
-                    selections[new_match] = selections.pop(match)
-        return selections
-
 
     def get_matcher_selections(self, mappings):
         """Expand the selections from the spec file to include a tuple
