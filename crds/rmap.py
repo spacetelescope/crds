@@ -90,8 +90,6 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 class MappingError(crds.CrdsError):
     """Exception in load_rmap."""
-    def __init__(self, *args):
-        super(MappingError, self).__init__(" ".join([str(x) for x in args]))
 
 class FormatError(MappingError):
     "Something wrong with context or rmap file format."
@@ -368,11 +366,9 @@ class Mapping(object):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        try:
+        with log.augment_exception("Can't load file " + where):
             code = MAPPING_VALIDATOR.compile_and_check(text)
             header, selector = cls._interpret(code)
-        except Exception, exc:
-            raise MappingError("Can't load file " + where + " : " + str(exc))
         return LowerCaseDict(header), selector
 
     @classmethod
@@ -1176,8 +1172,7 @@ class ReferenceMapping(Mapping):
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.verbose("Validating", repr(self.basename))
-        with log.error_on_exception("Invalid mapping:", self.instrument, self.filekind, 
-                                    map_to_exception=ValidationError):
+        with log.error_on_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
 
     def file_matches(self, filename):
