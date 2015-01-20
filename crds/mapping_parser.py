@@ -86,9 +86,6 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     stats.sort_stats("time")
     stats.print_stats(20)
     
-class ParsingError(Exception):
-    """A mapping file could not be parsed using the CRDS mapping grammar."""
-    
 Parsing = namedtuple("Parsing", "header,selector")
     
 def parse_mapping(filename):
@@ -103,13 +100,9 @@ def parse_mapping(filename):
 
     log.verbose("Parsing", repr(filename))
     filename = rmap.locate_mapping(filename)
-    try:
+    with log.augment_exception("Parsing error in", repr(filename)):
         header, selector = MAPPING_PARSER(open(filename).read()).mapping()
-    except Exception, exc:
-        raise ParsingError("Parsing error in", repr(filename), ":", str(exc))
-    else:
         return Parsing(header, selector)
-
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""

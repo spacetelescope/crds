@@ -187,12 +187,10 @@ def exception_trap_logger(func):
         except Exception,  exc:
             msg = format(*args + (":", str(exc)), **keys)
             reraise = func(msg)
-            map_to_exception = keys.get("map_to_exception", None)
+            map_to_exception = keys.get("map_to_exception", exc.__class__)
             if CRDS_DEBUG or reraise:
-                if map_to_exception:
-                    raise map_to_exception(msg)
-                else:
-                    raise
+                raise
+                raise map_to_exception(msg)
     return func_on_exception
 
 # =======================================================================================================
