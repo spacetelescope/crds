@@ -517,7 +517,7 @@ class Mapping(object):
         header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
 
-    def validate_mapping(self,  trap_exceptions=False):
+    def validate_mapping(self):
         """Validate `self` only implementing any checks to be performed by
         crds.certify.   ContextMappings are mostly validated at load time.
         Stick extra checks for context mappings here.
@@ -1170,21 +1170,15 @@ class ReferenceMapping(Mapping):
                 valid_values[info.name] = values
         return valid_values
 
-    def validate_mapping(self, trap_exceptions=False):
+    def validate_mapping(self):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.verbose("Validating", repr(self.basename))
-        try:
-            self.selector.validate_selector(self.tpn_valid_values, trap_exceptions)
-        except Exception, exc:
-            if trap_exceptions == mapping_type(self):
-                log.error("invalid mapping:", self.instrument, self.filekind, ":", str(exc))
-            elif trap_exceptions in ["debug", "none", None, False]:
-                raise
-            else:
-                raise ValidationError(repr(self) + " : " + str(exc))
+        with log.error_on_exception("Invalid mapping:", self.instrument, self.filekind, 
+                                    map_to_exception=ValidationError):
+            self.selector.validate_selector(self.tpn_valid_values)
 
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
