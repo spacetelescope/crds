@@ -1304,8 +1304,8 @@ of uniform rmap structure for HST:
     rmap_name = "Match"
     
     def __init__(self, parameters, selections, rmap_header={}):
-        self._substitutions = rmap_header.get("substitutions", {})
-        selects = self.do_substitutions(parameters, selections, self._substitutions)
+        self._substitutions = dict(rmap_header.get("substitutions", {}))
+        selects = self.do_substitutions(parameters, selections)
 
         super(MatchSelector, self).__init__(parameters, selects, rmap_header)  # largely overridden
         self._raw_selections = sorted(selections.items())  # override __init__ using selects
@@ -1338,10 +1338,11 @@ of uniform rmap structure for HST:
             elem = utils.condition_value(elem)
         return elem
 
-    def do_substitutions(self, parameters, selections, substitutions):
+    def do_substitutions(self, parameters, selections):
         """Replace parkey values in `selections` which are specified
         in mapping `substitutions` as {parkey : { old_value : new_value }}
         """
+        substitutions = self._substitutions
         for parkey in substitutions:
             which = parameters.index(parkey)
             for match in selections:
