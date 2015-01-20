@@ -282,6 +282,10 @@ class Selector(object):
     def short_name(self):
         return self.__class__.__name__[:-len("Selector")]
 
+    def raw_keys(self):
+        """Return the list of keys as they appear in the rmap text,  prior to substitutions."""
+        return [s.key for s in self._raw_selections]
+
     def keys(self):
         """Return the list of keys used to make selections."""
         return [s.key for s in self._selections]
@@ -291,8 +295,7 @@ class Selector(object):
         return [s.choice for s in self._selections]
 
     def choose(self, header):
-        """Given `header`,  operate on self.keys() to choose one of self.choices(). 
-        """
+        """Given `header`,  operate on self.keys() to choose one of self.choices()."""
         self._check_defined(header)
         lookup_key = self._validate_header(header)  # may return header or a key
         exc = None
@@ -399,7 +402,7 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
-        for key in self.keys():
+        for key in self.raw_keys():
             self._validate_key(key, valid_values_map)
         for choice in self.choices():
             if isinstance(choice, Selector):
@@ -720,12 +723,12 @@ class Selector(object):
                     repr(self._parameters), ":", repr(new_selector._parameters))]
 
         differences = []
-        new_selector_keys = new_selector.keys()
-        self_keys = self.keys()
-        new_selector_map = dict_wo_dups(new_selector._selections)
+        new_selector_keys = new_selector.raw_keys()
+        self_keys = self.raw_keys()
+        new_selector_map = dict_wo_dups(new_selector._raw_selections)
         # Warning:  the message formats here are important to client code.
         # don't change without doing a survey. e.g. replaced blank1 with blank2.
-        for key, choice in self._selections:
+        for key, choice in self._raw_selections:
             pkey = self._diff_key(key)
             if key not in new_selector_keys:
                 if isinstance(choice, Selector):
@@ -763,7 +766,7 @@ class Selector(object):
         """
         msg = self._get_msg(path, pars)
         diffs = []        
-        for key, choice in self._selections:
+        for key, choice in self._raw_selections:
             pkey = self._diff_key(key)
             if isinstance(choice, Selector):
                 diffs.extend(choice._flat_diff(change, path + (pkey,), pars + (self._parameters,)))
