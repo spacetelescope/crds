@@ -286,6 +286,10 @@ class Selector(object):
         """Return the list of keys as they appear in the rmap text,  prior to substitutions."""
         return [s.key for s in self._raw_selections]
 
+    def raw_choices(self):
+        """Return the list of items which can be selected."""
+        return [s.choice for s in self._raw_selections]
+
     def keys(self):
         """Return the list of keys used to make selections."""
         return [s.key for s in self._selections]
@@ -391,7 +395,7 @@ class Selector(object):
         """Validate the parameters and keys of `self` against the legal
         values spec'ed in `valid_values_map`.
         """
-        with log.error_on_exception(self.short_name):
+        with log.augment_exception(self.short_name):
             self._validate_selector(valid_values_map)
 
     def _validate_selector(self, valid_values_map):
@@ -402,7 +406,7 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
-        for key in self.raw_keys():
+        for key in self.keys():
             self._validate_key(key, valid_values_map)
         for choice in self.choices():
             if isinstance(choice, Selector):
@@ -540,7 +544,9 @@ class Selector(object):
     def delete(self, terminal):
         """Remove all instances of `terminal` from `self`."""
         deleted = 0
-        for i, choice in enumerate(self.choices()):
+        choices, raw_choices = self.choices(), self.raw_choices()
+        for i, choice in enumerate(choices):
+            raw_choice = raw_choices[i]
             if choice == terminal:
                 log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][0], terminal))
                 assert self._selections[i][1]== terminal
@@ -550,6 +556,7 @@ class Selector(object):
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
+                raw_choice.delete(terminal)
         return deleted
     
     def insert(self, header, value, valid_values_map):
@@ -1514,7 +1521,7 @@ of uniform rmap structure for HST:
         for i, name in enumerate(self._parameters):
             if name not in valid_values_map:
                 continue
-            for value in key[i].split("|"):
+            for value in str(key[i]).split("|"):
                 self._validate_value(name, value, valid_values_map[name])
         for other in self.keys():
             if key != other and match_superset(other, key) and \
@@ -1530,7 +1537,7 @@ class UseAfterSelector(Selector):
     the "date" condition and returns the corresponding item.
 
 
-Enable debugging which causes trapped exceptions to raise rather than issue ERROR
+Enable debugging which causes trapped exceptions to raise rather than issue ERROR.
 
     >>> from crds import log
     >>> old_debug = log.set_debug(True)
@@ -1624,11 +1631,11 @@ Alternate date/time formats are accepted as header parameters.
     
     >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
 
-Restore debug configuration
+Restore debug configuration.
 
     >>> _jnk = log.set_debug(old_debug)
 
-    """    
+    """
     def get_selection(self, date):
         log.verbose("Matching date", date, " ", verbosity=60)
         yield self.bsearch(date, self._selections)
