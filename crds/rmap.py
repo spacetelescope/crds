@@ -1172,7 +1172,7 @@ class ReferenceMapping(Mapping):
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.verbose("Validating", repr(self.basename))
-        with log.error_on_exception("Invalid mapping:", self.instrument, self.filekind):
+        with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
 
     def file_matches(self, filename):
