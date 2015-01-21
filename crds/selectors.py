@@ -186,7 +186,7 @@ class Selector(object):
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(*s) for s in selections.items()])
-            self._substitutions = dict(rmap_header.get("substitutions", {}))
+            self._substitutions = dict(self._rmap_header.get("substitutions", {}))
             selects = self.do_substitutions(parameters, selections)
             self._selections = [Selection(*s) for s in self.condition_selections(selects)]
         else:
@@ -391,7 +391,7 @@ class Selector(object):
         """Validate the parameters and keys of `self` against the legal
         values spec'ed in `valid_values_map`.
         """
-        with log.error_on_exception(self.short_name, map_exception_to=ValidationError):
+        with log.error_on_exception(self.short_name):
             self._validate_selector(valid_values_map)
 
     def _validate_selector(self, valid_values_map):
@@ -542,20 +542,16 @@ class Selector(object):
         deleted = 0
         for i, choice in enumerate(self.choices()):
             if choice == terminal:
-                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][1], terminal))
-                self._del_item(i, terminal)
+                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][0], terminal))
+                assert self._selections[i][1]== terminal
+                assert self._raw_selections[i][1] == terminal
+                del self._selections[i]
+                del self._raw_selections[i]
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
         return deleted
     
-    def _del_item(self, i, terminal):
-        """Actually remove the `i`th selection of `self` which should have `terminal` as it's choice."""
-        assert self._selections[i][1]== terminal
-        assert self._raw_selections[i][1] == terminal
-        del self._selections[i]
-        del self._raw_selections[i]
-        
     def insert(self, header, value, valid_values_map):
         """Based on `header` recursively insert `value` into the Selector hierarchy,
         either adding it as a new choice or replacing the existing choice with 
@@ -1533,6 +1529,14 @@ class UseAfterSelector(Selector):
     """A UseAfter selector chooses the greatest time which is less than
     the "date" condition and returns the corresponding item.
 
+
+Enable debugging which causes trapped exceptions to raise rather than issue ERROR
+
+    >>> from crds import log
+    >>> old_debug = log.set_debug(True)
+
+Construct a test UseAfterSelector
+
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-26 01:28:00':'nal1503ij_bia.fits',
     ...        '2004-02-14 00:00:00':'o3913216j_bia.fits',
@@ -1542,7 +1546,6 @@ class UseAfterSelector(Selector):
     ...        '2004-07-14 16:52:00':'o9f15549j_bia.fits',
     ...        '2004-07-30 00:18:00':'o9t1553tj_bia.fits',
     ... })
-
 
 Exact match
 
@@ -1566,8 +1569,8 @@ Earlier than all entries
     ...
     UseAfterError: No selection with time < '2000-07-02 08:08:59'
     
-UseAfter dates should look like YYYY-MM-DD HH:MM:SS or:
-    
+UseAfter dates should look like YYYY-MM-DD HH:MM:SS or:    
+
     >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), {
     ...        '2003-09-26 foo 01:28:00':'nal1503ij_bia.fits',
     ... })
@@ -1620,6 +1623,11 @@ A more subtle error in the date or time should still be detected:
 Alternate date/time formats are accepted as header parameters.
     
     >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
+
+Restore debug configuration
+
+    >>> _jnk = log.set_debug(old_debug)
+
     """    
     def get_selection(self, date):
         log.verbose("Matching date", date, " ", verbosity=60)
