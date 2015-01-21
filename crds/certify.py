@@ -524,7 +524,8 @@ class FitsCertifier(Certifier):
                     log.info("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
                     return []
             except:
-                log.warning("Rmap reffile_format NOT DEFINED,  assuming it's a table.")
+                log.info("Rmap reffile_format NOT DEFINED,  assuming it's a not table.")
+                return []
             try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
                 mode_columns = g_rmap.locate.get_row_keys(g_rmap)
                 log.info("Table unique-row-keys defined as", repr(mode_columns))
@@ -944,7 +945,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         log.set_debug(old_flag)
 
 def _certify_files(files, context=None, dump_provenance=False, check_references=False, 
-                  is_mapping=False, trap_exceptions=True, compare_old_reference=False,
+                  is_mapping=False, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
                   comparison_reference=None):
     """certify_files() core function with error trapping set."""
