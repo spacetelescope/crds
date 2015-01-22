@@ -395,7 +395,7 @@ class Selector(object):
         """Validate the parameters and keys of `self` against the legal
         values spec'ed in `valid_values_map`.
         """
-        with log.augment_exception(self.short_name):
+        with log.augment_exception(self.short_name + repr(self._parameters)):
             self._validate_selector(valid_values_map)
 
     def _validate_selector(self, valid_values_map):
@@ -406,26 +406,28 @@ class Selector(object):
         
         Raise a ValidationError if there are any problems.
         """
-        for key in self.keys():
-            self._validate_key(key, valid_values_map)
-        for choice in self.choices():
-            if isinstance(choice, Selector):
-                choice.validate_selector(valid_values_map)
-            elif isinstance(choice, basestring):
-                pass
-            elif isinstance(choice, tuple):
-                for val in choice:
-                    if not isinstance(val, basestring): 
-                        raise ValidationError("Non-string tuple value for choice at " + repr(key))
-            elif isinstance(choice, dict):
-                for val in choice:
-                    if not isinstance(val, basestring):
-                        raise ValidationError("Non-string dictionary key for choice at " + repr(key))
-                for val in choice.values():
-                    if not isinstance(val, basestring):
-                        raise ValidationError("Non-string dictionary value for choice at " + repr(key))
-            else:
-                raise ValidationError
+        for selection in self._selections:
+            key, choice = selection.key, selection.choice
+            with log.augment_exception(repr(key)):
+                self._validate_key(key, valid_values_map)
+            with log.augment_exception(repr(key)):
+                if isinstance(choice, Selector):
+                    choice.validate_selector(valid_values_map)
+                elif isinstance(choice, basestring):
+                    pass
+                elif isinstance(choice, tuple):
+                    for val in choice:
+                        if not isinstance(val, basestring): 
+                            raise ValidationError("Non-string tuple value for choice at " + repr(key))
+                elif isinstance(choice, dict):
+                    for val in choice:
+                        if not isinstance(val, basestring):
+                            raise ValidationError("Non-string dictionary key for choice at " + repr(key))
+                    for val in choice.values():
+                        if not isinstance(val, basestring):
+                            raise ValidationError("Non-string dictionary value for choice at " + repr(key))
+                else:
+                    raise ValidationError
 
     def _validate_header(self, header):
         """Check self._parameters in `header` against the values found in the
@@ -1277,7 +1279,7 @@ derived from TPN files:
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError:  parameter='bar' value='2.0' is not in ('3.0',)
+    ValidationError: Match('foo', 'bar') : ('1.0', '2.0') :  parameter='bar' value='2.0' is not in ('3.0',)
     
 Match tuples should have the same length as the parameter list:
     
@@ -1473,8 +1475,8 @@ of uniform rmap structure for HST:
         """
         log.verbose("Merging equivalent selectors", equivalent_selectors, verbosity=60)
         combined = equivalent_selectors[0]
-        for next in equivalent_selectors[1:]:
-            combined = combined.merge(next)
+        for esel in equivalent_selectors[1:]:
+            combined = combined.merge(esel)
         log.verbose("Merge result:\n", log.Deferred(combined.format), verbosity=70)
         return combined
 
@@ -1674,16 +1676,14 @@ Restore debug configuration.
         return self._validate_datetime(self._parameters, date)
         
     def _raw_date(self, header):
-        """Combine the values of self.parameters from `header` into a single
-        raw date separated by spaces.
-        """
+        """Combine the values of self.parameters from `header` into a single raw date separated by spaces."""
         date = ""
         for par in self._parameters:
             date += header[par] + " "
         return date.strip()
 
     def match_item(self, key):
-        """Account for the slightly weird UseAfter syntax."""
+        """Account for succinct UseAfter syntax hack,  space joined date + time is really two parameters for HST."""
         if len(self._parameters) == 1:
             return ((self._parameters[0], key),)
         else:
