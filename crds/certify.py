@@ -521,10 +521,10 @@ class FitsCertifier(Certifier):
             g_rmap = find_governing_rmap(self.context, self.filename)
             try:
                 if g_rmap.reffile_format != "table":
-                    log.info("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
+                    log.verbose("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
                     return []
             except:
-                log.info("Rmap reffile_format NOT DEFINED,  assuming it's a not table.")
+                log.verbose("Rmap reffile_format NOT DEFINED,  assuming it's a not table.")
                 return []
             try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
                 mode_columns = g_rmap.locate.get_row_keys(g_rmap)
