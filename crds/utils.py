@@ -398,7 +398,6 @@ def evalfile(fname):
 
 # ===================================================================
 
-@traced
 def create_path(path, mode=int("755", 8)):
     """Recursively traverses directory path creating directories as
     needed so that the entire path exists.
@@ -417,7 +416,6 @@ def create_path(path, mode=int("755", 8)):
             log.verbose("Creating", repr(subdir))
             os.mkdir(subdir, mode)
 
-@traced
 def ensure_dir_exists(fullpath, mode=int("755", 8)):
     """Creates dirs from `fullpath` if they don't already exist.
     """
