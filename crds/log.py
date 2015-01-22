@@ -171,6 +171,9 @@ def exception_trap_logger(func):
     def func_on_exception(*args, **keys):
         """func_on_exception is a context manager which issues a func() message if any statement
         in a with-block generates an exception.   The exception is suppressed.
+        
+        >>> import sys
+        >>> add_console_handler(sys.stdout)
     
         >> with warn_on_exception("As expected, it failed."):
         ...    print("do it.")
@@ -185,10 +188,18 @@ def exception_trap_logger(func):
         try:
             yield
         except Exception,  exc:
+            keys["end"] = ""
             msg = format(*args + (":", str(exc)), **keys)
             reraise = func(msg)
-            if CRDS_DEBUG or reraise:
-                raise
+            if CRDS_DEBUG:
+                # In python-2, distinction between raise and "raise something".  raise doesn't
+                # wreck the traceback,  raising a new improved exception does.
+                raise  
+            elif reraise:
+                # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
+                raise exc.__class__(msg)
+            else:
+                pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception
 
 # =======================================================================================================
