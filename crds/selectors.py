@@ -218,7 +218,8 @@ class Selector(object):
                     new_match[which] = replacement
                     new_match = tuple(new_match)
                     log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                                repr(match), "-->", repr(new_match), verbosity=70)
+                                (parkey, old_parvalue, replacement), "transforms",
+                                repr(match), "-->", repr(new_match), verbosity=60)
                     selections[new_match] = selections.pop(match)
         return selections
 
