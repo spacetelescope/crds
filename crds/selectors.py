@@ -396,7 +396,7 @@ class Selector(object):
         """Validate the parameters and keys of `self` against the legal
         values spec'ed in `valid_values_map`.
         """
-        with log.augment_exception(self.short_name + repr(self._parameters)):
+        with log.error_on_exception(self.short_name + repr(self._parameters)):
             self._validate_selector(valid_values_map)
 
     def _validate_selector(self, valid_values_map):
@@ -413,7 +413,7 @@ class Selector(object):
                 self._validate_key(key, valid_values_map)
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
-                    choice.validate_selector(valid_values_map)
+                    choice._validate_selector(valid_values_map)
                 elif isinstance(choice, basestring):
                     pass
                 elif isinstance(choice, tuple):
@@ -1255,6 +1255,10 @@ class MatchSelector(Selector):
     """Matching selector does a modified dictionary lookup by directly matching
     the runtime (header) parameters to the selector keys.  
 
+Set error_on_exception() and augment_exception() behavior to reraise:
+
+    >>> old_debug = log.set_debug(True)
+
 The value 'N/A' is equivalent to "don't care" and does not add to the value
 of a match.   Literal matches or "*" increase confidence of a good match.
 
@@ -1280,7 +1284,7 @@ derived from TPN files:
     >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
     Traceback (most recent call last):
     ...
-    ValidationError: Match('foo', 'bar') : ('1.0', '2.0') :  parameter='bar' value='2.0' is not in ('3.0',)
+    ValidationError:  parameter='bar' value='2.0' is not in ('3.0',)
     
 Match tuples should have the same length as the parameter list:
     
@@ -1333,6 +1337,10 @@ of uniform rmap structure for HST:
     ... })
     >>> m.choose({})
     '100'
+
+Restore original debug behavior:
+
+    >>> _jnk = log.set_debug(old_debug)
     
     """
     rmap_name = "Match"
