@@ -704,7 +704,6 @@ class JsonCertifier(Certifier):
         
     def load(self):
         """Load and parse the .json in self.filename"""
-        import json
         with open(self.filename) as handle:
             contents = handle.read()
         try:
