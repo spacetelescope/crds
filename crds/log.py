@@ -172,9 +172,6 @@ def exception_trap_logger(func):
         """func_on_exception is a context manager which issues a func() message if any statement
         in a with-block generates an exception.   The exception is suppressed.
         
-        >>> import sys
-        >>> add_console_handler(sys.stdout)
-    
         >> with warn_on_exception("As expected, it failed."):
         ...    print("do it.")
         do it.
