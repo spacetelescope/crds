@@ -1046,12 +1046,12 @@ Checks a CRDS reference or mapping file.
         else:
             check_references = None
 
-        assert (self.args.comparison_context is None) or rmap.is_mapping(self.args.comparison_context), \
+        assert (self.args.comparison_context is None) or config.is_mapping_spec(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
-        assert (self.args.comparison_reference is None) or not rmap.is_mapping(self.args.comparison_reference), \
+        assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
         if self.args.comparison_reference:
-            assert len(self.files) == 1 and not rmap.is_mapping(self.files[0]), \
+            assert len(self.files) == 1 and not config.is_mapping_spec(self.files[0]), \
                 "Only one reference can be certified if --comparison-reference is specified."
             
         if (not self.args.dont_recurse_mappings):
@@ -1060,7 +1060,7 @@ Checks a CRDS reference or mapping file.
             all_files = set(self.files)
             
         certify_files(sorted(all_files), 
-                      context=self.args.comparison_context,
+                      context=self.resolve_context(self.args.comparison_context),
                       comparison_reference=self.args.comparison_reference,
                       compare_old_reference=self.args.comparison_context or self.args.comparison_reference,
                       dump_provenance=self.args.dump_provenance, 
