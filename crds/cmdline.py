@@ -285,7 +285,7 @@ class Script(object):
                 files.extend(self.load_file_list(fname[1:]))
             else:
                 files.append(fname)
-        return [fname.lower() for fname in files]
+        return files # [fname.lower() for fname in files]
     
     def load_file_list(self, at_file):
         """Recursively load an @-file, returning a list of words/files.
