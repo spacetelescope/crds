@@ -343,7 +343,7 @@ def ref_properties_from_header(filename):
     try:
         filekind = TYPES.filetype_to_filekind(instrument, filetype)
     except KeyError:
-        raise CrdsError("Invalid FILETYPE (or CDBSFILE) for '{}' of instrument '{}'." .format(filetype, instrument))
+        raise CrdsError("Invalid FILETYPE (or CDBSFILE) of '{}' for instrument '{}'." .format(filetype, instrument))
     return path, "hst", instrument, filekind, serial, ext
 
 # ============================================================================
