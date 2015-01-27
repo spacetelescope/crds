@@ -1,6 +1,6 @@
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "1.4.0"   # >= OPUS-2015.1
+__version__ = "1.5.0"   # >= OPUS-2015.1 and/or OPUS-2014.4a server
 
 # ============================================================================
 
