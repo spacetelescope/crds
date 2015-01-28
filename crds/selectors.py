@@ -187,7 +187,10 @@ class Selector(object):
                 "selections should be a dictionary { key: choice, ... }."
             self._raw_selections = sorted([Selection(*s) for s in selections.items()])
             self._substitutions = dict(self._rmap_header.get("substitutions", {}))
-            selects = self.do_substitutions(parameters, selections)
+            if self._substitutions:
+                selects = self.do_substitutions(parameters, selections, self._substitutions)
+            else:
+                selects = selections
             self._selections = [Selection(*s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
@@ -200,12 +203,11 @@ class Selector(object):
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
     
-    def do_substitutions(self, parameters, selections):
+    def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
         in mapping `substitutions` as {parkey : { old_value : new_value }}
         """
         selections = copy.deepcopy(selections)
-        substitutions = self._substitutions
         for parkey in substitutions:
             which = parameters.index(parkey)
             for match in selections:
