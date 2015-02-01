@@ -10,8 +10,7 @@ a dataset to be processed.
 If the rows are different,  then the dataset should be reprocessed.  
 """
 
-from astropy.io import fits
-from crds import rmap, log, utils
+from crds import rmap, log, utils, tables
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
@@ -116,11 +115,7 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
 @utils.cached
 def fits_to_simpletable(fits_file, extension=1):
     '''Retrieve a table from a FITS file, converting it to a simple list.'''
-    hdulist = fits.open(fits_file)
-    simple = dict()
-    simple['columns'] = [name.lower() for name in hdulist[extension].columns.names]
-    simple['data'] = [tuple(row) for row in hdulist[extension].data]
-    return simple
+    return tables.tables(fits_file).next()
 
 def str_to_number(input, strip=True):
     
@@ -156,10 +151,10 @@ def mode_select(table, constraints):
     -------
     The next row that matches.
     """
-    for row in table['data']:
+    for row in table.rows:
         selected = True
         for field in constraints:
-            field_index = table['columns'].index(field)
+            field_index = table.cols.index(field)
             (value, cmpfn, args) = constraints[field]
             selected = selected & cmpfn(str_to_number(row[field_index]), value, args)
 
@@ -327,7 +322,7 @@ class DeepLook(object):
         data_new = fits_to_simpletable(new_reference)
 
         # Columns must be the same between tables.
-        if sorted(data_old['columns']) != sorted(data_new['columns']):
+        if sorted(data_old.cols) != sorted(data_new.cols):
             self.message = 'Columns are different between references.'
             return
 
@@ -632,7 +627,7 @@ class DeepLook_ACSCCDpars(DeepLook_ACS):
 
 class DeepLook_ACSDetector(DeepLook_ACS):
     def __init__(self):
-        super(DeepLook_ACSCCDTAB, self).__init__()
+        super(DeepLook_ACSDetector, self).__init__()
 
         self.mode_fields = {
             'detector': self.cmp_equal_parameters,
