@@ -260,6 +260,8 @@ def get_fits_header_union(filepath, needed_keys=()):
     return reduce_header(filepath, union, needed_keys)
 
 
+# ================================================================================================================
+
 _GEIS_TEST_DATA = """
 SIMPLE  =                    F /
                                                                               
@@ -389,10 +391,41 @@ def get_conjugate(reference):
         return reference[:-1] + "d"
     return None
 
+# ================================================================================================================
+
+# XXXX Generalize to data model.
+def dump_multi_key(fitsname, keys, warn_keys):
+    """Dump out all header values for `keys` in all extensions of `fitsname`."""
+    hdulist = pyfits.open(fitsname)
+    unseen = set(keys)
+    for i, hdu in enumerate(hdulist):
+        for key in keys:
+            for card in hdu.header.cards:
+                if card.keyword == key:
+                    if interesting_value(card.value):
+                        log.info("["+str(i)+"]", key, card.value, card.comment)
+                        if key in unseen:
+                            unseen.remove(key)
+    for key in unseen:
+        if key in warn_keys:
+            log.warning("Missing keyword '%s'."  % key)
+
+def interesting_value(value):
+    """Return True IFF `value` isn't uninteresting."""
+    if str(value).strip().lower() in ["",
+                                 "*** end of mandatory fields ***",
+                                 "*** column names ***",
+                                 "*** column formats ***"]:
+        return False
+    return True
+
+
+# ================================================================================================================    
+
 def test():
     """Run doctest on data_file module."""
     import doctest
-    from . import data_file
+    from crds import data_file
     return doctest.testmod(data_file)
 
 if __name__ == "__main__":
