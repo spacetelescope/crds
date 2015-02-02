@@ -112,25 +112,23 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
 ###########
 # Utilities
 ###########
-@utils.cached
-def fits_to_simpletable(fits_file, extension=1):
-    '''Retrieve a table from a FITS file, converting it to a simple list.'''
-    return tables.tables(fits_file).next()
-
-def str_to_number(input, strip=True):
+def str_to_number(val, strip=True):
+    """Map string `input` to the simplest numerical type capable of parsing it.  If `input`
+    will not parse for any type,  return it as-is,  optionally stripping whitespace.
+    """
     
     types = [int, long, float, complex]
 
     result = None
     for t in types:
         try:
-            result = t(input)
+            result = t(val)
             break
-        except:
+        except Exception:
             next
     
     if result is None:
-        result = input.strip() if strip else input
+        result = val.strip() if strip else val
         
     return result
 
@@ -154,7 +152,7 @@ def mode_select(table, constraints):
     for row in table.rows:
         selected = True
         for field in constraints:
-            field_index = table.cols.index(field)
+            field_index = table.colnames.index(field.upper())
             (value, cmpfn, args) = constraints[field]
             selected = selected & cmpfn(str_to_number(row[field_index]), value, args)
 
@@ -318,11 +316,11 @@ class DeepLook(object):
                     constraint_values[key] = self.metavalues[key][constraint_values[key]]
 
         # Read the references
-        data_old = fits_to_simpletable(old_reference)
-        data_new = fits_to_simpletable(new_reference)
+        data_old = tables.tables(old_reference)[0]   # XXXX currently limited to FITS extension 1
+        data_new = tables.tables(new_reference)[0]
 
         # Columns must be the same between tables.
-        if sorted(data_old.cols) != sorted(data_new.cols):
+        if sorted(data_old.colnames) != sorted(data_new.colnames):
             self.message = 'Columns are different between references.'
             return
 
@@ -336,8 +334,8 @@ class DeepLook(object):
 
         # Reduce the tables to just those rows that match the mode
         # specifications.
-        mode_rows_old = [repr(row) for row in mode_select(data_old, constraints)]
-        mode_rows_new = [repr(row) for row in mode_select(data_new, constraints)]
+        mode_rows_old = [row for row in mode_select(data_old, constraints)]
+        mode_rows_new = [row for row in mode_select(data_new, constraints)]
 
         # Sort the rows
         mode_rows_old.sort()

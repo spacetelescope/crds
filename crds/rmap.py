@@ -1253,13 +1253,15 @@ class ReferenceMapping(Mapping):
         header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), define_as="N/A")
         
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
-        log.info("insert_reference raw reffile header:\n", 
-                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]))
+        log.verbose("insert_reference raw reffile header:\n", 
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
+                    verbosity=70)
 
         header = self.get_matching_header(header)
         
-        log.info("insert_reference matching reffile header:\n", 
-                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]))
+        log.verbose("insert_reference matching reffile header:\n", 
+                    log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
+                    verbosity=70)
 
         if self._rmap_update_headers:
             # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
