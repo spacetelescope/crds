@@ -183,6 +183,8 @@ def get_yaml_header(filepath, needed_keys=()):
     header = yaml.load(open(filepath))
     return reduce_header(filepath, header, needed_keys)
 
+DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
+
 def reduce_header(filepath, old_header, needed_keys=()):
     """Limit `header` to `needed_keys`,  converting all keys to upper case
     and making note of any significant duplicates, and adding any missing
@@ -197,6 +199,8 @@ def reduce_header(filepath, old_header, needed_keys=()):
     for (key, value) in old_header:
         key = str(key.upper())
         value = str(value)
+        if key in DUPLICATES_OK:
+            continue
         if (not needed_keys) or key in needed_keys:
             if key in header and header[key] != value:
                 log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
