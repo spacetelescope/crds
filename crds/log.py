@@ -199,6 +199,23 @@ def exception_trap_logger(func):
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception
 
+@contextlib.contextmanager
+def reduced_verbosity(reduced_level, threshhold):
+    """Sets the global verbosity level to `reduced_level` as long as it is already below `threshhold`
+    within the scope of the with-block / context manager.
+    
+    If the global verbosity is above `threshhold`,  don't set to `reduced_level` enabling high verbosity settings
+    to bypass the suppression.
+    """
+    old_verbose = get_verbose()
+    if old_verbose < threshhold:
+        set_verbose(min(old_verbose, reduced_level))
+    try:
+        yield
+    finally:
+        if old_verbose < threshhold:
+            set_verbose(old_verbose)
+        
 # =======================================================================================================
 
 CRDS_DEBUG = False
