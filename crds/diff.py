@@ -2,6 +2,9 @@
 system.   It supports specification of the files using only the basenames or
 a full path.   Currently it operates on mapping, FITS, or text files.
 """
+
+from __future__ import print_function
+
 import os
 import sys
 from collections import defaultdict
@@ -304,7 +307,7 @@ def newer(name1, name2):
 # ============================================================================
 
 
-def fits_difference(observatory, old_file, new_file, by_rows=False, only_fields=None):
+def fits_difference(observatory, old_file, new_file):
     """Run fitsdiff on files named `old_file` and `new_file`.
     """
     assert old_file.endswith(".fits"), \
@@ -315,14 +318,14 @@ def fits_difference(observatory, old_file, new_file, by_rows=False, only_fields=
     loc_new_file = rmap.locate_file(new_file, observatory)
 
     # Do the standard diff.
-    fd = FITSDiff(loc_old_file, loc_new_file)
+    fdiff = FITSDiff(loc_old_file, loc_new_file)
 
     # Do the diff by rows.
-    rd = rowdiff.RowDiff(loc_old_file, loc_new_file)
+    rdiff = rowdiff.RowDiff(loc_old_file, loc_new_file)
 
-    if not fd.identical:
-        fd.report(fileobj=sys.stdout)
-        print '\n', rd
+    if not fdiff.identical:
+        fdiff.report(fileobj=sys.stdout)
+        print('\n', rdiff)
 
 def text_difference(observatory, old_file, new_file):
     """Run UNIX diff on two text files named `old_file` and `new_file`."""
@@ -373,9 +376,9 @@ def get_updated_files(context1, context2):
     old = context1
     old_map = rmap.get_cached_mapping(old)
     old_files = set(old_map.mapping_names() + old_map.reference_names())
-    all = rmap.list_mappings("*"+extension1, old_map.observatory)
+    all_mappings = rmap.list_mappings("*"+extension1, old_map.observatory)
     updated = set()
-    for new in all:
+    for new in all_mappings:
         if new > old:
             if new <= context2:
                 new_map = rmap.get_cached_mapping(new)
@@ -493,7 +496,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         updated = get_updated_files(self.old_file, self.new_file)
         for mapping in updated:
             if rmap.is_mapping(mapping):
-                print(mapping), self.instrument_filekind(mapping)
+                print(mapping, self.instrument_filekind(mapping))
         for reference in updated:
             if not rmap.is_mapping(reference):
                 print(reference, self.instrument_filekind(reference))

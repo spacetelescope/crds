@@ -10,7 +10,7 @@ a dataset to be processed.
 If the rows are different,  then the dataset should be reprocessed.  
 """
 
-from crds import rmap, log, utils, tables
+from crds import rmap, log, tables
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
@@ -120,12 +120,12 @@ def str_to_number(val, strip=True):
     types = [int, long, float, complex]
 
     result = None
-    for t in types:
+    for typ in types:
         try:
-            result = t(val)
+            result = typ(val)
             break
         except Exception:
-            next
+            continue
     
     if result is None:
         result = val.strip() if strip else val
@@ -185,7 +185,7 @@ def mode_equality(modes_a, modes_b):
 #
 ###################
 
-def cmp_equal(table_value, matching_values, wildcards=[]):
+def cmp_equal(table_value, matching_values, wildcards=()):
     """Value equality
 
     Parameters
@@ -213,7 +213,7 @@ def cmp_equal(table_value, matching_values, wildcards=[]):
     else:
         try:
             is_equal = (table_value in matching_values)
-        except:
+        except Exception:
             is_equal = (table_value == matching_values)
 
     # That's all folks.
@@ -235,6 +235,7 @@ class DeepLookError(Exception):
     """
     
     def __init__(self, message):
+        super(DeepLookError, self).__init__(message)
         self.message = message
 
     def __str__(self):
@@ -497,7 +498,7 @@ class DeepLook_COSTDSTAB(DeepLook_COS):
 
 class DeepLook_COSFullSegment(DeepLook_COS):
     def __init__(self):
-        super(DeepLook_COSFullmode, self).__init__()
+        super(DeepLook_COSFullSegment, self).__init__()
 
         self.mode_fields = {
             'opt_elem': self.cmp_equal_parameters,

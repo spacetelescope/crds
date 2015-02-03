@@ -155,7 +155,7 @@ Row change
             b> -1
          1 different table data element(s) found (2.22% different).
     <BLANKLINE>
-    Row differences for HDU extension #1
+     Row differences for HDU extension #1
     <BLANKLINE>
         Summary:
             a rows 1-1 differ from b rows 1-1
