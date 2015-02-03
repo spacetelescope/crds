@@ -2,6 +2,8 @@
 
 MAYBE integrate rc, environment, and command line parameters.
 """
+from __future__ import print_function
+
 import sys
 import os
 import argparse
@@ -352,14 +354,14 @@ class Script(object):
 
     def _console_profile(self, function, sort_by="cumulative", top_n=100):
         """Run `function` under the profiler and print results to console."""
-        pr = cProfile.Profile()
-        pr.enable()
+        prof = cProfile.Profile()
+        prof.enable()
         function()
-        pr.disable()
-        s = StringIO.StringIO()
-        ps = pstats.Stats(pr, stream=s).sort_stats(sort_by)
-        ps.print_stats(top_n)
-        print(s.getvalue())
+        prof.disable()
+        stats_str = StringIO.StringIO()
+        prof_stats = pstats.Stats(prof, stream=stats_str).sort_stats(sort_by)
+        prof_stats.print_stats(top_n)
+        print(stats_str.getvalue())
 
     def report_stats(self):
         """Print out collected statistics."""
@@ -410,10 +412,10 @@ class Script(object):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
         if ignore_cache is None:
             ignore_cache = self.args.ignore_cache
-        _localpaths, downloads, bytes = api.dump_files(
+        _localpaths, downloads, nbytes = api.dump_files(
             context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
         self.increment_stat("total-files", downloads)
-        self.increment_stat("total-bytes", bytes)
+        self.increment_stat("total-bytes", nbytes)
         
     def dump_mappings(self, mappings, ignore_cache=None):
         """Download all `mappings` and their dependencies if not already cached.."""
@@ -423,10 +425,10 @@ class Script(object):
             log.verbose("Not connected to server. Skipping dump_mappings", mappings, verbosity=55)
             return
         for mapping in mappings:
-             _localpaths, downloads, bytes = api.dump_mappings(
-                 mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
-             self.increment_stat("total-files", downloads)
-             self.increment_stat("total-bytes", bytes)
+            _localpaths, downloads, nbytes = api.dump_mappings(
+                mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
+            self.increment_stat("total-files", downloads)
+            self.increment_stat("total-bytes", nbytes)
 
 # =============================================================================
 
@@ -468,7 +470,7 @@ class UniqueErrorsMixin(object):
         return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
                           *params, end="", **keys)
 
-    def dump_unique_errors(self, error_list_data_file=None):
+    def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
         if self.args.dump_unique_errors:
             for key in sorted(self.ue_mixin.messages):
@@ -542,10 +544,10 @@ class ContextsScript(Script):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
         if ignore_cache is None:
             ignore_cache = self.args.ignore_cache
-        _localpaths, downloads, bytes = api.dump_files(
+        _localpaths, downloads, nbytes = api.dump_files(
             context, files, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
         self.increment_stat("total-files", downloads)
-        self.increment_stat("total-bytes", bytes)
+        self.increment_stat("total-bytes", nbytes)
 
     def get_context_mappings(self):
         """Return the set of mappings which are pointed to by the mappings

@@ -1,23 +1,18 @@
 """This module defines an abstract API for tables used in CRDS file certification row checks
-and bestrefs table effects determinations.  In both cases it basically provides an iterator
-over the segments/hdus for a table file and a simple object which gives readonly row acess to
-each segment.
+and bestrefs table effects determinations.  In both cases it basically provides a list of 
+SimpleTable objects,  one per segment/hdu for a table file and a simple object which gives 
+readonly row acess to each segment.
 
 ----------------------------------------------------------------------------------
 Demo and test the basic API for FITS tables:
 
->>> ntables("tests/data/v8q14451j_idc.fits")
+>>> FITS_FILE = _HERE  + "/tests/data/v8q14451j_idc.fits"
+>>> ntables(FITS_FILE)
 1
 
->>> for tab in tables("tests/data/v8q14451j_idc.fits"):
-...    print repr(tab)
-SimpleTable('tests/data/v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44'), nrows=694)
-
->>> tab.filename
-'tests/data/v8q14451j_idc.fits'
-
->>> tab.basename
-'v8q14451j_idc.fits'
+>>> for tab in tables(FITS_FILE):
+...     print repr(tab)
+SimpleTable('v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44'), nrows=694)
 
 >>> tab.segment
 1
@@ -35,18 +30,13 @@ SimpleTable('tests/data/v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION'
 ----------------------------------------------------------------------------------
 Demo and test the API for non-FITS formats using astropy format guessing:
 
->>> ntables("tests/data/ascii_tab.csv")
+>>> CSV_FILE = _HERE + "/tests/data/ascii_tab.csv"
+>>> ntables(CSV_FILE)
 1
 
->>> for tab in tables("tests/data/ascii_tab.csv"):
-...    print repr(tab)
-SimpleTable('tests/data/ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)
-
->>> tab.filename
-'tests/data/ascii_tab.csv'
-
->>> tab.basename
-'ascii_tab.csv'
+>>> for tab in tables(CSV_FILE):
+...     print repr(tab)
+SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)
 
 >>> tab.segment
 1
@@ -59,7 +49,6 @@ SimpleTable('tests/data/ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', '
 
 >>> tab.columns['OBSID'][0]
 3102
-
 """
 import os.path
 
@@ -67,6 +56,8 @@ from astropy.io import fits
 from astropy import table
 
 from crds import utils, log
+
+_HERE = os.path.dirname(__file__) or "."
 
 def ntables(filename):
     """Return the number of segments / hdus in `filename`."""
@@ -120,7 +111,7 @@ class SimpleTable(object):
         return self._columns
         
     def __repr__(self):
-        return (self.__class__.__name__ + "(" + repr(self.filename) + ", " + repr(self.segment) + ", colnames=" +
+        return (self.__class__.__name__ + "(" + repr(self.basename) + ", " + repr(self.segment) + ", colnames=" +
                 repr(self.colnames) + ", nrows=" + str(len(self.rows)) + ")")
     
     
