@@ -2,6 +2,64 @@
 and bestrefs table effects determinations.  In both cases it basically provides an iterator
 over the segments/hdus for a table file and a simple object which gives readonly row acess to
 each segment.
+
+----------------------------------------------------------------------------------
+Demo and test the basic API for FITS tables:
+
+>>> ntables("tests/data/v8q14451j_idc.fits")
+1
+
+>>> for tab in tables("tests/data/v8q14451j_idc.fits"):
+...    print repr(tab)
+SimpleTable('tests/data/v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44'), nrows=694)
+
+>>> tab.filename
+'tests/data/v8q14451j_idc.fits'
+
+>>> tab.basename
+'v8q14451j_idc.fits'
+
+>>> tab.segment
+1
+
+>>> tab.rows[0]
+(1, 'FORWARD', 'F475W', 'CLEAR2L', 4096, 2048, 2048.0, 1024.0, 260.86691, 198.35629, 0.050000001, 0.0022632401, 0.049226411, 8.8356778e-08, -3.5535871e-07, 4.119137e-07, 2.531863e-12, -2.6421639e-11, -6.091743e-12, -2.302028e-11, 6.8711719e-15, -1.057525e-15, 4.884969e-15, 1.564524e-15, 9.3779168e-16, 0.04858401, 0.0021281759, -4.700963e-07, 2.949148e-07, -1.2576361e-07, -1.890378e-11, -2.340621e-12, -2.209152e-11, 3.51687e-12, -8.4106374e-15, 2.246166e-15, -4.855206e-15, -1.634969e-15, -8.0853678e-16)
+
+>>> tab.colnames[0]
+'DETCHIP'
+
+>>> tab.columns['DETCHIP'][:1]
+(1,)
+
+
+----------------------------------------------------------------------------------
+Demo and test the API for non-FITS formats using astropy format guessing:
+
+>>> ntables("tests/data/ascii_tab.csv")
+1
+
+>>> for tab in tables("tests/data/ascii_tab.csv"):
+...    print repr(tab)
+SimpleTable('tests/data/ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)
+
+>>> tab.filename
+'tests/data/ascii_tab.csv'
+
+>>> tab.basename
+'ascii_tab.csv'
+
+>>> tab.segment
+1
+
+>>> tab.rows[0]
+(3102, 0.32000000000000001, 4167, 4085, 'Q1250+568-A')
+
+>>> tab.colnames[0]
+'OBSID'
+
+>>> tab.columns['OBSID'][0]
+3102
+
 """
 import os.path
 
@@ -40,14 +98,15 @@ class SimpleTable(object):
     def __init__(self, filename, segment=1):
         self.filename = filename
         self.segment = segment
-        if filename.endswith(".fits"):
-            astropy_table = table.Table.read(filename, hdu=segment)
-        else:
-            astropy_table = table.Table.read(filename)
-        self.rows = tuple(row for row in astropy_table)   # readonly
-        self._columns = None  # dynamic,  independent of astropy
-        self.colnames = tuple(name for name in astropy_table.columns)
         self.basename = os.path.basename(filename)
+        self._columns = None  # dynamic,  independent of astropy
+        if filename.endswith(".fits"):
+            tab = fits.open(filename)[segment].data
+            self.colnames = tuple(name.upper() for name in tab.columns.names)
+        else:
+            tab = table.Table.read(filename)
+            self.colnames = tuple(name.upper() for name in tab.columns)
+        self.rows = tuple(tuple(row) for row in tab)   # readonly
         log.verbose("Creating", repr(self), verbosity=60)
         
     @property
@@ -65,3 +124,10 @@ class SimpleTable(object):
                 repr(self.colnames) + ", nrows=" + str(len(self.rows)) + ")")
     
     
+
+def test():
+    import doctest, crds.tables
+    return doctest.testmod(crds.tables)
+
+if __name__ == "__main__":
+    print test()

@@ -334,8 +334,8 @@ class DeepLook(object):
 
         # Reduce the tables to just those rows that match the mode
         # specifications.
-        mode_rows_old = [row for row in mode_select(data_old, constraints)]
-        mode_rows_new = [row for row in mode_select(data_new, constraints)]
+        mode_rows_old = [repr(row) for row in mode_select(data_old, constraints)]
+        mode_rows_new = [repr(row) for row in mode_select(data_new, constraints)]
 
         # Sort the rows
         mode_rows_old.sort()
@@ -349,7 +349,7 @@ class DeepLook(object):
         self.is_different = not mode_equality(mode_rows_old, mode_rows_new)
 
         if self.is_different:
-            self.message = 'Selection rules have excuted and the selected rows are different.'
+            self.message = 'Selection rules have executed and the selected rows are different.'
         else:
             self.message = 'Selection rules have executed and the selected rows are the same.'
 
