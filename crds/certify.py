@@ -129,7 +129,7 @@ class Validator(object):
                 for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
                     self.check_value(filename + "[" + str(i) +"]", value)
         if not column_seen:
-            self.__handle_missing("Couldn't find column", repr(self.name), "in", repr(filename))
+            self.__handle_missing()
         else:
             self.__handle_excluded(None)
         return ok
@@ -156,6 +156,7 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         else:
             sys.exc_clear()
+            log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
 
     def __handle_excluded(self, value):
