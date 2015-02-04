@@ -849,7 +849,7 @@ class InstrumentContext(ContextMapping):
             for parkey, choices in selection.get_parkey_map().items():
                 if parkey not in pkmap:
                     pkmap[parkey] = set()
-                pkmap[parkey] |= choices
+                pkmap[parkey] |= set(choices)
         for parkey, choices in pkmap.items():
             pkmap[parkey] = list(pkmap[parkey])
             if "CORR" not in parkey:
