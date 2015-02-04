@@ -701,7 +701,7 @@ class Selector(object):
                 for parkey in nested:
                     if parkey not in vmap:
                         vmap[parkey] = set()
-                    vmap[parkey] |= nested[parkey]
+                    vmap[parkey] |= set(nested[parkey])
         return vmap
 
     def get_selector_value_map(self):
