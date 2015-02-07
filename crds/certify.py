@@ -494,11 +494,12 @@ class FitsCertifier(Certifier):
         if not self.context:
             log.info("Table mode checking requires a comparison context.   Skipping.")
             return []
+        mode_columns = []
         with log.error_on_exception("Error finding governing rmap for", repr(self.basename), 
                                     "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
-        mode_columns = g_rmap.locate.get_row_keys(g_rmap)
-        log.info("Table unique-row-keys defined as", repr(mode_columns), "under", repr(g_rmap.basename))
+            mode_columns = g_rmap.locate.get_row_keys(g_rmap)
+            log.info("Table unique-row-keys defined as", repr(mode_columns), "under", repr(g_rmap.basename))
         return mode_columns
             
     def certify_reference_modes(self):
