@@ -10,8 +10,7 @@ a dataset to be processed.
 If the rows are different,  then the dataset should be reprocessed.  
 """
 
-from astropy.io import fits
-from crds import rmap, log, utils
+from crds import rmap, log, tables
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
@@ -113,29 +112,23 @@ def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_cont
 ###########
 # Utilities
 ###########
-@utils.cached
-def fits_to_simpletable(fits_file, extension=1):
-    '''Retrieve a table from a FITS file, converting it to a simple list.'''
-    hdulist = fits.open(fits_file)
-    simple = dict()
-    simple['columns'] = [name.lower() for name in hdulist[extension].columns.names]
-    simple['data'] = [tuple(row) for row in hdulist[extension].data]
-    return simple
-
-def str_to_number(input, strip=True):
+def str_to_number(val, strip=True):
+    """Map string `input` to the simplest numerical type capable of parsing it.  If `input`
+    will not parse for any type,  return it as-is,  optionally stripping whitespace.
+    """
     
     types = [int, long, float, complex]
 
     result = None
-    for t in types:
+    for typ in types:
         try:
-            result = t(input)
+            result = typ(val)
             break
-        except:
-            next
+        except Exception:
+            continue
     
     if result is None:
-        result = input.strip() if strip else input
+        result = val.strip() if strip else val
         
     return result
 
@@ -156,10 +149,10 @@ def mode_select(table, constraints):
     -------
     The next row that matches.
     """
-    for row in table['data']:
+    for row in table.rows:
         selected = True
         for field in constraints:
-            field_index = table['columns'].index(field)
+            field_index = table.colnames.index(field.upper())
             (value, cmpfn, args) = constraints[field]
             selected = selected & cmpfn(str_to_number(row[field_index]), value, args)
 
@@ -192,7 +185,7 @@ def mode_equality(modes_a, modes_b):
 #
 ###################
 
-def cmp_equal(table_value, matching_values, wildcards=[]):
+def cmp_equal(table_value, matching_values, wildcards=()):
     """Value equality
 
     Parameters
@@ -220,7 +213,7 @@ def cmp_equal(table_value, matching_values, wildcards=[]):
     else:
         try:
             is_equal = (table_value in matching_values)
-        except:
+        except Exception:
             is_equal = (table_value == matching_values)
 
     # That's all folks.
@@ -242,6 +235,7 @@ class DeepLookError(Exception):
     """
     
     def __init__(self, message):
+        super(DeepLookError, self).__init__(message)
         self.message = message
 
     def __str__(self):
@@ -323,11 +317,11 @@ class DeepLook(object):
                     constraint_values[key] = self.metavalues[key][constraint_values[key]]
 
         # Read the references
-        data_old = fits_to_simpletable(old_reference)
-        data_new = fits_to_simpletable(new_reference)
+        data_old = tables.tables(old_reference)[0]   # XXXX currently limited to FITS extension 1
+        data_new = tables.tables(new_reference)[0]
 
         # Columns must be the same between tables.
-        if sorted(data_old['columns']) != sorted(data_new['columns']):
+        if sorted(data_old.colnames) != sorted(data_new.colnames):
             self.message = 'Columns are different between references.'
             return
 
@@ -356,7 +350,7 @@ class DeepLook(object):
         self.is_different = not mode_equality(mode_rows_old, mode_rows_new)
 
         if self.is_different:
-            self.message = 'Selection rules have excuted and the selected rows are different.'
+            self.message = 'Selection rules have executed and the selected rows are different.'
         else:
             self.message = 'Selection rules have executed and the selected rows are the same.'
 
@@ -504,7 +498,7 @@ class DeepLook_COSTDSTAB(DeepLook_COS):
 
 class DeepLook_COSFullSegment(DeepLook_COS):
     def __init__(self):
-        super(DeepLook_COSFullmode, self).__init__()
+        super(DeepLook_COSFullSegment, self).__init__()
 
         self.mode_fields = {
             'opt_elem': self.cmp_equal_parameters,
@@ -632,7 +626,7 @@ class DeepLook_ACSCCDpars(DeepLook_ACS):
 
 class DeepLook_ACSDetector(DeepLook_ACS):
     def __init__(self):
-        super(DeepLook_ACSCCDTAB, self).__init__()
+        super(DeepLook_ACSDetector, self).__init__()
 
         self.mode_fields = {
             'detector': self.cmp_equal_parameters,

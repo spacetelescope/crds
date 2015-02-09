@@ -6,7 +6,6 @@ import os
 import os.path
 import re
 import glob
-import contextlib
 
 from crds import log
 

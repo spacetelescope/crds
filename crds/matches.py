@@ -147,8 +147,7 @@ def get_exptime(match_dict):
     for key in ["META.OBSERVATION.DATE", "META_OBSERVATION_DATE"]:
         if key in match_dict:
             return match_dict[key]
-    else:
-        return "1900-01-01 00:00:00"        
+    return "1900-01-01 00:00:00"
 
 # ===================================================================
 
@@ -244,10 +243,10 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
                 else:
                     print(dataset_id, ":", context, ":", log.format_parameter_list(header))
 
-    def locate_file(self, file):
+    def locate_file(self, filename):
         """Override for self.files..."""
-        return os.path.basename(file)
-    
+        return os.path.basename(filename)
+
     def dump_match_tuples(self, context):
         """Print out the match tuples for `references` under `context`.
         """

@@ -47,7 +47,7 @@ Test: COS WCPTAB, reprocess yes
     CRDS  : DEBUG    Deep Reference examination between /grp/crds/cache/references/hst/x2i1559gl_wcp.fits and /grp/crds/cache/references/hst/xaf1429el_wcp.fits initiated.
     CRDS  : DEBUG    Instantiating rules for reference type cos_wcptab.
     CRDS  : DEBUG    Rule DeepLook_COSOpt_elem: Reprocessing is required.
-    CRDS  : DEBUG    Rule DeepLook_COSOpt_elem: Selection rules have excuted and the selected rows are different.
+    CRDS  : DEBUG    Rule DeepLook_COSOpt_elem: Selection rules have executed and the selected rows are different.
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     3 infos
