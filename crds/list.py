@@ -104,16 +104,16 @@ class ListScript(cmdline.ContextsScript):
         """Consult the server and print the names of all references associated with
         the given contexts.
         """
-        references = [ rmap.locate_file(file, self.observatory) if self.args.full_path else file
-                       for file in self.get_context_references() ]
+        references = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
+                       for filename in self.get_context_references() ]
         _print_list(references)
     
     def list_mappings(self):
         """Consult the server and print the names of all CRDS mappings associated 
         with the given contexts.
         """
-        mappings = [ rmap.locate_file(file, self.observatory) if self.args.full_path else file
-                       for file in self.get_context_mappings() ]
+        mappings = [ rmap.locate_file(filename, self.observatory) if self.args.full_path else filename
+                       for filename in self.get_context_mappings() ]
         _print_list(mappings)
     
     def list_cached_mappings(self):
@@ -158,15 +158,15 @@ class ListScript(cmdline.ContextsScript):
                 "version": heavy_client.version_info() 
                 })
     
-def _print_dict(title, d, selected = None):
+def _print_dict(title, dictionary, selected = None):
     """Print out dictionary `d` with a one line `title`."""
     if selected is None:
-        selected = d.keys()
+        selected = dictionary.keys()
     print(title)
-    if not d:
+    if not dictionary:
         print("\tCRDS_PATH and CRDS_SERVER_URL not set.")
     for key in selected:
-        print("\t" + key + " = " + repr(d[key]))
+        print("\t" + key + " = " + repr(dictionary[key]))
 
 def _print_list(files):
     """Print `files` one file per line."""

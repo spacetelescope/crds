@@ -121,7 +121,6 @@ def setval(filepath, key, value):
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
 
-@utils.capture_output 
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
@@ -155,14 +154,13 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
         if observatory == "jwst":
-            return get_data_model_header.suppressed(filepath, needed_keys)
+            return get_data_model_header(filepath, needed_keys)
         else:
             return get_fits_header_union(filepath, needed_keys)
 
 # A clearer name
 get_unconditioned_header = get_header
 
-@utils.capture_output
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
     from jwst_lib import models
@@ -183,6 +181,8 @@ def get_yaml_header(filepath, needed_keys=()):
     header = yaml.load(open(filepath))
     return reduce_header(filepath, header, needed_keys)
 
+DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
+
 def reduce_header(filepath, old_header, needed_keys=()):
     """Limit `header` to `needed_keys`,  converting all keys to upper case
     and making note of any significant duplicates, and adding any missing
@@ -197,6 +197,8 @@ def reduce_header(filepath, old_header, needed_keys=()):
     for (key, value) in old_header:
         key = str(key.upper())
         value = str(value)
+        if key in DUPLICATES_OK:
+            continue
         if (not needed_keys) or key in needed_keys:
             if key in header and header[key] != value:
                 log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
@@ -259,6 +261,8 @@ def get_fits_header_union(filepath, needed_keys=()):
             union.append((key, value))
     return reduce_header(filepath, union, needed_keys)
 
+
+# ================================================================================================================
 
 _GEIS_TEST_DATA = """
 SIMPLE  =                    F /
@@ -389,10 +393,41 @@ def get_conjugate(reference):
         return reference[:-1] + "d"
     return None
 
+# ================================================================================================================
+
+# XXXX Generalize to data model.
+def dump_multi_key(fitsname, keys, warn_keys):
+    """Dump out all header values for `keys` in all extensions of `fitsname`."""
+    hdulist = pyfits.open(fitsname)
+    unseen = set(keys)
+    for i, hdu in enumerate(hdulist):
+        for key in keys:
+            for card in hdu.header.cards:
+                if card.keyword == key:
+                    if interesting_value(card.value):
+                        log.info("["+str(i)+"]", key, card.value, card.comment)
+                        if key in unseen:
+                            unseen.remove(key)
+    for key in unseen:
+        if key in warn_keys:
+            log.warning("Missing keyword '%s'."  % key)
+
+def interesting_value(value):
+    """Return True IFF `value` isn't uninteresting."""
+    if str(value).strip().lower() in ["",
+                                 "*** end of mandatory fields ***",
+                                 "*** column names ***",
+                                 "*** column formats ***"]:
+        return False
+    return True
+
+
+# ================================================================================================================    
+
 def test():
     """Run doctest on data_file module."""
     import doctest
-    from . import data_file
+    from crds import data_file
     return doctest.testmod(data_file)
 
 if __name__ == "__main__":

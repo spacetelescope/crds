@@ -16,7 +16,7 @@ __all__ = [
            "CrdsDownloadError",
            
            "CrdsUnknownInstrumentError",
-           "CrdsUnknownRefypeError",
+           "CrdsUnknownReftypeError",
            ]
 
 # List of all the observatory package names

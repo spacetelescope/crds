@@ -12,6 +12,7 @@ from astropy.io import fits as pyfits
 import numpy as np
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
+from crds import tables
 from crds import client
 from crds import mapping_parser
 from crds.rmap import ValidationError
@@ -119,21 +120,18 @@ class Validator(object):
         """Extract a column of new_values from `filename` and check them all against
         the legal values for this Validator.   This checks a single column,  not a row/mode.
         """
-        try:
-            new_values = self.get_column_values(filename)
-            if new_values is None: # Ignore missing optional columns
-                return True 
-        except Exception, exc:
-            log.error("Can't read column values:", str(exc))
-            return False
-
-        # new_values must not be None,  check all, waiting to fail later
         ok = True
-        for i, value in enumerate(new_values): # compare to TPN values
-            try:
-                self.check_value(filename + "[" + str(i) +"]", value)
-            except ValueError, exc:
-                ok = False 
+        column_seen = False
+        for tab in tables.tables(filename):
+            if self.name in tab.colnames:
+                column_seen = True
+                # new_values must not be None,  check all, waiting to fail later
+                for i, value in enumerate(tab.columns[self.name]): # compare to TPN values
+                    self.check_value(filename + "[" + str(i) +"]", value)
+        if not column_seen:
+            self.__handle_missing()
+        else:
+            self.__handle_excluded(None)
         return ok
         
     def check_group(self, _filename):
@@ -150,29 +148,6 @@ class Validator(object):
             return self.__handle_missing()
         return self.__handle_excluded(value)
 
-    def get_column_values(self, filename):
-        """Pull the column of values corresponding to this Validator out of
-        `filename` and return it.   Handle missing and excluded cases.
-        """
-        hdu = pyfits.open(filename)
-        
-        # make sure table(s) are in extension(s) not the PRIMARY extension
-        assert len(hdu) > 1, "table file with only primary extension: " + repr(filename)
-
-        # start by finding the extension which contains the requested column
-        for extn in hdu:
-            if (hasattr(extn,'_extension') and 'table' in extn._extension.lower() and self.name in extn.data.names):
-                col_extn = extn
-                break
-        else:  # If no extension could be found with that column, report as missing
-            hdu.close()
-            return self.__handle_missing()
-
-        # If it was found, return the values
-        values = col_extn.data.field(self.name)
-        hdu.close()
-        return self.__handle_excluded(values)
-
     def __handle_missing(self):
         """This Validator's key is missing.   Either raise an exception or
         ignore it depending on whether this Validator's key is required.
@@ -181,6 +156,7 @@ class Validator(object):
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         else:
             sys.exc_clear()
+            log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
 
     def __handle_excluded(self, value):
@@ -398,8 +374,8 @@ def validators_by_typekey(key, observatory):
     # Make and cache Validators for `filename`s reference file type.
     try:
         validators = [validator(x) for x in locator.get_tpninfos(*key)]
-        log.verbose("Validators for", repr(key), "=", log.PP(validators))
-    except Exception, exc:
+        log.verbose("Validators for", repr(key), ":\n", log.PP(validators))
+    except Exception as exc:
         raise RuntimeError("FAILED loading type contraints for " + repr(key) + " with " + repr(exc))
     return validators
 
@@ -461,7 +437,6 @@ class FitsCertifier(Certifier):
         super(FitsCertifier, self).__init__(*args, **keys)
         self.simple_validators = get_validators(self.filename, self.observatory)
         self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
-        self.basefile = os.path.basename(self.filename)
         self.mode_columns = self.get_mode_column_names()
 
     def certify(self):
@@ -472,13 +447,13 @@ class FitsCertifier(Certifier):
         if self.mode_columns:
             self.certify_reference_modes()
         if self.dump_provenance:
-            dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys, 
-                           self.provenance_keys)
+            data_file.dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys, 
+                                     self.provenance_keys)
 
     def fits_verify(self):
         """Use pyfits to verify the FITS format of self.filename."""
         if not self.filename.endswith(".fits"):
-            log.verbose("Skipping FITS verify for '%s'" % self.basefile)
+            log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
         fits = pyfits.open(self.filename)
         fits.verify(option='exception') # validates all keywords
@@ -504,33 +479,27 @@ class FitsCertifier(Certifier):
         """Check simple parameter values,  column and non-column."""
         header = data_file.get_header(self.filename)
         for checker in self.simple_validators:
-            with log.error_on_exception("checking " + repr(checker.info.name)):
+            with log.error_on_exception("Checking " + repr(checker.info.name)):
                 checker.check(self.filename, header)
 
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
         
         Only tables whose rmaps define row_keys will have mode checking performed.
+        
+        The first iteration of row_keys were defined as an rmap header paramter.  Subsequent iterations switched
+        to a global definition in the locator module file rowkeys.dat.   The current iteration defines rowkeys in
+        the spec for each type in the observatory package.
         """
         if not self.context:
             log.info("Table mode checking requires a comparison context.   Skipping.")
             return []
         mode_columns = []
-        with log.error_on_exception("Error finding governing rmap for", repr(self.basefile), 
+        with log.error_on_exception("Error finding governing rmap for", repr(self.basename), 
                                     "under", repr(self.context)):
             g_rmap = find_governing_rmap(self.context, self.filename)
-            try:
-                if g_rmap.reffile_format != "table":
-                    log.verbose("Rmap reffile_format is not 'TABLE',  skipping table mode checks.")
-                    return []
-            except:
-                log.verbose("Rmap reffile_format NOT DEFINED,  assuming it's a not table.")
-                return []
-            try:   # get_row_keys should return [] to suppress mode checks,  otherwise mode columns.
-                mode_columns = g_rmap.locate.get_row_keys(g_rmap)
-                log.info("Table unique-row-keys defined as", repr(mode_columns))
-            except:
-                log.warning("Table unique-row-keys for", repr(g_rmap.basename), "for", repr(self.filename), "NOT DEFINED. Skipping table mode checks.")
+            mode_columns = g_rmap.locate.get_row_keys(g_rmap)
+            log.info("Table unique-row-keys defined as", repr(mode_columns), "under", repr(g_rmap.basename))
         return mode_columns
             
     def certify_reference_modes(self):
@@ -539,28 +508,33 @@ class FitsCertifier(Certifier):
             old_reference = self.comparison_reference
         else:
             old_reference = self.find_old_reference(self.context, self.filename)
-            if old_reference is None or old_reference == self.basefile:
-                # Load table modes anyway,  looking for duplicate modes.
-                _new_modes, _new_all_cols = table_mode_dictionary(
-                    "new reference", self.filename, self.mode_columns)
-                log.warning("No comparison reference for", repr(self.basefile), 
-                            "in context", repr(self.context) + ". Skipping table comparison.")
+            if old_reference is None or old_reference == self.basename:
+                # Load tables modes anyway,  looking for duplicate modes.
+                for tab in tables.tables(self.filename):
+                    table_mode_dictionary("new reference", tab, self.mode_columns)
+                log.warning("No comparison reference for", repr(self.basename), 
+                            "in context", repr(self.context) + ". Skipping tables comparison.")
                 return
-        n_old_hdus = len(pyfits.open(old_reference))
-        n_new_hdus = len(pyfits.open(self.filename))
-        if n_old_hdus != n_new_hdus:
-            log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basefile), ":",
-                        n_old_hdus, "vs.", n_new_hdus)
+        n_old_segments = tables.ntables(old_reference)
+        n_new_segments = tables.ntables(self.filename)
+        if n_old_segments != n_new_segments:
+            log.warning("Differing HDU counts in", repr(old_reference), "and", repr(self.basename), ":",
+                        n_old_segments, "vs.", n_new_segments)
+            
+        old_tables = tables.tables(old_reference)
+        new_tables = tables.tables(self.filename)
 
-        for i in range(1, min(n_new_hdus, n_old_hdus)):
-            with log.error("checking table modes"):
-                self.check_table_modes(old_reference, ext=i)
+        for i in range(0, min(n_new_segments, n_old_segments)):
+            with log.error_on_exception("Checking tables modes in segment", i, "of", repr(self.filename)):
+                self.check_table_modes(old_tables[i], new_tables[i])
     
     def find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace in `context`,  or None.
         """
-        with log.error_on_exception("Resolving prior reference for", repr(reffile), "in", repr(context)):
-            return self._find_old_reference(context, reffile) 
+        log.verbose("Resolving comparison reference for", repr(reffile), "in context", repr(context))
+        with log.warn_on_exception("Failed resolving comparison reference for table checks"):
+            with log.reduced_verbosity(0, 70):    # Turn off verbose messages in block unless verbosity >= 70
+                return self._find_old_reference(context, reffile) 
     
     def _find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace."""
@@ -596,27 +570,24 @@ class FitsCertifier(Certifier):
             if not os.path.exists(match_file):   # For server-less mode in debug environments w/o Central Store
                 raise IOError("Comparison reference " + repr(match_refname) + " is defined but does not exist.")
             log.info("Comparing reference", repr(refname), "against", repr(os.path.basename(match_file)))
-        except Exception, exc:
+        except Exception as exc:
             log.warning("Failed to obtain reference comparison file", repr(match_refname), ":", str(exc))
             match_file = None
     
         return match_file
     
-    def check_table_modes(self, old_reference, ext):
-        """Check the table modes of extension `ext` of `old_reference` versus self.filename"""
-        ext_suffix = "[" + str(ext) + "]"
-        new_reference_ex = self.basefile + ext_suffix
-        old_reference_ex = old_reference + ext_suffix
-        log.verbose("Checking table modes of '{}' against comparison reference '{}'".format(
+    def check_table_modes(self, old_table, new_table):
+        """Check the tables modes of extension `ext` of `old_reference` versus self.filename"""
+        new_reference_ex = new_table.basename + "[" + str(new_table.segment) + "]"
+        old_reference_ex = old_table.basename + "[" + str(old_table.segment) + "]"
+        log.verbose("Checking tables modes of '{}' against comparison reference '{}'".format(
                 new_reference_ex, old_reference_ex))
-        old_modes, old_all_cols = table_mode_dictionary(
-            "old reference", old_reference, self.mode_columns, ext=ext)
+        old_modes, old_all_cols = table_mode_dictionary("old reference", old_table, self.mode_columns)
         if not old_modes:
             log.info("No modes defined in comparison reference", repr(old_reference_ex), 
                      "for keys", repr(self.mode_columns))
             return
-        new_modes, new_all_cols = table_mode_dictionary(
-            "new reference", self.filename, self.mode_columns, ext=ext)
+        new_modes, new_all_cols = table_mode_dictionary("new reference", new_table, self.mode_columns)
         if not new_modes:
             log.info("No modes defined in new reference", repr(new_reference_ex), "for keys", 
                      repr(self.mode_columns))
@@ -635,8 +606,8 @@ class FitsCertifier(Certifier):
                 log.verbose("Old:", repr(old_modes[mode]), verbosity=60)
                 continue
             # modes[mode][0] is row_no,  modes[mode][1] is row value
-            diff = self.compare_row_values(mode, old_modes[mode][1], new_modes[mode][1])
-            if not diff:
+            diffs = self.compare_row_values(mode, old_modes[mode][1], new_modes[mode][1])
+            if not diffs:
                 log.verbose("Mode", mode, "of", repr(new_reference_ex), 
                             "has same values as", repr(old_reference_ex),  verbosity=60)
             else:
@@ -647,7 +618,7 @@ class FitsCertifier(Certifier):
         for mode in sorted(new_modes):
             if mode not in old_modes:
                 log.info("Table mode", mode, "of new reference", repr(new_reference_ex),
-                         "is NOT IN old reference", repr(old_reference))
+                         "is NOT IN old reference", repr(old_table.basename))
                 log.verbose("New:", repr(new_modes[mode]), verbosity=60)
                 
     def compare_row_values(self, mode, old_row, new_row):
@@ -669,30 +640,6 @@ class FitsCertifier(Certifier):
                 different += 1
         return different
 
-def dump_multi_key(fitsname, keys, warn_keys):
-    """Dump out all header values for `keys` in all extensions of `fitsname`."""
-    hdulist = pyfits.open(fitsname)
-    unseen = set(keys)
-    for i, hdu in enumerate(hdulist):
-        for key in keys:
-            for card in hdu.header.cards:
-                if card.keyword == key:
-                    if interesting_value(card.value):
-                        log.info("["+str(i)+"]", key, card.value, card.comment)
-                        if key in unseen:
-                            unseen.remove(key)
-    for key in unseen:
-        if key in warn_keys:
-            log.warning("Missing keyword '%s'."  % key)
-
-def interesting_value(value):
-    """Return True IFF `value` isn't uninteresting."""
-    if str(value).strip().lower() in ["",
-                                 "*** end of mandatory fields ***",
-                                 "*** column names ***",
-                                 "*** column formats ***"]:
-        return False
-    return True
 
 class JsonCertifier(Certifier):
     """Certifier for a .json file,  currently basic parsing only."""
@@ -875,18 +822,16 @@ def find_governing_rmap(context, reference):
 
 # ============================================================================
 
-def table_mode_dictionary(generic_name, filename, mode_keys, ext=1):
+def table_mode_dictionary(generic_name, tab, mode_keys):
     """Returns ({ (mode_val,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
-    for FITS data table `filename` at extension `ext` where column names `mode_keys` define the 
-    columns to select for mode values.
+    for crds.tables `tab` where column names `mode_keys` define the  columns to select for mode values.
     """
-    table = pyfits.getdata(filename, ext=ext)
-    all_cols = [name.upper() for name in table.names]
-    basename = repr(os.path.basename(filename) + "[{}]".format(ext))
+    all_cols = [name.upper() for name in tab.colnames]
+    basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
     log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
     log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
     modes = defaultdict(list)
-    for i, row in enumerate(table):
+    for i, row in enumerate(tab.rows):
         new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
         rowdict = dict(new_row)
         # Table row keys can vary by extension.  Have CRDS support a simple model of using
@@ -929,7 +874,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
     dump_provenance:        for references,  log provenance keywords and rmap parkey values.
     check_references:       False, "exists", "contents"
     is_mapping:             bool  (assume mapping regardless of filename)
-    compare_old_reference:  bool,  if True,  attempt table mode checking.
+    compare_old_reference:  bool,  if True,  attempt tables mode checking.
     dont_parse:             bool,  if True,  don't run parser to scan mappings for duplicate keys.
     script:                 command line Script instance
     trap_exceptions:        if True, trapped exceptions issue ERROR messages. Otherwise reraised.
@@ -986,7 +931,7 @@ def _certify_files(files, context=None, dump_provenance=False, check_references=
                               dont_parse=dont_parse, script=script, observatory=observatory,
                               comparison_reference=comparison_reference)            
             certifier.certify()
-
+    tables.clear_cache()
     log.info('#' * 40)  # Serves as demarkation for each file's report
 
 def test():
@@ -1033,7 +978,7 @@ Checks a CRDS reference or mapping file.
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
             help="Pipeline context defining comparison files.")
         self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
-            help="Comparison reference for table certification.")
+            help="Comparison reference for tables certification.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
 

@@ -455,7 +455,8 @@ def cache_atomic_write(replace_path, contents, fail_warning):
                 file_.write(contents)
             os.rename(temp_path, replace_path)
         except Exception, exc:
-            log.verbose_warning("CACHE Failed writing", repr(replace_path), ":", repr(exc))
+            log.verbose_warning("CACHE Failed writing", repr(replace_path), 
+                                ":", fail_warning, ":", repr(exc))
     else:
         log.verbose("CACHE Skipped update of readonly", repr(replace_path))
 

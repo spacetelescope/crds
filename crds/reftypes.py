@@ -245,8 +245,12 @@ class TypeParameters(object):
         For HST calibration references mapping is an rmap.
         """
         mapping = rmap.asmapping(mapping)
-        return self.row_keys[mapping.instrument][mapping.filekind]
-
+        try:
+            return self.row_keys[mapping.instrument][mapping.filekind]
+        except KeyError:
+            log.verbose("No unique row keys defined for", repr(mapping.basename))
+            return []
+        
     def get_row_keys_by_instrument(self, instrument):
         """To support defining the CRDS server interface to DADSOPS, return the
         sorted list of row keys necessary to perform all the table lookups
