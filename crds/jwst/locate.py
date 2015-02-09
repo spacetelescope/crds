@@ -64,7 +64,11 @@ def get_file_properties(filename):
     >> get_file_properties("test_data/s7g1700gl_dead.fits")
     """
     if rmap.is_mapping(filename):
-        return decompose_newstyle_name(filename)[2:4]
+        try:
+            return decompose_newstyle_name(filename)[2:4]
+        except Exception:
+            mapping = rmap.load_mapping(filename)
+            return mapping.instrument, mapping.filekind
     elif REF_EXT_RE.search(filename):
         result = get_reference_properties(filename)[2:4]
     else:
