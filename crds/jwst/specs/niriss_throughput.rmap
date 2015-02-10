@@ -1,15 +1,15 @@
 header = {
     'derived_from' : 'Hand made 2015-02-09 13:06:00',
     'file_ext' : '.fits',
-    'filekind' : 'FILTER',
-    'filetype' : 'FILTER',
+    'filekind' : 'THROUGHPUT',
+    'filetype' : 'THROUGHPUT',
     'instrument' : 'NIRISS',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_niriss_filter.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.FILTER',),),
     'sha1sum' : '5ffbf3675332a02351596270fffff70569cd2dd4',
-    'suffix' : 'filter',
+    'suffix' : 'throughput',
     'text_descr' : 'Throughput',
 }
 
