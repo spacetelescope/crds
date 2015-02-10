@@ -8,7 +8,7 @@ header = {
     'name' : 'jwst_niriss_filter.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.FILTER',),),
-    'sha1sum' : '5ffbf3675332a02351596270fffff70569cd2dd4',
+    'sha1sum' : 'd8c838f8bec6c62d190f7e8b204fc888f19007a8',
     'suffix' : 'throughput',
     'text_descr' : 'Throughput',
 }
