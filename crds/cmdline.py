@@ -336,7 +336,7 @@ class Script(object):
             elif self.args.profile:
                 self._profile()
             elif self.args.pdb:
-                pdb.runctx("self._main()", locals(), locals())
+                pdb.runctx("self._main()", globals(), locals())
             else:
                 return self._main()
         except KeyboardInterrupt:
@@ -408,8 +408,10 @@ class Script(object):
         log.error(*args, **keys)
         sys.exit(status)
 
-    def dump_files(self, context, files=None, ignore_cache=None):
+    def dump_files(self, context=None, files=None, ignore_cache=None):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
+        if context is None:
+            context = self.default_context
         if ignore_cache is None:
             ignore_cache = self.args.ignore_cache
         _localpaths, downloads, nbytes = api.dump_files(
@@ -429,6 +431,31 @@ class Script(object):
                 mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
             self.increment_stat("total-files", downloads)
             self.increment_stat("total-bytes", nbytes)
+            
+    def sync_files(self, files, context=None, ignore_cache=None):
+        """Like dump_files(),  but dumps recursive closure of any mappings rather than just the listed mapping."""
+        mappings = [ filename for filename in files if config.is_mapping(filename) ]
+        references = [filename for filename in files if not config.is_mapping(filename) ]
+        if mappings:
+            self.dump_mappings(mappings, ignore_cache)
+        if references:
+            self.dump_files(context, references, ignore_cache)
+
+    def all_references(self, files):
+        """Return True IFF every file in files is a reference."""
+        for filename in files:
+            if not config.is_reference(filename):
+                return False
+        else:
+            return True
+
+    def all_mappings(self, files):
+        """Return True IFF every file in files is a mapping."""
+        for filename in files:
+            if not config.is_mapping(filename):
+                return False
+        else:
+            return True
 
 # =============================================================================
 
