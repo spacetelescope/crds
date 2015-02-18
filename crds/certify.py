@@ -374,7 +374,7 @@ def validators_by_typekey(key, observatory):
     # Make and cache Validators for `filename`s reference file type.
     try:
         validators = [validator(x) for x in locator.get_tpninfos(*key)]
-        log.verbose("Validators for", repr(key), ":\n", log.PP(validators))
+        log.verbose("Validators for", repr(key), ":\n", log.PP(validators), verbosity=60)
     except Exception as exc:
         raise RuntimeError("FAILED loading type contraints for " + repr(key) + " with " + repr(exc))
     return validators
@@ -401,8 +401,6 @@ class Certifier(object):
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
-        assert not comparison_reference or context, \
-            "specifying a comparison reference also requires a comparison context."
     
     @property
     def basename(self):
@@ -424,6 +422,7 @@ class Certifier(object):
         ValidationError exceptions.
         """
         raise NotImplementedError("Certify is an abstract class.")
+
 # ============================================================================
 
 class FitsCertifier(Certifier):
@@ -479,7 +478,7 @@ class FitsCertifier(Certifier):
         """Check simple parameter values,  column and non-column."""
         header = data_file.get_header(self.filename)
         for checker in self.simple_validators:
-            with log.error_on_exception("Checking " + repr(checker.info.name)):
+            with log.error_on_exception("In", repr(self.filename), "checking " + repr(checker.info.name)):
                 checker.check(self.filename, header)
 
     def get_mode_column_names(self):
@@ -491,15 +490,14 @@ class FitsCertifier(Certifier):
         to a global definition in the locator module file rowkeys.dat.   The current iteration defines rowkeys in
         the spec for each type in the observatory package.
         """
-        if not self.context:
-            log.info("Table mode checking requires a comparison context.   Skipping.")
-            return []
         mode_columns = []
-        with log.error_on_exception("Error finding governing rmap for", repr(self.basename), 
-                                    "under", repr(self.context)):
-            g_rmap = find_governing_rmap(self.context, self.filename)
-            mode_columns = g_rmap.locate.get_row_keys(g_rmap)
-            log.info("Table unique-row-keys defined as", repr(mode_columns), "under", repr(g_rmap.basename))
+        with log.error_on_exception("Error finding unique row keys for", repr(self.basename)):
+            instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
+            mode_columns = utils.get_locator_module(self.observatory).get_row_keys(instrument, filekind)
+            if mode_columns:
+                log.info("Table unique row parameters defined as", repr(mode_columns))
+            else:
+                log.verbose("No unique row parameters, skipping table row checks.")
         return mode_columns
             
     def certify_reference_modes(self):
@@ -726,7 +724,7 @@ class MappingCertifier(Certifier):
         # derived_from = mapping.get_derived_from()
         derived_from = find_old_mapping(self.context, self.filename)
         if derived_from is not None:
-            if derived_from.name == self.filename:
+            if derived_from.name == self.basename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
                 diff.mapping_check_diffs(mapping, derived_from)
@@ -785,16 +783,22 @@ def mapping_closure(files):
 # ============================================================================
 
 def find_old_mapping(comparison_context, new_mapping):
-    """Find the mapping in pmap `comparison_context` corresponding to `new_mapping`,  if there is one.
+    """Find the Mapping in pmap `comparison_context` corresponding to filename `new_mapping`,  if there is one.
     This call will cache `comparison_context` so it should only be called on "official" mappings,  not
     trial mappings.
     """
     if comparison_context:
         comparison_mapping = rmap.get_cached_mapping(comparison_context)
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
+        old_base, new_base = old_mapping.basename, os.path.basename(new_mapping)
         if old_mapping is not None:
-            log.info("Mapping", repr(os.path.basename(new_mapping)), "corresponds to mapping", 
-                     repr(old_mapping.name), "under context", repr(comparison_context))
+            if old_base != new_base:
+                log.info("Mapping", repr(new_base), 
+                         "corresponds to mapping", repr(old_base), 
+                         "under context", repr(comparison_context))
+            else:
+                log.verbose("Mapping", repr(old_base), 
+                            "did not change relative to context", repr(comparison_context))
         return old_mapping
     else:
         return None
@@ -952,14 +956,43 @@ class CertifyScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     """
     
     def __init__(self, *args, **keys):
+#        super(CertifyScript, self).__init__(*args, **keys)
         cmdline.Script.__init__(self, *args, **keys)
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
 
     description = """
-Checks a CRDS reference or mapping file.
+Checks a CRDS reference or mapping file:
+
+1. Verifies basic file format: .fits, .json, .yaml, .pmap, .imap, .rmap
+2. Checks references for required keywords and values, where constraints are defined.
+3. Checks CRDS rules for permissible values with respect to defined reference constraints.
+3. Checks CRDS rules for accidental file reversions or duplicate lines.
+4. Checks CRDS rules for noteworthy version-to-version changes such as new or removed match cases.
+4. Checks tables for deleted or duplicate rows relative to a comparison table.
+5. Finds comparison references with respect to old CRDS contexts.
     """
     
-    epilog = ""
+    epilog = """
+    
+To run crds.certify on a reference(s) to verify basic file format and parameter constraints:
+
+  % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits...
+
+If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
+
+For recursively checking CRDS rules do like this:
+
+  % python -m crds.certify hst_0311.pmap --comparison-context=hst_0312.pmap
+
+If a comparison context is defined, checked mappings will be compared against their peers (if they exist) in
+the comparison context.  Many classes of mapping differences will result in warnings.
+
+For reference table checks,  a comparison reference can also be specified directly rather than inferred from context:
+
+  % python -m crds.certify some_reference.fits --comparison-reference=old_reference_version.fits
+
+For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
+    """
     
     def add_args(self):
         self.add_argument("files", nargs="+")
@@ -976,9 +1009,11 @@ Checks a CRDS reference or mapping file.
         self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
             help="Dump provenance keywords.")
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
-            help="Pipeline context defining comparison files.")
+            help="Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.")
         self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
             help="Comparison reference for tables certification.")
+        self.add_argument("-s", "--sync-files", dest="sync_files", action="store_true",
+            help="Fetch any missing files needed for the requested difference from the CRDS server.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
 
@@ -990,18 +1025,34 @@ Checks a CRDS reference or mapping file.
         else:
             check_references = None
 
-        assert (self.args.comparison_context is None) or config.is_mapping_spec(self.args.comparison_context), \
+        assert (self.args.comparison_context in [None, "none"]) or config.is_mapping_spec(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
-        if self.args.comparison_reference:
-            assert len(self.files) == 1 and not config.is_mapping_spec(self.files[0]), \
-                "Only one reference can be certified if --comparison-reference is specified."
             
         if (not self.args.dont_recurse_mappings):
             all_files = mapping_closure(self.files)
         else:
             all_files = set(self.files)
+            
+        if not self.all_references(all_files) and not self.all_mappings(all_files):
+            if self.args.comparison_context is None and not self.args.comparison_reference:
+                log.info("Mixing references and mappings in one certify run skips any default comparison checks.")
+
+        if self.all_references(all_files):
+            # Change original default behavior of None to default operational context,  for references.
+            # For mappings / older contexts the default tends to be the wrong thing,  hence references only.
+            if self.args.comparison_context is None and not self.args.comparison_reference:
+                log.verbose("Defaulting comparison context to latest operational CRDS context.")
+                self.args.comparison_context = self.default_context
+        elif self.args.comparison_context and self.args.comparison_context.lower() == "none":
+            self.args.comparison_context = None
+            
+        if self.args.comparison_context and self.args.sync_files:
+            resolved_context = self.resolve_context(self.args.comparison_context)
+            self.sync_files([resolved_context])
+        if self.args.comparison_reference and self.args.sync_files:
+            self.sync_files([self.args.comparison_reference])
             
         certify_files(sorted(all_files), 
                       context=self.resolve_context(self.args.comparison_context),
@@ -1019,7 +1070,7 @@ Checks a CRDS reference or mapping file.
         log.standard_status()
         
         return log.errors()
-
+    
 def main():
     """Construct and run the Certify script,  return 1 if errors occurred, 0 otherwise."""
     errors = CertifyScript()()

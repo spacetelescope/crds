@@ -214,7 +214,7 @@ def mapping_check_diffs(mapping, derived_from):
     """
     mapping = rmap.asmapping(mapping, cached="readonly")
     derived_from = rmap.asmapping(derived_from, cached="readonly")
-    log.info("Checking derivation diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
+    log.info("Checking diffs from", repr(derived_from.basename), "to", repr(mapping.basename))
     diffs = derived_from.difference(mapping)
     mapping_check_diffs_core(diffs)
 
@@ -446,6 +446,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Print out the names of instruments and types which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-modes", dest="print_affected_modes", action="store_true",
             help="Print out the names of instruments, types, and matching parameters,  rather than diffs.")
+        self.add_argument("--sync-files", dest="sync_files", action="store_true",
+            help="Fetch any missing files needed for the requested difference from the CRDS server.")
 
 
     def main(self):
@@ -453,6 +455,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
         self.old_file = self.resolve_context(self.args.old_file)
         self.new_file = self.resolve_context(self.args.new_file)
+        if self.args.sync_files:
+            self.sync_files([self.old_file, self.new_file])
         # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
         if self.args.print_new_files:
             return self.print_new_files()

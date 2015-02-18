@@ -206,7 +206,7 @@ class TypeParameters(object):
             else:
                 raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
                     os.path.basename(filename), instrument, filekind))
-        log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key)
+        log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key, verbosity=60)
         return key
 
     reference_name_to_tpn_key = reference_name_to_validator_key
@@ -221,7 +221,7 @@ class TypeParameters(object):
 
 # =============================================================================
 
-    def get_row_keys(self, mapping):
+    def get_row_keys(self, instrument, filekind):
         """Return the row_keys which define unique table rows corresponding to mapping.
         
         These are used for "mode" checks to issue warnings when unique rows are deleted
@@ -244,11 +244,10 @@ class TypeParameters(object):
         
         For HST calibration references mapping is an rmap.
         """
-        mapping = rmap.asmapping(mapping)
         try:
-            return self.row_keys[mapping.instrument][mapping.filekind]
+            return self.row_keys[instrument][filekind]
         except KeyError:
-            log.verbose("No unique row keys defined for", repr(mapping.basename))
+            log.verbose("No unique row keys defined for", repr((instrument, filekind)))
             return []
         
     def get_row_keys_by_instrument(self, instrument):
