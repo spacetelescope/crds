@@ -436,6 +436,7 @@ class FitsCertifier(Certifier):
         super(FitsCertifier, self).__init__(*args, **keys)
         self.simple_validators = get_validators(self.filename, self.observatory)
         self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
+        self.all_simple_names = [ val.name for val in self.simple_validators if val.info.keytype != 'C' ]
         self.mode_columns = self.get_mode_column_names()
 
     def certify(self):
@@ -446,8 +447,11 @@ class FitsCertifier(Certifier):
         if self.mode_columns:
             self.certify_reference_modes()
         if self.dump_provenance:
-            data_file.dump_multi_key(self.filename, self.get_rmap_parkeys() + self.provenance_keys, 
-                                     self.provenance_keys)
+            dump_keys = sorted(set(key.upper() for key in 
+                self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
+                self.all_simple_names +   # what's defined in .tpn's, maybe not matched
+                self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
+            data_file.dump_multi_key(self.filename, dump_keys, self.provenance_keys)
 
     def fits_verify(self):
         """Use pyfits to verify the FITS format of self.filename."""
