@@ -1,6 +1,6 @@
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "1.5.0"   # >= OPUS-2015.1 and/or OPUS-2014.4a server
+__version__ = "1.6.0"   # > jwst_build4 
 
 # ============================================================================
 
