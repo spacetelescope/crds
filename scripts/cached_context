@@ -1,0 +1,14 @@
+#! /bin/sh 
+
+# e.g.  cached_context hst
+
+export CRDS_SERVER_URL="https://hst-serverless-mode.stsci.edu"
+export observatory="$1"
+
+if [ "$1" == "" ]
+then
+    echo "usage:  cached_context [hst|jwst]"
+fi
+
+python -m crds.list --operational-context  --readonly-cache --${observatory} 2>/dev/null
+
