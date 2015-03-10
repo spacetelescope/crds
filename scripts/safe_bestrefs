@@ -23,13 +23,6 @@
 #  To prevent multiple bestrefs or cron_sync from modifying the
 #  cache config area,  it is chmod'ed to read-only.
 
-#  To prevent multiple bestrefs from blocking one another,
-#  they share crds.config.lock as a "read lock".
-
-#  To prevent a pipeline stall on crds.config.lock in the
-#  event the sync system fails,  safe_bestrefs only waits 3 
-#  minutes on crds.config.lock and then proceeds anyway.
-
 # -------------------------------------------------------------------------
 
 # Add time to log messages
