@@ -60,6 +60,12 @@ class TestValidatorClasses(CRDSTestCase):
         certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
         certify.certify_files([self.data("hst_acs_darkfile.rmap")], observatory="hst")
         
+    def test_check_comment(self):
+        from crds import certify
+        certify.certify_files([self.data("hst.pmap")], observatory="hst")
+        certify.certify_files([self.data("hst_acs.imap")], observatory="hst")
+        certify.certify_files([self.data("hst_acs_darkfile_comment.rmap")], observatory="hst")
+        
     def test_table_mode_checks_identical(self):
         from crds import certify
         certify.certify_files([self.data("v8q14451j_idc.fits")], observatory="hst", 

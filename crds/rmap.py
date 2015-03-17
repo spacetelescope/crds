@@ -246,10 +246,10 @@ class MappingValidator(ast.NodeVisitor):
                      "Invalid 'header' or 'selector' definition")
         self.assert_(node, isinstance(node.targets[0], ast.Name),
                      "Invalid 'header' or 'selector' definition")
-        self.assert_(node, node.targets[0].id in ["header","selector"],
-                     "Only define 'header' or 'selector' sections")
-        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict)),
-                    "Section value must be a selector call or dictionary")
+        self.assert_(node, node.targets[0].id in ["header","selector","comment"],
+                     "Only define 'header' or 'selector' or 'comment' sections")
+        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict, ast.Str)),
+                    "Section value must be a selector call or dictionary or string")
         self.generic_visit(node)
 
     def visit_Call(self, node):
@@ -307,6 +307,7 @@ class Mapping(object):
         self.filename = filename
         self.header = LowerCaseDict(header)
         self.selector = selector
+        self.comment = keys.pop("comment", None)
         for name in self.required_attrs:
             if name not in self.header:
                 raise MissingHeaderKeyError(
@@ -347,8 +348,9 @@ class Mapping(object):
     @classmethod
     def from_string(cls, text, basename="(noname)", *args, **keys):
         """Construct a mapping from string `text` nominally named `basename`."""
-        header, selector = cls._parse_header_selector(text, basename)
-        mapping = cls(basename, header, selector, **keys)
+        header, selector, comment = cls._parse_header_selector(text, basename)
+        keys.pop("comment", None)
+        mapping = cls(basename, header, selector, comment=comment, **keys)
         ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
         try:
             mapping._check_hash(text)
@@ -368,8 +370,8 @@ class Mapping(object):
         """
         with log.augment_exception("Can't load file " + where):
             code = MAPPING_VALIDATOR.compile_and_check(text)
-            header, selector = cls._interpret(code)
-        return LowerCaseDict(header), selector
+            header, selector, comment = cls._interpret(code)
+        return LowerCaseDict(header), selector, comment
 
     @classmethod
     def _interpret(cls, code):
@@ -381,10 +383,11 @@ class Mapping(object):
         exec code in namespace
         header = LowerCaseDict(namespace["header"])
         selector = namespace["selector"]
+        comment = namespace.get("comment", None)
         if isinstance(selector, selectors.Parameters):
-            return header, selector.instantiate(header)
+            return header, selector.instantiate(header), comment
         elif isinstance(selector, dict):
-            return header, selector
+            return header, selector, comment
         else:
             raise FormatError("selector must be a dict or a Selector.")
 
@@ -417,8 +420,11 @@ class Mapping(object):
         not rewriting them since it is based on internal representations and
         therefore loses comments.
         """
-        return "header = %s\n\nselector = %s\n" % \
-            (self._format_header(), self._format_selector())
+        if self.comment:
+            return "header = {0}\n\ncomment = {1}\n\nselector = {2}\n" .format( 
+                self._format_header(), self._format_comment(), self._format_selector())
+        else:
+            return "header = {0}\n\nselector = {1}\n".format(self._format_header(), self._format_selector())       
 
     def _format_dict(self, dict_, indent=0):
         """Return indented source code for nested `dict`."""
@@ -443,6 +449,10 @@ class Mapping(object):
             return self._format_dict(self.selector)
         else:
             return self.selector.format()
+        
+    def _format_comment(self):
+        """Return the string representation of the multi-line comment block."""
+        return '"""' + self.comment + '"""'
 
     def write(self, filename=None):
         """Write out this mapping to the specified `filename`,
@@ -453,9 +463,8 @@ class Mapping(object):
         else:
             self.filename = filename
         self.header["sha1sum"] = self._get_checksum(self.format())
-        file = open(filename, "w+")
-        file.write(self.format())
-        file.close()
+        with open(filename, "w+") as handle:
+            handle.write(self.format())
 
     def _check_hash(self, text):
         """Verify that the mapping header has a checksum and that it is

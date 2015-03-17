@@ -15,15 +15,16 @@ from crds import rmap, selectors, log
 
 MAPPING_GRAMMAR = r"""
 
-ws = (' ' | '\r' | '\n' | '\t' | comment)*
+ws = (' ' | '\r' | '\n' | '\t' )*
 
-comment = '#' (~'\n' anything)*:c '\n' -> ''.join(c)
-
-mapping = header_section:h selector_section:s -> (h, s)
+mapping = header_section:h comment_section:c selector_section:s -> (h, s, c)
 
 header_section = ws 'header' ws '=' ws dict:d ws -> d
 
+comment_section = ((ws 'comment' ws '=' ws block_string:c ws -> c)
+                  | -> None)  
 selector_section = ws 'selector' ws '=' ws selector:s ws -> s
+
 selector = ( dict | parameters ):d -> d
 parameters = ws parameters_name:n ws '(' ws dict:d ws ')' -> eval(n, globals(), locals())(d)
 parameters_name = ('Match' | 'UseAfter' | 'SelectVersion' | 'Bracket' | 'GeometricallyNearest' | 'ClosestTime'):n -> n
@@ -38,6 +39,10 @@ value = (string | tuple | number | selector | dict | set | true | false | none):
 
 string = (('"' (escapedChar | ~'"' anything)*:c '"')
          |("'" (escapedChar | ~"'" anything)*:c "'") -> ''.join(c))
+         
+block_string = (('\"\"\"' (escapedChar | ~'\"\"\"' anything)*:c '\"\"\"')
+               |("\'\'\'" (escapedChar | ~"\'\'\'" anything)*:c "\'\'\'")) -> ''.join(c)
+         
 escapedChar = '\\' (('"' -> '"')    |('\\' -> '\\')
                    |('/' -> '/')    |('b' -> '\b')
                    |('f' -> '\f')   |('n' -> '\n')
@@ -86,7 +91,7 @@ def profile_parse(filename="hst_cos_deadtab.rmap"):
     stats.sort_stats("time")
     stats.print_stats(20)
     
-Parsing = namedtuple("Parsing", "header,selector")
+Parsing = namedtuple("Parsing", "header,selector,comment")
     
 def parse_mapping(filename):
     """Parse mapping `filename`.   Return parsing."""
@@ -101,8 +106,8 @@ def parse_mapping(filename):
     log.verbose("Parsing", repr(filename))
     filename = rmap.locate_mapping(filename)
     with log.augment_exception("Parsing error in", repr(filename)):
-        header, selector = MAPPING_PARSER(open(filename).read()).mapping()
-        return Parsing(header, selector)
+        header, selector, comment = MAPPING_PARSER(open(filename).read()).mapping()
+        return Parsing(header, selector, comment)
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""
@@ -113,4 +118,5 @@ def check_duplicates(parsing):
         selectors.check_duplicates(parsing.selector, ["selector"])
 
 if __name__ == "__main__":
-    check_duplicates(sys.argv[1])
+    with log.error_on_exception(""):
+        check_duplicates(parse_mapping(sys.argv[1]))
