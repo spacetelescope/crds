@@ -1,0 +1,19 @@
+header = {
+    'derived_from' : 'jwst_miri_mask_0004.rmap',
+    'filekind' : 'MASK',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_mask_0005.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : '8a76b22548ae0a64ed893682adcb23acc356f938',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'FULL') : 'jwst_miri_mask_0012.fits',
+    ('MIRIFULONG', 'N/A') : 'jwst_miri_mask_0010.fits',
+    ('MIRIFUSHORT', 'FULL') : 'jwst_miri_mask_0013.fits',
+    ('MIRIFUSHORT', 'N/A') : 'jwst_miri_mask_0011.fits',
+    ('MIRIMAGE', 'FULL') : 'jwst_miri_mask_0014.fits',
+    ('MIRIMAGE', 'N/A') : 'jwst_miri_mask_0009.fits',
+})

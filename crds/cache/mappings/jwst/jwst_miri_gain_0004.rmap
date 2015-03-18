@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'jwst_miri_gain_0002.rmap',
+    'filekind' : 'GAIN',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_gain_0004.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : 'b5afab7fc116db66ced93b7d9f528998aa53706c',
+    'substitutions' : {
+        'META.SUBARRAY.NAME' : {
+            'GENERIC' : 'N/A',
+        },
+    },
+}
+
+selector = Match({
+    ('MIRIFULONG', 'GENERIC') : 'jwst_miri_gain_0003.fits',
+    ('MIRIFUSHORT', 'GENERIC') : 'jwst_miri_gain_0004.fits',
+    ('MIRIMAGE', 'GENERIC') : 'jwst_miri_gain_0005.fits',
+})
