@@ -186,6 +186,7 @@ def exception_trap_logger(func):
             yield
         except Exception,  exc:
             keys["end"] = ""
+            exc_class = keys.pop("exception_class", exc.__class__)
             msg = format(*args + (":", str(exc)), **keys)
             reraise = func(msg)
             if CRDS_DEBUG:
@@ -194,7 +195,7 @@ def exception_trap_logger(func):
                 raise  
             elif reraise:
                 # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
-                raise exc.__class__(msg)
+                raise exc_class(msg)
             else:
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception

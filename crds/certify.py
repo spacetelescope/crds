@@ -35,15 +35,21 @@ TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 
 # ============================================================================
 
-class MissingKeywordError(Exception):
+class CertifyException(Exception):
+    """Certify exception baseclass."""
+    
+class MissingKeywordError(CertifyException):
     """A required keyword was not defined."""
 
-class IllegalKeywordError(Exception):
+class IllegalKeywordError(CertifyException):
     """A keyword which should not be defined was present."""
 
-class InvalidFormatError(Exception):
+class InvalidFormatError(CertifyException):
     """The given file was not loadable."""
 
+class TypeSetupError(CertifyException):
+    """An error occured while trying to locate file constraints and row mode variables."""
+    
 # ----------------------------------------------------------------------------
 class Validator(object):
     """Validator is an Abstract class which applies TpnInfo objects to reference files.
@@ -382,7 +388,10 @@ def validators_by_typekey(key, observatory):
 # ============================================================================
 
 class Certifier(object):
-    """Container class for parameters for a certification run."""
+    """Baseclass for all certifiers: references, mappings, etc."""
+
+    format_name = None    # Abstract
+
     def __init__(self, filename, context=None, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
@@ -392,7 +401,7 @@ class Certifier(object):
         self.context = context
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
-        self.dump_provenance = dump_provenance
+        self._dump_provenance = dump_provenance
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
@@ -409,6 +418,8 @@ class Certifier(object):
     def log_error(self, msg):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
+            if log.CRDS_DEBUG:
+                raise
             try:
                 instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
             except Exception:
@@ -423,46 +434,59 @@ class Certifier(object):
         """
         raise NotImplementedError("Certify is an abstract class.")
 
-# ============================================================================
 
-class FitsCertifier(Certifier):
-    """Support certifying reference files:
-    
+class ReferenceCertifier(Certifier):
+    """Baseclass for most reference file certifier classes.    
     1. Check simple keywords against TPN files using the reftype's validators.
     2. Check mode tables against prior reference of comparison_context.
     3. Dump out keywords of interest.
     """
     def __init__(self, *args, **keys):
-        super(FitsCertifier, self).__init__(*args, **keys)
+        super(ReferenceCertifier, self).__init__(*args, **keys)
+        self.simple_validators = None
+        self.all_column_names = None
+        self.all_simple_names = None
+        self.mode_columns = None
+        
+    def complex_init(self):
+        """Can't do this until we at least know the file is loadable."""
         self.simple_validators = get_validators(self.filename, self.observatory)
         self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
         self.all_simple_names = [ val.name for val in self.simple_validators if val.info.keytype != 'C' ]
         self.mode_columns = self.get_mode_column_names()
-
+    
     def certify(self):
-        """Certify a FITS reference file."""
-        with log.augment_exception("File does not comply with FITS format"):
-            self.fits_verify()
+        """Certify `self.filename`,  either reporting using log.error() or raising
+        ValidationError exceptions.
+        """
+        with log.augment_exception("Error parsing ", self.format_name, exception_class=InvalidFormatError):
+            self.load()
+        with log.augment_exception("Error locating constraints for ", self.format_name, exception_class=TypeSetupError):
+            self.complex_init()
         self.certify_simple_parameters()
         if self.mode_columns:
             self.certify_reference_modes()
-        if self.dump_provenance:
-            dump_keys = sorted(set(key.upper() for key in 
-                self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
-                self.all_simple_names +   # what's defined in .tpn's, maybe not matched
-                self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
-            data_file.dump_multi_key(self.filename, dump_keys, self.provenance_keys)
+        if self._dump_provenance:
+            self.dump_provenance()
 
-    def fits_verify(self):
-        """Use pyfits to verify the FITS format of self.filename."""
-        if not self.filename.endswith(".fits"):
-            log.verbose("Skipping FITS verify for '%s'" % self.basename)
-            return
-        fits = pyfits.open(self.filename)
-        fits.verify(option='exception') # validates all keywords
-        fits.close()
-        log.info("FITS file", repr(self.basename), " conforms to FITS standards.")
-        return True
+    def certify_simple_parameters(self):
+        """Check simple parameter values,  column and non-column."""
+        header = data_file.get_header(self.filename)
+        for checker in self.simple_validators:
+            try:
+                checker.check(self.filename, header)
+            except Exception as exc:
+                self.log_error("checking " + repr(checker.info.name) + " : " + str(exc))
+                
+
+    def dump_provenance(self):
+        """Dump out provenance keywords for informational purposes."""
+        banner("-")
+        dump_keys = sorted(set(key.upper() for key in 
+            self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
+            self.all_simple_names +   # what's defined in .tpn's, maybe not matched
+            self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
+        data_file.dump_multi_key(self.filename, dump_keys, self.provenance_keys)
 
     def get_rmap_parkeys(self):
         """Determine required parkeys in reference path `refname` according to pipeline
@@ -477,13 +501,6 @@ class FitsCertifier(Certifier):
         except Exception, exc:
             log.verbose_warning("Failed retrieving required parkeys:", str(exc))
             return []
-
-    def certify_simple_parameters(self):
-        """Check simple parameter values,  column and non-column."""
-        header = data_file.get_header(self.filename)
-        for checker in self.simple_validators:
-            with log.error_on_exception("In", repr(self.filename), "checking " + repr(checker.info.name)):
-                checker.check(self.filename, header)
 
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
@@ -642,15 +659,85 @@ class FitsCertifier(Certifier):
                 different += 1
         return different
 
+# ============================================================================
 
-class JsonCertifier(Certifier):
-    """Certifier for a .json file,  currently basic parsing only."""
+def find_governing_rmap(context, reference):
+    """Given mapping `context`,  return the loaded rmap which governs `reference`.   Typically this will
+    be the rmap which contains the predecessor to `reference`,  not `reference` itself.
+    """
+    mapping = rmap.asmapping(context, cached=True)
+    instrument, filekind = mapping.locate.get_file_properties(reference)
+    if mapping.name.endswith(".pmap"):
+        governing_rmap = mapping.get_imap(instrument).get_rmap(filekind)
+    elif mapping.name.endswith(".imap"):
+        governing_rmap = mapping.get_rmap(filekind)
+    elif mapping.name.endswith(".rmap"):
+        governing_rmap = mapping
+    else:
+        raise ValueError("Invalid comparison context " + repr(context))
+    g_instrument, g_filekind = mapping.locate.get_file_properties(governing_rmap.name)
+    assert instrument == g_instrument, "Comparison context inconsistent with reference file: " + repr(instrument) + " vs. " + repr(g_instrument)
+    assert filekind == g_filekind, "Comparison context inconsistent with reference type: " + repr(filekind) + " vs. " + repr(g_filekind)
+    log.verbose("Reference '{}' corresponds to rmap '{}' in context '{}'".format(
+                reference, governing_rmap.name, mapping.name))
+    return governing_rmap
+
+# ============================================================================
+
+def table_mode_dictionary(generic_name, tab, mode_keys):
+    """Returns ({ (mode_val,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
+    for crds.tables `tab` where column names `mode_keys` define the  columns to select for mode values.
+    """
+    all_cols = [name.upper() for name in tab.colnames]
+    basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
+    log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
+    log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
+    modes = defaultdict(list)
+    for i, row in enumerate(tab.rows):
+        new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
+        rowdict = dict(new_row)
+        # Table row keys can vary by extension.  Have CRDS support a simple model of using
+        # whichever mode_keys are present in a given row.
+        mode = tuple((key, rowdict[key]) for key in mode_keys if key in rowdict)
+        if not mode:
+            log.info("Empty actual mode in", generic_name, basename, "with candidate mode columns", mode_keys)
+            return {}, []
+        modes[mode].append((i, new_row))
+    for mode in sorted(modes.keys()):
+        if len(modes[mode]) > 1:
+            log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
+                        "\n".join([repr(new_row) for row in modes[mode]]))
+    # modes[mode][0] is first instance of multiply defined mode.
+    return { mode:modes[mode][0] for mode in modes }, all_cols
+
+def handle_nan(var):
+    """Map nan values to 'nan' so that 'nan' == 'nan'."""
+    if isinstance(var, (np.float32, np.float64, np.float128)) and np.isnan(var):
+        return 'nan'
+    elif isinstance(var, np.ndarray) and var.shape == () and np.any(np.isnan(var)):
+        return 'nan'
+    else:
+        return var
     
-    def certify(self):
-        """Certify a .json file."""
-        with log.error_on_exception("File does not parse as valid JSON"):
-            self.load()
-        
+# ============================================================================
+
+class FitsCertifier(ReferenceCertifier):
+    format_name ="FITS"    
+    def load(self):
+        """Use pyfits to verify the FITS format of self.filename."""
+        if not self.filename.endswith(".fits"):
+            log.verbose("Skipping FITS verify for '%s'" % self.basename)
+            return
+        fits = pyfits.open(self.filename)
+        fits.verify(option='exception') # validates all keywords
+        fits.close()
+        log.info("FITS file", repr(self.basename), " conforms to FITS standards.")
+
+# ============================================================================
+
+class JsonCertifier(ReferenceCertifier):
+    """Certifier for a .json file,  currently basic parsing only."""
+    format_name = "JSON"
     def load(self):
         """Load and parse the .json in self.filename"""
         with open(self.filename) as handle:
@@ -660,14 +747,11 @@ class JsonCertifier(Certifier):
         except Exception as exc:
             raise InvalidFormatError(str(exc))
 
-class YamlCertifier(Certifier):
+# ============================================================================
+
+class YamlCertifier(ReferenceCertifier):
     """Certifier for a .yaml file,  currently basic parsing only."""
-    
-    def certify(self):
-        """Certify a .yaml file."""
-        with log.error_on_exception("File does not parse as valid YAML"):
-            self.load()
-        
+    format_name = "YAML"
     def load(self):
         """Load and parse the .yaml in self.filename"""
         try:
@@ -681,30 +765,25 @@ class YamlCertifier(Certifier):
             return yaml.load(contents)
         except Exception as exc:
             raise InvalidFormatError(str(exc))
-
-class TextCertifier(Certifier):
-    """Certifier for a text file,  currently a pass through with a warning."""
-    
-    def certify(self):
-        """Certify a .text file."""
-        with log.error_on_exception("File does not parse as valid text"):
-            self.load()
         
+# ============================================================================
+
+class AsdfCertifier(ReferenceCertifier):
+    """Cerifier for ASDF formatted files."""
+    format_name = "ASDF"
     def load(self):
-        """Load and parse the .json in self.filename"""
-        log.warning("No certification checks for text file", repr(self.basename))
-        with open(self.filename) as handle:
-            contents = handle.read()
-        return contents
+        """Load and parse the .yaml in self.filename"""
+        return data_file.get_asdf_header(self.filename)
+
+# ============================================================================
 
 class UnknownCertifier(Certifier):
     """Certifier for unknown type,  currently a pass through with a warning."""
     
     def certify(self):
         """Certify an unknown format file."""
-        with log.error_on_exception("File does not load"):
-            self.load()
-        
+        pass
+
     def load(self):
         """Load file of unknown type."""
         log.warning("No certification checks for unknown file type of", repr(self.basename))
@@ -713,6 +792,7 @@ class UnknownCertifier(Certifier):
         return contents
     
 # ============================================================================
+
 class MappingCertifier(Certifier):
     """Parameter container for certifying a mapping file,  and possibly it's references."""
 
@@ -784,8 +864,6 @@ def mapping_closure(files):
         closure_files |= more_files
     return sorted(closure_files)
 
-# ============================================================================
-
 def find_old_mapping(comparison_context, new_mapping):
     """Find the Mapping in pmap `comparison_context` corresponding to filename `new_mapping`,  if there is one.
     This call will cache `comparison_context` so it should only be called on "official" mappings,  not
@@ -806,64 +884,6 @@ def find_old_mapping(comparison_context, new_mapping):
         return old_mapping
     else:
         return None
-
-def find_governing_rmap(context, reference):
-    """Given mapping `context`,  return the loaded rmap which governs `reference`.   Typically this will
-    be the rmap which contains the predecessor to `reference`,  not `reference` itself.
-    """
-    mapping = rmap.asmapping(context, cached=True)
-    instrument, filekind = mapping.locate.get_file_properties(reference)
-    if mapping.name.endswith(".pmap"):
-        governing_rmap = mapping.get_imap(instrument).get_rmap(filekind)
-    elif mapping.name.endswith(".imap"):
-        governing_rmap = mapping.get_rmap(filekind)
-    elif mapping.name.endswith(".rmap"):
-        governing_rmap = mapping
-    else:
-        raise ValueError("Invalid comparison context " + repr(context))
-    g_instrument, g_filekind = mapping.locate.get_file_properties(governing_rmap.name)
-    assert instrument == g_instrument, "Comparison context inconsistent with reference file: " + repr(instrument) + " vs. " + repr(g_instrument)
-    assert filekind == g_filekind, "Comparison context inconsistent with reference type: " + repr(filekind) + " vs. " + repr(g_filekind)
-    log.verbose("Reference '{}' corresponds to rmap '{}' in context '{}'".format(
-                reference, governing_rmap.name, mapping.name))
-    return governing_rmap
-
-# ============================================================================
-
-def table_mode_dictionary(generic_name, tab, mode_keys):
-    """Returns ({ (mode_val,...) : (row_no, (entire_row_values, ...)) },  [col_name, ...] ) 
-    for crds.tables `tab` where column names `mode_keys` define the  columns to select for mode values.
-    """
-    all_cols = [name.upper() for name in tab.colnames]
-    basename = repr(os.path.basename(tab.filename) + "[{}]".format(tab.segment))
-    log.verbose("Mode columns for", generic_name, basename, "are:", repr(mode_keys))
-    log.verbose("All column names for", generic_name, basename, "are:", repr(all_cols))
-    modes = defaultdict(list)
-    for i, row in enumerate(tab.rows):
-        new_row = tuple(zip(all_cols, (handle_nan(v) for v in row)))
-        rowdict = dict(new_row)
-        # Table row keys can vary by extension.  Have CRDS support a simple model of using
-        # whichever mode_keys are present in a given row.
-        mode = tuple((key, rowdict[key]) for key in mode_keys if key in rowdict)
-        if not mode:
-            log.info("Empty actual mode in", generic_name, basename, "with candidate mode columns", mode_keys)
-            return {}, []
-        modes[mode].append((i, new_row))
-    for mode in sorted(modes.keys()):
-        if len(modes[mode]) > 1:
-            log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
-                        "\n".join([repr(new_row) for row in modes[mode]]))
-    # modes[mode][0] is first instance of multiply defined mode.
-    return { mode:modes[mode][0] for mode in modes }, all_cols
-
-def handle_nan(var):
-    """Map nan values to 'nan' so that 'nan' == 'nan'."""
-    if isinstance(var, (np.float32, np.float64, np.float128)) and np.isnan(var):
-        return 'nan'
-    elif isinstance(var, np.ndarray) and var.shape == () and np.any(np.isnan(var)):
-        return 'nan'
-    else:
-        return var
 
 # ============================================================================
 
@@ -895,7 +915,11 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
                   comparison_reference=comparison_reference)
     finally:
         log.set_debug(old_flag)
-
+        
+def banner(char='#'):
+    """Print a standard divider."""
+    log.info(char * 40)  # Serves as demarkation for each file's report
+    
 def _certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   is_mapping=False, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
@@ -909,14 +933,14 @@ def _certify_files(files, context=None, dump_provenance=False, check_references=
         
     for fnum, filename in enumerate(files):
         if not skip_banner:
-            log.info('#' * 40)  # Serves as demarkation for each file's report
+            banner()
 
             klasses = {
                 "mapping" : MappingCertifier,
                 "fits" : FitsCertifier,
                 "json" : JsonCertifier,
                 "yaml" : YamlCertifier,
-                "text" : TextCertifier,
+                "asdf" : AsdfCertifier,
                 "unknown" : UnknownCertifier,
             }
             filetype = config.filetype(filename)
@@ -937,10 +961,11 @@ def _certify_files(files, context=None, dump_provenance=False, check_references=
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
                               dont_parse=dont_parse, script=script, observatory=observatory,
-                              comparison_reference=comparison_reference)            
+                              comparison_reference=comparison_reference)
             certifier.certify()
+        
     tables.clear_cache()
-    log.info('#' * 40)  # Serves as demarkation for each file's report
+    banner()
 
 def test():
     """Run doctests in this module.  See also certify unittests."""
@@ -967,7 +992,7 @@ class CertifyScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     description = """
 Checks a CRDS reference or mapping file:
 
-1. Verifies basic file format: .fits, .json, .yaml, .pmap, .imap, .rmap
+1. Verifies basic file format: .fits, .json, .yaml, .asdf, .pmap, .imap, .rmap
 2. Checks references for required keywords and values, where constraints are defined.
 3. Checks CRDS rules for permissible values with respect to defined reference constraints.
 3. Checks CRDS rules for accidental file reversions or duplicate lines.
@@ -1020,6 +1045,10 @@ For more information on the checks being performed,  use --verbose or --verbosit
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
+
+    def locate_file(self, filename):
+        """Interpret command line filenames normally without implicit cache paths."""
+        return os.path.join(".", filename) if not os.path.dirname(filename) else filename
 
     def main(self):
         if self.args.deep:

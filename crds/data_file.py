@@ -54,6 +54,8 @@ import json
 from crds import utils, log
 
 from astropy.io import fits as pyfits
+import numpy as np
+# import pyasdf
 
 # =============================================================================
 
@@ -76,6 +78,7 @@ def is_dataset(name):
     except Exception:
         return False
 
+# XXXX this function is weak.
 def get_observatory(filepath, original_name=None):
     """Return the observatory corresponding to `filepath`.  filepath
     may be a web temporary file with a garbage name.   Use 
@@ -94,7 +97,7 @@ def get_observatory(filepath, original_name=None):
         except Exception:
             observatory = "hst"
         return observatory.lower()
-    elif original_name.endswith(".asdf"):
+    elif original_name.endswith((".asdf", ".yaml", ".json", ".text", ".txt")):
         return "jwst"
     else:
         return "hst"
@@ -145,18 +148,22 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     if original_name is None:
         original_name = os.path.basename(filepath)
     if is_geis(original_name):
-        return get_geis_header(filepath, needed_keys)
-    elif filepath.endswith(".json"):
-        return get_json_header(filepath, needed_keys)
-    elif filepath.endswith(".yaml"):
-        return get_yaml_header(filepath, needed_keys)
+        header = get_geis_header(filepath, needed_keys)
+    elif original_name.endswith(".json"):
+        header = get_json_header(filepath, needed_keys)
+    elif original_name.endswith(".yaml"):
+        header = get_yaml_header(filepath, needed_keys)
+    elif original_name.endswith(".asdf"):
+        header = get_asdf_header(filepath, needed_keys)
     else:
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
         if observatory == "jwst":
-            return get_data_model_header(filepath, needed_keys)
+            header = get_data_model_header(filepath, needed_keys)
         else:
-            return get_fits_header_union(filepath, needed_keys)
+            header = get_fits_header_union(filepath, needed_keys)
+    log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
+    return header
 
 # A clearer name
 get_unconditioned_header = get_header
@@ -173,13 +180,50 @@ def get_data_model_header(filepath, needed_keys=()):
 def get_json_header(filepath, needed_keys=()):
     """For now,  just treat the JSON as the header."""
     header = json.load(open(filepath))
+    header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
     """For now,  just treat the YAML as the header."""
     import yaml
     header = yaml.load(open(filepath))
+    header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
+
+# ----------------------------------------------------------------------------------------------
+
+def get_asdf_header(filepath, needed_keys=()):
+    import pyasdf
+    handle = pyasdf.AsdfFile.read(filepath)
+    header = to_simple_types(handle.tree)
+    return reduce_header(filepath, header, needed_keys)
+
+def to_simple_types(tree):
+    """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
+    result = dict()
+    for key in tree:
+        value = tree[key]
+        if isinstance(value, (type(tree), dict)):
+            nested = to_simple_types(value)
+            for nested_key, nested_value in nested.items():
+                result[str(key.upper() + "." + nested_key)] = nested_value
+        else:
+            result[str(key.upper())] = simple_type(value)
+    return result
+
+def simple_type(value):
+    """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
+    if isinstance(value, np.ndarray):
+        rval = None
+    elif isinstance(value, (basestring, int, float, long, complex)):
+        rval = str(value)
+    elif isinstance(value, (list, tuple)):
+        rval = tuple(simple_type(val) for val in value)
+    else:
+        rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
+    return rval
+
+# ----------------------------------------------------------------------------------------------
 
 DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
 
@@ -398,16 +442,16 @@ def get_conjugate(reference):
 # XXXX Generalize to data model.
 def dump_multi_key(fitsname, keys, warn_keys):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
-    hdulist = pyfits.open(fitsname)
+    log.info("Provenance Keywords")
+    header = get_header(fitsname, keys)
     unseen = set(keys)
-    for i, hdu in enumerate(hdulist):
-        for key in keys:
-            for card in hdu.header.cards:
-                if card.keyword == key:
-                    if interesting_value(card.value):
-                        log.info("["+str(i)+"]", key, card.value, card.comment)
-                        if key in unseen:
-                            unseen.remove(key)
+    for key in keys:
+        hval = header.get(key, None)
+        if hval is not None:
+            if interesting_value(hval):
+                log.info(key, "=", repr(hval))
+            if key in unseen:
+                unseen.remove(key)
     for key in unseen:
         if key in warn_keys:
             log.warning("Missing keyword '%s'."  % key)

@@ -69,7 +69,7 @@ def get_file_properties(filename):
         except Exception:
             mapping = rmap.load_mapping(filename)
             return mapping.instrument, mapping.filekind
-    elif REF_EXT_RE.search(filename):
+    elif config.is_reference(filename):
         result = get_reference_properties(filename)[2:4]
     else:
         try:
@@ -197,11 +197,11 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_fits_header_union(filename)
-    instrument = header.get("INSTRUME", "UNDEFINED").lower()
+    header = data_file.get_header(filename)
+    instrument = utils.header_to_instrument(header, default="UNDEFINED").lower()
     assert instrument in INSTRUMENTS, \
         "Invalid instrument " + repr(instrument) + " in file " + repr(filename)
-    filekind = header.get("REFTYPE", "UNDEFINED").lower()
+    filekind = utils.get_any_of(header, ["REFTYPE", "META.TYPE"], "UNDEFINED").lower()
     assert filekind in FILEKINDS, \
         "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
