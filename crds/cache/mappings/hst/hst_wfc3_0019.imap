@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'hst_wfc3_0018.imap',
+    'instrument' : 'WFC3',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'hst_wfc3_0019.imap',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '148f300bd00c8f828b645fbdb425edfe3f145f4b',
+}
+
+selector = {
+    'atodtab' : 'hst_wfc3_atodtab.rmap',
+    'biasfile' : 'hst_wfc3_biasfile.rmap',
+    'bpixtab' : 'hst_wfc3_bpixtab.rmap',
+    'ccdtab' : 'hst_wfc3_ccdtab.rmap',
+    'crrejtab' : 'hst_wfc3_crrejtab.rmap',
+    'd2imfile' : 'hst_wfc3_d2imfile.rmap',
+    'darkfile' : 'hst_wfc3_darkfile_0020.rmap',
+    'flshfile' : 'hst_wfc3_flshfile_0001.rmap',
+    'idctab' : 'hst_wfc3_idctab.rmap',
+    'imphttab' : 'hst_wfc3_imphttab.rmap',
+    'mdriztab' : 'hst_wfc3_mdriztab.rmap',
+    'nlinfile' : 'hst_wfc3_nlinfile.rmap',
+    'oscntab' : 'hst_wfc3_oscntab.rmap',
+    'pfltfile' : 'hst_wfc3_pfltfile.rmap',
+}

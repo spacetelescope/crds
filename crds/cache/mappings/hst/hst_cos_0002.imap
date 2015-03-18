@@ -1,0 +1,30 @@
+header = {
+    'derived_from' : 'hst_cos_0001.imap',
+    'instrument' : 'COS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'hst_cos_0002.imap',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'd47aeecb341d0bf6bca889b5f893e2acb4de0221',
+}
+
+selector = {
+    'badttab' : 'hst_cos_badttab.rmap',
+    'bpixtab' : 'hst_cos_bpixtab.rmap',
+    'brftab' : 'hst_cos_brftab.rmap',
+    'brsttab' : 'hst_cos_brsttab.rmap',
+    'deadtab' : 'hst_cos_deadtab.rmap',
+    'disptab' : 'hst_cos_disptab.rmap',
+    'flatfile' : 'hst_cos_flatfile_0003.rmap',
+    'fluxtab' : 'hst_cos_fluxtab.rmap',
+    'geofile' : 'hst_cos_geofile.rmap',
+    'gsagtab' : 'hst_cos_gsagtab.rmap',
+    'hvtab' : 'hst_cos_hvtab.rmap',
+    'lamptab' : 'hst_cos_lamptab.rmap',
+    'phatab' : 'hst_cos_phatab.rmap',
+    'spwcstab' : 'hst_cos_spwcstab.rmap',
+    'tdstab' : 'hst_cos_tdstab.rmap',
+    'walktab' : 'hst_cos_walktab.rmap',
+    'wcptab' : 'hst_cos_wcptab.rmap',
+    'xtractab' : 'hst_cos_xtractab.rmap',
+}

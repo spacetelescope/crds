@@ -1,0 +1,33 @@
+header = {
+    'derived_from' : 'hst_acs.imap',
+    'instrument' : 'ACS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'hst_acs_0001.imap',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '5d78d387dd4f240c75f9fd274b119fe4388fe037',
+}
+
+selector = {
+    'atodtab' : 'hst_acs_atodtab.rmap',
+    'biasfile' : 'hst_acs_biasfile.rmap',
+    'bpixtab' : 'hst_acs_bpixtab.rmap',
+    'ccdtab' : 'hst_acs_ccdtab.rmap',
+    'cfltfile' : 'hst_acs_cfltfile.rmap',
+    'crrejtab' : 'hst_acs_crrejtab.rmap',
+    'd2imfile' : 'hst_acs_d2imfile_0001.rmap',
+    'darkfile' : 'hst_acs_darkfile.rmap',
+    'dgeofile' : 'hst_acs_dgeofile.rmap',
+    'drkcfile' : 'hst_acs_drkcfile.rmap',
+    'flshfile' : 'hst_acs_flshfile.rmap',
+    'idctab' : 'hst_acs_idctab.rmap',
+    'imphttab' : 'hst_acs_imphttab.rmap',
+    'mdriztab' : 'hst_acs_mdriztab.rmap',
+    'mlintab' : 'hst_acs_mlintab.rmap',
+    'npolfile' : 'hst_acs_npolfile.rmap',
+    'oscntab' : 'hst_acs_oscntab.rmap',
+    'pctetab' : 'hst_acs_pctetab.rmap',
+    'pfltfile' : 'hst_acs_pfltfile.rmap',
+    'shadfile' : 'hst_acs_shadfile.rmap',
+    'spottab' : 'hst_acs_spottab.rmap',
+}
