@@ -1,0 +1,28 @@
+header = {
+    'derived_from' : 'jwst_miri_readnoise_0002.rmap',
+    'filekind' : 'READNOISE',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_readnoise_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.EXPOSURE.READPATT'),),
+    'sha1sum' : '41fd7d450b63cd8c564ba0e247f58cb92d9a918e',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'FULL', 'FAST') : 'jwst_miri_readnoise_0003.fits',
+    ('MIRIFULONG', 'FULL', 'SLOW') : 'jwst_miri_readnoise_0004.fits',
+    ('MIRIFUSHORT', 'FULL', 'FAST') : 'jwst_miri_readnoise_0005.fits',
+    ('MIRIFUSHORT', 'FULL', 'SLOW') : 'jwst_miri_readnoise_0006.fits',
+    ('MIRIMAGE', 'BRIGHTSKY', 'FAST') : 'jwst_miri_readnoise_0007.fits',
+    ('MIRIMAGE', 'FULL', 'FAST') : 'jwst_miri_readnoise_0012.fits',
+    ('MIRIMAGE', 'FULL', 'SLOW') : 'jwst_miri_readnoise_0017.fits',
+    ('MIRIMAGE', 'MASK1065', 'FAST') : 'jwst_miri_readnoise_0008.fits',
+    ('MIRIMAGE', 'MASK1140', 'FAST') : 'jwst_miri_readnoise_0009.fits',
+    ('MIRIMAGE', 'MASK1550', 'FAST') : 'jwst_miri_readnoise_0010.fits',
+    ('MIRIMAGE', 'MASKLYOT', 'FAST') : 'jwst_miri_readnoise_0011.fits',
+    ('MIRIMAGE', 'SLITLESSPRISM', 'FAST') : 'jwst_miri_readnoise_0013.fits',
+    ('MIRIMAGE', 'SUB128', 'FAST') : 'jwst_miri_readnoise_0014.fits',
+    ('MIRIMAGE', 'SUB256', 'FAST') : 'jwst_miri_readnoise_0015.fits',
+    ('MIRIMAGE', 'SUB64', 'FAST') : 'jwst_miri_readnoise_0016.fits',
+})
