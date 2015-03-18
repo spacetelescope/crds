@@ -1,0 +1,32 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2014-05-09 23:24:59.742166',
+    'filekind' : 'FLUXTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_fluxtab_0250.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE', 'LIFE_ADJ'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'FLUXCORR',
+    'rmap_relevance' : '((OBSTYPE == "SPECTROSCOPIC") and (FLUXCORR != "OMIT"))',
+    'sha1sum' : 'b3902aebdadb98917c316cbae0566cb329c42f76',
+}
+
+selector = Match({
+    ('FUV', 'SPECTROSCOPIC', 0) : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700kl_phot.fits',
+    }),
+    ('FUV', 'SPECTROSCOPIC', 2) : UseAfter({
+        '2009-05-11 00:00:02' : 'y3s1619sl_phot.fits',
+    }),
+    ('FUV', 'SPECTROSCOPIC', '-1|1') : UseAfter({
+        '2009-05-11 00:00:02' : 'y3s1619rl_phot.fits',
+    }),
+    ('NUV', 'SPECTROSCOPIC', 0) : UseAfter({
+        '1996-10-01 00:00:00' : 's7g17011l_phot.fits',
+    }),
+    ('NUV', 'SPECTROSCOPIC', '-1|1') : UseAfter({
+        '2009-05-11 00:00:00' : 'xah2038hl_phot.fits',
+    }),
+})

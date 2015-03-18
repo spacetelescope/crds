@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2014-06-05 11:15:26.802767',
+    'filekind' : 'NPOLFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_npolfile_0250.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'FILTER'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'DRIZCORR',
+    'rmap_relevance' : '((DETECTOR == "UVIS") and (DRIZCORR != "OMIT"))',
+    'sha1sum' : '2943c07e94432986f9c71944a39ff6ac1488138b',
+}
+
+selector = Match({
+})
