@@ -51,34 +51,17 @@ import os.path
 import re
 import json
 
-from crds import utils, log
+from crds import utils, log, config
 
 from astropy.io import fits as pyfits
-import numpy as np
 # import pyasdf
 
 # =============================================================================
 
-def get_filetype(name):
-    """Identify file type based on filename,  not file contents.
-    """
-    if name.endswith(".fits"):
-        return "fits"
-    elif name.endswith(".asdf"):
-        return "asdf"
-    elif is_geis(name):
-        return "geis"
-    else:
-        raise TypeError("Unknown file type for file named" + repr(name))
-
 def is_dataset(name):
     """Returns True IFF `name` is plausible as a dataset.   Not a guarantee."""
-    try:
-        return isinstance(get_filetype(name), str)
-    except Exception:
-        return False
+    return config.filetype(name) in ["fits", "asdf", "geis"]
 
-# XXXX this function is weak.
 def get_observatory(filepath, original_name=None):
     """Return the observatory corresponding to `filepath`.  filepath
     may be a web temporary file with a garbage name.   Use 
@@ -113,7 +96,7 @@ def getval(filepath, key, condition=True):
 
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
-    ftype = get_filetype(filepath)
+    ftype = config.filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith(("META.","META_")):
             return dm_setval(filepath, key, value)
@@ -128,9 +111,9 @@ def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
     from jwst_lib import models
-    with models.open(filepath) as dm:
-        dm[key.lower()] = value
-        dm.save(filepath)
+    with models.open(filepath) as d_model:
+        d_model[key.lower()] = value
+        d_model.save(filepath)
 
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
@@ -144,18 +127,23 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
-    """Return the complete unconditioned header dictionary of a reference file."""
+    """Return the complete unconditioned header dictionary of a reference file.
+    
+    Original name is used to determine file type for web upload temporary files which
+    have no distinguishable extension.  Original name is browser-side name for file.
+    """
     if original_name is None:
         original_name = os.path.basename(filepath)
-    if is_geis(original_name):
-        header = get_geis_header(filepath, needed_keys)
-    elif original_name.endswith(".json"):
-        header = get_json_header(filepath, needed_keys)
-    elif original_name.endswith(".yaml"):
-        header = get_yaml_header(filepath, needed_keys)
-    elif original_name.endswith(".asdf"):
-        header = get_asdf_header(filepath, needed_keys)
-    else:
+    filetype = config.filetype(original_name)
+    try:
+        header_func = {
+            "asdf" : get_asdf_header,
+            "json" : get_json_header,
+            "yaml" : get_yaml_header,
+            "geis" : get_geis_header,
+        }[filetype]
+        header = header_func(filepath, needed_keys)
+    except KeyError:
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
         if observatory == "jwst":
@@ -171,20 +159,20 @@ get_unconditioned_header = get_header
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
     from jwst_lib import models
-    with models.open(filepath) as dm:
-        d = dm.to_flat_dict(include_arrays=False)
-    d = sanitize_data_model_dict(d)
-    header = reduce_header(filepath, d, needed_keys)
+    with models.open(filepath) as d_model:
+        flat_dict = d_model.to_flat_dict(include_arrays=False)
+    d_header = sanitize_data_model_dict(flat_dict)
+    header = reduce_header(filepath, d_header, needed_keys)
     return header
 
 def get_json_header(filepath, needed_keys=()):
-    """For now,  just treat the JSON as the header."""
+    """Return the flattened header associated with a JSON file."""
     header = json.load(open(filepath))
     header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
-    """For now,  just treat the YAML as the header."""
+    """Return the flattened header associated with a YAML file."""
     import yaml
     header = yaml.load(open(filepath))
     header = to_simple_types(header)
@@ -193,6 +181,7 @@ def get_yaml_header(filepath, needed_keys=()):
 # ----------------------------------------------------------------------------------------------
 
 def get_asdf_header(filepath, needed_keys=()):
+    """Return the flattened header associated with an ASDF file."""
     import pyasdf
     handle = pyasdf.AsdfFile.read(filepath)
     header = to_simple_types(handle.tree)
@@ -213,9 +202,7 @@ def to_simple_types(tree):
 
 def simple_type(value):
     """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-    if isinstance(value, np.ndarray):
-        rval = None
-    elif isinstance(value, (basestring, int, float, long, complex)):
+    if isinstance(value, (basestring, int, float, long, complex)):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
@@ -267,12 +254,12 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
             header[key] = define_as
     return header
 
-def sanitize_data_model_dict(d):
+def sanitize_data_model_dict(flat_dict):
     """Given data model keyword dict `d`,  sanitize the keys and values to
     strings, upper case the keys,  and add fake keys for FITS keywords.
     """
     cleaned = {}
-    for key, val in d.items():
+    for key, val in flat_dict.items():
         skey = str(key).upper()
         sval = str(val)
         fits_magx = "_EXTRA_FITS.PRIMARY."
@@ -439,11 +426,10 @@ def get_conjugate(reference):
 
 # ================================================================================================================
 
-# XXXX Generalize to data model.
-def dump_multi_key(fitsname, keys, warn_keys):
+def dump_multi_key(fitsname, keys, warn_keys, original_name=None, observatory=None):
     """Dump out all header values for `keys` in all extensions of `fitsname`."""
     log.info("Provenance Keywords")
-    header = get_header(fitsname, keys)
+    header = get_header(fitsname, needed_keys=keys, original_name=original_name, observatory=observatory)
     unseen = set(keys)
     for key in keys:
         hval = header.get(key, None)

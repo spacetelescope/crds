@@ -2,17 +2,12 @@ from __future__ import division # confidence high
 from __future__ import with_statement
 
 import os
-import warnings
 
-import numpy as np
-
-import crds
-from crds import certify, utils, log, certify
+from crds import certify, utils, log
 
 from crds.tests import CRDSTestCase
-#from pyfits.tests.util import CaptureStdout, catch_warnings
 
-from nose.tools import assert_equal, assert_raises, assert_true, assert_false
+from nose.tools import assert_raises, assert_true
 
 class TestHSTTpnInfoClass(CRDSTestCase):
 
@@ -36,11 +31,11 @@ class TestCertifyClasses(CRDSTestCase):
 
     def setUp(self, *args, **keys):
         super(TestCertifyClasses, self).setUp(*args, **keys)
-        self._old_debug = log.set_debug(True)
+        self._old_debug = log.set_exception_trap(False)
 
     def tearDown(self, *args, **keys):
         super(TestCertifyClasses, self).tearDown(*args, **keys)
-        log.set_debug(self._old_debug)
+        log.set_exception_trap(self._old_debug)
         
     def test_character_validator(self):
         """Test the constructor with default argument values."""
@@ -83,48 +78,50 @@ class TestCertifyClasses(CRDSTestCase):
         from crds.jwst import locate
         locate.load_all_type_constraints()
 
-    def test_JsonCertifier_valid(self):
-        cert = certify.JsonCertifier(self.data("valid.json"), 
-                                     observatory="jwst",context="jwst.pmap")
-        cert.certify()
+    def test_JsonCertify_valid(self):
+        certify.certify_file(
+            self.data("valid.json"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
             
-    def test_JsonCertifier_invalid(self):
-        cert = certify.JsonCertifier(self.data("invalid.json"),
-                                     observatory="jwst",context="jwst.pmap")
-        assert_raises(certify.InvalidFormatError, cert.certify)
+    # still raises due to augment_exception but raises with standard InvalidFormatError
+    def test_JsonCertify_invalid(self):
+        assert_raises(certify.InvalidFormatError, certify.certify_file,  
+            self.data("invalid.json"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
         
-    def test_YamlCertifier_valid(self):
-        cert = certify.YamlCertifier(self.data("valid.yaml"), 
-                                     observatory="jwst",context="jwst.pmap")
-        cert.certify()
+    def test_YamlCertify_valid(self):
+        certify.certify_file(
+            self.data("valid.yaml"), observatory="jwst", context="jwst.pmap", trap_exceptions=False)
+
+    # still raises due to augment_exception but raises with standard InvalidFormatError            
+    def test_YamlCertify_invalid(self):
+        assert_raises(certify.InvalidFormatError, certify.certify_file,
+            self.data("invalid.yaml"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
+
+    def test_AsdfCertify_valid(self):
+        certify.certify_file(
+            self.data("valid.asdf"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
             
-    def test_YamlCertifier_invalid(self):
-        cert = certify.YamlCertifier(self.data("invalid.yaml"),
-                                     observatory="jwst",context="jwst.pmap")
-        assert_raises(certify.InvalidFormatError, cert.certify)
-        
-    def test_AsdfCertifier_valid(self):
-        cert = certify.AsdfCertifier(self.data("valid.asdf"), 
-                                     observatory="jwst",context="jwst.pmap")
-        cert.certify()
-            
-    def test_AsdfCertifier_invalid(self):
-        cert = certify.YamlCertifier(self.data("invalid.asdf"),
-                                     observatory="jwst",context="jwst.pmap")
-        assert_raises(certify.InvalidFormatError, cert.certify)
+    def test_AsdfCertify_invalid(self):
+        assert_raises(certify.InvalidFormatError, certify.certify_file,
+            self.data("invalid.asdf"), observatory="jwst",context="jwst.pmap", trap_exceptions="test")                  
         
     def test_UnknownCertifier_valid(self):
-        cert = certify.UnknownCertifier(self.data("valid.text"), 
-                                     observatory="jwst",context="jwst.pmap")
-        cert.certify()
+        certify.certify_file(
+            self.data("valid.text"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
             
     def test_UnknownCertifier_missing(self):
-        cert = certify.UnknownCertifier(self.data("non-existent-file.txt"), 
-                                     observatory="jwst",context="jwst.pmap")
-        assert_raises(IOError, cert.certify)
+        assert_raises(certify.InvalidFormatError, certify.certify_file, 
+            self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
         
-    def test_FitsCertifier_bad_value(self):
-        cert = certify.FitsCertifier(self.data("s7g1700gm_dead_broken.fits"), 
-                                     observatory="hst",context="hst.pmap")
-        assert_raises(ValueError, cert.certify)
+    def test_FitsCertify_bad_value(self):
+        assert_raises(ValueError, certify.certify_file,
+            self.data("s7g1700gm_dead_broken.fits"), observatory="hst", context="hst.pmap", trap_exceptions=False)
+        
+    def test_FitsCertify_opaque_name(self):
+        certify.certify_file(
+            self.data("opaque_fts.tmp"), observatory="hst", context="hst.pmap",
+            original_name="s7g1700gl_dead.fits", trap_exceptions=False)
+
+    def test_AsdfCertify_opaque_name(self):
+        certify.certify_file(self.data("opaque_asd.tmp"), observatory="hst", context="hst.pmap", 
+            original_name="valid.asdf", trap_exceptions=False)
 
