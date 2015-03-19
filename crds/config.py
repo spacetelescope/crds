@@ -463,6 +463,13 @@ def locate_file(filepath, observatory):
         return filepath
     return relocate_file(filepath, observatory)
 
+def pop_crds_uri(filepath):
+    """Pop off crds:// from a filepath,  yielding an pathless filename."""
+    if filepath.startswith("crds://"):
+        filepath = filepath[len("crds://"):]
+        assert not os.path.dirname(filepath), "crds:// must prefix a filename with no path."
+    return filepath
+    
 def relocate_file(filepath, observatory):
     """Returns path in CRDS cache where `filepath` would be relocated if it were
     copied into the CRDS cache.
