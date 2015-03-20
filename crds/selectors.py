@@ -1259,7 +1259,7 @@ class MatchSelector(Selector):
 
 Set error_on_exception() and augment_exception() behavior to reraise:
 
-    >>> old_debug = log.set_debug(True)
+    >>> old_debug = log.set_exception_trap(False)
 
 The value 'N/A' is equivalent to "don't care" and does not add to the value
 of a match.   Literal matches or "*" increase confidence of a good match.
@@ -1342,7 +1342,7 @@ of uniform rmap structure for HST:
 
 Restore original debug behavior:
 
-    >>> _jnk = log.set_debug(old_debug)
+    >>> _jnk = log.set_exception_trap(old_debug)
     
     """
     rmap_name = "Match"
@@ -1553,7 +1553,7 @@ class UseAfterSelector(Selector):
 Enable debugging which causes trapped exceptions to raise rather than issue ERROR.
 
     >>> from crds import log
-    >>> old_debug = log.set_debug(True)
+    >>> old_debug = log.set_exception_trap(False)
 
 Construct a test UseAfterSelector
 
@@ -1646,7 +1646,7 @@ Alternate date/time formats are accepted as header parameters.
 
 Restore debug configuration.
 
-    >>> _jnk = log.set_debug(old_debug)
+    >>> _jnk = log.set_exception_trap(old_debug)
 
     """
     def get_selection(self, date):

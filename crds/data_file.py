@@ -51,30 +51,16 @@ import os.path
 import re
 import json
 
-from crds import utils, log
+from crds import utils, log, config
 
 from astropy.io import fits as pyfits
+# import pyasdf
 
 # =============================================================================
 
-def get_filetype(name):
-    """Identify file type based on filename,  not file contents.
-    """
-    if name.endswith(".fits"):
-        return "fits"
-    elif name.endswith(".asdf"):
-        return "asdf"
-    elif is_geis(name):
-        return "geis"
-    else:
-        raise TypeError("Unknown file type for file named" + repr(name))
-
 def is_dataset(name):
     """Returns True IFF `name` is plausible as a dataset.   Not a guarantee."""
-    try:
-        return isinstance(get_filetype(name), str)
-    except Exception:
-        return False
+    return config.filetype(name) in ["fits", "asdf", "geis"]
 
 def get_observatory(filepath, original_name=None):
     """Return the observatory corresponding to `filepath`.  filepath
@@ -94,7 +80,7 @@ def get_observatory(filepath, original_name=None):
         except Exception:
             observatory = "hst"
         return observatory.lower()
-    elif original_name.endswith(".asdf"):
+    elif original_name.endswith((".asdf", ".yaml", ".json", ".text", ".txt")):
         return "jwst"
     else:
         return "hst"
@@ -110,7 +96,7 @@ def getval(filepath, key, condition=True):
 
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
-    ftype = get_filetype(filepath)
+    ftype = config.filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith(("META.","META_")):
             return dm_setval(filepath, key, value)
@@ -125,9 +111,9 @@ def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
     from jwst_lib import models
-    with models.open(filepath) as dm:
-        dm[key.lower()] = value
-        dm.save(filepath)
+    with models.open(filepath) as d_model:
+        d_model[key.lower()] = value
+        d_model.save(filepath)
 
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
@@ -141,22 +127,31 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     return utils.condition_header(header, needed_keys)
 
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
-    """Return the complete unconditioned header dictionary of a reference file."""
+    """Return the complete unconditioned header dictionary of a reference file.
+    
+    Original name is used to determine file type for web upload temporary files which
+    have no distinguishable extension.  Original name is browser-side name for file.
+    """
     if original_name is None:
         original_name = os.path.basename(filepath)
-    if is_geis(original_name):
-        return get_geis_header(filepath, needed_keys)
-    elif filepath.endswith(".json"):
-        return get_json_header(filepath, needed_keys)
-    elif filepath.endswith(".yaml"):
-        return get_yaml_header(filepath, needed_keys)
-    else:
+    filetype = config.filetype(original_name)
+    try:
+        header_func = {
+            "asdf" : get_asdf_header,
+            "json" : get_json_header,
+            "yaml" : get_yaml_header,
+            "geis" : get_geis_header,
+        }[filetype]
+        header = header_func(filepath, needed_keys)
+    except KeyError:
         if observatory is None:
             observatory = get_observatory(filepath, original_name)
         if observatory == "jwst":
-            return get_data_model_header(filepath, needed_keys)
+            header = get_data_model_header(filepath, needed_keys)
         else:
-            return get_fits_header_union(filepath, needed_keys)
+            header = get_fits_header_union(filepath, needed_keys)
+    log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
+    return header
 
 # A clearer name
 get_unconditioned_header = get_header
@@ -164,22 +159,58 @@ get_unconditioned_header = get_header
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
     from jwst_lib import models
-    with models.open(filepath) as dm:
-        d = dm.to_flat_dict(include_arrays=False)
-    d = sanitize_data_model_dict(d)
-    header = reduce_header(filepath, d, needed_keys)
+    with models.open(filepath) as d_model:
+        flat_dict = d_model.to_flat_dict(include_arrays=False)
+    d_header = sanitize_data_model_dict(flat_dict)
+    header = reduce_header(filepath, d_header, needed_keys)
     return header
 
 def get_json_header(filepath, needed_keys=()):
-    """For now,  just treat the JSON as the header."""
+    """Return the flattened header associated with a JSON file."""
     header = json.load(open(filepath))
+    header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
-    """For now,  just treat the YAML as the header."""
+    """Return the flattened header associated with a YAML file."""
     import yaml
     header = yaml.load(open(filepath))
+    header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
+
+# ----------------------------------------------------------------------------------------------
+
+def get_asdf_header(filepath, needed_keys=()):
+    """Return the flattened header associated with an ASDF file."""
+    import pyasdf
+    handle = pyasdf.AsdfFile.read(filepath)
+    header = to_simple_types(handle.tree)
+    return reduce_header(filepath, header, needed_keys)
+
+def to_simple_types(tree):
+    """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
+    result = dict()
+    for key in tree:
+        value = tree[key]
+        if isinstance(value, (type(tree), dict)):
+            nested = to_simple_types(value)
+            for nested_key, nested_value in nested.items():
+                result[str(key.upper() + "." + nested_key)] = nested_value
+        else:
+            result[str(key.upper())] = simple_type(value)
+    return result
+
+def simple_type(value):
+    """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
+    if isinstance(value, (basestring, int, float, long, complex)):
+        rval = str(value)
+    elif isinstance(value, (list, tuple)):
+        rval = tuple(simple_type(val) for val in value)
+    else:
+        rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
+    return rval
+
+# ----------------------------------------------------------------------------------------------
 
 DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
 
@@ -223,12 +254,12 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
             header[key] = define_as
     return header
 
-def sanitize_data_model_dict(d):
+def sanitize_data_model_dict(flat_dict):
     """Given data model keyword dict `d`,  sanitize the keys and values to
     strings, upper case the keys,  and add fake keys for FITS keywords.
     """
     cleaned = {}
-    for key, val in d.items():
+    for key, val in flat_dict.items():
         skey = str(key).upper()
         sval = str(val)
         fits_magx = "_EXTRA_FITS.PRIMARY."
@@ -392,35 +423,6 @@ def get_conjugate(reference):
     elif is_geis_header(reference):
         return reference[:-1] + "d"
     return None
-
-# ================================================================================================================
-
-# XXXX Generalize to data model.
-def dump_multi_key(fitsname, keys, warn_keys):
-    """Dump out all header values for `keys` in all extensions of `fitsname`."""
-    hdulist = pyfits.open(fitsname)
-    unseen = set(keys)
-    for i, hdu in enumerate(hdulist):
-        for key in keys:
-            for card in hdu.header.cards:
-                if card.keyword == key:
-                    if interesting_value(card.value):
-                        log.info("["+str(i)+"]", key, card.value, card.comment)
-                        if key in unseen:
-                            unseen.remove(key)
-    for key in unseen:
-        if key in warn_keys:
-            log.warning("Missing keyword '%s'."  % key)
-
-def interesting_value(value):
-    """Return True IFF `value` isn't uninteresting."""
-    if str(value).strip().lower() in ["",
-                                 "*** end of mandatory fields ***",
-                                 "*** column names ***",
-                                 "*** column formats ***"]:
-        return False
-    return True
-
 
 # ================================================================================================================    
 
