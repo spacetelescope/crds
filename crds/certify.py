@@ -492,6 +492,14 @@ class ReferenceCertifier(Certifier):
             self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
             self.all_simple_names +   # what's defined in .tpn's, maybe not matched
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
+        unseen = self._dump_provenance_core(dump_keys)
+        warn_keys = self.provenance_keys
+        for key in unseen:
+            if key in warn_keys:
+                log.warning("Missing keyword '%s'."  % key)
+
+    def _dump_provenance_core(self, dump_keys):
+        """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
         for key in dump_keys:
             hval = self.header.get(key, None)
@@ -500,10 +508,7 @@ class ReferenceCertifier(Certifier):
                     log.info(key, "=", repr(hval))
                 if key in unseen:
                     unseen.remove(key)
-        warn_keys = self.provenance_keys
-        for key in unseen:
-            if key in warn_keys:
-                log.warning("Missing keyword '%s'."  % key)
+        return unseen
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
@@ -758,6 +763,21 @@ class FitsCertifier(ReferenceCertifier):
         fits.close()
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
+
+    def _dump_provenance_core(self, dump_keys):
+        """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
+        hdulist = pyfits.open(self.filename)
+        unseen = set(dump_keys)
+        for i, hdu in enumerate(hdulist):
+            for key in dump_keys:
+                for card in hdu.header.cards:
+                    if card.keyword == key:
+                        if self.interesting_value(card.value):
+                            log.info("["+str(i)+"]", key, card.value, card.comment)
+                        if key in unseen:
+                            unseen.remove(key)
+        return unseen
+
 # ============================================================================
 
 class UnknownCertifier(Certifier):
