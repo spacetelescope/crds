@@ -22,6 +22,9 @@ To sync best references and rules for specific dataset ids:
   % python -m crds.sync --contexts hst_0001.pmap hst_0002.pmap --dataset-ids J6M915030 --fetch-references
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import os.path
@@ -387,7 +390,7 @@ class SyncScript(cmdline.ContextsScript):
             log.verbose("Downloading verification info for", len(basenames), "files.", verbosity=10)
             infos = api.get_file_info_map(observatory=self.observatory, files=basenames, 
                                          fields=["size","rejected","blacklisted","state","sha1sum"])
-        except Exception, exc:
+        except Exception as exc:
             log.error("Failed getting file info.  CACHE VERIFICATION FAILED.  Exception: ", repr(str(exc)))
             return
         bytes_so_far = 0

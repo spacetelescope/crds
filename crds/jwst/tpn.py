@@ -6,6 +6,9 @@ in an rmap.
 See the HST tpn.py and locator.py modules,  as well as crds.certify
 and crds.rmap,  for more information.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os.path
 import pprint
@@ -101,7 +104,7 @@ def get_tpninfos(*key):
 # =============================================================================
 
 def main():
-    print "null tpn processing."
+    print("null tpn processing.")
 
 if __name__ == "__main__":
     main()

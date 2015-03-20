@@ -3,6 +3,8 @@ errors, warnings, and info.  Also error exception raising and
 tracebacks.
 """
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os
@@ -203,7 +205,7 @@ def exception_trap_logger(func):
         """
         try:
             yield
-        except Exception,  exc:
+        except Exception as  exc:
             keys["end"] = ""
             exc_class = keys.pop("exception_class", exc.__class__)
             msg = format(*args + (":", str(exc)), **keys)

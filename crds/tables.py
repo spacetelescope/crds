@@ -50,6 +50,9 @@ SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT
 >>> tab.columns['OBSID'][0]
 3102
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 
 from astropy.io import fits
@@ -121,4 +124,4 @@ def test():
     return doctest.testmod(crds.tables)
 
 if __name__ == "__main__":
-    print test()
+    print(test())

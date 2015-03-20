@@ -2,6 +2,9 @@
 w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
 call returns the jsonrpc "result" field.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import urllib2 as urllib
 import uuid
@@ -32,7 +35,7 @@ def apply_with_retries(f, *pars, **keys):
     for retry in range(retries):
         try:
             return f(*pars, **keys)
-        except Exception, exc:
+        except Exception as exc:
             log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
@@ -113,7 +116,7 @@ class CheckingProxy(object):
         try:
             channel = urllib.urlopen(url, parameters)
             return channel.read()
-        except Exception, exc:
+        except Exception as exc:
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
 
     def __call__(self, *args, **kwargs):

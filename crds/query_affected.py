@@ -1,4 +1,6 @@
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os.path
@@ -390,7 +392,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
                     last_tuple = utils.evalfile(self.last_processed_path)
                     item = int(last_tuple[0])
                     log.verbose("Loaded last processed:", last_tuple)
-                except Exception, exc:
+                except Exception as exc:
                     self.fatal_error(self.last_processed_path, "already exists but was unusable:", str(exc))
             else:
                 item = 0

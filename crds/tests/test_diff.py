@@ -180,6 +180,9 @@ CLEANUP
    >>> test_config.cleanup()
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""

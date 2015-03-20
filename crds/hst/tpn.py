@@ -9,6 +9,9 @@ onto lists of TpnInfo objects which describe parameter constraints.   The protoc
 is implemented as an observatory specific "plugin" through the locator.py module.
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 
 from crds import rmap, utils

@@ -6,6 +6,9 @@ Dataset header preconditioning implemented as match-time operation.
 
 Match fallbacks implemented as rmap-generation-time weaker matches,  single CRDS lookup.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 from .acs_common import *
 

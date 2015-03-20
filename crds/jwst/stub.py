@@ -78,6 +78,9 @@ context only contains the baseline empty .rmap.   The second context contains th
 and is the usable end result.   In the event of errors,  nothing precludes deriving from the baseline empty .rmap more
 than once.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os.path

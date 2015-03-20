@@ -43,6 +43,8 @@ etc.
 """
 
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 
 # =========================================================================
@@ -292,7 +294,7 @@ def fail(*args, **keys):
     print(" ".join(args), file=keys.pop("file", sys.stderr))
     sys.exit(keys.pop("status", -1))
 
-def usage(description, min_args, max_args=sys.maxint, help=""):
+def usage(description, min_args, max_args=sys.maxsize, help=""):
     """Emit a standard program usage message based on the min and max
     command line parameter counts.   If the program takes at least
     one parameter,  min_args should be 1.   If the program takes at most
