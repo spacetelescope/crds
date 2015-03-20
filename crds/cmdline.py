@@ -319,18 +319,27 @@ class Script(object):
         return [self.locate_file(fname) for fname in self.get_files(self.args.files)]
         
     def locate_file(self, filename):
-        """Locate file defines how members of the self.args.files list are located when they have
-        no absolute or relative path.   The default behavior is to locate CRDS cached files,  either
-        references or mappings.   This is inappropriate for datasets so in some cases locate_file
-        needs to be overridden.
+        """Locate file defines how members of the self.args.files list are located.
+        The default behavior is to locate CRDS cached files,  either references or mappings.
+        This is inappropriate for datasets so in some cases locate_file needs to be overridden.
         """
-        return rmap.locate_file(filename, observatory=self.observatory)
+        return config.locate_file(filename, observatory=self.observatory)
+
+    def locate_file_outside_cache(self, filename):
+        """This is essentially normal filename syntax,  except crds:// is interpreted to mean
+        locate filename inside the CRDS cache.
+        """
+        filename2 = config.pop_crds_uri(filename)   # nominally crds://
+        if filename != filename2:
+            return config.locate_file(filename2, self.observatory)
+        else:
+            return os.path.abspath(filename)
 
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         try:
             if self.args.debug_traps:
-                log.set_debug(True)
+                log.set_exception_trap(False)
             if self.args.version:
                 _show_version()
             elif self.args.profile:
@@ -520,6 +529,7 @@ class ContextsScript(Script):
     
     def __init__(self, *args, **keys):
         super(ContextsScript, self).__init__(*args, **keys)
+        self._all_mappings = None
 
     def add_args(self):
         self.add_argument('--contexts', metavar='CONTEXT', type=mapping_spec, nargs='*',
@@ -542,7 +552,7 @@ class ContextsScript(Script):
         elif self.args.all:
             assert not self.args.range or self.args.last_n_contexts, "Cannot specify --all and --range or --last"
             self._all_mappings = self._list_mappings("*.*map")
-            contexts = [ file for file in self._all_mappings if file.endswith(".pmap") ]
+            contexts = [ fil for fil in self._all_mappings if fil.endswith(".pmap") ]
         elif self.args.last_n_contexts:
             assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
             contexts = self._list_mappings()[-self.args.last_n_contexts:]
@@ -587,7 +597,7 @@ class ContextsScript(Script):
         log.verbose("Getting all mappings for specified contexts.", verbosity=55)
         if self.args.all:
             files = self._all_mappings
-            pmaps = sorted([file for file in files if file.endswith(".pmap")])
+            pmaps = sorted([fil for fil in files if fil.endswith(".pmap")])
             useable_contexts = []
             if pmaps and files:
                 with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):

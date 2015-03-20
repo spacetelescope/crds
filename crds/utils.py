@@ -702,15 +702,48 @@ def file_to_instrument(filename):
     header = data_file.get_unconditioned_header(filename, needed_keys=["INSTRUME", "META.INSTRUMENT.NAME", "INSTRUMENT"])
     return header_to_instrument(header)
     
-def header_to_instrument(header):
-    """Given reference or dataset `header`, return the associated instrument."""
-    for instr_key in ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT"]:
-        try:
-            return header[instr_key].upper()
-        except KeyError:
-            pass
-    else:
+def header_to_instrument(header, default=None):
+    """Given reference or dataset `header`, return the associated instrument.
+    
+    >>> header_to_instrument({"INSTRUME":"ACS"}, default="UNDEFINED")
+    'ACS'
+    
+    >>> header_to_instrument({"META.INSTRUMENT.NAME":"MIRI"}, default=None)
+    'MIRI'
+    
+    >>> header_to_instrument({"FOO":"MIRI"}, default="UNDEFINED")
+    'UNDEFINED'
+    """
+    val = get_any_of(header, ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT"], default)
+    if val is None:
         raise KeyError("No instrument keyword defined in header.")
+    else:
+        return val.upper()
+
+def get_any_of(getter,  possible_keys,  default=None):
+    """Search for the value of any of `possible_keys` in `dictionary`,  returning `default` if none are found.
+    
+    >>> get_any_of( {"A":1},  ["C","D","A"], "UNDEFINED")
+    1
+    >>> get_any_of( {"X":1},  ["C","D","A"], "UNDEFINED")
+    'UNDEFINED'
+    """
+    for key in possible_keys:
+        val = getter.get(key, None)
+        if val is not None:
+            return val
+    else:
+        return default
+    
+def header_to_observatory(header):
+    """Given reference or dataset `header`,  return the associated observatory.
+    
+    >>> header_to_observatory({"META.INSTRUMENT.NAME":"MIRI"})
+    'jwst'
+    """
+    instr = header_to_instrument(header)
+    observ = instrument_to_observatory(instr)
+    return observ
     
 def get_reference_paths(observatory):
     """Return the list of subdirectories involved with storing references of all instruments."""

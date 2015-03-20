@@ -166,6 +166,25 @@ def set_log_time(enable_time=False):
 
 # ===========================================================================
 
+@contextlib.contextmanager
+def reduced_verbosity(reduced_level, threshhold):
+    """Sets the global verbosity level to `reduced_level` as long as it is already below `threshhold`
+    within the scope of the with-block / context manager.
+    
+    If the global verbosity is above `threshhold`,  don't set to `reduced_level` enabling high verbosity settings
+    to bypass the suppression.
+    """
+    old_verbose = get_verbose()
+    if old_verbose < threshhold:
+        set_verbose(min(old_verbose, reduced_level))
+    try:
+        yield
+    finally:
+        if old_verbose < threshhold:
+            set_verbose(old_verbose)
+        
+# ===========================================================================
+
 def exception_trap_logger(func):
     @contextlib.contextmanager
     def func_on_exception(*args, **keys):
@@ -186,53 +205,37 @@ def exception_trap_logger(func):
             yield
         except Exception,  exc:
             keys["end"] = ""
+            exc_class = keys.pop("exception_class", exc.__class__)
             msg = format(*args + (":", str(exc)), **keys)
             reraise = func(msg)
-            if CRDS_DEBUG:
+            if CRDS_EXCEPTION_TRAP == False:
                 # In python-2, distinction between raise and "raise something".  raise doesn't
                 # wreck the traceback,  raising a new improved exception does.
                 raise  
-            elif reraise:
-                # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
-                raise exc.__class__(msg)
+            # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
+            elif reraise or CRDS_EXCEPTION_TRAP == "test":
+                raise exc_class(msg)
             else:
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception
 
-@contextlib.contextmanager
-def reduced_verbosity(reduced_level, threshhold):
-    """Sets the global verbosity level to `reduced_level` as long as it is already below `threshhold`
-    within the scope of the with-block / context manager.
-    
-    If the global verbosity is above `threshhold`,  don't set to `reduced_level` enabling high verbosity settings
-    to bypass the suppression.
-    """
-    old_verbose = get_verbose()
-    if old_verbose < threshhold:
-        set_verbose(min(old_verbose, reduced_level))
-    try:
-        yield
-    finally:
-        if old_verbose < threshhold:
-            set_verbose(old_verbose)
-        
-# =======================================================================================================
+CRDS_EXCEPTION_TRAP = True
 
-CRDS_DEBUG = False
+def get_exception_trap():
+    """Return the value of the exception trap flag,  False means 'debug'."""
+    return CRDS_EXCEPTION_TRAP
 
-def set_debug(flag):
+def set_exception_trap(flag):
     """Set the debug by-pass mode flag for log.error_on_exception() exception trap."""
-    global CRDS_DEBUG
-    old_flag = CRDS_DEBUG
+    global CRDS_EXCEPTION_TRAP
+    old_flag = CRDS_EXCEPTION_TRAP
     if flag is not None:
-        CRDS_DEBUG = flag
+        CRDS_EXCEPTION_TRAP = flag
     return old_flag
     
 def _reraise(*args, **keys):
     """Signal to exception_trap_logger to unconditionally reraise the exception,  probably augmented."""
     return True
-
-# =======================================================================================================
 
 info_on_exception = exception_trap_logger(info)
 debug_on_exception = exception_trap_logger(debug)

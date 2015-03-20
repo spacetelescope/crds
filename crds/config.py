@@ -160,6 +160,18 @@ def get_crds_refpath(observatory):
     """
     return _std_cache_path(observatory, "CRDS_REFPATH", "references")
 
+def locate_config(cfg, observatory):
+    """Return the absolute path where reference `ref` should be located."""
+    if os.path.dirname(cfg):
+        return cfg
+    return os.path.join(get_crds_cfgpath(observatory), cfg)
+
+# -------------------------------------------------------------------------------------
+
+def get_sqlite3_db_path(observatory):
+    """Return the path to the downloadable CRDS catalog + history SQLite3 database file."""
+    return locate_config("crds_db.sqlite3", observatory)
+
 # ===========================================================================
 
 CRDS_SUBDIR_TAG_FILE = "ref_cache_subdir_mode"
@@ -381,6 +393,54 @@ writable_cache_or_warning = writable_cache_abort(log.warning)
 
 # ===========================================================================
 
+def filetype(filename):
+    """Classify `filename`'s type so it can be processed or displayed.
+    
+    >>> filetype("foo.fits")
+    'fits'
+
+    >>> filetype("foo.yaml")
+    'yaml'
+
+    >>> filetype("foo.pmap")
+    'mapping'
+
+    >>> filetype("foo.json")
+    'json'
+
+    >>> filetype("foo.txt")
+    'text'
+
+    >>> filetype("foo.r0h")
+    'geis'
+
+    >>> filetype('foo.exe')
+    'unknown'
+    """
+    if is_mapping(filename):
+        return "mapping"
+    elif filename.endswith(".fits"):
+        return "fits"
+    elif filename.endswith(".yaml"):
+        return "yaml"
+    elif filename.endswith(".json"):
+        return "json"
+    elif filename.endswith(".asdf"):
+        return "asdf"
+    elif filename.endswith(".txt"):
+        return "text"
+    elif re.match(r".*\.r[0-9]h$", filename): # GEIS header
+        return "geis"
+    else:
+        return "unknown"
+
+def file_in_cache(filename, observatory):
+    """Return True IFF `filename` is in the local cache."""
+    path = locate_file(os.path.basename(filename), observatory)
+    return os.path.exists(path)
+
+# ===========================================================================
+
 def get_path(filename, observatory):
     """Return the CRDS cache path of `filename` for `observatory`.   The path is
     similar to the one from locate_file(),  but includes dirname only,  not `filename` itself.
@@ -403,6 +463,13 @@ def locate_file(filepath, observatory):
         return filepath
     return relocate_file(filepath, observatory)
 
+def pop_crds_uri(filepath):
+    """Pop off crds:// from a filepath,  yielding an pathless filename."""
+    if filepath.startswith("crds://"):
+        filepath = filepath[len("crds://"):]
+        assert not os.path.dirname(filepath), "crds:// must prefix a filename with no path."
+    return filepath
+    
 def relocate_file(filepath, observatory):
     """Returns path in CRDS cache where `filepath` would be relocated if it were
     copied into the CRDS cache.
@@ -415,11 +482,7 @@ def relocate_file(filepath, observatory):
     else:
         return relocate_reference(filepath, observatory)
 
-def locate_config(cfg, observatory):
-    """Return the absolute path where reference `ref` should be located."""
-    if os.path.dirname(cfg):
-        return cfg
-    return os.path.join(get_crds_cfgpath(observatory), cfg)
+# ===========================================================================
 
 def locate_reference(ref, observatory):
     """Returns CRDS cache path for `ref` if it specifies no directory, otherwise
@@ -439,15 +502,27 @@ def relocate_reference(ref, observatory):
     from crds import utils
     return utils.get_locator_module(observatory).locate_file(ref)
 
-def is_mapping(mapping):
-    """Return True IFF `mapping` has an extension indicating a CRDS mapping 
-    file.
-    """
-    return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
+def is_reference(reference):
+    """Return True IFF file name `reference` is plausible as a reference file name.
+    is_reference() does not *guarantee* that `reference` is a reference file name,
+    in particular a dataset filename might pass as a reference.
 
-def get_sqlite3_db_path(observatory):
-    """Return the path to the downloadable CRDS catalog + history SQLite3 database file."""
-    return locate_config("crds_db.sqlite3", observatory)
+    >>> is_reference("something.fits")
+    True
+    >>> is_reference("something.asdf")
+    True
+    >>> is_reference("something.r0h")
+    True
+    >>> is_reference("something.foo")
+    False
+    >>> is_reference("/some/path/something.fits")
+    True
+    >>> is_reference("/some/path/something.pmap")
+    False
+
+    """
+    extension = os.path.splitext(reference)[-1]
+    return re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
 
 # -------------------------------------------------------------------------------------
 
@@ -485,6 +560,10 @@ CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
 CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
 CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
+
+def is_mapping(mapping):
+    """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
+    return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -536,69 +615,6 @@ def is_date_based_mapping_spec(mapping):
     """
     return is_mapping_spec(mapping) and not is_mapping(mapping)
 
-def is_reference(reference):
-    """Return True IFF file name `reference` is plausible as a reference file name.
-    is_reference() does not *guarantee* that `reference` is a reference file name,
-    in particular a dataset filename might pass as a reference.
-
-    >>> is_reference("something.fits")
-    True
-    >>> is_reference("something.asdf")
-    True
-    >>> is_reference("something.r0h")
-    True
-    >>> is_reference("something.foo")
-    False
-    >>> is_reference("/some/path/something.fits")
-    True
-    >>> is_reference("/some/path/something.pmap")
-    False
-
-    """
-    extension = os.path.splitext(reference)[-1]
-    return re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
-
-def filetype(filename):
-    """Classify `filename`'s type so it can be processed or displayed.
-    
-    >>> filetype("foo.fits")
-    'fits'
-
-    >>> filetype("foo.yaml")
-    'yaml'
-
-    >>> filetype("foo.pmap")
-    'mapping'
-
-    >>> filetype("foo.json")
-    'json'
-
-    >>> filetype("foo.txt")
-    'text'
-
-    >>> filetype("foo.r0h")
-    'text'
-
-    >>> filetype('foo.exe')
-    'unknown'
-    """
-    if is_mapping(filename):
-        return "mapping"
-    elif filename.endswith(".fits"):
-        return "fits"
-    elif filename.endswith(".yaml"):
-        return "yaml"
-    elif filename.endswith(".json"):
-        return "json"
-    elif filename.endswith(".asdf"):
-        return "asdf"
-    elif filename.endswith(".txt"):
-        return "text"
-    elif re.match(r".*\.r[0-9]h$", filename): # GEIS header
-        return "text"
-    else:
-        return "unknown"
-
 def locate_mapping(mappath, observatory=None):
     """Return the CRDS cache path for mapping `mappath` if it has no directory,
     otherwise returns mappath as-is.
@@ -618,11 +634,6 @@ def relocate_mapping(mappath, observatory=None):
 def mapping_exists(mapping):
     """Return True IFF `mapping` exists on the local file system."""
     return os.path.exists(locate_mapping(mapping))
-
-def file_in_cache(filename, observatory):
-    """Return True IFF `filename` is in the local cache."""
-    path = locate_file(os.path.basename(filename), observatory)
-    return os.path.exists(path)
 
 # These are name based but could be written as slower check-the-mapping
 # style functions.
