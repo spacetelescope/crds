@@ -2,6 +2,9 @@
 HTML tables and HST FITS data sets.   It contains a formatting function which will render
 a date and time in a sortable string representation (isoformat).
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import datetime
 import re
@@ -328,7 +331,7 @@ def is_datetime(datetime_str):
         "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
     try:
         parse_date(datetime_str)
-    except ValueError, exc:
+    except ValueError as exc:
         raise crds.CrdsError(str(exc))
     return datetime_str
 
@@ -341,5 +344,5 @@ def test():
     return doctest.testmod(timestamp)
 
 if __name__ == "__main__":
-    print test()
+    print(test())
 

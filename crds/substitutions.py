@@ -22,6 +22,9 @@ CRDS defines a function:
 
 which will interpret the rules to expand appropriate values in header.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import os.path
 
@@ -72,7 +75,7 @@ class HeaderExpander(object):
         for (var, expr), (expansion, compiled) in self.mapping.items():
             try:
                 applicable = eval(compiled, {}, header)  # compiled code is from static file.
-            except Exception, exc:
+            except Exception as exc:
                 log.verbose_warning("Header expansion for",repr(expr), 
                             "failed for", repr(str(exc)))
                 continue

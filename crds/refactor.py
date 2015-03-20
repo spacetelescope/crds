@@ -1,6 +1,9 @@
 """This module defines functions for modifying rmaps in various ways,  generally
 the transformations required to automate rmap maintenance on the CRDS website.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 
 from crds import (rmap, log, diff, cmdline)

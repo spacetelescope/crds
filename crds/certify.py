@@ -2,6 +2,9 @@
 used to check parameter values in .fits reference files.   It verifies that FITS
 files define required parameters and that they have legal values.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import re
@@ -524,7 +527,7 @@ class ReferenceCertifier(Certifier):
             pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
             instrument, filekind = pmap.locate.get_file_properties(self.filename)
             return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-        except Exception, exc:
+        except Exception as exc:
             log.verbose_warning("Failed retrieving required parkeys:", str(exc))
             return []
 

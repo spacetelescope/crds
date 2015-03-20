@@ -1,4 +1,7 @@
 """Generic utility routines used by a variety of modules."""
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import os.path
@@ -165,10 +168,10 @@ class CachedFunction(object):
         """Compute (cache_key, func(*args, **keys)).   Do not add to cache."""
         key = self.cache_key(*args, **keys)
         if key in self.cache:
-            log.verbose("Cached call", self.uncached.func_name, repr(key), verbosity=80)
+            log.verbose("Cached call", self.uncached.__name__, repr(key), verbosity=80)
             return key, self.cache[key]
         else:
-            log.verbose("Uncached call", self.uncached.func_name, repr(key), verbosity=80)
+            log.verbose("Uncached call", self.uncached.__name__, repr(key), verbosity=80)
             return key, self.uncached(*args, **keys)
 
     def readonly(self, *args, **keys):
@@ -199,7 +202,7 @@ def clear_function_caches():
 def list_cached_functions():
     """List all the functions supporting caching under @utils.cached or @utils.xcached."""
     for cache_func in sorted(CachedFunction.cache_set):
-        print repr(cache_func.uncached)
+        print(repr(cache_func.uncached))
 
 # ===================================================================
 
@@ -245,7 +248,7 @@ def capture_output(func):
         """Closure on `func` which supports various forms of output capture."""
         
         def __repr__(self):
-            return "CapturedFunction('%s')" % func.func_name
+            return "CapturedFunction('%s')" % func.__name__
 
         def returns_outputs(self, *args, **keys):
             """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
@@ -451,7 +454,7 @@ def remove(rmpath, observatory):
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
             log.verbose("Removing: ", repr(rmpath))
             if os.path.isfile(rmpath):
-                os.chmod(rmpath, 0666)
+                os.chmod(rmpath, 0o666)
                 os.remove(rmpath)
             else:
                 pysh.sh("rm -rf ${rmpath}", raise_on_error=True)

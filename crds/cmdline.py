@@ -3,6 +3,8 @@
 MAYBE integrate rc, environment, and command line parameters.
 """
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os
@@ -255,7 +257,7 @@ class Script(object):
         try:
             if not self.server_info.connected:
                 raise RuntimeError("Required server connection unavailable.")
-        except Exception, exc:
+        except Exception as exc:
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
                              repr(api.get_crds_server()), "::", str(exc))
     

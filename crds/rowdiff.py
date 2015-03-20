@@ -2,6 +2,9 @@
 FITS files or HDU lists. This can be a command-line module or class in a
 script. Written to add this functionality to crds.diff.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import difflib
 from itertools import product
 import numpy as np
@@ -87,7 +90,7 @@ def get_hdulist(fits_reference):
     if isinstance(fits_reference, basestring):
             try:
                 result = fitsopen(fits_reference)
-            except Exception, e:
+            except Exception as e:
                 raise IOError("error opening file (%s): %s: %s" %
                               (fits_reference, e.__class.__name__, e.args[0]))
     return result
@@ -951,10 +954,10 @@ class RowDiffScript(cmdline.Script):
         if self.args.mode_fields is not None:
             mode_fields = self.args.mode_fields.split(',')
         
-        print RowDiff(tableA_path, tableB_path,
+        print(RowDiff(tableA_path, tableB_path,
                       fields=fields,
                       ignore_fields=ignore_fields,
-                      mode_fields=mode_fields)
+                      mode_fields=mode_fields))
 
 if __name__ == "__main__":
     RowDiffScript()()

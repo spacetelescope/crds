@@ -1,6 +1,9 @@
 """This module manages the automatic generation of new context files based on
 a list of new rmaps and a baseline context.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import shutil
 import re

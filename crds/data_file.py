@@ -47,6 +47,9 @@ False
  'UCH3CJTM': '0.',
  'UCH4CJTM': '0.'}
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import re
 import json
@@ -433,5 +436,5 @@ def test():
     return doctest.testmod(data_file)
 
 if __name__ == "__main__":
-    print test()
+    print(test())
 

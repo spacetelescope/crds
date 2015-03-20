@@ -83,6 +83,9 @@ and complexity.   Here we add time to the selection criteria:
 Note that the context variables used by some Selector's are implicit,
 with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 from crds import timestamp
 import re
 import fnmatch
@@ -310,7 +313,7 @@ class Selector(object):
             try:
                 log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
-            except crds.CrdsLookupError, exc:
+            except crds.CrdsLookupError as exc:
                 continue
         more_info = " last exception: " + str(exc) if exc else ""
         raise crds.CrdsLookupError("All lookup attempts failed." + more_info)
@@ -515,7 +518,7 @@ class Selector(object):
         """
         try:
             return timestamp.reformat_date(value)
-        except Exception, exc:
+        except Exception as exc:
             raise ValidationError(
                 self.short_name + " Invalid date/time format for " + repr(pars) +
                 " value=" + repr(value) + " exception is " + repr(str(exc)))
@@ -2065,7 +2068,7 @@ class VersionRelation(ComparableMixin):
         self.relation_str = str(relation_str)
         if self.relation_str.replace("=","").strip() == "default":
             self.relation = "="
-            self.version = sys.maxint
+            self.version = sys.maxsize
         else:
             if not self.relation_str.startswith(("<","=")):
                 self.relation_str = "=" + self.relation_str
@@ -2307,4 +2310,4 @@ def test():
     return doctest.testmod(selectors)
 
 if __name__ == "__main__":
-    print test()
+    print(test())

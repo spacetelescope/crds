@@ -51,6 +51,9 @@ Active instrument references are also broken down by filetype:
 >>> len(r.reference_names())  > 500
 True
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import os.path
@@ -103,11 +106,11 @@ class MissingHeaderKeyError(MappingError):
 class AstDumper(ast.NodeVisitor):
     """Debug class for dumping out rmap ASTs."""
     def visit(self, node):
-        print ast.dump(node), "\n"
+        print(ast.dump(node), "\n")
         ast.NodeVisitor.visit(self, node)
 
     def dump(self, node):
-        print ast.dump(node), "\n"
+        print(ast.dump(node), "\n")
         self.generic_visit(node)
 
     visit_Assign = dump
@@ -354,7 +357,7 @@ class Mapping(object):
         ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
         try:
             mapping._check_hash(text)
-        except ChecksumError, exc:
+        except ChecksumError as exc:
             if ignore == "warn":
                 log.warning("Checksum error", ":", str(exc))
             elif ignore:
@@ -840,7 +843,7 @@ class InstrumentContext(ContextMapping):
             filekind = filekind.lower()
             try:
                 ref = self.get_rmap(filekind).get_best_ref(header)
-            except Exception, exc:
+            except Exception as exc:
                 ref = "NOT FOUND " + str(exc)
             if ref is not None:
                 refs[filekind] = ref
@@ -1050,7 +1053,7 @@ class ReferenceMapping(Mapping):
             return "NOT FOUND n/a"
         except OmitReferenceTypeError:
             return None
-        except Exception, exc:
+        except Exception as exc:
             return "NOT FOUND " + str(exc)
 
     def _get_best_ref(self, header_in):
@@ -1070,7 +1073,7 @@ class ReferenceMapping(Mapping):
             log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=",
                         repr(bestref), verbosity=55)
             return bestref
-        except Exception, exc:
+        except Exception as exc:
             log.verbose("First selection failed:", str(exc), verbosity=55)
             header = self._fallback_header(self, header_in) # Execute type-specific plugin if applicable
             try:
@@ -1084,7 +1087,7 @@ class ReferenceMapping(Mapping):
                     return bestref
                 else:
                     raise
-            except Exception, exc:
+            except Exception as exc:
                 log.verbose("Fallback selection failed:", str(exc), verbosity=55)
                 if self._reffile_required in ["YES", "NONE"]:
                     log.verbose("No match found and reference is required:",  str(exc), verbosity=55)
@@ -1215,7 +1218,7 @@ class ReferenceMapping(Mapping):
             relevant = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "is relevant:", relevant, repr(source), verbosity=55)
-        except Exception, exc:
+        except Exception as exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
             if not relevant:
@@ -1229,7 +1232,7 @@ class ReferenceMapping(Mapping):
             omit = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "should be omitted: ", omit, repr(source), verbosity=55)
-        except Exception, exc:
+        except Exception as exc:
             log.warning("Keyword omit check failed: " + str(exc))
         else:
             if omit:
@@ -1546,4 +1549,4 @@ def test():
     return doctest.testmod(rmap)
 
 if __name__ == "__main__":
-    print test()
+    print(test())
