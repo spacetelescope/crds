@@ -424,34 +424,6 @@ def get_conjugate(reference):
         return reference[:-1] + "d"
     return None
 
-# ================================================================================================================
-
-def dump_multi_key(fitsname, keys, warn_keys, original_name=None, observatory=None):
-    """Dump out all header values for `keys` in all extensions of `fitsname`."""
-    log.info("Provenance Keywords")
-    header = get_header(fitsname, needed_keys=keys, original_name=original_name, observatory=observatory)
-    unseen = set(keys)
-    for key in keys:
-        hval = header.get(key, None)
-        if hval is not None:
-            if interesting_value(hval):
-                log.info(key, "=", repr(hval))
-            if key in unseen:
-                unseen.remove(key)
-    for key in unseen:
-        if key in warn_keys:
-            log.warning("Missing keyword '%s'."  % key)
-
-def interesting_value(value):
-    """Return True IFF `value` isn't uninteresting."""
-    if str(value).strip().lower() in ["",
-                                 "*** end of mandatory fields ***",
-                                 "*** column names ***",
-                                 "*** column formats ***"]:
-        return False
-    return True
-
-
 # ================================================================================================================    
 
 def test():
