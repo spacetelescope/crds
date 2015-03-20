@@ -84,7 +84,7 @@ one reference type was recommended.   This is essentially a list of files to be 
 TEST CASES
 ----------
 
->>> import test_config
+>>> from crds.tests import test_config
 >>> test_config.setup()
 
 >>> from crds.bestrefs import BestrefsScript

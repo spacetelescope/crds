@@ -54,7 +54,7 @@ Perform FITS table difference by rows
 TEST CASES
 ----------
 
->>> import test_config
+>>> from crds.tests import test_config
 >>> test_config.setup()
 
 >>> from crds.rowdiff import RowDiffScript
@@ -316,7 +316,7 @@ from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""
-    import test_rowdiff, doctest
+    import test_rowdiff, test_config, doctest
     return doctest.testmod(test_rowdiff)
 
 if __name__ == "__main__":

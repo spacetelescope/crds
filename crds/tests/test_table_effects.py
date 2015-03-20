@@ -5,7 +5,7 @@ This tests, through the use of bestrefs, the functioning of table effects.
 TEST CASES
 ----------
 
->>> import test_config
+>>> from crds.tests import test_config
 >>> test_config.setup()
 
 >>> from crds.bestrefs import BestrefsScript
