@@ -53,7 +53,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
 TEST CASES
 ----------
 
->>> import test_config
+>>> from crds.tests import test_config
 >>> test_config.setup()
 
 >>> from crds.diff import DiffScript
