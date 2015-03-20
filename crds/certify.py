@@ -445,6 +445,7 @@ class ReferenceCertifier(Certifier):
     """
     def __init__(self, *args, **keys):
         super(ReferenceCertifier, self).__init__(*args, **keys)
+        self.header = None
         self.simple_validators = None
         self.all_column_names = None
         self.all_simple_names = None
@@ -487,14 +488,31 @@ class ReferenceCertifier(Certifier):
 
     def dump_provenance(self):
         """Dump out provenance keywords for informational purposes."""
-        banner("-")
         dump_keys = sorted(set(key.upper() for key in 
             self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
             self.all_simple_names +   # what's defined in .tpn's, maybe not matched
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
-        data_file.dump_multi_key(
-            self.filename, dump_keys, self.provenance_keys, original_name=self.original_name, 
-            observatory=self.observatory)
+        unseen = set(dump_keys)
+        for key in dump_keys:
+            hval = self.header.get(key, None)
+            if hval is not None:
+                if self.interesting_value(hval):
+                    log.info(key, "=", repr(hval))
+                if key in unseen:
+                    unseen.remove(key)
+        warn_keys = self.provenance_keys
+        for key in unseen:
+            if key in warn_keys:
+                log.warning("Missing keyword '%s'."  % key)
+
+    def interesting_value(self, value):
+        """Return True IFF `value` isn't uninteresting."""
+        if str(value).strip().lower() in ["",
+                                     "*** end of mandatory fields ***",
+                                     "*** column names ***",
+                                     "*** column formats ***"]:
+            return False
+        return True
 
     def get_rmap_parkeys(self):
         """Determine required parkeys in reference path `refname` according to pipeline
@@ -739,7 +757,7 @@ class FitsCertifier(ReferenceCertifier):
         fits.verify(option='exception') # validates all keywords
         fits.close()
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
-
+        return super(FitsCertifier, self).load()
 # ============================================================================
 
 class UnknownCertifier(Certifier):
