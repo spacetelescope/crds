@@ -394,19 +394,20 @@ class Certifier(object):
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None):
+                 original_name=None, trap_exceptions=None):
         
         self.filename = filename
         self.context = context
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
-        self._dump_provenance = dump_provenance
+        self._dump_provenance_flag = dump_provenance
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
         self.observatory = observatory
         self.comparison_reference = comparison_reference
         self.original_name = original_name
+        self.trap_exceptions = trap_exceptions
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -469,7 +470,7 @@ class ReferenceCertifier(Certifier):
         self.certify_simple_parameters()
         if self.mode_columns:
             self.certify_reference_modes()
-        if self._dump_provenance:
+        if self._dump_provenance_flag:
             self.dump_provenance()
     
     def certify_simple_parameters(self):
@@ -557,7 +558,10 @@ class ReferenceCertifier(Certifier):
         if self.comparison_reference:
             old_reference = self.comparison_reference
         else:
-            old_reference = self.find_old_reference(self.context, self.filename)
+            if self.context is not None:
+                old_reference = self.find_old_reference(self.context, self.filename)
+            else:
+                old_reference = None
             if old_reference is None or old_reference == self.basename:
                 # Load tables modes anyway,  looking for duplicate modes.
                 for tab in tables.tables(self.filename):
@@ -583,8 +587,7 @@ class ReferenceCertifier(Certifier):
         """
         log.verbose("Resolving comparison reference for", repr(reffile), "in context", repr(context))
         with log.warn_on_exception("Failed resolving comparison reference for table checks"):
-            with log.reduced_verbosity(0, 70):    # Turn off verbose messages in block unless verbosity >= 70
-                return self._find_old_reference(context, reffile) 
+            return self._find_old_reference(context, reffile) 
     
     def _find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace."""
@@ -815,6 +818,8 @@ class MappingCertifier(Certifier):
             if derived_from.name == self.basename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
+                log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from),
+                         "from context", repr(self.context), "for checking mapping differences.")
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
             if self.context is not None:
@@ -828,10 +833,13 @@ class MappingCertifier(Certifier):
         
         if self.check_references == "contents":
             certify_files(references, context=self.context, 
+                          dump_provenance=self._dump_provenance_flag,
                           check_references=self.check_references,
                           compare_old_reference=self.compare_old_reference,
+                          trap_exceptions=self.trap_exceptions,
+                          script=self.script,
                           observatory=self.observatory)
-    
+
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
         paths for which the reference does not exist.
@@ -876,15 +884,6 @@ def find_old_mapping(comparison_context, new_mapping):
     if comparison_context:
         comparison_mapping = rmap.get_cached_mapping(comparison_context)
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
-        old_base, new_base = old_mapping.basename, os.path.basename(new_mapping)
-        if old_mapping is not None:
-            if old_base != new_base:
-                log.info("Mapping", repr(new_base), 
-                         "corresponds to mapping", repr(old_base), 
-                         "under context", repr(comparison_context))
-            else:
-                log.verbose("Mapping", repr(old_base), 
-                            "did not change relative to context", repr(comparison_context))
         return old_mapping
     else:
         return None
@@ -929,19 +928,17 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
         if comparison_reference:
             log.info("Certifying", repr(original_name) + ith,  "as", repr(filetype.upper()),
                      "relative to context", repr(context), "and comparison reference", repr(comparison_reference))
-        elif context:
+        else:
             log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()),
                      "relative to context", repr(context))
-        else:
-            log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()))
-            
         with log.error_on_exception("Validation error in " + repr(original_name)):
             certifier = klass(filename, context=context, check_references=check_references,
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
                               dont_parse=dont_parse, script=script, observatory=observatory,
                               comparison_reference=comparison_reference,
-                              original_name=original_name)
+                              original_name=original_name,
+                              trap_exceptions=trap_exceptions)
             certifier.certify()
 
     finally:
@@ -1063,10 +1060,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
-    def locate_file(self, filename):
-        """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
-        return self.locate_file_outside_cache(filename)
-    
+    """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
+    # locate_file = cmdline.Script.locate_file_outside_cache
+
     def main(self):
         if self.args.deep:
             check_references = "contents"
@@ -1075,8 +1071,10 @@ For more information on the checks being performed,  use --verbose or --verbosit
         else:
             check_references = None
 
-        assert (self.args.comparison_context in [None, "none"]) or config.is_mapping_spec(self.args.comparison_context), \
+        # String spellings of "none" are from command line,  None is the default which means "use operational context".
+        assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
+
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
             
@@ -1095,7 +1093,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
             if self.args.comparison_context is None and not self.args.comparison_reference:
                 log.verbose("Defaulting comparison context to latest operational CRDS context.")
                 self.args.comparison_context = self.default_context
-        elif self.args.comparison_context and self.args.comparison_context.lower() == "none":
+        elif self.args.comparison_context in [None, "none", "None", "NONE"]:
+            log.info("No comparison context specified or specified as 'none'.  No default context for mixed types.")
             self.args.comparison_context = None
             
         if self.args.comparison_context and self.args.sync_files:

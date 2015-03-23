@@ -318,22 +318,34 @@ class Script(object):
             raise NotImplementedError("Class must implement list of `self.args.files` raw file paths.")
         return [self.locate_file(fname) for fname in self.get_files(self.args.files)]
         
+
+    # 
+    # NOTES:
+    # crds:// will always mean "inside the cache"
+    # ./ will always mean "current directory"
+    # pathless files are more ambiguous,  historically in CRDS they mean "in the cache" 
+    #    but in most/all OSes pathless means "current directory" so concievably could change
+    #
     def locate_file(self, filename):
         """Locate file defines how members of the self.args.files list are located.
         The default behavior is to locate CRDS cached files,  either references or mappings.
         This is inappropriate for datasets so in some cases locate_file needs to be overridden.
+        Symbolic context names, e.g. hst-operatonal, resolved to literal contexts, e.g. hst_0320.pmap
         """
-        return config.locate_file(filename, observatory=self.observatory)
+        filename = config.pop_crds_uri(filename)   # nominally crds://
+        return config.locate_file(self.resolve_context(filename), observatory=self.observatory)
 
     def locate_file_outside_cache(self, filename):
         """This is essentially normal filename syntax,  except crds:// is interpreted to mean
-        locate filename inside the CRDS cache.
+        locate filename inside the CRDS cache.  symbolic context names are also resolved to
+        literal context filenames.
         """
         filename2 = config.pop_crds_uri(filename)   # nominally crds://
-        if filename != filename2:
+        filename2 = self.resolve_context(filename2) # e.g. hst-operational -->  hst_0320.pmap
+        if filename != filename2:  # Had crds:// or was date based copnt
             return config.locate_file(filename2, self.observatory)
         else:
-            return os.path.abspath(filename)
+            return os.path.abspath(filename2)
 
     def __call__(self):
         """Run the script's main() according to command line parameters."""
