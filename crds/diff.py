@@ -7,6 +7,7 @@ from __future__ import print_function
 
 import os
 import sys
+import re
 from collections import defaultdict
 
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config
@@ -290,10 +291,17 @@ def newer(name1, name2):
     False
     >>> newer("hst_cos_deadtab_0002.rmap", "hst_cos_deadtab_0001.rmap")
     True
+    >>> newer("hst_cos_deadtab_0001.asdf", "hst_cos_deadtab_0050.fits")
+    True
+    >>> newer("hst_cos_deadtab_0051.fits", "hst_cos_deadtab_0050.asdf")
+    False
     """
     if newstyle_name(name1):
         if newstyle_name(name2): # compare CRDS names
-            result = name1 > name2
+            if extension_rank(name1) == extension_rank(name2):
+                result = name1 > name2   # same extension compares by counter
+            else:  
+                result = extension_rank(name1) > extension_rank(name2)
         else:  # CRDS > CDBS
             result = True
     else:
@@ -304,6 +312,34 @@ def newer(name1, name2):
     log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
     return result
 
+def extension_rank(filename):
+    """Return a date ranking for `filename` based on extension, lowest numbers are oldest.
+    
+    >>> extension_rank("fooo.r0h")
+    0.0
+    >>> extension_rank("fooo.fits")
+    1.0
+    >>> extension_rank("fooo.json")
+    2.0
+    >>> extension_rank("fooo.yaml")
+    3.0
+    >>> extension_rank("/some/path/fooo.asdf")
+    4.0
+    """
+    ext = os.path.splitext(filename)[-1]
+    if re.match(r"\.r\dh", ext) or re.match(r"\.r\dd", ext):
+        return 0.0
+    elif ext == ".fits":
+        return 1.0
+    elif ext == ".json":
+        return 2.0
+    elif ext == ".yaml":
+        return 3.0
+    elif ext == ".asdf":
+        return 4.0
+    else:
+        return 5.0
+    
 # ============================================================================
 
 
@@ -531,6 +567,12 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         modes = mapping_affected_modes(self.old_file, self.new_file, self.args.include_header_diffs)
         for affected in modes:
             print(format_affected_mode(affected))
+
+
+def test():
+    import doctest
+    from crds import diff
+    return doctest.testmod(diff)
 
 if __name__ == "__main__":
     DiffScript()()
