@@ -332,7 +332,7 @@ def translate_date_based_context(info, context):
         except Exception, exc:
             log.error("Failed to translate date based context", repr(context), ":", str(exc))
             raise
-        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=20)
+        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=80)
         return translated
 
 def local_version_obsolete(server_version):
