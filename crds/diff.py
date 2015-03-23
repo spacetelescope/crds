@@ -485,12 +485,13 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.add_argument("--sync-files", dest="sync_files", action="store_true",
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
 
+    # locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
         """Perform the differencing."""
         self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
-        self.old_file = self.resolve_context(self.args.old_file)
-        self.new_file = self.resolve_context(self.args.new_file)
+        self.old_file = self.resolve_context(self.locate_file(self.args.old_file))
+        self.new_file = self.resolve_context(self.locate_file(self.args.new_file))
         if self.args.sync_files:
             self.sync_files([self.old_file, self.new_file])
         # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
