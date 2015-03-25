@@ -490,6 +490,9 @@ class UniqueErrorsMixin(object):
         self.ue_mixin.count = Counter()
         self.ue_mixin.unique_data_names = set()
         self.ue_mixin.all_data_names = set()
+        
+        # Exception trap context manager for use in "with" blocks trapping exceptions.
+        self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)  # can be overridden
 
     def add_args(self):
         """Add command line parameters to Script arg parser."""
@@ -506,12 +509,13 @@ class UniqueErrorsMixin(object):
         """
         msg = self.format_prefix(data, instrument, filekind, *params, **keys)
         log.error(msg)
-        key = log.format(instrument, filekind, params, **keys)
+        key = log.format(instrument, filekind, *params, **keys)
         if key not in self.ue_mixin.messages:
             self.ue_mixin.messages[key] = msg
             self.ue_mixin.unique_data_names.add(data)
         self.ue_mixin.count[key] += 1
         self.ue_mixin.all_data_names.add(data)
+        return None # for log.exception_trap_logger  --> don't reraise
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""

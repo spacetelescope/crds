@@ -204,17 +204,16 @@ def exception_trap_logger(func):
         try:
             yield
         except Exception,  exc:
-            keys["end"] = ""
-            exc_class = keys.pop("exception_class", exc.__class__)
-            msg = format(*args + (":", str(exc)), **keys)
-            reraise = func(msg)
+            reraise = func(*args + (":", str(exc)), **keys)
             if CRDS_EXCEPTION_TRAP == False:
                 # In python-2, distinction between raise and "raise something".  raise doesn't
                 # wreck the traceback,  raising a new improved exception does.
                 raise  
             # Augmented,  the traceback is trashed from here down but the message is better when caught higher up.
             elif reraise or CRDS_EXCEPTION_TRAP == "test":
-                raise exc_class(msg)
+                exc_class = keys.pop("exception_class", exc.__class__)
+                keys["end"] = ""
+                raise exc_class(format(*args + (":", str(exc)), **keys))
             else:
                 pass # snuff the exception,  func() probably issued a log message.
     return func_on_exception

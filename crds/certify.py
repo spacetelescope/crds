@@ -143,7 +143,7 @@ class Validator(object):
         
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
-        raise RuntimeError("Group keys are not currently supported by CRDS.")
+        log.warning("Group keys are not currently supported by CRDS.")
 
     def _get_header_value(self, header):
         """Pull this Validator's value out of `header` and return it.
@@ -408,6 +408,7 @@ class Certifier(object):
         self.comparison_reference = comparison_reference
         self.original_name = original_name
         self.trap_exceptions = trap_exceptions
+        self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -420,16 +421,12 @@ class Certifier(object):
     def format_name(self):
         return repr(self.original_name) if self.original_name else repr(self.basename)
     
-    def log_error(self, msg):
+    def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
-            try:
-                instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
-            except Exception:
-                instrument = filekind = "unknown"
-            self.script.log_and_track_error(self.filename, instrument, filekind, msg)
+            self.script.log_and_track_error(self.filename, *args, **keys)
         else:
-            log.error("In", repr(self.filename), ":", msg)
+            log.error("In", repr(self.filename), ":", *args, **keys)
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
@@ -463,7 +460,7 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error parsing", self.format_name, exception_class=InvalidFormatError):
+        with log.augment_exception("Error loading", self.format_name, exception_class=InvalidFormatError):
             self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
@@ -476,12 +473,8 @@ class ReferenceCertifier(Certifier):
     def certify_simple_parameters(self):
         """Check simple parameter values,  column and non-column."""
         for checker in self.simple_validators:
-            try:
+            with self.error_on_exception("Checking", repr(checker.info.name)):
                 checker.check(self.filename, self.header)
-            except Exception as exc:
-                if not log.get_exception_trap():
-                    raise
-                self.log_error("Checking " + repr(checker.info.name) + " : " + str(exc))
                 
     def load(self):
         """Load and parse header from self.filename"""
@@ -544,7 +537,7 @@ class ReferenceCertifier(Certifier):
         the spec for each type in the observatory package.
         """
         mode_columns = []
-        with log.error_on_exception("Error finding unique row keys for", repr(self.basename)):
+        with self.error_on_exception("Error finding unique row keys for", repr(self.basename)):
             instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
             mode_columns = utils.get_locator_module(self.observatory).get_row_keys(instrument, filekind)
             if mode_columns:
@@ -579,7 +572,7 @@ class ReferenceCertifier(Certifier):
         new_tables = tables.tables(self.filename)
 
         for i in range(0, min(n_new_segments, n_old_segments)):
-            with log.error_on_exception("Checking tables modes in segment", i, "of", repr(self.filename)):
+            with self.error_on_exception("Checking tables modes in segment", i, "of", repr(self.filename)):
                 self.check_table_modes(old_tables[i], new_tables[i])
     
     def find_old_reference(self, context, reffile):
@@ -847,7 +840,7 @@ class MappingCertifier(Certifier):
         references = []
         for ref in mapping.reference_names():
             path = None
-            with log.error_on_exception("Can't locate reference file", repr(ref)):
+            with self.error_on_exception("Can't locate reference file", repr(ref)):
                 path = get_existing_path(ref, mapping.observatory)
             if path:
                 log.verbose("Reference", repr(ref), "exists at", repr(path))
@@ -860,21 +853,6 @@ def get_existing_path(reference, observatory):
     if not os.path.exists(path):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
-
-def mapping_closure(files):
-    """Traverse the mappings in `files` and return a list of all mappings
-    referred to by `files` as well as any references in `files`.
-    """
-    closure_files = set()
-    for file_ in files:
-        more_files = set([file_])
-        if rmap.is_mapping(file_):
-            with log.error_on_exception("Problem loading submappings of", repr(file_)):
-                mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
-                more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
-        closure_files |= more_files
-    return sorted(closure_files)
 
 def find_old_mapping(comparison_context, new_mapping):
     """Find the Mapping in pmap `comparison_context` corresponding to filename `new_mapping`,  if there is one.
@@ -931,7 +909,10 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
         else:
             log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()),
                      "relative to context", repr(context))
-        with log.error_on_exception("Validation error in " + repr(original_name)):
+
+        trap = log.error_on_exception if script is None else script.error_on_exception
+            
+        with trap(filename, "Certifier instantiation error"):
             certifier = klass(filename, context=context, check_references=check_references,
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
@@ -939,6 +920,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                               comparison_reference=comparison_reference,
                               original_name=original_name,
                               trap_exceptions=trap_exceptions)
+        with trap(filename, "Validation error"):
             certifier.certify()
 
     finally:
@@ -1079,7 +1061,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
             
         if not self.args.dont_recurse_mappings:
-            all_files = mapping_closure(self.files)
+            all_files = self.mapping_closure(self.files)
         else:
             all_files = set(self.files)
             
@@ -1119,6 +1101,32 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         return log.errors()
     
+    def log_and_track_error(self, filename, *args, **keys):
+        """Override log_and_track_error() to compute instrument, filekind automatically."""
+        basename = os.path.basename(filename)
+        try:
+            instrument, filekind = utils.get_file_properties(self.observatory, filename)
+        except Exception:
+            instrument = filekind = "unknown"
+        super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
+        return None  # to suppress re-raise
+    
+    def mapping_closure(self, files):
+        """Traverse the mappings in `files` and return a list of all mappings referred to by 
+        `files` as well as any references in `files`.
+        """
+        closure_files = set()
+        for file_ in files:
+            more_files = set([file_])
+            if rmap.is_mapping(file_):
+                with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
+                    mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
+                    more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
+                    more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
+            closure_files |= more_files
+        return sorted(closure_files)
+
+
 def main():
     """Construct and run the Certify script,  return 1 if errors occurred, 0 otherwise."""
     errors = CertifyScript()()
