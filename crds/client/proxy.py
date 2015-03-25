@@ -17,14 +17,8 @@ PARSER = parser_mod.HTMLParser()
 
 from crds import log, config
 
-class CrdsError(Exception):
-    """Baseclass for all client exceptions."""
-    def __init__(self, *args, **keys):
-        return super(CrdsError, self).__init__(" ".join(args), **keys)
+from crds.exceptions import ServiceError
 
-class ServiceError(CrdsError):
-    """The service call failed for some reason."""
-    
 def apply_with_retries(f, *pars, **keys):
     """Apply function f() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
     retries = config.get_client_retry_count()

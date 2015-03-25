@@ -97,44 +97,7 @@ import copy
 import crds
 from crds import log, utils
 
-# ==============================================================================
-
-class ValidationError(crds.CrdsError):
-    """Some Selector key did not match the set of legal values.
-    """
-
-class AmbiguousMatchError(crds.CrdsError):
-    """Represents a MatchSelector which matched more than one equivalently 
-    weighted choice.   Ambiguous matches represents a problem in the RMAP 
-    for projects which don't allow these or Selectors which don't support 
-    them.   NOTE: allowing ambiguous matches is important to HST and the 
-    canonical HST Match -> UseAfter pattern can support them under many
-    circumstances.  The semantics for these are shaky since it's possible
-    to have merge collisions which work out badly.
-    """
-
-class MissingParameterError(crds.CrdsError):
-    """A required parameter for a matching selector did not appear
-    in the parameter dictionary.
-    """
-
-class BadValueError(crds.CrdsError):
-    """A required parameter for a matching selector did not have
-    any of the valid values.
-    """
-
-class ModificationError(crds.CrdsError):
-    """Failed attempt to modify rmap, e.g. replacement vs. addition.
-    """
-
-class MatchingError(crds.CrdsLookupError):
-    """Represents a MatchSelector lookup which failed.
-    """
-
-class UseAfterError(crds.CrdsLookupError):
-    """None of the dates in the selector precedes the processing date.
-    """
-    
+from crds.exceptions import *
 
 # ==============================================================================
 

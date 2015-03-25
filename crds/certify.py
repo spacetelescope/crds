@@ -14,7 +14,7 @@ from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import tables
 from crds import client
 from crds import mapping_parser
-from crds.rmap import ValidationError
+from crds.exceptions import *
 
 NOT_FITS = -1
 VALID_FITS = 1
@@ -32,23 +32,6 @@ VALID_FITS = 1
 #
 TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 
-# ============================================================================
-
-class CertifyException(Exception):
-    """Certify exception baseclass."""
-    
-class MissingKeywordError(CertifyException):
-    """A required keyword was not defined."""
-
-class IllegalKeywordError(CertifyException):
-    """A keyword which should not be defined was present."""
-
-class InvalidFormatError(CertifyException):
-    """The given file was not loadable."""
-
-class TypeSetupError(CertifyException):
-    """An error occured while trying to locate file constraints and row mode variables."""
-    
 # ----------------------------------------------------------------------------
 class Validator(object):
     """Validator is an Abstract class which applies TpnInfo objects to reference files.
@@ -871,9 +854,6 @@ def banner(char='#'):
     log.info(char * 40)  # Serves as demarkation for each file's report
     
 # ============================================================================
-
-class MissingReferenceError(RuntimeError):
-    """A reference file mentioned by a mapping isn't in CRDS yet."""
 
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,

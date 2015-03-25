@@ -18,7 +18,7 @@ import glob
 
 # import crds.pysh as pysh
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
-from crds import CrdsError
+from crds.exceptions import CrdsError
 from crds.hst import siname
 
 # =======================================================================

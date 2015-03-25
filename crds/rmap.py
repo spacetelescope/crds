@@ -70,15 +70,7 @@ from . import (log, utils, selectors, data_file, config, substitutions)
 from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
-from crds.selectors import ValidationError
-
-# ===================================================================
-
-class CrdsUnknownInstrumentError(crds.CrdsError):
-    """Reference to an instrument which does not exist in a context."""
-
-class CrdsUnknownReftypeError(crds.CrdsError):
-    """Reference to a filekind which does not exist in a context."""
+from crds.exceptions import *
 
 # ===================================================================
 
@@ -87,18 +79,6 @@ Failure  = namedtuple("Failure","header_keyword,message")
 Filemap  = namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
-
-class MappingError(crds.CrdsError):
-    """Exception in load_rmap."""
-
-class FormatError(MappingError):
-    "Something wrong with context or rmap file format."
-
-class ChecksumError(MappingError):
-    "There's a problem with the mapping's checksum."
-
-class MissingHeaderKeyError(MappingError):
-    """A required key was not in the mapping header."""
 
 class AstDumper(ast.NodeVisitor):
     """Debug class for dumping out rmap ASTs."""
@@ -738,7 +718,7 @@ class PipelineContext(ContextMapping):
         try:
             return self.selections[instrument]
         except KeyError:
-            raise crds.CrdsUnknownInstrumentError("Unknown instrument " + repr(instrument) +
+            raise CrdsUnknownInstrumentError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.basename))
 
     def get_filekinds(self, dataset):
@@ -766,7 +746,7 @@ class PipelineContext(ContextMapping):
                 try: # This hack makes FITS headers work prior to back-mapping to data model names.
                     instr = header["INSTRUME"]
                 except KeyError:
-                    raise crds.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+                    raise CrdsError("Missing '%s' keyword in header" % self.instrument_key)
         return instr.upper()
 
     def get_item_key(self, filename):
@@ -935,21 +915,6 @@ class InstrumentContext(ContextMapping):
         return diffs
 
 # ===================================================================
-
-class IrrelevantReferenceTypeError(LookupError):
-    """The reference determined by this rmap does not apply to the instrument
-    mode specified by the dataset header.
-    
-    Based on the "rmap_relevance" rmap header expression.
-    """
-
-class OmitReferenceTypeError(LookupError):
-    """The reference determined by this rmap does not apply to the instrument
-    mode specified by the dataset header,  and should be completely omitted from
-    the bestrefs results dictionary.
-    
-    Based on the "rmap_omit" rmap header expression.
-    """
 
 class ReferenceMapping(Mapping):
     """ReferenceMapping manages loading the rmap associated with a single
@@ -1307,7 +1272,7 @@ class ReferenceMapping(Mapping):
         terminal = os.path.basename(terminal)
         deleted_count = new.selector.delete(terminal)
         if deleted_count == 0:
-            raise crds.CrdsError("Terminal '%s' could not be found and deleted." % terminal)
+            raise CrdsError("Terminal '%s' could not be found and deleted." % terminal)
         return new
 
     def get_matching_header(self, header):
