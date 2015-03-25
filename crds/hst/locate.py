@@ -34,7 +34,7 @@ def test():
 # These two functions decouple the generic reference file certifier program 
 # from observatory-unique ways of specifying and caching Validator parameters.
 
-from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
+from crds.hst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS, INSTRUMENT_FIXERS, TYPE_FIXERS
 
 reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
 mapping_validator_key = TYPES.mapping_validator_key
@@ -309,15 +309,6 @@ def ref_properties_from_cdbs_path(filename):
     except KeyError:
         assert False, "Couldn't map extension/suffix " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
-
-INSTRUMENT_FIXERS = {
-    "wfii": "wfpc2",
-}
-
-TYPE_FIXERS = {
-    ("wfpc2","dark") : "drk", 
-}
-
 
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine:

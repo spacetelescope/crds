@@ -11,3 +11,8 @@ EXTENSIONS = TYPES.extensions
 TEXT_DESCR = TYPES.text_descr
 FILEKINDS = TYPES.filekinds
 
+INSTRUMENT_FIXERS = {
+}
+
+TYPE_FIXERS = {
+}

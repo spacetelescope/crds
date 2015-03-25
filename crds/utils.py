@@ -13,7 +13,7 @@ import ast
 
 # from crds import data_file,  import deferred until required
 
-from crds import log, config, pysh, ALL_OBSERVATORIES
+from crds import log, config, pysh, ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
 
 # ===================================================================
 
@@ -666,7 +666,7 @@ def instrument_to_observatory(instrument):
     'jwst'
     >>> instrument_to_observatory("foo")
     """
-    instrument = instrument.lower()
+    instrument = fix_instrument(instrument.lower())
     for (obs, instr) in observatory_instrument_tuples():
         if instrument == instr:
             return obs
@@ -694,12 +694,14 @@ def instrument_to_locator(instrument):
     return get_locator_module(instrument_to_observatory(instrument))
 
 def file_to_instrument(filename):
-    """Given reference or dataset `filename`,  return the associated instrument."""
+    """Given reference or dataset `filename`,  return the associated instrument.
+    A key aspect of this function versus get_file_properties() is that observatory is not known.
+    """
     for (_obs, instr) in observatory_instrument_tuples():
         if "{}_".format(instr) in filename.lower() or "_{}".format(instr) in filename.lower():
             return instr.upper()
     from crds import data_file
-    header = data_file.get_unconditioned_header(filename, needed_keys=["INSTRUME", "META.INSTRUMENT.NAME", "INSTRUMENT"])
+    header = data_file.get_unconditioned_header(filename, needed_keys=INSTRUMENT_KEYWORDS)
     return header_to_instrument(header)
     
 def header_to_instrument(header, default=None):
@@ -714,11 +716,33 @@ def header_to_instrument(header, default=None):
     >>> header_to_instrument({"FOO":"MIRI"}, default="UNDEFINED")
     'UNDEFINED'
     """
-    val = get_any_of(header, ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT"], default)
+    val = get_any_of(header,  INSTRUMENT_KEYWORDS, default)
+    val = fix_instrument(val)
     if val is None:
         raise KeyError("No instrument keyword defined in header.")
     else:
         return val.upper()
+    
+def fix_instrument(instr):
+    """"Apply instrument fixers to `instr` to replace obsolete synonyms with standard version."""
+    return get_all_instrument_fixers().get(instr, instr)
+
+@cached
+def get_all_instrument_fixers():
+    """Return the dictionary which maps all weird instrument name synonymns to standard names
+    for the combination of all obersvatories.
+    """
+    all_fixers = {}
+    for obs in ALL_OBSERVATORIES:
+        obs_pkg = get_observatory_package(obs)
+        try:
+            obs_fixers = obs_pkg.INSTRUMENT_FIXERS
+        except AttributeError:
+            continue
+        assert not (set(all_fixers.keys()) & set(obs_fixers.keys())), \
+            "Two observatories are using the same instrument fixer."
+        all_fixers.update(obs_fixers)
+    return all_fixers
 
 def get_any_of(getter,  possible_keys,  default=None):
     """Search for the value of any of `possible_keys` in `dictionary`,  returning `default` if none are found.
@@ -759,6 +783,6 @@ reference_to_locator = file_to_locator
 def test():
     """Run doctests."""
     import doctest
-    from . import utils
+    from crds import utils
     return doctest.testmod(utils)
 
