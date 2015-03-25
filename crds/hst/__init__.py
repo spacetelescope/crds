@@ -10,3 +10,11 @@ TEXT_DESCR = TYPES.text_descr
 FILEKINDS = TYPES.filekinds
 
 HERE  = os.path.dirname(__file__) or "."
+
+INSTRUMENT_FIXERS = {
+    "wfii": "wfpc2",
+}
+
+TYPE_FIXERS = {
+    ("wfpc2","dark") : "drk", 
+}
