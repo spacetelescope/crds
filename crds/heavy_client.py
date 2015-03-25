@@ -35,6 +35,7 @@ import uuid
 
 from . import rmap, log, utils, config
 from crds.client import api
+from crds.exceptions import *
 
 __all__ = ["getreferences", "getrecommendations"]
 
@@ -266,9 +267,9 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         log.verbose("Caching mapping files for context", srepr(context))
         try:
             api.dump_mappings(context, ignore_cache=ignore_cache)
-        except crds.CrdsError, exc:
+        except CrdsError, exc:
             traceback.print_exc()
-            raise crds.CrdsNetworkError("Failed caching mapping files: " + str(exc))
+            raise CrdsNetworkError("Failed caching mapping files: " + str(exc))
         return rmap.get_best_references(context, parameters, reftypes)
 
 # ============================================================================
@@ -326,7 +327,7 @@ def translate_date_based_context(info, context):
             if context == info.observatory + "-operational":
                 return info["operational_context"]
             else:
-                raise crds.CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
+                raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
         try:
             translated = api.get_context_by_date(context, observatory=info.observatory)
         except Exception, exc:
@@ -381,7 +382,7 @@ class ConfigInfo(utils.Struct):
         else:
             eff_mode = mode   # explicitly local or remote
             if eff_mode == "remote" and not self.connected:
-                raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
+                raise CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
             if eff_mode == "local" and obsolete:
                 log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
         return eff_mode
@@ -405,7 +406,7 @@ def get_config_info(observatory):
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
-    except api.CrdsError:
+    except CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
     info.effective_mode = info.get_effective_mode()
@@ -496,7 +497,7 @@ def get_installed_info(observatory):
         log.warning("Using highest numbered pipeline context", repr(pmap), 
                     "as default. Bad file checking is disabled.")
     except IndexError, exc:
-        raise crds.CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
+        raise CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
                         repr(where) + " : " + str(exc))
     return ConfigInfo(
             edit_context = pmap,

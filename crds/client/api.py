@@ -9,23 +9,16 @@ import urllib2
 import re
 import zlib
 
-from .proxy import CheckingProxy, ServiceError, CrdsError
+from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
 from crds import utils, log, config
 from crds.client import proxy
 
-# ==============================================================================
+from crds.exceptions import *
 
-class CrdsNetworkError(CrdsError):
-    """First network service call failed, nominally connection refused."""
-    
-class CrdsLookupError(CrdsError, LookupError):
-    """Filekind NOT FOUND for some reason defined in the exception string."""
-    
-class CrdsDownloadError(CrdsError):
-    """Error downloading data for a reference or mapping file."""
+# ==============================================================================
 
 __all__ = [
            "get_default_context",
@@ -62,12 +55,6 @@ __all__ = [
            "get_best_references_by_ids",
            "get_best_references_by_header_map",
 
-           "CrdsError",
-           "CrdsLookupError",
-           "CrdsNetworkError",
-           "CrdsDownloadError",
-           "ServiceError",
-           
            "get_required_parkeys",
            "get_affected_datasets",
            "get_context_history",

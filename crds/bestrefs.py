@@ -14,9 +14,10 @@ import json
 from astropy.io import fits as pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
+from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
 from crds.client import api
+from crds.exceptions import *
 
 # ===================================================================
 
@@ -26,9 +27,6 @@ MAX_DATE = "9999-01-01 23:59:59"
 # ===================================================================
 
 UpdateTuple = namedtuple("UpdateTuple", ["instrument", "filekind", "old_reference", "new_reference"])
-
-class UnsupportedUpdateMode(CrdsError):
-    """Database modes don't currently support updating best references recommendations on the server."""
 
 # ===================================================================
 # There's a problem with using CDBS as a gold standard in getting consistent results between
@@ -83,7 +81,7 @@ class HeaderGenerator(object):
         """Return the full header corresponding to `source`.   If header is a string, raise an exception."""
         header = self._header(source)
         if isinstance(header, str):
-            raise crds.CrdsError("Failed to fetch header for " + repr(source) + ": " + repr(header))
+            raise CrdsError("Failed to fetch header for " + repr(source) + ": " + repr(header))
         else:
             return dict(header)
 
@@ -111,7 +109,7 @@ class HeaderGenerator(object):
     
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
-        raise UnsupportedUpdateMode("This dataset access mode doesn't support updates.")
+        raise UnsupportedUpdateModeError("This dataset access mode doesn't support updates.")
     
     def save_pickle(self, outpath, only_ids=None):
         """Write out headers to `outpath` file which can be a Python pickle or .json"""
