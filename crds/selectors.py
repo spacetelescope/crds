@@ -1434,7 +1434,7 @@ Restore original debug behavior:
         # Sort candidates into:  [ (weight, [match_tuples...]) ... ]
         # Lowest weight is best match
         candidates = sorted([(x[0], tuple(x[1])) for x in candidates.items()])
-        log.verbose("Candidates", log.PP(candidates), verbosity=60)
+        log.verbose("Candidates:\n", log.PP(candidates), verbosity=60)
         return candidates
 
     @utils.cached
