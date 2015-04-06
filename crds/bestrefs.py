@@ -17,7 +17,7 @@ import crds
 from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
 from crds.client import api
-from crds.exceptions import *
+from crds.exceptions import CrdsError
 
 # ===================================================================
 
@@ -479,6 +479,9 @@ and debug output.
             self.args.dump_unique_errors = True
             self.args.stats = True
         
+        config.ALLOW_BAD_RULES.set(self.args.allow_bad_rules)
+        config.ALLOW_BAD_REFERENCES.set(self.args.allow_bad_references)
+
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
         self.updates = OrderedDict()  # map of reference updates
@@ -660,8 +663,14 @@ and debug output.
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
         
+        self.add_argument("--allow-bad-rules", action="store_true",
+            help="Only warn if a context which is marked 'bad' is used, otherwise error.")
+        
+        self.add_argument("--allow-bad-references", action="store_true",
+            help="Only warn if a reference which is marked bad is recommended, otherwise error.")
+        
         self.add_argument("-e", "--bad-files-are-errors", action="store_true",
-            help="Treat recommendations of known bad/invalid files as errors, not warnings.")
+            help="DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.")
         
         self.add_argument("--undefined-differences-matter", action="store_true",
             help="If not set, a transition from UNDEFINED to anything else is not considered a difference error.")
@@ -711,7 +720,7 @@ and debug output.
         # Get subset of bad files contained by this context.
         bad_contained = heavy_client.get_bad_mappings_in_context(self.observatory, context)
         if bad_contained:
-            if self.args.bad_files_are_errors:
+            if not config.ALLOW_BAD_RULES:
                 self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
                         "is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.")
             else:                 
@@ -722,7 +731,7 @@ and debug output.
     def warn_bad_reference(self, dataset, instrument, filekind, reference):
         """Issue a warning if `reference` is a known bad file."""
         if reference.lower() in self.bad_files:
-            if self.args.bad_files_are_errors:
+            if not config.ALLOW_BAD_REFERENCES:
                 self.log_and_track_error(dataset, instrument, filekind, "File", repr(reference), 
                     "is bad. Use is not recommended,  results may not be scientifically valid.")
             else:
@@ -733,14 +742,17 @@ and debug output.
             return 0
 
     def warn_bad_updates(self):
-        """Issue warnings for each bad file in the updates map."""
+        """Issue warnings for each bad references in the updates map.  This is not inlined in the
+        getreferences() core function because it only pertains to *new* bad reference assignments,
+        not old ones,  so it is only relevant for an update,  not every assignment.
+        """
         log.verbose("Checking updates for bad files.")
         bad_files = 0
         for (dataset, updates) in sorted(self.updates.items()):
             for update in sorted(updates):
                 bad_files += self.warn_bad_reference(dataset, update.instrument, update.filekind, update.new_reference)
         log.verbose("Total bad files =", bad_files)
-        
+
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
         return filename
@@ -827,9 +839,9 @@ and debug output.
         with log.error_on_exception("Failed processing", repr(dataset)):
             log.verbose("="*120)
             if self.args.files:
-                log.info("===> Processing", dataset)
+                log.info("===> Processing", dataset)     # file mode
             else:
-                log.verbose("===> Processing", dataset, verbosity=25)
+                log.verbose("===> Processing", dataset, verbosity=25)   # database or regression modes
             self.increment_stat("datasets", 1)
             return self._process(dataset)
 
@@ -1107,7 +1119,7 @@ def cleanpath(name):
 
 def main():
     """Construct and run the bestrefs script,  return 1 if errors occurred, 0 otherwise."""
-    errors = BestrefsScript()() 
+    errors = BestrefsScript()()
     exit_status = int(errors > 0)  # no errors = 0,  errors = 1
     return exit_status
 

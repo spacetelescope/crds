@@ -9,12 +9,6 @@ import glob
 
 from crds import log
 
-# ============================================================================
-
-CRDS_DATA_CHUNK_SIZE = 2**23   # file download transfer block size, 8M.  HTTP, but maybe not RPC.
-
-CRDS_CHECKSUM_BLOCK_SIZE = 2**23   # size of block for utils.checksum(), also 8M
-
 # ===========================================================================
 
 def env_to_bool(varname, default=False):
@@ -28,11 +22,9 @@ def env_str_to_bool(varname, val):
     """Convert the boolean environment value string `val` to a Python bool
     on behalf of environment variable `varname`.
     """
-    if val in ["False", "false", "True", "true"]:
-        rval = bool(val.capitalize())
-    elif val in ["F", "f", "0", False, 0]:
+    if val in ["False", "false", "FALSE", "F", "f", "0", False, 0]:
         rval = False
-    elif val in ["T", "t", "1", True, 1]:
+    elif val in ["True", "true", "TRUE", "T", "t", "1", True, 1]:
         rval = True
     else:
         raise ValueError("Invalid value " +  repr(val) + 
@@ -54,6 +46,83 @@ def env_str_to_int(varname, val):
         raise ValueError("Invalid value for " + repr(varname) + 
                          " should have a decimal integer value but is " + repr(str(val)))
 
+# ===========================================================================
+
+class ConfigItem(object):
+    """CRDS environment control item base class.  These are driven by environment variables
+    but conceptually could extend to a CRDS .rc file of some kind.
+    """
+    def __init__(self, env_var, default, comment=None, valid_values=None, lower=False):
+        """Defines CRDS environment item named `env_var` which has the value `default` when not specified anywhere."""
+        self.env_var = env_var  # for starters,  this IS an env var,  bu conceptually it is an identifier.
+        self.default = default
+        self.comment = comment
+        self.valid_values = valid_values
+        self.lower = lower
+        self.get()
+
+    def check_value(self, value):
+        """Verify that `value` is valid for this config item."""
+        if self.valid_values:
+            assert value in self.valid_values, "Invalid value for " + repr(self.env_var) + " of " + repr(value)  + \
+                "is not one of " + repr(self.valid_values)
+        return value
+
+    def get(self):
+        """Return the value of this control item,  or the default if it is not set."""
+        value = os.environ.get(self.env_var, self.default)
+        if self.lower:
+            value = value.lower()
+        self.check_value(value)
+        return value
+    
+    def set(self, value):
+        """Set the value of the control item,  for the sake of this runtime session only."""
+        self.check_value(value)
+        if self.lower:
+            value = value.lower()
+        os.environ[self.env_var] = str(value)
+        
+class StrConfigItem(ConfigItem):
+    """Config item for a string value,  currently no difference from base ConfigItem."""
+
+class BooleanConfigItem(ConfigItem):
+    """Represents a boolean environment setting for CRDS."""
+
+    def get(self):
+        """Return the bool value of this config item."""
+        return env_str_to_bool(self.env_var, super(BooleanConfigItem, self).get())
+    
+    def __nonzero__(self):
+        """Support using this boolean config item be used as a conditional expression."""
+        return self.get()
+    
+class IntConfigItem(ConfigItem):
+    """Represents a boolean environment setting for CRDS."""
+
+    def get(self):
+        """Return the bool value of this config item."""
+        return env_str_to_int(self.env_var, super(IntConfigItem, self).get())
+    
+    def __nonzero__(self):
+        """Support using this boolean config item be used as a conditional expression."""
+        return self.get() != 0
+    
+# ===========================================================================
+
+ALLOW_BAD_REFERENCES  = BooleanConfigItem("CRDS_ALLOW_BAD_REFERENCES", False,
+    "When True, references which are designated as BAD (scientifically invalid) on the server can be used with warnings.")
+
+ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
+    "When True, rules which are designated as BAD (scientifically invalid) on the server can be used with warnings.")
+
+# ============================================================================
+
+CRDS_DATA_CHUNK_SIZE = IntConfigItem("CRDS_DATA_CHUNK_SIZE", 2**23,
+   "File download transfer block size, 8M.  HTTP, but maybe not RPC.")   
+
+CRDS_CHECKSUM_BLOCK_SIZE = IntConfigItem("CRDS_CHECKSUM_BLOCK_SIZE", 2**23,
+    "Size of data read into memory at once for utils.checksum.")
 # ===========================================================================
 
 DEFAULT_CRDS_DIR = "/grp/crds/cache"
@@ -216,6 +285,11 @@ def check_crds_ref_subdir_mode(mode):
 
 # ===========================================================================
 
+CRDS_MODE = StrConfigItem("CRDS_MODE", default="auto",
+    comment="""Selects where bestrefs are performed, locally, remotely (on the CRDS server), 
+    or automatically chosen by comparing client version to server version.""",
+    valid_values=["local", "remote", "auto"])
+
 def get_crds_processing_mode():
     """Return the preferred location for computing best references when
     network connectivity is available.
@@ -224,9 +298,11 @@ def get_crds_processing_mode():
     'remote'  --   compute remotely even if client CRDS is up-to-date
     'auto'    --   compute locally unless connected and client CRDS is obsolete
     """
-    mode = os.environ.get("CRDS_MODE","auto")
-    assert mode in ["local", "remote", "auto"], "Invalid CRDS_MODE: " + repr(mode)
-    return mode
+    return CRDS_MODE.get()
+
+# ===============================================================================================
+
+# CRDS_CONTEXT = StrConfigItem("CRDS_CONTEXT", default=None)
 
 def get_crds_env_context():
     """If it has been specified in the environment by CRDS_CONTEXT,  return the 
@@ -260,6 +336,9 @@ def get_crds_env_context():
             "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context) + " at " + repr(where)
     return context
 
+CRDS_IGNORE_MAPPING_CHECKSUM = BooleanConfigItem("CRDS_IGNORE_MAPPING_CHECKSUM", False,
+    "disables mapping checksums during development.")
+
 def get_ignore_checksum():
     """Returns environment override for disabling mapping checksums during development."""
     return env_to_bool("CRDS_IGNORE_MAPPING_CHECKSUM", False)
@@ -290,6 +369,10 @@ def get_crds_actual_paths(observatory):
 
 # client API related settings.
 
+CRDS_DOWNLOAD_MODE = StrConfigItem("CRDS_DOWNLOAD_MODE", "http",
+    "Selects the mode used by the CRDS client for downloading rules and references.",
+    ["http", "rpc", "plugin"], lower=True)
+
 def get_download_mode():
     """Return the mode used to download references and mappings,  either normal
     "http" file transfer or json "rpc" based.   In theory HTTP optimizes better 
@@ -299,10 +382,7 @@ def get_download_mode():
     archive server).   Once/if a public archive server is available with normal 
     URLs,  that wopuld be the preferred means to get references and mappings.
     """
-    mode = os.environ.get("CRDS_DOWNLOAD_MODE", "http").lower()
-    assert mode in ["http", "rpc", "plugin"], \
-        "Invalid CRDS_DOWNLOAD_MODE setting.  Use 'http' (default), 'rpc' (port forwarding), or 'plugin' (fastest)."
-    return mode
+    return CRDS_DOWNLOAD_MODE.get()
 
 def get_download_plugin():
     """Fetch a command template from the environment to use a as a substitute for CRDS
