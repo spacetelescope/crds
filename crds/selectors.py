@@ -375,6 +375,7 @@ class Selector(object):
         for selection in self._selections:
             key, choice = selection.key, selection.choice
             with log.augment_exception(repr(key)):
+                log.verbose("Validating match key", repr(key))
                 self._validate_key(key, valid_values_map)
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
@@ -431,6 +432,8 @@ class Selector(object):
         Note that the .tpn assumption applies primarily to HST, the valid value constraints
         for JWST may (eventually) come from the data model schema instead.
         """
+        log.verbose("Validating parameter", repr(name), "with value", repr(value), 
+                    "with respect to", valid_list)
         if value in valid_list:   # typical |-glob valid_list membership
             return
         if "*" in valid_list or "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
@@ -1496,6 +1499,7 @@ Restore original debug behavior:
                                   repr(self._parameters) + " for key " + repr(key))
         for i, name in enumerate(self._parameters):
             if name not in valid_values_map:
+                log.verbose("Skipping unchecked parameter", repr(name))
                 continue
             for value in str(key[i]).split("|"):
                 self._validate_value(name, value, valid_values_map[name])
