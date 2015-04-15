@@ -296,5 +296,5 @@ def locate_dir(instrument, mode=None):
 # ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
-    # raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
+    raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
 
