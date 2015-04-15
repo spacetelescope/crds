@@ -150,7 +150,7 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
             header = get_data_model_header(filepath, needed_keys)
         else:
             header = get_fits_header_union(filepath, needed_keys)
-    log.verbose("Header of", repr(filepath), "=\n", log.PP(header), verbosity=90)
+    log.verbose("Header of", repr(filepath), "=", log.PP(header), verbosity=90)
     return header
 
 # A clearer name
