@@ -31,6 +31,10 @@ context which still assigned it:
 
 The default handling when a bad reference file is assigned is to raise an exception:
 
+>>> from crds import config
+>>> config.ALLOW_BAD_RULES.reset()
+>>> config.ALLOW_BAD_REFERENCES.reset()
+
 >>> crds.getreferences(header, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])
 Traceback (most recent call last):
     ...
