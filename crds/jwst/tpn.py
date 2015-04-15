@@ -65,6 +65,18 @@ def _schema_to_flat(schema):
     """Load the specified data model schema and return a flat dictionary from 
     data model dotted path strings to TpnInfo objects.
     """
+    flat = _x_schema_to_flat(schema)
+    uppercase = {}
+    for key, val in flat.iteritems():
+        if isinstance(val, list):
+            val = [ item.upper() for item in val ]
+        else:
+            val = val.upper()
+        uppercase[key.upper()] = val
+    return uppercase
+
+def _x_schema_to_flat(schema):
+    """Recursively flatten `schema` without addressing case issues."""
     results = {}
     if schema["type"] ==  "object":
         subprops = schema["properties"]
@@ -74,7 +86,8 @@ def _schema_to_flat(schema):
                 continue
             if isinstance(sub_tree, dict):
                 for subprop, val in sub_tree.items():
-                    results[prop + "." + subprop] = val
+                    key = prop + "." + subprop
+                    results[key] = val
             else:
                 results[prop] = sub_tree
     elif schema["type"] in ["string","number","integer","boolean"]:
@@ -100,10 +113,10 @@ def _schema_to_flat(schema):
 #
 
 SCHEMA_TYPE_TO_TPN = {
-    "string" : "Character",
-    "integer" : "Integer",
-    "number" : "Double",
-    "boolean" : "Logical",
+    "string" : "C",
+    "integer" : "I",
+    "number" : "D",
+    "boolean" : "L",
 }
 
 def _flat_to_tpns(flat=None):
@@ -117,13 +130,15 @@ def _flat_to_tpns(flat=None):
             values = [str(val) for val in flat.get(basekey + ".enum", [])]
             datatype = SCHEMA_TYPE_TO_TPN.get(value, None)
             if type is not None:
-                tpn = TpnInfo(name=basekey.upper(), keytype="Header", datatype=datatype, 
-                              presence="Required", values=values)
+                tpn = TpnInfo(name=basekey.upper(), keytype="H", datatype=datatype, 
+                              presence="R", values=values)
                 tpns.append(tpn)
     return sorted(tpns)
 
-def get_dm_to_fits(schema):
+def _get_dm_to_fits(schema=None):
     """Return mapping from DM dotted path string to FITS keyword."""
+    if schema is None:
+        schema = _load_schema()
     fits = {}
     flat = _schema_to_flat(schema)
     for key, val in flat.iteritems():
@@ -131,10 +146,20 @@ def get_dm_to_fits(schema):
             fits[str(key[:-len(".fits_keyword")])] = str(val)
     return fits
 
-def get_fits_to_dm(schema):
+def _get_fits_to_dm(schema=None):
     """Return mapping from FITS keyword to DM dotted path string."""
-    return utils.invert_dict(get_dm_to_fits(schema))
+    return utils.invert_dict(_get_dm_to_fits(schema))
 
+DM_TO_FITS = _get_dm_to_fits()
+FITS_TO_DM = _get_fits_to_dm()
+
+def dm_to_fits(key):
+    """Return the FITS keyword for DM `key` or None."""
+    return DM_TO_FITS.get(key, None)
+
+def fits_to_dm(key):
+    """Return the DM keyword for FITS `key` or None."""
+    return FITS_TO_DM.get(key, None)
 
 # =============================================================================
 
