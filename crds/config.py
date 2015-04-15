@@ -51,6 +51,25 @@ def env_str_to_int(varname, val):
 class ConfigItem(object):
     """CRDS environment control item base class.  These are driven by environment variables
     but conceptually could extend to a CRDS .rc file of some kind.
+
+    >>> CFG = ConfigItem("CRDS_CFG_ITEM", "999", "Test config item", valid_values=["999", "1000"])
+    >>> CFG.get()
+    '999'
+    >>> import os
+    >>> os.environ["CRDS_CFG_ITEM"] = "1000"
+    >>> CFG.get()
+    '1000'
+    >>> os.environ["CRDS_CFG_ITEM"] = "2"
+    >>> CFG.get()
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid value for 'CRDS_CFG_ITEM' of '2'is not one of ['999', '1000']
+    
+    >>> CFG.set("999")
+    >>> CFG.get()
+    '999'
+    >>> os.environ["CRDS_CFG_ITEM"]
+    '999'
     """
     def __init__(self, env_var, default, comment=None, valid_values=None, lower=False):
         """Defines CRDS environment item named `env_var` which has the value `default` when not specified anywhere."""
@@ -78,16 +97,48 @@ class ConfigItem(object):
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
-        self.check_value(value)
-        if self.lower:
+        if self.lower and isinstance(value, basestring):
             value = value.lower()
+        self.check_value(value)
         os.environ[self.env_var] = str(value)
+
+    def reset(self):
+        """Restore this variable to it's default value,  clearing any environment setting."""
+        del os.environ[self.env_var]
         
 class StrConfigItem(ConfigItem):
     """Config item for a string value,  currently no difference from base ConfigItem."""
 
 class BooleanConfigItem(ConfigItem):
-    """Represents a boolean environment setting for CRDS."""
+    """Represents a boolean environment setting for CRDS.
+
+    >>> BOOL = BooleanConfigItem("CRDS_BOOL_ITEM", False, "Test boolean config item")
+    >>> if BOOL:
+    ...    print "True"
+    ... else:
+    ...    print "False"
+    False
+
+    >>> os.environ["CRDS_BOOL_ITEM"] = "True"
+    >>> if BOOL:
+    ...    print "True"
+    ... else:
+    ...    print "False"
+    True
+
+    >>> BOOL.set("True")
+    >>> if BOOL:
+    ...    print "True"
+    ... else:
+    ...    print "False"
+    True
+
+    """
+    def __init__(self, var, default, *args, **keys):
+        keys = dict(keys)
+        keys["valid_values"] = ["0", "1", "true", "false", "t", "f", False, True, 0, 1]
+        keys["lower"] = True
+        super(BooleanConfigItem, self).__init__(var, str(default), *args, **keys)
 
     def get(self):
         """Return the bool value of this config item."""
@@ -96,18 +147,7 @@ class BooleanConfigItem(ConfigItem):
     def __nonzero__(self):
         """Support using this boolean config item be used as a conditional expression."""
         return self.get()
-    
-class IntConfigItem(ConfigItem):
-    """Represents a boolean environment setting for CRDS."""
 
-    def get(self):
-        """Return the bool value of this config item."""
-        return env_str_to_int(self.env_var, super(IntConfigItem, self).get())
-    
-    def __nonzero__(self):
-        """Support using this boolean config item be used as a conditional expression."""
-        return self.get() != 0
-    
 # ===========================================================================
 
 ALLOW_BAD_REFERENCES  = BooleanConfigItem("CRDS_ALLOW_BAD_REFERENCES", False,
@@ -118,11 +158,15 @@ ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
 
 # ============================================================================
 
-CRDS_DATA_CHUNK_SIZE = IntConfigItem("CRDS_DATA_CHUNK_SIZE", 2**23,
-   "File download transfer block size, 8M.  HTTP, but maybe not RPC.")   
+CRDS_DATA_CHUNK_SIZE = 2**23   
+#   IntConfigItem("CRDS_DATA_CHUNK_SIZE", 2**23,
+#   "File download transfer block size, 8M.  HTTP, but maybe not RPC.")   
 
-CRDS_CHECKSUM_BLOCK_SIZE = IntConfigItem("CRDS_CHECKSUM_BLOCK_SIZE", 2**23,
-    "Size of data read into memory at once for utils.checksum.")
+CRDS_CHECKSUM_BLOCK_SIZE = 2**23
+
+# IntConfigItem("CRDS_CHECKSUM_BLOCK_SIZE", 2**23,
+#    "Size of data read into memory at once for utils.checksum.")
+
 # ===========================================================================
 
 DEFAULT_CRDS_DIR = "/grp/crds/cache"
