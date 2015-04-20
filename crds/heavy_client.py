@@ -41,6 +41,8 @@ __all__ = ["getreferences", "getrecommendations"]
 
 # ============================================================================
 
+# ============================================================================
+
 # !!!!! interface to jwst_lib.stpipe.crds_client
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
                   observatory="jwst", fast=False):
@@ -170,10 +172,15 @@ def _initial_recommendations(
         log.verbose("Computing best references remotely.")
         bestrefs = api.get_best_references(final_context, parameters, reftypes=reftypes)
     
-    if not fast:
-        warn_bad_references(observatory, bestrefs)
+    if not fast:   
+        # nominally fast=True (this is skipped) in crds.bestrefs,  used for HST and reprocessing
+        # because bestrefs sreprocessing determinations for two contexts which run on 100's of 
+        # thousands of datasets and should only report bad files once and only when arising from 
+        # the new vs. the old context.
         update_config_info(observatory)
         log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
+        warn_bad_references(observatory, bestrefs)
+    
     return final_context, bestrefs
 
 # ============================================================================
@@ -182,10 +189,35 @@ def warn_bad_context(observatory, context):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
     bad_contained = get_bad_mappings_in_context(observatory, context)
     if bad_contained:
-        log.warning("Final context", repr(context), 
-                    "is bad or contains bad rules.  It may produce scientifically invalid results.")
-        log.verbose("Final context", repr(context), "contains bad files:", repr(bad_contained))
-        
+        msg = log.format("Final context", repr(context), 
+                         "is marked as scientifically invalid:", log.PP(bad_contained))
+        if config.ALLOW_BAD_RULES:
+            log.warning(msg)
+        else:
+            raise CrdsBadRulesError(msg)
+
+def warn_bad_references(observatory, bestrefs):
+    """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
+    for reftype, refpath in bestrefs.items():
+        warn_bad_reference(observatory, reftype, refpath)
+
+def warn_bad_reference(observatory, reftype, reference):
+    """Return True IFF `reference` is in the set of scientifically invalid files for `observatory`.
+    
+    reference   the CRDS pathname or basename for a reference to check
+    bad_files   None or a set of scientifically invalid files.
+    
+    """
+    ref = os.path.basename(reference)
+    bad_files = get_config_info(observatory).bad_files_set
+    if ref in bad_files:
+        msg = log.format("Recommended reference", repr(ref), "of type", repr(reftype), 
+                         "is designated scientifically invalid.")
+        if config.ALLOW_BAD_REFERENCES:
+            log.warning(msg)
+        else:
+            raise CrdsBadReferenceError(msg)
+
 def mapping_names(context):
     """Return the full set of mapping names associated with `context`,  compute locally if possible,
     else consult server.
@@ -203,15 +235,6 @@ def get_bad_mappings_in_context(observatory, context):
     context_mappings = mapping_names(context)
     return sorted(list(context_mappings.intersection(bad_mappings)))
 
-def warn_bad_references(observatory, bestrefs):
-    """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
-    bad_files = get_config_info(observatory).bad_files_set
-    base_bestrefs = { reftype:os.path.basename(ref) for (reftype, ref) in bestrefs.items() }
-    for reftype, ref in base_bestrefs.items():
-        if ref in bad_files:
-            log.warning("Recommended reference", repr(ref), "for type", repr(reftype), 
-                        "is a known bad file.  It may produce scientifically invalid results.")
-    
 # ============================================================================
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
