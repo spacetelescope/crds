@@ -26,104 +26,105 @@ crds.bestrefs
 crds.bestrefs computes the best references with respect to a particular context or contexts
 for a set of FITS files, dataset ids,  or instruments::
 
-    usage: /Users/jmiller/work/workspace_crds/CRDS-opus_2014.4/crds/bestrefs.py
-           [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
-           [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
-           [-i INSTRUMENTS [INSTRUMENTS ...]]
-           [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
-           [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
-           [--diffs-only] [--datasets-since DATASETS_SINCE]
-           [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
-           [--update-pickle] [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
-           [--print-affected-details] [--print-new-references]
-           [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
-           [--differences-are-errors] [-e] [--undefined-differences-matter]
-           [--na-differences-matter] [--compare-cdbs] [-z] [--dump-unique-errors]
-           [--unique-errors-file UNIQUE_ERRORS_FILE]
-           [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
-           [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
-
-* Determines best references with respect to a context or contexts.   
-* Optionally compares new results to prior results.
-* Optionally prints source data names affected by the new context.
-* Optionally updates the headers of file-based data with new recommendations.
-
-Bestrefs has a number of command line parameters which make it operate in different modes.
-
-* optional arguments::
-    
-    -h, --help            show this help message and exit
-    -n NEW_CONTEXT, --new-context NEW_CONTEXT
-                        Compute the updated best references using this context. Uses current operational context by default.
-    -o OLD_CONTEXT, --old-context OLD_CONTEXT
-                        Compare bestrefs recommendations from two contexts.
-    --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
-    -c, --compare-source-bestrefs
-                        Compare new bestrefs recommendations to recommendations from data source,  files or database.
-    -f FILES [FILES ...], --files FILES [FILES ...]
-                        Dataset files to compute best references for.
-    -d IDs [IDs ...], --datasets IDs [IDs ...]
-                        Dataset ids to consult database for matching parameters and old results.
-    --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
-    -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
-                        Instruments to compute best references for, all historical datasets in database.
-    -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
-                        A list of reference types to process,  defaulting to all types.
-    -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
-                        A list of reference types which should not be processed,  defaulting to nothing.
-    --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
-    --datasets-since DATASETS_SINCE
-                        Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
-    -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
-                        Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
-    -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
-                        Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
-    --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
-    --only-ids [IDS [IDS ...]]
-                        If specified, process only the listed dataset ids.
-    -u, --update-bestrefs
-                        Update sources with new best reference recommendations.
-    --print-affected      Print names of products for which the new context would assign new references for some exposure.
-    --print-affected-details
-                        Include instrument and affected types in addition to compound names of affected exposures.
-    --print-new-references
-                        Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
-    --print-update-counts
-                        Prints dictionary of update counts by instrument and type,  status on updated files.
-    -r, --remote-bestrefs
-                        Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
-    -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
-                        Fetch the required context mappings to the local cache.  Defaults TRUE.
-    -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
-                        Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
-    --differences-are-errors
-                        Treat recommendation differences between new context and original source as errors.
-    -e, --bad-files-are-errors
-                        Treat recommendations of known bad/invalid files as errors, not warnings.
-    --undefined-differences-matter
-                        If not set, a transition from UNDEFINED to anything else is not considered a difference error.
-    --na-differences-matter
-                        If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
-    --compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
-    -z, --optimize-tables
-                        If set, apply row-based optimizations to screen out inconsequential table updates.
-    --dump-unique-errors  Record and dump the first instance of each kind of error.
-    --unique-errors-file UNIQUE_ERRORS_FILE
-                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
-    --all-errors-file ALL_ERRORS_FILE
-                        Write out all err'ing data names (ids or filenames) to specified file.
-    -v, --verbose         Set log verbosity to True,  nominal debug level.
-    --verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-    -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-    -I, --ignore-cache    Download required files even if they're already in the cache.
-    -V, --version         Print the software version and exit.
-    -J, --jwst            Force observatory to JWST for determining header conventions.
-    -H, --hst             Force observatory to HST for determining header conventions.
-    --stats               Track and print timing statistics.
-    --profile PROFILE     Output profile stats to the specified file.
-    --log-time            Add date/time to log messages.
-    --pdb                 Run under pdb.
+	usage: /Users/jmiller/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
+	       [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
+	       [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
+	       [-i INSTRUMENTS [INSTRUMENTS ...]]
+	       [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
+	       [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
+	       [--diffs-only] [--datasets-since DATASETS_SINCE]
+	       [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
+	       [--update-pickle] [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
+	       [--print-affected-details] [--print-new-references]
+	       [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
+	       [--differences-are-errors] [--allow-bad-rules] [--allow-bad-references]
+	       [-e] [--undefined-differences-matter] [--na-differences-matter]
+	       [--compare-cdbs] [--affected-datasets] [-z] [--dump-unique-errors]
+	       [--unique-errors-file UNIQUE_ERRORS_FILE]
+	       [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
+	       [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
+	       [--debug-traps]
+	
+	* Determines best references with respect to a context or contexts.   
+	* Optionally compares new results to prior results.
+	* Optionally prints source data names affected by the new context.
+	* Optionally updates the headers of file-based data with new recommendations.
+	    
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -n NEW_CONTEXT, --new-context NEW_CONTEXT
+	                        Compute the updated best references using this context. Uses current operational context by default.
+	  -o OLD_CONTEXT, --old-context OLD_CONTEXT
+	                        Compare bestrefs recommendations from two contexts.
+	  --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
+	  -c, --compare-source-bestrefs
+	                        Compare new bestrefs recommendations to recommendations from data source,  files or database.
+	  -f FILES [FILES ...], --files FILES [FILES ...]
+	                        Dataset files to compute best references for.
+	  -d IDs [IDs ...], --datasets IDs [IDs ...]
+	                        Dataset ids to consult database for matching parameters and old results.
+	  --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
+	  -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
+	                        Instruments to compute best references for, all historical datasets in database.
+	  -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
+	                        A list of reference types to process,  defaulting to all types.
+	  -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
+	                        A list of reference types which should not be processed,  defaulting to nothing.
+	  --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
+	  --datasets-since DATASETS_SINCE
+	                        Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
+	  -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
+	                        Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
+	  -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
+	                        Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
+	  --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
+	  --only-ids [IDS [IDS ...]]
+	                        If specified, process only the listed dataset ids.
+	  -u, --update-bestrefs
+	                        Update sources with new best reference recommendations.
+	  --print-affected      Print names of products for which the new context would assign new references for some exposure.
+	  --print-affected-details
+	                        Include instrument and affected types in addition to compound names of affected exposures.
+	  --print-new-references
+	                        Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
+	  --print-update-counts
+	                        Prints dictionary of update counts by instrument and type,  status on updated files.
+	  -r, --remote-bestrefs
+	                        Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
+	  -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
+	                        Fetch the required context mappings to the local cache.  Defaults TRUE.
+	  -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
+	                        Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
+	  --differences-are-errors
+	                        Treat recommendation differences between new context and original source as errors.
+	  --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
+	  --allow-bad-references
+	                        Only warn if a reference which is marked bad is recommended, otherwise error.
+	  -e, --bad-files-are-errors
+	                        DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
+	  --undefined-differences-matter
+	                        If not set, a transition from UNDEFINED to anything else is not considered a difference error.
+	  --na-differences-matter
+	                        If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
+	  --compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
+	  --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats
+	  -z, --optimize-tables
+	                        If set, apply row-based optimizations to screen out inconsequential table updates.
+	  --dump-unique-errors  Record and dump the first instance of each kind of error.
+	  --unique-errors-file UNIQUE_ERRORS_FILE
+	                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
+	  --all-errors-file ALL_ERRORS_FILE
+	                        Write out all err'ing data names (ids or filenames) to specified file.
+	  -v, --verbose         Set log verbosity to True,  nominal debug level.
+	  --verbosity VERBOSITY
+	                        Set log verbosity to a specific level: 0..100.
+	  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+	  -I, --ignore-cache    Download required files even if they're already in the cache.
+	  -V, --version         Print the software version and exit.
+	  -J, --jwst            Force observatory to JWST for determining header conventions.
+	  -H, --hst             Force observatory to HST for determining header conventions.
+	  --log-time            Add date/time to log messages.
 
 .............................
 File Oriented Best References
@@ -234,6 +235,17 @@ Verbosity
 
 crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational 
 and debug output.
+
+.........
+Bad Files
+.........
+
+CRDS files can be designated as scientifically invalid on the CRDS server by the CRDS team.   Knowledge of bad
+files is synchronized to remote caches by crds.bestrefs and crds.sync.  By default, attempting to use bad rules or 
+assign bad references will generate errors and fail.   crds.bestrefs supports two command line switches,  
+*---allow-bad-rules* and *---allow-bad-references* to override the default handling of bad files and enable their 
+use with warnings.  Environment variables **CRDS_ALLOW_BAD_RULES** and **CRDS_ALLOW_BAD_REFERENCES** can also be 
+set to 1 to establish warnings rather than errors as the default.
 
 
 crds.sync 

@@ -21,6 +21,7 @@ class CRDSTestCase(unittest.TestCase):
     def tearDown(self, *args, **keys):
         super(CRDSTestCase, self).tearDown(*args, **keys)
         shutil.rmtree(self.temp_dir)
+        utils.clear_function_caches()
 
     def data(self, filename):
         return os.path.join(self.data_dir, filename)
