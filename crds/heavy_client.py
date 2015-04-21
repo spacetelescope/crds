@@ -190,7 +190,7 @@ def warn_bad_context(observatory, context):
     bad_contained = get_bad_mappings_in_context(observatory, context)
     if bad_contained:
         msg = log.format("Final context", repr(context), 
-                         "is marked as scientifically invalid:", log.PP(bad_contained))
+                         "is marked as scientifically invalid based on:", log.PP(bad_contained))
         if config.ALLOW_BAD_RULES:
             log.warning(msg)
         else:
