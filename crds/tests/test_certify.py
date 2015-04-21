@@ -3,7 +3,7 @@ from __future__ import with_statement
 
 import os
 
-from crds import certify, utils, log
+from crds import certify, utils, log, client
 
 from crds.tests import CRDSTestCase
 
@@ -16,7 +16,7 @@ class TestHSTTpnInfoClass(CRDSTestCase):
         hstlocator = utils.get_locator_module("hst")
         self.tpninfos = hstlocator.get_tpninfos('acs_idc.tpn')
         self.validators = [certify.validator(info) for info in self.tpninfos]
-        os.environ['CRDS_SERVER_URL'] = 'https://crds-serverless-mode.stsci.edu'
+        client.set_crds_server('https://crds-serverless-mode.stsci.edu')
         os.environ['CRDS_MAPPATH'] = self.hst_mappath
         os.environ['CRDS_PATH'] = "/grp/crds/hst"
         os.environ["CRDS_CONTEXT"] ="hst.pmap"
