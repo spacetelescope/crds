@@ -182,6 +182,14 @@ Compute simple bestrefs for 1 catalog datasets using hst.pmap:
     >>> status
     0
 
+MAINTENANCE NOTE:  the preceding test is currently an expected error case pending the delivery of a modified
+WFC3 FLSHFILE rmap located at crds/hst/prototypes/wfc3/hst_wfc3_flshfile_0251.rmap.  Once the modified rmap 
+is delivered to operations,  the above new-context should be changed to the new OPS context.  After that point,
+all mirrors of OPS to DEV should work without the exected errors due to FLASHCUR=='UNDEFINED'.   The only changes
+in the modified rmap should be header changes,  nominally the rmap_relevance expression;  additional changes
+may reflect new flshfile submissions which happened after the prototype rmap was created.
+
+
 Compute comparison bestrefs between two contexts:
 
     >>> case = BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")

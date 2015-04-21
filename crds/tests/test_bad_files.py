@@ -6,13 +6,18 @@ which are written down in the "config" directory.
 A key aspect of bad files management is the location and contents of the cache config
 directory.  The current HST cache in trunk/crds/cache has a config area and 4 bad files.
 
->>> from crds.tests import test_config
->>> test_config.setup()
+>>> import crds
+>>> from crds import utils, log
+
+>>> import os
+>>> os.environ["CRDS_PATH"] = "/grp/crds/cache"
+>>> os.environ["CRDS_SERVER_URL"] = "https://hst-crds-dev.stsci.edu"
+>>> utils.clear_function_caches()
+>>> log.set_test_mode()
+>>> os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 Here I contrived a header which will select one of the current 4 bad files from an old
 context which still assigned it:
-
->>> import crds
 
 >>> header = {
 ...   'INSTRUME' : 'ACS',
@@ -44,6 +49,7 @@ CrdsBadReferenceError: Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltf
 A secondary behaviour is to permit use of bad references with a warning:
 
 >>> import os
+>>> os.environ["CRDS_ALLOW_BAD_RULES"] = "1"
 >>> os.environ["CRDS_ALLOW_BAD_REFERENCES"] = "1"
 
 >>> crds.getreferences(header, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])
@@ -56,34 +62,6 @@ When run in 'fast' mode as is done for the calls from crds.bestrefs,  no excepti
 
 >>> crds.getreferences(header, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'], fast=True)
 {'pfltfile': '/grp/crds/cache/references/hst/l2d0959cj_pfl.fits'}
-
-
-There is also a check for use of bad rules. JWST has a few,  including jwst_0017.pmap by "inheritance"
-since it includes a/some bad files.
-
->>> header = {
-...   "meta.instrument.name": "NIRISS",
-...   "meta.observation.date": "2012-07-25T00:00:00",
-...   "meta.instrument.detector" : "NIRISS",
-...   "meta.instrument.filter" : "CLEAR",
-...   "meta.subarray.name" : "FULL",
-... }
-
->>> crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
-Traceback (most recent call last):
-       ...
-CrdsBadRulesError: Final context 'jwst_0017.pmap' is marked as scientifically invalid: ['jwst_miri_flat_0003.rmap']
-<BLANKLINE>
-
-Similarly,  the use of bad rules can be permitted:
-
->>> import os
->>> os.environ["CRDS_ALLOW_BAD_RULES"] = "1"
-
->>> crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
-CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid: ['jwst_miri_flat_0003.rmap']
-<BLANKLINE>
-{'flat': '/grp/crds/cache/references/jwst/jwst_niriss_flat_0000.fits'}
 
 
 The crds.bestrefs program handles bad files differently because it frequently operates on
@@ -130,19 +108,62 @@ CRDS  : INFO     1 warnings
 CRDS  : INFO     3 infos
 0
 
-Do some setup to switch to a JWST cache and serverless mode.
+Do some setup to switch to a JWST serverless mode.
 
->> from crds import utils
->> utils.clear_function_caches()
->> os.environ["CRDS_SERVER_URL"] = "https://jwst-serverless-mode.stsci.edu"
->> CRDS_PATH = os.path.abspath(os.path.join(os.getcwd(), "..", "cache"))
->> os.environ["CRDS_PATH"] = CRDS_PATH
->> print("CRDS_PATH =", CRDS_PATH)
+>>> utils.clear_function_caches()
+>>> os.environ["CRDS_PATH"] = "/grp/crds/cache"
+>>> os.environ["CRDS_SERVER_URL"] = "https://jwst-serverless-mode.stsci.edu"
+>>> import crds.client.api
+>>> _ = reload(crds.client.api)
+
+There is also a check for use of bad rules. JWST has a few,  including jwst_0017.pmap by "inheritance"
+since it includes some bad rules.
+
+>>> header = {
+...   "meta.instrument.name": "NIRISS",
+...   "meta.observation.date": "2012-07-25T00:00:00",
+...   "meta.instrument.detector" : "NIRISS",
+...   "meta.instrument.filter" : "CLEAR",
+...   "meta.subarray.name" : "FULL",
+... }
+
+>>> config.ALLOW_BAD_RULES.reset()
+>>> config.ALLOW_BAD_REFERENCES.reset()
+>>> utils.clear_function_caches()
+
+>>> crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
+Traceback (most recent call last):
+       ...
+CrdsBadRulesError: Final context 'jwst_0017.pmap' is marked as scientifically invalid: ['jwst_miri_flat_0003.rmap']
+<BLANKLINE>
+
+Similarly,  the use of bad rules can be permitted:
+
+>>> import os
+>>> os.environ["CRDS_ALLOW_BAD_RULES"] = "1"
+
+>>> utils.clear_function_caches()
+>>> crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
+CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid: ['jwst_miri_flat_0003.rmap']
+<BLANKLINE>
+{'flat': '/grp/crds/cache/references/jwst/jwst_niriss_flat_0000.fits'}
+
 
 Here try bad rules using the same HST dataset which should not matter since bad rules are detected before using the
 dataset or header:
 
->> BestrefsScript("crds.bestrefs --new-context jwst_0017.pmap --files data/j8btyyy_raw_bad.fits --types gain")()
+>>> utils.clear_function_caches()
+>>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/j8btyyy_raw_bad.fits --types gain")()
+CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
+CRDS  : INFO     No comparison context or source comparison requested.
+CRDS  : INFO     No file header updates requested;  dry run.
+CRDS  : INFO     ===> Processing data/j8btyyy_raw_bad.fits
+CRDS  : ERROR    Failed processing 'data/j8btyyy_raw_bad.fits' : Failed computing bestrefs for data 'data/j8btyyy_raw_bad.fits' with respect to 'jwst_0017.pmap' : Final context 'jwst_0017.pmap' is marked as scientifically invalid: ['jwst_miri_flat_0003.rmap']
+<BLANKLINE>
+CRDS  : INFO     2 errors
+CRDS  : INFO     0 warnings
+CRDS  : INFO     3 infos
+2
 
 """
 
