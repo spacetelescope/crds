@@ -945,11 +945,11 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            _old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
+            old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
                                                         ("NOT FOUND NO MATCH",)) # omit UNDEFINED for useless update check.
             new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
                                                        ("NOT FOUND NO MATCH","UNDEFINED"))
-            if not new_ok:
+            if not new_ok or not old_ok:
                 failed_updates.append(UpdateTuple(instrument, filekind, old_org, new_org))
                 continue
             
