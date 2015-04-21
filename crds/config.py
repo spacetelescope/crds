@@ -104,7 +104,7 @@ class ConfigItem(object):
 
     def reset(self):
         """Restore this variable to it's default value,  clearing any environment setting."""
-        del os.environ[self.env_var]
+        os.environ.pop(self.env_var, None)
         
 class StrConfigItem(ConfigItem):
     """Config item for a string value,  currently no difference from base ConfigItem."""
