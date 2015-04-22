@@ -186,7 +186,8 @@ from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""
-    import test_diff, doctest
+    import doctest
+    from crds.tests import test_diff
     doctest.ELLIPSIS_MARKER = '-etc-'
     return doctest.testmod(test_diff, optionflags=doctest.ELLIPSIS)
 

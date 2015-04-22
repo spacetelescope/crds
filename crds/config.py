@@ -117,23 +117,23 @@ class BooleanConfigItem(ConfigItem):
 
     >>> BOOL = BooleanConfigItem("CRDS_BOOL_ITEM", False, "Test boolean config item")
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     False
 
     >>> os.environ["CRDS_BOOL_ITEM"] = "True"
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     True
 
     >>> BOOL.set("True")
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     True
 
     """

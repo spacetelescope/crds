@@ -11,7 +11,7 @@ Demo and test the basic API for FITS tables:
 1
 
 >>> for tab in tables(FITS_FILE):
-...     print repr(tab)
+...     print(repr(tab))
 SimpleTable('v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44'), nrows=694)
 
 >>> tab.segment
@@ -35,7 +35,7 @@ Demo and test the API for non-FITS formats using astropy format guessing:
 1
 
 >>> for tab in tables(CSV_FILE):
-...     print repr(tab)
+...     print(repr(tab))
 SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)
 
 >>> tab.segment

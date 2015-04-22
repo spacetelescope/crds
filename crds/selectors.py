@@ -1239,7 +1239,7 @@ of a match.   Literal matches or "*" increase confidence of a good match.
     >>> m.choose(dict(foo='1.0',bar='2.0'))
     '200'
     
-    >>> print m.format()
+    >>> print(m.format())
     Match({
         (1.0, 2.0) : '200',
         (1.0, 'N/A') : '100',

@@ -214,7 +214,8 @@ from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""
-    import test_bestrefs, doctest
+    import doctest
+    from crds.tests import test_bestrefs
     return doctest.testmod(test_bestrefs)
 
 if __name__ == "__main__":
