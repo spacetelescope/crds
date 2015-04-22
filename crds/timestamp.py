@@ -20,7 +20,7 @@ def reformat_date(date):
 
 def format_date(date):
     """Format a datestring `d` in CRDS standard form."""
-    if isinstance(date, (str, unicode)):
+    if isinstance(date, basestring):
         date = parse_date(date)
     return date.isoformat(" ")
 
