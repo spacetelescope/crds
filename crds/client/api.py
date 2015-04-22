@@ -5,12 +5,18 @@ cache them locally.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+import sys
 import os
 import os.path
 import base64
-import urllib2
 import re
 import zlib
+
+if sys.version_info < (3,0,0):
+    from urllib2 import urlopen
+else:
+    from urllib.request import urlopen
 
 from .proxy import CheckingProxy
 
@@ -574,7 +580,7 @@ class FileCacher(object):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
         url = self.get_url(filename)
         try:
-            infile = urllib2.urlopen(url)
+            infile = urlopen(url)
             chunk = 0
             stats = utils.TimingStats()
             stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)

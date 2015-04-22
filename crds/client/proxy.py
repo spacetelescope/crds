@@ -5,8 +5,8 @@ call returns the jsonrpc "result" field.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
 import sys
-import urllib2 as urllib
 import uuid
 import json
 import time
@@ -14,8 +14,11 @@ import os
 
 if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
+    from urllib2 import urlopen
 else:
     import html.parser as parser_mod
+    from urllib.request import urlopen
+
 PARSER = parser_mod.HTMLParser()
 
 from crds import log, config
@@ -108,7 +111,7 @@ class CheckingProxy(object):
     def _call_service(self, parameters, url):
         """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
         try:
-            channel = urllib.urlopen(url, parameters)
+            channel = urlopen(url, parameters)
             return channel.read()
         except Exception as exc:
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
