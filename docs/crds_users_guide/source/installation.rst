@@ -115,7 +115,8 @@ OPTIONAL: For executing the unit tests (runtests) add:
 OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
 
    * Parsley-1.1  (included in CRDS subversion under third_party)
-   * pyaml  (for certifying yaml references)
+   * pyaml  (for certifying and using yaml references)
+   * pyasdf (for certifying and using ASDF references)
    
 OPTIONAL: For building documentation add:
    * docutils
@@ -425,6 +426,12 @@ integer,  nominally 50.   Higher values output more information,  lower
 values less information.   CRDS also has command line switches 
 --verbose (level=50) and --verbosity=<level>.   Verbosity level 
 ranges from 0 to 100 and defaults to 0 (no verbose output).
+
+**CRDS_ALLOW_BAD_RULES**  enable CRDS to use assigment rules which have been
+designated as bad files / scientifically invalid.
+
+**CRDS_ALLOW_BAD_REFERENCES** enable CRDS to assign reference files which have
+been designated as scientifically invalid after issuing a warning.
 
 **CRDS_IGNORE_MAPPING_CHECKSUM** causes CRDS to waive mapping checksums 
 when set to True,  useful when you're editing them.

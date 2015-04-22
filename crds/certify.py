@@ -17,7 +17,7 @@ from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import tables
 from crds import client
 from crds import mapping_parser
-from crds.rmap import ValidationError
+from crds.exceptions import *
 
 NOT_FITS = -1
 VALID_FITS = 1
@@ -35,23 +35,6 @@ VALID_FITS = 1
 #
 TpnInfo = namedtuple("TpnInfo", "name,keytype,datatype,presence,values")
 
-# ============================================================================
-
-class CertifyException(Exception):
-    """Certify exception baseclass."""
-    
-class MissingKeywordError(CertifyException):
-    """A required keyword was not defined."""
-
-class IllegalKeywordError(CertifyException):
-    """A keyword which should not be defined was present."""
-
-class InvalidFormatError(CertifyException):
-    """The given file was not loadable."""
-
-class TypeSetupError(CertifyException):
-    """An error occured while trying to locate file constraints and row mode variables."""
-    
 # ----------------------------------------------------------------------------
 class Validator(object):
     """Validator is an Abstract class which applies TpnInfo objects to reference files.
@@ -146,7 +129,7 @@ class Validator(object):
         
     def check_group(self, _filename):
         """Probably related to pre-FITS HST GEIS files,  not implemented."""
-        raise RuntimeError("Group keys are not currently supported by CRDS.")
+        log.warning("Group keys are not currently supported by CRDS.")
 
     def _get_header_value(self, header):
         """Pull this Validator's value out of `header` and return it.
@@ -397,19 +380,21 @@ class Certifier(object):
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None):
+                 original_name=None, trap_exceptions=None):
         
         self.filename = filename
         self.context = context
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
-        self._dump_provenance = dump_provenance
+        self._dump_provenance_flag = dump_provenance
         self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
         self.observatory = observatory
         self.comparison_reference = comparison_reference
         self.original_name = original_name
+        self.trap_exceptions = trap_exceptions
+        self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
@@ -422,16 +407,12 @@ class Certifier(object):
     def format_name(self):
         return repr(self.original_name) if self.original_name else repr(self.basename)
     
-    def log_error(self, msg):
+    def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
         if self.script:
-            try:
-                instrument, filekind = utils.get_file_properties(self.script.observatory, self.filename)
-            except Exception:
-                instrument = filekind = "unknown"
-            self.script.log_and_track_error(self.filename, instrument, filekind, msg)
+            self.script.log_and_track_error(self.filename, *args, **keys)
         else:
-            log.error("In", repr(self.filename), ":", msg)
+            log.error("In", repr(self.filename), ":", *args, **keys)
             
     def certify(self):
         """Certify `self.filename`,  either reporting using log.error() or raising
@@ -465,25 +446,21 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error parsing", self.format_name, exception_class=InvalidFormatError):
+        with log.augment_exception("Error loading", self.format_name, exception_class=InvalidFormatError):
             self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
         self.certify_simple_parameters()
         if self.mode_columns:
             self.certify_reference_modes()
-        if self._dump_provenance:
+        if self._dump_provenance_flag:
             self.dump_provenance()
     
     def certify_simple_parameters(self):
         """Check simple parameter values,  column and non-column."""
         for checker in self.simple_validators:
-            try:
+            with self.error_on_exception("Checking", repr(checker.info.name)):
                 checker.check(self.filename, self.header)
-            except Exception as exc:
-                if not log.get_exception_trap():
-                    raise
-                self.log_error("Checking " + repr(checker.info.name) + " : " + str(exc))
                 
     def load(self):
         """Load and parse header from self.filename"""
@@ -495,6 +472,14 @@ class ReferenceCertifier(Certifier):
             self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
             self.all_simple_names +   # what's defined in .tpn's, maybe not matched
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
+        unseen = self._dump_provenance_core(dump_keys)
+        warn_keys = self.provenance_keys
+        for key in unseen:
+            if key in warn_keys:
+                log.warning("Missing keyword '%s'."  % key)
+
+    def _dump_provenance_core(self, dump_keys):
+        """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
         for key in dump_keys:
             hval = self.header.get(key, None)
@@ -503,10 +488,7 @@ class ReferenceCertifier(Certifier):
                     log.info(key, "=", repr(hval))
                 if key in unseen:
                     unseen.remove(key)
-        warn_keys = self.provenance_keys
-        for key in unseen:
-            if key in warn_keys:
-                log.warning("Missing keyword '%s'."  % key)
+        return unseen
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
@@ -541,7 +523,7 @@ class ReferenceCertifier(Certifier):
         the spec for each type in the observatory package.
         """
         mode_columns = []
-        with log.error_on_exception("Error finding unique row keys for", repr(self.basename)):
+        with self.error_on_exception("Error finding unique row keys for", repr(self.basename)):
             instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
             mode_columns = utils.get_locator_module(self.observatory).get_row_keys(instrument, filekind)
             if mode_columns:
@@ -555,7 +537,10 @@ class ReferenceCertifier(Certifier):
         if self.comparison_reference:
             old_reference = self.comparison_reference
         else:
-            old_reference = self.find_old_reference(self.context, self.filename)
+            if self.context is not None:
+                old_reference = self.find_old_reference(self.context, self.filename)
+            else:
+                old_reference = None
             if old_reference is None or old_reference == self.basename:
                 # Load tables modes anyway,  looking for duplicate modes.
                 for tab in tables.tables(self.filename):
@@ -573,7 +558,7 @@ class ReferenceCertifier(Certifier):
         new_tables = tables.tables(self.filename)
 
         for i in range(0, min(n_new_segments, n_old_segments)):
-            with log.error_on_exception("Checking tables modes in segment", i, "of", repr(self.filename)):
+            with self.error_on_exception("Checking tables modes in segment", i, "of", repr(self.filename)):
                 self.check_table_modes(old_tables[i], new_tables[i])
     
     def find_old_reference(self, context, reffile):
@@ -581,8 +566,7 @@ class ReferenceCertifier(Certifier):
         """
         log.verbose("Resolving comparison reference for", repr(reffile), "in context", repr(context))
         with log.warn_on_exception("Failed resolving comparison reference for table checks"):
-            with log.reduced_verbosity(0, 70):    # Turn off verbose messages in block unless verbosity >= 70
-                return self._find_old_reference(context, reffile) 
+            return self._find_old_reference(context, reffile) 
     
     def _find_old_reference(self, context, reffile):
         """Returns the name of the old reference file(s) that the new reffile would replace."""
@@ -761,6 +745,21 @@ class FitsCertifier(ReferenceCertifier):
         fits.close()
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
+
+    def _dump_provenance_core(self, dump_keys):
+        """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
+        hdulist = pyfits.open(self.filename)
+        unseen = set(dump_keys)
+        for i, hdu in enumerate(hdulist):
+            for key in dump_keys:
+                for card in hdu.header.cards:
+                    if card.keyword == key:
+                        if self.interesting_value(card.value):
+                            log.info("["+str(i)+"]", key, card.value, card.comment)
+                        if key in unseen:
+                            unseen.remove(key)
+        return unseen
+
 # ============================================================================
 
 class UnknownCertifier(Certifier):
@@ -798,6 +797,8 @@ class MappingCertifier(Certifier):
             if derived_from.name == self.basename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
+                log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from),
+                         "from context", repr(self.context), "for checking mapping differences.")
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
             if self.context is not None:
@@ -811,10 +812,13 @@ class MappingCertifier(Certifier):
         
         if self.check_references == "contents":
             certify_files(references, context=self.context, 
+                          dump_provenance=self._dump_provenance_flag,
                           check_references=self.check_references,
                           compare_old_reference=self.compare_old_reference,
+                          trap_exceptions=self.trap_exceptions,
+                          script=self.script,
                           observatory=self.observatory)
-    
+
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
         paths for which the reference does not exist.
@@ -822,7 +826,7 @@ class MappingCertifier(Certifier):
         references = []
         for ref in mapping.reference_names():
             path = None
-            with log.error_on_exception("Can't locate reference file", repr(ref)):
+            with self.error_on_exception("Can't locate reference file", repr(ref)):
                 path = get_existing_path(ref, mapping.observatory)
             if path:
                 log.verbose("Reference", repr(ref), "exists at", repr(path))
@@ -836,21 +840,6 @@ def get_existing_path(reference, observatory):
         raise ValidationError("Path " + repr(path) + " does not exist.")
     return path
 
-def mapping_closure(files):
-    """Traverse the mappings in `files` and return a list of all mappings
-    referred to by `files` as well as any references in `files`.
-    """
-    closure_files = set()
-    for file_ in files:
-        more_files = set([file_])
-        if rmap.is_mapping(file_):
-            with log.error_on_exception("Problem loading submappings of", repr(file_)):
-                mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
-                more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
-        closure_files |= more_files
-    return sorted(closure_files)
-
 def find_old_mapping(comparison_context, new_mapping):
     """Find the Mapping in pmap `comparison_context` corresponding to filename `new_mapping`,  if there is one.
     This call will cache `comparison_context` so it should only be called on "official" mappings,  not
@@ -859,15 +848,6 @@ def find_old_mapping(comparison_context, new_mapping):
     if comparison_context:
         comparison_mapping = rmap.get_cached_mapping(comparison_context)
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
-        old_base, new_base = old_mapping.basename, os.path.basename(new_mapping)
-        if old_mapping is not None:
-            if old_base != new_base:
-                log.info("Mapping", repr(new_base), 
-                         "corresponds to mapping", repr(old_base), 
-                         "under context", repr(comparison_context))
-            else:
-                log.verbose("Mapping", repr(old_base), 
-                            "did not change relative to context", repr(comparison_context))
         return old_mapping
     else:
         return None
@@ -877,9 +857,6 @@ def banner(char='#'):
     log.info(char * 40)  # Serves as demarkation for each file's report
     
 # ============================================================================
-
-class MissingReferenceError(RuntimeError):
-    """A reference file mentioned by a mapping isn't in CRDS yet."""
 
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
@@ -912,19 +889,21 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
         if comparison_reference:
             log.info("Certifying", repr(original_name) + ith,  "as", repr(filetype.upper()),
                      "relative to context", repr(context), "and comparison reference", repr(comparison_reference))
-        elif context:
+        else:
             log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()),
                      "relative to context", repr(context))
-        else:
-            log.info("Certifying", repr(original_name) + ith, "as", repr(filetype.upper()))
+
+        trap = log.error_on_exception if script is None else script.error_on_exception
             
-        with log.error_on_exception("Validation error in " + repr(original_name)):
+        with trap(filename, "Certifier instantiation error"):
             certifier = klass(filename, context=context, check_references=check_references,
                               compare_old_reference=compare_old_reference,
                               dump_provenance=dump_provenance,
                               dont_parse=dont_parse, script=script, observatory=observatory,
                               comparison_reference=comparison_reference,
-                              original_name=original_name)
+                              original_name=original_name,
+                              trap_exceptions=trap_exceptions)
+        with trap(filename, "Validation error"):
             certifier.certify()
 
     finally:
@@ -1046,10 +1025,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
-    def locate_file(self, filename):
-        """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
-        return self.locate_file_outside_cache(filename)
-    
+    """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
+    # locate_file = cmdline.Script.locate_file_outside_cache
+
     def main(self):
         if self.args.deep:
             check_references = "contents"
@@ -1058,13 +1036,15 @@ For more information on the checks being performed,  use --verbose or --verbosit
         else:
             check_references = None
 
-        assert (self.args.comparison_context in [None, "none"]) or config.is_mapping_spec(self.args.comparison_context), \
+        # String spellings of "none" are from command line,  None is the default which means "use operational context".
+        assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
             "Specified --context file " + repr(self.args.comparison_context) + " is not a CRDS mapping."
+
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
             
         if not self.args.dont_recurse_mappings:
-            all_files = mapping_closure(self.files)
+            all_files = self.mapping_closure(self.files)
         else:
             all_files = set(self.files)
             
@@ -1078,7 +1058,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
             if self.args.comparison_context is None and not self.args.comparison_reference:
                 log.verbose("Defaulting comparison context to latest operational CRDS context.")
                 self.args.comparison_context = self.default_context
-        elif self.args.comparison_context and self.args.comparison_context.lower() == "none":
+        elif self.args.comparison_context in [None, "none", "None", "NONE"]:
+            log.info("No comparison context specified or specified as 'none'.  No default context for mixed types.")
             self.args.comparison_context = None
             
         if self.args.comparison_context and self.args.sync_files:
@@ -1103,6 +1084,32 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         return log.errors()
     
+    def log_and_track_error(self, filename, *args, **keys):
+        """Override log_and_track_error() to compute instrument, filekind automatically."""
+        basename = os.path.basename(filename)
+        try:
+            instrument, filekind = utils.get_file_properties(self.observatory, filename)
+        except Exception:
+            instrument = filekind = "unknown"
+        super(CertifyScript, self).log_and_track_error(filename, instrument, filekind, *args, **keys)
+        return None  # to suppress re-raise
+    
+    def mapping_closure(self, files):
+        """Traverse the mappings in `files` and return a list of all mappings referred to by 
+        `files` as well as any references in `files`.
+        """
+        closure_files = set()
+        for file_ in files:
+            more_files = set([file_])
+            if rmap.is_mapping(file_):
+                with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
+                    mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
+                    more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
+                    more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
+            closure_files |= more_files
+        return sorted(closure_files)
+
+
 def main():
     """Construct and run the Certify script,  return 1 if errors occurred, 0 otherwise."""
     errors = CertifyScript()()
