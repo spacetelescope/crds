@@ -17,9 +17,10 @@ import json
 from astropy.io import fits as pyfits
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, CrdsError, heavy_client, diff, timestamp, matches, config)
+from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
 from crds.client import api
+from crds.exceptions import CrdsError, UnsupportedUpdateModeError
 
 # ===================================================================
 
@@ -29,9 +30,6 @@ MAX_DATE = "9999-01-01 23:59:59"
 # ===================================================================
 
 UpdateTuple = namedtuple("UpdateTuple", ["instrument", "filekind", "old_reference", "new_reference"])
-
-class UnsupportedUpdateMode(CrdsError):
-    """Database modes don't currently support updating best references recommendations on the server."""
 
 # ===================================================================
 # There's a problem with using CDBS as a gold standard in getting consistent results between
@@ -86,7 +84,7 @@ class HeaderGenerator(object):
         """Return the full header corresponding to `source`.   If header is a string, raise an exception."""
         header = self._header(source)
         if isinstance(header, str):
-            raise crds.CrdsError("Failed to fetch header for " + repr(source) + ": " + repr(header))
+            raise CrdsError("Failed to fetch header for " + repr(source) + ": " + repr(header))
         else:
             return dict(header)
 
@@ -114,7 +112,7 @@ class HeaderGenerator(object):
     
     def handle_updates(self, updates):
         """In general,  reject request to update best references on the source."""
-        raise UnsupportedUpdateMode("This dataset access mode doesn't support updates.")
+        raise UnsupportedUpdateModeError("This dataset access mode doesn't support updates.")
     
     def save_pickle(self, outpath, only_ids=None):
         """Write out headers to `outpath` file which can be a Python pickle or .json"""
@@ -217,10 +215,10 @@ class DatasetHeaderGenerator(HeaderGenerator):
         """
         parts = source.split(":")
         assert 1 <= len(parts) <= 2, "Invalid dataset id " + repr(source)
-        try:   # when specifying datasets with 1-part id, return first of "associated ids"
-               # when specifying datasets with 2-part id,
+        try:    # when specifying datasets with 1-part id, return first of "associated ids"
+                # when specifying datasets with 2-part id,
             if len(parts) == 1:
-                return sorted(id for id in self.headers if parts[0] in id)[0]
+                return sorted(dataset_id for dataset_id in self.headers if parts[0] in dataset_id)[0]
             else:
                 return source
         except:
@@ -484,9 +482,13 @@ and debug output.
             self.args.dump_unique_errors = True
             self.args.stats = True
         
+        config.ALLOW_BAD_RULES.set(self.args.allow_bad_rules)
+        config.ALLOW_BAD_REFERENCES.set(self.args.allow_bad_references)
+
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
         self.updates = OrderedDict()  # map of reference updates
+        self.failed_updates = OrderedDict()  # map of datasets to failure pseudo-update-tuples
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         self.affected_instruments = None
@@ -646,6 +648,9 @@ and debug output.
     
         self.add_argument("--print-affected-details", action="store_true",
             help="Include instrument and affected types in addition to compound names of affected exposures.")
+        
+        self.add_argument("--skip-failure-effects", action="store_true",
+            help="If bestrefs fail, don't include those dataset ids in the list of affected products.")        
     
         self.add_argument("--print-new-references", action="store_true",
             help="Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.")
@@ -665,8 +670,14 @@ and debug output.
         self.add_argument("--differences-are-errors", action="store_true",
             help="Treat recommendation differences between new context and original source as errors.")
         
+        self.add_argument("--allow-bad-rules", action="store_true",
+            help="Only warn if a context which is marked 'bad' is used, otherwise error.")
+        
+        self.add_argument("--allow-bad-references", action="store_true",
+            help="Only warn if a reference which is marked bad is recommended, otherwise error.")
+        
         self.add_argument("-e", "--bad-files-are-errors", action="store_true",
-            help="Treat recommendations of known bad/invalid files as errors, not warnings.")
+            help="DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.")
         
         self.add_argument("--undefined-differences-matter", action="store_true",
             help="If not set, a transition from UNDEFINED to anything else is not considered a difference error.")
@@ -716,7 +727,7 @@ and debug output.
         # Get subset of bad files contained by this context.
         bad_contained = heavy_client.get_bad_mappings_in_context(self.observatory, context)
         if bad_contained:
-            if self.args.bad_files_are_errors:
+            if not config.ALLOW_BAD_RULES:
                 self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
                         "is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.")
             else:                 
@@ -727,7 +738,7 @@ and debug output.
     def warn_bad_reference(self, dataset, instrument, filekind, reference):
         """Issue a warning if `reference` is a known bad file."""
         if reference.lower() in self.bad_files:
-            if self.args.bad_files_are_errors:
+            if not config.ALLOW_BAD_REFERENCES:
                 self.log_and_track_error(dataset, instrument, filekind, "File", repr(reference), 
                     "is bad. Use is not recommended,  results may not be scientifically valid.")
             else:
@@ -738,14 +749,17 @@ and debug output.
             return 0
 
     def warn_bad_updates(self):
-        """Issue warnings for each bad file in the updates map."""
+        """Issue warnings for each bad references in the updates map.  This is not inlined in the
+        getreferences() core function because it only pertains to *new* bad reference assignments,
+        not old ones,  so it is only relevant for an update,  not every assignment.
+        """
         log.verbose("Checking updates for bad files.")
         bad_files = 0
         for (dataset, updates) in sorted(self.updates.items()):
             for update in sorted(updates):
                 bad_files += self.warn_bad_reference(dataset, update.instrument, update.filekind, update.new_reference)
         log.verbose("Total bad files =", bad_files)
-        
+
     def locate_file(self, filename):
         """Locate a dataset file leaving the path unchanged. Applies to self.args.files"""
         return filename
@@ -817,9 +831,11 @@ and debug output.
                 if self.args.only_ids and dataset not in self.args.only_ids:
                     log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
                     continue
-                updates = self.process(dataset)
+                updates, failed_updates = self.process(dataset)
                 if updates:
                     self.updates[dataset] = updates
+                if failed_updates:
+                    self.failed_updates[dataset] = failed_updates
             self.post_processing()
         self.report_stats()
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=30)
@@ -832,11 +848,12 @@ and debug output.
         with log.error_on_exception("Failed processing", repr(dataset)):
             log.verbose("="*120)
             if self.args.files:
-                log.info("===> Processing", dataset)
+                log.info("===> Processing", dataset)     # file mode
             else:
-                log.verbose("===> Processing", dataset, verbosity=25)
+                log.verbose("===> Processing", dataset, verbosity=25)   # database or regression modes
             self.increment_stat("datasets", 1)
             return self._process(dataset)
+        return None, None
 
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
@@ -849,14 +866,14 @@ and debug output.
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
-            updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
+            updates, failed_updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
             if self.args.optimize_tables:
                 updates = self.optimize_tables(dataset, updates)
         else:
-            updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
+            updates, failed_updates = self.screen_bestrefs(instrument, dataset, new_bestrefs), []
         if self.args.update_pickle:  # XXXXX mutating input bestrefs to support updated pickles
             self.new_headers.update_headers( { dataset : new_bestrefs })
-        return updates
+        return updates, failed_updates
     
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
@@ -898,7 +915,7 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
 
-            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
+            new_ok, _new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
                                                        ("NOT FOUND NO MATCH","UNDEFINED"))
             if new_ok:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
@@ -920,6 +937,7 @@ and debug output.
         log.verbose("-"*120, verbosity=55)
 
         updates = []
+        failed_updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
 
@@ -930,15 +948,16 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            _ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
+            old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
                                                         ("NOT FOUND NO MATCH",)) # omit UNDEFINED for useless update check.
             new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
                                                        ("NOT FOUND NO MATCH","UNDEFINED"))
-            self._add_synced_reference(new)
-
-            if not new_ok:
+            if not new_ok or not old_ok:
+                failed_updates.append(UpdateTuple(instrument, filekind, old_org, new_org))
                 continue
             
+            self._add_synced_reference(new)
+
             if old == "UNDEFINED" and new == "N/A" and not self.args.undefined_differences_matter:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
                             "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
@@ -969,7 +988,7 @@ and debug output.
                     log.verbose(self.format_prefix(dataset, instrument, filekind), 
                         "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)            
 
-        return updates
+        return updates, failed_updates
 
     def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind, na_conversions):
         """Fetch the bestref for `filekind` from `bestrefs`, and handle conversions to N/A
@@ -1016,22 +1035,34 @@ and debug output.
 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
+
         if self.args.save_pickle:
             self.new_headers.save_pickle(self.args.save_pickle, only_ids=self.args.only_ids)
-        self.warn_bad_updates()
-        if self.args.print_update_counts:
-            self.print_update_stats()
-        if self.args.print_affected:
-            self.print_affected()
-        if self.args.print_affected_details:
-            self.print_affected_details()
+        
+        self.warn_bad_updates()  # Warn about bad file reference updates only, not failures
+ 
         if self.args.print_new_references:
             self.print_new_references()
+        
         if self.args.update_bestrefs:
             log.verbose("Performing best references updates.")
             self.new_headers.handle_updates(self.updates)
+
         if self.args.sync_references:
             self.sync_references()
+
+        if not self.args.skip_failure_effects:
+            self.updates.update(self.failed_updates)
+        
+        if self.args.print_update_counts:
+            self.print_update_stats()   #  For affected datasets,  add back failed dataset updates
+        
+        if self.args.print_affected:
+            self.print_affected()
+        
+        if self.args.print_affected_details:
+            self.print_affected_details()
+
         self.dump_unique_errors()
         
     def optimize_tables(self, dataset, updates):
@@ -1112,7 +1143,7 @@ def cleanpath(name):
 
 def main():
     """Construct and run the bestrefs script,  return 1 if errors occurred, 0 otherwise."""
-    errors = BestrefsScript()() 
+    errors = BestrefsScript()()
     exit_status = int(errors > 0)  # no errors = 0,  errors = 1
     return exit_status
 

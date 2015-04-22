@@ -26,9 +26,6 @@ server cannot be contacted.
 7. The ability to fall back to pre-installed contexts if no context is defined
 through the network, parameter, or environment variable mechanisms.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 import os
 import pprint
 import glob
@@ -38,8 +35,11 @@ import uuid
 
 from . import rmap, log, utils, config
 from crds.client import api
+from crds.exceptions import *
 
 __all__ = ["getreferences", "getrecommendations"]
+
+# ============================================================================
 
 # ============================================================================
 
@@ -172,10 +172,15 @@ def _initial_recommendations(
         log.verbose("Computing best references remotely.")
         bestrefs = api.get_best_references(final_context, parameters, reftypes=reftypes)
     
-    if not fast:
-        warn_bad_references(observatory, bestrefs)
+    if not fast:   
+        # nominally fast=True (this is skipped) in crds.bestrefs,  used for HST and reprocessing
+        # because bestrefs sreprocessing determinations for two contexts which run on 100's of 
+        # thousands of datasets and should only report bad files once and only when arising from 
+        # the new vs. the old context.
         update_config_info(observatory)
         log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
+        warn_bad_references(observatory, bestrefs)
+    
     return final_context, bestrefs
 
 # ============================================================================
@@ -184,10 +189,35 @@ def warn_bad_context(observatory, context):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
     bad_contained = get_bad_mappings_in_context(observatory, context)
     if bad_contained:
-        log.warning("Final context", repr(context), 
-                    "is bad or contains bad rules.  It may produce scientifically invalid results.")
-        log.verbose("Final context", repr(context), "contains bad files:", repr(bad_contained))
-        
+        msg = log.format("Final context", repr(context), 
+                         "is marked as scientifically invalid based on:", log.PP(bad_contained))
+        if config.ALLOW_BAD_RULES:
+            log.warning(msg)
+        else:
+            raise CrdsBadRulesError(msg)
+
+def warn_bad_references(observatory, bestrefs):
+    """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
+    for reftype, refpath in bestrefs.items():
+        warn_bad_reference(observatory, reftype, refpath)
+
+def warn_bad_reference(observatory, reftype, reference):
+    """Return True IFF `reference` is in the set of scientifically invalid files for `observatory`.
+    
+    reference   the CRDS pathname or basename for a reference to check
+    bad_files   None or a set of scientifically invalid files.
+    
+    """
+    ref = os.path.basename(reference)
+    bad_files = get_config_info(observatory).bad_files_set
+    if ref in bad_files:
+        msg = log.format("Recommended reference", repr(ref), "of type", repr(reftype), 
+                         "is designated scientifically invalid.")
+        if config.ALLOW_BAD_REFERENCES:
+            log.warning(msg)
+        else:
+            raise CrdsBadReferenceError(msg)
+
 def mapping_names(context):
     """Return the full set of mapping names associated with `context`,  compute locally if possible,
     else consult server.
@@ -205,15 +235,6 @@ def get_bad_mappings_in_context(observatory, context):
     context_mappings = mapping_names(context)
     return sorted(list(context_mappings.intersection(bad_mappings)))
 
-def warn_bad_references(observatory, bestrefs):
-    """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
-    bad_files = get_config_info(observatory).bad_files_set
-    base_bestrefs = { reftype:os.path.basename(ref) for (reftype, ref) in bestrefs.items() }
-    for reftype, ref in base_bestrefs.items():
-        if ref in bad_files:
-            log.warning("Recommended reference", repr(ref), "for type", repr(reftype), 
-                        "is a known bad file.  It may produce scientifically invalid results.")
-    
 # ============================================================================
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
@@ -226,7 +247,7 @@ def check_parameters(header):
             "Non-string key " + repr(key) + " in parameters."
         try:
             header[key]
-        except Exception as exc:
+        except Exception, exc:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters: " + repr(str(exc)))
         assert isinstance(header[key], (basestring, float, int, bool)), \
@@ -265,13 +286,13 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
             raise IOError("explicitly ignoring cache.")
         # Finally do the best refs computation using pmap methods from local code.
         return rmap.get_best_references(context, parameters, reftypes)
-    except IOError as exc:
+    except IOError, exc:
         log.verbose("Caching mapping files for context", srepr(context))
         try:
             api.dump_mappings(context, ignore_cache=ignore_cache)
-        except crds.CrdsError as exc:
+        except CrdsError, exc:
             traceback.print_exc()
-            raise crds.CrdsNetworkError("Failed caching mapping files: " + str(exc))
+            raise CrdsNetworkError("Failed caching mapping files: " + str(exc))
         return rmap.get_best_references(context, parameters, reftypes)
 
 # ============================================================================
@@ -329,13 +350,13 @@ def translate_date_based_context(info, context):
             if context == info.observatory + "-operational":
                 return info["operational_context"]
             else:
-                raise crds.CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
+                raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
         try:
             translated = api.get_context_by_date(context, observatory=info.observatory)
-        except Exception as exc:
+        except Exception, exc:
             log.error("Failed to translate date based context", repr(context), ":", str(exc))
             raise
-        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=20)
+        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=80)
         return translated
 
 def local_version_obsolete(server_version):
@@ -384,7 +405,7 @@ class ConfigInfo(utils.Struct):
         else:
             eff_mode = mode   # explicitly local or remote
             if eff_mode == "remote" and not self.connected:
-                raise crds.CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
+                raise CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
             if eff_mode == "local" and obsolete:
                 log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
         return eff_mode
@@ -408,7 +429,7 @@ def get_config_info(observatory):
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
-    except api.CrdsError:
+    except CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
     info.effective_mode = info.get_effective_mode()
@@ -457,7 +478,7 @@ def cache_atomic_write(replace_path, contents, fail_warning):
             with open(temp_path, "w+") as file_:
                 file_.write(contents)
             os.rename(temp_path, replace_path)
-        except Exception as exc:
+        except Exception, exc:
             log.verbose_warning("CACHE Failed writing", repr(replace_path), 
                                 ":", fail_warning, ":", repr(exc))
     else:
@@ -498,8 +519,8 @@ def get_installed_info(observatory):
         pmap = os.path.basename(sorted(glob.glob(where))[-1])
         log.warning("Using highest numbered pipeline context", repr(pmap), 
                     "as default. Bad file checking is disabled.")
-    except IndexError as exc:
-        raise crds.CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
+    except IndexError, exc:
+        raise CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
                         repr(where) + " : " + str(exc))
     return ConfigInfo(
             edit_context = pmap,

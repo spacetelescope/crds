@@ -7,34 +7,30 @@ __version__ = "1.6.0"   # > jwst_build4
 
 # ============================================================================
 
+from . import exceptions
+
 __all__ = [ 
            "get_default_context", 
            "getreferences", 
            "getrecommendations",
-           "get_cached_mapping",
-           
-           "CrdsError", 
-           "CrdsNetworkError", 
-           "CrdsLookupError", 
-           "CrdsDownloadError",
-           
-           "CrdsUnknownInstrumentError",
-           "CrdsUnknownReftypeError",
-           ]
+           "get_cached_mapping",           
+           ] + exceptions.__all__
 
 # List of all the observatory package names
 ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]
 
+# keywords used to identify instrument from headers
+INSTRUMENT_KEYWORDS = ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT"]
+
 # ============================================================================
 
 from . import config   # module
-from crds.client import CrdsError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
+
+from .exceptions import *
+
 from crds.client import get_default_context
-
 from .heavy_client import getreferences, getrecommendations
-
 from .rmap import get_cached_mapping, locate_mapping, locate_file
-from .rmap import CrdsUnknownInstrumentError, CrdsUnknownReftypeError
 
 # ============================================================================
 
