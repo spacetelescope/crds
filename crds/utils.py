@@ -62,7 +62,7 @@ def cached(func):
 
     >>> @cached
     ... def sum(x,y):
-    ...   print "really doing it."
+    ...   print("really doing it.")
     ...   return x+y
     
     The first call should actually call the unwrapped sum():
@@ -216,7 +216,7 @@ def capture_output(func):
     
     >>> @capture_output
     ... def f(x,y): 
-    ...    print "hi"
+    ...    print("hi")
     ...    return x + y
     
     >>> f
@@ -788,4 +788,7 @@ def test():
     import doctest
     from crds import utils
     return doctest.testmod(utils)
+
+if __name__ == "__main__":
+    print(test())
 

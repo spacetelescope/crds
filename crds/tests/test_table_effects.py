@@ -82,7 +82,8 @@ from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""
-    import test_table_effects, doctest
+    import doctest
+    from crds.tests import test_table_effects
     return doctest.testmod(test_table_effects)
 
 if __name__ == "__main__":
