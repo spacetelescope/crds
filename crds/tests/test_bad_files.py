@@ -168,6 +168,9 @@ CRDS  : INFO     3 infos
 >>> os.environ["CRDS_SERVER_URL"] = old_server_url
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 def test():
     """Run module tests,  for now just doctests only."""
