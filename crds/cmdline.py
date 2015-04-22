@@ -382,7 +382,7 @@ class Script(object):
         prof.enable()
         function()
         prof.disable()
-        stats_str = io.StringIO()
+        stats_str = io.BytesIO()
         prof_stats = pstats.Stats(prof, stream=stats_str).sort_stats(sort_by)
         prof_stats.print_stats(top_n)
         print(stats_str.getvalue())

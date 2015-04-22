@@ -277,7 +277,7 @@ def lines(command, **keys):
     of lines.
     """
     # keys["independent_error"] = False
-    return io.StringIO(_captured_output(command, **keys).out).readlines()
+    return io.BytesIO(_captured_output(command, **keys).out).readlines()
 
 # =========================================================================
 

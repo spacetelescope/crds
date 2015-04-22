@@ -253,7 +253,7 @@ def capture_output(func):
         def returns_outputs(self, *args, **keys):
             """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
             oldout, olderr = sys.stdout, sys.stderr
-            out = io.StringIO()
+            out = io.BytesIO()
             sys.stdout, sys.stderr = out, out
             # handler = log.add_stream_handler(out)
             try:

@@ -7,7 +7,7 @@ True
 False
 
 >>> import io
->>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
+>>> header = get_geis_header(io.BytesIO(_GEIS_TEST_DATA))
 
 >>> import pprint
 >>> pprint.pprint(header)
