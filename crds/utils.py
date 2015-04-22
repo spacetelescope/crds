@@ -7,8 +7,8 @@ import os
 import os.path
 import stat
 import re
-import sha
-import cStringIO
+import hashlib
+import io
 import functools
 from collections import Counter
 import datetime
@@ -253,7 +253,7 @@ def capture_output(func):
         def returns_outputs(self, *args, **keys):
             """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
             oldout, olderr = sys.stdout, sys.stderr
-            out = cStringIO.StringIO()
+            out = io.StringIO()
             sys.stdout, sys.stderr = out, out
             # handler = log.add_stream_handler(out)
             try:
@@ -463,7 +463,7 @@ def remove(rmpath, observatory):
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
-    xsum = sha.new()
+    xsum = hashlib.sha1()
     with open(pathname, "rb") as infile:
         size = 0
         insize = os.stat(pathname).st_size
@@ -475,7 +475,7 @@ def checksum(pathname):
 
 def str_checksum(data):
     """Return the CRDS hexdigest for small strings.""" 
-    xsum = sha.new()
+    xsum = hashlib.sha1()
     xsum.update(data)
     return xsum.hexdigest()
 
@@ -509,7 +509,7 @@ def get_object(*args):
     namespace = {}
     import_cmd = "from " + pkgpath + " import " + cls
     with log.augment_exception("Error importing", repr(import_cmd)):
-        exec import_cmd in namespace, namespace
+        exec(import_cmd, namespace, namespace)
         return namespace[cls]
 
 # ==============================================================================

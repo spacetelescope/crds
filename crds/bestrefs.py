@@ -11,8 +11,12 @@ from __future__ import absolute_import
 import sys
 import os
 from collections import namedtuple, OrderedDict
-import cPickle
 import json
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 from astropy.io import fits as pyfits
 
@@ -124,7 +128,7 @@ class HeaderGenerator(object):
         if outpath.endswith(".json"):
             saver = json.dump
         elif outpath.endswith(".pkl"):
-            saver = cPickle.dump
+            saver = pickle.dump
         with open(outpath, "wb+") as pick:
             saver(only_hdrs, pick)
         log.info("Done writing", repr(outpath))
@@ -305,7 +309,7 @@ class PickleHeaderGenerator(HeaderGenerator):
             if path.endswith(".json"):
                 loader = json.load
             elif path.endswith(".pkl"):
-                loader = cPickle.load
+                loader = pickle.load
             else:
                 raise ValueError("Valid serialization formats are .json and .pkl")
             headers = loader(pick)

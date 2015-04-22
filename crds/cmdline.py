@@ -10,7 +10,8 @@ import sys
 import os
 import argparse
 import pdb
-import cProfile, pstats, StringIO
+import cProfile, pstats
+import io
 import re
 from collections import Counter
 
@@ -381,7 +382,7 @@ class Script(object):
         prof.enable()
         function()
         prof.disable()
-        stats_str = StringIO.StringIO()
+        stats_str = io.StringIO()
         prof_stats = pstats.Stats(prof, stream=stats_str).sort_stats(sort_by)
         prof_stats.print_stats(top_n)
         print(stats_str.getvalue())

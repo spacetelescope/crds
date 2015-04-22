@@ -6,8 +6,8 @@ True
 >>> is_geis("bar.fits")
 False
 
->>> import cStringIO
->>> header = get_geis_header(cStringIO.StringIO(_GEIS_TEST_DATA))
+>>> import io
+>>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
 
 >>> import pprint
 >>> pprint.pprint(header)

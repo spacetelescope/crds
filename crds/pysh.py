@@ -54,7 +54,7 @@ import os
 import re
 import glob
 import os.path
-import cStringIO
+import io
 import inspect
 
 from subprocess import PIPE, STDOUT, Popen
@@ -277,7 +277,7 @@ def lines(command, **keys):
     of lines.
     """
     # keys["independent_error"] = False
-    return cStringIO.StringIO(_captured_output(command, **keys).out).readlines()
+    return io.StringIO(_captured_output(command, **keys).out).readlines()
 
 # =========================================================================
 

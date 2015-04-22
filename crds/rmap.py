@@ -363,7 +363,7 @@ class Mapping(object):
         """
         namespace = {}
         namespace.update(selectors.SELECTORS)
-        exec code in namespace
+        exec(code, namespace)
         header = LowerCaseDict(namespace["header"])
         selector = namespace["selector"]
         comment = namespace.get("comment", None)
