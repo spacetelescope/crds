@@ -12,6 +12,7 @@ import os.path
 import base64
 import re
 import zlib
+import six
 
 if sys.version_info < (3,0,0):
     from urllib2 import urlopen
@@ -704,7 +705,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             wanted.extend(list(refname))
         elif isinstance(refname, dict):
             wanted.extend(refname.values())
-        elif isinstance(refname, basestring):
+        elif isinstance(refname, six.string_types):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", repr(filetype), 
@@ -724,7 +725,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             refs[str(filetype)] = tuple([str(localrefs[name]) for name in refname])
         elif isinstance(refname, dict):
             refs[str(filetype)] = { name : str(localrefs[name]) for name in refname }
-        elif isinstance(refname, basestring):
+        elif isinstance(refname, six.string_types):
             if "NOT FOUND" in refname:
                 refs[str(filetype)] = str(refname)
             else:

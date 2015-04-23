@@ -10,6 +10,7 @@ import datetime
 import re
 
 import crds
+import six
 
 # =======================================================================
 
@@ -20,7 +21,7 @@ def reformat_date(date):
 
 def format_date(date):
     """Format a datestring `d` in CRDS standard form."""
-    if isinstance(date, basestring):
+    if isinstance(date, six.string_types):
         date = parse_date(date)
     return date.isoformat(" ")
 
