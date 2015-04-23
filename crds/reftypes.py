@@ -12,7 +12,6 @@ import collections
 import glob
 
 from crds import rmap, log, utils, data_file
-import six
 # from crds.certify import TpnInfo
 
 # =============================================================================
@@ -200,7 +199,7 @@ class TypeParameters(object):
         observatory = utils.header_to_observatory(header)
         instrument, filekind = utils.get_file_properties(observatory, filename)
         tpnfile = self.unified_defs[instrument][filekind][field]
-        if isinstance(tpnfile, six.string_types):
+        if isinstance(tpnfile, basestring):
             key = (tpnfile,)  # tpn filename
         else: # it's a list of conditional tpns
             for (condition, tpn) in tpnfile:
