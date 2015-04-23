@@ -15,6 +15,7 @@ from astropy.io.fits.hdu.hdulist import fitsopen
 from astropy.io.fits.hdu.table import _TableLikeHDU
 
 from crds import rmap, cmdline
+import six
 
 
 #==========================================================================
@@ -87,7 +88,7 @@ def get_hdulist(fits_reference):
     """
     # If the reference is a string, presume its a file path
     result = fits_reference
-    if isinstance(fits_reference, basestring):
+    if isinstance(fits_reference, six.string_types):
             try:
                 result = fitsopen(fits_reference)
             except Exception as e:
@@ -120,7 +121,7 @@ def string_to_list(str, separator=','):
     """
 
     result = str
-    if isinstance(result, basestring):
+    if isinstance(result, six.string_types):
         result = result.split(',')
     return result
 

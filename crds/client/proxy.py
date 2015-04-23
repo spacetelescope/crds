@@ -11,6 +11,7 @@ import uuid
 import json
 import time
 import os
+import six
 
 if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
@@ -36,8 +37,9 @@ def apply_with_retries(f, *pars, **keys):
             log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
+            exc2 = exc
     else:
-        raise exc
+        raise exc2
 
 def program_id():
     """Return a nominal identifier for this program."""
@@ -110,9 +112,11 @@ class CheckingProxy(object):
 
     def _call_service(self, parameters, url):
         """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
+        if not isinstance(parameters, bytes):
+            parameters = parameters.encode("utf-8")
         try:
             channel = urlopen(url, parameters)
-            return channel.read()
+            return channel.read().decode("utf-8")
         except Exception as exc:
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
 
@@ -129,7 +133,7 @@ class CheckingProxy(object):
 
 def fix_strings(rval):
     """Convert unicode to strings."""
-    if isinstance(rval, basestring):
+    if isinstance(rval, six.string_types):
         return str(rval)
     elif isinstance(rval, tuple):
         return tuple([fix_strings(x) for x in rval])

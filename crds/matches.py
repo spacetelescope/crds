@@ -19,6 +19,7 @@ from pprint import pprint as pp
 
 from crds import rmap, log, cmdline, utils
 from crds.client import api
+import six
 
 # ===================================================================
 
@@ -115,7 +116,7 @@ def _flatten_items_to_dict(match_path):
     """
     result = {}
     for par in match_path:
-        if len(par) == 2 and isinstance(par[0], basestring) and isinstance(par[1], basestring):
+        if len(par) == 2 and isinstance(par[0], six.string_types) and isinstance(par[1], six.string_types):
             result[par[0]] = par[1]
         else:
             result.update(_flatten_items_to_dict(par))

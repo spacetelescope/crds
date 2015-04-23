@@ -28,7 +28,7 @@ from crds.client import api
 def _clean_file_lines(files):
     """Return simple filenames from paths in `files`, ignoring error messages."""
     files = [os.path.basename(f.strip()) for f in files]
-    return  [f for f in files if config.FILE_RE.match(f)]
+    return  [f for f in files if config.FILE_RE.match(str(f))]
 
 def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention `filename`."""

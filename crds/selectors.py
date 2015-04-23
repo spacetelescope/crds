@@ -101,6 +101,7 @@ import crds
 from crds import log, utils
 
 from crds.exceptions import *
+import six
 
 # ==============================================================================
 
@@ -121,7 +122,21 @@ def dict_wo_dups(items):
 
 # Selections are items from a Selector's dictionary.   Portions of the lookup return both.
 # A "choice" is a Selector's ultimate choose() return value,  e.g. a filename or other Selector.
-Selection = namedtuple("Selection", ("key", "choice"))
+# Selection = namedtuple("Selection", ("key", "choice"))
+
+class Selection(tuple):
+    def __new__(cls, key, choice):
+        return super(Selection, cls).__new__(cls, (key, choice))
+
+    def __init__(self, key, choice):
+        self.key = key
+        self.choice = choice
+    
+    def _cmp_key(self, key):
+        return tuple(str(field) for field in key) if isinstance(key, tuple) else str(key)
+
+    def __lt__(self, other):
+        return self._cmp_key(self.key) < self._cmp_key(other.key)
 
 # ==============================================================================
 
@@ -216,7 +231,7 @@ class Selector(object):
                 flat.extend([key + row for row in nested["selections"]])
             else:
                 subpars = ["REFERENCE"]
-                if isinstance(key, basestring):  # Fix non-tuple keys
+                if isinstance(key, six.string_types):  # Fix non-tuple keys
                     key = (key,)
                 flat.extend([key + (val,)])
         pars = list(self.todict_parameters()) + subpars
@@ -335,7 +350,7 @@ class Selector(object):
         for choice in self.choices():
             if isinstance(choice, Selector):
                 new_files = choice.reference_names()
-            elif isinstance(choice, basestring):
+            elif isinstance(choice, six.string_types):
                 new_files = [choice]
             elif isinstance(choice, tuple):
                 new_files = list(choice)
@@ -382,18 +397,18 @@ class Selector(object):
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
                     choice._validate_selector(valid_values_map)
-                elif isinstance(choice, basestring):
+                elif isinstance(choice, six.string_types):
                     pass
                 elif isinstance(choice, tuple):
                     for val in choice:
-                        if not isinstance(val, basestring): 
+                        if not isinstance(val, six.string_types): 
                             raise ValidationError("Non-string tuple value for choice at " + repr(key))
                 elif isinstance(choice, dict):
                     for val in choice:
-                        if not isinstance(val, basestring):
+                        if not isinstance(val, six.string_types):
                             raise ValidationError("Non-string dictionary key for choice at " + repr(key))
                     for val in choice.values():
-                        if not isinstance(val, basestring):
+                        if not isinstance(val, six.string_types):
                             raise ValidationError("Non-string dictionary value for choice at " + repr(key))
                 else:
                     raise ValidationError
@@ -790,7 +805,7 @@ class DiffTuple(tuple):
         pars2 = []
         vals2 = []
         for i, par in enumerate(self.parameter_names):
-            if isinstance(par, basestring):
+            if isinstance(par, six.string_types):
                 pars2.append(par)
                 vals2.append(self[i])
             else:
@@ -1410,7 +1425,7 @@ Restore original debug behavior:
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "UNDEFINED")
             log.verbose("Binding", repr(parkey), "=", repr(value), verbosity=60)
-            for match_tuple, (matchers, _subselector) in remaining.items():
+            for match_tuple, (matchers, _subselector) in list(remaining.items()):
                 # Match the key to the current header vaue
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
@@ -1492,7 +1507,7 @@ Restore original debug behavior:
         values in `valid_values_map`.   Note that each `key` is 
         nominally a tuple with values for multiple parkeys.
         """
-        if isinstance(key, (basestring, int, float)):
+        if isinstance(key, (six.string_types, int, float)):
             key = (key,)
         if len(key) != len(self._parameters):
             raise ValidationError("wrong length for parameter list " + 
@@ -2270,7 +2285,7 @@ def test():
     """Run module doctest."""
     import doctest
     from crds import selectors
-    return doctest.testmod(selectors)
+    return doctest.testmod(selectors, optionflags=doctest.IGNORE_EXCEPTION_DETAIL)
 
 if __name__ == "__main__":
     print(test())

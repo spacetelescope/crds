@@ -474,7 +474,14 @@ def checksum(pathname):
     return xsum.hexdigest()
 
 def str_checksum(data):
-    """Return the CRDS hexdigest for small strings.""" 
+    """Return the CRDS hexdigest for small strings.
+
+    >>> str_checksum("this is a test.")
+    '7728f8eb7bf75ec3cc49364861eec852fc814870'
+
+    """
+    if not isinstance(data, bytes):
+        data = data.encode("utf-8")
     xsum = hashlib.sha1()
     xsum.update(data)
     return xsum.hexdigest()
@@ -611,8 +618,9 @@ def _eval_keys(keys):
 def condition_header_keys(header):
     """Convert a matching parameter header into the form which supports eval(), ie.
     JWST-style header keys.   Nominally for JWST data model style keys.
-
-    >>> condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"})
+    
+    >>> from pprint import pprint as pp
+    >>> pp(condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"}))
     {'META.INSTRUMENT.NAME': 'NIRISS', 'META_INSTRUMENT_NAME': 'NIRISS'}
 
     """

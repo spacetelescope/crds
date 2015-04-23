@@ -33,7 +33,7 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
         naxis1 = int(float(header["NAXIS1"]))
     except ValueError:
         log.verbose("acs_biasfile_selection: bad NAXIS1.")
-        sys.exc_clear()
+        # sys.exc_clear()
     else:
         header["NAXIS1"] = utils.condition_value(str(naxis1))
         # if pre-SM4 and NAXIS1 > HALF_CHIP
@@ -55,7 +55,7 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
             naxis2 = int(float(header["NAXIS2"])) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NAXIS2.")
-            sys.exc_clear()
+            # sys.exc_clear()
         else:
             header["NAXIS2"] = utils.condition_value(str(naxis2)) 
     dump_mutations(header_in, header)
