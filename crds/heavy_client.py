@@ -39,6 +39,7 @@ import uuid
 from . import rmap, log, utils, config
 from crds.client import api
 from crds.exceptions import *
+import six
 
 __all__ = ["getreferences", "getrecommendations"]
 
@@ -246,14 +247,14 @@ def check_observatory(observatory):
 def check_parameters(header):
     """Make sure dict-like `header` is a mapping from strings to simple types."""
     for key in header:
-        assert isinstance(key, basestring), \
+        assert isinstance(key, six.string_types), \
             "Non-string key " + repr(key) + " in parameters."
         try:
             header[key]
         except Exception as exc:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters: " + repr(str(exc)))
-        assert isinstance(header[key], (basestring, float, int, bool)), \
+        assert isinstance(header[key], (six.string_types, float, int, bool)), \
             "Parameter " + repr(key) + " isn't a string, float, int, or bool."
     
 def check_reftypes(reftypes):
@@ -262,7 +263,7 @@ def check_reftypes(reftypes):
         "reftypes must be a list or tuple of strings, or sub-class of those."
     if reftypes is not None:
         for reftype in reftypes:
-            assert isinstance(reftype, basestring), \
+            assert isinstance(reftype, six.string_types), \
                 "each reftype must be a string, .e.g. biasfile or darkfile."
                 
 def check_context(context):

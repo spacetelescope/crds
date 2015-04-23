@@ -57,6 +57,7 @@ import json
 from crds import utils, log, config
 
 from astropy.io import fits as pyfits
+import six
 # import pyasdf
 
 # =============================================================================
@@ -205,7 +206,7 @@ def to_simple_types(tree):
 
 def simple_type(value):
     """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-    if isinstance(value, (basestring, int, float, long, complex)):
+    if isinstance(value, (six.string_types, int, float, long, complex)):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
@@ -369,7 +370,7 @@ def is_geis_header(name):
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
-    if isinstance(name, basestring):
+    if isinstance(name, six.string_types):
         if name.endswith("d"):
             name = name[:-1] + "h"
         lines = open(name)
