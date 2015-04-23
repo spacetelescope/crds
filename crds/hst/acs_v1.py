@@ -28,7 +28,7 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
         numcols = int(float(header["NUMCOLS"]))
     except ValueError:
         log.verbose("acs_biasfile_selection: bad NUMCOLS.")
-        sys.exc_clear()
+        # sys.exc_clear()
     else:
         header["NUMCOLS"] = utils.condition_value(str(numcols))
         # if pre-SM4 and NUMCOLS > HALF_CHIP
@@ -50,7 +50,7 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
             numrows = int(float(header["NUMROWS"])) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
-            sys.exc_clear()
+            # sys.exc_clear()
         else:
             header["NUMROWS"] = utils.condition_value(str(numrows)) 
     return header     # XXXXXX RETURN NOW !!!!

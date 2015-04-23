@@ -148,7 +148,7 @@ class Validator(object):
         if self.info.presence in ["R","P"]:
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         else:
-            sys.exc_clear()
+            # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
 

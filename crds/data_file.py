@@ -7,7 +7,7 @@ True
 False
 
 >>> import io
->>> header = get_geis_header(io.BytesIO(_GEIS_TEST_DATA))
+>>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
 
 >>> import pprint
 >>> pprint.pprint(header)
@@ -57,6 +57,7 @@ import json
 from crds import utils, log, config
 
 from astropy.io import fits as pyfits
+import six
 # import pyasdf
 
 # =============================================================================
@@ -205,7 +206,7 @@ def to_simple_types(tree):
 
 def simple_type(value):
     """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-    if isinstance(value, (basestring, int, float, long, complex)):
+    if isinstance(value, (six.string_types, int, float, complex)):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
@@ -298,7 +299,7 @@ def get_fits_header_union(filepath, needed_keys=()):
 
 # ================================================================================================================
 
-_GEIS_TEST_DATA = """
+_GEIS_TEST_DATA = u"""
 SIMPLE  =                    F /
                                                                               
 BITPIX  =                   16 /                                                
@@ -369,7 +370,7 @@ def is_geis_header(name):
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
-    if isinstance(name, basestring):
+    if isinstance(name, six.string_types):
         if name.endswith("d"):
             name = name[:-1] + "h"
         lines = open(name)
@@ -386,7 +387,7 @@ def get_geis_header(name, needed_keys=()):
             line = line[:31]
             
         if line.startswith("HISTORY"):
-            history.append(line[len("HISTORY"):].strip())
+            history.append(str(line[len("HISTORY"):].strip()))
             continue
 
         words = [x.strip() for x in line.split("=")]
@@ -409,7 +410,7 @@ def get_geis_header(name, needed_keys=()):
             value = value[1:-1].strip()
 
         # Assign value,  supporting list of values for HISTORY
-        header[key] = value
+        header[str(key)] = str(value)
         
     if not needed_keys or "HISTORY" in needed_keys:
         header["HISTORY"] = history

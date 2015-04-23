@@ -39,7 +39,9 @@ HERE = os.path.dirname(__file__) or "."
 class HeaderExpander(object):
     """HeaderExpander applies a set of expansion rules to a header.  It 
     compiles the applicability expression of each rule.
-    
+
+    >>> from pprint import pprint as pp
+
     >>> expansions = {
     ...  'FILTER1' : { "DETECTOR=='HRC' and FILTER1=='ANY'": 'F555W|F775W|F625W'},
     ...  'OBSTYPE' : { "DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": 'IMAGING|CORONAGRAPHIC'},
@@ -47,16 +49,16 @@ class HeaderExpander(object):
     >>> expander = HeaderExpander(expansions)
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"ANY" }
-    >>> expander.expand(header)
+    >>> pp(expander.expand(header))
     {'DETECTOR': 'HRC', 'FILTER1': 'F555W|F775W|F625W'}
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"G280L", "OBSTYPE":"ANY" }
-    >>> expander.expand(header)
-    {'OBSTYPE': 'ANY', 'DETECTOR': 'HRC', 'FILTER1': 'G280L'}
+    >>> pp(expander.expand(header))
+    {'DETECTOR': 'HRC', 'FILTER1': 'G280L', 'OBSTYPE': 'ANY'}
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"G800L", "OBSTYPE":"ANY" }
-    >>> expander.expand(header)
-    {'OBSTYPE': 'IMAGING|CORONAGRAPHIC', 'DETECTOR': 'HRC', 'FILTER1': 'G800L'}
+    >>> pp(expander.expand(header))
+    {'DETECTOR': 'HRC', 'FILTER1': 'G800L', 'OBSTYPE': 'IMAGING|CORONAGRAPHIC'}
     """
     def __init__(self, expansion_mapping, expansion_file="(none)"):
         self.mapping = {}

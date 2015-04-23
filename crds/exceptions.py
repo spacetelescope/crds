@@ -8,6 +8,9 @@ class CrdsError(Exception):
     def __init__(self, *args, **keys):
         return super(CrdsError, self).__init__(" ".join(args), **keys)
 
+    def __repr__(self):
+        return self.__class__.__name__ + "(" + repr(str(self)) + ")"
+
 # -------------------------------------------------------------------------------------------
 
 class ServiceError(CrdsError):

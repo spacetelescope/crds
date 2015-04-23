@@ -77,7 +77,7 @@ def get_file_properties(filename):
     >>> get_file_properties("./hst_acs_biasfile_0001.rmap")
     ('acs', 'biasfile')
 
-    >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
+    >> get_file_properties("./hst_acs_biasfile_0001.pmap")
     Traceback (most recent call last):
     ...
     IOError: [Errno 2] No such file or directory: './hst_acs_biasfile_0001.pmap'

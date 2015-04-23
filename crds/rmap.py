@@ -74,6 +74,7 @@ from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
 from crds.exceptions import *
+import six
 
 # ===================================================================
 
@@ -269,7 +270,7 @@ class LowerCaseDict(dict):
         val = super(LowerCaseDict, self).__getitem__(key)
         # Return string values as lower case,  but exclude literal expressions surrounded by ()
         # for case-sensitive HST rmap relevance expressions.
-        if isinstance(val, basestring) and not (val.startswith("(") and val.endswith(")")):
+        if isinstance(val, six.string_types) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
     
@@ -732,7 +733,7 @@ class PipelineContext(ContextMapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.  `dataset` can be a filename or a header dictionary.
         """
-        if isinstance(dataset, basestring):
+        if isinstance(dataset, six.string_types):
             instrument = data_file.getval(dataset,  self.instrument_key)
         elif isinstance(dataset, dict):
             instrument = self.get_instrument(dataset)
@@ -1137,7 +1138,8 @@ class ReferenceMapping(Mapping):
                     try:
                         limits = [int(float(x)) for x in limits]
                     except Exception:
-                        sys.exc_clear()
+                        pass
+                        # sys.exc_clear()
                     else:
                         values = range(limits[0], limits[1]+1)
                 if condition:
@@ -1417,7 +1419,7 @@ def asmapping(filename_or_mapping, cached=False, **keys):
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping
-    elif isinstance(filename_or_mapping, basestring):
+    elif isinstance(filename_or_mapping, six.string_types):
         if cached in [False, "uncached"]:
             return load_mapping(filename_or_mapping, **keys)
         elif cached in [True, "cached"]:
@@ -1479,7 +1481,7 @@ def mapping_type(mapping):
     >>> mapping_type(get_cached_mapping('hst_acs_darkfile.rmap'))
     'rmap'
     """
-    if isinstance(mapping, (str, unicode)):
+    if isinstance(mapping, six.string_types):
         if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:
