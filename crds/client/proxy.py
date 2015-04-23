@@ -11,7 +11,6 @@ import uuid
 import json
 import time
 import os
-import six
 
 if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
@@ -130,7 +129,7 @@ class CheckingProxy(object):
 
 def fix_strings(rval):
     """Convert unicode to strings."""
-    if isinstance(rval, six.string_types):
+    if isinstance(rval, basestring):
         return str(rval)
     elif isinstance(rval, tuple):
         return tuple([fix_strings(x) for x in rval])

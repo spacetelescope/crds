@@ -11,7 +11,6 @@ import re
 import glob
 
 from crds import log
-import six
 
 # ===========================================================================
 
@@ -101,7 +100,7 @@ class ConfigItem(object):
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
-        if self.lower and isinstance(value, six.string_types):
+        if self.lower and isinstance(value, basestring):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
@@ -691,7 +690,7 @@ CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, six.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -730,7 +729,7 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-foo")
     False
     """
-    return is_mapping(mapping) or (isinstance(mapping, six.string_types) and bool(CONTEXT_RE.match(mapping)))
+    return is_mapping(mapping) or (isinstance(mapping, basestring) and bool(CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).

@@ -12,7 +12,6 @@ import sys
 import os
 from collections import namedtuple, OrderedDict
 import json
-import six
 
 try:
     import cPickle as pickle
@@ -144,7 +143,7 @@ class HeaderGenerator(object):
             
         items = headers2.items()
         for dataset_id, header in items:
-            if isinstance(header, six.string_types):
+            if isinstance(header, basestring):
                 log.warning("Skipping bad dataset", dataset_id, ":", headers2[dataset_id])
                 del headers2[dataset_id]
 

@@ -19,7 +19,6 @@ from argparse import RawTextHelpFormatter
 
 from crds import rmap, log, data_file, heavy_client, config, utils
 from crds.client import api
-import six
 
 # =============================================================================
 
@@ -111,7 +110,7 @@ class Script(object):
     def __init__(self, argv=None, parser_pars=None, reset_log=True):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
-        if isinstance(argv, six.string_types):
+        if isinstance(argv, basestring):
             argv = argv.split()
         elif argv is None:
             argv = sys.argv
