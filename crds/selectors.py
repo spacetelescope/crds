@@ -286,14 +286,15 @@ class Selector(object):
         """Given `header`,  operate on self.keys() to choose one of self.choices()."""
         self._check_defined(header)
         lookup_key = self._validate_header(header)  # may return header or a key
-        exc = None
+        last_exc = None
         for selection in self.get_selection(lookup_key):  # iterate over weighted selections, best match first.
             try:
                 log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
             except crds.CrdsLookupError as exc:
+                last_exc = exc
                 continue
-        more_info = " last exception: " + str(exc) if exc else ""
+        more_info = " last exception: " + str(last_exc) if last_exc else ""
         raise crds.CrdsLookupError("All lookup attempts failed." + more_info)
                 
     def get_selection(self, lookup_key):
