@@ -235,14 +235,14 @@ def capture_output(func):
     
     If you don't care about the return value,  but want the output:
     
-    >>> f.outputs(1, 2)
-    'hi\\n'
-    
+    >>> f.outputs(1, 2) == 'hi\\n'
+    True
+
     If you need both the return value and captured output:
     
-    >>> f.returns_outputs(1, 2)
-    (3, 'hi\\n')
-       
+    >>> f.returns_outputs(1, 2) == (3, 'hi\\n')
+    True
+
     """
     class CapturedFunction(object):
         """Closure on `func` which supports various forms of output capture."""
@@ -252,19 +252,22 @@ def capture_output(func):
 
         def returns_outputs(self, *args, **keys):
             """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
+            sys.stdout.flush()
+            sys.stderr.flush()
             oldout, olderr = sys.stdout, sys.stderr
-            out = io.BytesIO()
+            if sys.version_info < (3,0,0):
+                out = io.BytesIO()
+            else:
+                out = io.TextIOWrapper(io.BytesIO())
             sys.stdout, sys.stderr = out, out
-            # handler = log.add_stream_handler(out)
             try:
                 result = func(*args, **keys)
-            finally:
                 out.flush()
-                # log.remove_stream_handler(handler)
+                out.seek(0)
+                return result, out.read()
+            finally:
                 sys.stdout, sys.stderr = oldout, olderr
-            out.seek(0)
-            return result, out.read()
-        
+
         def suppressed(self, *args, **keys):
             """Call the wrapped function, suppress output,  return f() normally."""
             return self.returns_outputs(*args, **keys)[0]
