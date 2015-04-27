@@ -24,7 +24,7 @@ False
  'GROUPS': 'T',
  'HISTORY': ['This file was edited by Michael S. Wiggs, August 1995',
              '',
-             'e2112084u.r0h was edited to include values of 256, which correspond'],
+             'e2112084u.r0h was edited to include values of 256'],
  'INSTRUME': 'WFPC2',
  'KSPOTS': 'OFF',
  'NAXIS': '1',
@@ -348,7 +348,7 @@ PEDIGREE= 'INFLIGHT 01/01/1994 - 15/05/1995'
 DESCRIP = 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS'                        
 HISTORY This file was edited by Michael S. Wiggs, August 1995                   
 HISTORY                                                                         
-HISTORY e2112084u.r0h was edited to include values of 256, which correspond     
+HISTORY e2112084u.r0h was edited to include values of 256 
 END                                                                             
 """
 
