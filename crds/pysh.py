@@ -158,6 +158,11 @@ class Shell:
         if self._trace_commands:
             print(repr(self), file=sys.stderr)
         self.out, self.err = self._popen.communicate(self._input)
+        if sys.version_info >= (3,0,0):
+            if self.out:
+                self.out = self.out.decode("utf-8")
+            if self.err:
+                self.err = self.err.decode("utf-8")
         self.status = self._popen.returncode
         if self._raise_on_error and self._popen.returncode:
             if self._trace_exceptions and not self._trace_commands:
@@ -277,7 +282,7 @@ def lines(command, **keys):
     of lines.
     """
     # keys["independent_error"] = False
-    return io.BytesIO(_captured_output(command, **keys).out).readlines()
+    return _captured_output(command, **keys).out.splitlines()
 
 # =========================================================================
 
