@@ -1,8 +1,0 @@
-Critical/enhanced portions of django-json-rpc are built into
-the CRDS client and don't need to be installed separately.
-See crds.client.proxy
-
-Parsley is used by crds.certify to check for duplicate entries in
-mappings.  Checking is optional and fails nicely if parsely is not
-installed...  but thanks to third_party it always should be.
-
