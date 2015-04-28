@@ -268,7 +268,7 @@ class TypeParameters(object):
     def get_filekinds(self, instrument):
         """Return the sequence of filekind strings for `instrument`."""
         instrument = instrument.lower()
-        return self._filekind_to_suffix[instrument].keys()
+        return sorted(self._filekind_to_suffix[instrument].keys())
 
     def get_item(self, instrument, filekind, name):
         """Return config item `name` for `instrument` and `filekind`"""
