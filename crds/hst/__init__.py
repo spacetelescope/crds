@@ -9,24 +9,23 @@
 'darkfile'
 
 >>> TYPES.get_filekinds("wfpc2")
-['offtab', 'flatfile', 'idctab', 'darkfile', 'biasfile', 'wf4tfile', 'dgeofile', 'atodfile', 'maskfile', 'shadfile']
+['atodfile', 'biasfile', 'darkfile', 'dgeofile', 'flatfile', 'idctab', 'maskfile', 'offtab', 'shadfile', 'wf4tfile']
 
 >>> TYPES.mapping_validator_key("hst_acs_darkfile.rmap")
 ('acs_drk_ld.tpn',)
 
-
 >>> from crds import config
 
->>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
+>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
 ('stis_lfl_ld.tpn',)
 
->>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
+>> TYPES.reference_name_to_ld_tpn_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
 ('stis_lfl_ld.tpn',)
 
->>> TYPES.reference_name_to_validator_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
+>> TYPES.reference_name_to_validator_key(config.locate_file("pcc2026io_lfl.fits", "hst"))
 ('stis_slfl.tpn',)
 
->>> TYPES.reference_name_to_validator_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
+>> TYPES.reference_name_to_validator_key(config.locate_file("iaf1723io_lfl.fits", "hst"))
 ('stis_ilfl.tpn',)
 
 """
