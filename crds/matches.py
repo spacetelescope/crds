@@ -254,10 +254,10 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         for ref in self.files:
             matches = self.find_match_tuples(context, ref)
             if matches:
-                for match in matches:        
+                for match in matches:
                     log.write(ctx, ref, ":", match)
             else:
-                log.write(ctx, ref, ":", "none")
+                log.verbose(ctx, ref, ":", "none")
 
     def find_match_tuples(self, context, reffile):
         """Return the list of match representations for `reference` in `context`.   
