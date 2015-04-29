@@ -5,8 +5,9 @@ import os.path
 import crds.pysh
 import crds
 
+topdir = os.getcwd()
+
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
 os.environ["CRDS_MAPPATH"] = os.path.join(os.path.dirname(crds.__file__), "cache", "mappings")
-
-crds.pysh.sh("nosetests --verbose --with-doctest --doctest-tests --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
+crds.pysh.sh("nosetests --verbose --with-doctest --doctest-tests --with-coverage --cover-html --cover-html-dir=$topdir/coverage --cover-erase --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
 
