@@ -7,7 +7,6 @@ from __future__ import division # confidence high
 from __future__ import with_statement
 from __future__ import print_function
 
-import unittest
 import os
 from pprint import pprint as pp
 
@@ -162,14 +161,349 @@ def test_rmap_tojson():
     '{"header": {"observatory": "hst", "name": "hst_cos_bpixtab_0252.rmap", "reffile_required": "none", "parkey": [["DETECTOR"], ["DATE-OBS", "TIME-OBS"]], "mapping": "reference", "filekind": "bpixtab", "instrument": "cos", "derived_from": "hst_cos_bpixtab_0251.rmap", "reffile_switch": "none", "reffile_format": "table", "rmap_relevance": "always", "sha1sum": "d2024dade52a406af70fcdf27a81088004d67cae"}, "selections": [["FUV", "1996-10-01 00:00:00", "s7g1700dl_bpix.fits"], ["FUV", "2009-05-11 00:00:00", "z1r1943fl_bpix.fits"], ["NUV", "1996-10-01 00:00:00", "s7g1700pl_bpix.fits"], ["NUV", "2009-05-11 00:00:00", "uas19356l_bpix.fits"]], "parameters": ["DETECTOR", "USEAFTER", "REFERENCE"], "text_descr": "Data Quality (Bad Pixel) Initialization Table"}'
     """
 
-def test_get_filekinds():
+def test_load_rmap_bad_expr(self):
     """
-    >>> r = rmap.get_cached_mapping("hst.pmap")
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_badexpr.rmap")
+    Traceback (most recent call last):
+    ...
+    SyntaxError: invalid syntax
+    """
+
+def test_rmap_get_parkey_map():
+    """
+    >>> i = rmap.get_cached_mapping("hst_acs.imap")
+    >>> pp(i.get_parkey_map())
+    {'APERTURE': ['*',
+                  'WFC',
+                  'WFC-FIX',
+                  'WFC1',
+                  'WFC1-1K',
+                  'WFC1-2K',
+                  'WFC1-512',
+                  'WFC1-CTE',
+                  'WFC1-FIX',
+                  'WFC1-IRAMP',
+                  'WFC1-IRAMPQ',
+                  'WFC1-MRAMP',
+                  'WFC1-MRAMPQ',
+                  'WFC1-POL0UV',
+                  'WFC1-POL0V',
+                  'WFC1-POL120UV',
+                  'WFC1-POL120V',
+                  'WFC1-POL60UV',
+                  'WFC1-POL60V',
+                  'WFC1-SMFL',
+                  'WFC2',
+                  'WFC2-2K',
+                  'WFC2-FIX',
+                  'WFC2-MRAMP',
+                  'WFC2-ORAMP',
+                  'WFC2-ORAMPQ',
+                  'WFC2-POL0UV',
+                  'WFC2-POL0V',
+                  'WFC2-POL120UV',
+                  'WFC2-POL120V',
+                  'WFC2-POL60UV',
+                  'WFC2-POL60V',
+                  'WFC2-SMFL',
+                  'WFCENTER'],
+     'ATODCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'BIASCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'CCDAMP': ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D', 'N/A'],
+     'CCDCHIP': ['N/A'],
+     'CCDGAIN': ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0', 'N/A'],
+     'CRCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'DARKCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'DETECTOR': ['HRC', 'SBC', 'WFC'],
+     'DQICORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'DRIZCORR': ['NONE', 'COMPLETE', 'PERFORM', 'OMIT', 'UNDEFINED'],
+     'FILTER1': ['*',
+                 'BLOCK1',
+                 'BLOCK2',
+                 'BLOCK3',
+                 'BLOCK4',
+                 'CLEAR1L',
+                 'CLEAR1S',
+                 'F115LP',
+                 'F122M',
+                 'F125LP',
+                 'F140LP',
+                 'F150LP',
+                 'F165LP',
+                 'F475W',
+                 'F502N',
+                 'F550M',
+                 'F555W',
+                 'F606W',
+                 'F625W',
+                 'F658N',
+                 'F775W',
+                 'F850LP',
+                 'F892N',
+                 'G800L',
+                 'N/A',
+                 'POL0UV',
+                 'POL120UV',
+                 'POL60UV',
+                 'PR110L',
+                 'PR130L'],
+     'FILTER2': ['CLEAR2L',
+                 'CLEAR2S',
+                 'F220M',
+                 'F220W',
+                 'F250W',
+                 'F330W',
+                 'F344N',
+                 'F410W',
+                 'F435W',
+                 'F660N',
+                 'F814W',
+                 'FR1016N',
+                 'FR388N',
+                 'FR423N',
+                 'FR459M',
+                 'FR462N',
+                 'FR505N',
+                 'FR551N',
+                 'FR555N',
+                 'FR601N',
+                 'FR647M',
+                 'FR656N',
+                 'FR716N',
+                 'FR782N',
+                 'FR853N',
+                 'FR914M',
+                 'FR931N',
+                 'N/A',
+                 'POL0V',
+                 'POL120V',
+                 'POL60V',
+                 'PR200L'],
+     'FLASHCUR': ['HIGH', 'LOW', 'MED'],
+     'FLATCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'FLSHCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'FW1OFFST': ['-1.0', '1.0', 'N/A'],
+     'FW2OFFST': ['-1.0', '1.0', 'N/A'],
+     'FWSOFFST': ['N/A'],
+     'GLINCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'LTV1': ['-1816.0',
+              '-2048.0',
+              '-3072.0',
+              '-3584.0',
+              '-3604.0',
+              '19.0',
+              '22.0',
+              '24.0',
+              'N/A'],
+     'LTV2': ['-1.0',
+              '-1023.0',
+              '-1535.0',
+              '-1591.0',
+              '-57.0',
+              '-824.0',
+              '0.0',
+              '20.0',
+              'N/A'],
+     'NUMCOLS': ['1046.0',
+                 '1062.0',
+                 '2070.0',
+                 '2300.0',
+                 '4144.0',
+                 '512.0',
+                 '534.0',
+                 'N/A'],
+     'NUMROWS': ['1024.0', '1044.0', '2046.0', '2068.0', '400.0', '512.0', 'N/A'],
+     'OBSTYPE': ['CORONAGRAPHIC', 'IMAGING', 'SPECTROSCOPIC'],
+     'PCTECORR': ['NONE', 'COMPLETE', 'PERFORM', 'OMIT', 'UNDEFINED'],
+     'PHOTCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'SHADCORR': ['PERFORM', 'NONE', 'OMIT', 'COMPLETE', 'UNDEFINED'],
+     'SHUTRPOS': ['A', 'B'],
+     'XCORNER': ['N/A'],
+     'YCORNER': ['N/A']}
     """
     
+    
+def test_rmap_get_parkey_map():
+    """
+    >>> i = rmap.get_cached_mapping("hst_acs.imap")
+    >>> i.get_rmap("foo")
+    Traceback (most recent call last):
+    ...
+    CrdsUnknownReftypeError: Unknown reference type 'foo'
+    """
+
+def test_rmap_get_valid_values_map():
+    """
+    >>> i = rmap.get_cached_mapping("hst_acs.imap")
+    >>> pp(i.get_valid_values_map())
+    {'APERTURE': ['NONE',
+                  'SBC',
+                  'SBC-FIX',
+                  'WFC',
+                  'WFC-FIX',
+                  'WFC1',
+                  'WFC1-1K',
+                  'WFC1-2K',
+                  'WFC1-512',
+                  'WFC1-CTE',
+                  'WFC1-FIX',
+                  'WFC1-IRAMP',
+                  'WFC1-IRAMPQ',
+                  'WFC1-MRAMP',
+                  'WFC1-MRAMPQ',
+                  'WFC1-POL0UV',
+                  'WFC1-POL0V',
+                  'WFC1-POL120UV',
+                  'WFC1-POL120V',
+                  'WFC1-POL60UV',
+                  'WFC1-POL60V',
+                  'WFC1-SMFL',
+                  'WFC2',
+                  'WFC2-2K',
+                  'WFC2-FIX',
+                  'WFC2-MRAMP',
+                  'WFC2-ORAMP',
+                  'WFC2-ORAMPQ',
+                  'WFC2-POL0UV',
+                  'WFC2-POL0V',
+                  'WFC2-POL120UV',
+                  'WFC2-POL120V',
+                  'WFC2-POL60UV',
+                  'WFC2-POL60V',
+                  'WFC2-SMFL',
+                  'WFCENTER'],
+     'ATODCORR': [],
+     'BIASCORR': [],
+     'CCDAMP': ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D'],
+     'CCDCHIP': [],
+     'CCDGAIN': ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0'],
+     'CRCORR': [],
+     'DARKCORR': [],
+     'DETECTOR': ['HRC', 'SBC', 'WFC'],
+     'DQICORR': [],
+     'DRIZCORR': [],
+     'FILTER1': ['BLOCK1',
+                 'BLOCK2',
+                 'BLOCK3',
+                 'BLOCK4',
+                 'CLEAR1L',
+                 'CLEAR1S',
+                 'F115LP',
+                 'F122M',
+                 'F125LP',
+                 'F140LP',
+                 'F150LP',
+                 'F165LP',
+                 'F475W',
+                 'F502N',
+                 'F550M',
+                 'F555W',
+                 'F606W',
+                 'F625W',
+                 'F658N',
+                 'F775W',
+                 'F850LP',
+                 'F892N',
+                 'G800L',
+                 'POL0UV',
+                 'POL120UV',
+                 'POL60UV',
+                 'PR110L',
+                 'PR130L'],
+     'FILTER2': ['CLEAR2L',
+                 'CLEAR2S',
+                 'F220W',
+                 'F250W',
+                 'F330W',
+                 'F344N',
+                 'F435W',
+                 'F660N',
+                 'F814W',
+                 'FR1016N',
+                 'FR388N',
+                 'FR423N',
+                 'FR459M',
+                 'FR462N',
+                 'FR505N',
+                 'FR551N',
+                 'FR601N',
+                 'FR647M',
+                 'FR656N',
+                 'FR716N',
+                 'FR782N',
+                 'FR853N',
+                 'FR914M',
+                 'FR931N',
+                 'POL0V',
+                 'POL120V',
+                 'POL60V',
+                 'PR200L'],
+     'FLASHCUR': ['HIGH', 'LOW', 'MED'],
+     'FLATCORR': [],
+     'FLSHCORR': [],
+     'FW1OFFST': ['-1', '0', '1', '2'],
+     'FW2OFFST': ['-1', '0', '1', '2'],
+     'FWSOFFST': ['-1', '0', '1', '2'],
+     'GLINCORR': [],
+     'LTV1': [],
+     'LTV2': [],
+     'NUMCOLS': [],
+     'NUMROWS': [],
+     'OBSTYPE': ['CORONAGRAPHIC', 'IMAGING', 'INTERNAL', 'SPECTROSCOPIC'],
+     'PCTECORR': [],
+     'PHOTCORR': [],
+     'SHADCORR': [],
+     'SHUTRPOS': ['A', 'B'],
+     'XCORNER': [],
+     'YCORNER': []}
+
+    >>> pp(i.get_valid_values_map(remove_special=False)["CCDGAIN"])
+    ['0.5', '1.0', '1.4', '2.0', '4.0', '8.0']
+
+    >>> pp(i.get_valid_values_map(condition=True)["FW1OFFST"])
+    ['-1.0', '0.0', '1.0', '2.0']
+
+    """
+
+def test_rmap_get_best_references_fail():
+    """
+    >>> i = rmap.get_cached_mapping("hst_acs.imap")
+    >>> i.get_best_references({
+    ... "DETECTOR" : "HRC",
+    ... "CCDAMP" : "B",
+    ... "CCDGAIN" : "7.0",
+    ... "DARKCORR" : "PERFORM",
+    ... "DATE-OBS" : "2015-04-30",
+    ... "TIME-OBS" : "16:43:00",
+    ... }, include=["darkfile"])
+    {'darkfile': 'NOT FOUND No match found.'}
+    """
+
+def test_validate_mapping_valid():
+    """
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
+    >>> r.validate_mapping()
+    """
+
+def test_validate_mapping_invalid1():
+    """
+    >>> log.set_test_mode()
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid1.rmap")
+    >>> r.validate_mapping()
+    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') : '2002-03- 00:34:31' : UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2002-03- 00:34:31' exception is "Unknown numerical date format: '2002/03/ 00:34:31'"
+    """
+
+def test_validate_mapping_invalid2():
+    """
+    >>> log.set_test_mode()
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid2.rmap")
+    >>> r.validate_mapping()
+    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('FOOBAR', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='DETECTOR' value='FOOBAR' is not in ('WFC', 'HRC', 'SBC')
+    """
+
 # ==================================================================================
 
-class CrdsRmapTests(CRDSTestCase):
+class TestRmap(CRDSTestCase):
 
     def test_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")
@@ -183,13 +517,22 @@ class CrdsRmapTests(CRDSTestCase):
                            'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
                            'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
 
+    def test_get_equivalent_mapping(self):
+        i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
+        self.assertEqual(i.get_equivalent_mapping("hst.pmap"), None)
+        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
+        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
+
+ 
 # ==================================================================================
 
 
 def test():
     """Run module tests,  for now just doctests only."""
-    unittest.main()
     import test_rmap, doctest
+    import unittest
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestRmap)
+    unittest.TextTestRunner().run(suite)
     return doctest.testmod(test_rmap)
 
 if __name__ == "__main__":
