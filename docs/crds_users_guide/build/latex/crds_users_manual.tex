@@ -61,7 +61,7 @@
 
 
 \title{crds Documentation}
-\date{April 15, 2015}
+\date{April 30, 2015}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -1359,46 +1359,59 @@ crds.certify checks a reference or mapping file against constraints on legal
 matching parameter values.   For reference files,  crds.certify also performs checks
 of the FITS format and when given a context,  and will compare the given file against
 the file it replaces looking for new or missing table rows.
-
+\begin{itemize}
+\item {} 
 crds.certify --help yields:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-Checks a CRDS reference or mapping file.
-
-positional arguments:
-  files
-
-optional arguments:
-  \PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
-  \PYGZhy{}d, \PYGZhy{}\PYGZhy{}deep            Certify reference files referred to by mappings have valid contents.
-  \PYGZhy{}r, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}recurse\PYGZhy{}mappings
-                        Do not load and validate mappings recursively,  checking only directly specified files.
-  \PYGZhy{}a, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
-  \PYGZhy{}e, \PYGZhy{}\PYGZhy{}exist           Certify reference files referred to by mappings exist.
-  \PYGZhy{}m, \PYGZhy{}\PYGZhy{}mapping         Ignore extensions, the files being certified are mappings.
-  \PYGZhy{}p, \PYGZhy{}\PYGZhy{}dump\PYGZhy{}provenance
-                        Dump provenance keywords.
-  \PYGZhy{}t TRAP\PYGZus{}EXCEPTIONS, \PYGZhy{}\PYGZhy{}trap\PYGZhy{}exceptions TRAP\PYGZus{}EXCEPTIONS
-                        Capture exceptions at level: pmap, imap, rmap, selector, debug, none
-  \PYGZhy{}x COMPARISON\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context COMPARISON\PYGZus{}CONTEXT
-                        Pipeline context defining comparison files.
-  \PYGZhy{}y COMPARISON\PYGZus{}REFERENCE, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}reference COMPARISON\PYGZus{}REFERENCE
-                        Comparison reference for table certification.
-  \PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors  Record and dump the first instance of each kind of error.
-  \PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE
-                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
-  \PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE
-                        Write out all err\PYGZsq{}ing data names (ids or filenames) to specified file.
-  \PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
-  \PYGZhy{}\PYGZhy{}verbosity VERBOSITY
-                        Set log verbosity to a specific level: 0..100.
-  \PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-  \PYGZhy{}V, \PYGZhy{}\PYGZhy{}version         Print the software version and exit.
-  \PYGZhy{}J, \PYGZhy{}\PYGZhy{}jwst            Force observatory to JWST for determining header conventions.
-  \PYGZhy{}H, \PYGZhy{}\PYGZhy{}hst             Force observatory to HST for determining header conventions.
+usage: /Users/jmiller/work/workspace\PYGZus{}crds/CRDS/crds/certify.py
+   [\PYGZhy{}h] [\PYGZhy{}d] [\PYGZhy{}r] [\PYGZhy{}a] [\PYGZhy{}e] [\PYGZhy{}p] [\PYGZhy{}x COMPARISON\PYGZus{}CONTEXT]
+   [\PYGZhy{}y COMPARISON\PYGZus{}REFERENCE] [\PYGZhy{}s] [\PYGZhy{}\PYGZhy{}dump\PYGZhy{}unique\PYGZhy{}errors]
+   [\PYGZhy{}\PYGZhy{}unique\PYGZhy{}errors\PYGZhy{}file UNIQUE\PYGZus{}ERRORS\PYGZus{}FILE]
+   [\PYGZhy{}\PYGZhy{}all\PYGZhy{}errors\PYGZhy{}file ALL\PYGZus{}ERRORS\PYGZus{}FILE] [\PYGZhy{}v] [\PYGZhy{}\PYGZhy{}verbosity VERBOSITY] [\PYGZhy{}R]
+   [\PYGZhy{}I] [\PYGZhy{}V] [\PYGZhy{}J] [\PYGZhy{}H] [\PYGZhy{}\PYGZhy{}stats] [\PYGZhy{}\PYGZhy{}profile PROFILE] [\PYGZhy{}\PYGZhy{}log\PYGZhy{}time] [\PYGZhy{}\PYGZhy{}pdb]
+   [\PYGZhy{}\PYGZhy{}debug\PYGZhy{}traps]
+   files [files ...]
 \end{Verbatim}
 
-crds.certify is invoked as, e.g.:
+\item {} 
+Checks a CRDS reference or mapping file:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+1. Verifies basic file format: .fits, .json, .yaml, .asdf, .pmap, .imap, .rmap
+2. Checks references for required keywords and values, where constraints are defined.
+3. Checks CRDS rules for permissible values with respect to defined reference constraints.
+4. Checks CRDS rules for accidental file reversions or duplicate lines.
+5. Checks CRDS rules for noteworthy version\PYGZhy{}to\PYGZhy{}version changes such as new or removed match cases.
+6. Checks tables for deleted or duplicate rows relative to a comparison table.
+7. Finds comparison references with respect to old CRDS contexts.
+\end{Verbatim}
+
+\item {} 
+positional arguments:
+
+files
+
+\item {} 
+optional arguments:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZhy{}h, \PYGZhy{}\PYGZhy{}help            show this help message and exit
+\PYGZhy{}d, \PYGZhy{}\PYGZhy{}deep            Certify reference files referred to by mappings have valid contents.
+\PYGZhy{}r, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}recurse\PYGZhy{}mappings   Do not load and validate mappings recursively,  checking only directly specified files.
+\PYGZhy{}a, \PYGZhy{}\PYGZhy{}dont\PYGZhy{}parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
+\PYGZhy{}e, \PYGZhy{}\PYGZhy{}exist           Certify reference files referred to by mappings exist.
+\PYGZhy{}p, \PYGZhy{}\PYGZhy{}dump\PYGZhy{}provenance  Dump provenance keywords.
+\PYGZhy{}x COMPARISON\PYGZus{}CONTEXT, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context COMPARISON\PYGZus{}CONTEXT   Pipeline context defining comparison files.  Defaults to operational context,  use \PYGZsq{}none\PYGZsq{} to suppress.
+\PYGZhy{}y COMPARISON\PYGZus{}REFERENCE, \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}reference COMPARISON\PYGZus{}REFERENCE  Comparison reference for tables certification.
+\PYGZhy{}s, \PYGZhy{}\PYGZhy{}sync\PYGZhy{}files      Fetch any missing files needed for the requested difference from the CRDS server.
+\PYGZhy{}v, \PYGZhy{}\PYGZhy{}verbose         Set log verbosity to True,  nominal debug level.
+\PYGZhy{}\PYGZhy{}verbosity VERBOSITY Set log verbosity to a specific level: 0..100.
+\PYGZhy{}R, \PYGZhy{}\PYGZhy{}readonly\PYGZhy{}cache  Don\PYGZsq{}t modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+\end{Verbatim}
+
+\item {} 
+crds.certify is normally invoked as, e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYGZpc{} python \PYGZhy{}m crds.certify \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context=hst\PYGZus{}0027.pmap   some\PYGZus{}reference.fits
@@ -1406,7 +1419,39 @@ crds.certify is invoked as, e.g.:
 \PYGZpc{} python \PYGZhy{}m crds.certify hst.pmap
 \end{Verbatim}
 
+\item {} 
+To run crds.certify on a reference(s) to verify basic file format and parameter constraints:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.certify \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context=hst\PYGZus{}0027.pmap   some\PYGZus{}reference.fits...
+\end{Verbatim}
+
+If some\_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
+
+\item {} 
+For recursively checking CRDS rules do this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.certify hst\PYGZus{}0311.pmap \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}context=hst\PYGZus{}0312.pmap
+\end{Verbatim}
+
+If a comparison context is defined, checked mappings will be compared against their peers (if they exist) in
+the comparison context.  Many classes of mapping differences will result in warnings.
+
+\item {} 
+For reference table checks,  a comparison reference can also be specified directly rather than inferred from context:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.certify some\PYGZus{}reference.fits \PYGZhy{}\PYGZhy{}comparison\PYGZhy{}reference=old\PYGZus{}reference\PYGZus{}version.fits
+\end{Verbatim}
+
+\item {} 
+For more information on the checks being performed,  use --verbose or --verbosity=N where N \textgreater{} 50.
+
+\item {} 
 Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
+
+\end{itemize}
 
 
 \section{crds.diff}
