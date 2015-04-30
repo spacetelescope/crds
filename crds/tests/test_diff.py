@@ -115,6 +115,8 @@ def test_fits_diff():
     Compute diffs for two .fits's:
 
     >>> case = DiffScript(argv="diff.py data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
+    >>> import doctest
+    >>> doctest.ELLIPSIS_MARKER = '-etc-'
     >>> case.run()  # doctest:+ELLIPSIS
     -etc-
      a: data/hst_acs_biasfile_0001.fits
@@ -141,6 +143,8 @@ def test_rmap_primitive_diffs():
     Compute primitive diffs for two .rmap's:
 
     >>> case = DiffScript(argv="diff.py data/hst_acs_biasfile_0001.rmap data/hst_acs_biasfile_0002.rmap --primitive-diffs")
+    >>> import doctest
+    >>> doctest.ELLIPSIS_MARKER = '-etc-'
     >>> case.run()  #doctest:+ELLIPSIS
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00'), 'replaced data/hst_acs_biasfile_0001.fits with data/hst_acs_biasfile_0002.fits')
@@ -208,6 +212,8 @@ def test_row_change():
     """
     Row change
     >>> case = DiffScript(argv="diff.py data/test-source.fits data/test-change-row1-valueLeft.fits")
+    >>> import doctest
+    >>> doctest.ELLIPSIS_MARKER = '-etc-'
     >>> case.run()  #doctest:+ELLIPSIS
     -etc-
      a: data/test-source.fits
