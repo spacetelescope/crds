@@ -501,6 +501,11 @@ def test_validate_mapping_invalid2():
     CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('FOOBAR', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='DETECTOR' value='FOOBAR' is not in ('WFC', 'HRC', 'SBC')
     """
 
+def test_rmap_asmapping_readonly():
+    """
+    >>> r = rmap.asmapping("data/hst_acs_darkfile.rmap", cached="readonly")
+    """
+    
 # ==================================================================================
 
 class TestRmap(CRDSTestCase):
@@ -523,11 +528,14 @@ class TestRmap(CRDSTestCase):
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
 
- 
+
+    def test_list_references(self):
+        self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
+
 # ==================================================================================
 
 
-def test():
+def tst():
     """Run module tests,  for now just doctests only."""
     import test_rmap, doctest
     import unittest
@@ -536,4 +544,4 @@ def test():
     return doctest.testmod(test_rmap)
 
 if __name__ == "__main__":
-    print(test())
+    print(tst())
