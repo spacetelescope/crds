@@ -289,12 +289,12 @@ def get_sqlite3_db_path(observatory):
 
 CRDS_SUBDIR_TAG_FILE = "ref_cache_subdir_mode"
 CRDS_REF_SUBDIR_MODES = ["instrument", "flat", "legacy"]
-_CRDS_REF_SUBDIR_MODE = None
+CRDS_REF_SUBDIR_MODE = "None"  # does not make cache consistent with env,  test only!!
 
 def get_crds_ref_subdir_mode(observatory):
     """Return the mode value defining how reference files are located."""
-    if _CRDS_REF_SUBDIR_MODE is not None:
-        mode = _CRDS_REF_SUBDIR_MODE
+    if CRDS_REF_SUBDIR_MODE is not "None":
+        mode = CRDS_REF_SUBDIR_MODE
     else:
         mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
         try:
@@ -314,9 +314,9 @@ def get_crds_ref_subdir_mode(observatory):
 
 def set_crds_ref_subdir_mode(mode, observatory):
     """Set the reference file location subdirectory `mode`."""
-    global _CRDS_REF_SUBDIR_MODE
+    global CRDS_REF_SUBDIR_MODE
     check_crds_ref_subdir_mode(mode)
-    _CRDS_REF_SUBDIR_MODE = mode
+    CRDS_REF_SUBDIR_MODE = mode
     mode_path = os.path.join(get_crds_cfgpath(observatory), CRDS_SUBDIR_TAG_FILE)
     if writable_cache_or_verbose("skipping subdir mode write."):
         from crds import heavy_client as hv   #  yeah,  kinda gross
@@ -785,6 +785,29 @@ def mapping_to_filekind(context_file):
     'biasfile'
     """
     return os.path.basename(context_file).split("_")[2].split(".")[0]
+
+# -------------------------------------------------------------------------------------
+
+def get_crds_state():
+    """Capture the current CRDS configuration and return it as a dictionary.
+    Intended for customizing state during self-tests and restoring during teardown.
+    """
+    global CRDS_REF_SUBDIR_MODE
+    env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
+    env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
+    return env
+
+def set_crds_state(old_state):
+    """Restore the configuration of CRDS returned by get_crds_state()."""
+    global CRDS_REF_SUBDIR_MODE
+    for key in os.environ.keys():
+        if key.startswith("CRDS_"):
+            del os.environ[key]
+    for key, val in old_state.items():
+        os.environ[key] = val
+    CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
+
+# -------------------------------------------------------------------------------------
 
 def test():
     """Run doctests on crds.config module."""

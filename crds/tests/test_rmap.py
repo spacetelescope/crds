@@ -10,19 +10,13 @@ from __future__ import print_function
 import os
 from pprint import pprint as pp
 
-from crds import rmap, log, exceptions
+from crds import rmap, log, exceptions, config
+from crds.client import api
 from crds.tests import CRDSTestCase
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
-
-def test_get_derived_from():
-    """
-    >>> r = rmap.get_cached_mapping("hst_acs_flshfile_0252.rmap")
-    >>> r.get_derived_from().name
-    'hst_acs_flshfile_0251.rmap'
-    """
 
 def test_get_derived_from_created():
     """
@@ -221,6 +215,7 @@ def test_rmap_missing_checksum():
 
 def test_rmap_warn_checksum():
     """
+    >>> log.set_test_mode()
     >>> r = rmap.ReferenceMapping.from_string('''
     ... header = {
     ...    'derived_from' : 'generated from CDBS database 2013-01-11 13:58:14.664182',
@@ -663,8 +658,15 @@ class TestRmap(CRDSTestCase):
 
 
     def test_list_references(self):
-        self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
+        os.environ["CRDS_REFPATH_SINGLE"] = os.getcwd() + "/data"
+        config.CRDS_REF_SUBDIR_MODE = "flat"
+        self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h'])
 
+    def test_get_derived_from(self):
+        # api.dump_mappings("hst.pmap", mappings=["hst_acs_flshfile_0251.rmap"])
+        os.environ["CRDS_MAPPATH_SINGLE"] = os.getcwd() + "/data"
+        r = rmap.get_cached_mapping("data/hst_acs_flshfile_0252.rmap")
+        self.assertEqual(r.get_derived_from().name, 'hst_acs_flshfile_0251.rmap')
 
 # ==================================================================================
 
