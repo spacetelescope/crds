@@ -481,7 +481,7 @@ class Selector(object):
                             raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
                                                   " at " + repr(key))
                 else:
-                    raise ValidationError
+                    raise ValidationError("Illegal type for selector primitive value", repr(choice))
 
     def _validate_header(self, header):
         """Check self._parameters in `header` against the values found in the
@@ -1425,7 +1425,17 @@ Dictionary results are legal as long as the keys and values are simple strings:
     Traceback (most recent call last):
     ...
     ValidationError: Non-string dictionary key for choice {1: '200'} at ('1.0', 'N/A')
-    
+
+No other primitive choices are legal,  so None is invalid:
+
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : None,
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Illegal type for selector primitive value None
+
 Inconsistencies between parameter lists and match tuples are detected:
     
     >>> m = MatchSelector(("foo",), {

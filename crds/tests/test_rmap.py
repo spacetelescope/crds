@@ -24,6 +24,21 @@ def test_get_derived_from():
     'hst_acs_flshfile_0251.rmap'
     """
 
+def test_get_derived_from_created():
+    """
+    >>> log.set_test_mode()
+    >>> p = rmap.get_cached_mapping("hst.pmap")
+    >>> p.get_derived_from()
+    CRDS  : INFO     Skipping derivation checks for root mapping 'hst.pmap' derived_from = 'created by hand 12-23-2011'
+    """
+def test_get_derived_from_phony():
+    """
+    >>> log.set_test_mode()
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_phony_derive.rmap")
+    >>> r.get_derived_from()
+    CRDS  : WARNING  Parent mapping for 'hst_acs_darkfile_phony_derive.rmap' = 'phony.rmap' does not exist.
+    """
+
 def test_missing_required_header_key():
     """
     >>> r = rmap.load_mapping("data/hst_acs_darkfile_missing_key.rmap")
@@ -31,6 +46,68 @@ def test_missing_required_header_key():
     ...
     MissingHeaderKeyError: Required header key 'mapping' is missing.
     """
+
+def test_rmap_missing_references():
+    """
+    These are all missing because there is no reference file cache in this mode.
+
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_comment.rmap")
+    >>> pp(r.missing_references())
+    ['lcb12060j_drk.fits',
+     'n3o1022cj_drk.fits',
+     'n3o1022ej_drk.fits',
+     'n3o1022fj_drk.fits',
+     'n3o1022hj_drk.fits',
+     'n3o1022ij_drk.fits',
+     'n3o1022kj_drk.fits',
+     'n3o1022lj_drk.fits',
+     'r1u1415ij_drk.fits',
+     'r1u1415kj_drk.fits',
+     'r1u1415mj_drk.fits']
+    """
+
+def test_rmap_minimum_header():
+    """
+    >>> p = rmap.get_cached_mapping("hst.pmap")
+    >>> pp(p.get_minimum_header("data/j8bt05njq_raw.fits"))
+    {'APERTURE': 'HRC',
+     'ATODCORR': 'OMIT',
+     'BIASCORR': 'PERFORM',
+     'CCDAMP': 'C',
+     'CCDCHIP': 'UNDEFINED',
+     'CCDGAIN': '2.0',
+     'CRCORR': 'OMIT',
+     'DARKCORR': 'PERFORM',
+     'DATE-OBS': '2002-04-13',
+     'DETECTOR': 'HRC',
+     'DQICORR': 'PERFORM',
+     'DRIZCORR': 'PERFORM',
+     'FILTER1': 'F555W',
+     'FILTER2': 'CLEAR2S',
+     'FLASHCUR': 'OFF',
+     'FLATCORR': 'PERFORM',
+     'FLSHCORR': 'OMIT',
+     'FW1OFFST': '0.0',
+     'FW2OFFST': '0.0',
+     'FWSOFFST': '0.0',
+     'GLINCORR': 'UNDEFINED',
+     'INSTRUME': 'ACS',
+     'LTV1': '19.0',
+     'LTV2': '0.0',
+     'NUMCOLS': 'UNDEFINED',
+     'NUMROWS': 'UNDEFINED',
+     'OBSTYPE': 'IMAGING',
+     'PCTECORR': 'UNDEFINED',
+     'PHOTCORR': 'PERFORM',
+     'REFTYPE': 'UNDEFINED',
+     'SHADCORR': 'OMIT',
+     'SHUTRPOS': 'B',
+     'TIME-OBS': '18:16:35',
+     'XCORNER': 'UNDEFINED',
+     'YCORNER': 'UNDEFINED'}
+    """
+    
+
 
 def test_rmap_str():
     """
@@ -140,6 +217,30 @@ def test_rmap_missing_checksum():
     Traceback (most recent call last):
     ...
     ChecksumError: sha1sum is missing in '(noname)'
+    """
+
+def test_rmap_warn_checksum():
+    """
+    >>> r = rmap.ReferenceMapping.from_string('''
+    ... header = {
+    ...    'derived_from' : 'generated from CDBS database 2013-01-11 13:58:14.664182',
+    ...    'filekind' : 'DARKFILE',
+    ...    'instrument' : 'ACS',
+    ...    'mapping' : 'REFERENCE',
+    ...    'name' : 'hst_acs_darkfile_comment.rmap',
+    ...    'observatory' : 'HST',
+    ...    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    ...    'sha1sum' : "something bad",
+    ... }
+    ...
+    ... selector = Match({
+    ...    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+    ...        '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
+    ...        '2002-03-01 00:00:00' : 'n3o1022cj_drk.fits',
+    ...     }),
+    ... })
+    ... ''', ignore_checksum='warn')
+    CRDS  : WARNING  Checksum error : sha1sum mismatch in '(noname)'
     """
 
 def test_rmap_todict():
@@ -332,6 +433,15 @@ def test_rmap_get_parkey_map():
     CrdsUnknownReftypeError: Unknown reference type 'foo'
     """
 
+def test_rmap_get_reference_parkeys():
+    """
+    >>> r = rmap.get_cached_mapping("data/jwst_miri_specwcs_0004.rmap")
+    >>> r.parkey
+    (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),)
+    >>> r.get_reference_parkeys()
+    ('DETECTOR', 'CHANNEL', 'BAND', 'SUBARRAY', 'META.EXPOSURE.TYPE')
+    """
+
 def test_rmap_get_valid_values_map():
     """
     >>> i = rmap.get_cached_mapping("hst_acs.imap")
@@ -479,6 +589,22 @@ def test_rmap_get_best_references_fail():
     {'darkfile': 'NOT FOUND No match found.'}
     """
 
+def test_rmap_get_best_references_include():
+    """
+    >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_comment.rmap")
+    >>> header = {
+    ... 'CCDAMP': 'ABCD',
+    ... 'CCDGAIN': '1.0',
+    ... 'DARKCORR': 'UNDEFINED',
+    ... 'DATE-OBS': '2002-07-18',
+    ... 'DETECTOR': 'WFC',
+    ... 'TIME-OBS': '18:09:15.773332'}
+    >>> r.get_best_references(header, include=["flatfile"])
+    Traceback (most recent call last):
+    ...
+    CrdsUnknownReftypeError: ReferenceMapping 'hst_acs_darkfile_comment.rmap' can only compute bestrefs for type 'darkfile' not ['flatfile']
+    """
+
 def test_validate_mapping_valid():
     """
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
@@ -531,6 +657,7 @@ class TestRmap(CRDSTestCase):
 
     def test_list_references(self):
         self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
+
 
 # ==================================================================================
 
