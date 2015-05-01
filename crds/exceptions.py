@@ -3,7 +3,7 @@
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
     def __init__(self, *args, **keys):
-        return super(CrdsError, self).__init__(" ".join(args), **keys)
+        return super(CrdsError, self).__init__(" ".join(str(arg) for arg in args), **keys)
 
 # -------------------------------------------------------------------------------------------
 
