@@ -638,31 +638,31 @@ def test_rmap_asmapping_readonly():
 
 class TestRmap(CRDSTestCase):
 
-    def test_get_imap_except(self):
+    def test_rmap_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")
         with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
             r.get_imap("foo")
 
-    def test_get_filekind(self):
+    def test_rmap_get_filekind(self):
         r = rmap.get_cached_mapping("hst.pmap")
         self.assertEqual(r.get_filekinds("data/j8bt05njq_raw.fits"),
                          [ 'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
                            'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
                            'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
 
-    def test_get_equivalent_mapping(self):
+    def test_rmap_get_equivalent_mapping(self):
         i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
         self.assertEqual(i.get_equivalent_mapping("hst.pmap"), None)
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
 
 
-    def test_list_references(self):
+    def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = os.getcwd() + "/data"
         config.CRDS_REF_SUBDIR_MODE = "flat"
         self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h'])
 
-    def test_get_derived_from(self):
+    def test_rmap_get_derived_from(self):
         # api.dump_mappings("hst.pmap", mappings=["hst_acs_flshfile_0251.rmap"])
         os.environ["CRDS_MAPPATH_SINGLE"] = os.getcwd() + "/data"
         r = rmap.get_cached_mapping("data/hst_acs_flshfile_0252.rmap")
