@@ -455,8 +455,10 @@ class Script(object):
             
     def sync_files(self, files, context=None, ignore_cache=None):
         """Like dump_files(),  but dumps recursive closure of any mappings rather than just the listed mapping."""
-        mappings = [ filename for filename in files if config.is_mapping(filename) ]
-        references = [filename for filename in files if not config.is_mapping(filename) ]
+        mappings = [ os.path.basename(filename)
+                     for filename in files if config.is_mapping(filename) ]
+        references = [os.path.basename(filename)
+                      for filename in files if not config.is_mapping(filename) ]
         if mappings:
             self.dump_mappings(mappings, ignore_cache)
         if references:
