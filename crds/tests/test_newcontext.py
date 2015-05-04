@@ -44,7 +44,7 @@ def test_new_context():
     CRDS  : INFO     Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in './hst_0003.pmap'
     0
 
-    >>> pp([difference[-1] for difference in diff.mapping_diffs("hst.pmap", "./hst_0003.pmap")])
+    >>> pp([difference[-1] for difference in diff.mapping_diffs("data/hst.pmap", "./hst_0003.pmap")])
     ["replaced 'hst_acs.imap' with './hst_acs_0270.imap'",
      "replaced 'hst_cos.imap' with './hst_cos_0268.imap'",
      "replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
@@ -52,7 +52,8 @@ def test_new_context():
      "replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap'",
      "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'"]
     
-    >>> _ = pysh.sh("rm \./*\.[pir]map")
+    >>> pysh.sh("rm \./*\.[pir]map")
+    0
     """
 
 class TestNewContext(CRDSTestCase):
