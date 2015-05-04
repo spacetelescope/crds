@@ -274,7 +274,7 @@ class SyncScript(cmdline.ContextsScript):
         heavy_client.update_config_info(self.observatory)
         self.report_stats()
         log.standard_status()
-
+        return log.errors()
     # ------------------------------------------------------------------------------------------
     
     @property

@@ -788,13 +788,14 @@ def mapping_to_filekind(context_file):
 
 # -------------------------------------------------------------------------------------
 
-def get_crds_state():
+def get_crds_state(clear_existing=False):
     """Capture the current CRDS configuration and return it as a dictionary.
     Intended for customizing state during self-tests and restoring during teardown.
     """
-    global CRDS_REF_SUBDIR_MODE
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
+    if clear_existing:
+        clear_crds_state()
     return env
 
 def set_crds_state(old_state):
@@ -806,6 +807,13 @@ def set_crds_state(old_state):
     for key, val in old_state.items():
         os.environ[key] = val
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
+
+def clear_crds_state():
+    """Wipe out the existing configuration variable state of CRDS."""
+    for var in list(os.environ.keys()):
+        if var.startswith("CRDS_"):
+            os.environ.pop(var)
+
 
 # -------------------------------------------------------------------------------------
 
