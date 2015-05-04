@@ -10,6 +10,7 @@ import sys
 import re
 from collections import defaultdict
 
+import crds
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config
 
 from astropy.io.fits import FITSDiff
@@ -272,7 +273,7 @@ def newstyle_name(name):
     >>> newstyle_name("hst_acs_darkfile_0001.fits")
     True
     """
-    return name.startswith(("hst", "jwst", "tobs"))
+    return name.startswith(tuple(crds.ALL_OBSERVATORIES))
 
 def newer(name1, name2):
     """Determine if `name1` is a more recent file than `name2` accounting for 
@@ -295,11 +296,16 @@ def newer(name1, name2):
     True
     >>> newer("hst_cos_deadtab_0051.fits", "hst_cos_deadtab_0050.asdf")
     False
+    >>> newer("hst_cos_deadtab_0001.fits", "hst_cos_deadtab_99991.fits")
+    False
+    >>> newer("hst_cos_deadtab_99991.fits", "hst_cos_deadtab_0001.fits")
+    True
     """
     if newstyle_name(name1):
         if newstyle_name(name2): # compare CRDS names
             if extension_rank(name1) == extension_rank(name2):
-                result = name1 > name2   # same extension compares by counter
+                serial1, serial2 = newstyle_serial(name1), newstyle_serial(name2)
+                result = serial1 > serial2   # same extension compares by counter
             else:  
                 result = extension_rank(name1) > extension_rank(name2)
         else:  # CRDS > CDBS
@@ -339,7 +345,21 @@ def extension_rank(filename):
         return 4.0
     else:
         return 5.0
-    
+
+def newstyle_serial(name):
+    """Return the serial number associated with a CRDS-style name.
+
+    >>> newstyle_serial("hst_0042.pmap")
+    42
+    >>> newstyle_serial("hst_0990999.pmap")    
+    990999
+    >>> newstyle_serial("hst_cos_0999.imap")
+    999
+    >>> newstyle_serial("hst_cos_darkfile_0998.fits")
+    998
+    """
+    return int(re.search(r"_(\d+)\..\w+", name).groups()[0], 10)
+
 # ============================================================================
 
 
