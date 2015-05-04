@@ -10,35 +10,49 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds import rmap, log, exceptions, newcontext, diff, pysh
+from crds import rmap, log, exceptions, newcontext, diff, pysh, config
 from crds.tests import CRDSTestCase
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
+def test_fake_name():
+    """
+    Fake names are only used by crds.newcontext when it is run from the command line.
+
+    >>> newcontext.fake_name("data/hst.pmap")
+    './hst_0003.pmap'
+    
+    >>> newcontext.fake_name("data/hst_cos_0001.imap")
+    './hst_cos_0001.imap'
+
+    >>> newcontext.fake_name("data/hst_cos_deadtab_9999.rmap")
+    './hst_cos_deadtab_10000.rmap'
+    """
+
 def test_new_context():
     """
     >>> log.set_test_mode()
+    >>> newcontext.NewContextScript("newcontext.py data/hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
+    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0268.imap'
+    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0270.imap'
+    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0268.imap' for 'COS' in './hst_0003.pmap'
+    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_0270.imap' for 'ACS' in './hst_0003.pmap'
+    CRDS  : INFO     Adjusting name 'hst_cos_0268.imap' derived_from 'hst_cos.imap' in './hst_cos_0268.imap'
+    CRDS  : INFO     Adjusting name 'hst_acs_0270.imap' derived_from 'hst_acs.imap' in './hst_acs_0270.imap'
+    CRDS  : INFO     Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in './hst_0003.pmap'
+    0
 
-    >>> newcontext.NewContextScript("newcontext.py hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
-    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0001.imap'
-    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0001.imap'
-    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0001.imap' for 'COS' in './hst_0001.pmap'
-    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_0001.imap' for 'ACS' in './hst_0001.pmap'
-    CRDS  : INFO     Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in './hst_cos_0001.imap'
-    CRDS  : INFO     Adjusting name 'hst_acs_0001.imap' derived_from 'hst_acs.imap' in './hst_acs_0001.imap'
-    CRDS  : INFO     Adjusting name 'hst_0001.pmap' derived_from 'hst.pmap' in './hst_0001.pmap'
-
-    >>> pp([difference[-1] for difference in diff.mapping_diffs("hst.pmap", "./hst_0001.pmap")])
-    ["replaced 'hst_acs.imap' with './hst_acs_0001.imap'",
-     "replaced 'hst_cos.imap' with './hst_cos_0001.imap'",
+    >>> pp([difference[-1] for difference in diff.mapping_diffs("hst.pmap", "./hst_0003.pmap")])
+    ["replaced 'hst_acs.imap' with './hst_acs_0270.imap'",
+     "replaced 'hst_cos.imap' with './hst_cos_0268.imap'",
      "replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
      "replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap'",
      "replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap'",
      "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'"]
     
-    >>> _ = pysh.sh("rm *.imap *.pmap")
+    >>> _ = pysh.sh("rm \./*\.[pir]map")
     """
 
 class TestNewContext(CRDSTestCase):

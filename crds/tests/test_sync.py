@@ -10,7 +10,8 @@ from __future__ import print_function
 import os
 from pprint import pprint as pp
 
-from crds import sync, log, exceptions
+import crds
+from crds import sync, log, exceptions, config
 from crds.sync import SyncScript
 from crds.tests import CRDSTestCase
 
@@ -18,53 +19,41 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_sync_contexts():
-    """
-    >>> log.set_test_mode()
-    >>> import doctest
-    >>> doctest.ELLIPSIS_MARKER = '-etc-'
-
-    >>> SyncScript("sync.py --contexts hst_cos.imap")()  # doctest:+ELLIPSIS
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     0 infos
-
-    >>> SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references")() # doctest:+ELLIPSIS
-    -etc-
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     2 infos
-    
-    """
-
-# ==================================================================================
-
 class TestSync(CRDSTestCase):
 
-    '''
-    def test_get_imap_except(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
-            r.get_imap("foo")
+    def setUp(self):
+        super(TestSync, self).setUp()
+        config.clear_crds_state()
+        os.environ["CRDS_PATH"] = self.temp_dir
+        os.environ["CRDS_REF_SUBDIR_MODE"] = "flat"
+        log.set_test_mode()
 
-    def test_get_filekind(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        self.assertEqual(r.get_filekinds("data/j8bt05njq_raw.fits"),
-                         [ 'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
-                           'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
-                           'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
+    def test_sync_contexts(self):
+        SyncScript("sync.py --contexts hst_cos.imap")()
+        i = crds.get_cached_mapping("hst_cos.imap")
+        for name in i.mapping_names():
+            assert os.path.exists(config.locate_mapping(name))
 
-    def test_get_equivalent_mapping(self):
-        i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
-        self.assertEqual(i.get_equivalent_mapping("hst.pmap"), None)
-        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
-        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
+        SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references")()
+        r = crds.get_cached_mapping("hst_cos_deadtab.rmap")
+        for name in r.reference_names():
+            fname = config.locate_file(name, "hst")
+            assert os.path.exists(fname)
+            with open(fname, "w+") as handle:
+                handle.write("foo")
 
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --check-files")()
+        self.assertEqual(errs, 2)
 
-    def test_list_references(self):
-        self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
-    '''
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --check-files --repair-files")()
+        self.assertEqual(errs, 2)
 
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --check-files --repair-files")()
+        self.assertEqual(errs, 0)
+
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --check-files --repair-files --check-sha1sum")()
+        self.assertEqual(errs, 0)
+    
 # ==================================================================================
 
 
