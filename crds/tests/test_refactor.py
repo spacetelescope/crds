@@ -18,7 +18,7 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_refactor_contexts():
+def test_refactor_add_files():
     """
     >>> log.set_test_mode()
     >>> import doctest
@@ -34,7 +34,7 @@ def test_refactor_contexts():
     >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_insert.rmap", "none", "data/s7g1700hl_dead.fits", expected=("add",)))
     True
 
-    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_insert.rmap", "none", "data/s7g1700hl_dead.fits",
+    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_insert.rmap", "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits",
     ...                          expected=("replace",))
     CRDS  : ERROR    Expected one of ('replace',) but got 'add' from change (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), "added terminal 's7g1700hl_dead.fits'")
     False
@@ -43,22 +43,10 @@ def test_refactor_contexts():
     
     """
 
-def test_refactor_set_header():
-    """
-    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_header.rmap new_key some new value")()  # doctest:+ELLIPSIS
-    0
-
-    >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_header.rmap --include-header-diffs --hide-boring-diffs").run()
-    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_header.rmap'), "header added 'new_key' = 'some new value'")
-    
-    >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_header.rmap", "none", "none", expected=("add_header",)))
-    True
-
-    >>> _ = os.system("rm ./*.rmap")
-    """
-
 def test_refactor_delete_files():
-    """
+    """ 
+    >>> log.set_test_mode()
+
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete.rmap data/s7g1700gl_dead.fits")()  # doctest:+ELLIPSIS
     CRDS  : INFO     Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
     0
@@ -78,6 +66,72 @@ def test_refactor_delete_files():
     False
 
     """
+
+def test_refactor_add_header():
+    """
+    >>> log.set_test_mode()
+
+    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap new_key some new value")()  # doctest:+ELLIPSIS
+    0
+
+    >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap --include-header-diffs --hide-boring-diffs").run()
+    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_add_header.rmap'), "header added 'new_key' = 'some new value'")
+    
+    >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_add_header.rmap", "none", "none", expected=("add_header",)))
+    True
+
+    >>> _ = os.system("rm ./*.rmap")
+    """
+
+def test_refactor_replace_header():
+    """
+    >>> log.set_test_mode()
+
+    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap reffile_format something new")()  # doctest:+ELLIPSIS
+    0
+
+    >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap --include-header-diffs --hide-boring-diffs").run()
+    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_replace_header.rmap'), "header replaced 'reffile_format' = 'table' with 'something new'")
+    
+    >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_replace_header.rmap", "none", "none", expected=("replace_header",)))
+    True
+
+    >>> _ = os.system("rm ./*.rmap")
+    """
+
+def test_refactor_del_header():
+    """
+    >>> log.set_test_mode()
+
+    >>> RefactorScript("refactor.py del_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap reffile_format")()  # doctest:+ELLIPSIS
+    0
+
+    >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap --include-header-diffs --hide-boring-diffs").run()
+    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_del_header.rmap'), "deleted header 'reffile_format' = 'table'")
+    
+    >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_del_header.rmap", "none", "none", expected=("del_header",)))
+    True
+
+    >>> _ = os.system("rm ./*.rmap")
+    """
+
+def test_refactor_bad_modify_count():
+    """ 
+    >>> log.set_test_mode()
+
+    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "data/hst_cos_deadtab_9998.rmap", 
+    ...                                   "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits", expected=("add",))
+    CRDS  : ERROR    Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700gl_dead.fits' with 's7g1700hl_dead.fits'")
+    CRDS  : ERROR    Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('NUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700ql_dead.fits' with 's7g1700hl_dead.fits'")
+    False
+
+    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "data/hst_cos_deadtab_9998.rmap", 
+    ...                                   "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits", expected=("replace",))
+    CRDS  : ERROR    Replacement COUNT DIFFERENCE replacing 'data/s7g1700gl_dead.fits' with 'data/s7g1700hl_dead.fits' in 'data/hst_cos_deadtab.rmap' 1 vs. 2
+    False
+    """
+    
+
 
 # ==================================================================================
 

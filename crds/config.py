@@ -801,9 +801,7 @@ def get_crds_state(clear_existing=False):
 def set_crds_state(old_state):
     """Restore the configuration of CRDS returned by get_crds_state()."""
     global CRDS_REF_SUBDIR_MODE
-    for key in os.environ.keys():
-        if key.startswith("CRDS_"):
-            del os.environ[key]
+    clear_crds_state()
     for key, val in old_state.items():
         os.environ[key] = val
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]

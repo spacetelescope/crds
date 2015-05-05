@@ -2,6 +2,7 @@
 the transformations required to automate rmap maintenance on the CRDS website.
 """
 import os.path
+import sys
 
 from crds import (rmap, log, diff, cmdline)
 # ============================================================================
@@ -109,8 +110,8 @@ def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("ad
             log.error("Expected one of", repr(expected), "but got", repr(actual),
                       "from change", repr(difference))
             as_expected = False
-    old_count = len([line for line in open(old_rmap).readlines() if old_ref in line])
-    new_count = len([line for line in open(new_rmap).readlines() if new_ref in line])
+    old_count = len([line for line in open(old_rmap).readlines() if os.path.basename(old_ref) in line])
+    new_count = len([line for line in open(new_rmap).readlines() if os.path.basename(new_ref) in line])
     if "replace" in expected and old_count != new_count:
         log.error("Replacement COUNT DIFFERENCE replacing", repr(old_ref), "with", repr(new_ref), "in", repr(old_rmap),
                   old_count, "vs.", new_count)
@@ -130,7 +131,7 @@ class RefactorScript(cmdline.Script):
     """
     
     def add_args(self):
-        self.add_argument("command", choices=("insert", "delete", "set_header"),
+        self.add_argument("command", choices=("insert", "delete", "set_header", "del_header"),
             help="Name of refactoring command to perform.")
         self.add_argument('old_rmap', type=cmdline.reference_mapping,
             help="Reference mapping to modify by inserting references.")
@@ -140,15 +141,20 @@ class RefactorScript(cmdline.Script):
             help="Reference files to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
         
     def main(self):
-        if self.args.command == "insert":
-            rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
-        elif self.args.command == "delete":
-            rmap_delete_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
-        elif self.args.command == "set_header":
-            set_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0], self.args.references[1])
-        else:
-            raise ValueError("Unknown refactoring command: " + repr(self.args.command))
+        with log.error_on_exception("Refactoring operation FAILED"):
+            if self.args.command == "insert":
+                rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+            elif self.args.command == "delete":
+                rmap_delete_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+            elif self.args.command == "set_header":
+                set_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0], 
+                                 " ".join(self.args.references[1:]))
+            elif self.args.command == "del_header":
+                del_header_value(self.args.old_rmap, self.args.new_rmap, self.args.references[0])
+            else:
+                raise ValueError("Unknown refactoring command: " + repr(self.args.command))
+        return log.errors()
 
 if __name__ == "__main__":
-    RefactorScript()()
+    sys.exit(RefactorScript()())
 
