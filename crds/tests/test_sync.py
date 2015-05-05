@@ -28,6 +28,9 @@ class TestSync(CRDSTestCase):
         os.environ["CRDS_REF_SUBDIR_MODE"] = "flat"
         log.set_test_mode()
 
+    def assertCrdsExists(self, filename, observatory):
+        self.assertTrue(os.path.exists(config.locate_file(filename, observatory)))
+
     def test_sync_contexts(self):
         SyncScript("sync.py --contexts hst_cos.imap")()
         i = crds.get_cached_mapping("hst_cos.imap")
@@ -53,17 +56,49 @@ class TestSync(CRDSTestCase):
 
         errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --check-files --repair-files --check-sha1sum")()
         self.assertEqual(errs, 0)
+
+    def test_sync_explicit_files(self):
+        filepath = config.locate_mapping("hst_cos_deadtab.rmap")
+        self.assertFalse(os.path.exists(filepath))
+        errs = SyncScript("sync.py --files hst_cos_deadtab.rmap --check-files --repair-files --check-sha1sum")()
+        self.assertEqual(errs, 0)
+        r = crds.get_cached_mapping("hst_cos_deadtab.rmap")
+
+    def test_sync_readonly_cache(self):
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --readonly-cache")()
+        self.assertEqual(errs, 0)
+
+    def test_sync_organize(self):
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references")()
+        self.assertEqual(errs, 0)
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --organize=instrument --organize-delete-junk --readonly-cache")()
+        self.assertEqual(errs, 0)
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --organize=instrument --organize-delete-junk")()
+        self.assertEqual(errs, 0)
+        errs = SyncScript("sync.py --contexts hst_cos_deadtab.rmap --fetch-references --organize=flat --organize-delete-junk")()
+        self.assertEqual(errs, 0)
+        self.assertCrdsExists("hst_cos_deadtab.rmap", "hst")
+        self.assertCrdsExists("s7g1700gl_dead.fits", "hst")
+        self.assertCrdsExists("s7g1700ql_dead.fits", "hst")
+        
+    def test_sync_fetch_sqlite3_db(self):
+        errs = SyncScript("crds.sync --fetch-sqlite-db")()
+        self.assertEqual(errs, 0)
+        
+    def test_sync_dataset_ids(self):
+        errs = SyncScript("crds.sync --contexts hst.pmap --dataset-ids LA9K03CBQ:LA9K03CBQ")()
+        self.assertEqual(errs, 0)
     
 # ==================================================================================
 
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    import test_sync, doctest
     import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestSync)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_sync)
+    # import test_sync, doctest
+    # return doctest.testmod(test_sync)
 
 if __name__ == "__main__":
     print(tst())

@@ -192,6 +192,7 @@ def get_sqlite_db(observatory):
     encoded_compressed_data = S.get_sqlite_db(observatory)
     data = zlib.decompress(base64.b64decode(encoded_compressed_data))
     path = config.get_sqlite3_db_path(observatory)
+    utils.ensure_dir_exists(path)
     with open(path, "wb+") as db_out:
         db_out.write(data)
     return path
