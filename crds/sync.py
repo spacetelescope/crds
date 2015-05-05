@@ -497,4 +497,4 @@ class SyncScript(cmdline.ContextsScript):
 # ==============================================================================================================
 
 if __name__ == "__main__":
-    SyncScript()()
+    sys.exit(SyncScript()())

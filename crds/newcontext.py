@@ -2,6 +2,7 @@
 a list of new rmaps and a baseline context.
 """
 import os.path
+import sys
 import shutil
 import re
 import glob
@@ -167,4 +168,4 @@ fake names and are for local test purposes only,  not formal distribution.
         return log.errors()
 
 if __name__ == "__main__":
-    NewContextScript()()
+    sys.exit(NewContextScript()())

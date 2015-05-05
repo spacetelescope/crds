@@ -463,4 +463,4 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
             return os.path.join(config.get_crds_cfgpath(self.observatory), "ad_last_processed")
             
 if __name__ == "__main__":
-    QueryAffectedDatasetsScript()()
+    sys.exit(QueryAffectedDatasetsScript()())
