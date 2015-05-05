@@ -207,4 +207,4 @@ def test():
     return doctest.testmod(uses)
 
 if __name__ == "__main__":
-    UsesScript()()
+    sys.exit(UsesScript()())

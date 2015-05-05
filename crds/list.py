@@ -3,6 +3,7 @@ mapping files associated with the specified contexts by consulting the CRDS
 server.   More generally it's for printing out information on CRDS files.
 """
 from __future__ import print_function
+import sys
 import os.path
 
 import crds
@@ -174,4 +175,4 @@ def _print_list(files):
         print(filename)
 
 if __name__ == "__main__":
-    ListScript()()
+    sys.exit(ListScript()())

@@ -2,6 +2,7 @@
 FITS files or HDU lists. This can be a command-line module or class in a
 script. Written to add this functionality to crds.diff.
 """
+import sys
 import difflib
 from itertools import product
 import numpy as np
@@ -957,4 +958,4 @@ class RowDiffScript(cmdline.Script):
                       mode_fields=mode_fields)
 
 if __name__ == "__main__":
-    RowDiffScript()()
+    sys.exit(RowDiffScript()())
