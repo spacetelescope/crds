@@ -811,6 +811,7 @@ def clear_crds_state():
     for var in list(os.environ.keys()):
         if var.startswith("CRDS_"):
             os.environ.pop(var)
+    CRDS_REF_SUBDIR_MODE = None
 
 
 # -------------------------------------------------------------------------------------
