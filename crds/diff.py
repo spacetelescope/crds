@@ -11,7 +11,7 @@ import re
 from collections import defaultdict
 
 import crds
-from crds import rmap, log, pysh, cmdline, utils, rowdiff, config
+from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
 
 from astropy.io.fits import FITSDiff
 
@@ -427,24 +427,18 @@ def get_updated_files(context1, context2):
     """
     extension1 = os.path.splitext(context1)[1]
     extension2 = os.path.splitext(context2)[1]
-    assert extension1 == extension2, \
-        "Only compare mappings of same type/extension."
-    old = context1
-    old_map = rmap.get_cached_mapping(old)
+    assert extension1 == extension2, "Only compare mappings of same type/extension."
+    old_map = rmap.get_cached_mapping(context1)
     old_files = set(old_map.mapping_names() + old_map.reference_names())
     all_mappings = rmap.list_mappings("*"+extension1, old_map.observatory)
     updated = set()
+    context1, context2 = os.path.basename(context1), os.path.basename(context2)
     for new in all_mappings:
-        if new > old:
-            if new <= context2:
-                new_map = rmap.get_cached_mapping(new)
-                new_files = set(new_map.mapping_names() + new_map.reference_names())
-                updated |= new_files - old_files
-                old = new
-                old_files = new_files
-            else:
-                break
-    return sorted(list(updated))
+        new = os.path.basename(new)
+        if context1 < new <= context2:
+            new_map = rmap.get_cached_mapping(new)
+            updated |= set(new_map.mapping_names() + new_map.reference_names())
+    return sorted(list(updated - old_files))
 
 # ==============================================================================================================
     
@@ -513,24 +507,32 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.old_file = self.resolve_context(self.locate_file(self.args.old_file))
         self.new_file = self.resolve_context(self.locate_file(self.args.new_file))
         if self.args.sync_files:
-            self.sync_files([self.old_file, self.new_file])
+            if self.args.print_all_new_files:
+                errs = sync.SyncScript("crds.sync --all")()
+                assert not errs, "Errors occurred while syncing all rules to CRDS cache."
+            else:
+                self.sync_files([self.old_file, self.new_file])
+        elif self.args.print_all_new_files:
+            log.warning("--print-all-new-files requires a complete set of rules.  suggest --sync-files.")
+            
         # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
         if self.args.print_new_files:
-            return self.print_new_files()
+            self.print_new_files()
         elif self.args.print_all_new_files:
-            return self.print_all_new_files()
+            self.print_all_new_files()
         elif self.args.print_affected_instruments:
-            return self.print_affected_instruments()
+            self.print_affected_instruments()
         elif self.args.print_affected_types:
-            return self.print_affected_types()
+            self.print_affected_types()
         elif self.args.print_affected_modes:
-            return self.print_affected_modes()
+            self.print_affected_modes()
         else:
-            return difference(self.observatory, self.old_file, self.new_file, 
-                   primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
-                   mapping_text_diffs=self.args.mapping_text_diffs,
-                   include_header_diffs=self.args.include_header_diffs,
-                   hide_boring_diffs=self.args.hide_boring_diffs)
+            difference(self.observatory, self.old_file, self.new_file, 
+                       primitive_diffs=self.args.primitive_diffs, check_diffs=self.args.check_diffs,
+                       mapping_text_diffs=self.args.mapping_text_diffs,
+                       include_header_diffs=self.args.include_header_diffs,
+                       hide_boring_diffs=self.args.hide_boring_diffs)
+        return log.errors()
     
     def print_new_files(self):
         """Print the references or mappings which are in the second (new) context and not
@@ -596,4 +598,4 @@ def test():
     return doctest.testmod(diff)
 
 if __name__ == "__main__":
-    DiffScript()()
+    sys.exit(DiffScript()())
