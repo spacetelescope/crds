@@ -818,6 +818,7 @@ class InstrumentContext(ContextMapping):
         for filekind in include:
             log.verbose("-"*120, verbosity=55)
             filekind = filekind.lower()
+            ref = None
             try:
                 ref = self.get_rmap(filekind).get_best_ref(header)
             except Exception, exc:

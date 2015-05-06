@@ -633,6 +633,13 @@ def test_rmap_asmapping_readonly():
     """
     >>> r = rmap.asmapping("data/hst_acs_darkfile.rmap", cached="readonly")
     """
+
+def test_rmap_get_equivalent_mapping_missing():
+    """
+    >>> p = rmap.get_cached_mapping("hst.pmap")
+    >>> p.get_equivalent_mapping("hst_cos_twozxtab_0001.rmap")
+    CRDS  : WARNING  No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'
+    """
     
 # ==================================================================================
 
@@ -656,6 +663,10 @@ class TestRmap(CRDSTestCase):
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
 
+
+    def test_rmap_list_mappings(self):
+        os.environ["CRDS_MAPPATH_SINGLE"] = os.getcwd() + "/data"
+        self.assertEqual(rmap.list_mappings("*.imap", "hst"), ['hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap'])
 
     def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = os.getcwd() + "/data"
