@@ -54,6 +54,7 @@ TEST CASES
 ----------
 """
 
+from crds import log
 from crds.diff import DiffScript
 from crds.tests import test_config
 
@@ -266,6 +267,7 @@ def test_diff_print_affected_modes():
 
 def test_diff_print_all_new_files():
     """
+    >>> log.set_test_mode()
     >>> DiffScript("crds.diff data/hst.pmap data/hst_0002.pmap --print-all-new-files --sync-files")()
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
