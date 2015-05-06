@@ -12,7 +12,7 @@ from pprint import pprint as pp
 
 from crds import rmap, log, exceptions, config
 from crds.client import api
-from crds.tests import CRDSTestCase
+from crds.tests import CRDSTestCase, test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -636,9 +636,11 @@ def test_rmap_asmapping_readonly():
 
 def test_rmap_get_equivalent_mapping_missing():
     """
+    >>> test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
     >>> p.get_equivalent_mapping("hst_cos_twozxtab_0001.rmap")
     CRDS  : WARNING  No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'
+    >>> test_config.cleanup()
     """
     
 # ==================================================================================
