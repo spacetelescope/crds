@@ -305,11 +305,11 @@ class SyncScript(cmdline.ContextsScript):
             already_have = set(rmap.list_references("*", self.observatory))
             fetched = [ x for x in sorted(set(references)-set(already_have)) if not x.startswith("NOT FOUND") ]
             if fetched:
-                log.info("Would fetch references:", repr(fetched))
+                log.info("READONLY CACHE would fetch references:", repr(fetched))
                 with log.info_on_exception("Reference size information not available."):
                     info_map = api.get_file_info_map(self.observatory, fetched, fields=["size"])
                     total_bytes = api.get_total_bytes(info_map)
-                    log.info("Would download", len(fetched), "references totaling",  
+                    log.info("READONLY CACHE would download", len(fetched), "references totaling",  
                              utils.human_format_number(total_bytes).strip(), "bytes.")
         else:
             self.dump_files(self.contexts[0], references)
