@@ -208,11 +208,57 @@ CLEANUP: blow away the test cache
     >>> test_config.cleanup()
 
 """
+import os
 
-def test():
+from crds.bestrefs import BestrefsScript
+from crds.tests import CRDSTestCase
+
+class TestBestrefs(CRDSTestCase):
+    
+    script_class = BestrefsScript
+    server_url = "https://hst-crds-dev.stsci.edu"
+
+    def setup(self):
+        super(TestBestrefs, self).setup()
+
+    def test_bestrefs_affected_datasets(self):
+        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0314.pmap --new-context hst_0315.pmap",
+                        expected_errs=0)
+        
+    def test_bestrefs_from_pickle(self):
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.pkl",
+                        expected_errs=0)
+        
+    def test_bestrefs_to_pickle(self):
+        self.run_script("crds.bestrefs --datasets LA9K03C3Q:LA9K03C3Q LA9K03C5Q:LA9K03C5Q LA9K03C7Q:LA9K03C7Q "
+                        "--new-context hst_0315.pmap --save-pickle test_cos.pkl",
+                        expected_errs=0)
+        os.remove("test_cos.pkl")
+        
+    def test_bestrefs_from_json(self):
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.json",
+                        expected_errs=0)
+
+    def test_bestrefs_to_json(self):
+        self.run_script("crds.bestrefs -i cos --new-context hst_0315.pmap --save-pickle test_cos.json",
+                        expected_errs=None)
+        os.remove("test_cos.json")
+
+    def test_bestrefs_at_file(self):
+        self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap",
+                        expected_errs=0)
+        
+
+# ==================================================================================
+
+def tst():
     """Run module tests,  for now just doctests only."""
-    import test_bestrefs, doctest
-    return doctest.testmod(test_bestrefs)
+    import test_rmap, doctest
+    import unittest
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestBestrefs)
+    unittest.TextTestRunner().run(suite)
+    return doctest.testmod(test_rmap)
 
 if __name__ == "__main__":
-    print(test())
+    print(tst())
+

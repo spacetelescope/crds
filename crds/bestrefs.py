@@ -764,7 +764,7 @@ and debug output.
     def init_headers(self, context, datasets_since):
         """Create header a header generator for `context`,  interpreting command line parameters."""
         if self.args.files:
-            new_headers = FileHeaderGenerator(context, self.args.files, datasets_since)
+            new_headers = FileHeaderGenerator(context, self.files, datasets_since)
             # log.info("Computing bestrefs for dataset files", self.args.files)
         elif self.args.datasets:
             self.require_server_connection()
