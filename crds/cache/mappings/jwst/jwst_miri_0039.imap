@@ -1,0 +1,30 @@
+header = {
+    'derived_from' : 'jwst_miri_0038.imap',
+    'instrument' : 'MIRI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_miri_0039.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'e92a0dc0623e32dc7af87b3509bccb5de933a326',
+}
+
+selector = {
+    'DARK' : 'jwst_miri_dark_0007.rmap',
+    'DISTORTION' : 'jwst_miri_distortion_0002.rmap',
+    'DRIZPARS' : 'jwst_miri_drizpars_0000.rmap',
+    'FLAT' : 'jwst_miri_flat_0014.rmap',
+    'FRINGE' : 'jwst_miri_fringe_0005.rmap',
+    'GAIN' : 'jwst_miri_gain_0004.rmap',
+    'IPC' : 'jwst_miri_ipc_0001.rmap',
+    'LASTFRAME' : 'jwst_miri_lastframe_0005.rmap',
+    'LINEARITY' : 'jwst_miri_linearity_0006.rmap',
+    'MASK' : 'jwst_miri_mask_0007.rmap',
+    'PHOTOM' : 'jwst_miri_photom_0004.rmap',
+    'READNOISE' : 'jwst_miri_readnoise_0004.rmap',
+    'REGIONS' : 'jwst_miri_regions_0003.rmap',
+    'RESET' : 'jwst_miri_reset_0005.rmap',
+    'SATURATION' : 'jwst_miri_saturation_0003.rmap',
+    'SPECWCS' : 'jwst_miri_specwcs_0004.rmap',
+    'STRAYMASK' : 'jwst_miri_straymask_0003.rmap',
+    'WCSREGIONS' : 'jwst_miri_wcsregions_0003.rmap',
+}
