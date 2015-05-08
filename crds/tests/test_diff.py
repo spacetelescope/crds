@@ -190,7 +190,7 @@ def test_diff_file_reversions():
     """
     Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
 
-    >>> test_config.setup()
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_0002.pmap data/hst_0001.pmap --check-diffs")
     >>> case.run()
     (('data/hst_0002.pmap', 'data/hst_0001.pmap'), ('acs',), 'replaced data/hst_acs_0002.imap with data/hst_acs_0001.imap')
@@ -323,11 +323,11 @@ def test_diff_print_affected_instruments():
 
 def test():
     """Run module tests,  for now just doctests only."""
+    old_state = test_config.setup()
     import test_diff, doctest
     doctest.ELLIPSIS_MARKER = '-etc-'
-    test_config.setup()
     results = doctest.testmod(test_diff, optionflags=doctest.ELLIPSIS)
-    test_config.cleanup()
+    test_config.cleanup(old_state)
     return results
 
 if __name__ == "__main__":

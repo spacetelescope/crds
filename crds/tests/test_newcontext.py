@@ -91,7 +91,10 @@ def tst():
     import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestNewContext)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_newcontext)
+    old_state = test_config.setup()
+    result = doctest.testmod(test_newcontext)
+    test_config.cleanup(old_state)
+    return result
 
 if __name__ == "__main__":
     print(tst())
