@@ -55,7 +55,7 @@ TEST CASES
 ----------
 
 >>> import test_config
->>> test_config.setup()
+>>> old_state = test_config.setup()
 
 >>> from crds.rowdiff import RowDiffScript
 
@@ -307,7 +307,7 @@ Mode test: duplicate modes
 
 CLEANUP
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
 

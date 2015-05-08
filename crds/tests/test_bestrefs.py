@@ -85,7 +85,7 @@ TEST CASES
 ----------
 
 >>> import test_config
->>> test_config.setup()
+>>> old_state = test_config.setup()
 
 >>> from crds.bestrefs import BestrefsScript
 
@@ -205,7 +205,7 @@ Compute comparison bestrefs between two contexts:
 
 CLEANUP: blow away the test cache
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
 import os
@@ -216,36 +216,34 @@ from crds.tests import CRDSTestCase
 class TestBestrefs(CRDSTestCase):
     
     script_class = BestrefsScript
-    server_url = "https://hst-crds-dev.stsci.edu"
-
-    def setup(self):
-        super(TestBestrefs, self).setup()
+    
+    # server_url = "https://hst-crds-dev.stsci.edu"
 
     def test_bestrefs_affected_datasets(self):
         self.run_script("crds.bestrefs --affected-datasets --old-context hst_0314.pmap --new-context hst_0315.pmap",
                         expected_errs=0)
         
     def test_bestrefs_from_pickle(self):
-        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.pkl",
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.pkl --stats --print-affected-details",
                         expected_errs=0)
         
     def test_bestrefs_to_pickle(self):
         self.run_script("crds.bestrefs --datasets LA9K03C3Q:LA9K03C3Q LA9K03C5Q:LA9K03C5Q LA9K03C7Q:LA9K03C7Q "
-                        "--new-context hst_0315.pmap --save-pickle test_cos.pkl",
+                        "--new-context hst_0315.pmap --save-pickle test_cos.pkl --stats",
                         expected_errs=0)
         os.remove("test_cos.pkl")
         
     def test_bestrefs_from_json(self):
-        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.json",
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.json --stats",
                         expected_errs=0)
 
     def test_bestrefs_to_json(self):
-        self.run_script("crds.bestrefs -i cos --new-context hst_0315.pmap --save-pickle test_cos.json",
+        self.run_script("crds.bestrefs -i cos --new-context hst_0315.pmap --save-pickle test_cos.json --stats",
                         expected_errs=None)
         os.remove("test_cos.json")
 
     def test_bestrefs_at_file(self):
-        self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap",
+        self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap --stats",
                         expected_errs=0)
         
 

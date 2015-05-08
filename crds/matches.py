@@ -151,31 +151,8 @@ def get_exptime(match_dict):
 
 # ===================================================================
 
-HERE = os.path.dirname(__file__) or "."
-
 class MatchesScript(cmdline.ContextsScript):
-    """Command line script for printing reference selection criteria.
-    
-    >>> log.set_test_mode()
-    >>> old_state = config.get_crds_state(clear_existing=True)
-    >>> os.environ["CRDS_MAPPATH"] = HERE + "/cache/mappings"
-    >>> os.environ["CRDS_SERVER_URL"] = "hst-crds-dev.stsci.edu"
-    
-    >>> _ = MatchesScript("crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits")()
-     lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' OBSTYPE='IMAGING' FW1OFFST='N/A' FW2OFFST='N/A' FWSOFFST='N/A' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
-    
-    >>> _ = MatchesScript("crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths")()
-     lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' 'IMAGING' 'N/A' 'N/A' 'N/A' '1997-01-01' '00:00:00'
-    
-    >>> _ = MatchesScript("crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format")()
-     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('OBSTYPE', 'IMAGING'), ('FW1OFFST', 'N/A'), ('FW2OFFST', 'N/A'), ('FWSOFFST', 'N/A'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
-    
-    >>> _ = MatchesScript("crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap --condition-values")()
-    JBANJOF3Q:JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='UNDEFINED' BIASCORR='UNDEFINED' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='UNDEFINED' DARKCORR='UNDEFINED' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='UNDEFINED' DRIZCORR='UNDEFINED' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='UNDEFINED' FLSHCORR='UNDEFINED' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='UNDEFINED' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='2070.0' NUMROWS='2046.0' OBSTYPE='INTERNAL' PCTECORR='UNDEFINED' PHOTCORR='UNDEFINED' REFTYPE='UNDEFINED' SHADCORR='UNDEFINED' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
-    JBANJOF3Q:JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='UNDEFINED' BIASCORR='UNDEFINED' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='UNDEFINED' DARKCORR='UNDEFINED' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='UNDEFINED' DRIZCORR='UNDEFINED' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='UNDEFINED' FLSHCORR='UNDEFINED' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='UNDEFINED' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='2070.0' NUMROWS='2046.0' OBSTYPE='INTERNAL' PCTECORR='UNDEFINED' PHOTCORR='UNDEFINED' REFTYPE='UNDEFINED' SHADCORR='UNDEFINED' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
-    
-    >>> config.set_crds_state(old_state)
-    """
+    """Command line script for printing reference selection criteria."""
 
     description = """
 Prints out the selection criteria by which the specified references are matched with respect to the specified contexts.

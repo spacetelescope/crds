@@ -11,15 +11,25 @@ from crds.client import api
 
 HERE = os.path.dirname(__file__) or "."
 
+CRDS_DIR = os.path.dirname(crds.__file__)
+CRDS_SOURCE_CACHE = os.path.join(CRDS_DIR,'cache')
+CRDS_SHARED_GROUP_CACHE = "/grp/crds/cache"
+CRDS_FORWARDED_URL = "https://localhost:8001/"
+TEST_DATA = os.path.join(HERE, 'data')
+TEST_MAPPATH = os.path.join(CRDS_SOURCE_CACHE, "mappings")
+TEST_TEMP_DIR = tempfile.mkdtemp(prefix='crds-test-')
+
 class CRDSTestCase(unittest.TestCase):
     
     server_url = None
 
     def setUp(self, *args, **keys):
         super(CRDSTestCase, self).setUp(*args, **keys)
-        self.data_dir = os.path.join(HERE, 'data')
-        self.temp_dir = tempfile.mkdtemp(prefix='crds-test-')
-        self.hst_mappath =  os.path.join(crds.__path__[0],'cache','mappings')
+        self.data_dir = TEST_DATA
+        self.temp_dir = TEST_TEMP_DIR
+        if not os.path.exists(self.temp_dir):
+            os.mkdir(self.temp_dir)
+        self.hst_mappath =  TEST_MAPPATH
         utils.clear_function_caches()
         self.crds_state = config.get_crds_state()
         if self.server_url is not None:
@@ -27,7 +37,8 @@ class CRDSTestCase(unittest.TestCase):
 
     def tearDown(self, *args, **keys):
         super(CRDSTestCase, self).tearDown(*args, **keys)
-        shutil.rmtree(self.temp_dir)
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)
         utils.clear_function_caches()
         config.set_crds_state(self.crds_state)
 
@@ -48,4 +59,3 @@ class CRDSTestCase(unittest.TestCase):
 
     def temp(self, filename):
         return os.path.join(self.temp_dir, filename)
-

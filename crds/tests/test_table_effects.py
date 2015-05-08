@@ -6,7 +6,7 @@ TEST CASES
 ----------
 
 >>> import test_config
->>> test_config.setup()
+>>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE)
 
 >>> from crds.bestrefs import BestrefsScript
 
@@ -73,7 +73,7 @@ Test: COS WCPTAB, reprocess no
 
 CLEANUP: blow away the test cache
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
 
