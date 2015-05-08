@@ -1,0 +1,18 @@
+header = {
+    'derived_from' : 'jwst_niriss_superbias_0001.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'superbias',
+    'filetype' : 'SUPERBIAS',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_superbias_0002.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : 'b5162a1d965b38ccabe6ef314c631fe05c690a56',
+    'suffix' : 'sbias',
+    'text_descr' : 'Super Bias',
+}
+
+selector = Match({
+    ('NIS', 'ANY', 'GENERIC') : 'jwst_niriss_superbias_0001.fits',
+})
