@@ -127,11 +127,11 @@ class HeaderGenerator(object):
             only_hdrs = { dataset_id:hdr for (dataset_id, hdr) in self.headers.items() if dataset_id in only_ids }
         log.info("Writing all headers to", repr(outpath))
         if outpath.endswith(".json"):
-            saver = json.dump
+            with open(outpath, "w+") as pick:
+                json.dump(only_hdrs, pick)
         elif outpath.endswith(".pkl"):
-            saver = pickle.dump
-        with open(outpath, "wb+") as pick:
-            saver(only_hdrs, pick)
+            with open(outpath, "wb+") as pick:
+                pickle.dump(only_hdrs, pick)
         log.info("Done writing", repr(outpath))
             
     def update_headers(self, headers2, only_ids=None):
@@ -306,15 +306,16 @@ class PickleHeaderGenerator(HeaderGenerator):
     
     def load_headers(self, path):
         """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
-        with open(path, "rb") as pick:
-            if path.endswith(".json"):
-                loader = json.load
-            elif path.endswith(".pkl"):
-                loader = pickle.load
-            else:
-                raise ValueError("Valid serialization formats are .json and .pkl")
-            headers = loader(pick)
+        if path.endswith(".json"):
+            with open(path, "r") as pick:
+                headers = json.load(pick)
+        elif path.endswith(".pkl"):
+            with open(path, "rb") as pick:
+                headers = pickle.load(pick)
+        else:
+            raise ValueError("Valid serialization formats are .json and .pkl")
         return headers
+
 # ===================================================================
 
 def update_file_bestrefs(context, dataset, updates):
