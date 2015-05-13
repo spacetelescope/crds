@@ -27,6 +27,7 @@ from crds import utils, log, config
 from crds.client import proxy
 
 from crds.exceptions import *
+from crds.python3 import *
 
 # ==============================================================================
 
