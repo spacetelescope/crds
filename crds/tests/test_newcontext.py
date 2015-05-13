@@ -11,13 +11,13 @@ import os, os.path
 from pprint import pprint as pp
 
 from crds import rmap, log, exceptions, newcontext, diff, pysh, config
-from crds.tests import CRDSTestCase
+from crds.tests import CRDSTestCase, test_config
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_fake_name():
+def tst_fake_name():
     """
     Fake names are only used by crds.newcontext when it is run from the command line.
 
@@ -31,10 +31,10 @@ def test_fake_name():
     './hst_cos_deadtab_10000.rmap'
     """
 
-def test_new_context():
+def tst_new_context():
     """
     >>> log.set_test_mode()
-    >>> newcontext.NewContextScript("newcontext.py data/hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
+    >>> newcontext.NewContextScript("newcontext.py hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
     CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0268.imap'
     CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0270.imap'
     CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0268.imap' for 'COS' in './hst_0003.pmap'
@@ -59,42 +59,45 @@ def test_new_context():
 class TestNewContext(CRDSTestCase):
 
     '''
-    def test_get_imap_except(self):
+    def tst_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")
         with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
             r.get_imap("foo")
 
-    def test_get_filekind(self):
+    def tst_get_filekind(self):
         r = rmap.get_cached_mapping("hst.pmap")
         self.assertEqual(r.get_filekinds("data/j8bt05njq_raw.fits"),
                          [ 'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
                            'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
                            'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
 
-    def test_get_equivalent_mapping(self):
+    def tst_get_equivalent_mapping(self):
         i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
         self.assertEqual(i.get_equivalent_mapping("hst.pmap"), None)
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
 
 
-    def test_list_references(self):
+    def tst_list_references(self):
         self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
     '''
 
 # ==================================================================================
 
 
-def tst():
+def main():
     """Run module tests,  for now just doctests only."""
     import test_newcontext, doctest
     import unittest
+
     suite = unittest.TestLoader().loadTestsFromTestCase(TestNewContext)
     unittest.TextTestRunner().run(suite)
+
     old_state = test_config.setup()
     result = doctest.testmod(test_newcontext)
     test_config.cleanup(old_state)
+
     return result
 
 if __name__ == "__main__":
-    print(tst())
+    print(main())

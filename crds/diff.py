@@ -509,7 +509,7 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         if self.args.sync_files:
             if self.args.print_all_new_files:
                 errs = sync.SyncScript("crds.sync --all")()
-                assert not errs, "Errors occurred while syncing all rules to CRDS cache."
+                # assert not errs, "Errors occurred while syncing all rules to CRDS cache."
             else:
                 self.sync_files([self.old_file, self.new_file])
         elif self.args.print_all_new_files:

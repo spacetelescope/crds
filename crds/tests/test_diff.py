@@ -58,10 +58,11 @@ from crds import log
 from crds.diff import DiffScript
 from crds.tests import test_config
 
-def test_diff_pmap_diffs():
+def tst_diff_pmap_diffs():
     """
     Compute diffs for two .pmap's:
 
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_0001.pmap data/hst_0002.pmap")
     >>> case.run()
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('acs',), 'replaced data/hst_acs_0001.imap with data/hst_acs_0002.imap')
@@ -74,12 +75,14 @@ def test_diff_pmap_diffs():
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_imap_diffs():
+def tst_diff_imap_diffs():
     """
     Compute diffs for two .imap's:
 
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_acs_0001.imap data/hst_acs_0002.imap")
     >>> case.run()
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('biasfile',), 'replaced data/hst_acs_biasfile_0001.rmap with data/hst_acs_biasfile_0002.rmap')
@@ -91,12 +94,14 @@ def test_diff_imap_diffs():
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_rmap_diffs():
+def tst_diff_rmap_diffs():
     """
     Compute diffs for two .rmap's:
 
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_acs_biasfile_0001.rmap data/hst_acs_biasfile_0002.rmap --include-header-diffs")
     >>> case.run()
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), 'deleted header \\'rmap_relevance\\' = \\'((DETECTOR != "SBC") and (BIASCORR != "OMIT"))\\'')
@@ -112,12 +117,14 @@ def test_diff_rmap_diffs():
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_fits_diff():
+def tst_diff_fits_diff():
     """
     Compute diffs for two .fits's:
 
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_acs_biasfile_0001.fits data/hst_acs_biasfile_0002.fits")
     >>> import doctest
     >>> doctest.ELLIPSIS_MARKER = '-etc-'
@@ -141,12 +148,14 @@ def test_diff_fits_diff():
     <BLANKLINE>
     <BLANKLINE>
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_rmap_primitive_diffs():
+def tst_diff_rmap_primitive_diffs():
     """
     Compute primitive diffs for two .rmap's:
 
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/hst_acs_biasfile_0001.rmap data/hst_acs_biasfile_0002.rmap --primitive-diffs")
     >>> import doctest
     >>> doctest.ELLIPSIS_MARKER = '-etc-'
@@ -184,9 +193,10 @@ def test_diff_rmap_primitive_diffs():
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_file_reversions():
+def tst_diff_file_reversions():
     """
     Compute diffs checking for reversions: (invert file order to simulate reverse filename progression)
 
@@ -212,11 +222,14 @@ def test_diff_file_reversions():
     CRDS  : WARNING  Reversion at ('data/hst_acs_0001.imap', ('biasfile',)) replaced 'data/hst_acs_biasfile_0002.rmap' with 'data/hst_acs_biasfile_0001.rmap'
     CRDS  : WARNING  Reversion at ('data/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00')) replaced 'data/hst_acs_biasfile_0002.fits' with 'data/hst_acs_biasfile_0001.fits'
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_row_change():
+def tst_diff_row_change():
     """
     Row change
+
+    >>> old_state = test_config.setup()
     >>> case = DiffScript("crds.diff data/test-source.fits data/test-change-row1-valueLeft.fits")
     >>> import doctest
     >>> doctest.ELLIPSIS_MARKER = '-etc-'
@@ -255,19 +268,22 @@ def test_diff_row_change():
              'no', 'no', 8989, 9870.0254, 'readmittance'
     <BLANKLINE>
     0
+    >>> test_config.cleanup(old_state)
     """
     
-def test_diff_print_affected_modes():
+def tst_diff_print_affected_modes():
     """
+    >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-modes")()
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='FUV' DIFF_COUNT='1'
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_print_all_new_files():
+def tst_diff_print_all_new_files():
     """
-    >>> log.set_test_mode()
+    >>> old_state = test_config.setup(cache=tests.CRDS_SOURCE_CACHE)
     >>> DiffScript("crds.diff data/hst.pmap data/hst_0002.pmap --print-all-new-files --sync-files")()
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
@@ -294,41 +310,52 @@ def test_diff_print_all_new_files():
     x961836ai_drk.fits wfc3 darkfile
     x961836bi_drk.fits wfc3 darkfile
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_print_new_files():
+def tst_diff_print_new_files():
     """
+    >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_0001.pmap data/hst_0002.pmap --print-new-files")()
     hst_0002.pmap
     hst_acs_0002.imap
     hst_acs_biasfile_0002.rmap
     data/hst_acs_biasfile_0002.fits
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_print_affected_types():
+def tst_diff_print_affected_types():
     """
+    >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-types")()
     cos        deadtab   
     0
+    >>> test_config.cleanup(old_state)
     """
 
-def test_diff_print_affected_instruments():
+def tst_diff_print_affected_instruments():
     """
+    >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
     cos
     0
+    >>> test_config.cleanup(old_state)
     """
 
 
-def test():
-    """Run module tests,  for now just doctests only."""
-    old_state = test_config.setup()
+def main():
+    """Run module tests,  for now just doctests only.
+    
+    test_config.setup() and cleanup() are done inline above because bracketing
+    the tests here does not get picked up by nose test discovery.  Combining
+    tests into one giant docstring works but is hard to analyze and debug when
+    things go wrong.
+    """
     import test_diff, doctest
     doctest.ELLIPSIS_MARKER = '-etc-'
     results = doctest.testmod(test_diff, optionflags=doctest.ELLIPSIS)
-    test_config.cleanup(old_state)
     return results
 
 if __name__ == "__main__":
-    print(test())
+    print(main())
