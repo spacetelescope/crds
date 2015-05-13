@@ -1,6 +1,7 @@
 header = {
     'derived_from' : 'generated from CDBS database 2013-07-20 13:49:09.861807',
-    'extra_keys' : ('XCORNER', 'YCORNER', 'CCDCHIP'),
+    'extra_info' : 'Some other piece of information.',
+    'extra_keys' : ('ZCORNER', 'YCORNER', 'CCDCHIP'),
     'filekind' : 'BIASFILE',
     'instrument' : 'ACS',
     'mapping' : 'REFERENCE',
@@ -8,10 +9,9 @@ header = {
     'observatory' : 'HST',
     'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN', 'APERTURE', 'NUMCOLS', 'NUMROWS', 'LTV1', 'LTV2', 'XCORNER', 'YCORNER', 'CCDCHIP'), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'IMAGE',
-    'reffile_required' : 'YES',
+    'reffile_required' : 'NO',
     'reffile_switch' : 'BIASCORR',
-    'rmap_relevance' : '((DETECTOR != "SBC") and (BIASCORR != "OMIT"))',
-    'sha1sum' : '4c2b073254eb2527693494052df50f611d418782',
+    'sha1sum' : '32df61d8f1cd4d398d84d05e1706b5565712d87d',
 }
 
 selector = Match({
@@ -35,15 +35,15 @@ selector = Match({
         '2006-07-04 11:29:31' : 'q9e1206hj_bia.fits',
         '2006-07-15 04:42:53' : 'q9e1206sj_bia.fits',
     }),
-    ('HRC', 'A', 4.0, '*', 1062, 1044, 19.0, 20.0, 'N/A', 'N/A', 'N/A') : UseAfter({
-        '1992-01-01 00:00:00' : 'm991609tj_bia.fits',
-        '2006-07-04 11:32:35' : 'q9e1206kj_bia.fits',
-        '2006-07-15 04:42:53' : 'q9e12071j_bia.fits',
-    }),
     ('HRC', 'A', 4.0, '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A') : UseAfter({
         '1992-01-01 00:00:00' : 'm991609tj_bia.fits',
         '2006-07-04 11:32:35' : 'q9e1206kj_bia.fits',
         '2006-07-15 04:42:53' : 'q9e12071j_bia.fits',
+    }),
+    ('HRC', 'A', 5.0, '*', 1062, 1044, 19.0, 20.0, 'N/A', 'N/A', 'N/A') : UseAfter({
+        '1992-01-01 00:00:00' : 'm991609tj_bia.fits',
+        '2006-07-04 11:32:35' : 'q9e1206kj_bia.fits',
+        '2006-07-15 04:43:54' : 'q9e12071j_bia.fits',
     }),
     ('HRC', 'A', 8.0, '*', 1062, 1044, 19.0, 20.0, 'N/A', 'N/A', 'N/A') : UseAfter({
         '1992-01-01 00:00:00' : 'm9b1222fj_bia.fits',

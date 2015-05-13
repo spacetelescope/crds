@@ -6,15 +6,9 @@ which are written down in the "config" directory.
 A key aspect of bad files management is the location and contents of the cache config
 directory.  The current HST cache in trunk/crds/cache has a config area and 4 bad files.
 
->>> import crds
->>> from crds import utils, log, client
+>> import os
 
->>> import os
->>> os.environ["CRDS_PATH"] = "/grp/crds/cache"
->>> os.environ["CRDS_SERVER_URL"] = "https://hst-crds-dev.stsci.edu"
->>> client.set_crds_server("https://hst-crds-dev.stsci.edu")
->>> utils.clear_function_caches()
->>> log.set_test_mode()
+>>> old_state = test_config.setup()
 >>> os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 Here I contrived a header which will select one of the current 4 bad files from an old
@@ -110,11 +104,8 @@ CRDS  : INFO     3 infos
 
 Do some setup to switch to a JWST serverless mode.
 
->>> utils.clear_function_caches()
->>> os.environ["CRDS_PATH"] = "/grp/crds/cache"
->>> os.environ["CRDS_SERVER_URL"] = "https://jwst-serverless-mode.stsci.edu"
->>> client.set_crds_server("https://jwst-serverless-mode.stsci.edu")
->>> old_server_url = os.environ.pop("CRDS_SERVER_URL", None)
+>>> test_config.cleanup(old_state)
+>>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")
 
 There is also a check for use of bad rules. JWST has a few,  including jwst_0017.pmap by "inheritance"
 since it includes some bad rules.
@@ -142,10 +133,15 @@ Similarly,  the use of bad rules can be permitted:
 >>> config.ALLOW_BAD_RULES.set("1")
 >>> utils.clear_function_caches()
 
->>> crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
+>>> refs = crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
 CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
 <BLANKLINE>
-{'flat': '/grp/crds/cache/references/jwst/jwst_niriss_flat_0000.fits'}
+
+>>> refs.keys() == ['flat']
+True
+
+>>> os.path.basename(refs['flat']) == 'jwst_niriss_flat_0000.fits'
+True
 
 Here try bad rules for a JWST dataset:
 
@@ -165,18 +161,25 @@ CRDS  : INFO     0 warnings
 CRDS  : INFO     3 infos
 2
 
->>> os.environ["CRDS_SERVER_URL"] = old_server_url
+>>> test_config.cleanup(old_state)
 
 """
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-def test():
+import os
+
+import crds
+from crds import utils, log, client
+from crds.tests import test_config
+from crds import tests
+
+def main():
     """Run module tests,  for now just doctests only."""
     import doctest
     from crds.tests import test_bad_files
     return doctest.testmod(test_bad_files)
 
 if __name__ == "__main__":
-    print(test())
+    print(main())

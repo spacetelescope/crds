@@ -600,8 +600,8 @@ class Mapping(object):
         """Return the Mapping object `self` was derived from, or None."""
         derived_from = None
         derived_path = locate_mapping(self.derived_from)
-        if "generated" in self.derived_from or "cloning" in self.derived_from:
-            log.verbose("Skipping derivation checks for root mapping", repr(self.basename),
+        if "generated" in self.derived_from or "cloning" in self.derived_from or "by hand" in self.derived_from:
+            log.info("Skipping derivation checks for root mapping", repr(self.basename),
                       "derived_from =", repr(self.derived_from))
         elif os.path.exists(derived_path):
             with log.error_on_exception("Can't load parent mapping", repr(derived_path)):
@@ -824,6 +824,7 @@ class InstrumentContext(ContextMapping):
         for filekind in include:
             log.verbose("-"*120, verbosity=55)
             filekind = filekind.lower()
+            ref = None
             try:
                 ref = self.get_rmap(filekind).get_best_ref(header)
             except Exception as exc:
@@ -1007,11 +1008,9 @@ class ReferenceMapping(Mapping):
 
     def get_best_references(self, header, include=None):
         """Shim so that .rmaps can be used for bestrefs in place of a .pmap or .imap for single type development."""
-        if include is not None:
-            for reftype in include:
-                if reftype != self.filekind:
-                    raise CrdsUnknownReftypeError(self.__class__.__name__, repr(self.basename), 
-                                                    "can only compute bestrefs for type", repr(self.filekind))
+        if include is not None and self.filekind not in include:
+            raise CrdsUnknownReftypeError(self.__class__.__name__, repr(self.basename), 
+                                          "can only compute bestrefs for type", repr(self.filekind), "not", include)
         return { self.filekind : self.get_best_ref(header) }
 
     def get_best_ref(self, header):

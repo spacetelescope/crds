@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'jwst_0055.pmap',
+    'description' : 'Spliced in MIRI imap from jwst_0050.pmap',
+    'mapping' : 'PIPELINE',
+    'name' : 'jwst_0057.pmap',
+    'observatory' : 'JWST',
+    'parkey' : ('META.INSTRUMENT.NAME',),
+    'sha1sum' : '97b0970ebc51df6cbe2130531cfd494a1003620c',
+}
+
+selector = {
+    'FGS' : 'jwst_fgs_0012.imap',
+    'MIRI' : 'jwst_miri_0040.imap',
+    'NIRCAM' : 'jwst_nircam_0011.imap',
+    'NIRISS' : 'jwst_niriss_0015.imap',
+    'NIRSPEC' : 'jwst_nirspec_0019.imap',
+}

@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'fgs_superbias.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'superbias',
+    'filetype' : 'SUPERBIAS',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_superbias_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : '699be9dbd82924b9a5ed22a2dbff86862846f8a7',
+    'suffix' : 'sbias',
+    'text_descr' : 'Super Bias',
+}
+
+selector = Match({
+})

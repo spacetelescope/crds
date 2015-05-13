@@ -2,12 +2,17 @@
 import sys
 import os
 import os.path
-import crds.pysh
 import crds
+from crds import config
 
 topdir = os.getcwd()
 
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
+topdir = os.getcwd()
+
+# config.clear_crds_state()
+# os.environ["CRDS_SERVER_URL"] = "https://hst-crds-dev.stsci.edu"
 os.environ["CRDS_MAPPATH"] = os.path.join(os.path.dirname(crds.__file__), "cache", "mappings")
-crds.pysh.sh("nosetests --verbose --with-doctest --doctest-tests --with-coverage --cover-html --cover-html-dir=$topdir/coverage --cover-erase --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
+os.system("nosetests --verbose --with-doctest --doctest-tests --with-coverage --cover-html "
+          "--cover-html-dir={0}/coverage --cover-erase --cover-branches --logging-clear-handlers {1}".format(topdir, " ".join(sys.argv[1:])))
 

@@ -55,7 +55,7 @@ TEST CASES
 ----------
 
 >>> from crds.tests import test_config
->>> test_config.setup()
+>>> old_state = test_config.setup()
 
 >>> from crds.rowdiff import RowDiffScript
 
@@ -307,18 +307,18 @@ Mode test: duplicate modes
 
 CLEANUP
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-def test():
+def main():
     """Run module tests,  for now just doctests only."""
     import doctest
-    from crds.tests import test_rowdiff, test_config
+    from crds.tests import test_rowdiff
     return doctest.testmod(test_rowdiff)
 
 if __name__ == "__main__":
-    print(test())
+    print(main())

@@ -94,6 +94,7 @@ import numbers
 from collections import namedtuple
 import ast
 import copy
+from pprint import pprint as pp
 
 # import numpy as np
 
@@ -112,6 +113,23 @@ def dict_wo_dups(items):
     NOTE:  the Python exec code which nominally loads rmaps also silently removes dups...
     seems un-pythonic to me...  so this code only has a chance of working for specially 
     parsed item lists.
+    
+    >>> items = [
+    ...     ('this', 1),
+    ...     ('that', 2),
+    ... ]
+    >>> pp(dict_wo_dups(items))
+    {'that': 2, 'this': 1}
+
+    >>> items2 = [
+    ...     ('this', 1),
+    ...     ('this', 2),
+    ... ]
+    >>> pp(dict_wo_dups(items2))
+    Traceback (most recent call last):
+    ...
+    ValueError: Key 'this' appears more than once 
+
     """
     d = {}
     for key, value in items:
@@ -187,6 +205,41 @@ class Selector(object):
     def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
         in mapping `substitutions` as {parkey : { old_value : new_value }}
+        
+        >>> header = {
+        ...    'name' : 'jwst_miri_flat_0015.rmap',
+        ...    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.BAND', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+        ...    'substitutions' : {
+        ...        'META.SUBARRAY.NAME' : {
+        ...            'GENERIC' : 'N/A',
+        ...        },
+        ...     },
+        ... }
+        >>> sel = MatchSelector(
+        ...    ('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.INSTRUMENT.BAND', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),
+        ...    {
+        ...        ('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC') : 'jwst_miri_flat_0025.fits',
+        ...        ('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL') : 'jwst_miri_flat_0034.fits',
+        ...        ('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065') : 'jwst_miri_flat_0038.fits',
+        ...    },
+        ...    header
+        ... )
+
+        Since substitutions are defined in the header,  internally GENERIC is translated to N/A:
+        
+        >>> pp(sel._selections)
+        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', '*', 'N/A'), choice='jwst_miri_flat_0025.fits'),
+         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', '*', 'FULL'), choice='jwst_miri_flat_0034.fits'),
+         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+
+        For external representation and rewriting the rmap,  the original unchanged version of the
+        match parameters is retained:
+
+        >>> pp(sel._raw_selections)
+        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC'), choice='jwst_miri_flat_0025.fits'),
+         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL'), choice='jwst_miri_flat_0034.fits'),
+         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+
         """
         selections = copy.deepcopy(selections)
         for parkey in substitutions:
@@ -219,6 +272,37 @@ class Selector(object):
         """Return a flat representation of this Selector hierarchy where the path to each terminal node (file)
         is enumerated as one long tuple of key values.   Return a dictionary with one tuple of parameter names
         and a list of tuples of parameter values / files.
+        
+        To illustrate what "flat" is,  we define nested selectors,  Match --> UseAfter,  as-is typical for HST:
+        
+        >>> sel = MatchSelector(('DETECTOR',), {
+        ...    ('FUV',) : UseAfterSelector(('DATE-OBS', 'TIME-OBS'), {
+        ...        '1996-10-01 00:00:00' : 's7g1700gl_dead.fits',
+        ...    }),
+        ...    ('NUV',) : UseAfterSelector(('DATE-OBS', 'TIME-OBS'), {
+        ...        '1996-10-01 00:00:00' : 's7g1700ql_dead.fits',
+        ...    }),
+        ... }, )
+        
+        The "flat" result combines the nested keys and values into single tuples suitable for display in tables:
+        
+        >>> pp(sel.todict_flat())
+        {'parameters': ['DETECTOR', 'USEAFTER', 'REFERENCE'],
+         'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700gl_dead.fits'),
+                        ('NUV', '1996-10-01 00:00:00', 's7g1700ql_dead.fits')]}
+                        
+        Since the selector is already defined,  also test todict():
+        
+        >>> pp(sel.todict())      
+        {'parameters': ('DETECTOR',),
+         'selections': [(('FUV',),
+                         {'parameters': ('USEAFTER',),
+                          'selections': [('1996-10-01 00:00:00',
+                                          's7g1700gl_dead.fits')]}),
+                        (('NUV',),
+                         {'parameters': ('USEAFTER',),
+                          'selections': [('1996-10-01 00:00:00',
+                                          's7g1700ql_dead.fits')]})]}
         """
         flat = []
         subpars = []
@@ -246,9 +330,10 @@ class Selector(object):
 
     def condition_selections(self, selections):
         """Replace the keys of selections with "conditioned" keys,  keys in
-        which all the values have passed through self.condition_key().
+        which all the values have passed through self.condition_key().        
         """
         result = [(self.condition_key(key), value) for (key, value) in selections.items()]
+        # XXX duplicate checking is most likely dead code here,  now in mapping_parser.py
         if len(result) != len(dict(result).keys()):    # fast check
             dict_wo_dups(result)  # slow generate more informative message
         return sorted(result)
@@ -403,16 +488,19 @@ class Selector(object):
                 elif isinstance(choice, tuple):
                     for val in choice:
                         if not isinstance(val, six.string_types): 
-                            raise ValidationError("Non-string tuple value for choice at " + repr(key))
+                            raise ValidationError("Non-string tuple value for choice " + repr(choice) + 
+                                                  " at " + repr(key))
                 elif isinstance(choice, dict):
                     for val in choice:
                         if not isinstance(val, six.string_types):
-                            raise ValidationError("Non-string dictionary key for choice at " + repr(key))
+                            raise ValidationError("Non-string dictionary key for choice " + repr(choice) +  
+                                                  " at " + repr(key))
                     for val in choice.values():
                         if not isinstance(val, six.string_types):
-                            raise ValidationError("Non-string dictionary value for choice at " + repr(key))
+                            raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
+                                                  " at " + repr(key))
                 else:
-                    raise ValidationError
+                    raise ValidationError("Illegal type for selector primitive value", repr(choice))
 
     def _validate_header(self, header):
         """Check self._parameters in `header` against the values found in the
@@ -943,6 +1031,12 @@ class GlobMatcher(RegexMatcher):
     as or-ed name globs.  Globs are translated into regexes.
     
     >>> m = GlobMatcher("foo")
+    
+    A Matcher repr generally shows the underlying regex.
+    
+    >>> repr(m)
+    "GlobMatcher('^(foo\\\\Z(?ms))$')"
+
     >>> m.match("bar")
     -1
     >>> m.match("foo")
@@ -1313,6 +1407,63 @@ to a given file:
 The result of file_matches() is a list of lists of keys because it is
 used recursively on trees of mappings and selectors.
     
+Tuple results are legal as long as the elements are simple strings:
+    
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : ("100","200"),
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : (100,"200"),
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Non-string tuple value for choice (100, '200') at ('1.0', 'N/A')
+
+Dictionary results are legal as long as the keys and values are simple strings:
+    
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : {"flummox":"200"},
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : {"flummox":200},
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Non-string dictionary value for choice {'flummox': 200} at ('1.0', 'N/A')
+
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : { 1:"200"},
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Non-string dictionary key for choice {1: '200'} at ('1.0', 'N/A')
+
+No other primitive choices are legal,  so None is invalid:
+
+    >>> m = MatchSelector(("foo","bar"), {
+    ...    (1.0, 'N/A') : None,
+    ... })
+    >>> m.validate_selector({ "foo" : ("1.0",), "bar":("3.0",) })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Illegal type for selector primitive value None
+
+Inconsistencies between parameter lists and match tuples are detected:
+    
+    >>> m = MatchSelector(("foo",), {
+    ...    (1.0, 'N/A') : { "1":"200"},
+    ... })
+    Traceback (most recent call last):
+    ...
+    ValidationError: Match key=('1.0', 'N/A') is wrong length for parameters ('foo',)
+    
 The special case of matching an empty set also needs to work for the sake
 of uniform rmap structure for HST:
     
@@ -1625,6 +1776,14 @@ A more subtle error in the date or time should still be detected:
 Alternate date/time formats are accepted as header parameters.
     
     >>> choice = u.choose({"DATE-OBS":"2003/12/20", "TIME-OBS":"01:28"})
+    
+Empty UseAfterSelectors always raise an exception on choose():
+    
+    >>> u = UseAfterSelector(("DATE-OBS", "TIME-OBS"), { })
+    >>> u.choose({"DATE-OBS":"2003-09-01", "TIME-OBS":"01:28:00"})
+    Traceback (most recent call last):
+    ...
+    UseAfterError: No selection with time < '2003-09-01 01:28:00'
 
 Restore debug configuration.
 

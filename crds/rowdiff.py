@@ -5,6 +5,9 @@ script. Written to add this functionality to crds.diff.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+import sys
+
 import difflib
 from itertools import product
 import numpy as np
@@ -961,4 +964,4 @@ class RowDiffScript(cmdline.Script):
                       mode_fields=mode_fields))
 
 if __name__ == "__main__":
-    RowDiffScript()()
+    sys.exit(RowDiffScript()())
