@@ -228,17 +228,19 @@ class Selector(object):
         Since substitutions are defined in the header,  internally GENERIC is translated to N/A:
         
         >>> pp(sel._selections)
-        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', '*', 'N/A'), choice='jwst_miri_flat_0025.fits'),
-         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', '*', 'FULL'), choice='jwst_miri_flat_0034.fits'),
-         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+        [(('MIRIFULONG', 'N/A', 'LONG', '*', 'N/A'), 'jwst_miri_flat_0025.fits'),
+         (('MIRIFUSHORT', 'N/A', 'LONG', '*', 'FULL'), 'jwst_miri_flat_0034.fits'),
+         (('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'),
+          'jwst_miri_flat_0038.fits')]
 
         For external representation and rewriting the rmap,  the original unchanged version of the
         match parameters is retained:
 
         >>> pp(sel._raw_selections)
-        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC'), choice='jwst_miri_flat_0025.fits'),
-         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL'), choice='jwst_miri_flat_0034.fits'),
-         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+        [(('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC'), 'jwst_miri_flat_0025.fits'),
+         (('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL'), 'jwst_miri_flat_0034.fits'),
+         (('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'),
+          'jwst_miri_flat_0038.fits')]
 
         """
         selections = copy.deepcopy(selections)
@@ -901,7 +903,21 @@ class DiffTuple(tuple):
                 pars2.extend(list(par))
                 vals2.extend(list(self[i]))
         return DiffTuple(*vals2, parameter_names=pars2, instrument=self.instrument, filekind=self.filekind)
-    
+
+    def __lt__(self, other):
+        if len(self) > len(other):
+            return True
+        elif len(self) < len(other):
+            return False
+        else:
+            return super(DiffTuple, self).__lt__(other)
+
+    def __eq__(self, other):
+        if len(self) == len(other):
+            return super(DiffTuple, self).__eq__(other)
+        else:
+            return False
+
     def items(self):
         """Return [ (param_name, val), ... ]"""
         return [ (str(x), str(y)) for (x, y) in zip(self.parameter_names, self) ]
