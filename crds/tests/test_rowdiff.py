@@ -311,10 +311,11 @@ CLEANUP
 
 """
 
-def test():
+def main():
     """Run module tests,  for now just doctests only."""
-    import test_rowdiff, doctest
+    import doctest
+    from crds.tests import test_rowdiff
     return doctest.testmod(test_rowdiff)
 
 if __name__ == "__main__":
-    print(test())
+    print(main())

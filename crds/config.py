@@ -788,14 +788,20 @@ def mapping_to_filekind(context_file):
 
 # -------------------------------------------------------------------------------------
 
-def get_crds_state(clear_existing=False):
+def get_crds_state(clear_existing=False, clear_server_url=False):
     """Capture the current CRDS configuration and return it as a dictionary.
     Intended for customizing state during self-tests and restoring during teardown.
+    
+    if `clear_existing` is True,  the CRDS environment settings are cleared and
+    defaults are used.
+
+    if `clear_server_url` is not True,  the CRDS_SERVER_URL is not changed by 
+    `clear_existing` above.  So by default,  CRDS_SERVER_URL is immune to `clear_existing`.
     """
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
     if clear_existing:
-        clear_crds_state()
+        clear_crds_state(clear_server_url)
     return env
 
 def set_crds_state(old_state):
@@ -806,10 +812,15 @@ def set_crds_state(old_state):
         os.environ[key] = val
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
 
-def clear_crds_state():
-    """Wipe out the existing configuration variable state of CRDS."""
+def clear_crds_state(clear_server_url=False):
+    """Wipe out the existing configuration variable state of CRDS.
+
+    if `clear_server_url` is not True,  the CRDS server is not changed by 
+    `clear_existing` above.  So,  by default,  CRDS_SERVER_URL is immune to 
+    `clear_existing`.
+    """
     for var in list(os.environ.keys()):
-        if var.startswith("CRDS_"):
+        if var.startswith("CRDS_") and (var != "CRDS_SERVER_URL" or clear_server_url):
             os.environ.pop(var)
     CRDS_REF_SUBDIR_MODE = None
 

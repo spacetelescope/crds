@@ -84,7 +84,8 @@ one reference type was recommended.   This is essentially a list of files to be 
 TEST CASES
 ----------
 
->>> import test_config
+>>> from crds.tests import test_config
+
 >>> old_state = test_config.setup()
 
 >>> from crds.bestrefs import BestrefsScript
@@ -249,7 +250,7 @@ class TestBestrefs(CRDSTestCase):
 
 # ==================================================================================
 
-def tst():
+def main():
     """Run module tests,  for now just doctests only."""
     import test_rmap, doctest
     import unittest
@@ -258,5 +259,5 @@ def tst():
     return doctest.testmod(test_rmap)
 
 if __name__ == "__main__":
-    print(tst())
+    print(main())
 
