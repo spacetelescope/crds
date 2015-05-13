@@ -17,7 +17,7 @@ import os.path
 from collections import defaultdict
 from pprint import pprint as pp
 
-from crds import rmap, log, cmdline, utils
+from crds import rmap, log, cmdline, utils, config
 from crds.client import api
 import six
 
@@ -158,9 +158,14 @@ class MatchesScript(cmdline.ContextsScript):
     """Command line script for printing reference selection criteria."""
 
     description = """
-Prints out the selection criteria by which the specified references are matched
-with respect to a particular context.
-    """
+Prints out the selection criteria by which the specified references are matched with respect to the specified contexts.
+
+The primary and original role of crds.matches is to interpret CRDS rules and report the matching criteria for specified
+references.
+
+A secondary function of crds.matches is to dump the matching criteria associated with particular dataset ids,
+or all dataset ids for an instrument, according to the appropriate archive catalog (e.g. DADSOPS).
+"""
 
     epilog = """
 ** crds.matches can dump reference file match cases with respect to particular contexts:
@@ -198,7 +203,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         self.add_argument("-c", "--condition-values", action="store_true",
             help="When dumping dataset parameters, first apply CRDS value conditioning / normalization.")
         self.add_argument("-m", "--minimize-headers", action="store_true",
-            help="When dumping dataset parameters,  limit them to matching parameters, not historical bestrefs.")
+            help="When dumping dataset parameters,  limit them to matching parameters, excluding e.g. historical bestrefs.")
 
     def main(self):
         """Process command line parameters in to a context and list of
@@ -212,7 +217,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         else:
             self.print_help()
             log.error("Specify --files to dump reference match cases or --datasets to dump dataset matching parameters.")
-            sys.exit(-1)
+        return log.errors()
 
     def dump_reference_matches(self):
         """Print out the match paths for the reference files specified on the 
@@ -257,10 +262,10 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         for ref in self.files:
             matches = self.find_match_tuples(context, ref)
             if matches:
-                for match in matches:        
+                for match in matches:
                     log.write(ctx, ref, ":", match)
             else:
-                log.write(ctx, ref, ":", "none")
+                log.verbose(ctx, ref, ":", "none")
 
     def find_match_tuples(self, context, reffile):
         """Return the list of match representations for `reference` in `context`.   
@@ -299,4 +304,4 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
             return "=".join(tup if not self.args.omit_parameter_names else tup[1:])
         
 if __name__ == "__main__":
-    MatchesScript()()
+   sys.exit(MatchesScript()())

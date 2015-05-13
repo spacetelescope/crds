@@ -308,7 +308,7 @@ def ref_properties_from_cdbs_path(filename):
     else:
         suffix = GEIS_EXT_TO_SUFFIX[extension[1:3]]
     try:
-        filekind = TYPES.suffix_to_filekind[instrument][suffix]
+        filekind = TYPES.suffix_to_filekind(instrument, suffix)
     except KeyError:
         assert False, "Couldn't map extension/suffix " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension

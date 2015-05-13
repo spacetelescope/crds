@@ -1,0 +1,32 @@
+header = {
+    'derived_from' : 'jwst_nircam_superbias_0002.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'superbias',
+    'filetype' : 'SUPERBIAS',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_superbias_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.READPATT', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : 'f301851c1bb9bfac39c8512e81f3de0722c80bde',
+    'substitutions' : {
+        'META.SUBARRAY.NAME' : {
+            'GENERIC' : 'N/A',
+        },
+    },
+    'suffix' : 'sbias',
+    'text_descr' : 'Super Bias',
+}
+
+selector = Match({
+    ('NRCA1', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0001.fits',
+    ('NRCA2', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0002.fits',
+    ('NRCA3', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0003.fits',
+    ('NRCA4', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0004.fits',
+    ('NRCALONG', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0009.fits',
+    ('NRCB1', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0005.fits',
+    ('NRCB2', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0006.fits',
+    ('NRCB3', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0007.fits',
+    ('NRCB4', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0008.fits',
+    ('NRCBLONG', 'ANY', 'GENERIC') : 'jwst_nircam_superbias_0010.fits',
+})

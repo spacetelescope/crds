@@ -5,10 +5,12 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 import os.path
+import sys
 import shutil
 import re
+import glob
 
-from crds import (rmap, utils, log, cmdline, refactor)
+from crds import (rmap, utils, log, cmdline, refactor, config)
 
 # =============================================================================
 
@@ -114,14 +116,21 @@ def fake_name(old_map):
     create a new mapping name of the same series.   This name is fake in the
     sense that it is local to a developer's machine.
     """
-    match = re.search(r"_(\d+)\.[pir]map", old_map)
-    if match:
-        serial = int(match.group(1)) + 1
-        new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
-    elif re.match(r"\w+\.[pir]map", old_map):   
-        # if no serial,  start off existing sequence as 0
+    if re.search(r"_\d+", old_map):
+        map_glob = re.sub(r"_\d+(\..map)", r"_*\1", old_map)
+        same_maps = sorted(glob.glob(config.locate_mapping(map_glob)))
+        if same_maps:
+            last_map = same_maps[-1]
+            match = re.search(r"_(\d+)\..map", last_map)
+            serial = int(match.group(1), 10) + 1
+            new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
+        else:
+            new_map = old_map
+    elif re.search(r"\w+[^_]\..map", old_map):   
+        # if no serial,  start off existing sequence as 0001
         parts = os.path.splitext(old_map)
-        new_map = fake_name(parts[0] + "_0000" + parts[1])
+        new_map = parts[0] + "_0001" + parts[1]
+        new_map = fake_name(new_map)
     else:
         raise ValueError("Unrecognized mapping filename " + repr(old_map))
     if os.path.exists(rmap.locate_mapping(new_map)):
@@ -129,7 +138,7 @@ def fake_name(old_map):
         return fake_name(new_map)   
     else:
         if not new_map.startswith("./"):
-            new_map = "./" + new_map
+            new_map = "./" + os.path.basename(new_map)
         return new_map
 
 def update_header_names(name_map):
@@ -159,6 +168,7 @@ fake names and are for local test purposes only,  not formal distribution.
     def main(self):
         name_map = new_context(self.args.old_pmap, self.args.new_rmap)
         update_header_names(name_map)
+        return log.errors()
 
 if __name__ == "__main__":
-    NewContextScript()()
+    sys.exit(NewContextScript()())

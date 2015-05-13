@@ -467,49 +467,73 @@ matching parameter values.   For reference files,  crds.certify also performs ch
 of the FITS format and when given a context,  and will compare the given file against
 the file it replaces looking for new or missing table rows. 
 
-crds.certify --help yields::
+* crds.certify --help yields::
 
-    Checks a CRDS reference or mapping file.
-        
-    positional arguments:
-      files
+	usage: /Users/jmiller/work/workspace_crds/CRDS/crds/certify.py	
+	   [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
+	   [-y COMPARISON_REFERENCE] [-s] [--dump-unique-errors]
+	   [--unique-errors-file UNIQUE_ERRORS_FILE]
+	   [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
+	   [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
+	   [--debug-traps]
+	   files [files ...]
+
+* Checks a CRDS reference or mapping file::
+
+    1. Verifies basic file format: .fits, .json, .yaml, .asdf, .pmap, .imap, .rmap 
+    2. Checks references for required keywords and values, where constraints are defined.
+    3. Checks CRDS rules for permissible values with respect to defined reference constraints.
+    4. Checks CRDS rules for accidental file reversions or duplicate lines.
+    5. Checks CRDS rules for noteworthy version-to-version changes such as new or removed match cases.
+    6. Checks tables for deleted or duplicate rows relative to a comparison table.
+    7. Finds comparison references with respect to old CRDS contexts.
+
     
-    optional arguments:
-      -h, --help            show this help message and exit
-      -d, --deep            Certify reference files referred to by mappings have valid contents.
-      -r, --dont-recurse-mappings
-                            Do not load and validate mappings recursively,  checking only directly specified files.
-      -a, --dont-parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
-      -e, --exist           Certify reference files referred to by mappings exist.
-      -m, --mapping         Ignore extensions, the files being certified are mappings.
-      -p, --dump-provenance
-                            Dump provenance keywords.
-      -t TRAP_EXCEPTIONS, --trap-exceptions TRAP_EXCEPTIONS
-                            Capture exceptions at level: pmap, imap, rmap, selector, debug, none
-      -x COMPARISON_CONTEXT, --comparison-context COMPARISON_CONTEXT
-                            Pipeline context defining comparison files.
-      -y COMPARISON_REFERENCE, --comparison-reference COMPARISON_REFERENCE
-                            Comparison reference for table certification.
-      --dump-unique-errors  Record and dump the first instance of each kind of error.
-      --unique-errors-file UNIQUE_ERRORS_FILE
-                            Write out data names (ids or filenames) for first instance of unique errors to specified file.
-      --all-errors-file ALL_ERRORS_FILE
-                            Write out all err'ing data names (ids or filenames) to specified file.
-      -v, --verbose         Set log verbosity to True,  nominal debug level.
-      --verbosity VERBOSITY
-                            Set log verbosity to a specific level: 0..100.
-      -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-      -V, --version         Print the software version and exit.
-      -J, --jwst            Force observatory to JWST for determining header conventions.
-      -H, --hst             Force observatory to HST for determining header conventions.
-                            
-crds.certify is invoked as, e.g.::
+* positional arguments::
+
+  files
+
+* optional arguments::
+
+  -h, --help            show this help message and exit
+  -d, --deep            Certify reference files referred to by mappings have valid contents.
+  -r, --dont-recurse-mappings   Do not load and validate mappings recursively,  checking only directly specified files.
+  -a, --dont-parse      Skip slow mapping parse based checks,  including mapping duplicate entry checking.
+  -e, --exist           Certify reference files referred to by mappings exist.
+  -p, --dump-provenance  Dump provenance keywords.
+  -x COMPARISON_CONTEXT, --comparison-context COMPARISON_CONTEXT   Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.
+  -y COMPARISON_REFERENCE, --comparison-reference COMPARISON_REFERENCE  Comparison reference for tables certification.
+  -s, --sync-files      Fetch any missing files needed for the requested difference from the CRDS server.
+  -v, --verbose         Set log verbosity to True,  nominal debug level.
+  --verbosity VERBOSITY Set log verbosity to a specific level: 0..100.
+  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+         
+* crds.certify is normally invoked as, e.g.::
 
     % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits
     
     % python -m crds.certify hst.pmap
     
-Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
+* To run crds.certify on a reference(s) to verify basic file format and parameter constraints::
+
+  % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits...
+
+  If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
+
+* For recursively checking CRDS rules do this::
+
+  % python -m crds.certify hst_0311.pmap --comparison-context=hst_0312.pmap
+
+  If a comparison context is defined, checked mappings will be compared against their peers (if they exist) in
+  the comparison context.  Many classes of mapping differences will result in warnings.
+
+* For reference table checks,  a comparison reference can also be specified directly rather than inferred from context::
+
+  % python -m crds.certify some_reference.fits --comparison-reference=old_reference_version.fits
+
+* For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
+    
+* Invoking crds.certify on a context mapping recursively certifies all sub-mappings.
 
 crds.diff
 ---------

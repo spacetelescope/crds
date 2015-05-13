@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-01-11 13:58:14.664182',
+    'filekind' : 'DARKFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_something_else.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'CCDAMP', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey_relevance' : {
+        'ccdamp' : '(DETECTOR x= "SBC")',
+    },
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'e8a1965e791c0c3eb5ec84fb24e664ba56d456e7',
+}
+
+selector = Match({
+    ('HRC', 'A|ABCD|AD|B|BC|C|D', '1.0|2.0|4.0|8.0') : UseAfter({
+        '1992-01-01 00:00:00' : 'lcb12060j_drk.fits',
+        '2002-03-01 00:00:00' : 'n3o1022cj_drk.fits',
+    }),
+})

@@ -976,10 +976,10 @@ Checks a CRDS reference or mapping file:
 1. Verifies basic file format: .fits, .json, .yaml, .asdf, .pmap, .imap, .rmap
 2. Checks references for required keywords and values, where constraints are defined.
 3. Checks CRDS rules for permissible values with respect to defined reference constraints.
-3. Checks CRDS rules for accidental file reversions or duplicate lines.
-4. Checks CRDS rules for noteworthy version-to-version changes such as new or removed match cases.
-4. Checks tables for deleted or duplicate rows relative to a comparison table.
-5. Finds comparison references with respect to old CRDS contexts.
+4. Checks CRDS rules for accidental file reversions or duplicate lines.
+5. Checks CRDS rules for noteworthy version-to-version changes such as new or removed match cases.
+6. Checks tables for deleted or duplicate rows relative to a comparison table.
+7. Finds comparison references with respect to old CRDS contexts.
     """
     
     epilog = """
@@ -990,7 +990,7 @@ To run crds.certify on a reference(s) to verify basic file format and parameter 
 
 If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
 
-For recursively checking CRDS rules do like this:
+For recursively checking CRDS rules do this:
 
   % python -m crds.certify hst_0311.pmap --comparison-context=hst_0312.pmap
 

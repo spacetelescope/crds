@@ -126,7 +126,7 @@ class TypeParameters(object):
                 }
 
         with log.error_on_exception("Failed determining filekind_to_suffix"):
-            self.filekind_to_suffix = {
+            self._filekind_to_suffix = {
                 instr : {
                     filekind.lower() : self.unified_defs[instr][filekind]["suffix"].lower()
                     for filekind in self.unified_defs[instr]
@@ -135,10 +135,10 @@ class TypeParameters(object):
                 }
             
         with log.error_on_exception("Failed determining suffix_to_filekind"):
-            self.suffix_to_filekind = _invert_instr_dict(self.filekind_to_suffix)
+            self._suffix_to_filekind = _invert_instr_dict(self._filekind_to_suffix)
 
         with log.error_on_exception("Failed determining filetype_to_suffix"):
-            self.filetype_to_suffix = {
+            self._filetype_to_suffix = {
                 instr : {
                     self.unified_defs[instr][filekind]["filetype"].lower() : self.unified_defs[instr][filekind]["suffix"].lower()
                     for filekind in self.unified_defs[instr]
@@ -147,7 +147,7 @@ class TypeParameters(object):
                 }
 
         with log.error_on_exception("Failed determining suffix_to_filetype"):
-            self.suffix_to_filetype = _invert_instr_dict(self.filetype_to_suffix)
+            self.suffix_to_filetype = _invert_instr_dict(self._filetype_to_suffix)
 
         with log.error_on_exception("Failed determining unique_rowkeys"):
             self.row_keys = {
@@ -166,8 +166,8 @@ class TypeParameters(object):
         filetype = filetype.lower()
         if instrument == "nic":
             instrument = "nicmos"
-        suffix = self.filetype_to_suffix[instrument][filetype]
-        return self.suffix_to_filekind[instrument][suffix]
+        suffix = self._filetype_to_suffix[instrument][filetype]
+        return self._suffix_to_filekind[instrument][suffix]
 
     def suffix_to_filekind(self, instrument, suffix):
         """Map the value of an instrument and TPN suffix onto it's
@@ -175,12 +175,13 @@ class TypeParameters(object):
         """
         if instrument == "nic":
             instrument = "nicmos"
-        return self.suffix_to_filekind[instrument][suffix]
+        return self._suffix_to_filekind[instrument][suffix]
 
 # =============================================================================
 
     def mapping_validator_key(self, mapping):
         """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
+        mapping = rmap.asmapping(mapping)
         return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"],)
         # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
 
@@ -271,7 +272,7 @@ class TypeParameters(object):
     def get_filekinds(self, instrument):
         """Return the sequence of filekind strings for `instrument`."""
         instrument = instrument.lower()
-        return self.filekind_to_suffix[instrument].keys()
+        return sorted(self._filekind_to_suffix[instrument].keys())
 
     def get_item(self, instrument, filekind, name):
         """Return config item `name` for `instrument` and `filekind`"""
