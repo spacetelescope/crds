@@ -78,6 +78,16 @@ CRDS  : INFO     0 warnings
 CRDS  : INFO     3 infos
 1
 
+>>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --allow-bad-references")()
+CRDS  : INFO     No comparison context or source comparison requested.
+CRDS  : INFO     No file header updates requested;  dry run.
+CRDS  : INFO     ===> Processing data/j8btxxx_raw_bad.fits
+CRDS  : WARNING  For data/j8btxxx_raw_bad.fits ACS pfltfile File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
+CRDS  : INFO     0 errors
+CRDS  : INFO     1 warnings
+CRDS  : INFO     3 infos
+0
+
 As a backward compatibility measure,  the --bad-files-are-errors switch is still accepted but is a tautology:
 
 >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --bad-files-are-errors")()
