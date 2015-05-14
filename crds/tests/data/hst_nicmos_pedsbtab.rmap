@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.616739',
+    'filekind' : 'PEDSBTAB',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_pedsbtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'row_keys' : ('CAMERA',),
+    'sha1sum' : '4179400b4f626c14ac5a9ff125a531f90483fa70',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1999-07-27 00:00:00' : 's2d1302mn_psb.fits',
+    }),
+})

@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:43.912829',
+    'filekind' : 'CCDTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_ccdtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'row_keys' : ('CCDCHIP', 'CCDAMP', 'CCDGAIN', 'CCDOFSTA', 'CCDOFSTB', 'CCDOFSTC', 'CCDOFSTD', 'BINAXIS1', 'BINAXIS2'),
+    'sha1sum' : '8b0467cb1f8843bb5395b77371a04e7976e201a7',
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '1991-01-01 00:00:00' : 'q911321li_ccd.fits',
+        '2008-02-20 00:00:00' : 't2c16200i_ccd.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '1991-01-01 00:00:00' : 'r6p1618ci_ccd.fits',
+        '1991-01-02 00:00:00' : 't291659mi_ccd.fits',
+    }),
+})
