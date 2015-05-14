@@ -210,6 +210,8 @@ CLEANUP: blow away the test cache
 
 """
 import os
+import json
+import shutil
 
 from crds.bestrefs import BestrefsScript
 from crds.tests import CRDSTestCase
@@ -247,7 +249,39 @@ class TestBestrefs(CRDSTestCase):
         self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap --stats",
                         expected_errs=0)
         
+    def test_bestrefs_remote(self):
+        self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap --remote --stats",
+                        expected_errs=0)
+        
+    def test_bestrefs_new_references(self):
+        self.run_script("crds.bestrefs --files @data/bestrefs_file_list  --new-context hst_0315.pmap --print-new-references --stats",
+                        expected_errs=0)
 
+    def test_bestrefs_update_file_headers(self):
+        shutil.copy("data/j8bt06o6q_raw.fits", "j8bt06o6q_raw.fits")
+        self.run_script("crds.bestrefs --files ./j8bt06o6q_raw.fits --new-context hst_0315.pmap --update-bestrefs",
+                       expected_errs=0)
+        os.remove("j8bt06o6q_raw.fits")
+        
+    def test_bestrefs_update_bestrefs(self):
+        # """update_bestrefs modifies dataset file headers"""
+        shutil.copy("data/j8bt06o6q_raw.fits", "j8bt06o6q_raw.fits")
+        self.run_script("crds.bestrefs --files ./j8bt06o6q_raw.fits --new-context hst_0315.pmap --update-bestrefs",
+                       expected_errs=0)
+        os.remove("j8bt06o6q_raw.fits")
+
+'''
+    def test_bestrefs_update_headers(self):
+        # """update_headers updates original headers from a pickle saving a new pickle withn orginal + overrides."""
+        self.run_script("crds.bestrefs --new-context hst_0315.pmap --update-pickle --load-pickle data/test_cos.pkl data/test_cos_update.json --save-pickle ./test_cos_combined.json",
+                       expected_errs=0)
+        header = json.load(open("./test_cos_combined.json"))
+        assert header["BADTTAB"] == "FOO_BADT.FITS"
+        assert header["GSAGTAB"] == "BAR_GSAG.FITS"
+        assert header["FLATFILE"] == "XAB1551CL_FLAT.FITS"
+        # os.remove("./test_cos_combined.json")
+'''
+        
 # ==================================================================================
 
 def main():
