@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:48.270598',
+    'filekind' : 'IDCTAB',
+    'instrument' : 'WFPC2',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_idctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '2c4655ba36bfb3e3bd48ae51b3ac6a79d3ab9688',
+}
+
+selector = Match({
+    () : UseAfter({
+        '1992-01-01 00:00:00' : 'o8v14029u_idc.fits',
+        '1993-12-01 00:00:00' : 'ta81040ku_idc.fits',
+        '1994-01-01 00:00:00' : 'ta81040lu_idc.fits',
+    }),
+})

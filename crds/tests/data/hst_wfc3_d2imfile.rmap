@@ -1,0 +1,20 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-09-18 08:58:57.082915',
+    'filekind' : 'D2IMFILE',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_d2imfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'DRIZCORR',
+    'rmap_relevance' : '((DETECTOR == "UVIS") and (DRIZCORR != "OMIT"))',
+    'sha1sum' : '5a94232015c8aefcc001c2d038f7fd47cb451633',
+}
+
+selector = Match({
+    () : UseAfter({
+        '2009-06-09 00:00:00' : 'x5o1555ji_d2i.fits',
+    }),
+})

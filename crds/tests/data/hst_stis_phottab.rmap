@@ -1,0 +1,41 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:37.727753',
+    'filekind' : 'PHOTTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_phottab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'row_keys' : ('OPT_ELEM', 'CENWAVE', 'SPORDER'),
+    'sha1sum' : '67cb6a1161e040d0c4e43ccfb549b0d82621b8c7',
+}
+
+selector = Match({
+    ('CCD', 'IMAGING') : UseAfter({
+        '1996-10-01 00:00:00' : 'l7a15023o_pht.fits',
+    }),
+    ('CCD', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 'p822207no_pht.fits',
+    }),
+    ('FUV-MAMA', 'IMAGING') : UseAfter({
+        '1996-10-01 00:00:00' : 'r7u15528o_pht.fits',
+    }),
+    ('FUV-MAMA', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 'qb319510o_pht.fits',
+        '1999-03-15 00:00:00' : 'qb319511o_pht.fits',
+        '2001-07-10 00:00:00' : 'qb319512o_pht.fits',
+        '2009-05-11 00:00:00' : 'vb816445o_pht.fits',
+    }),
+    ('NUV-MAMA', 'IMAGING') : UseAfter({
+        '1996-10-01 00:00:00' : 'n181340bo_pht.fits',
+    }),
+    ('NUV-MAMA', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 'qb319513o_pht.fits',
+        '2001-07-10 00:00:00' : 'qb319514o_pht.fits',
+        '2009-05-11 00:00:00' : 'vb816448o_pht.fits',
+    }),
+})
