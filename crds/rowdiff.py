@@ -438,7 +438,7 @@ class RowDiff():
         if isinstance(self.mode_fields, dict):
             mode_field_names = dict.keys(self.mode_fields)
 
-            mode_constraints = {key: value for key, value in self.mode_fields.iteritems() if value is not None}
+            mode_constraints = {key: value for key, value in self.mode_fields.items() if value is not None}
         else:
             mode_field_names = self.mode_fields
             mode_constraints = {}
@@ -589,7 +589,7 @@ class RowDiff():
                 if isinstance(self.mode_fields, dict):
                     selected_rows = np.array([True for index in
                                               range(len(a_table_values))])
-                    for (field, values) in dict.iteritems(self.mode_fields):
+                    for (field, values) in dict.items(self.mode_fields):
                         if values:
                             selected_rows = np.logical_and(selected_rows,
                                                            selected(a_table_values[field], values))
