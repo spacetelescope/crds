@@ -108,7 +108,7 @@ def acs_biasfile_filter(kmap_orig):
             },
         }
     for match in kmap_orig:
-        header = dict(zip(BIASFILE_PARKEYS, match))
+        header = dict(list(zip(BIASFILE_PARKEYS, match)))
         if header["APERTURE"] == "":
             for filemap in kmap_orig[match]:
                 if filemap.date > SM4:
@@ -134,7 +134,7 @@ def acs_darkfile_filter(kmap_orig):
     kmap = copy.deepcopy(kmap_orig)
     header_additions = {}
     for match in kmap_orig:
-        header = dict(zip(BIASFILE_PARKEYS, match))
+        header = dict(list(zip(BIASFILE_PARKEYS, match)))
         try:
             if float(header["CCDGAIN"]) == -999.0:
                 log.warning("CCDGAIN=-999.0 Deleting match", match, "with", kmap[match])

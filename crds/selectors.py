@@ -873,7 +873,7 @@ class Selector(object):
         """
         item = self.match_item(key)
         if item:
-            pars, vals = zip(*item)
+            pars, vals = list(zip(*item))
             return tuple([str(x) for x in vals])
         else:
             return ()
