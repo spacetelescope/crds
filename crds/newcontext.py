@@ -46,7 +46,7 @@ def generate_new_contexts(old_pipeline, updates, new_names):
     for imap_name in updates:
         hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name])
     new_pipeline = new_names.pop(old_pipeline)
-    new_imaps = new_names.values()
+    new_imaps = list(new_names.values())
     hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
     return [new_pipeline] + new_imaps
     
