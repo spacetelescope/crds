@@ -1,6 +1,5 @@
 """This module contains doctests and unit tests which exercise some of the more
 complex features of the basic rmap infrastructure.
-
 """
 
 from __future__ import division # confidence high
@@ -52,12 +51,12 @@ def tst_new_context():
     0
 
     >>> pp([difference[-1] for difference in diff.mapping_diffs("data/hst.pmap", "./hst_0003.pmap")])
-    ["replaced 'hst_acs.imap' with './hst_acs_0003.imap'",
-     "replaced 'hst_cos.imap' with './hst_cos_0001.imap'",
-     "replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
+    ["replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
+     "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'",
      "replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap'",
      "replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap'",
-     "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'"]
+     "replaced 'hst_acs.imap' with './hst_acs_0003.imap'",
+     "replaced 'hst_cos.imap' with './hst_cos_0001.imap'"]
     
     >>> pysh.sh("rm \./*\.[pir]map")
     0
