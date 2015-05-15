@@ -303,7 +303,7 @@ class DeepLook(object):
         """
 
         # Convert header keys to lowercase for consistency
-        headers_low = dict((k.lower(), v) for k, v in headers.iteritems())
+        headers_low = dict((k.lower(), v) for k, v in headers.items())
 
         # Start off that the references are different.
         self.is_different = True
