@@ -6,10 +6,7 @@ which are written down in the "config" directory.
 A key aspect of bad files management is the location and contents of the cache config
 directory.  The current HST cache in trunk/crds/cache has a config area and 4 bad files.
 
->> import os
-
 >>> old_state = test_config.setup()
->>> os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 Here I contrived a header which will select one of the current 4 bad files from an old
 context which still assigned it:
@@ -31,7 +28,6 @@ context which still assigned it:
 
 The default handling when a bad reference file is assigned is to raise an exception:
 
->>> from crds import config
 >>> config.ALLOW_BAD_RULES.reset()
 >>> config.ALLOW_BAD_REFERENCES.reset()
 
@@ -181,7 +177,7 @@ from __future__ import absolute_import
 import os
 
 import crds
-from crds import utils, log, client
+from crds import utils, log, client, config
 from crds.tests import test_config
 from crds import tests
 

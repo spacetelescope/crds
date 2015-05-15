@@ -691,7 +691,7 @@ def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=Tru
             pipeline_context, baserefs=references, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=2)
     else:
         r_paths, r_downloads, r_bytes = {}, 0, 0
-    return dict(m_paths.items()+r_paths.items()), m_downloads + r_downloads, m_bytes + r_bytes
+    return dict(list(m_paths.items())+list(r_paths.items())), m_downloads + r_downloads, m_bytes + r_bytes
     
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
