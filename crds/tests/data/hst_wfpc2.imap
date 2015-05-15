@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'generated 2013-07-20 13:50:50.358814',
+    'instrument' : 'WFPC2',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'hst_wfpc2.imap',
+    'observatory' : 'HST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'd3ef91690a955ec91e7068812b7479dad08dcbdc',
+}
+
+selector = {
+    'atodfile' : 'hst_wfpc2_atodfile.rmap',
+    'biasfile' : 'hst_wfpc2_biasfile.rmap',
+    'darkfile' : 'hst_wfpc2_darkfile.rmap',
+    'dgeofile' : 'hst_wfpc2_dgeofile.rmap',
+    'flatfile' : 'hst_wfpc2_flatfile.rmap',
+    'idctab' : 'hst_wfpc2_idctab.rmap',
+    'maskfile' : 'hst_wfpc2_maskfile.rmap',
+    'offtab' : 'hst_wfpc2_offtab.rmap',
+    'shadfile' : 'hst_wfpc2_shadfile.rmap',
+    'wf4tfile' : 'hst_wfpc2_wf4tfile.rmap',
+}

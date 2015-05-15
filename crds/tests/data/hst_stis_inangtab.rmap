@@ -1,0 +1,27 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:36.730659',
+    'filekind' : 'INANGTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_inangtab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('OPT_ELEM', 'SPORDER', 'CENWAVE'),
+    'sha1sum' : 'ede649fbe54b3092e09eee649a2e3f963be3ba00',
+}
+
+selector = Match({
+    ('CCD',) : UseAfter({
+        '1996-10-01 00:00:00' : 'h5s11397o_iac.fits',
+    }),
+    ('FUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'h1v1541eo_iac.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1996-10-01 00:00:00' : 'l3m1437ro_iac.fits',
+    }),
+})

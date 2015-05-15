@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:31.547207',
+    'filekind' : 'WCPTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_wcptab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(OBSTYPE == "SPECTROSCOPIC")',
+    'row_keys' : ('OPT_ELEM',),
+    'sha1sum' : '4ccb39bff6f4ad8218bb7212910ca8658084102a',
+}
+
+selector = Match({
+    ('FUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 't2314311l_wcp.fits',
+        '2009-05-12 00:00:00' : 't9b18112l_wcp.fits',
+        '2009-08-17 00:00:00' : 'u1t1616ql_wcp.fits',
+    }),
+    ('NUV', 'SPECTROSCOPIC') : UseAfter({
+        '1996-10-01 00:00:00' : 'x2i1559gl_wcp.fits',
+    }),
+})

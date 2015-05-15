@@ -1,0 +1,25 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:45.189446',
+    'filekind' : 'MDRIZTAB',
+    'instrument' : 'WFC3',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfc3_mdriztab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'DRIZCORR',
+    'rmap_relevance' : '(DRIZCORR != "OMIT")',
+    'sha1sum' : 'a0fc49948df316b89270548bfd0e405c78aa0782',
+}
+
+selector = Match({
+    ('IR',) : UseAfter({
+        '2008-01-01 00:00:00' : 'sau19319i_mdz.fits',
+        '2009-05-14 00:00:00' : 'ubi1853pi_mdz.fits',
+    }),
+    ('UVIS',) : UseAfter({
+        '2008-01-01 00:00:00' : 'sau1931ai_mdz.fits',
+        '2009-05-14 00:00:00' : 'ubi1853qi_mdz.fits',
+    }),
+})

@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:48.279075',
+    'filekind' : 'WF4TFILE',
+    'instrument' : 'WFPC2',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_wfpc2_wf4tfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('ATODGAIN',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : 'e32d983a610da813444404e4d85cf2c2c200d1b1',
+}
+
+selector = Match({
+    (7,) : UseAfter({
+        '2002-03-01 00:00:00' : 't8i1146bu.r7h',
+    }),
+    (15,) : UseAfter({
+        '2002-03-01 00:00:00' : 't8i1146au.r7h',
+    }),
+})

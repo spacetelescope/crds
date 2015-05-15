@@ -1,0 +1,32 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:49:10.060357',
+    'filekind' : 'CFLTFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_cfltfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'FILTER1', 'FILTER2', 'OBSTYPE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(DETECTOR == "HRC" and OBSTYPE == "CORONAGRAPHIC")',
+    'sha1sum' : '4db81b6f4f879056e6853fa41e1c814f22b5e59b',
+}
+
+selector = Match({
+    ('HRC', 'CLEAR1S', 'F330W', 'CORONAGRAPHIC') : UseAfter({
+        '2002-03-01 00:00:00' : 'oai16327j_cfl.fits',
+    }),
+    ('HRC', 'CLEAR1S', 'F435W', 'CORONAGRAPHIC') : UseAfter({
+        '2002-03-01 00:00:00' : 'oai16328j_cfl.fits',
+    }),
+    ('HRC', 'CLEAR1S', 'F814W', 'CORONAGRAPHIC') : UseAfter({
+        '2002-03-01 00:00:00' : 'oai1632bj_cfl.fits',
+    }),
+    ('HRC', 'F475W', 'CLEAR2S', 'CORONAGRAPHIC') : UseAfter({
+        '2002-03-01 00:00:00' : 'oai16329j_cfl.fits',
+    }),
+    ('HRC', 'F606W', 'CLEAR2S', 'CORONAGRAPHIC') : UseAfter({
+        '2002-03-01 00:00:00' : 'oai1632aj_cfl.fits',
+    }),
+})

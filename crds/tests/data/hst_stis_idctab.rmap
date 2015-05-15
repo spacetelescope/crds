@@ -1,0 +1,27 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:36.724271',
+    'filekind' : 'IDCTAB',
+    'instrument' : 'STIS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_stis_idctab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : '(OBSTYPE == "IMAGING")',
+    'row_keys' : ('FILTER', 'DIRECTION'),
+    'sha1sum' : '88de588f2391da29c1de7c12bf8489b18a05ee95',
+}
+
+selector = Match({
+    ('CCD',) : UseAfter({
+        '1997-02-27 00:00:00' : 'o8g1508do_idc.fits',
+    }),
+    ('FUV-MAMA',) : UseAfter({
+        '1997-02-27 00:00:00' : 'o8g1508eo_idc.fits',
+    }),
+    ('NUV-MAMA',) : UseAfter({
+        '1997-02-27 00:00:00' : 'o8g1508fo_idc.fits',
+    }),
+})
