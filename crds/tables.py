@@ -110,7 +110,7 @@ class SimpleTable(object):
         Retuns { colname : column, ... }
         """
         if self._columns is None:
-            self._columns = dict(zip(self.colnames, zip(*self.rows)))
+            self._columns = dict(list(zip(self.colnames, list(zip(*self.rows)))))
         return self._columns
         
     def __repr__(self):
