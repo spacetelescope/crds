@@ -58,7 +58,7 @@ TEST CASES
 ----------
 """
 
-from crds import log
+from crds import log, tests
 from crds.diff import DiffScript
 from crds.tests import test_config
 

@@ -126,7 +126,7 @@ def fake_name(old_map):
             new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
         else:
             new_map = old_map
-    elif re.search(r"\w+[^_]\..map", old_map):   
+    elif re.search(r"\w+[^\d]+\..map", old_map):   
         # if no serial,  start off existing sequence as 0001
         parts = os.path.splitext(old_map)
         new_map = parts[0] + "_0001" + parts[1]

@@ -708,7 +708,9 @@ class TestRmap(CRDSTestCase):
 
     def test_rmap_list_mappings(self):
         os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
-        self.assertEqual(rmap.list_mappings("*.imap", "hst"), ['hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap'])
+        self.assertEqual(rmap.list_mappings("*.imap", "hst"), 
+                         ['hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_cos.imap',
+                          'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap'])
 
     def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = tests.TEST_DATA
