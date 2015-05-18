@@ -360,7 +360,7 @@ def newstyle_serial(name):
     >>> newstyle_serial("hst_cos_darkfile_0998.fits")
     998
     """
-    return int(re.search(r"_(\d+)\..\w+", name).groups()[0], 10)
+    return int(re.search(r"_(\d+)\.\w+", name).groups()[0], 10)
 
 # ============================================================================
 
@@ -510,8 +510,13 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
         self.new_file = self.resolve_context(self.locate_file(self.args.new_file))
         if self.args.sync_files:
             if self.args.print_all_new_files:
-                errs = sync.SyncScript("crds.sync --all")()
-                # assert not errs, "Errors occurred while syncing all rules to CRDS cache."
+                serial_old = newstyle_serial(self.old_file)
+                serial_new = newstyle_serial(self.new_file) + 1
+                if None not in [serial_old, serial_new]:
+                    errs = sync.SyncScript("crds.sync --range {0}:{1}".format(serial_old, serial_new))()
+                    assert not errs, "Errors occurred while syncing all rules to CRDS cache."
+                else:
+                    log.warning("Cannot sync non-standard mapping names,  results may be incomplete.")
             else:
                 self.sync_files([self.old_file, self.new_file])
         elif self.args.print_all_new_files:

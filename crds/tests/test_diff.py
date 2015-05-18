@@ -288,17 +288,42 @@ def tst_diff_print_affected_modes():
 def tst_diff_print_all_new_files():
     """
     >>> old_state = test_config.setup(cache=tests.CRDS_SOURCE_CACHE)
-    >>> DiffScript("crds.diff data/hst.pmap data/hst_0002.pmap --print-all-new-files --sync-files")()
+    >>> DiffScript("crds.diff hst_0001.pmap hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     0 infos
-    hst_0001.pmap  
     hst_0002.pmap  
+    hst_0003.pmap  
+    hst_0004.pmap  
+    hst_0005.pmap  
+    hst_0006.pmap  
+    hst_0007.pmap  
+    hst_0008.pmap  
+    hst_acs_0001.imap acs 
+    hst_acs_d2imfile_0001.rmap acs d2imfile
+    hst_cos_0001.imap cos 
+    hst_cos_0002.imap cos 
+    hst_cos_flatfile_0002.rmap cos flatfile
+    hst_cos_flatfile_0003.rmap cos flatfile
     hst_stis_0001.imap stis 
+    hst_stis_0002.imap stis 
     hst_stis_biasfile_0001.rmap stis biasfile
+    hst_stis_biasfile_0002.rmap stis biasfile
     hst_stis_darkfile_0001.rmap stis darkfile
-    hst_wfc3_0001.imap wfc3 
-    hst_wfc3_darkfile_0001.rmap wfc3 darkfile
+    hst_stis_darkfile_0002.rmap stis darkfile
+    hst_wfc3_0002.imap wfc3 
+    hst_wfc3_0003.imap wfc3 
+    hst_wfc3_darkfile_0004.rmap wfc3 darkfile
+    hst_wfc3_flshfile_0001.rmap wfc3 flshfile
+    x5u17177j_d2i.fits acs d2imfile
+    x5v1944hl_flat.fits cos flatfile
+    x7h1457mi_drk.fits wfc3 darkfile
+    x7h1457ni_drk.fits wfc3 darkfile
+    x7h1457oi_drk.fits wfc3 darkfile
+    x7h1457pi_drk.fits wfc3 darkfile
+    x7v2004ri_drk.fits wfc3 darkfile
+    x7v2004si_drk.fits wfc3 darkfile
+    x7v2004ti_drk.fits wfc3 darkfile
     x8c16266o_bia.fits stis biasfile
     x8c16267o_bia.fits stis biasfile
     x8c16268o_bia.fits stis biasfile
@@ -309,11 +334,21 @@ def tst_diff_print_all_new_files():
     x8c1626do_drk.fits stis darkfile
     x8c1626eo_drk.fits stis darkfile
     x8c1626fo_drk.fits stis darkfile
-    x9618368i_drk.fits wfc3 darkfile
-    x9618369i_drk.fits wfc3 darkfile
-    x961836ai_drk.fits wfc3 darkfile
-    x961836bi_drk.fits wfc3 darkfile
+    x8k1551hi_drk.fits wfc3 darkfile
+    x8k1551ii_drk.fits wfc3 darkfile
+    x8k1551ji_drk.fits wfc3 darkfile
+    x8k1551ki_drk.fits wfc3 darkfile
+    x8k1551li_drk.fits wfc3 darkfile
+    x9c1801qo_bia.fits stis biasfile
+    x9c1801ro_bia.fits stis biasfile
+    x9c1801so_bia.fits stis biasfile
+    x9c1801to_bia.fits stis biasfile
+    x9c18020o_bia.fits stis biasfile
+    x9c18021o_drk.fits stis darkfile
+    x9c18022o_drk.fits stis darkfile
+    x9c18023o_drk.fits stis darkfile
     0
+
     >>> test_config.cleanup(old_state)
     """
 
