@@ -328,7 +328,8 @@ class Mapping(object):
     @classmethod
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation."""
-        text = open(config.locate_mapping(basename)).read()
+        with  open(config.locate_mapping(basename)) as file:
+            text = file.read()
         return cls.from_string(text, basename, *args, **keys)
 
     @classmethod
