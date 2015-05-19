@@ -8,9 +8,10 @@ import sys
 import os
 import optparse
 import logging
+import warnings
+import functools
 import pprint
 import contextlib
-
 
 DEFAULT_VERBOSITY_LEVEL = 50
 
@@ -130,7 +131,7 @@ class CrdsLogger(object):
     def remove_stream_handler(self, handler):
         self.handlers.remove(handler)
         self.logger.removeHandler(handler)
-    
+
 THE_LOGGER = CrdsLogger("CRDS")
 
 info = THE_LOGGER.info
@@ -163,6 +164,31 @@ def set_test_mode():
 def set_log_time(enable_time=False):
     """Set the flag for including time in log messages.  Ignore CRDS_LOG_TIME."""
     THE_LOGGER.set_formatter(enable_time)
+
+# ===========================================================================
+
+def hijacked_showwarning(message, *args, **keys):
+    """Map the warnings.showwarning plugin function parameters onto log.warning."""
+    warning(message)
+    # raise Exception("temp debug exception,  REMOVE ME...")
+
+def hijack_warnings(func):
+    """Decorator that redirects warning messages to CRDS warnings."""
+    @functools.wraps(func)
+    def wrapper(*args, **keys):
+        """Reassign warnings to CRDS warnings prior to executing `func`,  restore
+        warnings state afterwards and return result of `func`.
+        """
+        old_showwarning = warnings.showwarning
+        warnings.showwarning = hijacked_showwarning
+        # warnings.simplefilter("always")
+        try:
+            result = func(*args, **keys)
+        finally:
+            warnings.showwarning = old_showwarning
+            warnings.resetwarnings()
+        return result
+    return wrapper
 
 # ===========================================================================
 
