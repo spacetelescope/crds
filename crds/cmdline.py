@@ -350,7 +350,8 @@ class Script(object):
             return config.locate_file(filename2, self.observatory)
         else:
             return os.path.abspath(filename2)
-
+    
+    @log.hijack_warnings
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         try:
