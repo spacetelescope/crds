@@ -109,8 +109,9 @@ def parse_mapping(filename):
     log.verbose("Parsing", repr(filename))
     filename = rmap.locate_mapping(filename)
     with log.augment_exception("Parsing error in", repr(filename)):
-        header, selector, comment = MAPPING_PARSER(open(filename).read()).mapping()
-        return Parsing(header, selector, comment)
+        with open(filename) as pfile:
+            header, selector, comment = MAPPING_PARSER(pfile.read()).mapping()
+            return Parsing(header, selector, comment)
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""

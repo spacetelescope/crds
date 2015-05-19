@@ -171,15 +171,17 @@ def get_data_model_header(filepath, needed_keys=()):
 
 def get_json_header(filepath, needed_keys=()):
     """Return the flattened header associated with a JSON file."""
-    header = json.load(open(filepath))
-    header = to_simple_types(header)
+    with open(filepath) as pfile:
+        header = json.load(pfile)
+        header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
     """Return the flattened header associated with a YAML file."""
     import yaml
-    header = yaml.load(open(filepath))
-    header = to_simple_types(header)
+    with open(filepath) as pfile:
+        header = yaml.load(pfile)
+        header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 # ----------------------------------------------------------------------------------------------
@@ -287,13 +289,14 @@ def get_fits_header_union(filepath, needed_keys=()):
     found as extensions are loaded in numerical order.
     """
     union = []
-    for hdu in pyfits.open(filepath):
-        for card in hdu.header.cards:
-            card.verify('fix')
-            key, value = card.keyword, str(card.value)
-            if not key:
-                continue
-            union.append((key, value))
+    with pyfits.open(filepath) as hdulist:
+        for hdu in hdulist:
+            for card in hdu.header.cards:
+                card.verify('fix')
+                key, value = card.keyword, str(card.value)
+                if not key:
+                    continue
+                union.append((key, value))
     return reduce_header(filepath, union, needed_keys)
 
 
@@ -373,7 +376,8 @@ def get_geis_header(name, needed_keys=()):
     if isinstance(name, six.string_types):
         if name.endswith("d"):
             name = name[:-1] + "h"
-        lines = open(name)
+        with open(name) as pfile:
+            lines = pfile.readlines()
     else:  # assume file-like object
         lines = name
 

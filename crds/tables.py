@@ -95,8 +95,9 @@ class SimpleTable(object):
         self.basename = os.path.basename(filename)
         self._columns = None  # dynamic,  independent of astropy
         if filename.endswith(".fits"):
-            tab = fits.open(filename)[segment].data
-            self.colnames = tuple(name.upper() for name in tab.columns.names)
+            with fits.open(filename) as hdus:
+                tab = hdus[segment].data
+                self.colnames = tuple(name.upper() for name in tab.columns.names)
         else:
             tab = table.Table.read(filename)
             self.colnames = tuple(name.upper() for name in tab.columns)

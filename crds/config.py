@@ -304,7 +304,8 @@ def get_crds_ref_subdir_mode(observatory):
     else:
         mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
         try:
-            mode = open(mode_path).read().strip()
+            with open(mode_path) as pfile:
+                mode = pfile.read().strip()
             # log.verbose("Determined cache format from", repr(mode_path), "as", repr(mode))
         except IOError:
             if len(glob.glob(os.path.join(get_crds_refpath(observatory), "*"))) > 20:

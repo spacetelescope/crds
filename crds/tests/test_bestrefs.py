@@ -287,7 +287,8 @@ class TestBestrefs(CRDSTestCase):
         # """update_headers updates original headers from a pickle saving a new pickle withn orginal + overrides."""
         self.run_script("crds.bestrefs --new-context hst_0315.pmap --datasets LCE31SW6Q:LCE31SW6Q --load-pickle data/test_cos_update.json --save-pickle ./test_cos_combined.json",
                        expected_errs=0)
-        header = json.load(open("./test_cos_combined.json"))
+        with open("./test_cos_combined.json") as pfile:
+            header = json.load(pfile)
         header = header["LCE31SW6Q:LCE31SW6Q"]
         assert header["BADTTAB"] == "FOO_BADT.FITS"
         assert header["GSAGTAB"] == "BAR_GSAG.FITS"
