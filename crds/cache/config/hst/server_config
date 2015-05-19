@@ -5,7 +5,7 @@
                   'svnurl': '/ssb/svn/crds/trunk'},
  'edit_context': 'hst_0338.pmap',
  'effective_mode': 'local',
- 'last_synced': '2015-05-19 17:35:11.125362',
+ 'last_synced': '2015-05-19 18:17:17.832370',
  'mapping_url': {'hst': 'https://hst-crds-dev.stsci.edu/unchecked_get/mappings/hst/'},
  'max_bestrefs_per_rpc': 1000,
  'max_headers_per_rpc': 5000,

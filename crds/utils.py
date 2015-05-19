@@ -687,6 +687,9 @@ def instrument_to_observatory(instrument):
     >>> instrument_to_observatory("miri")
     'jwst'
     >>> instrument_to_observatory("foo")
+    Traceback (most recent call last):
+    ...
+    ValueError: Unknown instrument 'foo'    
     """
     instrument = fix_instrument(instrument.lower())
     for (obs, instr) in observatory_instrument_tuples():
