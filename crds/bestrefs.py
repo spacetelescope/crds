@@ -327,27 +327,25 @@ def update_file_bestrefs(context, dataset, updates):
 
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
-    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)    
-    hdulist = pyfits.open(dataset, mode="update", do_not_scale_image_data=True)
+    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
+    with pyfits.open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
 
-    # XXX TODO switch pyfits.setval to data_file.setval
-    def set_key(keyword, value):
-        log.verbose("Setting", repr(dataset), keyword, "=", value)
-        hdulist[0].header[keyword] = value
+        # XXX TODO switch pyfits.setval to data_file.setval
+        def set_key(keyword, value):
+            log.verbose("Setting", repr(dataset), keyword, "=", value)
+            hdulist[0].header[keyword] = value
 
-    set_key("CRDS_CTX", context)
-    set_key("CRDS_VER", version_info)
+        set_key("CRDS_CTX", context)
+        set_key("CRDS_VER", version_info)
 
-    for update in sorted(updates):
-        new_ref = update.new_reference.upper()
-        if new_ref != "N/A":
-            new_ref = (prefix + new_ref).lower()
-        set_key(update.filekind.upper(), new_ref)
+        for update in sorted(updates):
+            new_ref = update.new_reference.upper()
+            if new_ref != "N/A":
+                new_ref = (prefix + new_ref).lower()
+            set_key(update.filekind.upper(), new_ref)
 
-    for hdu in hdulist:
-        hdu.data
-
-    hdulist.close()
+        for hdu in hdulist:
+            hdu.data
 
 # ============================================================================
 

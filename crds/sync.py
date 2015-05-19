@@ -352,7 +352,8 @@ class SyncScript(cmdline.ContextsScript):
         for context in self.contexts:
             if self.args.dataset_ids:
                 if len(self.args.dataset_ids) == 1 and self.args.dataset_ids[0].startswith("@"):
-                    self.args.dataset_ids = open(self.args.dataset_ids[0][1:]).read().splitlines()
+                    with open(self.args.dataset_ids[0][1:]) as pfile:
+                        self.args.dataset_ids = pfile.read().splitlines()
                 with log.error_on_exception("Failed to get matching parameters for", self.args.dataset_ids):
                     id_headers = api.get_dataset_headers_by_id(context, self.args.dataset_ids)
             for dataset in self.args.dataset_files or self.args.dataset_ids:
