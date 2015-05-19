@@ -40,15 +40,16 @@ def _load_tpn_lines(fname):
     """
     lines = []
     append = False
-    for line in open(fname):
-        line = line.strip()
-        if line.startswith("#") or not line:
-            continue
-        if append:
-            lines[-1] = lines[-1][:-1].strip() + line
-        else:
-            lines.append(line)
-        append = line.endswith("\\")
+    with open(fname) as pfile:
+        for line in pfile:
+            line = line.strip()
+            if line.startswith("#") or not line:
+                continue
+            if append:
+                lines[-1] = lines[-1][:-1].strip() + line
+            else:
+                lines.append(line)
+            append = line.endswith("\\")
     return lines
 
 
