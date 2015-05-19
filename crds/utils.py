@@ -38,7 +38,9 @@ def traced(func):
         result = func(*args, **keys)
         log.verbose("trace result:", func.__name__, ":", result, verbosity=55)
         return result
-    func2.__name__ = func.__name__
+    func2.__name__ = func.__name__ + " [traced]"
+    func2.__doc__ = func.__doc__
+    func2.__module__ = func.__module__
     func2._traced = True
     return func2
 
@@ -140,7 +142,9 @@ class xcached(object):
         """Create a CachedFunction for `func` with extra qualifiers *args and **keys.
         Nomnially executes at import time.
         """
-        return CachedFunction(func, *self.args, **self.keys)
+        cached = CachedFunction(func, *self.args, **self.keys)
+        cached.__name__ = cached.uncached.__name__ + " [xcached]"
+        return cached
 
 class CachedFunction(object):
     """Class to support the @cached function decorator.   Called at runtime
@@ -154,7 +158,10 @@ class CachedFunction(object):
         self.uncached = func
         self.omit_from_key = [] if omit_from_key is None else omit_from_key
         self.cache_set.add(self)
-    
+        self.__doc__ = self.uncached.__doc__
+        self.__module__ = self.uncached.__module__
+        self.__name__ = self.uncached.__name__ + " [cached]"
+        
     def cache_key(self, *args, **keys):
         """Compute the cache key for the given parameters."""
         args = tuple([ a for (i, a) in enumerate(args) if i not in self.omit_from_key])
