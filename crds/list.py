@@ -102,7 +102,8 @@ class ListScript(cmdline.ContextsScript):
             path = os.path.abspath(name)
             print("File: ", repr(path))
             print("#"*120)
-            print(open(path).read())
+            with open(path) as pfile:
+                print(pfile.read())
             
     def list_references(self):
         """Consult the server and print the names of all references associated with

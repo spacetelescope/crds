@@ -740,24 +740,23 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        fits = pyfits.open(self.filename)
-        fits.verify(option='exception') # validates all keywords
-        fits.close()
+        with pyfits.open(self.filename) as pfile:
+            pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
-        hdulist = pyfits.open(self.filename)
-        unseen = set(dump_keys)
-        for i, hdu in enumerate(hdulist):
-            for key in dump_keys:
-                for card in hdu.header.cards:
-                    if card.keyword == key:
-                        if self.interesting_value(card.value):
-                            log.info("["+str(i)+"]", key, card.value, card.comment)
-                        if key in unseen:
-                            unseen.remove(key)
+        with pyfits.open(self.filename) as hdulist:
+            unseen = set(dump_keys)
+            for i, hdu in enumerate(hdulist):
+                for key in dump_keys:
+                    for card in hdu.header.cards:
+                        if card.keyword == key:
+                            if self.interesting_value(card.value):
+                                log.info("["+str(i)+"]", key, card.value, card.comment)
+                            if key in unseen:
+                                unseen.remove(key)
         return unseen
 
 # ============================================================================
