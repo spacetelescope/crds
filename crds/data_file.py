@@ -90,6 +90,7 @@ def get_observatory(filepath, original_name=None):
         return "hst"
 
     
+@log.hijack_warnings
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
     if condition:
@@ -98,6 +99,7 @@ def getval(filepath, key, condition=True):
         header = get_unconditioned_header(filepath, needed_keys=[key])
     return header[key]
 
+@log.hijack_warnings
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
     ftype = config.filetype(filepath)
@@ -111,6 +113,7 @@ def setval(filepath, key, value):
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
 
+@log.hijack_warnings
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
@@ -119,6 +122,7 @@ def dm_setval(filepath, key, value):
         d_model[key.lower()] = value
         d_model.save(filepath)
 
+@log.hijack_warnings
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
@@ -130,6 +134,7 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     header = get_header(filepath, needed_keys, original_name, observatory=observatory)
     return utils.condition_header(header, needed_keys)
 
+@log.hijack_warnings
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
     

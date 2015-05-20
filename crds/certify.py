@@ -17,7 +17,8 @@ from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import tables
 from crds import client
 from crds import mapping_parser
-from crds.exceptions import *
+from crds.exceptions import (MissingKeywordError, IllegalKeywordError, InvalidFormatError, TypeSetupError,
+                             ValidationError)
 
 NOT_FITS = -1
 VALID_FITS = 1
@@ -735,6 +736,8 @@ def handle_nan(var):
 # ============================================================================
 
 class FitsCertifier(ReferenceCertifier):
+    """Certifier dedicated to FITS format references."""
+
     def load(self):
         """Use pyfits to verify the FITS format of self.filename."""
         if not self.filename.endswith(".fits"):
@@ -857,9 +860,10 @@ def banner(char='#'):
     
 # ============================================================================
 
+@log.hijack_warnings
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False, script=None, observatory=None,
+                  dont_parse=False, script=None, observatory=None,
                   comparison_reference=None, original_name=None, ith=""):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
@@ -925,6 +929,7 @@ def get_certifier_class(original_name):
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
+@log.hijack_warnings
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
@@ -940,7 +945,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         
         certify_file(filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             trap_exceptions=trap_exceptions, compare_old_reference=compare_old_reference, 
-            dont_parse=dont_parse, skip_banner=skip_banner, script=script, observatory=observatory,
+            dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith)
         
     tables.clear_cache()
@@ -1024,7 +1029,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
-    """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
+    # For files on the command line to default to normal UNIX syntax, no path is CWD,
+    # uncomment following statement.   Add crds:// for cache paths.
+
     # locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
@@ -1085,7 +1092,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
     
     def log_and_track_error(self, filename, *args, **keys):
         """Override log_and_track_error() to compute instrument, filekind automatically."""
-        basename = os.path.basename(filename)
         try:
             instrument, filekind = utils.get_file_properties(self.observatory, filename)
         except Exception:
