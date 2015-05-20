@@ -10,7 +10,6 @@ import os
 import re
 from collections import defaultdict, namedtuple
 
-from astropy.io import fits as pyfits
 import numpy as np
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
@@ -475,7 +474,7 @@ class ReferenceCertifier(Certifier):
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
         unseen = self._dump_provenance_core(dump_keys)
         warn_keys = self.provenance_keys
-        for key in unseen:
+        for key in sorted(unseen):
             if key in warn_keys:
                 log.warning("Missing keyword '%s'."  % key)
 
@@ -483,13 +482,21 @@ class ReferenceCertifier(Certifier):
         """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
         for key in dump_keys:
-            hval = self.header.get(key, None)
-            if hval is not None:
-                if self.interesting_value(hval):
-                    log.info(key, "=", repr(hval))
-                if key in unseen:
-                    unseen.remove(key)
+            if self._check_provenance_key(key):
+                unseen.remove(key)
+            elif self._check_provenance_key("META." + key):
+                unseen.remove(key)
         return unseen
+
+    def _check_provenance_key(self, key):
+        """Check one keyword, dump it,  and return True IFF it was present in self.header."""
+        hval = self.header.get(key, None)
+        if hval is not None:
+            if self.interesting_value(hval):
+                log.info(key, "=", repr(hval))
+            return True
+        else:
+            return False
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
@@ -625,8 +632,8 @@ class ReferenceCertifier(Certifier):
             log.info("No modes defined in new reference", repr(new_reference_ex), "for keys", 
                      repr(self.mode_columns))
             return
-        old_sample = old_modes.values()[0]
-        new_sample = new_modes.values()[0]
+        old_sample = list(old_modes.values())[0]
+        new_sample = list(new_modes.values())[0]
         if len(old_sample) != len(new_sample) or old_all_cols != new_all_cols:
             log.warning("Change in row format betwween", repr(old_reference_ex), "and", repr(new_reference_ex))
             log.verbose("Old sample:", repr(old_sample))
@@ -743,14 +750,14 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        with pyfits.open(self.filename) as pfile:
+        with data_file.fits_open(self.filename) as pfile:
             pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
-        with pyfits.open(self.filename) as hdulist:
+        with data_file.fits_open(self.filename) as hdulist:
             unseen = set(dump_keys)
             for i, hdu in enumerate(hdulist):
                 for key in dump_keys:
@@ -1065,7 +1072,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
                 log.verbose("Defaulting comparison context to latest operational CRDS context.")
                 self.args.comparison_context = self.default_context
         elif self.args.comparison_context in [None, "none", "None", "NONE"]:
-            log.info("No comparison context specified or specified as 'none'.  No default context for mixed types.")
+            log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
             
         if self.args.comparison_context and self.args.sync_files:
