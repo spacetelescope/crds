@@ -257,10 +257,8 @@ def set_log_time(enable_time=False):
 
 # ===========================================================================
 
-def hijacked_showwarning(message, *args, **keys):
-    """Map the warnings.showwarning plugin function parameters onto log.warning."""
-    warning(message)
-    # raise Exception("temp debug exception,  REMOVE ME...")
+# NOTE:  hijack_warnings needs to be nestable
+# XXX: hijack_warnings is non-reentrant and FAILS with THREADS
 
 def hijack_warnings(func):
     """Decorator that redirects warning messages to CRDS warnings."""
@@ -271,14 +269,26 @@ def hijack_warnings(func):
         """
         old_showwarning = warnings.showwarning
         warnings.showwarning = hijacked_showwarning
-        # warnings.simplefilter("always")
         try:
             result = func(*args, **keys)
         finally:
             warnings.showwarning = old_showwarning
-            warnings.resetwarnings()
         return result
     return wrapper
+
+def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
+    """Map the warnings.showwarning plugin function parameters onto log.warning."""
+    try:
+        scat = str(category).split(".")[-1].split("'")[0]
+    except Exception:
+        scat = category
+    try:
+        sfile = str(filename).split(".egg")[-1].split("site-packages")[-1].replace("/",".").replace(".py", "")
+        while sfile.startswith(("/",".")):
+            sfile = sfile[1:]
+    except Exception:
+        sfile = filename
+    warning(scat, sfile, "(" + str(lineno) + ")", message)
 
 # ===========================================================================
 
