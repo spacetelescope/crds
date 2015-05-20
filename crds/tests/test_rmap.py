@@ -682,8 +682,8 @@ selector = Match({
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    import test_rmap, doctest
-    import unittest
+    from crds.tests import test_rmap
+    import unittest, doctest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestRmap)
     unittest.TextTestRunner().run(suite)
     return doctest.testmod(test_rmap)
