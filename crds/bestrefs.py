@@ -19,8 +19,6 @@ try:
 except ImportError:
     import pickle
 
-from astropy.io import fits as pyfits
-
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
@@ -328,9 +326,8 @@ def update_file_bestrefs(context, dataset, updates):
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
     prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
-    with pyfits.open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
+    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
 
-        # XXX TODO switch pyfits.setval to data_file.setval
         def set_key(keyword, value):
             log.verbose("Setting", repr(dataset), keyword, "=", value)
             hdulist[0].header[keyword] = value

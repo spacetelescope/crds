@@ -288,7 +288,8 @@ def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
             sfile = sfile[1:]
     except Exception:
         sfile = filename
-    warning(scat, sfile, "(" + str(lineno) + ")", message)
+    message = str(message).replace("\n","")
+    warning(scat, ":", sfile, ":", message)
 
 # ===========================================================================
 

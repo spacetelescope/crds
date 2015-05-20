@@ -411,6 +411,8 @@ class Script(object):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
         date based specifications against the CRDS server operational context history.
         """
+        if isinstance(context, str) and context.lower() == "none":
+            return None
         if config.is_date_based_mapping_spec(context):
             if re.match(config.OBSERVATORY_RE_STR + r"-operational", context):
                 final_context = self.server_info.operational_context

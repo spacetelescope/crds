@@ -10,18 +10,25 @@ import os
 from crds import certify, utils, log, client
 from crds.certify import CertifyScript
 
-from crds.tests import CRDSTestCase
+from crds.tests import CRDSTestCase, test_config
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def certify_doctests():
-    """
-    >>> log.set_test_mode()
+class TestCertifyScript(CertifyScript):
+    """Subclass TestCertifyScript to better support doctesting..."""
+    def __call__(self):
+        try:
+            old_config = test_config.setup()
+            return super(TestCertifyScript, self).__call__()
+        finally:
+            test_config.cleanup(old_config)
 
-    >>> CertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()
-    CRDS  : WARNING  AstropyUserWarning astropy.io.fits.file (302) File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+def certify_truncated_file():
+    """
+    >>> TestCertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
     CRDS  : INFO     FITS file 'truncated.fits' conforms to FITS standards.
@@ -30,8 +37,11 @@ def certify_doctests():
     CRDS  : INFO     1 warnings
     CRDS  : INFO     4 infos
     0
+    """
 
-    >>> CertifyScript("crds.certify data/s7g1700gl_dead.fits --dump-provenance --comparison-context hst.pmap")()
+def certify_dump_provenance_fits():
+    """
+    >>> TestCertifyScript("crds.certify data/s7g1700gl_dead.fits --dump-provenance --comparison-context hst.pmap")()
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/s7g1700gl_dead.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
     CRDS  : INFO     FITS file 's7g1700gl_dead.fits' conforms to FITS standards.
@@ -50,8 +60,28 @@ def certify_doctests():
     CRDS  : INFO     0 warnings
     CRDS  : INFO     14 infos
     0
+    """
 
-    >>> CertifyScript("crds.certify data/missing_keyword.fits --comparison-context hst.pmap")()
+def certify_dump_provenance_generic():
+    """
+    >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS  : INFO     META.PEDIGREE = 'dummy'
+    CRDS  : INFO     META.USEAFTER = 'Mar 21 2001 12:00:00'
+    CRDS  : WARNING  Missing keyword 'COMMENT'.
+    CRDS  : WARNING  Missing keyword 'DESCRIP'.
+    CRDS  : WARNING  Missing keyword 'HISTORY'.
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     3 warnings
+    CRDS  : INFO     5 infos
+    0
+    """
+
+def certify_missing_keyword():
+    """
+    >>> TestCertifyScript("crds.certify data/missing_keyword.fits --comparison-context hst.pmap")()
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/missing_keyword.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
     CRDS  : INFO     FITS file 'missing_keyword.fits' conforms to FITS standards.
@@ -61,6 +91,141 @@ def certify_doctests():
     CRDS  : INFO     0 warnings
     CRDS  : INFO     4 infos
     1
+    """
+
+def certify_recursive():
+    """
+    >>> TestCertifyScript("crds.certify hst_cos.imap --exist --dont-parse")()
+    CRDS  : INFO     No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_bpixtab.rmap' (3/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_brftab.rmap' (4/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_brsttab.rmap' (5/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_deadtab.rmap' (6/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_geofile.rmap' (10/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_gsagtab.rmap' (11/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_hvtab.rmap' (12/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_lamptab.rmap' (13/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_phatab.rmap' (14/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_spwcstab.rmap' (15/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_tdstab.rmap' (16/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_walktab.rmap' (17/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     40 infos
+    0
+    """
+
+def certify_table_comparison_context():
+    """
+    >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    CRDS  : INFO     FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS  : INFO     Table unique row parameters defined as ('DATE',)
+    CRDS  : INFO     Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
+    CRDS  : WARNING  Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS  : WARNING  Table mode (('DATE', 56964.0),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS  : WARNING  Table mode (('DATE', 56921.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56922.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56924.041700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56924.208400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56924.3125),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56925.0),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56959.458400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56959.666700000002),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56961.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56962.833400000003),) from old reference 'yas2005el_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     15 warnings
+    CRDS  : INFO     6 infos
+    0
+    """
+
+def certify_table_comparison_reference():
+    """
+    >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-reference data/y9j16159l_hv.fits")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
+    CRDS  : INFO     FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS  : INFO     Table unique row parameters defined as ('DATE',)
+    CRDS  : WARNING  Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
+    CRDS  : WARNING  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.041700000002),) :
+     (('DATE', 56925.0), ('HVLEVELB', 175))
+    (('DATE', 56925.0), ('HVLEVELB', 175))
+    CRDS  : WARNING  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
+     (('DATE', 56925.0), ('HVLEVELB', 175))
+    (('DATE', 56925.0), ('HVLEVELB', 175))
+    CRDS  : WARNING  Table mode (('DATE', 56921.833400000003),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56924.041700000002),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56924.3125),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : WARNING  Table mode (('DATE', 56925.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     10 warnings
+    CRDS  : INFO     5 infos
+    0
+    """
+
+def certify_comparison_context_none_all_references():
+    """
+    >>> TestCertifyScript("crds.certify data/y951738kl_hv.fits --comparison-context None")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
+    CRDS  : INFO     FITS file 'y951738kl_hv.fits' conforms to FITS standards.
+    CRDS  : INFO     Table unique row parameters defined as ('DATE',)
+    CRDS  : WARNING  No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     1 warnings
+    CRDS  : INFO     5 infos
+    0
+    """
+
+def certify_comparison_context_none_all_mappings():
+    """
+    >>> TestCertifyScript("crds.certify hst_cos_deadtab.rmap --comparison-context None")()
+    CRDS  : INFO     No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying '/grp/crds/cache/mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     4 infos
+    0
     """
 
 # ==================================================================================

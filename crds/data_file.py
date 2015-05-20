@@ -283,18 +283,13 @@ def sanitize_data_model_dict(flat_dict):
             cleaned["META.INSTRUMENT.TYPE"] = cleaned["META.INSTRUMENT.NAME"]
     return cleaned
 
-def get_fits_header(filepath, needed_keys=()):
-    """Return `needed_keys` or all from FITS file `fname`s primary header."""
-    primary_header = pyfits.getheader(filepath)
-    return reduce_header(filepath, primary_header, needed_keys)
-
 def get_fits_header_union(filepath, needed_keys=()):
     """Get the union of keywords from all header extensions of FITS
     file `fname`.  In the case of collisions, keep the first value
     found as extensions are loaded in numerical order.
     """
     union = []
-    with pyfits.open(filepath) as hdulist:
+    with fits_open(filepath) as hdulist:
         for hdu in hdulist:
             for card in hdu.header.cards:
                 card.verify('fix')
@@ -304,6 +299,19 @@ def get_fits_header_union(filepath, needed_keys=()):
                 union.append((key, value))
     return reduce_header(filepath, union, needed_keys)
 
+
+# ================================================================================================================
+
+def fits_open(filename, **keys):
+    """Return the results of io.fits.open() configured using CRDS environment settings,  overriden by
+    any conflicting keyword parameter values.
+    """
+    keys = dict(keys)
+    if "checksum" not in keys:
+        keys["checksum"] = bool(config.FITS_VERIFY_CHECKSUM)
+    if "ignore_missing_end" not in keys:
+        keys["ignore_missing_end"] = bool(config.FITS_IGNORE_MISSING_END)
+    return pyfits.open(filename, **keys)
 
 # ================================================================================================================
 
