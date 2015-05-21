@@ -269,6 +269,7 @@ def hijack_warnings(func):
         """
         old_showwarning = warnings.showwarning
         warnings.showwarning = hijacked_showwarning
+        warnings.simplefilter("always")
         try:
             result = func(*args, **keys)
         finally:
