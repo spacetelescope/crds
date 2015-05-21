@@ -143,7 +143,7 @@ Similarly,  the use of bad rules can be permitted:
 CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
 <BLANKLINE>
 
->>> refs.keys() == ['flat']
+>>> list(refs.keys()) == ['flat']
 True
 
 >>> os.path.basename(refs['flat']) == 'jwst_niriss_flat_0000.fits'
