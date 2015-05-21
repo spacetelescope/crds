@@ -55,17 +55,16 @@ from __future__ import division
 from __future__ import absolute_import
 import os.path
 
-from astropy.io import fits
 from astropy import table
 
-from crds import utils, log
+from crds import utils, log, data_file
 
 _HERE = os.path.dirname(__file__) or "."
 
 def ntables(filename):
     """Return the number of segments / hdus in `filename`."""
     if filename.endswith(".fits"):
-        with fits.open(filename) as hdus:
+        with data_file.fits_open(filename) as hdus:
             return len(hdus) - 1
     else:
         return 1
@@ -77,7 +76,7 @@ def tables(filename):
     This function is self-cached.    Clear the cache using clear_cache().
     """
     if filename.endswith(".fits"):
-        with fits.open(filename) as hdus:
+        with data_file.fits_open(filename) as hdus:
             return [ SimpleTable(filename, i+1) for i in range(len(hdus)-1) ]
     else:
         return [ SimpleTable(filename, segment=1) ]
@@ -95,7 +94,7 @@ class SimpleTable(object):
         self.basename = os.path.basename(filename)
         self._columns = None  # dynamic,  independent of astropy
         if filename.endswith(".fits"):
-            with fits.open(filename) as hdus:
+            with data_file.fits_open(filename) as hdus:
                 tab = hdus[segment].data
                 self.colnames = tuple(name.upper() for name in tab.columns.names)
         else:
