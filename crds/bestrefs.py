@@ -1083,9 +1083,9 @@ and debug output.
         """Print the product id for any product which has new bestrefs for any
         of its component exposures.   All components share a common product id.
         """
-        affected_products = set([self.dataset_to_product_id(dataset) 
+        affected_products = {self.dataset_to_product_id(dataset) 
                                  for dataset in self.updates 
-                                 if self.updates[dataset]])
+                                 if self.updates[dataset]}
         log.info("Affected products =", len(affected_products))
         for product in sorted(affected_products):
             print(product)
