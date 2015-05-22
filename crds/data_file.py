@@ -80,7 +80,7 @@ def get_observatory(filepath, original_name=None):
         return "hst"
     if original_name.endswith(".fits"):
         try:
-            observatory = pyfits.getval(filepath, "TELESCOP")
+            observatory = getval(filepath, "TELESCOP")
         except Exception:
             observatory = "hst"
         return observatory.lower()
@@ -194,8 +194,8 @@ def get_yaml_header(filepath, needed_keys=()):
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
     import pyasdf
-    handle = pyasdf.AsdfFile.read(filepath)
-    header = to_simple_types(handle.tree)
+    with pyasdf.AsdfFile.read(filepath) as handle:
+        header = to_simple_types(handle.tree)
     return reduce_header(filepath, header, needed_keys)
 
 def to_simple_types(tree):
