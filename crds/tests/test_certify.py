@@ -31,10 +31,15 @@ def certify_truncated_file():
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     FITS file 'truncated.fits' conforms to FITS standards.
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
-    CRDS  : INFO     1 warnings
+    CRDS  : INFO     6 warnings
     CRDS  : INFO     4 infos
     0
     """
