@@ -285,7 +285,7 @@ def sm_filter_opcodes(sm_opcodes, code='equal'):
     condition = lambda opcode: opcode[0] != code
 
     # do the filtering
-    return filter(condition, sm_opcodes)
+    return list(filter(condition, sm_opcodes))
 
 
 @np.vectorize
