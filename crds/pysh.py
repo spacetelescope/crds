@@ -340,7 +340,7 @@ def pysh_execfile(fname, globals=None, locals=None):
         os.close(handle)
 
     try:
-        execfile(fname, globals, locals)
+        exec(compile(open(fname).read(), fname, 'exec'), globals, locals)
     finally:
         os.remove(fname)
 
