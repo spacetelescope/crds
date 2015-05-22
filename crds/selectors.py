@@ -2254,7 +2254,7 @@ class VersionRelation(ComparableMixin):
             return True
         elif isinstance(self.version, numbers.Number) and isinstance(other.version, numbers.Number):
             return True
-        elif type(self.version) == type(other.version):
+        elif isinstance(self.version, type(other.version)):
             return True
         else:
             raise ValidationError("Incompatible version expression types: " + 
