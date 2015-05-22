@@ -233,7 +233,7 @@ def mapping_check_diffs_core(diffs):
         elif "rule" in action:
             log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
-            old_val, new_val = map(os.path.basename, diff_replace_old_new(msg))
+            old_val, new_val = list(map(os.path.basename, diff_replace_old_new(msg)))
             if newer(new_val, old_val):
                 log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
             else:
