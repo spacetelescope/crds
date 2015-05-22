@@ -148,7 +148,7 @@ class BooleanConfigItem(ConfigItem):
         """Return the bool value of this config item."""
         return env_str_to_bool(self.env_var, super(BooleanConfigItem, self).get())
     
-    def __nonzero__(self):
+    def __bool__(self):
         """Support using this boolean config item be used as a conditional expression."""
         return self.get()
 
