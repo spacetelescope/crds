@@ -220,7 +220,7 @@ def na_key(match, replacement='*'):
 def total_files(kmap):
     total = set()
     for match, fmaps in kmap.items():
-        total = total.union(set([fmap.file for fmap in fmaps]))
+        total = total.union({fmap.file for fmap in fmaps})
     return total
         
 def add_fallback_to_kmap(kmap, matches, dont_care,

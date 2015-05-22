@@ -1112,12 +1112,12 @@ For more information on the checks being performed,  use --verbose or --verbosit
         """
         closure_files = set()
         for file_ in files:
-            more_files = set([file_])
+            more_files = {file_}
             if rmap.is_mapping(file_):
                 with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
                     mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                    more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
-                    more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
+                    more_files = {rmap.locate_mapping(name) for name in mapping.mapping_names()}
+                    more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
 

@@ -108,7 +108,7 @@ def required_keys(expr):
     >>> required_keys("VAR1=='VAL1' and VAR2=='VAL2' and VAR3=='VAL3'")
     ['VAR1', 'VAR2', 'VAR3']
     """
-    return sorted(set([term.split("=")[0].strip() for term in expr.split("and")]))
+    return sorted({term.split("=")[0].strip() for term in expr.split("and")})
     
 
 class ReferenceHeaderExpanders(dict):

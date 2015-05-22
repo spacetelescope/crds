@@ -97,7 +97,7 @@ class AstDumper(ast.NodeVisitor):
     visit_Assign = dump
     visit_Call = dump
 
-ILLEGAL_NODES = set([
+ILLEGAL_NODES = {
     "visit_FunctionDef",
     "visit_ClassDef", 
     "visit_Return", 
@@ -130,9 +130,9 @@ ILLEGAL_NODES = set([
     "visit_Repr",
     "visit_AugLoad",
     "visit_AugStore",
-    ])
+    }
 
-LEGAL_NODES = set([
+LEGAL_NODES = {
     'visit_Module',
     'visit_Name',
     'visit_Str',
@@ -161,14 +161,14 @@ LEGAL_NODES = set([
     'visit_Not',
     'visit_NameConstant',
     'visit_USub',
- ])
+ }
 
-CUSTOMIZED_NODES = set([
+CUSTOMIZED_NODES = {
     'visit_Call',
     'visit_Assign',
     'visit_Illegal',
     'visit_Unknown',
-])
+}
 
 ALL_CATEGORIZED_NODES = set.union(ILLEGAL_NODES, LEGAL_NODES, CUSTOMIZED_NODES)
 
@@ -878,7 +878,7 @@ class InstrumentContext(ContextMapping):
             if key not in pkmap:
                 pkmap[key] = []    # flag a need for an unconstrained input
         if remove_special:
-            specials = set(["ANY","N/A"])
+            specials = {"ANY","N/A"}
             for key in pkmap:  # remove specials like ANY or N/A
                 if pkmap[key]:
                     pkmap[key] = pkmap[key] - specials
