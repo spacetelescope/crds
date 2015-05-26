@@ -281,7 +281,7 @@ class LowerCaseDict(dict):
             return default
     
     def __repr__(self):
-        return self.__class__.__name__ + "(%s)" % super(LowerCaseDict, self).__repr__()
+        return self.__class__.__name__ + "(%s)" % repr({key: self.header[key] for key in self.header }) #super(LowerCaseDict, self).__repr__()
 
 class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
@@ -291,7 +291,7 @@ class Mapping(object):
 
     def __init__(self, filename, header, selector, **keys):
         self.filename = filename
-        self.header = LowerCaseDict(header)
+        self.header = LowerCaseDict(header)   # consistent lower case values
         self.selector = selector
         self.comment = keys.pop("comment", None)
         for name in self.required_attrs:
@@ -630,7 +630,7 @@ class Mapping(object):
         return the filename and header of the next levels down,  not the contents.
         """
         return {
-                "header" : copy.copy(self.header),
+                "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
                 "selections" : sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
                                        for key,val in self.selections.items() ])
@@ -1323,7 +1323,7 @@ class ReferenceMapping(Mapping):
         """
         nested = self.selector.todict_flat()
         return {
-                "header" : copy.copy(self.header),
+                "header" : { key : self.header[key] for key in self.header },
                 "text_descr" : self.obs_package.TEXT_DESCR[self.filekind],
                 "parameters" : tuple(nested["parameters"]),
                 "selections" : nested["selections"]
