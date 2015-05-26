@@ -154,8 +154,7 @@ Here try bad rules for a JWST dataset:
 >>> utils.clear_function_caches()
 >>> config.ALLOW_BAD_RULES.set("0")
 
->>> script = BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")
->>> script()
+>>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")()
 CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
 CRDS  : INFO     No comparison context or source comparison requested.
 CRDS  : INFO     No file header updates requested;  dry run.
