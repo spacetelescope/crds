@@ -45,6 +45,7 @@ etc.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+from builtins import object
 
 
 # =========================================================================
@@ -96,7 +97,7 @@ def get_debug():
 
 # =========================================================================
 
-class Shell:
+class Shell(object):
     """Shell performs sh-like variable substitutions and returns a callable
     object which runs `args` as a subprocess when called.   The shell object
     records the final command line and manages program I/O,  capturing output
