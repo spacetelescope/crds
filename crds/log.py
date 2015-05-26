@@ -267,13 +267,16 @@ def hijack_warnings(func):
         """Reassign warnings to CRDS warnings prior to executing `func`,  restore
         warnings state afterwards and return result of `func`.
         """
-        old_showwarning = warnings.showwarning
-        warnings.showwarning = hijacked_showwarning
-        warnings.simplefilter("default")
-        try:
-            result = func(*args, **keys)
-        finally:
-            warnings.showwarning = old_showwarning
+        with warnings.catch_warnings():
+            old_showwarning = warnings.showwarning
+            warnings.showwarning = hijacked_showwarning
+            warnings.simplefilter("default")
+            warnings.filterwarnings("ignore", r".*unclosed file.*", Warning, r".*crds.data_file.*")
+            warnings.filterwarnings("ignore", r".*unclosed file.*", Warning, r".*astropy.io.fits.convenience.*")
+            try:
+                result = func(*args, **keys)
+            finally:
+                warnings.showwarning = old_showwarning
         return result
     return wrapper
 

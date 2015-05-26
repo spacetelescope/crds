@@ -53,6 +53,7 @@ from __future__ import absolute_import
 import os.path
 import re
 import json
+import warnings
 
 from crds import utils, log, config
 
@@ -80,8 +81,8 @@ def get_observatory(filepath, original_name=None):
         return "hst"
     if original_name.endswith(".fits"):
         try:
-            observatory = getval(filepath, "TELESCOP")
-        except Exception:
+            observatory = pyfits.getval(filepath, keyword="TELESCOP")
+        except KeyError:
             observatory = "hst"
         return observatory.lower()
     elif original_name.endswith((".asdf", ".yaml", ".json", ".text", ".txt")):
@@ -105,6 +106,7 @@ def setval(filepath, key, value):
     ftype = config.filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith(("META.","META_")):
+            key = key.replace("META_", "META.")
             return dm_setval(filepath, key, value)
         else:
             return pyfits.setval(filepath, key, value)
