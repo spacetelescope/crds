@@ -3,8 +3,11 @@ mapping files associated with the specified contexts by consulting the CRDS
 server.   More generally it's for printing out information on CRDS files.
 """
 from __future__ import print_function
-import sys
+from __future__ import division
+from __future__ import absolute_import
+
 import os.path
+import sys
 
 import crds
 from crds import cmdline, rmap, log, config, heavy_client
@@ -99,7 +102,8 @@ class ListScript(cmdline.ContextsScript):
             path = os.path.abspath(name)
             print("File: ", repr(path))
             print("#"*120)
-            print(open(path).read())
+            with open(path) as pfile:
+                print(pfile.read())
             
     def list_references(self):
         """Consult the server and print the names of all references associated with
@@ -144,6 +148,7 @@ class ListScript(cmdline.ContextsScript):
         server = self.server_info
         current_server_url = api.get_crds_server()
         mode = config.get_crds_ref_subdir_mode(self.observatory)
+        pyinfo = _get_python_info()
         _print_dict("CRDS Environment", info)
         _print_dict("CRDS Client Config", { 
                 "server_url" : current_server_url, 
@@ -158,6 +163,18 @@ class ListScript(cmdline.ContextsScript):
                 "crds" : repr(crds),
                 "version": heavy_client.version_info() 
                 })
+        _print_dict("Python Environment", pyinfo)
+
+def _get_python_info():
+    """Collect and return information about the Python environment"""
+    pyinfo = {
+        "Python Version" : ".".join(str(num) for num in sys.version_info),
+        "Python Executable": sys.executable,
+        }
+    pypath = os.environ.get("PYTHON_PATH", None)
+    if pypath:
+        pyinfo["PYTHON_PATH"] = pypath
+    return pyinfo
     
 def _print_dict(title, dictionary, selected = None):
     """Print out dictionary `d` with a one line `title`."""

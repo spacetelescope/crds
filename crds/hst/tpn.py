@@ -9,6 +9,9 @@ onto lists of TpnInfo objects which describe parameter constraints.   The protoc
 is implemented as an observatory specific "plugin" through the locator.py module.
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 
 from crds import rmap, utils
@@ -28,15 +31,16 @@ def _load_tpn_lines(fname):
     """
     lines = []
     append = False
-    for line in open(fname):
-        line = line.strip()
-        if line.startswith("#") or not line:
-            continue
-        if append:
-            lines[-1] = lines[-1][:-1].strip() + line
-        else:
-            lines.append(line)
-        append = line.endswith("\\")
+    with open(fname) as pfile:
+        for line in pfile:
+            line = line.strip()
+            if line.startswith("#") or not line:
+                continue
+            if append:
+                lines[-1] = lines[-1][:-1].strip() + line
+            else:
+                lines.append(line)
+            append = line.endswith("\\")
     return lines
 
 
@@ -99,7 +103,9 @@ def get_tpn_text(*args):
     handle *key for any key returned by reference_name_to_validator_key.   In particular,
     for some subtypes,  *args will be (tpn_filename,).
     """
-    return open(os.path.join(HERE, "tpns", args[0])).read()
+    with open(os.path.join(HERE, "tpns", args[0])) as pfile:
+        text = pfile.read()
+    return text
 
 def reference_name_to_tpn_text(filename):
     """Given reference `filename`,  return the text of the corresponding .tpn"""

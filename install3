@@ -1,0 +1,22 @@
+#! /bin/sh
+
+cd `dirname $0`
+
+./clean
+
+rm -f install.log
+
+st=0
+
+if (test -e save_version) 
+then 
+    ./save_version >crds/svn_version.py;  
+fi
+python3 setup.py install $* --force  >> install.log
+st=$st$?
+
+./clean
+
+echo final status $st
+st=`echo $st | tr -d 0 | cut -c1-1`
+exit $st

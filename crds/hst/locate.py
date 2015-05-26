@@ -11,6 +11,9 @@ in the certification of reference files.
 The intentions is that a similar module with different policies could
 be implemented for JWST.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import gzip
 import re
@@ -20,14 +23,7 @@ import glob
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
 from crds.exceptions import CrdsError
 from crds.hst import siname
-
-# =======================================================================
-
-def test():
-    """Run the module doctests."""
-    import doctest
-    from crds.hst import locate
-    return doctest.testmod(locate)
+from crds.tests import test_config
 
 # =======================================================================
 
@@ -74,7 +70,7 @@ def get_file_properties(filename):
     >>> get_file_properties("./hst_acs_biasfile_0001.rmap")
     ('acs', 'biasfile')
 
-    >>> get_file_properties("./hst_acs_biasfile_0001.pmap")
+    >> get_file_properties("./hst_acs_biasfile_0001.pmap")
     Traceback (most recent call last):
     ...
     IOError: [Errno 2] No such file or directory: './hst_acs_biasfile_0001.pmap'
@@ -163,6 +159,19 @@ def decompose_newstyle_name(filename):
 def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and 
     return (instrument, filekind).
+
+    >>> old_config = test_config.setup()
+
+    >>> properties_inside_mapping("hst.pmap")
+    ('', '')
+
+    >>> properties_inside_mapping("hst_acs.imap")
+    ('acs', '')
+
+    >>> properties_inside_mapping("hst_acs_darkfile.rmap")
+    ('acs', 'darkfile')
+
+    >>> test_config.cleanup(old_config)
     """
     loaded = rmap.fetch_mapping(filename)
     if loaded.mapping == "pipeline":
@@ -208,6 +217,15 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
     """Dev function to compare the properties returned by name decomposition
     to the properties determined by file contents and make sure they're the same.
     Also checks rmap membership.
+
+    >> old_config = test_config.setup()
+    >> check_naming_consistency("acs")
+    >> check_naming_consistency("cos")
+    >> check_naming_consistency("nicmos")
+    >> check_naming_consistency("stis")
+    >> check_naming_consistency("wfc3")
+    >> check_naming_consistency("wfpc2")
+    >> test_config.cleanup(old_config)
     """
     from crds import certify
 
@@ -217,7 +235,6 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
             _path, _observ, instrument, filekind, _serial, _ext = ref_properties_from_cdbs_path(ref)
 
             if checked_instrument is not None and instrument != checked_instrument:
-
                 continue
 
             if data_file.is_geis_data(ref):
@@ -314,7 +331,6 @@ def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine:
 
     (path, "hst", instrument, filekind, serial, ext) 
-
     """
     # For legacy files,  just use the root filename as the unique id
     path, _parts, ext = _get_fields(filename)
@@ -433,4 +449,17 @@ __all__ = [
 
 for name in __all__:
     assert name in dir()
+
+# =======================================================================
+
+def main():
+    """Run the module doctests."""
+    import doctest
+    from crds.hst import locate
+    return doctest.testmod(locate)
+
+# =======================================================================
+
+if __name__ == "__main__":
+    print(main())
 

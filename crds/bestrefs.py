@@ -5,13 +5,19 @@ For more details on the several modes of operations and command line parameters 
 
 % python -m crds.bestrefs --help
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 from collections import namedtuple, OrderedDict
-import cPickle
 import json
+import six
 
-from astropy.io import fits as pyfits
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
@@ -119,11 +125,11 @@ class HeaderGenerator(object):
             only_hdrs = { dataset_id:hdr for (dataset_id, hdr) in self.headers.items() if dataset_id in only_ids }
         log.info("Writing all headers to", repr(outpath))
         if outpath.endswith(".json"):
-            saver = json.dump
+            with open(outpath, "w+") as pick:
+                json.dump(only_hdrs, pick)
         elif outpath.endswith(".pkl"):
-            saver = cPickle.dump
-        with open(outpath, "wb+") as pick:
-            saver(only_hdrs, pick)
+            with open(outpath, "wb+") as pick:
+                pickle.dump(only_hdrs, pick)
         log.info("Done writing", repr(outpath))
             
     def update_headers(self, headers2, only_ids=None):
@@ -136,7 +142,7 @@ class HeaderGenerator(object):
             
         items = headers2.items()
         for dataset_id, header in items:
-            if isinstance(header, basestring):
+            if isinstance(header, six.string_types):
                 log.warning("Skipping bad dataset", dataset_id, ":", headers2[dataset_id])
                 del headers2[dataset_id]
 
@@ -298,15 +304,16 @@ class PickleHeaderGenerator(HeaderGenerator):
     
     def load_headers(self, path):
         """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
-        with open(path, "rb") as pick:
-            if path.endswith(".json"):
-                loader = json.load
-            elif path.endswith(".pkl"):
-                loader = cPickle.load
-            else:
-                raise ValueError("Valid serialization formats are .json and .pkl")
-            headers = loader(pick)
+        if path.endswith(".json"):
+            with open(path, "r") as pick:
+                headers = json.load(pick)
+        elif path.endswith(".pkl"):
+            with open(path, "rb") as pick:
+                headers = pickle.load(pick)
+        else:
+            raise ValueError("Valid serialization formats are .json and .pkl")
         return headers
+
 # ===================================================================
 
 def update_file_bestrefs(context, dataset, updates):
@@ -318,27 +325,24 @@ def update_file_bestrefs(context, dataset, updates):
 
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
-    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)    
-    hdulist = pyfits.open(dataset, mode="update", do_not_scale_image_data=True)
+    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
+    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
 
-    # XXX TODO switch pyfits.setval to data_file.setval
-    def set_key(keyword, value):
-        log.verbose("Setting", repr(dataset), keyword, "=", value)
-        hdulist[0].header[keyword] = value
+        def set_key(keyword, value):
+            log.verbose("Setting", repr(dataset), keyword, "=", value)
+            hdulist[0].header[keyword] = value
 
-    set_key("CRDS_CTX", context)
-    set_key("CRDS_VER", version_info)
+        set_key("CRDS_CTX", context)
+        set_key("CRDS_VER", version_info)
 
-    for update in sorted(updates):
-        new_ref = update.new_reference.upper()
-        if new_ref != "N/A":
-            new_ref = (prefix + new_ref).lower()
-        set_key(update.filekind.upper(), new_ref)
+        for update in sorted(updates):
+            new_ref = update.new_reference.upper()
+            if new_ref != "N/A":
+                new_ref = (prefix + new_ref).lower()
+            set_key(update.filekind.upper(), new_ref)
 
-    for hdu in hdulist:
-        hdu.data
-
-    hdulist.close()
+        for hdu in hdulist:
+            hdu.data
 
 # ============================================================================
 
@@ -1079,9 +1083,9 @@ and debug output.
         """Print the product id for any product which has new bestrefs for any
         of its component exposures.   All components share a common product id.
         """
-        affected_products = set([self.dataset_to_product_id(dataset) 
+        affected_products = {self.dataset_to_product_id(dataset) 
                                  for dataset in self.updates 
-                                 if self.updates[dataset]])
+                                 if self.updates[dataset]}
         log.info("Affected products =", len(affected_products))
         for product in sorted(affected_products):
             print(product)

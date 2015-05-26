@@ -1,6 +1,9 @@
 """This module manages the automatic generation of new context files based on
 a list of new rmaps and a baseline context.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import sys
 import shutil
@@ -20,7 +23,7 @@ def get_update_map(old_pipeline, updated_rmaps):
     """
     pctx = rmap.get_cached_mapping(old_pipeline)
     updates = {}
-    for update in updated_rmaps:
+    for update in sorted(updated_rmaps):
         instrument, _filekind = utils.get_file_properties(pctx.observatory, update)
         imap_name = pctx.get_imap(instrument).filename
         if imap_name not in updates:
@@ -40,10 +43,10 @@ def generate_new_contexts(old_pipeline, updates, new_names):
     new_names --   { old_pmap : new_pmap, old_imaps : new_imaps }
     """
     new_names = dict(new_names)
-    for imap_name in updates:
+    for imap_name in sorted(updates):
         hack_in_new_maps(imap_name, new_names[imap_name], updates[imap_name])
     new_pipeline = new_names.pop(old_pipeline)
-    new_imaps = new_names.values()
+    new_imaps = list(new_names.values())
     hack_in_new_maps(old_pipeline, new_pipeline, new_imaps)
     return [new_pipeline] + new_imaps
     
@@ -52,7 +55,7 @@ def hack_in_new_maps(old, new, updated_maps):
     installs each map of `updated_maps` in place of it's predecessor.
     """
     copy_mapping(old, new)  
-    for mapping in updated_maps:
+    for mapping in sorted(updated_maps):
         key, replaced = insert_mapping(new, mapping)
         if replaced:
             log.info("Replaced", repr(replaced), "with", repr(mapping), "for", repr(key), "in", repr(new))
@@ -104,7 +107,7 @@ def generate_fake_names(old_pipeline, updates):
     """
     new_names = {}
     new_names[old_pipeline] = fake_name(old_pipeline)
-    for old_imap in updates:
+    for old_imap in sorted(updates):
         new_names[old_imap] = fake_name(old_imap)
     return new_names
 
@@ -123,7 +126,7 @@ def fake_name(old_map):
             new_map = re.sub(r"_(\d+)(\.[pir]map)", r"_%04d\2" % serial, old_map)
         else:
             new_map = old_map
-    elif re.search(r"\w+[^_]\..map", old_map):   
+    elif re.search(r"\w+[^\d]+\..map", old_map):   
         # if no serial,  start off existing sequence as 0001
         parts = os.path.splitext(old_map)
         new_map = parts[0] + "_0001" + parts[1]
@@ -142,7 +145,7 @@ def update_header_names(name_map):
     """Update the .name and .derived_from fields in mapping new_path.header
     to reflect derivation from old_path and name new_path.
     """
-    for old_path, new_path in name_map.items():
+    for old_path, new_path in sorted(name_map.items()):
         old_base, new_base = os.path.basename(old_path), os.path.basename(new_path)
         refactor.update_derivation(new_path, old_base)
         log.info("Adjusting name", repr(new_base), "derived_from", repr(old_base), 

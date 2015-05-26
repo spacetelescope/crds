@@ -6,6 +6,9 @@ specific policies for JWST:
 2. How to manage parameters for reference file Validator objects used
 in the certification of reference files. 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import re
 
@@ -74,7 +77,7 @@ def get_file_properties(filename):
     else:
         try:
             result = properties_inside_mapping(filename)
-        except Exception, exc:
+        except Exception as exc:
             result = get_reference_properties(filename)[2:4]
     assert result[0] in INSTRUMENTS+[""], "Bad instrument " + \
         repr(result[0]) + " in filename " + repr(filename)

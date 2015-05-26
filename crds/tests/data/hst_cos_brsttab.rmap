@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:30.201002',
+    'filekind' : 'BRSTTAB',
+    'instrument' : 'COS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_cos_brsttab.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR', 'OBSMODE'), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'TABLE',
+    'reffile_required' : 'NONE',
+    'reffile_switch' : 'BRSTCORR',
+    'rmap_relevance' : '((DETECTOR == "FUV" and OBSMODE == "TIME-TAG") and (BRSTCORR != "OMIT"))',
+    'row_keys' : ('SEGMENT',),
+    'sha1sum' : 'c93b4535598d38f1c01c8248298ef4989bb90749',
+}
+
+selector = Match({
+    ('FUV', 'TIME-TAG') : UseAfter({
+        '1996-10-01 00:00:00' : 's7g1700fl_burst.fits',
+    }),
+})

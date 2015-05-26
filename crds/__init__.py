@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
 __version__ = "1.6.0"   # > jwst_build4 
@@ -35,5 +38,5 @@ def handle_version():
     """Handles --version printing for scripts."""
     import sys, crds
     if '--version' in sys.argv :
-        print crds.__version__
+        print(crds.__version__)
         sys.exit(0)

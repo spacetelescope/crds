@@ -7,6 +7,9 @@ dictionary entries which normally collide silently eliminating one
 item.  This is principally intended to detect rmap cut-and-paste
 errors in hand edited rmaps.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os.path
 from collections import namedtuple
@@ -106,8 +109,9 @@ def parse_mapping(filename):
     log.verbose("Parsing", repr(filename))
     filename = rmap.locate_mapping(filename)
     with log.augment_exception("Parsing error in", repr(filename)):
-        header, selector, comment = MAPPING_PARSER(open(filename).read()).mapping()
-        return Parsing(header, selector, comment)
+        with open(filename) as pfile:
+            header, selector, comment = MAPPING_PARSER(pfile.read()).mapping()
+            return Parsing(header, selector, comment)
 
 def check_duplicates(parsing):
     """Examine mapping `parsing` from parse_mapping() for duplicate header or selector entries."""

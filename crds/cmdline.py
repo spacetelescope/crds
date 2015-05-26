@@ -3,12 +3,15 @@
 MAYBE integrate rc, environment, and command line parameters.
 """
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os
 import argparse
 import pdb
-import cProfile, pstats, StringIO
+import cProfile, pstats
+import io
 import re
 from collections import Counter
 
@@ -16,6 +19,7 @@ from argparse import RawTextHelpFormatter
 
 from crds import rmap, log, data_file, heavy_client, config, utils
 from crds.client import api
+import six
 
 # =============================================================================
 
@@ -107,7 +111,7 @@ class Script(object):
     def __init__(self, argv=None, parser_pars=None, reset_log=True):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
-        if isinstance(argv, basestring):
+        if isinstance(argv, six.string_types):
             argv = argv.split()
         elif argv is None:
             argv = sys.argv
@@ -255,7 +259,7 @@ class Script(object):
         try:
             if not self.server_info.connected:
                 raise RuntimeError("Required server connection unavailable.")
-        except Exception, exc:
+        except Exception as exc:
             self.fatal_error("Failed connecting to CRDS server at CRDS_SERVER_URL =", 
                              repr(api.get_crds_server()), "::", str(exc))
     
@@ -380,7 +384,7 @@ class Script(object):
         prof.enable()
         function()
         prof.disable()
-        stats_str = StringIO.StringIO()
+        stats_str = io.BytesIO()
         prof_stats = pstats.Stats(prof, stream=stats_str).sort_stats(sort_by)
         prof_stats.print_stats(top_n)
         print(stats_str.getvalue())
@@ -407,6 +411,8 @@ class Script(object):
         """Resolve context spec `context` into a .pmap, .imap, or .rmap filename,  interpreting
         date based specifications against the CRDS server operational context history.
         """
+        if isinstance(context, str) and context.lower() == "none":
+            return None
         if config.is_date_based_mapping_spec(context):
             if re.match(config.OBSERVATORY_RE_STR + r"-operational", context):
                 final_context = self.server_info.operational_context

@@ -1,11 +1,14 @@
 """Generic utility routines used by a variety of modules."""
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import os.path
 import stat
 import re
-import sha
-import cStringIO
+import hashlib
+import io
 import functools
 from collections import Counter
 import datetime
@@ -14,6 +17,7 @@ import ast
 # from crds import data_file,  import deferred until required
 
 from crds import log, config, pysh, ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+from crds.python3 import *
 
 # ===================================================================
 
@@ -61,7 +65,7 @@ def cached(func):
 
     >>> @cached
     ... def sum(x,y):
-    ...   print "really doing it."
+    ...   print("really doing it.")
     ...   return x+y
     
     The first call should actually call the unwrapped sum():
@@ -172,10 +176,10 @@ class CachedFunction(object):
         """Compute (cache_key, func(*args, **keys)).   Do not add to cache."""
         key = self.cache_key(*args, **keys)
         if key in self.cache:
-            log.verbose("Cached call", self.uncached.func_name, repr(key), verbosity=80)
+            log.verbose("Cached call", self.uncached.__name__, repr(key), verbosity=80)
             return key, self.cache[key]
         else:
-            log.verbose("Uncached call", self.uncached.func_name, repr(key), verbosity=80)
+            log.verbose("Uncached call", self.uncached.__name__, repr(key), verbosity=80)
             return key, self.uncached(*args, **keys)
 
     def readonly(self, *args, **keys):
@@ -206,7 +210,7 @@ def clear_function_caches():
 def list_cached_functions():
     """List all the functions supporting caching under @utils.cached or @utils.xcached."""
     for cache_func in sorted(CachedFunction.cache_set):
-        print repr(cache_func.uncached)
+        print(repr(cache_func.uncached))
 
 # ===================================================================
 
@@ -220,7 +224,7 @@ def capture_output(func):
     
     >>> @capture_output
     ... def f(x,y): 
-    ...    print "hi"
+    ...    print("hi")
     ...    return x + y
     
     >>> f
@@ -239,36 +243,39 @@ def capture_output(func):
     
     If you don't care about the return value,  but want the output:
     
-    >>> f.outputs(1, 2)
-    'hi\\n'
-    
+    >>> f.outputs(1, 2) == 'hi\\n'
+    True
+
     If you need both the return value and captured output:
     
-    >>> f.returns_outputs(1, 2)
-    (3, 'hi\\n')
-       
+    >>> f.returns_outputs(1, 2) == (3, 'hi\\n')
+    True
+
     """
     class CapturedFunction(object):
         """Closure on `func` which supports various forms of output capture."""
         
         def __repr__(self):
-            return "CapturedFunction('%s')" % func.func_name
+            return "CapturedFunction('%s')" % func.__name__
 
         def returns_outputs(self, *args, **keys):
             """Call the wrapped function,  capture output,  return (f(), output_from_f)."""
+            sys.stdout.flush()
+            sys.stderr.flush()
             oldout, olderr = sys.stdout, sys.stderr
-            out = cStringIO.StringIO()
+            if sys.version_info < (3,0,0):
+                out = io.BytesIO()
+            else:
+                out = io.TextIOWrapper(io.BytesIO())
             sys.stdout, sys.stderr = out, out
-            # handler = log.add_stream_handler(out)
             try:
                 result = func(*args, **keys)
-            finally:
                 out.flush()
-                # log.remove_stream_handler(handler)
+                out.seek(0)
+                return result, out.read()
+            finally:
                 sys.stdout, sys.stderr = oldout, olderr
-            out.seek(0)
-            return result, out.read()
-        
+
         def suppressed(self, *args, **keys):
             """Call the wrapped function, suppress output,  return f() normally."""
             return self.returns_outputs(*args, **keys)[0]
@@ -458,7 +465,7 @@ def remove(rmpath, observatory):
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
             log.verbose("Removing: ", repr(rmpath))
             if os.path.isfile(rmpath):
-                os.chmod(rmpath, 0666)
+                os.chmod(rmpath, 0o666)
                 os.remove(rmpath)
             else:
                 pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
@@ -467,7 +474,7 @@ def remove(rmpath, observatory):
 
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
-    xsum = sha.new()
+    xsum = hashlib.sha1()
     with open(pathname, "rb") as infile:
         size = 0
         insize = os.stat(pathname).st_size
@@ -478,8 +485,15 @@ def checksum(pathname):
     return xsum.hexdigest()
 
 def str_checksum(data):
-    """Return the CRDS hexdigest for small strings.""" 
-    xsum = sha.new()
+    """Return the CRDS hexdigest for small strings.
+
+    >>> str_checksum("this is a test.")
+    '7728f8eb7bf75ec3cc49364861eec852fc814870'
+
+    """
+    if not isinstance(data, bytes):
+        data = data.encode("utf-8")
+    xsum = hashlib.sha1()
     xsum.update(data)
     return xsum.hexdigest()
 
@@ -513,7 +527,7 @@ def get_object(*args):
     namespace = {}
     import_cmd = "from " + pkgpath + " import " + cls
     with log.augment_exception("Error importing", repr(import_cmd)):
-        exec import_cmd in namespace, namespace
+        exec(import_cmd, namespace, namespace)
         return namespace[cls]
 
 # ==============================================================================
@@ -615,8 +629,9 @@ def _eval_keys(keys):
 def condition_header_keys(header):
     """Convert a matching parameter header into the form which supports eval(), ie.
     JWST-style header keys.   Nominally for JWST data model style keys.
-
-    >>> condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"})
+    
+    >>> from pprint import pprint as pp
+    >>> pp(condition_header_keys({"META.INSTRUMENT.NAME": "NIRISS"}))
     {'META.INSTRUMENT.NAME': 'NIRISS', 'META_INSTRUMENT_NAME': 'NIRISS'}
 
     """
@@ -672,6 +687,9 @@ def instrument_to_observatory(instrument):
     >>> instrument_to_observatory("miri")
     'jwst'
     >>> instrument_to_observatory("foo")
+    Traceback (most recent call last):
+    ...
+    ValueError: Unknown instrument 'foo'    
     """
     instrument = fix_instrument(instrument.lower())
     for (obs, instr) in observatory_instrument_tuples():
@@ -780,7 +798,7 @@ def get_reference_paths(observatory):
     """Return the list of subdirectories involved with storing references of all instruments."""
     pkg = get_observatory_package(observatory)
     locate = get_locator_module(observatory)
-    return sorted(set([locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS]))
+    return sorted({locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS})
 
 # These functions should actually be general,  working on both references and
 # dataset files.
@@ -792,4 +810,7 @@ def test():
     import doctest
     from crds import utils
     return doctest.testmod(utils)
+
+if __name__ == "__main__":
+    print(test())
 

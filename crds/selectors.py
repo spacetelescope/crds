@@ -83,6 +83,9 @@ and complexity.   Here we add time to the selection criteria:
 Note that the context variables used by some Selector's are implicit,
 with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 from crds import timestamp
 import re
 import fnmatch
@@ -99,6 +102,7 @@ import crds
 from crds import log, utils
 
 from crds.exceptions import *
+import six
 
 # ==============================================================================
 
@@ -136,7 +140,21 @@ def dict_wo_dups(items):
 
 # Selections are items from a Selector's dictionary.   Portions of the lookup return both.
 # A "choice" is a Selector's ultimate choose() return value,  e.g. a filename or other Selector.
-Selection = namedtuple("Selection", ("key", "choice"))
+# Selection = namedtuple("Selection", ("key", "choice"))
+
+class Selection(tuple):
+    def __new__(cls, key, choice):
+        return super(Selection, cls).__new__(cls, (key, choice))
+
+    def __init__(self, key, choice):
+        self.key = key
+        self.choice = choice
+    
+    def _cmp_key(self, key):
+        return tuple(str(field) for field in key) if isinstance(key, tuple) else str(key)
+
+    def __lt__(self, other):
+        return self._cmp_key(self.key) < self._cmp_key(other.key)
 
 # ==============================================================================
 
@@ -210,17 +228,19 @@ class Selector(object):
         Since substitutions are defined in the header,  internally GENERIC is translated to N/A:
         
         >>> pp(sel._selections)
-        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', '*', 'N/A'), choice='jwst_miri_flat_0025.fits'),
-         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', '*', 'FULL'), choice='jwst_miri_flat_0034.fits'),
-         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+        [(('MIRIFULONG', 'N/A', 'LONG', '*', 'N/A'), 'jwst_miri_flat_0025.fits'),
+         (('MIRIFUSHORT', 'N/A', 'LONG', '*', 'FULL'), 'jwst_miri_flat_0034.fits'),
+         (('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'),
+          'jwst_miri_flat_0038.fits')]
 
         For external representation and rewriting the rmap,  the original unchanged version of the
         match parameters is retained:
 
         >>> pp(sel._raw_selections)
-        [Selection(key=('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC'), choice='jwst_miri_flat_0025.fits'),
-         Selection(key=('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL'), choice='jwst_miri_flat_0034.fits'),
-         Selection(key=('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'), choice='jwst_miri_flat_0038.fits')]
+        [(('MIRIFULONG', 'N/A', 'LONG', 'ANY', 'GENERIC'), 'jwst_miri_flat_0025.fits'),
+         (('MIRIFUSHORT', 'N/A', 'LONG', 'ANY', 'FULL'), 'jwst_miri_flat_0034.fits'),
+         (('MIRIMAGE', 'F1000W', 'N/A', 'FAST', 'MASK1065'),
+          'jwst_miri_flat_0038.fits')]
 
         """
         selections = copy.deepcopy(selections)
@@ -297,7 +317,7 @@ class Selector(object):
                 flat.extend([key + row for row in nested["selections"]])
             else:
                 subpars = ["REFERENCE"]
-                if isinstance(key, basestring):  # Fix non-tuple keys
+                if isinstance(key, six.string_types):  # Fix non-tuple keys
                     key = (key,)
                 flat.extend([key + (val,)])
         pars = list(self.todict_parameters()) + subpars
@@ -353,14 +373,15 @@ class Selector(object):
         """Given `header`,  operate on self.keys() to choose one of self.choices()."""
         self._check_defined(header)
         lookup_key = self._validate_header(header)  # may return header or a key
-        exc = None
+        last_exc = None
         for selection in self.get_selection(lookup_key):  # iterate over weighted selections, best match first.
             try:
                 log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
-            except crds.CrdsLookupError, exc:
+            except crds.CrdsLookupError as exc:
+                last_exc = exc
                 continue
-        more_info = " last exception: " + str(exc) if exc else ""
+        more_info = " last exception: " + str(last_exc) if last_exc else ""
         raise crds.CrdsLookupError("All lookup attempts failed." + more_info)
                 
     def get_selection(self, lookup_key):
@@ -417,7 +438,7 @@ class Selector(object):
         for choice in self.choices():
             if isinstance(choice, Selector):
                 new_files = choice.reference_names()
-            elif isinstance(choice, basestring):
+            elif isinstance(choice, six.string_types):
                 new_files = [choice]
             elif isinstance(choice, tuple):
                 new_files = list(choice)
@@ -464,20 +485,20 @@ class Selector(object):
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
                     choice._validate_selector(valid_values_map)
-                elif isinstance(choice, basestring):
+                elif isinstance(choice, six.string_types):
                     pass
                 elif isinstance(choice, tuple):
                     for val in choice:
-                        if not isinstance(val, basestring): 
+                        if not isinstance(val, six.string_types): 
                             raise ValidationError("Non-string tuple value for choice " + repr(choice) + 
                                                   " at " + repr(key))
                 elif isinstance(choice, dict):
                     for val in choice:
-                        if not isinstance(val, basestring):
+                        if not isinstance(val, six.string_types):
                             raise ValidationError("Non-string dictionary key for choice " + repr(choice) +  
                                                   " at " + repr(key))
                     for val in choice.values():
-                        if not isinstance(val, basestring):
+                        if not isinstance(val, six.string_types):
                             raise ValidationError("Non-string dictionary value for choice " + repr(choice)  + 
                                                   " at " + repr(key))
                 else:
@@ -566,7 +587,7 @@ class Selector(object):
         """
         try:
             return timestamp.reformat_date(value)
-        except Exception, exc:
+        except Exception as exc:
             raise ValidationError(
                 self.short_name + " Invalid date/time format for " + repr(pars) +
                 " value=" + repr(value) + " exception is " + repr(str(exc)))
@@ -852,7 +873,7 @@ class Selector(object):
         """
         item = self.match_item(key)
         if item:
-            pars, vals = zip(*item)
+            pars, vals = list(zip(*item))
             return tuple([str(x) for x in vals])
         else:
             return ()
@@ -875,14 +896,28 @@ class DiffTuple(tuple):
         pars2 = []
         vals2 = []
         for i, par in enumerate(self.parameter_names):
-            if isinstance(par, basestring):
+            if isinstance(par, six.string_types):
                 pars2.append(par)
                 vals2.append(self[i])
             else:
                 pars2.extend(list(par))
                 vals2.extend(list(self[i]))
         return DiffTuple(*vals2, parameter_names=pars2, instrument=self.instrument, filekind=self.filekind)
-    
+
+    def __lt__(self, other):
+        if len(self) > len(other):
+            return True
+        elif len(self) < len(other):
+            return False
+        else:
+            return super(DiffTuple, self).__lt__(other)
+
+    def __eq__(self, other):
+        if len(self) == len(other):
+            return super(DiffTuple, self).__eq__(other)
+        else:
+            return False
+
     def items(self):
         """Return [ (param_name, val), ... ]"""
         return [ (str(x), str(y)) for (x, y) in zip(self.parameter_names, self) ]
@@ -1330,7 +1365,7 @@ of a match.   Literal matches or "*" increase confidence of a good match.
     >>> m.choose(dict(foo='1.0',bar='2.0'))
     '200'
     
-    >>> print m.format()
+    >>> print(m.format())
     Match({
         (1.0, 2.0) : '200',
         (1.0, 'N/A') : '100',
@@ -1558,7 +1593,7 @@ Restore original debug behavior:
         for i, parkey in enumerate(self._parameters):
             value = header.get(parkey, "UNDEFINED")
             log.verbose("Binding", repr(parkey), "=", repr(value), verbosity=60)
-            for match_tuple, (matchers, _subselector) in remaining.items():
+            for match_tuple, (matchers, _subselector) in list(remaining.items()):
                 # Match the key to the current header vaue
                 match_status = matchers[i].match(value)
                 # returns 1 (match), 0 (don't care), or -1 (no match)
@@ -1640,7 +1675,7 @@ Restore original debug behavior:
         values in `valid_values_map`.   Note that each `key` is 
         nominally a tuple with values for multiple parkeys.
         """
-        if isinstance(key, (basestring, int, float)):
+        if isinstance(key, (six.string_types, int, float)):
             key = (key,)
         if len(key) != len(self._parameters):
             raise ValidationError("wrong length for parameter list " + 
@@ -2187,7 +2222,7 @@ class VersionRelation(ComparableMixin):
         self.relation_str = str(relation_str)
         if self.relation_str.replace("=","").strip() == "default":
             self.relation = "="
-            self.version = sys.maxint
+            self.version = sys.maxsize
         else:
             if not self.relation_str.startswith(("<","=")):
                 self.relation_str = "=" + self.relation_str
@@ -2219,7 +2254,7 @@ class VersionRelation(ComparableMixin):
             return True
         elif isinstance(self.version, numbers.Number) and isinstance(other.version, numbers.Number):
             return True
-        elif type(self.version) == type(other.version):
+        elif isinstance(self.version, type(other.version)):
             return True
         else:
             raise ValidationError("Incompatible version expression types: " + 
@@ -2426,7 +2461,7 @@ def test():
     """Run module doctest."""
     import doctest
     from crds import selectors
-    return doctest.testmod(selectors)
+    return doctest.testmod(selectors, optionflags=doctest.IGNORE_EXCEPTION_DETAIL)
 
 if __name__ == "__main__":
-    print test()
+    print(test())

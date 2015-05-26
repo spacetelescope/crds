@@ -1,6 +1,5 @@
 """This module contains doctests and unit tests which exercise some of the more
 complex features of the basic rmap infrastructure.
-
 """
 
 from __future__ import division # confidence high
@@ -10,16 +9,19 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds import rmap, log, exceptions, newcontext, diff, pysh, config
-from crds.tests import CRDSTestCase
+from crds import rmap, log, exceptions, newcontext, diff, pysh, tests
+from crds.tests import CRDSTestCase, test_config
 
 from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_fake_name():
+def tst_fake_name():
     """
     Fake names are only used by crds.newcontext when it is run from the command line.
+
+    >>> old_state = test_config.setup()
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
 
     >>> newcontext.fake_name("data/hst.pmap")
     './hst_0003.pmap'
@@ -29,31 +31,37 @@ def test_fake_name():
 
     >>> newcontext.fake_name("data/hst_cos_deadtab_9999.rmap")
     './hst_cos_deadtab_10000.rmap'
+
+    >>> test_config.cleanup(old_state)
     """
 
-def test_new_context():
+def tst_new_context():
     """
-    >>> log.set_test_mode()
-    >>> newcontext.NewContextScript("newcontext.py data/hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
-    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0268.imap'
-    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0270.imap'
-    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0268.imap' for 'COS' in './hst_0003.pmap'
-    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_0270.imap' for 'ACS' in './hst_0003.pmap'
-    CRDS  : INFO     Adjusting name 'hst_cos_0268.imap' derived_from 'hst_cos.imap' in './hst_cos_0268.imap'
-    CRDS  : INFO     Adjusting name 'hst_acs_0270.imap' derived_from 'hst_acs.imap' in './hst_acs_0270.imap'
+    >>> old_state = test_config.setup()
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+
+    >>> newcontext.NewContextScript("newcontext.py hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
+    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0003.imap'
+    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0001.imap'
+    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_0003.imap' for 'ACS' in './hst_0003.pmap'
+    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0001.imap' for 'COS' in './hst_0003.pmap'
     CRDS  : INFO     Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in './hst_0003.pmap'
+    CRDS  : INFO     Adjusting name 'hst_acs_0003.imap' derived_from 'hst_acs.imap' in './hst_acs_0003.imap'
+    CRDS  : INFO     Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in './hst_cos_0001.imap'
     0
 
     >>> pp([difference[-1] for difference in diff.mapping_diffs("data/hst.pmap", "./hst_0003.pmap")])
-    ["replaced 'hst_acs.imap' with './hst_acs_0270.imap'",
-     "replaced 'hst_cos.imap' with './hst_cos_0268.imap'",
-     "replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
+    ["replaced 'w3m17170j_imp.fits' with 'xb61855jj_imp.fits'",
+     "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'",
      "replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap'",
      "replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap'",
-     "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'"]
+     "replaced 'hst_acs.imap' with './hst_acs_0003.imap'",
+     "replaced 'hst_cos.imap' with './hst_cos_0001.imap'"]
     
     >>> pysh.sh("rm \./*\.[pir]map")
     0
+
+    >>> test_config.cleanup(old_state)
     """
 
 class TestNewContext(CRDSTestCase):
@@ -63,35 +71,24 @@ class TestNewContext(CRDSTestCase):
         r = rmap.get_cached_mapping("hst.pmap")
         with self.assertRaises(exceptions.CrdsUnknownInstrumentError):
             r.get_imap("foo")
-
-    def test_get_filekind(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        self.assertEqual(r.get_filekinds("data/j8bt05njq_raw.fits"),
-                         [ 'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
-                           'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
-                           'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'])
-
-    def test_get_equivalent_mapping(self):
-        i = rmap.get_cached_mapping("data/hst_acs_0002.imap")
-        self.assertEqual(i.get_equivalent_mapping("hst.pmap"), None)
-        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_0001.imap").name, "hst_acs.imap")
-        self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
-
-
-    def test_list_references(self):
-        self.assertEqual(rmap.list_references("*.r1h", "hst"), [])
     '''
 
 # ==================================================================================
 
 
-def tst():
+def main():
     """Run module tests,  for now just doctests only."""
-    import test_newcontext, doctest
-    import unittest
+    from crds.tests import test_newcontext
+    import unittest, doctest
+
     suite = unittest.TestLoader().loadTestsFromTestCase(TestNewContext)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_newcontext)
+
+    old_state = test_config.setup()
+    result = doctest.testmod(test_newcontext)
+    test_config.cleanup(old_state)
+
+    return result
 
 if __name__ == "__main__":
-    print(tst())
+    print(main())

@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
 """
 >>> TYPES.get_row_keys_by_instrument("wfpc2")
 ['detchip', 'detector', 'direction', 'filter', 'filter1', 'filter2', 'obsdate', 'theta']
