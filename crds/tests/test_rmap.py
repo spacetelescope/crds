@@ -61,42 +61,17 @@ def test_rmap_minimum_header():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
-    >>> pp(p.get_minimum_header("data/j8bt05njq_raw.fits"))
-    {'APERTURE': 'HRC',
-     'ATODCORR': 'OMIT',
-     'BIASCORR': 'PERFORM',
-     'CCDAMP': 'C',
-     'CCDCHIP': 'UNDEFINED',
-     'CCDGAIN': '2.0',
-     'CRCORR': 'OMIT',
-     'DARKCORR': 'PERFORM',
-     'DATE-OBS': '2002-04-13',
-     'DETECTOR': 'HRC',
-     'DQICORR': 'PERFORM',
-     'DRIZCORR': 'PERFORM',
-     'FILTER1': 'F555W',
-     'FILTER2': 'CLEAR2S',
-     'FLASHCUR': 'OFF',
-     'FLATCORR': 'PERFORM',
-     'FLSHCORR': 'OMIT',
-     'FW1OFFST': '0.0',
-     'FW2OFFST': '0.0',
-     'FWSOFFST': '0.0',
-     'GLINCORR': 'UNDEFINED',
-     'INSTRUME': 'ACS',
-     'LTV1': '19.0',
-     'LTV2': '0.0',
-     'NUMCOLS': 'UNDEFINED',
-     'NUMROWS': 'UNDEFINED',
-     'OBSTYPE': 'IMAGING',
-     'PCTECORR': 'UNDEFINED',
-     'PHOTCORR': 'PERFORM',
+    >>> pp(p.get_minimum_header("data/cos_N8XTZCAWQ.fits"))
+    {'CAMERA': '3.0',
+     'DATE-OBS': '2005-05-13',
+     'FILTER': 'F160W',
+     'INSTRUME': 'NICMOS',
+     'NREAD': '1.0',
+     'OBSMODE': 'MULTIACCUM',
+     'READOUT': 'FAST',
      'REFTYPE': 'UNDEFINED',
-     'SHADCORR': 'OMIT',
-     'SHUTRPOS': 'B',
-     'TIME-OBS': '18:16:35',
-     'XCORNER': 'UNDEFINED',
-     'YCORNER': 'UNDEFINED'}
+     'SAMP_SEQ': 'SPARS64',
+     'TIME-OBS': '11:00:47'}
     >>> test_config.cleanup(old_state)
     """
     
@@ -671,7 +646,7 @@ selector = Match({
     
     def test_rmap_todict(self):
         r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
-        self.assertEqual(r.todict(), {'text_descr': 'Data Quality (Bad Pixel) Initialization Table', 'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700dl_bpix.fits'), ('FUV', '2009-05-11 00:00:00', 'z1r1943fl_bpix.fits'), ('NUV', '1996-10-01 00:00:00', 's7g1700pl_bpix.fits'), ('NUV', '2009-05-11 00:00:00', 'uas19356l_bpix.fits')], 'header': {'sha1sum': 'd2024dade52a406af70fcdf27a81088004d67cae', 'reffile_switch': 'NONE', 'filekind': 'BPIXTAB', 'instrument': 'COS', 'derived_from': 'hst_cos_bpixtab_0251.rmap', 'reffile_format': 'TABLE', 'observatory': 'HST', 'parkey': (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')), 'reffile_required': 'NONE', 'rmap_relevance': 'ALWAYS', 'mapping': 'REFERENCE', 'name': 'hst_cos_bpixtab_0252.rmap'}, 'parameters': ('DETECTOR', 'USEAFTER', 'REFERENCE')})
+        self.assertEqual(r.todict(), {'text_descr': 'Data Quality (Bad Pixel) Initialization Table', 'selections': [('FUV', '1996-10-01 00:00:00', 's7g1700dl_bpix.fits'), ('FUV', '2009-05-11 00:00:00', 'z1r1943fl_bpix.fits'), ('NUV', '1996-10-01 00:00:00', 's7g1700pl_bpix.fits'), ('NUV', '2009-05-11 00:00:00', 'uas19356l_bpix.fits')], 'header': {'sha1sum': 'd2024dade52a406af70fcdf27a81088004d67cae', 'reffile_switch': 'none', 'filekind': 'bpixtab', 'instrument': 'cos', 'derived_from': 'hst_cos_bpixtab_0251.rmap', 'reffile_format': 'table', 'observatory': 'hst', 'parkey': (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')), 'reffile_required': 'none', 'rmap_relevance': 'always', 'mapping': 'reference', 'name': 'hst_cos_bpixtab_0252.rmap'}, 'parameters': ('DETECTOR', 'USEAFTER', 'REFERENCE')})
 
     def test_rmap_tojson(self):
         r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
