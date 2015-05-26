@@ -1141,7 +1141,7 @@ class ReferenceMapping(Mapping):
                         pass
                         # sys.exc_clear()
                     else:
-                        values = range(limits[0], limits[1]+1)
+                        values = list(range(limits[0], limits[1]+1))
                 if condition:
                     values = tuple([utils.condition_value(val) for val in values])
                 valid_values[info.name] = values
