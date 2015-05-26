@@ -11,7 +11,7 @@ Demo and test the basic API for FITS tables:
 1
 
 >>> for tab in tables(FITS_FILE):
-...     print repr(tab)
+...     print(repr(tab))
 SimpleTable('v8q14451j_idc.fits', 1, colnames=('DETCHIP', 'DIRECTION', 'FILTER1', 'FILTER2', 'XSIZE', 'YSIZE', 'XREF', 'YREF', 'V2REF', 'V3REF', 'SCALE', 'CX10', 'CX11', 'CX20', 'CX21', 'CX22', 'CX30', 'CX31', 'CX32', 'CX33', 'CX40', 'CX41', 'CX42', 'CX43', 'CX44', 'CY10', 'CY11', 'CY20', 'CY21', 'CY22', 'CY30', 'CY31', 'CY32', 'CY33', 'CY40', 'CY41', 'CY42', 'CY43', 'CY44'), nrows=694)
 
 >>> tab.segment
@@ -35,7 +35,7 @@ Demo and test the API for non-FITS formats using astropy format guessing:
 1
 
 >>> for tab in tables(CSV_FILE):
-...     print repr(tab)
+...     print(repr(tab))
 SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT'), nrows=2)
 
 >>> tab.segment
@@ -50,19 +50,21 @@ SimpleTable('ascii_tab.csv', 1, colnames=('OBSID', 'REDSHIFT', 'X', 'Y', 'OBJECT
 >>> tab.columns['OBSID'][0]
 3102
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 
-from astropy.io import fits
 from astropy import table
 
-from crds import utils, log
+from crds import utils, log, data_file
 
 _HERE = os.path.dirname(__file__) or "."
 
 def ntables(filename):
     """Return the number of segments / hdus in `filename`."""
     if filename.endswith(".fits"):
-        with fits.open(filename) as hdus:
+        with data_file.fits_open(filename) as hdus:
             return len(hdus) - 1
     else:
         return 1
@@ -74,7 +76,7 @@ def tables(filename):
     This function is self-cached.    Clear the cache using clear_cache().
     """
     if filename.endswith(".fits"):
-        with fits.open(filename) as hdus:
+        with data_file.fits_open(filename) as hdus:
             return [ SimpleTable(filename, i+1) for i in range(len(hdus)-1) ]
     else:
         return [ SimpleTable(filename, segment=1) ]
@@ -92,8 +94,9 @@ class SimpleTable(object):
         self.basename = os.path.basename(filename)
         self._columns = None  # dynamic,  independent of astropy
         if filename.endswith(".fits"):
-            tab = fits.open(filename)[segment].data
-            self.colnames = tuple(name.upper() for name in tab.columns.names)
+            with data_file.fits_open(filename) as hdus:
+                tab = hdus[segment].data
+                self.colnames = tuple(name.upper() for name in tab.columns.names)
         else:
             tab = table.Table.read(filename)
             self.colnames = tuple(name.upper() for name in tab.columns)
@@ -107,7 +110,7 @@ class SimpleTable(object):
         Retuns { colname : column, ... }
         """
         if self._columns is None:
-            self._columns = dict(zip(self.colnames, zip(*self.rows)))
+            self._columns = dict(list(zip(self.colnames, list(zip(*self.rows)))))
         return self._columns
         
     def __repr__(self):
@@ -121,4 +124,4 @@ def test():
     return doctest.testmod(crds.tables)
 
 if __name__ == "__main__":
-    print test()
+    print(test())

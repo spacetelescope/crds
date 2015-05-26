@@ -8,6 +8,9 @@ Added "hooks" to newly generated rmap headers provided acs_biasfile_filter is im
 
 Simplified rmap generation process.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import copy
 
 from .acs_common import *
@@ -30,7 +33,7 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
         naxis1 = int(float(header["NAXIS1"]))
     except ValueError:
         log.verbose("acs_biasfile_selection: bad NAXIS1.")
-        sys.exc_clear()
+        # sys.exc_clear()
     else:
         header["NAXIS1"] = utils.condition_value(str(naxis1))
         # if pre-SM4 and NAXIS1 > HALF_CHIP
@@ -52,7 +55,7 @@ def precondition_header_acs_biasfile_v2(rmap, header_in):
             naxis2 = int(float(header["NAXIS2"])) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NAXIS2.")
-            sys.exc_clear()
+            # sys.exc_clear()
         else:
             header["NAXIS2"] = utils.condition_value(str(naxis2)) 
     dump_mutations(header_in, header)
@@ -105,7 +108,7 @@ def acs_biasfile_filter(kmap_orig):
             },
         }
     for match in kmap_orig:
-        header = dict(zip(BIASFILE_PARKEYS, match))
+        header = dict(list(zip(BIASFILE_PARKEYS, match)))
         if header["APERTURE"] == "":
             for filemap in kmap_orig[match]:
                 if filemap.date > SM4:
@@ -131,7 +134,7 @@ def acs_darkfile_filter(kmap_orig):
     kmap = copy.deepcopy(kmap_orig)
     header_additions = {}
     for match in kmap_orig:
-        header = dict(zip(BIASFILE_PARKEYS, match))
+        header = dict(list(zip(BIASFILE_PARKEYS, match)))
         try:
             if float(header["CCDGAIN"]) == -999.0:
                 log.warning("CCDGAIN=-999.0 Deleting match", match, "with", kmap[match])

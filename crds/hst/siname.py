@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 #========================================================================
 #
 # module: siname
@@ -17,7 +20,6 @@
 # 10/22/12  Todd Miller   hacked into CRDS
 #
 #========================================================================
-import string
 import re
 
 # exceptions
@@ -62,20 +64,20 @@ History:
 10/01/02 xxxxx MSwam     Initial version
 =======================================================================
    """
-   if (string.lower(dataset[0]) == 'j'):
-      return("ACS")
-   elif (string.lower(dataset[0]) == 'o'):
-      return("STIS")
-   elif (string.lower(dataset[0]) == 'n'):
-      return("NICMOS")
-   elif (string.lower(dataset[0]) == 'u'):
-      return("WFPC2")
-   elif (string.lower(dataset[0]) == 'i'):
-      return("WFC3")
-   elif (string.lower(dataset[0]) == 'l'):
-      return("COS")
-   else:
-      raise UnknownInstrument
+   try:
+     return ID_CHAR_TO_INSTRUMENT[dataset[0].lower()]
+   except:
+     raise UnknownInstrument
+
+ID_CHAR_TO_INSTRUMENT = {
+  "j" : "ACS",
+  "o": "STIS",
+  "n": "NICMOS",
+  "u": "WFPC2",
+  "i": "WFC3",
+  "l": "COS",
+  "m" : "MULTI",
+  }
 
 def add_IRAF_prefix(instrument_name):
     """
@@ -222,18 +224,8 @@ History:
 10/01/02 xxxxx MSwam     Initial version
 =======================================================================
    """
-    if (instrument_name == "ACS"):
-      return "acs"
-    elif (instrument_name == "STIS"):
-      return "stis"
-    elif (instrument_name == "NICMOS"):
-      return "nic"
-    elif (instrument_name == "WFPC2"):
-      return "wfpc2"
-    elif (instrument_name == "WFC3"):
-      return "wfc3"
-    elif (instrument_name == "COS"):
-      return "cos"
+    if instrument_name in CDBS_supports:
+      return instrument_name.lower()
     elif (instrument_name == "SYNPHOT" or instrument_name == "MULTI"):
       return "synphot"
     else:
@@ -270,31 +262,13 @@ History:
 
    # first test for a synphot or thermal file (check the last two pieces)
    pos = len(parts) - 2
-   if (pos > 0 and 
-       (string.lower(parts[pos]) == "syn" or
-        string.lower(parts[pos]) == "th")):
-      return("SYNPHOT")
+   if pos > 0 and parts[pos].lower() in ["syn", "th"]:
+      return "SYNPHOT"
    pos += 1
-   if (pos > 0 and 
-       (string.lower(parts[pos]) == "syn" or
-        string.lower(parts[pos]) == "th")):
-      return("SYNPHOT")
-
-   # test the last character of the first piece
-   if (string.lower(parts[0][-1:]) == 'j'):
-      return("ACS")
-   elif (string.lower(parts[0][-1:]) == 'o'):
-      return("STIS")
-   elif (string.lower(parts[0][-1:]) == 'n'):
-      return("NICMOS")
-   elif (string.lower(parts[0][-1:]) == 'u'):
-      return("WFPC2")
-   elif (string.lower(parts[0][-1:]) == 'i'):
-      return("WFC3")
-   elif (string.lower(parts[0][-1:]) == 'l'):
-      return("COS")
-   elif (string.lower(parts[0][-1:]) == 'm'):
-      return("MULTI")
-   else:
+   if pos > 0 and parts[pos].lower() in ["syn", "th"]:
+      return "SYNPHOT"
+   try:
+     return ID_CHAR_TO_INSTRUMENT[parts[0][-1:].lower()]
+   except:
       raise UnknownInstrument
 

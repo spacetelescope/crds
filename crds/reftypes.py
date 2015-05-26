@@ -4,11 +4,15 @@ organized around loading type specs or prototype rmaps from the "specs" subdirec
 an observatory/subsystem package.   For HST this reduces defining new types to adding 
 a prototype rmap and defining .tpn files in the observatory package.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import collections
 import glob
 
 from crds import rmap, log, utils, data_file
+import six
 # from crds.certify import TpnInfo
 
 # =============================================================================
@@ -197,7 +201,7 @@ class TypeParameters(object):
         observatory = utils.header_to_observatory(header)
         instrument, filekind = utils.get_file_properties(observatory, filename)
         tpnfile = self.unified_defs[instrument][filekind][field]
-        if isinstance(tpnfile, basestring):
+        if isinstance(tpnfile, six.string_types):
             key = (tpnfile,)  # tpn filename
         else: # it's a list of conditional tpns
             for (condition, tpn) in tpnfile:

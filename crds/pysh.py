@@ -43,6 +43,9 @@ etc.
 """
 
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import object
 
 
 # =========================================================================
@@ -52,7 +55,7 @@ import os
 import re
 import glob
 import os.path
-import cStringIO
+import io
 import inspect
 
 from subprocess import PIPE, STDOUT, Popen
@@ -94,7 +97,7 @@ def get_debug():
 
 # =========================================================================
 
-class Shell:
+class Shell(object):
     """Shell performs sh-like variable substitutions and returns a callable
     object which runs `args` as a subprocess when called.   The shell object
     records the final command line and manages program I/O,  capturing output
@@ -156,6 +159,11 @@ class Shell:
         if self._trace_commands:
             print(repr(self), file=sys.stderr)
         self.out, self.err = self._popen.communicate(self._input)
+        if sys.version_info >= (3,0,0):
+            if self.out:
+                self.out = self.out.decode("utf-8")
+            if self.err:
+                self.err = self.err.decode("utf-8")
         self.status = self._popen.returncode
         if self._raise_on_error and self._popen.returncode:
             if self._trace_exceptions and not self._trace_commands:
@@ -275,7 +283,7 @@ def lines(command, **keys):
     of lines.
     """
     # keys["independent_error"] = False
-    return cStringIO.StringIO(_captured_output(command, **keys).out).readlines()
+    return _captured_output(command, **keys).out.splitlines()
 
 # =========================================================================
 
@@ -292,7 +300,7 @@ def fail(*args, **keys):
     print(" ".join(args), file=keys.pop("file", sys.stderr))
     sys.exit(keys.pop("status", -1))
 
-def usage(description, min_args, max_args=sys.maxint, help=""):
+def usage(description, min_args, max_args=sys.maxsize, help=""):
     """Emit a standard program usage message based on the min and max
     command line parameter counts.   If the program takes at least
     one parameter,  min_args should be 1.   If the program takes at most
@@ -333,7 +341,7 @@ def pysh_execfile(fname, globals=None, locals=None):
         os.close(handle)
 
     try:
-        execfile(fname, globals, locals)
+        exec(compile(open(fname).read(), fname, 'exec'), globals, locals)
     finally:
         os.remove(fname)
 

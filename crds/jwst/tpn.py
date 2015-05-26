@@ -6,6 +6,9 @@ in an rmap.
 See the HST tpn.py and locator.py modules,  as well as crds.certify
 and crds.rmap,  for more information.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os.path
 import pprint
@@ -37,15 +40,16 @@ def _load_tpn_lines(fname):
     """
     lines = []
     append = False
-    for line in open(fname):
-        line = line.strip()
-        if line.startswith("#") or not line:
-            continue
-        if append:
-            lines[-1] = lines[-1][:-1].strip() + line
-        else:
-            lines.append(line)
-        append = line.endswith("\\")
+    with open(fname) as pfile:
+        for line in pfile:
+            line = line.strip()
+            if line.startswith("#") or not line:
+                continue
+            if append:
+                lines[-1] = lines[-1][:-1].strip() + line
+            else:
+                lines.append(line)
+            append = line.endswith("\\")
     return lines
 
 
@@ -101,7 +105,7 @@ def get_tpninfos(*key):
 # =============================================================================
 
 def main():
-    print "null tpn processing."
+    print("null tpn processing.")
 
 if __name__ == "__main__":
     main()

@@ -5,10 +5,11 @@ This tests, through the use of bestrefs, the functioning of table effects.
 TEST CASES
 ----------
 
->>> import test_config
->>> test_config.setup()
-
+>>> from crds import tests
+>>> from crds.tests import test_config
 >>> from crds.bestrefs import BestrefsScript
+
+>>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE)
 
 Test: Default rule: always reprocess, based on STIS PCTAB.
 Test: STIS APERTAB: No reprocess
@@ -73,14 +74,20 @@ Test: COS WCPTAB, reprocess no
 
 CLEANUP: blow away the test cache
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
-def test():
+from crds import tests
+
+def main():
     """Run module tests,  for now just doctests only."""
-    import test_table_effects, doctest
+    import doctest
+    from crds.tests import test_table_effects
     return doctest.testmod(test_table_effects)
 
 if __name__ == "__main__":
-    print(test())
+    print(main())

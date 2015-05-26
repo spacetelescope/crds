@@ -2,7 +2,13 @@
 FITS files or HDU lists. This can be a command-line module or class in a
 script. Written to add this functionality to crds.diff.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import object
+
 import sys
+
 import difflib
 from itertools import product
 import numpy as np
@@ -13,6 +19,7 @@ from astropy.io.fits.hdu.hdulist import fitsopen
 from astropy.io.fits.hdu.table import _TableLikeHDU
 
 from crds import rmap, cmdline
+import six
 
 
 #==========================================================================
@@ -85,10 +92,10 @@ def get_hdulist(fits_reference):
     """
     # If the reference is a string, presume its a file path
     result = fits_reference
-    if isinstance(fits_reference, basestring):
+    if isinstance(fits_reference, six.string_types):
             try:
                 result = fitsopen(fits_reference)
-            except Exception, e:
+            except Exception as e:
                 raise IOError("error opening file (%s): %s: %s" %
                               (fits_reference, e.__class.__name__, e.args[0]))
     return result
@@ -118,7 +125,7 @@ def string_to_list(str, separator=','):
     """
 
     result = str
-    if isinstance(result, basestring):
+    if isinstance(result, six.string_types):
         result = result.split(',')
     return result
 
@@ -279,7 +286,7 @@ def sm_filter_opcodes(sm_opcodes, code='equal'):
     condition = lambda opcode: opcode[0] != code
 
     # do the filtering
-    return filter(condition, sm_opcodes)
+    return list(filter(condition, sm_opcodes))
 
 
 @np.vectorize
@@ -307,7 +314,7 @@ def selected(element, wanted):
 
 
 #==========================================================================
-class RowDiff():
+class RowDiff(object):
     """Perform FITS table difference by rows
 
     Modules that are based on FITSDiff, such as Diff, compare
@@ -432,7 +439,7 @@ class RowDiff():
         if isinstance(self.mode_fields, dict):
             mode_field_names = dict.keys(self.mode_fields)
 
-            mode_constraints = {key: value for key, value in self.mode_fields.iteritems() if value is not None}
+            mode_constraints = {key: value for key, value in self.mode_fields.items() if value is not None}
         else:
             mode_field_names = self.mode_fields
             mode_constraints = {}
@@ -583,7 +590,7 @@ class RowDiff():
                 if isinstance(self.mode_fields, dict):
                     selected_rows = np.array([True for index in
                                               range(len(a_table_values))])
-                    for (field, values) in dict.iteritems(self.mode_fields):
+                    for (field, values) in dict.items(self.mode_fields):
                         if values:
                             selected_rows = np.logical_and(selected_rows,
                                                            selected(a_table_values[field], values))
@@ -952,10 +959,10 @@ class RowDiffScript(cmdline.Script):
         if self.args.mode_fields is not None:
             mode_fields = self.args.mode_fields.split(',')
         
-        print RowDiff(tableA_path, tableB_path,
+        print(RowDiff(tableA_path, tableB_path,
                       fields=fields,
                       ignore_fields=ignore_fields,
-                      mode_fields=mode_fields)
+                      mode_fields=mode_fields))
 
 if __name__ == "__main__":
     sys.exit(RowDiffScript()())

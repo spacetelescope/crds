@@ -23,7 +23,7 @@ setup_pars = {
         },
     "package_data" : {
         'crds.tests' : [
-            'data/*.*',
+            'data/*',
             ],
         'crds.hst': [
             '*.dat',

@@ -1,0 +1,24 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:29.356994',
+    'filekind' : 'SHADFILE',
+    'instrument' : 'ACS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_acs_shadfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('DETECTOR',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'YES',
+    'reffile_switch' : 'SHADCORR',
+    'rmap_relevance' : '((DETECTOR != "SBC") and (SHADCORR != "OMIT"))',
+    'sha1sum' : '4df831a398c7e85bb3b8e9e9e567ca879b426c4a',
+}
+
+selector = Match({
+    ('HRC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'j4d1435rj_shd.fits',
+        '1992-01-01 00:00:00' : 'kcb1734pj_shd.fits',
+    }),
+    ('WFC',) : UseAfter({
+        '1991-01-01 00:00:00' : 'kcb17349j_shd.fits',
+    }),
+})

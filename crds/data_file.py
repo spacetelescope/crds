@@ -6,8 +6,8 @@ True
 >>> is_geis("bar.fits")
 False
 
->>> import cStringIO
->>> header = get_geis_header(cStringIO.StringIO(_GEIS_TEST_DATA))
+>>> import io
+>>> header = get_geis_header(io.StringIO(_GEIS_TEST_DATA))
 
 >>> import pprint
 >>> pprint.pprint(header)
@@ -24,7 +24,7 @@ False
  'GROUPS': 'T',
  'HISTORY': ['This file was edited by Michael S. Wiggs, August 1995',
              '',
-             'e2112084u.r0h was edited to include values of 256, which correspond'],
+             'e2112084u.r0h was edited to include values of 256'],
  'INSTRUME': 'WFPC2',
  'KSPOTS': 'OFF',
  'NAXIS': '1',
@@ -47,13 +47,18 @@ False
  'UCH3CJTM': '0.',
  'UCH4CJTM': '0.'}
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import re
 import json
+import warnings
 
 from crds import utils, log, config
 
 from astropy.io import fits as pyfits
+import six
 # import pyasdf
 
 # =============================================================================
@@ -76,8 +81,8 @@ def get_observatory(filepath, original_name=None):
         return "hst"
     if original_name.endswith(".fits"):
         try:
-            observatory = pyfits.getval(filepath, "TELESCOP")
-        except Exception:
+            observatory = pyfits.getval(filepath, keyword="TELESCOP")
+        except KeyError:
             observatory = "hst"
         return observatory.lower()
     elif original_name.endswith((".asdf", ".yaml", ".json", ".text", ".txt")):
@@ -86,6 +91,7 @@ def get_observatory(filepath, original_name=None):
         return "hst"
 
     
+@log.hijack_warnings
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
     if condition:
@@ -94,11 +100,13 @@ def getval(filepath, key, condition=True):
         header = get_unconditioned_header(filepath, needed_keys=[key])
     return header[key]
 
+@log.hijack_warnings
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
     ftype = config.filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith(("META.","META_")):
+            key = key.replace("META_", "META.")
             return dm_setval(filepath, key, value)
         else:
             return pyfits.setval(filepath, key, value)
@@ -107,6 +115,7 @@ def setval(filepath, key, value):
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
 
+@log.hijack_warnings
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
@@ -115,6 +124,7 @@ def dm_setval(filepath, key, value):
         d_model[key.lower()] = value
         d_model.save(filepath)
 
+@log.hijack_warnings
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
@@ -126,6 +136,7 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     header = get_header(filepath, needed_keys, original_name, observatory=observatory)
     return utils.condition_header(header, needed_keys)
 
+@log.hijack_warnings
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
     
@@ -167,15 +178,17 @@ def get_data_model_header(filepath, needed_keys=()):
 
 def get_json_header(filepath, needed_keys=()):
     """Return the flattened header associated with a JSON file."""
-    header = json.load(open(filepath))
-    header = to_simple_types(header)
+    with open(filepath) as pfile:
+        header = json.load(pfile)
+        header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 def get_yaml_header(filepath, needed_keys=()):
     """Return the flattened header associated with a YAML file."""
     import yaml
-    header = yaml.load(open(filepath))
-    header = to_simple_types(header)
+    with open(filepath) as pfile:
+        header = yaml.load(pfile)
+        header = to_simple_types(header)
     return reduce_header(filepath, header, needed_keys)
 
 # ----------------------------------------------------------------------------------------------
@@ -183,8 +196,8 @@ def get_yaml_header(filepath, needed_keys=()):
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
     import pyasdf
-    handle = pyasdf.AsdfFile.read(filepath)
-    header = to_simple_types(handle.tree)
+    with pyasdf.AsdfFile.read(filepath) as handle:
+        header = to_simple_types(handle.tree)
     return reduce_header(filepath, header, needed_keys)
 
 def to_simple_types(tree):
@@ -202,7 +215,7 @@ def to_simple_types(tree):
 
 def simple_type(value):
     """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-    if isinstance(value, (basestring, int, float, long, complex)):
+    if isinstance(value, (six.string_types, int, float, complex)):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
@@ -272,30 +285,39 @@ def sanitize_data_model_dict(flat_dict):
             cleaned["META.INSTRUMENT.TYPE"] = cleaned["META.INSTRUMENT.NAME"]
     return cleaned
 
-def get_fits_header(filepath, needed_keys=()):
-    """Return `needed_keys` or all from FITS file `fname`s primary header."""
-    primary_header = pyfits.getheader(filepath)
-    return reduce_header(filepath, primary_header, needed_keys)
-
 def get_fits_header_union(filepath, needed_keys=()):
     """Get the union of keywords from all header extensions of FITS
     file `fname`.  In the case of collisions, keep the first value
     found as extensions are loaded in numerical order.
     """
     union = []
-    for hdu in pyfits.open(filepath):
-        for card in hdu.header.cards:
-            card.verify('fix')
-            key, value = card.keyword, str(card.value)
-            if not key:
-                continue
-            union.append((key, value))
+    with fits_open(filepath) as hdulist:
+        for hdu in hdulist:
+            for card in hdu.header.cards:
+                card.verify('fix')
+                key, value = card.keyword, str(card.value)
+                if not key:
+                    continue
+                union.append((key, value))
     return reduce_header(filepath, union, needed_keys)
 
 
 # ================================================================================================================
 
-_GEIS_TEST_DATA = """
+def fits_open(filename, **keys):
+    """Return the results of io.fits.open() configured using CRDS environment settings,  overriden by
+    any conflicting keyword parameter values.
+    """
+    keys = dict(keys)
+    if "checksum" not in keys:
+        keys["checksum"] = bool(config.FITS_VERIFY_CHECKSUM)
+    if "ignore_missing_end" not in keys:
+        keys["ignore_missing_end"] = bool(config.FITS_IGNORE_MISSING_END)
+    return pyfits.open(filename, **keys)
+
+# ================================================================================================================
+
+_GEIS_TEST_DATA = u"""
 SIMPLE  =                    F /
                                                                               
 BITPIX  =                   16 /                                                
@@ -344,7 +366,7 @@ PEDIGREE= 'INFLIGHT 01/01/1994 - 15/05/1995'
 DESCRIP = 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS'                        
 HISTORY This file was edited by Michael S. Wiggs, August 1995                   
 HISTORY                                                                         
-HISTORY e2112084u.r0h was edited to include values of 256, which correspond     
+HISTORY e2112084u.r0h was edited to include values of 256 
 END                                                                             
 """
 
@@ -366,10 +388,11 @@ def is_geis_header(name):
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
-    if isinstance(name, basestring):
+    if isinstance(name, six.string_types):
         if name.endswith("d"):
             name = name[:-1] + "h"
-        lines = open(name)
+        with open(name) as pfile:
+            lines = pfile.readlines()
     else:  # assume file-like object
         lines = name
 
@@ -383,7 +406,7 @@ def get_geis_header(name, needed_keys=()):
             line = line[:31]
             
         if line.startswith("HISTORY"):
-            history.append(line[len("HISTORY"):].strip())
+            history.append(str(line[len("HISTORY"):].strip()))
             continue
 
         words = [x.strip() for x in line.split("=")]
@@ -406,7 +429,7 @@ def get_geis_header(name, needed_keys=()):
             value = value[1:-1].strip()
 
         # Assign value,  supporting list of values for HISTORY
-        header[key] = value
+        header[str(key)] = str(value)
         
     if not needed_keys or "HISTORY" in needed_keys:
         header["HISTORY"] = history
@@ -433,5 +456,5 @@ def test():
     return doctest.testmod(data_file)
 
 if __name__ == "__main__":
-    print test()
+    print(test())
 

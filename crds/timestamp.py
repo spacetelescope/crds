@@ -2,11 +2,15 @@
 HTML tables and HST FITS data sets.   It contains a formatting function which will render
 a date and time in a sortable string representation (isoformat).
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import datetime
 import re
 
 import crds
+import six
 
 # =======================================================================
 
@@ -21,7 +25,7 @@ def format_date(date):
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
-    if isinstance(date, (str, unicode)):
+    if isinstance(date, six.string_types):
         date = parse_date(date)
     return date.isoformat(" ")
 
@@ -395,7 +399,7 @@ def is_datetime(datetime_str):
         "Invalid date/time.  Should be YYYY-MM-DD HH:MM:SS"
     try:
         parse_date(datetime_str)
-    except ValueError, exc:
+    except ValueError as exc:
         raise crds.CrdsError(str(exc))
     return datetime_str
 
@@ -408,5 +412,5 @@ def test():
     return doctest.testmod(timestamp)
 
 if __name__ == "__main__":
-    print test()
+    print(test())
 

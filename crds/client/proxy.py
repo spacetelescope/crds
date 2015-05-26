@@ -2,17 +2,24 @@
 w/getattr. Converts service errors into ServiceError exceptions,  otherwise 
 call returns the jsonrpc "result" field.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+
 import sys
-import urllib2 as urllib
 import uuid
 import json
 import time
 import os
+import six
 
 if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
+    from urllib2 import urlopen
 else:
     import html.parser as parser_mod
+    from urllib.request import urlopen
+
 PARSER = parser_mod.HTMLParser()
 
 from crds import log, config
@@ -26,12 +33,13 @@ def apply_with_retries(f, *pars, **keys):
     for retry in range(retries):
         try:
             return f(*pars, **keys)
-        except Exception, exc:
+        except Exception as exc:
             log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
             time.sleep(delay)
+            exc2 = exc
     else:
-        raise exc
+        raise exc2
 
 def program_id():
     """Return a nominal identifier for this program."""
@@ -104,10 +112,12 @@ class CheckingProxy(object):
 
     def _call_service(self, parameters, url):
         """Call the JSONRPC defined by `parameters` and raise a ServiceError on any exception."""
+        if not isinstance(parameters, bytes):
+            parameters = parameters.encode("utf-8")
         try:
-            channel = urllib.urlopen(url, parameters)
-            return channel.read()
-        except Exception, exc:
+            channel = urlopen(url, parameters)
+            return channel.read().decode("utf-8")
+        except Exception as exc:
             raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
 
     def __call__(self, *args, **kwargs):
@@ -123,7 +133,7 @@ class CheckingProxy(object):
 
 def fix_strings(rval):
     """Convert unicode to strings."""
-    if isinstance(rval, basestring):
+    if isinstance(rval, six.string_types):
         return str(rval)
     elif isinstance(rval, tuple):
         return tuple([fix_strings(x) for x in rval])

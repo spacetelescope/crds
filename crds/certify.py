@@ -2,19 +2,22 @@
 used to check parameter values in .fits reference files.   It verifies that FITS
 files define required parameters and that they have legal values.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import re
 from collections import defaultdict, namedtuple
 
-from astropy.io import fits as pyfits
 import numpy as np
 
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import tables
 from crds import client
 from crds import mapping_parser
-from crds.exceptions import *
+from crds.exceptions import (MissingKeywordError, IllegalKeywordError, InvalidFormatError, TypeSetupError,
+                             ValidationError)
 
 NOT_FITS = -1
 VALID_FITS = 1
@@ -145,7 +148,7 @@ class Validator(object):
         if self.info.presence in ["R","P"]:
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
         else:
-            sys.exc_clear()
+            # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
             return # missing value is None, so let's be explicit about the return value
 
@@ -471,7 +474,7 @@ class ReferenceCertifier(Certifier):
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
         unseen = self._dump_provenance_core(dump_keys)
         warn_keys = self.provenance_keys
-        for key in unseen:
+        for key in sorted(unseen):
             if key in warn_keys:
                 log.warning("Missing keyword '%s'."  % key)
 
@@ -479,13 +482,21 @@ class ReferenceCertifier(Certifier):
         """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
         for key in dump_keys:
-            hval = self.header.get(key, None)
-            if hval is not None:
-                if self.interesting_value(hval):
-                    log.info(key, "=", repr(hval))
-                if key in unseen:
-                    unseen.remove(key)
+            if self._check_provenance_key(key):
+                unseen.remove(key)
+            elif self._check_provenance_key("META." + key):
+                unseen.remove(key)
         return unseen
+
+    def _check_provenance_key(self, key):
+        """Check one keyword, dump it,  and return True IFF it was present in self.header."""
+        hval = self.header.get(key, None)
+        if hval is not None:
+            if self.interesting_value(hval):
+                log.info(key, "=", repr(hval))
+            return True
+        else:
+            return False
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
@@ -506,7 +517,7 @@ class ReferenceCertifier(Certifier):
             pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
             instrument, filekind = pmap.locate.get_file_properties(self.filename)
             return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-        except Exception, exc:
+        except Exception as exc:
             log.verbose_warning("Failed retrieving required parkeys:", str(exc))
             return []
 
@@ -621,8 +632,8 @@ class ReferenceCertifier(Certifier):
             log.info("No modes defined in new reference", repr(new_reference_ex), "for keys", 
                      repr(self.mode_columns))
             return
-        old_sample = old_modes.values()[0]
-        new_sample = new_modes.values()[0]
+        old_sample = list(old_modes.values())[0]
+        new_sample = list(new_modes.values())[0]
         if len(old_sample) != len(new_sample) or old_all_cols != new_all_cols:
             log.warning("Change in row format betwween", repr(old_reference_ex), "and", repr(new_reference_ex))
             log.verbose("Old sample:", repr(old_sample))
@@ -732,29 +743,30 @@ def handle_nan(var):
 # ============================================================================
 
 class FitsCertifier(ReferenceCertifier):
+    """Certifier dedicated to FITS format references."""
+
     def load(self):
         """Use pyfits to verify the FITS format of self.filename."""
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        fits = pyfits.open(self.filename)
-        fits.verify(option='exception') # validates all keywords
-        fits.close()
+        with data_file.fits_open(self.filename) as pfile:
+            pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
-        hdulist = pyfits.open(self.filename)
-        unseen = set(dump_keys)
-        for i, hdu in enumerate(hdulist):
-            for key in dump_keys:
-                for card in hdu.header.cards:
-                    if card.keyword == key:
-                        if self.interesting_value(card.value):
-                            log.info("["+str(i)+"]", key, card.value, card.comment)
-                        if key in unseen:
-                            unseen.remove(key)
+        with data_file.fits_open(self.filename) as hdulist:
+            unseen = set(dump_keys)
+            for i, hdu in enumerate(hdulist):
+                for key in dump_keys:
+                    for card in hdu.header.cards:
+                        if card.keyword == key:
+                            if self.interesting_value(card.value):
+                                log.info("["+str(i)+"]", key, card.value, card.comment)
+                            if key in unseen:
+                                unseen.remove(key)
         return unseen
 
 # ============================================================================
@@ -855,9 +867,10 @@ def banner(char='#'):
     
 # ============================================================================
 
+@log.hijack_warnings
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, skip_banner=False, script=None, observatory=None,
+                  dont_parse=False, script=None, observatory=None,
                   comparison_reference=None, original_name=None, ith=""):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
@@ -923,6 +936,7 @@ def get_certifier_class(original_name):
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
+@log.hijack_warnings
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
@@ -938,7 +952,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         
         certify_file(filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             trap_exceptions=trap_exceptions, compare_old_reference=compare_old_reference, 
-            dont_parse=dont_parse, skip_banner=skip_banner, script=script, observatory=observatory,
+            dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith)
         
     tables.clear_cache()
@@ -1022,7 +1036,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
-    """Files on the command line default to normal UNIX syntax, no path is CWD.  Add crds:// for cache paths."""
+    # For files on the command line to default to normal UNIX syntax, no path is CWD,
+    # uncomment following statement.   Add crds:// for cache paths.
+
     # locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
@@ -1056,7 +1072,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
                 log.verbose("Defaulting comparison context to latest operational CRDS context.")
                 self.args.comparison_context = self.default_context
         elif self.args.comparison_context in [None, "none", "None", "NONE"]:
-            log.info("No comparison context specified or specified as 'none'.  No default context for mixed types.")
+            log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
             
         if self.args.comparison_context and self.args.sync_files:
@@ -1083,7 +1099,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
     
     def log_and_track_error(self, filename, *args, **keys):
         """Override log_and_track_error() to compute instrument, filekind automatically."""
-        basename = os.path.basename(filename)
         try:
             instrument, filekind = utils.get_file_properties(self.observatory, filename)
         except Exception:
@@ -1097,12 +1112,12 @@ For more information on the checks being performed,  use --verbose or --verbosit
         """
         closure_files = set()
         for file_ in files:
-            more_files = set([file_])
+            more_files = {file_}
             if rmap.is_mapping(file_):
                 with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
                     mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
-                    more_files = set([rmap.locate_mapping(name) for name in mapping.mapping_names()])
-                    more_files = (more_files - set([rmap.locate_mapping(mapping.basename)])) | set([file_])
+                    more_files = {rmap.locate_mapping(name) for name in mapping.mapping_names()}
+                    more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files
         return sorted(closure_files)
 

@@ -9,9 +9,13 @@ a dataset to be processed.
 
 If the rows are different,  then the dataset should be reprocessed.  
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 from crds import rmap, log, tables
 from crds.client import api
+from crds.python3 import *
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):
     """This is the top level interface to crds.bestrefs running in "Affected Datasets" mode.
@@ -299,7 +303,7 @@ class DeepLook(object):
         """
 
         # Convert header keys to lowercase for consistency
-        headers_low = dict((k.lower(), v) for k, v in headers.iteritems())
+        headers_low = dict((k.lower(), v) for k, v in headers.items())
 
         # Start off that the references are different.
         self.is_different = True

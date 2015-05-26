@@ -22,6 +22,9 @@ CRDS defines a function:
 
 which will interpret the rules to expand appropriate values in header.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import os.path
 
@@ -36,7 +39,9 @@ HERE = os.path.dirname(__file__) or "."
 class HeaderExpander(object):
     """HeaderExpander applies a set of expansion rules to a header.  It 
     compiles the applicability expression of each rule.
-    
+
+    >>> from pprint import pprint as pp
+
     >>> expansions = {
     ...  'FILTER1' : { "DETECTOR=='HRC' and FILTER1=='ANY'": 'F555W|F775W|F625W'},
     ...  'OBSTYPE' : { "DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": 'IMAGING|CORONAGRAPHIC'},
@@ -44,16 +49,16 @@ class HeaderExpander(object):
     >>> expander = HeaderExpander(expansions)
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"ANY" }
-    >>> expander.expand(header)
+    >>> pp(expander.expand(header))
     {'DETECTOR': 'HRC', 'FILTER1': 'F555W|F775W|F625W'}
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"G280L", "OBSTYPE":"ANY" }
-    >>> expander.expand(header)
-    {'OBSTYPE': 'ANY', 'DETECTOR': 'HRC', 'FILTER1': 'G280L'}
+    >>> pp(expander.expand(header))
+    {'DETECTOR': 'HRC', 'FILTER1': 'G280L', 'OBSTYPE': 'ANY'}
 
     >>> header = { "DETECTOR":"HRC", "FILTER1":"G800L", "OBSTYPE":"ANY" }
-    >>> expander.expand(header)
-    {'OBSTYPE': 'IMAGING|CORONAGRAPHIC', 'DETECTOR': 'HRC', 'FILTER1': 'G800L'}
+    >>> pp(expander.expand(header))
+    {'DETECTOR': 'HRC', 'FILTER1': 'G800L', 'OBSTYPE': 'IMAGING|CORONAGRAPHIC'}
     """
     def __init__(self, expansion_mapping, expansion_file="(none)"):
         self.mapping = {}
@@ -72,7 +77,7 @@ class HeaderExpander(object):
         for (var, expr), (expansion, compiled) in self.mapping.items():
             try:
                 applicable = eval(compiled, {}, header)  # compiled code is from static file.
-            except Exception, exc:
+            except Exception as exc:
                 log.verbose_warning("Header expansion for",repr(expr), 
                             "failed for", repr(str(exc)))
                 continue
@@ -103,7 +108,7 @@ def required_keys(expr):
     >>> required_keys("VAR1=='VAL1' and VAR2=='VAL2' and VAR3=='VAL3'")
     ['VAR1', 'VAR2', 'VAR3']
     """
-    return sorted(set([term.split("=")[0].strip() for term in expr.split("and")]))
+    return sorted({term.split("=")[0].strip() for term in expr.split("and")})
     
 
 class ReferenceHeaderExpanders(dict):

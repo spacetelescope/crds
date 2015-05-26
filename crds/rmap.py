@@ -51,6 +51,9 @@ Active instrument references are also broken down by filetype:
 >>> len(r.reference_names())  > 500
 True
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import sys
 import os
 import os.path
@@ -71,6 +74,7 @@ from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
 from crds.exceptions import *
+import six
 
 # ===================================================================
 
@@ -83,17 +87,17 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 class AstDumper(ast.NodeVisitor):
     """Debug class for dumping out rmap ASTs."""
     def visit(self, node):
-        print ast.dump(node), "\n"
+        print(ast.dump(node), "\n")
         ast.NodeVisitor.visit(self, node)
 
     def dump(self, node):
-        print ast.dump(node), "\n"
+        print(ast.dump(node), "\n")
         self.generic_visit(node)
 
     visit_Assign = dump
     visit_Call = dump
 
-ILLEGAL_NODES = set([
+ILLEGAL_NODES = {
     "visit_FunctionDef",
     "visit_ClassDef", 
     "visit_Return", 
@@ -126,9 +130,9 @@ ILLEGAL_NODES = set([
     "visit_Repr",
     "visit_AugLoad",
     "visit_AugStore",
-    ])
+    }
 
-LEGAL_NODES = set([
+LEGAL_NODES = {
     'visit_Module',
     'visit_Name',
     'visit_Str',
@@ -155,14 +159,16 @@ LEGAL_NODES = set([
     'visit_BinOp',
     'visit_UnaryOp',
     'visit_Not',
- ])
+    'visit_NameConstant',
+    'visit_USub',
+ }
 
-CUSTOMIZED_NODES = set([
+CUSTOMIZED_NODES = {
     'visit_Call',
     'visit_Assign',
     'visit_Illegal',
     'visit_Unknown',
-])
+}
 
 ALL_CATEGORIZED_NODES = set.union(ILLEGAL_NODES, LEGAL_NODES, CUSTOMIZED_NODES)
 
@@ -264,7 +270,7 @@ class LowerCaseDict(dict):
         val = super(LowerCaseDict, self).__getitem__(key)
         # Return string values as lower case,  but exclude literal expressions surrounded by ()
         # for case-sensitive HST rmap relevance expressions.
-        if isinstance(val, basestring) and not (val.startswith("(") and val.endswith(")")):
+        if isinstance(val, six.string_types) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
     
@@ -275,7 +281,7 @@ class LowerCaseDict(dict):
             return default
     
     def __repr__(self):
-        return self.__class__.__name__ + "(%s)" % super(LowerCaseDict, self).__repr__()
+        return self.__class__.__name__ + "(%s)" % repr({key: self.header[key] for key in self.header }) #super(LowerCaseDict, self).__repr__()
 
 class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
@@ -285,7 +291,7 @@ class Mapping(object):
 
     def __init__(self, filename, header, selector, **keys):
         self.filename = filename
-        self.header = LowerCaseDict(header)
+        self.header = LowerCaseDict(header)   # consistent lower case values
         self.selector = selector
         self.comment = keys.pop("comment", None)
         for name in self.required_attrs:
@@ -322,7 +328,8 @@ class Mapping(object):
     @classmethod
     def from_file(cls, basename, *args, **keys):
         """Load a mapping file `basename` and do syntax and basic validation."""
-        text = open(config.locate_mapping(basename)).read()
+        with  open(config.locate_mapping(basename)) as pfile:
+            text = pfile.read()
         return cls.from_string(text, basename, *args, **keys)
 
     @classmethod
@@ -334,7 +341,7 @@ class Mapping(object):
         ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
         try:
             mapping._check_hash(text)
-        except ChecksumError, exc:
+        except ChecksumError as exc:
             if ignore == "warn":
                 log.warning("Checksum error", ":", str(exc))
             elif ignore:
@@ -360,7 +367,7 @@ class Mapping(object):
         """
         namespace = {}
         namespace.update(selectors.SELECTORS)
-        exec code in namespace
+        exec(code, namespace)
         header = LowerCaseDict(namespace["header"])
         selector = namespace["selector"]
         comment = namespace.get("comment", None)
@@ -623,7 +630,7 @@ class Mapping(object):
         return the filename and header of the next levels down,  not the contents.
         """
         return {
-                "header" : copy.copy(self.header),
+                "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
                 "selections" : sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
                                        for key,val in self.selections.items() ])
@@ -727,7 +734,7 @@ class PipelineContext(ContextMapping):
         `dataset`s instrument.   Not all are necessarily appropriate for
         the current mode.  `dataset` can be a filename or a header dictionary.
         """
-        if isinstance(dataset, basestring):
+        if isinstance(dataset, six.string_types):
             instrument = data_file.getval(dataset,  self.instrument_key)
         elif isinstance(dataset, dict):
             instrument = self.get_instrument(dataset)
@@ -821,7 +828,7 @@ class InstrumentContext(ContextMapping):
             ref = None
             try:
                 ref = self.get_rmap(filekind).get_best_ref(header)
-            except Exception, exc:
+            except Exception as exc:
                 ref = "NOT FOUND " + str(exc)
             if ref is not None:
                 refs[filekind] = ref
@@ -871,7 +878,7 @@ class InstrumentContext(ContextMapping):
             if key not in pkmap:
                 pkmap[key] = []    # flag a need for an unconstrained input
         if remove_special:
-            specials = set(["ANY","N/A"])
+            specials = {"ANY","N/A"}
             for key in pkmap:  # remove specials like ANY or N/A
                 if pkmap[key]:
                     pkmap[key] = pkmap[key] - specials
@@ -1014,7 +1021,7 @@ class ReferenceMapping(Mapping):
             return "NOT FOUND n/a"
         except OmitReferenceTypeError:
             return None
-        except Exception, exc:
+        except Exception as exc:
             return "NOT FOUND " + str(exc)
 
     def _get_best_ref(self, header_in):
@@ -1034,7 +1041,7 @@ class ReferenceMapping(Mapping):
             log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=",
                         repr(bestref), verbosity=55)
             return bestref
-        except Exception, exc:
+        except Exception as exc:
             log.verbose("First selection failed:", str(exc), verbosity=55)
             header = self._fallback_header(self, header_in) # Execute type-specific plugin if applicable
             try:
@@ -1048,7 +1055,7 @@ class ReferenceMapping(Mapping):
                     return bestref
                 else:
                     raise
-            except Exception, exc:
+            except Exception as exc:
                 log.verbose("Fallback selection failed:", str(exc), verbosity=55)
                 if self._reffile_required in ["YES", "NONE"]:
                     log.verbose("No match found and reference is required:",  str(exc), verbosity=55)
@@ -1131,9 +1138,10 @@ class ReferenceMapping(Mapping):
                     try:
                         limits = [int(float(x)) for x in limits]
                     except Exception:
-                        sys.exc_clear()
+                        pass
+                        # sys.exc_clear()
                     else:
-                        values = range(limits[0], limits[1]+1)
+                        values = list(range(limits[0], limits[1]+1))
                 if condition:
                     values = tuple([utils.condition_value(val) for val in values])
                 valid_values[info.name] = values
@@ -1179,7 +1187,7 @@ class ReferenceMapping(Mapping):
             relevant = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "is relevant:", relevant, repr(source), verbosity=55)
-        except Exception, exc:
+        except Exception as exc:
             log.warning("Relevance check failed: " + str(exc))
         else:
             if not relevant:
@@ -1193,7 +1201,7 @@ class ReferenceMapping(Mapping):
             omit = eval(compiled, {}, header)   # secured
             log.verbose("Filekind ", repr(self.instrument), repr(self.filekind),
                         "should be omitted: ", omit, repr(source), verbosity=55)
-        except Exception, exc:
+        except Exception as exc:
             log.warning("Keyword omit check failed: " + str(exc))
         else:
             if omit:
@@ -1315,7 +1323,7 @@ class ReferenceMapping(Mapping):
         """
         nested = self.selector.todict_flat()
         return {
-                "header" : copy.copy(self.header),
+                "header" : { key : self.header[key] for key in self.header },
                 "text_descr" : self.obs_package.TEXT_DESCR[self.filekind],
                 "parameters" : tuple(nested["parameters"]),
                 "selections" : nested["selections"]
@@ -1411,7 +1419,7 @@ def asmapping(filename_or_mapping, cached=False, **keys):
     """
     if isinstance(filename_or_mapping, Mapping):
         return filename_or_mapping
-    elif isinstance(filename_or_mapping, basestring):
+    elif isinstance(filename_or_mapping, six.string_types):
         if cached in [False, "uncached"]:
             return load_mapping(filename_or_mapping, **keys)
         elif cached in [True, "cached"]:
@@ -1473,7 +1481,7 @@ def mapping_type(mapping):
     >>> mapping_type(get_cached_mapping('hst_acs_darkfile.rmap'))
     'rmap'
     """
-    if isinstance(mapping, (str, unicode)):
+    if isinstance(mapping, six.string_types):
         if config.is_mapping(mapping):
             return os.path.splitext(mapping)[1][1:]
         else:
@@ -1510,4 +1518,4 @@ def test():
     return doctest.testmod(rmap)
 
 if __name__ == "__main__":
-    print test()
+    print(test())

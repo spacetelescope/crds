@@ -18,3 +18,7 @@ end
 
 rm -rf dist MANIFEST
 rm -rf build
+svn status | grep crds/cache | cut -d '?' -f2 | xargs rm -rf
+svn status | grep __pycache__ | xargs rm -rf
+svn status | grep '\.bak' | xargs rm -rf
+

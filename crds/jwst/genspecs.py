@@ -1,6 +1,9 @@
 """Generate .spec files from existing JWST mappings and original hard coded
 enumerations.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import glob
 import os.path
 

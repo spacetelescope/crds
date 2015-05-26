@@ -54,8 +54,8 @@ Perform FITS table difference by rows
 TEST CASES
 ----------
 
->>> import test_config
->>> test_config.setup()
+>>> from crds.tests import test_config
+>>> old_state = test_config.setup()
 
 >>> from crds.rowdiff import RowDiffScript
 
@@ -307,14 +307,18 @@ Mode test: duplicate modes
 
 CLEANUP
 
-    >>> test_config.cleanup()
+    >>> test_config.cleanup(old_state)
 
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
-def test():
+def main():
     """Run module tests,  for now just doctests only."""
-    import test_rowdiff, doctest
+    import doctest
+    from crds.tests import test_rowdiff
     return doctest.testmod(test_rowdiff)
 
 if __name__ == "__main__":
-    print(test())
+    print(main())

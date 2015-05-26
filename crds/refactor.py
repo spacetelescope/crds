@@ -1,6 +1,9 @@
 """This module defines functions for modifying rmaps in various ways,  generally
 the transformations required to automate rmap maintenance on the CRDS website.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 import os.path
 import sys
 
@@ -110,8 +113,10 @@ def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("ad
             log.error("Expected one of", repr(expected), "but got", repr(actual),
                       "from change", repr(difference))
             as_expected = False
-    old_count = len([line for line in open(old_rmap).readlines() if os.path.basename(old_ref) in line])
-    new_count = len([line for line in open(new_rmap).readlines() if os.path.basename(new_ref) in line])
+    with open(old_rmap) as pfile:
+        old_count = len([line for line in pfile.readlines() if os.path.basename(old_ref) in line])
+    with open(new_rmap) as pfile:
+        new_count = len([line for line in pfile.readlines() if os.path.basename(new_ref) in line])
     if "replace" in expected and old_count != new_count:
         log.error("Replacement COUNT DIFFERENCE replacing", repr(old_ref), "with", repr(new_ref), "in", repr(old_rmap),
                   old_count, "vs.", new_count)

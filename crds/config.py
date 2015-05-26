@@ -1,6 +1,9 @@
 """This module is the interface to CRDS configuration information.  Predominantly
 it is used to define CRDS file cache paths and file location functions.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import os
 import os.path
@@ -8,6 +11,7 @@ import re
 import glob
 
 from crds import log
+import six
 
 # ===========================================================================
 
@@ -97,7 +101,7 @@ class ConfigItem(object):
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
-        if self.lower and isinstance(value, basestring):
+        if self.lower and isinstance(value, six.string_types):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
@@ -114,23 +118,23 @@ class BooleanConfigItem(ConfigItem):
 
     >>> BOOL = BooleanConfigItem("CRDS_BOOL_ITEM", False, "Test boolean config item")
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     False
 
     >>> os.environ["CRDS_BOOL_ITEM"] = "True"
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     True
 
     >>> BOOL.set("True")
     >>> if BOOL:
-    ...    print "True"
+    ...    print("True")
     ... else:
-    ...    print "False"
+    ...    print("False")
     True
 
     """
@@ -147,6 +151,16 @@ class BooleanConfigItem(ConfigItem):
     def __nonzero__(self):
         """Support using this boolean config item be used as a conditional expression."""
         return self.get()
+
+    __bool__ = __nonzero__
+
+# ===========================================================================
+
+FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", False,
+    "When True, ignore missing END records in the FITS primary header.  Otherwise fail.")
+
+FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", True,
+    "When True, verify that FITS header CHECKSUM and DATASUM values are correct.  Otherwise fail.")
 
 # ===========================================================================
 
@@ -298,7 +312,8 @@ def get_crds_ref_subdir_mode(observatory):
     else:
         mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
         try:
-            mode = open(mode_path).read().strip()
+            with open(mode_path) as pfile:
+                mode = pfile.read().strip()
             # log.verbose("Determined cache format from", repr(mode_path), "as", repr(mode))
         except IOError:
             if len(glob.glob(os.path.join(get_crds_refpath(observatory), "*"))) > 20:
@@ -687,7 +702,7 @@ CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, basestring) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, six.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -726,7 +741,7 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-foo")
     False
     """
-    return is_mapping(mapping) or (isinstance(mapping, basestring) and bool(CONTEXT_RE.match(mapping)))
+    return is_mapping(mapping) or (isinstance(mapping, six.string_types) and bool(CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).
@@ -788,14 +803,20 @@ def mapping_to_filekind(context_file):
 
 # -------------------------------------------------------------------------------------
 
-def get_crds_state(clear_existing=False):
+def get_crds_state(clear_existing=False, clear_server_url=False):
     """Capture the current CRDS configuration and return it as a dictionary.
     Intended for customizing state during self-tests and restoring during teardown.
+    
+    if `clear_existing` is True,  the CRDS environment settings are cleared and
+    defaults are used.
+
+    if `clear_server_url` is not True,  the CRDS_SERVER_URL is not changed by 
+    `clear_existing` above.  So by default,  CRDS_SERVER_URL is immune to `clear_existing`.
     """
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
     if clear_existing:
-        clear_crds_state()
+        clear_crds_state(clear_server_url)
     return env
 
 def set_crds_state(old_state):
@@ -806,10 +827,15 @@ def set_crds_state(old_state):
         os.environ[key] = val
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
 
-def clear_crds_state():
-    """Wipe out the existing configuration variable state of CRDS."""
+def clear_crds_state(clear_server_url=False):
+    """Wipe out the existing configuration variable state of CRDS.
+
+    if `clear_server_url` is not True,  the CRDS server is not changed by 
+    `clear_existing` above.  So,  by default,  CRDS_SERVER_URL is immune to 
+    `clear_existing`.
+    """
     for var in list(os.environ.keys()):
-        if var.startswith("CRDS_"):
+        if var.startswith("CRDS_") and (var != "CRDS_SERVER_URL" or clear_server_url):
             os.environ.pop(var)
     CRDS_REF_SUBDIR_MODE = None
 

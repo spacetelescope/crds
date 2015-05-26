@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'generated from CDBS database 2013-07-20 13:50:33.627242',
+    'filekind' : 'SAADFILE',
+    'instrument' : 'NICMOS',
+    'mapping' : 'REFERENCE',
+    'name' : 'hst_nicmos_saadfile.rmap',
+    'observatory' : 'HST',
+    'parkey' : (('CAMERA',), ('DATE-OBS', 'TIME-OBS')),
+    'reffile_format' : 'IMAGE',
+    'reffile_required' : 'NO',
+    'reffile_switch' : 'NONE',
+    'rmap_relevance' : 'ALWAYS',
+    'sha1sum' : '4194a4065f55ada7e9b048bb8938b0070b8da350',
+}
+
+selector = Match({
+    (1,) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb31722sn_sdk.fits',
+    }),
+    (2,) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb31722tn_sdk.fits',
+    }),
+    (3,) : UseAfter({
+        '2000-01-01 00:00:00' : 'qb317230n_sdk.fits',
+    }),
+})

@@ -12,7 +12,7 @@ import os
 import crds
 from crds import log, config, rmap
 from crds.sync import SyncScript
-from crds.tests import CRDSTestCase
+from crds.tests import CRDSTestCase, test_config
 
 # ==================================================================================
 
@@ -69,7 +69,9 @@ class TestSync(CRDSTestCase):
         self.run_script("crds.sync --fetch-sqlite-db")
         
     def test_sync_dataset_ids(self):
-        self.run_script("crds.sync --contexts hst.pmap --dataset-ids LA9K03CBQ:LA9K03CBQ")
+        old_state = test_config.setup()
+        self.run_script("crds.sync --contexts hst.pmap --dataset-ids LA9K03CBQ:LA9K03CBQ --fetch-references")
+        test_config.cleanup(old_state)
         
     def test_purge_mappings(self):
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references")

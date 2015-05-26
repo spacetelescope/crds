@@ -16,6 +16,8 @@ reference or mapping file.
  'hst_cos_flatfile_0002.rmap']
 """
 from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os.path
@@ -26,7 +28,7 @@ from crds.client import api
 def _clean_file_lines(files):
     """Return simple filenames from paths in `files`, ignoring error messages."""
     files = [os.path.basename(f.strip()) for f in files]
-    return  [f for f in files if config.FILE_RE.match(f)]
+    return  [f for f in files if config.FILE_RE.match(str(f))]
 
 def findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention `filename`."""

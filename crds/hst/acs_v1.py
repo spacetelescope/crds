@@ -6,6 +6,9 @@ Dataset header preconditioning implemented as match-time operation.
 
 Match fallbacks implemented as rmap-generation-time weaker matches,  single CRDS lookup.
 """
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 from .acs_common import *
 
@@ -25,7 +28,7 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
         numcols = int(float(header["NUMCOLS"]))
     except ValueError:
         log.verbose("acs_biasfile_selection: bad NUMCOLS.")
-        sys.exc_clear()
+        # sys.exc_clear()
     else:
         header["NUMCOLS"] = utils.condition_value(str(numcols))
         # if pre-SM4 and NUMCOLS > HALF_CHIP
@@ -47,7 +50,7 @@ def precondition_header_acs_biasfile_v1(rmap, header_in):
             numrows = int(float(header["NUMROWS"])) / 2
         except ValueError:
             log.verbose("acs_biasfile_selection: bad NUMROWS.")
-            sys.exc_clear()
+            # sys.exc_clear()
         else:
             header["NUMROWS"] = utils.condition_value(str(numrows)) 
     return header     # XXXXXX RETURN NOW !!!!
@@ -217,7 +220,7 @@ def na_key(match, replacement='*'):
 def total_files(kmap):
     total = set()
     for match, fmaps in kmap.items():
-        total = total.union(set([fmap.file for fmap in fmaps]))
+        total = total.union({fmap.file for fmap in fmaps})
     return total
         
 def add_fallback_to_kmap(kmap, matches, dont_care,

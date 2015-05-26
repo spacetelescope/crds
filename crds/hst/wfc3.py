@@ -1,4 +1,7 @@
 """Special case code for WFC3."""
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import copy
 
@@ -42,7 +45,7 @@ def wfc3_darkfile_filter(kmap_orig):
     darkfile_match_keys = ('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN', 'SAMP_SEQ', 'SUBTYPE')
     kmap = copy.deepcopy(kmap_orig)
     for match in kmap_orig:
-        header = dict(zip(darkfile_match_keys, match))
+        header = dict(list(zip(darkfile_match_keys, match)))
         if header["SUBTYPE"] == '':
             header["SUBTYPE"] = "N/A"
             new_match = tuple(header[key] for key in darkfile_match_keys)
