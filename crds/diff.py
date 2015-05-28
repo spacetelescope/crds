@@ -7,6 +7,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+import six
+
 import os
 import sys
 import re
@@ -359,8 +361,15 @@ def newstyle_serial(name):
     999
     >>> newstyle_serial("hst_cos_darkfile_0998.fits")
     998
+    >>> newstyle_serial("hst.pmap")
+    0
     """
-    return int(re.search(r"_(\d+)\.\w+", name).groups()[0], 10)
+    assert isinstance(name, six.string_types)
+    serial_search = re.search(r"_(\d+)\.\w+", name)
+    if serial_search:
+        return int(serial_search.groups()[0], 10)
+    else:
+        return 0
 
 # ============================================================================
 
