@@ -406,6 +406,34 @@ def test_rmap_get_equivalent_mapping_missing():
     >>> test_config.cleanup(old_state)
     """
     
+def test_imap_match_not_applicable():
+    """
+    >>> old_state = test_config.setup()
+    >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
+    >>> p.get_best_references({
+    ...      "DETECTOR" : "SBC",
+    ...      "CCDAMP" : "A",
+    ...      "CCDGAIN" : "1.0",
+    ...      "DATE-OBS" : "1993-01-01",
+    ...      "TIME-OBS" : "12:00:00",
+    ... })
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_imap_match_not_applicable():
+    """
+    >>> old_state = test_config.setup()
+    >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
+    >>> p.get_best_references({
+    ...      "DETECTOR" : "SBC",
+    ...      "CCDAMP" : "A",
+    ...      "CCDGAIN" : "1.0",
+    ...      "DATE-OBS" : "2002-03-19",
+    ...      "TIME-OBS" : "00:34:32",
+    ... })
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 
 class TestRmap(CRDSTestCase):
@@ -651,6 +679,26 @@ selector = Match({
     def test_rmap_tojson(self):
         r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
         self.assertEqual(json.loads(r.tojson()), {u'header': {u'observatory': u'hst', u'name': u'hst_cos_bpixtab_0252.rmap', u'reffile_required': u'none', u'parkey': [[u'DETECTOR'], [u'DATE-OBS', u'TIME-OBS']], u'mapping': u'reference', u'filekind': u'bpixtab', u'instrument': u'cos', u'derived_from': u'hst_cos_bpixtab_0251.rmap', u'reffile_switch': u'none', u'reffile_format': u'table', u'rmap_relevance': u'always', u'sha1sum': u'd2024dade52a406af70fcdf27a81088004d67cae'}, u'text_descr': u'Data Quality (Bad Pixel) Initialization Table', u'parameters': [u'DETECTOR', u'USEAFTER', u'REFERENCE'], u'selections': [[u'FUV', u'1996-10-01 00:00:00', u's7g1700dl_bpix.fits'], [u'FUV', u'2009-05-11 00:00:00', u'z1r1943fl_bpix.fits'], [u'NUV', u'1996-10-01 00:00:00', u's7g1700pl_bpix.fits'], [u'NUV', u'2009-05-11 00:00:00', u'uas19356l_bpix.fits']]})
+
+    def test_rmap_match_not_applicable(self):
+        r = rmap.get_cached_mapping("data/hst_acs_darkfile_na_omit.rmap")
+        self.assertRaises(r.get_best_ref({
+          "DETECTOR" : "SBC",
+          "CCDAMP" : "A",
+          "CCDGAIN" : "1.0",
+          "DATE-OBS" : "1993-01-01",
+          "TIME-OBS" : "12:00:00",
+        }))
+
+    def test_rmap_match_omit(self):
+        r = rmap.get_cached_mapping("data/hst_acs_darkfile_na_omit.rmap")
+        self.assertRaises(r.get_best_ref({
+          "DETECTOR" : "SBC",
+          "CCDAMP" : "A",
+          "CCDGAIN" : "1.0",
+          "DATE-OBS" : "2002-03-19",
+          "TIME-OBS" : "00:34:32",
+        }))
 
 # ==================================================================================
 

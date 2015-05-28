@@ -800,6 +800,9 @@ class InstrumentContext(ContextMapping):
         self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
+            if rmap_name == "N/A":
+                self.selections[filekind] = "N/A"
+                continue
             self.selections[filekind] = refmap = _load(rmap_name, **keys)
             self._check_nested("observatory", self.observatory, refmap)
             self._check_nested("instrument", self.instrument, refmap)
@@ -808,10 +811,12 @@ class InstrumentContext(ContextMapping):
 
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping."""
-        try:
-            return self.selections[filekind.lower()]
-        except KeyError:
-            raise crds.CrdsUnknownReftypeError("Unknown reference type " + repr(str(filekind)))
+        filekind = str(filekind).lower()
+        if filekind not in self.selections:
+            raise crds.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
+        if self.selections[filekind] == "N/A":
+            raise IrrelevantReferenceTypeError("Type", repr(filekind), "is not used for", repr(self.instrument))
+        return self.selections[filekind]
 
     def get_best_references(self, header, include=None):
         """Returns a map of best references { filekind : reffile_basename }
@@ -828,6 +833,10 @@ class InstrumentContext(ContextMapping):
             ref = None
             try:
                 ref = self.get_rmap(filekind).get_best_ref(header)
+            except IrrelevantReferenceTypeError:
+                ref = "NOT FOUND n/a"
+            except OmitReferenceTypeError:
+                ref = None
             except Exception as exc:
                 ref = "NOT FOUND " + str(exc)
             if ref is not None:
@@ -1012,7 +1021,11 @@ class ReferenceMapping(Mapping):
         if include is not None and self.filekind not in include:
             raise CrdsUnknownReftypeError(self.__class__.__name__, repr(self.basename), 
                                           "can only compute bestrefs for type", repr(self.filekind), "not", include)
-        return { self.filekind : self.get_best_ref(header) }
+        bestref = self.get_best_ref(header)
+        if bestref is not None:
+            return { self.filekind : self.get_best_ref(header) }
+        else:
+            return {}
 
     def get_best_ref(self, header):
         try:
@@ -1037,22 +1050,18 @@ class ReferenceMapping(Mapping):
         header = self._precondition_header(self, header_in) # Execute type-specific plugin if applicable
         header = self.map_irrelevant_parkeys_to_na(header)  # Execute rmap parkey_relevance conditions
         try:
+            attempt = 1
             bestref = self.selector.choose(header)
-            log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=",
-                        repr(bestref), verbosity=55)
-            return bestref
         except Exception as exc:
             log.verbose("First selection failed:", str(exc), verbosity=55)
             header = self._fallback_header(self, header_in) # Execute type-specific plugin if applicable
             try:
                 if header:
+                    attempt = 1
                     header = self.minimize_header(header)
                     log.verbose("Fallback lookup on", repr(header), verbosity=55)
                     header = self.map_irrelevant_parkeys_to_na(header) # Execute rmap parkey_relevance conditions
                     bestref = self.selector.choose(header)
-                    log.verbose("Found bestref_fallback", repr(self.instrument), repr(self.filekind), "=",
-                                repr(bestref), verbosity=55)
-                    return bestref
                 else:
                     raise
             except Exception as exc:
@@ -1063,7 +1072,18 @@ class ReferenceMapping(Mapping):
                 else:
                     log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
                     raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
+        bestref = bestref.lower()
+        log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), 
+                    "on attempt", attempt, verbosity=55)
+        if bestref == "n/a":
+            raise IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")                
+        if bestref == "omit":
+            raise OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
+        return bestref
 
+    def _handle_special_values(self, bestref, attempt):
+        """Screen out special return values N/A and OMIT and raise appropriate exceptions."""
+    
     def reference_names(self):
         """Return the list of reference file basenames associated with this
         ReferenceMapping.
