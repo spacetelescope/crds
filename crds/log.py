@@ -97,8 +97,6 @@ import sys
 import os
 import optparse
 import logging
-import warnings
-import functools
 import pprint
 import contextlib
 
@@ -254,46 +252,6 @@ def set_test_mode():
 def set_log_time(enable_time=False):
     """Set the flag for including time in log messages.  Ignore CRDS_LOG_TIME."""
     THE_LOGGER.set_formatter(enable_time)
-
-# ===========================================================================
-
-# NOTE:  hijack_warnings needs to be nestable
-# XXX: hijack_warnings is non-reentrant and FAILS with THREADS
-
-def hijack_warnings(func):
-    """Decorator that redirects warning messages to CRDS warnings."""
-    @functools.wraps(func)
-    def wrapper(*args, **keys):
-        """Reassign warnings to CRDS warnings prior to executing `func`,  restore
-        warnings state afterwards and return result of `func`.
-        """
-        with warnings.catch_warnings():
-            old_showwarning = warnings.showwarning
-            warnings.showwarning = hijacked_showwarning
-            warnings.simplefilter("default")
-            warnings.filterwarnings("ignore", r".*unclosed file.*", Warning, r".*crds.data_file.*")
-            warnings.filterwarnings("ignore", r".*unclosed file.*", Warning, r".*astropy.io.fits.convenience.*")
-            try:
-                result = func(*args, **keys)
-            finally:
-                warnings.showwarning = old_showwarning
-        return result
-    return wrapper
-
-def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
-    """Map the warnings.showwarning plugin function parameters onto log.warning."""
-    try:
-        scat = str(category).split(".")[-1].split("'")[0]
-    except Exception:
-        scat = category
-    try:
-        sfile = str(filename).split(".egg")[-1].split("site-packages")[-1].replace("/",".").replace(".py", "")
-        while sfile.startswith(("/",".")):
-            sfile = sfile[1:]
-    except Exception:
-        sfile = filename
-    message = str(message).replace("\n","")
-    warning(scat, ":", sfile, ":", message)
 
 # ===========================================================================
 
