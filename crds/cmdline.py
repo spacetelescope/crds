@@ -351,7 +351,7 @@ class Script(object):
         else:
             return os.path.abspath(filename2)
     
-    @log.hijack_warnings
+    @data_file.hijack_warnings
     def __call__(self):
         """Run the script's main() according to command line parameters."""
         try:

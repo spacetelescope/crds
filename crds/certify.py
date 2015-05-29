@@ -867,7 +867,7 @@ def banner(char='#'):
     
 # ============================================================================
 
-@log.hijack_warnings
+@data_file.hijack_warnings
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, script=None, observatory=None,
@@ -936,7 +936,7 @@ def get_certifier_class(original_name):
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
-@log.hijack_warnings
+@data_file.hijack_warnings
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
