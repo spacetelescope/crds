@@ -414,7 +414,7 @@ class Script(object):
         if isinstance(context, str) and context.lower() == "none":
             return None
         if config.is_date_based_mapping_spec(context):
-            if re.match(config.OBSERVATORY_RE_STR + r"-operational", context):
+            if re.match(config.OBSERVATORY_RE_STR + r"-operational$", context):
                 final_context = self.server_info.operational_context
             else:
                 _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
@@ -593,7 +593,7 @@ class ContextsScript(Script):
                     if rmin <= serial <= rmax:
                         contexts.append(context)
         else:
-            contexts = [self.resolve_context(self.observatory + "-operational")]
+            contexts = [self.resolve_context(config.get_crds_env_context() or self.observatory + "-operational")]
         log.verbose("Determined contexts: ", contexts, verbosity=55)
         return sorted(contexts)
 
