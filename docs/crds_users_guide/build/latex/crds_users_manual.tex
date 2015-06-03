@@ -61,7 +61,7 @@
 
 
 \title{crds Documentation}
-\date{April 30, 2015}
+\date{June 03, 2015}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -329,13 +329,25 @@ provided by STScI.   Most people install CRDS as part of Ureka which is found he
 \end{quote}
 
 Follow the instructions for installing Ureka and afterward you should be able to do the following:
-\begin{quote}
 
-\% python -m crds.list --version
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} python \PYGZhy{}m crds.list \PYGZhy{}\PYGZhy{}version
 CRDS  : INFO     crds version 1.1.1 revision 1784M
-\end{quote}
+\end{Verbatim}
 
 and get similar output reflecting your installed CRDS version.
+
+
+\section{Pip Installation}
+\label{installation:pip-installation}
+It's possible to install and update CRDS using Python's pip system like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} pip install crds
+\end{Verbatim}
+
+Because of the dependencies required by CRDS such as numpy and astropy,  installing via Ureka is preferred
+and will provide a system closer or identical to the one in pipeline use.
 
 
 \section{Installing from Source}
@@ -610,12 +622,12 @@ organization, including the default shared group readonly cache at /grp/crds/cac
 variables:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
-setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst
+setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
+setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
+setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
+setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
+setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
+setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/
 setenv uref\PYGZus{}linux \PYGZdl{}\PYGZdl{}uref
 \end{Verbatim}
 
@@ -623,12 +635,12 @@ setenv uref\PYGZus{}linux \PYGZdl{}\PYGZdl{}uref
 organization, the default for newly created caches in the future, set these environment variables:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/iref
-setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/jref
-setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/oref
-setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/lref
-setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/nref
-setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/uref
+setenv iref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/iref/
+setenv jref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/jref/
+setenv oref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/oref/
+setenv lref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/lref/
+setenv nref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/nref/
+setenv uref \PYGZdl{}\PYGZob{}CRDS\PYGZus{}PATH\PYGZcb{}/references/hst/uref/
 setenv uref\PYGZus{}linux \PYGZdl{}uref
 \end{Verbatim}
 

@@ -68,14 +68,23 @@ provided by STScI.   Most people install CRDS as part of Ureka which is found he
 
     http://ssb.stsci.edu/ureka/
 
-Follow the instructions for installing Ureka and afterward you should be able to do the following:
+Follow the instructions for installing Ureka and afterward you should be able to do the following::
 
     % python -m crds.list --version
     CRDS  : INFO     crds version 1.1.1 revision 1784M
     
 and get similar output reflecting your installed CRDS version.
-   
 
+Pip Installation
+----------------
+
+It's possible to install and update CRDS using Python's pip system like this::
+
+   % pip install crds
+
+Because of the dependencies required by CRDS such as numpy and astropy,  installing via Ureka is preferred
+and will provide a system closer or identical to the one in pipeline use.
+   
 Installing from Source
 ----------------------
 
@@ -278,23 +287,23 @@ format was flat,  and the shared group cache at /grp/crds/cache remains flat.
 organization, including the default shared group readonly cache at /grp/crds/cache,  set these environment 
 variables::
 
-  setenv iref ${CRDS_PATH}/references/hst
-  setenv jref ${CRDS_PATH}/references/hst
-  setenv oref ${CRDS_PATH}/references/hst
-  setenv lref ${CRDS_PATH}/references/hst
-  setenv nref ${CRDS_PATH}/references/hst
-  setenv uref ${CRDS_PATH}/references/hst
+  setenv iref ${CRDS_PATH}/references/hst/
+  setenv jref ${CRDS_PATH}/references/hst/
+  setenv oref ${CRDS_PATH}/references/hst/
+  setenv lref ${CRDS_PATH}/references/hst/
+  setenv nref ${CRDS_PATH}/references/hst/
+  setenv uref ${CRDS_PATH}/references/hst/
   setenv uref_linux $$uref
 
 **By-Instrument CRDS cache** For calibration software to use references in a CRDS cache with a by-instrument
 organization, the default for newly created caches in the future, set these environment variables::
   
-  setenv iref ${CRDS_PATH}/references/hst/iref
-  setenv jref ${CRDS_PATH}/references/hst/jref
-  setenv oref ${CRDS_PATH}/references/hst/oref
-  setenv lref ${CRDS_PATH}/references/hst/lref
-  setenv nref ${CRDS_PATH}/references/hst/nref
-  setenv uref ${CRDS_PATH}/references/hst/uref
+  setenv iref ${CRDS_PATH}/references/hst/iref/
+  setenv jref ${CRDS_PATH}/references/hst/jref/
+  setenv oref ${CRDS_PATH}/references/hst/oref/
+  setenv lref ${CRDS_PATH}/references/hst/lref/
+  setenv nref ${CRDS_PATH}/references/hst/nref/
+  setenv uref ${CRDS_PATH}/references/hst/uref/
   setenv uref_linux $uref
 
 **Reorganizing CRDS References** The crds.sync tool can be used to reorganize the directory structure of a large 

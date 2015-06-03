@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011/Fink) (format=pdflatex 2014.10.23)  15 APR 2015 16:01
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011/Fink) (format=pdflatex 2014.10.23)  3 JUN 2015 16:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -880,7 +880,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 168--168
 
  []
 
-<stsci_logo.pdf, id=210, 237.88875pt x 133.49875pt>
+<stsci_logo.pdf, id=214, 237.88875pt x 133.49875pt>
 File: stsci_logo.pdf Graphic file (type pdf)
  <use stsci_logo.pdf>
 Package pdftex.def Info: stsci_logo.pdf used on input line 168.
@@ -1016,11 +1016,11 @@ l.319 \chapter
               {Installation} [2]
 Chapter 2.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 344.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 356.
 [3
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 406--407
+Underfull \hbox (badness 10000) in paragraph at lines 418--419
 
  []
 
@@ -1033,52 +1033,52 @@ Chapter 4.
 [11
 
 ]
-Underfull \vbox (badness 10000) detected at line 935
+Underfull \vbox (badness 10000) detected at line 947
  []
 
 
-Underfull \vbox (badness 10000) detected at line 935
+Underfull \vbox (badness 10000) detected at line 947
  []
 
 [12] [13] [14] [15] [16] [17] [18] [19] [20]
-Underfull \hbox (badness 10000) in paragraph at lines 1513--1513
+Underfull \hbox (badness 10000) in paragraph at lines 1570--1570
 
  []
 
 [21] [22] [23] [24]
 Chapter 5.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1753.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1810.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1755.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1812.
 [25
 
 ] [26]
 Chapter 6.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1877--1877
+Underfull \hbox (badness 10000) in paragraph at lines 1934--1934
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1878--1879
+Underfull \hbox (badness 10000) in paragraph at lines 1935--1936
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1893--1894
+Underfull \hbox (badness 10000) in paragraph at lines 1950--1951
 
  []
 
 [27
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1911--1911
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1912--1913
+Underfull \hbox (badness 10000) in paragraph at lines 1969--1970
 
  []
 
@@ -1086,349 +1086,349 @@ Underfull \hbox (badness 10000) in paragraph at lines 1912--1913
 
 ]
 Chapter 7.
-<file_relationships.png, id=465, 796.9775pt x 597.56583pt>
+<file_relationships.png, id=470, 796.9775pt x 597.56583pt>
 File: file_relationships.png Graphic file (type png)
 
 <use file_relationships.png>
-Package pdftex.def Info: file_relationships.png used on input line 2146.
+Package pdftex.def Info: file_relationships.png used on input line 2203.
 (pdftex.def)             Requested size: 796.97554pt x 597.56436pt.
 File: file_relationships.png Graphic file (type png)
  <use file_relationships.png>
-Package pdftex.def Info: file_relationships.png used on input line 2146.
+Package pdftex.def Info: file_relationships.png used on input line 2203.
 (pdftex.def)             Requested size: 469.755pt x 352.2143pt.
  [33 <./file_relationships.png>] [34] [35] [36] [37] [38] [39] [40] [41] [42] [
 43] [44
 
 ]
 Chapter 8.
-<web_index.png, id=549, 947.54pt x 945.5325pt>
+<web_index.png, id=554, 947.54pt x 945.5325pt>
 File: web_index.png Graphic file (type png)
  <use web_index.png>
-Package pdftex.def Info: web_index.png used on input line 2798.
+Package pdftex.def Info: web_index.png used on input line 2855.
 (pdftex.def)             Requested size: 947.53767pt x 945.5302pt.
 File: web_index.png Graphic file (type png)
 
 <use web_index.png>
-Package pdftex.def Info: web_index.png used on input line 2798.
+Package pdftex.def Info: web_index.png used on input line 2855.
 (pdftex.def)             Requested size: 469.755pt x 468.75421pt.
- <web_context_history.png, id=550, 945.5325pt x 540.0175pt>
+ <web_context_history.png, id=555, 945.5325pt x 540.0175pt>
 File: web_context_history.png Graphic file (type png)
 
 <use web_context_history.png>
-Package pdftex.def Info: web_context_history.png used on input line 2829.
+Package pdftex.def Info: web_context_history.png used on input line 2886.
 (pdftex.def)             Requested size: 945.5302pt x 540.01617pt.
 File: web_context_history.png Graphic file (type png)
  <use web_context_history.png>
-Package pdftex.def Info: web_context_history.png used on input line 2829.
+Package pdftex.def Info: web_context_history.png used on input line 2886.
 (pdftex.def)             Requested size: 469.755pt x 268.29416pt.
- [45 <./web_index.png>] <web_context_table.png, id=556, 957.5775pt x 931.48pt>
+ [45 <./web_index.png>] <web_context_table.png, id=561, 957.5775pt x 931.48pt>
 File: web_context_table.png Graphic file (type png)
 
 <use web_context_table.png>
-Package pdftex.def Info: web_context_table.png used on input line 2837.
+Package pdftex.def Info: web_context_table.png used on input line 2894.
 (pdftex.def)             Requested size: 957.57516pt x 931.47772pt.
 File: web_context_table.png Graphic file (type png)
  <use web_context_table.png>
-Package pdftex.def Info: web_context_table.png used on input line 2837.
+Package pdftex.def Info: web_context_table.png used on input line 2894.
 (pdftex.def)             Requested size: 469.755pt x 456.95508pt.
 
-<web_context_difference.png, id=557, 946.53625pt x 940.51375pt>
+<web_context_difference.png, id=562, 946.53625pt x 940.51375pt>
 File: web_context_difference.png Graphic file (type png)
 
 <use web_context_difference.png>
-Package pdftex.def Info: web_context_difference.png used on input line 2854.
+Package pdftex.def Info: web_context_difference.png used on input line 2911.
 (pdftex.def)             Requested size: 946.53395pt x 940.51146pt.
 File: web_context_difference.png Graphic file (type png)
  <use web_context_difference.png>
-Package pdftex.def Info: web_context_difference.png used on input line 2854.
+Package pdftex.def Info: web_context_difference.png used on input line 2911.
 (pdftex.def)             Requested size: 469.755pt x 466.75406pt.
  [46 <./web_context_history.png> <./web_context_table.png>]
-<web_dataset_bestrefs.png, id=563, 956.57375pt x 579.16376pt>
+<web_dataset_bestrefs.png, id=568, 956.57375pt x 579.16376pt>
 File: web_dataset_bestrefs.png Graphic file (type png)
 
 <use web_dataset_bestrefs.png>
-Package pdftex.def Info: web_dataset_bestrefs.png used on input line 2879.
+Package pdftex.def Info: web_dataset_bestrefs.png used on input line 2936.
 (pdftex.def)             Requested size: 956.57141pt x 579.16234pt.
 File: web_dataset_bestrefs.png Graphic file (type png)
  <use web_dataset_bestrefs.png>
-Package pdftex.def Info: web_dataset_bestrefs.png used on input line 2879.
+Package pdftex.def Info: web_dataset_bestrefs.png used on input line 2936.
 (pdftex.def)             Requested size: 469.755pt x 284.41133pt.
  [47 <./web_context_difference.png> <./web_dataset_bestrefs.png>]
-<web_dataset_bestrefs_results.png, id=569, 949.5475pt x 939.51pt>
+<web_dataset_bestrefs_results.png, id=574, 949.5475pt x 939.51pt>
 File: web_dataset_bestrefs_results.png Graphic file (type png)
 
 <use web_dataset_bestrefs_results.png>
 Package pdftex.def Info: web_dataset_bestrefs_results.png used on input line 29
-14.
+71.
 (pdftex.def)             Requested size: 949.54518pt x 939.5077pt.
 File: web_dataset_bestrefs_results.png Graphic file (type png)
  <use web_dataset_bestrefs_results.png>
 Package pdftex.def Info: web_dataset_bestrefs_results.png used on input line 29
-14.
+71.
 (pdftex.def)             Requested size: 469.755pt x 464.79367pt.
 
-<web_explore_bestrefs.png, id=570, 951.555pt x 495.8525pt>
+<web_explore_bestrefs.png, id=575, 951.555pt x 495.8525pt>
 File: web_explore_bestrefs.png Graphic file (type png)
 
 <use web_explore_bestrefs.png>
-Package pdftex.def Info: web_explore_bestrefs.png used on input line 2937.
+Package pdftex.def Info: web_explore_bestrefs.png used on input line 2994.
 (pdftex.def)             Requested size: 951.55267pt x 495.85129pt.
 File: web_explore_bestrefs.png Graphic file (type png)
  <use web_explore_bestrefs.png>
-Package pdftex.def Info: web_explore_bestrefs.png used on input line 2937.
+Package pdftex.def Info: web_explore_bestrefs.png used on input line 2994.
 (pdftex.def)             Requested size: 469.755pt x 244.79327pt.
  [48 <./web_dataset_bestrefs_results.png>]
-<web_explore_bestrefs_parameters.png, id=581, 944.52875pt x 871.255pt>
+<web_explore_bestrefs_parameters.png, id=586, 944.52875pt x 871.255pt>
 File: web_explore_bestrefs_parameters.png Graphic file (type png)
 
 <use web_explore_bestrefs_parameters.png>
 Package pdftex.def Info: web_explore_bestrefs_parameters.png used on input line
- 2945.
+ 3002.
 (pdftex.def)             Requested size: 944.52644pt x 871.25288pt.
 File: web_explore_bestrefs_parameters.png Graphic file (type png)
 
 <use web_explore_bestrefs_parameters.png>
 Package pdftex.def Info: web_explore_bestrefs_parameters.png used on input line
- 2945.
+ 3002.
 (pdftex.def)             Requested size: 469.755pt x 433.31323pt.
 
-<web_browse_database.png, id=582, 946.53625pt x 497.86pt>
+<web_browse_database.png, id=587, 946.53625pt x 497.86pt>
 File: web_browse_database.png Graphic file (type png)
 
 <use web_browse_database.png>
-Package pdftex.def Info: web_browse_database.png used on input line 2960.
+Package pdftex.def Info: web_browse_database.png used on input line 3017.
 (pdftex.def)             Requested size: 946.53395pt x 497.85878pt.
 File: web_browse_database.png Graphic file (type png)
  <use web_browse_database.png>
-Package pdftex.def Info: web_browse_database.png used on input line 2960.
+Package pdftex.def Info: web_browse_database.png used on input line 3017.
 (pdftex.def)             Requested size: 469.755pt x 247.07578pt.
 
-<web_browse_database_files.png, id=583, 956.57375pt x 918.43124pt>
+<web_browse_database_files.png, id=588, 956.57375pt x 918.43124pt>
 File: web_browse_database_files.png Graphic file (type png)
 
 <use web_browse_database_files.png>
-Package pdftex.def Info: web_browse_database_files.png used on input line 2971.
+Package pdftex.def Info: web_browse_database_files.png used on input line 3028.
 
 (pdftex.def)             Requested size: 956.57141pt x 918.429pt.
 File: web_browse_database_files.png Graphic file (type png)
  <use web_browse_database_files.png>
-Package pdftex.def Info: web_browse_database_files.png used on input line 2971.
+Package pdftex.def Info: web_browse_database_files.png used on input line 3028.
 
 (pdftex.def)             Requested size: 469.755pt x 451.01624pt.
 
-<web_browse_database_details.png, id=584, 950.55125pt x 407.5225pt>
+<web_browse_database_details.png, id=589, 950.55125pt x 407.5225pt>
 File: web_browse_database_details.png Graphic file (type png)
 
 <use web_browse_database_details.png>
-Package pdftex.def Info: web_browse_database_details.png used on input line 298
-0.
+Package pdftex.def Info: web_browse_database_details.png used on input line 303
+7.
 (pdftex.def)             Requested size: 950.54893pt x 407.5215pt.
 File: web_browse_database_details.png Graphic file (type png)
  <use web_browse_database_details.png>
-Package pdftex.def Info: web_browse_database_details.png used on input line 298
-0.
+Package pdftex.def Info: web_browse_database_details.png used on input line 303
+7.
 (pdftex.def)             Requested size: 469.755pt x 201.3978pt.
 
 [49 <./web_explore_bestrefs.png> <./web_explore_bestrefs_parameters.png>]
 [50 <./web_browse_database.png> <./web_browse_database_files.png> <./web_browse
 _database_details.png>]
-<web_recent_activity.png, id=594, 952.55875pt x 494.84875pt>
+<web_recent_activity.png, id=599, 952.55875pt x 494.84875pt>
 File: web_recent_activity.png Graphic file (type png)
 
 <use web_recent_activity.png>
-Package pdftex.def Info: web_recent_activity.png used on input line 3019.
+Package pdftex.def Info: web_recent_activity.png used on input line 3076.
 (pdftex.def)             Requested size: 952.55643pt x 494.84755pt.
 File: web_recent_activity.png Graphic file (type png)
  <use web_recent_activity.png>
-Package pdftex.def Info: web_recent_activity.png used on input line 3019.
+Package pdftex.def Info: web_recent_activity.png used on input line 3076.
 (pdftex.def)             Requested size: 469.755pt x 244.04102pt.
 
-<web_recent_activity_results.png, id=595, 952.55875pt x 805.0075pt>
+<web_recent_activity_results.png, id=600, 952.55875pt x 805.0075pt>
 File: web_recent_activity_results.png Graphic file (type png)
 
 <use web_recent_activity_results.png>
-Package pdftex.def Info: web_recent_activity_results.png used on input line 302
-8.
+Package pdftex.def Info: web_recent_activity_results.png used on input line 308
+5.
 (pdftex.def)             Requested size: 952.55643pt x 805.00555pt.
 File: web_recent_activity_results.png Graphic file (type png)
  <use web_recent_activity_results.png>
-Package pdftex.def Info: web_recent_activity_results.png used on input line 302
-8.
+Package pdftex.def Info: web_recent_activity_results.png used on input line 308
+5.
 (pdftex.def)             Requested size: 469.755pt x 396.9998pt.
 
 [51 <./web_recent_activity.png> <./web_recent_activity_results.png>]
-<web_login.png, id=602, 948.54375pt x 459.7175pt>
+<web_login.png, id=607, 948.54375pt x 459.7175pt>
 File: web_login.png Graphic file (type png)
  <use web_login.png>
-Package pdftex.def Info: web_login.png used on input line 3052.
+Package pdftex.def Info: web_login.png used on input line 3109.
 (pdftex.def)             Requested size: 948.54143pt x 459.71637pt.
 File: web_login.png Graphic file (type png)
 
 <use web_login.png>
-Package pdftex.def Info: web_login.png used on input line 3052.
+Package pdftex.def Info: web_login.png used on input line 3109.
 (pdftex.def)             Requested size: 469.755pt x 227.66959pt.
- <web_logged_in.png, id=603, 944.52875pt x 945.5325pt>
+ <web_logged_in.png, id=608, 944.52875pt x 945.5325pt>
 File: web_logged_in.png Graphic file (type png)
 
 <use web_logged_in.png>
-Package pdftex.def Info: web_logged_in.png used on input line 3060.
+Package pdftex.def Info: web_logged_in.png used on input line 3117.
 (pdftex.def)             Requested size: 944.52644pt x 945.5302pt.
 File: web_logged_in.png Graphic file (type png)
  <use web_logged_in.png>
-Package pdftex.def Info: web_logged_in.png used on input line 3060.
+Package pdftex.def Info: web_logged_in.png used on input line 3117.
 (pdftex.def)             Requested size: 469.755pt x 470.25468pt.
- [52 <./web_login.png> <./web_logged_in.png>] <web_certify_file.png, id=609, 95
+ [52 <./web_login.png> <./web_logged_in.png>] <web_certify_file.png, id=614, 95
 9.585pt x 811.03pt>
 File: web_certify_file.png Graphic file (type png)
 
 <use web_certify_file.png>
-Package pdftex.def Info: web_certify_file.png used on input line 3102.
+Package pdftex.def Info: web_certify_file.png used on input line 3159.
 (pdftex.def)             Requested size: 959.58266pt x 811.02802pt.
 File: web_certify_file.png Graphic file (type png)
  <use web_certify_file.png>
-Package pdftex.def Info: web_certify_file.png used on input line 3102.
+Package pdftex.def Info: web_certify_file.png used on input line 3159.
 (pdftex.def)             Requested size: 469.755pt x 397.03691pt.
 
-<web_mark_files_bad.png, id=610, 955.57pt x 564.1075pt>
+<web_mark_files_bad.png, id=615, 955.57pt x 564.1075pt>
 File: web_mark_files_bad.png Graphic file (type png)
 
 <use web_mark_files_bad.png>
-Package pdftex.def Info: web_mark_files_bad.png used on input line 3132.
+Package pdftex.def Info: web_mark_files_bad.png used on input line 3189.
 (pdftex.def)             Requested size: 955.56767pt x 564.10611pt.
 File: web_mark_files_bad.png Graphic file (type png)
  <use web_mark_files_bad.png>
-Package pdftex.def Info: web_mark_files_bad.png used on input line 3132.
+Package pdftex.def Info: web_mark_files_bad.png used on input line 3189.
 (pdftex.def)             Requested size: 469.755pt x 277.31027pt.
- [53 <./web_certify_file.png>] <web_set_context.png, id=620, 949.5475pt x 700.6
+ [53 <./web_certify_file.png>] <web_set_context.png, id=625, 949.5475pt x 700.6
 175pt>
 File: web_set_context.png Graphic file (type png)
 
 <use web_set_context.png>
-Package pdftex.def Info: web_set_context.png used on input line 3152.
+Package pdftex.def Info: web_set_context.png used on input line 3209.
 (pdftex.def)             Requested size: 949.54518pt x 700.61578pt.
 File: web_set_context.png Graphic file (type png)
  <use web_set_context.png>
-Package pdftex.def Info: web_set_context.png used on input line 3152.
+Package pdftex.def Info: web_set_context.png used on input line 3209.
 (pdftex.def)             Requested size: 469.755pt x 346.60895pt.
 
-<web_batch_submit_references.png, id=621, 953.5625pt x 658.46pt>
+<web_batch_submit_references.png, id=626, 953.5625pt x 658.46pt>
 File: web_batch_submit_references.png Graphic file (type png)
 
 <use web_batch_submit_references.png>
-Package pdftex.def Info: web_batch_submit_references.png used on input line 317
-9.
+Package pdftex.def Info: web_batch_submit_references.png used on input line 323
+6.
 (pdftex.def)             Requested size: 953.56018pt x 658.4584pt.
 File: web_batch_submit_references.png Graphic file (type png)
  <use web_batch_submit_references.png>
-Package pdftex.def Info: web_batch_submit_references.png used on input line 317
-9.
+Package pdftex.def Info: web_batch_submit_references.png used on input line 323
+6.
 (pdftex.def)             Requested size: 469.755pt x 324.38641pt.
 
 [54 <./web_mark_files_bad.png> <./web_set_context.png>]
-<web_upload_files.png, id=627, 751.80875pt x 407.5225pt>
+<web_upload_files.png, id=632, 751.80875pt x 407.5225pt>
 File: web_upload_files.png Graphic file (type png)
 
 <use web_upload_files.png>
-Package pdftex.def Info: web_upload_files.png used on input line 3201.
+Package pdftex.def Info: web_upload_files.png used on input line 3258.
 (pdftex.def)             Requested size: 751.8069pt x 407.5215pt.
 File: web_upload_files.png Graphic file (type png)
  <use web_upload_files.png>
-Package pdftex.def Info: web_upload_files.png used on input line 3201.
+Package pdftex.def Info: web_upload_files.png used on input line 3258.
 (pdftex.def)             Requested size: 469.755pt x 254.63875pt.
  [55 <./web_batch_submit_references.png> <./web_upload_files.png>]
-<web_derive_from_context.png, id=635, 694.595pt x 322.20375pt>
+<web_derive_from_context.png, id=640, 694.595pt x 322.20375pt>
 File: web_derive_from_context.png Graphic file (type png)
 
 <use web_derive_from_context.png>
-Package pdftex.def Info: web_derive_from_context.png used on input line 3283.
+Package pdftex.def Info: web_derive_from_context.png used on input line 3340.
 (pdftex.def)             Requested size: 694.5933pt x 322.20296pt.
 File: web_derive_from_context.png Graphic file (type png)
  <use web_derive_from_context.png>
-Package pdftex.def Info: web_derive_from_context.png used on input line 3283.
+Package pdftex.def Info: web_derive_from_context.png used on input line 3340.
 (pdftex.def)             Requested size: 469.755pt x 217.9157pt.
  [56 <./web_derive_from_context.png>]
-<web_batch_submit_results.png, id=642, 869.2475pt x 739.76375pt>
+<web_batch_submit_results.png, id=647, 869.2475pt x 739.76375pt>
 File: web_batch_submit_results.png Graphic file (type png)
 
 <use web_batch_submit_results.png>
-Package pdftex.def Info: web_batch_submit_results.png used on input line 3332.
+Package pdftex.def Info: web_batch_submit_results.png used on input line 3389.
 (pdftex.def)             Requested size: 869.24538pt x 739.76193pt.
 File: web_batch_submit_results.png Graphic file (type png)
  <use web_batch_submit_results.png>
-Package pdftex.def Info: web_batch_submit_results.png used on input line 3332.
+Package pdftex.def Info: web_batch_submit_results.png used on input line 3389.
 (pdftex.def)             Requested size: 469.755pt x 399.78253pt.
  [57 <./web_batch_submit_results.png>]
-<web_collision_warnings.png, id=655, 984.67876pt x 369.38pt>
+<web_collision_warnings.png, id=660, 984.67876pt x 369.38pt>
 File: web_collision_warnings.png Graphic file (type png)
 
 <use web_collision_warnings.png>
-Package pdftex.def Info: web_collision_warnings.png used on input line 3369.
+Package pdftex.def Info: web_collision_warnings.png used on input line 3426.
 (pdftex.def)             Requested size: 984.67635pt x 369.37909pt.
 File: web_collision_warnings.png Graphic file (type png)
  <use web_collision_warnings.png>
-Package pdftex.def Info: web_collision_warnings.png used on input line 3369.
+Package pdftex.def Info: web_collision_warnings.png used on input line 3426.
 (pdftex.def)             Requested size: 469.755pt x 176.21822pt.
 
-<web_submit_references.png, id=656, 969.6225pt x 666.49pt>
+<web_submit_references.png, id=661, 969.6225pt x 666.49pt>
 File: web_submit_references.png Graphic file (type png)
 
 <use web_submit_references.png>
-Package pdftex.def Info: web_submit_references.png used on input line 3409.
+Package pdftex.def Info: web_submit_references.png used on input line 3466.
 (pdftex.def)             Requested size: 969.62013pt x 666.48837pt.
 File: web_submit_references.png Graphic file (type png)
  <use web_submit_references.png>
-Package pdftex.def Info: web_submit_references.png used on input line 3409.
+Package pdftex.def Info: web_submit_references.png used on input line 3466.
 (pdftex.def)             Requested size: 469.755pt x 322.90149pt.
 
-<web_submit_mappings.png, id=657, 973.6375pt x 606.265pt>
+<web_submit_mappings.png, id=662, 973.6375pt x 606.265pt>
 File: web_submit_mappings.png Graphic file (type png)
 
 <use web_submit_mappings.png>
-Package pdftex.def Info: web_submit_mappings.png used on input line 3423.
+Package pdftex.def Info: web_submit_mappings.png used on input line 3480.
 (pdftex.def)             Requested size: 973.63512pt x 606.26352pt.
 File: web_submit_mappings.png Graphic file (type png)
  <use web_submit_mappings.png>
-Package pdftex.def Info: web_submit_mappings.png used on input line 3423.
+Package pdftex.def Info: web_submit_mappings.png used on input line 3480.
 (pdftex.def)             Requested size: 469.755pt x 292.50253pt.
  [58 <./web_collision_warnings.png>] [59 <./web_submit_references.png> <./web_s
 ubmit_mappings.png>] [60
 
 ]
 Chapter 9.
-[61] [62] <web_jsonrpc_browse.png, id=690, 664.4825pt x 893.3375pt>
+[61] [62] <web_jsonrpc_browse.png, id=695, 664.4825pt x 893.3375pt>
 File: web_jsonrpc_browse.png Graphic file (type png)
 
 <use web_jsonrpc_browse.png>
-Package pdftex.def Info: web_jsonrpc_browse.png used on input line 3572.
+Package pdftex.def Info: web_jsonrpc_browse.png used on input line 3629.
 (pdftex.def)             Requested size: 664.48087pt x 893.33531pt.
 File: web_jsonrpc_browse.png Graphic file (type png)
  <use web_jsonrpc_browse.png>
-Package pdftex.def Info: web_jsonrpc_browse.png used on input line 3572.
+Package pdftex.def Info: web_jsonrpc_browse.png used on input line 3629.
 (pdftex.def)             Requested size: 469.755pt x 631.54782pt.
  [63] [64 <./web_jsonrpc_browse.png>]
 Chapter 10.
 [65
 
 ] [66] (./crds_users_manual.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3851.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3908.
  [67]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3851.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 3908.
  (./crds_users_manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3851.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3851.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3908.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3908.
 
 Package rerunfilecheck Info: File `crds_users_manual.out' has not changed.
-(rerunfilecheck)             Checksum: A7F48AC9EE2F47EE537892B2E66F6C39;3232.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3851.
+(rerunfilecheck)             Checksum: 126139FC570730ED245FB6B07C4CC419;3295.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3908.
  ) 
 Here is how much of TeX's memory you used:
- 9685 strings out of 493633
- 137546 string characters out of 3149114
- 239603 words of memory out of 3000000
- 12481 multiletter control sequences out of 15000+200000
+ 9688 strings out of 493633
+ 137601 string characters out of 3149114
+ 239646 words of memory out of 3000000
+ 12483 multiletter control sequences out of 15000+200000
  60960 words of font info for 68 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
- 36i,12n,49p,1260b,653s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,12n,51p,1260b,653s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/sw/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</sw/share/texmf-dist/fonts
 /type1/urw/courier/ucrb8a.pfb></sw/share/texmf-dist/fonts/type1/urw/courier/ucr
 r8a.pfb></sw/share/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb></sw/share/te
@@ -1437,10 +1437,10 @@ urw/helvetic/uhvbo8a.pfb></sw/share/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.
 pfb></sw/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></sw/share/texmf-dis
 t/fonts/type1/urw/times/utmr8a.pfb></sw/share/texmf-dist/fonts/type1/urw/times/
 utmri8a.pfb>
-Output written on crds_users_manual.pdf (71 pages, 2139221 bytes).
+Output written on crds_users_manual.pdf (71 pages, 2140575 bytes).
 PDF statistics:
- 797 PDF objects out of 1000 (max. 8388607)
- 673 compressed objects within 7 object streams
- 221 named destinations out of 1000 (max. 500000)
- 569 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 802 PDF objects out of 1000 (max. 8388607)
+ 678 compressed objects within 7 object streams
+ 222 named destinations out of 1000 (max. 500000)
+ 577 words of extra memory for PDF output out of 10000 (max. 10000000)
 
