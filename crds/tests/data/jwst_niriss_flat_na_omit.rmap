@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'jwst_niriss_flat_0002.rmap',
+    'filekind' : 'FLAT',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_flat_na_omit.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'ee5c9657710e110ac68569c44000c63edddf3a62',
+}
+
+selector = Match({
+    ('NIS', 'BOGUS1') : 'OMIT',
+    ('NIS', 'BOGUS2') : 'N/A',
+})
