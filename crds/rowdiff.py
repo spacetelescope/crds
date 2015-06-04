@@ -5,7 +5,6 @@ script. Written to add this functionality to crds.diff.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from builtins import object
 
 import sys
 

@@ -54,12 +54,57 @@ import os.path
 import re
 import json
 import warnings
+import functools
 
 from crds import utils, log, config
 
 from astropy.io import fits as pyfits
+from astropy.utils.exceptions import AstropyUserWarning
+
 import six
 # import pyasdf
+
+# ===========================================================================
+
+# NOTE:  hijack_warnings needs to be nestable
+# XXX: hijack_warnings is non-reentrant and FAILS with THREADS
+
+def hijack_warnings(func):
+    """Decorator that redirects warning messages to CRDS warnings."""
+    @functools.wraps(func)
+    def wrapper(*args, **keys):
+        """Reassign warnings to CRDS warnings prior to executing `func`,  restore
+        warnings state afterwards and return result of `func`.
+        """
+        with warnings.catch_warnings():
+            old_showwarning = warnings.showwarning
+            warnings.showwarning = hijacked_showwarning
+            warnings.simplefilter("always", AstropyUserWarning)
+            warnings.filterwarnings("always", r".*", UserWarning, r".*jwst_lib.*")
+            warnings.filterwarnings("error", r".*is not one of.*", UserWarning, r".*jwst_lib.*")
+            warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*crds.data_file.*")
+            warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*astropy.io.fits.convenience.*")
+            try:
+                result = func(*args, **keys)
+            finally:
+                warnings.showwarning = old_showwarning
+        return result
+    return wrapper
+
+def hijacked_showwarning(message, category, filename, lineno, *args, **keys):
+    """Map the warnings.showwarning plugin function parameters onto log.warning."""
+    try:
+        scat = str(category).split(".")[-1].split("'")[0]
+    except Exception:
+        scat = category
+    try:
+        sfile = str(filename).split(".egg")[-1].split("site-packages")[-1].replace("/",".").replace(".py", "")
+        while sfile.startswith(("/",".")):
+            sfile = sfile[1:]
+    except Exception:
+        sfile = filename
+    message = str(message).replace("\n","")
+    log.warning(scat, ":", sfile, ":", message)
 
 # =============================================================================
 
@@ -91,7 +136,7 @@ def get_observatory(filepath, original_name=None):
         return "hst"
 
     
-@log.hijack_warnings
+@hijack_warnings
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
     if condition:
@@ -100,7 +145,7 @@ def getval(filepath, key, condition=True):
         header = get_unconditioned_header(filepath, needed_keys=[key])
     return header[key]
 
-@log.hijack_warnings
+@hijack_warnings
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
     ftype = config.filetype(filepath)
@@ -115,7 +160,7 @@ def setval(filepath, key, value):
     else:
         raise NotImplementedError("setval not supported for type " + repr(ftype))
 
-@log.hijack_warnings
+@hijack_warnings
 def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
@@ -124,7 +169,7 @@ def dm_setval(filepath, key, value):
         d_model[key.lower()] = value
         d_model.save(filepath)
 
-@log.hijack_warnings
+@hijack_warnings
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
@@ -136,7 +181,7 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
     header = get_header(filepath, needed_keys, original_name, observatory=observatory)
     return utils.condition_header(header, needed_keys)
 
-@log.hijack_warnings
+@hijack_warnings
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
     

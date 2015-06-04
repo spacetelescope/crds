@@ -375,24 +375,15 @@ def get_crds_env_context():
     >>> get_crds_env_context()
     Traceback (most recent call last):
     ...
-    AssertionError: If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. 'jwst.pmap', not 'jwst_miri_0022.imap'
+    AssertionError: Only set CRDS_CONTEXT to a literal or symbolic context (.pmap), e.g. jwst_0042.pmap,  jwst-2014-10-15T00:15:21, jwst-operational,  not 'jwst_miri_0022.imap'
    
-    >>> os.environ["CRDS_CONTEXT"] = "/nowhere/to/be/found/jwst_0042.pmap"    
-    >>> get_crds_env_context()
-    Traceback (most recent call last):
-    ...
-    AssertionError: Can't find pipeline mapping specified by CRDS_CONTEXT = '/nowhere/to/be/found/jwst_0042.pmap' at '/nowhere/to/be/found/jwst_0042.pmap'
-
     >>> del os.environ["CRDS_CONTEXT"]
     >>> get_crds_env_context()
     """
     context = os.environ.get("CRDS_CONTEXT", None)
-    if context is not None:
-        where = locate_mapping(context)
-        assert context.endswith(".pmap"), \
-            "If set, CRDS_CONTEXT should specify a pipeline mapping,  e.g. 'jwst.pmap', not " + repr(context)
-        assert os.path.exists(where), \
-            "Can't find pipeline mapping specified by CRDS_CONTEXT = " + repr(context) + " at " + repr(where)
+    if context:
+        assert is_context_spec(context), \
+            "Only set CRDS_CONTEXT to a literal or symbolic context (.pmap), e.g. jwst_0042.pmap,  jwst-2014-10-15T00:15:21, jwst-operational,  not " + repr(context)
     return context
 
 CRDS_IGNORE_MAPPING_CHECKSUM = BooleanConfigItem("CRDS_IGNORE_MAPPING_CHECKSUM", False,
@@ -695,10 +686,14 @@ CONTEXT_DATETIME_RE = re.compile(complete_re(CONTEXT_DATETIME_RE_STR))
 
 # e.g.  hst, hst-acs, hst-acs-darkfile
 CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?)?" 
+CONTEXT_OBS_RE_STR = r"[a-z]{1,8}" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
 CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
 CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
+
+PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
@@ -742,6 +737,37 @@ def is_mapping_spec(mapping):
     False
     """
     return is_mapping(mapping) or (isinstance(mapping, six.string_types) and bool(CONTEXT_RE.match(mapping)))
+
+def is_context(mapping):
+    """Return True IFF `mapping` has an extension indicating a CRDS CONTEXT, i.e. .pmap."""
+    return isinstance(mapping, six.string_types) and mapping.endswith((".pmap",))
+
+def is_context_spec(mapping):
+    """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
+    
+    Date-based specifications can be interpreted by the CRDS server with respect to the operational
+    context history to determine the default operational context which was in use at that date.
+    This function verifies syntax only,  not the existence of corresponding context.
+    
+    >>> is_context_spec("hst_0042.pmap")
+    True
+    
+    >>> is_context_spec("hst.pmap")
+    True
+    
+    >>> is_context_spec("foo.pmap")
+    True
+    
+    >>> is_context_spec("foo")
+    False
+    
+    >>> is_context_spec("hst-2040-01-29T12:00:00")
+    True
+
+    >>> is_context_spec("hst-acs-2040-01-29T12:00:00")
+    False
+    """
+    return is_context(mapping) or (isinstance(mapping, six.string_types) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).

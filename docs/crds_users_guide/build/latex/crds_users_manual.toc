@@ -2,10 +2,11 @@
 \contentsline {chapter}{\numberline {1}Package Overview}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Installation}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Installation via Ureka}{3}{section.2.1}
-\contentsline {section}{\numberline {2.2}Installing from Source}{3}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Subversion Checkout}{3}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Run the Install Script}{3}{subsection.2.2.2}
-\contentsline {section}{\numberline {2.3}Dependencies}{3}{section.2.3}
+\contentsline {section}{\numberline {2.2}Pip Installation}{3}{section.2.2}
+\contentsline {section}{\numberline {2.3}Installing from Source}{3}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Subversion Checkout}{3}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Run the Install Script}{3}{subsection.2.3.2}
+\contentsline {section}{\numberline {2.4}Dependencies}{4}{section.2.4}
 \contentsline {chapter}{\numberline {3}Setting up your Environment}{5}{chapter.3}
 \contentsline {section}{\numberline {3.1}Basic Environment}{5}{section.3.1}
 \contentsline {section}{\numberline {3.2}Setup for On Site Operartional Use (HST or JWST)}{5}{section.3.2}
@@ -34,10 +35,10 @@
 \contentsline {subsection}{\numberline {4.2.8}Bad Files}{15}{subsection.4.2.8}
 \contentsline {section}{\numberline {4.3}crds.sync}{15}{section.4.3}
 \contentsline {section}{\numberline {4.4}crds.certify}{18}{section.4.4}
-\contentsline {section}{\numberline {4.5}crds.diff}{19}{section.4.5}
-\contentsline {section}{\numberline {4.6}crds.rowdiff}{20}{section.4.6}
-\contentsline {section}{\numberline {4.7}crds.uses}{21}{section.4.7}
-\contentsline {section}{\numberline {4.8}crds.matches}{22}{section.4.8}
+\contentsline {section}{\numberline {4.5}crds.diff}{20}{section.4.5}
+\contentsline {section}{\numberline {4.6}crds.rowdiff}{21}{section.4.6}
+\contentsline {section}{\numberline {4.7}crds.uses}{22}{section.4.7}
+\contentsline {section}{\numberline {4.8}crds.matches}{23}{section.4.8}
 \contentsline {section}{\numberline {4.9}pipeline\_bestrefs}{24}{section.4.9}
 \contentsline {chapter}{\numberline {5}Library Use}{25}{chapter.5}
 \contentsline {section}{\numberline {5.1}crds.getreferences()}{25}{section.5.1}
