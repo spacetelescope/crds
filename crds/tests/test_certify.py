@@ -239,6 +239,33 @@ def certify_comparison_context_none_all_mappings():
     0
     """
 
+def certify_jwst_valid():
+    """
+    >>> TestCertifyScript("crds.certify data/niriss_ref_photom.fits --comparison-context None")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/niriss_ref_photom.fits' (1/1) as 'FITS' relative to context None
+    CRDS  : INFO     FITS file 'niriss_ref_photom.fits' conforms to FITS standards.
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     0 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     4 infos
+    0
+    """
+
+def certify_jwst_invalid():
+    """
+    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
+    CRDS  : INFO     FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
+    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : meta.instrument.detector: 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2']. Setting to default of None
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     1 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     4 infos
+    1
+    """
+
 # ==================================================================================
 
 class TestHSTTpnInfoClass(CRDSTestCase):
