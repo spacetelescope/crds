@@ -11,8 +11,8 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '(DETECTOR == "UVIS" and SUBARRAY == "FALSE")',
-    'sha1sum' : '57d717bfec8894a9da2bd1398fbbae0a4daf1a38',
-    'suffix' : 'drc',
+    'sha1sum' : '8b68079142028df644e940f98fe135ceaffc1078',
+    'suffix' : 'dkc',
     'text_descr' : 'Cte Corrected Dark',
 }
 
