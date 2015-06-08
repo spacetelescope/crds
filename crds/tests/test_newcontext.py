@@ -41,12 +41,12 @@ def tst_new_context():
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
 
     >>> newcontext.NewContextScript("newcontext.py hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
-    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in './hst_acs_0003.imap'
-    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in './hst_cos_0001.imap'
-    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_0003.imap' for 'ACS' in './hst_0003.pmap'
-    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0001.imap' for 'COS' in './hst_0003.pmap'
+    CRDS  : INFO     Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in 'hst_acs.imap' producing './hst_acs_10000.imap'
+    CRDS  : INFO     Replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap' for 'deadtab' in 'hst_cos.imap' producing './hst_cos_0001.imap'
+    CRDS  : INFO     Replaced 'hst_acs.imap' with './hst_acs_10000.imap' for 'ACS' in 'hst.pmap' producing './hst_0003.pmap'
+    CRDS  : INFO     Replaced 'hst_cos.imap' with './hst_cos_0001.imap' for 'COS' in 'hst.pmap' producing './hst_0003.pmap'
     CRDS  : INFO     Adjusting name 'hst_0003.pmap' derived_from 'hst.pmap' in './hst_0003.pmap'
-    CRDS  : INFO     Adjusting name 'hst_acs_0003.imap' derived_from 'hst_acs.imap' in './hst_acs_0003.imap'
+    CRDS  : INFO     Adjusting name 'hst_acs_10000.imap' derived_from 'hst_acs.imap' in './hst_acs_10000.imap'
     CRDS  : INFO     Adjusting name 'hst_cos_0001.imap' derived_from 'hst_cos.imap' in './hst_cos_0001.imap'
     0
 
@@ -55,7 +55,7 @@ def tst_new_context():
      "replaced 's7g1700gl_dead.fits' with 's7g1700gm_dead.fits'",
      "replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap'",
      "replaced 'hst_cos_deadtab.rmap' with 'data/hst_cos_deadtab_9999.rmap'",
-     "replaced 'hst_acs.imap' with './hst_acs_0003.imap'",
+     "replaced 'hst_acs.imap' with './hst_acs_10000.imap'",
      "replaced 'hst_cos.imap' with './hst_cos_0001.imap'"]
     
     >>> pysh.sh("rm \./*\.[pir]map")
