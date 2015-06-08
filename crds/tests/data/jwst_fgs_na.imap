@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_niriss_0017.imap',
+    'instrument' : 'FGS',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_fgs_na.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '626289883529d898a6b485288215b1558d1635af',
+}
+
+selector = {
+    'FLAT' : 'N/A',
+}

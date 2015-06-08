@@ -5,9 +5,11 @@ header = {
     'name' : 'jwst_na_omit.pmap',
     'observatory' : 'JWST',
     'parkey' : ('META.INSTRUMENT.NAME',),
-    'sha1sum' : '585a5aba7313405ef9ccaca34f8873c9341c5919',
+    'sha1sum' : 'ec240d806576cbb8688bc4f7f74f8f983efca73e',
 }
 
 selector = {
+    'FGS' : 'jwst_fgs_na.imap',
+    'MIRI' : 'jwst_miri_omit.imap',
     'NIRISS' : 'jwst_niriss_na_omit.imap',
 }
