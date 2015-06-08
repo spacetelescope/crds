@@ -58,10 +58,10 @@ def hack_in_new_maps(old, new, updated_maps):
     for mapping in sorted(updated_maps):
         key, replaced = insert_mapping(new, mapping)
         if replaced:
-            log.info("Replaced", repr(replaced), "with", repr(mapping), "for", repr(key), "in", repr(new))
+            log.info("Replaced", repr(replaced), "with", repr(mapping), "for", repr(key), "in", repr(old), "producing", repr(new))
         else:
-            log.info("Added", repr(mapping), "for", repr(key), "in", repr(new))
-            
+            log.info("Added", repr(mapping), "for", repr(key), "in", repr(old), "producing", repr(new))
+
 def insert_mapping(context, mapping):
     """Replace the filename in file `context` with the same generic name
     as `mapping` with `mapping`.  Re-write `context` in place.

@@ -291,30 +291,54 @@ class FileSelectionsDict(dict):
     na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
     omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
     special_values_set = na_values_set | omit_values_set
+
+    @classmethod
+    def is_na_value(cls, value):
+        return isinstance(value, str) and value in cls.na_values_set
+    
+    @classmethod
+    def is_omit_value(cls, value):
+        return isinstance(value, str) and value in cls.omit_values_set
+
+    @classmethod
+    def is_special_value(cls, value):
+        return isinstance(value, str) and value in cls.special_values_set
+        
+    def string_values(self):
+        """Any of the special values will also be strings.  Some non-strings are not hashable,  can't make sets."""
+        return set([val for val in self.values() if isinstance(val, str)])
+
+    def nonstring_values(self):
+        """Exotic return values like bracket tuples or dicts.   Currently these MAY NOT contain N/A, etc."""
+        return [val for val in self.values() if not isinstance(val, str)]    
     
     def normal_values(self):
-        """
+        """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
+        
         >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
         ['something.imap']
         """
-        return sorted(list(set(self.values()) - self.special_values_set))
+        return sorted(list(self.string_values() - self.special_values_set) + self.nonstring_values())
 
     def special_values(self):
-        """
+        """These are values which must be trapped and reformatted in the Mapping classes.
+        
         >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
         ['N/A']
         """
-        return sorted(list(set(self.values()) & self.special_values_set))
+        return sorted(list(self.string_values() & self.special_values_set))
 
     def normal_keys(self):
-        """
+        """Each of these keys has a corresponding value which IS NOT special.
+        
         >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).normal_keys()
         ['that']
         """
         return sorted([key for key in self.keys() if self[key] not in self.special_values_set])
 
     def special_keys(self):
-        """
+        """Each of these keys has a corresponding values which IS special.
+        
         >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).special_keys()
         ['this']
         """
@@ -333,7 +357,6 @@ class FileSelectionsDict(dict):
         [('this', 'N/A')]
         """
         return sorted([ (key,val) for (key,val) in self.items() if val in self.special_values_set])
-        
 
 # ===================================================================
 
@@ -849,7 +872,7 @@ class InstrumentContext(ContextMapping):
         self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
-            if rmap_name in FileSelectionsDict.special_values_set:
+            if FileSelectionsDict.is_special_value(rmap_name):
                 self.selections[filekind] = rmap_name
                 continue
             else:
@@ -864,9 +887,9 @@ class InstrumentContext(ContextMapping):
         filekind = str(filekind).lower()
         if filekind not in self.selections:
             raise crds.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
-        if self.selections[filekind] in FileSelectionsDict.na_values_set:
+        if FileSelectionsDict.is_na_value(self.selections[filekind]):
             raise IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
-        if self.selections[filekind] in FileSelectionsDict.omit_values_set:
+        if  FileSelectionsDict.is_omit_value(self.selections[filekind]):
             raise OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
@@ -1090,7 +1113,10 @@ class ReferenceMapping(Mapping):
         except OmitReferenceTypeError:
             return None
         except Exception as exc:
-            return "NOT FOUND " + str(exc)
+            if log.get_exception_trap():
+                return "NOT FOUND " + str(exc)
+            else:
+                raise
 
     def _get_best_ref(self, header_in):
         """Return the single reference file basename appropriate for
@@ -1129,9 +1155,9 @@ class ReferenceMapping(Mapping):
                     raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
         log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), 
                     "on attempt", attempt, verbosity=55)
-        if bestref in FileSelectionsDict.na_values_set:
+        if FileSelectionsDict.is_na_value(bestref):
             raise IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")                
-        if bestref in FileSelectionsDict.omit_values_set:
+        if FileSelectionsDict.is_omit_value(bestref):
             raise OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
         return bestref
 
