@@ -55,16 +55,12 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 import sys
-import os
 import os.path
-import re
 import glob
-import copy
 import json
 import ast
 
 from collections import namedtuple
-
 
 import crds
 from . import (log, utils, selectors, data_file, config, substitutions)
@@ -283,11 +279,72 @@ class LowerCaseDict(dict):
     def __repr__(self):
         return self.__class__.__name__ + "(%s)" % repr({key: self.header[key] for key in self.header }) #super(LowerCaseDict, self).__repr__()
 
+# ===================================================================
+
+class FileSelectionsDict(dict):
+    """Manages selections for higher level mappings like .pmaps and .imaps.
+
+    Provides helper methods which exlude or highlight special selection values
+    like N/A or OMIT to support recursive loading or processing.   Special
+    values,  since they do not designate nested files, terminate any recursion
+    """
+    na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
+    omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
+    special_values_set = na_values_set | omit_values_set
+    
+    def normal_values(self):
+        """
+        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
+        ['something.imap']
+        """
+        return sorted(list(set(self.values()) - self.special_values_set))
+
+    def special_values(self):
+        """
+        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
+        ['N/A']
+        """
+        return sorted(list(set(self.values()) & self.special_values_set))
+
+    def normal_keys(self):
+        """
+        >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).normal_keys()
+        ['that']
+        """
+        return sorted([key for key in self.keys() if self[key] not in self.special_values_set])
+
+    def special_keys(self):
+        """
+        >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).special_keys()
+        ['this']
+        """
+        return sorted([key for key in self.keys() if self[key] in self.special_values_set])
+
+    def normal_items(self):
+        """
+        >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_items())
+        [('that', 'something.imap')]
+        """
+        return sorted([ (key,val) for (key,val) in self.items() if val not in self.special_values_set])
+
+    def special_items(self):
+        """
+        >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_items())
+        [('this', 'N/A')]
+        """
+        return sorted([ (key,val) for (key,val) in self.items() if val in self.special_values_set])
+        
+
+# ===================================================================
+
 class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
     required_attrs = []
+    
+    # no precursor file if derived_from contains any of these.
+    null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
         self.filename = filename
@@ -479,7 +536,7 @@ class Mapping(object):
         """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
         if hasattr(self, "selections"):
-            for selection in self.selections.values():
+            for selection in self.selections.normal_values():
                 parkeys |= set(selection.get_required_parkeys())
         return sorted(parkeys)
 
@@ -583,33 +640,38 @@ class Mapping(object):
     
     def reference_names(self):
         """Returns set(ref_file_name...)"""
-        return sorted({ reference for selector in self.selections.values() for reference in selector.reference_names() })
+        return sorted({ reference for selector in self.selections.normal_values() for reference in selector.reference_names() })
 
     def reference_name_map(self):
         """Returns { filekind : set( ref_file_name... ) }"""
-        return { filekind:selector.reference_names() for (filekind, selector) in self.selections.items() }
+        name_map = { filekind:selector.reference_names() for (filekind, selector) in self.selections.normal_items() }
+        name_map.update(self.selections.special_items())
+        return name_map
 
     def mapping_names(self):
         """Returns a list of mapping files associated with this Mapping"""
-        return sorted([self.basename] + [name for selector in self.selections.values() for name in selector.mapping_names()])
+        return sorted([self.basename] + [name for selector in self.selections.normal_values() for name in selector.mapping_names()])
  
     def file_matches(self, filename):
         """Return the "extended match tuples" which can be followed to arrive at `filename`."""
-        return sorted([match for value in self.selections.values() for match in value.file_matches(filename)])
+        return sorted([match for value in self.selections.normal_values() for match in value.file_matches(filename)])
     
     def get_derived_from(self):
         """Return the Mapping object `self` was derived from, or None."""
-        derived_from = None
+        for substring in self.null_derivation_substrings:
+            if substring in self.derived_from:
+                log.info("Skipping derivation checks for root mapping", repr(self.basename),
+                         "derived_from =", repr(self.derived_from))
+                return None
         derived_path = locate_mapping(self.derived_from)
-        if "generated" in self.derived_from or "cloning" in self.derived_from or "by hand" in self.derived_from:
-            log.info("Skipping derivation checks for root mapping", repr(self.basename),
-                      "derived_from =", repr(self.derived_from))
-        elif os.path.exists(derived_path):
+        if os.path.exists(derived_path):
             with log.error_on_exception("Can't load parent mapping", repr(derived_path)):
                 derived_from = fetch_mapping(derived_path)
+                return derived_from
+            return None
         else:
             log.warning("Parent mapping for", repr(self.basename), "=", repr(self.derived_from), "does not exist.")
-        return derived_from
+            return None
 
     def _check_type(self, expected_type):
         """Verify that this mapping has `expected_type` as the value of header 'mapping'."""
@@ -629,11 +691,13 @@ class Mapping(object):
         levels of the hierarchy starting with this one.   If recursive is zero,  only
         return the filename and header of the next levels down,  not the contents.
         """
+        selections = sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
+                        for (key,val) in self.selections.normal_items()])
+        selections.update(self.selections.special_items())
         return {
                 "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
-                "selections" : sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
-                                       for key,val in self.selections.items() ])
+                "selections" : selections,
                 }
         
     def tojson(self, recursive=10):
@@ -646,23 +710,6 @@ class Mapping(object):
         """
         return self.instrument.upper()
 
-    def apply(self, func, *args, **kargs):
-        """Apply a function recursively to this mapping and
-        all child mappings.
-        """
-
-        # Do the function on this object.
-        results = func(self, *args, **kargs)
-
-        # Now for each submapping, do the same
-        if hasattr(self, 'selections'):
-            for name, context in self.selections.items():
-                if isinstance(context, Mapping):
-                    results.extend(context.apply(func, *args, **kargs))
-
-        # that's all folks
-        return results
-    
     def locate_file(self, filename):
         """Return the full path (in cache or absolute) of `filename` as determined by the current environment."""
         return locate_file(filename, self.observatory)
@@ -698,7 +745,7 @@ class PipelineContext(ContextMapping):
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
-        self.selections = {}
+        self.selections = FileSelectionsDict()
         self._check_type("pipeline")
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
@@ -724,6 +771,8 @@ class PipelineContext(ContextMapping):
         instrument = instrument_hacks.get(instrument.lower(), instrument.lower())
         try:
             return self.selections[instrument]
+        except (IrrelevantReferenceTypeError, OmitReferenceTypeError):
+            raise
         except KeyError:
             raise CrdsUnknownInstrumentError("Unknown instrument " + repr(instrument) +
                                   " for context " + repr(self.basename))
@@ -781,7 +830,7 @@ class PipelineContext(ContextMapping):
             { instrument : [ matching_parkey_name, ... ], }
         """
         return { instrument : list(self.parkey) + self.selections[instrument].get_required_parkeys() 
-                 for instrument in self.selections }
+                 for instrument in self.selections.normal_keys() }
         
 # ===================================================================
 
@@ -796,17 +845,18 @@ class InstrumentContext(ContextMapping):
         super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
-        self.selections = {}
+        self.selections = FileSelectionsDict()
         self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
-            if rmap_name == "N/A":
-                self.selections[filekind] = "N/A"
+            if rmap_name in FileSelectionsDict.special_values_set:
+                self.selections[filekind] = rmap_name
                 continue
-            self.selections[filekind] = refmap = _load(rmap_name, **keys)
-            self._check_nested("observatory", self.observatory, refmap)
-            self._check_nested("instrument", self.instrument, refmap)
-            self._check_nested("filekind", filekind, refmap)
+            else:
+                self.selections[filekind] = refmap = _load(rmap_name, **keys)
+                self._check_nested("observatory", self.observatory, refmap)
+                self._check_nested("instrument", self.instrument, refmap)
+                self._check_nested("filekind", filekind, refmap)
         self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def get_rmap(self, filekind):
@@ -814,8 +864,10 @@ class InstrumentContext(ContextMapping):
         filekind = str(filekind).lower()
         if filekind not in self.selections:
             raise crds.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
-        if self.selections[filekind] == "N/A":
-            raise IrrelevantReferenceTypeError("Type", repr(filekind), "is not used for", repr(self.instrument))
+        if self.selections[filekind] in FileSelectionsDict.na_values_set:
+            raise IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
+        if self.selections[filekind] in FileSelectionsDict.omit_values_set:
+            raise OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
     def get_best_references(self, header, include=None):
@@ -826,7 +878,7 @@ class InstrumentContext(ContextMapping):
         """
         refs = {}
         if not include:
-            include = self.selections
+            include = self.selections.keys()
         for filekind in include:
             log.verbose("-"*120, verbosity=55)
             filekind = filekind.lower()
@@ -851,7 +903,7 @@ class InstrumentContext(ContextMapping):
         Return { parkey : [legal values...], ... }
         """
         pkmap = {}
-        for selection in self.selections.values():
+        for selection in self.selections.normal_values():
             for parkey, choices in selection.get_parkey_map().items():
                 if parkey not in pkmap:
                     pkmap[parkey] = set()
@@ -877,7 +929,7 @@ class InstrumentContext(ContextMapping):
         lists of valid values.
         """
         pkmap = {}
-        for selection in self.selections.values():
+        for selection in self.selections.normal_values():
             rmap_pkmap = selection.get_valid_values_map(condition)
             for key in rmap_pkmap:
                 if key not in pkmap:
@@ -1028,6 +1080,9 @@ class ReferenceMapping(Mapping):
             return {}
 
     def get_best_ref(self, header):
+        """Return a single best reference value associated with this .rmap and `header`.  Map exceptions
+        from nested methods onto simple "NOT FOUND..." strings which are exempted from reference downloads.
+        """
         try:
             return self._get_best_ref(header)
         except IrrelevantReferenceTypeError:
@@ -1072,12 +1127,11 @@ class ReferenceMapping(Mapping):
                 else:
                     log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
                     raise IrrelevantReferenceTypeError("No match found and reference type is not required.")
-        bestref = bestref.lower()
         log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), 
                     "on attempt", attempt, verbosity=55)
-        if bestref == "n/a":
+        if bestref in FileSelectionsDict.na_values_set:
             raise IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")                
-        if bestref == "omit":
+        if bestref in FileSelectionsDict.omit_values_set:
             raise OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
         return bestref
 
