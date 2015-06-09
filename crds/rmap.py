@@ -603,29 +603,50 @@ class Mapping(object):
         new_mapping = asmapping(new_mapping, cache="readonly")
         differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:
+            # Check for deleted or replaced keys in self / old mapping.
             if key not in new_mapping.selections:
+                # This could be better if it recursed and enumerated deleted files.
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), "deleted " + repr(self.selections[key].filename)),
+                    * path + ((self.filename, new_mapping.filename), (key,), "deleted " + repr(self._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
             else:
-                diffs = self.selections[key].difference( new_mapping.selections[key],  
-                    path = path + ((self.filename, new_mapping.filename,), ), 
-                    pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
-                differences.extend(diffs)
+                if self._is_normal_value(key) and new_mapping._is_normal_value(key): 
+                    # recursion needed if both selections are mappings.
+                    diffs = self.selections[key].difference( new_mapping.selections[key],  
+                        path = path + ((self.filename, new_mapping.filename,), ), 
+                        pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
+                    differences.extend(diffs)
+                else:   
+                    # special value difference only includes replacement names,  not recursive diffs.
+                    diffs = True
                 if diffs:
                     diff = selectors.DiffTuple(
                         * (path + ((self.filename, new_mapping.filename), (key,), 
-                                  "replaced " + repr(self.selections[key].filename) + " with " + repr(new_mapping.selections[key].filename))),
+                        "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
                         parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                     differences.append(diff)
         for key in new_mapping.selections:
+            # Check for added keys in new_mapping
             if key not in self.selections:
+                # This could be better if it recursed and enumerated added files.
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), "added " + repr(new_mapping.selections[key].filename)),
+                    * path + ((self.filename, new_mapping.filename), (key,), "added " + repr(new_mapping._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
+            else:
+                # replacement case already handled above,  not needed in reverse.
+                pass 
         return sorted(differences)
+    
+    def _is_normal_value(self, key):
+        """Return True IFF the value of selection `key` is not special, i.e. N/A or OMIT."""
+        return not FileSelectionsDict.is_special_value(self.selections[key])
+    
+    def _value_name(self, key):
+        """Return either a special value,  or the filename of the loaded mapping."""
+        value = self.selections[key]
+        return value if FileSelectionsDict.is_special_value(value) else value.filename
     
     def difference_header(self, other, path=(), pars=()):
         """Compare `self` with `other` and return a list of difference
