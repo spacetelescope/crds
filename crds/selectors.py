@@ -787,7 +787,8 @@ class Selector(object):
     # XXXX changes to the format of difference messages need to be coordinated with
     # crds.diff,  crds.rmap and the website interative application (crds.server.interactive.web_certify).
     # IOW,  the messages are part of the software API,  don't change without review.
-    def difference(self, new_selector, path=(), pars=(), top_selector=True):
+    def difference(self, new_selector, path=(), pars=(), top_selector=True, 
+                   recurse_added_deleted=False):
         """Return the list of differences between `self` and `new_selector` where 
         `path` names the
         """
@@ -812,8 +813,11 @@ class Selector(object):
             pkey = self._diff_key(key)
             if key not in new_selector_keys:
                 if isinstance(choice, Selector):
-                    differences.extend(choice._flat_diff("deleted {} rule for".format(self.short_name), 
+                    differences.extend(choice.flat_diff("deleted {} rule for".format(self.short_name), 
                                                          path + (pkey,), pars + (self._parameters,)))
+#                     if recurse_added_deleted:
+#                         diffs = choice.flat_diff("delete terminal", path + (pkey,), pars + (self._parameters,))
+#                         differences.extend(diffs)
                 elif top_selector:
                     differences.append(msg(key, "deleted {} rule for".format(self.short_name), repr(choice)))
                 else:
@@ -832,25 +836,28 @@ class Selector(object):
                 new_selector_choice = new_selector_map[key]
                 if isinstance(new_selector_choice, Selector):
                     differences.extend(
-                        new_selector_choice._flat_diff("added {} rule for".format(self.short_name), 
+                        new_selector_choice.flat_diff("added {} rule for".format(self.short_name), 
                                                        path + (pkey,), pars + (self._parameters,)))
+#                     if recurse_added_deleted:
+#                         diffs = choice.flat_diff("added terminal", path + (pkey,), pars + (self._parameters,))
+#                         differences.extend(diffs)
                 elif top_selector:
                     differences.append(msg(key, "added {} rule for".format(self.short_name), repr(new_selector_choice)))
                 else:
                     differences.append(msg(key, "added terminal", repr(new_selector_choice)))
         return differences
     
-    def _flat_diff(self, change, path, pars):
+    def flat_diff(self, change, path, pars):
         """Return `change` messages relative to `path` for all of `self`s selections
         as a simple flat list of one change tuple per nested choice.
         """
-        msg = self._get_msg(path, pars)
         diffs = []        
         for key, choice in self._raw_selections:
             pkey = self._diff_key(key)
             if isinstance(choice, Selector):
-                diffs.extend(choice._flat_diff(change, path + (pkey,), pars + (self._parameters,)))
+                diffs.extend(choice.flat_diff(change, path + (pkey,), pars + (self._parameters,)))
             else:
+                msg = self._get_msg(path, pars)
                 diffs.append(msg(key, change, repr(choice)))
         return diffs
     

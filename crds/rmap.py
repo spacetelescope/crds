@@ -596,7 +596,7 @@ class Mapping(object):
         """
         log.verbose("Validating", repr(self.basename))
 
-    def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False):
+    def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Compare `self` with `new_mapping` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
@@ -605,17 +605,22 @@ class Mapping(object):
         for key in self.selections:
             # Check for deleted or replaced keys in self / old mapping.
             if key not in new_mapping.selections:
-                # This could be better if it recursed and enumerated deleted files.
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), "deleted " + repr(self._value_name(key))),
+                    * path + ((self.filename, new_mapping.filename), (key,), 
+                    "deleted " + repr(self._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
+                if recurse_added_deleted and self._is_normal_value(key):
+                    # Get tuples for all implicitly deleted nested files.
+                    deleted = self.selections[key].diff_files("deleted", 
+                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    differences.extend(deleted)
             else:
                 if self._is_normal_value(key) and new_mapping._is_normal_value(key): 
                     # recursion needed if both selections are mappings.
                     diffs = self.selections[key].difference( new_mapping.selections[key],  
-                        path = path + ((self.filename, new_mapping.filename,), ), 
-                        pars = pars + (self.diff_name,), include_header_diffs=include_header_diffs)
+                        path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
+                        include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
                     differences.extend(diffs)
                 else:   
                     # special value difference only includes replacement names,  not recursive diffs.
@@ -629,16 +634,37 @@ class Mapping(object):
         for key in new_mapping.selections:
             # Check for added keys in new_mapping
             if key not in self.selections:
-                # This could be better if it recursed and enumerated added files.
                 diff = selectors.DiffTuple(
-                    * path + ((self.filename, new_mapping.filename), (key,), "added " + repr(new_mapping._value_name(key))),
+                    * path + ((self.filename, new_mapping.filename), (key,), 
+                    "added " + repr(new_mapping._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 differences.append(diff)
+                if recurse_added_deleted and new_mapping._is_normal_value(key):
+                    # Get tuples for all implicitly added nested files.
+                    nested_adds = new_mapping.selections[key].diff_files("added", 
+                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    differences.extend(nested_adds)
             else:
                 # replacement case already handled above,  not needed in reverse.
                 pass 
         return sorted(differences)
     
+    def diff_files(self, added_deleted, path=(), pars=()):
+        """Return the list of diff tuples for all nested changed files in a higher level addition
+        or deletion.   added_deleted should be "added" or "deleted"
+        """
+        diffs = []
+        for key, selection in self.selection.items():
+            if self._is_normal_value(key):
+                diffs.extend(selection.diff_files(added_deleted, path + (key,), pars + (self.diff_name,)))
+            else:
+                delete_special = selectors.DiffTuple(
+                        * (path + ((self.filename,), (key,), 
+                        added_deleted + " " + repr(self._value_name(key)))),
+                        parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                diffs.append(delete_special)
+        return diffs
+
     def _is_normal_value(self, key):
         """Return True IFF the value of selection `key` is not special, i.e. N/A or OMIT."""
         return not FileSelectionsDict.is_special_value(self.selections[key])
@@ -1284,21 +1310,32 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
-    def difference(self, other, path=(), pars=(), include_header_diffs=False):
-        """Return the list of difference tuples between `self` and `other`,
-        prefixing each tuple with context `path`.   Elements of `path` are
-        named by correspnding elements of `pars`.
+    def difference(self, other, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
+        """Return the list of difference tuples between `self` and `other`, prefixing each tuple with context `path`.
+        Elements of `path` are named by correspnding elements of `pars`.
         """
         other = asmapping(other, cache="readonly")
         header_diffs = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
         body_diffs = self.selector.difference(other.selector, 
                 path = path + ((self.filename, other.filename),),
-                pars = pars + (self.diff_name,))
+                pars = pars + (self.diff_name,),
+                recurse_added_deleted=recurse_added_deleted)
         diffs = header_diffs + body_diffs
         for diff in diffs:
             diff.instrument = self.instrument
             diff.filekind = self.filekind
         return diffs
+
+    def diff_files(self, added_deleted, path=(), pars=()):
+        """Return the list of diff tuples for all nested changed files in a higher level addition
+        or deletion.   added_deleted should be "added" or "deleted"
+        """
+        body_diffs = self.selector.flat_diff(added_deleted + " terminal",
+                path = path + ((self.filename,)), pars = pars + (self.diff_name,))
+        for diff in body_diffs:
+            diff.instrument = self.instrument
+            diff.filekind = self.filekind
+        return body_diffs
 
     def check_rmap_relevance(self, header):
         """Raise an exception if this rmap's relevance expression evaluated in the context of `header` returns False.

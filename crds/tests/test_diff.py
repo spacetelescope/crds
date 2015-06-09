@@ -78,7 +78,7 @@ def tst_diff_pmap_diffs():
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('biasfile',), 'replaced data/hst_acs_biasfile_0001.rmap with data/hst_acs_biasfile_0002.rmap')
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('acs',), 'replaced data/hst_acs_0001.imap with data/hst_acs_0002.imap')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -97,7 +97,7 @@ def tst_diff_imap_diffs():
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('biasfile',), 'replaced data/hst_acs_biasfile_0001.rmap with data/hst_acs_biasfile_0002.rmap')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -120,7 +120,7 @@ def tst_diff_rmap_diffs():
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'extra_keys' = ('XCORNER', 'YCORNER', 'CCDCHIP') with ('ZCORNER', 'YCORNER', 'CCDCHIP')")
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'reffile_required' = 'yes' with 'no'")
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'sha1sum' = '90a43965be5d044f1e8fcf5f141b3f64b763ca89' with '32df61d8f1cd4d398d84d05e1706b5565712d87d'")
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -151,7 +151,7 @@ def tst_diff_fits_diff():
              ?          ^
     <BLANKLINE>
     <BLANKLINE>
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -196,7 +196,7 @@ def tst_diff_rmap_primitive_diffs():
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -225,7 +225,7 @@ def tst_diff_file_reversions():
     CRDS  : WARNING  Reversion at ('data/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00')) replaced 'data/hst_acs_biasfile_0002.fits' with 'data/hst_acs_biasfile_0001.fits'
     CRDS  : WARNING  Reversion at ('data/hst_acs_0001.imap', ('biasfile',)) replaced 'data/hst_acs_biasfile_0002.rmap' with 'data/hst_acs_biasfile_0001.rmap'
     CRDS  : WARNING  Reversion at ('data/hst_0001.pmap', ('acs',)) replaced 'data/hst_acs_0002.imap' with 'data/hst_acs_0001.imap'
-    0
+    2
     >>> test_config.cleanup(old_state)
     """
 
@@ -271,7 +271,7 @@ def tst_diff_row_change():
              'no', 'yes', 425, -2689.2646, 'ogeed'
              'no', 'no', 8989, 9870.0254, 'readmittance'
     <BLANKLINE>
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
     
@@ -281,7 +281,7 @@ def tst_diff_print_affected_modes():
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-modes")()
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='FUV' DIFF_COUNT='1'
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -347,8 +347,7 @@ def tst_diff_print_all_new_files():
     x9c18021o_drk.fits stis darkfile
     x9c18022o_drk.fits stis darkfile
     x9c18023o_drk.fits stis darkfile
-    0
-
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -360,7 +359,7 @@ def tst_diff_print_new_files():
     hst_acs_0002.imap
     hst_acs_biasfile_0002.rmap
     data/hst_acs_biasfile_0002.fits
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -369,7 +368,7 @@ def tst_diff_print_affected_types():
     >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-types")()
     cos        deadtab   
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -378,7 +377,7 @@ def tst_diff_print_affected_instruments():
     >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
     cos
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 

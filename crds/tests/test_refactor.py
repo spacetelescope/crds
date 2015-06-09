@@ -30,7 +30,7 @@ def test_refactor_add_files():
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_insert.rmap").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), 'added terminal s7g1700hl_dead.fits')
-    0
+    1
     
     >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_insert.rmap", "none", "data/s7g1700hl_dead.fits", expected=("add",)))
     True
@@ -54,7 +54,7 @@ def test_refactor_delete_files():
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_delete.rmap").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_delete.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700gl_dead.fits')
-    0
+    1
 
     >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_delete.rmap", "none", "data/s7g1700gl_dead.fits", expected=("delete",))
     True
@@ -78,7 +78,7 @@ def test_refactor_add_header():
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap --include-header-diffs --hide-boring-diffs").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_add_header.rmap'), "header added 'new_key' = 'some new value'")
-    0
+    1
 
     >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_add_header.rmap", "none", "none", expected=("add_header",)))
     True
@@ -95,7 +95,7 @@ def test_refactor_replace_header():
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap --include-header-diffs --hide-boring-diffs").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_replace_header.rmap'), "header replaced 'reffile_format' = 'table' with 'something new'")
-    0
+    1
     
     >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_replace_header.rmap", "none", "none", expected=("replace_header",)))
     True
@@ -112,7 +112,7 @@ def test_refactor_del_header():
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap --include-header-diffs --hide-boring-diffs").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_del_header.rmap'), "deleted header 'reffile_format' = 'table'")
-    0
+    1
 
     >>> pp(refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_del_header.rmap", "none", "none", expected=("del_header",)))
     True
