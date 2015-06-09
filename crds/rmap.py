@@ -622,6 +622,14 @@ class Mapping(object):
                         path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
                         include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
                     differences.extend(diffs)
+                elif recurse_added_deleted and self._is_normal_value(key):  # new_mapping is special
+                    diffs = self.selections[key].diff_files("deleted", 
+                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    differences.extend(diffs)
+                elif recurse_added_deleted and new_mapping._is_normal_value(key):   # self is special
+                    diffs = new_mapping.selections[key].diff_files("added", 
+                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    differences.extend(diffs)
                 else:   
                     # special value difference only includes replacement names,  not recursive diffs.
                     diffs = True
@@ -654,7 +662,7 @@ class Mapping(object):
         or deletion.   added_deleted should be "added" or "deleted"
         """
         diffs = []
-        for key, selection in self.selection.items():
+        for key, selection in self.selections.items():
             if self._is_normal_value(key):
                 diffs.extend(selection.diff_files(added_deleted, path + (key,), pars + (self.diff_name,)))
             else:
@@ -819,9 +827,12 @@ class PipelineContext(ContextMapping):
         self._check_type("pipeline")
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            self.selections[instrument] = ictx = _load(imapname, **keys)
-            self._check_nested("observatory", self.observatory, ictx)
-            self._check_nested("instrument", instrument, ictx)
+            if self.selections.is_special_value(imapname):
+                self.selections[instrument] = imapname
+            else:
+                self.selections[instrument] = ictx = _load(imapname, **keys)
+                self._check_nested("observatory", self.observatory, ictx)
+                self._check_nested("instrument", instrument, ictx)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def get_best_references(self, header, include=None):
@@ -919,9 +930,8 @@ class InstrumentContext(ContextMapping):
         self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
-            if FileSelectionsDict.is_special_value(rmap_name):
+            if self.selections.is_special_value(rmap_name):
                 self.selections[filekind] = rmap_name
-                continue
             else:
                 self.selections[filekind] = refmap = _load(rmap_name, **keys)
                 self._check_nested("observatory", self.observatory, refmap)
