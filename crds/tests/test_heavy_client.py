@@ -18,7 +18,7 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_getreferences_na():
+def test_getreferences_rmap_na():
     """
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
@@ -30,12 +30,36 @@ def test_getreferences_na():
     >>> test_config.cleanup(old_state)
     """
 
-def test_getreferences_omit():
+def test_getreferences_rmap_omit():
     """
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
 
     >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS", "META.INSTRUMENT.FILTER":"BOGUS1"},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    {}
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_getreferences_imap_na():
+    """
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"FGS",},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    {'flat': 'NOT FOUND n/a'}
+
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_getreferences_imap_omit():
+    """
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"MIRI",},
     ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
     {}
 
