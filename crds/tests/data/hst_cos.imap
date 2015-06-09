@@ -5,7 +5,7 @@ header = {
     'name' : 'hst_cos.imap',
     'observatory' : 'HST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'a87bbe694e942cd5e7a7a3f70ccf8e9e6b3a2d7a',
+    'sha1sum' : '697ce6b6197ae3870b10b76f44eb9b66a65e4bc8',
 }
 
 selector = {
@@ -16,7 +16,6 @@ selector = {
     'deadtab' : 'hst_cos_deadtab.rmap',
     'disptab' : 'hst_cos_disptab.rmap',
     'flatfile' : 'hst_cos_flatfile.rmap',
-    'fluxtab' : 'hst_cos_fluxtab.rmap',
     'geofile' : 'hst_cos_geofile.rmap',
     'gsagtab' : 'hst_cos_gsagtab.rmap',
     'hvtab' : 'hst_cos_hvtab.rmap',
