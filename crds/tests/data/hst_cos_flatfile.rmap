@@ -10,7 +10,7 @@ header = {
     'reffile_required' : 'NO',
     'reffile_switch' : 'FLATCORR',
     'rmap_relevance' : '(FLATCORR != "OMIT")',
-    'sha1sum' : 'd454fd6b8e2266cd771f1ebdabf761c353a964ea',
+    'sha1sum' : '16ed59ba259771ac03af06fcaa1f8df693792c50',
 }
 
 selector = Match({
