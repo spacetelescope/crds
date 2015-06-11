@@ -787,8 +787,7 @@ class Selector(object):
     # XXXX changes to the format of difference messages need to be coordinated with
     # crds.diff,  crds.rmap and the website interative application (crds.server.interactive.web_certify).
     # IOW,  the messages are part of the software API,  don't change without review.
-    def difference(self, new_selector, path=(), pars=(), top_selector=True, 
-                   recurse_added_deleted=False):
+    def difference(self, new_selector, path=(), pars=(), top_selector=True):
         """Return the list of differences between `self` and `new_selector` where 
         `path` names the
         """
@@ -815,9 +814,6 @@ class Selector(object):
                 if isinstance(choice, Selector):
                     differences.extend(choice.flat_diff("deleted {} rule for".format(self.short_name), 
                                                          path + (pkey,), pars + (self._parameters,)))
-#                     if recurse_added_deleted:
-#                         diffs = choice.flat_diff("delete terminal", path + (pkey,), pars + (self._parameters,))
-#                         differences.extend(diffs)
                 elif top_selector:
                     differences.append(msg(key, "deleted {} rule for".format(self.short_name), repr(choice)))
                 else:
@@ -838,9 +834,6 @@ class Selector(object):
                     differences.extend(
                         new_selector_choice.flat_diff("added {} rule for".format(self.short_name), 
                                                        path + (pkey,), pars + (self._parameters,)))
-#                     if recurse_added_deleted:
-#                         diffs = choice.flat_diff("added terminal", path + (pkey,), pars + (self._parameters,))
-#                         differences.extend(diffs)
                 elif top_selector:
                     differences.append(msg(key, "added {} rule for".format(self.short_name), repr(new_selector_choice)))
                 else:

@@ -51,7 +51,6 @@ For example:
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
     
     NOTE: mapping logical differences (the default) to not compare CRDS mapping headers.
-    
 
 ----------
 TEST CASES
@@ -381,7 +380,7 @@ def tst_diff_print_affected_instruments():
     >>> test_config.cleanup(old_state)
     """
 
-def test_diff_recurse_added_deleted_na():
+def tst_diff_recurse_added_deleted_na():
     """
     For this test,  checking recursive terminal adds/deletes and N/A + OMIT at all levels:
 
@@ -409,13 +408,20 @@ def test_diff_recurse_added_deleted_na():
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700nl_1dx.fits')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g1700ol_1dx.fits')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('FUV', 'G130M|G140L|G160M'), ('1996-10-01', '00:00:00'), 'replaced n9n20182l_flat.fits with OMIT')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('FUV', 'G160M'), ('1996-10-01', '00:00:00'), 'deleted Match rule for v4s17227l_flat.fits')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('NUV', 'G160M'), ('1996-10-01', '00:00:00'), 'added Match rule for v4s17227l_flat.fits')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'), ('1996-10-01', '00:00:00'), 'replaced s7g1700tl_flat.fits with N/A')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('flatfile',), 'replaced hst_cos_flatfile.rmap with data/hst_cos_flatfile.rmap')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('fluxtab',), 'deleted hst_cos_fluxtab.rmap')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('tracetab',), 'added N/A')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('twozxtab',), 'added data/hst_cos_twozxtab_0262.rmap')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('xtractab',), 'replaced hst_cos_xtractab.rmap with OMIT')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('acs',), 'replaced hst_acs.imap with data/hst_acs.imap')
     (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('cos',), 'replaced hst_cos.imap with data/hst_cos.imap')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('nicmos',), 'replaced hst_nicmos.imap with data/hst_nicmos.imap')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('stis',), 'replaced hst_stis.imap with data/hst_stis.imap')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfc3',), 'replaced hst_wfc3.imap with data/hst_wfc3.imap')
+    (('/Users/jmiller/crds_cache_dev/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfpc2',), 'replaced hst_wfpc2.imap with data/hst_wfpc2.imap')
     1
     """
 
