@@ -602,8 +602,7 @@ class Mapping(object):
         """
         new_mapping = asmapping(new_mapping, cache="readonly")
         differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
-        for key in self.selections:
-            # Check for deleted or replaced keys in self / old mapping.
+        for key in self.selections:  # Check for deleted or replaced keys in self / old mapping.
             if key not in new_mapping.selections:
                 diff = selectors.DiffTuple(
                     * path + ((self.filename, new_mapping.filename), (key,), 
@@ -612,35 +611,36 @@ class Mapping(object):
                 differences.append(diff)
                 if recurse_added_deleted and self._is_normal_value(key):
                     # Get tuples for all implicitly deleted nested files.
-                    deleted = self.selections[key].diff_files("deleted", 
+                    nested_diffs = self.selections[key].diff_files("deleted", 
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
-                    differences.extend(deleted)
-            else:
+                else: # either nor recursion or key is special and cannot be recursed.
+                    nested_diffs = []
+            elif self._value_name(key) != new_mapping._value_name(key):
+                diff = selectors.DiffTuple(
+                    * (path + ((self.filename, new_mapping.filename), (key,), 
+                    "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
+                    parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
+                differences.append(diff)
                 if self._is_normal_value(key) and new_mapping._is_normal_value(key): 
                     # recursion needed if both selections are mappings.
-                    diffs = self.selections[key].difference( new_mapping.selections[key],  
+                    nested_diffs = self.selections[key].difference( new_mapping.selections[key],  
                         path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
                         include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
-                    differences.extend(diffs)
-                elif recurse_added_deleted and self._is_normal_value(key):  # new_mapping is special
-                    diffs = self.selections[key].diff_files("deleted", 
-                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
-                    differences.extend(diffs)
-                elif recurse_added_deleted and new_mapping._is_normal_value(key):   # self is special
-                    diffs = new_mapping.selections[key].diff_files("added", 
-                        path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
-                    differences.extend(diffs)
-                else:   
-                    # special value difference only includes replacement names,  not recursive diffs.
-                    diffs = True
-                if diffs:
-                    diff = selectors.DiffTuple(
-                        * (path + ((self.filename, new_mapping.filename), (key,), 
-                        "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
-                        parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
-                    differences.append(diff)
-        for key in new_mapping.selections:
-            # Check for added keys in new_mapping
+                elif recurse_added_deleted:  # include added/deleted cases from normal mapping replacing special
+                    if self._is_normal_value(key):  # new_mapping is special
+                        nested_diffs = self.selections[key].diff_files("deleted", 
+                            path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    elif new_mapping._is_normal_value(key):   # self is special
+                        nested_diffs = new_mapping.selections[key].diff_files("added", 
+                            path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
+                    else:  # recurse but both special,  handled by basic diff above.
+                        nested_diffs = []
+                else:  # not both normal, and no recursion,  handled by basic diff above.
+                    nested_diffs = []
+            else:  # values are the same,  no diff or nested diffs.
+                nested_diffs = []
+            differences.extend(nested_diffs)
+        for key in new_mapping.selections:   # Check for added keys in new_mapping
             if key not in self.selections:
                 diff = selectors.DiffTuple(
                     * path + ((self.filename, new_mapping.filename), (key,), 
@@ -652,8 +652,7 @@ class Mapping(object):
                     nested_adds = new_mapping.selections[key].diff_files("added", 
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                     differences.extend(nested_adds)
-            else:
-                # replacement case already handled above,  not needed in reverse.
+            else: # replacement case already handled in first for-loop,  not needed in reverse.
                 pass 
         return sorted(differences)
     
@@ -1328,8 +1327,7 @@ class ReferenceMapping(Mapping):
         header_diffs = self.difference_header(other, path=path, pars=pars) if include_header_diffs else []
         body_diffs = self.selector.difference(other.selector, 
                 path = path + ((self.filename, other.filename),),
-                pars = pars + (self.diff_name,),
-                recurse_added_deleted=recurse_added_deleted)
+                pars = pars + (self.diff_name,))
         diffs = header_diffs + body_diffs
         for diff in diffs:
             diff.instrument = self.instrument

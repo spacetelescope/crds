@@ -20,7 +20,7 @@ selector = Match({
     ('FUV', 'G130M|G140L|G160M') : UseAfter({
         '1996-10-01 00:00:00' : 'OMIT',
     }),
-    ('FUV', 'G160M') : UseAfter({
+    ('NUV', 'G160M') : UseAfter({
         '1996-10-01 00:00:00' : 'v4s17227l_flat.fits',
     }),
     ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB') : UseAfter({
