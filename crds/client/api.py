@@ -12,7 +12,7 @@ import os.path
 import base64
 import re
 import zlib
-import six
+from crds import python23
 
 if sys.version_info < (3,0,0):
     from urllib2 import urlopen
@@ -27,7 +27,7 @@ from crds import utils, log, config
 from crds.client import proxy
 
 from crds.exceptions import *
-from crds.python3 import *
+from crds.python23 import *
 
 # ==============================================================================
 
@@ -707,7 +707,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             wanted.extend(list(refname))
         elif isinstance(refname, dict):
             wanted.extend(refname.values())
-        elif isinstance(refname, six.string_types):
+        elif isinstance(refname, python23.string_types):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
                     log.verbose("Reference type", repr(filetype), 
@@ -727,7 +727,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             refs[str(filetype)] = tuple([str(localrefs[name]) for name in refname])
         elif isinstance(refname, dict):
             refs[str(filetype)] = { name : str(localrefs[name]) for name in refname }
-        elif isinstance(refname, six.string_types):
+        elif isinstance(refname, python23.string_types):
             if "NOT FOUND" in refname:
                 refs[str(filetype)] = str(refname)
             else:

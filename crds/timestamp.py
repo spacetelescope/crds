@@ -10,7 +10,7 @@ import datetime
 import re
 
 import crds
-import six
+from crds import python23
 
 # =======================================================================
 
@@ -25,7 +25,7 @@ def format_date(date):
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
-    if isinstance(date, six.string_types):
+    if isinstance(date, python23.string_types):
         date = parse_date(date)
     return date.isoformat(" ")
 

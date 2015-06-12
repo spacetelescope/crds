@@ -7,7 +7,7 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-import six
+from crds import python23
 
 import os
 import sys
@@ -375,7 +375,7 @@ def newstyle_serial(name):
     >>> newstyle_serial("hst.pmap")
     0
     """
-    assert isinstance(name, six.string_types)
+    assert isinstance(name, python23.string_types)
     serial_search = re.search(r"_(\d+)\.\w+", name)
     if serial_search:
         return int(serial_search.groups()[0], 10)
