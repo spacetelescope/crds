@@ -51,7 +51,6 @@ For example:
 Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
     
     NOTE: mapping logical differences (the default) to not compare CRDS mapping headers.
-    
 
 ----------
 TEST CASES
@@ -78,7 +77,7 @@ def tst_diff_pmap_diffs():
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('biasfile',), 'replaced data/hst_acs_biasfile_0001.rmap with data/hst_acs_biasfile_0002.rmap')
     (('data/hst_0001.pmap', 'data/hst_0002.pmap'), ('acs',), 'replaced data/hst_acs_0001.imap with data/hst_acs_0002.imap')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -97,7 +96,7 @@ def tst_diff_imap_diffs():
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
     (('data/hst_acs_0001.imap', 'data/hst_acs_0002.imap'), ('biasfile',), 'replaced data/hst_acs_biasfile_0001.rmap with data/hst_acs_biasfile_0002.rmap')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -120,7 +119,7 @@ def tst_diff_rmap_diffs():
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'extra_keys' = ('XCORNER', 'YCORNER', 'CCDCHIP') with ('ZCORNER', 'YCORNER', 'CCDCHIP')")
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'reffile_required' = 'yes' with 'no'")
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), "header replaced 'sha1sum' = '90a43965be5d044f1e8fcf5f141b3f64b763ca89' with '32df61d8f1cd4d398d84d05e1706b5565712d87d'")
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -151,7 +150,7 @@ def tst_diff_fits_diff():
              ?          ^
     <BLANKLINE>
     <BLANKLINE>
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -196,7 +195,7 @@ def tst_diff_rmap_primitive_diffs():
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-04', '11:32:35'), 'added Match rule for q9e1206kj_bia.fits')
     ================================================================================
     (('data/hst_acs_biasfile_0001.rmap', 'data/hst_acs_biasfile_0002.rmap'), ('HRC', 'A', '5.0', '*', '1062', '1044', '19.0', '20.0', 'N/A', 'N/A', 'N/A'), ('2006-07-15', '04:43:54'), 'added Match rule for q9e12071j_bia.fits')
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -225,7 +224,7 @@ def tst_diff_file_reversions():
     CRDS  : WARNING  Reversion at ('data/hst_acs_biasfile_0001.rmap', ('HRC', 'A', '1.0', '*', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'), ('1992-01-02', '00:00:00')) replaced 'data/hst_acs_biasfile_0002.fits' with 'data/hst_acs_biasfile_0001.fits'
     CRDS  : WARNING  Reversion at ('data/hst_acs_0001.imap', ('biasfile',)) replaced 'data/hst_acs_biasfile_0002.rmap' with 'data/hst_acs_biasfile_0001.rmap'
     CRDS  : WARNING  Reversion at ('data/hst_0001.pmap', ('acs',)) replaced 'data/hst_acs_0002.imap' with 'data/hst_acs_0001.imap'
-    0
+    2
     >>> test_config.cleanup(old_state)
     """
 
@@ -271,7 +270,7 @@ def tst_diff_row_change():
              'no', 'yes', 425, -2689.2646, 'ogeed'
              'no', 'no', 8989, 9870.0254, 'readmittance'
     <BLANKLINE>
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
     
@@ -281,7 +280,7 @@ def tst_diff_print_affected_modes():
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-modes")()
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='FUV' DIFF_COUNT='1'
     INSTRUMENT='COS' REFTYPE='DEADTAB' DETECTOR='NUV' DIFF_COUNT='1'
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -347,8 +346,7 @@ def tst_diff_print_all_new_files():
     x9c18021o_drk.fits stis darkfile
     x9c18022o_drk.fits stis darkfile
     x9c18023o_drk.fits stis darkfile
-    0
-
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -360,7 +358,7 @@ def tst_diff_print_new_files():
     hst_acs_0002.imap
     hst_acs_biasfile_0002.rmap
     data/hst_acs_biasfile_0002.fits
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -369,7 +367,7 @@ def tst_diff_print_affected_types():
     >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-types")()
     cos        deadtab   
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
@@ -378,10 +376,56 @@ def tst_diff_print_affected_instruments():
     >>> old_state = test_config.setup()
     >>> DiffScript("crds.diff data/hst_cos_deadtab.rmap data/hst_cos_deadtab_9998.rmap --print-affected-instruments")()
     cos
-    0
+    1
     >>> test_config.cleanup(old_state)
     """
 
+def tst_diff_recurse_added_deleted_na():
+    """
+    For this test,  checking recursive terminal adds/deletes and N/A + OMIT at all levels:
+
+    Changed hst_wfpc2.imap to N/A
+    Replaced hst_cos.imap with data/hst_cos.imap results in recursive COS changes
+    Deleted hst_cos_fluxtab.rmap,  results in deleted terminals, rmap
+    Added hst_cos_twozxtab_0262.rmap,  results in added terminals, rmap
+    Added COS TRACETAB as N/A
+    Replaced COS XTRACTAB with OMIT
+    Changed two COS FLATFILE references to OMIT and N/A
+
+    >>> old_state = test_config.setup(cache=None)
+    >>> DiffScript("crds.diff hst.pmap data/hst.pmap --recurse-added-deleted")()
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'data/hst_cos_twozxtab_0262.rmap', ('FUV', 'SPECTROSCOPIC', '3.0'), ('2009-05-11', '00:00:00'), 'added terminal z2d1925ql_2zx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700kl_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal u8k1433ql_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17416l_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('FUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17587l_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17011l_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_fluxtab.rmap', ('NUV', 'SPECTROSCOPIC'), ('2009-05-11', '00:00:00'), 'deleted terminal t9h1220sl_phot.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:01'), 'deleted terminal x1v17414l_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g17006l_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g17007l_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('FUV', 'SPECTROSCOPIC', '2'), ('2009-05-11', '00:00:02'), 'deleted terminal x6q17586l_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-1|1'), ('2009-05-11', '00:00:00'), 'deleted terminal w5g1439sl_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700nl_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap',), 'hst_cos_xtractab.rmap', ('NUV', 'SPECTROSCOPIC', '-2147483648'), ('2006-10-01', '00:00:00'), 'deleted terminal s7g1700ol_1dx.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('FUV', 'G130M|G140L|G160M'), ('1996-10-01', '00:00:00'), 'replaced n9n20182l_flat.fits with OMIT')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('FUV', 'G160M'), ('1996-10-01', '00:00:00'), 'deleted Match rule for v4s17227l_flat.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('NUV', 'G160M'), ('1996-10-01', '00:00:00'), 'added Match rule for v4s17227l_flat.fits')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('hst_cos_flatfile.rmap', 'data/hst_cos_flatfile.rmap'), ('NUV', 'G185M|G225M|G230L|G285M|MIRRORA|MIRRORB'), ('1996-10-01', '00:00:00'), 'replaced s7g1700tl_flat.fits with N/A')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('flatfile',), 'replaced hst_cos_flatfile.rmap with data/hst_cos_flatfile.rmap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('fluxtab',), 'deleted hst_cos_fluxtab.rmap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('tracetab',), 'added N/A')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('twozxtab',), 'added data/hst_cos_twozxtab_0262.rmap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('xtractab',), 'replaced hst_cos_xtractab.rmap with OMIT')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('acs',), 'replaced hst_acs.imap with data/hst_acs.imap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('cos',), 'replaced hst_cos.imap with data/hst_cos.imap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('nicmos',), 'replaced hst_nicmos.imap with data/hst_nicmos.imap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('stis',), 'replaced hst_stis.imap with data/hst_stis.imap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfc3',), 'replaced hst_wfc3.imap with data/hst_wfc3.imap')
+    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfpc2',), 'replaced hst_wfpc2.imap with data/hst_wfpc2.imap')
+    1
+    >>> test_config.cleanup(old_state)
+    """
 
 def main():
     """Run module tests,  for now just doctests only.

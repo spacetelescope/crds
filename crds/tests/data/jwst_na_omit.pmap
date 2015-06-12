@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'jwst_0059.pmap',
+    'description' : 'Handmade test case for N/A + OMIT handing.',
+    'mapping' : 'PIPELINE',
+    'name' : 'jwst_na_omit.pmap',
+    'observatory' : 'JWST',
+    'parkey' : ('META.INSTRUMENT.NAME',),
+    'sha1sum' : 'ec240d806576cbb8688bc4f7f74f8f983efca73e',
+}
+
+selector = {
+    'FGS' : 'jwst_fgs_na.imap',
+    'MIRI' : 'jwst_miri_omit.imap',
+    'NIRISS' : 'jwst_niriss_na_omit.imap',
+}
