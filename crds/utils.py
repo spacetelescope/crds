@@ -17,7 +17,7 @@ import ast
 # from crds import data_file,  import deferred until required
 
 from crds import log, config, pysh, ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
-from crds.python3 import *
+from crds.python23 import *
 
 # ===================================================================
 

@@ -11,7 +11,7 @@ import re
 import glob
 
 from crds import log
-import six
+from crds import python23
 
 # ===========================================================================
 
@@ -101,7 +101,7 @@ class ConfigItem(object):
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
-        if self.lower and isinstance(value, six.string_types):
+        if self.lower and isinstance(value, python23.string_types):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
@@ -697,7 +697,7 @@ PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, six.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -736,11 +736,11 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-foo")
     False
     """
-    return is_mapping(mapping) or (isinstance(mapping, six.string_types) and bool(CONTEXT_RE.match(mapping)))
+    return is_mapping(mapping) or (isinstance(mapping, python23.string_types) and bool(CONTEXT_RE.match(mapping)))
 
 def is_context(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS CONTEXT, i.e. .pmap."""
-    return isinstance(mapping, six.string_types) and mapping.endswith((".pmap",))
+    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap",))
 
 def is_context_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
@@ -767,7 +767,7 @@ def is_context_spec(mapping):
     >>> is_context_spec("hst-acs-2040-01-29T12:00:00")
     False
     """
-    return is_context(mapping) or (isinstance(mapping, six.string_types) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
+    return is_context(mapping) or (isinstance(mapping, python23.string_types) and bool(PIPELINE_CONTEXT_RE.match(mapping)))
 
 def is_date_based_mapping_spec(mapping):
     """Return True IFF `mapping` is a date based specification (not a filename).

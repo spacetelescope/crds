@@ -61,7 +61,7 @@ from crds import utils, log, config
 from astropy.io import fits as pyfits
 from astropy.utils.exceptions import AstropyUserWarning
 
-import six
+from crds import python23
 # import pyasdf
 
 # ===========================================================================
@@ -260,7 +260,7 @@ def to_simple_types(tree):
 
 def simple_type(value):
     """Convert ASDF values to simple strings, where applicable,  exempting potentially large values."""
-    if isinstance(value, (six.string_types, int, float, complex)):
+    if isinstance(value, (python23.string_types, int, float, complex)):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
@@ -433,7 +433,7 @@ def is_geis_header(name):
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
 
-    if isinstance(name, six.string_types):
+    if isinstance(name, python23.string_types):
         if name.endswith("d"):
             name = name[:-1] + "h"
         with open(name) as pfile:
