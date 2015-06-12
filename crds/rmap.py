@@ -603,30 +603,28 @@ class Mapping(object):
         new_mapping = asmapping(new_mapping, cache="readonly")
         differences = self.difference_header(new_mapping, path=path, pars=pars) if include_header_diffs else []
         for key in self.selections:  # Check for deleted or replaced keys in self / old mapping.
-            if key not in new_mapping.selections:
+            if key not in new_mapping.selections:   # deletions from self
                 diff = selectors.DiffTuple(
                     * path + ((self.filename, new_mapping.filename), (key,), 
                     "deleted " + repr(self._value_name(key))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
-                differences.append(diff)
                 if recurse_added_deleted and self._is_normal_value(key):
                     # Get tuples for all implicitly deleted nested files.
                     nested_diffs = self.selections[key].diff_files("deleted", 
                         path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
-                else: # either nor recursion or key is special and cannot be recursed.
+                else: # either no recursion or key is special and cannot be recursed.
                     nested_diffs = []
-            elif self._value_name(key) != new_mapping._value_name(key):
+            elif self._value_name(key) != new_mapping._value_name(key):   # replacements in self
                 diff = selectors.DiffTuple(
                     * (path + ((self.filename, new_mapping.filename), (key,), 
                     "replaced " + repr(self._value_name(key)) + " with " + repr(new_mapping._value_name(key)))),
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
-                differences.append(diff)
-                if self._is_normal_value(key) and new_mapping._is_normal_value(key): 
+                if self._is_normal_value(key) and new_mapping._is_normal_value(key):   # mapping replacements
                     # recursion needed if both selections are mappings.
                     nested_diffs = self.selections[key].difference( new_mapping.selections[key],  
                         path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
                         include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
-                elif recurse_added_deleted:  # include added/deleted cases from normal mapping replacing special
+                elif recurse_added_deleted:  # include added/deleted cases from normal mapping replacing special, vice versa
                     if self._is_normal_value(key):  # new_mapping is special
                         nested_diffs = self.selections[key].diff_files("deleted", 
                             path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
@@ -635,13 +633,16 @@ class Mapping(object):
                             path = path + ((self.filename,),), pars = pars + (self.diff_name,),)
                     else:  # recurse but both special,  handled by basic diff above.
                         nested_diffs = []
-                else:  # not both normal, and no recursion,  handled by basic diff above.
+                else:  # No recursion,  handled by basic diff above.
                     nested_diffs = []
             else:  # values are the same,  no diff or nested diffs.
+                diff = None
                 nested_diffs = []
+            if diff:
+                differences.append(diff)
             differences.extend(nested_diffs)
-        for key in new_mapping.selections:   # Check for added keys in new_mapping
-            if key not in self.selections:
+        for key in new_mapping.selections:
+            if key not in self.selections:      # Additions to self
                 diff = selectors.DiffTuple(
                     * path + ((self.filename, new_mapping.filename), (key,), 
                     "added " + repr(new_mapping._value_name(key))),
