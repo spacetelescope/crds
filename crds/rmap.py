@@ -304,30 +304,6 @@ class FileSelectionsDict(dict):
     def is_special_value(cls, value):
         return isinstance(value, str) and value in cls.special_values_set
         
-    def string_values(self):
-        """Any of the special values will also be strings.  Some non-strings are not hashable,  can't make sets."""
-        return set([val for val in self.values() if isinstance(val, str)])
-
-    def nonstring_values(self):
-        """Exotic return values like bracket tuples or dicts.   Currently these MAY NOT contain N/A, etc."""
-        return [val for val in self.values() if not isinstance(val, str)]    
-    
-    def normal_values(self):
-        """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
-        
-        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
-        ['something.imap']
-        """
-        return sorted(list(self.string_values() - self.special_values_set) + self.nonstring_values())
-
-    def special_values(self):
-        """These are values which must be trapped and reformatted in the Mapping classes.
-        
-        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
-        ['N/A']
-        """
-        return sorted(list(self.string_values() & self.special_values_set))
-
     def normal_keys(self):
         """Each of these keys has a corresponding value which IS NOT special.
         
@@ -344,19 +320,35 @@ class FileSelectionsDict(dict):
         """
         return sorted([key for key in self.keys() if self[key] in self.special_values_set])
 
+    def normal_values(self):
+        """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
+        
+        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
+        ['something.imap']
+        """
+        return [ self[key] for key in self.normal_keys() ]
+
+    def special_values(self):
+        """These are values which must be trapped and reformatted in the Mapping classes.
+        
+        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
+        ['N/A']
+        """
+        return [ self[key] for key in self.special_keys() ]
+
     def normal_items(self):
         """
         >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_items())
         [('that', 'something.imap')]
         """
-        return sorted([ (key,val) for (key,val) in self.items() if val not in self.special_values_set])
+        return [ (key, self[key]) for key in self.normal_keys() ]
 
     def special_items(self):
         """
         >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_items())
         [('this', 'N/A')]
         """
-        return sorted([ (key,val) for (key,val) in self.items() if val in self.special_values_set])
+        return [ (key, self[key]) for key in self.special_keys() ]
 
 # ===================================================================
 
