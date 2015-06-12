@@ -812,7 +812,7 @@ class Selector(object):
             pkey = self._diff_key(key)
             if key not in new_selector_keys:
                 if isinstance(choice, Selector):
-                    differences.extend(choice._flat_diff("deleted {} rule for".format(self.short_name), 
+                    differences.extend(choice.flat_diff("deleted {} rule for".format(self.short_name), 
                                                          path + (pkey,), pars + (self._parameters,)))
                 elif top_selector:
                     differences.append(msg(key, "deleted {} rule for".format(self.short_name), repr(choice)))
@@ -832,7 +832,7 @@ class Selector(object):
                 new_selector_choice = new_selector_map[key]
                 if isinstance(new_selector_choice, Selector):
                     differences.extend(
-                        new_selector_choice._flat_diff("added {} rule for".format(self.short_name), 
+                        new_selector_choice.flat_diff("added {} rule for".format(self.short_name), 
                                                        path + (pkey,), pars + (self._parameters,)))
                 elif top_selector:
                     differences.append(msg(key, "added {} rule for".format(self.short_name), repr(new_selector_choice)))
@@ -840,17 +840,17 @@ class Selector(object):
                     differences.append(msg(key, "added terminal", repr(new_selector_choice)))
         return differences
     
-    def _flat_diff(self, change, path, pars):
+    def flat_diff(self, change, path, pars):
         """Return `change` messages relative to `path` for all of `self`s selections
         as a simple flat list of one change tuple per nested choice.
         """
-        msg = self._get_msg(path, pars)
         diffs = []        
         for key, choice in self._raw_selections:
             pkey = self._diff_key(key)
             if isinstance(choice, Selector):
-                diffs.extend(choice._flat_diff(change, path + (pkey,), pars + (self._parameters,)))
+                diffs.extend(choice.flat_diff(change, path + (pkey,), pars + (self._parameters,)))
             else:
+                msg = self._get_msg(path, pars)
                 diffs.append(msg(key, change, repr(choice)))
         return diffs
     

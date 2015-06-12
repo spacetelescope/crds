@@ -192,7 +192,7 @@ def _get_file_info_map(observatory, files, fields):
 def get_total_bytes(info_map):
     """Return the total byte count of file info map `info_map`."""
     try:
-        return sum([int(info_map[name]["size"]) for name in info_map if "NOT FOUND" not in info_map[name]])
+        return sum([long(info_map[name]["size"]) for name in info_map if "NOT FOUND" not in info_map[name]])
     except Exception as exc:
         log.error("Error computing total byte count: ", str(exc))
         return -1
@@ -493,7 +493,7 @@ class FileCacher(object):
                 try:
                     if "NOT FOUND" in self.info_map[name]:
                         raise CrdsDownloadError("file is not known to CRDS server.")
-                    bytes, path = int(self.info_map[name]["size"]), localpaths[name]
+                    bytes, path = long(self.info_map[name]["size"]), localpaths[name]
                     log.info(file_progress("Fetching", name, path, bytes, bytes_so_far, total_bytes, nth_file, total_files))
                     self.download(name, path)
                     bytes_so_far += os.stat(path).st_size

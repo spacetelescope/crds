@@ -1,0 +1,13 @@
+header = {
+    'derived_from' : 'jwst_niriss_0018.imap',
+    'instrument' : 'MIRI',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_miri_omit.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : 'b9031800c3511b91d114f14c40d9b7ee30547fca',
+}
+
+selector = {
+    'FLAT' : 'OMIT',
+}

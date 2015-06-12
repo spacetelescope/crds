@@ -243,6 +243,10 @@ def errors():
     """Return the global count of errors."""
     return THE_LOGGER.errors
 
+def warnings():
+    """Return the global count of errors."""
+    return THE_LOGGER.warnings
+
 def set_test_mode():
     """Route log messages to standard output for testing with doctest."""
     remove_console_handler()

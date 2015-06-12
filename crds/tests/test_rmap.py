@@ -406,6 +406,48 @@ def test_rmap_get_equivalent_mapping_missing():
     >>> test_config.cleanup(old_state)
     """
     
+def test_imap_match_not_applicable():
+    """
+    >>> old_state = test_config.setup()
+    >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
+    >>> p.get_best_references({
+    ...      "DETECTOR" : "SBC",
+    ...      "CCDAMP" : "A",
+    ...      "CCDGAIN" : "1.0",
+    ...      "DATE-OBS" : "1993-01-01",
+    ...      "TIME-OBS" : "12:00:00", 
+    ...      "OBSTYPE" : "IMAGING",
+    ...      "FLATCORR" : "PERFORM",
+    ...      "DQICORR" : "PERFORM",
+    ...      "DRIZCORR" : "PERFORM",
+    ...      "PHOTCORR" : "PERFORM",
+    ...      "DRIZCORR" : "PERFORM",
+    ... })["pctetab"]
+    'NOT FOUND n/a'
+    >>> test_config.cleanup(old_state)
+    """
+
+def test_imap_match_omit():
+    """
+    >>> old_state = test_config.setup()
+    >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
+    >>> "mlintab" in p.get_best_references({
+    ...      "DETECTOR" : "SBC",
+    ...      "CCDAMP" : "A",
+    ...      "CCDGAIN" : "1.0",
+    ...      "DATE-OBS" : "2002-03-19",
+    ...      "TIME-OBS" : "00:34:32",
+    ...      "OBSTYPE" : "IMAGING",
+    ...      "FLATCORR" : "PERFORM",
+    ...      "DQICORR" : "PERFORM",
+    ...      "DRIZCORR" : "PERFORM",
+    ...      "PHOTCORR" : "PERFORM",
+    ...      "DRIZCORR" : "PERFORM",
+    ... })
+    False
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 
 class TestRmap(CRDSTestCase):
@@ -430,9 +472,10 @@ class TestRmap(CRDSTestCase):
 
     def test_rmap_list_mappings(self):
         os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
-        self.assertEqual(rmap.list_mappings("*.imap", "hst"), 
-                         ['hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_cos.imap',
-                          'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap'])
+        self.assertEqual(rmap.list_mappings("*.imap", "hst"), [
+                'hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_acs_9999.imap',
+                'hst_cos.imap', 'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap', 
+                'jwst_fgs_na.imap', 'jwst_miri_omit.imap', 'jwst_niriss_na_omit.imap'])
 
     def test_rmap_list_references(self):
         os.environ["CRDS_REFPATH_SINGLE"] = tests.TEST_DATA
@@ -651,6 +694,26 @@ selector = Match({
     def test_rmap_tojson(self):
         r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
         self.assertEqual(json.loads(r.tojson()), {u'header': {u'observatory': u'hst', u'name': u'hst_cos_bpixtab_0252.rmap', u'reffile_required': u'none', u'parkey': [[u'DETECTOR'], [u'DATE-OBS', u'TIME-OBS']], u'mapping': u'reference', u'filekind': u'bpixtab', u'instrument': u'cos', u'derived_from': u'hst_cos_bpixtab_0251.rmap', u'reffile_switch': u'none', u'reffile_format': u'table', u'rmap_relevance': u'always', u'sha1sum': u'd2024dade52a406af70fcdf27a81088004d67cae'}, u'text_descr': u'Data Quality (Bad Pixel) Initialization Table', u'parameters': [u'DETECTOR', u'USEAFTER', u'REFERENCE'], u'selections': [[u'FUV', u'1996-10-01 00:00:00', u's7g1700dl_bpix.fits'], [u'FUV', u'2009-05-11 00:00:00', u'z1r1943fl_bpix.fits'], [u'NUV', u'1996-10-01 00:00:00', u's7g1700pl_bpix.fits'], [u'NUV', u'2009-05-11 00:00:00', u'uas19356l_bpix.fits']]})
+
+    def test_rmap_match_not_applicable(self):
+        r = rmap.get_cached_mapping("data/hst_acs_darkfile_na_omit.rmap")
+        r.get_best_ref({
+                "DETECTOR" : "SBC",
+                "CCDAMP" : "A",
+                "CCDGAIN" : "1.0",
+                "DATE-OBS" : "1993-01-01",
+                "TIME-OBS" : "12:00:00",
+                }) == "NOT FOUNT n/a"
+        
+    def test_rmap_match_omit(self):
+        r = rmap.get_cached_mapping("data/hst_acs_darkfile_na_omit.rmap")
+        r.get_best_ref({
+                "DETECTOR" : "SBC",
+                "CCDAMP" : "A",
+                "CCDGAIN" : "1.0",
+                "DATE-OBS" : "2002-03-19",
+                "TIME-OBS" : "00:34:32",
+                }) is None
 
 # ==================================================================================
 
