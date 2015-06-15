@@ -1,0 +1,3 @@
+jwst_miri_dark_0008.rmap
+jwst_miri_flat_0002.rmap
+jwst_miri_flat_0003.rmap

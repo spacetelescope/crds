@@ -1,0 +1,37 @@
+header = {
+    'derived_from' : 'jwst_nirspec_regions_0002.rmap',
+    'extra_keys' : ('META.EXPOSURE.TYPE',),
+    'filekind' : 'REGIONS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_regions_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.GRATING', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'FILTER' : 'META.INSTRUMENT.FILTER',
+        'GRATING' : 'META.INSTRUMENT.GRATING',
+    },
+    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE", "MIR_LRS-FIXEDSLIT", "MIR_LRS-SLITLESS"))',
+    'sha1sum' : '49857936deae765788cad0f839e2ed4206e539e0',
+}
+
+selector = Match({
+    ('NRS1', 'G140H', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0003.json',
+    ('NRS1', 'G140H', 'F100LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0007.json',
+    ('NRS1', 'G140M', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0001.json',
+    ('NRS1', 'G140M', 'F100LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0005.json',
+    ('NRS1', 'G235H', 'F170LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0011.json',
+    ('NRS1', 'G235M', 'F170LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0013.json',
+    ('NRS1', 'G395H', 'F290LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0009.json',
+    ('NRS1', 'G395M', 'F290LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0015.json',
+    ('NRS2', 'G140H', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0004.json',
+    ('NRS2', 'G140H', 'F100LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0008.json',
+    ('NRS2', 'G140M', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0002.json',
+    ('NRS2', 'G140M', 'F100LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0006.json',
+    ('NRS2', 'G235H', 'F170LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0012.json',
+    ('NRS2', 'G235M', 'F170LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0014.json',
+    ('NRS2', 'G395H', 'F290LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0010.json',
+    ('NRS2', 'G395M', 'F290LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0016.json',
+})
