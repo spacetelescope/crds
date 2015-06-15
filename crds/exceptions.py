@@ -55,6 +55,9 @@ class ChecksumError(MappingError):
 class MissingHeaderKeyError(MappingError):
     """A required key was not in the mapping header."""
 
+class InconsistentParkeyError(MappingError):
+    """The parkey tuple was inconsistent with the rest of the .rmap in some way."""
+
 # -------------------------------------------------------------------------------------------
 
 class ValidationError(CrdsError):

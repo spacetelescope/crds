@@ -1,19 +1,27 @@
 header = {
     'derived_from' : 'jwst_miri_wcsregions_0002.rmap',
-    'extra_keys' : ('META.EXPOSURE.TYPE',),
     'filekind' : 'WCSREGIONS',
     'instrument' : 'MIRI',
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_wcsregions_0003.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.TYPE'),),
     'reference_to_dataset' : {
         'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE", "MIR_LRS-FIXEDSLIT", "MIR_LRS-SLITLESS", "NRS_FIXEDSLIT"))',
-    'sha1sum' : 'c08e23b5edd7d613aa92ddeed49024120bd743bb',
+    'sha1sum' : '92c81d1b7770f86266a1b95ea868837aa51cad2e',
 }
 
 selector = Match({
-    'MIRIFUSHORT|MIRIFULONG' : 'jwst_miri_wcsregions_0001.json',
+    ('ANY', 'MIR_4QPM') : 'N/A',
+    ('ANY', 'MIR_DARK') : 'N/A',
+    ('ANY', 'MIR_FLAT-IMAGE') : 'N/A',
+    ('ANY', 'MIR_FLAT-MRS') : 'N/A',
+    ('ANY', 'MIR_IMAGE') : 'N/A',
+    ('ANY', 'MIR_LRS-FIXEDSLIT') : 'N/A',
+    ('ANY', 'MIR_LRS-SLITLESS') : 'N/A',
+    ('ANY', 'MIR_LYOT') : 'N/A',
+    ('ANY', 'MIR_TACQ') : 'N/A',
+    ('MIRIFUSHORT|MIRIFULONG', 'XXX_TODO') : 'jwst_miri_wcsregions_0001.json',
 })
