@@ -1,0 +1,23 @@
+header = {
+    'derived_from' : 'jwst_nircam_saturation_0000.rmap',
+    'filekind' : 'SATURATION',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_saturation_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '43d6a19bd0acc6cebdf29338c4350c565016df49',
+}
+
+selector = Match({
+    ('NRCA1', '*') : 'jwst_nircam_saturation_0030.fits',
+    ('NRCA2', '*') : 'jwst_nircam_saturation_0031.fits',
+    ('NRCA3', '*') : 'jwst_nircam_saturation_0032.fits',
+    ('NRCA4', '*') : 'jwst_nircam_saturation_0033.fits',
+    ('NRCALONG', '*') : 'jwst_nircam_saturation_0034.fits',
+    ('NRCB1', '*') : 'jwst_nircam_saturation_0035.fits',
+    ('NRCB2', '*') : 'jwst_nircam_saturation_0036.fits',
+    ('NRCB3', '*') : 'jwst_nircam_saturation_0037.fits',
+    ('NRCB4', '*') : 'jwst_nircam_saturation_0038.fits',
+    ('NRCBLONG', '*') : 'jwst_nircam_saturation_0039.fits',
+})

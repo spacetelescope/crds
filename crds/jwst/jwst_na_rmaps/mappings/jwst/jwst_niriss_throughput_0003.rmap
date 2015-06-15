@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'jwst_niriss_throughput_0002.rmap',
+    'file_ext' : '.fits',
+    'filekind' : 'THROUGHPUT',
+    'filetype' : 'THROUGHPUT',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_throughput_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.FILTER',),),
+    'sha1sum' : 'e6c77e11078f0391a88b4db2645d866670bbb8b0',
+    'suffix' : 'throughput',
+    'text_descr' : 'Throughput',
+}
+
+selector = Match({
+    'F277W' : 'jwst_niriss_throughput_0005.fits',
+    'F380M' : 'jwst_niriss_throughput_0006.fits',
+    'F430M' : 'jwst_niriss_throughput_0007.fits',
+    'F480M' : 'jwst_niriss_throughput_0008.fits',
+})

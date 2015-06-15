@@ -1,0 +1,16 @@
+header = {
+    'derived_from' : 'jwst_miri_photom_0003.rmap',
+    'filekind' : 'PHOTOM',
+    'instrument' : 'MIRI',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_miri_photom_0004.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : 'a45032813d5fae0fe76f4bf3d09c23cd03a06cb9',
+}
+
+selector = Match({
+    ('MIRIFULONG', 'ANY') : 'jwst_miri_photom_0007.fits',
+    ('MIRIFUSHORT', 'ANY') : 'jwst_miri_photom_0008.fits',
+    ('MIRIMAGE', 'ANY') : 'jwst_miri_photom_0009.fits',
+})

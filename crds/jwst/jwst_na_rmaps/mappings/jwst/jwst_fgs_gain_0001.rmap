@@ -1,0 +1,15 @@
+header = {
+    'derived_from' : 'jwst_fgs_gain_0000.rmap',
+    'filekind' : 'GAIN',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_gain_0001.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
+    'sha1sum' : '107e0c0fb505edc217a473627bcaadfb5c7cc6b2',
+}
+
+selector = Match({
+    ('GUIDER1', 'ANY') : 'jwst_fgs_gain_0000.fits',
+    ('GUIDER2', 'ANY') : 'jwst_fgs_gain_0001.fits',
+})
