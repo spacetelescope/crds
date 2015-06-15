@@ -5,11 +5,12 @@ header = {
     'name' : 'jwst_nircam_0012.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '91d74fee22bc13cb0cf9752b7a4b2f514cd454be',
+    'sha1sum' : '5ba74144d0ef86703a4504db39c80fd464666374',
 }
 
 selector = {
     'DARK' : 'jwst_nircam_dark_0002.rmap',
+    'DISTORTION' : 'N/A',
     'DRIZPARS' : 'jwst_nircam_drizpars_0000.rmap',
     'FLAT' : 'jwst_nircam_flat_0000.rmap',
     'GAIN' : 'jwst_nircam_gain_0000.rmap',
@@ -18,6 +19,9 @@ selector = {
     'MASK' : 'jwst_nircam_mask_0001.rmap',
     'PHOTOM' : 'jwst_nircam_photom_0001.rmap',
     'READNOISE' : 'jwst_nircam_readnoise_0000.rmap',
+    'REGIONS' : 'N/A',
     'SATURATION' : 'jwst_nircam_saturation_0001.rmap',
+    'SPECWCS' : 'N/A',
     'SUPERBIAS' : 'jwst_nircam_superbias_0003.rmap',
+    'WCSREGIONS' : 'N/A',
 }

@@ -5,15 +5,19 @@ header = {
     'name' : 'jwst_fgs_0014.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '3618da584cdb1faef71992c3241dd1b2d1741641',
+    'sha1sum' : 'a2ea91eaf66709b05f23f2bd112848c7c7672797',
 }
 
 selector = {
+    'DISTORTION' : 'N/A',
     'GAIN' : 'jwst_fgs_gain_0001.rmap',
     'IPC' : 'jwst_fgs_ipc_0001.rmap',
     'LINEARITY' : 'jwst_fgs_linearity_0003.rmap',
     'MASK' : 'jwst_fgs_mask_0002.rmap',
     'READNOISE' : 'jwst_fgs_readnoise_0001.rmap',
+    'REGIONS' : 'N/A',
     'SATURATION' : 'jwst_fgs_saturation_0002.rmap',
+    'SPECWCS' : 'N/A',
     'SUPERBIAS' : 'jwst_fgs_superbias_0004.rmap',
+    'WCSREGIONS' : 'N/A',
 }
