@@ -5,7 +5,7 @@ header = {
     'name' : 'jwst_nirspec_0021.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'a29a7d08d2fc0426c35555dd861b67f6e98d8bf1',
+    'sha1sum' : 'a9e30afb8ae272f201f3062f4e3c6404c2dd6e6a',
 }
 
 selector = {
@@ -22,4 +22,5 @@ selector = {
     'SATURATION' : 'jwst_nirspec_saturation_0001.rmap',
     'SPECWCS' : 'jwst_nirspec_specwcs_0003.rmap',
     'SUPERBIAS' : 'jwst_nirspec_superbias_0004.rmap',
+    'WCSREGIONS' : 'N/A',
 }
