@@ -1,6 +1,5 @@
 header = {
     'derived_from' : 'jwst_nirspec_regions_0002.rmap',
-    'extra_keys' : ('META.EXPOSURE.TYPE',),
     'filekind' : 'REGIONS',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
@@ -13,11 +12,18 @@ header = {
         'FILTER' : 'META.INSTRUMENT.FILTER',
         'GRATING' : 'META.INSTRUMENT.GRATING',
     },
-    'rmap_relevance' : '(META.EXPOSURE.TYPE not in ("MIR_IMAGE", "NRC_IMAGE", "NIS_IMAGE", "MIR_LRS-FIXEDSLIT", "MIR_LRS-SLITLESS"))',
-    'sha1sum' : '49857936deae765788cad0f839e2ed4206e539e0',
+    'sha1sum' : '1c8c2bcd715402e6ee773f892e03d4acd2da7113',
 }
 
 selector = Match({
+    ('ANY', 'ANY', 'ANY', 'NRS_AUTOFLAT') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_AUTOWAVECAL') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_CONFIRM') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_IFU') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_MSA') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_TACONFIRM') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_TACQ') : 'N/A',
+    ('ANY', 'ANY', 'ANY', 'NRS_TASLIT') : 'N/A',
     ('NRS1', 'G140H', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0003.json',
     ('NRS1', 'G140H', 'F100LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0007.json',
     ('NRS1', 'G140M', 'F070LP', 'NRS_FIXEDSLIT') : 'jwst_nirspec_regions_0001.json',

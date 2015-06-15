@@ -1302,6 +1302,12 @@ class ReferenceMapping(Mapping):
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.verbose("Validating", repr(self.basename))
+        if  "reference_to_dataset" in self.header:
+            for case in self.parkey:
+                for par in case:
+                    if par.upper() not in self.reference_to_dataset.values():
+                        raise InconsistentParkeyError("Inconsistent parkey and reference_to_dataset header items:", 
+                                                      repr(par), "in", repr(self.reference_to_dataset))
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
 
