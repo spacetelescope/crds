@@ -662,7 +662,7 @@ def complete_re(regex_str):
 
 OBSERVATORY_RE_STR = r"[a-zA-Z_0-9]{1,8}"
 OBSERVATORY_RE = re.compile(complete_re(OBSERVATORY_RE_STR))
-FILE_RE_STR = r"[A-Za-z0-9\._\- ]{1,128}"
+FILE_RE_STR = r"[A-Za-z0-9\._\- ]{1,128}|N/A|OMIT"
 FILE_RE = re.compile(complete_re(FILE_RE_STR)) # at min *should not* contain % < > \ { }
 FILE_PATH_RE_STR = r"([/A-Za-z0-9_\- ]{1,256})?" + FILE_RE_STR
 FILE_PATH_RE = re.compile(complete_re(FILE_PATH_RE_STR))  # at min *should not* contain % < > \ { }
