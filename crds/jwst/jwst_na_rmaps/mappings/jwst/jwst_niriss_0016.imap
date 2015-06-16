@@ -5,11 +5,12 @@ header = {
     'name' : 'jwst_niriss_0016.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : 'c5744e51973b5e438bea345ec3c6a9a64125738e',
+    'sha1sum' : '062e501b7c26192bed5df4a08d9cdebe06b6ecfa',
 }
 
 selector = {
     'DARK' : 'jwst_niriss_dark_0004.rmap',
+    'DISTORTION' : 'N/A',
     'FLAT' : 'jwst_niriss_flat_0002.rmap',
     'GAIN' : 'jwst_niriss_gain_0001.rmap',
     'IPC' : 'jwst_niriss_ipc_0001.rmap',
@@ -19,6 +20,7 @@ selector = {
     'READNOISE' : 'jwst_niriss_readnoise_0001.rmap',
     'REGIONS' : 'N/A',
     'SATURATION' : 'jwst_niriss_saturation_0002.rmap',
+    'SPECWCS' : 'N/A',
     'SUPERBIAS' : 'jwst_niriss_superbias_0003.rmap',
     'THROUGHPUT' : 'jwst_niriss_throughput_0003.rmap',
     'WCSREGIONS' : 'N/A',
