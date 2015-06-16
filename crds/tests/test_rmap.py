@@ -715,6 +715,14 @@ selector = Match({
                 "TIME-OBS" : "00:34:32",
                 }) is None
 
+    def test_rmap_todict(self):
+        p = rmap.get_cached_mapping("hst.pmap")
+        p.todict()
+
+    def test_rmap_match_omit(self):
+        p = rmap.get_cached_mapping("jwst.pmap")
+        p.tojson()
+
 # ==================================================================================
 
 
