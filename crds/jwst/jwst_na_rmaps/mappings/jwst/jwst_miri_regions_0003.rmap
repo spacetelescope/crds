@@ -6,7 +6,7 @@ header = {
     'name' : 'jwst_miri_regions_0003.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.EXPOSURE.TYPE'),),
-    'sha1sum' : '852a0a3fabe822c31585aa7ccc2148366cd52e53',
+    'sha1sum' : 'dbe5b6b5df2d03651af27d38e95652d1c4efb94e',
 }
 
 selector = Match({
@@ -19,9 +19,9 @@ selector = Match({
     ('ANY', 'ANY', 'ANY', 'MIR_LRS-SLITLESS') : 'N/A',
     ('ANY', 'ANY', 'ANY', 'MIR_LYOT') : 'N/A',
     ('ANY', 'ANY', 'ANY', 'MIR_TACQ') : 'N/A',
-    ('MIRIFULONG', '34', 'LONG', 'XXX_TODO') : 'jwst_miri_regions_0001.fits',
-    ('MIRIFULONG', '34', 'MEDIUM', 'XXX_TODO') : 'jwst_miri_regions_0002.fits',
-    ('MIRIFULONG', '34', 'SHORT', 'XXX_TODO') : 'jwst_miri_regions_0003.fits',
-    ('MIRIFUSHORT', '12', 'LONG', 'XXX_TODO') : 'jwst_miri_regions_0004.fits',
-    ('MIRIFUSHORT', '12', 'MEDIUM', 'XXX_TODO') : 'jwst_miri_regions_0005.fits',
+    ('MIRIFULONG', '34', 'LONG', 'N/A') : 'jwst_miri_regions_0001.fits',
+    ('MIRIFULONG', '34', 'MEDIUM', 'N/A') : 'jwst_miri_regions_0002.fits',
+    ('MIRIFULONG', '34', 'SHORT', 'N/A') : 'jwst_miri_regions_0003.fits',
+    ('MIRIFUSHORT', '12', 'LONG', 'N/A') : 'jwst_miri_regions_0004.fits',
+    ('MIRIFUSHORT', '12', 'MEDIUM', 'N/A') : 'jwst_miri_regions_0005.fits',
 })

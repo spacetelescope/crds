@@ -10,7 +10,7 @@ header = {
         'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : '92c81d1b7770f86266a1b95ea868837aa51cad2e',
+    'sha1sum' : '438b005f6d0b398939f3798d12fcbbd329e6ccaf',
 }
 
 selector = Match({
@@ -23,5 +23,5 @@ selector = Match({
     ('ANY', 'MIR_LRS-SLITLESS') : 'N/A',
     ('ANY', 'MIR_LYOT') : 'N/A',
     ('ANY', 'MIR_TACQ') : 'N/A',
-    ('MIRIFUSHORT|MIRIFULONG', 'XXX_TODO') : 'jwst_miri_wcsregions_0001.json',
+    ('MIRIFUSHORT|MIRIFULONG', 'N/A') : 'jwst_miri_wcsregions_0001.json',
 })
