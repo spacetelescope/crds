@@ -10,7 +10,7 @@ header = {
         'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : 'c8906cfd21b73e9879b363a2b377a9b486dd95f1',
+    'sha1sum' : '1e8ba8332a33788ce4a50665d4e6dfbe27fe620a',
 }
 
 selector = Match({
@@ -22,6 +22,6 @@ selector = Match({
     ('ANY', 'NRS_TACONFIRM') : 'N/A',
     ('ANY', 'NRS_TACQ') : 'N/A',
     ('ANY', 'NRS_TASLIT') : 'N/A',
-    ('NRS1', 'XXX_TODO') : 'jwst_nirspec_distortion_0001.json',
-    ('NRS2', 'XXX_TODO') : 'jwst_nirspec_distortion_0002.json',
+    ('NRS1', 'N/A') : 'jwst_nirspec_distortion_0001.json',
+    ('NRS2', 'N/A') : 'jwst_nirspec_distortion_0002.json',
 })
