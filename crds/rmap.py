@@ -277,7 +277,11 @@ class LowerCaseDict(dict):
             return default
     
     def __repr__(self):
-        return self.__class__.__name__ + "(%s)" % repr({key: self.header[key] for key in self.header }) #super(LowerCaseDict, self).__repr__()
+        """
+        >>> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
+        LowerCaseDict({'this': 'that', 'another': '(ESCAPED)'})
+        """
+        return self.__class__.__name__ + "({})".format(repr({key: self[key] for key in self }))
 
 # ===================================================================
 
@@ -715,7 +719,7 @@ class Mapping(object):
     def reference_name_map(self):
         """Returns { filekind : set( ref_file_name... ) }"""
         name_map = { filekind:selector.reference_names() for (filekind, selector) in self.selections.normal_items() }
-        name_map.update(self.selections.special_items())
+        name_map.update(dict(self.selections.special_items()))
         return name_map
 
     def mapping_names(self):
@@ -761,9 +765,10 @@ class Mapping(object):
         levels of the hierarchy starting with this one.   If recursive is zero,  only
         return the filename and header of the next levels down,  not the contents.
         """
-        selections = sorted([ (key, val.todict(recursive-1) if recursive-1 else (val.basename, val.header)) 
-                        for (key,val) in self.selections.normal_items()])
-        selections.update(self.selections.special_items())
+        selections = dict([(key, val.todict(recursive-1)) if recursive-1 
+                           else (val.basename, val.header)
+                           for (key,val) in self.selections.normal_items()])
+        selections.update(dict(self.selections.special_items()))
         return {
                 "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
