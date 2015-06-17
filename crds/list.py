@@ -157,6 +157,10 @@ class ListScript(cmdline.ContextsScript):
                 "effective_context": heavy_client.get_processing_mode(self.observatory)[1],
                 })
         _print_dict("CRDS Actual Paths", real_paths)
+        if self.observatory == "hst":
+            _print_dict("Calibration Environment", 
+                        { var : os.environ[var] for var in os.environ
+                          if len(var) == 4 and var.lower().endswith("ref") })
         _print_dict("CRDS Server Info", server, 
                     ["observatory", "status", "connected", "operational_context", "last_synced", 
                      "reference_url", "mapping_url", "effective_mode"])
