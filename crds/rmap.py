@@ -1266,14 +1266,11 @@ class ReferenceMapping(Mapping):
             raise OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
         return bestref
 
-    def _handle_special_values(self, bestref, attempt):
-        """Screen out special return values N/A and OMIT and raise appropriate exceptions."""
-    
     def reference_names(self):
         """Return the list of reference file basenames associated with this
         ReferenceMapping.
         """
-        return self.selector.reference_names()
+        return [name for name in self.selector.reference_names() if not is_special_value(name)]
 
     def mapping_names(self):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
