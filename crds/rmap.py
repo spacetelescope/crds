@@ -296,6 +296,11 @@ class FileSelectionsDict(dict):
     omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
     special_values_set = na_values_set | omit_values_set
 
+    test_descr = {
+        "N/A" : "Not Applicable",
+        "TEMP_N/A" : "Temporarily Not Applicable",
+        }
+
     @classmethod
     def is_na_value(cls, value):
         return isinstance(value, str) and value in cls.na_values_set
@@ -769,10 +774,12 @@ class Mapping(object):
         selections = dict([(key, val.todict(recursive-1)) if recursive-1 
                             else (val.basename, val.header)
                             for (key,val) in self.selections.normal_items()])
-        selections.update(dict(self.selections.special_items()))
+        selections.update(dict([(key, {"name": val, "text_descr": self.obs_package.TEXT_DESCR[key]}) 
+                                for (key,val) in self.selections.special_items()]))
         # selections.items() critical below for prior interface,  web context display
         return {
                 "header" : { key: self.header[key] for key in self.header },
+                "name" : self.header["name"],
                 "parameters" : tuple(self.parkey),
                 "selections" : list(sorted(selections.items())),
                 }
