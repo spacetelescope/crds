@@ -278,10 +278,10 @@ class LowerCaseDict(dict):
     
     def __repr__(self):
         """
-        >>> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
+        >> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
         LowerCaseDict({'this': 'that', 'another': '(ESCAPED)'})
         """
-        return self.__class__.__name__ + "({})".format(repr({key: self[key] for key in self }))
+        return self.__class__.__name__ + "({})".format(repr({ key: self[key] for key in self }))
 
 # ===================================================================
 
@@ -765,16 +765,18 @@ class Mapping(object):
         levels of the hierarchy starting with this one.   If recursive is zero,  only
         return the filename and header of the next levels down,  not the contents.
         """
+        # dict required here for subsequent update.
         selections = dict([(key, val.todict(recursive-1)) if recursive-1 
-                           else (val.basename, val.header)
-                           for (key,val) in self.selections.normal_items()])
+                            else (val.basename, val.header)
+                            for (key,val) in self.selections.normal_items()])
         selections.update(dict(self.selections.special_items()))
+        # selections.items() critical below for prior interface,  web context display
         return {
                 "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
-                "selections" : selections,
+                "selections" : list(selections.items()),
                 }
-        
+
     def tojson(self, recursive=10):
         """Return a JSON representation of this mapping and it's children."""
         return json.dumps(self.todict(recursive=recursive))
@@ -849,8 +851,21 @@ class PipelineContext(ContextMapping):
 
         >>> h = {'CENTERA1': '513.0', 'CENTERA2': '513.0', 'PHOTCORR': 'UNDEFINED', 'FLSHCORR': 'UNDEFINED', 'MEMBER_NAME': 'I9ZF01DZQ', 'MEMBER_TYPE': 'EXP-DTH', 'SUBTYPE': 'FULLIMAG', 'OSCNTAB': 'Q911321MI_OSC.FITS', 'MEANEXP': '0.0', 'PFLTFILE': 'UC72113PI_PFL.FITS', 'CHINJECT': 'NONE', 'CCDCHIP': '0.0', 'EXPSTART': '2009-12-07 16:10:34.380000', 'FLATCORR': 'UNDEFINED', 'CRTHRESH': '0.0', 'CRRADIUS': '0.0', 'ASN_ID': 'I9ZF01010', 'INSTRUME': 'WFC3', 'SUBARRAY': 'F', 'CCDAMP': 'ABCD', 'CCDOFSTA': 'UNDEFINED', 'APERTURE': 'IR', 'SIZAXIS2': '1024.0', 'SIZAXIS1': '1024.0', 'FLSHFILE': 'N/A', 'BINAXIS1': '1.0', 'BINAXIS2': '1.0', 'CCDTAB': 'T2C16200I_CCD.FITS', 'IDCTAB': 'W3M18525I_IDC.FITS', 'SKYSUB': 'UNDEFINED', 'CCDOFSTB': 'UNDEFINED', 'CCDOFSTC': 'UNDEFINED', 'CCDOFSTD': 'UNDEFINED', 'DQICORR': 'UNDEFINED', 'FLASHCUR': 'UNDEFINED', 'DATA_SET': 'I9ZF01010', 'CRSIGMAS': 'UNDEFINED', 'DARKCORR': 'UNDEFINED', 'SAMP_SEQ': 'STEP200', 'SCALENSE': '0.0', 'DRIZCORR': 'UNDEFINED', 'INITGUES': 'UNDEFINED', 'IMPHTTAB': 'WBJ1825RI_IMP.FITS', 'SHADCORR': 'UNDEFINED', 'DATA_SET_EXP': 'I9ZF01DZQ', 'CRMASK': 'F', 'MDRIZTAB': 'UBI1853PI_MDZ.FITS', 'OBSMODE': 'MULTIACCUM', 'NLINFILE': 'U1K1727MI_LIN.FITS', 'ATODCORR': 'UNDEFINED', 'BADINPDQ': '0.0', 'SHUTRPOS': 'UNDEFINED', 'DATE-OBS': '2009-12-07', 'ATODTAB': 'N/A', 'TIME-OBS': '16:10:34.380000', 'DARKFILE': 'XAG19298I_DRK.FITS', 'FILTER': 'F110W', 'BPIXTAB': 'Y711519RI_BPX.FITS', 'CCDGAIN': '2.5', 'DETECTOR': 'IR', 'BIASFILE': 'N/A', 'CRSPLIT': 'UNDEFINED', 'CRREJTAB': 'U6A1748RI_CRR.FITS', 'BIASCORR': 'UNDEFINED'}
 
-        >>> p.get_old_references(h)
-        {'NLINFILE': 'U1K1727MI_LIN.FITS', 'IMPHTTAB': 'WBJ1825RI_IMP.FITS', 'IDCTAB': 'W3M18525I_IDC.FITS', 'DARKFILE': 'XAG19298I_DRK.FITS', 'ATODTAB': 'N/A', 'CCDTAB': 'T2C16200I_CCD.FITS', 'BPIXTAB': 'Y711519RI_BPX.FITS', 'OSCNTAB': 'Q911321MI_OSC.FITS', 'BIASFILE': 'N/A', 'CRREJTAB': 'U6A1748RI_CRR.FITS', 'PFLTFILE': 'UC72113PI_PFL.FITS', 'FLSHFILE': 'N/A', 'MDRIZTAB': 'UBI1853PI_MDZ.FITS'}
+        >>> import pprint
+        >>> pprint.pprint(p.get_old_references(h))
+        {'ATODTAB': 'N/A',
+         'BIASFILE': 'N/A',
+         'BPIXTAB': 'Y711519RI_BPX.FITS',
+         'CCDTAB': 'T2C16200I_CCD.FITS',
+         'CRREJTAB': 'U6A1748RI_CRR.FITS',
+         'DARKFILE': 'XAG19298I_DRK.FITS',
+         'FLSHFILE': 'N/A',
+         'IDCTAB': 'W3M18525I_IDC.FITS',
+         'IMPHTTAB': 'WBJ1825RI_IMP.FITS',
+         'MDRIZTAB': 'UBI1853PI_MDZ.FITS',
+         'NLINFILE': 'U1K1727MI_LIN.FITS',
+         'OSCNTAB': 'Q911321MI_OSC.FITS',
+         'PFLTFILE': 'UC72113PI_PFL.FITS'}
         """
         header = dict(header)   # make a copy
         instrument = self.get_instrument(header)
