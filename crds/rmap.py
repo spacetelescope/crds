@@ -841,6 +841,22 @@ class PipelineContext(ContextMapping):
         imap = self.get_imap(instrument)
         return imap.get_best_references(header, include)
 
+    def get_old_references(self, header, include=None):
+        """Return the old references defined in keyword map `header` using this
+        context to define the types to return when `include` is None.
+
+        >>> p = get_cached_mapping("hst.pmap")
+
+        >>> h = {'CENTERA1': '513.0', 'CENTERA2': '513.0', 'PHOTCORR': 'UNDEFINED', 'FLSHCORR': 'UNDEFINED', 'MEMBER_NAME': 'I9ZF01DZQ', 'MEMBER_TYPE': 'EXP-DTH', 'SUBTYPE': 'FULLIMAG', 'OSCNTAB': 'Q911321MI_OSC.FITS', 'MEANEXP': '0.0', 'PFLTFILE': 'UC72113PI_PFL.FITS', 'CHINJECT': 'NONE', 'CCDCHIP': '0.0', 'EXPSTART': '2009-12-07 16:10:34.380000', 'FLATCORR': 'UNDEFINED', 'CRTHRESH': '0.0', 'CRRADIUS': '0.0', 'ASN_ID': 'I9ZF01010', 'INSTRUME': 'WFC3', 'SUBARRAY': 'F', 'CCDAMP': 'ABCD', 'CCDOFSTA': 'UNDEFINED', 'APERTURE': 'IR', 'SIZAXIS2': '1024.0', 'SIZAXIS1': '1024.0', 'FLSHFILE': 'N/A', 'BINAXIS1': '1.0', 'BINAXIS2': '1.0', 'CCDTAB': 'T2C16200I_CCD.FITS', 'IDCTAB': 'W3M18525I_IDC.FITS', 'SKYSUB': 'UNDEFINED', 'CCDOFSTB': 'UNDEFINED', 'CCDOFSTC': 'UNDEFINED', 'CCDOFSTD': 'UNDEFINED', 'DQICORR': 'UNDEFINED', 'FLASHCUR': 'UNDEFINED', 'DATA_SET': 'I9ZF01010', 'CRSIGMAS': 'UNDEFINED', 'DARKCORR': 'UNDEFINED', 'SAMP_SEQ': 'STEP200', 'SCALENSE': '0.0', 'DRIZCORR': 'UNDEFINED', 'INITGUES': 'UNDEFINED', 'IMPHTTAB': 'WBJ1825RI_IMP.FITS', 'SHADCORR': 'UNDEFINED', 'DATA_SET_EXP': 'I9ZF01DZQ', 'CRMASK': 'F', 'MDRIZTAB': 'UBI1853PI_MDZ.FITS', 'OBSMODE': 'MULTIACCUM', 'NLINFILE': 'U1K1727MI_LIN.FITS', 'ATODCORR': 'UNDEFINED', 'BADINPDQ': '0.0', 'SHUTRPOS': 'UNDEFINED', 'DATE-OBS': '2009-12-07', 'ATODTAB': 'N/A', 'TIME-OBS': '16:10:34.380000', 'DARKFILE': 'XAG19298I_DRK.FITS', 'FILTER': 'F110W', 'BPIXTAB': 'Y711519RI_BPX.FITS', 'CCDGAIN': '2.5', 'DETECTOR': 'IR', 'BIASFILE': 'N/A', 'CRSPLIT': 'UNDEFINED', 'CRREJTAB': 'U6A1748RI_CRR.FITS', 'BIASCORR': 'UNDEFINED'}
+
+        >>> p.get_old_references(h)
+        {'NLINFILE': 'U1K1727MI_LIN.FITS', 'IMPHTTAB': 'WBJ1825RI_IMP.FITS', 'IDCTAB': 'W3M18525I_IDC.FITS', 'DARKFILE': 'XAG19298I_DRK.FITS', 'ATODTAB': 'N/A', 'CCDTAB': 'T2C16200I_CCD.FITS', 'BPIXTAB': 'Y711519RI_BPX.FITS', 'OSCNTAB': 'Q911321MI_OSC.FITS', 'BIASFILE': 'N/A', 'CRREJTAB': 'U6A1748RI_CRR.FITS', 'PFLTFILE': 'UC72113PI_PFL.FITS', 'FLSHFILE': 'N/A', 'MDRIZTAB': 'UBI1853PI_MDZ.FITS'}
+        """
+        header = dict(header)   # make a copy
+        instrument = self.get_instrument(header)
+        imap = self.get_imap(instrument)
+        return imap.get_old_references(header, include)
+
     def get_imap(self, instrument):
         """Return the InstrumentMapping corresponding to `instrument`."""
         instrument_hacks = {
@@ -971,6 +987,26 @@ class InstrumentContext(ContextMapping):
             if ref is not None:
                 refs[filekind] = ref
         log.verbose("-"*120, verbosity=55)
+        return refs
+
+    def get_old_references(self, header, include=None):
+        """Returns a map of old references which were recorded in `header`,
+        returning only those types listed in `include` or all types if
+        `include` is None.
+        """
+        refs = {}
+        if not include:
+            include = self.selections.keys()
+        include = [ key.upper() for key in include ]
+        header = { key.upper() : val.strip() for (key, val) in header.items() }
+        for filekind in include:
+            try:
+                ref = header[filekind]
+                if ref == "NOT FOUND n/a":
+                    ref = "N/A"
+                refs[filekind] = ref
+            except KeyError:
+                refs[filekind] = "UNDEFINED"
         return refs
 
     def get_parkey_map(self):
@@ -1664,6 +1700,20 @@ def mapping_type(mapping):
         return "rmap"
     else:
         raise ValueError("Unknown mapping type for " + repr(Mapping))
+# ===================================================================
+
+def is_special_value(filename):
+    """Return True IFF `filename` is one of the special values which
+    does not correspond to a file, e.g. N/A.
+    
+    >>> is_special_value("foo.fits")
+    False
+
+    >>> is_special_value("N/A")
+    True
+    """
+    return FileSelectionsDict.is_special_value(str(filename))
+
 # ===================================================================
 
 def get_best_references(context_file, header, include=None, condition=True):
