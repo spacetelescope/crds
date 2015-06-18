@@ -774,7 +774,7 @@ class Mapping(object):
         return {
                 "header" : { key: self.header[key] for key in self.header },
                 "parameters" : tuple(self.parkey),
-                "selections" : list(selections.items()),
+                "selections" : list(sorted(selections.items())),
                 }
 
     def tojson(self, recursive=10):
