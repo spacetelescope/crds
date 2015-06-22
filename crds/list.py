@@ -155,19 +155,17 @@ class ListScript(cmdline.ContextsScript):
                 "cache_subdir_mode": cache_subdir_mode,
                 "readonly_cache": self.readonly_cache,
                 "effective_context": heavy_client.get_processing_mode(self.observatory)[1],
-                })
-        _print_dict("CRDS Actual Paths", real_paths)
-        if self.observatory == "hst":
-            _print_dict("Calibration Environment", 
-                        { var : os.environ[var] for var in os.environ
-                          if len(var) == 4 and var.lower().endswith("ref") })
-        _print_dict("CRDS Server Info", server, 
-                    ["observatory", "status", "connected", "operational_context", "last_synced", 
-                     "reference_url", "mapping_url", "effective_mode"])
-        _print_dict("CRDS Package", { 
                 "crds" : repr(crds),
                 "version": heavy_client.version_info() 
                 })
+        _print_dict("CRDS Actual Paths", real_paths)
+        _print_dict("CRDS Server Info", server, 
+                    ["observatory", "status", "connected", "operational_context", "last_synced", 
+                     "reference_url", "mapping_url", "effective_mode"])
+        if self.observatory == "hst":
+            cal_vars = { var : os.environ[var] for var in os.environ
+                          if len(var) == 4 and var.lower().endswith("ref") }
+            _print_dict("Calibration Environment", cal_vars)
         _print_dict("Python Environment", pyinfo)
 
 def _get_python_info():
@@ -186,10 +184,11 @@ def _print_dict(title, dictionary, selected = None):
     if selected is None:
         selected = dictionary.keys()
     print(title)
-    if not dictionary:
-        print("\tCRDS_PATH and CRDS_SERVER_URL not set.")
-    for key in selected:
-        print("\t" + key + " = " + repr(dictionary[key]))
+    if dictionary:
+        for key in selected:
+            print("\t" + key + " = " + repr(dictionary[key]))
+    else:
+        print("\t" + "none")
 
 def _print_list(files):
     """Print `files` one file per line."""
