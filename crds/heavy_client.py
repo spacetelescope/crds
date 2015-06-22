@@ -546,10 +546,13 @@ def version_info():
     """Return CRDS checkout URL and revision,  client side."""
     try:
         from . import svn_version
-        lines = svn_version.__full_svn_info__.strip().split("\n")
-        svn = ", ".join([line for line in lines if line.startswith(("URL","Revision"))])
-        svn = svn.replace("URL: ", "").replace("Revision: ", "")
-        return crds.__version__ + ", " + svn
+        url = revision = "none"
+        for line in svn_version.__full_svn_info__.strip().split("\n"):
+            if line.startswith("URL"):
+                url = line.replace("URL: ","").split("/")[-1]
+            if line.startswith("Revision"):
+                revision = line.replace("Revision: ","")
+        return crds.__version__ + ", " + url + ", " + revision
     except Exception:
         return "unknown"
     
