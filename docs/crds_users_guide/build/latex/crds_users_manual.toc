@@ -74,34 +74,39 @@
 \contentsline {subsubsection}{precondition\_header}{38}{subsubsection*.8}
 \contentsline {subsubsection}{fallback\_header}{38}{subsubsection*.9}
 \contentsline {section}{\numberline {7.7}Selectors}{39}{section.7.7}
-\contentsline {subsection}{\numberline {7.7.1}Match}{39}{subsection.7.7.1}
-\contentsline {subsubsection}{Parameter Tuples and Simple Matches}{39}{subsubsection*.10}
-\contentsline {subsubsection}{Single Parameter Values}{39}{subsubsection*.11}
-\contentsline {subsubsection}{Or \textbar {}}{39}{subsubsection*.12}
-\contentsline {subsubsection}{Wild Cards *}{39}{subsubsection*.13}
-\contentsline {subsubsection}{Regular Expressions}{40}{subsubsection*.14}
-\contentsline {subsubsection}{Literal Expressions}{40}{subsubsection*.15}
-\contentsline {subsubsection}{Relational Expressions}{40}{subsubsection*.16}
-\contentsline {subsubsection}{Between}{40}{subsubsection*.17}
-\contentsline {subsubsection}{N/A}{41}{subsubsection*.18}
-\contentsline {subsubsection}{Substitution Parameters}{41}{subsubsection*.19}
-\contentsline {subsubsection}{Match Weighting}{41}{subsubsection*.20}
-\contentsline {subsection}{\numberline {7.7.2}UseAfter}{42}{subsection.7.7.2}
-\contentsline {subsection}{\numberline {7.7.3}SelectVersion}{42}{subsection.7.7.3}
-\contentsline {subsection}{\numberline {7.7.4}ClosestTime}{42}{subsection.7.7.4}
-\contentsline {subsection}{\numberline {7.7.5}GeometricallyNearest}{42}{subsection.7.7.5}
-\contentsline {subsection}{\numberline {7.7.6}Bracket}{43}{subsection.7.7.6}
+\contentsline {subsection}{\numberline {7.7.1}Primitive Return Values}{39}{subsection.7.7.1}
+\contentsline {subsubsection}{Single Filename}{39}{subsubsection*.10}
+\contentsline {subsubsection}{Filename Tuple}{39}{subsubsection*.11}
+\contentsline {subsubsection}{Not Applicable}{39}{subsubsection*.12}
+\contentsline {subsubsection}{Omit}{39}{subsubsection*.13}
+\contentsline {subsection}{\numberline {7.7.2}Match}{39}{subsection.7.7.2}
+\contentsline {subsubsection}{Parameter Tuples and Simple Matches}{39}{subsubsection*.14}
+\contentsline {subsubsection}{Single Parameter Values}{40}{subsubsection*.15}
+\contentsline {subsubsection}{Or \textbar {}}{40}{subsubsection*.16}
+\contentsline {subsubsection}{Wild Cards *}{40}{subsubsection*.17}
+\contentsline {subsubsection}{Regular Expressions}{40}{subsubsection*.18}
+\contentsline {subsubsection}{Literal Expressions}{41}{subsubsection*.19}
+\contentsline {subsubsection}{Relational Expressions}{41}{subsubsection*.20}
+\contentsline {subsubsection}{Between}{41}{subsubsection*.21}
+\contentsline {subsubsection}{N/A}{41}{subsubsection*.22}
+\contentsline {subsubsection}{Substitution Parameters}{42}{subsubsection*.23}
+\contentsline {subsubsection}{Match Weighting}{42}{subsubsection*.24}
+\contentsline {subsection}{\numberline {7.7.3}UseAfter}{42}{subsection.7.7.3}
+\contentsline {subsection}{\numberline {7.7.4}SelectVersion}{43}{subsection.7.7.4}
+\contentsline {subsection}{\numberline {7.7.5}ClosestTime}{43}{subsection.7.7.5}
+\contentsline {subsection}{\numberline {7.7.6}GeometricallyNearest}{43}{subsection.7.7.6}
+\contentsline {subsection}{\numberline {7.7.7}Bracket}{43}{subsection.7.7.7}
 \contentsline {chapter}{\numberline {8}Using the CRDS Web Site}{45}{chapter.8}
 \contentsline {section}{\numberline {8.1}Operational References}{45}{section.8.1}
 \contentsline {section}{\numberline {8.2}Context History (more)}{46}{section.8.2}
 \contentsline {subsection}{\numberline {8.2.1}Differencing contexts}{46}{subsection.8.2.1}
 \contentsline {section}{\numberline {8.3}Open Services}{47}{section.8.3}
 \contentsline {subsection}{\numberline {8.3.1}Dataset Best References}{47}{subsection.8.3.1}
-\contentsline {subsubsection}{Context}{48}{subsubsection*.21}
-\contentsline {subsubsection}{Dataset}{48}{subsubsection*.22}
-\contentsline {paragraph}{Upload FITS header}{48}{paragraph*.23}
-\contentsline {paragraph}{Archived Dataset}{48}{paragraph*.24}
-\contentsline {subsubsection}{Dataset Best References Results}{48}{subsubsection*.25}
+\contentsline {subsubsection}{Context}{48}{subsubsection*.25}
+\contentsline {subsubsection}{Dataset}{48}{subsubsection*.26}
+\contentsline {paragraph}{Upload FITS header}{48}{paragraph*.27}
+\contentsline {paragraph}{Archived Dataset}{48}{paragraph*.28}
+\contentsline {subsubsection}{Dataset Best References Results}{48}{subsubsection*.29}
 \contentsline {subsection}{\numberline {8.3.2}Explore Best References}{48}{subsection.8.3.2}
 \contentsline {subsection}{\numberline {8.3.3}Browse Database}{49}{subsection.8.3.3}
 \contentsline {subsection}{\numberline {8.3.4}Recent Activity}{51}{subsection.8.3.4}
@@ -111,19 +116,19 @@
 \contentsline {subsection}{\numberline {8.4.3}Mark Files Bad}{53}{subsection.8.4.3}
 \contentsline {subsection}{\numberline {8.4.4}Set Context}{54}{subsection.8.4.4}
 \contentsline {subsection}{\numberline {8.4.5}Batch Submit References}{55}{subsection.8.4.5}
-\contentsline {subsubsection}{Upload Files}{55}{subsubsection*.26}
-\contentsline {paragraph}{Web Approach}{55}{paragraph*.27}
-\contentsline {paragraph}{Shell Approach}{56}{paragraph*.28}
-\contentsline {subsubsection}{Derive From Context}{56}{subsubsection*.29}
-\contentsline {paragraph}{Edit Context}{57}{paragraph*.30}
-\contentsline {paragraph}{Operational Context}{57}{paragraph*.31}
-\contentsline {paragraph}{Recent}{57}{paragraph*.32}
-\contentsline {paragraph}{User Specified}{57}{paragraph*.33}
-\contentsline {subsubsection}{Auto Rename}{57}{subsubsection*.34}
-\contentsline {subsubsection}{Compare Old Reference}{57}{subsubsection*.35}
-\contentsline {subsubsection}{Results}{57}{subsubsection*.36}
-\contentsline {subsubsection}{Collisions}{58}{subsubsection*.37}
-\contentsline {subsubsection}{Confirm or Discard}{58}{subsubsection*.38}
+\contentsline {subsubsection}{Upload Files}{55}{subsubsection*.30}
+\contentsline {paragraph}{Web Approach}{55}{paragraph*.31}
+\contentsline {paragraph}{Shell Approach}{56}{paragraph*.32}
+\contentsline {subsubsection}{Derive From Context}{56}{subsubsection*.33}
+\contentsline {paragraph}{Edit Context}{57}{paragraph*.34}
+\contentsline {paragraph}{Operational Context}{57}{paragraph*.35}
+\contentsline {paragraph}{Recent}{57}{paragraph*.36}
+\contentsline {paragraph}{User Specified}{57}{paragraph*.37}
+\contentsline {subsubsection}{Auto Rename}{57}{subsubsection*.38}
+\contentsline {subsubsection}{Compare Old Reference}{57}{subsubsection*.39}
+\contentsline {subsubsection}{Results}{57}{subsubsection*.40}
+\contentsline {subsubsection}{Collisions}{58}{subsubsection*.41}
+\contentsline {subsubsection}{Confirm or Discard}{58}{subsubsection*.42}
 \contentsline {subsection}{\numberline {8.4.6}Submit References}{58}{subsection.8.4.6}
 \contentsline {subsection}{\numberline {8.4.7}Submit Mappings}{59}{subsection.8.4.7}
 \contentsline {chapter}{\numberline {9}Web Services}{61}{chapter.9}
