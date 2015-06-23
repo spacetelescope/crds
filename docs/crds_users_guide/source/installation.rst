@@ -153,6 +153,12 @@ obtains rules and references and where CRDS caches files to on your local system
 If you are currently working on only a single project,  it may be helpful to declare that project::
 
     % setenv CRDS_OBSERVATORY   hst (or jwst)
+
+**NOTE:**  CRDS operates from and manages the CRDS cache.   Direct edits of the cache are not recommended in
+most cases,  with the possible exception of in-place edits of personal rules or reference files.   Changes to
+other files or directory structure,   including cache creation,  are not recommended.   Files in the cache
+are subject to automatic replacement or deletion by the CRDS framework and should be viewed as temporary
+working copies only.
         
 Setup for On Site Operartional Use (HST or JWST)
 ------------------------------------------------

@@ -319,8 +319,54 @@ computes a set of matching parameters used for a second matching attempt which w
 Selectors
 ---------
 
-All the CRDS selection operators are written to select either a filename *or* a nested operator.   In the case of HST,
-the Match operator locates a nested UseAfter operator which in turn locates the reference file.
+All the CRDS selection operators are written to select either a return
+value *or* a nested operator.  In the case of HST, the Match operator locates a
+nested UseAfter operator which in turn locates the reference file.
+
+Primitive Return Values
+.......................
+
+Ultimately the result of every selector lookup is some form of return value to
+which various CRDS operations can be applied: best references assignment, file
+distribution, file certification, file differencing, etc.
+
+Single Filename
+,,,,,,,,,,,,,,,
+
+The most typical return value is a single reference filename.  In the case of
+GEIS files, for the data+header file pair the header is specified in rmaps but
+both components are distributed.
+
+Filename Tuple
+,,,,,,,,,,,,,,
+
+A tuple of primitive filenames can be specified.  All files in the tuple are
+synchronized and returned as best references.  The nominal application of a
+file tuple is for the bracket selector where the files are used for pipeline
+side interpolations between the two references to generate a synthetic
+reference.
+
+Not Applicable
+,,,,,,,,,,,,,,
+
+A value of N/A can be assigned in place of a filename.  This applies the full
+power of the matching system to the specification of instrument modes for which
+a reference type does not apply.  For JWST this feature is used to perform data
+driven WCS processing based on CRDS reference file assignments.  Ultimately the
+best reference assigned is N/A, nominally explicitly recorded for the type
+keyword.  No file is distributed or prefetched.  N/A may be specified in place
+of a reference file or an rmap file.  In the case of specifying N/A for an rmap
+file (in the imap/instrument mapping), that type becomes N/A for all modes of
+that instrument.
+
+Omit
+,,,,
+
+Similar to N/A, a value of OMIT can be specified in place of a filename.  OMIT
+can be used to completely remove a type from the best references response.  No
+file is synchronized or processed, and no best reference should be recorded in
+the dataset header for that type.  This feature is currently unused.
+
 
 Match
 .....

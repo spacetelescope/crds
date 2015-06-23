@@ -487,11 +487,10 @@ the file it replaces looking for new or missing table rows.
     5. Checks CRDS rules for noteworthy version-to-version changes such as new or removed match cases.
     6. Checks tables for deleted or duplicate rows relative to a comparison table.
     7. Finds comparison references with respect to old CRDS contexts.
-
     
 * positional arguments::
 
-  files
+    files
 
 * optional arguments::
 
