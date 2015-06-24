@@ -46,7 +46,7 @@ class CrdsUnknownReftypeError(CrdsError):
 class MappingError(CrdsError):
     """Exception in load_rmap."""
 
-class FormatError(MappingError):
+class MappingFormatError(MappingError):
     "Something wrong with context or rmap file format."
 
 class ChecksumError(MappingError):
