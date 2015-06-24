@@ -108,7 +108,7 @@ def parse_mapping(filename):
 
     log.verbose("Parsing", repr(filename))
     filename = rmap.locate_mapping(filename)
-    with log.augment_exception("Parsing error in", repr(filename), exception_class=exceptions.FormatError):
+    with log.augment_exception("Parsing error in", repr(filename), exception_class=exceptions.MappingFormatError):
         with open(filename) as pfile:
             parser = MAPPING_PARSER(pfile.read())
             header, selector, comment = parser.mapping()
