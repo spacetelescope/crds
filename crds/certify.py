@@ -169,7 +169,7 @@ class KeywordValidator(Validator):
         if value not in self._values:  # and tuple(self._values) != ('*',):
             if isinstance(value, str):
                 for pat in self._values:
-                    if re.match(pat, value):
+                    if re.match(config.complete_re(pat), value):
                         self.verbose(filename, value, "matches", repr(pat))
                         return
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
