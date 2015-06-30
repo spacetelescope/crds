@@ -1,0 +1,27 @@
+header = {
+    'derived_from' : 'jwst_nirspec_distortion_0002.rmap',
+    'filekind' : 'DISTORTION',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_distortion_0003.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.TYPE'),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '588729e5dd95da63572249d633b0f451d186d80a',
+}
+
+selector = Match({
+    ('ANY', 'NRS_AUTOFLAT') : 'N/A',
+    ('ANY', 'NRS_AUTOWAVECAL') : 'N/A',
+    ('ANY', 'NRS_CONFIRM') : 'N/A',
+    ('ANY', 'NRS_IFU') : 'N/A',
+    ('ANY', 'NRS_MSA') : 'N/A',
+    ('ANY', 'NRS_TACONFIRM') : 'N/A',
+    ('ANY', 'NRS_TACQ') : 'N/A',
+    ('ANY', 'NRS_TASLIT') : 'N/A',
+    ('NRS1', 'N/A') : 'jwst_nirspec_distortion_0001.json',
+    ('NRS2', 'N/A') : 'jwst_nirspec_distortion_0002.json',
+})
