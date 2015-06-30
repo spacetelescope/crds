@@ -497,9 +497,9 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
-        log.verbose_warning("Using cached CRDS reference assignment rules last updated on", repr(info.last_synced))
+        log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except IOError:
-        log.warning("CRDS server connection and cache load FAILED.  Using pre-installed TEST RULES; NOT FOR CALIBRATION USE." )
+        log.error("CRDS server connection and cache load FAILED.  Using pre-installed TEST RULES; NOT FOR CALIBRATION USE." )
         info = get_installed_info(observatory)
     info.connected = False
     return info
