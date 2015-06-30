@@ -1,0 +1,26 @@
+header = {
+    'derived_from' : 'jwst_nirspec_specwcs_0003.rmap',
+    'filekind' : 'SPECWCS',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_specwcs_0004.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.EXPOSURE.TYPE'),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '4f93056fabddfa5a0f0e60357500d9f6307ff40c',
+}
+
+selector = Match({
+    ('ANY', 'NRS_AUTOFLAT') : 'N/A',
+    ('ANY', 'NRS_AUTOWAVECAL') : 'N/A',
+    ('ANY', 'NRS_CONFIRM') : 'N/A',
+    ('ANY', 'NRS_IFU') : 'N/A',
+    ('ANY', 'NRS_MSA') : 'N/A',
+    ('ANY', 'NRS_TACONFIRM') : 'N/A',
+    ('ANY', 'NRS_TACQ') : 'N/A',
+    ('ANY', 'NRS_TASLIT') : 'N/A',
+    ('NRS1|NRS2', 'N/A') : 'jwst_nirspec_specwcs_0001.json',
+})
