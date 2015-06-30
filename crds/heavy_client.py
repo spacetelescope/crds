@@ -498,11 +498,15 @@ def load_server_info(observatory):
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
         log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    except IOError:
-        log.error("CRDS server connection and cache load FAILED.  Using pre-installed TEST RULES; NOT FOR CALIBRATION USE." )
-        info = get_installed_info(observatory)
-    info.connected = False
-    return info
+    except IOError, exc:
+        log.error("CRDS cache config file failed to load from", repr(server_config), ":", str(exc))
+        if config.ALLOW_PREINSTALLED_RULES:
+            log.error("CRDS server connection and cache load FAILED.  Pre-installed rules are enabled for TESTING only,  NOT production calibrations.")
+            info = get_installed_info(observatory)
+            info.connected = False
+            return info
+        else:
+            log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue.  Use 'setenv CRDS_ALLOW_PREINSTALLED_RULES 1' to use old CRDS rules for testing purposes only.")        
 
 def get_installed_info(observatory):
     """Make up a bare-bones server info dictionary to define the pipeline context
