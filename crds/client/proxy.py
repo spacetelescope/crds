@@ -11,6 +11,8 @@ import uuid
 import json
 import time
 import os
+import ssl
+
 from crds import python23
 
 if sys.version_info < (3, 0, 0):
@@ -115,6 +117,8 @@ class CheckingProxy(object):
         if not isinstance(parameters, bytes):
             parameters = parameters.encode("utf-8")
         try:
+            # context = ssl.create_default_context()
+            # channel = urlopen(url, parameters, context=context)
             channel = urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
