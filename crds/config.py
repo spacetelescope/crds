@@ -170,6 +170,9 @@ ALLOW_BAD_REFERENCES  = BooleanConfigItem("CRDS_ALLOW_BAD_REFERENCES", False,
 ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
     "When True, rules which are designated as BAD (scientifically invalid) on the server can be used with warnings.")
 
+ALLOW_PREINSTALLED_RULES = BooleanConfigItem("CRDS_ALLOW_PREINSTALLED_RULES", False,
+    "When True, if server connection and cache loads fail,  allow stale rules pre-installed with CRDS package for testing only.")
+
 # ============================================================================
 
 CRDS_DATA_CHUNK_SIZE = 2**23   
