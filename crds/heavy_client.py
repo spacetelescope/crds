@@ -504,9 +504,9 @@ def load_server_info(observatory):
             log.error("CRDS server connection and cache load FAILED.  Pre-installed rules are enabled for TESTING only,  NOT production calibrations.")
             info = get_installed_info(observatory)
             info.connected = False
-            return info
         else:
-            log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue.  Use 'setenv CRDS_ALLOW_PREINSTALLED_RULES 1' to use old CRDS rules for testing purposes only.")        
+            log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue.  Use 'setenv CRDS_ALLOW_PREINSTALLED_RULES 1' to use old CRDS rules for testing purposes only.")
+    return info
 
 def get_installed_info(observatory):
     """Make up a bare-bones server info dictionary to define the pipeline context
