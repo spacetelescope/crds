@@ -47,6 +47,8 @@ class TestSync(CRDSTestCase):
         crds.get_cached_mapping("hst_cos_deadtab.rmap")
 
     def test_sync_readonly_cache(self):
+        self.tearDown()   # switch to default test environment (currently) from hst-crds-dev.csh
+        self.run_script("crds.sync --contexts hst_cos_deadtab.rmap")  # sync to establish config area for sure
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references --readonly-cache")
 
     def test_sync_organize_flat(self):
