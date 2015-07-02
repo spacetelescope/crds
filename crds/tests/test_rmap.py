@@ -728,11 +728,12 @@ selector = Match({
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    from crds.tests import test_rmap
-    import unittest, doctest
+    import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestRmap)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_rmap)
+
+    from crds.tests import test_rmap, tstmod
+    return tstmod(test_rmap)
 
 if __name__ == "__main__":
     print(tst())

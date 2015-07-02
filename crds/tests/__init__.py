@@ -64,3 +64,10 @@ class CRDSTestCase(unittest.TestCase):
 
     def temp(self, filename):
         return os.path.join(self.temp_dir, filename)
+
+
+def tstmod(module):
+    """Wrap tests.tstmod to configure standard options throughout CRDS tests."""
+    import doctest
+    # doctest.ELLIPSIS_MARKER = '-etc-'
+    return doctest.testmod(module, optionflags=doctest.ELLIPSIS)

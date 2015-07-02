@@ -435,11 +435,8 @@ def main():
     tests into one giant docstring works but is hard to analyze and debug when
     things go wrong.
     """
-    import doctest
-    from crds.tests import test_diff
-    doctest.ELLIPSIS_MARKER = '-etc-'
-    results = doctest.testmod(test_diff, optionflags=doctest.ELLIPSIS)
-    return results
+    from crds.tests import test_diff, tstmod
+    return tstmod(test_diff)
 
 if __name__ == "__main__":
     print(main())

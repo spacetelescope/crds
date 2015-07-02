@@ -398,9 +398,8 @@ def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCertify)
     unittest.TextTestRunner().run(suite)
 
-    import doctest
-    from crds.tests import test_certify
-    return doctest.testmod(test_certify)
+    from crds.tests import test_certify, tstmod
+    return tstmod(test_certify)
 
 if __name__ == "__main__":
     print(main())

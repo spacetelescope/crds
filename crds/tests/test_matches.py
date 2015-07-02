@@ -61,11 +61,11 @@ class TestRmap(CRDSTestCase):
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    from crds.tests import test_matches
-    import unittest, doctest
+    from crds.tests import test_matches, tstmod
+    import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestRmap)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_matches)
+    return tstmod(test_matches)
 
 if __name__ == "__main__":
     print(tst())

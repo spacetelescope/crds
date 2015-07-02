@@ -303,9 +303,8 @@ def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBestrefs)
     unittest.TextTestRunner().run(suite)
 
-    import doctest
-    from crds.tests import test_bestrefs
-    return doctest.testmod(test_bestrefs)
+    from crds.tests import test_bestrefs, tstmod
+    return tstmod(test_bestrefs)
 
 if __name__ == "__main__":
     print(main())

@@ -88,11 +88,12 @@ class TestHeavyClient(CRDSTestCase):
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    from crds.tests import test_heavy_client
-    import unittest, doctest
+    import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestHeavyClient)
     unittest.TextTestRunner().run(suite)
-    return doctest.testmod(test_heavy_client)
+
+    from crds.tests import test_heavy_client, tstmod
+    return tstmod(test_heavy_client)
 
 if __name__ == "__main__":
     print(tst())

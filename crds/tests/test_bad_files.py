@@ -140,6 +140,7 @@ Similarly,  the use of bad rules can be permitted:
 >>> utils.clear_function_caches()
 
 >>> refs = crds.getreferences(header, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])
+CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '...'
 CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
 <BLANKLINE>
 
@@ -155,6 +156,7 @@ Here try bad rules for a JWST dataset:
 >>> config.ALLOW_BAD_RULES.set("0")
 
 >>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")()
+CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '...'
 CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
 CRDS  : INFO     No comparison context or source comparison requested.
 CRDS  : INFO     No file header updates requested;  dry run.
@@ -182,9 +184,8 @@ from crds import tests
 
 def main():
     """Run module tests,  for now just doctests only."""
-    import doctest
-    from crds.tests import test_bad_files
-    return doctest.testmod(test_bad_files)
+    from crds.tests import test_bad_files, tstmod
+    return tstmod(test_bad_files)
 
 if __name__ == "__main__":
     print(main())

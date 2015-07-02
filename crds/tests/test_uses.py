@@ -130,12 +130,12 @@ class TestUses(CRDSTestCase):
 def tst():
     """Run module tests,  for now just doctests only."""
     
-    import unittest, doctest
+    import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUses)
     unittest.TextTestRunner().run(suite)
 
-    from crds.tests import test_uses
-    return doctest.testmod(test_uses)
+    from crds.tests import test_uses, tstmod
+    return tstmod(test_uses)
 
 if __name__ == "__main__":
     print(tst())
