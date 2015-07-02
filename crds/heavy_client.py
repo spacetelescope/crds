@@ -498,7 +498,7 @@ def load_server_info(observatory):
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
         log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    except IOError, exc:
+    except IOError as exc:
         log.error("CRDS cache config file failed to load from", repr(server_config), ":", str(exc))
         if config.ALLOW_PREINSTALLED_RULES:
             log.error("CRDS server connection and cache load FAILED.  Pre-installed rules are enabled for TESTING only,  NOT production calibrations.")
