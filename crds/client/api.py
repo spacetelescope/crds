@@ -26,7 +26,7 @@ from .proxy import CheckingProxy
 from crds import utils, log, config
 from crds.client import proxy
 
-from crds.exceptions import *
+from crds.exceptions import ServiceError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
 from crds.python23 import *
 
 # ==============================================================================

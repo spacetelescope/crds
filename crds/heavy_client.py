@@ -38,7 +38,7 @@ import uuid
 
 from . import rmap, log, utils, config
 from crds.client import api
-from crds.exceptions import *
+from crds.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
 from crds import python23
 
 __all__ = ["getreferences", "getrecommendations"]
