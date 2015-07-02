@@ -78,14 +78,14 @@ class TestNewContext(CRDSTestCase):
 
 def main():
     """Run module tests,  for now just doctests only."""
-    from crds.tests import test_newcontext
-    import unittest, doctest
+    from crds.tests import test_newcontext, tstmod
+    import unittest
 
     suite = unittest.TestLoader().loadTestsFromTestCase(TestNewContext)
     unittest.TextTestRunner().run(suite)
 
     old_state = test_config.setup()
-    result = doctest.testmod(test_newcontext)
+    result = tstmod(test_newcontext)
     test_config.cleanup(old_state)
 
     return result

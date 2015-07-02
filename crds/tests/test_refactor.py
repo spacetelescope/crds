@@ -164,12 +164,12 @@ class TestRefactor(CRDSTestCase):
 def tst():
     """Run module tests,  for now just doctests only."""
 
-    import unittest, doctest
+    import unittest
     suite = unittest.TestLoader().loadTestsFromTestCase(TestRefactor)
     unittest.TextTestRunner().run(suite)
     
-    from crds.tests import test_refactor
-    return doctest.testmod(test_refactor)
+    from crds.tests import test_refactor, tstmod
+    return tstmod(test_refactor)
 
 if __name__ == "__main__":
     print(tst())

@@ -85,9 +85,8 @@ from crds import tests
 
 def main():
     """Run module tests,  for now just doctests only."""
-    import doctest
-    from crds.tests import test_table_effects
-    return doctest.testmod(test_table_effects)
+    from crds.tests import test_table_effects, tstmod
+    return tstmod(test_table_effects)
 
 if __name__ == "__main__":
     print(main())
