@@ -101,7 +101,7 @@ from pprint import pprint as pp
 import crds
 from crds import log, utils
 
-from crds.exceptions import *
+from crds.exceptions import ValidationError, CrdsLookupError, AmbiguousMatchError, MatchingError, UseAfterError
 from crds import python23
 
 # ==============================================================================
@@ -378,11 +378,11 @@ class Selector(object):
             try:
                 log.verbose("Trying", selection, verbosity=60)
                 return self.get_choice(selection, header) # recursively,  what's final choice?
-            except crds.CrdsLookupError as exc:
+            except CrdsLookupError as exc:
                 last_exc = exc
                 continue
         more_info = " last exception: " + str(last_exc) if last_exc else ""
-        raise crds.CrdsLookupError("All lookup attempts failed." + more_info)
+        raise CrdsLookupError("All lookup attempts failed." + more_info)
                 
     def get_selection(self, lookup_key):
         """Most selectors are based on a sorted items list which represents a
