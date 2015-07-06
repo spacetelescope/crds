@@ -231,7 +231,7 @@ def mapping_names(context):
     try:
         mapping = crds.get_cached_mapping(context)
         contained_mappings = mapping.mapping_names()
-    except Exception:
+    except IOError:
         contained_mappings = api.get_mapping_names(context)
     return set(contained_mappings)
 
@@ -239,7 +239,7 @@ def get_bad_mappings_in_context(observatory, context):
     """Return the list of bad files (defined by the server) contained by `context`."""
     bad_mappings = get_config_info(observatory).bad_files_set
     context_mappings = mapping_names(context)
-    return sorted(list(context_mappings.intersection(bad_mappings)))
+    return sorted(list(context_mappings & bad_mappings))
 
 # ============================================================================
 def check_observatory(observatory):
@@ -438,6 +438,8 @@ def get_config_info(observatory):
     except CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
+        info.status = "cache"
+        info.connected = False
     info.effective_mode = info.get_effective_mode()
     return info
 
@@ -499,51 +501,10 @@ def load_server_info(observatory):
         info.status = "cache"
         log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except IOError as exc:
-        log.error("CRDS cache config file failed to load from", repr(server_config), ":", str(exc))
-        if config.ALLOW_PREINSTALLED_RULES:
-            log.error("CRDS server connection and cache load FAILED.  Pre-installed rules are enabled for TESTING only,  NOT production calibrations.")
-            info = get_installed_info(observatory)
-            info.connected = False
-        else:
-            log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue.  Use 'setenv CRDS_ALLOW_PREINSTALLED_RULES 1' to use old CRDS rules for testing purposes only.")
+        log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue. "
+                        " See https://hst-crds.stsci.edu or https://jwst-crds.stsci.edu for more information on configuring CRDS.")
     return info
 
-def get_installed_info(observatory):
-    """Make up a bare-bones server info dictionary to define the pipeline context
-    using pre-installed mappings for `observatory`.   Choose the most recent
-    pipeline context as the default operational context as determined by the 
-    context numbering scheme,  highest serial number wins.
-    
-    These are the ultimate fall-back settings for CRDS in serverless-mode and 
-    assume the mappings are pre-installed and/or visible on the Central Store.
-    
-    By providing a config directory and server config file,  the results of this
-    code should not be used in so-called "server-less mode".   This code is the
-    fallback for remote users when network connectivity has failed and they do
-    not *already* have cached server config (and mappings).
-    """
-    try:
-        # lexical sort of pmap names yields most recent (highest numbered) last.
-        os.environ["CRDS_MAPPATH"] = crds.__path__[0] + "/cache/mappings"
-        where = config.locate_mapping("*.pmap", observatory)
-        pmap = os.path.basename(sorted(glob.glob(where))[-1])
-        log.warning("Using highest numbered pipeline context", repr(pmap), 
-                    "as default. Bad file checking is disabled.")
-    except IndexError as exc:
-        raise CrdsError("Configuration or install error.  Can't find any .pmaps at " + 
-                        repr(where) + " : " + str(exc))
-    return ConfigInfo(
-            edit_context = pmap,
-            operational_context = pmap,
-            observatory = observatory,
-            bad_files = "",
-            status = "s/w install",
-            crds_version = dict( str="0.0.0"),
-            last_synced = "Not connected and not cached,  using installed mappings only.",
-            reference_url = "Not connected",
-            mapping_url = "Not connected"
-            )
-    
 # XXXX Careful with version string length here, FITS has a 68 char limit which degrades to CONTINUE records
 # XXXX which cause problems for other systems.
 def version_info():
