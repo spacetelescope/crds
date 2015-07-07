@@ -19,7 +19,7 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_get_derived_from_created():
+def dt_get_derived_from_created():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
@@ -27,7 +27,7 @@ def test_get_derived_from_created():
     CRDS  : INFO     Skipping derivation checks for root mapping 'hst.pmap' derived_from = 'created by hand 12-23-2011'
     >>> test_config.cleanup(old_state)
     """
-def test_get_derived_from_phony():
+def dt_get_derived_from_phony():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_phony_derive.rmap")
@@ -36,7 +36,7 @@ def test_get_derived_from_phony():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_missing_references():
+def dt_rmap_missing_references():
     """
     These are all missing because there is no reference file cache in this mode.
 
@@ -57,7 +57,7 @@ def test_rmap_missing_references():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_minimum_header():
+def dt_rmap_minimum_header():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
@@ -77,7 +77,7 @@ def test_rmap_minimum_header():
     
 
 
-def test_rmap_str():
+def dt_rmap_str():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_cos_bpixtab_0252.rmap")
@@ -110,7 +110,7 @@ def test_rmap_str():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_obs_package():
+def dt_rmap_obs_package():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
@@ -119,7 +119,7 @@ def test_rmap_obs_package():
     >>> test_config.cleanup(old_state)
     """
     
-def test_rmap_format_with_comment():
+def dt_rmap_format_with_comment():
     '''
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_comment.rmap")
@@ -168,7 +168,7 @@ def test_rmap_format_with_comment():
     >>> test_config.cleanup(old_state)
     '''
 
-def test_rmap_warn_checksum():
+def dt_rmap_warn_checksum():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.ReferenceMapping.from_string('''
@@ -194,7 +194,7 @@ def test_rmap_warn_checksum():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_get_reference_parkeys():
+def dt_rmap_get_reference_parkeys():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/jwst_miri_specwcs_0004.rmap")
@@ -205,7 +205,7 @@ def test_rmap_get_reference_parkeys():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_get_valid_values_map():
+def dt_rmap_get_valid_values_map():
     """
     >>> old_state = test_config.setup()
     >>> i = rmap.get_cached_mapping("hst_acs.imap")
@@ -339,7 +339,7 @@ def test_rmap_get_valid_values_map():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_get_valid_values_map_range():
+def dt_rmap_get_valid_values_map_range():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_wfpc2_flatfile.rmap")
@@ -348,7 +348,7 @@ def test_rmap_get_valid_values_map_range():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_get_best_references_fail():
+def dt_rmap_get_best_references_fail():
     """
     >>> old_state = test_config.setup()
     >>> i = rmap.get_cached_mapping("hst_acs.imap")
@@ -364,7 +364,7 @@ def test_rmap_get_best_references_fail():
     >>> test_config.cleanup(old_state)
     """
 
-def test_validate_mapping_valid():
+def dt_validate_mapping_valid():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile.rmap")
@@ -372,7 +372,7 @@ def test_validate_mapping_valid():
     >>> test_config.cleanup(old_state)
     """
 
-def test_validate_mapping_invalid1():
+def dt_validate_mapping_invalid1():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid1.rmap")
@@ -381,7 +381,7 @@ def test_validate_mapping_invalid1():
     >>> test_config.cleanup(old_state)
     """
 
-def test_validate_mapping_invalid2():
+def dt_validate_mapping_invalid2():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid2.rmap")
@@ -390,23 +390,23 @@ def test_validate_mapping_invalid2():
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_asmapping_readonly():
+def dt_rmap_asmapping_readonly():
     """
     >>> old_state = test_config.setup()
     >>> r = rmap.asmapping("data/hst_acs_darkfile.rmap", cached="readonly")
     >>> test_config.cleanup(old_state)
     """
 
-def test_rmap_get_equivalent_mapping_missing():
+def dt_rmap_get_equivalent_mapping_missing():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_SOURCE_CACHE)
+    >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
     >>> p.get_equivalent_mapping("hst_cos_twozxtab_0001.rmap")
     CRDS  : WARNING  No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'
     >>> test_config.cleanup(old_state)
     """
-    
-def test_imap_match_not_applicable():
+
+def dt_imap_match_not_applicable():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
@@ -427,7 +427,7 @@ def test_imap_match_not_applicable():
     >>> test_config.cleanup(old_state)
     """
 
-def test_imap_match_omit():
+def dt_imap_match_omit():
     """
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("data/hst_acs_9999.imap")
@@ -471,20 +471,20 @@ class TestRmap(CRDSTestCase):
         self.assertEqual(i.get_equivalent_mapping("data/hst_acs_biasfile_0002.rmap").name, "hst_acs_biasfile.rmap")
 
     def test_rmap_list_mappings(self):
-        os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+        os.environ["CRDS_MAPPATH_SINGLE"] = self.data_dir
         self.assertEqual(rmap.list_mappings("*.imap", "hst"), [
                 'hst_acs.imap', 'hst_acs_0001.imap', 'hst_acs_0002.imap', 'hst_acs_9999.imap',
                 'hst_cos.imap', 'hst_nicmos.imap', 'hst_stis.imap', 'hst_wfc3.imap', 'hst_wfpc2.imap', 
                 'jwst_fgs_na.imap', 'jwst_miri_omit.imap', 'jwst_niriss_na_omit.imap'])
 
     def test_rmap_list_references(self):
-        os.environ["CRDS_REFPATH_SINGLE"] = tests.TEST_DATA
+        os.environ["CRDS_REFPATH_SINGLE"] = self.data_dir
         config.CRDS_REF_SUBDIR_MODE = "flat"
         self.assertEqual(rmap.list_references("*.r1h", "hst"), ['dbu1405fu.r1h', 'dbu1405iu.r1h', 'e1b09593u.r1h', 'e1b09594u.r1h'])
 
     def test_rmap_get_derived_from(self):
         # api.dump_mappings("hst.pmap", mappings=["hst_acs_flshfile_0251.rmap"])
-        os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+        os.environ["CRDS_MAPPATH_SINGLE"] = self.data_dir
         r = rmap.get_cached_mapping("data/hst_acs_flshfile_0252.rmap")
         self.assertEqual(r.get_derived_from().name, 'hst_acs_flshfile_0251.rmap')
 
@@ -719,7 +719,8 @@ selector = Match({
         p = rmap.get_cached_mapping("hst.pmap")
         p.todict()
 
-    def test_rmap_match_omit(self):
+    def test_rmap_match_tjson(self):
+        os.environ["CRDS_PATH"] = tests.CRDS_CACHE_TEST
         p = rmap.get_cached_mapping("jwst.pmap")
         p.tojson()
 

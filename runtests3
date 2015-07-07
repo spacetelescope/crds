@@ -2,11 +2,26 @@
 import sys
 import os
 import os.path
-import crds.pysh
 import crds
+from crds import config, log
 
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
-os.environ["CRDS_MAPPATH"] = os.path.join(os.path.dirname(crds.__file__), "cache", "mappings")
+topdir = os.getcwd()
 
-crds.pysh.sh("nosetests --verbose --with-doctest --doctest-tests --doctest-options=+IGNORE_EXCEPTION_DETAIL --logging-clear-handlers {}".format(" ".join(sys.argv[1:])))
+# config.clear_crds_state()
+# os.environ["CRDS_SERVER_URL"] = "https://hst-crds-dev.stsci.edu"
+
+# Unlike historical CRDS with builtin cache,  test cache is now a separate 
+# subversion checkout from ^/branches/crds_cache_test to ../crds_cache_test.
+# os.environ["CRDS_PATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive")
+os.environ["CRDS_CACHE_TEST"] = os.path.join(os.getcwd(), "..", "crds_cache_test")
+
+EXTRA_PARAMETERS = " ".join(sys.argv[1:])
+
+if  "--coverage" in sys.argv:
+    sys.argv.remove("--coverage")
+    COVERAGE_SWITCHES = " --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-erase --cover-branches ".format(topdir)
+    EXTRA_PARAMETERS += COVERAGE_SWITCHES
+    
+os.system("nosetests --verbose --with-doctest --doctest-tests --doctest-options=+ELLIPSIS,+NORMALIZE_WHITESPACE,+IGNORE_EXCEPTION_DETAIL --logging-clear-handlers {0}".format(EXTRA_PARAMETERS))
 

@@ -10,8 +10,8 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds import log, config, uses
-from crds.tests import CRDSTestCase
+from crds import log, config, uses, tests
+from crds.tests import CRDSTestCase, test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -19,12 +19,9 @@ from nose.tools import assert_raises, assert_true
 
 HERE = os.path.dirname(__file__) or "."
 
-def test_uses_finaall_mappings_using_reference():
+def dt_uses_finaall_mappings_using_reference():
     """
-    >>> old_state = config.get_crds_state(clear_existing=True)
-    >>> os.environ["CRDS_MAPPATH"] = HERE + "/../cache/mappings"
-    >>> log.set_test_mode()
-    
+    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
     >>> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
     hst.pmap
     hst_0001.pmap
@@ -38,16 +35,13 @@ def test_uses_finaall_mappings_using_reference():
     hst_cos_flatfile.rmap
     hst_cos_flatfile_0002.rmap
     0
-    
-    >>> config.set_crds_state(old_state)
+
+    >>> test_config.cleanup(old_state)
     """
 
-def test_uses_rmaps():
+def dt_uses_rmaps():
     """
-    >>> old_state = config.get_crds_state(clear_existing=True)
-    >>> os.environ["CRDS_MAPPATH"] = HERE + "/../cache/mappings"
-    >>> log.set_test_mode()
-    
+    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
     >>> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
@@ -68,37 +62,34 @@ def test_uses_rmaps():
     hst_acs_darkfile.rmap hst_0012.pmap
     hst_acs_darkfile.rmap hst_0013.pmap
     hst_acs_darkfile.rmap hst_0014.pmap
+    hst_acs_darkfile.rmap hst_0015.pmap
     hst_acs_darkfile.rmap hst_acs.imap
     hst_acs_darkfile.rmap hst_acs_0001.imap
+    hst_acs_darkfile.rmap hst_acs_0002.imap
     0
-    
-    >>> config.set_crds_state(old_state)
+
+    >>> test_config.cleanup(old_state)
     """
     
-def test_uses_imap():
+def dt_uses_imap():
     """
-    >>> old_state = config.get_crds_state(clear_existing=True)
-    >>> os.environ["CRDS_MAPPATH"] = HERE + "/../cache/mappings"
-    >>> log.set_test_mode()
-    
+    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
     >>> uses.UsesScript("crds.uses --files hst_cos.imap")()
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap
     0
 
-    >>> config.set_crds_state(old_state)
+    >>> test_config.cleanup(old_state)
     """
 
-def test_uses_print_datasets():
+def dt_uses_print_datasets():
     """
-    >>> old_state = config.get_crds_state(clear_existing=True)
-    >>> os.environ["CRDS_MAPPATH"] = HERE + "/../cache/mappings"
-    >>> log.set_test_mode()
-   
     This test/function is quite slow since it surveys the catalog for recorded uses of the
     specified file.  Too slow for routine unit tests.
     
+    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+
     >> uses.UsesScript("crds.uses --files n3o1022ij_drk.fits --print-datasets --hst")()
     J8BA0HRPQ:J8BA0HRPQ
     J8BA0IRTQ:J8BA0IRTQ
@@ -106,7 +97,7 @@ def test_uses_print_datasets():
     J8BA0KT4Q:J8BA0KT4Q
     J8BA0LIJQ:J8BA0LIJQ
 
-    >>> config.set_crds_state(old_state)
+    >>> test_config.cleanup(old_state)
     """
 
 class TestUses(CRDSTestCase):

@@ -221,8 +221,8 @@ class CrdsLogger(object):
         self.logger.removeHandler(handler)
 
     def fatal_error(self, *args, **keys):
-        status = keys.pop("status", -1)
         error("(FATAL)", *args, **keys)
+        status = int(errors() != 0)
         sys.exit(status)
 
 THE_LOGGER = CrdsLogger("CRDS")

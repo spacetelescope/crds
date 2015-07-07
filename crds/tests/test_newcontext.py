@@ -16,7 +16,7 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def tst_fake_name():
+def dt_fake_name():
     """
     Fake names are only used by crds.newcontext when it is run from the command line.
 
@@ -35,7 +35,7 @@ def tst_fake_name():
     >>> test_config.cleanup(old_state)
     """
 
-def tst_new_context():
+def dt_new_context():
     """
     >>> old_state = test_config.setup()
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA

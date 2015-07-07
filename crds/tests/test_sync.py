@@ -1,6 +1,5 @@
 """This module contains doctests and unit tests which exercise some of the more
 complex features of the basic rmap infrastructure.
-
 """
 
 from __future__ import division # confidence high
@@ -22,10 +21,8 @@ class TestSync(CRDSTestCase):
 
     def setUp(self):
         super(TestSync, self).setUp()
-        config.clear_crds_state()
         os.environ["CRDS_PATH"] = self.temp_dir
         os.environ["CRDS_REF_SUBDIR_MODE"] = "flat"
-        log.set_test_mode()
 
     def test_sync_contexts(self):
         self.run_script("crds.sync --contexts hst_cos.imap")
@@ -47,7 +44,8 @@ class TestSync(CRDSTestCase):
         crds.get_cached_mapping("hst_cos_deadtab.rmap")
 
     def test_sync_readonly_cache(self):
-        self.tearDown()   # switch to default test environment (currently) from hst-crds-dev.csh
+        super(TestSync, self).setUp()
+        # self.tearDown()   # switch to default test environment (currently) from hst-crds-dev.csh
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap")  # sync to establish config area for sure
         self.run_script("crds.sync --contexts hst_cos_deadtab.rmap --fetch-references --readonly-cache")
 

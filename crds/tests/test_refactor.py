@@ -18,13 +18,11 @@ from nose.tools import assert_raises, assert_true
 
 # ==================================================================================
 
-def test_refactor_add_files():
+def dt_refactor_add_files():
     """
     >>> log.set_test_mode()
-    >>> import doctest
-    >>> doctest.ELLIPSIS_MARKER = '-etc-'
 
-    >>> RefactorScript("refactor.py insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
     CRDS  : INFO     Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
     0
 
@@ -44,11 +42,11 @@ def test_refactor_add_files():
     
     """
 
-def test_refactor_delete_files():
+def dt_refactor_delete_files():
     """ 
     >>> log.set_test_mode()
 
-    >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete.rmap data/s7g1700gl_dead.fits")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete.rmap data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
     CRDS  : INFO     Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
     0
 
@@ -59,7 +57,7 @@ def test_refactor_delete_files():
     >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_delete.rmap", "none", "data/s7g1700gl_dead.fits", expected=("delete",))
     True
 
-    >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete2.rmap data/foobar.fits")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete2.rmap data/foobar.fits")()  # doctest: +ELLIPSIS
     CRDS  : INFO     Deleting 'data/foobar.fits' from 'hst_cos_deadtab.rmap'
     CRDS  : ERROR    Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
     1
@@ -69,11 +67,11 @@ def test_refactor_delete_files():
 
     """
 
-def test_refactor_add_header():
+def dt_refactor_add_header():
     """
     >>> log.set_test_mode()
 
-    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap new_key some new value")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap new_key some new value")()  # doctest: +ELLIPSIS
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_add_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -86,11 +84,11 @@ def test_refactor_add_header():
     >>> _ = os.system("rm ./*.rmap")
     """
 
-def test_refactor_replace_header():
+def dt_refactor_replace_header():
     """
     >>> log.set_test_mode()
 
-    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap reffile_format something new")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py set_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap reffile_format something new")()  # doctest: +ELLIPSIS
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_replace_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -103,11 +101,11 @@ def test_refactor_replace_header():
     >>> _ = os.system("rm ./*.rmap")
     """
 
-def test_refactor_del_header():
+def dt_refactor_del_header():
     """
     >>> log.set_test_mode()
 
-    >>> RefactorScript("refactor.py del_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap reffile_format")()  # doctest:+ELLIPSIS
+    >>> RefactorScript("refactor.py del_header data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap reffile_format")()  # doctest: +ELLIPSIS
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_del_header.rmap --include-header-diffs --hide-boring-diffs").run()
@@ -120,7 +118,7 @@ def test_refactor_del_header():
     >>> _ = os.system("rm ./*.rmap")
     """
 
-def test_refactor_bad_modify_count():
+def dt_refactor_bad_modify_count():
     """ 
     >>> log.set_test_mode()
 
