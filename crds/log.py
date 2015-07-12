@@ -222,8 +222,7 @@ class CrdsLogger(object):
 
     def fatal_error(self, *args, **keys):
         error("(FATAL)", *args, **keys)
-        status = int(errors() != 0)
-        sys.exit(status)
+        sys.exit(-1)  # FATAL == totally unambiguous
 
 THE_LOGGER = CrdsLogger("CRDS")
 
