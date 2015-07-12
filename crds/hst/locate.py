@@ -23,7 +23,6 @@ import glob
 from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
 from crds.exceptions import CrdsError
 from crds.hst import siname
-from crds.tests import test_config
 
 # =======================================================================
 
@@ -160,6 +159,7 @@ def properties_inside_mapping(filename):
     """Load `filename`s mapping header to discover and 
     return (instrument, filekind).
 
+    >>> from crds.tests import test_config
     >>> old_config = test_config.setup()
 
     >>> properties_inside_mapping("hst.pmap")
@@ -218,6 +218,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
     to the properties determined by file contents and make sure they're the same.
     Also checks rmap membership.
 
+    >> from crds.tests import test_config
     >> old_config = test_config.setup()
     >> check_naming_consistency("acs")
     >> check_naming_consistency("cos")
