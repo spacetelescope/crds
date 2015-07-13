@@ -396,23 +396,21 @@ class ConfigInfo(utils.Struct):
         return set(self.get("bad_files", "").split())
 
     def get_effective_mode(self):
-        """Based on environment CRDS_MODE,  connection status,  server s/w version, 
-        and the installed client s/w version,  determine whether best refs should be
-        computed locally or on the server.   Simple unless CRDS_MODE is defaulting
-        to "auto" in which case the effective mode is "remote" when connected and
-        the client is obsolete relative to the server.
+        """Based on environment CRDS_MODE,  connection status,  and server config force_remote_mode flag,
+        determine whether best refs should be computed locally or on the server.   Simple unless 
+        CRDS_MODE defaults to "auto" in which case the effective mode is "remote" when connected and
+        the server sets force_remote_mode to True.
         
         returns 'local' or 'remote'
         """
         mode = config.get_crds_processing_mode()  # local, remote, auto
-        obsolete = local_version_obsolete(self.crds_version["str"])
         if mode == "auto":
-            eff_mode = "remote" if (self.connected and obsolete) else "local"
+            eff_mode = "remote" if (self.connected and self.force_remote_mode) else "local"
         else:
             eff_mode = mode   # explicitly local or remote
             if eff_mode == "remote" and not self.connected:
                 raise CrdsError("Can't compute 'remote' best references while off-line.  Set CRDS_MODE to 'local' or 'auto'.")
-            if eff_mode == "local" and obsolete:
+            if eff_mode == "local" and self.force_remote_mode:
                 log.warning("Computing bestrefs locally with obsolete client.   Recommended references may be sub-optimal.")
         return eff_mode
 
