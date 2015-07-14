@@ -1456,8 +1456,9 @@ class ReferenceMapping(Mapping):
         # Since expansion rules may depend on keys not used in matching,  get entire header  
         header = data_file.get_header(reffile, observatory=self.observatory)
         
-        header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), define_as="N/A")
-        
+        header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), 
+                                               define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)
+    
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:\n", 
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
