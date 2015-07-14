@@ -47,6 +47,8 @@ FILEKINDS = TYPES.filekinds
 
 HERE  = os.path.dirname(__file__) or "."
 
+UNDEFINED_PARKEY_SUBST_VALUE = "N/A"
+
 INSTRUMENT_FIXERS = {
     "wfii": "wfpc2",
 }
@@ -54,7 +56,6 @@ INSTRUMENT_FIXERS = {
 TYPE_FIXERS = {
     ("wfpc2","dark") : "drk", 
 }
-
 
 def test():
     """Run hst package doctests."""
