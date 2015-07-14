@@ -47,7 +47,7 @@ FILEKINDS = TYPES.filekinds
 
 HERE  = os.path.dirname(__file__) or "."
 
-UNDEFINED_PARKEY_SUBST_VALUE = "N/A"
+UNDEFINED_PARKEY_SUBST_VALUE = "UNDEFINED"
 
 INSTRUMENT_FIXERS = {
     "wfii": "wfpc2",
