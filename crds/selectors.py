@@ -326,6 +326,19 @@ class Selector(object):
             "selections" : flat,
             }
         
+    def delete_match_param(self, parameter):
+        """Delete the value of `parameter` name in every match case,  recursively
+        if `parameter is not in self._parameters.
+        """
+        for i, (old_key, choice) in enumerate(self._raw_selections):
+            try:
+                ix = self._parameters.index(parameter)
+                new_key = old_key[:ix] + old_key[ix+1:]
+                self._raw_selections[i] = (new_key, choice)
+                log.verbose("Replacing match case", repr(old_key), "with", repr(new_key))
+            except ValueError:
+                choice.delete_match_param(parameter)
+
     def todict_parameters(self):
         """Overridable,  generally self._parameters."""
         return self._parameters
