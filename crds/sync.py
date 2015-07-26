@@ -285,6 +285,8 @@ class SyncScript(cmdline.ContextsScript):
         heavy_client.update_config_info(self.observatory)
         if self.args.verify_context_change:
             self.verify_context_change(old_context)
+        if self.args.push_context:
+            self.push_context()
         self.report_stats()
         log.standard_status()
         return log.errors()
