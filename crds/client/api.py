@@ -70,6 +70,7 @@ __all__ = [
            "get_affected_datasets",
            "get_context_history",
 
+           "push_context",
            ]
 
 # ============================================================================
@@ -373,7 +374,7 @@ def push_context(observatory, kind, key, context):
     for critical systems like pipelines,  not average users.   This lets the server
     display actual versus commanded (Set Context) operational contexts for a pipeline.
     """
-    return S.push_context(observatory, kind, context, key)
+    return S.push_context(observatory, kind, key, context)
 
 # ==============================================================================
 
