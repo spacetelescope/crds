@@ -212,10 +212,10 @@ def dt_bestrefs_catalog_dataset():
 
     >>> old_state = test_config.setup()
     
-    >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets I9ZF01010")() # doctest: +ELLIPSIS
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at 'https://...' for ['I9ZF01010']
-    CRDS  : INFO     Dumped 4 of 1 datasets from CRDS server at 'https://...'
-    CRDS  : INFO     Computing bestrefs for datasets ['I9ZF01010']
+    >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets LB6M01030")() # doctest: +ELLIPSIS
+    CRDS  : INFO     Dumping dataset parameters from CRDS server at '...' for ['LB6M01030']
+    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at '...'
+    CRDS  : INFO     Computing bestrefs for datasets ['LB6M01030']
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
@@ -258,7 +258,7 @@ class TestBestrefs(CRDSTestCase):
     cache = CRDS_CACHE_TEST
 
     def test_bestrefs_affected_datasets(self):
-        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0314.pmap --new-context hst_0315.pmap",
+        self.run_script("crds.bestrefs --affected-datasets --old-context hst_0314.pmap --new-context hst_0315.pmap --datasets-since 2015-01-01",
                         expected_errs=0)
         
     def test_bestrefs_from_pickle(self):
