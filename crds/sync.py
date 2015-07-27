@@ -236,6 +236,10 @@ class SyncScript(cmdline.ContextsScript):
                           help="Migrate cache to specified structure, 'flat' or 'instrument'. WARNING: perform only on idle caches.")
         self.add_argument("--organize-delete-junk", action="store_true",
                           help="When --organize'ing, delete obstructing files or directories CRDS discovers.")
+        self.add_argument("--verify-context-change", action="store_true",
+                          help="When specified,  it's an error if the context does not update to something new.")
+        self.add_argument("--push-context", metavar="CONTEXT_KEY", type=str,
+                          help="When specified, push the name of the final cached operational context to the server.")
 
     # ------------------------------------------------------------------------------------------
     
@@ -248,6 +252,8 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
         self.require_server_connection()
+        if self.readonly_cache and self.args.verify_context_change:
+            log.error("--readonly-cache and --verify-context-change are incompatible,  a readonly cache cannot change.")
         if self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.args.files
@@ -274,7 +280,13 @@ class SyncScript(cmdline.ContextsScript):
             sys.exit(-1)
         if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
+        if self.args.verify_context_change:
+            old_context = heavy_client.load_server_info(self.observatory).operational_context
         heavy_client.update_config_info(self.observatory)
+        if self.args.verify_context_change:
+            self.verify_context_change(old_context)
+        if self.args.push_context:
+            self.push_context()
         self.report_stats()
         log.standard_status()
         return log.errors()
@@ -284,7 +296,24 @@ class SyncScript(cmdline.ContextsScript):
     def server_info(self):
         """Return the server_info dict from the CRDS server.  Do not call update_config_info() until sync complete."""
         return heavy_client.get_config_info(self.observatory)
-
+    
+    def verify_context_change(self, old_context):
+        """Verify that the starting and post-sync contexts are different,  or issue an error."""
+        utils.clear_function_caches()
+        new_context = self.default_context
+        if old_context == new_context:
+            log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
+        else:
+            log.info("Operational context updated from", repr(old_context), "to",  repr(new_context))
+            
+    def push_context(self):
+        """Push the final context recorded in the local cache to the CRDS server so it can be displayed
+        as the operational state of a pipeline.
+        """
+        utils.clear_function_caches()
+        with log.error_on_exception("Failed pushing local operational context to CRDS server"):
+            api.push_context(self.observatory, "operational", self.args.push_context, self.default_context)
+            
     # ------------------------------------------------------------------------------------------
 
     def purge_mappings(self):
