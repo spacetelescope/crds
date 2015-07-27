@@ -476,7 +476,8 @@ and debug output.
                 
         if self.args.affected_datasets:
             self.args.diffs_only = True
-            self.args.datasets_since = "auto"
+            if not self.args.datasets_since:
+                self.args.datasets_since = "auto"
             self.args.optimize_tables = True
             self.args.print_update_counts = True
             self.args.print_affected = True
