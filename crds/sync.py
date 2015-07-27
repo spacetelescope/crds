@@ -304,7 +304,7 @@ class SyncScript(cmdline.ContextsScript):
         if old_context == new_context:
             log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
         else:
-            log.info("Operational context  updated from", repr(old_context), "to",  repr(new_context))
+            log.info("Operational context updated from", repr(old_context), "to",  repr(new_context))
             
     def push_context(self):
         """Push the final context recorded in the local cache to the CRDS server so it can be displayed
