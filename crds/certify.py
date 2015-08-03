@@ -1070,11 +1070,11 @@ For more information on the checks being performed,  use --verbose or --verbosit
         else:
             all_files = set(self.files)
             
-        if not self.all_references(all_files) and not self.all_mappings(all_files):
+        if not self.are_all_references(all_files) and not self.are_all_mappings(all_files):
             if self.args.comparison_context is None and not self.args.comparison_reference:
                 log.info("Mixing references and mappings in one certify run skips any default comparison checks.")
 
-        if self.all_references(all_files):
+        if self.are_all_references(all_files):
             # Change original default behavior of None to default operational context,  for references.
             # For mappings / older contexts the default tends to be the wrong thing,  hence references only.
             if self.args.comparison_context is None and not self.args.comparison_reference:

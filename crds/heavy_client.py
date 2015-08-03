@@ -35,6 +35,7 @@ import glob
 import ast
 import traceback
 import uuid
+import fnmatch 
 
 from . import rmap, log, utils, config
 from crds.client import api
@@ -412,12 +413,20 @@ def get_config_info(observatory):
             info = load_server_info(observatory)
             info.status = "cache"
             info.connected = True
+            log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except CrdsError:
         log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
         info = load_server_info(observatory)
         info.status = "cache"
         info.connected = False
+        log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     info.effective_mode = info.get_effective_mode()
+
+    # XXX For backward compatibility with older servers which don't have ".mappings" in server info.
+    if not hasattr(info, "mappings"):
+        with log.verbose_warning_on_exception("Failed fetching list of all CRDS mappings from server"):
+            info.mappings = api.list_mappings(observatory, "*.*")
+
     return info
 
 def update_config_info(observatory):
@@ -476,7 +485,6 @@ def load_server_info(observatory):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
-        log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except IOError as exc:
         log.fatal_error("CRDS server connection and cache load FAILED.  Cannot continue. "
                         " See https://hst-crds.stsci.edu or https://jwst-crds.stsci.edu for more information on configuring CRDS.")
@@ -514,6 +522,14 @@ def get_context_parkeys(context, instrument):
         return list(parkeys)
     else:
         return list(parkeys[instrument])
+
+# ============================================================================
+def list_mappings(observatory, glob_pattern):
+    """Optimized version of "list_mappings" server api function which leverages
+    mappings list given in server_info api rather than separate rpc call.  
+    """
+    info = get_config_info(observatory)
+    return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
 
 # ============================================================================
 

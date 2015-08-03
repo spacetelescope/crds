@@ -470,7 +470,7 @@ class Script(object):
         if references:
             self.dump_files(context, references, ignore_cache)
 
-    def all_references(self, files):
+    def are_all_references(self, files):
         """Return True IFF every file in files is a reference."""
         for filename in files:
             if not config.is_reference(filename):
@@ -478,7 +478,7 @@ class Script(object):
         else:
             return True
 
-    def all_mappings(self, files):
+    def are_all_mappings(self, files):
         """Return True IFF every file in files is a mapping."""
         for filename in files:
             if not config.is_mapping(filename):
@@ -553,7 +553,6 @@ class ContextsScript(Script):
     
     def __init__(self, *args, **keys):
         super(ContextsScript, self).__init__(*args, **keys)
-        self._all_mappings = None
 
     def add_args(self):
         self.add_argument('--contexts', metavar='CONTEXT', type=mapping_spec, nargs='*',
@@ -575,16 +574,15 @@ class ContextsScript(Script):
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
             assert not self.args.range or self.args.last_n_contexts, "Cannot specify --all and --range or --last"
-            self._all_mappings = self._list_mappings("*.*map")
-            contexts = [ fil for fil in self._all_mappings if fil.endswith(".pmap") ]
+            contexts = self._list_mappings("*.pmap")
         elif self.args.last_n_contexts:
             assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
-            contexts = self._list_mappings()[-self.args.last_n_contexts:]
+            contexts = self._list_mappings("*.pmap")[-self.args.last_n_contexts:]
         elif self.args.range:
             assert not self.args.all or self.args.last_n_contexts, "Cannot specify --range and --last or --all"
             rmin, rmax = self.args.range
             contexts = []
-            all_contexts = self._list_mappings()
+            all_contexts = self._list_mappings("*.pmap")
             for context in all_contexts:
                 match = re.match(r"\w+_(\d+).pmap", context)
                 if match:
@@ -599,7 +597,7 @@ class ContextsScript(Script):
     def _list_mappings(self, glob_pattern="*.pmap"):
         """Return a list of all the .pmap's on the CRDS Server."""
         self.require_server_connection()
-        return api.list_mappings(glob_pattern=glob_pattern)
+        return heavy_client.list_mappings(self.observatory, glob_pattern)
     
     def dump_files(self, context, files=None, ignore_cache=None):
         """Download mapping or reference `files1` with respect to `context`,  tracking stats."""
@@ -620,8 +618,7 @@ class ContextsScript(Script):
             return []
         log.verbose("Getting all mappings for specified contexts.", verbosity=55)
         if self.args.all:
-            files = self._all_mappings
-            pmaps = sorted([fil for fil in files if fil.endswith(".pmap")])
+            pmaps = self._list_mappings("*.pmap")
             useable_contexts = []
             if pmaps and files:
                 with log.warn_on_exception("Failed dumping mappings for", repr(self.contexts)):

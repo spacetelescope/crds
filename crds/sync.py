@@ -299,8 +299,7 @@ class SyncScript(cmdline.ContextsScript):
     
     def verify_context_change(self, old_context):
         """Verify that the starting and post-sync contexts are different,  or issue an error."""
-        utils.clear_function_caches()
-        new_context = self.default_context
+        new_context = heavy_client.load_server_info(self.observatory).operational_context
         if old_context == new_context:
             log.error("Expected operational context switch but starting and post-sync contexts are both", repr(old_context))
         else:
@@ -310,10 +309,11 @@ class SyncScript(cmdline.ContextsScript):
         """Push the final context recorded in the local cache to the CRDS server so it can be displayed
         as the operational state of a pipeline.
         """
-        utils.clear_function_caches()
-        with log.error_on_exception("Failed pushing local operational context to CRDS server"):
-            api.push_context(self.observatory, "operational", self.args.push_context, self.default_context)
-            
+        info = heavy_client.load_server_info(self.observatory)
+        with log.error_on_exception("Failed pushing cached operational context name to CRDS server"):
+            api.push_context(self.observatory, "operational", self.args.push_context, info.operational_context)
+            log.info("Pushed cached operatonal context name", repr(info.operational_context), "to CRDS server")
+
     # ------------------------------------------------------------------------------------------
 
     def purge_mappings(self):

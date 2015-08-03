@@ -844,14 +844,16 @@ def get_crds_state(clear_existing=False, clear_server_url=False):
     """
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
+    env["_CRDS_CACHE_READONLY"] = get_cache_readonly()
     if clear_existing:
         clear_crds_state(clear_server_url)
     return env
 
 def set_crds_state(old_state):
     """Restore the configuration of CRDS returned by get_crds_state()."""
-    global CRDS_REF_SUBDIR_MODE
+    global CRDS_REF_SUBDIR_MODE, _CRDS_CACHE_READONLY
     clear_crds_state()
+    _CRDS_CACHE_READONLY = old_state.pop("_CRDS_CACHE_READONLY")
     for key, val in old_state.items():
         os.environ[key] = val
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
@@ -867,7 +869,7 @@ def clear_crds_state(clear_server_url=False):
         if var.startswith("CRDS_") and (var != "CRDS_SERVER_URL" or clear_server_url):
             os.environ.pop(var)
     CRDS_REF_SUBDIR_MODE = None
-
+    _CRDS_CACHE_READONLY = False
 
 # -------------------------------------------------------------------------------------
 

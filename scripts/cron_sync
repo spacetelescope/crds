@@ -76,7 +76,7 @@ export CRDS_DOWNLOAD_MODE=plugin
      # override pipeline global readonly setting.
      export CRDS_READONLY_CACHE=0
      chmod 644 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
-     python -m crds.sync $* --verbose --stats # nominally --last 10 --fetch-references
+     python -m crds.sync $* --stats # nominally --last 10 --fetch-references
     
   fi
     

@@ -204,7 +204,7 @@ class CachedFunction(object):
 def clear_function_caches():
     "Clear all the caches created using @utils.cached or @utils.xcached."""
     for cache_func in CachedFunction.cache_set:
-        log.verbose("Clearing cache for", repr(cache_func.uncached))
+        log.verbose("Clearing cache for", repr(cache_func.uncached), verbosity=80)
         cache_func.cache = dict()
         
 def list_cached_functions():
