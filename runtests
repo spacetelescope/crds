@@ -22,6 +22,7 @@ if  "--coverage" in sys.argv:
     sys.argv.remove("--coverage")
     COVERAGE_SWITCHES = " --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-erase --cover-branches ".format(topdir)
     EXTRA_PARAMETERS += COVERAGE_SWITCHES
-    
+
+os.system("./install --include-test-data")    
 os.system("nosetests --verbose --with-doctest --doctest-tests --doctest-options=+ELLIPSIS,+NORMALIZE_WHITESPACE --logging-clear-handlers {0}".format(EXTRA_PARAMETERS))
 
