@@ -1,0 +1,52 @@
+As of version 1.7.0 (opus_2015.2-client-2) the CRDS source distribution
+has been restructured to remove the "fallback cache" and to omit the
+test data directory.
+
+The ^/trunk/crds/cache directory and package has been moved to
+^/branches/crds_cache_archive and contains only dirty rules.
+
+The builtin cache has been moved to ^/branches/crds_cache_test for testing
+purposes and should be set up as an independent subversion checkout one level
+above this directory named "crds_cache_test".  Formally crds.cache was used as
+a pristing file archive of operational rules.  Now transferred to
+^/branches/crds_cache_test, the rules are no longer guaranteed to be prisitine
+and may be modified to support the demands of testing.  The function of version
+controlling CRDS rules is now relegated to ^/branches/crds_cache_archive which
+contains only pristine production rules transcribed from the HST + JWST
+archives.
+
+Additionally, the auxilliary "crds/test/data" test data directory required to
+run unit tests has been excluded from the source package distribution and is
+only installable using a subversion checkout.  This directory contains crontrived
+rules, reference files, and datasets for testing CRDS.
+
+Now,  setting up CRDS to run the built-in unit tests can be accomplished as follows:
+
+% svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  CRDS
+% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_cache_test crds_cache_test
+% cd CRDS
+% source envs/hst-crds-dev.csh
+% ./runtests
+
+Runtests is configured to install the ^/trunk/crds/tests/data directory
+(normally excluded from the source distribution to reduce size) but still
+present in the subversion checkout and installable by adding
+--include-test-data to the ./install or setup.py install command.
+
+The above configures CRDS to run the built-in unit tests using 3 file sources:
+
+- ^/branches/crds_cache_test
+- ^/trunk/crds/test/data
+- /grp/crds/cache
+
+/grp/crds/cache is the shared CRDS readonly cache at the Institute (currently
+on the Central Store) which currently contains all rules and references for
+both JWST and HST.
+
+CRDS/crds/test/data is normally omitted from source code distributions.
+
+^/branches/crds_cache_test is a modified version of
+^/branches/crds_cache_archive altered to support unit testing requirements.
+
+Unit tests requiring a server are run against https://hst-crds-dev.stsci.edu
+using this setup.
