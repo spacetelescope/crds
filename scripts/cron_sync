@@ -63,7 +63,7 @@ export CRDS_DOWNLOAD_MODE=plugin
 
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
 
-  if [[ $? == 1 ]]
+  if [[ $? != 0 ]]
   then
     echo "cron_sync: WARNING: failed to obtain crds.sync.lock"
     exit 1
