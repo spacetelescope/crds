@@ -60,19 +60,21 @@ class ListScript(cmdline.ContextsScript):
         self.add_argument('--mappings', action='store_true', dest="list_mappings",
             help='print names of mapping files referred to by contexts')
         self.add_argument("--cached-references", action="store_true",
-            help="prints out the paths of all references in the local cache.")
+            help="prints the paths of all references in the local cache.")
         self.add_argument("--cached-mappings", action="store_true",
-            help="prints out the paths of all mappings in the local cache.")
+            help="prints the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
-            help="prints out the full paths of files for --cached-references and --cached-mappings.""")
+            help="prints the full paths of files for --cached-references and --cached-mappings.""")
         self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
-            help="prints out matching parameters for the specified dataset ids.")
+            help="prints matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
-            help="print out CRDS configuration information.")
+            help="print CRDS configuration information.")
         self.add_argument("--cat", nargs="+", dest="cat", metavar="FILES",
-            help="print out the text of the specified mapping files.")
+            help="print the text of the specified mapping files.")
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
-            help="print out the name of the current operational context.")
+            help="print the name of the operational context on the central CRDS server.")
+        self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
+            help="print the name of the context reported as in use by the specified pipeline.")
         super(ListScript, self).add_args()
         
     def main(self):
@@ -93,6 +95,14 @@ class ListScript(cmdline.ContextsScript):
             self.cat_files()
         if self.args.operational_context:
             print(self.default_context)
+        if self.args.remote_context:
+            print(self.remote_context)
+
+    @property
+    def remote_context(self):
+        """Print the name of the context in use by default at the"""
+        self.require_server_connection()
+        return api.get_remote_context(self.observatory, self.args.remote_context)
 
     def cat_files(self):
         """Print out the files listed after --cat"""
