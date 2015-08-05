@@ -311,7 +311,7 @@ class SyncScript(cmdline.ContextsScript):
         """
         info = heavy_client.load_server_info(self.observatory)
         with log.error_on_exception("Failed pushing cached operational context name to CRDS server"):
-            api.push_context(self.observatory, "operational", self.args.push_context, info.operational_context)
+            api.push_remote_context(self.observatory, "operational", self.args.push_context, info.operational_context)
             log.info("Pushed cached operatonal context name", repr(info.operational_context), "to CRDS server")
 
     # ------------------------------------------------------------------------------------------
