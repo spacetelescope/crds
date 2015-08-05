@@ -618,6 +618,7 @@ class ContextsScript(Script):
             return []
         log.verbose("Getting all mappings for specified contexts.", verbosity=55)
         if self.args.all:
+            files = self._list_mappings("*.*map")
             pmaps = self._list_mappings("*.pmap")
             useable_contexts = []
             if pmaps and files:
