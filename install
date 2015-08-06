@@ -2,7 +2,10 @@
 
 cd `dirname $0`
 
-./clean
+if (test -e clean)
+then
+    ./clean
+fi
 
 rm -f install.log
 
@@ -15,7 +18,10 @@ fi
 python setup.py install $* --force  >> install.log
 st=$st$?
 
-./clean
+if (test -e clean)
+then
+    ./clean
+fi
 
 echo final status $st
 st=`echo $st | tr -d 0 | cut -c1-1`
