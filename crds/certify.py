@@ -387,7 +387,7 @@ class Certifier(object):
 
     def __init__(self, filename, context=None, check_references=False, 
                  compare_old_reference=False, dump_provenance=False,
-                 provenance_keys=("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",),
+                 provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
                  original_name=None, trap_exceptions=None):
         
@@ -396,7 +396,6 @@ class Certifier(object):
         self.check_references = check_references
         self.compare_old_reference = compare_old_reference
         self._dump_provenance_flag = dump_provenance
-        self.provenance_keys = list(provenance_keys)
         self.dont_parse = dont_parse     # mapping only
         self.script = script
         self.observatory = observatory
@@ -407,7 +406,11 @@ class Certifier(object):
     
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
+
+        self.observatory = observatory or utils.file_to_observatory(filename)
     
+        self.provenance_keys = list(provenance_keys or utils.get_observatory_package(self.observatory).PROVENANCE_KEYWORDS)
+
     @property
     def basename(self):
         return os.path.basename(self.filename)
