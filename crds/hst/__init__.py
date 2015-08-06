@@ -57,6 +57,8 @@ TYPE_FIXERS = {
     ("wfpc2","dark") : "drk", 
 }
 
+PROVENANCE_KEYWORDS = ("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)
+
 def test():
     """Run hst package doctests."""
     from crds import hst
