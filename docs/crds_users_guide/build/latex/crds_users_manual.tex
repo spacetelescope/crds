@@ -61,7 +61,7 @@
 
 
 \title{crds Documentation}
-\date{June 23, 2015}
+\date{August 07, 2015}
 \release{1.1}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -2724,11 +2724,11 @@ provide complete coverage for the range between 1 and 90.
 \label{rmap_syntax:n-a}
 Some rmaps have match tuple values of ``N/A'',  or Not Applicable.
 A value of N/A is matched as a special version of ``*'', matching anything,  but
-not affecting the ``weight'' of the match.
-\begin{quote}
+not affecting the ``weight'' of the match:
 
-(`HRC', `N/A') :  ``some\_file.fits''
-\end{quote}
+\begin{Verbatim}[commandchars=\\\{\}]
+(\PYGZsq{}HRC\PYGZsq{}, \PYGZsq{}N/A\PYGZsq{}) :  \PYGZdq{}some\PYGZus{}file.fits\PYGZdq{}
+\end{Verbatim}
 
 There are a couple uses for N/A parameters.    First,  sometimes a parameter is
 irrelevant in the context of the other parameters.   So for an rmap which covers
@@ -2737,6 +2737,19 @@ sometimes a parameter is relevant to custom lookup code,  but is not used by the
 match directly.  In this second case,   the ``N/A'' parameter may be used by custom
 header preconditioning code to assist in mutating the other parameter values
 that \emph{are} used in the match.
+
+
+\subsubsection{NOT Expressions}
+\label{rmap_syntax:not-expressions}
+It's possible to match the negation of match expressions by pre-pending ``NOT ''
+to the unnegated expression.   For example:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+(\PYGZsq{}not HRC\PYGZsq{}, \PYGZsq{}N/A\PYGZsq{}) :  \PYGZdq{}not\PYGZus{}some\PYGZus{}file.fits\PYGZdq{}
+\end{Verbatim}
+
+The weight of a negated expression is the opposite of unnegated weight of the
+expression: -1 -\textgreater{} 1, 1 -\textgreater{} -1, 0 -\textgreater{} 0.
 
 
 \subsubsection{Substitution Parameters}

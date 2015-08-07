@@ -486,7 +486,7 @@ N/A
 
 Some rmaps have match tuple values of "N/A",  or Not Applicable.   
 A value of N/A is matched as a special version of "*", matching anything,  but
-not affecting the "weight" of the match.
+not affecting the "weight" of the match::
 
    ('HRC', 'N/A') :  "some_file.fits"
 
@@ -497,6 +497,17 @@ sometimes a parameter is relevant to custom lookup code,  but is not used by the
 match directly.  In this second case,   the "N/A" parameter may be used by custom
 header preconditioning code to assist in mutating the other parameter values
 that *are* used in the match.
+
+NOT Expressions
+,,,,,,,,,,,,,,,
+It's possible to match the negation of match expressions by pre-pending "NOT "
+to the unnegated expression.   For example::
+
+   ('not HRC', 'N/A') :  "not_some_file.fits"
+
+The weight of a negated expression is the opposite of unnegated weight of the
+expression: -1 -> 1, 1 -> -1, 0 -> 0.
+
 
 Substitution Parameters
 ,,,,,,,,,,,,,,,,,,,,,,,
