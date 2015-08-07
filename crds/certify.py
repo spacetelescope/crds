@@ -485,6 +485,7 @@ class ReferenceCertifier(Certifier):
             self.all_simple_names +   # what's defined in .tpn's, maybe not matched
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
         unseen = self._dump_provenance_core(dump_keys)
+        log.verbose("Potential provenance keywords:", repr(dump_keys), verbosity=60)
         warn_keys = self.provenance_keys
         for key in sorted(unseen):
             if key in warn_keys:
@@ -495,8 +496,6 @@ class ReferenceCertifier(Certifier):
         unseen = set(dump_keys)
         for key in dump_keys:
             if self._check_provenance_key(key):
-                unseen.remove(key)
-            elif self._check_provenance_key("META." + key):
                 unseen.remove(key)
         return unseen
 
@@ -779,6 +778,7 @@ class FitsCertifier(ReferenceCertifier):
                                 log.info("["+str(i)+"]", key, card.value, card.comment)
                             if key in unseen:
                                 unseen.remove(key)
+        unseen = super(FitsCertifier, self)._dump_provenance_core(unseen)
         return unseen
 
 # ============================================================================
