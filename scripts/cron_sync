@@ -94,6 +94,8 @@ exit 0
 #   bestrefs does not update the cache when run with --readonly-cache
 #
 #   To prevent a race condition where the context updates before the arrival
-#   of mappings,  all programs the default setting in the pipeline environment
-#   should be export CRDS_READONLY_CACHE=1.
+#   of mappings,  all programs in the pipeline environment
+#   should export CRDS_READONLY_CACHE=1 as a default setting to prevent
+#   cache updates by programs other than cron_sync.
 #
+
