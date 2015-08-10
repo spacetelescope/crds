@@ -238,8 +238,8 @@ class SyncScript(cmdline.ContextsScript):
                           help="When --organize'ing, delete obstructing files or directories CRDS discovers.")
         self.add_argument("--verify-context-change", action="store_true",
                           help="When specified,  it's an error if the context does not update to something new.")
-        self.add_argument("--push-context", metavar="CONTEXT_KEY", type=str,
-                          help="When specified, push the name of the final cached operational context to the server.")
+        self.add_argument("--push-context", metavar="KEY", type=str,
+                          help="When specified, push the name of the final cached context to the server for the pipeline identified by KEY.")
 
     # ------------------------------------------------------------------------------------------
     
