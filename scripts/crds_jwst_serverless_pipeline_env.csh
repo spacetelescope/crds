@@ -12,20 +12,20 @@
 #
 
 # Prevent calibration code from interacting with the CRDS server,  magic name defines web failures as expected.
-export CRDS_SERVER_URL=" https://jwst-serverless-mode.stsci.edu"
+setenv CRDS_SERVER_URL https://jwst-serverless-mode.stsci.edu
 
 # Define the default observatory for the pipeline.
-export CRDS_OBSERVATORY="jwst"
+setenv CRDS_OBSERVATORY jwst
 
 # Prohibit pipeline steps from modifying the CRDS cache,  only cron_sync should.
-export CRDS_READONLY_CACHE="1"
+setenv CRDS_READONLY_CACHE 1
 
 # Add timestamps to CRDS log messages
-export CRDS_LOG_TIME="1"
+setenv CRDS_LOG_TIME 1
 
 # Number of times to try again for CRDS client network fails: 1 == 1 try, no retries.
-export CRDS_CLIENT_RETRY_COUNT="1"
+setenv CRDS_CLIENT_RETRY_COUNT 1
 
 # Seconds to wait between retries,  no wait.
-export CRDS_CLIENT_RETRY_DELAY_SECONDS="0"
+setenv CRDS_CLIENT_RETRY_DELAY_SECONDS 0
 
