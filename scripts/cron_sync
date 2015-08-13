@@ -7,7 +7,7 @@
 #    example context selections:
 #        nothing ==  hst-operational
 #        --contexts hst_0257.pmap hst_0283.pmap hst-operational
-#        --last 5
+#        --last 20
 #        --all
 #
 #   requires:  
@@ -18,24 +18,30 @@
 # This script is intended to be run in a cron job at a relatively high
 # rate, say once every 30 minutes.  
 #
-# Several things should be considered for cron rate:
+# The contexts which are selected for syncing should be a sufficiently large recent
+# group of contexts that cron_sync is guaranteed to be run between the last and any
+# other preceding context in the group,  i.e.  Set Context is called twice for that
+# group of contexts,  guaranteeing that no new files are missed.   --all is the safest
+# absolute setting but becomes slower as more contexts are created.   --last 20 seemed
+# like a good fixed lenth worst case setting which has constant run time.
 #
-#   latency     --  the rate at which cron_sync will notice new files.
-# 
-#   reliability --  the chance that the unsafe_sync will wind up
-#                   transferring reference data while bestrefs is
-#                   blocked.
+# --fetch-references is required to download references to the CRDS cache.
+# Omitting --fetch-references, rapid --check-sha1sum is possible for only the
+# selected contexts / rules, not all their references.  It is not uncommon for
+# different versions of rules to have different contents but identical lengths.
 #
-#   system load  -- doing both safe and unsafe syncs currently runs
-#                   for about a minute,  presumably using primarily
-#                   CPU and network,  not memory or disk.   This is
-#                   the nominal case where nothing is new or changing.
-
+# --check-files is a good idea, it checks length, file status (bad file,
+# undelivered, etc) and file existence in cache.  --verbose, not mentioned,
+# is optional but will produce checking output for 20k+ files.
+#
+# --check-sha1sum is only suitable for periodic cache checks or without
+# --fetch-references, it requires around 8 hours to check all the references.
+#
 
 # -------------------------------------------------------------------------
 
 # default CRDS_LOCKS to CRDS_PATH unless it is known that the CRDS_PATH
-# file system has broken flock's
+# file system has broken flock's,  i.e. a limited network file system.
 if [[ -z "$CRDS_LOCKS" ]]
 then
     export CRDS_LOCKS="$CRDS_PATH"
@@ -88,7 +94,7 @@ exit 0
 #
 #   crds.sync.lock ensures that no two cron_syncs run concurrently.
 #
-#   crds.sync does not block bestrefs
+#   cron_sync does not block bestrefs
 #   bestrefs does not block bestrefs
 #   sync transfers files then updates the config area last
 #   bestrefs does not update the cache when run with --readonly-cache
