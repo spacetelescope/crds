@@ -245,14 +245,14 @@ def get_best_references(pipeline_context, header, reftypes=None):
                                       str(refname)[len("NOT FOUND"):])
     return bestrefs
 
-def get_best_references_by_ids(context, dataset_ids, reftypes=None):
+def get_best_references_by_ids(context, dataset_ids, reftypes=None, include_headers=False):
     """Get best references for the specified `dataset_ids` and reference types.  If
     reftypes is None,  all types are returned.
     
     Returns { dataset_id : { reftype: bestref, ... }, ... }
     """
     try:
-        bestrefs = S.get_best_references_by_ids(context, dataset_ids, reftypes)
+        bestrefs = S.get_best_references_by_ids(context, dataset_ids, reftypes, include_headers)
     except Exception as exc:
         raise CrdsLookupError(str(exc))
     return bestrefs
