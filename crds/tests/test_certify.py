@@ -78,15 +78,15 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
-    CRDS  : INFO     META.PEDIGREE = 'dummy'
-    CRDS  : INFO     META.USEAFTER = 'Mar 21 2001 12:00:00'
-    CRDS  : WARNING  Missing keyword 'COMMENT'.
+    CRDS  : WARNING  Missing keyword 'AUTHOR'.
     CRDS  : WARNING  Missing keyword 'DESCRIP'.
     CRDS  : WARNING  Missing keyword 'HISTORY'.
+    CRDS  : WARNING  Missing keyword 'PEDIGREE'.
+    CRDS  : WARNING  Missing keyword 'USEAFTER'.
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
-    CRDS  : INFO     3 warnings
-    CRDS  : INFO     5 infos
+    CRDS  : INFO     5 warnings
+    CRDS  : INFO     3 infos
     0
     """
 
