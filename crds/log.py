@@ -340,6 +340,7 @@ verbose_on_exception = exception_trap_logger(verbose)
 verbose_warning_on_exception = exception_trap_logger(verbose)
 warn_on_exception = exception_trap_logger(warning)
 error_on_exception = exception_trap_logger(error)
+fatal_error_on_exception = exception_trap_logger(fatal_error)
 augment_exception = exception_trap_logger(_reraise)
 
 # ===========================================================================
