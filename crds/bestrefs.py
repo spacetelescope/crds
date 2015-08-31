@@ -113,10 +113,6 @@ class HeaderGenerator(object):
         return self.clean_parameters(self.header(source))
         # return self.header(source)
     
-    def handle_updates(self, updates):
-        """In general,  reject request to update best references on the source."""
-        raise UnsupportedUpdateModeError("This dataset access mode doesn't support updates.")
-    
     def save_pickle(self, outpath, only_ids=None):
         """Write out headers to `outpath` file which can be a Python pickle or .json"""
         if only_ids is None:
@@ -126,7 +122,8 @@ class HeaderGenerator(object):
         log.info("Writing all headers to", repr(outpath))
         if outpath.endswith(".json"):
             with open(outpath, "w+") as pick:
-                json.dump(only_hdrs, pick)
+                for dataset, header in sorted(only_hdrs.items()):
+                    pick.write(json.dumps({ dataset : header }) + "\n")
         elif outpath.endswith(".pkl"):
             with open(outpath, "wb+") as pick:
                 pickle.dump(only_hdrs, pick)
@@ -168,6 +165,22 @@ class HeaderGenerator(object):
                         log.verbose("Adding", repr(dataset_id), "key", repr(key), "=", repr(header2[key]))                        
                     header1[key] = header2[key]
 
+    def handle_updates(self, all_updates):
+        """Base handle_updates() updates the loaded headers with the computed bestrefs for use 
+        with --save-pickle.
+        """
+        for dataset in sorted(all_updates):
+            updates = all_updates[dataset]
+            if updates:
+                log.verbose("-"*120)
+                for update in sorted(updates):
+                    new_ref = update.new_reference.upper()
+                    if new_ref != "N/A":
+                        new_ref = new_ref.lower()
+                    self.headers[dataset][update.filekind.upper()] = new_ref
+
+# ===================================================================
+
 # FileHeaderGenerator uses a deferred header loading scheme which incrementally reads each header
 # from a file as processing is going on via header().   The "pickle correction" scheme works by 
 # pre-loading the FileHeaderGenerator with pickled headers...  which prevents the file from ever being
@@ -183,11 +196,44 @@ class FileHeaderGenerator(HeaderGenerator):
 
     def handle_updates(self, all_updates):
         """Write best reference updates back to dataset file headers."""
+        super(FileHeaderGenerator, self).handle_updates(all_updates)
         for source in sorted(all_updates):
             updates = all_updates[source]
             if updates:
                 log.verbose("-"*120)
                 update_file_bestrefs(self.context, source, updates)
+
+# ===================================================================
+
+def update_file_bestrefs(context, dataset, updates):
+    """Update the header of `dataset` with best reference recommendations
+    `bestrefs` determined by context named `pmap`.
+    """
+    if not updates:
+        return
+
+    version_info = heavy_client.version_info()
+    instrument = updates[0].instrument
+    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
+    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
+
+        def set_key(keyword, value):
+            log.verbose("Setting", repr(dataset), keyword, "=", value)
+            hdulist[0].header[keyword] = value
+
+        set_key("CRDS_CTX", context)
+        set_key("CRDS_VER", version_info)
+
+        for update in sorted(updates):
+            new_ref = update.new_reference.upper()
+            if new_ref != "N/A":
+                new_ref = (prefix + new_ref).lower()
+            set_key(update.filekind.upper(), new_ref)
+
+        for hdu in hdulist:
+            hdu.data
+
+# ===================================================================
 
 class DatasetHeaderGenerator(HeaderGenerator):
     """Generates lookup parameters and historical best references from dataset ids.   Server/DB bases"""
@@ -304,45 +350,22 @@ class PickleHeaderGenerator(HeaderGenerator):
     
     def load_headers(self, path):
         """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
+        
         if path.endswith(".json"):
-            with open(path, "r") as pick:
-                headers = json.load(pick)
+            headers = {}
+            try:
+                with open(path, "r") as pick:
+                    for line in pick:
+                        headers.update(json.loads(line))
+            except ValueError:
+                with open(path, "r") as pick:
+                    headers = json.load(pick)
         elif path.endswith(".pkl"):
             with open(path, "rb") as pick:
                 headers = pickle.load(pick)
         else:
             raise ValueError("Valid serialization formats are .json and .pkl")
         return headers
-
-# ===================================================================
-
-def update_file_bestrefs(context, dataset, updates):
-    """Update the header of `dataset` with best reference recommendations
-    `bestrefs` determined by context named `pmap`.
-    """
-    if not updates:
-        return
-
-    version_info = heavy_client.version_info()
-    instrument = updates[0].instrument
-    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
-    with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
-
-        def set_key(keyword, value):
-            log.verbose("Setting", repr(dataset), keyword, "=", value)
-            hdulist[0].header[keyword] = value
-
-        set_key("CRDS_CTX", context)
-        set_key("CRDS_VER", version_info)
-
-        for update in sorted(updates):
-            new_ref = update.new_reference.upper()
-            if new_ref != "N/A":
-                new_ref = (prefix + new_ref).lower()
-            set_key(update.filekind.upper(), new_ref)
-
-        for hdu in hdulist:
-            hdu.data
 
 # ============================================================================
 
