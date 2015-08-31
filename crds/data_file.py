@@ -241,7 +241,7 @@ def get_yaml_header(filepath, needed_keys=()):
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
     import pyasdf
-    with pyasdf.AsdfFile.read(filepath) as handle:
+    with pyasdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
     return reduce_header(filepath, header, needed_keys)
 
