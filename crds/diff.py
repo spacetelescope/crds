@@ -148,8 +148,11 @@ def mapping_affected_modes(old_file, new_file, include_header_diffs=True):
             affected[mode] += 1
     return [ tup + (("DIFF_COUNT", str(affected[tup])),) for tup in sorted(affected) ]
     
-DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS", "META.OBSERVATION.DATE", 
-                               "META_OBSERVATION_DATE", "DIFFERENCE", "INSTRUME", "REFTYPE")
+DEFAULT_EXCLUDED_PARAMETERS = ("DATE-OBS", "TIME-OBS", 
+                               "META.OBSERVATION.DATE", "META.OBSERVATION.TIME",
+                               "META_OBSERVATION_DATE", "META_OBSERVATION_TIME",
+                               "DIFFERENCE", "INSTRUME", "REFTYPE")
+
 BORING_VARS = ["NAME", "DERIVED_FROM", "SHA1SUM", "ROW_KEYS"]  # XXX ROW_KEYS obsolete
 
 def affected_mode(diff, excluded_parameters=DEFAULT_EXCLUDED_PARAMETERS):
