@@ -141,16 +141,25 @@ def _get_minimum_exptime(context, reffile):
     exptimes = [ get_exptime(path_dict) for path_dict in path_dicts ]
     return min(exptimes)
 
+
+DATE_TIME_PAIRS = [
+    ("DATE-OBS", "TIME-OBS"),
+    ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME"),
+    ("META_OBSERVATION_DATE", "META_OBSERVATION_TIME"),
+    ]
+
 def get_exptime(match_dict):
     """Given a `match_dict` dictionary of matching parameters for one match path,
     return the EXPTIME for it or 1900-01-01 00:00:00 if no EXPTIME can be derived.
     """
-    if "DATE-OBS" in match_dict and "TIME-OBS" in match_dict:
-        return match_dict["DATE-OBS"] + " " + match_dict["TIME-OBS"]
-    for key in ["META.OBSERVATION.DATE", "META_OBSERVATION_DATE"]:
-        if key in match_dict:
-            return match_dict[key]
-    return "1900-01-01 00:00:00"
+    for dt_pair in DATE_TIME_PAIRS:
+        try:
+            return match_dict[dt_pair[0]] + " " + match_dict[dt_pair[1]]
+        except KeyError:
+            continue
+    else:
+        log.verbose("matches.exp_time:  no exptime value found. returning worst case 1900-01-01 00:00:00.")
+        return "1900-01-01 00:00:00"
 
 # ===================================================================
 
