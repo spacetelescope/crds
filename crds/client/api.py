@@ -314,10 +314,10 @@ def get_server_version():
     info = get_server_info()
     return info["crds_version"]["str"]
 
-def get_dataset_headers_by_id(context, dataset_ids):
+def get_dataset_headers_by_id(context, dataset_ids, datasets_since=None):
     """Return { dataset_id : { header } } for `dataset_ids`."""
     context = os.path.basename(context)
-    return S.get_dataset_headers_by_id(context, dataset_ids)
+    return S.get_dataset_headers_by_id(context, dataset_ids, datasets_since)
     
 def get_dataset_ids(context, instrument, datasets_since=None):
     """Return [ dataset_id, ...] for `instrument`."""
