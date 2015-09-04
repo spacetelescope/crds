@@ -16,9 +16,14 @@ from collections import namedtuple
 
 from crds import rmap, selectors, log, exceptions
 
+# NOTE:  #-comments are treated as white space and currently dropped when an rmap is rewritten
+# as a new version.
+
 MAPPING_GRAMMAR = r"""
 
-ws = (' ' | '\r' | '\n' | '\t' )*
+ws = (' ' | '\r' | '\n' | '\t' | pound_comment)*
+
+pound_comment = '#' (~'\n' anything)*:c '\n' -> ''.join(c)
 
 mapping = header_section:h comment_section:c selector_section:s -> (h, s, c)
 
