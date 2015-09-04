@@ -275,8 +275,15 @@ def locate_file(refname, mode=None):
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
-    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
-    rootdir = locate_dir(instrument, mode)
+    if mode is  None:
+        mode = config.get_crds_ref_subdir_mode(observatory="jwst")
+    if mode == "instrument":
+        _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
+        rootdir = locate_dir(instrument, mode)
+    elif mode == "flat":
+        rootdir = config.get_crds_refpath("jwst")
+    else:
+        raise ValueError("Unhandled reference file location mode " + repr(mode))
     return  os.path.join(rootdir, os.path.basename(refname))
 
 def locate_dir(instrument, mode=None):
