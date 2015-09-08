@@ -434,8 +434,8 @@ class Selector(object):
                         self.short_name + " key=" + repr(key) + 
                         " is wrong length for parameters " + repr(self._parameters))
                 if esoteric_key(key[i]):
-                    # parmap[par] |= set([key[i]])
-                    pass  # for the consistently esoteric,  this == empty list == no checking
+                    parmap[par] = []  # == no checking
+                    break
                 else:
                     parmap[par] |= set(key[i].split("|"))
         for par, val in parmap.items():
