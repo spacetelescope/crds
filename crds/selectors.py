@@ -1663,7 +1663,7 @@ Restore original debug behavior:
             if "raise_ambiguous" in self._rmap_header:
                 raise_ambiguous = self._rmap_header["raise_ambiguous"] in ["True", "true", "TRUE", "1"]
             else:
-                raise_ambiguous =  self._rmap_header["observatory"]!="hst"
+                raise_ambiguous =  self._rmap_header.get("observatory", None) != "hst"
 
         weights, remaining = self._winnow(header, dict(self._match_selections))
 
