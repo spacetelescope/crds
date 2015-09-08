@@ -1651,14 +1651,20 @@ Restore original debug behavior:
         for selection in self.winnowing_match(header):
             yield selection
 
-    def winnowing_match(self, header, raise_ambiguous=False):
+    def winnowing_match(self, header, raise_ambiguous=None):
         """Iterate through each of the parameters in `fitskeys`, binding
         them successively to corresponding values from `header`.  For
         each bound fitskey,  iterate through `selections` and winnow out
         keys which cannot match based on the value of the current fitskey.
         Successively yield any survivors,  in the order of most specific
         matching value (fewest *'s) to least specific matching value.
-        """        
+        """
+        if raise_ambiguous is None:
+            if "raise_ambiguous" in self._rmap_header:
+                raise_ambiguous = self._rmap_header["raise_ambiguous"] in ["True", "true", "TRUE", "1"]
+            else:
+                raise_ambiguous =  self._rmap_header["observatory"]!="hst"
+
         weights, remaining = self._winnow(header, dict(self._match_selections))
 
         sorted_candidates = self._rank_candidates(weights, remaining)
