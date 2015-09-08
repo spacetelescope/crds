@@ -1207,9 +1207,25 @@ class NotMatcher(Matcher):
             }[unnegated]
 
 def esoteric_key(key):
-    """Return True if `key` validation is a tautology or too complicated."""
+    """Return True if `key` validation is a tautology or too complicated.
+
+    >>> esoteric_key('NOT FUN')
+    True
+    >>> esoteric_key('FUN')
+    False
+    >>> esoteric_key('{ThisIsATest}')
+    True
+    >>> esoteric_key('#ThisIsATest#')
+    True
+    >>> esoteric_key('(ThisIsATest)')
+    True
+    >>> esoteric_key('{ThisIsATest)')   # a compromise,  ideally False
+    True
+    >>> esoteric_key('BETWEEN 100 200')
+    True
+    """
     key = key.upper()
-    return key.startswith(("{","(","#")) and key.endswith(("}",")","#")) or key.startswith("BETWEEN")
+    return key.startswith(("{","(","#")) and key.endswith(("}",")","#")) or key.startswith("BETWEEN") or key.startswith("NOT")
 
 def matcher(key):
     """Factory for different matchers based on key types.
