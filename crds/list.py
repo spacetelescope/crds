@@ -100,7 +100,9 @@ class ListScript(cmdline.ContextsScript):
 
     @property
     def remote_context(self):
-        """Print the name of the context in use by default at the"""
+        """Print the name of the context in use at pipeline `self.args.remote_context`
+        as recorded on the server after being pushed by the crds.sync tool in the pipeline.
+        """
         self.require_server_connection()
         return api.get_remote_context(self.observatory, self.args.remote_context)
 
