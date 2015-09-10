@@ -759,7 +759,11 @@ MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
 
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, python23.string_types) and bool(MAPPING_RE.match(mapping))
+    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+
+def is_valid_mapping_name(mapping):
+    """Return True IFF `mapping` has a CRDS-style root name and a mapping extension."""
+    return is_mapping(mapping) and bool(MAPPING_RE.match(mapping))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.
