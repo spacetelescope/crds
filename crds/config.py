@@ -635,28 +635,6 @@ def relocate_reference(ref, observatory):
     from crds import utils
     return utils.get_locator_module(observatory).locate_file(ref)
 
-def is_reference(reference):
-    """Return True IFF file name `reference` is plausible as a reference file name.
-    is_reference() does not *guarantee* that `reference` is a reference file name,
-    in particular a dataset filename might pass as a reference.
-
-    >>> is_reference("something.fits")
-    True
-    >>> is_reference("something.asdf")
-    True
-    >>> is_reference("something.r0h")
-    True
-    >>> is_reference("something.foo")
-    False
-    >>> is_reference("/some/path/something.fits")
-    True
-    >>> is_reference("/some/path/something.pmap")
-    False
-
-    """
-    extension = os.path.splitext(reference)[-1]
-    return re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension) is not None
-
 # -------------------------------------------------------------------------------------
 
 def complete_re(regex_str):
@@ -682,6 +660,84 @@ def check_path(path):
 
 # -------------------------------------------------------------------------------------
 
+def is_reference(reference):
+    """Return True IFF file name `reference` is plausible as a reference file name.
+    is_reference() does not *guarantee* that `reference` is a reference file name,
+    in particular a dataset filename might pass as a reference.
+
+    >>> is_reference("something.fits")
+    True
+    >>> is_reference("something.asdf")
+    True
+    >>> is_reference("something.r0h")
+    True
+    >>> is_reference("something.foo")
+    False
+    >>> is_reference("/some/path/something.fits")
+    True
+    >>> is_reference("/some/path/something.pmap")
+    False
+
+    """
+    extension = os.path.splitext(reference)[-1].lower()
+    return bool(re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension))
+
+# max len name component == 32.  max components == 6. (currently 3 used).
+# no digits in CRDS name components,  except serial no
+CRDS_NAME_RE_STR = r"([a-z]{1,32}_?){1,6}(_\d\d\d\d)?\."
+CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete.
+
+# s7g1700gl_dead.fits
+CDBS_NAME_RE_STR = r"[a-z0-9]{1,10}_[a-z]{1,10}\.(fits|r\d[hd])"
+CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
+
+def is_valid_reference_name(filename):
+    """Return True IFF `filename` has a valid CRDS reference filename format.
+    
+    >>> is_valid_reference_name("hst_acs_darkfile_0027.rmap")
+    False
+
+    >>> is_valid_reference_name("hst_acs_darkfile_0027.fits")
+    True
+    
+    >>> is_valid_reference_name("s7g1700gl_dead.fits")
+    True
+    """
+    name = os.path.basename(filename)
+    return is_reference(name) and (is_crds_name(name) or is_cdbs_name(name))
+
+def is_crds_name(name):
+    """Return True IFF `name` is a valid CRDS-style name.
+
+    >>> is_crds_name("hst_acs_darkfile_0027.rmap")
+    True
+    
+    >>> is_crds_name("hst_acs.imap")
+    True
+    
+    >>> is_crds_name("hst_acs_darkfile_0027.fits")
+    True
+    
+    >>> is_crds_name("s7g1700gl_dead.fits")
+    False
+    """
+    name = os.path.basename(name).lower()
+    return bool(CRDS_NAME_RE.match(name))
+
+def is_cdbs_name(name):
+    """Return True IFF `name is a valid CDBS-style name.
+
+    >>> is_cdbs_name("hst_acs_darkfile_0027.rmap")
+    False
+    
+    >>> is_cdbs_name("s7g1700gl_dead.fits")
+    True
+    """
+    name = os.path.basename(name).lower()
+    return bool(CDBS_NAME_RE.match(name))
+
+# -------------------------------------------------------------------------------------
+
 # Standard date time format using T separator for command line use specifying contexts.
 # e.g. 2040-02-22T12:01:30.4567
 CONTEXT_DATETIME_RE_STR = r"\d\d\d\d\-\d\d\-\d\d(T\d\d:\d\d:\d\d(\.\d+)?)?"
@@ -698,9 +754,12 @@ CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
 PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
+MAPPING_RE_STR = CRDS_NAME_RE_STR + r".map"
+MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
+
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
-    return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+    return isinstance(mapping, python23.string_types) and bool(MAPPING_RE.match(mapping))
 
 def is_mapping_spec(mapping):
     """Return True IFF `mapping` is a mapping name *or* a date based mapping specification.

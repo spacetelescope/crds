@@ -575,14 +575,14 @@ def newstyle_serial(name):
     >>> newstyle_serial("hst_cos_darkfile_0998.fits")
     998
     >>> newstyle_serial("hst.pmap")
-    0
+    -1
     """
     assert isinstance(name, python23.string_types)
     serial_search = re.search(r"_(\d+)\.\w+", name)
     if serial_search:
         return int(serial_search.groups()[0], 10)
     else:
-        return 0
+        return -1
 
 # ============================================================================
 
