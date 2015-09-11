@@ -166,20 +166,27 @@ class KeywordValidator(Validator):
 
     def _check_value(self, filename, value):
         """Raises ValueError if `value` is not valid."""
-        if value not in self._values:  # and tuple(self._values) != ('*',):
-            if isinstance(value, str):
-                for pat in self._values:
-                    if self._match_value(pat, value):
-                        self.verbose(filename, value, "matches", repr(pat))
-                        return
+        if self._match_value(value):
+            self.verbose(filename, value, "is in", repr(self._values))
+        else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
                             str(log.PP(self._values)))
-        else:
-            self.verbose(filename, value, "is in", repr(self._values))
     
-    def _match_value(self, pattern, value):
-        """Match `pattern` to the entirety of `value` by adding re ^ and $ to pattern."""
-        return re.match(config.complete_re(pattern), value)
+    def _match_value(self, value):
+        """Do a literal match of `value` to the values of this tpninfo."""
+        return value in self._values
+
+
+class RegexValidator(KeywordValidator):
+    """Checks that a value is one of the literal TpnInfo values."""
+    def _match_value(self, value):
+        if super(RegexValidator, self)._match_value(value):
+            return True
+        sval = str(value)
+        for pat in self._values:
+            if re.match(config.complete_re(pat), sval):
+                return True
+        return False
 
 # ----------------------------------------------------------------------------
 
@@ -295,9 +302,13 @@ class PedigreeValidator(KeywordValidator):
             timestamp.Slashdate.get_datetime(stop)
         return pedigree
 
-    def _match_value(self, pattern, value):
+    def _match_value(self, value):
         """Match raw pattern as prefix string only,  no complete_re()."""
-        return re.match(pattern, value)
+        sval = str(value)
+        for pat in self._values:
+            if re.match(pat, sval):   # intentionally NOT complete_re()
+                return True
+        return False
 
 # ----------------------------------------------------------------------------
 
@@ -352,6 +363,8 @@ def validator(info):
         return IntValidator(info)
     elif info.datatype == "L":
         return LogicalValidator(info)
+    elif info.datatype == "X":
+        return RegexValidator(info)
     else:
         raise ValueError("Unimplemented datatype " + repr(info.datatype))
 
