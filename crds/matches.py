@@ -193,14 +193,42 @@ lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND'
 % python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
 JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
 JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
+
+** crds.matches can list all references which satisfy any filter constraints relevant to their bestref lookup.
+
+% python -m crds.matches --contexts jwst-operational --filters META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' --brief
+CRDS  : INFO     Symbolic context 'jwst-operational' resolves to 'jwst_0074.pmap'
+ jwst_miri_drizpars_0001.fits :  
+ jwst_nircam_drizpars_0001.fits :  
+ jwst_nirspec_dark_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.SUBARRAY.NAME='FULL'
+ jwst_nirspec_dark_0007.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.SUBARRAY.NAME='ALLSLITS'
+ jwst_nirspec_distortion_0001.json :  META.INSTRUMENT.DETECTOR='NRS1' META.EXPOSURE.TYPE='N/A'
+ jwst_nirspec_flat_0004.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' META.INSTRUMENT.GRATING='G140M' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
+ jwst_nirspec_flat_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' META.INSTRUMENT.GRATING='G140H' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
+ jwst_nirspec_gain_0000.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_ipc_0001.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_linearity_0004.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_mask_0002.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_photom_0009.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_readnoise_0000.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_regions_0001.json :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.GRATING='G140M' META.INSTRUMENT.FILTER='F070LP' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
+ jwst_nirspec_regions_0003.json :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.GRATING='G140H' META.INSTRUMENT.FILTER='F070LP' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
+ jwst_nirspec_saturation_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1'
+ jwst_nirspec_specwcs_0001.json :  META.INSTRUMENT.DETECTOR='NRS1|NRS2' META.EXPOSURE.TYPE='N/A'
+ jwst_nirspec_superbias_0002.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.EXPOSURE.READPATT='*' META.SUBARRAY.NAME='N/A'
+
 """
     
     def add_args(self):
         super(MatchesScript, self).add_args()
-        self.add_argument("--files", nargs="+", 
+        self.add_argument("--files", nargs="+", default=(),
             help="References for which to dump selection criteria.")
+        self.add_argument("--files-from-contexts", action="store_true",
+            help="Operate on all references referred to by the context parameters.")
+        self.add_argument("--filters", nargs="+", default=(), 
+            help="Parameter constraints (key=value) which references matching on `key` must satisfy.  Unused parameters for a reference type are ignored.")
         self.add_argument("-b", "--brief-paths", action="store_true",
-            help="Don't the instrument and filekind.")
+            help="Don't show the instrument and filekind clutter if already in filename.")
         self.add_argument("-o", "--omit-parameter-names", action="store_true",
             help="Hide the parameter names of the selection criteria,  just show the values.")
         self.add_argument("-t", "--tuple-format", action="store_true",
@@ -219,7 +247,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         reference files.   Print out the match tuples within the context
         which contain the reference files.
         """
-        if self.args.files:
+        if self.matched_files:
             self.dump_reference_matches()
         elif self.args.datasets or self.args.instrument:
             self.dump_dataset_headers()
@@ -228,11 +256,19 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
             log.error("Specify --files to dump reference match cases or --datasets to dump dataset matching parameters.")
         return log.errors()
 
+    @property
+    def matched_files(self):
+        """Combine references from --files with references implied by --contexts parameters."""
+        matched = list(self.files)
+        if self.args.files_from_contexts:
+            matched += list(self.get_context_references())
+        return matched
+
     def dump_reference_matches(self):
         """Print out the match paths for the reference files specified on the 
         command line with respect to the specified contexts.
         """
-        for ref in self.files:
+        for ref in self.matched_files:
             cmdline.reference_file(ref)
         for context in self.contexts:
             self.dump_match_tuples(context)
@@ -268,7 +304,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         """Print out the match tuples for `references` under `context`.
         """
         ctx = context if len(self.contexts) > 1 else ""  
-        for ref in self.files:
+        for ref in self.matched_files:
             matches = self.find_match_tuples(context, ref)
             if matches:
                 for match in matches:
@@ -284,6 +320,8 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
         result = []
         for path in matches:
             prefix = self.format_prefix(path[0])
+            if self.is_filtered(path):
+                continue
             match_tuple = tuple([self.format_match_tup(tup) for section in path[1:] for tup in section])
             if self.args.tuple_format:
                 if prefix:
@@ -293,6 +331,18 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
             result.append(match_tuple)
         return result
     
+    def is_filtered(self, path):
+        """Return True is `path` meets all matching parameter constraints specified by --filters, 
+        otherwise False.
+        """
+        for filter in self.args.filters:
+            key, value = (item.strip() for item in filter.split("="))
+            for section in path[1:]:
+                for tup in section:
+                    if tup[0].upper() == key.upper() and value.upper() not in tup[1].upper().split("|"):
+                        return True
+        return False
+                        
     def format_prefix(self, path):
         """Return any representation of observatory, instrument, and filekind."""
         if not self.args.brief_paths:
