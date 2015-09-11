@@ -831,7 +831,7 @@ class MappingCertifier(Certifier):
             if derived_from.name == self.basename:
                 log.verbose("Mapping", repr(self.filename), "did not change relative to context", repr(self.context))
             else:
-                log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from),
+                log.info("Mapping", repr(self.basename), "corresponds to", repr(derived_from.name),
                          "from context", repr(self.context), "for checking mapping differences.")
                 diff.mapping_check_diffs(mapping, derived_from)
         else:
