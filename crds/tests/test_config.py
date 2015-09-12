@@ -41,8 +41,6 @@ class CRDSTestCase(unittest.TestCase):
         if not os.path.exists(self.temp_dir):
             os.mkdir(self.temp_dir)
         self.hst_mappath =  TEST_MAPPATH
-        # utils.clear_function_caches()
-        # self.crds_state = config.get_crds_state()
         self.old_state = setup(cache=self.cache, url=self.server_url, 
                                clear_existing=self.clear_existing)
         self.old_dir = os.getcwd()
@@ -76,22 +74,18 @@ class CRDSTestCase(unittest.TestCase):
 # ==============================================================================
 
 def setup(cache=CRDS_SHARED_GROUP_CACHE, url=None, clear_existing=True):
+    """Reset the CRDS configuration state to support testing given the supplied parameters."""
     log.set_test_mode()
-
-    old_url = os.environ.get("CRDS_SERVER_URL", None)
-
-    old_state = config.get_crds_state(clear_existing=clear_existing)
-
+    old_state = config.get_crds_state()
+    if clear_existing:
+        config.clear_crds_state()
+    if url is not None:
+        os.environ["CRDS_SERVER_URL"] = url
+        client.set_crds_server(url)
     old_state["OLD_CWD"] = os.getcwd()
     os.chdir(HERE)
-
-    os.environ["CRDS_SERVER_URL"] = url if url is not None else old_url
-    client.set_crds_server(os.environ["CRDS_SERVER_URL"])
-
     if cache is not None:
         os.environ["CRDS_PATH"] = cache
-    elif hasattr(old_state, "CRDS_PATH"):
-        os.environ["CRDS_PATH"] = old_state["CRDS_PATH"]
     utils.clear_function_caches()
     return old_state
 
@@ -99,9 +93,6 @@ def cleanup(old_state):
     """Strictly speaking test cleanup is more than restoring CRDS state."""
     os.chdir(old_state.pop("OLD_CWD"))
     config.set_crds_state(old_state)
-    url = os.environ.get("CRDS_SERVER_URL", None)
-    if url is not None:
-        client.set_crds_server(url)
     utils.clear_function_caches()
 
 # ==============================================================================

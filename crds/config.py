@@ -895,42 +895,34 @@ def mapping_to_filekind(context_file):
 
 # -------------------------------------------------------------------------------------
 
-def get_crds_state(clear_existing=False, clear_server_url=False):
+def get_crds_state():
     """Capture the current CRDS configuration and return it as a dictionary.
     Intended for customizing state during self-tests and restoring during teardown.
-    
-    if `clear_existing` is True,  the CRDS environment settings are cleared and
-    defaults are used.
-
-    if `clear_server_url` is not True,  the CRDS_SERVER_URL is not changed by 
-    `clear_existing` above.  So by default,  CRDS_SERVER_URL is immune to `clear_existing`.
     """
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
     env["_CRDS_CACHE_READONLY"] = get_cache_readonly()
-    if clear_existing:
-        clear_crds_state(clear_server_url)
     return env
 
 def set_crds_state(old_state):
     """Restore the configuration of CRDS returned by get_crds_state()."""
+    from crds.client import api   # deferred circular import
+    # determination of observatory and server URL are intertwined
     global CRDS_REF_SUBDIR_MODE, _CRDS_CACHE_READONLY
-    clear_crds_state()
+    clear_crds_state()    
     _CRDS_CACHE_READONLY = old_state.pop("_CRDS_CACHE_READONLY")
+    CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
     for key, val in old_state.items():
         os.environ[key] = val
-    CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
+    if os.environ.get("CRDS_SERVER_URL", None):
+        api.set_crds_server(os.environ["CRDS_SERVER_URL"])
 
-def clear_crds_state(clear_server_url=False):
+def clear_crds_state():
     """Wipe out the existing configuration variable state of CRDS.
-
-    if `clear_server_url` is not True,  the CRDS server is not changed by 
-    `clear_existing` above.  So,  by default,  CRDS_SERVER_URL is immune to 
-    `clear_existing`.
     """
     for var in list(os.environ.keys()):
-        if var.startswith("CRDS_") and (var != "CRDS_SERVER_URL" or clear_server_url):
-            os.environ.pop(var)
+        if var.startswith("CRDS_"):
+            del os.environ[var]
     CRDS_REF_SUBDIR_MODE = None
     _CRDS_CACHE_READONLY = False
 
