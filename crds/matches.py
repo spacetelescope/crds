@@ -196,27 +196,18 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
 
 ** crds.matches can list all references which satisfy any filter constraints relevant to their bestref lookup.
 
-% python -m crds.matches --contexts jwst-operational --filters META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' --brief
-CRDS  : INFO     Symbolic context 'jwst-operational' resolves to 'jwst_0074.pmap'
- jwst_miri_drizpars_0001.fits :  
- jwst_nircam_drizpars_0001.fits :  
- jwst_nirspec_dark_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.SUBARRAY.NAME='FULL'
- jwst_nirspec_dark_0007.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.SUBARRAY.NAME='ALLSLITS'
- jwst_nirspec_distortion_0001.json :  META.INSTRUMENT.DETECTOR='NRS1' META.EXPOSURE.TYPE='N/A'
- jwst_nirspec_flat_0004.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' META.INSTRUMENT.GRATING='G140M' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
- jwst_nirspec_flat_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.FILTER='F070LP' META.INSTRUMENT.GRATING='G140H' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
- jwst_nirspec_gain_0000.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_ipc_0001.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_linearity_0004.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_mask_0002.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_photom_0009.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_readnoise_0000.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_regions_0001.json :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.GRATING='G140M' META.INSTRUMENT.FILTER='F070LP' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
- jwst_nirspec_regions_0003.json :  META.INSTRUMENT.DETECTOR='NRS1' META.INSTRUMENT.GRATING='G140H' META.INSTRUMENT.FILTER='F070LP' META.EXPOSURE.TYPE='NRS_FIXEDSLIT'
- jwst_nirspec_saturation_0006.fits :  META.INSTRUMENT.DETECTOR='NRS1'
- jwst_nirspec_specwcs_0001.json :  META.INSTRUMENT.DETECTOR='NRS1|NRS2' META.EXPOSURE.TYPE='N/A'
- jwst_nirspec_superbias_0002.fits :  META.INSTRUMENT.DETECTOR='NRS1' META.EXPOSURE.READPATT='*' META.SUBARRAY.NAME='N/A'
-
+% python -m crds.matches --contexts jwst-niriss-operational --files-from-contexts --filters META.INSTRUMENT.FILTER='F480M' --brief
+CRDS  : INFO     Symbolic context 'jwst-niriss-operational' resolves to 'jwst_niriss_0028.imap'
+jwst_niriss_dark_0005.fits :  META.INSTRUMENT.DETECTOR='NIS' META.SUBARRAY.NAME='FULL'
+jwst_niriss_gain_0001.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_ipc_0002.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_linearity_0005.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_mask_0004.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_photom_0017.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_readnoise_0001.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_saturation_0005.fits :  META.INSTRUMENT.DETECTOR='NIS'
+jwst_niriss_superbias_0003.fits :  META.INSTRUMENT.DETECTOR='NIS' META.EXPOSURE.READPATT='*' META.SUBARRAY.NAME='N/A'
+jwst_niriss_throughput_0008.fits :  META.INSTRUMENT.FILTER='F480M'
 """
     
     def add_args(self):
