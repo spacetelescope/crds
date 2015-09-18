@@ -453,7 +453,7 @@ for name in __all__:
 
 # =======================================================================
 
-def main():
+def test():
     """Run the module doctests."""
     import doctest
     from crds.hst import locate
@@ -462,5 +462,5 @@ def main():
 # =======================================================================
 
 if __name__ == "__main__":
-    print(main())
+    print(test())
 
