@@ -319,7 +319,10 @@ a warning is issued when the containing context is used.
 
 Marking a reference file as bad is a more precise technique which invalidates
 only that reference in every context that includes it.   Warnings are issued related
-to the bad reference only when the reference is actually recommended by CRDS.  
+to the bad reference only when the reference is actually recommended by CRDS.
+
+By default,  recommendation or use of bad files is an error.   The default behaviour
+can be overrideden,  allowing use of bad rules or references with a warning,  by
 
 
 Set Context
@@ -576,6 +579,47 @@ submitted this way must also pass through crds.certify.
 .. figure:: images/web_submit_mappings.png
    :scale: 50 %
    :alt: create contexts inputs
-   
 
-  
+   
+Mapping Change Procedure
+++++++++++++++++++++++++
+
+The nominal process used to modify CRDS mappings is to:
+
+1. Download the mapping to be used as a baseline for the revised version.
+Leave the name as-is.  The download can be accomplished by using the crds.sync
+tool to download the file to a local cache, or by browsing to the file's
+details page and using the *download* link near the top of the page.  Likewise
+the source file can be copied directly from the shared on site default 
+readonly cache.   This download, don't rename, upload process is used to
+automatically maintain the derivation history of mappings in their headers,
+the name field is progagated down to the derived_from field to track the
+source mapping prior to renaming the new mapping.
+
+2. Modify the mapping in a text editor implementing required changes.  Use
+care editing mappings since many aspects of the mapping cannot be verified by
+crds.certify.   Where possible match values are validated against CRDS .tpn
+files or JWST data model schema.
+
+3. Run crds.certify on the resulting mapping, using the current operational
+context as the point of comparison::
+
+% python -m crds.certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-operational
+
+4. During iteration, run crds.checksum on the mapping to update the internal
+sha1sum if you wish to load the context into Python to do interactive tests 
+with the .rmap::
+
+% python -m crds.checksum ./jwst_miri_dark_0004.rmap
+% python
+>>> import crds
+>>> r = crds.get_cached_mapping("./jwst_miri_dark_0004.rmap")
+
+The internal checksum can also be used to verify upload integrity when you
+finally submit the file to CRDS, an out-of-date checksum or corrupted file will
+generate a warning.   Alternately:: 
+
+% setenv CRDS_IGNORE_MAPPING_CHECKSUMS 1 
+
+to suppress mapping load errors due to invalid checksums during development.
+
