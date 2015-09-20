@@ -230,6 +230,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
     
     Raises           CrdsLookupError,  typically for problems with header values
     """
+    header = { str(key):str(value) for (key,value) in header.items() }
     try:
         bestrefs = S.get_best_references(pipeline_context, dict(header), reftypes)
     except Exception as exc:
