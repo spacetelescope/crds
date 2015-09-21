@@ -28,6 +28,8 @@ def dt_getreferences_rmap_na():
     {'flat': 'NOT FOUND n/a'}
 
     >>> test_config.cleanup(old_state)
+    
+    >> config.get_crds_state()
     """
 
 def dt_getreferences_rmap_omit():
@@ -40,6 +42,8 @@ def dt_getreferences_rmap_omit():
     {}
 
     >>> test_config.cleanup(old_state)
+    
+    >> config.get_crds_state()
     """
 
 def dt_getreferences_imap_na():
@@ -68,7 +72,7 @@ def dt_getreferences_imap_omit():
 
 # ==================================================================================
 
-class TestHeavyClient(CRDSTestCase):
+# class TestHeavyClient(CRDSTestCase):
 
     """
     def test_rmap_get_imap_except(self):
@@ -88,9 +92,9 @@ class TestHeavyClient(CRDSTestCase):
 
 def tst():
     """Run module tests,  for now just doctests only."""
-    import unittest
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestHeavyClient)
-    unittest.TextTestRunner().run(suite)
+    # import unittest
+    # suite = unittest.TestLoader().loadTestsFromTestCase(TestHeavyClient)
+    # unittest.TextTestRunner().run(suite)
 
     from crds.tests import test_heavy_client, tstmod
     return tstmod(test_heavy_client)
