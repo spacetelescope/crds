@@ -144,7 +144,7 @@ class HeaderGenerator(object):
                 del headers2[dataset_id]
 
         # Munge for consistent case and value formatting regardless of source
-        headers2 = { dataset_id.upper() : 
+        headers2 = { dataset_id : 
                         { key.upper():utils.condition_value(val) for (key,val) in headers2[dataset_id].items() } 
                         for dataset_id in headers2 if dataset_id in only_ids }
         

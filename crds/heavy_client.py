@@ -374,8 +374,9 @@ class ConfigInfo(utils.Struct):
     def bad_files_set(self):
         """Return the set of references and mappings which are considered scientifically invalid."""
         return set(self.get("bad_files", "").split())
-
-    def get_effective_mode(self):
+    
+    @property
+    def effective_mode(self):
         """Based on environment CRDS_MODE,  connection status,  and server config force_remote_mode flag,
         determine whether best refs should be computed locally or on the server.   Simple unless 
         CRDS_MODE defaults to "auto" in which case the effective mode is "remote" when connected and
@@ -409,19 +410,18 @@ def get_config_info(observatory):
         info.status = "server"
         info.connected = True
         log.verbose("Connected to server at", srepr(api.get_crds_server()))
-        if not config.writable_cache_or_verbose("Using cached configuration and default context."):
-            info = load_server_info(observatory)
-            info.status = "cache"
-            info.connected = True
-            log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    except CrdsError:
-        log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()))
+        if info.effective_mode != "remote":
+            if not config.writable_cache_or_verbose("Using cached configuration and default context."):
+                info = load_server_info(observatory)
+                info.status = "cache"
+                info.connected = True
+                log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+    except CrdsError as exc:
+        log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
         info = load_server_info(observatory)
         info.status = "cache"
         info.connected = False
         log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    info.effective_mode = info.get_effective_mode()
-
     # XXX For backward compatibility with older servers which don't have ".mappings" in server info.
     if not hasattr(info, "mappings"):
         with log.verbose_warning_on_exception("Failed fetching list of all CRDS mappings from server"):
