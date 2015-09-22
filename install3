@@ -12,7 +12,7 @@ if (test -e save_version)
 then 
     ./save_version >crds/svn_version.py;  
 fi
-python3 setup.py install $* --force  >> install.log
+python3 setup.py install $* --include-test-data --force  >> install.log
 st=$st$?
 
 ./clean
