@@ -15,7 +15,7 @@ if (test -e save_version)
 then 
     ./save_version >crds/svn_version.py;  
 fi
-python setup.py install $* --force  >> install.log
+python setup.py install $* --include-test-data --force  >> install.log
 st=$st$?
 
 if (test -e clean)
