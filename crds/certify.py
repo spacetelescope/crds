@@ -175,6 +175,10 @@ class KeywordValidator(Validator):
     def _match_value(self, value):
         """Do a literal match of `value` to the values of this tpninfo."""
         return value in self._values
+    
+    def _match_value(self, pattern, value):
+        """Match `pattern` to the entirety of `value` by adding re ^ and $ to pattern."""
+        return re.match(config.complete_re(pattern), value)
 
 
 class RegexValidator(KeywordValidator):
@@ -376,8 +380,10 @@ def get_validators(filename, observatory):
     """
     locator = utils.get_locator_module(observatory)
     # Get the cache key for this filetype.
-    key = locator.reference_name_to_validator_key(filename)
-    return validators_by_typekey(key, observatory)
+    validators = []
+    for key in locator.reference_name_to_validator_key(filename):
+        validators.extend(validators_by_typekey(key, observatory))
+    return validators
 
 @utils.cached
 def validators_by_typekey(key, observatory):
