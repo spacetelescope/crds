@@ -31,8 +31,7 @@ HERE = os.path.dirname(__file__) or "./"
 
 def test():
     """Run the module doctests."""
-    import doctest
-    from . import locate
+    import doctest, locate
     return doctest.testmod(locate)
 
 # =======================================================================
@@ -276,15 +275,8 @@ def locate_file(refname, mode=None):
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
-    if mode is  None:
-        mode = config.get_crds_ref_subdir_mode(observatory="jwst")
-    if mode == "instrument":
-        _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
-        rootdir = locate_dir(instrument, mode)
-    elif mode == "flat":
-        rootdir = config.get_crds_refpath("jwst")
-    else:
-        raise ValueError("Unhandled reference file location mode " + repr(mode))
+    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
+    rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
 
 def locate_dir(instrument, mode=None):
@@ -307,5 +299,5 @@ def locate_dir(instrument, mode=None):
 # ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
-    raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
+    tpn.get_tpninfos("miri_flat.tpn")  # With core schema,  one type loads all
 

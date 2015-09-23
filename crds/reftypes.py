@@ -48,7 +48,7 @@ class TypeSpec(dict):
         """
         header = utils.Struct(header)
         assert "suffix" in header
-        assert "text_descr" in header
+        assert "text_descr" in header or header.filetype == "all"
         if "tpn" not in header:
             header.tpn = header.instrument.lower() + "_" + header.suffix + ".tpn"
         if "ld_tpn" not in header:
@@ -57,6 +57,8 @@ class TypeSpec(dict):
             header.file_ext = ".fits"
         if "unique_rowkeys" not in header:
             header.unique_rowkeys = None
+        if "extra_keys" not in header:
+            header.extra_keys = None
         super(TypeSpec, self).__init__(header.items())
 
     @classmethod
@@ -186,6 +188,17 @@ class TypeParameters(object):
         # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
 
     def reference_name_to_validator_key(self, filename, field="tpn"):
+        header = data_file.get_header(filename)
+        observatory = utils.header_to_observatory(header)
+        instrument, filekind = utils.get_file_properties(observatory, filename)
+        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
+            yield self._reference_name_to_validator_key(filename, field, header, observatory, "all", "all")
+        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
+            yield self._reference_name_to_validator_key(filename, field, header, observatory, instrument, "all")
+        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
+            yield self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind)
+
+    def _reference_name_to_validator_key(self, filename, field, header, observatory, instrument, filekind):
         """Given a reference filename `fitsname`,  return a dictionary key
         suitable for caching the reference type's Validator.
         
@@ -197,19 +210,19 @@ class TypeParameters(object):
         
         Returns (.tpn filename,)
         """
-        header = data_file.get_header(filename)
-        observatory = utils.header_to_observatory(header)
-        instrument, filekind = utils.get_file_properties(observatory, filename)
-        tpnfile = self.unified_defs[instrument][filekind][field]
-        if isinstance(tpnfile, python23.string_types):
-            key = (tpnfile,)  # tpn filename
-        else: # it's a list of conditional tpns
-            for (condition, tpn) in tpnfile:
-                if eval(condition, header):
-                    key = (tpn,)  # tpn filename
-                    break
-            else:
-                raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
+        try:
+            tpnfile = self.unified_defs[instrument][filekind][field]
+            if isinstance(tpnfile, python23.string_types):
+                key = (tpnfile,)  # tpn filename
+            else: # it's a list of conditional tpns
+                for (condition, tpn) in tpnfile:
+                    if eval(condition, header):
+                        key = (tpn,)  # tpn filename
+                        break
+                else:
+                    assert False
+        except (AssertionError, KeyError):
+            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
                     os.path.basename(filename), instrument, filekind))
         log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key, verbosity=60)
         return key

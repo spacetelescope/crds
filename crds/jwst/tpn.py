@@ -15,6 +15,7 @@ import pprint
 
 from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
+from . import schema
 
 # =============================================================================
 
@@ -91,8 +92,7 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
-@utils.cached
-def get_tpninfos(*key):
+def get_classic_tpninfos(*key):
     """Load the listof TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
@@ -101,6 +101,13 @@ def get_tpninfos(*key):
     except IOError:
         log.verbose_warning("no TPN for", key)
         return []
+
+@utils.cached
+def get_tpninfos(*key):
+    """Load the listof TPN info tuples corresponding to `instrument` and 
+    `filekind` from it's .tpn file.
+    """
+    return get_classic_tpninfos(*key) + schema.get_schema_tpninfos(*key)
 
 # =============================================================================
 
