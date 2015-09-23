@@ -61,17 +61,14 @@ def certify_dump_provenance_fits():
     CRDS  : INFO     [0] COMMENT = 'Created by S. Beland and IDT and P. Hodge converted to user coord.' 
     CRDS  : INFO     [0] DESCRIP initial version 
     CRDS  : INFO     [0] DETECTOR FUV 
-    CRDS  : INFO     [0] FILETYPE DEADTIME REFERENCE TABLE 
     CRDS  : INFO     [0] HISTORY   Modified to account for chamge of coordinates 
     CRDS  : INFO     [0] HISTORY fuv_080509_r_dead.fits renamed to s7g1700gl_dead.fits on Jul 16 2008 
-    CRDS  : INFO     [0] INSTRUME COS 
     CRDS  : INFO     [0] PEDIGREE GROUND 16/07/2008 16/07/2010 
     CRDS  : INFO     [0] USEAFTER Oct 01 1996 00:00:00 
-    CRDS  : INFO     [0] VCALCOS 2.0 
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     14 infos
+    CRDS  : INFO     11 infos
     0
     """
 
