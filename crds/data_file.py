@@ -217,8 +217,9 @@ get_unconditioned_header = get_header
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
     from jwst_lib import models
-    with models.open(filepath) as d_model:
-        flat_dict = d_model.to_flat_dict(include_arrays=False)
+    with log.augment_exception("JWST Data Model (jwst_lib.models)"):
+        with models.open(filepath) as d_model:
+            flat_dict = d_model.to_flat_dict(include_arrays=False)
     d_header = sanitize_data_model_dict(flat_dict)
     d_header = reduce_header(filepath, d_header, needed_keys)
     header = cross_strap_header(d_header)
@@ -250,7 +251,7 @@ def get_asdf_header(filepath, needed_keys=()):
         header = to_simple_types(handle.tree)
     header = reduce_header(filepath, header, needed_keys)
     header = cross_strap_header(header)
-    return
+    return header
 
 # ----------------------------------------------------------------------------------------------
 
@@ -279,13 +280,13 @@ def simple_type(value):
 
 def cross_strap_header(header):
     """Foreach DM keyword in header,  add the corresponding FITS keyword,  and vice versa."""
-    from crds.jwst import tpn as jwst_tpn
+    from crds.jwst import schema
     crossed = dict(header)
-    for key, val in header.iteritems():
-        fitskey = jwst_tpn.dm_to_fits(key)
+    for key, val in header.items():
+        fitskey = schema.dm_to_fits(key)
         if fitskey is not None and fitskey not in crossed:
             crossed[fitskey] = val
-        dmkey = jwst_tpn.fits_to_dm(key)
+        dmkey = schema.fits_to_dm(key)
         if dmkey is not None and dmkey not in crossed:
             crossed[dmkey] = val
     return crossed
