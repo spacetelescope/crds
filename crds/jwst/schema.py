@@ -34,9 +34,9 @@ def get_schema_tpninfos(*key):
     return []
 
 @utils.cached
-def get_schema_tpns():
+def get_schema_tpns(schema_name=None):
     """Load all the TpnInfos in the core schema."""
-    flat = _schema_to_flat(_load_schema())
+    flat = _schema_to_flat(_load_schema(schema_name))
     all_tpns = _flat_to_tpns(flat)
     return all_tpns
 
@@ -45,7 +45,8 @@ def tpninfos_key_to_parkeys(key):
     """Given a key for a TpnInfo's list, return the associated required parkeys."""
     _mode, context  = heavy_client.get_processing_mode("jwst")
     p = rmap.get_cached_mapping(context)
-    instrument, filekind = key[0].split(".")[0].split("_")[:2]
+    instrument, suffix = key[0].split(".")[0].split("_")[:2]
+    filekind = p.locate.suffix_to_filekind(instrument, suffix)
     keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
     keys.append("META.INSTRUMENT.NAME")
     return sorted(keys)
@@ -55,10 +56,10 @@ def tpninfos_key_to_parkeys(key):
 # JWST Data Model schema to TPN
 
 
-def _load_schema():
+def _load_schema(schema_name=None):
     """Return the core data model schema."""
     from jwst_lib import models
-    model = models.DataModel()
+    model = models.DataModel(schema=schema_name)
     return model.schema
 
 def _schema_to_flat(schema):
@@ -122,10 +123,10 @@ OPTIONAL_TYPES = type_or_null(BASIC_TYPES)
 #
 
 SCHEMA_TYPE_TO_TPN = {
-    "STRING" : ("C", "R"),
-    "INTEGER" : ("I", "R"),
-    "NUMBER" : ("D", "R"),
-    "BOOLEAN" : ("L", "R"),
+    "STRING" : ("C", "O"),
+    "INTEGER" : ("I", "O"),
+    "NUMBER" : ("D", "O"),
+    "BOOLEAN" : ("L", "O"),
     
     ("STRING", "NULL") : ("C", "O"),
     ("INTEGER", "NULL") : ("I", "O"),
@@ -133,21 +134,25 @@ SCHEMA_TYPE_TO_TPN = {
     ("BOOLEAN", "NULL") : ("L", "O"),
 }
 
-def _flat_to_tpns(flat=None):
+def _flat_to_tpns(flat=None, schema_name=None):
     """Convert flat representation of DM schema to list of all TpnInfo objects."""
     if flat is None:
-        flat = _schema_to_flat(_load_schema())
+        flat = _schema_to_flat(_load_schema(schema_name))
     tpns = []
     for key, value in flat.items():
         if key.endswith(".TYPE"):
             basekey = str(key[:-len(".TYPE")])
             legal_values = [str(val) for val in flat.get(basekey + ".ENUM", [])]
+            if legal_values:
+                legal_values += ["ANY", "N/A"]
+            legal_values = sorted(set(legal_values))
             if isinstance(value, list):
                 value = tuple(value)
             datatype = SCHEMA_TYPE_TO_TPN.get(value, None)
             if datatype is not None:
                 tpn = TpnInfo(name=basekey.upper(), keytype="H", datatype=datatype[0], 
                               presence=datatype[1], values=legal_values)
+                log.verbose("Adding tpn constraint from DM schema:", repr(tpn), verbosity=65)
                 tpns.append(tpn)
             else:
                 log.warning("No TPN form for", repr(key), repr(value))

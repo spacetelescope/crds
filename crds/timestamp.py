@@ -325,6 +325,30 @@ class Sybdate(DateParser):
             del items["meridian"]
         return dict([(name, int(x)) for (name, x) in items.items() if x])
     
+class Jwstdate(DateParser):
+    """
+    >>> Jwstdate.get_datetime("2001-03-21T12:00:00")
+    datetime.datetime(2001, 3, 21, 12, 0)
+
+    >>> Jwstdate.get_datetime("2001-03-21 12:00:00")
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid 'Jwstdate' format '2001-03-21 12:00:00'
+    """
+    _format = re.compile(
+        r"(?P<year>\d\d\d\d)\-" + \
+            r"(?P<month>\d\d)\-" + \
+            r"(?P<day>\d\d)T" + \
+            r"(?P<hour>\d\d):" + \
+            r"(?P<minute>\d\d):" + \
+            r"(?P<second>\d\d)"
+        )
+
+    @classmethod
+    def _get_date_dict(cls, match):
+        items = match.groupdict()
+        return dict([(name, int(x)) for (name, x) in items.items() if x])
+    
 class Anydate(DateParser):
     """
     Historically Anydate was an HST format limited to Sybdate and Slashdate:

@@ -1,0 +1,14 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+INSTRUME	H	C	R                   NIRISS
+PUPIL       H   C   R                   CLEARP,F090W,F115W,F140M,F150W,F158M,F200W,GR700XD,NRM
+DETECTOR	H	C	R                   NIS
+READPATT    H   C   R                   NIS,NISRAPID
+FILTER      H   C   R
