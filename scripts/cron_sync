@@ -66,13 +66,12 @@ export CRDS_DOWNLOAD_MODE=plugin
 #
 
 # -------------------------------------------------------------------------
-
+status=1
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
 
   if [[ $? != 0 ]]
   then
     echo "cron_sync: WARNING: failed to obtain crds.sync.lock"
-    exit 1
   else
      echo "cron_sync: INFO: obtained crds.sync.lock"
     
@@ -83,11 +82,12 @@ export CRDS_DOWNLOAD_MODE=plugin
      export CRDS_READONLY_CACHE=0
      chmod 644 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
      python -m crds.sync $* --stats # nominally --last 10 --fetch-references
-    
+     status=$?
   fi
     
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
-exit 0
+echo "existing with status $status"
+exit $status
 
 #
 #   Summarizing overall design of sync + bestrefs in pipelines:
