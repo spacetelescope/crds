@@ -67,6 +67,8 @@ def _schema_to_flat(schema):
     data model dotted path strings to TpnInfo objects.
     """
     flat = _x_schema_to_flat(schema)
+    if flat is None:
+        return None
     uppercase = {}
     for key, val in flat.items():
         if isinstance(val, list):
@@ -79,10 +81,13 @@ def _schema_to_flat(schema):
 def _x_schema_to_flat(schema):
     """Recursively flatten `schema` without addressing case issues."""
     results = {}
+    if "oneOf" in schema:   # punt on hybrid types for now, multiple "type" members
+        log.verbose_warning("Schema item has unhandled oneOf type.", verbosity=80)
+        return None
     if schema["type"] ==  "object":
         subprops = schema["properties"]
         for prop in subprops:
-            with log.augment_exception("In", repr(prop)):
+            with log.augment_exception("In schema property", repr(prop)):
                 sub_tree = _schema_to_flat(subprops[prop])
                 if sub_tree is None:
                     continue
@@ -173,15 +178,21 @@ def _get_fits_to_dm(schema=None):
     """Return mapping from FITS keyword to DM dotted path string."""
     return utils.invert_dict(_get_dm_to_fits(schema))
 
-DM_TO_FITS = _get_dm_to_fits()
-FITS_TO_DM = _get_fits_to_dm()
+DM_TO_FITS = None
+FITS_TO_DM = None
 
 def dm_to_fits(key):
     """Return the FITS keyword for DM `key` or None."""
+    global DM_TO_FITS
+    if DM_TO_FITS is None:
+        DM_TO_FITS = _get_dm_to_fits()
     return DM_TO_FITS.get(key, None)
 
 def fits_to_dm(key):
     """Return the DM keyword for FITS `key` or None."""
+    global FITS_TO_DM
+    if FITS_TO_DM is None:
+        FITS_TO_DM = _get_fits_to_dm()
     return FITS_TO_DM.get(key, None)
 
 # =============================================================================
