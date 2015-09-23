@@ -33,7 +33,6 @@ def _evalfile_with_fail(filename):
         result = {}
     return result
 
-<<<<<<< .working
 # =============================================================================
 
 def _load_tpn_lines(fname):
@@ -53,89 +52,6 @@ def _load_tpn_lines(fname):
                 lines.append(line)
             append = line.endswith("\\")
     return lines
-
-def _fix_quoted_whitespace(line):
-    """Replace spaces and tabs which appear inside quotes in `line` with
-    underscores,  and return it.
-    """
-    i = 0
-    while i < len(line):
-        char = line[i]
-        i += 1
-        if char != '"':
-            continue
-        quote = char
-        while i < len(line):
-            char = line[i]
-            i += 1
-            if char == quote:
-                break
-            if char in " \t":
-                line = line[:i-1] + "_" + line[i:]
-    return line
-
-def _load_tpn(fname):
-    """Load a TPN file and return it as a list of TpnInfo objects
-    describing keyword requirements including acceptable values.
-    """
-    tpn = []
-    for line in _load_tpn_lines(fname):
-        line = _fix_quoted_whitespace(line)
-        items = line.split()
-        if len(items) == 4:
-            name, keytype, datatype, presence = items
-            values = []
-        else:
-            name, keytype, datatype, presence, values = items
-            values = values.split(",")
-            values = [v.upper() for v in values]
-        tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
-    return tpn
-
-def get_classic_tpninfos(*key):
-    """Load the listof TPN info tuples corresponding to `instrument` and 
-    `filekind` from it's .tpn file.
-    """
-    try:
-        return _load_tpn(os.path.join(HERE, "tpns", key[0]))
-    except IOError:
-        log.verbose_warning("no TPN for", key)
-        return []
-
-=======
->>>>>>> .merge-right.r2546
-<<<<<<< .working
-@utils.cached
-def get_tpninfos(*key):
-    """Load the listof TPN info tuples corresponding to `instrument` and 
-    `filekind` from it's .tpn file.
-=======
-# =============================================================================
-
-def _load_tpn_lines(fname):
-    """Load the lines of a CDBS .tpn file,  ignoring #-comments, blank lines,
-     and joining lines ending in \\.
->>>>>>> .merge-right.r2546
-    """
-<<<<<<< .working
-    # return get_classic_tpninfos(*key) + schema.get_schema_tpninfos(*key)
-    return schema.get_schema_tpninfos(*key)
-
-=======
-    lines = []
-    append = False
-    with open(fname) as pfile:
-        for line in pfile:
-            line = line.strip()
-            if line.startswith("#") or not line:
-                continue
-            if append:
-                lines[-1] = lines[-1][:-1].strip() + line
-            else:
-                lines.append(line)
-            append = line.endswith("\\")
-    return lines
-
 
 def _fix_quoted_whitespace(line):
     """Replace spaces and tabs which appear inside quotes in `line` with
@@ -192,7 +108,6 @@ def get_tpninfos(*key):
     # return get_classic_tpninfos(*key)
     # return get_classic_tpninfos(*key) + schema.get_schema_tpninfos(*key)
 
->>>>>>> .merge-right.r2546
 # =============================================================================
 
 def main():

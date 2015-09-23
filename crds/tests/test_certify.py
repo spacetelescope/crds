@@ -28,7 +28,7 @@ class TestCertifyScript(CertifyScript):
 def certify_truncated_file():
     """
     >>> TestCertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()
-    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
@@ -43,9 +43,11 @@ def certify_truncated_file():
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
-    CRDS  : INFO     12 warnings
+    CRDS  : INFO     14 warnings
     CRDS  : INFO     4 infos
     0
     """
@@ -262,7 +264,7 @@ def certify_jwst_invalid():
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
     CRDS  : INFO     FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : meta.instrument.detector: 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']. Setting to default of None
+    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : JWST Data Model (jwst_lib.models) : meta.instrument.detector: 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']. Setting to default of None
     CRDS  : INFO     ########################################
     CRDS  : INFO     1 errors
     CRDS  : INFO     0 warnings
