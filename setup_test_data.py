@@ -1,4 +1,4 @@
-#! /usr/bin/env $PYTHON
+#!/usr/bin/env python
 import sys
 import glob
 
@@ -22,34 +22,24 @@ setup_pars = {
         'crds.tests' : 'crds/tests',
         },
     "package_data" : {
-        'crds.hst': [
-            '*.dat',
-            'tpns/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            ],
-        'crds.jwst': [
-            '*.dat',
-            'tpns/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            ],
-        'crds.tobs': [
-            '*.dat',
-            'tpns/*.tpn',
-            'specs/*.spec',
-            'specs/*.rmap',
-            ],
+            'crds.tests' : [
+                'data/*',
+                ],
         },
     "scripts" : glob.glob("scripts/*"),
     }
 
+if "--include-test-data" in sys.argv:
+    sys.argv.remove("--include-test-data")
+    setup_pars["package_data"].update({
+            })
+
 import crds   #  local subdirectory...  ew...
 
-setup(name="crds",
-      provides=["crds","crds.hst","crds.jwst","crds.client","crds.tobs"],
+setup(name="crds_test_data",
+      provides=["crds.tests.data",],
       version=crds.__version__,
-      description="Calibration Reference Data System,  HST/JWST reference file management",
+      description="Calibration Reference Data System,  HST/JWST reference file management (test data)",
       long_description=open('README.rst').read(),
       author="Todd Miller",
       author_email="jmiller@stsci.edu",
