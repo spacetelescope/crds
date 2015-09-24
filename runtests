@@ -1,5 +1,26 @@
-#! /bin/sh
+#! /usr/bin/env python
+import sys
+import os
+import os.path
+import crds
+from crds import config, log
 
-cd `dirname $0`
+os.chdir(os.path.dirname(sys.argv[0]) or ".")
+topdir = os.getcwd()
 
-$PYTHON _runtests
+# Unlike historical CRDS with builtin cache,  test cache is now a separate 
+# subversion checkout from ^/branches/crds_cache_test to ../crds_cache_test.
+# os.environ["CRDS_MAPPATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive", "mappings")
+os.environ["CRDS_CACHE_TEST"] = os.path.join(os.getcwd(), "..", "crds_cache_test")
+
+EXTRA_PARAMETERS = " ".join(sys.argv[1:])
+
+if  "--coverage" in sys.argv:
+    sys.argv.remove("--coverage")
+    COVERAGE_SWITCHES = " --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-erase --cover-branches ".format(topdir)
+    EXTRA_PARAMETERS += COVERAGE_SWITCHES
+
+os.system("$PYTHON -m crds.sync --all --stats")    
+os.system("./install")    
+os.system("nosetests --verbose --doctest-tests --doctest-options=+ELLIPSIS,+NORMALIZE_WHITESPACE --logging-clear-handlers {0}".format(EXTRA_PARAMETERS))
+
