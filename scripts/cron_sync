@@ -66,7 +66,6 @@ export CRDS_DOWNLOAD_MODE=plugin
 #
 
 # -------------------------------------------------------------------------
-
 ( flock --exclusive --nonblock 200 # --nonblock means fail on unavailable locks,  cron collision
 
   if [[ $? != 0 ]]
@@ -81,13 +80,17 @@ export CRDS_DOWNLOAD_MODE=plugin
      export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
      # override pipeline global readonly setting.
      export CRDS_READONLY_CACHE=0
-     chmod 644 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null 
+     chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
+     umask 2  # only block writes by other.
      python -m crds.sync $* --stats # nominally --last 10 --fetch-references
-    
+     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
+     exit $?
   fi
     
 ) 200> ${CRDS_LOCKS}/crds.sync.lock 
-exit 0
+status=$?
+# echo "existing with status $status"
+exit $status
 
 #
 #   Summarizing overall design of sync + bestrefs in pipelines:
