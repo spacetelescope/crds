@@ -80,10 +80,7 @@ export CRDS_DOWNLOAD_MODE=plugin
      export CRDS_CLIENT_RETRY_DELAY_SECONDS=10
      # override pipeline global readonly setting.
      export CRDS_READONLY_CACHE=0
-     chmod 664 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
-     umask 2  # only block writes by other.
      python -m crds.sync $* --stats # nominally --last 10 --fetch-references
-     chmod 444 ${CRDS_PATH}/config/{hst,jwst}/* >& /dev/null
      exit $?
   fi
     
