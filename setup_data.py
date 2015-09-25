@@ -7,18 +7,10 @@ from distutils.core import setup
 setup_pars = {
     "packages" : [
         'crds',
-        'crds.client',
-        'crds.hst',
-        'crds.jwst',
-        'crds.tobs',
         'crds.tests',
         ],
     "package_dir" : {
         'crds' : 'crds',
-        'crds.client' : 'crds/client',
-        'crds.hst' : 'crds/hst',
-        'crds.jwst' : 'crds/jwst',
-        'crds.tobs' : 'crds/tobs',
         'crds.tests' : 'crds/tests',
         },
     "package_data" : {
@@ -26,13 +18,7 @@ setup_pars = {
                 'data/*',
                 ],
         },
-    "scripts" : glob.glob("scripts/*"),
     }
-
-if "--include-test-data" in sys.argv:
-    sys.argv.remove("--include-test-data")
-    setup_pars["package_data"].update({
-            })
 
 import crds   #  local subdirectory...  ew...
 
