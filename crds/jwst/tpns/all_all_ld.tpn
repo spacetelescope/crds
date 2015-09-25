@@ -1,0 +1,13 @@
+# Template file used by certify to check Load files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME		KEYTYPE	DATATYPE	PRESENCE	VALUES
+#--------------------------------------------------------------------------
+# USEAFTER_DATE	H	C	R	&SYBDATE
+# INSTRUMENT	H	C	R	ACS
+# DETECTOR	C	C	R	WFC,HRC,SBC
+# PEDIGREE	C	C	R	INFLIGHT,GROUND,MODEL,DUMMY
