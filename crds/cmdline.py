@@ -17,7 +17,7 @@ from collections import Counter
 
 from argparse import RawTextHelpFormatter
 
-from crds import rmap, log, data_file, heavy_client, config, utils
+from crds import rmap, log, data_file, heavy_client, config, utils, exceptions
 from crds.client import api
 from crds import python23
 
@@ -223,6 +223,10 @@ class Script(object):
     def add_argument(self, *args, **keys):
         """Add a parser argument."""
         self.parser.add_argument(*args, **keys)
+
+    def get_exclusive_arg_group(self, *args, **keys):
+        """Return a mutually exlusive argument group."""
+        return self.parser.add_mutually_exclusive_group(*args, **keys)
 
     def add_standard_args(self):
         """Add standard CRDS command line parameters."""
@@ -555,31 +559,31 @@ class ContextsScript(Script):
         super(ContextsScript, self).__init__(*args, **keys)
 
     def add_args(self):
-        self.add_argument('--contexts', metavar='CONTEXT', type=mapping_spec, nargs='*',
+        group = self.get_exclusive_arg_group(required=False)
+        group.add_argument('--contexts', metavar='CONTEXT', type=mapping_spec, nargs='*',
             help="Specify a list of CRDS mappings to operate on: .pmap, .imap, or .rmap or date-based specification")        
-        self.add_argument("--range", metavar="MIN:MAX",  type=nrange, dest="range", default=None,
+        group.add_argument("--range", metavar="MIN:MAX",  type=nrange, dest="range", default=None,
             help='Operate for pipeline context ids (.pmaps) between <MIN> and <MAX>.')
-        self.add_argument('--all', action='store_true',
+        group.add_argument('--all', action='store_true',
             help='Operate with respect to all known CRDS contexts.')
-        self.add_argument('--last-n-contexts', metavar="N", type=int, default=None,
+        group.add_argument('--last-n-contexts', metavar="N", type=int, default=None,
             help='Operate with respect to the last N contexts.')
+        group.add_argument("--up-to-context", metavar='CONTEXT', type=mapping_spec, nargs=1,
+            help='Operate on all contexts up to and including the specified context.')
+        group.add_argument("--after-context", metavar='CONTEXT', type=mapping_spec, nargs=1,
+            help='Operate on all contexts after and including the specified context.')
 
     def determine_contexts(self):
         """Support explicit specification of contexts, context id range, or all."""
         log.verbose("Determining contexts.", verbosity=55)
         if self.args.contexts:
-            assert not self.args.range, 'Cannot specify explicit contexts and --range'
-            assert not self.args.all, 'Cannot specify explicit contexts and --all'
             # permit instrument and reference mappings,  not just pipelines:
             contexts = [self.resolve_context(ctx) for ctx in self.args.contexts]
         elif self.args.all:
-            assert not self.args.range or self.args.last_n_contexts, "Cannot specify --all and --range or --last"
             contexts = self._list_mappings("*.pmap")
         elif self.args.last_n_contexts:
-            assert not self.args.range or self.args.all, "Cannot specify --last and --range or --all"
             contexts = self._list_mappings("*.pmap")[-self.args.last_n_contexts:]
         elif self.args.range:
-            assert not self.args.all or self.args.last_n_contexts, "Cannot specify --range and --last or --all"
             rmin, rmax = self.args.range
             contexts = []
             all_contexts = self._list_mappings("*.pmap")
@@ -589,6 +593,18 @@ class ContextsScript(Script):
                     serial = int(match.group(1))
                     if rmin <= serial <= rmax:
                         contexts.append(context)
+        elif self.args.up_to_context:
+            pmaps = self._list_mappings("*.pmap")
+            with log.augment_exception("Invalid --up-to-context", repr(self.args.up_to_context[0]), exc_class=exceptions.CrdsError):
+                up_to_context = self.resolve_context(self.args.up_to_context[0])
+                up_to_ix = pmaps.index(up_to_context)+1
+                contexts = pmaps[:up_to_ix]
+        elif self.args.after_context:
+            pmaps = self._list_mappings("*.pmap")
+            with log.augment_exception("Invalid --after-context", repr(self.args.after_context[0]), exc_class=exceptions.CrdsError):
+                after_context = self.resolve_context(self.args.after_context[0])
+                after_ix = pmaps.index(after_context)
+                contexts = pmaps[after_ix:]
         else:
             contexts = [self.resolve_context(config.get_crds_env_context() or self.observatory + "-operational")]
         log.verbose("Determined contexts: ", contexts, verbosity=55)
