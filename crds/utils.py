@@ -412,7 +412,14 @@ def evalfile(fname):
 
 # ===================================================================
 
-def create_path(path, mode=int("755", 8)):
+UMASK = 0o002
+with log.verbose_warning_on_exception("Failed determining UMASK"):
+    UMASK = os.umask(0)
+    os.umask(UMASK)
+
+DEFAULT_DIR_PERMS = ~UMASK & 0o777
+
+def create_path(path, mode=DEFAULT_DIR_PERMS):
     """Recursively traverses directory path creating directories as
     needed so that the entire path exists.
     """
@@ -427,10 +434,10 @@ def create_path(path, mode=int("755", 8)):
         current.append(str(part))
         subdir = os.path.abspath(os.path.join(*current))
         if not os.path.exists(subdir):
-            log.verbose("Creating", repr(subdir))
+            log.verbose("Creating", repr(subdir), "with permissions %o" % mode)
             os.mkdir(subdir, mode)
 
-def ensure_dir_exists(fullpath, mode=int("755", 8)):
+def ensure_dir_exists(fullpath, mode=DEFAULT_DIR_PERMS):
     """Creates dirs from `fullpath` if they don't already exist.
     """
     create_path(os.path.dirname(fullpath), mode)
