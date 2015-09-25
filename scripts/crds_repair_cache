@@ -1,0 +1,58 @@
+#! /bin/sh
+#
+# usage:
+#
+# % crds_repair_cache [--all | --last N] [--readonly-cache] [--check-sha1sum]
+#
+# This script is one approach for refreshing a CRDS cache (most likely TEST
+# pipeline CRDS cache) to make it consistent with the CRDS server cache and
+# CRDS server database.  It may be useful in a variety of situations but is
+# designed first-and-foremost for the following situation in the TEST pipeline:
+# 
+# 1. TEST pipeline and TEST CRDS server are refreshed from the OPS server
+#    (possibly including use of this script) to baseline the TEST system for
+#    testing.
+#
+# 2. TEST file deliveries are performed creating files unique to the TEST
+#    pipeline and CRDS server.  The CRDS server rules and default context will
+#    almost certainly diverge from OPS, some references may be deliveried
+#    early.  The TEST pipeline cache will likewise diverge from OPS.
+#
+# 3. At a later time, the CRDS TEST server is refreshed / rebaselined from OPS
+#    to support more current file regressions.  The TEST pipeline's CRDS cache
+#    becomes out of sync with the CRDS TEST server, possibly with like named
+#    files with different contents and behavior.
+#
+# 4. This script is run to resynchronize the TEST pipeline's CRDS cache to match
+#    the current contents of the CRDS TEST server.
+#
+
+# First check, download, and/or purge any rules files differences, verifying
+# sha1sums since it is common for rules differences to produce files of the
+# same length but different contents.
+
+cron_sync --check-sha1sum --repair-files --purge-mappings $*
+
+# Second,  check, download, and/or purge any reference files differences,
+# omitting --check-sha1sum because it is very time consuming. (Expect
+# 8 hours+ for the full HST cache.)  If desired anyway,  --check-sha1sum can
+# be added on the command line as an optional parameter.  This will remove
+# references not known to the specified set of CRDS rules,  and it will 
+# correct like named references (between TEST and OPS) which have different
+# lengths.  It cannot detect differences in same-length files without 
+# --check-sha1sum so it is possible that residual files from the last
+# TEST cycle will go uncorrected.
+
+cron_sync --repair-files --fetch-references --purge-references $*
+
+# 
+# Other notes:  An alternate approach for hacking caches is to manually remove 
+# suspect files,  perhaps all mappings and config,  and then to resynchronize
+# using cron_sync.   The downside of this approach is that it maskes assumptions
+# about cache design and behavior
+#
+# Yet another approach is to use cron_sync only with respect to particular
+# reference files by specifying --files instead of --all or --last N.   This can
+# enable using --check-sha1sum on suspect references within a reasonable amount
+# of time.
+#
