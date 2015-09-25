@@ -465,7 +465,6 @@ def remove(rmpath, observatory):
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
             log.verbose("Removing: ", repr(rmpath))
             if os.path.isfile(rmpath):
-                os.chmod(rmpath, 0o666)
                 os.remove(rmpath)
             else:
                 pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
