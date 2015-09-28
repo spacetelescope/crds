@@ -261,7 +261,7 @@ def certify_jwst_invalid():
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
     CRDS  : INFO     FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : JWST Data Model (jwst_lib.models) : meta.instrument.detector: 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']. Setting to default of None
+    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : JWST Data Model (jwst_lib.models) : meta.instrument.detector: 'FOO' is not one of [u'NRCA1', u'NRCA2', u'NRCA3', u'NRCA4', u'NRCALONG', u'NRCB1', u'NRCB2', u'NRCB3', u'NRCB4', u'NRCBLONG', u'NRS1', u'NRS2', u'ANY', u'MIRIMAGE', u'MIRIFULONG', u'MIRIFUSHORT', u'NIRISS', u'NIS', u'GUIDER1', u'GUIDER2', u'N/A']. Setting to default of None
     CRDS  : INFO     ########################################
     CRDS  : INFO     1 errors
     CRDS  : INFO     0 warnings

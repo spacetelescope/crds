@@ -175,6 +175,8 @@ class HeaderGenerator(object):
                 log.verbose("-"*120)
                 for update in sorted(updates):
                     new_ref = update.new_reference.upper()
+                    if new_ref == "NOT FOUND N/A":
+                        new_ref = "N/A"
                     if new_ref != "N/A":
                         new_ref = new_ref.lower()
                     self.headers[dataset][update.filekind.upper()] = new_ref
