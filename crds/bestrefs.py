@@ -145,7 +145,7 @@ class HeaderGenerator(object):
 
         # Munge for consistent case and value formatting regardless of source
         headers2 = { dataset_id : 
-                        { key.upper():utils.condition_value(val) for (key,val) in headers2[dataset_id].items() } 
+                        { key.upper():bestrefs_condition(val) for (key,val) in headers2[dataset_id].items() } 
                         for dataset_id in headers2 if dataset_id in only_ids }
         
         # replace param-by-param,  not id-by-id, since headers2[id] may be partial
@@ -175,11 +175,16 @@ class HeaderGenerator(object):
                 log.verbose("-"*120)
                 for update in sorted(updates):
                     new_ref = update.new_reference.upper()
-                    if new_ref == "NOT FOUND N/A":
-                        new_ref = "N/A"
                     if new_ref != "N/A":
                         new_ref = new_ref.lower()
                     self.headers[dataset][update.filekind.upper()] = new_ref
+
+def bestrefs_condition(value):
+    """Condition header keyword value to normal form,  converting NOT FOUND N/A to N/A."""
+    val = utils.condition_value(value)
+    if val == "NOT FOUND N/A":
+        val = "N/A"
+    return val
 
 # ===================================================================
 
