@@ -475,6 +475,24 @@ class Certifier(object):
         return validators
 
 
+    def get_corresponding_rmap(self):
+        """Return the rmap which corresponds to self.filename under self.context."""
+        pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
+        instrument, filekind = pmap.locate.get_file_properties(self.filename)
+        return pmap.get_imap(instrument).get_rmap(filekind)
+
+    def get_rmap_parkeys(self):
+        """Determine required parkeys in reference path `refname` according to pipeline
+        mapping `context`.
+        """
+        if self.context is None:
+            return []
+        try:
+            return self.get_corresponding_rmap().get_required_parkeys()
+        except Exception as exc:
+            log.verbose_warning("Failed retrieving required parkeys:", str(exc))
+            return []
+
 class ReferenceCertifier(Certifier):
     """Baseclass for most reference file certifier classes.    
     1. Check simple keywords against TPN files using the reftype's validators.
@@ -572,24 +590,6 @@ class ReferenceCertifier(Certifier):
                                      "*** column formats ***"]:
             return False
         return True
-
-    def get_corresponding_rmap(self):
-        """Return the rmap which corresponds to self.filename under self.context."""
-        pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
-        instrument, filekind = pmap.locate.get_file_properties(self.filename)
-        return pmap.get_imap(instrument).get_rmap(filekind)
-
-    def get_rmap_parkeys(self):
-        """Determine required parkeys in reference path `refname` according to pipeline
-        mapping `context`.
-        """
-        if self.context is None:
-            return []
-        try:
-            return self.get_corresponding_rmap().get_required_parkeys()
-        except Exception as exc:
-            log.verbose_warning("Failed retrieving required parkeys:", str(exc))
-            return []
 
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
