@@ -1127,6 +1127,12 @@ For more information on the checks being performed,  use --verbose or --verbosit
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
             
+        if self.args.comparison_context and self.args.sync_files:
+            resolved_context = self.resolve_context(self.args.comparison_context)
+            self.sync_files([resolved_context])
+        if self.args.comparison_reference and self.args.sync_files:
+            self.sync_files([self.args.comparison_reference])
+            
         if not self.args.dont_recurse_mappings:
             all_files = self.mapping_closure(self.files)
         else:
@@ -1145,12 +1151,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
         elif self.args.comparison_context in [None, "none", "None", "NONE"]:
             log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
-            
-        if self.args.comparison_context and self.args.sync_files:
-            resolved_context = self.resolve_context(self.args.comparison_context)
-            self.sync_files([resolved_context])
-        if self.args.comparison_reference and self.args.sync_files:
-            self.sync_files([self.args.comparison_reference])
             
         certify_files(sorted(all_files), 
                       context=self.resolve_context(self.args.comparison_context),
