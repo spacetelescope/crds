@@ -48,6 +48,7 @@ mapping_validator_key = TYPES.mapping_validator_key
 get_row_keys = TYPES.get_row_keys
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
+suffix_to_filekind = TYPES.suffix_to_filekind
 
 # =======================================================================
 
@@ -307,5 +308,4 @@ def locate_dir(instrument, mode=None):
 # ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
-    raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
-
+    tpn.get_tpninfos("miri_flat.tpn")  # With core schema,  one type loads all

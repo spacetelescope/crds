@@ -15,6 +15,7 @@ import pprint
 
 from crds import rmap, log, utils, data_file
 from crds.certify import TpnInfo
+from . import schema
 
 # =============================================================================
 
@@ -51,7 +52,6 @@ def _load_tpn_lines(fname):
                 lines.append(line)
             append = line.endswith("\\")
     return lines
-
 
 def _fix_quoted_whitespace(line):
     """Replace spaces and tabs which appear inside quotes in `line` with
@@ -91,16 +91,22 @@ def _load_tpn(fname):
         tpn.append(TpnInfo(name, keytype, datatype, presence, tuple(values)))
     return tpn
 
+def get_classic_tpninfos(*key):
+    """Load the listof TPN info tuples corresponding to `instrument` and 
+    `filekind` from it's .tpn file.
+    """
+    with log.verbose_warning_on_exception("no TPN for", key, verbosity=70):
+        return _load_tpn(os.path.join(HERE, "tpns", key[0]))
+    return []
+
 @utils.cached
 def get_tpninfos(*key):
     """Load the listof TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
-    try:
-        return _load_tpn(os.path.join(HERE, "tpns", key[0]))
-    except IOError:
-        log.verbose_warning("no TPN for", key)
-        return []
+    return schema.get_schema_tpns()  # schema.get_schema_tpninfos(*key)
+    # return get_classic_tpninfos(*key)
+    # return get_classic_tpninfos(*key) + schema.get_schema_tpninfos(*key)
 
 # =============================================================================
 
