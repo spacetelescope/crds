@@ -24,6 +24,7 @@
 setenv CRDS_SERVER_URL  https://hst-crds-dev.stsci.edu    # development
 setenv CRDS_PATH ${HOME}/crds_cache_dev
 setenv CRDS_READONLY_CACHE 0
+setenv CRDS_CACHE_TEST `pwd`/../crds_cache_test
 
 # --------------------------------------------------------------------------------------------------------------------
 # To override server recommendations for the operational pipeline context (.pmap)
