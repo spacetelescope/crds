@@ -112,7 +112,7 @@ class Differencer(object):
 
     def __init__(self, observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                  include_header_diffs=False, hide_boring_diffs=False, recurse_added_deleted=False,
-                 lowest_mapping_only=False, remove_paths=False):
+                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False):
         self.observatory = observatory
         self.old_file = old_file
         self.new_file = new_file
@@ -124,6 +124,7 @@ class Differencer(object):
         self.recurse_added_deleted = recurse_added_deleted
         self.lowest_mapping_only = lowest_mapping_only
         self.remove_paths = remove_paths
+        self.squash_tuples = squash_tuples
 
     def locate_file(self, filename):
         """Return the full path for `filename` implementing default CRDS file cache
@@ -169,7 +170,10 @@ class MappingDifferencer(Differencer):
                 log.write("="*80)
             diff2 = simplify_to_lowest_mapping(diff) if self.lowest_mapping_only else diff
             diff2 = remove_diff_paths(diff2) if self.remove_paths else diff2
-            log.write(diff2)
+            if not self.squash_tuples:
+                log.write(diff2)
+            else:
+                log.write(self.squash_diff_tuples(diff2))
             if self.primitive_diffs and "header" not in diff_action(diff):
                 # XXXX fragile, coordinate with selector.py and rmap.py
                 if "replaced" in diff[-1]:
@@ -187,6 +191,9 @@ class MappingDifferencer(Differencer):
             mapping_check_diffs_core(differences)
         return 1 if differences else 0
 
+    def squash_diff_tuples(self, diff2):
+        return " -- ".join([" ".join(diff) if isinstance(diff, tuple) else diff for diff in diff2])
+    
     def mapping_diffs(self):
         """Return the logical differences between CRDS mappings named `old_file` 
         and `new_file`.
@@ -740,6 +747,14 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
          0 no differences
          1 some differences
          2 errors or warnings
+
+Differencing two sets of rules with simplified output:
+
+    % python -m crds.diff jwst_0080.pmap jwst_0081.pmap --brief --squash-tuples
+    jwst_miri_regions_0004.rmap jwst_miri_regions_0005.rmap -- MIRIFUSHORT 12 SHORT N/A -- added Match rule for jwst_miri_regions_0006.fits
+    jwst_miri_0048.imap jwst_miri_0049.imap -- regions -- replaced jwst_miri_regions_0004.rmap with jwst_miri_regions_0005.rmap
+    jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
+
     """
     def __init__(self, *args, **keys):
         super(DiffScript, self).__init__(*args, **keys)
@@ -779,6 +794,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Only include the name of the leaf mapping being diffed,  not all anscestor mappings.")
         self.add_argument("-E", "--remove-paths", dest="remove_paths", action="store_true",
             help="Remove path names from files in output.")
+        self.add_argument("-Q", "--squash-tuples", dest="squash_tuples", action="store_true",
+            help="Simplify formatting of difference results (remove tuple notations)")
         self.add_argument("-F", "--brief", dest="brief", action="store_true",
             help="Switch alias for --lowest-mapping-only --remove-paths --hide-boring-diffs --include-headers")
         
@@ -829,7 +846,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
                                 hide_boring_diffs=self.args.hide_boring_diffs,
                                 recurse_added_deleted=self.args.recurse_added_deleted,
                                 lowest_mapping_only=self.args.lowest_mapping_only,
-                                remove_paths=self.args.remove_paths)
+                                remove_paths=self.args.remove_paths,
+                                squash_tuples=self.args.squash_tuples)
         if log.errors() or log.warnings():
             return 2
         else:
