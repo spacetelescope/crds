@@ -187,16 +187,23 @@ class TypeParameters(object):
         return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"],)
         # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
 
+    @utils.cached
     def reference_name_to_validator_key(self, filename, field="tpn"):
+        """Return the sequence of validator keys associated with `filename`.   A validator key
+        is nominally a .tpn filename and can vary by observatory, instrument, and type as well
+        as by functions on the header of `filename`.
+        """
         header = data_file.get_header(filename)
         observatory = utils.header_to_observatory(header)
         instrument, filekind = utils.get_file_properties(observatory, filename)
+        results = []
         with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            yield self._reference_name_to_validator_key(filename, field, header, observatory, "all", "all")
+            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, "all", "all"))
         with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            yield self._reference_name_to_validator_key(filename, field, header, observatory, instrument, "all")
+            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, "all"))
         with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            yield self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind)
+            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind))
+        return list(set(results))
 
     def _reference_name_to_validator_key(self, filename, field, header, observatory, instrument, filekind):
         """Given a reference filename `fitsname`,  return a dictionary key
