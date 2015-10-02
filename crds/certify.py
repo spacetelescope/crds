@@ -518,7 +518,7 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error loading", self.format_name, exception_class=InvalidFormatError):
+        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
             self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
