@@ -1,4 +1,5 @@
 {
+    'instrument' : 'all',
     'filetype' : 'xxx',
     'suffix' : 'xxx',
     'text_descr' : 'All instruments and reference file types.',
