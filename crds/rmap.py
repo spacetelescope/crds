@@ -436,7 +436,8 @@ class Mapping(object):
         """Given a mapping at `filepath`,  validate it and return a fully
         instantiated (header, selector) tuple.
         """
-        with log.augment_exception("Can't load file " + where):
+        with log.augment_exception("Can't load file " + where, 
+                                   exception_class=crexc.MappingError):
             code = MAPPING_VALIDATOR.compile_and_check(text)
             header, selector, comment = cls._interpret(code)
         return LowerCaseDict(header), selector, comment

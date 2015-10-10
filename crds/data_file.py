@@ -320,9 +320,11 @@ def sanitize_data_model_dict(flat_dict):
     for key, val in flat_dict.items():
         skey = str(key).upper()
         sval = str(val)
-        fits_magx = "_EXTRA_FITS.PRIMARY."
+        fits_magx = "EXTRA_FITS.PRIMARY.HEADER."
         if key.upper().startswith(fits_magx):
-            cleaned[skey[len(fits_magx):]] = sval
+            if key.endswith(".0"):
+                skey = flat_dict[key].upper()
+                sval = flat_dict[key[:-len(".0")] + ".1"]
         cleaned[skey] = sval
     # Hack for backward incompatible model naming change.
     if "META.INSTRUMENT.NAME" in cleaned:
