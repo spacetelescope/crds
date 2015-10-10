@@ -1,4 +1,6 @@
 {
+    'instrument' : 'fgs',
+    'filekind' : 'all',
     'filetype' : 'all',
     'suffix' : 'all',
     'text_descr' : 'All FGS reference file types.',
