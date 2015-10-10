@@ -7,8 +7,8 @@
 #
 # NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
 #----------------------------------------------------------
-INSTRUME	H	C	R                   NIRISS
-PUPIL       H   C   R                   CLEARP,F090W,F115W,F140M,F150W,F158M,F200W,GR700XD,NRM
-DETECTOR	H	C	R                   NIS
-READPATT    H   C   R                   NIS,NISRAPID
-FILTER      H   C   R
+META.INSTRUMENT.NAME	    H	C	R                   NIRISS
+META.INSTRUMENT.PUPIL       H   C   R                   CLEARP,F090W,F115W,F140M,F150W,F158M,F200W,GR700XD,NRM,N/A
+META.INSTRUMENT.DETECTOR	H	C	R                   NIS,N/A
+META.EXPOSURE.READPATT      H   C   R                   NIS,NISRAPID
+META.INSTRUMENT.FILTER      H   C   R
