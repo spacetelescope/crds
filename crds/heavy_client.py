@@ -415,18 +415,18 @@ def get_config_info(observatory):
                 info = load_server_info(observatory)
                 info.status = "cache"
                 info.connected = True
-                log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+                log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except CrdsError as exc:
-        log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
+        if "serverless" not in api.get_crds_server():
+            log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
         info = load_server_info(observatory)
         info.status = "cache"
         info.connected = False
-        log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+        log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     # XXX For backward compatibility with older servers which don't have ".mappings" in server info.
     if not hasattr(info, "mappings"):
         with log.verbose_warning_on_exception("Failed fetching list of all CRDS mappings from server"):
             info.mappings = api.list_mappings(observatory, "*.*")
-
     return info
 
 def update_config_info(observatory):

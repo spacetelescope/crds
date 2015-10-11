@@ -182,7 +182,6 @@ def dt_bad_rules_jwst_getreferences_warning():
     >>> config.ALLOW_BAD_RULES.set("1")
     
     >>> refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])   # doctest: +ELLIPSIS
-    CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '...'
     CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
     <BLANKLINE>
     
@@ -203,7 +202,6 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     >>> config.ALLOW_BAD_RULES.reset()
     
     >>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")()   # doctest: +ELLIPSIS
-    CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '...'
     CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
@@ -212,7 +210,7 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     <BLANKLINE>
     CRDS  : INFO     2 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     4 infos
+    CRDS  : INFO     3 infos
     2
     
     >>> test_config.cleanup(old_state)
