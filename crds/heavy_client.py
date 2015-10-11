@@ -250,6 +250,7 @@ def check_observatory(observatory):
 
 def check_parameters(header):
     """Make sure dict-like `header` is a mapping from strings to simple types."""
+    header = dict(header)
     for key in header:
         assert isinstance(key, python23.string_types), \
             "Non-string key " + repr(key) + " in parameters."
@@ -258,8 +259,9 @@ def check_parameters(header):
         except Exception as exc:
             raise ValueError("Can't fetch mapping key " + repr(key) + 
                              " from parameters: " + repr(str(exc)))
-        assert isinstance(header[key], (python23.string_types, float, int, bool)), \
-            "Parameter " + repr(key) + " isn't a string, float, int, or bool."
+        if not isinstance(header[key], (python23.string_types, float, int, bool)):
+            log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
+            del header[key]
     
 def check_reftypes(reftypes):
     """Make sure reftypes is a sequence of string identifiers."""
