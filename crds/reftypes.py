@@ -184,8 +184,8 @@ class TypeParameters(object):
     def mapping_validator_key(self, mapping):
         """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
         mapping = rmap.asmapping(mapping)
-        return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"],)
-        # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
+        return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"], mapping.filename)
+        # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")   # now has multiple values
 
     @utils.cached
     def reference_name_to_validator_key(self, filename, field="tpn"):
@@ -197,13 +197,18 @@ class TypeParameters(object):
         observatory = utils.header_to_observatory(header)
         instrument, filekind = utils.get_file_properties(observatory, filename)
         results = []
-        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, "all", "all"))
-        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, "all"))
-        with log.verbose_warning_on_exception("Can't find validators", verbosity=75):
-            results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind))
-        return list(set(results))
+        def append_tpn_level(results, instrument, filekind):
+            """Append the validator key for associated with one level of the `instrument`
+            and `filekind` to `results`.
+            """
+            try:
+                results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind))
+            except Exception as exc:
+                log.verbose_warning("Can't find TPN key for", (filename, instrument, filekind), ":", str(exc), verbosity=75)
+        append_tpn_level(results, "all", "all")
+        append_tpn_level(results, instrument, "all")
+        append_tpn_level(results, instrument, filekind)
+        return results
 
     def _reference_name_to_validator_key(self, filename, field, header, observatory, instrument, filekind):
         """Given a reference filename `fitsname`,  return a dictionary key
@@ -220,11 +225,11 @@ class TypeParameters(object):
         try:
             tpnfile = self.unified_defs[instrument][filekind][field]
             if isinstance(tpnfile, python23.string_types):
-                key = (tpnfile,)  # tpn filename
+                key = (tpnfile, filename)  # tpn filename
             else: # it's a list of conditional tpns
                 for (condition, tpn) in tpnfile:
                     if eval(condition, header):
-                        key = (tpn,)  # tpn filename
+                        key = (tpn, filename)  # tpn filename
                         break
                 else:
                     assert False

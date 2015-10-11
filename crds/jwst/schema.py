@@ -22,16 +22,24 @@ from crds.certify import TpnInfo
 
 # ====================================================================================
 
-@utils.cached
 def get_schema_tpninfos(*key):
     """Load the list of TPN info tuples corresponding to `instrument` and 
     `filekind` from it's .tpn file.
     """
     with log.warn_on_exception("Failed loading schema constraints for", repr(key)):
-        tpns = get_schema_tpns()
+        schema_name = reference_to_schema_name(key[1])
+        tpns = get_schema_tpns(schema_name)
         parkeys = tpninfos_key_to_parkeys(key)
         return [ info for info in tpns if info.name in parkeys ]
     return []
+
+def reference_to_schema_name(reference_name):
+    """This function will eventually identify the schema associated with `reference_name`
+    unless replaced by similar functionality in the models package.
+
+    Returns None  meaning "default/core schema"
+    """
+    return None
 
 @utils.cached
 def get_schema_tpns(schema_name=None):
@@ -41,14 +49,17 @@ def get_schema_tpns(schema_name=None):
     return all_tpns
 
 @utils.cached
-def tpninfos_key_to_parkeys(key):
+def tpninfos_key_to_parkeys(tpn):
     """Given a key for a TpnInfo's list, return the associated required parkeys."""
-    _mode, context  = heavy_client.get_processing_mode("jwst")
-    p = rmap.get_cached_mapping(context)
-    instrument, suffix = key[0].split(".")[0].split("_")[:2]
-    filekind = p.locate.suffix_to_filekind(instrument, suffix)
-    keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
-    keys.append("META.INSTRUMENT.NAME")
+    if "all_" or "_all." in tpn:
+        return []
+    with log.verbose_warning_on_exception("Can't determine parkeys for", repr(tpn)):
+        _mode, context  = heavy_client.get_processing_mode("jwst")
+        p = rmap.get_cached_mapping(context)
+        instrument, suffix = tpn.split(".")[0].split("_")[:2]
+        filekind = p.locate.suffix_to_filekind(instrument, suffix)
+        keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
+        keys.append("META.INSTRUMENT.NAME")
     return sorted(keys)
 
 # =============================================================================

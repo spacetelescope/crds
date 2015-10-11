@@ -389,7 +389,6 @@ def validator(info):
 
 # ============================================================================
 
-@utils.cached
 def validators_by_typekey(key, observatory):
     """Load and return the list of validators associated with reference type 
     validator `key`.   Factored out because it is cached on parameters.
