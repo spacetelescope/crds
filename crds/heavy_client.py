@@ -251,7 +251,8 @@ def check_observatory(observatory):
 def check_parameters(header):
     """Make sure dict-like `header` is a mapping from strings to simple types."""
     header = dict(header)
-    for key in header:
+    keys = header.keys()
+    for key in keys:
         assert isinstance(key, python23.string_types), \
             "Non-string key " + repr(key) + " in parameters."
         try:
@@ -262,7 +263,7 @@ def check_parameters(header):
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
-    
+
 def check_reftypes(reftypes):
     """Make sure reftypes is a sequence of string identifiers."""
     assert isinstance(reftypes, (list, tuple, type(None))), \
