@@ -251,7 +251,8 @@ def check_observatory(observatory):
 def check_parameters(header):
     """Make sure dict-like `header` is a mapping from strings to simple types."""
     header = dict(header)
-    for key in header:
+    keys = header.keys()
+    for key in keys:
         assert isinstance(key, python23.string_types), \
             "Non-string key " + repr(key) + " in parameters."
         try:
