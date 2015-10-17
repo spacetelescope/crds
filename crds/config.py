@@ -877,7 +877,11 @@ def mapping_to_observatory(context_file):
     >>> mapping_to_observatory('hst_acs_biasfile_0000.rmap')
     'hst'
     """
-    return os.path.basename(context_file).split("_")[0].split(".")[0]
+    obs = os.path.basename(context_file).split("_")[0].split(".")[0]
+    import crds
+    assert obs in crds.ALL_OBSERVATORIES, \
+        "Mapping " + repr(context_file) + " does not have a valid observatory name."
+    return obs
 
 def mapping_to_instrument(context_file):
     """
