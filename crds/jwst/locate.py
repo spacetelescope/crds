@@ -48,7 +48,6 @@ mapping_validator_key = TYPES.mapping_validator_key
 get_row_keys = TYPES.get_row_keys
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
-suffix_to_filekind = TYPES.suffix_to_filekind
 
 # =======================================================================
 
@@ -132,11 +131,12 @@ def decompose_newstyle_name(filename):
         filekind = parts[2]
         serial = list_get(parts, 3, "")
 
-    # Don't include filename in these or it messes up crds.certify unique error tracking.
-
-    assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
-    assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
-    assert re.match(r"\d*", serial), "Invalid id field " + repr(id)
+    assert instrument in INSTRUMENTS+[""], "Invalid instrument " + \
+        repr(instrument) + " in name " + repr(filename)
+    assert filekind in FILEKINDS+[""], "Invalid filekind " + \
+        repr(filekind) + " in name " + repr(filename)
+    assert re.match(r"\d*", serial), "Invalid id field " + \
+        repr(id) + " in name " + repr(filename)
     # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
@@ -202,11 +202,12 @@ def ref_properties_from_header(filename):
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
     header = data_file.get_header(filename)
-    # Don't add filename to assertions to keep crds.certify unique errors working
     instrument = utils.header_to_instrument(header, default="UNDEFINED").lower()
-    assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
+    assert instrument in INSTRUMENTS, \
+        "Invalid instrument " + repr(instrument) + " in file " + repr(filename)
     filekind = utils.get_any_of(header, ["REFTYPE", "META.TYPE"], "UNDEFINED").lower()
-    assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
+    assert filekind in FILEKINDS, \
+        "Invalid file type " + repr(filekind) + " in file " + repr(filename)    
     return path, "jwst", instrument, filekind, serial, ext
 
 # =============================================================================
@@ -306,4 +307,5 @@ def locate_dir(instrument, mode=None):
 # ============================================================================
 def load_all_type_constraints():
     """Load all the JWST type constraint files."""
-    tpn.get_tpninfos("miri_flat.tpn", "foo.fits")  # With core schema,  one type loads all
+    raise NotImplementedError("expected failure,  JWST type constraints not implemented yet.")
+

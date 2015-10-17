@@ -296,7 +296,7 @@ Mark Files Bad
 ..............
 
 *Mark Files Bad* supports marking a file as scientifically invalid and
-also supports reversing the decision and marking it good once more.
+also supoports reversing the decision and marking it good once more.
 
 The CRDS procedure for marking files bad requires three steps:
 
@@ -305,14 +305,7 @@ The CRDS procedure for marking files bad requires three steps:
 3. Mark the prospective bad files actually bad using Mark Bad Files.
 
 Following this procedure maintains the invariant that the operational context
-contains no known bad files.   The designation as bad files does not take
-effect until any local CRDS cache is synchronized with the server.
-
-Creating a clean context can be done in arbitrary ways,  but the two most
-common ways will likely be:
-
-1. Submit replacement files for the bad files to create a clean context.
-2. Use Delete References to generate a new context without the bad files.
+contains no known bad files.
 
 .. figure:: images/web_mark_files_bad.png
    :scale: 50 %
@@ -325,69 +318,12 @@ which refer to the bad .imaps.   Whenever a rules file is marked bad,
 a warning is issued when the containing context is used.
 
 Marking a reference file as bad is a more precise technique which invalidates
-only that reference in every context that includes it.  Warnings are issued
-related to the bad reference only when the reference is actually recommended by
-CRDS.
+only that reference in every context that includes it.   Warnings are issued related
+to the bad reference only when the reference is actually recommended by CRDS.
 
-By default, recommendation of bad files is an error.  The default
-behaviour can be overrideden, allowing use of bad rules or references with a
-warning, by setting environment variables: *CRDS_ALLOW_BAD_RULES* and/or
-*CRDS_ALLOW_BAD_REFERENCES* or by using command line switches for
-crds.bestrefs: *--allow-bad-rules* and *--allow-bad-references*.
+By default,  recommendation or use of bad files is an error.   The default behaviour
+can be overrideden,  allowing use of bad rules or references with a warning,  by
 
-Delete References
-.................
-
-*Delete References* supports supports removing references (but not rules) from
-a context generating a new context.  Delete References provides one
-straightforward way to generate clean rules prior to marking the deleted files
-as bad.
-
-.. figure:: images/web_delete_references.png
-   :scale: 50 %
-   :alt: delete references
-
-Delete References does not remove the files from CRDS, it only removes them
-from the specified set of rules.  The references remain available under any
-contexts which still refer to them.
-
-Once references have been replaced or deleted from the operational context and
-the new context is made operational using Set Context, the deleted or replaced
-references can be marked as scientifically invalid using Mark Files Bad.
-
-Files are specified for Delete References by listing their names in the Deleted
-Files field of the input form, separated by spaces, commas, and/or newlines.
-
-Changes to rules which result from delete references are presented on a results
-page which must be confirmed or cancelled as with other file submissions.
-
-Add References
-..............
-
-*Add References* supports adding existing CRDS references to a CRDS context
-which does not contain them already.  Add References is the inverse of Delete
-References and generates new CRDS rules without requiring the resubmission of
-files to CRDS.
-
-.. figure:: images/web_add_references.png
-   :scale: 50 %
-   :alt: delete references
-
-Add references can be used to undo the effects of Delete References in a
-perhaps distant descendant context containing other changes.  Add references
-can also be used to add tested references from a branched context into the
-current operational context.
-
-Files are specified for Add References by listing their names in the Added
-Files field of the input form, separated by spaces, commas, and/or newlines.
-
-Changes to rules which result from add references are presented on a results
-page which must be confirmed or cancelled as with other file submissions.
-Rules changes from add references should be carefully reviewed to ensure that
-the resulting rmap update is as intended.  In particular, other rmap
-differences from a branched context are not added, so additional test
-parameters or other header and structural changes of any test rmap are not
-carried over by Add References,  only the reference files themselves.
 
 Set Context
 ...........

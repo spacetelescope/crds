@@ -263,7 +263,7 @@ def check_parameters(header):
         if not isinstance(header[key], (python23.string_types, float, int, bool)):
             log.verbose_warning("Parameter " + repr(key) + " isn't a string, float, int, or bool.   Dropping.", verbosity=90)
             del header[key]
-
+    
 def check_reftypes(reftypes):
     """Make sure reftypes is a sequence of string identifiers."""
     assert isinstance(reftypes, (list, tuple, type(None))), \
@@ -418,18 +418,18 @@ def get_config_info(observatory):
                 info = load_server_info(observatory)
                 info.status = "cache"
                 info.connected = True
-                log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+                log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     except CrdsError as exc:
-        if "serverless" not in api.get_crds_server():
-            log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
+        log.verbose_warning("Couldn't contact CRDS server:", srepr(api.get_crds_server()), ":", str(exc))
         info = load_server_info(observatory)
         info.status = "cache"
         info.connected = False
-        log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
+        log.info("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
     # XXX For backward compatibility with older servers which don't have ".mappings" in server info.
     if not hasattr(info, "mappings"):
         with log.verbose_warning_on_exception("Failed fetching list of all CRDS mappings from server"):
             info.mappings = api.list_mappings(observatory, "*.*")
+
     return info
 
 def update_config_info(observatory):
