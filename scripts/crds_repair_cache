@@ -2,7 +2,7 @@
 #
 # usage:
 #
-# % crds_repair_cache [--all | --last N] [--readonly-cache] [--check-sha1sum]
+# % crds_repair_cache [--all | --last N | --range M:N | --up-to-context <ctx> | --after-context <ctx> | --files <specific files...>] [--readonly-cache] [--check-sha1sum]
 #
 # This script is one approach for refreshing a CRDS cache (most likely TEST
 # pipeline CRDS cache) to make it consistent with the CRDS server cache and
@@ -15,18 +15,25 @@
 #
 # 2. TEST file deliveries are performed creating files unique to the TEST
 #    pipeline and CRDS server.  The CRDS server rules and default context will
-#    almost certainly diverge from OPS, some references may be deliveried
-#    early.  The TEST pipeline cache will likewise diverge from OPS.
+#    almost certainly diverge from OPS, some references may be deliveried early
+#    to TEST with names identical to OPS.  The TEST pipeline CRDS cache will
+#    likewise diverge from the OPS pipeline CRDS cache.
 #
 # 3. At a later time, the CRDS TEST server is refreshed / rebaselined from OPS
 #    to support more current file regressions.  The TEST pipeline's CRDS cache
-#    becomes out of sync with the CRDS TEST server, possibly with like named
-#    files with different contents and behavior.
+#    is then out of sync with the CRDS TEST server, possibly with like named
+#    rules files with different contents and behavior.
 #
 # 4. This script is run to resynchronize the TEST pipeline's CRDS cache to match
-#    the current contents of the CRDS TEST server.
+#    the current contents of the CRDS TEST server (and OPS server).
 #
-
+# NOTE:  this script relies on cron_sync.  cron_sync in turn relies on UNIX umask
+#    to create appropriate default group permissions.  Users should nominally
+#    specify "umask 2" in their interactive shell to cause synced files to be
+#    created with user and group rwx permissions. 
+#
+# --------------------------------------------------------------------------
+#
 # First check, download, and/or purge any rules files differences, verifying
 # sha1sums since it is common for rules differences to produce files of the
 # same length but different contents.
