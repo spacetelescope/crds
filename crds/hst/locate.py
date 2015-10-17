@@ -36,6 +36,7 @@ mapping_validator_key = TYPES.mapping_validator_key
 get_row_keys = TYPES.get_row_keys
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
+suffix_to_filekind = TYPES.suffix_to_filekind
 
 from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_name_to_ld_tpn_text
 
@@ -60,8 +61,6 @@ def condition_matching_header(rmapping, header):
 
 # =======================================================================
 
-REF_EXT_RE = re.compile(r"\.fits|\.r\dh$")
-
 def get_file_properties(filename):
     """Figure out (instrument, filekind) based on `filename` which
     should be a mapping or FITS reference file.
@@ -84,7 +83,7 @@ def get_file_properties(filename):
             return decompose_newstyle_name(filename)[2:4]
         except Exception:
             return properties_inside_mapping(filename)
-    elif REF_EXT_RE.search(filename):
+    elif config.is_reference(filename):
         result = get_reference_properties(filename)[2:4]
     else:
         try:
@@ -143,15 +142,11 @@ def decompose_newstyle_name(filename):
         serial = list_get(parts, 3, "")
 
     assert observatory == "hst"
-    assert instrument in INSTRUMENTS+[""], "Invalid instrument " + \
-        repr(instrument) + " in name " + repr(filename)
-    assert filekind in FILEKINDS+[""], "Invalid filekind " + \
-        repr(filekind) + " in name " + repr(filename)
+    assert instrument in INSTRUMENTS+[""], "Invalid instrument " + repr(instrument)
+    assert filekind in FILEKINDS+[""], "Invalid filekind " + repr(filekind)
+    # assert re.match("\d*", serial), "Invalid id field " + repr(id)
 
-    # assert re.match("\d*", serial), "Invalid id field " + \
-    #     repr(id) + " in name " + repr(filename)
-    
-# extension may vary for upload temporary files.
+    # extension may vary for upload temporary files.
 
     return path, observatory, instrument, filekind, serial, ext
 
