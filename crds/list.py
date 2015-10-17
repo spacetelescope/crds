@@ -202,10 +202,7 @@ def _print_dict(title, dictionary, selected = None):
     print(title)
     if dictionary:
         for key in selected:
-            try:
-                print("\t" + key + " = " + repr(dictionary[key]))
-            except Exception:
-                print("\t" + key + " = " + repr(getattr(dictionary, key)))
+            print("\t" + key + " = " + repr(dictionary[key]))
     else:
         print("\t" + "none")
 

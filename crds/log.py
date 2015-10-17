@@ -301,7 +301,7 @@ def exception_trap_logger(func):
         """
         try:
             yield
-        except Exception as exc:
+        except Exception as  exc:
             reraise = func(*args + (":", str(exc)), **keys)
             if CRDS_EXCEPTION_TRAP == False:
                 # In python-2, distinction between raise and "raise something".  raise doesn't
@@ -337,7 +337,7 @@ def _reraise(*args, **keys):
 info_on_exception = exception_trap_logger(info)
 debug_on_exception = exception_trap_logger(debug)
 verbose_on_exception = exception_trap_logger(verbose)
-verbose_warning_on_exception = exception_trap_logger(verbose_warning)
+verbose_warning_on_exception = exception_trap_logger(verbose)
 warn_on_exception = exception_trap_logger(warning)
 error_on_exception = exception_trap_logger(error)
 fatal_error_on_exception = exception_trap_logger(fatal_error)

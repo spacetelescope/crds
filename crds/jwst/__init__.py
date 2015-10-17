@@ -24,14 +24,4 @@ TYPE_FIXERS = {
 
 PROVENANCE_KEYWORDS = ("DESCRIP", "PEDIGREE", "USEAFTER","HISTORY", "AUTHOR")
 
-# When loading headers,  make sure each keyword in a tuple is represented with
-# the same value enabling any form to be used.  Case insensitive.
-CROSS_STRAPPED_KEYWORDS = [
-    ("INSTRUME", "INSTRUMENT", "META.INSTRUMENT.NAME","META.INSTRUMENT.TYPE"),
-    ("TELESCOP","TELESCOPE", "META.TELESCOPE",),
-    ("AUTHOR", "META.REFFILE.AUTHOR",),
-    ("PEDIGREE", "META.REFFILE.PEDIGREE",),
-    ("USEAFTER", "META.REFFILE.USEAFTER",),
-    ("DESCRIP", "DESCRIPTION", "META.REFFILE.DESCRIPTION",),
-    ]
 

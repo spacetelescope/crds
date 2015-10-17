@@ -6,7 +6,6 @@
            "type" : "flat",
            "pedigree" : "dummy",
            "useafter" : "Mar 21 2001 12:00:00",
-           "detector" : "mirifulong",
-           "readpatt" : "any"
+           "detector" : "mirifulong"
            }
 }

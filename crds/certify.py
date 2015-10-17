@@ -12,12 +12,10 @@ from collections import defaultdict, namedtuple
 
 import numpy as np
 
-import crds
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
 from crds import tables
 from crds import client
 from crds import mapping_parser
-from crds import selectors
 from crds.exceptions import (MissingKeywordError, IllegalKeywordError, InvalidFormatError, TypeSetupError,
                              ValidationError)
 
@@ -177,9 +175,10 @@ class KeywordValidator(Validator):
     def _match_value(self, value):
         """Do a literal match of `value` to the values of this tpninfo."""
         return value in self._values
-    
+
+
 class RegexValidator(KeywordValidator):
-    """Checks that a value matches TpnInfo values treated as regexes."""
+    """Checks that a value is one of the literal TpnInfo values."""
     def _match_value(self, value):
         if super(RegexValidator, self)._match_value(value):
             return True
@@ -198,16 +197,6 @@ class CharacterValidator(KeywordValidator):
         if " " in chars:
             chars = '"' + "_".join(chars.split()) + '"'
         return chars
-
-    def _check_value(self, filename, value):
-        if selectors.esoteric_key(value):
-            values = [value]
-        else:
-            values = value.split("|") 
-            if len(values) > 1:
-                self.verbose(filename, value, "is an or'ed parameter matching", values)
-        for val in values:
-            super(CharacterValidator, self)._check_value(filename, val)
 
 # ----------------------------------------------------------------------------
 
@@ -331,14 +320,6 @@ class SybdateValidator(KeywordValidator):
 
 # ----------------------------------------------------------------------------
 
-class JwstdateValidator(KeywordValidator):
-    """Check &JWSTDATE date fields."""
-    def check_value(self, filename, value):
-        self.verbose(filename, value)
-        timestamp.Jwstdate.get_datetime(value)
-
-# ----------------------------------------------------------------------------
-
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
     def check_value(self, filename, value):
@@ -389,19 +370,27 @@ def validator(info):
 
 # ============================================================================
 
+def get_validators(filename, observatory):
+    """Given a reference file `filename`,  return the observatory specific
+    list of Validators used to check that reference file type.
+    """
+    locator = utils.get_locator_module(observatory)
+    # Get the cache key for this filetype.
+    key = locator.reference_name_to_validator_key(filename)
+    return validators_by_typekey(key, observatory)
+
+@utils.cached
 def validators_by_typekey(key, observatory):
     """Load and return the list of validators associated with reference type 
     validator `key`.   Factored out because it is cached on parameters.
     """
     locator = utils.get_locator_module(observatory)
     # Make and cache Validators for `filename`s reference file type.
-    validators = [validator(x) for x in locator.get_tpninfos(*key)]
-    log.verbose("Validators for", repr(key), ":\n", log.PP(validators), verbosity=60)
-    """
     try:
+        validators = [validator(x) for x in locator.get_tpninfos(*key)]
+        log.verbose("Validators for", repr(key), ":\n", log.PP(validators), verbosity=60)
     except Exception as exc:
         raise RuntimeError("FAILED loading type contraints for " + repr(key) + " with " + repr(exc))
-    """
     return validators
 
 # ============================================================================
@@ -442,10 +431,6 @@ class Certifier(object):
     @property
     def format_name(self):
         return repr(self.original_name) if self.original_name else repr(self.basename)
-
-    @property
-    def locator(self):
-        return utils.get_locator_module(self.observatory)
     
     def log_and_track_error(self, *args, **keys):
         """Output a log error on behalf of `msg`,  tracking it for uniqueness if run inside a script."""
@@ -460,37 +445,6 @@ class Certifier(object):
         """
         raise NotImplementedError("Certify is an abstract class.")
 
-
-    def get_validators(self):
-        """Given a reference file `filename`,  return the observatory specific
-        list of Validators used to check that reference file type.
-        """
-        # Get the cache key for this filetype.
-        validators = []
-        for key in self.locator.reference_name_to_validator_key(self.filename):
-            validators.extend(validators_by_typekey(key, self.observatory))
-        parkeys = set(self.get_rmap_parkeys())
-        validators = [ val for val in validators if val.name in parkeys ]
-        return validators
-
-
-    def get_corresponding_rmap(self):
-        """Return the rmap which corresponds to self.filename under self.context."""
-        pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
-        instrument, filekind = pmap.locate.get_file_properties(self.filename)
-        return pmap.get_imap(instrument).get_rmap(filekind)
-
-    def get_rmap_parkeys(self):
-        """Determine required parkeys in reference path `refname` according to pipeline
-        mapping `context`.
-        """
-        if self.context is None:
-            return []
-        try:
-            return self.get_corresponding_rmap().get_required_parkeys()
-        except Exception as exc:
-            log.verbose_warning("Failed retrieving required parkeys:", str(exc))
-            return []
 
 class ReferenceCertifier(Certifier):
     """Baseclass for most reference file certifier classes.    
@@ -508,7 +462,7 @@ class ReferenceCertifier(Certifier):
         
     def complex_init(self):
         """Can't do this until we at least know the file is loadable."""
-        self.simple_validators = self.get_validators()
+        self.simple_validators = get_validators(self.filename, self.observatory)
         self.all_column_names = [ val.name for val in self.simple_validators if val.info.keytype == 'C' ]
         self.all_simple_names = [ val.name for val in self.simple_validators if val.info.keytype != 'C' ]
         self.mode_columns = self.get_mode_column_names()
@@ -517,7 +471,7 @@ class ReferenceCertifier(Certifier):
         """Certify `self.filename`,  either reporting using log.error() or raising
         ValidationError exceptions.
         """
-        with log.augment_exception("Error loading", exception_class=InvalidFormatError):
+        with log.augment_exception("Error loading", self.format_name, exception_class=InvalidFormatError):
             self.header = self.load()
         with log.augment_exception("Error locating constraints for", self.format_name, exception_class=TypeSetupError):
             self.complex_init()
@@ -535,20 +489,7 @@ class ReferenceCertifier(Certifier):
                 
     def load(self):
         """Load and parse header from self.filename"""
-        header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
-        if self.context:
-            r = self.get_corresponding_rmap()
-            if hasattr(r, "reference_to_dataset"):
-                # dataset_to_reference = utils.invert_dict(r.reference_to_dataset)
-                for key, val in header.items():
-                    try:
-                        header[r.reference_to_dataset[key]] = header[key]
-                    except KeyError:
-                        continue
-        instr = utils.header_to_instrument(header)
-        for key in crds.INSTRUMENT_KEYWORDS:
-            header[key] = instr
-        return header
+        return data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
 
     def dump_provenance(self):
         """Dump out provenance keywords for informational purposes."""
@@ -557,7 +498,7 @@ class ReferenceCertifier(Certifier):
             self.all_simple_names +   # what's defined in .tpn's, maybe not matched
             self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
         unseen = self._dump_provenance_core(dump_keys)
-        log.verbose("Potential provenance keywords:", repr(dump_keys), verbosity=80)
+        log.verbose("Potential provenance keywords:", repr(dump_keys), verbosity=60)
         warn_keys = self.provenance_keys
         for key in sorted(unseen):
             if key in warn_keys:
@@ -590,6 +531,20 @@ class ReferenceCertifier(Certifier):
             return False
         return True
 
+    def get_rmap_parkeys(self):
+        """Determine required parkeys in reference path `refname` according to pipeline
+        mapping `context`.
+        """
+        if self.context is None:
+            return []
+        try:
+            pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
+            instrument, filekind = pmap.locate.get_file_properties(self.filename)
+            return pmap.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
+        except Exception as exc:
+            log.verbose_warning("Failed retrieving required parkeys:", str(exc))
+            return []
+
     def get_mode_column_names(self):
         """Return any column names of `self` defined to be mode columns by the corresponding rmap in `self.context`.
         
@@ -602,7 +557,7 @@ class ReferenceCertifier(Certifier):
         mode_columns = []
         with self.error_on_exception("Error finding unique row keys for", repr(self.basename)):
             instrument, filekind = utils.get_file_properties(self.observatory, self.filename)
-            mode_columns = self.locator.get_row_keys(instrument, filekind)
+            mode_columns = utils.get_locator_module(self.observatory).get_row_keys(instrument, filekind)
             if mode_columns:
                 log.info("Table unique row parameters defined as", repr(mode_columns))
             else:
@@ -956,7 +911,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     original_name:          browser-side name of file if any, files 
     """
     try:
-        old_flag = log.set_exception_trap(trap_exceptions)    #  XXX non-reentrant code,  no threading
+        old_flag = log.set_exception_trap(trap_exceptions)    #  non-reentrant code,  no threading
         
         if original_name is None:
             original_name = filename
@@ -1126,12 +1081,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
         assert (self.args.comparison_reference is None) or not config.is_mapping_spec(self.args.comparison_reference), \
             "Specified --comparison-reference file " + repr(self.args.comparison_reference) + " is not a reference."
             
-        if self.args.comparison_context and self.args.sync_files:
-            resolved_context = self.resolve_context(self.args.comparison_context)
-            self.sync_files([resolved_context])
-        if self.args.comparison_reference and self.args.sync_files:
-            self.sync_files([self.args.comparison_reference])
-            
         if not self.args.dont_recurse_mappings:
             all_files = self.mapping_closure(self.files)
         else:
@@ -1150,6 +1099,12 @@ For more information on the checks being performed,  use --verbose or --verbosit
         elif self.args.comparison_context in [None, "none", "None", "NONE"]:
             log.info("No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.")
             self.args.comparison_context = None
+            
+        if self.args.comparison_context and self.args.sync_files:
+            resolved_context = self.resolve_context(self.args.comparison_context)
+            self.sync_files([resolved_context])
+        if self.args.comparison_reference and self.args.sync_files:
+            self.sync_files([self.args.comparison_reference])
             
         certify_files(sorted(all_files), 
                       context=self.resolve_context(self.args.comparison_context),

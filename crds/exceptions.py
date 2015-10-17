@@ -6,7 +6,7 @@ from __future__ import absolute_import
 class CrdsError(Exception):
     """Baseclass for all client exceptions."""
     def __init__(self, *args, **keys):
-        super(CrdsError, self).__init__(" ".join(str(arg) for arg in args), **keys)
+        return super(CrdsError, self).__init__(" ".join(str(arg) for arg in args), **keys)
 
     def __repr__(self):
         return self.__class__.__name__ + "(" + repr(str(self)) + ")"

@@ -17,7 +17,6 @@ from collections import Counter
 
 from argparse import RawTextHelpFormatter
 
-import crds
 from crds import rmap, log, data_file, heavy_client, config, utils, exceptions
 from crds.client import api
 from crds import python23
@@ -185,14 +184,8 @@ class Script(object):
         
         obs = os.environ.get("CRDS_OBSERVATORY", None)
         if obs:
-            return self.set_server(obs.lower())
-
-        url = os.environ.get("CRDS_SERVER_URL", None)
-        if url is not None:
-            for obs in crds.ALL_OBSERVATORIES:
-                if obs in url.lower():
-                    return self.set_server(obs)
-
+            self.set_server(obs.lower())
+        
         files = []
         if hasattr(self, "contexts"):
             files += self.contexts

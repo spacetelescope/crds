@@ -48,7 +48,7 @@ class TypeSpec(dict):
         """
         header = utils.Struct(header)
         assert "suffix" in header
-        assert "text_descr" in header or header.filetype == "all"
+        assert "text_descr" in header
         if "tpn" not in header:
             header.tpn = header.instrument.lower() + "_" + header.suffix + ".tpn"
         if "ld_tpn" not in header:
@@ -57,8 +57,6 @@ class TypeSpec(dict):
             header.file_ext = ".fits"
         if "unique_rowkeys" not in header:
             header.unique_rowkeys = None
-        if "extra_keys" not in header:
-            header.extra_keys = None
         super(TypeSpec, self).__init__(header.items())
 
     @classmethod
@@ -184,33 +182,10 @@ class TypeParameters(object):
     def mapping_validator_key(self, mapping):
         """Return (_ld.tpn name, ) corresponding to CRDS ReferenceMapping `mapping` object."""
         mapping = rmap.asmapping(mapping)
-        return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"], mapping.filename)
-        # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")   # now has multiple values
+        return (self.unified_defs[mapping.instrument][mapping.filekind]["ld_tpn"],)
+        # return reference_name_to_validator_key(mapping.filepath, field="ld_tpn")
 
-    @utils.cached
     def reference_name_to_validator_key(self, filename, field="tpn"):
-        """Return the sequence of validator keys associated with `filename`.   A validator key
-        is nominally a .tpn filename and can vary by observatory, instrument, and type as well
-        as by functions on the header of `filename`.
-        """
-        header = data_file.get_header(filename)
-        observatory = utils.header_to_observatory(header)
-        instrument, filekind = utils.get_file_properties(observatory, filename)
-        results = []
-        def append_tpn_level(results, instrument, filekind):
-            """Append the validator key for associated with one level of the `instrument`
-            and `filekind` to `results`.
-            """
-            try:
-                results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind))
-            except Exception as exc:
-                log.verbose_warning("Can't find TPN key for", (filename, instrument, filekind), ":", str(exc), verbosity=75)
-        append_tpn_level(results, "all", "all")
-        append_tpn_level(results, instrument, "all")
-        append_tpn_level(results, instrument, filekind)
-        return results
-
-    def _reference_name_to_validator_key(self, filename, field, header, observatory, instrument, filekind):
         """Given a reference filename `fitsname`,  return a dictionary key
         suitable for caching the reference type's Validator.
         
@@ -222,19 +197,19 @@ class TypeParameters(object):
         
         Returns (.tpn filename,)
         """
-        try:
-            tpnfile = self.unified_defs[instrument][filekind][field]
-            if isinstance(tpnfile, python23.string_types):
-                key = (tpnfile, filename)  # tpn filename
-            else: # it's a list of conditional tpns
-                for (condition, tpn) in tpnfile:
-                    if eval(condition, header):
-                        key = (tpn, filename)  # tpn filename
-                        break
-                else:
-                    assert False
-        except (AssertionError, KeyError):
-            raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
+        header = data_file.get_header(filename)
+        observatory = utils.header_to_observatory(header)
+        instrument, filekind = utils.get_file_properties(observatory, filename)
+        tpnfile = self.unified_defs[instrument][filekind][field]
+        if isinstance(tpnfile, python23.string_types):
+            key = (tpnfile,)  # tpn filename
+        else: # it's a list of conditional tpns
+            for (condition, tpn) in tpnfile:
+                if eval(condition, header):
+                    key = (tpn,)  # tpn filename
+                    break
+            else:
+                raise ValueError("No TPN match for reference='{}' instrument='{}' reftype='{}'".format(
                     os.path.basename(filename), instrument, filekind))
         log.verbose("Validator key for", field, "for", repr(filename), instrument, filekind, "=", key, verbosity=60)
         return key

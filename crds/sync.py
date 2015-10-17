@@ -426,12 +426,11 @@ class SyncScript(cmdline.ContextsScript):
         bytes_so_far = 0
         total_bytes = api.get_total_bytes(infos)
         for nth_file, file in enumerate(files):
-            bfile = os.path.basename(file)
-            if infos[bfile] == "NOT FOUND":
-                log.error("CRDS has no record of file", repr(bfile))
+            if infos[file] == "NOT FOUND":
+                log.error("CRDS has no record of file", repr(file))
             else:
-                self.verify_file(file, infos[bfile], bytes_so_far, total_bytes, nth_file, len(files))
-                bytes_so_far += int(infos[bfile]["size"])
+                self.verify_file(file, infos[file], bytes_so_far, total_bytes, nth_file, len(files))
+                bytes_so_far += int(infos[file]["size"])
         
     def verify_file(self, file, info, bytes_so_far, total_bytes, nth_file, total_files):
         """Check one `file` against the provided CRDS database `info` dictionary."""
