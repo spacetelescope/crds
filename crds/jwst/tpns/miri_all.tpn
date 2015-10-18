@@ -1,0 +1,16 @@
+# Template file used by certify to check reference files
+# Some fields may be abbreviated to their first character:
+#
+# keytype = (Header|Group|Column)
+# datatype = (Integer|Real|Logical|Double|Character)
+# presence = (Optional|Required)
+#
+# NAME	KEYTYPE  DATATYPE	PRESENCE	VALUES
+#----------------------------------------------------------
+META.INSTRUMENT.NAME        H	C	R                   MIRI
+META.INSTRUMENT.DETECTOR	H	C	R                   MIRIFULONG,MIRIFUSHORT,MIRIMAGE
+META.INSTRUMENT.FILTER      H   C   R
+META.EXPOSURE.READPATT      H   C   R                   SLOW,FAST,FASTGRPAVG,FASTINTAVG,ANY
+META.INSTRUMENT.CHANNEL     H   C   O                   1,2,3,4,12,34,LONG,SHORT
+META.INSTRUMENT.BAND        H   C   O                   SHORT,MEDIUM,LONG,SHORT-MEDIUM,LONG-SHORT,MEDIUM-LONG,N/A
+META.SUBARRAY.NAME          H   C   O                   FULL,GENERIC,MASK1140,MASK1550,MASK1065,MASKLYOT,BRIGHTSKY,SUB256,SUB128,SUB64,SLITLESSPRISM

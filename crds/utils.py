@@ -451,7 +451,7 @@ def is_writable(filepath, no_exist=True):
     If `filepath` doesn't exist,  return `no_exist` if the directory is writable.
     """
     if not os.path.exists(filepath):   # If file doesn't exist,  make sure directory is writable.
-        return no_exist and is_writable(os.path.dirname(filepath))
+        return no_exist and len(os.path.dirname(filepath)) and is_writable(os.path.dirname(filepath))
     stats = os.stat(filepath)
     return bool((stats.st_mode & stat.S_IWUSR) and (stats.st_uid == os.geteuid()) or 
                 (stats.st_mode & stat.S_IWGRP) and (stats.st_gid in os.getgroups()) or
@@ -805,6 +805,25 @@ def get_reference_paths(observatory):
     pkg = get_observatory_package(observatory)
     locate = get_locator_module(observatory)
     return sorted({locate.locate_dir(instrument) for instrument in pkg.INSTRUMENTS})
+
+
+def fix_json_strings(source_json):
+    """Squash unicode in nested json object `source_json`."""
+    if sys.version_info >= (3, 0, 0):
+        return source_json
+    if isinstance(source_json, dict):
+        result = {}
+        for key, val in source_json.items():
+            result[str(key)] = fix_json_strings(val)
+    elif isinstance(source_json, (list, tuple)):
+        result = []
+        for val in source_json:
+            result.append(fix_json_strings(val))
+    elif isinstance(source_json, string_types):
+        result = str(source_json)
+    else:
+        result = source_json
+    return result
 
 # These functions should actually be general,  working on both references and
 # dataset files.
