@@ -261,7 +261,7 @@ def certify_jwst_invalid():
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
     CRDS  : INFO     FITS file 'niriss_ref_photom_bad.fits' conforms to FITS standards.
-    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading 'data/niriss_ref_photom_bad.fits' : 'FOO' is not valid in keyword 'DETECTOR'
+    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_bad.fits' ::  Validation error : Error loading : JWST Data Model (jwst_lib.models) : 'FOO' is not valid in keyword 'DETECTOR'
     CRDS  : INFO     ########################################
     CRDS  : INFO     1 errors
     CRDS  : INFO     0 warnings
