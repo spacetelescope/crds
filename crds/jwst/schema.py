@@ -92,9 +92,10 @@ def _schema_to_flat(schema):
 def _x_schema_to_flat(schema):
     """Recursively flatten `schema` without addressing case issues."""
     results = {}
-    if "oneOf" in schema:   # punt on hybrid types for now, multiple "type" members
-        log.verbose_warning("Schema item has unhandled oneOf type.", verbosity=80)
-        return None
+    for feature in ["oneOf","allOf","$ref"]:
+        if feature in schema:
+            log.verbose_warning("Schema item has unhandled feature {}.", verbosity=80)
+            return None
     if schema["type"] ==  "object":
         subprops = schema["properties"]
         for prop in subprops:

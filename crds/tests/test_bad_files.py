@@ -205,10 +205,10 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : ERROR    Failed loading source 'data/jw_nrcb1_uncal_sloper_image.fits' from 'FileHeaderGenerator' : '2013-04-03T16:52:19.612000' is not valid in keyword 'EXPSTART'
+    CRDS  : ERROR    Failed loading source 'data/jw_nrcb1_uncal_sloper_image.fits' from 'FileHeaderGenerator' : JWST Data Model (jwst_lib.models) : '2013-04-03T16:52:19.612000' is not valid in keyword 'EXPSTART'
     CRDS  : INFO     2 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     3 infos
+    CRDS  : INFO     2 infos
     2
 
     >>> test_config.cleanup(old_state)
