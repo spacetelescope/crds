@@ -203,18 +203,16 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     >>> config.ALLOW_BAD_RULES.reset()
     
     >>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")()   # doctest: +ELLIPSIS
-    CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '...'
+    CRDS  : INFO     Using CACHED CRDS reference assignment rules last updated on '2015-10-18 08:50:14.777877'
     CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/jw_nrcb1_uncal_sloper_image.fits
-    CRDS  : ERROR    Failed processing 'data/jw_nrcb1_uncal_sloper_image.fits' : Failed computing bestrefs for data 'data/jw_nrcb1_uncal_sloper_image.fits' with respect to 'jwst_0017.pmap' : Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
-    <BLANKLINE>
+    CRDS  : ERROR    Failed loading source 'data/jw_nrcb1_uncal_sloper_image.fits' from 'FileHeaderGenerator' : '2013-04-03T16:52:19.612000' is not valid in keyword 'EXPSTART'
     CRDS  : INFO     2 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     4 infos
+    CRDS  : INFO     3 infos
     2
-    
+
     >>> test_config.cleanup(old_state)
     """
 
