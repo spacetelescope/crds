@@ -537,8 +537,10 @@ class ReferenceCertifier(Certifier):
         """Load and parse header from self.filename"""
         header = data_file.get_header(self.filename, observatory=self.observatory, original_name=self.original_name)
         if self.context:
-            r = self.get_corresponding_rmap()
-            if hasattr(r, "reference_to_dataset"):
+            r = None
+            with log.verbose_warning_on_exception("No corresponding rmap"):
+                r = self.get_corresponding_rmap()
+            if r and hasattr(r, "reference_to_dataset"):
                 # dataset_to_reference = utils.invert_dict(r.reference_to_dataset)
                 for key, val in header.items():
                     try:
