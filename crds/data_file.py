@@ -212,13 +212,17 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
 # A clearer name
 get_unconditioned_header = get_header
 
+# ----------------------------------------------------------------------------------------------
+
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
     from jwst_lib import models
-    with models.open(filepath) as d_model:
-        flat_dict = d_model.to_flat_dict(include_arrays=False)
+    with log.augment_exception("JWST Data Model (jwst_lib.models)"):
+        with models.open(filepath) as d_model:
+            flat_dict = d_model.to_flat_dict(include_arrays=False)
     d_header = sanitize_data_model_dict(flat_dict)
-    header = reduce_header(filepath, d_header, needed_keys)
+    d_header = reduce_header(filepath, d_header, needed_keys)
+    header = cross_strap_header(d_header)
     return header
 
 def get_json_header(filepath, needed_keys=()):
@@ -226,7 +230,9 @@ def get_json_header(filepath, needed_keys=()):
     with open(filepath) as pfile:
         header = json.load(pfile)
         header = to_simple_types(header)
-    return reduce_header(filepath, header, needed_keys)
+    header = reduce_header(filepath, header, needed_keys)
+    header = cross_strap_header(header)
+    return header
 
 def get_yaml_header(filepath, needed_keys=()):
     """Return the flattened header associated with a YAML file."""
@@ -234,16 +240,20 @@ def get_yaml_header(filepath, needed_keys=()):
     with open(filepath) as pfile:
         header = yaml.load(pfile)
         header = to_simple_types(header)
-    return reduce_header(filepath, header, needed_keys)
-
-# ----------------------------------------------------------------------------------------------
+    header = reduce_header(filepath, header, needed_keys)
+    header = cross_strap_header(header)
+    return header
 
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
     import pyasdf
     with pyasdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
-    return reduce_header(filepath, header, needed_keys)
+    header = reduce_header(filepath, header, needed_keys)
+    header = cross_strap_header(header)
+    return header
+
+# ----------------------------------------------------------------------------------------------
 
 def to_simple_types(tree):
     """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
@@ -267,6 +277,19 @@ def simple_type(value):
     else:
         rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
     return rval
+
+def cross_strap_header(header):
+    """Foreach DM keyword in header,  add the corresponding FITS keyword,  and vice versa."""
+    from crds.jwst import schema
+    crossed = dict(header)
+    for key, val in header.items():
+        fitskey = schema.dm_to_fits(key)
+        if fitskey is not None and fitskey not in crossed:
+            crossed[fitskey] = val
+        dmkey = schema.fits_to_dm(key)
+        if dmkey is not None and dmkey not in crossed:
+            crossed[dmkey] = val
+    return crossed
 
 # ----------------------------------------------------------------------------------------------
 

@@ -161,8 +161,9 @@ def hdus_consistent(a_hdulist, b_hdulist):
         if a_hdulist[index].header.get('XTENSION') != \
            b_hdulist[index].header.get('XTENSION'):
             raise RuntimeError('Extension %d different: FITS A = %s, FITS B = %s' % \
-                               (a_hdulist[index].header.get('XTENSION'),
-                                b_hdulist[index].header.get('XTENSION')))
+                                   (index, 
+                                    a_hdulist[index].header.get('XTENSION'),
+                                    b_hdulist[index].header.get('XTENSION')))
 
     return True
 

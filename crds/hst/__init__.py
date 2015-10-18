@@ -59,6 +59,12 @@ TYPE_FIXERS = {
 
 PROVENANCE_KEYWORDS = ("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)
 
+# When loading headers,  make sure each keyword in a tuple is represented with
+# the same value enabling any form to be used.
+CROSS_STRAPPED_KEYWORDS = [
+    ]
+
+
 def test():
     """Run hst package doctests."""
     from crds import hst

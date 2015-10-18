@@ -13,6 +13,9 @@ import os
 import sys
 import re
 from collections import defaultdict
+import tempfile
+import json
+import pprint
 
 import crds
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
@@ -24,7 +27,6 @@ from astropy.io.fits import FITSDiff
 __all__ = [
     "DiffScript",
     "difference",
-    "Difference",
     "get_affected",
     "get_added_references",
     "get_deleted_references",
@@ -79,7 +81,7 @@ def difference(observatory, old_file, new_file, *args, **keys):
         "fits" : FitsDifferencer,
         "text" : TextDifferencer,
         "yaml" : TextDifferencer,
-        "json" : TextDifferencer,
+        "json" : JsonDifferencer,
         }
     differ_class = differs.get(filetype, None)
     if differ_class is None:
@@ -110,7 +112,7 @@ class Differencer(object):
 
     def __init__(self, observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                  include_header_diffs=False, hide_boring_diffs=False, recurse_added_deleted=False,
-                 lowest_mapping_only=False, remove_paths=False):
+                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False):
         self.observatory = observatory
         self.old_file = old_file
         self.new_file = new_file
@@ -122,6 +124,15 @@ class Differencer(object):
         self.recurse_added_deleted = recurse_added_deleted
         self.lowest_mapping_only = lowest_mapping_only
         self.remove_paths = remove_paths
+        self.squash_tuples = squash_tuples
+
+    def locate_file(self, filename):
+        """Return the full path for `filename` implementing default CRDS file cache
+        location behavior,  and verifying that the resulting path is safe.
+        """
+        path = config.locate_file(filename, self.observatory)
+        config.check_path(path)  # check_path returns abspath,  bad for listsings.
+        return path
 
 # ==============================================================================================================
     
@@ -159,7 +170,10 @@ class MappingDifferencer(Differencer):
                 log.write("="*80)
             diff2 = simplify_to_lowest_mapping(diff) if self.lowest_mapping_only else diff
             diff2 = remove_diff_paths(diff2) if self.remove_paths else diff2
-            log.write(diff2)
+            if not self.squash_tuples:
+                log.write(diff2)
+            else:
+                log.write(self.squash_diff_tuples(diff2))
             if self.primitive_diffs and "header" not in diff_action(diff):
                 # XXXX fragile, coordinate with selector.py and rmap.py
                 if "replaced" in diff[-1]:
@@ -177,6 +191,9 @@ class MappingDifferencer(Differencer):
             mapping_check_diffs_core(differences)
         return 1 if differences else 0
 
+    def squash_diff_tuples(self, diff2):
+        return " -- ".join([" ".join(diff) if isinstance(diff, tuple) else diff for diff in diff2])
+    
     def mapping_diffs(self):
         """Return the logical differences between CRDS mappings named `old_file` 
         and `new_file`.
@@ -187,8 +204,8 @@ class MappingDifferencer(Differencer):
         mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
         
         """
-        old_map = rmap.fetch_mapping(self.old_file, ignore_checksum=True)
-        new_map = rmap.fetch_mapping(self.new_file, ignore_checksum=True)
+        old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True)
+        new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True)
         differences = old_map.difference(new_map, include_header_diffs=self.include_header_diffs,
                                          recurse_added_deleted=self.recurse_added_deleted)
         return differences
@@ -232,8 +249,8 @@ class FitsDifferencer(Differencer):
         0 no differences
         1 some differences
         """
-        loc_old_file = rmap.locate_file(self.old_file, self.observatory)
-        loc_new_file = rmap.locate_file(self.new_file, self.observatory)
+        loc_old_file = self.locate_file(self.old_file)
+        loc_new_file = self.locate_file(self.new_file)
         
         # Do the standard diff.
         fdiff = FITSDiff(loc_old_file, loc_new_file)
@@ -253,22 +270,76 @@ class TextDifferencer(Differencer):
     """Run UNIX diff on two text files named `old_file` and `new_file`."""
 
     def __init__(self, *args, **keys):
+        """Initialize TextDifferencer validating identical extensions for both files."""
         super(TextDifferencer, self).__init__(*args, **keys)
         assert os.path.splitext(self.old_file)[-1] == os.path.splitext(self.new_file)[-1], \
             "Files " + repr(self.old_file) + " and " + repr(self.new_file) + " are of different types."
 
+    def diff(self):
+        """Returns the diff status and combined output from stdout and stderr of the diff command."""
+        loc_old_file = self.locate_file(self.old_file)
+        loc_new_file = self.locate_file(self.new_file)
+        status, out_err = pysh.status_out_err("diff -b -c ${loc_old_file} ${loc_new_file}", raise_on_error=False)   # secure
+        return status, out_err
+
     def difference(self):
         """Run UNIX diff on two text files named `old_file` and `new_file`.
+
+        Returns the output status and 
         
         Returns:
         0 no differences
         1 some differences
         2 errors
         """
-        _loc_old_file = config.check_path(rmap.locate_file(self.old_file, self.observatory))
-        _loc_new_file = config.check_path(rmap.locate_file(self.new_file, self.observatory))
-        return pysh.sh("diff -b -c ${_loc_old_file} ${_loc_new_file}", raise_on_error=False)   # secure
+        status, out_err = self.diff()
+        print(out_err, end="")
+        return status
+
+# ==============================================================================================================
     
+class JsonDifferencer(TextDifferencer):
+    """Run UNIX diff on two text files named `old_file` and `new_file`."""
+
+    def __init__(self, *args, **keys):
+        """Initialize JsonDifferencer capturing optional keyword parameter pretty_print=True."""
+        super(JsonDifferencer, self).__init__(*args, **keys)
+        self.pretty_print = keys.pop("pretty_print", True)
+        self.remove_files = []
+        
+    def locate_file(self, source_name):
+        """Create a temporary file based on source filename source name IFF self.pretty_print."""
+        if not self.pretty_print:
+            return super(JsonDifferencer, self).locate_file(source_name)
+        else:
+            source_path = config.check_path(source_name)
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
+            with open(source_path) as source_file:
+                source_json = json.load(source_file)
+            source_pp = pprint.pformat(utils.fix_json_strings(source_json))
+            temp_file.write(source_pp)
+        self.remove_files += [temp_file.name]
+        return temp_file.name
+
+    def difference(self):
+        """Run UNIX diff on two json files named `old_file` and `new_file`.
+        If self.pretty_print is True,  reformat the files as temporaries
+        
+        Returns:
+        0 no differences
+        1 some differences
+        2 errors
+        """
+        result, out_err = super(JsonDifferencer, self).diff()
+        out_err = out_err.replace(self.remove_files[0], self.old_file)
+        out_err = out_err.replace(self.remove_files[1], self.new_file)
+        print(out_err, end="")
+        if self.pretty_print:
+            for fname in self.remove_files:
+                with log.verbose_warning_on_exception("Failed removing", repr(fname)):
+                    os.remove(fname)
+        return result
+
 # ============================================================================
         
 def simplify_to_lowest_mapping(diff):
@@ -676,6 +747,14 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
          0 no differences
          1 some differences
          2 errors or warnings
+
+Differencing two sets of rules with simplified output:
+
+    % python -m crds.diff jwst_0080.pmap jwst_0081.pmap --brief --squash-tuples
+    jwst_miri_regions_0004.rmap jwst_miri_regions_0005.rmap -- MIRIFUSHORT 12 SHORT N/A -- added Match rule for jwst_miri_regions_0006.fits
+    jwst_miri_0048.imap jwst_miri_0049.imap -- regions -- replaced jwst_miri_regions_0004.rmap with jwst_miri_regions_0005.rmap
+    jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
+
     """
     def __init__(self, *args, **keys):
         super(DiffScript, self).__init__(*args, **keys)
@@ -715,6 +794,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
             help="Only include the name of the leaf mapping being diffed,  not all anscestor mappings.")
         self.add_argument("-E", "--remove-paths", dest="remove_paths", action="store_true",
             help="Remove path names from files in output.")
+        self.add_argument("-Q", "--squash-tuples", dest="squash_tuples", action="store_true",
+            help="Simplify formatting of difference results (remove tuple notations)")
         self.add_argument("-F", "--brief", dest="brief", action="store_true",
             help="Switch alias for --lowest-mapping-only --remove-paths --hide-boring-diffs --include-headers")
         
@@ -723,8 +804,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
     def main(self):
         """Perform the differencing."""
         self.args.files = [ self.args.old_file, self.args.new_file ]   # for defining self.observatory
-        self.old_file = self.resolve_context(self.locate_file(self.args.old_file))
-        self.new_file = self.resolve_context(self.locate_file(self.args.new_file))
+        self.old_file = self.locate_file(self.args.old_file)
+        self.new_file = self.locate_file(self.args.new_file)
         if self.args.brief:
             self.args.lowest_mapping_only = True
             self.args.remove_paths = True
@@ -765,7 +846,8 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
                                 hide_boring_diffs=self.args.hide_boring_diffs,
                                 recurse_added_deleted=self.args.recurse_added_deleted,
                                 lowest_mapping_only=self.args.lowest_mapping_only,
-                                remove_paths=self.args.remove_paths)
+                                remove_paths=self.args.remove_paths,
+                                squash_tuples=self.args.squash_tuples)
         if log.errors() or log.warnings():
             return 2
         else:

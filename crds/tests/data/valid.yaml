@@ -6,3 +6,4 @@ meta:
     type: flat
     useafter: Mar 21 2001 12:00:00
     pedigree: dummy
+    readpatt: any

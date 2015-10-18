@@ -266,9 +266,15 @@ def err(command, **keys):
     return _captured_output(command, **keys).err
 
 def out_err(command, **keys):
-    """Run a subprogram and return it's interleaved stdout and stderr."""
+    """Run a subprogram and return it's combined/interleaved stdout and stderr."""
     keys["independent_error"] = False
     return _captured_output(command, **keys).out
+
+def status_out_err(command, **keys):
+    """Run a subprogram and return it's status and combined/interleaved stdout and stderr."""
+    keys["independent_error"] = False
+    capture = _captured_output(command, **keys)
+    return capture.status, capture.out
 
 def words(command, **keys):
     """Return the standard output of `command` split into a sequence
