@@ -7,8 +7,11 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_camera.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
-    'sha1sum' : '4eebd8c285112802e361eea1c7eb8db3fe47b23e',
+    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '7df408f2a50c0ff05a22a9a6e130751de53464c2',
     'suffix' : 'camera',
     'text_descr' : 'Camera Model',
 }
