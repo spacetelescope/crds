@@ -267,7 +267,9 @@ class Selector(object):
         """
         return {
                 "parameters" : self.todict_parameters(),
-                "selections" : [ (key, val.todict()) if isinstance(val, Selector) else (key, val) for key,val in self._raw_selections ]
+                "selections" : [ (self.fix_singleton_match_case(key), val.todict()) if isinstance(val, Selector) 
+                                 else (self.fix_singleton_match_case(key), val) 
+                                 for key,val in self._raw_selections ]
                 }
 
     def todict_flat(self):
@@ -313,19 +315,23 @@ class Selector(object):
                 nested = val.todict_flat()
                 subpars = nested["parameters"]
                 # XXX hack!  convert or-globs to comma separated strings for web rendering
-                key = tuple([", ".join(str(parval).split("|")) for parval in key])
-                flat.extend([key + row for row in nested["selections"]])
+                key = tuple([", ".join(str(parval).split("|")) for parval in self.fix_singleton_match_case(key)])
+                flat.extend([self.fix_singleton_match_case(key) + row for row in nested["selections"]])
             else:
                 subpars = ["REFERENCE"]
-                if isinstance(key, python23.string_types):  # Fix non-tuple keys
-                    key = (key,)
-                flat.extend([key + (val,)])
+                flat.extend([self.fix_singleton_match_case(key) + (val,)])
         pars = list(self.todict_parameters()) + subpars
         return {
             "parameters" : pars,
             "selections" : flat,
             }
-        
+
+    def fix_singleton_match_case(self, case):
+        """Change special match cases with singleton parameters which remove the tuple notation
+        into standard tuple parameters.
+        """
+        return (case,) if isinstance(case, (python23.string_types, int, float, bool)) else case
+
     def delete_match_param(self, parameter):
         """Delete the value of `parameter` name in every match case,  recursively
         if `parameter is not in self._parameters.
