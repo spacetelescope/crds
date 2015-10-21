@@ -1,17 +1,18 @@
 header = {
     'derived_from' : 'Hand made 2015-09-02 16:35:00',
     'file_ext' : '.fits',
-    'filekind' : 'CAMERA',
+    'filekind' : 'camera',
     'filetype' : 'CAMERA',
     'instrument' : 'NIRSPEC',
     'mapping' : 'REFERENCE',
-    'name' : 'jwst_nirspec_camera.rmap',
+    'name' : 'jwst_nirspec_camera_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',),),
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER'),),
     'reference_to_dataset' : {
-        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'FILTER' : 'META.INSTRUMENT.FILTER',
     },
-    'sha1sum' : '7df408f2a50c0ff05a22a9a6e130751de53464c2',
+    'sha1sum' : 'aa7adc729f14e27f9d06f87295a5395635bd9268',
     'suffix' : 'camera',
     'text_descr' : 'Camera Model',
 }
