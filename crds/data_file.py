@@ -259,6 +259,8 @@ def to_simple_types(tree):
     """Convert an ASDF tree structure to a flat dictionary of simple types with dotted path tree keys."""
     result = dict()
     for key in tree:
+        if not isinstance(key, python23.string_types):  # skip non-string keys
+            continue
         value = tree[key]
         if isinstance(value, (type(tree), dict)):
             nested = to_simple_types(value)
