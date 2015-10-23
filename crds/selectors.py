@@ -297,15 +297,15 @@ class Selector(object):
                         
         Since the selector is already defined,  also test todict():
         
-        >>> pp(sel.todict())      
+        >>> pp(sel.todict())
         {'parameters': ('DETECTOR',),
          'selections': [(('FUV',),
                          {'parameters': ('USEAFTER',),
-                          'selections': [('1996-10-01 00:00:00',
+                          'selections': [(('1996-10-01 00:00:00',),
                                           's7g1700gl_dead.fits')]}),
                         (('NUV',),
                          {'parameters': ('USEAFTER',),
-                          'selections': [('1996-10-01 00:00:00',
+                          'selections': [(('1996-10-01 00:00:00',),
                                           's7g1700ql_dead.fits')]})]}
         """
         flat = []
