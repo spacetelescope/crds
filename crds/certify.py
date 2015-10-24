@@ -540,13 +540,8 @@ class ReferenceCertifier(Certifier):
             r = None
             with log.verbose_warning_on_exception("No corresponding rmap"):
                 r = self.get_corresponding_rmap()
-            if r and hasattr(r, "reference_to_dataset"):
-                # dataset_to_reference = utils.invert_dict(r.reference_to_dataset)
-                for key, val in header.items():
-                    try:
-                        header[r.reference_to_dataset[key]] = header[key]
-                    except KeyError:
-                        continue
+            if r:
+                header = r.locate.reference_keys_to_dataset_keys(r, header)
         instr = utils.header_to_instrument(header)
         for key in crds.INSTRUMENT_KEYWORDS:
             header[key] = instr

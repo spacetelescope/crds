@@ -225,11 +225,20 @@ def reference_keys_to_dataset_keys(rmapping, header):
     header = dict(header)
     try:
         translations = rmapping.reference_to_dataset
-        for key in translations:
-            if key in header:
-                header[translations[key]] = header[key]
     except AttributeError:
         pass
+    else:
+        # Add replacements for translations *if* the existing untranslated value
+        # is poor and the translated value is better defined.   This is to do
+        # translations w/o replacing valid/concrete DM values with something 
+        # like guessed values of "UNDEFINED" or "N/A".
+        for rkey in translations:
+            if rkey in header:
+                dkey = translations[rkey]
+                dval = header.get(translations[rkey], None)
+                rval = header[rkey]
+                if dval in [None, "N/A", "UNDEFINED"] and rval not in [None, "UNDEFINED"]:
+                    header[dkey] = rval
     return header
 
 # =============================================================================

@@ -1363,12 +1363,11 @@ class ReferenceMapping(Mapping):
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
         log.verbose("Validating", repr(self.basename))
-        if  "reference_to_dataset" in self.header:
-            for case in self.parkey:
-                for par in case:
-                    if par.upper() not in self.reference_to_dataset.values():
-                        raise crexc.InconsistentParkeyError("Inconsistent parkey and reference_to_dataset header items:", 
-                                                      repr(par), "in", repr(self.reference_to_dataset))
+        if "reference_to_dataset" in self.header:
+            parkeys = self.get_required_parkeys()
+            for reference, dataset in self.reference_to_dataset.items():
+                assert dataset.upper() in parkeys, \
+                    "reference_to_dataset dataset keyword not in parkey keywords."
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
 
@@ -1481,16 +1480,17 @@ class ReferenceMapping(Mapping):
         return new
 
     def get_reference_parkeys(self):
-        """Return parkey names from the reference file perspective."""
+        """Return parkey names from the reference file perspective,  this can be a superset
+        of the obvious parkey count due to redundant keyword expressions resulting from 
+        reference_to_dataset and mixed filetypes (some translated,  some not.)
+        """
         dataset_parkeys = self.get_required_parkeys()
-        reference_to_dataset = getattr(self, "reference_to_dataset", None)
-        if reference_to_dataset:
-            dataset_to_reference = utils.invert_dict(reference_to_dataset)
-            reference_parkeys = [ dataset_to_reference[key] if key in dataset_to_reference else key 
-                                  for key in dataset_parkeys ]
-            return tuple(reference_parkeys)
-        else:
-            return tuple(dataset_parkeys)
+        if "reference_to_dataset" in self.header:
+            for reference, dataset in self.reference_to_dataset.items():
+                assert dataset in dataset_parkeys, \
+                    "reference_to_dataset dataset keyword not in parkey tuple."
+                dataset_parkeys.append(reference)
+        return tuple(set(dataset_parkeys))
 
     def insert(self, header, value):
         """Given reference file `header` and terminal `value`, insert the value into a copy
