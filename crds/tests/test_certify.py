@@ -65,10 +65,12 @@ def certify_dump_provenance_fits():
     CRDS  : INFO     [0] HISTORY fuv_080509_r_dead.fits renamed to s7g1700gl_dead.fits on Jul 16 2008 
     CRDS  : INFO     [0] PEDIGREE GROUND 16/07/2008 16/07/2010 
     CRDS  : INFO     [0] USEAFTER Oct 01 1996 00:00:00 
+    CRDS  : INFO     TIME-OBS = '00:00:00'
+    CRDS  : INFO     DATE-OBS = '1996-10-01'
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     11 infos
+    CRDS  : INFO     13 infos
     0
     """
 
