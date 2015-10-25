@@ -364,7 +364,7 @@ class TestCertify(CRDSTestCase):
 
     def test_AsdfCertify_valid(self):
         certify.certify_file(
-            self.data("valid.asdf"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
+            self.data("valid.asdf"), observatory="jwst",context="jwst_0082.pmap", trap_exceptions=False)
             
     def test_AsdfCertify_invalid(self):
         assert_raises(certify.InvalidFormatError, certify.certify_file,
