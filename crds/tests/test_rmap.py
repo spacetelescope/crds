@@ -201,7 +201,7 @@ def dt_rmap_get_reference_parkeys():
     >>> r.parkey
     (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL', 'META.INSTRUMENT.BAND', 'META.SUBARRAY.NAME'),)
     >>> r.get_reference_parkeys()
-    ('DETECTOR', 'CHANNEL', 'BAND', 'SUBARRAY', 'META.EXPOSURE.TYPE')
+    ('META.INSTRUMENT.BAND', 'META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.EXPOSURE.TYPE', 'BAND', 'META.INSTRUMENT.CHANNEL', 'SUBARRAY', 'DETECTOR', 'CHANNEL')
     >>> test_config.cleanup(old_state)
     """
 
