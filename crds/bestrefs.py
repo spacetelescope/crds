@@ -562,14 +562,22 @@ and debug output.
             "Must specify one of: --files, --datasets, --instruments, --all-instruments, --diffs-only and/or --load-pickles."
 
         if self.args.diffs_only:
-            assert self.new_context and self.old_context, "--diffs-only only works for context-to-context bestrefs."
-            self.affected_instruments = diff.get_affected(self.old_context, self.new_context)
-            log.info("Mapping differences from", repr(self.old_context), "-->", repr(self.new_context), "affect:\n", 
+            assert self.new_context and self.old_context, \
+                "--diffs-only only works for context-to-context bestrefs."
+            differ = diff.MappingDifferencer(
+                self.observatory, self.old_context, self.new_context)
+            self.affected_instruments = differ.get_affected()
+            log.info("Mapping differences from", repr(self.old_context), 
+                     "-->", repr(self.new_context), "affect:\n", 
                      log.PP(self.affected_instruments))
             self.instruments = self.affected_instruments.keys()
             if not self.instruments:
                 log.info("No instruments were affected.")
                 return False
+            if (self.args.datasets_since=="auto" and
+                (differ.header_modified() or differ.files_deleted())):
+                log.info("Checking all dates due to header changes or file deletions.")
+                self.args.datasets_since = MIN_DATE
         elif self.args.instruments:
             self.instruments = self.args.instruments
         elif self.args.all_instruments:

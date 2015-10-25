@@ -60,7 +60,7 @@ def get_affected(old_pmap, new_pmap, *args, **keys):
     observatory = keys.pop("observatory", rmap.get_cached_mapping(old_pmap).observatory)
     differ = MappingDifferencer(observatory, old_pmap, new_pmap, *args, **keys)
     return differ.get_affected()
-    
+
 # ==============================================================================================================
     
 def difference(observatory, old_file, new_file, *args, **keys):
@@ -227,6 +227,27 @@ class MappingDifferencer(Differencer):
                         log.verbose("Affected", (instrument, filekind), "based on diff", diff, verbosity=20)
                         instrs[instrument].add(filekind)
         return { key:list(val) for (key, val) in instrs.items() }
+
+    def header_modified(self):
+        """Return true IFF there were changes in an rmap header."""
+        return self._find_diff_str("header")
+
+    def files_deleted(self):
+        """Return True IFF files were deleted in an rmap."""
+        return self._find_diff_str("delete")
+
+    def _find_diff_str(self, diff_str):
+        """Return True IFF `diff_str` is in some rmap diff."""
+        diffs = self.mapping_diffs()
+        diffs = remove_boring(diffs)
+        for diff in diffs:
+            for step in diff:
+                if len(step) == 2 and rmap.is_mapping(step[0]):
+                    if diff_str in diff_action(diff):
+                        log.verbose("Found", repr(diff_str), "diff between", repr(step[0:1]))
+                        return True
+        return False
+        
 
 # ==============================================================================================================
     
