@@ -2,7 +2,7 @@
 #
 # usage:
 #
-# % crds_repair_cache [--all | --last N | --range M:N | --up-to-context <ctx> | --after-context <ctx> | --files <specific files...>] [--readonly-cache] [--check-sha1sum]
+# % crds_repair_cache [--all | --last N | --range M:N | --up-to-context <ctx> | --after-context <ctx> | --files <specific files...>] [--readonly-cache] [--check-sha1sum] [--purge-references]
 #
 # This script is one approach for refreshing a CRDS cache (most likely TEST
 # pipeline CRDS cache) to make it consistent with the CRDS server cache and
@@ -50,7 +50,7 @@ cron_sync --check-sha1sum --repair-files --purge-mappings $*
 # --check-sha1sum so it is possible that residual files from the last
 # TEST cycle will go uncorrected.
 
-cron_sync --repair-files --fetch-references --purge-references $*
+cron_sync --repair-files --fetch-references $*
 
 # 
 # Other notes:  An alternate approach for hacking caches is to manually remove 
