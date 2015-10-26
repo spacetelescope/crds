@@ -816,7 +816,7 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        with data_file.fits_open(self.filename) as pfile:
+        with data_file.fits_open(self.filename, checksum=True) as pfile:
             pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
