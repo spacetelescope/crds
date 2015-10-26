@@ -1,0 +1,22 @@
+header = {
+    'derived_from' : 'Hand made 2015-10-26 11:14:00',
+    'file_ext' : '.fits',
+    'filekind' : 'DISTORTION',
+    'filetype' : 'DISTORTION',
+    'instrument' : 'NIRCAM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nircam_distortion.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.CHANNEL'),),
+    'reference_to_dataset' : {
+        'CHANNEL' : 'META.INSTRUMENT.CHANNEL',
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '5cd52b10126e220a7cd248372221572730b63bd4',
+    'suffix' : 'distortion',
+    'text_descr' : 'Distortion',
+}
+
+selector = Match({
+})
