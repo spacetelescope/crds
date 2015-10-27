@@ -173,6 +173,9 @@ ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
 ALLOW_PREINSTALLED_RULES = BooleanConfigItem("CRDS_ALLOW_PREINSTALLED_RULES", False,
     "When True, if server connection and cache loads fail,  allow stale rules pre-installed with CRDS package for testing only.")
 
+ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", False,
+    "When True, don't map JWST data model warnings onto CRDS errors.")
+
 # ============================================================================
 
 CRDS_DATA_CHUNK_SIZE = 2**23   

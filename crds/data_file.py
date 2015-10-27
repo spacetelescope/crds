@@ -81,7 +81,8 @@ def hijack_warnings(func):
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
             warnings.filterwarnings("always", r".*", UserWarning, r".*jwst_lib.*")
-            warnings.filterwarnings("error", r".*is not valid in keyword.*", UserWarning, r".*jwst_lib.*")
+            if not config.ALLOW_SCHEMA_VIOLATIONS:
+                warnings.filterwarnings("error", r".*is not valid in keyword.*", UserWarning, r".*jwst_lib.*")
             warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*crds.data_file.*")
             warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*astropy.io.fits.convenience.*")
             try:
