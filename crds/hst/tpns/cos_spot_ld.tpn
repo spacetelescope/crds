@@ -17,4 +17,4 @@ DETECTOR                  C        C         R    FUV
 PEDIGREE                  C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
 OBSERVATION_END_DATE    C    C         O    &SYBDATE
-COMMENT             C        C         P
+COMMENT             C        C         O
