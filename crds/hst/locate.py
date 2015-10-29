@@ -323,6 +323,29 @@ def ref_properties_from_cdbs_path(filename):
         assert False, "Couldn't map extension/suffix " + repr(suffix) + " to filekind."
     return path, "hst", instrument, filekind, serial, extension
 
+def instrument_from_refname(filename):
+    """Based on `filename` rather than it's contents,  determine the associated
+    instrument or raise an exception.
+
+    >>> instrument_from_refname('hst_cos_spottab_0052.fits')
+    'cos'
+
+    >>> instrument_from_refname('zas1615jl_spot.fits')
+    'cos'
+
+    >>> instrument_from_refname('foobar.fits')
+    Traceback (most recent call last):
+    ...
+    AssertionError: Cannot determine instrument for filename 'foobar.fits'
+    """
+    try:   # Hopefully it's a nice new standard filename, easy
+        return decompose_newstyle_name(filename)[2]
+    except AssertionError:  # cryptic legacy paths & names, i.e. reality
+        try:
+            return siname.WhichCDBSInstrument(os.path.basename(filename)).lower()
+        except Exception:
+            assert False, "Cannot determine instrument for filename '{}'".format(filename)
+
 def ref_properties_from_header(filename):
     """Look inside FITS `filename` header to determine:
 
@@ -363,7 +386,7 @@ def locate_file(refname, mode=None):
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
-    _path,  _observatory, instrument, _filekind, _serial, _ext = get_reference_properties(refname)
+    instrument = instrument_from_refname(refname)
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
 
