@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : '930044e791f222cee89cb8d6609a3b9f5b13e42f',
+    'sha1sum' : '23b239069a0b3102e7dd915e2b4ff9d55828b7d0',
     'suffix' : 'msa',
     'text_descr' : 'MSA',
 }

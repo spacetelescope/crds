@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : 'e0e66ece760e94c57e1564ac88c9dc269aa6d44f',
+    'sha1sum' : 'eeda82173e7c5844ebbfd7add656129d0e988753',
     'suffix' : 'collimator',
     'text_descr' : 'Collimator',
 }

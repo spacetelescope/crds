@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : 'bb89ac452b5c28107df0104a2572fd1b56ee3d04',
+    'sha1sum' : '3a1d367c72f9bc15b32d59a956f8cef7bc2aa33e',
     'suffix' : 'ote',
     'text_descr' : 'OTE',
 }

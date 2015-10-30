@@ -12,7 +12,7 @@ header = {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
         'FILTER' : 'META.INSTRUMENT.FILTER',
     },
-    'sha1sum' : '26645cd3355ab04c1eb3f58da11241090141aa2b',
+    'sha1sum' : '5fe7d29bee62480df9901a58b94cc77861df0e9a',
     'suffix' : 'fore',
     'text_descr' : 'FORE Model',
 }

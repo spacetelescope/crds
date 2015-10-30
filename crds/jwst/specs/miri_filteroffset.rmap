@@ -12,7 +12,7 @@ header = {
         'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : '49776eefa931d3234e3df98007b1a74872ee1a26',
+    'sha1sum' : '5c41a10fc0373a18e2511d1bc110793fe38ac0f5',
     'suffix' : 'filteroffset',
     'text_descr' : 'Imager Filter Offset',
 }

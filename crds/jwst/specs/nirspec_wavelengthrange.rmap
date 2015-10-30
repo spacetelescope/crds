@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : 'ede528c659c7725f73e88a42bb5d790255789cac',
+    'sha1sum' : '8e2347c1b401cb0a43f4a16ffb569d86fd8c5454',
     'suffix' : 'wavelengthrange',
     'text_descr' : 'Spectral Configurations',
 }

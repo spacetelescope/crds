@@ -14,7 +14,7 @@ header = {
         'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : '569eeec9b04a228c6156fe671cefc84fe74f8e27',
+    'sha1sum' : '14f285c12c0c69e9232663b18c6e42847ef63714',
     'suffix' : 'v2v3',
     'text_descr' : 'v2-v3 map',
 }
