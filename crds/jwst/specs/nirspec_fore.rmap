@@ -12,9 +12,9 @@ header = {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
         'FILTER' : 'META.INSTRUMENT.FILTER',
     },
-    'sha1sum' : '5fe7d29bee62480df9901a58b94cc77861df0e9a',
+    'sha1sum' : '1d5404d1402176db89ca31e80164c31600404b48',
     'suffix' : 'fore',
-    'text_descr' : 'FORE Model',
+    'text_descr' : 'Transform through the FORE optics',
 }
 
 selector = Match({
