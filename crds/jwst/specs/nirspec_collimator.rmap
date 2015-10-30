@@ -13,7 +13,7 @@ header = {
     },
     'sha1sum' : 'e0e66ece760e94c57e1564ac88c9dc269aa6d44f',
     'suffix' : 'collimator',
-    'text_descr' : 'NIRSPEC Collimator Description',
+    'text_descr' : 'Collimator',
 }
 
 selector = Match({

@@ -14,7 +14,7 @@ header = {
     },
     'sha1sum' : '26645cd3355ab04c1eb3f58da11241090141aa2b',
     'suffix' : 'fore',
-    'text_descr' : 'NIRSPEC FORE Model',
+    'text_descr' : 'FORE Model',
 }
 
 selector = Match({
