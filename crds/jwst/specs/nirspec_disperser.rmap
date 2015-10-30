@@ -14,7 +14,7 @@ header = {
     },
     'sha1sum' : 'd5f7f4c9ef9dd272bb863566577b0e6fadb0f9a0',
     'suffix' : 'disperser',
-    'text_descr' : 'NIRSPEC Disperser Description',
+    'text_descr' : 'Disperser',
 }
 
 selector = Match({

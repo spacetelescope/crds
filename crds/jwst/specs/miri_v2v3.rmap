@@ -16,7 +16,7 @@ header = {
     },
     'sha1sum' : '569eeec9b04a228c6156fe671cefc84fe74f8e27',
     'suffix' : 'v2v3',
-    'text_descr' : 'MIRI v2-v3 map',
+    'text_descr' : 'v2-v3 map',
 }
 
 selector = Match({

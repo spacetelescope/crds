@@ -13,7 +13,7 @@ header = {
     },
     'sha1sum' : '930044e791f222cee89cb8d6609a3b9f5b13e42f',
     'suffix' : 'msa',
-    'text_descr' : 'NIRSPEC MSA Description',
+    'text_descr' : 'MSA',
 }
 
 selector = Match({

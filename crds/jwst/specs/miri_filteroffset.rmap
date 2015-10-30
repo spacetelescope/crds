@@ -14,7 +14,7 @@ header = {
     },
     'sha1sum' : '49776eefa931d3234e3df98007b1a74872ee1a26',
     'suffix' : 'filteroffset',
-    'text_descr' : 'MIRI Imager Filter Offset',
+    'text_descr' : 'Imager Filter Offset',
 }
 
 selector = Match({

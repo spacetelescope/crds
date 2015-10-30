@@ -13,7 +13,7 @@ header = {
     },
     'sha1sum' : 'ede528c659c7725f73e88a42bb5d790255789cac',
     'suffix' : 'wavelengthrange',
-    'text_descr' : 'NIRSPEC Spectral Configurations',
+    'text_descr' : 'Spectral Configurations',
 }
 
 selector = Match({
