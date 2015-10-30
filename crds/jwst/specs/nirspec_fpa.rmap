@@ -11,7 +11,7 @@ header = {
     'reference_to_dataset' : {
         'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
     },
-    'sha1sum' : '8065845ab140b05036df0c65222c8d751f36c115',
+    'sha1sum' : '9450034bb65b7286091d478c6072933dc4b21364',
     'suffix' : 'fpa',
     'text_descr' : 'FPA',
 }
