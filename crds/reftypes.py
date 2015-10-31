@@ -202,7 +202,9 @@ class TypeParameters(object):
             and `filekind` to `results`.
             """
             try:
-                results.append(self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind))
+                validator_key = self._reference_name_to_validator_key(filename, field, header, observatory, instrument, filekind)
+                log.verbose("Adding validator key", repr(validator_key))
+                results.append(validator_key)
             except Exception as exc:
                 log.verbose_warning("Can't find TPN key for", (filename, instrument, filekind), ":", str(exc), verbosity=75)
         append_tpn_level(results, "all", "all")
