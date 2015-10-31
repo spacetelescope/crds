@@ -44,11 +44,17 @@ from crds.jwst.tpn import get_tpninfos   #  reference_name_to_validator_key, map
 from crds.jwst import TYPES, INSTRUMENTS, FILEKINDS, EXTENSIONS
 
 reference_name_to_validator_key = TYPES.reference_name_to_validator_key 
-mapping_validator_key = TYPES.mapping_validator_key
+# mapping_validator_key = TYPES.mapping_validator_key
 get_row_keys = TYPES.get_row_keys
 get_row_keys_by_instrument = TYPES.get_row_keys_by_instrument
 get_item = TYPES.get_item
 suffix_to_filekind = TYPES.suffix_to_filekind
+
+# =======================================================================
+
+def mapping_validator_key(mapping):
+    """For now,  just use instrument based constraints."""
+    return (mapping.instrument + "_all_ld.tpn", mapping.name)
 
 # =======================================================================
 

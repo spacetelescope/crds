@@ -560,12 +560,18 @@ class Selector(object):
         for JWST may (eventually) come from the data model schema instead.
         """
         if value in valid_list:   # typical |-glob valid_list membership
+            log.verbose("Value for", repr(name), "of", repr(value), "is in", repr(valid_list))
             return
-        if "*" in valid_list or "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
+        if "*" in valid_list or "ANY" in valid_list  or \
+                "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
+            log.verbose("Valid list for", repr(name), "is empty or includes wild cards. OK, no other check.")
             return
-        if esoteric_key(value) or value in ["*", "N/A"]:   # exempt
+        if esoteric_key(value) or value in ["*", "ANY", "N/A"]:   # exempt
+            log.verbose("Value of", repr(name), "of", repr(value), 
+                        "is unchecked esoteric or wild card.  OK, no other check.")
             return
         if value.lower().startswith("between"):
+            log.verbose("Checking 'between' expression for", repr(name), "of", repr(value))
             _btw, value1, value2 = value.split()
             self._validate_value(name, value1, valid_list)
             self._validate_value(name, value2, valid_list)
@@ -573,12 +579,17 @@ class Selector(object):
         if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges in .tpns as n1:n2
             min, max = [float(x) for x in valid_list[0].split(":")]  # normalize everything as float
             if min <= float(value) <= max:
+                log.verbose("Numeric value of", repr(name), "of", repr(value), 
+                            "is in range", repr(min), "...", repr(max))
                 return
             else:
                 raise ValidationError(
                     " parameter=" + repr(name) + " value =" +  repr(value) + " is not in range [" + 
                     str(min) + " .. " + str(max) + "]")
         if name in self._substitutions and value in self._substitutions[name]:
+            log.verbose("Value of", repr(name), "of", repr(value), "is substitution from", 
+                        repr(value), "to", repr(self._substitutions[name])+". Checking subsititution value.")
+            self._validate_value(name, self._substitutions[name][value], valid_list)
             return
         raise ValidationError(
             " parameter=" + repr(name) + " value=" + repr(value) + 
