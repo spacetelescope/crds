@@ -1455,10 +1455,12 @@ class ReferenceMapping(Mapping):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         # Since expansion rules may depend on keys not used in matching,  get entire header  
         header = data_file.get_header(reffile, observatory=self.observatory)
-        
         header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), 
-                                               define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)
-    
+                                               define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)    
+        return self._insert_reference(self, header, os.path.basename(reffile))
+
+    def _insert_reference(self, header, reffile):
+        """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:\n", 
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
@@ -1473,10 +1475,10 @@ class ReferenceMapping(Mapping):
         if self._rmap_update_headers:
             # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
             for hdr in self._rmap_update_headers(self, header):
-                new = self.insert(hdr, os.path.basename(reffile))
+                new = self.insert(hdr, reffile)
         else:
             # almost all instruments/types do this.
-            new = self.insert(header, os.path.basename(reffile))
+            new = self.insert(header, reffile)
         return new
 
     def get_reference_parkeys(self):
