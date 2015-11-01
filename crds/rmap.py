@@ -1457,7 +1457,7 @@ class ReferenceMapping(Mapping):
         header = data_file.get_header(reffile, observatory=self.observatory)
         header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), 
                                                define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)    
-        return self._insert_reference(self, header, os.path.basename(reffile))
+        return self._insert_reference(header, os.path.basename(reffile))
 
     def _insert_reference(self, header, reffile):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
