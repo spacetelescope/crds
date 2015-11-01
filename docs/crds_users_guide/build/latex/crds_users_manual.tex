@@ -61,8 +61,8 @@
 
 
 \title{crds Documentation}
-\date{October 08, 2015}
-\release{1.1}
+\date{November 01, 2015}
+\release{1.8}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
 \renewcommand{\releasename}{Release}
@@ -3681,8 +3681,8 @@ Python based client library.   See \href{http://json-rpc.org/wiki/specification}
 for more details on the JSONRPC protocol.
 
 
-\section{Supported Methods}
-\label{web_services:supported-methods}
+\section{Context Information}
+\label{web_services:context-information}
 
 \subsection{get\_default\_context(observatory)}
 \label{web_services:get-default-context-observatory}
@@ -3691,6 +3691,25 @@ in use by default in the operational pipeline, e.g. `jwst\_0001.pmap'.
 get\_default\_context is called with a single parameter, \emph{observatory},  which can
 be `hst' or `jwst'.
 
+
+\subsection{get\_remote\_context(observatory, pipeline\_name)}
+\label{web_services:get-remote-context-observatory-pipeline-name}
+\textbf{get\_remote\_context} returns the name of the pipeline mapping last reported
+as synced by the specified \code{pipeline\_name} (e.g. `Pipeline CRDS Cache').  This
+is the value stored in the local cache of the specified pipeline, whereas the
+above get\_default\_context() is the shared centralized value maintained by the
+CRDS server. In other words, get\_default\_context() returns the centralized
+commanded default, whereas get\_remote\_context() returns that \emph{actual} context
+in use by the specified pipeline, synced to it's local cache, and echoed back
+to the server.  Note that if a pipeline is run in ``remote'' mode (via the CRDS
+bestrefs web service) the only context status which is relevant is
+get\_default\_context() since the default for the web service is maintained on
+the CRDS server.  Hence without a strong rationale to the contrary,  use
+of get\_default\_context() is preferred over get\_remote\_context().
+
+
+\section{Best References}
+\label{web_services:best-references}
 
 \subsection{get\_best\_references(context, header, reftypes)}
 \label{web_services:get-best-references-context-header-reftypes}
@@ -3738,6 +3757,32 @@ Example JSON for \emph{reftypes} might be:
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{p}{[}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{amplifier}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{mask}\PYG{l+s}{\PYGZdq{}}\PYG{p}{]}
 \end{Verbatim}
+
+
+\subsection{get\_best\_references\_by\_header\_map(context, header\_map, reftypes)}
+\label{web_services:get-best-references-by-header-map-context-header-map-reftypes}
+This service is an adaptation of get\_best\_references() to support returning
+best references for multiple datasets with a single service call.  All
+parameters are as for get\_best\_references() with the modification that \emph{header}
+above is replaced with a mapping from multiple dataset ids to their
+corresponding headers, i.e. \emph{header\_map}:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZob{} dataset\PYGZus{}id : header, ... \PYGZcb{}
+\end{Verbatim}
+
+The return value is likewise adapted to return best references for multiple
+datasets:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZob{} dataset\PYGZus{}id : best\PYGZus{}references, ... \PYGZcb{}
+\end{Verbatim}
+
+Where \emph{dataset\_id} is nominally an HST IPPPSSOOT id (e.g. `I9ZF01010') or JWST
+dataset identifier (TBD).  Since \emph{dataset\_id} is only a keyword not used in best
+references computations, it can be any unique abstract identifier consisting of
+alphanumeric characters, period, colon, hyphen, or plus sign of 128 characters
+or less.
 
 
 \section{JSONRPC URL}
