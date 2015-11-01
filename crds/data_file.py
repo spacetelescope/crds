@@ -170,7 +170,6 @@ def dm_setval(filepath, key, value):
         d_model[key.lower()] = value
         d_model.save(filepath)
 
-@hijack_warnings
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
@@ -185,6 +184,19 @@ def get_conditioned_header(filepath, needed_keys=(), original_name=None, observa
 @hijack_warnings
 def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
+
+    Hijack io.fits and data model warnings and map them to errors.
+    
+    Original name is used to determine file type for web upload temporary files which
+    have no distinguishable extension.  Original name is browser-side name for file.
+    """
+    return get_dataset_header(filepath, needed_keys, original_name, observatory)
+
+
+def get_dataset_header(filepath, needed_keys=(), original_name=None, observatory=None):
+    """Return the complete unconditioned header dictionary of a reference file.
+
+    Does not hijack warnings.
     
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
