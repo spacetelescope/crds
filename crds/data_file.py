@@ -286,6 +286,8 @@ def cross_strap_header(header):
     from crds.jwst import schema
     crossed = dict(header)
     for key, val in header.items():
+        if val is None:
+            val = "UNDEFINED"
         fitskey = schema.dm_to_fits(key)
         if fitskey is not None and fitskey not in crossed:
             crossed[fitskey] = val
@@ -334,7 +336,7 @@ def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
     """
     header = dict(header)
     for key in needed_keys:
-        if key not in header or header[key] == "UNDEFINED":
+        if key not in header or header[key] in ["UNDEFINED", None]:
             header[key] = define_as
     return header
 
