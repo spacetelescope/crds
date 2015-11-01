@@ -397,11 +397,6 @@ def validators_by_typekey(key, observatory):
     # Make and cache Validators for `filename`s reference file type.
     validators = [validator(x) for x in locator.get_tpninfos(*key)]
     log.verbose("Validators for", repr(key), ":\n", log.PP(validators), verbosity=60)
-    """
-    try:
-    except Exception as exc:
-        raise RuntimeError("FAILED loading type contraints for " + repr(key) + " with " + repr(exc))
-    """
     return validators
 
 # ============================================================================
@@ -469,8 +464,8 @@ class Certifier(object):
         validators = []
         for key in self.locator.reference_name_to_validator_key(self.filename):
             validators.extend(validators_by_typekey(key, self.observatory))
-        parkeys = set(self.get_rmap_parkeys())
-        validators = [ val for val in validators if val.name in parkeys ]
+        # parkeys = set(self.get_rmap_parkeys())
+        # validators = [ val for val in validators if val.name in parkeys ]
         return validators
 
 

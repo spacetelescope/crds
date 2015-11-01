@@ -500,6 +500,7 @@ class Selector(object):
         for selection in self._selections:
             key, choice = selection.key, selection.choice
             with log.augment_exception(repr(key)):
+                log.verbose("Validating key", repr(key))
                 self._validate_key(key, valid_values_map)
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
@@ -698,6 +699,7 @@ class Selector(object):
     def _insert(self, header, value, parkey, classes, valid_values_map):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
         key = self._make_key(header, parkey[0])
+        log.verbose("Validating key", repr(key))
         self._validate_key(key, valid_values_map)
         i = self._find_key(key)
         if len(classes) > 1:   # add or insert nested selector
