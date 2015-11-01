@@ -1492,7 +1492,7 @@ class ReferenceMapping(Mapping):
                 assert dataset in dataset_parkeys, \
                     "reference_to_dataset dataset keyword not in parkey tuple."
                 dataset_parkeys.append(reference)
-        return tuple(set(dataset_parkeys))
+        return tuple(sorted(set(dataset_parkeys)))
 
     def insert(self, header, value):
         """Given reference file `header` and terminal `value`, insert the value into a copy
