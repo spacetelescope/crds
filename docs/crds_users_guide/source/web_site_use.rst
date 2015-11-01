@@ -371,7 +371,7 @@ files to CRDS.
 
 .. figure:: images/web_add_references.png
    :scale: 50 %
-   :alt: delete references
+   :alt: add references
 
 Add references can be used to undo the effects of Delete References in a
 perhaps distant descendant context containing other changes.  Add references
