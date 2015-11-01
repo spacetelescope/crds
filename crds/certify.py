@@ -298,6 +298,8 @@ class PedigreeValidator(KeywordValidator):
         Ignore missing start/stop dates.
         """
         value = super(PedigreeValidator, self)._get_header_value(header)
+        if value is None:
+            return
         try:
             pedigree, start, stop = value.split()
         except ValueError:
@@ -325,7 +327,7 @@ class PedigreeValidator(KeywordValidator):
 
 class SybdateValidator(KeywordValidator):
     """Check &SYBDATE Sybase date fields."""
-    def check_value(self, filename, value):
+    def _check_value(self, filename, value):
         self.verbose(filename, value)
         timestamp.Sybdate.get_datetime(value)
 
@@ -333,7 +335,7 @@ class SybdateValidator(KeywordValidator):
 
 class JwstdateValidator(KeywordValidator):
     """Check &JWSTDATE date fields."""
-    def check_value(self, filename, value):
+    def _check_value(self, filename, value):
         self.verbose(filename, value)
         timestamp.Jwstdate.get_datetime(value)
 
@@ -341,7 +343,7 @@ class JwstdateValidator(KeywordValidator):
 
 class SlashdateValidator(KeywordValidator):
     """Validates &SLASHDATE fields."""
-    def check_value(self, filename, value):
+    def _check_value(self, filename, value):
         self.verbose(filename, value)
         timestamp.Slashdate.get_datetime(value)
 
@@ -349,7 +351,7 @@ class SlashdateValidator(KeywordValidator):
 
 class AnydateValidator(KeywordValidator):
     """Validates &ANYDATE fields."""
-    def check_value(self, filename, value):
+    def _check_value(self, filename, value):
         self.verbose(filename, value)
         timestamp.Anydate.get_datetime(value)
 
@@ -357,7 +359,7 @@ class AnydateValidator(KeywordValidator):
 
 class FilenameValidator(KeywordValidator):
     """Validates &FILENAME fields."""
-    def check_value(self, filename, value):
+    def _check_value(self, filename, value):
         self.verbose(filename, value)
         result = (value == "(initial)") or not os.path.dirname(value)
         return result
