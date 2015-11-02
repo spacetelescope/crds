@@ -198,7 +198,7 @@ class FileHeaderGenerator(HeaderGenerator):
     def _header(self, filename):
         """Get the best references recommendations recorded in the header of file `dataset`."""
         if filename not in self.headers:
-            self.headers[filename] = data_file.get_dataset_header(filename, observatory=self.observatory)
+            self.headers[filename] = data_file.get_free_header(filename, observatory=self.observatory)
         return self.headers[filename]
 
     def handle_updates(self, all_updates):

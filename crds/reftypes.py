@@ -193,7 +193,7 @@ class TypeParameters(object):
         is nominally a .tpn filename and can vary by observatory, instrument, and type as well
         as by functions on the header of `filename`.
         """
-        header = data_file.get_header(filename)
+        header = data_file.get_free_header(filename)
         observatory = utils.header_to_observatory(header)
         instrument, filekind = utils.get_file_properties(observatory, filename)
         results = []
