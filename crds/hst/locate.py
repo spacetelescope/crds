@@ -386,7 +386,10 @@ def locate_file(refname, mode=None):
     The aspect of this which is complicated is determining instrument and an instrument
     specific sub-directory for it based on the filename alone,  not the file contents.
     """
-    instrument = instrument_from_refname(refname)
+    try:
+        instrument = instrument_from_refname(refname)
+    except Exception:
+        instrument = get_reference_properties(refname)[1]
     rootdir = locate_dir(instrument, mode)
     return  os.path.join(rootdir, os.path.basename(refname))
 
