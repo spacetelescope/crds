@@ -1,12 +1,17 @@
 {
     "meta" : {
            "instrument" : {
-                "name" : "miri"
+                "name" : "miri",
+                "detector" : "mirifulong"
            },
-           "type" : "flat",
-           "pedigree" : "dummy",
-           "useafter" : "Mar 21 2001 12:00:00",
-           "detector" : "mirifulong",
-           "readpatt" : "any"
+           "reffile" : {
+                     "type" : "flat",
+                     "pedigree" : "dummy",
+                     "useafter" : "2015-01-25T12:00:00",
+                     "author" : "Todd Miller"
+           },
+           "exposure" : {
+                      "readpatt" : "any"
            }
+    }
 }
