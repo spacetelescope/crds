@@ -613,6 +613,10 @@ def relocate_file(filepath, observatory):
     Able to determine CRDS cache location based on filename or file
     contents when `filepath` points to a real file.
     """
+    # IMPORTANT:  since the outcome of relocate_file is ALWAYS a CRDS cache path,
+    # the "dirname alresady defined" short-cut should not be used here.  The existing
+    # dirname is irrelevant execept for determining file properties from badly named
+    # reference files by inspecting the header.
     if is_mapping(filepath):
         return relocate_mapping(filepath, observatory)
     else:
@@ -635,8 +639,6 @@ def relocate_reference(ref, observatory):
     the CRDS cache location.  Otherwise, the basename of `ref` must be
     in a standard form which implies location.
     """
-    if os.path.dirname(ref):
-        return ref
     # This limited case is required for the server and dealing with temporary filenames
     # which cannot be used to determine instrument subdirectory based on name.
     if get_crds_ref_subdir_mode(observatory) == "flat":

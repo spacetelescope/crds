@@ -190,10 +190,10 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
     """
-    return get_dataset_header(filepath, needed_keys, original_name, observatory)
+    return get_free_header(filepath, needed_keys, original_name, observatory)
 
 
-def get_dataset_header(filepath, needed_keys=(), original_name=None, observatory=None):
+def get_free_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
     Does not hijack warnings.
