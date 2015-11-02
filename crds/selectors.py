@@ -567,6 +567,11 @@ class Selector(object):
                 "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
             log.verbose("Valid list for", repr(name), "is empty or includes wild cards. OK, no other check.")
             return
+        if value.startswith("NOT"):
+            log.verbose("NOT expression for", repr(name), "of", repr(value), 
+                        "validating negated sub-expression value.")
+            self._validate_value(name, value[len("NOT"):].strip(), valid_list)
+            return
         if esoteric_key(value) or value in ["*", "ANY", "N/A"]:   # exempt
             log.verbose("Value of", repr(name), "of", repr(value), 
                         "is unchecked esoteric or wild card.  OK, no other check.")
