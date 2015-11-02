@@ -328,16 +328,13 @@ def reduce_header(filepath, old_header, needed_keys=()):
     for (key, value) in old_header:
         key = str(key.upper())
         value = str(value)
-        if key in DUPLICATES_OK:
-            continue
         if (not needed_keys) or key in needed_keys:
-            if key in header and header[key] != value:
+            if (key in header and header[key] != value) and not key in DUPLICATES_OK:
                 log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
                                     "using", repr(header[key]), "not", repr(value), verbosity=70)
                 continue
             else:
-                header[key] = value
-                
+                header[key] = value                
     return ensure_keys_defined(header)
 
 def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):

@@ -82,15 +82,15 @@ def certify_dump_provenance_generic():
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
     CRDS  : INFO     ########################################
     CRDS  : INFO     Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
+    CRDS  : INFO     AUTHOR = 'Todd Miller'
+    CRDS  : INFO     DESCRIP = 'Brief notes on this reference.'
+    CRDS  : INFO     HISTORY = 'How this reference came to be and changed over time.'
     CRDS  : INFO     META.EXPOSURE.READPATT = 'any'
     CRDS  : INFO     META.INSTRUMENT.DETECTOR = 'mirifulong'
     CRDS  : INFO     META.INSTRUMENT.NAME = 'MIRI'
-    CRDS  : INFO     META.REFFILE.AUTHOR = 'Todd Miller'
-    CRDS  : INFO     META.REFFILE.DESCRIPTION = 'Brief notes on this reference.'
-    CRDS  : INFO     META.REFFILE.HISTORY = 'How this reference came to be and changed over time.'
-    CRDS  : INFO     META.REFFILE.PEDIGREE = 'dummy'
-    CRDS  : INFO     META.REFFILE.USEAFTER = '2015-01-25T12:00:00'
     CRDS  : INFO     META.TELESCOPE = 'jwst'
+    CRDS  : INFO     PEDIGREE = 'dummy'
+    CRDS  : INFO     USEAFTER = '2015-01-25T12:00:00'
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
