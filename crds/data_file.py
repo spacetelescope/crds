@@ -53,15 +53,15 @@ from __future__ import absolute_import
 import os.path
 import re
 import json
+import datetime
 import warnings
 import functools
-
-from crds import utils, log, config
 
 from astropy.io import fits as pyfits
 from astropy.utils.exceptions import AstropyUserWarning
 
-from crds import python23
+from crds import utils, log, config, python23, timestamp
+
 # import pyasdf
 
 # ===========================================================================
@@ -289,6 +289,8 @@ def simple_type(value):
         rval = str(value)
     elif isinstance(value, (list, tuple)):
         rval = tuple(simple_type(val) for val in value)
+    elif isinstance(value, datetime.datetime):
+        rval = timestamp.reformat_date(value).replace(" ", "T")
     else:
         rval = "SUPRESSED_NONSTD_TYPE: " + repr(str(value.__class__.__name__))
     return rval
