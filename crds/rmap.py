@@ -596,7 +596,7 @@ class Mapping(object):
         crds.certify.   ContextMappings are mostly validated at load time.
         Stick extra checks for context mappings here.
         """
-        log.verbose("Validating", repr(self.basename))
+        log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
 
     def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Compare `self` with `new_mapping` and return a list of difference
@@ -1362,7 +1362,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        log.verbose("Validating", repr(self.basename))
+        log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
         if "reference_to_dataset" in self.header:
             parkeys = self.get_required_parkeys()
             for reference, dataset in self.reference_to_dataset.items():
