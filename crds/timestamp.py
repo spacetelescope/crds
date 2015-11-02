@@ -327,7 +327,7 @@ class Sybdate(DateParser):
     
 class Jwstdate(DateParser):
     """
-    >>> Jwstdate.get_datetime("2001-03-21")
+    >>> Jwstdate.get_datetime("2001-03-21T00:00:00")
     datetime.datetime(2001, 3, 21, 0, 0)
 
     >>> Jwstdate.get_datetime("2001-03-21 12:00:00")
@@ -338,7 +338,10 @@ class Jwstdate(DateParser):
     _format = re.compile(
         r"^(?P<year>\d\d\d\d)\-" + \
             r"(?P<month>\d\d)\-" + \
-            r"(?P<day>\d\d)$"
+            r"(?P<day>\d\d)T" + \
+            r"(?P<hour>\d\d):" + \
+            r"(?P<minute>\d\d):" + \
+            r"(?P<second>\d\d)$"
         )
 
     @classmethod
