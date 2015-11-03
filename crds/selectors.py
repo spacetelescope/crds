@@ -561,23 +561,23 @@ class Selector(object):
         for JWST may (eventually) come from the data model schema instead.
         """
         if value in valid_list:   # typical |-glob valid_list membership
-            log.verbose("Value for", repr(name), "of", repr(value), "is in", repr(valid_list))
+            log.verbose("Value for", repr(name), "of", repr(value), "is in", repr(valid_list), verbosity=60)
             return
         if "*" in valid_list or "ANY" in valid_list  or \
                 "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
-            log.verbose("Valid list for", repr(name), "is empty or includes wild cards. OK, no other check.")
+            log.verbose("Valid list for", repr(name), "is empty or includes wild cards. OK, no other check.", verbosity=60)
             return
         if value.startswith("NOT"):
             log.verbose("NOT expression for", repr(name), "of", repr(value), 
-                        "validating negated sub-expression value.")
+                        "validating negated sub-expression value.", verbosity=60)
             self._validate_value(name, value[len("NOT"):].strip(), valid_list)
             return
         if esoteric_key(value) or value in ["*", "ANY", "N/A"]:   # exempt
             log.verbose("Value of", repr(name), "of", repr(value), 
-                        "is unchecked esoteric or wild card.  OK, no other check.")
+                        "is unchecked esoteric or wild card.  OK, no other check.", verbosity=60)
             return
         if value.lower().startswith("between"):
-            log.verbose("Checking 'between' expression for", repr(name), "of", repr(value))
+            log.verbose("Checking 'between' expression for", repr(name), "of", repr(value), verbosity=60)
             _btw, value1, value2 = value.split()
             self._validate_value(name, value1, valid_list)
             self._validate_value(name, value2, valid_list)
@@ -586,7 +586,7 @@ class Selector(object):
             min, max = [float(x) for x in valid_list[0].split(":")]  # normalize everything as float
             if min <= float(value) <= max:
                 log.verbose("Numeric value of", repr(name), "of", repr(value), 
-                            "is in range", repr(min), "...", repr(max))
+                            "is in range", repr(min), "...", repr(max), verbosity=60)
                 return
             else:
                 raise ValidationError(
@@ -594,7 +594,7 @@ class Selector(object):
                     str(min) + " .. " + str(max) + "]")
         if name in self._substitutions and value in self._substitutions[name]:
             log.verbose("Value of", repr(name), "of", repr(value), "is substitution from", 
-                        repr(value), "to", repr(self._substitutions[name])+". Checking subsititution value.")
+                        repr(value), "to", repr(self._substitutions[name])+". Checking subsititution value.", verbosity=60)
             self._validate_value(name, self._substitutions[name][value], valid_list)
             return
         raise ValidationError(
