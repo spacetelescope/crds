@@ -813,14 +813,14 @@ class FitsCertifier(ReferenceCertifier):
         if not self.filename.endswith(".fits"):
             log.verbose("Skipping FITS verify for '%s'" % self.basename)
             return
-        with data_file.fits_open(self.filename, checksum=True) as pfile:
+        with data_file.fits_open_trapped(self.filename, checksum=True) as pfile:
             pfile.verify(option='exception') # validates all keywords
         log.info("FITS file", repr(self.basename), "conforms to FITS standards.")
         return super(FitsCertifier, self).load()
 
     def _dump_provenance_core(self, dump_keys):
         """FITS provenance dumper,  works on multiple extensions.  Returns unseen keys."""
-        with data_file.fits_open(self.filename) as hdulist:
+        with data_file.fits_open_trapped(self.filename) as hdulist:
             unseen = set(dump_keys)
             for i, hdu in enumerate(hdulist):
                 for key in dump_keys:

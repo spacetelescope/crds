@@ -76,6 +76,7 @@ def hijack_warnings(func):
         """Reassign warnings to CRDS warnings prior to executing `func`,  restore
         warnings state afterwards and return result of `func`.
         """
+        warnings.resetwarnings()
         with warnings.catch_warnings():
             old_showwarning = warnings.showwarning
             warnings.showwarning = hijacked_showwarning
@@ -389,6 +390,11 @@ def get_fits_header_union(filepath, needed_keys=()):
 
 
 # ================================================================================================================
+
+@hijack_warnings
+def fits_open_trapped(filename, **keys):
+    """Same as fits_open but with some astropy and JWST DM warnings hijacked by CRDS."""
+    return fits_open(filename, **keys)
 
 def fits_open(filename, **keys):
     """Return the results of io.fits.open() configured using CRDS environment settings,  overriden by
