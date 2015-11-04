@@ -78,6 +78,7 @@ def get_file_properties(filename):
         try:
             return decompose_newstyle_name(filename)[2:4]
         except Exception:
+            # NOTE: load_mapping more conservative than fetch_mapping used in properties_from_mapping
             mapping = rmap.load_mapping(filename)
             return mapping.instrument, mapping.filekind
     elif config.is_reference(filename):
@@ -207,9 +208,8 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_free_header(filename)
-    # Don't add filename to assertions to keep crds.certify unique errors working
-    instrument = utils.header_to_instrument(header, default="UNDEFINED").lower()
+    header = data_file.get_header(filename, observatory="jwst")
+    instrument = utils.header_to_instrument(header).lower()
     assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
     filekind = utils.get_any_of(header, ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"], "UNDEFINED").lower()
     assert filekind in FILEKINDS, "Invalid file type " + repr(filekind)
@@ -293,7 +293,7 @@ def locate_file(refname, mode=None):
     if mode is  None:
         mode = config.get_crds_ref_subdir_mode(observatory="jwst")
     if mode == "instrument":
-        instrument = instrument_from_reffile(refname)
+        instrument = utils.file_to_instrument(refname)
         rootdir = locate_dir(instrument, mode)
     elif mode == "flat":
         rootdir = config.get_crds_refpath("jwst")
@@ -317,21 +317,6 @@ def locate_dir(instrument, mode=None):
     else:
         raise ValueError("Unhandled reference file location mode " + repr(mode))
     return rootdir
-
-# ============================================================================
-
-def instrument_from_reffile(refname):
-    """Based on file `refname`,  determine the corresponding instrument by
-    decoding the name if possible,  otherwise by reading header contents.
-
-    Returns instrument
-    """
-    try:
-        instrument = decompose_newstyle_filename(refname)[2]
-    except:
-        header = data_file.get_free_header(refname)
-        instrument = utils.header_to_instrument(header, default="UNDEFINED").lower()
-    return instrument
 
 # ============================================================================
 def load_all_type_constraints():
