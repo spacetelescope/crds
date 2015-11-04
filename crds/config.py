@@ -642,7 +642,7 @@ def relocate_reference(ref, observatory):
     # This limited case is required for the server and dealing with temporary filenames
     # which cannot be used to determine instrument subdirectory based on name.
     if get_crds_ref_subdir_mode(observatory) == "flat":
-        return os.path.join(get_crds_refpath(observatory), ref)
+        return os.path.join(get_crds_refpath(observatory), os.path.basename(ref))
     else:
         from crds import utils
         return utils.get_locator_module(observatory).locate_file(ref)
