@@ -690,6 +690,8 @@ def instrument_to_observatory(instrument):
     
     >>> instrument_to_observatory("acs")
     'hst'
+    >>> instrument_to_observatory("ACS")
+    'hst'
     >>> instrument_to_observatory("miri")
     'jwst'
     >>> instrument_to_observatory("foo")
@@ -785,7 +787,7 @@ def get_any_of(getter,  possible_keys,  default=None):
     """
     for key in possible_keys:
         val = getter.get(key, None)
-        if val is not None:
+        if val is not None and val not in ["undefined", "UNDEFINED"]:
             return val
     else:
         return default

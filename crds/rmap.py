@@ -910,16 +910,16 @@ class PipelineContext(ContextMapping):
 
     def get_instrument(self, header):
         """Get the instrument name defined by file `header`."""
-        try:
-            instr = header[self.instrument_key.upper()]
-        except KeyError:
-            try:
-                instr = header[self.instrument_key.lower()]
+        for key in [self.instrument_key.upper(), self.instrument_key.lower()] + crds.INSTRUMENT_KEYWORDS:
+            try: # This hack makes FITS headers work prior to back-mapping to data model names.
+                instr = header[key]
             except KeyError:
-                try: # This hack makes FITS headers work prior to back-mapping to data model names.
-                    instr = header["INSTRUME"]
-                except KeyError:
-                    raise crexc.CrdsError("Missing '%s' keyword in header" % self.instrument_key)
+                continue
+            else:
+                if instr.upper() != "UNDEFINED":
+                    break
+        else:
+            raise crexc.CrdsError("Missing '%s' keyword in header for determining instrument." % self.instrument_key)
         return instr.upper()
 
     def get_item_key(self, filename):
