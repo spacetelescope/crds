@@ -136,6 +136,11 @@ class MissingReferenceError(CertifyError):
 
 # -------------------------------------------------------------------------------------------
 
+class NameComparisonError(CrdsError):
+    """Failed to determine the time order of two names."""
+
+# -------------------------------------------------------------------------------------------
+
 _exception_names = [ name for name in dir() if name.endswith("Error") ]
 
 __all__ = _exception_names
