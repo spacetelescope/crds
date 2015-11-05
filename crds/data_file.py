@@ -156,7 +156,7 @@ def setval(filepath, key, value):
             key = key.replace("META_", "META.")
             return dm_setval(filepath, key, value)
         else:
-            return pyfits.setval(filepath, key, value)
+            return pyfits.setval(filepath, key, value=value)
     elif ftype == "asdf":
         return dm_setval(filepath, key, value)
     else:

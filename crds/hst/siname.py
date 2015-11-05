@@ -79,6 +79,16 @@ ID_CHAR_TO_INSTRUMENT = {
   "m" : "MULTI",
   }
 
+INSTRUMENT_TO_ID_CHAR = { 
+  val: key for (key, val) in ID_CHAR_TO_INSTRUMENT.items() 
+}
+
+def instrument_to_id_char(instrument):
+  """Given an instrument name (e.g. acs) return the corresponding CDBS
+  instrument id character.
+  """
+  return INSTRUMENT_TO_ID_CHAR[instrument.upper()] 
+
 def add_IRAF_prefix(instrument_name):
     """
 =======================================================================
