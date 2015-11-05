@@ -179,6 +179,15 @@ class TypeParameters(object):
             instrument = "nicmos"
         return self._suffix_to_filekind[instrument][suffix]
 
+    def filekind_to_suffix(self, instrument, filekind):
+        """Given and instrument (e.g. acs) and filekind (e.g. darkfile)
+        turn the associated file suffix (e.g. drk) for use in generating
+        legacy filenames.
+        """
+        if instrument == "nic":
+            instrument = "nicmos"
+        return self._filekind_to_suffix[instrument][filekind]
+
 # =============================================================================
 
     def mapping_validator_key(self, mapping):

@@ -64,7 +64,7 @@ class ListScript(cmdline.ContextsScript):
         self.add_argument("--cached-mappings", action="store_true",
             help="prints the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
-            help="prints the full paths of files for --cached-references and --cached-mappings.""")
+            help="prints the full paths of files for --cached-references and --cached-mappings.")
         self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
             help="prints matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
