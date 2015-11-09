@@ -6,8 +6,21 @@ remote users to make calls to the CRDS server without installing the CRDS
 Python based client library.   See http://json-rpc.org/wiki/specification
 for more details on the JSONRPC protocol.
 
+Users of the CRDS client library can access these JSONRPC functions using 
+the crds.client module::
+
+  >>> from crds import client
+  >>> client.get_default_context('jwst')
+  'jwst_0101.pmap'
+
 Context Information
 -------------------
+
+The CRDS context is the version of CRDS rules used to select reference files.
+The default CRDS context is maintained on the CRDS server and reported by
+the function *get_default_context()*.  Remote pipelines which are operating
+decoupled from the CRDS server can post their actual cached context to the CRDS
+server for retrieval by *get_remote_context()*.
 
 Centralized Default
 +++++++++++++++++++
@@ -36,6 +49,70 @@ is run in "remote" mode computing best references on the CRDS Server, the
 generally preferred value is from get_default_context() since it always
 reflects the intended operational context regardless of the pipeline's CRDS
 mode.
+
+File Information
+----------------
+
+The CRDS server maintains a catalog of basic metadata for the rules and reference
+files managed by CRDS.   Catalog information cab be 
+
+Single File Metadata
+++++++++++++++++++++
+
+**get_file_info(pipeline_context, filename)**
+
+Return a dictionary of CRDS catalog information about `filename`.  For instance::
+
+ >>> get_file_info("jwst", "jwst_miri_flat_0023.fits")
+ {'activation_date': '2014-09-25 18:30:27',
+  'aperture': 'none',
+  'blacklisted': 'false',
+  'change_level': 'severe',
+  'comment': 'cdp-2 from fm testing',
+  'creator_name': 'jwst build 3 team',
+  'deliverer_user': 'jmiller',
+  'delivery_date': '2014-09-20 07:55:56',
+  'derived_from': 'none',
+  'description': 'all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes, nirspec flat.',
+  'filekind': 'flat',
+  'instrument': 'miri',
+  'name': 'jwst_miri_flat_0023.fits',
+  'observatory': 'jwst',
+  'pedigree': 'ground',
+  'reference_file_type': 'flat',
+  'rejected': 'false',
+  'replaced_by_filename': '',
+  'sha1sum': '3f0c92aae539cb67f8e8823cc6815130018948f7',
+  'size': '10592640',
+  'state': 'operational',
+  'type': 'reference',
+  'uploaded_as': 'jwst_miri_flat_0016.fits',
+  'useafter_date': '2050-01-01 00:00:00'}
+
+Multiple File Metadata
+++++++++++++++++++++++
+
+**get_file_info_map(observatory, files=None, fields=None)**
+
+get_file_info_map() is a multi-file version of get_info_map() whihch returns
+the information for several files with one call.  If `files` is not specified
+then get_file_info_map() returns info for all files.
+
+Return the info::
+    
+    { filename : { info, ... }, ... } 
+
+on `files` of `observatory`.
+
+`fields` can be used to limit info returned to specified keys::
+
+    ['activation_date', 'aperture', 'blacklisted', 'change_level', 'comment', 
+     'creator_name', 'deliverer_user', 'delivery_date', 'derived_from', 'description', 
+     'filekind', 'instrument', 'name', 'observatory', 'pedigree', 'reference_file_type', 
+     'rejected', 'replaced_by_filename', 'sha1sum', 'size', 'state', 'type', 
+     'uploaded_as', 'useafter_date']
+
+If `fields` is not specified then get_file_info_map() returns all fields.
 
 Best References
 ---------------
@@ -107,6 +184,44 @@ dataset identifier (TBD).  Since *dataset_id* is only a keyword not used in best
 references computations, it can be any unique abstract identifier consisting of
 alphanumeric characters, period, colon, hyphen, or plus sign of 128 characters
 or less.
+
+Selection Parameters
+++++++++++++++++++++
+
+**get_required_parkeys(context)**
+
+Return a mapping from instruments to lists of parameter names required to
+compute bestrefs under `context`,  i.e. matching header keys::
+
+    { instrument : [ matching_parkey_name, ... ], ... }
+
+In CRDS the matching parameters are defined by each set of rules, e.g. for 
+one HST context (hst_0366.pmap) the reference file selection parameters 
+for all instruments are as follows::
+
+    {'acs': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'CCDAMP', 'CCDCHIP',
+         'CCDGAIN', 'CRCORR', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR',
+         'DRIZCORR', 'FILTER1', 'FILTER2', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 
+         'FW1OFFST', 'FW2OFFST', 'FWSOFFST', 'GLINCORR', 'LTV1', 'LTV2', 'NAXIS1', 
+         'NAXIS2', 'OBSTYPE', 'PCTECORR', 'PHOTCORR', 'REFTYPE', 'RPTCORR', 
+         'SHADCORR', 'SHUTRPOS', 'TIME-OBS', 'XCORNER', 'YCORNER'], 
+    'cos': ['INSTRUME', 'ALGNCORR', 'BADTCORR', 'BRSTCORR', 'DATE-OBS', 'DEADCORR',
+        'DETECTOR', 'EXPTYPE', 'FLATCORR', 'FLUXCORR', 'LIFE_ADJ', 'OBSMODE', 'OBSTYPE', 
+        'OPT_ELEM', 'REFTYPE', 'TDSCORR', 'TIME-OBS', 'TRCECORR', 'WALKCORR'], 
+    'nicmos': ['INSTRUME', 'CAMERA', 'DATE-OBS', 'FILTER', 'NREAD', 'OBSMODE', 'READOUT', 
+            'REFTYPE', 'SAMP_SEQ', 'TIME-OBS'], 
+     'stis': ['INSTRUME', 'APERTURE', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 'CCDGAIN', 'CCDOFFST', 
+          'CENWAVE', 'DATE-OBS', 'DETECTOR', 'OBSTYPE', 'OPT_ELEM', 'REFTYPE', 'TIME-OBS'], 
+     'wfc3': ['INSTRUME', 'APERTURE', 'ATODCORR', 'BIASCORR', 'BINAXIS1', 'BINAXIS2', 'CCDAMP', 
+          'CCDGAIN', 'CHINJECT', 'DARKCORR', 'DATE-OBS', 'DETECTOR', 'DQICORR', 'DRIZCORR', 
+          'FILTER', 'FLASHCUR', 'FLATCORR', 'FLSHCORR', 'PHOTCORR', 'REFTYPE', 'SAMP_SEQ', 
+          'SHUTRPOS', 'SUBARRAY', 'SUBTYPE', 'TIME-OBS'], 
+     'wfpc2': ['INSTRUME', 'ATODGAIN', 'DATE-OBS', 'FILTER1', 'FILTER2', 'FILTNAM1', 'FILTNAM2', 
+            'IMAGETYP', 'LRFWAVE', 'MODE', 'REFTYPE', 'SERIALS', 'SHUTTER', 'TIME-OBS']
+    }
+
+The required parkeys can be used to reduce a complete file header to only those keywords
+necessary to select references under the given context.
 
 JSONRPC URL
 -----------
