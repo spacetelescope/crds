@@ -61,7 +61,7 @@
 
 
 \title{crds Documentation}
-\date{November 01, 2015}
+\date{November 09, 2015}
 \release{1.8}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
@@ -3680,40 +3680,131 @@ remote users to make calls to the CRDS server without installing the CRDS
 Python based client library.   See \href{http://json-rpc.org/wiki/specification}{http://json-rpc.org/wiki/specification}
 for more details on the JSONRPC protocol.
 
+Users of the CRDS client library can access these JSONRPC functions using
+the crds.client module:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{crds} \PYG{k+kn}{import} \PYG{n}{client}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{client}\PYG{o}{.}\PYG{n}{get\PYGZus{}default\PYGZus{}context}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{g+go}{\PYGZsq{}jwst\PYGZus{}0101.pmap\PYGZsq{}}
+\end{Verbatim}
+
 
 \section{Context Information}
 \label{web_services:context-information}
-
-\subsection{get\_default\_context(observatory)}
-\label{web_services:get-default-context-observatory}
-\textbf{get\_default\_context} returns the name of the pipeline mapping which is currently
-in use by default in the operational pipeline, e.g. `jwst\_0001.pmap'.
-get\_default\_context is called with a single parameter, \emph{observatory},  which can
-be `hst' or `jwst'.
+The CRDS context is the version of CRDS rules used to select reference files.
+The default CRDS context is maintained on the CRDS server and reported by
+the function \emph{get\_default\_context()}.  Remote pipelines which are operating
+decoupled from the CRDS server can post their actual cached context to the CRDS
+server for retrieval by \emph{get\_remote\_context()}.
 
 
-\subsection{get\_remote\_context(observatory, pipeline\_name)}
-\label{web_services:get-remote-context-observatory-pipeline-name}
-\textbf{get\_remote\_context} returns the name of the pipeline mapping last reported
-as synced by the specified \code{pipeline\_name} (e.g. `Pipeline CRDS Cache').  This
-is the value stored in the local cache of the specified pipeline, whereas the
-above get\_default\_context() is the shared centralized value maintained by the
-CRDS server. In other words, get\_default\_context() returns the centralized
-commanded default, whereas get\_remote\_context() returns that \emph{actual} context
-in use by the specified pipeline, synced to it's local cache, and echoed back
-to the server.  Note that if a pipeline is run in ``remote'' mode (via the CRDS
-bestrefs web service) the only context status which is relevant is
-get\_default\_context() since the default for the web service is maintained on
-the CRDS server.  Hence without a strong rationale to the contrary,  use
-of get\_default\_context() is preferred over get\_remote\_context().
+\subsection{Centralized Default}
+\label{web_services:centralized-default}
+\textbf{get\_default\_context(observatory)}
+
+get\_default\_context() returns the name of the pipeline mapping which is
+currently in use by default in the archive pipeline, e.g. `jwst\_0001.pmap'.
+This value is set and maintained on the CRDS Server using the Set Context web
+page and reflects a commanded default for all users.  Remote pipeline instances
+of CRDS running in `local' mode only update their copy of this default when
+their CRDS cache is synchronized with the server.  Hence this value represents
+a commanded context and the actual pipeline context differs until
+\emph{pipeline\_name} is synchronized with the CRDS server.
+
+
+\subsection{Pipeline Echo}
+\label{web_services:pipeline-echo}
+\textbf{get\_remote\_context(observatory, pipeline\_name)}
+
+get\_remote\_context() returns the name of the pipeline mapping last reported as
+synced by the specified \emph{pipeline\_name} (e.g. `jwst-ops-pipeline').  This is
+the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
+when the cache is synchronized.  Since this value is inapplicable if a pipeline
+is run in ``remote'' mode computing best references on the CRDS Server, the
+generally preferred value is from get\_default\_context() since it always
+reflects the intended operational context regardless of the pipeline's CRDS
+mode.
+
+
+\section{File Information}
+\label{web_services:file-information}
+The CRDS server maintains a catalog of basic metadata for the rules and reference
+files managed by CRDS.   Catalog information cab be
+
+
+\subsection{Single File Metadata}
+\label{web_services:single-file-metadata}
+\textbf{get\_file\_info(pipeline\_context, filename)}
+
+Return a dictionary of CRDS catalog information about \code{filename}.  For instance:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{get\PYGZus{}file\PYGZus{}info}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}miri\PYGZus{}flat\PYGZus{}0023.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{\PYGZob{}\PYGZsq{}activation\PYGZus{}date\PYGZsq{}: \PYGZsq{}2014\PYGZhy{}09\PYGZhy{}25 18:30:27\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}aperture\PYGZsq{}: \PYGZsq{}none\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}blacklisted\PYGZsq{}: \PYGZsq{}false\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}change\PYGZus{}level\PYGZsq{}: \PYGZsq{}severe\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}comment\PYGZsq{}: \PYGZsq{}cdp\PYGZhy{}2 from fm testing\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}creator\PYGZus{}name\PYGZsq{}: \PYGZsq{}jwst build 3 team\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}deliverer\PYGZus{}user\PYGZsq{}: \PYGZsq{}jmiller\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}delivery\PYGZus{}date\PYGZsq{}: \PYGZsq{}2014\PYGZhy{}09\PYGZhy{}20 07:55:56\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}derived\PYGZus{}from\PYGZsq{}: \PYGZsq{}none\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}description\PYGZsq{}: \PYGZsq{}all references from jwst build 3 delivery 2. update miri flats, fringes, straymasks, resets, lastframes, nirspec flat.\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}filekind\PYGZsq{}: \PYGZsq{}flat\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}instrument\PYGZsq{}: \PYGZsq{}miri\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}name\PYGZsq{}: \PYGZsq{}jwst\PYGZus{}miri\PYGZus{}flat\PYGZus{}0023.fits\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}observatory\PYGZsq{}: \PYGZsq{}jwst\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}pedigree\PYGZsq{}: \PYGZsq{}ground\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}reference\PYGZus{}file\PYGZus{}type\PYGZsq{}: \PYGZsq{}flat\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}rejected\PYGZsq{}: \PYGZsq{}false\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}replaced\PYGZus{}by\PYGZus{}filename\PYGZsq{}: \PYGZsq{}\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}sha1sum\PYGZsq{}: \PYGZsq{}3f0c92aae539cb67f8e8823cc6815130018948f7\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}size\PYGZsq{}: \PYGZsq{}10592640\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}state\PYGZsq{}: \PYGZsq{}operational\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}type\PYGZsq{}: \PYGZsq{}reference\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}uploaded\PYGZus{}as\PYGZsq{}: \PYGZsq{}jwst\PYGZus{}miri\PYGZus{}flat\PYGZus{}0016.fits\PYGZsq{},}
+\PYG{g+go}{ \PYGZsq{}useafter\PYGZus{}date\PYGZsq{}: \PYGZsq{}2050\PYGZhy{}01\PYGZhy{}01 00:00:00\PYGZsq{}\PYGZcb{}}
+\end{Verbatim}
+
+
+\subsection{Multiple File Metadata}
+\label{web_services:multiple-file-metadata}
+\textbf{get\_file\_info\_map(observatory, files=None, fields=None)}
+
+get\_file\_info\_map() is a multi-file version of get\_info\_map() whihch returns
+the information for several files with one call.  If \code{files} is not specified
+then get\_file\_info\_map() returns info for all files.
+
+Return the info:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZob{} filename : \PYGZob{} info, ... \PYGZcb{}, ... \PYGZcb{}
+\end{Verbatim}
+
+on \code{files} of \code{observatory}.
+
+\code{fields} can be used to limit info returned to specified keys:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{activation\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{aperture}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{blacklisted}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{change\PYGZus{}level}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{comment}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{creator\PYGZus{}name}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{deliverer\PYGZus{}user}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{delivery\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{filekind}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{pedigree}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{reference\PYGZus{}file\PYGZus{}type}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{rejected}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{replaced\PYGZus{}by\PYGZus{}filename}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{size}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{state}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{type}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{uploaded\PYGZus{}as}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{useafter\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\end{Verbatim}
+
+If \code{fields} is not specified then get\_file\_info\_map() returns all fields.
 
 
 \section{Best References}
 \label{web_services:best-references}
 
-\subsection{get\_best\_references(context, header, reftypes)}
-\label{web_services:get-best-references-context-header-reftypes}
-\textbf{get\_best\_references} matches a set of parameters \emph{header} against the lookup
+\subsection{Single Header}
+\label{web_services:single-header}
+\textbf{get\_best\_references(context, header, reftypes)}
+
+get\_best\_references() matches a set of parameters \emph{header} against the lookup
 rules specified by the pipeline mapping \emph{context} to return a mapping of
 type names onto recommended reference file names.
 
@@ -3759,8 +3850,10 @@ Example JSON for \emph{reftypes} might be:
 \end{Verbatim}
 
 
-\subsection{get\_best\_references\_by\_header\_map(context, header\_map, reftypes)}
-\label{web_services:get-best-references-by-header-map-context-header-map-reftypes}
+\subsection{Multiple Headers}
+\label{web_services:multiple-headers}
+\textbf{get\_best\_references\_by\_header\_map(context, header\_map, reftypes)}
+
 This service is an adaptation of get\_best\_references() to support returning
 best references for multiple datasets with a single service call.  All
 parameters are as for get\_best\_references() with the modification that \emph{header}
@@ -3783,6 +3876,48 @@ dataset identifier (TBD).  Since \emph{dataset\_id} is only a keyword not used i
 references computations, it can be any unique abstract identifier consisting of
 alphanumeric characters, period, colon, hyphen, or plus sign of 128 characters
 or less.
+
+
+\subsection{Selection Parameters}
+\label{web_services:selection-parameters}
+\textbf{get\_required\_parkeys(context)}
+
+Return a mapping from instruments to lists of parameter names required to
+compute bestrefs under \code{context},  i.e. matching header keys:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZob{} instrument : [ matching\PYGZus{}parkey\PYGZus{}name, ... ], ... \PYGZcb{}
+\end{Verbatim}
+
+In CRDS the matching parameters are defined by each set of rules, e.g. for
+one HST context (hst\_0366.pmap) the reference file selection parameters
+for all instruments are as follows:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{acs}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BIASCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDCHIP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CRCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DARKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DQICORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DRIZCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLASHCUR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLSHCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FW1OFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FW2OFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FWSOFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{GLINCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LTV1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LTV2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PCTECORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PHOTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{RPTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHADCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTRPOS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{XCORNER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{YCORNER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ALGNCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BADTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BRSTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DEADCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{EXPTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLUXCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LIFE\PYGZus{}ADJ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSMODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OPT\PYGZus{}ELEM}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TDSCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TRCECORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WALKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{nicmos}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CAMERA}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NREAD}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSMODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{READOUT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SAMP\PYGZus{}SEQ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{stis}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDOFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CENWAVE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OPT\PYGZus{}ELEM}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wfc3}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BIASCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CHINJECT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DARKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DQICORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DRIZCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLASHCUR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLSHCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PHOTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SAMP\PYGZus{}SEQ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTRPOS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SUBARRAY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SUBTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wfpc2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTNAM1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTNAM2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{IMAGETYP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LRFWAVE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{MODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SERIALS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+The required parkeys can be used to reduce a complete file header to only those keywords
+necessary to select references under the given context.
 
 
 \section{JSONRPC URL}
