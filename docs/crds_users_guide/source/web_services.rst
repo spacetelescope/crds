@@ -246,7 +246,7 @@ JSONRPC Request
 An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl::
 
-    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' http://jwst-crds.stsci.edu/json/
+    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' https://jwst-crds.stsci.edu/json/
     HTTP/1.1 200 OK
     Date: Fri, 12 Oct 2012 17:29:46 GMT
     Server: Apache/2.2.3 (Red Hat) mod_python/3.3.1 Python/2.7.2
