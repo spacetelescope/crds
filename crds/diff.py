@@ -11,15 +11,13 @@ from crds import python23
 
 import os
 import sys
-import re
 from collections import defaultdict
 import tempfile
 import json
 import pprint
 
-import crds
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
-from crds.exceptions import NameComparisonError
+from crds import naming
 
 from astropy.io.fits import FITSDiff
 
@@ -35,7 +33,6 @@ __all__ = [
     "diff_replace_old_new",
     "mapping_check_diffs",
     "mapping_diffs",
-    "newer",
 ]
 
 # ============================================================================
@@ -542,7 +539,7 @@ def mapping_check_diffs_core(diffs):
             log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
             old_val, new_val = [os.path.basename(x) for x in diff_replace_old_new(msg)]
-            if newer(new_val, old_val):
+            if naming.newer(new_val, old_val):
                 log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
             else:
                 log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
@@ -570,205 +567,6 @@ def _diff_tail(msg):
         else:
             tail.append(part)
     return tuple(reversed(tail))
-
-# =============================================================================================================
-
-def newer(name1, name2):
-    """Determine if `name1` is a more recent file than `name2` accounting for 
-    limited differences in naming conventions. Official CDBS and CRDS names are 
-    comparable using a simple text comparison,  just not to each other.
-    
-    >>> newer("s7g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
-    False
-
-    >>> newer("hst_cos_deadtab_0001.fits", "s7g1700gl_dead.fits")
-    True
-
-    >>> newer("s7g1700gl_dead.fits", "bbbbb.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbb.fits' for determining time order.
-
-    >>> newer("bbbbb.fits", "s7g1700gl_dead.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbb.fits' for determining time order.
-
-    >>> newer("hst_cos_deadtab_0001.rmap", "hst_cos_deadtab_0002.rmap")
-    False
-
-    >>> newer("hst_cos_deadtab_0002.rmap", "hst_cos_deadtab_0001.rmap")
-    True
-
-    >>> newer("hst_cos_deadtab_0001.asdf", "hst_cos_deadtab_0050.fits")
-    True
-
-    >>> newer("hst_cos_deadtab_0051.fits", "hst_cos_deadtab_0050.asdf")
-    False
-
-    >>> newer("hst_cos_deadtab_0001.fits", "hst_cos_deadtab_99991.fits")
-    False
-
-    >>> newer("hst_cos_deadtab_99991.fits", "hst_cos_deadtab_0001.fits")
-    True
-
-
-    >>> newer("07g1700gl_dead.fits", "s7g1700gl_dead.fits")
-    True
-
-    >>> newer("s7g1700gl_dead.fits", "07g1700gl_dead.fits")
-    False
-
-    >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('crds', 'newcdbs')
-    
-    >>> newer("17g1700gl_dead.fits", "hst_cos_deadtab_0001.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Unhandled name comparison case:  ('newcdbs', 'crds')
-    
-    """
-    cases = {
-        ("crds", "crds")  : "compare_crds",
-        ("oldcdbs", "oldcdbs") : "compare",
-        ("newcdbs", "newcdbs") : "compare",
-
-        ("crds", "oldcdbs") : True,
-        ("oldcdbs", "crds") : False,
-
-        ("newcdbs", "oldcdbs") : True,
-        ("oldcdbs", "newcdbs") : False,
-
-        ("crds", "newcdbs") : "raise",
-        ("newcdbs", "crds") : "raise",
-        }
-    name1, name2 = os.path.basename(name1), os.path.basename(name2)
-    class1 = classify_name(name1)
-    class2 = classify_name(name2)
-    case = cases[(class1, class2)]
-    if case == "compare_crds":
-        if extension_rank(name1) == extension_rank(name2):
-            serial1, serial2 = newstyle_serial(name1), newstyle_serial(name2)
-            result = serial1 > serial2   # same extension compares by counter
-        else:  
-            result = extension_rank(name1) > extension_rank(name2)
-    elif case == "compare":
-        result = name1 > name2
-    elif case in [True, False]:
-        result = case
-    elif case == "query":
-        result = True
-        with log.warning_on_exception("Failed obtaining file activation dates for files", 
-                                      repr(name1), "and", repr(name2), 
-                                      "from server.   can't determine time order."):
-            info_map = api.get_file_info_map("hst", [name1, name2], fields=["activation_date"])
-            result = info_map[name1]["activation_date"] > info_map[name2]["activation_date"]
-    else:
-        raise NameComparisonError("Unhandled name comparison case: ", repr((class1, class2)))
-    log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
-    return result
-
-def classify_name(name):
-    """Classify filename `name` as "crds", "oldcdbs", or "newcdbs".
-
-    >>> classify_name("jwst_miri_dark_0057.fits")
-    'crds'
-
-    >>> classify_name("s7g1700gl_dead.fits")
-    'oldcdbs'
-
-    >>> classify_name("07g1700gl_dead.fits")
-    'newcdbs'
-
-    >>> classify_name("bbbbbb.fits")
-    Traceback (most recent call last):
-    ...
-    NameComparisonError: Failed to classify name 'bbbbbb.fits' for determining time order.
-    """
-    if crds_name(name):
-        return "crds"
-    elif old_cdbs_name(name):
-        return "oldcdbs"
-    elif new_cdbs_name(name):
-        return "newcdbs"
-    else:
-        raise NameComparisonError("Failed to classify name", repr(name), "for determining time order.")
-
-def crds_name(name):
-    """Return True IFF `name` is a CRDS-style name, e.g. hst_acs.imap
-    
-    >>> newstyle_name("s7g1700gl_dead.fits")
-    False
-    >>> newstyle_name("hst.pmap")
-    True
-    >>> newstyle_name("hst_acs_darkfile_0001.fits")
-    True
-    """
-    return name.startswith(tuple(crds.ALL_OBSERVATORIES))
-
-newstyle_name = crds_name  # legacy
-
-OLD_CDBS = re.compile(config.complete_re(r"[A-Za-z][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\.[A-Za-z0-9]{1,6}"))
-NEW_CDBS = re.compile(config.complete_re(r"[0-9][A-Za-z0-9]{8}_[A-Za-z0-9]{1,8}\.[A-Za-z0-9]{1,6}"))
-
-def old_cdbs_name(name1):
-    """Return True IFF name1 is and original CDBS-style name."""
-    return OLD_CDBS.match(name1) is not None
-    
-def new_cdbs_name(name1):
-    """Return True IFF name1 is an extended CDBS-style name."""
-    return NEW_CDBS.match(name1) is not None
-    
-def extension_rank(filename):
-    """Return a date ranking for `filename` based on extension, lowest numbers are oldest.
-    
-    >>> extension_rank("fooo.r0h")
-    0.0
-    >>> extension_rank("fooo.fits")
-    1.0
-    >>> extension_rank("fooo.json")
-    2.0
-    >>> extension_rank("fooo.yaml")
-    3.0
-    >>> extension_rank("/some/path/fooo.asdf")
-    4.0
-    """
-    ext = os.path.splitext(filename)[-1]
-    if re.match(r"\.r\dh", ext) or re.match(r"\.r\dd", ext):
-        return 0.0
-    elif ext == ".fits":
-        return 1.0
-    elif ext == ".json":
-        return 2.0
-    elif ext == ".yaml":
-        return 3.0
-    elif ext == ".asdf":
-        return 4.0
-    else:
-        return 5.0
-
-def newstyle_serial(name):
-    """Return the serial number associated with a CRDS-style name.
-
-    >>> newstyle_serial("hst_0042.pmap")
-    42
-    >>> newstyle_serial("hst_0990999.pmap")    
-    990999
-    >>> newstyle_serial("hst_cos_0999.imap")
-    999
-    >>> newstyle_serial("hst_cos_darkfile_0998.fits")
-    998
-    >>> newstyle_serial("hst.pmap")
-    -1
-    """
-    assert isinstance(name, python23.string_types)
-    serial_search = re.search(r"_(\d+)\.\w+", name)
-    if serial_search:
-        return int(serial_search.groups()[0], 10)
-    else:
-        return -1
 
 # ============================================================================
 
@@ -928,8 +726,8 @@ Differencing two sets of rules with simplified output:
             self.args.include_headers = True
         if self.args.sync_files:
             if self.args.print_all_new_files:
-                serial_old = newstyle_serial(self.old_file)
-                serial_new = newstyle_serial(self.new_file) + 1
+                serial_old = naming.newstyle_serial(self.old_file)
+                serial_new = naming.newstyle_serial(self.new_file) + 1
                 if None not in [serial_old, serial_new]:
                     errs = sync.SyncScript("crds.sync --range {0}:{1}".format(serial_old, serial_new))()
                     assert not errs, "Errors occurred while syncing all rules to CRDS cache."
