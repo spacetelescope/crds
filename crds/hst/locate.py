@@ -375,7 +375,7 @@ def ref_properties_from_header(filename):
 
 # ============================================================================
 
-def generate_unique_name(filename):
+def generate_unique_name(filename, now=None):
 
     """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
     generate and return a unique enhanced CDBS-style name which incorporates a timestamp,
@@ -390,18 +390,35 @@ Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS]
     """
+    path, _obs, instr, filekind, _serial, ext = ref_properties_from_header(filename)
 
+    name = generate_unique_name_core(instr, filekind, ext, now)
+
+    return os.path.join(path, name)
+
+def generate_unique_name_core(instr, filekind, extension, now=None):
+    """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
+    generate and return a unique enhanced CDBS-style name which incorporates a timestamp,
+    and instrument id character, and a filetype suffix.
+
+Character 1   : Year [z=2015, 0=2016, 1= 2017, etc.]
+Character 2   : Month [1-9, a-c]
+Character 3   : Day [1-9, a-s(28), t(29), u(30), v(31)]
+Character 4-5: UT Hour [00 - 23]
+Character 6-7: UT Minute [00 - 59]
+Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
+Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
+u=WFPC2, n=NICMOS]
+    """
     time.sleep(2)
 
-    path, obs, instr, filekind, serial, ext = ref_properties_from_header(filename)
-    
     suffix = "_" + filekind_to_suffix(instr, filekind)
     
     instr_char = siname.instrument_to_id_char(instr)
 
-    timeid = generate_timestamp()
+    timeid = generate_timestamp(now)
 
-    return os.path.join(path, timeid + instr_char + suffix) + ext
+    return timeid + instr_char + suffix + extension
 
 def generate_timestamp(now=None):
 
@@ -424,7 +441,7 @@ def generate_timestamp(now=None):
 
     if 1 <= now.day <= 9:
         day = chr(now.day - 1 + ord('1'))
-    elif 10 <=- now.day <= 31:
+    elif 10 <= now.day <= 31:
         day = chr(now.day - 10 + ord('a'))
 
     hour = "%02d" % now.hour
@@ -535,6 +552,8 @@ __all__ = [
     "condition_matching_header",
 
     "generate_unique_name",
+    "generate_unique_name_core",
+    "generate_timestamp",
 ]
 
 for name in __all__:
