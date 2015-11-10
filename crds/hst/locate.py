@@ -15,13 +15,12 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 import os.path
-import gzip
-import re
 import glob
 import datetime
+import time
 
 # import crds.pysh as pysh
-from crds import (log, rmap, pysh, data_file, config, utils, timestamp)
+from crds import (log, rmap, data_file, config, utils, timestamp)
 from crds.exceptions import CrdsError
 from crds.hst import siname
 
@@ -376,7 +375,12 @@ def ref_properties_from_header(filename):
 
 # ============================================================================
 
-"""
+def generate_unique_name(filename):
+
+    """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
+    generate and return a unique enhanced CDBS-style name which incorporates a timestamp,
+    and instrument id character, and a filetype suffix.
+
 Character 1   : Year [z=2015, 0=2016, 1= 2017, etc.]
 Character 2   : Month [1-9, a-c]
 Character 3   : Day [1-9, a-s(28), t(29), u(30), v(31)]
@@ -385,15 +389,9 @@ Character 6-7: UT Minute [00 - 59]
 Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS]
-
-"""
-
-def generate_unique_name(filename):
-
-    """Given an arbitrarily named filename (which must correctly define it's format, e.g. .fits)
-    generate and return a unique enhanced CDBS-style name which incorporates a timestamp,
-    and instrument id character, and a filetype suffix.
     """
+
+    time.sleep(2)
 
     path, obs, instr, filekind, serial, ext = ref_properties_from_header(filename)
     
@@ -535,6 +533,8 @@ __all__ = [
     "fits_to_parkeys",
     "reference_keys_to_dataset_keys",
     "condition_matching_header",
+
+    "generate_unique_name",
 ]
 
 for name in __all__:

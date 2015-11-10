@@ -6,9 +6,8 @@ from __future__ import absolute_import
 
 import os.path
 import sys
-import time
 
-from crds import cmdline, log, utils, data_file
+from crds import cmdline, log, data_file, naming
 
 class UniqnameScript(cmdline.Script):
 
@@ -40,12 +39,12 @@ class UniqnameScript(cmdline.Script):
 
     def print_name(self, filename):
         """Print a demo version of how filename would be renamed."""
-        uniqname = generate_unique_name(filename)
+        uniqname = naming.generate_unique_name(filename)
         print("Generating", repr(filename), "-->", repr(uniqname))
 
     def rename_file(self, filename):
         """Rename `filename` to a unique name."""
-        uniqname = generate_unique_name(filename)
+        uniqname = naming.generate_unique_name(filename)
         print("Renaming", repr(filename), "-->", repr(uniqname))
         if self.args.set_filename:
             with log.error_on_exception("Failed to set FILENAME keyword for", repr(filename)):
@@ -53,11 +52,5 @@ class UniqnameScript(cmdline.Script):
         with log.error_on_exception("Failed to rename file", repr(filename)):
             os.rename(filename, uniqname)
     
-def generate_unique_name(filename):
-    """Given and original filepath `filename` generate a unique CRDS name for the file."""
-    time.sleep(2)
-    locator = utils.file_to_locator(filename)
-    return locator.generate_unique_name(filename)
-
 if __name__ == "__main__":
     sys.exit(UniqnameScript()())
