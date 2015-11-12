@@ -560,7 +560,7 @@ class Selector(object):
         Note that the .tpn assumption applies primarily to HST, the valid value constraints
         for JWST may (eventually) come from the data model schema instead.
         """
-        if value in valid_list:   # typical |-glob valid_list membership
+        if value in valid_list or utils.condition_value(value) in valid_list:   # typical |-glob valid_list membership
             log.verbose("Value for", repr(name), "of", repr(value), "is in", repr(valid_list), verbosity=60)
             return
         if "*" in valid_list or "ANY" in valid_list  or \
