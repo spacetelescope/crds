@@ -1,16 +1,15 @@
-__svn_version__ = '2715M'
+__svn_version__ = '2730:2731M'
 
 __full_svn_info__ = '''
 Path: .
-Working Copy Root Path: /Users/jmiller/work/workspace_crds/CRDS
-URL: https://aeon.stsci.edu/ssb/svn/crds/trunk
+URL: https://aeon.stsci.edu/ssb/svn/crds/branches/jwst-build-5-server
 Repository Root: https://aeon.stsci.edu/ssb/svn/crds
 Repository UUID: 0d8f46c8-9b30-49d0-b470-0f6283dc92e8
-Revision: 2715
+Revision: 2730
 Node Kind: directory
 Schedule: normal
 Last Changed Author: jmiller@stsci.edu
-Last Changed Rev: 2715
-Last Changed Date: 2015-11-04 13:13:22 -0500 (Wed, 04 Nov 2015)
+Last Changed Rev: 2730
+Last Changed Date: 2015-11-12 15:28:31 -0500 (Thu, 12 Nov 2015)
 
 '''
