@@ -791,6 +791,9 @@ def table_mode_dictionary(generic_name, tab, mode_keys):
         if len(modes[mode]) > 1:
             log.warning("Duplicate definitions in", generic_name, basename, "for mode:", mode, ":\n", 
                         "\n".join([repr(row) for row in modes[mode]]))
+            # log.warning("-"*80, "\n\nDuplicate definitions in", generic_name, basename, "for mode:", mode, 
+            #            "in rows", repr([row[0] for row in modes[mode]]), ":\n\n", 
+            #            "\n\n".join([repr(row) for row in modes[mode]]), "\n")
     # modes[mode][0] is first instance of multiply defined mode.
     return { mode:modes[mode][0] for mode in modes }, all_cols
 
