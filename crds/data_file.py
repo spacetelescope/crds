@@ -56,6 +56,7 @@ import json
 import datetime
 import warnings
 import functools
+import gc
 
 from astropy.io import fits as pyfits
 from astropy.utils.exceptions import AstropyUserWarning
@@ -120,6 +121,7 @@ def get_observatory(filepath, original_name=None):
     `original_name` to make inferences based on file extension, or
     filepath if original_name is None.
     """
+    gc.collect()
     if original_name is None:
         original_name = filepath
     if "jwst" in original_name:
@@ -150,6 +152,7 @@ def getval(filepath, key, condition=True):
 @hijack_warnings
 def setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value`."""
+    gc.collect()
     ftype = config.filetype(filepath)
     if ftype == "fits":
         if key.upper().startswith(("META.","META_")):
@@ -167,6 +170,7 @@ def dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
     from jwst_lib import models
+    gc.collect()
     with models.open(filepath) as d_model:
         d_model[key.lower()] = value
         d_model.save(filepath)
@@ -202,6 +206,7 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
     """
+    gc.collect()
     if original_name is None:
         original_name = os.path.basename(filepath)
     filetype = config.filetype(original_name)
@@ -238,6 +243,18 @@ def get_data_model_header(filepath, needed_keys=()):
     d_header = reduce_header(filepath, d_header, needed_keys)
     header = cross_strap_header(d_header)
     return header
+
+'''
+from jwst_lib import models
+def dm_leak(filepath):
+    """Memory leak demo/test/debug function."""
+    # with log.augment_exception("JWST Data Model (jwst_lib.models)"):
+    d_model = models.open(filepath)
+    flat_dict = d_model.to_flat_dict(include_arrays=False)
+    d_model.close()
+    del d_model
+    return dict(flat_dict)
+'''
 
 def get_json_header(filepath, needed_keys=()):
     """Return the flattened header associated with a JSON file."""
@@ -400,6 +417,7 @@ def fits_open(filename, **keys):
     """Return the results of io.fits.open() configured using CRDS environment settings,  overriden by
     any conflicting keyword parameter values.
     """
+    gc.collect()
     keys = dict(keys)
     if "checksum" not in keys:
         keys["checksum"] = bool(config.FITS_VERIFY_CHECKSUM)
@@ -479,6 +497,7 @@ def is_geis_header(name):
 
 def get_geis_header(name, needed_keys=()):
     """Return the `needed_keys` from GEIS file at `name`."""
+    gc.collect()
 
     if isinstance(name, python23.string_types):
         if name.endswith("d"):
