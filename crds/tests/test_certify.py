@@ -204,11 +204,11 @@ def certify_table_comparison_reference():
     CRDS  : WARNING  Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS  : WARNING  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.041700000002),) :
-     (('DATE', 56925.0), ('HVLEVELB', 175))
-    (('DATE', 56925.0), ('HVLEVELB', 175))
+     (129, (('DATE', 56924.041700000002), ('HVLEVELB', 169)))
+    (131, (('DATE', 56924.041700000002), ('HVLEVELB', 169)))
     CRDS  : WARNING  Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56925.0),) :
-     (('DATE', 56925.0), ('HVLEVELB', 175))
-    (('DATE', 56925.0), ('HVLEVELB', 175))
+     (132, (('DATE', 56925.0), ('HVLEVELB', 175)))
+    (134, (('DATE', 56925.0), ('HVLEVELB', 175)))
     CRDS  : WARNING  Table mode (('DATE', 56921.833400000003),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS  : WARNING  Table mode (('DATE', 56922.0),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
     CRDS  : WARNING  Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[2]' is NOT IN new reference 'y951738kl_hv.fits[2]'
