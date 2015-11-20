@@ -25,9 +25,12 @@ __all__ = [
 
 # =============================================================================================================
 
-def generate_unique_name(filename):
+def generate_unique_name(filename, observatory):
     """Given and original filepath `filename` generate a unique CRDS name for the file."""
-    locator = utils.file_to_locator(filename)
+    if observatory is None:
+        locator = utils.file_to_locator(filename)
+    else:
+        locator = utils.get_locator_module(observatory)
     return locator.generate_unique_name(filename)
 
 # =============================================================================================================

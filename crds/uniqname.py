@@ -7,7 +7,9 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import cmdline, log, data_file, naming
+from astropy.io import fits
+
+from crds import cmdline, log, naming
 
 class UniqnameScript(cmdline.Script):
 
@@ -22,35 +24,56 @@ class UniqnameScript(cmdline.Script):
         super(UniqnameScript, self).__init__(*args, **keys)
     
     def add_args(self):
-        self.add_argument('--files', nargs="*", help="Files to rename.")
-        self.add_argument('-r', '--rename-files', action='store_true', dest='rename_files',
-                          help='Rename the given files to their generated unique names.')
-        self.add_argument('-f', '--set-filename', action='store_true', dest='set_filename', 
+        """Setup command line switch parsing."""
+        self.add_argument('--files', nargs="*", 
+                          help="Files to rename.")
+        self.add_argument('--dry-run', action='store_true',
+                          help='Print how a file would be renamed without modifying it.')
+        self.add_argument('-f', '--set-filename-keyword', action='store_true',
                           help='When renaming, set the FILENAME keyword of the file to the generated name.')
+        self.add_argument('-e', '--verify-file', action='store_true', 
+                          help='Verify FITS compliance and any checksums before changing each file.')
+        self.add_argument('-s', '--standard', action='store_true', 
+                          help='Same as --set-filename-keyword --verify-file,  does not add checksums (add -a).')
+        self.add_argument('-r', '--remove-original', action='store_true',
+                          help='After renaming,  remove the orginal file.')
+        self.add_argument('-o', '--output-path',
+                          help='Output renamed files to this directory path.')
+        group = self.get_exclusive_arg_group(required=False)
+        group.add_argument('-a', '--add-checksum', action='store_true',
+                           help='Add FITS checksum.  Without, checksums *removed* if header modified.')
+        group.add_argument('-d', '--delete-checksum', action='store_true',
+                           help='Delete FITS checksum. Make sure checksums are removed.')
         super(UniqnameScript, self).add_args()
         
     def main(self):
         """Generate names corrsponding to files listed on the command line."""
+        if self.args.standard:
+            self.args.set_filename_keyword = True
+            self.args.verify_file = True
+            self.args.remove_original = True
+
         for filename in self.files:
-            if self.args.rename_files:
-                self.rename_file(filename)
+            uniqname = naming.generate_unique_name(filename, self.observatory)
+            if self.args.dry_run:
+                log.info("Would rename", repr(filename), "-->", repr(uniqname))
             else:
-                self.print_name(filename)
-
-    def print_name(self, filename):
-        """Print a demo version of how filename would be renamed."""
-        uniqname = naming.generate_unique_name(filename)
-        print("Generating", repr(filename), "-->", repr(uniqname))
-
-    def rename_file(self, filename):
-        """Rename `filename` to a unique name."""
-        uniqname = naming.generate_unique_name(filename)
-        print("Renaming", repr(filename), "-->", repr(uniqname))
-        if self.args.set_filename:
-            with log.error_on_exception("Failed to set FILENAME keyword for", repr(filename)):
-                data_file.setval(filename, "FILENAME", os.path.basename(uniqname))
-        with log.error_on_exception("Failed to rename file", repr(filename)):
-            os.rename(filename, uniqname)
+                self.rewrite(filename, uniqname)
+                if self.args.remove_original:
+                    os.remove(filename)
     
+    def rewrite(self, filename, uniqname):
+        """Add a FITS checksum to `filename.`"""
+        hdus = fits.open(filename, mode="readonly", checksum=self.args.verify_file)
+        if self.args.verify_file:
+            hdus.verify("fix+warn")
+        basename = os.path.basename(uniqname)
+        if self.args.set_filename_keyword:
+            hdus[0].header["FILENAME"] = basename
+        if self.args.output_path:
+            uniqname = os.path.join(self.args.outpath, basename)
+        log.info("Rewriting", repr(filename), "-->", repr(uniqname))
+        hdus.writeto(uniqname, output_verify="fix+warn", checksum=self.args.add_checksum)
+            
 if __name__ == "__main__":
     sys.exit(UniqnameScript()())
