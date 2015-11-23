@@ -394,8 +394,8 @@ class TestCertify(CRDSTestCase):
             original_name="s7g1700gl_dead.fits", trap_exceptions=False)
 
     def test_AsdfCertify_opaque_name(self):
-        certify.certify_file(self.data("opaque_asd.tmp"), observatory="hst", context="hst.pmap", 
-            original_name="valid.asdf", trap_exceptions=False)
+        certify.certify_file(self.data("opaque_asd.tmp"), observatory="jwst", context="jwst_0082.pmap", 
+            original_name="valid.tmp", trap_exceptions=False)
 
 # ==================================================================================
 

@@ -942,7 +942,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
-    files:                  list of file paths to certify.
+    filename:               path of file to certify
     context:                .pmap name to certify relative to
     dump_provenance:        for references,  log provenance keywords and rmap parkey values.
     check_references:       False, "exists", "contents"
@@ -961,7 +961,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
         if observatory is None:
             observatory = utils.file_to_observatory(filename)
 
-        filetype, klass = get_certifier_class(original_name)
+        filetype, klass = get_certifier_class(original_name, filename)
 
         if comparison_reference:
             log.info("Certifying", repr(original_name) + ith,  "as", repr(filetype.upper()),
@@ -986,7 +986,7 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
     finally:
         log.set_exception_trap(old_flag)
 
-def get_certifier_class(original_name):
+def get_certifier_class(original_name, filepath):
     """Given a reference file name with a valid extension, return the filetype and 
     Certifier subclass used to check it.
     """
@@ -999,7 +999,7 @@ def get_certifier_class(original_name):
         "geis" : ReferenceCertifier,
         "unknown" : UnknownCertifier,
     }
-    filetype = config.filetype(original_name)
+    filetype = data_file.get_filetype(original_name, filepath)
     klass = klasses.get(filetype, UnknownCertifier)
     return filetype, klass
         
