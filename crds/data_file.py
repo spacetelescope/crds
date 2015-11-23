@@ -209,7 +209,7 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     gc.collect()
     if original_name is None:
         original_name = os.path.basename(filepath)
-    filetype = config.filetype(original_name)
+    filetype = get_filetype(original_name, filepath)
     try:
         header_func = {
             "asdf" : get_asdf_header,
@@ -230,6 +230,35 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
 
 # A clearer name
 get_unconditioned_header = get_header
+
+# ----------------------------------------------------------------------------------------------
+
+def get_filetype(original_name, filepath):
+    """Determine file type from `original_name` if possible, otherwise attempt to
+    idenitfy based on file contents.
+    """
+    filetype = config.filetype(original_name)
+    if filetype != "unknown":
+        return filetype
+    with open(filepath, "rb") as handle:
+        first_5 = handle.read(5)
+    if first_5 == "#ASDF":
+        return "asdf"
+    elif first_5 == "SIMPLE":
+        return "fits"
+    try:
+        with open(filepath) as handle:
+            json.load(handle)
+            return "json"
+    except Exception:
+        pass
+    try:
+        with open(filepath) as handle:
+            yaml.load(handle)
+            return "yaml"
+    except Exception:
+        pass
+    return "unknown"
 
 # ----------------------------------------------------------------------------------------------
 
