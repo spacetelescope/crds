@@ -9,15 +9,17 @@ import sys
 
 from astropy.io import fits
 
-from crds import cmdline, log, naming
+from crds import cmdline, config, log, naming
 
 class UniqnameScript(cmdline.Script):
 
-    """Command line script for renaming files with official CRDS names."""
+    """Command line script for renaming references with official CRDS names."""
 
-    description = """This script is used to rename files with unique official CRDS names."""
+    description = """This script is used to rename references with unique official CRDS names."""
         
-    epilog = """    
+    epilog = """
+
+
     """
 
     def __init__(self, *args, **keys):
@@ -29,6 +31,8 @@ class UniqnameScript(cmdline.Script):
                           help="Files to rename.")
         self.add_argument('--dry-run', action='store_true',
                           help='Print how a file would be renamed without modifying it.')
+        self.add_argument('-a', '--add-checksum', action='store_true',
+                           help='Add FITS checksum.  Without, checksums *removed* if header modified.')
         self.add_argument('-f', '--set-filename-keyword', action='store_true',
                           help='When renaming, set the FILENAME keyword of the file to the generated name.')
         self.add_argument('-e', '--verify-file', action='store_true', 
@@ -39,12 +43,11 @@ class UniqnameScript(cmdline.Script):
                           help='After renaming,  remove the orginal file.')
         self.add_argument('-o', '--output-path',
                           help='Output renamed files to this directory path.')
-        group = self.get_exclusive_arg_group(required=False)
-        group.add_argument('-a', '--add-checksum', action='store_true',
-                           help='Add FITS checksum.  Without, checksums *removed* if header modified.')
-        group.add_argument('-d', '--delete-checksum', action='store_true',
-                           help='Delete FITS checksum. Make sure checksums are removed.')
+        self.add_argument('-b', '--brief', action='store_true',
+                          help='Produce less output.')
         super(UniqnameScript, self).add_args()
+
+    locate_file = cmdline.Script.locate_file_outside_cache
         
     def main(self):
         """Generate names corrsponding to files listed on the command line."""
@@ -54,9 +57,11 @@ class UniqnameScript(cmdline.Script):
             self.args.remove_original = True
 
         for filename in self.files:
+            assert config.is_reference(filename), \
+                "File " + repr(filename) + " does not appear to be a reference file.  Only references can be renamed."
             uniqname = naming.generate_unique_name(filename, self.observatory)
             if self.args.dry_run:
-                log.info("Would rename", repr(filename), "-->", repr(uniqname))
+                log.info("Would rename", self.format_file(filename), "-->", self.format_file(uniqname))
             else:
                 self.rewrite(filename, uniqname)
                 if self.args.remove_original:
@@ -72,8 +77,11 @@ class UniqnameScript(cmdline.Script):
             hdus[0].header["FILENAME"] = basename
         if self.args.output_path:
             uniqname = os.path.join(self.args.outpath, basename)
-        log.info("Rewriting", repr(filename), "-->", repr(uniqname))
+        log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
         hdus.writeto(uniqname, output_verify="fix+warn", checksum=self.args.add_checksum)
-            
+
+    def format_file(self, filename):
+        return repr(os.path.basename(filename) if self.args.brief else filename)
+        
 if __name__ == "__main__":
     sys.exit(UniqnameScript()())
