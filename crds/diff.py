@@ -669,6 +669,9 @@ Differencing two sets of rules with simplified output:
     jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
 
     """
+    
+    failsafe_error_status = 2
+    
     def __init__(self, *args, **keys):
         super(DiffScript, self).__init__(*args, **keys)
         # self.old_file = None
