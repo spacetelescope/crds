@@ -148,6 +148,7 @@ class Script(object):
             result = self.main()
             self.report_stats()  # here if not called already
             return result
+        return self.failsafe_error_status if hasattr(self, "failsafe_error_status") else log.errors()
     
     @property
     def locator(self):
