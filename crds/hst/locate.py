@@ -390,7 +390,7 @@ Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS]
     """
-    path, _obs, instr, filekind, _serial, ext = ref_properties_from_header(filename)
+    path, _obs, instr, filekind, _serial, ext = get_reference_properties(filename)
 
     name = generate_unique_name_core(instr, filekind, ext, now)
 
@@ -410,7 +410,8 @@ Character 8   : UT Seconds [0-9, a-t (~2 second intervals)]
 Character 9   : Instrument Designation [j=ACS, i=WFC3, o=STIS, l=COS,
 u=WFPC2, n=NICMOS]
     """
-    time.sleep(2)
+    if now is None:
+        time.sleep(2)
 
     suffix = "_" + filekind_to_suffix(instr, filekind)
     
