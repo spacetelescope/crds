@@ -18,9 +18,29 @@ class UniqnameScript(cmdline.Script):
 
     description = """This script is used to rename references with unique official CRDS names."""
         
-    epilog = """
+    epilog = """This program is based loosely on the CDBS program uniqname modified to support
+enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 
+The CRDS uniqame is nominally run as follows:
 
+    % python -m crds.uniqname --files s7g1700gl_dead.fits --brief --standard
+    CRDS  : INFO     Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
+
+If --add-checksum is specified,  CRDS uniqname will add FITS checksums to the file.
+If --add-checksum is not specified,  CRDS uniqname WILL REMOVE any existing checksum.
+
+If --verify-file is specified,  CRDS uniqname will check the FITS checksum and validate
+the FITS format of renamed files.
+
+If  --add-keywords is specified CRDS uniqname will add/modify the FILENAME, ROOTNAME,
+and HISTORY to document the renaming.
+
+If --remove-original is specified then the original file is deleted after the renamed
+file has been created and modified as specified (checksums, keywords, etc.)
+
+Renamed files can be output to a different directory using --output-path.
+
+--dry-run can be used to demo renaming by printing what the new name would be.
     """
 
     def __init__(self, *args, **keys):
@@ -34,12 +54,12 @@ class UniqnameScript(cmdline.Script):
                           help='Print how a file would be renamed without modifying it.')
         self.add_argument('-a', '--add-checksum', action='store_true',
                           help='Add FITS checksum.  Without, checksums *removed* if header modified.')
-        self.add_argument('-f', '--add-filename-keywords', action='store_true',
+        self.add_argument('-f', '--add-keywords', action='store_true',
                           help='When renaming, add FILENAME, ROOTNAME, HISTORY keywords for the generated name.')
         self.add_argument('-e', '--verify-file', action='store_true', 
                           help='Verify FITS compliance and any checksums before changing each file.')
         self.add_argument('-s', '--standard', action='store_true', 
-                          help='Same as --add-filename-keywords --verify-file,  does not add checksums (add -a).')
+                          help='Same as --add-keywords --verify-file,  does not add checksums (add -a).')
         self.add_argument('-r', '--remove-original', action='store_true',
                           help='After renaming,  remove the orginal file.')
         self.add_argument('-o', '--output-path',
@@ -53,7 +73,7 @@ class UniqnameScript(cmdline.Script):
     def main(self):
         """Generate names corrsponding to files listed on the command line."""
         if self.args.standard:
-            self.args.add_filename_keywords = True
+            self.args.add_keywords = True
             self.args.verify_file = True
         for filename in self.files:
             assert config.is_reference(filename), \
@@ -72,7 +92,7 @@ class UniqnameScript(cmdline.Script):
         if self.args.verify_file:
             hdus.verify("fix+warn")
         basename = os.path.basename(uniqname)
-        if self.args.add_filename_keywords:
+        if self.args.add_keywords:
             now = datetime.datetime.now()
             hdus[0].header["FILENAME"] = basename
             hdus[0].header["ROOTNAME"] = os.path.splitext(basename)[0].upper()
