@@ -377,10 +377,7 @@ class Script(object):
             elif self.args.pdb:
                 pdb.runctx("self._main()", globals(), locals())
             else:
-                status = self._main()
-                if status is None:
-                    status = log.errors()
-                return status
+                return self._main()
         except KeyboardInterrupt:
             if self.args.pdb:
                 raise
