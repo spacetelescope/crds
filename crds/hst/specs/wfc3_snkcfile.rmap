@@ -10,8 +10,8 @@ header = {
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(DETECTOR == "UVIS" and SUBARRAY == "FALSE")',
-    'sha1sum' : '07acda0c3eb5bf5e0c07cf6897342cd43f0c2cdb',
+    'rmap_relevance' : '(DETECTOR == "UVIS")',
+    'sha1sum' : '71f1fb28bd82a98778050f57b83ecbd3c47dd1a1',
     'suffix' : 'snk',
     'text_descr' : 'Sink Pixel Correction Image',
 }

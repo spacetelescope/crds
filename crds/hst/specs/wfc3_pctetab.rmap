@@ -10,8 +10,8 @@ header = {
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(DETECTOR == "UVIS" and SUBARRAY == "FALSE")',
-    'sha1sum' : '85a926223718bd197a8fd7991aaba97d4df5bb9f',
+    'rmap_relevance' : '(DETECTOR == "UVIS")',
+    'sha1sum' : '98591e299cd213ca72b3a60358674d09cbab012a',
     'suffix' : 'cte',
     'text_descr' : 'Pixel CTE Correction Table',
 }
