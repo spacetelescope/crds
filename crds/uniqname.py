@@ -26,6 +26,9 @@ The CRDS uniqame is nominally run as follows:
     % python -m crds.uniqname --files s7g1700gl_dead.fits --brief --standard
     CRDS  : INFO     Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
 
+If -s or --standard is added then routinely used switches are added as a
+predefined bundle.   Initially these are --add-keywords and --verify-file.
+
 If --add-checksum is specified,  CRDS uniqname will add FITS checksums to the file.
 If --add-checksum is not specified,  CRDS uniqname WILL REMOVE any existing checksum.
 
@@ -48,7 +51,7 @@ Renamed files can be output to a different directory using --output-path.
     
     def add_args(self):
         """Setup command line switch parsing."""
-        self.add_argument('--files', nargs="*", 
+        self.add_argument('--files', nargs="+", 
                           help="Files to rename.")
         self.add_argument('--dry-run', action='store_true',
                           help='Print how a file would be renamed without modifying it.')
@@ -75,6 +78,10 @@ Renamed files can be output to a different directory using --output-path.
         if self.args.standard:
             self.args.add_keywords = True
             self.args.verify_file = True
+
+        if not self.args.files:
+            return
+
         for filename in self.files:
             assert config.is_reference(filename), \
                 "File " + repr(filename) + " does not appear to be a reference file.  Only references can be renamed."
