@@ -176,9 +176,9 @@ class RefactorScript(cmdline.Script):
     def add_args(self):
         self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "del_header", "delete_parameter"),
             help="Name of refactoring command to perform.")
-        self.add_argument('--old_rmap', type=cmdline.reference_mapping, default=None,
+        self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
             help="Reference mapping to modify by inserting references.")
-        self.add_argument('--new_rmap', type=cmdline.reference_mapping, default=None,
+        self.add_argument('--new-rmap', type=cmdline.reference_mapping, default=None,
             help="Name of modified reference mapping output file.")
         self.add_argument('--references', type=str, nargs="*",
             help="Reference files to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
