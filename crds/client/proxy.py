@@ -18,11 +18,11 @@ from crds import python23
 if sys.version_info < (3, 0, 0):
     import HTMLParser as parser_mod
     from urllib2 import urlopen
+    unescape = parser_mod.HTMLParser().unescape
 else:
     import html.parser as parser_mod
     from urllib.request import urlopen
-
-PARSER = parser_mod.HTMLParser()
+    from html import unescape
 
 from crds import log, config
 
@@ -127,7 +127,7 @@ class CheckingProxy(object):
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = str(PARSER.unescape(jsonrpc["error"]["message"]))
+            decoded = str(unescape(jsonrpc["error"]["message"]))
             log.verbose("RPC FAILED", decoded)
             raise ServiceError(decoded)
         result = crds_decode(jsonrpc["result"])

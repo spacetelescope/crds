@@ -17,7 +17,7 @@
 # can be performed without a network connection.
 #
 foreach pmap (${CRDS_PATH}/mappings/$1/$1*.pmap)
-    echo "==================================================================================" |& cat
-    python -m crds.certify --$1 $pmap --exist $2 $3 $4 $5 $6
+    echo "=================================================================================="
+    python -m crds.certify --$1 $pmap --exist $2 $3 $4 $5 $6 --readonly-cache
 end
 

@@ -126,7 +126,7 @@ def get_minimum_exptime(context, references):
     """Return the minimum EXPTIME for the list of `references` with respect to `context`.
     This is used to define the potential reprocessing impact of new references,  since
     no dataset with an earlier EXPTIME than a reference is typically affected by the 
-    reference,  partciularly with respect to the HST USEAFTER approach.
+    reference,  particularly with respect to the HST USEAFTER approach.
     
     >>> get_minimum_exptime("hst.pmap", ["q9e1206kj_bia.fits"])
     '2006-07-04 11:32:35'
