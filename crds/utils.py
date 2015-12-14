@@ -13,6 +13,7 @@ import functools
 from collections import Counter
 import datetime
 import ast
+import gc
 
 # from crds import data_file,  import deferred until required
 
@@ -36,6 +37,7 @@ class Struct(dict):
 
 def traced(func):
     """Issue a verbose message showing parameters and possibly return val."""
+    @functools.wraps(func)
     def func2(*args, **keys):
         "Decoration wrapper for @trace."
         log.verbose("trace:", func.__name__, args if args else "", keys if keys else "", verbosity=55)
@@ -43,9 +45,25 @@ def traced(func):
         log.verbose("trace result:", func.__name__, ":", result, verbosity=55)
         return result
     func2.__name__ = func.__name__ + " [traced]"
-    func2.__doc__ = func.__doc__
-    func2.__module__ = func.__module__
     func2._traced = True
+    return func2
+
+# ===================================================================
+
+def gc_collected(func):
+    """Run Python's gc.collect() before and after the decorated function."""
+    @functools.wraps(func)
+    def func2(*args, **keys):
+        "Decoration wrapper for @gc_collected."
+        gc.collect()
+        result = None
+        try:
+            result = func(*args, **keys)
+        finally:
+            gc.collect()
+        return result
+    func2.__name__ = func.__name__ + " [gc_collected]"
+    func2._gc_collected = True
     return func2
 
 # ===================================================================

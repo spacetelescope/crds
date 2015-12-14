@@ -97,10 +97,11 @@ class SimpleTable(object):
             with data_file.fits_open(filename) as hdus:
                 tab = hdus[segment].data
                 self.colnames = tuple(name.upper() for name in tab.columns.names)
+                self.rows = tuple(tuple(row) for row in tab)   # readonly
         else:
             tab = table.Table.read(filename)
             self.colnames = tuple(name.upper() for name in tab.columns)
-        self.rows = tuple(tuple(row) for row in tab)   # readonly
+            self.rows = tuple(tuple(row) for row in tab)   # readonly
         log.verbose("Creating", repr(self), verbosity=60)
         
     @property
