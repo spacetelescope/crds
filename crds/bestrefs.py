@@ -565,7 +565,8 @@ and debug output.
             assert self.new_context and self.old_context, \
                 "--diffs-only only works for context-to-context bestrefs."
             differ = diff.MappingDifferencer(
-                self.observatory, self.old_context, self.new_context)
+                self.observatory, self.old_context, self.new_context, 
+                include_header_diffs=True, hide_boring_diffs=True)
             self.affected_instruments = differ.get_affected()
             log.info("Mapping differences from", repr(self.old_context), 
                      "-->", repr(self.new_context), "affect:\n", 
