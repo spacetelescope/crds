@@ -310,8 +310,9 @@ class TestBestrefs(CRDSTestCase):
         os.remove("j8bt06o6q_raw.fits")
 
     def test_bestrefs_bad_sources(self):
-        self.run_script("crds.bestrefs --all-instruments --instrument cos --new-context hst_0315.pmap",
-                        expected_errs=1)
+        with self.assertRaises(AssertionError):
+            self.run_script("crds.bestrefs --all-instruments --instrument cos --new-context hst_0315.pmap",
+                            expected_errs=1)
 
     def test_bestrefs_update_headers(self):
         # """update_headers updates original headers from a pickle saving a new pickle withn orginal + overrides."""
