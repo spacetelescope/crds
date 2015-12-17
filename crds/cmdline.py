@@ -143,12 +143,11 @@ class Script(object):
         calls self.main() which does the real work of the script.   _main() defines the full
         call tree of code which is run inside the profiler or debugger.
         """
-        with log.error_on_exception("Failed"):
-            self.contexts = self.determine_contexts()
-            result = self.main()
-            self.report_stats()  # here if not called already
-            return result
-    
+        self.contexts = self.determine_contexts()
+        result = self.main()
+        self.report_stats()  # here if not called already
+        return result
+
     @property
     def locator(self):
         """Return the module for observatory specific file locations and plugins functions."""
