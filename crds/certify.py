@@ -560,7 +560,7 @@ class ReferenceCertifier(Certifier):
     def _dump_provenance_core(self, dump_keys):
         """Generic dumper for self.header,  returns unseen keys."""
         unseen = set(dump_keys)
-        for key in dump_keys:
+        for key in sorted(dump_keys):
             if self._check_provenance_key(key):
                 unseen.remove(key)
         return unseen
@@ -849,7 +849,7 @@ class UnknownCertifier(Certifier):
 
     def load(self):
         """Load file of unknown type."""
-        with open(self.filename) as handle:
+        with open(self.filename, "rb") as handle:
             contents = handle.read()
         return contents
     
