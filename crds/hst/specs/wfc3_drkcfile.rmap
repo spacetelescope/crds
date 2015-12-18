@@ -1,20 +1,22 @@
 header = {
-    'derived_from' : 'Hand made Fri 2015-12-11 for CRDS Trac ticket #364',
+    'derived_from' : 'Hand edited 2015-12-18',
     'filekind' : 'DRKCFILE',
     'filetype' : 'CTEDARK',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
-    'name' : 'wfc3_drkcfile.rmap',
+    'name' : 'hst_wfc3_drkcfile_0004.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'CCDAMP', 'BINAXIS1', 'BINAXIS2', 'CCDGAIN'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(DETECTOR == "UVIS" and DARKCORR != "OMIT" and PCTECORR == "PERFORM")',
-    'sha1sum' : 'a0d08fc7b8b7fe2a2be948b0caaf12352036497a',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and PCTECORR == "PERFORM")',
+    'sha1sum' : '37c76fddad61af617facf2874fb91809c66659fb',
     'suffix' : 'dkc',
     'text_descr' : 'Cte Corrected Dark',
 }
 
 selector = Match({
+    () : UseAfter({
+    }),
 })

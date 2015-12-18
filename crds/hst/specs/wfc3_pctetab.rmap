@@ -1,20 +1,22 @@
 header = {
-    'derived_from' : 'Initial hand made version.  2014-12-15',
+    'derived_from' : 'Updated by hand 2015-12-18',
     'filekind' : 'PCTETAB',
     'filetype' : 'PIXCTE',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
-    'name' : 'hst_wfc3_pctetab.rmap',
+    'name' : 'hst_wfc3_pctetab_0003.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'TABLE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(DETECTOR == "UVIS")',
-    'sha1sum' : '98591e299cd213ca72b3a60358674d09cbab012a',
+    'rmap_relevance' : '(DETECTOR=="UVIS" and PCTECORR == "PERFORM")',
+    'sha1sum' : '2c56f972b19255533ddcd7f138c637b91805745f',
     'suffix' : 'cte',
     'text_descr' : 'Pixel CTE Correction Table',
 }
 
 selector = Match({
+    () : UseAfter({
+    }),
 })

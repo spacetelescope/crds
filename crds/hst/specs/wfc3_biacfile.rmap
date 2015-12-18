@@ -1,20 +1,22 @@
 header = {
-    'derived_from' : 'Initial hand made version.  2014-12-15',
+    'derived_from' : 'Hand edited 2015-12-18',
     'filekind' : 'BIACFILE',
     'filetype' : 'CTEBIAS',
     'instrument' : 'WFC3',
     'mapping' : 'REFERENCE',
-    'name' : 'hst_wfc3_biacfile.rmap',
+    'name' : 'hst_wfc3_biacfile_0003.rmap',
     'observatory' : 'HST',
-    'parkey' : (('DETECTOR', 'APERTURE', 'CCDAMP', 'CCDGAIN', 'BINAXIS1', 'BINAXIS2'), ('DATE-OBS', 'TIME-OBS')),
+    'parkey' : ((), ('DATE-OBS', 'TIME-OBS')),
     'reffile_format' : 'IMAGE',
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
-    'rmap_relevance' : '(DETECTOR == "UVIS" and DARKCORR != "OMIT" and PCTECORR == "PERFORM")',
-    'sha1sum' : '137a854ac72a48fc5e4685b5acd857d52912a18a',
+    'rmap_relevance' : '(DETECTOR == "UVIS" and PCTECORR == "PERFORM")',
+    'sha1sum' : 'f4105b8e78970fdbc03541008f890faa095d933a',
     'suffix' : 'bic',
     'text_descr' : 'CTE Bias Frame',
 }
 
 selector = Match({
+    () : UseAfter({
+    }),
 })
