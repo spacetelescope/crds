@@ -11,7 +11,7 @@ header = {
     'reffile_required' : 'YES',
     'reffile_switch' : 'PCTECORR',
     'rmap_relevance' : '(DETECTOR=="UVIS")',
-    'sha1sum' : 'ceb8131544662f62753d8ff9082a2a389a35dfb8',
+    'sha1sum' : '50a038c1bea1a448b555498b171ab330577e669c',
     'suffix' : 'snk',
     'text_descr' : 'Sink Pixel Correction Image',
 }
