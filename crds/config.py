@@ -697,7 +697,7 @@ CRDS_NAME_RE_STR = r"([a-z]{1,32}_?){1,6}(_\d\d\d\d)?\."
 CRDS_NAME_RE = re.compile(CRDS_NAME_RE_STR)   # intentionally not complete.
 
 # s7g1700gl_dead.fits
-CDBS_NAME_RE_STR = r"[a-z0-9]{1,10}_[a-z]{1,10}\.(fits|r\d[hd])"
+CDBS_NAME_RE_STR = r"[a-z0-9]{1,10}_[a-z0-9]{1,10}\.(fits|r\d[hd])"
 CDBS_NAME_RE = re.compile(complete_re(CDBS_NAME_RE_STR))
 
 def is_valid_reference_name(filename):
