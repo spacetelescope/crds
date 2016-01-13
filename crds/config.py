@@ -805,6 +805,9 @@ def is_mapping_spec(mapping):
     >>> is_mapping_spec("hst-edit")
     True
     
+    >>> is_mapping_spec("hst-cos-deadtab-edit")
+    True
+    
     >>> is_mapping_spec("jwst-operational")
     True
     
