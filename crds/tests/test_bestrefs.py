@@ -273,7 +273,7 @@ class TestBestrefs(CRDSTestCase):
         
     def test_bestrefs_from_json(self):
         self.run_script("crds.bestrefs --new-context hst_0315.pmap --load-pickle data/test_cos.json --stats",
-                        expected_errs=0)
+                        expected_errs=1)
 
     def test_bestrefs_to_json(self):
         self.run_script("crds.bestrefs --instrument cos --new-context hst_0315.pmap --save-pickle test_cos.json --datasets-since 2015-01-01 --stats",
@@ -317,7 +317,7 @@ class TestBestrefs(CRDSTestCase):
     def test_bestrefs_update_headers(self):
         # """update_headers updates original headers from a pickle saving a new pickle withn orginal + overrides."""
         self.run_script("crds.bestrefs --new-context hst_0315.pmap --datasets LCE31SW6Q:LCE31SW6Q --load-pickle data/test_cos_update.json "
-                        " --save-pickle ./test_cos_combined.json --update-bestrefs --update-pickle", expected_errs=0)
+                        " --save-pickle ./test_cos_combined.json --update-bestrefs --update-pickle", expected_errs=1)
         with open("./test_cos_combined.json") as pfile:
             header = json.load(pfile)
         header = header["LCE31SW6Q:LCE31SW6Q"]
