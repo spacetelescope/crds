@@ -8,9 +8,7 @@ import os.path
 import sys
 import datetime
 
-from astropy.io import fits
-
-from crds import cmdline, config, log, naming
+from crds import cmdline, config, log, naming, data_file
 
 class UniqnameScript(cmdline.Script):
 
@@ -69,6 +67,8 @@ Renamed files can be output to a different directory using --output-path.
                           help='Output renamed files to this directory path.')
         self.add_argument('-b', '--brief', action='store_true',
                           help='Produce less output.')
+        self.add_argument("--fits-errors", action="store_true",
+                          help="When set, treat FITS compliance and checksum errors as fatal exceptions.")
         super(UniqnameScript, self).add_args()
 
     locate_file = cmdline.Script.locate_file_outside_cache
@@ -92,23 +92,29 @@ Renamed files can be output to a different directory using --output-path.
                 self.rewrite(filename, uniqname)
                 if self.args.remove_original:
                     os.remove(filename)
+
+        # XXXX script returns filename result not suitable as program exit status
+        # XXXX filename result is insufficient if multiple files are specified.
+        # XXXX filename result supports embedded use on web server returning new name.
+        return uniqname  
     
     def rewrite(self, filename, uniqname):
         """Add a FITS checksum to `filename.`"""
-        hdus = fits.open(filename, mode="readonly", checksum=self.args.verify_file)
-        if self.args.verify_file:
-            hdus.verify("fix+warn")
-        basename = os.path.basename(uniqname)
-        if self.args.add_keywords:
-            now = datetime.datetime.now()
-            hdus[0].header["FILENAME"] = basename
-            hdus[0].header["ROOTNAME"] = os.path.splitext(basename)[0].upper()
-            hdus[0].header["HISTORY"] = "{0} renamed to {1} on {2} {3} {4}".format(
-                os.path.basename(filename), basename, MONTHS[now.month - 1], now.day, now.year)
-        if self.args.output_path:
-            uniqname = os.path.join(self.args.outpath, basename)
-        log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
-        hdus.writeto(uniqname, output_verify="fix+warn", checksum=self.args.add_checksum)
+        with data_file.fits_open(filename, mode="readonly", checksum=self.args.verify_file, do_not_scale_image_data=True) as hdus:
+            verify_mode = "fix+warn" if not self.args.fits_errors else "fix+exception"
+            if self.args.verify_file:
+                hdus.verify(verify_mode)
+            basename = os.path.basename(uniqname)
+            if self.args.add_keywords:
+                now = datetime.datetime.now()
+                hdus[0].header["FILENAME"] = basename
+                hdus[0].header["ROOTNAME"] = os.path.splitext(basename)[0].upper()
+                hdus[0].header["HISTORY"] = "{0} renamed to {1} on {2} {3} {4}".format(
+                    os.path.basename(filename), basename, MONTHS[now.month - 1], now.day, now.year)
+            if self.args.output_path:
+                uniqname = os.path.join(self.args.outpath, basename)
+            log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
+            hdus.writeto(uniqname, output_verify=verify_mode, checksum=self.args.add_checksum)
 
     def format_file(self, filename):
         """Print absolute path or basename of `filename` depending on command line --brief"""
@@ -117,6 +123,39 @@ Renamed files can be output to a different directory using --output-path.
 MONTHS = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ]
-    
+
+def checksum_exists(filename):
+    """Return True IFF `path` names a file which already has FITS checksums.  As a first guess,
+    existing checksums should be maintained across file content updates required by the renaming.
+    """
+    with data_file.fits_open(filename, mode="readonly", do_not_scale_image_data=True) as hdus:
+        for hdu in hdus:
+            if "CHECKSUM" in hdu.header or "DATASUM" in hdu.header:
+                add_checksum = True
+                break
+        else:
+            add_checksum = False
+    return add_checksum
+
+def uniqname(old_path):
+    """Rename file named `oldpath` to a newstyle HST uniqname format name.  This function
+    is used to integrate uniqname with the HST CRDS servers as the approach for "Auto Rename".
+    This function rewrites the original file at a new name/path and removes the original since
+    the new file is not only renamed but different.
+
+    Verify FITS compliance and any FITS checksums,  raising an exception on any problem.
+
+    Add FILENAME, ROOTNAME, and HISTORY keywords.
+    Preserve any FITS checksums.
+
+    Returns  new_cdbs_style_name : str
+    """
+    add_checksums = "--add-checksums" if checksum_exists(old_path) else ""
+    new_name = UniqnameScript("crds.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
+            old_path, add_checksums))()
+    return new_name
+
 if __name__ == "__main__":
-    sys.exit(UniqnameScript()())
+    UniqnameScript()()
+    sys.exit(log.errors())
+
