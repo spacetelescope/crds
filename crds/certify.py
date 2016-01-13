@@ -934,7 +934,7 @@ def banner(char='#'):
     
 # ============================================================================
 
-# @data_file.hijack_warnings
+@data_file.hijack_warnings
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, script=None, observatory=None,
