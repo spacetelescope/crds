@@ -426,7 +426,7 @@ def generate_timestamp(now=None):
     """Generate an enhanced CDBS-style uniqname."""
 
     if now is None:
-        now = datetime.datetime.now()
+        now = datetime.datetime.utcnow()
     
     if now.year < 2016:
         year = chr(now.year - 2015 + ord('z'))
