@@ -508,7 +508,6 @@ and debug output.
             self.args.diffs_only = True
             if not self.args.datasets_since:
                 self.args.datasets_since = "auto"
-            self.args.optimize_tables = True
             self.args.print_update_counts = True
             self.args.print_affected = True
             self.args.dump_unique_errors = True
@@ -730,7 +729,7 @@ and debug output.
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         self.add_argument("--affected-datasets", action="store_true", 
-            help="Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats")
+            help="Abbreviation for --diffs-only --datasets-since=auto --print-update-counts --print-affected --dump-unique-errors --stats")
         
         self.add_argument("-z", "--optimize-tables", action="store_true", 
             help="If set, apply row-based optimizations to screen out inconsequential table updates.")
