@@ -8,7 +8,7 @@ import os.path
 import sys
 import datetime
 
-from crds import cmdline, config, log, naming, data_file
+from crds import cmdline, config, log, naming, data_file, CrdsError
 
 class UniqnameScript(cmdline.Script):
 
@@ -104,17 +104,27 @@ Renamed files can be output to a different directory using --output-path.
             verify_mode = "fix+warn" if not self.args.fits_errors else "fix+exception"
             if self.args.verify_file:
                 hdus.verify(verify_mode)
-            basename = os.path.basename(uniqname)
+            basefile = os.path.basename(filename)
+            baseuniq = os.path.basename(uniqname)
             if self.args.add_keywords:
                 now = datetime.datetime.utcnow()
-                hdus[0].header["FILENAME"] = basename
-                hdus[0].header["ROOTNAME"] = os.path.splitext(basename)[0].upper()
+                hdus[0].header["FILENAME"] = baseuniq
+                hdus[0].header["ROOTNAME"] = os.path.splitext(baseuniq)[0].upper()
                 hdus[0].header["HISTORY"] = "{0} renamed to {1} on {2} {3} {4}".format(
-                    os.path.basename(filename), basename, MONTHS[now.month - 1], now.day, now.year)
+                    basefile, baseuniq, MONTHS[now.month - 1], now.day, now.year)
             if self.args.output_path:
-                uniqname = os.path.join(self.args.outpath, basename)
-            log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
-            hdus.writeto(uniqname, output_verify=verify_mode, checksum=self.args.add_checksum)
+                uniqname = os.path.join(self.args.outpath, baseuniq)
+            try:
+                log.info("Rewriting", self.format_file(filename), "-->", self.format_file(uniqname))
+                hdus.writeto(uniqname, output_verify=verify_mode, checksum=self.args.add_checksum)
+            except Exception as exc:
+                if os.path.exists(uniqname):
+                    os.remove(uniqname)
+                if "buffer is too small" in str(exc):
+                    raise CrdsError("Failed to rename/rewrite", repr(basefile), "as", repr(baseuniq), ":", 
+                                    "probable file truncation", ":", str(exc))
+                else:
+                    raise CrdsError("Failed to rename/rewrite", repr(basefile), "as", repr(baseuniq), ":", str(exc))
 
     def format_file(self, filename):
         """Print absolute path or basename of `filename` depending on command line --brief"""
