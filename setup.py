@@ -59,10 +59,10 @@ setup(name="crds",
       classifiers=[
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: BSD License',
-          'Operating System :: OS-X, Linux', 
+          'Operating System :: POSIX :: Linux',
+          'Operating System :: MacOS :: MacOS X',
           'Programming Language :: Python :: 2.7',
-          # 'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: Implementation :: CPython',
+          'Programming Language :: Python :: 3',
           'Topic :: Scientific/Engineering :: Astronomy',
       ],
       **setup_pars

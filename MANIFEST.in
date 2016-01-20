@@ -1,2 +1,2 @@
-include README.rst TESTING install setup.py setup.cfg
+include README.rst TESTING install setup.py setup_data.py setup.cfg
 recursive-include envs *
