@@ -11,6 +11,13 @@
 \usepackage{longtable}
 \usepackage{sphinx}
 \usepackage{multirow}
+\usepackage{amsfonts}
+\usepackage{amsfonts}
+
+\addto\captionsenglish{\renewcommand{\figurename}{Fig. }}
+\addto\captionsenglish{\renewcommand{\tablename}{Table }}
+\SetupFloatingEnvironment{literal-block}{name=Listing }
+
 
 \usepackage{enumitem}
 \setlistdepth{15}
@@ -61,11 +68,12 @@
 
 
 \title{crds Documentation}
-\date{November 09, 2015}
-\release{1.8}
+\date{January 21, 2016}
+\release{1.9.0}
 \author{STScI}
 \newcommand{\sphinxlogo}{\includegraphics{stsci_logo.pdf}\par}
 \renewcommand{\releasename}{Release}
+\setcounter{tocdepth}{2}
 \makeindex
 
 \makeatletter
@@ -86,7 +94,7 @@
 \expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
 \expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
 \expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
@@ -108,16 +116,18 @@
 \expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
 \expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
 \expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
 \expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@ch\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
 \expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
@@ -129,7 +139,7 @@
 \expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PYG@tok@cpf\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
@@ -162,6 +172,8 @@
 \def\PYGZrb{]}
 \makeatother
 
+\renewcommand\PYGZsq{\textquotesingle}
+
 \begin{document}
 
 \maketitle
@@ -182,17 +194,6 @@ core package enabling local use and development of mappings
 and reference files.  contains command line utility programs.
 
 \end{itemize}
-
-\end{description}
-
-\item {} \begin{description}
-\item[{crds.cache}] \leavevmode\begin{itemize}
-\item {} 
-prototype cache which contains the original baseline CRDS mappings generated
-
-\end{itemize}
-
-for HST and JWST,  also demonstrating cache structure for a dual project cache.
 
 \end{description}
 
@@ -222,15 +223,6 @@ certification constraints, and naming works.
 \item[{crds.jwst}] \leavevmode\begin{itemize}
 \item {} 
 analogous to crds.hst,  for JWST.
-
-\end{itemize}
-
-\end{description}
-
-\item {} \begin{description}
-\item[{crds.tobs}] \leavevmode\begin{itemize}
-\item {} 
-test observatory supporting artificial rules cases and tests.
 
 \end{itemize}
 
@@ -307,6 +299,23 @@ Lists cache files and configuration,  prints rules files,  dumps database datase
 
 \end{itemize}
 
+CRDS bestrefs for JWST:
+
+The crds.bestrefs functionality which assigns best references to datasets is fully integrated with the
+JWST calibration software and operates transparently as a consequence of running pipelines.
+
+Local Use:
+
+The CRDS defaults are set for onsite use at STScI.   These leverage a shared read-only cache of CRDS rules
+and references currently located at /grp/crds/cache.  HST users will need to set their iref\$-style environment
+variables accordingly to use references maintained by CRDS in /grp/crds/cache,  see below.
+
+Remote Use:
+
+CRDS can be configured to operate at remote sites by defining a CRDS server and a local cache directory.  With
+this configuration CRDS will transparently download the best references and CRDS rules required to calibrate datasets
+on demand.  See below for configuration instructions.
+
 More information can be found on each tool using the command line -- --help switch,  e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -319,10 +328,9 @@ or in the command line tools section of this document.
 \chapter{Installation}
 \label{installation:installation}
 
-\section{Installation via Ureka}
-\label{installation:installation-via-ureka}
-Ureka is a collection of astronomy software that provides everything you need to run the data reduction packages
-provided by STScI.   Most people install CRDS as part of Ureka which is found here:
+\section{Installation via Ureka or Conda}
+\label{installation:installation-via-ureka-or-conda}
+Most people install CRDS as part of STScI/SSB's (Science Software Branch) Ureka (or now Conda) which is found here:
 \begin{quote}
 
 \href{http://ssb.stsci.edu/ureka/}{http://ssb.stsci.edu/ureka/}
@@ -332,7 +340,7 @@ Follow the instructions for installing Ureka and afterward you should be able to
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYGZpc{} python \PYGZhy{}m crds.list \PYGZhy{}\PYGZhy{}version
-CRDS  : INFO     crds version 1.1.1 revision 1784M
+CRDS  : INFO     crds version 1.9.0 revision 2789:2793M
 \end{Verbatim}
 
 and get similar output reflecting your installed CRDS version.
@@ -394,18 +402,12 @@ OPTIONAL: For executing the unit tests (runtests) add:
 \item {} 
 nose
 
-\item {} 
-BeautifulSoup
-
-\item {} 
-stsci.tools
-
 \end{itemize}
 
 OPTIONAL: For running crds.certify to fully check CRDS rules/mapping files add:
 \begin{itemize}
 \item {} 
-Parsley-1.1  (included in CRDS subversion under third\_party)
+Parsley-1.2
 
 \item {} 
 pyaml  (for certifying and using yaml references)
@@ -461,7 +463,7 @@ are subject to automatic replacement or deletion by the CRDS framework and shoul
 working copies only.
 
 
-\section{Setup for On Site Operartional Use (HST or JWST)}
+\section{Setup for On-site Operartional Use (HST or JWST)}
 \label{installation:setup-for-on-site-operartional-use-hst-or-jwst}
 This section describes use of operational reference files onsite at STScI.  It's relevant to fully archived
 operational files,  not development and test.
@@ -470,18 +472,20 @@ operational files,  not development and test.
 \subsection{File Cache Location (CRDS\_PATH)}
 \label{installation:file-cache-location-crds-path}
 For typical onsite use at STScI, CRDS users can share a file cache which contains all rules and references.  The
-location of the shared cache initially defaults to:
+location of the shared cache and default \textbf{CRDS\_PATH} setting is essentially:
+\begin{quote}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-/grp/crds/cache
-\end{Verbatim}
+\% setenv CRDS\_PATH  /grp/crds/cache
+\end{quote}
 
-/grp/crds/cache is designed to support both HST and JWST with a single defaulted \textbf{CRDS\_PATH} setting.
+A remote or pipeline user defines a non-default CRDS cache by setting, e.g.:
+\begin{quote}
 
-Since /grp/crds/cache is the default,  you don't have to explicitly set \textbf{CRDS\_PATH}.
+\% setenv CRDS\_PATH   \$HOME/crds\_cache
+\end{quote}
 
-Since /grp/crds/cache starts out containing all the operational CRDS rules and reference files, file downloads
-are not required.
+Note that the CRDS cache is often used to store reference files and when fully populated for a
+particular mission can contain terabytes of files.
 
 
 \subsection{Server Selection (CRDS\_SERVER\_URL)}
@@ -489,68 +493,26 @@ are not required.
 Since each project is supported by a different operational server, CRDS must determine which (if any)
 server to use.
 
-Starting with OPUS 2014.3 and crds-1.1,  CRDS does a reasonable job guessing what project you're working on.
+For \textbf{HST}:
 
-CRDS can guess the project you're working on by:
-\begin{itemize}
-\item {} 
-Looking for the string `hst' or `jwst' in the file names you're operating on.
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://hst\PYGZhy{}crds.stsci.edu
+\end{Verbatim}
 
-\item {} 
-Looking inside files to determine the applicable instrument, and inferring the project from the instrument name.
+For \textbf{JWST}:
 
-\item {} 
-If you explicitly set CRDS\_SERVER\_URL,  CRDS can ask the server which project it supports.
-
-\end{itemize}
-
-You can tell CRDS which project you're working on by:
-\begin{itemize}
-\item {} 
-Using command line switches in CRDS utility programs:  ----hst or ----jwst
-
-\item {} 
-Setting CRDS\_OBSERVATORY to `hst' or `jwst'
-
-\end{itemize}
-
-If you're working on both projects frequently,  using the command line hints,  e.g. ----hst,  is probably
-preferred whenever CRDS has trouble guessing.
-
-If you're primarily working on one project,  definining \textbf{CRDS\_OBSERVATORY} is probably most convenient
-since then you won't need to provide command line hints.
-
-If CRDS can determine the project,  and you don't specify CRDS\_SERVER\_URL,  CRDS will use the default
-operational server for your project:
-
-\begin{tabulary}{\linewidth}{|L|L|}
-\hline
-\textsf{\relax 
-Project
-} & \textsf{\relax 
-Implicit CRDS\_SERVER\_URL
-}\\
-\hline
-hst
- & 
-\href{https://hst-crds.stsci.edu}{https://hst-crds.stsci.edu}
-\\
-
-jwst
- & 
-\href{https://jwst-crds.stsci.edu}{https://jwst-crds.stsci.edu}
-\\
-\hline\end{tabulary}
-
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://jwst\PYGZhy{}crds.stsci.edu
+\end{Verbatim}
 
 If CRDS cannot determine your project,  and you did not specify CRDS\_SERVER\_URL,  it will be defaulted to:
 
-\href{https://crds-serverless-mode.stsci.edu}{https://crds-serverless-mode.stsci.edu}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://crds\PYGZhy{}serverless\PYGZhy{}mode.stsci.edu
+\end{Verbatim}
 
-In serverless mode, dynamic cache updates are not possible so cache information may become stale.  This affects CRDS
-rules and reference updates,  CRDS knowledge of the current operational context, and CRDS knowledge of rules or
-references determined to be bad.   On the other hand,  in serverless-mode you're guaranteed to be working with
-a static system, and no warnings will  be issued because the server is not reachable.
+In serverless mode it is not possible for CRDS to download new files or configuration settings,
+so best reference recommendations may become stale.
 
 
 \subsection{Onsite CRDS Testing}
@@ -564,11 +526,20 @@ similar to this:
 \PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://hst\PYGZhy{}crds\PYGZhy{}test.stsci.edu
 \end{Verbatim}
 
+Alternative servers for JWST I\&T testing are:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://jwst\PYGZhy{}crds\PYGZhy{}b5it.stcsi.edu     \PYGZsh{} build\PYGZhy{}5
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://jwst\PYGZhy{}crds\PYGZhy{}b6it.stcsi.edu     \PYGZsh{} build\PYGZhy{}6
+\PYGZpc{} setenv CRDS\PYGZus{}SERVER\PYGZus{}URL https://jwst\PYGZhy{}crds\PYGZhy{}b7it.stcsi.edu     \PYGZsh{} build\PYGZhy{}7
+\end{Verbatim}
+
 After syncing this will provide access to CRDS test files and rules in a local cache:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYGZsh{} Fetch all the test rules
 \PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}all
+
 \PYGZsh{} Fetch specifically listed test references
 \PYGZpc{} python \PYGZhy{}m crds.sync \PYGZhy{}\PYGZhy{}files \PYGZlt{}test\PYGZus{}references\PYGZus{}only\PYGZus{}the\PYGZus{}test\PYGZus{}server\PYGZus{}has...\PYGZgt{}
 \end{Verbatim}
@@ -601,11 +572,8 @@ cache of rules and references supporting only the datasets you care about:
 For \textbf{HST}, to fetch the references required to process some FITS datasets:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}files dataset*.fits \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references=1
+\PYGZpc{} python \PYGZhy{}m crds.bestrefs \PYGZhy{}\PYGZhy{}files dataset*.fits \PYGZhy{}\PYGZhy{}sync\PYGZhy{}references=1  \PYGZhy{}\PYGZhy{}update\PYGZhy{}bestrefs
 \end{Verbatim}
-
-By default crds.bestrefs does not alter your dataset FITS files.   If you also wish to update your dataset FITS
-headers with best references,  add --update-bestrefs.
 
 For \textbf{JWST},  CRDS is directly integrated with the calibration step code and will automatically download
 rules and references as needed.   Downloads will only be an issue when you set CRDS\_PATH and don't already
@@ -1816,7 +1784,7 @@ reference file paths:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k}{def} \PYG{n+nf}{getreferences}\PYG{p}{(}\PYG{n}{parameters}\PYG{p}{,} \PYG{n}{reftypes}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{context}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}cache}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,}
-                  \PYG{n}{observatory}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{:}
+                  \PYG{n}{observatory}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{:}
     \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return the mapping from the requested {}`reftypes{}` to their}
 \PYG{l+s+sd}{    corresponding best reference file paths appropriate for a dataset}
 \PYG{l+s+sd}{    described by {}`parameters{}` with CRDS rules defined by {}`context{}`::}
@@ -2020,7 +1988,7 @@ the same Mapping,  there's a mapping cache maintained by the rmap module and
 accessed like this:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hst} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hst} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hst.pmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 The behavior of the cached mapping is identical to the ``loaded'' mapping and
@@ -2034,7 +2002,7 @@ and their descendents.   The ACS instrument context has a reference mapping for
 each of it's associated file kinds:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hst\PYGZus{}acs.imap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs}\PYG{o}{.}\PYG{n}{mapping\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{[\PYGZsq{}hst\PYGZus{}acs.imap\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}hst\PYGZus{}acs\PYGZus{}idctab.rmap\PYGZsq{},}
@@ -2056,7 +2024,7 @@ each of it's associated file kinds:
 The ACS atod reference mapping (rmap) refers to 4 different reference files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst\PYGZus{}acs\PYGZus{}atodtab.rmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hst\PYGZus{}acs\PYGZus{}atodtab.rmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{reference\PYGZus{}names}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{[\PYGZsq{}j4d1435hj\PYGZus{}a2d.fits\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}kcb1734hj\PYGZus{}a2d.fits\PYGZsq{},}
@@ -2082,7 +2050,7 @@ quick and dirty,  you can ask CRDS what dataset metadata may matter for
 determining best references:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZob{}\PYGZsq{}CCDAMP\PYGZsq{}: \PYGZsq{}C\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}CCDGAIN\PYGZsq{}: \PYGZsq{}2.0\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}DATE\PYGZhy{}OBS\PYGZsq{}: \PYGZsq{}2002\PYGZhy{}04\PYGZhy{}13\PYGZsq{},}
@@ -2139,7 +2107,7 @@ it manages:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{acs\PYGZus{}atod}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}ref}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s+s1}{\PYGZsq{}}
 \end{Verbatim}
 
 Often it is convenient to simply refer to a pipeline/observatory context file,
@@ -2148,7 +2116,7 @@ but this is really just shorthand for returning the best references for the
 instrument of that dataset:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hdr} \PYG{o}{=} \PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}minimum\PYGZus{}header}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{test\PYGZus{}data/j8bt05njq\PYGZus{}raw.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{hst}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)}
 \PYG{g+gp}{... }\PYG{k}{for} \PYG{n}{this} \PYG{n}{hdr}\PYG{p}{,} \PYG{n}{same} \PYG{k}{as} \PYG{n}{acs}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{n}{hdr}\PYG{p}{)} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
@@ -2173,7 +2141,7 @@ Ironically though,  the first thing you may want to do as a developer is ignore
 the checksum while you load a mapping you've edited:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{pipeline} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{load\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}checksum}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{pipeline} \PYG{o}{=} \PYG{n}{rmap}\PYG{o}{.}\PYG{n}{load\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hst.pmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{ignore\PYGZus{}checksum}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
 \end{Verbatim}
 
 Alternately you can set an environment variable to ignore the mapping checksum
@@ -2208,7 +2176,7 @@ precludes writing a parser for CRDS mappings in some other language.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{file_relationships.png}}
+\scalebox{0.500000}{\includegraphics{{file_relationships}.png}}
 \end{figure}
 
 
@@ -2256,22 +2224,22 @@ A sample pipeline mapping for HST looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst.pmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{created by hand 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PIPELINE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e2c6392fd2731df1e8d933bd990f3fd313a813db}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{name}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst.pmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{derived\PYGZus{}from}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{created by hand 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{mapping}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{PIPELINE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{observatory}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{parkey}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{description}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Initially generated on 12\PYGZhy{}23\PYGZhy{}2011}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{sha1sum}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{e2c6392fd2731df1e8d933bd990f3fd313a813db}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ACS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}acs.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NICMOS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}nicmos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{STIS}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}stis.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFC3}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}wfc3.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFPC2}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}wfpc2.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ACS}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}acs.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{COS}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{NICMOS}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}nicmos.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{STIS}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}stis.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WFC3}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}wfc3.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WFPC2}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}wfpc2.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -2285,33 +2253,33 @@ A sample instrument mapping for HST's COS instrument looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUMENT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos.imap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{800fb1567cb5bed4031402c7396aeb86c5e1db61}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{source\PYGZus{}url}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{derived\PYGZus{}from}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{description}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:57:10}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{instrument}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{COS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{mapping}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUMENT}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{name}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos.imap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{observatory}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{parkey}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{sha1sum}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{800fb1567cb5bed4031402c7396aeb86c5e1db61}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{source\PYGZus{}url}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{http://www.stsci.edu/hst/observatory/cdbs/SIfileInfo/COS/reftablequeryindex}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{badttab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}badttab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{bpixtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}bpixtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{brftab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brftab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{brsttab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}brsttab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{deadtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{disptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}disptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{flatfile}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}flatfile.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fluxtab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}fluxtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{geofile}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}geofile.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lamptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}lamptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{phatab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}phatab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{spwcstab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}spwcstab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tdstab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}tdstab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wcptab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}wcptab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{xtractab}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}xtractab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{badttab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}badttab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{bpixtab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}bpixtab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{brftab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}brftab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{brsttab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}brsttab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{deadtab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{disptab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}disptab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{flatfile}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}flatfile.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{fluxtab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}fluxtab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{geofile}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}geofile.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{lamptab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}lamptab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{phatab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}phatab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{spwcstab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}spwcstab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{tdstab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}tdstab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{wcptab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}wcptab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{xtractab}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}xtractab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -2328,23 +2296,23 @@ A sample reference mapping for HST COS DEADTAB looks like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{header} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{filekind}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DEADTAB}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{COS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mapping}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFERENCE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{parkey}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e27984a6441d8aaa7cd28ead2267a6be4c3a153b}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{derived\PYGZus{}from}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{scraped 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{description}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Initially generated on 2011\PYGZhy{}12\PYGZhy{}23 11:54:56}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{filekind}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DEADTAB}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{instrument}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{COS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{mapping}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFERENCE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{name}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{hst\PYGZus{}cos\PYGZus{}deadtab.rmap}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{observatory}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{parkey}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{sha1sum}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{e27984a6441d8aaa7cd28ead2267a6be4c3a153b}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Match}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FUV}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{s7g1700gl\PYGZus{}dead.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FUV}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+        \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{s7g1700gl\PYGZus{}dead.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
     \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
-    \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NUV}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{s7g1700ql\PYGZus{}dead.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{NUV}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+        \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{1996\PYGZhy{}10\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{s7g1700ql\PYGZus{}dead.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
     \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
@@ -2625,13 +2593,13 @@ as ``or'' and means that a match occurs if either pattern matches that dataset h
 will match:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{either\PYGZus{}this}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{either\PYGZus{}this}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{2}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 and also:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{that}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{that}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 
@@ -2820,13 +2788,13 @@ the single format shown in the rmap example below:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Match}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-   \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{HRC}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{j4d1435hj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1992\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HRC}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+       \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{j4d1435hj\PYGZus{}a2d.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+       \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{1992\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{kcb1734ij\PYGZus{}a2d.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
    \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
-   \PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WFC}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kcb1734hj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-       \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2008\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{t3n1116mj\PYGZus{}a2d.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WFC}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{p}{)} \PYG{p}{:} \PYG{n}{UseAfter}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+       \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{1991\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{kcb1734hj\PYGZus{}a2d.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+       \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{2008\PYGZhy{}01\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{t3n1116mj\PYGZus{}a2d.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
    \PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
@@ -2845,9 +2813,9 @@ to make a selection:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{SelectVersion}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZlt{}3.1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}65.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZlt{}5}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}73.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-   \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{default}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZlt{}3.1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cref\PYGZus{}flatfield\PYGZus{}65.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZlt{}5}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}      \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cref\PYGZus{}flatfield\PYGZus{}73.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+   \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{default}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2863,9 +2831,9 @@ the closest time which either precedes or follows the given parameter value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{ClosestTime}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2017\PYGZhy{}04\PYGZhy{}24 00:00:00}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2018\PYGZhy{}02\PYGZhy{}01 00:00:00}\PYG{l+s}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}222.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2019\PYGZhy{}04\PYGZhy{}15 00:00:00}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{2017\PYGZhy{}04\PYGZhy{}24 00:00:00}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{2018\PYGZhy{}02\PYGZhy{}01 00:00:00}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}222.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{2019\PYGZhy{}04\PYGZhy{}15 00:00:00}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}123.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2880,9 +2848,9 @@ the supplied parameter is chosen:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{GeomtricallyNearest}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{l+m+mf}{1.2} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-    \PYG{l+m+mf}{1.5} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-    \PYG{l+m+mf}{5.0} \PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.2} \PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.5} \PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{5.0} \PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
@@ -2896,16 +2864,16 @@ enclose the supplied parameter value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{selector} \PYG{o}{=} \PYG{n}{Bracket}\PYG{p}{(}\PYG{p}{\PYGZob{}}
-    \PYG{l+m+mf}{1.2}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-    \PYG{l+m+mf}{1.5}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-    \PYG{l+m+mf}{5.0}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.2}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{1.5}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+m+mf}{5.0}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cref\PYGZus{}flatfield\PYGZus{}137.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
 \PYG{p}{\PYGZcb{}}\PYG{p}{)}
 \end{Verbatim}
 
 Here,  a parameter value of 1.3 returns the value:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cref\PYGZus{}flatfield\PYGZus{}120.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cref\PYGZus{}flatfield\PYGZus{}124.fits}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \end{Verbatim}
 
 
@@ -2918,7 +2886,7 @@ functions which require a CRDS login account.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_index.png}}
+\scalebox{0.500000}{\includegraphics{{web_index}.png}}
 \label{web_site_use:jwst-crds-stsci-edu}\end{figure}
 
 Functions annotated with the word (alpha) are partially completed components of
@@ -2949,7 +2917,7 @@ the entire context history as a separate page as shown below:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_context_history.png}}
+\scalebox{0.500000}{\includegraphics{{web_context_history}.png}}
 \end{figure}
 
 Clicking on a \emph{context} link (the .pmap name) opens a page containing the Historical References
@@ -2957,7 +2925,7 @@ for some point in the past,  similar to the Operational References display:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_context_table.png}}
+\scalebox{0.500000}{\includegraphics{{web_context_table}.png}}
 \end{figure}
 
 References are displayed in accordion panels for each instrument.   Opening the panel for
@@ -2974,7 +2942,7 @@ for each file which differed between the two contexts:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_context_difference.png}}
+\scalebox{0.500000}{\includegraphics{{web_context_difference}.png}}
 \end{figure}
 
 Each file accordion opens into two accordions which display different views of the differences,
@@ -2999,7 +2967,7 @@ dataset file itself or a database catalog entry.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_dataset_bestrefs.png}}
+\scalebox{0.500000}{\includegraphics{{web_dataset_bestrefs}.png}}
 \end{figure}
 
 
@@ -3034,7 +3002,7 @@ be retrieved from the catalog.
 \label{web_site_use:dataset-best-references-results}\begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_dataset_bestrefs_results.png}}
+\scalebox{0.500000}{\includegraphics{{web_dataset_bestrefs_results}.png}}
 \end{figure}
 
 The results page for dataset best references displays the input parameters which
@@ -3057,7 +3025,7 @@ which will be used to define parameter choices:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_explore_bestrefs.png}}
+\scalebox{0.500000}{\includegraphics{{web_explore_bestrefs}.png}}
 \end{figure}
 
 The second phase is to enter the parameters of a dataset which are relevant
@@ -3065,7 +3033,7 @@ to best references selection.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_explore_bestrefs_parameters.png}}
+\scalebox{0.500000}{\includegraphics{{web_explore_bestrefs_parameters}.png}}
 \end{figure}
 
 The entered parameters are evaluated with respect to the given pipeline context
@@ -3080,7 +3048,7 @@ properties of CRDS reference and mapping files.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_browse_database.png}}
+\scalebox{0.500000}{\includegraphics{{web_browse_database}.png}}
 \end{figure}
 
 The first phase is to enter a number of filters to narrow the number or variety
@@ -3091,7 +3059,7 @@ which matched the filters showing their basic properties.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_browse_database_files.png}}
+\scalebox{0.500000}{\includegraphics{{web_browse_database_files}.png}}
 \end{figure}
 
 The second phase is initiated by clicking on the filename link of any file
@@ -3100,7 +3068,7 @@ to a detailed view of that file only:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_browse_database_details.png}}
+\scalebox{0.500000}{\includegraphics{{web_browse_database_details}.png}}
 \end{figure}
 
 The file details page has a number of accordion panes which open when you
@@ -3139,7 +3107,7 @@ tracked:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_recent_activity.png}}
+\scalebox{0.500000}{\includegraphics{{web_recent_activity}.png}}
 \end{figure}
 
 The first page lists a number of constraints which can be used to choose
@@ -3148,7 +3116,7 @@ value of *.   The result of the activity search is a table of matching actions:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_recent_activity_results.png}}
+\scalebox{0.500000}{\includegraphics{{web_recent_activity_results}.png}}
 \end{figure}
 
 The details vary by the type of action,  in this case showing the original name
@@ -3172,7 +3140,7 @@ rules,  users lock instruments when they log in.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_login.png}}
+\scalebox{0.500000}{\includegraphics{{web_login}.png}}
 \end{figure}
 
 When a user logs in,  the instrument they've locked and the time remaining on the
@@ -3180,7 +3148,7 @@ lock are displayed below the login (now logout) button:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_logged_in.png}}
+\scalebox{0.500000}{\includegraphics{{web_logged_in}.png}}
 \end{figure}
 
 The time displayed is the relative time remaining on the lock reservation,  nominally
@@ -3222,7 +3190,7 @@ and confirm or cancel each file submission before proceeding with the next.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_certify_file.png}}
+\scalebox{0.500000}{\includegraphics{{web_certify_file}.png}}
 \end{figure}
 
 If the certified file is a reference table,  the specified context is used to
@@ -3264,7 +3232,7 @@ Use Delete References to generate a new context without the bad files.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_mark_files_bad.png}}
+\scalebox{0.500000}{\includegraphics{{web_mark_files_bad}.png}}
 \end{figure}
 
 Marking a rules file (mapping) as bad implicitly marks all the files
@@ -3294,7 +3262,7 @@ as bad.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_delete_references.png}}
+\scalebox{0.500000}{\includegraphics{{web_delete_references}.png}}
 \end{figure}
 
 Delete References does not remove the files from CRDS, it only removes them
@@ -3321,7 +3289,7 @@ files to CRDS.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_add_references.png}}
+\scalebox{0.500000}{\includegraphics{{web_add_references}.png}}
 \end{figure}
 
 Add references can be used to undo the effects of Delete References in a
@@ -3347,7 +3315,7 @@ carried over by Add References,  only the reference files themselves.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_set_context.png}}
+\scalebox{0.500000}{\includegraphics{{web_set_context}.png}}
 \end{figure}
 
 CRDS enables contexts to be pre-positioned before their adoption as the default
@@ -3374,7 +3342,7 @@ files are checked with respect to the derivation context by crds.certify.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_batch_submit_references.png}}
+\scalebox{0.500000}{\includegraphics{{web_batch_submit_references}.png}}
 \end{figure}
 
 
@@ -3396,7 +3364,7 @@ uploading submitted files to a user's CRDS ingest directory via the browser.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_upload_files.png}}
+\scalebox{0.500000}{\includegraphics{{web_upload_files}.png}}
 \end{figure}
 
 Uploading files is accomplished by:
@@ -3478,7 +3446,7 @@ match locations in the .rmap file.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_derive_from_context.png}}
+\scalebox{0.500000}{\includegraphics{{web_derive_from_context}.png}}
 \end{figure}
 
 There are two special contexts in CRDS which are tracked:
@@ -3527,7 +3495,7 @@ input is irrelevant and ignored.
 \label{web_site_use:results}\begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_batch_submit_results.png}}
+\scalebox{0.500000}{\includegraphics{{web_batch_submit_results}.png}}
 \end{figure}
 
 The results page lists the following items:
@@ -3564,7 +3532,7 @@ being lost.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_collision_warnings.png}}
+\scalebox{0.500000}{\includegraphics{{web_collision_warnings}.png}}
 \end{figure}
 
 Collision tracking for CRDS mappings files is done based upon header fields,
@@ -3604,7 +3572,7 @@ Submitted references must still pass through crds.certify.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_submit_references.png}}
+\scalebox{0.500000}{\includegraphics{{web_submit_references}.png}}
 \end{figure}
 
 
@@ -3618,7 +3586,7 @@ submitted this way must also pass through crds.certify.
 \begin{figure}[htbp]
 \centering
 
-\scalebox{0.500000}{\includegraphics{web_submit_mappings.png}}
+\scalebox{0.500000}{\includegraphics{{web_submit_mappings}.png}}
 \end{figure}
 
 
@@ -3659,7 +3627,7 @@ with the .rmap:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{crds}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{r} \PYG{o}{=} \PYG{n}{crds}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{./jwst\PYGZus{}miri\PYGZus{}dark\PYGZus{}0004.rmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{r} \PYG{o}{=} \PYG{n}{crds}\PYG{o}{.}\PYG{n}{get\PYGZus{}cached\PYGZus{}mapping}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{./jwst\PYGZus{}miri\PYGZus{}dark\PYGZus{}0004.rmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 
 The internal checksum can also be used to verify upload integrity when you
@@ -3685,7 +3653,7 @@ the crds.client module:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{crds} \PYG{k+kn}{import} \PYG{n}{client}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{client}\PYG{o}{.}\PYG{n}{get\PYGZus{}default\PYGZus{}context}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{client}\PYG{o}{.}\PYG{n}{get\PYGZus{}default\PYGZus{}context}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{jwst}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZsq{}jwst\PYGZus{}0101.pmap\PYGZsq{}}
 \end{Verbatim}
 
@@ -3694,7 +3662,7 @@ the crds.client module:
 \label{web_services:context-information}
 The CRDS context is the version of CRDS rules used to select reference files.
 The default CRDS context is maintained on the CRDS server and reported by
-the function \emph{get\_default\_context()}.  Remote pipelines which are operating
+the function \emph{get\_default\_context()}.   Institutional pipelines which are operating
 decoupled from the CRDS server can post their actual cached context to the CRDS
 server for retrieval by \emph{get\_remote\_context()}.
 
@@ -3703,21 +3671,29 @@ server for retrieval by \emph{get\_remote\_context()}.
 \label{web_services:centralized-default}
 \textbf{get\_default\_context(observatory)}
 
-get\_default\_context() returns the name of the pipeline mapping which is
+get\_default\_context() returns the name of the context which is
 currently in use by default in the archive pipeline, e.g. `jwst\_0001.pmap'.
-This value is set and maintained on the CRDS Server using the Set Context web
-page and reflects a commanded default for all users.  Remote pipeline instances
-of CRDS running in `local' mode only update their copy of this default when
-their CRDS cache is synchronized with the server.  Hence this value represents
-a commanded context and the actual pipeline context differs until
-\emph{pipeline\_name} is synchronized with the CRDS server.
+This value is set and maintained on the CRDS Server.   The actual pipeline context
+differs from this commanded valuer until the pipeline is synchronized with the CRDS
+server using cron\_sync.
+
+The commanded default can be obtained using the CRDS client library as follows:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} from CRDS import client
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} client.get\PYGZus{}default\PYGZus{}context(\PYGZsq{}jwst\PYGZsq{})
+\PYGZsq{}jwst\PYGZus{}0101.pmap\PYGZsq{}
+\end{Verbatim}
+
+See the explanation of JSONRPC requests and responses below for a language and library
+neutral example of calling the same CRDS web service using the command line program ``curl''.
 
 
 \subsection{Pipeline Echo}
 \label{web_services:pipeline-echo}
 \textbf{get\_remote\_context(observatory, pipeline\_name)}
 
-get\_remote\_context() returns the name of the pipeline mapping last reported as
+get\_remote\_context() returns the name of the context last reported as
 synced by the specified \emph{pipeline\_name} (e.g. `jwst-ops-pipeline').  This is
 the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
 when the cache is synchronized.  Since this value is inapplicable if a pipeline
@@ -3725,6 +3701,53 @@ is run in ``remote'' mode computing best references on the CRDS Server, the
 generally preferred value is from get\_default\_context() since it always
 reflects the intended operational context regardless of the pipeline's CRDS
 mode.
+
+The actual default context for a pipeline can be obtained as follows:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} from CRDS import client
+ \PYGZgt{}\PYGZgt{}\PYGZgt{} client.get\PYGZus{}remote\PYGZus{}context(\PYGZsq{}jwst\PYGZsq{}, \PYGZsq{}jwst\PYGZhy{}ops\PYGZhy{}pipeline\PYGZsq{})
+\PYGZsq{}jwst\PYGZus{}0101.pmap\PYGZsq{}
+\end{Verbatim}
+
+
+\subsection{Context History}
+\label{web_services:context-history}
+CRDS makes the history of contexts which have been activated in the pipeline as
+the operational context via the get\_context\_history() web service:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{client}\PYG{o}{.}\PYG{n}{get\PYGZus{}context\PYGZus{}history}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{[(\PYGZsq{}2012\PYGZhy{}09\PYGZhy{}06 00:00:00\PYGZsq{}, \PYGZsq{}jwst.pmap\PYGZsq{}, \PYGZsq{}Bootstrap mappings\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2012\PYGZhy{}09\PYGZhy{}27 00:00:00\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}jwst\PYGZus{}0000.pmap\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}First rules and references from jwst\PYGZus{}gentools stub development cloning.\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2013\PYGZhy{}04\PYGZhy{}13 00:00:00\PYGZsq{}, \PYGZsq{}jwst\PYGZus{}0001.pmap\PYGZsq{}, \PYGZsq{}Linearity and dark files.\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2013\PYGZhy{}07\PYGZhy{}31 00:00:00\PYGZsq{}, \PYGZsq{}jwst\PYGZus{}0002.pmap\PYGZsq{}, \PYGZsq{}Dark and Mask files.\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2013\PYGZhy{}09\PYGZhy{}04 00:00:00\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}jwst\PYGZus{}0003.pmap\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}Absolute Calibration (photom) additions and replacements.\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2013\PYGZhy{}11\PYGZhy{}25 09:00:03\PYGZsq{}, \PYGZsq{}jwst\PYGZus{}0005.pmap\PYGZsq{}, \PYGZsq{}set by system\PYGZsq{}),}
+\PYG{g+go}{ (\PYGZsq{}2014\PYGZhy{}03\PYGZhy{}19 10:51:19\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}jwst\PYGZus{}0012.pmap\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\PYGZbs{}r\PYGZbs{}nNew linearity files for all instruments\PYGZbs{}r\PYGZbs{}nNew saturation files and rmaps for all instruments\PYGZsq{}),}
+
+\PYG{g+go}{        ...}
+
+\PYG{g+go}{ (\PYGZsq{}2015\PYGZhy{}11\PYGZhy{}18 12:58:13\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}jwst\PYGZus{}0105.pmap\PYGZsq{},}
+\PYG{g+go}{  \PYGZsq{}Declared various EXP\PYGZus{}TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket \PYGZsh{}238.\PYGZsq{})}
+\PYG{g+go}{  ]}
+\end{Verbatim}
+
+Each entry in the context history is a list/tuple of form:  (start\_date, context, description).
+
+Adjacent entries are consecutive,  the start date of the one context is the end date of the previous context.
+
+The context history is in first-to-last order and it is possible that the context will be regressed to a prior
+version;  consequently,  there is no guarantee that context names will monotonically increase.  At times several
+file submissions and created contexts are activated en masse via the last created context;  consequently,  there
+is no guarantee that pmap serial numbers will increase or decrease by one.
 
 
 \section{File Information}
@@ -3740,7 +3763,7 @@ files managed by CRDS.   Catalog information cab be
 Return a dictionary of CRDS catalog information about \code{filename}.  For instance:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{get\PYGZus{}file\PYGZus{}info}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}miri\PYGZus{}flat\PYGZus{}0023.fits}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{get\PYGZus{}file\PYGZus{}info}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst\PYGZus{}miri\PYGZus{}flat\PYGZus{}0023.fits}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZob{}\PYGZsq{}activation\PYGZus{}date\PYGZsq{}: \PYGZsq{}2014\PYGZhy{}09\PYGZhy{}25 18:30:27\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}aperture\PYGZsq{}: \PYGZsq{}none\PYGZsq{},}
 \PYG{g+go}{ \PYGZsq{}blacklisted\PYGZsq{}: \PYGZsq{}false\PYGZsq{},}
@@ -3787,11 +3810,11 @@ on \code{files} of \code{observatory}.
 \code{fields} can be used to limit info returned to specified keys:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{activation\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{aperture}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{blacklisted}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{change\PYGZus{}level}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{comment}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{creator\PYGZus{}name}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{deliverer\PYGZus{}user}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{delivery\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{derived\PYGZus{}from}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{description}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{filekind}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{instrument}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{observatory}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{pedigree}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{reference\PYGZus{}file\PYGZus{}type}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{rejected}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{replaced\PYGZus{}by\PYGZus{}filename}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sha1sum}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{size}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{state}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{type}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{uploaded\PYGZus{}as}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{useafter\PYGZus{}date}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{activation\PYGZus{}date}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{aperture}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{blacklisted}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{change\PYGZus{}level}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{comment}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{creator\PYGZus{}name}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{deliverer\PYGZus{}user}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{delivery\PYGZus{}date}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{derived\PYGZus{}from}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{description}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{filekind}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{instrument}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{name}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{observatory}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{pedigree}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{reference\PYGZus{}file\PYGZus{}type}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{rejected}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{replaced\PYGZus{}by\PYGZus{}filename}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{sha1sum}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{size}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{state}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{type}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{uploaded\PYGZus{}as}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{useafter\PYGZus{}date}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
 \end{Verbatim}
 
 If \code{fields} is not specified then get\_file\_info\_map() returns all fields.
@@ -3821,18 +3844,18 @@ as JWST stpipe data model dotted identifiers.  Example JSON for the get\_best\_r
 \emph{header} parameter for JWST is:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.type}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.detector}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{meta.instrument.filter}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{any}\PYG{l+s}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{meta.instrument.type}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fgs}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{meta.instrument.detector}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fgs1}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{meta.instrument.filter}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{any}\PYG{l+s+s2}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 For JWST,  it is also possible to use the equivalent FITS header keyword,  as
 defined by the data model schema, to determine best references:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{instrume}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{detector}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fgs1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{filter}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{any}\PYG{l+s}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{instrume}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fgs}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{detector}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fgs1}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{filter}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{any}\PYG{l+s+s2}{\PYGZdq{}} \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 For HST,  GEIS or FITS header keyword names are supported.
@@ -3846,7 +3869,7 @@ returned with the value \emph{NOT FOUND n/a}.
 Example JSON for \emph{reftypes} might be:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{[}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{amplifier}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{mask}\PYG{l+s}{\PYGZdq{}}\PYG{p}{]}
+\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{amplifier}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mask}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]}
 \end{Verbatim}
 
 
@@ -3894,25 +3917,25 @@ one HST context (hst\_0366.pmap) the reference file selection parameters
 for all instruments are as follows:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{acs}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BIASCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDCHIP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CRCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DARKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DQICORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DRIZCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLASHCUR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLSHCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FW1OFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FW2OFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FWSOFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{GLINCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LTV1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LTV2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PCTECORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PHOTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{RPTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-     \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHADCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTRPOS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{XCORNER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{YCORNER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
-\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ALGNCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BADTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BRSTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DEADCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{EXPTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLUXCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LIFE\PYGZus{}ADJ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSMODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OPT\PYGZus{}ELEM}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TDSCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TRCECORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WALKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
-\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{nicmos}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CAMERA}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{NREAD}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSMODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{READOUT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SAMP\PYGZus{}SEQ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{stis}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDOFFST}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CENWAVE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OBSTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{OPT\PYGZus{}ELEM}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wfc3}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{APERTURE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BIASCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{BINAXIS2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDAMP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CCDGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{CHINJECT}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DARKCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DQICORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DRIZCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLASHCUR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLATCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FLSHCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{PHOTCORR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SAMP\PYGZus{}SEQ}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-      \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTRPOS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SUBARRAY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SUBTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
- \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{wfpc2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ATODGAIN}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DATE\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTNAM1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTNAM2}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-        \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{IMAGETYP}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LRFWAVE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{MODE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{REFTYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SERIALS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SHUTTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TIME\PYGZhy{}OBS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{acs}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{APERTURE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ATODCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BIASCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDAMP}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDCHIP}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDGAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CRCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DARKCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DQICORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DRIZCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLASHCUR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLATCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLSHCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FW1OFFST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FW2OFFST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FWSOFFST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{GLINCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{LTV1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{LTV2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{NAXIS1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{NAXIS2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OBSTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{PCTECORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{PHOTCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{RPTCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+     \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SHADCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SHUTRPOS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{XCORNER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{YCORNER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cos}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ALGNCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BADTCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BRSTCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DEADCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{EXPTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLATCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLUXCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{LIFE\PYGZus{}ADJ}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OBSMODE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OBSTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OPT\PYGZus{}ELEM}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TDSCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TRCECORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WALKCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{nicmos}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CAMERA}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{NREAD}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OBSMODE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{READOUT}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SAMP\PYGZus{}SEQ}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{stis}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{APERTURE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BINAXIS1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BINAXIS2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDAMP}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDGAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDOFFST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CENWAVE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OBSTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{OPT\PYGZus{}ELEM}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{wfc3}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{APERTURE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ATODCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BIASCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BINAXIS1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{BINAXIS2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDAMP}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CCDGAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{CHINJECT}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DARKCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DQICORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DRIZCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLASHCUR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLATCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FLSHCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{PHOTCORR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SAMP\PYGZus{}SEQ}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+      \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SHUTRPOS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SUBARRAY}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SUBTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{wfpc2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ATODGAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DATE\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTNAM1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTNAM2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{IMAGETYP}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{LRFWAVE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{MODE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REFTYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SERIALS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SHUTTER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{TIME\PYGZhy{}OBS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -3947,7 +3970,7 @@ An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYGZpc{} curl \PYGZhy{}i \PYGZhy{}X POST \PYGZhy{}d \PYGZsq{}\PYGZob{}\PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}method\PYGZdq{}: \PYGZdq{}get\PYGZus{}default\PYGZus{}context\PYGZdq{}, \PYGZdq{}params\PYGZdq{}: [\PYGZdq{}jwst\PYGZdq{}], \PYGZdq{}id\PYGZdq{}: 1\PYGZcb{}\PYGZsq{} http://jwst\PYGZhy{}crds.stsci.edu/json/
+\PYGZpc{} curl \PYGZhy{}i \PYGZhy{}X POST \PYGZhy{}d \PYGZsq{}\PYGZob{}\PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}method\PYGZdq{}: \PYGZdq{}get\PYGZus{}default\PYGZus{}context\PYGZdq{}, \PYGZdq{}params\PYGZdq{}: [\PYGZdq{}jwst\PYGZdq{}], \PYGZdq{}id\PYGZdq{}: 1\PYGZcb{}\PYGZsq{} https://jwst\PYGZhy{}crds.stsci.edu/json/
 HTTP/1.1 200 OK
 Date: Fri, 12 Oct 2012 17:29:46 GMT
 Server: Apache/2.2.3 (Red Hat) mod\PYGZus{}python/3.3.1 Python/2.7.2
@@ -3971,10 +3994,10 @@ environments.
 
 \section{JSONRPC Response}
 \label{web_services:jsonrpc-response}
-The reponse returned by the server for the above request is the following JSON:
+The response returned by the server for the above request is the following JSON:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{error}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{null}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jsonrpc}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{1.0}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{id}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{result}\PYG{l+s}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{error}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{n}{null}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jsonrpc}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{id}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{result}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst\PYGZus{}0000.pmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 
@@ -3994,18 +4017,21 @@ text about the error.
 \section{JSONRPC Demo Page}
 \label{web_services:jsonrpc-demo-page}
 The CRDS servers support demoing the JSONRPC services and calling them interactively
-by visiting the URL \emph{.../json/browse/}.    The resulting page is shown here:
+by visiting the URL \emph{.../json/browse/}.  This facility is available in development
+and test environments upon request.
+
+The resulting page is shown here:
 \begin{figure}[htbp]
 \centering
 
-\scalebox{1.000000}{\includegraphics{web_jsonrpc_browse.png}}
+\scalebox{1.000000}{\includegraphics{{web_jsonrpc_browse}.png}}
 \end{figure}
 
 An example dialog for get\_best\_references from the CRDS jsonrpc demo page is
 shown here with FITS parkey names:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{INSTRUME}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ANY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst\PYGZus{}0000.pmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{INSTRUME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FGS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FGS1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FILTER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ANY}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
 \PYG{g+go}{Requesting \PYGZhy{}\PYGZgt{}}
 \PYG{g+go}{\PYGZob{}\PYGZdq{}id\PYGZdq{}:\PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}params\PYGZdq{}:[\PYGZdq{}jwst\PYGZus{}0000.pmap\PYGZdq{}, \PYGZob{}\PYGZdq{}INSTRUME\PYGZdq{}:\PYGZdq{}FGS\PYGZdq{}, \PYGZdq{}DETECTOR\PYGZdq{}:\PYGZdq{}FGS1\PYGZdq{}, \PYGZdq{}FILTER\PYGZdq{}:\PYGZdq{}ANY\PYGZdq{}\PYGZcb{}, null], \PYGZdq{}method\PYGZdq{}:\PYGZdq{}get\PYGZus{}best\PYGZus{}references\PYGZdq{}, \PYGZdq{}jsonrpc\PYGZdq{}:\PYGZdq{}1.0\PYGZdq{}\PYGZcb{}}
 \PYG{g+go}{Deferred(12, unfired)}
@@ -4016,17 +4042,13 @@ shown here with FITS parkey names:
 And the same query is here with JWST data model parkey names:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{jwst\PYGZus{}0000.pmap}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.TYPE}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.DETECTOR}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FGS1}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{META.INSTRUMENT.FILTER}\PYG{l+s}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ANY}\PYG{l+s}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{jsonrpc}\PYG{o}{.}\PYG{n}{get\PYGZus{}best\PYGZus{}references}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{jwst\PYGZus{}0000.pmap}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{META.INSTRUMENT.TYPE}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FGS}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{META.INSTRUMENT.DETECTOR}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{FGS1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{META.INSTRUMENT.FILTER}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ANY}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{,} \PYG{n}{null}\PYG{p}{)}
 \PYG{g+go}{Requesting \PYGZhy{}\PYGZgt{}}
 \PYG{g+go}{\PYGZob{}\PYGZdq{}id\PYGZdq{}:\PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}params\PYGZdq{}:[\PYGZdq{}jwst\PYGZus{}0000.pmap\PYGZdq{}, \PYGZob{}\PYGZdq{}META.INSTRUMENT.TYPE\PYGZdq{}:\PYGZdq{}FGS\PYGZdq{}, \PYGZdq{}META.INSTRUMENT.DETECTOR\PYGZdq{}:\PYGZdq{}FGS1\PYGZdq{}, \PYGZdq{}META.INSTRUMENT.FILTER\PYGZdq{}:\PYGZdq{}ANY\PYGZdq{}\PYGZcb{}, null], \PYGZdq{}method\PYGZdq{}:\PYGZdq{}get\PYGZus{}best\PYGZus{}references\PYGZdq{}, \PYGZdq{}jsonrpc\PYGZdq{}:\PYGZdq{}1.0\PYGZdq{}\PYGZcb{}}
 \PYG{g+go}{Deferred(14, unfired)}
 \PYG{g+go}{Got \PYGZhy{}\PYGZgt{}}
 \PYG{g+go}{\PYGZob{}\PYGZdq{}error\PYGZdq{}: null, \PYGZdq{}jsonrpc\PYGZdq{}: \PYGZdq{}1.0\PYGZdq{}, \PYGZdq{}id\PYGZdq{}: \PYGZdq{}jsonrpc\PYGZdq{}, \PYGZdq{}result\PYGZdq{}: \PYGZob{}\PYGZdq{}linearity\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}linearity\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}amplifier\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}amplifier\PYGZus{}0000.fits\PYGZdq{}, \PYGZdq{}mask\PYGZdq{}: \PYGZdq{}jwst\PYGZus{}fgs\PYGZus{}mask\PYGZus{}0000.fits\PYGZdq{}\PYGZcb{}\PYGZcb{}}
 \end{Verbatim}
-
-\textbf{NOTE:} An apparent bug in the demo interpreter makes it impossible to pass
-the get\_best\_references \emph{reftypes} parameter as an array of strings.   In the
-current demo reftypes can only be specified as null.
 
 
 \chapter{CRDS Database Access}
@@ -4147,119 +4169,119 @@ str
  & 
 CRDS filename
 \\
-
+\hline
 uploaded\_as
  & 
 str
  & 
 Name of file at time of upload / generation
 \\
-
+\hline
 state
  & 
 str
  & 
 uploaded, delivered, submitted, archiving, archived, archiving-failed, bad
 \\
-
+\hline
 blacklisted
  & 
 bool/int
  & 
 True/1 == this mapping,  and all mappings referring to it, are invalid.
 \\
-
+\hline
 rejected
  & 
 bool/int
  & 
 True/1 == this file is considered scientifically invalid
 \\
-
+\hline
 replaced\_by\_filename
  & 
 str
  & 
 Succeeding reference file in chain of contexts.  Weakly defined.
 \\
-
+\hline
 instrument
  & 
 str
  & 
 instrument name file applies to
 \\
-
+\hline
 filekind
  & 
 str
  & 
 reference type. For HST,  also keyword name for dataset headers
 \\
-
+\hline
 type
  & 
 str
  & 
 reference or mapping
 \\
-
+\hline
 description
  & 
 str
  & 
 description given at time of delivery
 \\
-
+\hline
 comment
  & 
 str
  & 
 COMMENT from reference file
 \\
-
+\hline
 aperture
  & 
 str
  & 
 APERTURE from reference file
 \\
-
+\hline
 derived\_from
  & 
 str
  & 
 Name of mapping this one was derived from
 \\
-
+\hline
 sha1sum
  & 
 str
  & 
 sha1sum of file to verify file integrity
 \\
-
+\hline
 size
  & 
 int
  & 
 length of file in bytes
 \\
-
+\hline
 creator\_name
  & 
 str
  & 
 author of reference or mapping file
 \\
-
+\hline
 deliverer\_user
  & 
 str
  & 
 person who submitted the reference or mapping to CRDS
 \\
-
+\hline
 deliverer\_email
  & 
 str
