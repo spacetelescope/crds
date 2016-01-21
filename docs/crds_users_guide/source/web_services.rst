@@ -18,7 +18,7 @@ Context Information
 
 The CRDS context is the version of CRDS rules used to select reference files.
 The default CRDS context is maintained on the CRDS server and reported by
-the function *get_default_context()*.  Remote pipelines which are operating
+the function *get_default_context()*.   Institutional pipelines which are operating
 decoupled from the CRDS server can post their actual cached context to the CRDS
 server for retrieval by *get_remote_context()*.
 
@@ -27,28 +27,41 @@ Centralized Default
 
 **get_default_context(observatory)**
 
-get_default_context() returns the name of the pipeline mapping which is
+get_default_context() returns the name of the context which is
 currently in use by default in the archive pipeline, e.g. 'jwst_0001.pmap'.
-This value is set and maintained on the CRDS Server using the Set Context web
-page and reflects a commanded default for all users.  Remote pipeline instances
-of CRDS running in 'local' mode only update their copy of this default when
-their CRDS cache is synchronized with the server.  Hence this value represents
-a commanded context and the actual pipeline context differs until
-*pipeline_name* is synchronized with the CRDS server.
+This value is set and maintained on the CRDS Server.   The actual pipeline context 
+differs from this commanded valuer until the pipeline is synchronized with the CRDS
+server using cron_sync.   
+
+The commanded default can be obtained using the CRDS client library as follows::
+
+   >>> from CRDS import client
+   >>> client.get_default_context('jwst')
+  'jwst_0101.pmap'
+
+See the explanation of JSONRPC requests and responses below for a language and library 
+neutral example of calling the same CRDS web service using the command line program "curl".
 
 Pipeline Echo
 +++++++++++++
 
 **get_remote_context(observatory, pipeline_name)**
 
-get_remote_context() returns the name of the pipeline mapping last reported as
+get_remote_context() returns the name of the context last reported as
 synced by the specified *pipeline_name* (e.g. 'jwst-ops-pipeline').  This is
 the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
 when the cache is synchronized.  Since this value is inapplicable if a pipeline
 is run in "remote" mode computing best references on the CRDS Server, the
 generally preferred value is from get_default_context() since it always
 reflects the intended operational context regardless of the pipeline's CRDS
-mode.
+mode.   
+
+The actual default context for a pipeline can be obtained as follows::
+
+   >>> from CRDS import client
+   >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
+  'jwst_0101.pmap'
+
 
 File Information
 ----------------
@@ -269,7 +282,7 @@ environments.
 JSONRPC Response
 ----------------
 
-The reponse returned by the server for the above request is the following JSON::
+The response returned by the server for the above request is the following JSON::
 
     {"error": null, "jsonrpc": "1.0", "id": 1, "result": "jwst_0000.pmap"}
     
