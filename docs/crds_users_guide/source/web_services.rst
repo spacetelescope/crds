@@ -18,7 +18,7 @@ Context Information
 
 The CRDS context is the version of CRDS rules used to select reference files.
 The default CRDS context is maintained on the CRDS server and reported by
-the function *get_default_context()*.  Remote pipelines which are operating
+the function *get_default_context()*.   Institutional pipelines which are operating
 decoupled from the CRDS server can post their actual cached context to the CRDS
 server for retrieval by *get_remote_context()*.
 
@@ -27,28 +27,79 @@ Centralized Default
 
 **get_default_context(observatory)**
 
-get_default_context() returns the name of the pipeline mapping which is
+get_default_context() returns the name of the context which is
 currently in use by default in the archive pipeline, e.g. 'jwst_0001.pmap'.
-This value is set and maintained on the CRDS Server using the Set Context web
-page and reflects a commanded default for all users.  Remote pipeline instances
-of CRDS running in 'local' mode only update their copy of this default when
-their CRDS cache is synchronized with the server.  Hence this value represents
-a commanded context and the actual pipeline context differs until
-*pipeline_name* is synchronized with the CRDS server.
+This value is set and maintained on the CRDS Server.   The actual pipeline context 
+differs from this commanded valuer until the pipeline is synchronized with the CRDS
+server using cron_sync.   
+
+The commanded default can be obtained using the CRDS client library as follows::
+
+   >>> from CRDS import client
+   >>> client.get_default_context('jwst')
+  'jwst_0101.pmap'
+
+See the explanation of JSONRPC requests and responses below for a language and library 
+neutral example of calling the same CRDS web service using the command line program "curl".
 
 Pipeline Echo
 +++++++++++++
 
 **get_remote_context(observatory, pipeline_name)**
 
-get_remote_context() returns the name of the pipeline mapping last reported as
+get_remote_context() returns the name of the context last reported as
 synced by the specified *pipeline_name* (e.g. 'jwst-ops-pipeline').  This is
 the value stored in a pipeline's CRDS cache and echoed back to the CRDS server
 when the cache is synchronized.  Since this value is inapplicable if a pipeline
 is run in "remote" mode computing best references on the CRDS Server, the
 generally preferred value is from get_default_context() since it always
 reflects the intended operational context regardless of the pipeline's CRDS
-mode.
+mode.   
+
+The actual default context for a pipeline can be obtained as follows::
+
+   >>> from CRDS import client
+   >>> client.get_remote_context('jwst', 'jwst-ops-pipeline')
+  'jwst_0101.pmap'
+  
+  
+Context History
++++++++++++++++
+
+CRDS makes the history of contexts which have been activated in the pipeline as
+the operational context via the get_context_history() web service::
+
+	>>> client.get_context_history("jwst")
+	[('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
+	 ('2012-09-27 00:00:00',
+	  'jwst_0000.pmap',
+	  'First rules and references from jwst_gentools stub development cloning.'),
+	 ('2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.'),
+	 ('2013-07-31 00:00:00', 'jwst_0002.pmap', 'Dark and Mask files.'),
+	 ('2013-09-04 00:00:00',
+	  'jwst_0003.pmap',
+	  'Absolute Calibration (photom) additions and replacements.'),
+	 ('2013-11-25 09:00:03', 'jwst_0005.pmap', 'set by system'),
+	 ('2014-03-19 10:51:19',
+	  'jwst_0012.pmap',
+	  'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\r\nNew linearity files for all instruments\r\nNew saturation files and rmaps for all instruments'),
+	
+		...
+
+	 ('2015-11-18 12:58:13',
+	  'jwst_0105.pmap',
+	  'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket #238.')
+	  ]
+	
+Each entry in the context history is a list/tuple of form:  (start_date, context, description).
+
+Adjacent entries are consecutive,  the start date of the one context is the end date of the previous context.
+
+The context history is in first-to-last order and it is possible that the context will be regressed to a prior
+version;  consequently,  there is no guarantee that context names will monotonically increase.  At times several
+file submissions and created contexts are activated en masse via the last created context;  consequently,  there
+is no guarantee that pmap serial numbers will increase or decrease by one.
+
 
 File Information
 ----------------
@@ -269,7 +320,7 @@ environments.
 JSONRPC Response
 ----------------
 
-The reponse returned by the server for the above request is the following JSON::
+The response returned by the server for the above request is the following JSON::
 
     {"error": null, "jsonrpc": "1.0", "id": 1, "result": "jwst_0000.pmap"}
     
@@ -290,7 +341,10 @@ JSONRPC Demo Page
 -----------------
 
 The CRDS servers support demoing the JSONRPC services and calling them interactively
-by visiting the URL *.../json/browse/*.    The resulting page is shown here:
+by visiting the URL *.../json/browse/*.  This facility is available in development
+and test environments upon request.
+
+The resulting page is shown here:
 
 .. figure:: images/web_jsonrpc_browse.png
    :scale: 100 %
@@ -314,9 +368,5 @@ And the same query is here with JWST data model parkey names:
     Deferred(14, unfired)
     Got ->
     {"error": null, "jsonrpc": "1.0", "id": "jsonrpc", "result": {"linearity": "jwst_fgs_linearity_0000.fits", "amplifier": "jwst_fgs_amplifier_0000.fits", "mask": "jwst_fgs_mask_0000.fits"}}
-
-**NOTE:** An apparent bug in the demo interpreter makes it impossible to pass 
-the get_best_references *reftypes* parameter as an array of strings.   In the
-current demo reftypes can only be specified as null.
 
 
