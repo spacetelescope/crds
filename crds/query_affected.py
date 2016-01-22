@@ -268,7 +268,7 @@ for debugging subclasses of the QueryAffectedDatasetsScript skeletal framework.
         if effects:
             self.save_last_processed(effects)
         return log.errors()
-
+        
     def process(self,  effects):
         """Output the results of all the context transitions."""
         ids = []
