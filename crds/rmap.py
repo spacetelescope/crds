@@ -1499,7 +1499,8 @@ class ReferenceMapping(Mapping):
         of this rmap and return it.
         """
         new = self.copy()
-        new.selector.insert(header, value, self.tpn_valid_values)
+        new.selector.insert(header, value, 
+            self.tpn_valid_values if not config.ALLOW_BAD_PARKEY_VALUES else {})
         return new
     
     def delete(self, terminal):
