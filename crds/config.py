@@ -173,6 +173,9 @@ ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
 ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", False,
     "When True, don't map JWST data model warnings onto CRDS errors.")
 
+ALLOW_BAD_PARKEY_VALUES = BooleanConfigItem("CRDS_ALLOW_BAD_PARKEY_VALUES", False,
+    "When True, turn off parkey value checking when loading rmaps.  For refactoring with bad 'legacy' references.")
+
 # ============================================================================
 
 CRDS_DATA_CHUNK_SIZE = 2**23   

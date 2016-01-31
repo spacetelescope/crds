@@ -7,7 +7,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline)
+from crds import (rmap, log, diff, cmdline, config)
 from crds import exceptions as crexc
 
 # ============================================================================
@@ -160,7 +160,8 @@ def set_rmap_parkey(rmapping, parkey, modify_inplace, *args, **keys):
     """
     new_filename  = rmapping.filename if modify_inplace else os.path.join(".", rmapping.basename)
     log.info("Setting parkey, removing all references from", rmapping.basename)
-    references = rmapping.reference_names()
+    references = [config.locate_file(name, observatory=rmapping.observatory)
+                  for name in rmapping.reference_names()]
     rmapping = rmap_delete_references(rmapping.filename, new_filename, references)
     log.info("Setting parkey", repr(parkey), "in",repr(rmapping.basename))
     rmapping.header["parkey"] = eval(parkey)
@@ -219,6 +220,7 @@ class RefactorScript(cmdline.Script):
                 self.set_parkey()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
+        log.standard_status()
         return log.errors()
     
     def rmap_apply(self, func, *args, **keys):
