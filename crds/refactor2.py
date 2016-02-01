@@ -176,6 +176,15 @@ def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
     new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
     new_mapping.write(new_filename)
 
+def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
+    """Apply the text replacements defined in list of colon separated 
+    old:new `fixers` list to `rmapping` writing results to `new_filename`.
+    """
+    for fixer in fixers:
+        old_text, new_text = fixer.split(":")
+        replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
+        rmapping = rmap.load_mapping(new_filename)
+
 # ============================================================================
 
 class RefactorScript(cmdline.Script):
@@ -224,7 +233,8 @@ class RefactorScript(cmdline.Script):
     This removes all the existing references and re-inserts them under the new parkey approach.
 
     python -m crds.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
-            --source-context jwst-operational --instruments X Y Z ... --types A B C ...
+            --source-context jwst-operational --instruments X Y Z ... --types A B C ... \\
+            --fixers FGS1:GUIDER1 FGS2:GUIDER2 ANY:GENERIC FULL:GENERIC
      
     7. Replace old text P1 with new text P2 in all rmaps found under
     source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
@@ -256,6 +266,8 @@ class RefactorScript(cmdline.Script):
         self.add_argument('--new-text', type=str, default=None, help="Replacement text for replace_text command.")
         self.add_argument('--inplace', action="store_true",
                           help="Rewrite files directly in cache replacing original copies.")
+        self.add_argument('--fixers', type=str, nargs="*",
+                          help="Simple colon separated global replacements of form old:new ... applied after refactoring.")
 
     def main(self):
         with log.error_on_exception("Refactoring operation FAILED"):
@@ -290,14 +302,19 @@ class RefactorScript(cmdline.Script):
                                         repr(source_context)):
                 imapping = pmapping.get_imap(instr)
                 for filekind in self.args.types:
-                    with log.error_on_exception("Failed loading rmap for", repr(filekind), "from", 
+                    with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
                                                 repr(imapping.basename), "of", 
                                                 repr(source_context)):
                         rmapping = imapping.get_rmap(filekind).copy()
                         new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
+                        fixers = self.args.fixers
                         keywords.update(locals())
                         func(*args, **keywords)
-
+                        if self.args.fixers:
+                            rmapping = rmap.load_mapping(new_filename)
+                            keywords.update(locals())
+                            apply_rmap_fixers(*args, **keywords)
+                        
     def del_header_key(self):
         """Set args.header_key to string args.header_value in all rmaps elaborated under
         args.source_context, args.instruments, and args.types.
