@@ -100,6 +100,7 @@ class Differencer(object):
     new_file              str  name of second/new file in difference
     primitive_diffs       bool difference replaced reference files using fitsdiff
     check_diffs           bool check for name reversions, file deletions, rule changes, class changes, and parameter changes
+    check_references      bool check for reference additions or deletions, regardless of matching criteria
     mapping_text_diffs    bool print out UNIX text diffs for mapping changes 
     include_header_diffs  bool include header changes in logical diff output for mappings
     hide_boring_diffs     bool hide boring header changes in logical diff output (name, sha1sum, derived_from, etc.)
@@ -110,12 +111,13 @@ class Differencer(object):
 
     def __init__(self, observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                  include_header_diffs=False, hide_boring_diffs=False, recurse_added_deleted=False,
-                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False):
+                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False, check_references=False):
         self.observatory = observatory
         self.old_file = old_file
         self.new_file = new_file
         self.primitive_diffs = primitive_diffs
         self.check_diffs = check_diffs
+        self.check_references = check_references
         self.mapping_text_diffs = mapping_text_diffs
         self.include_header_diffs = include_header_diffs
         self.hide_boring_diffs = hide_boring_diffs
@@ -179,14 +181,18 @@ class MappingDifferencer(Differencer):
                     from crds import diff
                     diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs, 
                                     recurse_added_deleted=self.recurse_added_deleted)
-        if self.mapping_text_diffs:
-            pairs = sorted(set(mapping_pairs(differences) +  [(self.old_file, self.new_file)]))
-            for (old, new) in pairs:
+        pairs = sorted(set(mapping_pairs(differences) +  [(self.old_file, self.new_file)]))
+        for (old, new) in pairs:
+            if self.mapping_text_diffs:
                 log.write("="*20, "text difference", repr(old), "vs.", repr(new), "="*20)
                 text_difference(self.observatory, old, new)
                 log.write("="*80)
+            if self.check_references:
+                mapping_check_references(new, old)
+
         if self.check_diffs:
             mapping_check_diffs_core(differences)
+        
         return 1 if differences else 0
 
     def squash_diff_tuples(self, diff2):
@@ -511,6 +517,21 @@ def remove_boring(diffs):
 
 # ============================================================================
 
+def mapping_check_references(mapping, derived_from):
+    """Regardless of matching criteria,  do a simple check listing added or deleted
+    references as appropritate.
+    """
+    mapping = rmap.asmapping(mapping, cached="readonly")
+    derived_from = rmap.asmapping(derived_from, cached="readonly")
+    old_refs = set(derived_from.reference_names())
+    new_refs = set(mapping.reference_names())
+    if old_refs - new_refs:
+        log.warning("Deleted references for", repr(derived_from.filename), "and", repr(mapping.filename), "=",
+                 list(old_refs - new_refs))
+    if new_refs - old_refs:
+        log.warning("Added references for", repr(derived_from.filename), "and", repr(mapping.filename), "=",
+                 list(new_refs - old_refs))
+ 
 def mapping_check_diffs(mapping, derived_from):
     """Issue warnings for *deletions* in self relative to parent derived_from
     mapping.  Issue warnings for *reversions*,  defined as replacements which
@@ -687,6 +708,8 @@ Differencing two sets of rules with simplified output:
             help="When a mapping is added or deleted, include all nested files as also added or deleted.  Else only top mapping change listed.")
         self.add_argument("-K", "--check-diffs", dest="check_diffs", action="store_true",
             help="Issue warnings about new rules, deletions, or reversions.")
+        self.add_argument("--check-references", dest="check_references", action="store_true",
+            help="Issue warnings if references are added to or deleted from either mapping.")
         self.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
             help="Rather than printing diffs for mappings,  print the names of new or replacement files.  Excludes intermediaries.")
         self.add_argument("-A", "--print-all-new-files", dest="print_all_new_files", action="store_true",
@@ -754,6 +777,7 @@ Differencing two sets of rules with simplified output:
             status = difference(self.observatory, self.old_file, self.new_file, 
                                 primitive_diffs=self.args.primitive_diffs, 
                                 check_diffs=self.args.check_diffs,
+                                check_references=self.args.check_references,
                                 mapping_text_diffs=self.args.mapping_text_diffs,
                                 include_header_diffs=self.args.include_header_diffs,
                                 hide_boring_diffs=self.args.hide_boring_diffs,
