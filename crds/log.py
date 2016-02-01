@@ -177,6 +177,7 @@ class CrdsLogger(object):
         """
         output = self.format(*args, **keys)
         self.eol_pending = not output.endswith("\n")
+        sys.stderr.flush()
         sys.stdout.write(output)
         sys.stdout.flush()
 
