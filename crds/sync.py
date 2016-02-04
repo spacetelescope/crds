@@ -34,6 +34,7 @@ import glob
 
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
+from crds.log import srepr
 import crds
 
 # ============================================================================
@@ -445,8 +446,8 @@ class SyncScript(cmdline.ContextsScript):
             return
         size = os.stat(path).st_size
         if int(info["size"]) != size:
-            self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + repr(size), 
-                                  "CRDS size=" + repr(info["size"]))
+            self.error_and_repair(path, "File", repr(base), "length mismatch LOCAL size=" + srepr(size), 
+                                  "CRDS size=" + srepr(info["size"]))
         elif self.args.check_sha1sum:
             log.verbose("Computing checksum for", repr(base), "of size", repr(size), verbosity=100)
             sha1sum = utils.checksum(path)
