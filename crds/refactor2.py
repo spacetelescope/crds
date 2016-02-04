@@ -176,6 +176,19 @@ def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
     new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
     new_mapping.write(new_filename)
 
+# ============================================================================
+
+def set_rmap_substitution(rmapping, new_filename, parameter_name, old_text, new_text, *args, **keys):
+    log.info("Adding substitution for", repr(parameter_name), 
+             "from", repr(old_text), "to", repr(new_text), "in", repr(rmapping.basename))
+    new_mapping = rmapping.copy()
+    if "substitutions" not in new_mapping.header:
+        new_mapping.header["substitutions"] = {}
+    new_mapping.header["substitutions"][parameter_name] = { old_text : new_text }
+    new_mapping.write(new_filename)
+
+# ============================================================================
+
 def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
     """Apply the text replacements defined in list of colon separated 
     old:new `fixers` list to `rmapping` writing results to `new_filename`.
@@ -242,10 +255,25 @@ class RefactorScript(cmdline.Script):
 
     python -m crds.refactor2 replace_text --old-text P1  --new-text P2 \\
             --source-context jwst-operational --instruments X Y Z ... --types A B C ...
+
+    8. Add an unconditional load-time parameter value substitution to the rmap header.  For this example,
+    the given substitution is added to the rmap "substitutions" header dictionary,  which has the effect
+    that match tuples in the rmap are transparently altered at load-time, and SUBARRAY values of GENERIC
+    are re-interpreted as N/A for the purposes of matching.
+
+    python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+            --source-context jwst-operational --instruments X Y Z ... --types A B C ...
+
+    IOW,  this command adds/updates something similar to the following to the specified rmaps:
+
+      'substitutions' : {
+          'META.SUBARRAY.NAME' : { 'GENERIC' : 'N/A' },
+      }
+
     """
     
     def add_args(self):
-        self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", 
+        self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "set_substitution",
                                               "del_header", "del_parameter", "set_parkey", "replace_text"),
                           help="Name of refactoring command to perform.")
         self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
@@ -285,6 +313,8 @@ class RefactorScript(cmdline.Script):
                 self.set_parkey()
             elif self.args.command == "replace_text":
                 self.replace_text()
+            elif self.args.command == "set_substitution":
+                self.set_substitution()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
         log.standard_status()
@@ -344,6 +374,10 @@ class RefactorScript(cmdline.Script):
     def replace_text(self):
         """Do simple text substitution in elaborated rmaps replacing `args.old_text` with `args.new_text`."""
         self.rmap_apply(replace_rmap_text, old_text=self.args.old_text,  new_text=self.args.new_text)
+
+    def set_substitution(self):
+        """Do simple text substitution in elaborated rmaps replacing `args.old_text` with `args.new_text`."""
+        self.rmap_apply(set_rmap_substitution, parameter_name=self.args.parameter_name, old_text=self.args.old_text,  new_text=self.args.new_text)
 
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
