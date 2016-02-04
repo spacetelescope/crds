@@ -25,6 +25,7 @@ from .proxy import CheckingProxy
 # dependent on core for configuration, logging, and  file path management.
 from crds import utils, log, config
 from crds.client import proxy
+from crds.log import srepr
 
 from crds.exceptions import ServiceError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
 from crds.python23 import *
@@ -112,9 +113,6 @@ def get_crds_server():
 set_crds_server(URL)
 
 # =============================================================================
-def srepr(obj):
-    """Return the repr() of the str() of `o`"""
-    return repr(str(obj))
 
 @utils.cached
 def list_mappings(observatory=None, glob_pattern="*"):
