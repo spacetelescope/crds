@@ -39,6 +39,7 @@ import fnmatch
 
 from . import rmap, log, utils, config
 from crds.client import api
+from crds.log import srepr
 from crds.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
 from crds import python23
 
@@ -531,12 +532,6 @@ def list_mappings(observatory, glob_pattern):
     """
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
-
-# ============================================================================
-
-def srepr(obj):
-    """Return the repr() of the str() of obj"""  
-    return repr(str(obj))
 
 # ============================================================================
 
