@@ -717,7 +717,7 @@ Differencing two sets of rules with simplified output:
         self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
             help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("-B", "--hide-boring-diffs", dest="hide_boring_diffs", action="store_true",
-            help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
+            help="Remove boiler-plate header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
         self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
@@ -746,7 +746,7 @@ Differencing two sets of rules with simplified output:
             self.args.lowest_mapping_only = True
             self.args.remove_paths = True
             self.args.hide_boring_diffs = True
-            self.args.include_headers = True
+            self.args.include_header_diffs = True
         if self.args.sync_files:
             if self.args.print_all_new_files:
                 serial_old = naming.newstyle_serial(self.old_file)
