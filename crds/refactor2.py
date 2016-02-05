@@ -7,7 +7,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline, config)
+from crds import (rmap, log, diff, cmdline, config, sync)
 from crds import exceptions as crexc
 from crds.log import srepr
 
@@ -310,8 +310,11 @@ class RefactorScript(cmdline.Script):
                           help="Rewrite files directly in cache replacing original copies.")
         self.add_argument('--fixers', type=str, nargs="*",
                           help="Simple colon separated global replacements of form old:new ... applied after refactoring.")
+        self.add_argument("--sync-files", dest="sync_files", action="store_true",
+            help="Fetch any missing files needed for the requested refactoring from the CRDS server.")
 
     def main(self):
+
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
                 rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
@@ -341,16 +344,16 @@ class RefactorScript(cmdline.Script):
         associated with the elaboration of args.source_context, args.instruments, args.types.
         """
         keywords = dict(keys)
-        source_context = self.resolve_context(self.args.source_context)
-        pmapping = rmap.get_cached_mapping(source_context)
+        self.setup_source_context()
+        pmapping = rmap.get_cached_mapping(self.source_context)
         for instr in self.args.instruments:
             with log.error_on_exception("Failed loading imap for", repr(instr), "from", 
-                                        repr(source_context)):
+                                        repr(self.source_context)):
                 imapping = pmapping.get_imap(instr)
                 for filekind in self.args.types:
                     with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
                                                 repr(imapping.basename), "of", 
-                                                repr(source_context)):
+                                                repr(self.source_context)):
                         rmapping = imapping.get_rmap(filekind).copy()
                         new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
                         fixers = self.args.fixers
@@ -360,6 +363,20 @@ class RefactorScript(cmdline.Script):
                             rmapping = rmap.load_mapping(new_filename)
                             keywords.update(locals())
                             apply_rmap_fixers(*args, **keywords)
+
+    def setup_source_context(self):
+        """Default the --source-context if necessary and then translate any symbolic name to a literal .pmap
+        name.  e.g.  jwst-edit -->  jwst_0109.pmap.   Then optionally sync the files to a local cache.
+        """
+        if self.args.source_context is None:
+            self.source_context = self.observatory + "-edit"
+            log.info("Defaulting --source-context to", srepr(self.source_context))
+        else:
+            self.source_context = self.args.source_context
+        self.source_context = self.resolve_context(self.source_context)
+        if self.args.sync_files:
+            errs = sync.SyncScript("crds.sync --contexts {}".format(self.source_context))()
+            assert not errs, "Errors occurred while syncing all rules to CRDS cache."
                         
     def del_header_key(self):
         """Set args.header_key to string args.header_value in all rmaps elaborated under
