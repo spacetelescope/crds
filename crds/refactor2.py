@@ -9,6 +9,7 @@ import sys
 
 from crds import (rmap, log, diff, cmdline, config)
 from crds import exceptions as crexc
+from crds.log import srepr
 
 # ============================================================================
     
@@ -45,16 +46,16 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
-        log.info("Inserting", os.path.basename(reference), "into", repr(new.name))
+        log.info("Inserting", srepr(os.path.basename(reference)), "into", srepr(new.name))
         new = new.insert_reference(reference)
     new.header["derived_from"] = old.basename
-    log.verbose("Writing", repr(new_rmap))
+    log.verbose("Writing", srepr(new_rmap))
     new.write(new_rmap)
     formatted = new.format()
     for reference in inserted_references:
         reference = os.path.basename(reference)
         assert reference in formatted, \
-            "Rules update failure. " + repr(reference) + " does not appear in new rmap." \
+            "Rules update failure. " + srepr(reference) + " does not appear in new rmap." \
             "  May be identical match with other submitted references."
     return new
 
@@ -67,16 +68,16 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     for reference in deleted_references:
-        log.info("Deleting", repr(reference), "from", repr(new.name))
+        log.info("Deleting", srepr(reference), "from", srepr(new.name))
         new = new.delete(reference)
     new.header["derived_from"] = old.basename
-    log.verbose("Writing", repr(new_rmap))
+    log.verbose("Writing", srepr(new_rmap))
     new.write(new_rmap)
     formatted = new.format()
     for reference in deleted_references:
         reference = os.path.basename(reference)
         assert reference not in formatted, \
-            "Rules update failure.  Deleted" + repr(reference) + " still appears in new rmap."
+            "Rules update failure.  Deleted " + srepr(reference) + " still appears in new rmap."
     return new
 
 def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("add",)):
@@ -94,15 +95,16 @@ def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("ad
         if actual in expected:
             pass   # white-list so it will fail when expected is bogus.
         else:
-            log.error("Expected one of", repr(expected), "but got", repr(actual),
-                      "from change", repr(difference))
+            log.error("Expected one of", srepr(expected), "but got", srepr(actual),
+                      "from change", srepr(difference))
             as_expected = False
     with open(old_rmap) as pfile:
         old_count = len([line for line in pfile.readlines() if os.path.basename(old_ref) in line])
     with open(new_rmap) as pfile:
         new_count = len([line for line in pfile.readlines() if os.path.basename(new_ref) in line])
     if "replace" in expected and old_count != new_count:
-        log.error("Replacement COUNT DIFFERENCE replacing", repr(old_ref), "with", repr(new_ref), "in", repr(old_rmap),
+        log.error("Replacement COUNT DIFFERENCE replacing", srepr(old_ref), "with", 
+                  srepr(new_ref), "in", srepr(old_rmap),
                   old_count, "vs.", new_count)
         as_expected = False
     return as_expected
@@ -114,8 +116,8 @@ def set_rmap_header(rmapping, new_filename, header_key, header_value, *args, **k
     This is potentially lossy since rewriting the rmap may/will lose comments and 
     formatting quirks.
     """
-    log.verbose("Setting header value in", repr(rmapping.basename), "for", repr(header_key), 
-                "=", repr(header_value))
+    log.verbose("Setting header value in", srepr(rmapping.basename), "for", srepr(header_key), 
+                "=", srepr(header_value))
     rmapping.header[header_key] = header_value
     rmapping.write(new_filename)
     
@@ -124,7 +126,7 @@ def del_rmap_header(rmapping, new_filename, header_key):
     This is potentially lossy since rewriting the rmap may/will lose comments and 
     formatting quirks.
     """
-    log.verbose("Deleting header value in", repr(rmapping.basename), "for", repr(header_key))
+    log.verbose("Deleting header value in", srepr(rmapping.basename), "for", srepr(header_key))
     del rmapping.header[header_key]
     rmapping.write(new_filename)
 
@@ -136,7 +138,7 @@ def del_rmap_parameter(rmapping, new_filename, parameter, *args, **keys):
     parkey = rmapping.parkey
     i, j = get_parameter_index(parkey, parameter)
     del_parkey = parkey[:i] +  ((parkey[i][:j] + parkey[i][j+1:]),)  + parkey[i+1:]
-    log.verbose("Replacing", repr(parkey), "with", repr(del_parkey), "in", repr(rmapping.basename))
+    log.verbose("Replacing", srepr(parkey), "with", srepr(del_parkey), "in", srepr(rmapping.basename))
     rmapping.header["parkey"] = del_parkey
     rmapping.selector.delete_match_param(parameter)
     rmapping.write(new_filename)
@@ -155,11 +157,11 @@ def set_rmap_parkey(rmapping, new_filename, parkey, *args, **keys):
     """Delete `parameter_name` from the parkey item of the `types` of the specified
     `instruments` in `context`.
     """
-    log.info("Setting parkey, removing all references from", rmapping.basename)
+    log.info("Setting parkey, removing all references from", srepr(rmapping.basename))
     references = [config.locate_file(name, observatory=rmapping.observatory)
                   for name in rmapping.reference_names()]
     rmapping = rmap_delete_references(rmapping.filename, new_filename, references)
-    log.info("Setting parkey", repr(parkey), "in",repr(rmapping.basename))
+    log.info("Setting parkey", srepr(parkey), "in", srepr(rmapping.basename))
     rmapping.header["parkey"] = eval(parkey)
     rmapping.write(new_filename)
     rmapping = rmap_insert_references(new_filename, new_filename, references)
@@ -169,8 +171,8 @@ def set_rmap_parkey(rmapping, new_filename, parkey, *args, **keys):
 def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys):
     """Do simple text replacement from `old_text` to `new_text` in `rmapping`.
     """
-    log.info("Replacing", repr(old_text), "with", repr(new_text), "in", 
-             repr(rmapping.basename), "to", repr(new_filename))
+    log.info("Replacing", srepr(old_text), "with", srepr(new_text), "in", 
+             srepr(rmapping.basename), "to", srepr(new_filename))
     original_rmap = str(rmapping)
     new_rmap = original_rmap.replace(old_text, new_text)
     new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
@@ -179,13 +181,25 @@ def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
 # ============================================================================
 
 def set_rmap_substitution(rmapping, new_filename, parameter_name, old_text, new_text, *args, **keys):
-    log.info("Adding substitution for", repr(parameter_name), 
-             "from", repr(old_text), "to", repr(new_text), "in", repr(rmapping.basename))
+    log.info("Adding substitution for", srepr(parameter_name), 
+             "from", srepr(old_text), "to", srepr(new_text), "in", srepr(rmapping.basename))
     new_mapping = rmapping.copy()
     if "substitutions" not in new_mapping.header:
         new_mapping.header["substitutions"] = {}
     new_mapping.header["substitutions"][parameter_name] = { old_text : new_text }
     new_mapping.write(new_filename)
+
+# ============================================================================
+
+def cat_rmap(rmapping, new_filename, header_key, *args, **keys):
+    """Cat/print rmapping's source text or the value of `header_key` in the rmap header."""
+    if header_key is not None:
+        log.info("In", srepr(rmapping.basename), "parameter", srepr(header_key), "=", srepr(rmapping.header[header_key]))
+    else:
+        log.info("-"*80)
+        log.info("Rmap", srepr(rmapping.basename), "is:")
+        log.info("-"*80)
+        log.write(str(rmapping))
 
 # ============================================================================
 
@@ -274,7 +288,7 @@ class RefactorScript(cmdline.Script):
     
     def add_args(self):
         self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "set_substitution",
-                                              "del_header", "del_parameter", "set_parkey", "replace_text"),
+                                              "del_header", "del_parameter", "set_parkey", "replace_text", "cat"),
                           help="Name of refactoring command to perform.")
         self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
                           help="Reference mapping to modify by inserting references.")
@@ -315,6 +329,8 @@ class RefactorScript(cmdline.Script):
                 self.replace_text()
             elif self.args.command == "set_substitution":
                 self.set_substitution()
+            elif self.args.command == "cat":
+                self.cat()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
         log.standard_status()
@@ -378,6 +394,12 @@ class RefactorScript(cmdline.Script):
     def set_substitution(self):
         """Do simple text substitution in elaborated rmaps replacing `args.old_text` with `args.new_text`."""
         self.rmap_apply(set_rmap_substitution, parameter_name=self.args.parameter_name, old_text=self.args.old_text,  new_text=self.args.new_text)
+
+    def cat(self):
+        """Either cat the text of the elaborated rmaps if no --parameter-name is specified,  or dump the specified 
+        --parameter-name from the rmap headers.
+        """
+        self.rmap_apply(cat_rmap, header_key=self.args.header_key)
 
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
