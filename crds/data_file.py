@@ -307,6 +307,11 @@ def get_asdf_header(filepath, needed_keys=()):
     import pyasdf
     with pyasdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
+        histall = []
+        for hist in handle.tree["history"]:
+            histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
+                           " :: " + hist["description"])
+        header["HISTORY"] = "\n".join(histall)
     header = reduce_header(filepath, header, needed_keys)
     header = cross_strap_header(header)
     return header
@@ -579,7 +584,7 @@ def get_geis_header(name, needed_keys=()):
         header[str(key)] = str(value)
         
     if not needed_keys or "HISTORY" in needed_keys:
-        header["HISTORY"] = history
+        header["HISTORY"] = "\n".join(history)
     
     return header
 
