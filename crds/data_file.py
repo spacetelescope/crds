@@ -358,6 +358,7 @@ def cross_strap_header(header):
 # ----------------------------------------------------------------------------------------------
 
 DUPLICATES_OK = ["COMMENT", "HISTORY", "NAXIS"]
+APPEND_KEYS = ["COMMENT", "HISTORY"]
 
 def reduce_header(filepath, old_header, needed_keys=()):
     """Limit `header` to `needed_keys`,  converting all keys to upper case
@@ -374,10 +375,13 @@ def reduce_header(filepath, old_header, needed_keys=()):
         key = str(key.upper())
         value = str(value)
         if (not needed_keys) or key in needed_keys:
-            if (key in header and header[key] != value) and not key in DUPLICATES_OK:
-                log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
-                                    "using", repr(header[key]), "not", repr(value), verbosity=70)
-                continue
+            if (key in header and header[key] != value):
+                if not key in DUPLICATES_OK:
+                    log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
+                                        "using", repr(header[key]), "not", repr(value), verbosity=70)
+                    continue
+                elif key in APPEND_KEYS:
+                    header[key] += "\n" + value
             else:
                 header[key] = value                
     return ensure_keys_defined(header)
