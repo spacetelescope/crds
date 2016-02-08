@@ -307,11 +307,12 @@ def get_asdf_header(filepath, needed_keys=()):
     import pyasdf
     with pyasdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
-        histall = []
-        for hist in handle.tree["history"]:
-            histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
-                           " :: " + hist["description"])
-        header["HISTORY"] = "\n".join(histall)
+        if "history" in handle.tree:
+            histall = []
+            for hist in handle.tree["history"]:
+                histall.append(timestamp.format_date(hist["time"]).split(".")[0] +
+                               " :: " + hist["description"])
+            header["HISTORY"] = "\n".join(histall)
     header = reduce_header(filepath, header, needed_keys)
     header = cross_strap_header(header)
     return header
@@ -377,7 +378,7 @@ def reduce_header(filepath, old_header, needed_keys=()):
     if isinstance(old_header, dict):
         old_header = old_header.items()
     for (key, value) in old_header:
-        key = str(key.upper())
+        key = str(key).upper()
         value = str(value)
         if (not needed_keys) or key in needed_keys:
             if (key in header and header[key] != value):
@@ -410,15 +411,20 @@ def sanitize_data_model_dict(flat_dict):
     strings, upper case the keys,  and add fake keys for FITS keywords.
     """
     cleaned = {}
-    for key, val in flat_dict.items():
-        skey = str(key).upper()
-        sval = str(val)
+    history = []
+    for key, val in sorted(flat_dict.items()):
+        skey, sval = str(key).upper(), str(val)
         fits_magx = "EXTRA_FITS.PRIMARY.HEADER."
-        if key.upper().startswith(fits_magx):
+        if skey.startswith("HISTORY") and skey.endswith("DESCRIPTION"):
+            history.append(sval)
+            continue
+        if skey.startswith(fits_magx):
             if key.endswith(".0"):
                 skey = flat_dict[key].upper()
                 sval = flat_dict[key[:-len(".0")] + ".1"]
         cleaned[skey] = sval
+    if history:
+        cleaned["HISTORY"] = " ".join(history)
     # Hack for backward incompatible model naming change.
     if "META.INSTRUMENT.NAME" in cleaned:
         if "META.INSTRUMENT.TYPE" not in cleaned:
