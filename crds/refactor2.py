@@ -356,6 +356,9 @@ class RefactorScript(cmdline.Script):
                                                 repr(self.source_context)):
                         rmapping = imapping.get_rmap(filekind).copy()
                         new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
+                        if os.path.exists(new_filename):
+                            log.info("Continuing refactoring from local copy", srepr(new_filename))
+                            rmapping = rmap.load_mapping(new_filename)
                         fixers = self.args.fixers
                         keywords.update(locals())
                         func(*args, **keywords)
