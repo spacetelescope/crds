@@ -238,37 +238,37 @@ class RefactorScript(cmdline.Script):
     the set of rmaps found under a source context which correspond to the specified instruments and types.
 
     3. Set header key K to value V in rmap X creating rmap Y.
-    source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
+    source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
     python -m crds.refactor2 set_header --header-key K --header-value V
 
     4. Delete header key K (e.g. description) in all the rmaps found under
-    source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
+    source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
     python -m crds.refactor2 del_header --header-key K \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     5. Remove single parameter name N (e.g. META.SUBARRAY.NAME) in all the rmaps found under
-    source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
+    source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This incudes modifying both parkey and all corresponding selector matching patterns.
 
     python -m crds.refactor2 del_parameter --parameter-name N \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     6. Set complete parkey in all rmaps found under
-    source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
+    source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This removes all the existing references and re-inserts them under the new parkey approach.
 
     python -m crds.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
-            --source-context jwst-operational --instruments X Y Z ... --types A B C ... \\
+            --source-context jwst-edit --instruments X Y Z ... --types A B C ... \\
             --fixers FGS1:GUIDER1 FGS2:GUIDER2 ANY:GENERIC FULL:GENERIC
      
     7. Replace old text P1 with new text P2 in all rmaps found under
-    source context C (e.g. jwst-operational) for types A B C... of instruments X Y Z...
+    source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This is a simple text substitution.
 
     python -m crds.refactor2 replace_text --old-text P1  --new-text P2 \\
-            --source-context jwst-operational --instruments X Y Z ... --types A B C ...
+            --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     8. Add an unconditional load-time parameter value substitution to the rmap header.  For this example,
     the given substitution is added to the rmap "substitutions" header dictionary,  which has the effect
@@ -276,13 +276,19 @@ class RefactorScript(cmdline.Script):
     are re-interpreted as N/A for the purposes of matching.
 
     python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
-            --source-context jwst-operational --instruments X Y Z ... --types A B C ...
+            --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     IOW,  this command adds/updates something similar to the following to the specified rmaps:
 
       'substitutions' : {
           'META.SUBARRAY.NAME' : { 'GENERIC' : 'N/A' },
       }
+      
+    9. All of the above commands which elaborate rmaps to refactor based on --source-context can also be
+    driven by a direct specification of .rmap names using --rmaps:
+    
+    python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+            --rmaps jwst_miri_dark_0007.rmap
 
     """
     
@@ -294,12 +300,13 @@ class RefactorScript(cmdline.Script):
                           help="Reference mapping to modify by inserting references.")
         self.add_argument('--new-rmap', type=cmdline.reference_mapping, default=None,
                           help="Name of modified reference mapping output file.")
-        self.add_argument('references', type=str, nargs="*",
+        self.add_argument('--references', type=str, nargs="*",
                           help="Reference files, to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
         self.add_argument('--source-context', type=str, default=None,
                           help="Source context from which to retrieve affected mappings.")
         self.add_argument('--instruments', type=str, nargs="*", help="Instruments to which to apply this operation.")
         self.add_argument('--types', type=str, nargs="*", help="Reference types to which to apply this operation.")
+        self.add_argument('--rmaps',  type=str, nargs="*", help="Explicitly specify list of rmaps for refactoring.")
         self.add_argument('--header-key', type=str, default=None, help="Header keyword for header commands.")
         self.add_argument('--header-value', type=str, default=None, help="Value for header commands.")
         self.add_argument('--parkey', type=str, default=None, help="New parkey value for set_parkey.")
@@ -344,28 +351,39 @@ class RefactorScript(cmdline.Script):
         associated with the elaboration of args.source_context, args.instruments, args.types.
         """
         keywords = dict(keys)
-        self.setup_source_context()
-        pmapping = rmap.get_cached_mapping(self.source_context)
-        for instr in self.args.instruments:
-            with log.error_on_exception("Failed loading imap for", repr(instr), "from", 
-                                        repr(self.source_context)):
-                imapping = pmapping.get_imap(instr)
-                for filekind in self.args.types:
-                    with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
-                                                repr(imapping.basename), "of", 
-                                                repr(self.source_context)):
-                        rmapping = imapping.get_rmap(filekind).copy()
-                        new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
-                        if os.path.exists(new_filename):
-                            log.info("Continuing refactoring from local copy", srepr(new_filename))
-                            rmapping = rmap.load_mapping(new_filename)
-                        fixers = self.args.fixers
-                        keywords.update(locals())
-                        func(*args, **keywords)
-                        if self.args.fixers:
-                            rmapping = rmap.load_mapping(new_filename)
-                            keywords.update(locals())
-                            apply_rmap_fixers(*args, **keywords)
+        if self.args.rmaps:
+            for rmap_name in self.args.rmaps:
+                with log.error_on_exception("Failed processing rmap", srepr(rmap_name)):
+                    rmapping = rmap.load_mapping(rmap_name)
+                    self.process_rmap(func, rmapping=rmapping, **keywords)
+        else:
+            self.setup_source_context()
+            pmapping = rmap.get_cached_mapping(self.source_context)
+            for instr in self.args.instruments:
+                with log.error_on_exception("Failed loading imap for", repr(instr), "from", 
+                                            repr(self.source_context)):
+                    imapping = pmapping.get_imap(instr)
+                    for filekind in self.args.types:
+                        with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
+                                                    repr(imapping.basename), "of", 
+                                                    repr(self.source_context)):
+                            rmapping = imapping.get_rmap(filekind).copy()
+                            self.process_rmap(func, rmapping=rmapping, **keywords)
+
+    def process_rmap(self, func, rmapping, *args, **keys):
+        """Execute `func` on a single `rmapping` passing along *args and **keys"""
+        keywords = dict(keys)
+        new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
+        if os.path.exists(new_filename):
+            log.info("Continuing refactoring from local copy", srepr(new_filename))
+            rmapping = rmap.load_mapping(new_filename)
+        fixers = self.args.fixers
+        keywords.update(locals())
+        func(*args, **keywords)
+        if self.args.fixers:
+            rmapping = rmap.load_mapping(new_filename)
+            keywords.update(locals())
+            apply_rmap_fixers(*args, **keywords)
 
     def setup_source_context(self):
         """Default the --source-context if necessary and then translate any symbolic name to a literal .pmap
