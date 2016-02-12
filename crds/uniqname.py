@@ -160,7 +160,7 @@ def uniqname(old_path):
 
     Returns  new_cdbs_style_name : str
     """
-    add_checksums = "--add-checksums" if checksum_exists(old_path) else ""
+    add_checksums = "--add-checksum" if checksum_exists(old_path) else ""
     new_name = UniqnameScript("crds.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
             old_path, add_checksums))()
     return new_name
