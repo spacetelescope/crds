@@ -45,9 +45,11 @@ def certify_truncated_file():
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS  : WARNING  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
-    CRDS  : INFO     14 warnings
+    CRDS  : INFO     16 warnings
     CRDS  : INFO     4 infos
     0
     """
@@ -275,6 +277,19 @@ def certify_jwst_invalid():
     CRDS  : INFO     1 errors
     CRDS  : INFO     0 warnings
     CRDS  : INFO     4 infos
+    1
+    """
+
+def certify_jwst_missing_optional_parkey():
+    """
+    >>> TestCertifyScript("crds.certify data/niriss_ref_photom_missing_parkey.fits --comparison-context jwst_0125.pmap")()
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     Certifying 'data/niriss_ref_photom_missing_parkey.fits' (1/1) as 'FITS' relative to context 'jwst_0125.pmap'
+    CRDS  : ERROR    instrument='UNKNOWN' type='UNKNOWN' data='data/niriss_ref_photom_missing_parkey.fits' ::  Validation error : Error loading : [Errno 2] No such file or directory: 'data/niriss_ref_photom_missing_parkey.fits'
+    CRDS  : INFO     ########################################
+    CRDS  : INFO     1 errors
+    CRDS  : INFO     0 warnings
+    CRDS  : INFO     3 infos
     1
     """
 

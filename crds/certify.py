@@ -9,6 +9,7 @@ import sys
 import os
 import re
 from collections import defaultdict, namedtuple
+import copy
 
 import numpy as np
 
@@ -162,6 +163,18 @@ class Validator(object):
             raise IllegalKeywordError("*Must not define* keyword " + repr(self.name))
         return value
 
+    @property
+    def optional(self):
+        """Return True IFF this parameter is optional."""
+        return self.info.presence == "O"
+    
+    def get_required_copy(self):
+        """Return a copy of this validator with self.presence overridden to R/required."""
+        required = copy.deepcopy(self)
+        idict = required.info._asdict()  # returns OrderedDict,  method is public despite _
+        idict["presence"] = "R"
+        required.info = TpnInfo(*idict.values())
+        return required
 
 class KeywordValidator(Validator):
     """Checks that a value is one of the literal TpnInfo values."""
@@ -466,10 +479,24 @@ class Certifier(object):
         validators = []
         for key in self.locator.reference_name_to_validator_key(self.filename):
             validators.extend(validators_by_typekey(key, self.observatory))
-        # parkeys = set(self.get_rmap_parkeys())
+        validators = self.set_rmap_parkeys_to_required(validators) 
         # validators = [ val for val in validators if val.name in parkeys ]
         return validators
-
+    
+    def set_rmap_parkeys_to_required(self, validators):
+        """Mutate copies of `validators` so that any specified by the rmap parkey are required."""
+        parkeys = set(self.get_rmap_parkeys())
+        vlist = []
+        for valid in validators:
+            if not valid.optional:
+                vlist.append(valid)
+            elif valid.name not in parkeys:
+                vlist.append(valid)
+            else:
+                log.verbose("Mapping", repr(valid.name), "to REQUIRED based on rmap parkeys from", 
+                         repr(self.get_corresponding_rmap().basename))
+                vlist.append(valid.get_required_copy())
+        return vlist
 
     def get_corresponding_rmap(self):
         """Return the rmap which corresponds to self.filename under self.context."""
