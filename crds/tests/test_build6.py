@@ -43,7 +43,7 @@ def dt_query_affected_datasets_list():
 
     >>> old_state = test_config.setup(url='https://jwst-crds.stsci.edu')
     
-    >>> QueryAffectedDatasetsScript("query_affected --list")()
+    >>> QueryAffectedDatasetsScript("query_affected --list")()  # doctest: +ELLIPSIS
     (0, '2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings')
     (1, '2012-09-27 00:00:00', 'jwst_0000.pmap', 'First rules and references from jwst_gentools stub development cloning.')
     (2, '2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.')
@@ -77,6 +77,7 @@ def dt_query_affected_datasets_list():
     (30, '2015-10-31 17:41:40', 'jwst_0100.pmap', 'Defined V2V3 is N/A for NIRSPEC.')
     (31, '2015-11-04 14:02:24', 'jwst_0101.pmap', 'Updated operational context for NIRCAM WAVELENGTHRANGE.')
     (32, '2015-11-18 12:58:13', 'jwst_0105.pmap', 'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket #238.')
+    ...
 
     >>> test_config.cleanup(old_state)
     """
