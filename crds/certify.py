@@ -565,6 +565,7 @@ class ReferenceCertifier(Certifier):
             with log.verbose_warning_on_exception("No corresponding rmap"):
                 r = self.get_corresponding_rmap()
             if r:
+                # header = r.map_irrelevant_parkeys_to_na(header)
                 header = r.locate.reference_keys_to_dataset_keys(r, header)
         instr = utils.header_to_instrument(header)
         for key in crds.INSTRUMENT_KEYWORDS:
