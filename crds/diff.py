@@ -111,7 +111,8 @@ class Differencer(object):
 
     def __init__(self, observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                  include_header_diffs=False, hide_boring_diffs=False, recurse_added_deleted=False,
-                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False, check_references=False):
+                 lowest_mapping_only=False, remove_paths=False, squash_tuples=False, check_references=False,
+                 cache1=None, cache2=None):
         self.observatory = observatory
         self.old_file = old_file
         self.new_file = new_file
@@ -125,6 +126,10 @@ class Differencer(object):
         self.lowest_mapping_only = lowest_mapping_only
         self.remove_paths = remove_paths
         self.squash_tuples = squash_tuples
+        self.cache1 = cache1
+        self.cache2 = cache2
+        self.mappings_cache1 = os.path.join(self.cache1, "mappings", self.observatory) if cache1 else None
+        self.mappings_cache2 = os.path.join(self.cache2, "mappings", self.observatory) if cache2 else None
 
     def locate_file(self, filename):
         """Return the full path for `filename` implementing default CRDS file cache
@@ -208,8 +213,8 @@ class MappingDifferencer(Differencer):
         mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
         
         """
-        old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True)
-        new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True)
+        old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
+        new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True, path=self.mappings_cache2)
         differences = old_map.difference(new_map, include_header_diffs=self.include_header_diffs,
                                          recurse_added_deleted=self.recurse_added_deleted)
         return differences
@@ -682,12 +687,23 @@ Will recursively produce logical, textual, and FITS diffs for all changes betwee
          1 some differences
          2 errors or warnings
 
-Differencing two sets of rules with simplified output:
+Differencing two sets of rules (withing the same cache) with simplified output:
 
     % python -m crds.diff jwst_0080.pmap jwst_0081.pmap --brief --squash-tuples
     jwst_miri_regions_0004.rmap jwst_miri_regions_0005.rmap -- MIRIFUSHORT 12 SHORT N/A -- added Match rule for jwst_miri_regions_0006.fits
     jwst_miri_0048.imap jwst_miri_0049.imap -- regions -- replaced jwst_miri_regions_0004.rmap with jwst_miri_regions_0005.rmap
     jwst_0080.pmap jwst_0081.pmap -- miri -- replaced jwst_miri_0048.imap with jwst_miri_0049.imap
+
+Differencing two sets of rules (from two different pre-synced caches, e.g. from TEST and OPS)  rules only:
+
+    % .... sync cache #1 using crds.sync and server #1
+    % .... sync cache #2 using crds.sync and server #2
+    % python -m crds.diff --cache1=/Users/fred/crds_cache_test --cache2=/Users/fred/crds_cache_ops hst_0382.pmap hst_0422.pmap  -F -Q
+    ...
+
+    This is a direct approach for recursively differencing a version of rules from the TEST pipeline with rules from the OPS pipeline.
+    Not all differencing modes work for this feature,  it's intended only for comparing rules,  doesn't support direct sync'ing, etc.
+    A key point is that different rules files in TEST and OPS can have the same name.
 
     """
     def __init__(self, *args, **keys):
@@ -734,6 +750,10 @@ Differencing two sets of rules with simplified output:
             help="Simplify formatting of difference results (remove tuple notations)")
         self.add_argument("-F", "--brief", dest="brief", action="store_true",
             help="Switch alias for --lowest-mapping-only --remove-paths --hide-boring-diffs --include-headers")
+        self.add_argument("--cache1",  dest="cache1", default=None,
+            help="CRDS_PATH for the first cache in a cache-to-cache difference.  Mappings only.""")
+        self.add_argument("--cache2",  dest="cache2", default=None,
+            help="CRDS_PATH for the second cache in a cache-to-cache difference.  Mappings only.""")
         
     # locate_file = cmdline.Script.locate_file_outside_cache
 
@@ -784,7 +804,9 @@ Differencing two sets of rules with simplified output:
                                 recurse_added_deleted=self.args.recurse_added_deleted,
                                 lowest_mapping_only=self.args.lowest_mapping_only,
                                 remove_paths=self.args.remove_paths,
-                                squash_tuples=self.args.squash_tuples)
+                                squash_tuples=self.args.squash_tuples,
+                                cache1=self.args.cache1,
+                                cache2=self.args.cache2)
         if log.errors() or log.warnings():
             return 2
         else:

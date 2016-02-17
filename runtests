@@ -15,5 +15,6 @@ os.environ["CRDS_CACHE_TEST"] = os.path.join(os.getcwd(), "..", "crds_cache_test
 
 os.system("python -m crds.sync --all --stats")    
 os.system("./install")
+# os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
 os.system("nosetests")
 

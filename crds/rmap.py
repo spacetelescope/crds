@@ -408,8 +408,17 @@ class Mapping(object):
 
     @classmethod
     def from_file(cls, basename, *args, **keys):
-        """Load a mapping file `basename` and do syntax and basic validation."""
-        with  open(config.locate_mapping(basename)) as pfile:
+        """Load a mapping file `basename` and do syntax and basic validation.  If `path` is
+        specified, recursively load all files relative to `path` and include path in the 
+        name of the mapping.
+        """
+        path = keys.get("path", None)
+        if path:
+            filename = os.path.join(path, os.path.basename(basename))
+            basename = filename
+        else:
+            filename = config.locate_mapping(basename)
+        with  open(filename) as pfile:
             text = pfile.read()
         return cls.from_string(text, basename, *args, **keys)
 
