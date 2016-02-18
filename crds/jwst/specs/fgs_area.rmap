@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_fgs_area_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', ),),
-    'sha1sum' : '448a6d48825f4239335f42608551d4f73f0afc94',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '5d120d9441bd9f90bc16dacd462fad664a0158bc',
     'suffix' : 'area',
     'text_descr' : 'Pixel-Area Map',
 }
