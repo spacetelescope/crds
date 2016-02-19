@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'Hand derived 2016-02-19',
+    'file_ext' : '.fits',
+    'filekind' : 'DARK',
+    'filetype' : 'DARK',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_dark.rmap'
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'),),
+    'sha1sum' : 'f619961f7d318a016ff56c470ba052e832766958',
+    'suffix' : 'dark',
+    'text_descr' : 'Dark Frame',
+}
