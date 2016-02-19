@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'Hand derived 2016-02-19',
+    'file_ext' : '.fits',
+    'filekind' : 'PHOTOM',
+    'filetype' : 'PHOTOMETRIC CALIBRATION',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_photom.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', ),),
+    'sha1sum' : 'ce399ff4cc548966131a80ab0870e8c0b8dec63c',
+    'suffix' : 'photom',
+    'text_descr' : 'Absolute Calibration',
+}
