@@ -1,0 +1,14 @@
+header = {
+    'derived_from' : 'Hand created 2016-02-19',
+    'file_ext' : '.fits',
+    'filekind' : 'FLAT',
+    'filetype' : 'PIXEL-TO-PIXEL FLAT',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'fgs_flat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', ),),
+    'sha1sum' : '5c2334eb57626da82b0d1e563f5db1b4949f8184',
+    'suffix' : 'flat',
+    'text_descr' : 'Flat Field',
+}
