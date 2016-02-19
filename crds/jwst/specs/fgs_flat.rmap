@@ -12,3 +12,6 @@ header = {
     'suffix' : 'flat',
     'text_descr' : 'Flat Field',
 }
+
+selector = Match({
+})
