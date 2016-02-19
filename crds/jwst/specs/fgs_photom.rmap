@@ -12,3 +12,6 @@ header = {
     'suffix' : 'photom',
     'text_descr' : 'Absolute Calibration',
 }
+
+selector = Match({
+})

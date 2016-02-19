@@ -12,3 +12,6 @@ header = {
     'suffix' : 'dark',
     'text_descr' : 'Dark Frame',
 }
+
+selector = Match({
+})
