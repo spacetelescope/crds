@@ -5,10 +5,10 @@ header = {
     'filetype' : 'DARK',
     'instrument' : 'FGS',
     'mapping' : 'REFERENCE',
-    'name' : 'fgs_dark.rmap'
+    'name' : 'fgs_dark.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'),),
-    'sha1sum' : 'f619961f7d318a016ff56c470ba052e832766958',
+    'sha1sum' : '372d7f23aa3b38f44ebfd0aadd534788bcbc7e9f',
     'suffix' : 'dark',
     'text_descr' : 'Dark Frame',
 }
