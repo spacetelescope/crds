@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'fgs_photom.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', ),),
-    'sha1sum' : 'ce399ff4cc548966131a80ab0870e8c0b8dec63c',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '0dab19ffd1c54ff5c9f7eb82dbcc61efecb0deda',
     'suffix' : 'photom',
     'text_descr' : 'Absolute Calibration',
 }

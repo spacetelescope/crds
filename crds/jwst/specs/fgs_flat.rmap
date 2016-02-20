@@ -7,8 +7,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'fgs_flat.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR', ),),
-    'sha1sum' : '5c2334eb57626da82b0d1e563f5db1b4949f8184',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
+    'sha1sum' : '384b9ebba29831f7b84a21dd492e495657e04afe',
     'suffix' : 'flat',
     'text_descr' : 'Flat Field',
 }
