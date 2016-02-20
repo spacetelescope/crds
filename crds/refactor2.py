@@ -118,7 +118,10 @@ def set_rmap_header(rmapping, new_filename, header_key, header_value, *args, **k
     """
     log.verbose("Setting header value in", srepr(rmapping.basename), "for", srepr(header_key), 
                 "=", srepr(header_value))
-    rmapping.header[header_key] = header_value
+    try:
+        rmapping.header[header_key] = eval(header_value)
+    except Exception:
+        rmapping.header[header_key] = header_value
     rmapping.write(new_filename)
     
 def del_rmap_header(rmapping, new_filename, header_key):
@@ -200,6 +203,14 @@ def cat_rmap(rmapping, new_filename, header_key, *args, **keys):
         log.info("Rmap", srepr(rmapping.basename), "is:")
         log.info("-"*80)
         log.write(str(rmapping))
+
+# ============================================================================
+
+def add_rmap_useafter(rmapping, new_filename, *args, **keys):
+    """Restructure the rmap in Match --> UseAfter form using JWST naming conventions."""
+    set_rmap_header(rmapping, new_filename, "classes", "('Match','UseAfter')", *args, **keys)
+    parkey = rmapping.parkey + (('META.OBSERVATION.DATE','META.OBSERVATION.TIME'),)
+    set_rmap_parkey(rmapping, new_filename, repr(parkey), *args, **keys)
 
 # ============================================================================
 
@@ -290,11 +301,16 @@ class RefactorScript(cmdline.Script):
     python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
             --rmaps jwst_miri_dark_0007.rmap
 
+    10. Add the nested UseAfter selector to early JWST rmaps based on Match-only.
+
+    python -m crds.refactor2 add_jwst_useafter --rmaps jwst_miri_dark_0007.rmap
+
     """
     
     def add_args(self):
         self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "set_substitution",
-                                              "del_header", "del_parameter", "set_parkey", "replace_text", "cat"),
+                                              "del_header", "del_parameter", "set_parkey", "replace_text", "cat",
+                                              "add_jwst_useafter"),
                           help="Name of refactoring command to perform.")
         self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
                           help="Reference mapping to modify by inserting references.")
@@ -341,6 +357,8 @@ class RefactorScript(cmdline.Script):
                 self.set_substitution()
             elif self.args.command == "cat":
                 self.cat()
+            elif self.args.command == "add_jwst_useafter":
+                self.add_jwst_useafter()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
         log.standard_status()
@@ -438,6 +456,10 @@ class RefactorScript(cmdline.Script):
         --parameter-name from the rmap headers.
         """
         self.rmap_apply(cat_rmap, header_key=self.args.header_key)
+
+    def add_jwst_useafter(self):
+        """Restructure rmaps to Match -> UseAfter form."""
+        self.rmap_apply(add_rmap_useafter)
 
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
