@@ -143,12 +143,12 @@ def dict_wo_dups(items):
 # Selection = namedtuple("Selection", ("key", "choice"))
 
 class Selection(tuple):
-    def __new__(cls, key, choice):
-        return super(Selection, cls).__new__(cls, (key, choice))
+    def __new__(cls, t):
+        return super(Selection, cls).__new__(cls, t)
 
-    def __init__(self, key, choice):
-        self.key = key
-        self.choice = choice
+    def __init__(self, t):
+        self.key = t[0]
+        self.choice = t[1]
     
     def _cmp_key(self, key):
         return tuple(str(field) for field in key) if isinstance(key, tuple) else str(key)
@@ -184,13 +184,13 @@ class Selector(object):
         if selections is not None:
             assert isinstance(selections, dict),  \
                 "selections should be a dictionary { key: choice, ... }."
-            self._raw_selections = sorted([Selection(*s) for s in selections.items()])
+            self._raw_selections = sorted([Selection(s) for s in selections.items()])
             self._substitutions = dict(self._rmap_header.get("substitutions", {}))
             if self._substitutions:
                 selects = self.do_substitutions(parameters, selections, self._substitutions)
             else:
                 selects = selections
-            self._selections = [Selection(*s) for s in self.condition_selections(selects)]
+            self._selections = [Selection(s) for s in self.condition_selections(selects)]
         else:
             # This branch exists to efficiently implement the
             # UseAfter merge operation.   It's not really intended
@@ -245,7 +245,10 @@ class Selector(object):
         """
         selections = copy.deepcopy(selections)
         for parkey in substitutions:
-            which = parameters.index(parkey)
+            try:
+                which = parameters.index(parkey)
+            except ValueError as exc:
+                continue
             for match in selections:
                 old_parvalue = match[which]
                 if old_parvalue in substitutions[parkey]:
@@ -1663,7 +1666,7 @@ Restore original debug behavior:
             matchers = []
             for parkey in keytuple:
                 matchers.append(matcher(parkey))
-            selections[keytuple] = MatchSelection(tuple(matchers), choice)
+            selections[keytuple] = MatchSelection((tuple(matchers), choice))
         return selections
 
     def get_selection(self, header):
@@ -1707,7 +1710,7 @@ Restore original debug behavior:
             else:
                 selector = remaining[match_tuples[0]].choice
             log.verbose("Matched", repr(match_tuples[0]), "returning", repr(selector), verbosity=60)
-            yield MatchSelection(match_tuples, selector)
+            yield MatchSelection((match_tuples, selector))
         raise MatchingError("No match found.")
 
     def _winnow(self, header, remaining):
