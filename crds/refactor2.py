@@ -211,6 +211,12 @@ def add_rmap_useafter(rmapping, new_filename, *args, **keys):
     set_rmap_header(rmapping, new_filename, "classes", "('Match','UseAfter')", *args, **keys)
     parkey = rmapping.parkey + (('META.OBSERVATION.DATE','META.OBSERVATION.TIME'),)
     set_rmap_parkey(rmapping, new_filename, repr(parkey), *args, **keys)
+    fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys)
+
+def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
+    """Change undefined USEAFTER dates to 1900-01-01 00:00:00."""
+    rmapping = rmap.ReferenceMapping.from_file(new_filename)
+    replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", "1900-01-01 00:00:00", *args, **keys)
 
 # ============================================================================
 
