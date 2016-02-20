@@ -15,6 +15,7 @@ from collections import defaultdict
 import tempfile
 import json
 import pprint
+import re
 
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
 from crds import naming
@@ -183,9 +184,10 @@ class MappingDifferencer(Differencer):
                 # XXXX fragile, coordinate with selector.py and rmap.py
                 if "replaced" in diff[-1]:
                     old, new = diff_replace_old_new(diff)
-                    from crds import diff
-                    diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs, 
-                                    recurse_added_deleted=self.recurse_added_deleted)
+                    if old and new:
+                        from crds import diff
+                        diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs, 
+                                        recurse_added_deleted=self.recurse_added_deleted)
         pairs = sorted(set(mapping_pairs(differences) +  [(self.old_file, self.new_file)]))
         for (old, new) in pairs:
             if self.mapping_text_diffs:
@@ -423,8 +425,11 @@ def unquote(name):
 # XXXX fragile,  coordinate with selector.py and rmap.py
 def diff_replace_old_new(diff):
     """Return the (old, new) filenames from difference tuple `diff`."""
-    _replaced, old, _with, new = diff[-1].split()
-    return unquote(old), unquote(new)
+    match = re.search(r"replaced '(.+)' with '(.+)'", diff[-1])
+    if match:
+        return match.group(1), match.group(2)
+    else:
+        return None, None
 
 # XXXX fragile,  coordinate with selector.py and rmap.py
 def diff_added_new(diff):
@@ -564,11 +569,15 @@ def mapping_check_diffs_core(diffs):
         elif "rule" in action:
             log.warning("Rule change at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "replace":
-            old_val, new_val = [os.path.basename(x) for x in diff_replace_old_new(msg)]
-            if naming.newer(new_val, old_val):
-                log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+            old_val, new_val = diff_replace_old_new(msg)
+            if old_val and new_val:
+                old_val, new_val = [os.path.basename(x) for x in diff_replace_old_new(msg)]
+                if naming.newer(new_val, old_val):
+                    log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
+                else:
+                    log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
             else:
-                log.warning("Reversion at", _diff_tail(msg)[:-1], msg[-1])
+                log.warning("Unusual replacement", _diff_tail(msg)[:-1], msg[-1])
         elif action == "delete":
             log.warning("Deletion at", _diff_tail(msg)[:-1], msg[-1])
         elif action == "parkey_difference":
