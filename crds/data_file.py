@@ -252,6 +252,7 @@ def get_filetype(original_name, filepath):
         pass
     try:
         with open(filepath) as handle:
+            import yaml
             yaml.load(handle)
             return "yaml"
     except Exception:
