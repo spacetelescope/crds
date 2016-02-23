@@ -1,15 +1,15 @@
-__svn_version__ = '2784M'
+__svn_version__ = '2844M'
 
 __full_svn_info__ = '''
 Path: .
-URL: https://aeon.stsci.edu/ssb/svn/crds/trunk
+URL: https://aeon.stsci.edu/ssb/svn/crds/branches/opus_2015.3-server-3
 Repository Root: https://aeon.stsci.edu/ssb/svn/crds
 Repository UUID: 0d8f46c8-9b30-49d0-b470-0f6283dc92e8
-Revision: 2784
+Revision: 2844
 Node Kind: directory
 Schedule: normal
 Last Changed Author: jmiller@stsci.edu
-Last Changed Rev: 2784
-Last Changed Date: 2016-01-13 17:03:01 -0500 (Wed, 13 Jan 2016)
+Last Changed Rev: 2843
+Last Changed Date: 2016-02-22 09:18:11 -0500 (Mon, 22 Feb 2016)
 
 '''
