@@ -512,6 +512,8 @@ and debug output.
             self.args.print_affected = True
             self.args.dump_unique_errors = True
             self.args.stats = True
+            self.args.undefined_differences_matter = True
+            self.args.na_differences_matter = True
         
         config.ALLOW_BAD_RULES.set(self.args.allow_bad_rules)
         config.ALLOW_BAD_REFERENCES.set(self.args.allow_bad_references)
@@ -729,7 +731,7 @@ and debug output.
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         self.add_argument("--affected-datasets", action="store_true", 
-            help="Abbreviation for --diffs-only --datasets-since=auto --print-update-counts --print-affected --dump-unique-errors --stats")
+            help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
         
         self.add_argument("-z", "--optimize-tables", action="store_true", 
             help="If set, apply row-based optimizations to screen out inconsequential table updates.")
