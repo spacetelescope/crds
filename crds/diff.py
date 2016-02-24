@@ -231,8 +231,17 @@ class MappingDifferencer(Differencer):
         diffs = remove_boring(diffs)
         for diff in diffs:
             for step in diff:
+                # Walking down the diff steps 1-by-1 eventually hits an rmap comparison which
+                # will define both instrument and type.  pmaps and imaps leave at least one blank.
                 if len(step) == 2 and rmap.is_mapping(step[0]):
                     instrument, filekind = utils.get_file_properties(self.observatory, step[0])
+                # This is inefficient since diff doesn't vary by step,  but set logic cleans up the redundancy
+                # New rmaps imply reprocessing the entire type.
+                elif isinstance(diff[-1],str) and diff[-1].startswith(("added","deleted")) and \
+                        diff[-1].endswith(".rmap'"):
+                    rmap_name = diff[-1].split()[-1].replace("'","")
+                    rmapping = rmap.fetch_mapping(rmap_name, ignore_checksum=True)
+                    instrument, filekind = rmapping.instrument, rmapping.filekind
                 if instrument.strip() and filekind.strip():
                     if filekind not in instrs[instrument]:
                         log.verbose("Affected", (instrument, filekind), "based on diff", diff, verbosity=20)
