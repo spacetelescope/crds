@@ -171,16 +171,16 @@ class MappingDifferencer(Differencer):
         if self.hide_boring_diffs:
             differences = remove_boring(differences)
         for diff in sorted(differences):
-            diff = unquote_diff(diff)
+            diff1 = unquote_diff(diff)
             if self.primitive_diffs:
                 log.write("="*80)
-            diff2 = simplify_to_lowest_mapping(diff) if self.lowest_mapping_only else diff
+            diff2 = simplify_to_lowest_mapping(diff1) if self.lowest_mapping_only else diff1
             diff2 = remove_diff_paths(diff2) if self.remove_paths else diff2
             if not self.squash_tuples:
                 log.write(diff2)
             else:
                 log.write(self.squash_diff_tuples(diff2))
-            if self.primitive_diffs and "header" not in diff_action(diff):
+            if self.primitive_diffs and "header" not in diff_action(diff1):
                 # XXXX fragile, coordinate with selector.py and rmap.py
                 if "replaced" in diff[-1]:
                     old, new = diff_replace_old_new(diff)
