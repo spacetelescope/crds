@@ -10,6 +10,7 @@ import sys
 from crds import (rmap, log, diff, cmdline, config, sync)
 from crds import exceptions as crexc
 from crds.log import srepr
+import crds
 
 # ============================================================================
     
@@ -208,15 +209,21 @@ def cat_rmap(rmapping, new_filename, header_key, *args, **keys):
 
 def add_rmap_useafter(rmapping, new_filename, *args, **keys):
     """Restructure the rmap in Match --> UseAfter form using JWST naming conventions."""
-    set_rmap_header(rmapping, new_filename, "classes", "('Match','UseAfter')", *args, **keys)
-    parkey = rmapping.parkey + (('META.OBSERVATION.DATE','META.OBSERVATION.TIME'),)
+    set_rmap_header(rmapping, new_filename, 
+                    "classes", repr(rmapping.obs_package.DEFAULT_SELECTORS), *args, **keys)
+    parkey = rmapping.obs_package.USEAFTER_KEYWORDS 
+    if parkey != rmapping.parkey[-1]:
+        parkey = rmapping.parkey + (parkey,)
+    else:
+        parkey = rmapping.parkey
     set_rmap_parkey(rmapping, new_filename, repr(parkey), *args, **keys)
     fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys)
 
 def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
     """Change undefined USEAFTER dates to 1900-01-01 00:00:00."""
     rmapping = rmap.ReferenceMapping.from_file(new_filename)
-    replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", "1900-01-01 00:00:00", *args, **keys)
+    if "UNDEFINED UNDEFINED" in str(rmapping):
+        replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", "1900-01-01 00:00:00", *args, **keys)
 
 # ============================================================================
 
@@ -316,7 +323,7 @@ class RefactorScript(cmdline.Script):
     def add_args(self):
         self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "set_substitution",
                                               "del_header", "del_parameter", "set_parkey", "replace_text", "cat",
-                                              "add_jwst_useafter"),
+                                              "add_useafter"),
                           help="Name of refactoring command to perform.")
         self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
                           help="Reference mapping to modify by inserting references.")
@@ -363,8 +370,8 @@ class RefactorScript(cmdline.Script):
                 self.set_substitution()
             elif self.args.command == "cat":
                 self.cat()
-            elif self.args.command == "add_jwst_useafter":
-                self.add_jwst_useafter()
+            elif self.args.command == "add_useafter":
+                self.add_useafter()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
         log.standard_status()
@@ -383,15 +390,20 @@ class RefactorScript(cmdline.Script):
         else:
             self.setup_source_context()
             pmapping = rmap.get_cached_mapping(self.source_context)
-            for instr in self.args.instruments:
+            instruments = pmapping.selections.keys() if "all" in self.args.instruments else self.args.instruments
+            for instr in instruments:
                 with log.error_on_exception("Failed loading imap for", repr(instr), "from", 
                                             repr(self.source_context)):
                     imapping = pmapping.get_imap(instr)
-                    for filekind in self.args.types:
+                    types = imapping.selections.keys() if "all" in self.args.types else self.args.types
+                    for filekind in types:
                         with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
-                                                    repr(imapping.basename), "of", 
-                                                    repr(self.source_context)):
-                            rmapping = imapping.get_rmap(filekind).copy()
+                                                    repr(imapping.basename), "of", repr(self.source_context)):
+                            try:
+                                rmapping = imapping.get_rmap(filekind).copy()
+                            except crds.exceptions.IrrelevantReferenceTypeError as exc:
+                                log.info("Skipping type", srepr(filekind), "as N/A")
+                                continue
                             self.process_rmap(func, rmapping=rmapping, **keywords)
 
     def process_rmap(self, func, rmapping, *args, **keys):
@@ -463,7 +475,7 @@ class RefactorScript(cmdline.Script):
         """
         self.rmap_apply(cat_rmap, header_key=self.args.header_key)
 
-    def add_jwst_useafter(self):
+    def add_useafter(self):
         """Restructure rmaps to Match -> UseAfter form."""
         self.rmap_apply(add_rmap_useafter)
 

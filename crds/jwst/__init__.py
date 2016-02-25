@@ -24,6 +24,9 @@ TYPE_FIXERS = {
 
 # PROVENANCE_KEYWORDS = ("META.REFFILE.DESCRIPTION", "META.REFFILE.PEDIGREE", "META.REFFILE.USEAFTER","META.REFFILE.HISTORY", "META.REFFILE.AUTHOR")
 PROVENANCE_KEYWORDS = ("DESCRIP", "PEDIGREE", "USEAFTER","HISTORY", "AUTHOR")
+USEAFTER_KEYWORDS = ("META.OBSERVATION.DATE", "META.OBSERVATION.TIME") # Dataset keywords matching in UseAfter selectors
+
+DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap
 
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.  Case insensitive.
