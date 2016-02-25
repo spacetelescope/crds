@@ -59,6 +59,10 @@ TYPE_FIXERS = {
 
 PROVENANCE_KEYWORDS = ("DESCRIP", "COMMENT", "PEDIGREE", "USEAFTER","HISTORY",)
 
+USEAFTER_KEYWORDS = ("DATE-OBS", "TIME-OBS")  # Dataset keywords matching in UseAfter selectors
+
+DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap
+
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.
 CROSS_STRAPPED_KEYWORDS = [
