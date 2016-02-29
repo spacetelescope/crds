@@ -1,4 +1,4 @@
-"""This module defines limited facilities for reading and conditioning 
+"""This module defines limited facilities for reading and conditioning
 FITS and GEIS headers.
 
 >>> is_geis("foo.r0h")
@@ -63,7 +63,7 @@ from astropy.utils.exceptions import AstropyUserWarning
 
 from crds import utils, log, config, python23, timestamp
 
-# import pyasdf
+# import asdf
 
 # ===========================================================================
 
@@ -118,7 +118,7 @@ def is_dataset(name):
 @utils.gc_collected
 def get_observatory(filepath, original_name=None):
     """Return the observatory corresponding to `filepath`.  filepath
-    may be a web temporary file with a garbage name.   Use 
+    may be a web temporary file with a garbage name.   Use
     `original_name` to make inferences based on file extension, or
     filepath if original_name is None.
     """
@@ -138,7 +138,7 @@ def get_observatory(filepath, original_name=None):
         return "jwst"
     else:
         return "hst"
-    
+
 # @hijack_warnings
 def getval(filepath, key, condition=True):
     """Return a single metadata value from `key` of file at `filepath`."""
@@ -176,7 +176,7 @@ def _dm_setval(filepath, key, value):
 def get_conditioned_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete conditioned header dictionary of a reference file,
     or optionally only the keys listed by `needed_keys`.
-    
+
     `original_name`,  if specified,  is used to determine the type of the file
     and is not required to be readable,  whereas `filepath` must be readable
     and contain the desired header.
@@ -189,7 +189,7 @@ def get_header(filepath, needed_keys=(), original_name=None, observatory=None):
     """Return the complete unconditioned header dictionary of a reference file.
 
     Hijack io.fits and data model warnings and map them to errors.
-    
+
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
     """
@@ -204,7 +204,7 @@ def get_free_header(filepath, needed_keys=(), original_name=None, observatory=No
     """Return the complete unconditioned header dictionary of a reference file.
 
     Does not hijack warnings.
-    
+
     Original name is used to determine file type for web upload temporary files which
     have no distinguishable extension.  Original name is browser-side name for file.
     """
@@ -305,8 +305,11 @@ def get_yaml_header(filepath, needed_keys=()):
 
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
-    import pyasdf
-    with pyasdf.AsdfFile.open(filepath) as handle:
+    try:
+        import pyasdf as asdf
+    except ImportError:
+        import asdf
+    with asdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
         if "history" in handle.tree:
             histall = []
@@ -371,7 +374,7 @@ def reduce_header(filepath, old_header, needed_keys=()):
     """Limit `header` to `needed_keys`,  converting all keys to upper case
     and making note of any significant duplicates, and adding any missing
     `needed_keys` as UNDEFINED.
-    
+
     To detect duplicates,  use an item list for `old_header`,  not a dict.
     """
     needed_keys = tuple(key.upper() for key in needed_keys)
@@ -390,15 +393,15 @@ def reduce_header(filepath, old_header, needed_keys=()):
                 elif key in APPEND_KEYS:
                     header[key] += "\n" + value
             else:
-                header[key] = value                
+                header[key] = value
     return ensure_keys_defined(header)
 
 def ensure_keys_defined(header, needed_keys=(), define_as="UNDEFINED"):
     """Define any keywords from `needed_keys` which are missing in `header`,  or defined as 'UNDEFINED',
     as `default`.
-    
+
     Normally this defines missing keys as UNDEFINED.
-    
+
     It can be used to redefine UNDEFINED as something else,  like N/A.
     """
     header = dict(header)
@@ -479,55 +482,55 @@ def fits_open(filename, **keys):
 
 _GEIS_TEST_DATA = u"""
 SIMPLE  =                    F /
-                                                                              
-BITPIX  =                   16 /                                                
-DATATYPE= 'INTEGER*2'          /                                                
-NAXIS   =                    1 /                                                
-NAXIS1  =                  800 /                                                
-GROUPS  =                    T /                                                
-GCOUNT  =                    4 /                                                
+
+BITPIX  =                   16 /
+DATATYPE= 'INTEGER*2'          /
+NAXIS   =                    1 /
+NAXIS1  =                  800 /
+GROUPS  =                    T /
+GCOUNT  =                    4 /
 PCOUNT  =                   38 /
-PSIZE   =                 1760 /                                                
-PTYPE1  = 'CRVAL1  '           /right ascension of reference pixel              
-PDTYPE1 = 'REAL*8  '           /                                                
-PSIZE1  =                   64 /                                                
-PTYPE2  = 'CRVAL2  '           /declination of reference pixel                  
-PDTYPE2 = 'REAL*8  '           /                                                
-PSIZE2  =                   64 /                                                
-                                                                                
-                               / GROUP PARAMETERS: OSS                          
-                                                                                
-                                                                                
-                               / GROUP PARAMETERS: PODPS                        
-                                                                                                                                                                
-INSTRUME= 'WFPC2   '           / instrument in use                              
-ROOTNAME= 'F8213081U'          / rootname of the observation set                
-FILETYPE= 'MSK     '           / shp, ext, edq, sdq, sci                        
-                                                                                
-                               / SCIENCE INSTRUMENT CONFIGURATION               
-                                                                                
-FILTNAM1= '        '           / first filter name                              
-FILTNAM2= '        '           / second filter name                             
-FILTER1 =                    0 / first filter number (0-48)                     
-FILTER2 =                    0 / second filter number (0-48)                    
-                                                                                
-UCH1CJTM=                   0. / TEC cold junction #1 temperature (Celcius)     
-UCH2CJTM=                   0. / TEC cold junction #2 temperature (Celcius)     
-UCH3CJTM=                   0. / TEC cold junction #3 temperature (Celcius)     
-UCH4CJTM=                   0. / TEC cold junction #4 temperature (Celcius)     
-UBAY3TMP=                   0. / Bay 3 A1 temperature (Celcius)                 
-KSPOTS  = 'OFF     '           / Status of Kelsall spot lamps: ON, OFF          
+PSIZE   =                 1760 /
+PTYPE1  = 'CRVAL1  '           /right ascension of reference pixel
+PDTYPE1 = 'REAL*8  '           /
+PSIZE1  =                   64 /
+PTYPE2  = 'CRVAL2  '           /declination of reference pixel
+PDTYPE2 = 'REAL*8  '           /
+PSIZE2  =                   64 /
+
+                               / GROUP PARAMETERS: OSS
+
+
+                               / GROUP PARAMETERS: PODPS
+
+INSTRUME= 'WFPC2   '           / instrument in use
+ROOTNAME= 'F8213081U'          / rootname of the observation set
+FILETYPE= 'MSK     '           / shp, ext, edq, sdq, sci
+
+                               / SCIENCE INSTRUMENT CONFIGURATION
+
+FILTNAM1= '        '           / first filter name
+FILTNAM2= '        '           / second filter name
+FILTER1 =                    0 / first filter number (0-48)
+FILTER2 =                    0 / second filter number (0-48)
+
+UCH1CJTM=                   0. / TEC cold junction #1 temperature (Celcius)
+UCH2CJTM=                   0. / TEC cold junction #2 temperature (Celcius)
+UCH3CJTM=                   0. / TEC cold junction #3 temperature (Celcius)
+UCH4CJTM=                   0. / TEC cold junction #4 temperature (Celcius)
+UBAY3TMP=                   0. / Bay 3 A1 temperature (Celcius)
+KSPOTS  = 'OFF     '           / Status of Kelsall spot lamps: ON, OFF
 SHUTTER = '        '           / Shutter in place during preflash or IFLAT (A,B)
-ATODGAIN=                   0. /                                                
-                                                                                
-                               / RSDP CONTROL KEYWORDS                          
-                                                                                
-PEDIGREE= 'INFLIGHT 01/01/1994 - 15/05/1995'                                    
-DESCRIP = 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS'                        
-HISTORY This file was edited by Michael S. Wiggs, August 1995                   
-HISTORY                                                                         
-HISTORY e2112084u.r0h was edited to include values of 256 
-END                                                                             
+ATODGAIN=                   0. /
+
+                               / RSDP CONTROL KEYWORDS
+
+PEDIGREE= 'INFLIGHT 01/01/1994 - 15/05/1995'
+DESCRIP = 'STATIC MASK - INCLUDES CHARGE TRANSFER TRAPS'
+HISTORY This file was edited by Michael S. Wiggs, August 1995
+HISTORY
+HISTORY e2112084u.r0h was edited to include values of 256
+END
 """
 
 def is_geis(name):
@@ -563,7 +566,7 @@ def get_geis_header(name, needed_keys=()):
         # Drop comment
         if len(line) >= 32 and line[31] == "/":
             line = line[:31]
-            
+
         if line.startswith("HISTORY"):
             history.append(str(line[len("HISTORY"):].strip()))
             continue
@@ -572,27 +575,27 @@ def get_geis_header(name, needed_keys=()):
 
         if len(words) < 2:
             continue
-        
+
         key = words[0]
-        
-        # Skip over unneeded keys            
+
+        # Skip over unneeded keys
         if needed_keys and key not in needed_keys:
             continue
-        
+
         # Recombine value / comment portion
         value = "=".join(words[1:])
 
-        # Remove quotes from strings        
+        # Remove quotes from strings
         value = value.strip()
         if value and value[0] == "'" and value[-1] == "'":
             value = value[1:-1].strip()
 
         # Assign value,  supporting list of values for HISTORY
         header[str(key)] = str(value)
-        
+
     if not needed_keys or "HISTORY" in needed_keys:
         header["HISTORY"] = "\n".join(history)
-    
+
     return header
 
 def get_conjugate(reference):
@@ -606,7 +609,7 @@ def get_conjugate(reference):
         return reference[:-1] + "d"
     return None
 
-# ================================================================================================================    
+# ================================================================================================================
 
 def test():
     """Run doctest on data_file module."""
