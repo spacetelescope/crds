@@ -137,16 +137,28 @@ class BooleanConfigItem(ConfigItem):
     ...    print("False")
     True
 
+    >>> BOOL.set("False")
+    >>> if BOOL:
+    ...    print("True")
+    ... else:
+    ...    print("False")
+    False
+
     """
     def __init__(self, var, default, *args, **keys):
         keys = dict(keys)
-        keys["valid_values"] = ["0", "1", "true", "false", "t", "f", False, True, 0, 1]
+        keys["valid_values"] = ["0", "1", "true", "false", "t", "f", "False", "True",
+                                False, True, 0, 1]
         keys["lower"] = True
         super(BooleanConfigItem, self).__init__(var, str(default), *args, **keys)
 
     def get(self):
         """Return the bool value of this config item."""
         return env_str_to_bool(self.env_var, super(BooleanConfigItem, self).get())
+
+    def set(self, val):
+        """Set the bool value of this config item to `val`,  coercing to bool."""
+        return super(BooleanConfigItem, self).set(env_str_to_bool(self.env_var, str(val)))
     
     def __nonzero__(self):
         """Support using this boolean config item be used as a conditional expression."""
@@ -681,6 +693,12 @@ def is_reference(reference):
     True
     >>> is_reference("something.asdf")
     True
+    >>> is_reference("something.json")
+    True
+    >>> is_reference("something.yaml")
+    True
+    >>> is_reference("something.text")
+    True
     >>> is_reference("something.r0h")
     True
     >>> is_reference("something.foo")
@@ -689,7 +707,10 @@ def is_reference(reference):
     True
     >>> is_reference("/some/path/something.pmap")
     False
-
+    >>> is_reference("/some/path/something.imap")
+    False
+    >>> is_reference("something.rmap")
+    False
     """
     extension = os.path.splitext(reference)[-1].lower()
     return bool(re.match(r"\.fits|\.asdf|\.r\dh|\.yaml|\.json|\.text", extension))

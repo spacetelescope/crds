@@ -10,7 +10,7 @@ import os.path
 import sys
 
 import crds
-from crds import cmdline, rmap, log, config, heavy_client, python23
+from crds import cmdline, rmap, log, config, heavy_client, python23, data_file
 from crds.client import api
 
 class ListScript(cmdline.ContextsScript):
@@ -110,13 +110,32 @@ class ListScript(cmdline.ContextsScript):
         """Print out the files listed after --cat"""
         self.args.files = self.args.cat   # determine observatory from --cat files.
         for name in self.files:
-            print("#"*120)
-            path = os.path.abspath(name)
-            print("File: ", repr(path))
-            print("#"*120)
-            with open(path) as pfile:
-                print(pfile.read())
+            path = self._cat_banner(name)
+            if config.is_reference(path):
+                self._cat_header(path)
+            else:
+                self._cat_text(path)
+
+    def _cat_banner(self, name):
+        """Print a banner for --cat for `name` and return the filepath of `name`."""
+        print("#"*120)
+        path = os.path.abspath(name)
+        print("File: ", repr(path))
+        print("#"*120)
+        return path
+
+    def _cat_text(self, pfile):
+        """Dump out the contexts of a text file."""
+        with open(path) as pfile:
+            print(pfile.read())
             
+    def _cat_header(self, pfile):
+        """Dump out the header associated with a reference file."""
+        old = config.ALLOW_SCHEMA_VIOLATIONS.get()
+        header = data_file.get_unconditioned_header(pfile)
+        print(log.PP(header))
+        config.ALLOW_SCHEMA_VIOLATIONS.set(old)
+
     def list_references(self):
         """Consult the server and print the names of all references associated with
         the given contexts.
