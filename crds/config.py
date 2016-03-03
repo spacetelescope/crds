@@ -104,7 +104,9 @@ class ConfigItem(object):
         if self.lower and isinstance(value, python23.string_types):
             value = value.lower()
         self.check_value(value)
+        old = self.get()
         os.environ[self.env_var] = str(value)
+        return old
 
     def reset(self):
         """Restore this variable to it's default value,  clearing any environment setting."""

@@ -131,7 +131,7 @@ class ListScript(cmdline.ContextsScript):
             
     def _cat_header(self, pfile):
         """Dump out the header associated with a reference file."""
-        old = config.ALLOW_SCHEMA_VIOLATIONS.get()
+        old = config.ALLOW_SCHEMA_VIOLATIONS.set(True)
         header = data_file.get_unconditioned_header(pfile)
         print(log.PP(header))
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
