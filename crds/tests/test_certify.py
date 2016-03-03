@@ -90,13 +90,14 @@ def certify_dump_provenance_generic():
     CRDS  : INFO     META.EXPOSURE.READPATT = 'any'
     CRDS  : INFO     META.INSTRUMENT.DETECTOR = 'mirifulong'
     CRDS  : INFO     META.INSTRUMENT.NAME = 'MIRI'
+    CRDS  : INFO     META.OBSERVATION.DATE = '2015-01-25'
     CRDS  : INFO     META.TELESCOPE = 'jwst'
     CRDS  : INFO     PEDIGREE = 'dummy'
     CRDS  : INFO     USEAFTER = '2015-01-25T12:00:00'
     CRDS  : INFO     ########################################
     CRDS  : INFO     0 errors
     CRDS  : INFO     0 warnings
-    CRDS  : INFO     12 infos
+    CRDS  : INFO     13 infos
     0
     """
 
