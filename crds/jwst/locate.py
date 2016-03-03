@@ -12,7 +12,7 @@ from __future__ import absolute_import
 import os.path
 import re
 
-from crds import (log, rmap, data_file, config, utils)
+from crds import (log, rmap, data_file, config, utils, timestamp)
 from . import tpn
 
 # =======================================================================
@@ -245,6 +245,10 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 rval = header[rkey]
                 if dval in [None, "N/A", "UNDEFINED"] and rval not in [None, "UNDEFINED"]:
                     header[dkey] = rval
+    if "USEAFTER" in header:  # and "DATE-OBS" not in header:
+        reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
+        header["DATE-OBS"] = header["META.OBSERVATION.DATE"] = reformatted[0]
+        header["TIME-OBS"] = header["META.OBSERVATION.TIME"] = reformatted[1]
     return header
 
 # =============================================================================

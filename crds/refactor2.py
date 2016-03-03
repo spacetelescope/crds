@@ -47,8 +47,10 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     for reference in inserted_references:
-        log.info("Inserting", srepr(os.path.basename(reference)), "into", srepr(new.name))
-        new = new.insert_reference(reference)
+        baseref = os.path.basename(reference)
+        with log.augment_exception("In reference", srepr(baseref)):
+            log.info("Inserting", srepr(baseref), "into", srepr(new.name))
+            new = new.insert_reference(reference)
     new.header["derived_from"] = old.basename
     log.verbose("Writing", srepr(new_rmap))
     new.write(new_rmap)
@@ -69,8 +71,10 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
     """
     new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
     for reference in deleted_references:
-        log.info("Deleting", srepr(reference), "from", srepr(new.name))
-        new = new.delete(reference)
+        baseref = os.path.basename(reference)
+        log.info("Deleting", srepr(baseref), "from", srepr(new.name))
+        with log.augment_exception("In reference", srepr(baseref)):
+            new = new.delete(reference)
     new.header["derived_from"] = old.basename
     log.verbose("Writing", srepr(new_rmap))
     new.write(new_rmap)
@@ -316,7 +320,7 @@ class RefactorScript(cmdline.Script):
 
     10. Add the nested UseAfter selector to early JWST rmaps based on Match-only.
 
-    python -m crds.refactor2 add_jwst_useafter --rmaps jwst_miri_dark_0007.rmap
+    python -m crds.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
 
     """
     
@@ -413,13 +417,13 @@ class RefactorScript(cmdline.Script):
         if os.path.exists(new_filename):
             log.info("Continuing refactoring from local copy", srepr(new_filename))
             rmapping = rmap.load_mapping(new_filename)
-        fixers = self.args.fixers
         keywords.update(locals())
-        func(*args, **keywords)
-        if self.args.fixers:
-            rmapping = rmap.load_mapping(new_filename)
+        fixers = self.args.fixers
+        if fixers:
+            rmapping = rmap.load_mapping(rmapping.filename)
             keywords.update(locals())
             apply_rmap_fixers(*args, **keywords)
+        func(*args, **keywords)
 
     def setup_source_context(self):
         """Default the --source-context if necessary and then translate any symbolic name to a literal .pmap
