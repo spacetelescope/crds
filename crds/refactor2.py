@@ -7,7 +7,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline, config, sync)
+from crds import (rmap, log, diff, cmdline, config, sync, certify, diff)
 from crds import exceptions as crexc
 from crds.log import srepr
 import crds
@@ -162,8 +162,7 @@ def get_parameter_index(parkey, parameter_name):
 # ============================================================================
 
 def set_rmap_parkey(rmapping, new_filename, parkey, *args, **keys):
-    """Delete `parameter_name` from the parkey item of the `types` of the specified
-    `instruments` in `context`.
+    """Set the parkey of `rmapping` to `parkey` and write out to `new_filename`.
     """
     log.info("Setting parkey, removing all references from", srepr(rmapping.basename))
     references = [config.locate_file(name, observatory=rmapping.observatory)
@@ -224,10 +223,26 @@ def add_rmap_useafter(rmapping, new_filename, *args, **keys):
     fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys)
 
 def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
-    """Change undefined USEAFTER dates to 1900-01-01 00:00:00."""
+    """Change undefined USEAFTER dates to condig.FAKE_USEAFTER_VALUE"""
     rmapping = rmap.ReferenceMapping.from_file(new_filename)
     if "UNDEFINED UNDEFINED" in str(rmapping):
-        replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", "1900-01-01 00:00:00", *args, **keys)
+        replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", 
+                          config.FAKE_USEAFTER_VALUE.replace("T"," "), *args, **keys)
+
+# ============================================================================
+
+def diff_rmap(rmapping, new_filename, *args, **keys):
+    """Difference `rmapping` against refactored rmap `new_filename`."""
+    script = diff.DiffScript("crds.diff {0} {1} --brief --mapping-text-diffs "
+                             "--check-diffs --recurse-added-deleted".format(rmapping.filename, new_filename), 
+                             reset_log=False, print_status=False)
+    script()
+
+def certify_rmap(rmapping, new_filename, source_context=None, *args, **keys):
+    """Certify `new_filename` to verify refactored rmap is valid."""
+    script = certify.CertifyScript("crds.certify {0} --comparison-context {1}".format(new_filename, source_context), 
+                                   reset_log=False, print_status=False)
+    script()
 
 # ============================================================================
 
@@ -327,7 +342,7 @@ class RefactorScript(cmdline.Script):
     def add_args(self):
         self.add_argument("command", choices=("insert_reference", "delete_reference", "set_header", "set_substitution",
                                               "del_header", "del_parameter", "set_parkey", "replace_text", "cat",
-                                              "add_useafter"),
+                                              "add_useafter", "diff_rmaps", "certify_rmaps"),
                           help="Name of refactoring command to perform.")
         self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
                           help="Reference mapping to modify by inserting references.")
@@ -348,12 +363,19 @@ class RefactorScript(cmdline.Script):
         self.add_argument('--new-text', type=str, default=None, help="Replacement text for replace_text command.")
         self.add_argument('--inplace', action="store_true",
                           help="Rewrite files directly in cache replacing original copies.")
-        self.add_argument('--fixers', type=str, nargs="*",
-                          help="Simple colon separated global replacements of form old:new ... applied after refactoring.")
+        self.add_argument('--fixers', type=str, nargs="*", default=["FGS1:GUIDER1","FGS2:GUIDER2"],
+                          help="Simple colon separated global replacements of form old:new ... applied before refactoring.")
         self.add_argument("--sync-files", dest="sync_files", action="store_true",
             help="Fetch any missing files needed for the requested refactoring from the CRDS server.")
+        self.add_argument("--diff-rmaps", action="store_true",
+                          help="After refactoring, crds.diff the refactored version against the original.")
+        self.add_argument("--certify-rmaps", action="store_true",
+                          help="After refactoring run crds.certify on refactored rmaps.")
 
     def main(self):
+        
+        if self.args.rmaps:   # clean up dead lines from file lists
+            self.args.rmaps = [ mapping for mapping in self.args.rmaps if mapping.strip() ]
 
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
@@ -376,8 +398,13 @@ class RefactorScript(cmdline.Script):
                 self.cat()
             elif self.args.command == "add_useafter":
                 self.add_useafter()
+            elif self.args.command == "diff_rmaps":
+                self.diff_rmaps()
+            elif self.args.command == "certify_rmaps":
+                self.certify_rmaps()
             else:
                 raise ValueError("Unknown refactoring command: " + repr(self.args.command))
+
         log.standard_status()
         return log.errors()
     
@@ -386,33 +413,45 @@ class RefactorScript(cmdline.Script):
         associated with the elaboration of args.source_context, args.instruments, args.types.
         """
         keywords = dict(keys)
+        self._setup_source_context()
         if self.args.rmaps:
             for rmap_name in self.args.rmaps:
                 with log.error_on_exception("Failed processing rmap", srepr(rmap_name)):
                     rmapping = rmap.load_mapping(rmap_name)
-                    self.process_rmap(func, rmapping=rmapping, **keywords)
+                    new_filename = self._process_rmap(func, rmapping=rmapping, **keywords)
+                    self._diff_and_certify(rmapping=rmapping, new_filename=new_filename,
+                                           source_context=self.source_context, **keywords)
         else:
-            self.setup_source_context()
             pmapping = rmap.get_cached_mapping(self.source_context)
             instruments = pmapping.selections.keys() if "all" in self.args.instruments else self.args.instruments
             for instr in instruments:
-                with log.error_on_exception("Failed loading imap for", repr(instr), "from", 
+                with log.augment_exception("Failed loading imap for", repr(instr), "from", 
                                             repr(self.source_context)):
                     imapping = pmapping.get_imap(instr)
-                    types = imapping.selections.keys() if "all" in self.args.types else self.args.types
-                    for filekind in types:
-                        with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
-                                                    repr(imapping.basename), "of", repr(self.source_context)):
-                            try:
-                                rmapping = imapping.get_rmap(filekind).copy()
-                            except crds.exceptions.IrrelevantReferenceTypeError as exc:
-                                log.info("Skipping type", srepr(filekind), "as N/A")
-                                continue
-                            self.process_rmap(func, rmapping=rmapping, **keywords)
+                types = imapping.selections.keys() if "all" in self.args.types else self.args.types
+                for filekind in types:
+                    with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
+                                                repr(imapping.basename), "of", repr(self.source_context)):
+                        try:
+                            rmapping = imapping.get_rmap(filekind).copy()
+                        except crds.exceptions.IrrelevantReferenceTypeError as exc:
+                            log.info("Skipping type", srepr(filekind), "as N/A")
+                            continue
+                        new_filename = self._process_rmap(func, rmapping=rmapping, **keywords)
+                        self._diff_and_certify(rmapping=rmapping, source_context=self.source_context, 
+                                               new_filename=new_filename, **keywords)
 
-    def process_rmap(self, func, rmapping, *args, **keys):
+    def _diff_and_certify(self, *args, **keys):
+        """Apply the diff and/or certify scripts if requested on the command line."""
+        if self.args.diff_rmaps:
+            diff_rmap(*args, **keys)
+        if self.args.certify_rmaps:
+            certify_rmap(*args, **keys)
+
+    def _process_rmap(self, func, rmapping, *args, **keys):
         """Execute `func` on a single `rmapping` passing along *args and **keys"""
         keywords = dict(keys)
+        rmapping_org = rmapping
         new_filename  = rmapping.filename if self.args.inplace else os.path.join(".", rmapping.basename)
         if os.path.exists(new_filename):
             log.info("Continuing refactoring from local copy", srepr(new_filename))
@@ -424,8 +463,9 @@ class RefactorScript(cmdline.Script):
             keywords.update(locals())
             apply_rmap_fixers(*args, **keywords)
         func(*args, **keywords)
-
-    def setup_source_context(self):
+        return new_filename
+    
+    def _setup_source_context(self):
         """Default the --source-context if necessary and then translate any symbolic name to a literal .pmap
         name.  e.g.  jwst-edit -->  jwst_0109.pmap.   Then optionally sync the files to a local cache.
         """
@@ -482,6 +522,14 @@ class RefactorScript(cmdline.Script):
     def add_useafter(self):
         """Restructure rmaps to Match -> UseAfter form."""
         self.rmap_apply(add_rmap_useafter)
+
+    def diff_rmaps(self):
+        """Apply crds.diff to the refactored rmaps."""
+        self.rmap_apply(diff_rmap)
+
+    def certify_rmaps(self):
+        """Apply crds.certify to the refactored rmaps."""
+        self.rmap_apply(certify_rmap)
 
 if __name__ == "__main__":
     sys.exit(RefactorScript()())

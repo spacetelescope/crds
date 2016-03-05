@@ -1073,6 +1073,8 @@ class CertifyScript(cmdline.Script, cmdline.UniqueErrorsMixin):
     
     def __init__(self, *args, **keys):
 #        super(CertifyScript, self).__init__(*args, **keys)
+        if "print_status" not in keys:
+            keys["print_status"] = True
         cmdline.Script.__init__(self, *args, **keys)
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
 
@@ -1187,9 +1189,6 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       script=self, observatory=self.observatory)
     
         self.dump_unique_errors()
-        self.report_stats()
-        log.standard_status()
-        
         return log.errors()
     
     def log_and_track_error(self, filename, *args, **keys):

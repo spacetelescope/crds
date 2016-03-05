@@ -109,7 +109,7 @@ class Script(object):
     decription = epilog = usage = None
     formatter_class = RawTextHelpFormatter
     
-    def __init__(self, argv=None, parser_pars=None, reset_log=True):
+    def __init__(self, argv=None, parser_pars=None, reset_log=True, print_status=False):
         self.stats = utils.TimingStats()
         self._already_reported_stats = False
         if isinstance(argv, python23.string_types):
@@ -131,9 +131,11 @@ class Script(object):
         # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
         log.set_log_time(config.get_log_time() or self.args.log_time)
         log.verbose("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
-        if reset_log:
+        self.print_status = print_status
+        self.reset_log = reset_log
+        if self.reset_log:
             log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
-        
+
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
         raise NotImplementedError("Script subclasses have to define main().")
@@ -146,6 +148,8 @@ class Script(object):
         self.contexts = self.determine_contexts()
         result = self.main()
         self.report_stats()  # here if not called already
+        if self.print_status:
+            log.standard_status()
         return result
 
     @property
