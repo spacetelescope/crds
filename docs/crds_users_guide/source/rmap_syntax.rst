@@ -35,7 +35,7 @@ The names of subsequent derived mappings include a version number::
 Basic Structure
 ---------------
 
-All mappings have the same basic structure consisting of a "header" section followe by a "selector" section.
+All mappings have the same basic structure consisting of a "header" section followed by a "selector" section.
 
 header
 ......
@@ -43,6 +43,11 @@ header
 The header provides meta data describing the mapping.  A critical field in the mapping header is the "parkey" 
 field which names the dataset parameters (nominally FITS keywords or JWST data model names) which are used by 
 the selector to do a best references lookup.
+
+comment
+.......
+
+An optional multi-line comment block can be added between the header and selector sections.
 
 selector
 ........
@@ -64,6 +69,10 @@ A sample pipeline mapping for HST looks like::
         'description' : 'Initially generated on 12-23-2011',
         'sha1sum' : 'e2c6392fd2731df1e8d933bd990f3fd313a813db',
     }
+
+    comment = """This is an optional mapping section used to add multiline commentary,
+    perhaps to describe mapping evolution or unusual behaviors.
+    """
     
     selector = {
         'ACS' : 'hst_acs.imap',
