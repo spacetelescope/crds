@@ -433,6 +433,10 @@ def sanitize_data_model_dict(flat_dict):
     if "META.INSTRUMENT.NAME" in cleaned:
         if "META.INSTRUMENT.TYPE" not in cleaned:
             cleaned["META.INSTRUMENT.TYPE"] = cleaned["META.INSTRUMENT.NAME"]
+    for keyval in config.FAKE_HEADER_KEYWORDS.get().split():
+        log.verbose_warning("Faking", repr(key), "as", repr(val), verbosity=10)
+        key, val = keyval.split(":")
+        cleaned[key] = val
     return cleaned
 
 def get_fits_header_union(filepath, needed_keys=()):

@@ -63,13 +63,15 @@ class ConfigItem(object):
     >>> os.environ["CRDS_CFG_ITEM"] = "1000"
     >>> CFG.get()
     '1000'
-    >>> os.environ["CRDS_CFG_ITEM"] = "2"
+    >>> os.environ["CRDS_CFG_ITEM"] = "2"   # Don't do this!
     >>> CFG.get()
     Traceback (most recent call last):
     ...
     AssertionError: Invalid value for 'CRDS_CFG_ITEM' of '2'is not one of ['999', '1000']
-    
+    >>> os.environ["CRDS_CFG_ITEM"] = "1000"    # cleaup .set() can't do
+
     >>> CFG.set("999")
+    '1000'
     >>> CFG.get()
     '999'
     >>> os.environ["CRDS_CFG_ITEM"]
@@ -101,10 +103,10 @@ class ConfigItem(object):
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
+        old = self.get()
         if self.lower and isinstance(value, python23.string_types):
             value = value.lower()
         self.check_value(value)
-        old = self.get()
         os.environ[self.env_var] = str(value)
         return old
 
@@ -132,7 +134,8 @@ class BooleanConfigItem(ConfigItem):
     ...    print("False")
     True
 
-    >>> BOOL.set("True")
+    >>> BOOL.set("True")  # .set() returns old value
+    True
     >>> if BOOL:
     ...    print("True")
     ... else:
@@ -140,6 +143,8 @@ class BooleanConfigItem(ConfigItem):
     True
 
     >>> BOOL.set("False")
+    True
+
     >>> if BOOL:
     ...    print("True")
     ... else:
@@ -159,8 +164,8 @@ class BooleanConfigItem(ConfigItem):
         return env_str_to_bool(self.env_var, super(BooleanConfigItem, self).get())
 
     def set(self, val):
-        """Set the bool value of this config item to `val`,  coercing to bool."""
-        return super(BooleanConfigItem, self).set(env_str_to_bool(self.env_var, str(val)))
+        """Set the bool value of this config item to `val`,  coercing to bool.  Return old value."""
+        return super(BooleanConfigItem, self).set(str(env_str_to_bool(self.env_var, str(val))))
     
     def __nonzero__(self):
         """Support using this boolean config item be used as a conditional expression."""
@@ -189,6 +194,9 @@ ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", Fals
 
 ALLOW_BAD_PARKEY_VALUES = BooleanConfigItem("CRDS_ALLOW_BAD_PARKEY_VALUES", False,
     "When True, turn off parkey value checking when loading rmaps.  For refactoring with bad 'legacy' references.")
+
+FAKE_HEADER_KEYWORDS = ConfigItem("CRDS_FAKE_HEADER_KEYWORDS", "",
+    "Set to space separated sequence of <key>:<value> pairs to override file headers.")
 
 # ============================================================================
 
