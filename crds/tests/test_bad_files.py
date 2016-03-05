@@ -65,7 +65,9 @@ def dt_bad_references_warning_cache_config():
     
     >>> old_state = test_config.setup(clear_existing=False)
     >>> config.ALLOW_BAD_RULES.set("1")
+    False
     >>> config.ALLOW_BAD_REFERENCES.set("1")
+    False
     
     >>> crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])    # doctest: +ELLIPSIS
     CRDS  : WARNING  Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically invalid.
@@ -118,8 +120,10 @@ def dt_bad_references_bestrefs_script_warning():
     """
     >>> old_state = test_config.setup(clear_existing=False)
     >>> config.ALLOW_BAD_RULES.set("1")
+    False
     >>> config.ALLOW_BAD_REFERENCES.set("1")
-    
+    False
+
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --allow-bad-references")() # doctest: +ELLIPSIS
     CRDS  : INFO     No comparison context or source comparison requested.
     CRDS  : INFO     No file header updates requested;  dry run.
@@ -180,7 +184,8 @@ def dt_bad_rules_jwst_getreferences_warning():
     
     >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.set("1")
-    
+    False
+
     >>> refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])   # doctest: +ELLIPSIS
     CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
     <BLANKLINE>
