@@ -66,7 +66,7 @@ def parse_date(date):
     if T_SEPERATED_DATE_RE.match(date):
         date = date.replace("T", " ")
         
-    if ALPHABETICAL_RE.match(date):
+    if ALPHABETICAL_RE.search(date):
         return parse_alphabetical_date(date)
     else:
         return parse_numerical_date(date)
@@ -100,6 +100,9 @@ def parse_alphabetical_date(date):
     >>> parse_alphabetical_date('JULY 27, 1999 00:00:00')
     datetime.datetime(1999, 7, 27, 0, 0)
 
+    >>> parse_alphabetical_date("03-Jan-2013")
+    datetime.datetime(2013, 1, 3, 0, 0)
+    
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
@@ -107,6 +110,10 @@ def parse_alphabetical_date(date):
         date = date.lower().replace(" am", "am")
     while date.lower().endswith(" pm"):
         date = date.lower().replace(" pm", "pm")
+    
+    date = date.replace("-", " ")
+    date = date.replace("/", " ")
+
     try:
         month, day, year, time = date.split()    # 'Feb 08 2006 01:02AM'
     except ValueError:
@@ -116,9 +123,15 @@ def parse_alphabetical_date(date):
     if day.endswith(","):     # 
         day = day[:-1]
 
-    imonth = month_num(month)
-    iday = int(day)
-    iyear = int(year)
+    try:
+        imonth = month_num(month)
+        iday = int(day)
+        iyear = int(year)
+    except Exception:
+        day, month = month, day
+        imonth = month_num(month)
+        iday = int(day)
+        iyear = int(year)
 
     ihour, iminute, isecond, imicrosecond = parse_time(time)
 
