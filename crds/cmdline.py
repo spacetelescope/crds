@@ -26,8 +26,7 @@ from crds import python23
 
 def _show_version():
     """Dump CRDS version information and exit python."""
-    import crds, crds.svn_version
-    log.info("crds version", crds.__version__, "revision", crds.svn_version.__svn_version__)
+    print(heavy_client.version_info())
     sys.exit(-1)
 
 # =============================================================================
