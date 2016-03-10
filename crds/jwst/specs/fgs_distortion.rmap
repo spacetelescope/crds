@@ -1,0 +1,21 @@
+header = {
+    'derived_from' : 'Hand made 2016-03-10',
+    'file_ext' : '.fits',
+    'filekind' : 'DISTORTION',
+    'filetype' : 'DISTORTION',
+    'instrument' : 'FGS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_fgs_distortion.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE', 'META.INSTRUMENT.DETECTOR'),),
+    'reference_to_dataset' : {
+        'DETECTOR' : 'META.INSTRUMENT.DETECTOR',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '9f2660a203dff476830488cc1ff1400d6599994b',
+    'suffix' : 'distortion',
+    'text_descr' : 'Distortion',
+}
+
+selector = Match({
+})
