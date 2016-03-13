@@ -183,20 +183,23 @@ FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", False,
 
 # ===========================================================================
 
+# Runtime bad file options for end users
+
 ALLOW_BAD_REFERENCES  = BooleanConfigItem("CRDS_ALLOW_BAD_REFERENCES", False,
     "When True, references which are designated as BAD (scientifically invalid) on the server can be used with warnings.")
 
 ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
     "When True, rules which are designated as BAD (scientifically invalid) on the server can be used with warnings.")
 
+# ===========================================================================
+
+# Refactoring options
+
 ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", False,
     "When True, don't map JWST data model warnings onto CRDS errors.")
 
 ALLOW_BAD_PARKEY_VALUES = BooleanConfigItem("CRDS_ALLOW_BAD_PARKEY_VALUES", False,
     "When True, turn off parkey value checking when loading rmaps.  For refactoring with bad 'legacy' references.")
-
-FAKE_HEADER_KEYWORDS = ConfigItem("CRDS_FAKE_HEADER_KEYWORDS", "",
-    "Set to space separated sequence of <key>:<value> pairs to override file headers.")
 
 # ============================================================================
 
