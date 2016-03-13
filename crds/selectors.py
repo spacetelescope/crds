@@ -659,20 +659,21 @@ class Selector(object):
     
     def delete(self, terminal):
         """Remove all instances of `terminal` from `self`."""
+        deleted = self._delete(self._selections, terminal)
+        deleted += self._delete( self._raw_selections, terminal)
+        return deleted
+    
+    def _delete(self, selections, terminal):
+        """Remove all instances of `terminal` from `selections`.   Directly mutates selections."""
         deleted = 0
-        choices, raw_choices = self.choices(), self.raw_choices()
-        for i, choice in enumerate(choices):
-            raw_choice = raw_choices[i]
+        for i, selection in enumerate(selections):
+            choice = selection[1]
             if choice == terminal:
-                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][0], terminal))
-                assert self._selections[i][1]== terminal
-                assert self._raw_selections[i][1] == terminal
-                del self._selections[i]
-                del self._raw_selections[i]
+                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, selection[0], terminal))
+                del selections[i]
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
-                raw_choice.delete(terminal)
         return deleted
     
     def insert(self, header, value, valid_values_map):
