@@ -636,7 +636,7 @@ class Selector(object):
         Assume the deepest value in the Selector tree must be a filename.
         """
         matches = []
-        for key, value in self._selections:
+        for key, value in self._raw_selections:
             here = tuple(sofar + (self.match_item(key),))
             if isinstance(value, Selector):
                 matches += value.file_matches(filename, here)
@@ -718,8 +718,13 @@ class Selector(object):
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
-                log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
-                old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                if isinstance(old_value, Selector):
+                    log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
+                    old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                else:
+                    log.verbose("Selector replaces terminal at", repr(key), "adding new selector.")
+                    new_value = self._create_path(header, value, parkey[1:], classes[1:])
+                    self._add_item(key, new_value)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))

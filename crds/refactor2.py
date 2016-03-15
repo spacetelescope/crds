@@ -7,7 +7,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline, config, sync, certify, diff)
+from crds import (rmap, log, diff, cmdline, config, sync, certify, diff, matches, data_file)
 from crds import exceptions as crexc
 from crds.log import srepr
 import crds
@@ -62,6 +62,31 @@ def rmap_insert_references(old_rmap, new_rmap, inserted_references):
             "  May be identical match with other submitted references."
     return new
 
+def rmap_insert_references_by_matches(old_rmap, new_rmap, references_headers):
+    """Given the full path of starting rmap `old_rmap`,  modify it by inserting 
+    or replacing all files in dict `references_headers` which maps a reference file basename
+    onto a list of headers under which it should be  matched.  Write out the result to
+    `new_rmap`.    If no actions are performed, don't write out `new_rmap`.
+    
+    Return new ReferenceMapping named `new_rmap`
+    """
+    new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
+    for baseref, header in references_headers.items():
+        with log.augment_exception("In reference", srepr(baseref)):
+            log.info("Inserting", srepr(baseref), "match case", srepr(header), "into", srepr(baseref))
+            new = new.insert_header_reference(header, baseref)
+    new.header["derived_from"] = old.basename
+    log.verbose("Writing", srepr(new_rmap))
+    new.write(new_rmap)
+    formatted = new.format()
+    for baseref in references_headers:
+        assert baseref in formatted, \
+            "Rules update failure. " + srepr(baseref) + " does not appear in new rmap." \
+            "  May be identical match with other submitted references."
+    return new
+
+# ============================================================================
+
 def rmap_delete_references(old_rmap, new_rmap, deleted_references):
     """Given the full path of starting rmap `old_rmap`,  modify it by deleting 
     all files in `deleted_references` and write out the result to
@@ -69,7 +94,7 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
     
     Return new ReferenceMapping named `new_rmap`
     """
-    new = old = rmap.fetch_mapping(old_rmap, ignore_checksum=True)
+    new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for reference in deleted_references:
         baseref = os.path.basename(reference)
         log.info("Deleting", srepr(baseref), "from", srepr(new.name))
@@ -84,6 +109,8 @@ def rmap_delete_references(old_rmap, new_rmap, deleted_references):
         assert reference not in formatted, \
             "Rules update failure.  Deleted " + srepr(reference) + " still appears in new rmap."
     return new
+
+# ============================================================================
 
 def rmap_check_modifications(old_rmap, new_rmap, old_ref, new_ref, expected=("add",)):
     """Check the differences between `old_rmap` and `new_rmap` and make sure they're
@@ -165,13 +192,33 @@ def set_rmap_parkey(rmapping, new_filename, parkey, *args, **keys):
     """Set the parkey of `rmapping` to `parkey` and write out to `new_filename`.
     """
     log.info("Setting parkey, removing all references from", srepr(rmapping.basename))
-    references = [config.locate_file(name, observatory=rmapping.observatory)
-                  for name in rmapping.reference_names()]
-    rmapping = rmap_delete_references(rmapping.filename, new_filename, references)
+    refnames = rmapping.reference_names()
+    references_headers = { refname : get_refactoring_header(rmapping.filename, refname)
+                           for refname in refnames }
+    rmapping = rmap_delete_references(rmapping.filename, new_filename, refnames)
     log.info("Setting parkey", srepr(parkey), "in", srepr(rmapping.basename))
     rmapping.header["parkey"] = eval(parkey)
     rmapping.write(new_filename)
-    rmapping = rmap_insert_references(new_filename, new_filename, references)
+    rmapping = rmap.load_mapping(new_filename)
+    rmapping = rmap_insert_references_by_matches(new_filename, new_filename, references_headers)
+    return rmapping
+
+def get_refactoring_header(rmapping, refname):
+    """Create a composite header which is derived from the file contents overidden by any values
+    as they appear in the rmap.
+    """
+    rmapping = rmap.asmapping(rmapping)
+    # A fallback source of information is the reference file headers
+    header = rmapping.get_refactor_header(
+        rmap.locate_file(refname, rmapping.observatory),
+        extra_keys=("META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS"))
+    # The primary source of information is the original rmap and the matching values defined there
+    headers2 = matches.find_match_paths_as_dict(rmapping.filename, refname)
+    # Combine the two,  using the rmap values to override anything duplicated in the reffile header
+    assert len(headers2) == 1, "Can't refactor file with more than one match: " + srepr(refname)
+    header.update(headers2[0])
+    return header
+
 
 # ============================================================================
 
@@ -227,7 +274,7 @@ def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
     rmapping = rmap.ReferenceMapping.from_file(new_filename)
     if "UNDEFINED UNDEFINED" in str(rmapping):
         replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", 
-                          config.FAKE_USEAFTER_VALUE.replace("T"," "), *args, **keys)
+                          "1900-01-01 00:00:00", *args, **keys)
 
 # ============================================================================
 
@@ -344,9 +391,9 @@ class RefactorScript(cmdline.Script):
                                               "del_header", "del_parameter", "set_parkey", "replace_text", "cat",
                                               "add_useafter", "diff_rmaps", "certify_rmaps"),
                           help="Name of refactoring command to perform.")
-        self.add_argument('--old-rmap', type=cmdline.reference_mapping, default=None,
+        self.add_argument('--old-rmap', type=cmdline.mapping_spec, default=None,
                           help="Reference mapping to modify by inserting references.")
-        self.add_argument('--new-rmap', type=cmdline.reference_mapping, default=None,
+        self.add_argument('--new-rmap', type=cmdline.mapping_spec, default=None,
                           help="Name of modified reference mapping output file.")
         self.add_argument('--references', type=str, nargs="*",
                           help="Reference files, to insert into (or delete from) `old_rmap` to produce `new_rmap`.")
@@ -375,13 +422,15 @@ class RefactorScript(cmdline.Script):
     def main(self):
         
         if self.args.rmaps:   # clean up dead lines from file lists
-            self.args.rmaps = [ mapping for mapping in self.args.rmaps if mapping.strip() ]
+            self.args.rmaps = [ self.resolve_context(mapping) for mapping in self.args.rmaps if mapping.strip() ]
 
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
-                rmap_insert_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+                old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
+                rmap_insert_references(old_rmap, new_rmap, self.args.references)
             elif self.args.command == "delete_reference":
-                rmap_delete_references(self.args.old_rmap, self.args.new_rmap, self.args.references)
+                old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
+                rmap_delete_references(old_rmap, new_rmap, self.args.references)
             elif self.args.command == "del_header":
                 self.del_header_key()
             elif self.args.command == "set_header":
@@ -417,12 +466,13 @@ class RefactorScript(cmdline.Script):
         if self.args.rmaps:
             for rmap_name in self.args.rmaps:
                 with log.error_on_exception("Failed processing rmap", srepr(rmap_name)):
+                    log.info("="*20, "Refactoring rmap", srepr(rmap_name), "="*20)
                     rmapping = rmap.load_mapping(rmap_name)
                     new_filename = self._process_rmap(func, rmapping=rmapping, **keywords)
                     self._diff_and_certify(rmapping=rmapping, new_filename=new_filename,
                                            source_context=self.source_context, **keywords)
         else:
-            pmapping = rmap.get_cached_mapping(self.source_context)
+            pmapping = rmap.load_mapping(self.source_context)
             instruments = pmapping.selections.keys() if "all" in self.args.instruments else self.args.instruments
             for instr in instruments:
                 with log.augment_exception("Failed loading imap for", repr(instr), "from", 
@@ -430,13 +480,15 @@ class RefactorScript(cmdline.Script):
                     imapping = pmapping.get_imap(instr)
                 types = imapping.selections.keys() if "all" in self.args.types else self.args.types
                 for filekind in types:
-                    with log.error_on_exception("Failed processing rmap for", repr(filekind), "from", 
-                                                repr(imapping.basename), "of", repr(self.source_context)):
+                    with log.error_on_exception("Failed processing rmap for", repr(filekind)): 
+                        #, "from", 
+                        # repr(imapping.basename), "of", repr(self.source_context)):
                         try:
                             rmapping = imapping.get_rmap(filekind).copy()
                         except crds.exceptions.IrrelevantReferenceTypeError as exc:
                             log.info("Skipping type", srepr(filekind), "as N/A")
                             continue
+                        log.info("="*20, "Refactoring rmap", srepr(rmapping.basename), "="*20)
                         new_filename = self._process_rmap(func, rmapping=rmapping, **keywords)
                         self._diff_and_certify(rmapping=rmapping, source_context=self.source_context, 
                                                new_filename=new_filename, **keywords)
