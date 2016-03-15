@@ -201,6 +201,9 @@ ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", Fals
 ALLOW_BAD_PARKEY_VALUES = BooleanConfigItem("CRDS_ALLOW_BAD_PARKEY_VALUES", False,
     "When True, turn off parkey value checking when loading rmaps.  For refactoring with bad 'legacy' references.")
 
+ALLOW_BAD_USEAFTER = BooleanConfigItem("CRDS_ALLOW_BAD_USEAFTER", False,
+    "When True,  when USEAFTER won't parse,  fake it as the primal default.")
+
 # ============================================================================
 
 CRDS_DATA_CHUNK_SIZE = 2**23   
