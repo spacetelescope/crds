@@ -1462,25 +1462,72 @@ class ReferenceMapping(Mapping):
     
     def insert_reference(self, reffile):
         """Returns new ReferenceMapping made from `self` inserting `reffile`."""
+        header = self.get_refactor_header(reffile)
+        return self.insert_header_reference(header, os.path.basename(reffile))
+
+    def get_refactor_header(self, reffile, extra_keys=()):
+        """Give reference path `reffile` return the header which should be used to insert
+        the file into this rmap based on the reffile contents.
+
+        1. Loads basic header from reffile.
+        2. Ensures required parkeys are at least defined as UNDEFINED or N/A.
+        3. Maps from reference file keywords and values to dataset keywords and values rmaps match on.
+        """
         # Since expansion rules may depend on keys not used in matching,  get entire header  
         header = data_file.get_header(reffile, observatory=self.observatory)
-        header = data_file.ensure_keys_defined(header, needed_keys=self.get_reference_parkeys(), 
+        needed_keys = tuple(self.get_reference_parkeys()) + tuple(extra_keys)
+        header = data_file.ensure_keys_defined(header, needed_keys=needed_keys,
                                                define_as=self.obs_package.UNDEFINED_PARKEY_SUBST_VALUE)    
-        return self._insert_reference(header, os.path.basename(reffile))
-
-    def _insert_reference(self, header, reffile):
-        """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         # NOTE: required parkeys are in terms of *dataset* headers,  not reference headers.
         log.verbose("insert_reference raw reffile header:\n", 
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
                     verbosity=70)
-
-        header = self.get_matching_header(header)
-        
-        log.verbose("insert_reference matching reffile header:\n", 
+        header = self.reference_to_dataset_header(header)        
+        log.verbose("insert_reference transformed-to-dataset header:\n", 
                     log.PP([ (key,val) for (key,val) in header.items() if key in self.get_reference_parkeys() ]),
                     verbosity=70)
+        return header
 
+    def reference_to_dataset_header(self, header):
+        """Convert the applicable keys in `header` from how they appear in the reference
+        file to how they appear in the rmap. Multiple conversion activities:
+
+        1. Mapping from reference file keywwords to corresponding dataset keywords.
+        2. Expansion of conditional substitutions defined in e.g. crds.hst.substitutions.dat
+        3. Any header conditioning,  normalization of values.
+        4. Irrelevant parkeys are mapped to N/A if discernable based on `header`.
+        5. extra_parkey keys are mapped to N/A.
+        """
+        # The reference file key and dataset key matched aren't always the same!
+        # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
+        # Also, DATE-OBS, TIME-OBS  <-->  USEAFTER
+        header = self.locate.reference_keys_to_dataset_keys(self, header)
+        
+        # Reference files specify things like ANY which must be expanded to 
+        # glob patterns for matching with the reference file.
+        header = substitutions.expand_wildcards(self, header)
+        
+        # Translate header values to .rmap normalized form,  e.g. utils.condition_value()
+        header = self.locate.condition_matching_header(self, header)
+    
+        # Evaluate parkey relevance rules in the context of header to map
+        # mode irrelevant parameters to N/A.
+        # XXX not clear if/how this works with expanded wildcard or-patterns.
+        header = self.map_irrelevant_parkeys_to_na(header)
+    
+        # The "extra" parkeys always appear in the rmap with values of "N/A".
+        # The dataset value of the parkey is typically used to compute other parkeys
+        # for HST corner cases.   It's a little stupid for them to appear in the
+        # rmap match tuples,  but the dataset values for those parkeys are indeed 
+        # relevant,  and it does provide a hint that magic is going on.  At rmap update
+        # time,  these parkeys need to be set to N/A even if they're actually defined.
+        for key in self.get_extra_parkeys():
+            log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
+            header[key] = "N/A"
+        return header
+        
+    def insert_header_reference(self, header, reffile):
+        """Returns new ReferenceMapping made from `self` inserting `reffile`."""
         if self._rmap_update_headers:
             # Generate variations on header as needed to emulate header "pre-conditioning" and fall back scenarios.
             for hdr in self._rmap_update_headers(self, header):
@@ -1521,41 +1568,6 @@ class ReferenceMapping(Mapping):
             raise crexc.CrdsError("Terminal '%s' could not be found and deleted." % terminal)
         return new
 
-    def get_matching_header(self, header):
-        """Convert the applicable keys in `header` from how they appear in the reference
-        file to how they appear in the rmap.   Where possible,  this uses CRDS substitution
-        rules as a function of `header` to replace reference file wild cards.  It also
-        evaluates parkey relevance expressions with respect to `header` to map unused parkeys
-        for a particular mode and extra parkeys to N/A.
-        """
-        # The reference file key and dataset key matched aren't always the same!?!?
-        # Specifically ACS BIASFILE NUMCOLS,NUMROWS and NAXIS1,NAXIS2
-        # Also DATE-OBS, TIME-OBS  <-->  USEAFTER
-        header = self.locate.reference_keys_to_dataset_keys(self, header)
-        
-        # Reference files specify things like ANY which must be expanded to 
-        # glob patterns for matching with the reference file.
-        header = substitutions.expand_wildcards(self, header)
-        
-        # Translate header values to .rmap normalized form,  e.g. utils.condition_value()
-        header = self.locate.condition_matching_header(self, header)
-    
-        # Evaluate parkey relevance rules in the context of header to map
-        # mode irrelevant parameters to N/A.
-        # XXX not clear if/how this works with expanded wildcard or-patterns.
-        header = self.map_irrelevant_parkeys_to_na(header)
-    
-        # The "extra" parkeys always appear in the rmap with values of "N/A".
-        # The dataset value of the parkey is typically used to compute other parkeys
-        # for HST corner cases.   It's a little stupid for them to appear in the
-        # rmap match tuples,  but the dataset values for those parkeys are indeed 
-        # relevant,  and it does provide a hint that magic is going on.  At rmap update
-        # time,  these parkeys need to be set to N/A even if they're actually defined.
-        for key in self.get_extra_parkeys():
-            log.verbose("Mapping extra parkey", repr(key), "from", header[key], "to 'N/A'.")
-            header[key] = "N/A"
-        return header
-        
     def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
         suitable for conversion to json.  `recursive` is ignored.
