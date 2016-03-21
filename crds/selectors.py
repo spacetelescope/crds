@@ -636,7 +636,7 @@ class Selector(object):
         Assume the deepest value in the Selector tree must be a filename.
         """
         matches = []
-        for key, value in self._selections:
+        for key, value in self._raw_selections:
             here = tuple(sofar + (self.match_item(key),))
             if isinstance(value, Selector):
                 matches += value.file_matches(filename, here)
@@ -659,20 +659,21 @@ class Selector(object):
     
     def delete(self, terminal):
         """Remove all instances of `terminal` from `self`."""
+        deleted = self._delete(self._selections, terminal)
+        deleted += self._delete( self._raw_selections, terminal)
+        return deleted
+    
+    def _delete(self, selections, terminal):
+        """Remove all instances of `terminal` from `selections`.   Directly mutates selections."""
         deleted = 0
-        choices, raw_choices = self.choices(), self.raw_choices()
-        for i, choice in enumerate(choices):
-            raw_choice = raw_choices[i]
+        for i, selection in enumerate(selections):
+            choice = selection[1]
             if choice == terminal:
-                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, self._raw_selections[i][0], terminal))
-                assert self._selections[i][1]== terminal
-                assert self._raw_selections[i][1] == terminal
-                del self._selections[i]
-                del self._raw_selections[i]
+                log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, selection[0], terminal))
+                del selections[i]
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
-                raw_choice.delete(terminal)
         return deleted
     
     def insert(self, header, value, valid_values_map):
@@ -717,8 +718,13 @@ class Selector(object):
                 self._add_item(key, new_value)
             else:
                 old_key, old_value = self._raw_selections[i]
-                log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
-                old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                if isinstance(old_value, Selector):
+                    log.verbose("Modify found", repr(old_key), "augmenting", repr(old_value), "with", repr(value))
+                    old_value._insert(header, value, parkey[1:], classes[1:], valid_values_map)
+                else:
+                    log.verbose("Selector replaces terminal at", repr(key), "adding new selector.")
+                    new_value = self._create_path(header, value, parkey[1:], classes[1:])
+                    self._add_item(key, new_value)
         else:  # add or replace primitive result
             if i is None:
                 log.verbose("Modify couldn't find", repr(key), "adding new value", repr(value))

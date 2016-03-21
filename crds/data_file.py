@@ -306,9 +306,9 @@ def get_yaml_header(filepath, needed_keys=()):
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
     try:
-        import pyasdf as asdf
-    except ImportError:
         import asdf
+    except Exception:
+        import pyasdf as asdf
     with asdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
         if "history" in handle.tree:
@@ -428,15 +428,11 @@ def sanitize_data_model_dict(flat_dict):
                 sval = flat_dict[key[:-len(".0")] + ".1"]
         cleaned[skey] = sval
     if history:
-        cleaned["HISTORY"] = " ".join(history)
+        cleaned["HISTORY"] = "\n".join(history)
     # Hack for backward incompatible model naming change.
     if "META.INSTRUMENT.NAME" in cleaned:
         if "META.INSTRUMENT.TYPE" not in cleaned:
             cleaned["META.INSTRUMENT.TYPE"] = cleaned["META.INSTRUMENT.NAME"]
-    for keyval in config.FAKE_HEADER_KEYWORDS.get().split():
-        log.verbose_warning("Faking", repr(key), "as", repr(val), verbosity=10)
-        key, val = keyval.split(":")
-        cleaned[key] = val
     return cleaned
 
 def get_fits_header_union(filepath, needed_keys=()):
