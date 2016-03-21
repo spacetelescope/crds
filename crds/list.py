@@ -124,7 +124,7 @@ class ListScript(cmdline.ContextsScript):
         print("#"*120)
         return path
 
-    def _cat_text(self, pfile):
+    def _cat_text(self, path):
         """Dump out the contexts of a text file."""
         with open(path) as pfile:
             print(pfile.read())

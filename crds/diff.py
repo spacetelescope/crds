@@ -580,7 +580,7 @@ def mapping_check_diffs_core(diffs):
         elif action == "replace":
             old_val, new_val = diff_replace_old_new(msg)
             if old_val and new_val:
-                old_val, new_val = [os.path.basename(x) for x in diff_replace_old_new(msg)]
+                old_val, new_val = [x for x in diff_replace_old_new(msg)]
                 if naming.newer(new_val, old_val):
                     log.verbose("In", _diff_tail(msg)[:-1], msg[-1])
                 else:

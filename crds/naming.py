@@ -81,6 +81,12 @@ def newer(name1, name2):
     >>> newer("s7g1700gl_dead.fits", "07g1700gl_dead.fits")
     False
 
+    >>> newer("N/A", "anything")
+    False
+
+    >>> newer("anything", "N/A")
+    False
+
     >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
     Traceback (most recent call last):
     ...
@@ -106,11 +112,13 @@ def newer(name1, name2):
         ("crds", "newcdbs") : "raise",
         ("newcdbs", "crds") : "raise",
         }
-    name1, name2 = os.path.basename(name1), os.path.basename(name2)
+    name1, name2 = crds_basename(name1), crds_basename(name2)
     class1 = classify_name(name1)
     class2 = classify_name(name2)
     case = cases[(class1, class2)]
-    if case == "compare_crds":
+    if name1 == "N/A" or name2 =="N/A":
+        result = False
+    elif case == "compare_crds":
         if extension_rank(name1) == extension_rank(name2):
             serial1, serial2 = newstyle_serial(name1), newstyle_serial(name2)
             result = serial1 > serial2   # same extension compares by counter
@@ -132,6 +140,13 @@ def newer(name1, name2):
     log.verbose("Comparing filename time order:", repr(name1), ">", repr(name2), "-->", result)
     return result
 
+def crds_basename(name):
+    """basename() accounting for N/A pass thru."""
+    if name == "N/A":
+        return "N/A"
+    else:
+        return os.path.basename(name)
+
 def classify_name(name):
     """Classify filename `name` as "crds", "oldcdbs", or "newcdbs".
 
@@ -149,7 +164,9 @@ def classify_name(name):
     ...
     NameComparisonError: Failed to classify name 'bbbbbb.fits' for determining time order.
     """
-    if crds_name(name):
+    if name == "N/A":
+        return "crds"
+    elif crds_name(name):
         return "crds"
     elif old_cdbs_name(name):
         return "oldcdbs"
