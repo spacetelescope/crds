@@ -649,7 +649,7 @@ class Selector(object):
         """Return ((parkey, key_field), ...) for match key `key`.   Fix string `key`s to unary tuples."""
         if not isinstance(key, tuple):
             key = (key,)
-        return tuple(zip(self._parameters, key))
+        return tuple(zip(self._parameters, [str(x) for x in key]))
     
     def merge(self, other):
         raise AmbiguousMatchError("More than one match was found at the same weight and " +
