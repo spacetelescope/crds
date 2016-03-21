@@ -1,5 +1,5 @@
-__svn_version__ = 'dc52b6e'
+__svn_version__ = '45b59fc'
 
 __full_svn_info__ = '''
-dc52b6e
+45b59fc
 '''
