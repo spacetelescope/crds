@@ -566,7 +566,8 @@ class ReferenceCertifier(Certifier):
                 r = self.get_corresponding_rmap()
             if r:
                 # header = r.map_irrelevant_parkeys_to_na(header)
-                header = r.locate.reference_keys_to_dataset_keys(r, header)
+                with self.error_on_exception("Error mapping reference names and values to dataset names and values"):
+                    header = r.locate.reference_keys_to_dataset_keys(r, header)
         instr = utils.header_to_instrument(header)
         for key in crds.INSTRUMENT_KEYWORDS:
             header[key] = instr

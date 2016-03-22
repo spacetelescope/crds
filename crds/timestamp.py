@@ -10,7 +10,7 @@ import datetime
 import re
 
 import crds
-from crds import python23
+from crds import python23, config, exceptions
 
 # =======================================================================
 
@@ -29,7 +29,7 @@ def format_date(date):
         date = parse_date(date)
     return date.isoformat(" ")
 
-T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d:\d\d$")
+T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d(:\d\d(:\d\d(.\d+)?)?)?$")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
 
 def parse_date(date):
@@ -78,12 +78,12 @@ def now():
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-def month_num(month):
+def month_num(month, initial_date=None):
     """Convert a month name to a month number."""
     try:
         return  MONTHS.index(month[:3].capitalize()) + 1
     except ValueError:
-        raise ValueError("Invalid month value " + repr(month))
+        raise ValueError("Invalid month value " + repr(month) + " in base date " + repr(initial_date))
     
 def parse_alphabetical_date(date):
     """Parse date/time strings with alphabetical months into datetime's.
@@ -106,6 +106,7 @@ def parse_alphabetical_date(date):
     >>> format_date("Mar 21 2001 12:00:00 am")
     '2001-03-21 00:00:00'
     """
+    initial_date = date
     while date.lower().endswith(" am"):
         date = date.lower().replace(" am", "am")
     while date.lower().endswith(" pm"):
@@ -124,12 +125,12 @@ def parse_alphabetical_date(date):
         day = day[:-1]
 
     try:
-        imonth = month_num(month)
+        imonth = month_num(month, initial_date)
         iday = int(day)
         iyear = int(year)
     except Exception:
         day, month = month, day
-        imonth = month_num(month)
+        imonth = month_num(month, initial_date)
         iday = int(day)
         iyear = int(year)
 
@@ -439,6 +440,24 @@ def is_datetime(datetime_str):
     except ValueError as exc:
         raise crds.CrdsError(str(exc))
     return datetime_str
+
+
+# ============================================================================
+def reformat_useafter(rmapping, header):
+    """Reformat a USEAFTER date in a standard CRDS form which can be split into
+    DATE-OBS and TIME-OBS.   Honor the ALLOW_BAD_USEAFTER to provide a safe default
+    for early junk USEAFTER values;  1900-01-01T00:00:00.
+    """
+    useafter = str(header["USEAFTER"])
+    try:
+        return timestamp.reformat_date(useafter)
+    except Exception:
+        if config.ALLOW_BAD_USEAFTER:
+            log.warning("Can't parse USEAFTER =", repr(useafter),
+                        "in", repr(rmapping.filename), "faking as '1900-01-01T00:00:00'")
+            return timestamp.reformat_date("1900-01-01T00:00:00")
+        else:
+            raise exceptions.InvalidUseAfterFormat("Bad USEAFTER time format =", repr(useafter))
 
 # ============================================================================
 

@@ -94,6 +94,11 @@ class UseAfterError(CrdsLookupError):
 
 # -------------------------------------------------------------------------------------------
 
+class InvalidUseAfterFormat(CrdsError):
+    """CRDS was unable to parse the value from a USEAFTER keyword or equivalent."""
+
+# -------------------------------------------------------------------------------------------
+
 class IrrelevantReferenceTypeError(LookupError):
     """The reference determined by this rmap does not apply to the instrument
     mode specified by the dataset header.
