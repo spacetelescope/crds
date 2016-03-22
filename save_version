@@ -1,7 +1,7 @@
 #! /bin/sh
 
-echo "__svn_version__ = '"`git show -s --pretty=%h`"'"  
+echo "__svn_version__ = '"`svnversion`"'"  
 echo 
 echo "__full_svn_info__ = '''" 
-git show -s --pretty=%h
+svn info 
 echo "'''"
