@@ -81,12 +81,17 @@ def newer(name1, name2):
     >>> newer("s7g1700gl_dead.fits", "07g1700gl_dead.fits")
     False
 
-    >>> newer("N/A", "anything")
+    >>> newer("N/A", "s7g1700gl_dead.fits")
     False
 
-    >>> newer("anything", "N/A")
-    False
+    >>> newer("07g1700gl_dead.fits", "N/A")
+    True
 
+    >>> newer("N/A", "hst_cos_deadtab_0002.rmap")
+    False                                                                                                                                    
+    >>> newer("hst_cos_deadtab_0002.rmap", "N/A")
+    True
+                                                                                                                                    
     >>> newer("hst_cos_deadtab_0001.fits", "17g1700gl_dead.fits")
     Traceback (most recent call last):
     ...
@@ -116,8 +121,10 @@ def newer(name1, name2):
     class1 = classify_name(name1)
     class2 = classify_name(name2)
     case = cases[(class1, class2)]
-    if name1 == "N/A" or name2 =="N/A":
-        result = False
+    if name1 == "N/A":
+        return False
+    elif name2 =="N/A":
+        result = True
     elif case == "compare_crds":
         if extension_rank(name1) == extension_rank(name2):
             serial1, serial2 = newstyle_serial(name1), newstyle_serial(name2)
