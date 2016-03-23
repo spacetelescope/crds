@@ -1,6 +1,6 @@
-__version__ = '9f3d64e'
+__version__ = '60515d9'
 
 __full_version_info__ = '''
-branch: add-useafter-continued
-sha1: 9f3d64e
+branch: fix-missing-log-import
+sha1: 60515d9
 '''

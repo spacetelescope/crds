@@ -10,7 +10,7 @@ import datetime
 import re
 
 import crds
-from crds import python23, config, exceptions
+from crds import python23, config, exceptions, log
 
 # =======================================================================
 
