@@ -13,7 +13,7 @@ st=0
 
 if (test -e save_version) 
 then 
-    ./save_version >crds/svn_version.py;  
+    ./save_version >crds/git_version.py;  
 fi
 python setup.py install $* --force  >> install.log
 st=$st$?
