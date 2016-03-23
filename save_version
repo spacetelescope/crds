@@ -1,7 +1,7 @@
 #! /bin/sh
-
-echo "__svn_version__ = '"`git show -s --pretty=%h`"'"  
+echo "__version__ = '"`git show -s --pretty=%h`"'"  
 echo 
-echo "__full_svn_info__ = '''" 
-git show -s --pretty=%h
+echo "__full_version_info__ = '''" 
+echo "branch: `git rev-parse --abbrev-ref HEAD`"
+echo "sha1: `git show -s --pretty=%h`"
 echo "'''"
