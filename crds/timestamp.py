@@ -30,7 +30,7 @@ def format_date(date):
     return date.isoformat(" ")
 
 T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d(:\d\d(:\d\d(.\d+)?)?)?$")
-ALPHABETICAL_RE = re.compile(r"[A-Za-z]")
+ALPHABETICAL_RE = re.compile(r"[A-Za-z]{3,10}")
 
 def parse_date(date):
     """Parse any date-time string into a datetime object.
@@ -450,12 +450,12 @@ def reformat_useafter(rmapping, header):
     """
     useafter = str(header["USEAFTER"])
     try:
-        return timestamp.reformat_date(useafter)
+        return reformat_date(useafter)
     except Exception:
         if config.ALLOW_BAD_USEAFTER:
             log.warning("Can't parse USEAFTER =", repr(useafter),
                         "in", repr(rmapping.filename), "faking as '1900-01-01T00:00:00'")
-            return timestamp.reformat_date("1900-01-01T00:00:00")
+            return reformat_date("1900-01-01T00:00:00")
         else:
             raise exceptions.InvalidUseAfterFormat("Bad USEAFTER time format =", repr(useafter))
 
