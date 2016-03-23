@@ -497,17 +497,17 @@ def load_server_info(observatory):
 def version_info():
     """Return CRDS checkout URL and revision,  client side."""
     try:
-        from . import svn_version
-        url = revision = "none"
-        for line in svn_version.__full_svn_info__.strip().split("\n"):
-            if line.startswith("URL"):
-                url = line.replace("URL: ","").split("/")[-1]
-            if line.startswith("Revision"):
-                revision = line.replace("Revision: ","")
-        return crds.__version__ + ", " + url + ", " + revision
+        from . import git_version
+        branch = revision = "none"
+        for line in git_version.__full_version_info__.strip().split("\n"):
+            if line.startswith("branch:"):
+                branch = line.split()[1].strip()
+            if line.startswith("sha1"):
+                revision = line.split()[1].strip()
+        return crds.__version__ + ", " + branch + ", " + revision
     except Exception:
         return "unknown"
-    
+
 @utils.cached
 def get_context_parkeys(context, instrument):
     """Return the parkeys required by `instrument` under `context`,  or the subset required by 

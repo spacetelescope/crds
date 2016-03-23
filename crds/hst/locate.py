@@ -49,15 +49,7 @@ def reference_keys_to_dataset_keys(rmapping, header):
     """
     result = dict(header)
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
-        try:
-            reformatted = timestamp.reformat_date(header["USEAFTER"]).split()
-        except Exception:
-            if config.ALLOW_BAD_USEAFTER:
-                log.warning("Can't parse USEAFTER=", repr(header["USEAFTER"]),
-                            " in", repr(rmapping.filename), "faking as '1900-01-01T00:00:00'")
-                reformatted = timestamp.reformat_date("1900-01-01T00:00:00").split()
-            else:
-                raise
+        reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = reformatted[0]
         header["TIME-OBS"] = reformatted[1]
     return header
