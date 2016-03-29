@@ -1,6 +1,6 @@
-__version__ = '60515d9'
+__version__ = 'b082be6'
 
 __full_version_info__ = '''
-branch: fix-missing-log-import
-sha1: 60515d9
+branch: cmdline-submission
+sha1: b082be6
 '''

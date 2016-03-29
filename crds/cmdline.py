@@ -13,7 +13,7 @@ import pdb
 import cProfile, pstats
 import io
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
@@ -61,6 +61,12 @@ def pipeline_mapping(filename):
     assert filename.endswith(".pmap"), "A .pmap file is required but got: '%s'" % filename
     return filename
 
+def context_spec(spec):
+    """Ensure filename is a .pmap or abstract .pmap like "jwst-edit" or date based context spec."""
+    assert config.is_context_spec(spec), \
+        "Parameter should be a .pmap or abstract context specifier, not: " + repr(spec)
+    return spec
+
 def instrument_mapping(filename):
     """Ensure `filename` is a .imap file."""
     assert filename.endswith(".imap"), "A .imap file is required but got: '%s'" % filename
@@ -91,7 +97,6 @@ def nrange(string):
     rmin, rmax = [int(x) for x in string.split(":")]
     assert 0 <= rmin <= rmax, "Invalid range values"
     return rmin, rmax
-    
 
 # =============================================================================
 # =============================================================================
@@ -443,6 +448,18 @@ class Script(object):
     def get_file_properties(self, filename):
         """Return (instrument, filekind) corresponding to `file`, and '' for none."""
         return utils.get_file_properties(self.observatory, filename)
+
+    def get_instruments_and_filekinds(self, filepaths=None):
+        """Given a list of filepaths (or self.files if filespaths is None),  return the
+        mapping of instruments and filekinds covered by the files.
+        """
+        if filepaths is None:
+            filepaths = self.files
+        itmapping = defaultdict(set)
+        for filepath in filepaths:
+            instrument, filekind = self.get_file_properties(filepath)
+            itmapping[instrument] |= set([filekind])
+        return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
 
     def fatal_error(self, *args, **keys):
         """Issue an error message and terminate the program."""
