@@ -73,6 +73,11 @@ __all__ = [
 
            "push_remote_context",
            "get_remote_context",
+
+           "get_submission_info",
+
+           "jpoll_pull_messages",
+           "jpoll_cancel",
            ]
 
 # ============================================================================
@@ -369,6 +374,25 @@ def get_remote_context(observatory, pipeline_name):
     presumed to be operational.
     """
     return S.get_remote_context(observatory, pipeline_name)
+
+# ==============================================================================
+
+def get_submission_info(observatory, username):
+    """Return configuration parameters needed for command line file submission
+    relative to the current server, observatory, and username.
+    """
+    return utils.Struct(S.get_submission_info(observatory, username))
+
+def jpoll_pull_messages(key, since=None):
+    """Return a list of jpoll json message objects from the channel associated
+    with `key` sent after datetime string `since` or since the last pull if 
+    since is not specified.
+    """
+    return [utils.Struct(msg) for msg in S.jpoll_pull_messages(key, since)]
+
+def jpoll_cancel(key):
+    """Request that the process writing to jpoll terminate on its next write."""
+    return S.jpoll_cancel(key)
 
 # ==============================================================================
 
