@@ -98,6 +98,10 @@ def nrange(string):
     assert 0 <= rmin <= rmax, "Invalid range values"
     return rmin, rmax
 
+def process_key(string):
+    assert config.PROCESS_KEY_RE.match(string),  "Invalid format for process key: " + repr(string)
+    return string
+
 # =============================================================================
 # =============================================================================
 
