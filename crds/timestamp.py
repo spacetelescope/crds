@@ -19,7 +19,7 @@ def reformat_date(date):
     parsed = parse_date(date)
     return format_date(parsed)
 
-def format_date(date):
+def format_date(date, sep=" "):
     """Format a datestring `d` in CRDS standard form.
     
     >>> format_date("Mar 21 2001 12:00:00 am")
@@ -27,7 +27,7 @@ def format_date(date):
     """
     if isinstance(date, python23.string_types):
         date = parse_date(date)
-    return date.isoformat(" ")
+    return date.isoformat(sep)
 
 T_SEPERATED_DATE_RE = re.compile(r"^\d\d\d\d[-/]\d\d[-/]\d\dT\d\d:\d\d(:\d\d(:\d\d(.\d+)?)?)?$")
 ALPHABETICAL_RE = re.compile(r"[A-Za-z]{3,10}")
@@ -71,9 +71,9 @@ def parse_date(date):
     else:
         return parse_numerical_date(date)
 
-def now():
+def now(sep=" "):
     """Returns the timestamp for the current time."""
-    return format_date(datetime.datetime.now())
+    return format_date(datetime.datetime.now(), sep)
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
