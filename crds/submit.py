@@ -10,11 +10,53 @@ import sys
 import os
 import os.path
 import shutil
+import glob
 import yaml
 
 from crds import log, cmdline, utils, timestamp, monitor
 from crds.client import api
 
+# ===================================================================
+
+SUBMISSION_DEFS = [
+    ("creating",   0770),  # This submission code is still encoding the submission in user-space
+    ("submitted",  0770),  # This submission is ready for pick-up by the background processor
+    ("processing", 0740),  # The background processor is running
+    ("confirming", 0740),  # The background processor has completed and the results are ready for review
+    ("failed",     0740),  # CRDS detected a fatal error in the submission content forcing cancellation
+    ("confirmed",  0740),  # The user has confirmed the submission
+    ("aborted",    0740),  # The user killed the submission early with an RPC.
+    ("cancelled",  0740),  # The user rejected the submission upon review
+    ("crashed",    0740),  # An untrapped exception occurred
+    ]
+
+STATE_MODE_MAP = dict(SUBMISSION_DEFS)
+
+CLIENT_STATES = { 
+    "creating", 
+    "submitted" 
+    }
+
+ACTIVE_STATES = {
+    "processing",
+    "confirming",
+    }
+
+INACTIVE_STATES = {
+    "confirmed",
+    "failed",
+    "aborted",
+    "cancelled",
+    "crashed"
+    }
+
+SUBMISSION_STATES = CLIENT_STATES | ACTIVE_STATES | INACTIVE_STATES
+assert SUBMISSION_STATES == set(STATE_MODE_MAP.keys())
+
+def check_state(state):
+    """Raise an exception if `state` is not a known valid state."""
+    assert state in STATE_MODE_MAP, "Submission state " + repr(state) + "is not a vaild state."
+        
 # ===================================================================
 
 @utils.cached
@@ -23,6 +65,17 @@ def get_submission_info(observatory, username):
     command line file submissions.
     """
     return api.get_submission_info(observatory, username)
+
+# ===================================================================
+
+def new_submission_name(user_name, instrument):
+    """Return a new unique name for a submission based on `user` and `instrument`."""
+    # Designed to sort by instrument and date.
+    return "-".join([instrument, timestamp.now("T"), user_name])
+
+def instrument_name(submission_name):
+    """Return the instrument name associated with this submission."""        
+    return submission_name.split("-")[0]
 
 # ===================================================================
 
@@ -50,16 +103,29 @@ class Submission(object):
         self.observatory = observatory
         self.instruments_filekinds = instruments_filekinds
         instrument = str(instruments_filekinds.keys()[0])
-        self.submission_key = submission_key or (instrument + "-" + timestamp.now("T"))
+        self.submission_key = submission_key or new_submission_name(self.user_name, instrument)
+        self._keys = keys
 
-    def path(self, *subpaths):
-        """Create a path in the file submission tree where subpaths[0] describes
-        the state of the submission (and contains many submissions) and subpaths[1:] 
-        further describe this individual submission and it's subdirectories.
+    def state_path(self, state, *subdirs):
+        """Return the path of the top level directory for `state` which has links
+        for all submissions in `state`.
+
+        Returns: ".../submissions/<state>"
+
+        This enables submissions to migrate through top level state directories during
+        the course of processing.
         """
-        state = subpaths[0]
-        return os.path.join(self.submission_info.submission_dir, state,
-                            self.submission_key, *subpaths[1:])
+        return os.path.join(self.submission_info.submission_subdir, state, *subdirs)
+
+    def path(self, *subdirs):
+        """Create a path in the submission tree where subdirs[0] describes the
+        state of the submission (and contains many submissions) and subdirs[1:]
+        further describe this individual submission and it's subdirectories.
+        
+        Returns: ".../submissions/<state>/<submission_key>/<submission_subpath...>"
+        """
+        state, submission_subpath = subdirs[0], subdirs[1:]
+        return os.path.join(self.state_path(state), self.submission_key, *submission_subpath)
 
     @property
     def submission_info(self):
@@ -78,9 +144,11 @@ class Submission(object):
 
         cancelled can be either a process cancellation or a confirmation cancellation.
         """
+        check_state(from_state)
+        check_state(to_state)
         os.link(self.path(from_state), self.path(to_state))
         os.unlink(self.path(from_state))
-        
+
     @property
     def params(self):
         """Return a dictionary of the parameters for this submission suitable for serialization."""
@@ -107,9 +175,7 @@ class Submission(object):
 
     def create_subdirs(self):
         """Create subdirectories associated with this submission."""
-        utils.create_path(self.path("creating"), mode=0770)
-        utils.create_path(self.path("creating", "uploads"), mode=0770)
-        utils.create_path(self.path("creating", "files"), mode=770)
+        utils.create_path(self.path("creating", "files"), mode=0770)
 
     def save(self, yaml_path):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
@@ -141,7 +207,13 @@ class Submission(object):
         return utils.get_locator_module(self.observatory)
 
     def destroy(self):
-        """Wipe out this submission on the file system"""
+        """Wipe out this submission on the file system."""
+        for state in STATE_MODE_MAP:
+            shutil.rmtree(self.path(state))
+
+    def delete_files(self):
+        """Delete the submitted files but retain the other portions of the submission."""
+        shutil.rmtree(self.path("uploaded_files"))
 
     def ensure_unique_uploaded_names(self):
         """Make sure there are no duplicate names in the submitted file list."""
@@ -167,15 +239,38 @@ class Submission(object):
                 other.append((original_name, uploaded_path))
         return sorted(other) + sorted(rmaps) + sorted(imaps) + sorted(pmaps)
 
+    def unique_for_instrument(self):
+        """Return True IFF there is no other submission actively processing for
+        the same instrument or instrument "none".
+        """
+        submsn_instr = instrument_name(self.submission_key)
+        for state in ACTIVE_STATES:
+            server_submissions = [
+                os.path.basename(sub) 
+                for sub in glob.glob(self.state_path(state, "*"))
+                ]
+            for active_name in server_submissions:
+                active_instr = instrument_name(active_name)
+                if submsn_instr in [active_instr] or "none" in active_instr:
+                    return False
+        return True
+
 # ===================================================================
 
 class ReferenceSubmissionScript(cmdline.Script):
     """Command line script file submission script."""
 
     description = """
+This script initiates a CRDS file submission from the command line rather than the
+web server.   Once submitted the submission will be processed on the CRDS server,
+optionally monitored on a web page, via this script, or as a separate command line
+program crds.monitor.
 """
 
     epilog = """
+Typical usage of this script would be something like the following.  Users of
+this command line interface must be members of the CRDS operators group
+"crdsoper".
 """
 
     # Override CRDS default behavior of looking in cache for path-less files.
@@ -258,6 +353,7 @@ class ReferenceSubmissionScript(cmdline.Script):
             confirm_link = self._monitor_processing()
 
         log.info("File submission ready for confirmation at:", log.srepr(confirm_link))
+        log.standard_status()
 
         return log.errors()
 
@@ -290,14 +386,14 @@ class ReferenceSubmissionScript(cmdline.Script):
         """Loop polling the CRDS server for status on this submission and produce console
         log output for important events.
         """
-        script = FileSubmissionMonitorScript("crds.submit --monitor --process-key {0} {1}".format(
-                self.submission.submission_key, log.get_verbose() if "--verbose" else ""))
+        script = monitor.MonitorScript(
+            "crds.monitor --process-key " +  self.submission.submission_key + 
+            " --verbose" if log.get_verbose() else "",
+            reset_log=False
+            )
         return script()
 
 # ===================================================================
-
-class FileSubmissionMonitorScript(monitor.MonitorScript):
-    pass
 
 # ===================================================================
 

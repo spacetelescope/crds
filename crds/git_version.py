@@ -1,6 +1,6 @@
-__version__ = 'db5308b'
+__version__ = '7afeed1'
 
 __full_version_info__ = '''
 branch: cmdline-submission
-sha1: db5308b
+sha1: 7afeed1
 '''
