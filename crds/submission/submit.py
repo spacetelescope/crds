@@ -13,7 +13,8 @@ import shutil
 import glob
 import yaml
 
-from crds import log, cmdline, utils, timestamp, monitor
+from crds import log, cmdline, utils, timestamp
+from crds.submission import monitor
 from crds.client import api
 from crds.log import srepr
 
