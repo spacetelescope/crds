@@ -15,19 +15,21 @@ import yaml
 
 from crds import log, cmdline, utils, timestamp, monitor
 from crds.client import api
+from crds.log import srepr
 
 # ===================================================================
 
 SUBMISSION_DEFS = [
     ("creating",   0770),  # This submission code is still encoding the submission in user-space
     ("submitted",  0770),  # This submission is ready for pick-up by the background processor
-    ("processing", 0740),  # The background processor is running
-    ("confirming", 0740),  # The background processor has completed and the results are ready for review
-    ("failed",     0740),  # CRDS detected a fatal error in the submission content forcing cancellation
-    ("confirmed",  0740),  # The user has confirmed the submission
-    ("aborted",    0740),  # The user killed the submission early with an RPC.
-    ("cancelled",  0740),  # The user rejected the submission upon review
-    ("crashed",    0740),  # An untrapped exception occurred
+    ("ingesting",  0750),  # The background processor is creating a CRDS owned copy of the submission
+    ("processing", 0750),  # The background processor is processing the submission
+    ("confirming", 0750),  # The background processor has completed and the results are ready for review
+    ("failed",     0750),  # CRDS detected a fatal error in the submission content forcing cancellation
+    ("confirmed",  0750),  # The user has confirmed the submission
+    ("aborted",    0750),  # The user killed the submission early with an RPC.
+    ("cancelled",  0750),  # The user rejected the submission upon review
+    ("crashed",    0750),  # An untrapped exception occurred
     ]
 
 STATE_MODE_MAP = dict(SUBMISSION_DEFS)
@@ -38,6 +40,7 @@ CLIENT_STATES = {
     }
 
 ACTIVE_STATES = {
+    "ingesting",
     "processing",
     "confirming",
     }
@@ -50,13 +53,16 @@ INACTIVE_STATES = {
     "crashed"
     }
 
+SERVER_STATES = ACTIVE_STATES | INACTIVE_STATES
+
 SUBMISSION_STATES = CLIENT_STATES | ACTIVE_STATES | INACTIVE_STATES
 assert SUBMISSION_STATES == set(STATE_MODE_MAP.keys())
 
 def check_state(state):
     """Raise an exception if `state` is not a known valid state."""
-    assert state in STATE_MODE_MAP, "Submission state " + repr(state) + "is not a vaild state."
-        
+    assert state in STATE_MODE_MAP, "Submission state " + srepr(state) + "is not a vaild state."
+    return state
+
 # ===================================================================
 
 @utils.cached
@@ -115,7 +121,7 @@ class Submission(object):
         This enables submissions to migrate through top level state directories during
         the course of processing.
         """
-        return os.path.join(self.submission_info.submission_subdir, state, *subdirs)
+        return os.path.join(self.submission_info.submission_dir, state, *subdirs)
 
     def path(self, *subdirs):
         """Create a path in the submission tree where subdirs[0] describes the
@@ -134,7 +140,7 @@ class Submission(object):
         """
         return get_submission_info(self.observatory, self.user_name)
 
-    def transition(self, from_state, to_state):
+    def transition(self, from_state, to_state, copy=None):
         """Transition this submission from one state to the next, with states nominally:
 
         1. Corresponding to a root directory into which the submission dir tree is hard-linked.
@@ -144,10 +150,16 @@ class Submission(object):
 
         cancelled can be either a process cancellation or a confirmation cancellation.
         """
-        check_state(from_state)
-        check_state(to_state)
-        os.link(self.path(from_state), self.path(to_state))
-        os.unlink(self.path(from_state))
+        from_path = self.path(check_state(from_state))
+        to_path = self.path(check_state(to_state))
+        log.verbose("Transitioning", srepr(self.submission_key), "from", srepr(from_state), "to", srepr(to_state))
+        if copy is None and from_state in CLIENT_STATES and to_state in SERVER_STATES:
+            log.verbose("Copying", srepr(from_path), "to", srepr(to_path), "to change ownership.")
+            shutil.copy(from_path, to_path)
+            shutil.rmtree(from_path)
+        else:
+            log.verbose("Moving", srepr(from_path), "to", srepr(to_path))
+            shutil.move(self.path(from_state), self.path(to_state))
 
     @property
     def params(self):
@@ -170,15 +182,17 @@ class Submission(object):
     
     def __repr__(self):
         """Return the string representation of a Submission object."""
-        fields = [a + "=" + repr(getattr(self, a)) for a in ["pmap_name", "user_name", "upload_names", "description"]]
+        fields = [a + "=" + srepr(getattr(self, a)) for a in ["pmap_name", "user_name", "upload_names", "description"]]
         return self.__class__.__name__ + "(" + ", ".join(fields) + ")"
 
     def create_subdirs(self):
         """Create subdirectories associated with this submission."""
         utils.create_path(self.path("creating", "files"), mode=0770)
+        utils.create_path(self.state_path("submitted"), mode=0770)
 
     def save(self, yaml_path):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
+        self.create_subdirs()
         utils.ensure_dir_exists(yaml_path, mode=770)
         with open(yaml_path, "w+") as spec_file:
             spec_file.write(self.yaml)
@@ -287,7 +301,7 @@ this command line interface must be members of the CRDS operators group
     def create_submission(self):
         """Create a Submission object based on script / command-line parameters."""
         submission = Submission(
-            pmap_name = self.resolve_context(self.args.derive_from_context),
+            pmap_name = self.args.derive_from_context,  # defer symbolic resolution to post-confirmation
             uploaded_files = { os.path.basename(filepath) : filepath for filepath in self.files },
             description = self.args.description,
             user_name = self.user_name,
@@ -332,6 +346,8 @@ this command line interface must be members of the CRDS operators group
         """Main control flow of submission directory and request manifest creation."""
 
         self.finish_parameters()
+
+        self.require_server_connection()
         
         # self.trial_certify_files()
         # self.trial_refactor_rules()
@@ -341,25 +357,26 @@ this command line interface must be members of the CRDS operators group
         with self.fatal("While creating submission request"):
             self.submission = self.create_submission()
             self.submission.save(self.submission.path("creating", "submission.yaml"))
-            return log.errors()
-
-        with self.fatal("While coping submitted files"):
-            self._copy_files()
+            self.submission.create_subdirs()
 
         with self.fatal("Submitting request"):
             self.submission.transition("creating", "submitted")
 
-        with self.fatal("While processing"):
+        log.info("Submitted request:", srepr(self.submission.submission_key))
+
+        with self.fatal("While monitoring processing"):
             confirm_link = self._monitor_processing()
 
-        log.info("File submission ready for confirmation at:", log.srepr(confirm_link))
         log.standard_status()
 
         return log.errors()
 
     def fatal(self, *params):
-        """Return a fatal error context manager with message based on `params`."""
-        return log.fatal_error_on_exception(*params)
+        """Return an exception context manager with message based on `params`.
+
+        Add any clean up required.
+        """
+        return log.augment_exception(*params)
 
     @property
     def ingest_dir(self):
@@ -368,29 +385,14 @@ this command line interface must be members of the CRDS operators group
         the submissions file tree.
         """
         return self.submission.submission_info.ingest_dir
-
-    def _copy_files(self):
-        """Copy uploaded files into the server ingest directory."""
-        for filepath in self.files:
-            if filepath.startswith(self.ingest_dir):
-                log.info("File", repr(filepath), "is already in your ingest directory.  Skipping copy.")
-                continue
-            else:
-                destpath = os.path.join(self.ingest_dir, os.path.basename(filepath))
-                log.info("Copying", repr(filepath), "to", repr(destpath))
-                utils.ensure_dir_exists(destpath)
-                shutil.copyfile(filepath, destpath)
-            os.link(filepath, self.submission.path("creating","uploads", os.path.basename(filepath)))
-
+    
     def _monitor_processing(self):
         """Loop polling the CRDS server for status on this submission and produce console
         log output for important events.
         """
-        script = monitor.MonitorScript(
-            "crds.monitor --process-key " +  self.submission.submission_key + 
-            " --verbose" if log.get_verbose() else "",
-            reset_log=False
-            )
+        command_line = ("crds.monitor --process-key " +  self.submission.submission_key + 
+                        (" --verbose" if log.get_verbose() else ""))
+        script = monitor.MonitorScript(argv=command_line, reset_log=False)
         return script()
 
 # ===================================================================

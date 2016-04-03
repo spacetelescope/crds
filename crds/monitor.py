@@ -13,6 +13,8 @@ import time
 
 from crds import log, cmdline
 from crds.client import api
+from crds.log import srepr
+from crds import exceptions
 
 # ===================================================================
 
@@ -44,7 +46,15 @@ class MonitorScript(cmdline.Script):
 
     def _poll_status(self):
         """Use network API to pull status messages from server."""
-        return api.jpoll_pull_messages(self.args.process_key)
+        try:
+            return api.jpoll_pull_messages(self.args.process_key)
+        except exceptions.StatusChannelNotFoundError:
+            log.verbose("Channel", srepr(self.args.process_key), 
+                        "not found.  Waiting for processing to start.")
+            return []
+        except exceptions.ServiceError as exc:
+            log.verbose("Unhandled RPC exception for", srepr(self.args.process_key), "is", str(exc))
+            raise
 
     def format_remote(self, *params):
         """Format tuple of message `params` in a standardized way for messages 

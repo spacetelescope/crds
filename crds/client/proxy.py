@@ -11,7 +11,6 @@ import uuid
 import json
 import time
 import os
-import ssl
 
 from crds import python23
 
@@ -26,15 +25,15 @@ else:
 
 from crds import log, config
 
-from crds.exceptions import ServiceError
+from crds import exceptions
 
-def apply_with_retries(f, *pars, **keys):
-    """Apply function f() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
+def apply_with_retries(func, *pars, **keys):
+    """Apply function func() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
     retries = config.get_client_retry_count()
     delay = config.get_client_retry_delay_seconds()
     for retry in range(retries):
         try:
-            return f(*pars, **keys)
+            return func(*pars, **keys)
         except Exception as exc:
             log.verbose("FAILED: Attempt", str(retry+1), "of", retries, "with:", str(exc))
             log.verbose("FAILED: Waiting for", delay, "seconds before retrying")  # waits after total fail...
@@ -81,14 +80,14 @@ class CheckingProxy(object):
                           "method": self.__service_name,
                           'params': params,
                           'id': program_id() + "-" + str(uuid.uuid1()) 
-                          }
+                         }
         
         parameters = json.dumps(jsonrpc_params)
         
         url = self._get_url(jsonrpc_params)
         
         if "serverless" in url or "server-less" in url:
-            raise ServiceError("Configured for server-less mode.  Skipping JSON RPC " + repr(self.__service_name))
+            raise exceptions.ServiceError("Configured for server-less mode.  Skipping JSON RPC " + repr(self.__service_name))
 
         if log.get_verbose() <= 50:
             log.verbose("CRDS JSON RPC", self.__service_name, params if len(str(params)) <= 60 else "(...)", "-->")
@@ -122,18 +121,28 @@ class CheckingProxy(object):
             channel = urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
-            raise ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+            raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
+
+ 
 
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
             decoded = str(unescape(jsonrpc["error"]["message"]))
-            log.verbose("RPC FAILED", decoded)
-            raise ServiceError(decoded)
-        result = crds_decode(jsonrpc["result"])
-        result = fix_strings(result)
-        log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
-        return result
+            raise self.classify_exception(decoded)
+        else:
+            result = crds_decode(jsonrpc["result"])
+            result = fix_strings(result)
+            log.verbose("RPC OK", log.PP(result) if log.get_verbose() >= 70 else "")
+            return result
+
+    def classify_exception(self, decoded):
+        """Interpret exc __str__ to define as more precise CRDS exception."""
+        if "Channel" in decoded and "not found" in decoded:
+            return exceptions.StatusChannelNotFoundError(decoded)
+        else:
+            msg = "CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(decoded)
+            return exceptions.ServiceError(msg)
 
 def fix_strings(rval):
     """Convert unicode to strings."""
@@ -166,12 +175,12 @@ def crds_encode(obj):
     return dict(crds_encoded = "1.0",
                 crds_payload = json.dumps(obj).encode('zlib').encode('base64'))
 
-def crds_decode(s):
+def crds_decode(msg):
     """Decode something which was crds_encode'd,  or return it unaltered if
     it wasn't.
     """
-    if isinstance(s, dict) and "crds_encoded" in s:
-        json_str = s["crds_payload"].decode('base64').decode('zlib')
+    if isinstance(msg, dict) and "crds_encoded" in msg:
+        json_str = msg["crds_payload"].decode('base64').decode('zlib')
         return json.loads(json_str)
     else:
-        return s
+        return msg

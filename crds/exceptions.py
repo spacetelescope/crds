@@ -16,6 +16,11 @@ class CrdsError(Exception):
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
     
+class StatusChannelNotFoundError(ServiceError):
+    """Requested status channel does not exist.  Typo or deleted."""
+
+# -------------------------------------------------------------------------------------------
+
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
 
