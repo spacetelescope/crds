@@ -26,25 +26,40 @@ This command can be used to list, cancel, and or delete submissions.
 """
 
     epilog = """
+XXXX TBD: under development  XXXXX
+
+The crds.submission control command is a Swiss Army knife which can be used to
+list, cancel, or clean up submissions.  It has basically two modes of
+operation:
+
+1. It can operate with respect to a specific submission name.   These come from
+command line submission output, automatic e-mails, or web-pages.
+
+2. It can operate with respect to a user and act on all their submissions.
+
+Only some submission states can be cleaned up file submitters.   Some states can
+only be cleared by a server admin.
 """
 
     def add_args(self):
         """Add class-specifc command line parameters."""
         super(ControlSubmissionScript, self).add_args()
         self.add_argument("--submission-key", type=cmdline.process_key, default=None,
-                          help="Key used to connect to remote process status stream.")
+                          help="Name for a specific submission.")
         self.add_argument("--for-user", action="store_true",
-                          help="When set, operate on all submissions for username.  Omit --submission-key.")
+                          help="Operate on all submissions for username.")
         self.add_argument("--username", type=str, default=None,
-                          help="Override login user name with the specified user name.")
+                          help="Operate on submissions with respect to username.   Defaults to login name.")
+        self.add_argument("--client", action="store_true",
+                          help="Operate the client initiating states which start the submission.")
         self.add_argument("--active", action="store_true",
-                          help="Operate on active submission directories.")
+                          help="Operate on server submission states where CRDS is processing. Server admin only.")
         self.add_argument("--all", action="store_true",
-                          help="Operate on all submission directories for the specified submission key.")
+                          help="Operate on all submission states.  WARNING: can delete completed states.  Server admin only.")
         self.add_argument("--cancel", action="store_true",
                           help="Send a process cancellation message to the specified submission key.")
         self.add_argument("--delete", action="store_true",
-                          help="Delete submission directories for the specified user or submission key.")
+                          help="Delete submission directories for the specified user or submission key.  Some restrictions.")
         self.add_argument("--list", action="store_true",
                           help="List the existing submission directories for the specified user or submission key.")
 

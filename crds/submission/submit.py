@@ -209,7 +209,7 @@ class Submission(object):
         log.verbose("Transitioning", srepr(self.submission_key), "from", srepr(from_state), "to", srepr(to_state))
         if copy is None and from_state in CLIENT_STATES and to_state in SERVER_STATES:
             log.verbose("Copying", srepr(from_path), "to", srepr(to_path), "to change ownership.")
-            shutil.copy(from_path, to_path)
+            shutil.copytree(from_path, to_path)
             shutil.rmtree(from_path)
         else:
             log.verbose("Moving", srepr(from_path), "to", srepr(to_path))
