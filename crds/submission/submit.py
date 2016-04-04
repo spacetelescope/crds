@@ -59,9 +59,11 @@ SERVER_STATES = ACTIVE_STATES | INACTIVE_STATES
 SUBMISSION_STATES = CLIENT_STATES | ACTIVE_STATES | INACTIVE_STATES
 assert SUBMISSION_STATES == set(STATE_MODE_MAP.keys())
 
+# ===================================================================
+
 def check_state(state):
     """Raise an exception if `state` is not a known valid state."""
-    assert state in STATE_MODE_MAP, "Submission state " + srepr(state) + "is not a vaild state."
+    assert state in SUBMISSION_STATES, "Submission state " + srepr(state) + "is not a vaild state."
     return state
 
 # ===================================================================
@@ -72,6 +74,57 @@ def get_submission_info(observatory, username):
     command line file submissions.
     """
     return api.get_submission_info(observatory, username)
+
+# ===================================================================
+
+def submission_state_paths(observatory, username, submission_key, state):
+    """Return all the paths associated with the given `state` and parameters.
+    If the submission key is None then all submissions for that user are
+    returned,  otherwise only the
+    """
+    subdir = get_submission_info(observatory, username).submission_dir
+    if submission_key is None:
+        pattern = os.path.join(subdir, state, "*-" + username)
+        return glob.glob(pattern)
+    else:
+        path = os.path.join(subdir, state, submission_key)
+        return [path] if os.path.exists(path) else []
+
+def submission_paths(observatory, username, submission_key, states):
+    """Return all submission paths associated with the specified 
+    parameters and `states`.
+    """
+    paths = []
+    for state in states:
+        paths.extend(submission_state_paths(observatory, username, submission_key, state))
+    return paths
+
+def active_paths(observatory, username, submission_key):
+    """Return associated with active states and the specified `username` and/or
+    `submission_key`.
+    """
+    return submission_paths(observatory, username, submission_key, ACTIVE_STATES)
+
+def inactive_paths(observatory, username, submission_key):
+    """Return associated with active states and the specified `username` and/or
+    `submission_key`.
+    """
+    return submission_paths(observatory, username, submission_key, INACTIVE_STATES)
+
+def client_paths(observatory, username, submission_key):
+    """Return associated with client states and the specified `username` and/or
+    `submission_key`.
+    """
+    return submission_paths(observatory, username, submission_key, CLIENT_STATES)
+
+def all_paths(observatory, username, submission_key):
+    """Return all submission paths related to the specified parameters.  If
+    submission_key is None then all submissions for the given username are
+    returned.
+    """
+    return (client_paths(observatory, username, submission_key) +
+            active_paths(observatory, username, submission_key) +
+            inactive_paths(observatory, username, submission_key))
 
 # ===================================================================
 
@@ -370,7 +423,7 @@ this command line interface must be members of the CRDS operators group
 
         log.standard_status()
 
-        return log.errors()
+        return self.submission.submission_key
 
     def fatal(self, *params):
         """Return an exception context manager with message based on `params`.

@@ -99,7 +99,13 @@ def nrange(string):
     return rmin, rmax
 
 def process_key(string):
+    """Check the format of a remote process identification  key."""
     assert config.PROCESS_KEY_RE.match(string),  "Invalid format for process key: " + repr(string)
+    return string
+
+def user_name(string):
+    """Check the format of a server user name string."""
+    assert config.USER_NAME_RE.match(string), "Invalid user name " + repr(string)
     return string
 
 # =============================================================================

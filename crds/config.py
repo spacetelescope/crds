@@ -984,6 +984,9 @@ def clear_crds_state():
 PROCESS_KEY_RE_STR = r"[a-zA-Z0-9:\.\-]{1,128}"   #  character "/" must be excluded
 PROCESS_KEY_RE = re.compile(PROCESS_KEY_RE_STR)
 
+USER_NAME_RE_STR = r"[a-z_]+"
+USER_NAME_RE = re.compile(USER_NAME_RE_STR)
+
 # -------------------------------------------------------------------------------------
 
 def test():
