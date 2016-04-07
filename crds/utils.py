@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import sys
 import os   # False pylint warning unused import,  verify before removing.
 import os.path
+import shutil
 import stat
 import re
 import hashlib
@@ -493,6 +494,44 @@ def remove(rmpath, observatory):
                 os.remove(rmpath)
             else:
                 pysh.sh("rm -rf ${rmpath}", raise_on_error=True)
+
+# ===================================================================
+
+def copytree(src, dst, symlinks=False, ignore=None, 
+             fnc_directory=None, fnc_file=None, fnc_symlink=None):
+    """Derived from shutil.copytree() example with added function hooks called
+    on a per-directory, per-file, and per-symlink basis with (src, dest)
+    parameters.  Removes exception trapping since partial copies are useless
+    for CRDS.  Cannot handle devices or sockets, only regular files and
+    directories.   File stats not preserved.
+    """
+    names = os.listdir(src)
+    if ignore is not None:
+        ignored_names = ignore(src, names)
+    else:
+        ignored_names = set()
+
+    os.makedirs(dst)
+
+    errors = []
+    for name in names:
+        if name in ignored_names:
+            continue
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        if symlinks and os.path.islink(srcname):
+            linkto = os.readlink(srcname)
+            if fnc_symlink is not None:
+                fnc_symlink(linkto, dstname)
+            os.symlink(linkto, dstname)
+        elif os.path.isdir(srcname):
+            if fnc_directory is not None:
+                fnc_directory(srcname, dstname)
+            copytree(srcname, dstname, symlinks, ignore)
+        else:
+            if fnc_file is not None:
+                fnc_file(srcname, dstname)
+            shutil.copy(srcname, dstname)
 
 # ===================================================================
 

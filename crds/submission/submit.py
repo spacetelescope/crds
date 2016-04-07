@@ -126,16 +126,24 @@ def all_paths(observatory, username, submission_key):
             active_paths(observatory, username, submission_key) +
             inactive_paths(observatory, username, submission_key))
 
+def split_path(path):
+    """
+    >>> split_path("/somewhere/on/the/disk/submitted/miri-2015-12-25T00:00:00.000000-homer")
+    ('submitted', 'miri', '2015-12-25T00:00:00.000000', 'homer')
+    """
+    state = os.path.basename(os.path.basename(path))
+    subname = os.path.basename(path)
+    instrument, year, month, day_time, user = subname.split("-")
+    return utils.Struct(
+        state=state, instrument=instrument, 
+        datetime="-".join([year, month, day_time]), user=user)
+
 # ===================================================================
 
 def new_submission_name(user_name, instrument):
     """Return a new unique name for a submission based on `user` and `instrument`."""
     # Designed to sort by instrument and date.
     return "-".join([instrument, timestamp.now("T"), user_name])
-
-def instrument_name(submission_name):
-    """Return the instrument name associated with this submission."""        
-    return submission_name.split("-")[0]
 
 # ===================================================================
 
@@ -194,6 +202,17 @@ class Submission(object):
         """
         return get_submission_info(self.observatory, self.user_name)
 
+    @property
+    def monitor_url(self):
+        """Return the server URL which can be used to monitor this submission via a web page."""
+        return self.submission_info.monitor_url + self.submission_key + "/"
+
+    @property
+    def confirm_url(self):
+        """Return the server URL which can be used to confirm/cancel this submission via a web page."""
+        return self.submission_info.confirm_url + self.submission_key + "/"
+        
+        
     def transition(self, from_state, to_state, copy=None):
         """Transition this submission from one state to the next, with states nominally:
 
@@ -209,7 +228,7 @@ class Submission(object):
         log.verbose("Transitioning", srepr(self.submission_key), "from", srepr(from_state), "to", srepr(to_state))
         if copy is None and from_state in CLIENT_STATES and to_state in SERVER_STATES:
             log.verbose("Copying", srepr(from_path), "to", srepr(to_path), "to change ownership.")
-            shutil.copytree(from_path, to_path)
+            utils.copytree(from_path, to_path)
             shutil.rmtree(from_path)
         else:
             log.verbose("Moving", srepr(from_path), "to", srepr(to_path))
@@ -276,7 +295,7 @@ class Submission(object):
 
     def destroy(self):
         """Wipe out this submission on the file system."""
-        for state in STATE_MODE_MAP:
+        for state in SUBMISSION_STATES:
             shutil.rmtree(self.path(state))
 
     def delete_files(self):
@@ -292,6 +311,7 @@ class Submission(object):
             assert uploaded_as.count(name) == 1, "File '%s' appears more than once." % name
         for path in paths:
             assert paths.count(path) == 1, "File path for '%s' appears more than once." %  pathmap[path]
+            assert os.path.exists(path), "File path for '%s' is not visible." % pathmap[path]
 
     def ordered_files(self):
         """Organize uploaded file tuples in dependency order,  starting with references and ending with .pmaps."""
@@ -311,17 +331,23 @@ class Submission(object):
         """Return True IFF there is no other submission actively processing for
         the same instrument or instrument "none".
         """
-        submsn_instr = instrument_name(self.submission_key)
+        submsn_instr = self.instrument_name(self.submission_key)
         for state in ACTIVE_STATES:
             server_submissions = [
                 os.path.basename(sub) 
                 for sub in glob.glob(self.state_path(state, "*"))
                 ]
             for active_name in server_submissions:
-                active_instr = instrument_name(active_name)
+                active_instr = self.instrument_name(active_name)
                 if submsn_instr in [active_instr] or "none" in active_instr:
                     return False
         return True
+
+    def instrument_name(self, submission_name):
+        """Return the instrument name associated with this submission."""
+        instr = split_path(submission_name).instrument
+        assert instr.lower() in self.obs_locate.INSTRUMENTS, "Invalid instrument name."
+        return instr
 
 # ===================================================================
 
@@ -387,6 +413,8 @@ this command line interface must be members of the CRDS operators group
         self.add_argument("--dont-compare-old-reference", action="store_true",
                           help="Unless specified, CRDS will check the current reference against any reference it replaces, as appropriate and possible.")
         self.add_argument("--username", type=str, default=None, help="CRDS username of file submitter.")
+        self.add_argument("--monitor-processing", action="store_true", 
+                          help="Monitor CRDS processing for on-going status and final confirmation link.")
         # self.add_argument("--password", type=str, default=None, help="CRDS password of file submitter.")
 
     def finish_parameters(self):
@@ -417,9 +445,11 @@ this command line interface must be members of the CRDS operators group
             self.submission.transition("creating", "submitted")
 
         log.info("Submitted request:", srepr(self.submission.submission_key))
+        log.info("The submission can be monitored at:", self.submission.monitor_url)
 
-        with self.fatal("While monitoring processing"):
-            confirm_link = self._monitor_processing()
+        if self.args.monitor_processing:
+            self.monitor_processing()
+            log.info("The submission can be confirmed or cancelled at:", self.submission.confirm_url)
 
         log.standard_status()
 
@@ -440,14 +470,16 @@ this command line interface must be members of the CRDS operators group
         """
         return self.submission.submission_info.ingest_dir
     
-    def _monitor_processing(self):
+    def monitor_processing(self):
         """Loop polling the CRDS server for status on this submission and produce console
         log output for important events.
         """
-        command_line = ("crds.monitor --process-key " +  self.submission.submission_key + 
-                        (" --verbose" if log.get_verbose() else ""))
-        script = monitor.MonitorScript(argv=command_line, reset_log=False)
-        return script()
+        with self.fatal("While monitoring processing"):
+            command_line = ("crds.monitor --submission-key " +  self.submission.submission_key + 
+                            (" --verbose" if log.get_verbose() else ""))
+            script = monitor.MonitorScript(argv=command_line, reset_log=False)
+            return script()
+        
 
 # ===================================================================
 

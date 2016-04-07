@@ -30,7 +30,7 @@ class MonitorScript(cmdline.Script):
     def add_args(self):
         """Add class-specifc command line parameters."""
         super(MonitorScript, self).add_args()
-        self.add_argument("--process-key", type=cmdline.process_key,
+        self.add_argument("--submission-key", type=cmdline.process_key,
                           help="Key used to connect to remote process status stream.")
         self.add_argument("--poll-delay", type=int, default=3.0,
                           help="Time in seconds between polling for messages.")
@@ -47,20 +47,20 @@ class MonitorScript(cmdline.Script):
     def _poll_status(self):
         """Use network API to pull status messages from server."""
         try:
-            return api.jpoll_pull_messages(self.args.process_key)
+            return api.jpoll_pull_messages(self.args.submission_key)
         except exceptions.StatusChannelNotFoundError:
-            log.verbose("Channel", srepr(self.args.process_key), 
+            log.verbose("Channel", srepr(self.args.submission_key), 
                         "not found.  Waiting for processing to start.")
             return []
         except exceptions.ServiceError as exc:
-            log.verbose("Unhandled RPC exception for", srepr(self.args.process_key), "is", str(exc))
+            log.verbose("Unhandled RPC exception for", srepr(self.args.submission_key), "is", str(exc))
             raise
 
     def format_remote(self, *params):
         """Format tuple of message `params` in a standardized way for messages 
         coming from the remote process being monitored.
         """
-        return log.format("REMOTE:", *params)
+        return log.format("REMOTE:", *params).strip()
 
     def handle_log_message(self, message):
         """Early API has only one message format,  "log_message".  Issur message info

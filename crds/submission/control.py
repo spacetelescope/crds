@@ -12,7 +12,7 @@ import sys
 import os
 import shutil
 
-from crds import cmdline, log
+from crds import cmdline, log, exceptions
 from crds.client import api
 from . import submit
 
@@ -77,7 +77,7 @@ only be cleared by a server admin.
         self.require_server_connection()
 
         if self.args.cancel:
-            api.jpoll_cancel(self.args.submission_key)
+            self.cancel()
 
         if self.args.list:
             self.list()
@@ -100,6 +100,18 @@ only be cleared by a server admin.
             paths = submit.all_paths(
                 self.observatory, self.username, self.args.submission_key)
         return paths
+
+    def cancel(self):
+        """"""
+        if not self.args.submission_key:
+            log.error("You must specify cancellations exactly by key.")
+            return
+        try:
+            api.jpoll_cancel(self.args.submission_key)
+        except exceptions.OwningProcessCancelledError:
+            log.info("Cancelled",  repr(self.args.submission_key))
+        else:
+            log.info("No confirmation of cancellation.")
 
     def list(self):
         """Print out the names of the submission paths."""
