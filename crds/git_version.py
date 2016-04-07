@@ -1,6 +1,6 @@
-__version__ = '27247c5'
+__version__ = '515a0dd'
 
 __full_version_info__ = '''
 branch: cmdline-submission
-sha1: 27247c5
+sha1: 515a0dd
 '''

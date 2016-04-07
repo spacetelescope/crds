@@ -21,16 +21,16 @@ from crds.log import srepr
 # ===================================================================
 
 SUBMISSION_DEFS = [
-    ("creating",   0770),  # This submission code is still encoding the submission in user-space
-    ("submitted",  0770),  # This submission is ready for pick-up by the background processor
-    ("ingesting",  0750),  # The background processor is creating a CRDS owned copy of the submission
-    ("processing", 0750),  # The background processor is processing the submission
-    ("confirming", 0750),  # The background processor has completed and the results are ready for review
-    ("failed",     0750),  # CRDS detected a fatal error in the submission content forcing cancellation
-    ("confirmed",  0750),  # The user has confirmed the submission
-    ("aborted",    0750),  # The user killed the submission early with an RPC.
-    ("cancelled",  0750),  # The user rejected the submission upon review
-    ("crashed",    0750),  # An untrapped exception occurred
+    ("creating",   0o770),  # This submission code is still encoding the submission in user-space
+    ("submitted",  0o770),  # This submission is ready for pick-up by the background processor
+    ("ingesting",  0o750),  # The background processor is creating a CRDS owned copy of the submission
+    ("processing", 0o750),  # The background processor is processing the submission
+    ("confirming", 0o750),  # The background processor has completed and the results are ready for review
+    ("failed",     0o750),  # CRDS detected a fatal error in the submission content forcing cancellation
+    ("confirmed",  0o750),  # The user has confirmed the submission
+    ("aborted",    0o750),  # The user killed the submission early with an RPC.
+    ("cancelled",  0o750),  # The user rejected the submission upon review
+    ("crashed",    0o750),  # An untrapped exception occurred
     ]
 
 STATE_MODE_MAP = dict(SUBMISSION_DEFS)
@@ -260,8 +260,8 @@ class Submission(object):
 
     def create_subdirs(self):
         """Create subdirectories associated with this submission."""
-        utils.create_path(self.path("creating", "files"), mode=0770)
-        utils.create_path(self.state_path("submitted"), mode=0770)
+        utils.create_path(self.path("creating", "files"), mode=0o770)
+        utils.create_path(self.state_path("submitted"), mode=0o770)
 
     def save(self, yaml_path):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
