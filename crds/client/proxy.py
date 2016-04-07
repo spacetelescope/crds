@@ -140,6 +140,8 @@ class CheckingProxy(object):
         """Interpret exc __str__ to define as more precise CRDS exception."""
         if "Channel" in decoded and "not found" in decoded:
             return exceptions.StatusChannelNotFoundError(decoded)
+        elif "External agent requested calling process termination." in decoded:
+            return exceptions.OwningProcessCancelledError(decoded)
         else:
             msg = "CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(decoded)
             return exceptions.ServiceError(msg)

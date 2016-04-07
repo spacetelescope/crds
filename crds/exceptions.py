@@ -19,6 +19,9 @@ class ServiceError(CrdsError):
 class StatusChannelNotFoundError(ServiceError):
     """Requested status channel does not exist.  Typo or deleted."""
 
+class OwningProcessCancelledError(ServiceError):
+    """A cancellation request was recieved on the specified channel."""
+
 # -------------------------------------------------------------------------------------------
 
 class CrdsDownloadError(CrdsError):
