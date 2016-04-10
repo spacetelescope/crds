@@ -154,7 +154,7 @@ class Submission(object):
     def __init__(self, pmap_name, uploaded_files, description, user_name, creator_name="UNKNOWN",
                  change_level="SEVERE", auto_rename=True, compare_old_reference=True,
                  submission_kind=None, observatory=None, pmap_mode=None, instruments_filekinds=None, 
-                 submission_key=None, **keys):
+                 submission_key=None, agent=None, **keys):
 
         """Initialize a submission object in memory."""
 
@@ -172,6 +172,7 @@ class Submission(object):
         self.instruments_filekinds = instruments_filekinds
         instrument = str(instruments_filekinds.keys()[0])
         self.submission_key = submission_key or new_submission_name(self.user_name, instrument)
+        self.agent = agent
         self._keys = keys
 
     def state_path(self, state, *subdirs):
@@ -394,7 +395,8 @@ this command line interface must be members of the CRDS operators group
             submission_kind = "batch",
             observatory = self.observatory,
             pmap_mode = "pmap_text",
-            instruments_filekinds = self.instruments_filekinds
+            instruments_filekinds = self.instruments_filekinds,
+            agent = "command-line-script"
             )
         return submission
 
