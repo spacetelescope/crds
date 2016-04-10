@@ -169,12 +169,35 @@ class Submission(object):
         self.compare_old_reference = bool(compare_old_reference)
         self.submission_kind = submission_kind
         self.observatory = observatory
-        self.instruments_filekinds = instruments_filekinds
-        instrument = str(instruments_filekinds.keys()[0])
+        assert len(uploaded_files) >= 1, "No files found in submission. You must submit at least one file."
+        self.instruments_filekinds = (instruments_filekinds or  
+                                      utils.get_instruments_filekinds(observatory, uploaded_files.values()))
+        instrument = str(self.instruments_filekinds.keys()[0]) if len(self.instruments_filekinds) == 1 else "multiple"
         self.submission_key = submission_key or new_submission_name(self.user_name, instrument)
         self.agent = agent
         self._keys = keys
 
+    @property
+    def params(self):
+        """Return a dictionary of the parameters for this submission suitable for serialization."""
+        return dict(
+            pmap_name = self.pmap_name,
+            pmap_mode = self.pmap_mode,
+            uploaded_files = self.uploaded_files, 
+            description = self.description, 
+            user_name = self.user_name, 
+            creator_name = self.creator_name,
+            change_level = self.change_level,
+            auto_rename = self.auto_rename,
+            compare_old_reference = self.compare_old_reference,
+            submission_kind = self.submission_kind,
+            observatory = self.observatory,
+            instruments_filekinds = self.instruments_filekinds,
+            submission_key = self.submission_key,
+            agent = self.agent,
+            _keys = self._keys,
+            )
+    
     def state_path(self, state, *subdirs):
         """Return the path of the top level directory for `state` which has links
         for all submissions in `state`.
@@ -235,25 +258,6 @@ class Submission(object):
             log.verbose("Moving", srepr(from_path), "to", srepr(to_path))
             shutil.move(self.path(from_state), self.path(to_state))
 
-    @property
-    def params(self):
-        """Return a dictionary of the parameters for this submission suitable for serialization."""
-        return dict(
-            pmap_name = self.pmap_name,
-            pmap_mode = self.pmap_mode,
-            uploaded_files = self.uploaded_files, 
-            description = self.description, 
-            user_name = self.user_name, 
-            creator_name = self.creator_name,
-            change_level = self.change_level,
-            auto_rename = self.auto_rename,
-            compare_old_reference = self.compare_old_reference,
-            observatory = self.observatory,
-            submission_kind = self.submission_kind,
-            submission_key = self.submission_key,
-            instruments_filekinds = self.instruments_filekinds
-            )
-    
     def __repr__(self):
         """Return the string representation of a Submission object."""
         fields = [a + "=" + srepr(getattr(self, a)) for a in ["pmap_name", "user_name", "upload_names", "description"]]
@@ -426,7 +430,7 @@ this command line interface must be members of the CRDS operators group
         if self.args.derive_from_context in ["edit", "ops"]:
             self.args.derive_from_context = self.observatory + "-" + self.args.derive_from_context
         self.user_name = self.args.username or os.getlogin()
-        self.instruments_filekinds = self.get_instruments_and_filekinds()
+        self.instruments_filekinds = utils.get_instruments_and_filekinds(self.files)
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""

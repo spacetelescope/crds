@@ -459,18 +459,6 @@ class Script(object):
         """Return (instrument, filekind) corresponding to `file`, and '' for none."""
         return utils.get_file_properties(self.observatory, filename)
 
-    def get_instruments_and_filekinds(self, filepaths=None):
-        """Given a list of filepaths (or self.files if filespaths is None),  return the
-        mapping of instruments and filekinds covered by the files.
-        """
-        if filepaths is None:
-            filepaths = self.files
-        itmapping = defaultdict(set)
-        for filepath in filepaths:
-            instrument, filekind = self.get_file_properties(filepath)
-            itmapping[instrument] |= set([filekind])
-        return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
-
     def fatal_error(self, *args, **keys):
         """Issue an error message and terminate the program."""
         log.fatal_error(*args, **keys)

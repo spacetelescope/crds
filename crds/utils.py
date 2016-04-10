@@ -11,7 +11,7 @@ import re
 import hashlib
 import io
 import functools
-from collections import Counter
+from collections import Counter, defaultdict
 import datetime
 import ast
 import gc
@@ -566,6 +566,17 @@ def get_file_properties(observatory, filename):
     """Return instrument,filekind fields associated with filename."""
     path = config.locate_file(filename, observatory)
     return get_locator_module(observatory).get_file_properties(path)        
+
+def get_instruments_filekinds(observatory, filepaths):
+    """Given a list of filepaths return the mapping of instruments and
+    filekinds covered by the files.
+    """
+    itmapping = defaultdict(set)
+    for filepath in filepaths:
+        instrument, filekind = get_file_properties(observatory, filepath)
+        itmapping[instrument] |= set([filekind])
+    result = { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
+     return result
 
 # ===================================================================
 
