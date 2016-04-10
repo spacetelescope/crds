@@ -575,8 +575,7 @@ def get_instruments_filekinds(observatory, filepaths):
     for filepath in filepaths:
         instrument, filekind = get_file_properties(observatory, filepath)
         itmapping[instrument] |= set([filekind])
-    result = { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
-     return result
+    return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
 
 # ===================================================================
 
