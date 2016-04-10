@@ -263,9 +263,11 @@ class Submission(object):
         utils.create_path(self.path("creating", "files"), mode=0o770)
         utils.create_path(self.state_path("submitted"), mode=0o770)
 
-    def save(self, yaml_path):
+    def save(self, yaml_path=None):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
         self.create_subdirs()
+        if yaml_path is None:
+            yaml_path = self.path("creating", "submission.yaml")
         utils.ensure_dir_exists(yaml_path, mode=770)
         with open(yaml_path, "w+") as spec_file:
             spec_file.write(self.yaml)
@@ -438,8 +440,7 @@ this command line interface must be members of the CRDS operators group
         
         with self.fatal("While creating submission request"):
             self.submission = self.create_submission()
-            self.submission.save(self.submission.path("creating", "submission.yaml"))
-            self.submission.create_subdirs()
+            self.submission.save()
 
         with self.fatal("Submitting request"):
             self.submission.transition("creating", "submitted")
