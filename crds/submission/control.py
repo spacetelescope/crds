@@ -62,6 +62,8 @@ only be cleared by a server admin.
                           help="Delete submission directories for the specified user or submission key.  Some restrictions.")
         self.add_argument("--list", action="store_true",
                           help="List the existing submission directories for the specified user or submission key.")
+        self.add_argument("--cat", action="store_true",
+                          help="Print out the .yaml manifests associated with the specified submissions.")
 
     @property
     def username(self):
@@ -81,6 +83,9 @@ only be cleared by a server admin.
 
         if self.args.list:
             self.list()
+
+        if self.args.cat:
+            self.cat()
 
         if self.args.delete:
             self.delete()
@@ -102,7 +107,7 @@ only be cleared by a server admin.
         return paths
 
     def cancel(self):
-        """"""
+        """ """
         if not self.args.submission_key:
             log.error("You must specify cancellations exactly by key.")
             return
@@ -118,6 +123,14 @@ only be cleared by a server admin.
         for path in self.get_submission_paths():
             print(path)
 
+    def cat(self):
+        """Dump out the yaml manifests associated with each submission path."""
+        for path in self.get_submission_paths():
+            print("="*15, path, "="*15)
+            manifest = os.path.join(path, "submission.yaml")
+            with log.error_on_exception("Failed dumping manifest", repr(manifest)):
+                print(open(manifest).read())
+        
     def delete(self):
         """Delete the submission paths from the file system."""
         for path in self.get_submission_paths():
