@@ -497,40 +497,30 @@ def remove(rmpath, observatory):
 
 # ===================================================================
 
-def copytree(src, dst, symlinks=False, ignore=None, 
-             fnc_directory=None, fnc_file=None, fnc_symlink=None):
+def _no_message(*args):
+    """Do nothing message handler."""
+
+def copytree(src, dst, symlinks=False, fnc_directory=_no_message, 
+             fnc_file=_no_message, fnc_symlink=_no_message):
     """Derived from shutil.copytree() example with added function hooks called
     on a per-directory, per-file, and per-symlink basis with (src, dest)
     parameters.  Removes exception trapping since partial copies are useless
     for CRDS.  Cannot handle devices or sockets, only regular files and
     directories.   File stats not preserved.
     """
-    names = os.listdir(src)
-    if ignore is not None:
-        ignored_names = ignore(src, names)
-    else:
-        ignored_names = set()
-
     os.makedirs(dst)
-
-    errors = []
-    for name in names:
-        if name in ignored_names:
-            continue
+    for name in os.listdir(src):
         srcname = os.path.join(src, name)
         dstname = os.path.join(dst, name)
         if symlinks and os.path.islink(srcname):
             linkto = os.readlink(srcname)
-            if fnc_symlink is not None:
-                fnc_symlink(linkto, dstname)
+            fnc_symlink("Linking", log.srepr(linkto), "to", log.srepr(dstname))
             os.symlink(linkto, dstname)
         elif os.path.isdir(srcname):
-            if fnc_directory is not None:
-                fnc_directory(srcname, dstname)
-            copytree(srcname, dstname, symlinks, ignore)
+            fnc_directory("Copying dir", log.srepr(srcname), "to", log.srepr(dstname))
+            copytree(srcname, dstname, symlinks)
         else:
-            if fnc_file is not None:
-                fnc_file(srcname, dstname)
+            fnc_file("Coping", log.srepr(srcname), "to", log.srepr(dstname))
             shutil.copy(srcname, dstname)
 
 # ===================================================================
