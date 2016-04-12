@@ -48,8 +48,8 @@ only be cleared by a server admin.
                           help="Name for a specific submission.")
         self.add_argument("--for-user", action="store_true",
                           help="Operate on all submissions for username.")
-        self.add_argument("--username", type=str, default=None,
-                          help="Operate on submissions with respect to username.   Defaults to login name.")
+        self.add_argument("--any-user", action="store_true",
+                          help="Operate on submissions for any/all users.")
         self.add_argument("--client", action="store_true",
                           help="Operate the client initiating states which start the submission.")
         self.add_argument("--active", action="store_true",
@@ -73,8 +73,11 @@ only be cleared by a server admin.
     def main(self):
         """Main processing for submisson control."""
 
-        if self.args.submission_key is None and not self.args.for_user:
+        if not (self.args.submission_key or self.args.for_user or self.args.any_user):
             log.fatal_error("You must either specify --submission-key or --for-user.")
+
+        if self.args.any_user:
+            self.args.username = "*"
 
         self.require_server_connection()
 

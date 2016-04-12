@@ -154,7 +154,7 @@ class Submission(object):
     def __init__(self, pmap_name, uploaded_files, description, user_name, creator_name="UNKNOWN",
                  change_level="SEVERE", auto_rename=True, compare_old_reference=True,
                  submission_kind=None, observatory=None, pmap_mode=None, instruments_filekinds=None, 
-                 submission_key=None, agent=None, **keys):
+                 submission_key=None, agent=None, submission_state=None, related_files=None, **keys):
 
         """Initialize a submission object in memory."""
 
@@ -169,13 +169,14 @@ class Submission(object):
         self.compare_old_reference = bool(compare_old_reference)
         self.submission_kind = submission_kind
         self.observatory = observatory
-        assert len(uploaded_files) >= 1, "No files found in submission. You must submit at least one file."
-        self.instruments_filekinds = (instruments_filekinds or  
-                                      utils.get_instruments_filekinds(observatory, uploaded_files.values()))
+        search_files = uploaded_files.values() if uploaded_files else related_files
+        self.instruments_filekinds = (instruments_filekinds or utils.get_instruments_filekinds(observatory, search_files))
         instrument = str(self.instruments_filekinds.keys()[0]) if len(self.instruments_filekinds) == 1 else "multiple"
         self.submission_key = submission_key or new_submission_name(self.user_name, instrument)
+        self.submission_state = submission_state or "creating"
         self.agent = agent
-        self._keys = keys
+        self.related_files = related_files or []
+        self.keys = keys
 
     @property
     def params(self):
@@ -195,7 +196,9 @@ class Submission(object):
             instruments_filekinds = self.instruments_filekinds,
             submission_key = self.submission_key,
             agent = self.agent,
-            _keys = self._keys,
+            submission_state = self.submission_state,
+            related_files = self.related_files,
+            keys = self.keys,
             )
     
     def state_path(self, state, *subdirs):
@@ -240,16 +243,17 @@ class Submission(object):
         """Issue a status message, intended to be overridden/augmented for web status."""
         log.info(*args)
         
-    def transition(self, from_state, to_state, copy=None):
+    def transition(self, to_state, copy=None):
         """Transition this submission from one state to the next, with states nominally:
 
         1. Corresponding to a root directory into which the submission dir tree is hard-linked.
 
         2. Being roughly:  creating, submitted, processing, failed, cancelled,
-                           confirming, confirmed
+        confirming, confirmed
 
         cancelled can be either a process cancellation or a confirmation cancellation.
         """
+        from_state = self.submission_state
         from_path = self.path(check_state(from_state))
         to_path = self.path(check_state(to_state))
         self.push_status("Transitioning", srepr(self.submission_key), "from", srepr(from_state), "to", srepr(to_state))
@@ -260,6 +264,8 @@ class Submission(object):
         else:
             self.push_status("Moving", srepr(from_path), "to", srepr(to_path))
             shutil.move(self.path(from_state), self.path(to_state))
+        self.submission_state = to_state
+        self.save(self.path(to_state, "submission.yaml"))
 
     def __repr__(self):
         """Return the string representation of a Submission object."""
@@ -268,15 +274,17 @@ class Submission(object):
 
     def create_subdirs(self):
         """Create subdirectories associated with this submission."""
-        utils.create_path(self.path("creating", "files"), mode=0o770)
-        utils.create_path(self.state_path("submitted"), mode=0o770)
+        utils.create_path(self.path("creating", "uploaded_files"), mode=0o770)
+        utils.create_path(self.path("creating", "generated_files"), mode=0o770)
+        utils.create_path(self.path("creating", "renamed_files"), mode=0o770)
+        utils.create_path(self.path("submitted"), mode=0o770)
 
     def save(self, yaml_path=None, added_params={}):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
         self.create_subdirs()
         if yaml_path is None:
             yaml_path = self.path("creating", "submission.yaml")
-        utils.ensure_dir_exists(yaml_path, mode=770)
+        utils.ensure_dir_exists(yaml_path, mode=0o770)
         pars = self.params
         pars.update(added_params)
         text = yaml.dump(pars)
@@ -301,14 +309,26 @@ class Submission(object):
         """Return the observatory locator module associted with this submission."""
         return utils.get_locator_module(self.observatory)
 
+'''
+    Untested... 
+
     def destroy(self):
         """Wipe out this submission on the file system."""
         for state in SUBMISSION_STATES:
-            shutil.rmtree(self.path(state))
+            self.rmtree_no_fail(self.path(state))
 
     def delete_files(self):
         """Delete the submitted files but retain the other portions of the submission."""
-        shutil.rmtree(self.path("uploaded_files"))
+        for state in SUBMISSION_STATES:
+            self.rmtree_no_fail(state, "uploaded_files")
+            self.rmtree_no_fail(state, "renamed_files")
+            self.rmtree_no_fail(state, "generated_files")
+
+    def rmtree_no_fail(self, *subtree):
+        """Remove the specified `subtree` of this submission directory, ignore if non-existent."""
+        with log.verbose_warning_on_exception("Failed removing", repr(subtree)):
+            shutil.rmtree(self.path(*subtree))
+'''
 
     def ensure_unique_uploaded_names(self):
         """Make sure there are no duplicate names in the submitted file list."""
@@ -400,7 +420,6 @@ this command line interface must be members of the CRDS operators group
             submission_kind = "batch",
             observatory = self.observatory,
             pmap_mode = "pmap_text",
-            instruments_filekinds = self.instruments_filekinds,
             agent = "command-line-script"
             )
         return submission
@@ -431,15 +450,14 @@ this command line interface must be members of the CRDS operators group
         if self.args.derive_from_context in ["edit", "ops"]:
             self.args.derive_from_context = self.observatory + "-" + self.args.derive_from_context
         self.user_name = self.args.username or os.getlogin()
-        self.instruments_filekinds = utils.get_instruments_and_filekinds(self.files)
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
 
-        self.finish_parameters()
-
         self.require_server_connection()
         
+        self.finish_parameters()
+
         # self.trial_certify_files()
         # self.trial_refactor_rules()
         # if log.errors() and not self.args.force_submission:
@@ -448,9 +466,7 @@ this command line interface must be members of the CRDS operators group
         with self.fatal("While creating submission request"):
             self.submission = self.create_submission()
             self.submission.save()
-
-        with self.fatal("Submitting request"):
-            self.submission.transition("creating", "submitted")
+            self.submission.transition("submitted")
 
         log.info("Submitted request:", srepr(self.submission.submission_key))
         log.info("The submission can be monitored at:", self.submission.monitor_url)
