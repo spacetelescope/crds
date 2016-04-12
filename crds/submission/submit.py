@@ -309,7 +309,7 @@ class Submission(object):
         """Return the observatory locator module associted with this submission."""
         return utils.get_locator_module(self.observatory)
 
-'''
+    '''
     Untested... 
 
     def destroy(self):
@@ -328,7 +328,7 @@ class Submission(object):
         """Remove the specified `subtree` of this submission directory, ignore if non-existent."""
         with log.verbose_warning_on_exception("Failed removing", repr(subtree)):
             shutil.rmtree(self.path(*subtree))
-'''
+    '''
 
     def ensure_unique_uploaded_names(self):
         """Make sure there are no duplicate names in the submitted file list."""

@@ -54,7 +54,7 @@ only be cleared by a server admin.
                           help="Operate the client initiating states which start the submission.")
         self.add_argument("--active", action="store_true",
                           help="Operate on server submission states where CRDS is processing. Server admin only.")
-        self.add_argument("--all", action="store_true",
+        self.add_argument("--all-states", action="store_true",
                           help="Operate on all submission states.  WARNING: can delete completed states.  Server admin only.")
         self.add_argument("--cancel", action="store_true",
                           help="Send a process cancellation message to the specified submission key.")
@@ -74,7 +74,7 @@ only be cleared by a server admin.
         """Main processing for submisson control."""
 
         if not (self.args.submission_key or self.args.for_user or self.args.any_user):
-            log.fatal_error("You must either specify --submission-key or --for-user.")
+            log.fatal_error("You must either specify --submission-key or --for-user or --any-user.")
 
         if self.args.any_user:
             self.args.username = "*"
@@ -104,7 +104,7 @@ only be cleared by a server admin.
         if self.args.active:
             paths += submit.active_paths(
                 self.observatory, self.username, self.args.submission_key)
-        if self.args.all:
+        if self.args.all_states:
             paths = submit.all_paths(
                 self.observatory, self.username, self.args.submission_key)
         return paths
