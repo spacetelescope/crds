@@ -206,17 +206,29 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.reset()
     
-    >>> BestrefsScript("crds.bestrefs --jwst --new-context jwst_0017.pmap --files data/jw_nrcb1_uncal_sloper_image.fits --types gain")()   # doctest: +ELLIPSIS
-    CRDS  : ERROR    instrument='ALL' type='ALL' data='ALL' ::  New-context = 'jwst_0017.pmap' is bad or contains bad rules.  Use is not recommended,  results may not be scientifically valid.
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/jw_nrcb1_uncal_sloper_image.fits
-    CRDS  : ERROR    Failed processing 'data/jw_nrcb1_uncal_sloper_image.fits' : Failed computing bestrefs for data 'data/jw_nrcb1_uncal_sloper_image.fits' with respect to 'jwst_0017.pmap' : Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
+    >>> hdr = {
+    ... 'META.INSTRUMENT.CHANNEL': 'SHORT',
+    ... 'META.INSTRUMENT.DETECTOR': 'NRCB1',
+    ... 'META.INSTRUMENT.FILTER': 'F182M',
+    ... 'META.INSTRUMENT.NAME': 'NIRCAM',
+    ... 'META.INSTRUMENT.PUPIL': 'FLAT',
+    ... 'META.INSTRUMENT.TYPE': 'NIRCAM',
+    ... 'META.OBSERVATION.DATE': '2013-04-03',
+    ... 'META.OBSERVATION.TIME': '16:52:19.612000',
+    ... 'META.SUBARRAY.FASTAXIS': '1',
+    ... 'META.SUBARRAY.NAME': 'FULL',
+    ... 'META.SUBARRAY.SLOWAXIS': '-2',
+    ... }
+    
+    Note that rules do crude inheritance of "badness" so a context containing any bad rmap
+    is bad for all rmaps.
+
+    >>> crds.getrecommendations(hdr, reftypes=["gain"], context="jwst_0017.pmap")    # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+    ...
+    CrdsBadRulesError: Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
     <BLANKLINE>
-    CRDS  : INFO     2 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     3 infos
-    2
+
     >>> test_config.cleanup(old_state)
     """
 
