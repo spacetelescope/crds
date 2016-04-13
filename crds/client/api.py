@@ -77,7 +77,7 @@ __all__ = [
            "get_submission_info",
 
            "jpoll_pull_messages",
-           "jpoll_cancel",
+           "jpoll_abort",
            ]
 
 # ============================================================================
@@ -390,9 +390,9 @@ def jpoll_pull_messages(key, since=None):
     """
     return [utils.Struct(msg) for msg in S.jpoll_pull_messages(key, since)]
 
-def jpoll_cancel(key):
+def jpoll_abort(key):
     """Request that the process writing to jpoll terminate on its next write."""
-    return S.jpoll_cancel(key)
+    return S.jpoll_abort(key)
 
 # ==============================================================================
 

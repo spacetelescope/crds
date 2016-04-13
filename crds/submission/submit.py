@@ -469,7 +469,7 @@ this command line interface must be members of the CRDS operators group
             self.submission.transition("submitted")
 
         log.info("Submitted request:", srepr(self.submission.submission_key))
-        log.info("The submission can be monitored at:", self.submission.monitor_url)
+        log.info("Monitor submission at:", self.submission.monitor_url)
 
         if self.args.monitor_processing:
             self.monitor_processing()
@@ -502,8 +502,8 @@ this command line interface must be members of the CRDS operators group
             command_line = ("crds.monitor --submission-key " +  self.submission.submission_key + 
                             (" --verbose" if log.get_verbose() else ""))
             script = monitor.MonitorScript(argv=command_line, reset_log=False)
-            return script()
-        
+            url = script()
+            return url
 
 # ===================================================================
 

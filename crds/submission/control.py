@@ -1,4 +1,4 @@
-"""This module provides a command line script to list, cancel, and/or 
+"""This module provides a command line script to list, abort, and/or 
 delete submissions by user or submission key.
 """
 
@@ -22,14 +22,14 @@ class ControlSubmissionScript(cmdline.Script):
     """Command line script to control submissions."""
 
     description = """
-This command can be used to list, cancel, and or delete submissions.
+This command can be used to list, abort, and or delete submissions.
 """
 
     epilog = """
 XXXX TBD: under development  XXXXX
 
 The crds.submission control command is a Swiss Army knife which can be used to
-list, cancel, or clean up submissions.  It has basically two modes of
+list, abort, or clean up submissions.  It has basically two modes of
 operation:
 
 1. It can operate with respect to a specific submission name.   These come from
@@ -56,7 +56,7 @@ only be cleared by a server admin.
                           help="Operate on server submission states where CRDS is processing. Server admin only.")
         self.add_argument("--all-states", action="store_true",
                           help="Operate on all submission states.  WARNING: can delete completed states.  Server admin only.")
-        self.add_argument("--cancel", action="store_true",
+        self.add_argument("--abort", action="store_true",
                           help="Send a process cancellation message to the specified submission key.")
         self.add_argument("--delete", action="store_true",
                           help="Delete submission directories for the specified user or submission key.  Some restrictions.")
@@ -81,8 +81,8 @@ only be cleared by a server admin.
 
         self.require_server_connection()
 
-        if self.args.cancel:
-            self.cancel()
+        if self.args.abort:
+            self.abort()
 
         if self.args.list:
             self.list()
@@ -109,17 +109,19 @@ only be cleared by a server admin.
                 self.observatory, self.username, self.args.submission_key)
         return paths
 
-    def cancel(self):
-        """ """
+    def abort(self):
+        """Send a request to the submission processor to abort the submission
+        specified by explicit key.
+        """
         if not self.args.submission_key:
             log.error("You must specify cancellations exactly by key.")
             return
         try:
-            api.jpoll_cancel(self.args.submission_key)
-        except exceptions.OwningProcessCancelledError:
-            log.info("Cancelled",  repr(self.args.submission_key))
+            api.jpoll_abort(self.args.submission_key)
+        except exceptions.OwningProcessAbortedError:
+            log.info("Aborted",  repr(self.args.submission_key))
         else:
-            log.info("No confirmation of cancellation.")
+            log.info("No confirmation of process abort.")
 
     def list(self):
         """Print out the names of the submission paths."""
