@@ -243,29 +243,23 @@ class Submission(object):
         """Issue a status message, intended to be overridden/augmented for web status."""
         log.info(*args)
         
-    def transition(self, to_state, copy=None):
-        """Transition this submission from one state to the next, with states nominally:
-
-        1. Corresponding to a root directory into which the submission dir tree is hard-linked.
-
-        2. Being roughly:  creating, submitted, processing, failed, cancelled,
-        confirming, confirmed
-
-        cancelled can be either a process cancellation or a confirmation cancellation.
+    def transition(self, to_state, **added_params):
+        """Transition this submission to `to_state` by moving it's submission directory
+        to the `to_state` directory and updating the .yaml manifest.
         """
         from_state = self.submission_state
         from_path = self.path(check_state(from_state))
         to_path = self.path(check_state(to_state))
         self.push_status("Transitioning", srepr(self.submission_key), "from", srepr(from_state), "to", srepr(to_state))
-        if copy is None and from_state in CLIENT_STATES and to_state in SERVER_STATES:
-            self.push_status("Copying", srepr(from_path), "to", srepr(to_path), "to change ownership.")
+        if from_state in CLIENT_STATES and to_state in SERVER_STATES:
+            self.push_status("Copying", srepr(from_path), "to", srepr(to_path)) # , "to change ownership.")
             utils.copytree(from_path, to_path, fnc_file=self.push_status)
             shutil.rmtree(from_path)
         else:
             self.push_status("Moving", srepr(from_path), "to", srepr(to_path))
             shutil.move(self.path(from_state), self.path(to_state))
         self.submission_state = to_state
-        self.save(self.path(to_state, "submission.yaml"))
+        self.save(self.path(to_state, "submission.yaml"), **added_params)
 
     def __repr__(self):
         """Return the string representation of a Submission object."""
@@ -279,9 +273,9 @@ class Submission(object):
         utils.create_path(self.path("creating", "renamed_files"), mode=0o770)
         utils.create_path(self.path("submitted"), mode=0o770)
 
-    def save(self, yaml_path=None, added_params={}):
+    def save(self, yaml_path=None, **added_params):
         """Given file submission parameters and files,  serialize the submission to the CRDS server file system."""
-        self.create_subdirs()
+        # self.create_subdirs()
         if yaml_path is None:
             yaml_path = self.path("creating", "submission.yaml")
         utils.ensure_dir_exists(yaml_path, mode=0o770)
@@ -297,6 +291,7 @@ class Submission(object):
         """Clasd method:  Load a submission object from the given `yaml_path`."""
         with open(yaml_path, "r") as spec_file:
             params = yaml.load(spec_file.read())
+            params.update(params.pop("keys"))
         return cls(**params)
 
     @property

@@ -14,15 +14,6 @@ import os
 
 from crds import python23
 
-if sys.version_info < (3, 0, 0):
-    import HTMLParser as parser_mod
-    from urllib2 import urlopen
-    unescape = parser_mod.HTMLParser().unescape
-else:
-    import html.parser as parser_mod
-    from urllib.request import urlopen
-    from html import unescape
-
 from crds import log, config
 
 from crds import exceptions
@@ -118,7 +109,7 @@ class CheckingProxy(object):
         try:
             # context = ssl.create_default_context()
             # channel = urlopen(url, parameters, context=context)
-            channel = urlopen(url, parameters)
+            channel = python23.urlopen(url, parameters)
             return channel.read().decode("utf-8")
         except Exception as exc:
             raise exceptions.ServiceError("CRDS jsonrpc failure " + repr(self.__service_name) + " " + str(exc))
@@ -128,7 +119,7 @@ class CheckingProxy(object):
     def __call__(self, *args, **kwargs):
         jsonrpc = self._call(*args, **kwargs)
         if jsonrpc["error"]:
-            decoded = str(unescape(jsonrpc["error"]["message"]))
+            decoded = str(python23.unescape(jsonrpc["error"]["message"]))
             raise self.classify_exception(decoded)
         else:
             result = crds_decode(jsonrpc["result"])

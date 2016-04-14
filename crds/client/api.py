@@ -14,11 +14,6 @@ import re
 import zlib
 from crds import python23
 
-if sys.version_info < (3,0,0):
-    from urllib2 import urlopen
-else:
-    from urllib.request import urlopen
-
 from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
@@ -383,12 +378,17 @@ def get_submission_info(observatory, username):
     """
     return utils.Struct(S.get_submission_info(observatory, username))
 
-def jpoll_pull_messages(key, since=None):
+def jpoll_pull_messages(key, since_id=None):
     """Return a list of jpoll json message objects from the channel associated
     with `key` sent after datetime string `since` or since the last pull if 
     since is not specified.
     """
-    return [utils.Struct(msg) for msg in S.jpoll_pull_messages(key, since)]
+    messages = []
+    for msg in S.jpoll_pull_messages(key, since_id):
+        decoded = utils.Struct(msg)
+        decoded.data = python23.unescape(decoded.data)
+        messages.append(decoded)
+    return messages
 
 def jpoll_abort(key):
     """Request that the process writing to jpoll terminate on its next write."""

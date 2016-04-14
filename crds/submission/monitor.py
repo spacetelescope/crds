@@ -11,7 +11,9 @@ from __future__ import absolute_import
 import sys
 import time
 
-from crds import log, cmdline
+import numpy as np
+
+from crds import log, cmdline, timestamp
 from crds.client import api
 from crds.log import srepr
 from crds import exceptions
@@ -26,6 +28,10 @@ class MonitorScript(cmdline.Script):
 
     epilog = """
 """
+
+    def __init__(self, *args, **keys):
+        super(MonitorScript, self).__init__(*args, **keys)
+        self._last_id = 0
 
     def add_args(self):
         """Add class-specifc command line parameters."""
@@ -43,11 +49,15 @@ class MonitorScript(cmdline.Script):
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
                 exit_flag = handler(message)
             time.sleep(self.args.poll_delay)
+        return exit_flag
 
-    def _poll_status(self):
+    def _poll_status(self, since=None):
         """Use network API to pull status messages from server."""
         try:
-            return api.jpoll_pull_messages(self.args.submission_key)
+            messages = api.jpoll_pull_messages(self.args.submission_key, since_id=self._last_id)
+            if messages:
+                self._last_id = np.max([int(msg.id) for msg in messages])
+            return messages
         except exceptions.StatusChannelNotFoundError:
             log.verbose("Channel", srepr(self.args.submission_key), 
                         "not found.  Waiting for processing to start.")
@@ -63,7 +73,7 @@ class MonitorScript(cmdline.Script):
         return log.format("REMOTE:", *params).strip()
 
     def handle_log_message(self, message):
-        """Early API has only one message format,  "log_message".  Issur message info
+        """Early API has only one message format,  "log_message".  Issue message info
         and continue monitoring.
         """
         log.info(self.format_remote(message.data))
@@ -76,8 +86,15 @@ class MonitorScript(cmdline.Script):
 
     def handle_done(self, message):
         """Generic "done" handler issue info() message and stops monitoring / exits."""
-        log.info(self.format_remote("Processing complete:", message.data))
-        return True
+        if message.status == 0:
+            log.info(self.format_remote("COMPLETE:", message.data))
+        elif message.status == 1:
+            log.info(self.format_remote("FAILED:", message.data))
+        elif message.status == 2:
+            log.info(self.format_remote("CANCELLED:", message.data))
+        else:
+            log.info(self.format_remote("DONE:", message))
+        return message.data
 
     def handle_cancel(self, message):
         """Generic "cancel" handler reports on commanded cancellation of remote process
