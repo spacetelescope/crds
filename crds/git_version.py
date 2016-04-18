@@ -1,6 +1,6 @@
-__version__ = '6f51336'
+__version__ = 'c7e29a1'
 
 __full_version_info__ = '''
 branch: master
-sha1: 6f51336
+sha1: c7e29a1
 '''
