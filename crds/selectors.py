@@ -310,19 +310,27 @@ class Selector(object):
                          {'parameters': ('USEAFTER',),
                           'selections': [(('1996-10-01 00:00:00',),
                                           's7g1700ql_dead.fits')]})]}
+
+        NOTE on N/A modes:
+        
+        Some modes can be defined as N/A by replacing sub-selectors and/or filenames
+        with N/A as the return value.   Where sub-selectors are omitted,  the length
+        of selections and parameters varies.   The implementation below
         """
         flat = []
         subpars = []
         for key, val in self._raw_selections:
             if isinstance(val, Selector):
                 nested = val.todict_flat()
-                subpars = nested["parameters"]
+                latest_pars = nested["parameters"]
                 # XXX hack!  convert or-globs to comma separated strings for web rendering
                 key = tuple([", ".join(str(parval).split("|")) for parval in self.fix_singleton_match_case(key)])
                 flat.extend([self.fix_singleton_match_case(key) + row for row in nested["selections"]])
             else:
-                subpars = ["REFERENCE"]
+                latest_pars = ["REFERENCE"]
                 flat.extend([self.fix_singleton_match_case(key) + (val,)])
+            if len(latest_pars) > len(subpars):
+                subpars = latest_pars
         pars = list(self.todict_parameters()) + subpars
         return {
             "parameters" : pars,
