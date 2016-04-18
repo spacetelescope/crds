@@ -313,7 +313,7 @@ def locate_dir(instrument, mode=None):
         config.check_crds_ref_subdir_mode(mode)
     crds_refpath = config.get_crds_refpath("jwst")
     if mode == "instrument":   # use simple names inside CRDS cache.
-        rootdir = os.path.join(crds_refpath, instrument)
+        rootdir = os.path.join(crds_refpath, instrument.lower())
         if not os.path.exists(rootdir):
             utils.ensure_dir_exists(rootdir + "/locate_dir.fits")
     elif mode == "flat":    # use original flat cache structure,  all instruments in same directory.
