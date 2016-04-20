@@ -155,7 +155,7 @@ class ListScript(cmdline.ContextsScript):
         """Dump out the header associated with a reference file."""
         old = config.ALLOW_SCHEMA_VIOLATIONS.set(True)
         header = data_file.get_unconditioned_header(path)
-        self._print_lines(path, str(log.PP(header)))
+        self._print_lines(path, str(log.PP(header)).splitlines())
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
 
     def _print_lines(self, path, lines):
