@@ -52,6 +52,17 @@ class ListScript(cmdline.ContextsScript):
     The paths of locally cached references (files already synced to your computer) can be listed:
     
     % python -m crds.list --cached-references
+
+    In both cases adding --full-path causes the path of the file within the CRDS cache to be printed.
+
+    The contents of mappings or references (header only) can be printed to stdout like this:
+
+    % python -m crds.list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
+    CRDS  : INFO     Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
+    CRDS  : INFO     Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
+    /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    /cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+
     """
     
     def add_args(self):
@@ -69,8 +80,10 @@ class ListScript(cmdline.ContextsScript):
             help="prints matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
             help="print CRDS configuration information.")
-        self.add_argument("--cat", nargs="+", dest="cat", metavar="FILES",
+        self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
             help="print the text of the specified mapping files.")
+        self.add_argument("--add-filenames", action="store_true",
+            help="prefix each line of a cat'ed file with the filename.")
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
@@ -91,7 +104,7 @@ class ListScript(cmdline.ContextsScript):
             self.list_datasets()
         if self.args.config:
             self.list_config()
-        if self.args.cat:
+        if self.args.cat is not None:
             self.cat_files()
         if self.args.operational_context:
             print(self.default_context)
@@ -109,8 +122,17 @@ class ListScript(cmdline.ContextsScript):
     def cat_files(self):
         """Print out the files listed after --cat"""
         self.args.files = self.args.cat   # determine observatory from --cat files.
-        for name in self.files:
-            path = self._cat_banner(name)
+
+        # --cat files...   specifying *no* files still triggers --cat logic
+        # XXXX not allowed --files files... @-files are permitted, containing file lists
+        # --contexts context-specifiers [including --all --last --range...]
+        # context specifiers can be symbolic and will be resolved.
+        catted_files = self.args.cat + self.contexts
+
+        # This could be expanded to include the closure of mappings or references
+        for name in catted_files:
+            path = self.locate_file(name)
+            path = self._cat_banner(path)
             if config.is_reference(path):
                 self._cat_header(path)
             else:
@@ -127,14 +149,22 @@ class ListScript(cmdline.ContextsScript):
     def _cat_text(self, path):
         """Dump out the contexts of a text file."""
         with open(path) as pfile:
-            print(pfile.read())
+            self._print_lines(path, pfile.readlines())
             
-    def _cat_header(self, pfile):
+    def _cat_header(self, path):
         """Dump out the header associated with a reference file."""
         old = config.ALLOW_SCHEMA_VIOLATIONS.set(True)
-        header = data_file.get_unconditioned_header(pfile)
-        print(log.PP(header))
+        header = data_file.get_unconditioned_header(path)
+        self._print_lines(path, str(log.PP(header)))
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
+
+    def _print_lines(self, path, lines):
+        """Print `lines` to stdout,  optionally prefixing each line with `path`."""
+        for line in lines:
+            if self.args.add_filenames:
+                print(path + ":", line.rstrip())
+            else:
+                print(line.rstrip())
 
     def list_references(self):
         """Consult the server and print the names of all references associated with
