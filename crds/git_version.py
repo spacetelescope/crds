@@ -1,6 +1,6 @@
-__version__ = 'c7e29a1'
+__version__ = '6c4a49d'
 
 __full_version_info__ = '''
-branch: master
-sha1: c7e29a1
+branch: list-cat-mappings
+sha1: 6c4a49d
 '''
