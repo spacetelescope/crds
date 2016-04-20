@@ -678,7 +678,8 @@ class Selector(object):
     def _delete(self, selections, terminal):
         """Remove all instances of `terminal` from `selections`.   Directly mutates selections."""
         deleted = 0
-        for i, selection in enumerate(selections):
+        for i in range(len(selections)-1,-1,-1):
+            selection = selections[i]
             choice = selection[1]
             if choice == terminal:
                 log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, selection[0], terminal))
