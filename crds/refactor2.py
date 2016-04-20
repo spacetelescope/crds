@@ -7,7 +7,8 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline, config, sync, certify, diff, matches, data_file)
+from crds import (config, log, utils, data_file, rmap)
+from crds import (cmdline, diff, sync, certify, matches)
 from crds import exceptions as crexc
 from crds.log import srepr
 import crds
@@ -192,18 +193,20 @@ def set_rmap_parkey(rmapping, new_filename, parkey, *args, **keys):
     """Set the parkey of `rmapping` to `parkey` and write out to `new_filename`.
     """
     log.info("Setting parkey, removing all references from", srepr(rmapping.basename))
+    pktuple = eval(parkey)
+    required_keywords = tuple(utils.flatten(pktuple))
     refnames = rmapping.reference_names()
-    references_headers = { refname : get_refactoring_header(rmapping.filename, refname)
+    references_headers = { refname : get_refactoring_header(rmapping.filename, refname, required_keywords)
                            for refname in refnames }
     rmapping = rmap_delete_references(rmapping.filename, new_filename, refnames)
     log.info("Setting parkey", srepr(parkey), "in", srepr(rmapping.basename))
-    rmapping.header["parkey"] = eval(parkey)
+    rmapping.header["parkey"] = pktuple
     rmapping.write(new_filename)
     rmapping = rmap.load_mapping(new_filename)
     rmapping = rmap_insert_references_by_matches(new_filename, new_filename, references_headers)
     return rmapping
 
-def get_refactoring_header(rmapping, refname):
+def get_refactoring_header(rmapping, refname, required_keywords):
     """Create a composite header which is derived from the file contents overidden by any values
     as they appear in the rmap.
     """
@@ -211,7 +214,7 @@ def get_refactoring_header(rmapping, refname):
     # A fallback source of information is the reference file headers
     header = rmapping.get_refactor_header(
         rmap.locate_file(refname, rmapping.observatory),
-        extra_keys=("META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS"))
+        extra_keys=("META.OBSERVATION.DATE", "META.OBSERVATION.TIME", "DATE-OBS","TIME-OBS") + required_keywords)
     # The primary source of information is the original rmap and the matching values defined there
     headers2 = matches.find_match_paths_as_dict(rmapping.filename, refname)
     # Combine the two,  using the rmap values to override anything duplicated in the reffile header
