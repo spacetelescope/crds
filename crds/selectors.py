@@ -682,6 +682,8 @@ class Selector(object):
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
+                if not len(choice.reference_names()):
+                    del selections[i]
         return deleted
     
     def insert(self, header, value, valid_values_map):
