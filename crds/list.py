@@ -63,6 +63,17 @@ class ListScript(cmdline.ContextsScript):
     /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     /cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
 
+    References need to be catted explicitly,  but the list can come from the above methods of listing references:
+
+    % python -m crds.list --cat jwst_nirspec_dark_0036.fits
+    CRDS  : INFO     Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
+    ########################################################################################################################
+    File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
+    ########################################################################################################################
+    {'A1_COL_C': '8.9600000e+002',
+    'A1_CONF1': '2.1846000e+004',
+    ...
+    }
     """
     
     def add_args(self):
@@ -82,6 +93,8 @@ class ListScript(cmdline.ContextsScript):
             help="print CRDS configuration information.")
         self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
             help="print the text of the specified mapping files.")
+        self.add_argument("--keywords", nargs="+", 
+            help="limited list of keywords to be catted from reference headers.")
         self.add_argument("--add-filenames", action="store_true",
             help="prefix each line of a cat'ed file with the filename.")
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
@@ -128,6 +141,8 @@ class ListScript(cmdline.ContextsScript):
         # --contexts context-specifiers [including --all --last --range...]
         # context specifiers can be symbolic and will be resolved.
         catted_files = self.args.cat + self.contexts
+        if not self.args.contexts or (self.default_context not in self.args.contexts):
+            catted_files.remove(self.default_context)
 
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
@@ -155,7 +170,15 @@ class ListScript(cmdline.ContextsScript):
         """Dump out the header associated with a reference file."""
         old = config.ALLOW_SCHEMA_VIOLATIONS.set(True)
         header = data_file.get_unconditioned_header(path)
-        self._print_lines(path, str(log.PP(header)).splitlines())
+        if self.args.keywords:
+            header2 = {}
+            for keyword in header:
+                for substr in self.args.keywords:
+                    if substr in keyword:
+                        header2[keyword] = header[keyword]
+        else:
+            header2 = header
+        self._print_lines(path, str(log.PP(header2)).splitlines())
         config.ALLOW_SCHEMA_VIOLATIONS.set(old)
 
     def _print_lines(self, path, lines):

@@ -594,19 +594,21 @@ selector = Bracket({
         r = rmap.ReferenceMapping.from_string(self.rmap_str, "./test.rmap", ignore_checksum=True)
         result = r.delete("bar.fits")
         result.write(self.result_filename)
+        log.verbose("result:\n", str(result))
         diffs = r.difference(result)
         log.verbose("diffs:", diffs)
         diffs = [diff for diff in diffs if "Selector" not in diff[-1]]
         assert len(diffs) == 2, "Fewer/more differences than expected: " + repr(diffs)
         for diff in diffs:
-            assert "deleted terminal" in diff[-1], "Bad difference " + repr(diff)
+            assert "deleted Bracket rule" in diff[-1], "Bad difference " + repr(diff)
         log.verbose("recursive delete result rmap:")
         log.verbose(open(self.result_filename).read())
     
     def test_1_recursive_use_rmap(self):
         r = rmap.load_mapping(self.result_filename)
         ref = r.get_best_ref(self.lookup_header)
-        assert ref.startswith("NOT FOUND All lookup attempts failed. last exception: No match found.")
+        log.verbose("ref:", ref)
+        assert ref.startswith("NOT FOUND list index out of range")
             
     def test_2_delete_fails(self):
         log.verbose("-"*60)
@@ -624,5 +626,6 @@ selector = Bracket({
     
         
 if __name__ == '__main__':
+    # log.set_verbose()
     unittest.main()
 
