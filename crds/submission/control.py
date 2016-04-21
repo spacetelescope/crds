@@ -46,6 +46,8 @@ only be cleared by a server admin.
         super(ControlSubmissionScript, self).add_args()
         self.add_argument("--submission-key", type=cmdline.process_key, default=None,
                           help="Name for a specific submission.")
+        self.add_argument("--username", type=str, default=None,
+                          help="Username of operator.")
         self.add_argument("--for-user", action="store_true",
                           help="Operate on all submissions for username.")
         self.add_argument("--any-user", action="store_true",

@@ -70,7 +70,7 @@ class MonitorScript(cmdline.Script):
         """Format tuple of message `params` in a standardized way for messages 
         coming from the remote process being monitored.
         """
-        return log.format("REMOTE:", *params).strip()
+        return log.format(">>", *params).strip()
 
     def handle_log_message(self, message):
         """Early API has only one message format,  "log_message".  Issue message info
@@ -86,15 +86,16 @@ class MonitorScript(cmdline.Script):
 
     def handle_done(self, message):
         """Generic "done" handler issue info() message and stops monitoring / exits."""
-        if message.status == 0:
-            log.info(self.format_remote("COMPLETE:", message.data))
-        elif message.status == 1:
-            log.info(self.format_remote("FAILED:", message.data))
-        elif message.status == 2:
-            log.info(self.format_remote("CANCELLED:", message.data))
+        status = message.data["status"]
+        if status == 0:
+            log.info(self.format_remote("COMPLETED:", message.data))
+        elif status == 1:
+            log.error(self.format_remote("FAILED:", message.data))
+        elif status == 2:
+            log.error(self.format_remote("CANCELLED:", message.data))
         else:
             log.info(self.format_remote("DONE:", message))
-        return message.data
+        return message.data["result"]
 
     def handle_cancel(self, message):
         """Generic "cancel" handler reports on commanded cancellation of remote process

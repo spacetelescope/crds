@@ -443,7 +443,8 @@ this command line interface must be members of the CRDS operators group
     def finish_parameters(self):
         """Finish up parameter setup which requires parsed command line arguments."""
         if self.args.derive_from_context in ["edit", "ops"]:
-            self.args.derive_from_context = self.observatory + "-" + self.args.derive_from_context
+            self.args.pmap_mode = "pmap_" + self.args.derive_from_context
+            self.args.derive_from_context = self.resolve_context(self.observatory + "-" + self.args.derive_from_context)
         self.user_name = self.args.username or os.getlogin()
 
     def main(self):
@@ -468,7 +469,7 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.monitor_processing:
             self.monitor_processing()
-            log.info("The submission can be confirmed or cancelled at:", self.submission.confirm_url)
+            log.info("Confirm/Cancel/Review at:", self.submission.confirm_url)
 
         log.standard_status()
 
