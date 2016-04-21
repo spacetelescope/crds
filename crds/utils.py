@@ -35,6 +35,24 @@ class Struct(dict):
 
 # ===================================================================
 
+def flatten(sequence):
+    """Given a sequence possibly containing nested lists or tuples,
+    flatten the sequence to a single non-nested list of primitives.
+
+    >>> flatten((('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')))
+    ['META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME', 'META.OBSERVATION.DATE', 'META.OBSERVATION.TIME']
+    """
+    flattened = []
+    for elem in sequence:
+        if isinstance(elem, (list, tuple)):
+            elem = flatten(elem)
+        else:
+            elem = [elem]
+        flattened.extend(elem)
+    return flattened
+
+# ===================================================================
+
 def traced(func):
     """Issue a verbose message showing parameters and possibly return val."""
     @functools.wraps(func)
