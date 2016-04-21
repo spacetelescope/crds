@@ -377,7 +377,7 @@ def dt_validate_mapping_invalid1():
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid1.rmap")
     >>> r.validate_mapping()
-    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') : '2002-03- 00:34:31' : UseAfter Invalid date/time format for ('DATE-OBS', 'TIME-OBS') value='2002-03- 00:34:31' exception is "Unknown numerical date format: '2002/03/ 00:34:31'"
+    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='CCDAMP' value='DDDD' is not in ('A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD', 'ABCD', 'N/A')
     >>> test_config.cleanup(old_state)
     """
 

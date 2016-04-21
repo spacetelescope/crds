@@ -48,7 +48,8 @@ class Validator(object):
         if self.info.presence not in ["R", "P", "E", "O"]:
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
         if not hasattr(self.__class__, "_values"):
-            self._values = self.condition_values(info)
+            self._values = self.condition_values([val for val in info.values if not val.upper().startswith("NOT_")])
+            self._not_values = self.condition_values([val[4:] for val in info.values if val.upper().startswith("NOT_")])
 
     def verbose(self, filename, value, *args, **keys):
         """Prefix log.verbose() with standard info about this Validator.  Unique message is in *args, **keys"""
@@ -62,9 +63,9 @@ class Validator(object):
         """Condition `value` to standard format for this Validator."""
         return value
 
-    def condition_values(self, info):
+    def condition_values(self, values):
         """Return the Validator-specific conditioned version of all the values in `info`."""
-        return sorted([self.condition(value) for value in info.values])
+        return sorted([self.condition(value) for value in values])
 
     def __repr__(self):
         """Represent Validator instance as a string."""
@@ -93,7 +94,7 @@ class Validator(object):
             return True
         if self.condition is not None:
             value = self.condition(value)
-        if not self._values:
+        if not (self._values or self._not_values):
             self.verbose(filename, value, "no .tpn values defined.")
             return True
         self._check_value(filename, value)
@@ -182,14 +183,21 @@ class KeywordValidator(Validator):
     def _check_value(self, filename, value):
         """Raises ValueError if `value` is not valid."""
         if self._match_value(value):
-            self.verbose(filename, value, "is in", repr(self._values))
+            if self._values:
+                self.verbose(filename, value, "is in", repr(self._values))
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
-                            str(log.PP(self._values)))
+                            str(log.PP(self._values)))    
+        if self._not_match_value(value):
+            raise ValueError("Value " + str(log.PP(value)) + " is disallowed.")
     
     def _match_value(self, value):
-        """Do a literal match of `value` to the values of this tpninfo."""
-        return value in self._values
+        """Do a literal match of `value` to the allowed values of this tpninfo."""
+        return value in self._values or not self._values
+    
+    def _not_match_value(self, value):
+        """Do a literal match of `value` to the disallowed values of this tpninfo."""
+        return value in self._not_values
     
 class RegexValidator(KeywordValidator):
     """Checks that a value matches TpnInfo values treated as regexes."""
@@ -227,20 +235,21 @@ class CharacterValidator(KeywordValidator):
 class LogicalValidator(KeywordValidator):
     """Validate booleans."""
     _values = ["T","F"]
+    _not_values = []
 
 # ----------------------------------------------------------------------------
 
 class NumericalValidator(KeywordValidator):
     """Check the value of a numerical keyword,  supporting range checking."""
-    def condition_values(self, info):
-        self.is_range = len(info.values) == 1 and ":" in info.values[0]
+    def condition_values(self, values):
+        self.is_range = len(values) == 1 and ":" in values[0]
         if self.is_range:
-            smin, smax = info.values[0].split(":")
+            smin, smax = values[0].split(":")
             self.min, self.max = self.condition(smin), self.condition(smax)
             assert self.min != '*' and self.max != '*', "TPN error, range min/max conditioned to '*'"
             values = None
         else:
-            values = KeywordValidator.condition_values(self, info)
+            values = KeywordValidator.condition_values(self, values)
         return values
 
     def _check_value(self, filename, value):
@@ -304,6 +313,7 @@ class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields."""
 
     _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
+    _not_values = []
 
     def _get_header_value(self, header):
         """Extract the PEDIGREE value from header,  checking any

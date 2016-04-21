@@ -310,19 +310,27 @@ class Selector(object):
                          {'parameters': ('USEAFTER',),
                           'selections': [(('1996-10-01 00:00:00',),
                                           's7g1700ql_dead.fits')]})]}
+
+        NOTE on N/A modes:
+        
+        Some modes can be defined as N/A by replacing sub-selectors and/or filenames
+        with N/A as the return value.   Where sub-selectors are omitted,  the length
+        of selections and parameters varies.   The implementation below
         """
         flat = []
         subpars = []
         for key, val in self._raw_selections:
             if isinstance(val, Selector):
                 nested = val.todict_flat()
-                subpars = nested["parameters"]
+                latest_pars = nested["parameters"]
                 # XXX hack!  convert or-globs to comma separated strings for web rendering
                 key = tuple([", ".join(str(parval).split("|")) for parval in self.fix_singleton_match_case(key)])
                 flat.extend([self.fix_singleton_match_case(key) + row for row in nested["selections"]])
             else:
-                subpars = ["REFERENCE"]
+                latest_pars = ["REFERENCE"]
                 flat.extend([self.fix_singleton_match_case(key) + (val,)])
+            if len(latest_pars) > len(subpars):
+                subpars = latest_pars
         pars = list(self.todict_parameters()) + subpars
         return {
             "parameters" : pars,
@@ -547,7 +555,7 @@ class Selector(object):
                         self.short_name + " required lookup parameter " + 
                         repr(name) + " is undefined.")
             
-    def _validate_value(self, name, value, valid_list):
+    def _validate_value(self, name, value, valid_list, runtime=True):
         """Verify that parameter `name` with `value` is in `valid_list` or
         meets some other generic criteria for validity.
         
@@ -566,14 +574,18 @@ class Selector(object):
         if value in valid_list or utils.condition_value(value) in valid_list:   # typical |-glob valid_list membership
             log.verbose("Value for", repr(name), "of", repr(value), "is in", repr(valid_list), verbosity=60)
             return
-        if "*" in valid_list or "ANY" in valid_list  or \
-                "N/A" in valid_list or not valid_list:   # some TPNs are type-only, empty list
-            log.verbose("Valid list for", repr(name), "is empty or includes wild cards. OK, no other check.", verbosity=60)
+        # Wild-cards in the rmap are handled here for the sake of runtime match headers
+        if runtime and ("*" in valid_list or "ANY" in valid_list or "N/A" in valid_list):
+            log.verbose("Valid list for", repr(name), "includes wild cards. OK, no other check.", verbosity=60)
+            return
+        # Some TPNs are type-only, empty list
+        if not valid_list:
+            log.verbose("Valid list for", repr(name), "is empty.  No other check.", verbosity=60)
             return
         if value.startswith("NOT"):
             log.verbose("NOT expression for", repr(name), "of", repr(value), 
                         "validating negated sub-expression value.", verbosity=60)
-            self._validate_value(name, value[len("NOT"):].strip(), valid_list)
+            self._validate_value(name, value[len("NOT"):].strip(), valid_list, runtime)
             return
         if esoteric_key(value) or value in ["*", "ANY", "N/A"]:   # exempt
             log.verbose("Value of", repr(name), "of", repr(value), 
@@ -582,8 +594,8 @@ class Selector(object):
         if value.lower().startswith("between"):
             log.verbose("Checking 'between' expression for", repr(name), "of", repr(value), verbosity=60)
             _btw, value1, value2 = value.split()
-            self._validate_value(name, value1, valid_list)
-            self._validate_value(name, value2, valid_list)
+            self._validate_value(name, value1, valid_list, runtime)
+            self._validate_value(name, value2, valid_list, runtime)
             return
         if len(valid_list) == 1 and ":" in valid_list[0]:   # handle ranges in .tpns as n1:n2
             min, max = [float(x) for x in valid_list[0].split(":")]  # normalize everything as float
@@ -598,7 +610,7 @@ class Selector(object):
         if name in self._substitutions and value in self._substitutions[name]:
             log.verbose("Value of", repr(name), "of", repr(value), "is substitution from", 
                         repr(value), "to", repr(self._substitutions[name])+". Checking subsititution value.", verbosity=60)
-            self._validate_value(name, self._substitutions[name][value], valid_list)
+            self._validate_value(name, self._substitutions[name][value], valid_list, runtime)
             return
         raise ValidationError(
             " parameter=" + repr(name) + " value=" + repr(value) + 
@@ -666,7 +678,8 @@ class Selector(object):
     def _delete(self, selections, terminal):
         """Remove all instances of `terminal` from `selections`.   Directly mutates selections."""
         deleted = 0
-        for i, selection in enumerate(selections):
+        for i in range(len(selections)-1,-1,-1):
+            selection = selections[i]
             choice = selection[1]
             if choice == terminal:
                 log.verbose("Deleting selection[%d] with key='%s' and terminal='%s'" % (i, selection[0], terminal))
@@ -674,6 +687,8 @@ class Selector(object):
                 deleted += 1
             elif isinstance(choice, Selector):
                 deleted += choice.delete(terminal)
+                if not len(choice.reference_names()):
+                    del selections[i]
         return deleted
     
     def insert(self, header, value, valid_values_map):
@@ -1823,9 +1838,12 @@ Restore original debug behavior:
                                   repr(self._parameters) + " for key " + repr(key))
         for i, name in enumerate(self._parameters):
             if name not in valid_values_map:
+                log.verbose("Unchecked", repr(name), "=", repr(key[i]))
                 continue
             for value in str(key[i]).split("|"):
-                self._validate_value(name, value, valid_values_map[name])
+                log.verbose("Checking", repr(name), "=", repr(key[i]), "against",
+                            valid_values_map[name])
+                self._validate_value(name, value, valid_values_map[name], runtime=False)
         for other in self.keys():
             if key != other and match_superset(other, key) and \
                 not different_match_weight(key, other):
@@ -2152,7 +2170,7 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
         parname = self._parameters[0]
         return self._validate_number(parname, header[parname])
 
-    def _validate_value(self, name, value, valid_list):
+    def _validate_value(self, name, value, valid_list, runtime=True):
         self._validate_number(name, value)
 
     @classmethod
@@ -2243,7 +2261,7 @@ class BracketSelector(Selector):
     def _validate_key(self, key, valid_values_map):
         return self._validate_number(self._parameters[0], key)
 
-    def _validate_value(self, name, value, valid_list):
+    def _validate_value(self, name, value, valid_list, runtime=True):
         self._validate_number(name, value)
 
     def _validate_header(self, header):
@@ -2478,7 +2496,7 @@ class SelectVersionSelector(Selector):
         """Keys effectively validated at __init__ time."""
         pass
 
-    def _validate_value(self, name, value, valid_list):
+    def _validate_value(self, name, value, valid_list, runtime=True):
         if value.replace("=","").strip() != "default":
             self._validate_number(name, value)
     
