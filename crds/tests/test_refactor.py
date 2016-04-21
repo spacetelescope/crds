@@ -51,10 +51,10 @@ def dt_refactor_delete_files():
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_delete.rmap").run()
-    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_delete.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), 'deleted terminal s7g1700gl_dead.fits')
+    (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_delete.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), 'deleted Match rule for s7g1700gl_dead.fits')
     1
 
-    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_delete.rmap", "none", "data/s7g1700gl_dead.fits", expected=("delete",))
+    >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_delete.rmap", "none", "data/s7g1700gl_dead.fits", expected=("delete_rule",))
     True
 
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete2.rmap data/foobar.fits")()  # doctest: +ELLIPSIS
