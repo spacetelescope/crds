@@ -15,7 +15,7 @@ and provide related services.
 
 Releases are `registered on PyPI <http://pypi.python.org/pypi/crds>`_,
 and development is occuring at the
-`project's subversion page <https://aeon.stsci.edu/ssb/trac/crds>`_.
+`project's github page <https://github.com/spacetelescope/crds>`_.
 
 For installation instructions, see the `online documentation HST https://hst-crds.stsci.edu/static/users_guide/index.html`_
 or  ``docs/install.rst`` in this source distribution.
