@@ -387,6 +387,12 @@ class RefactorScript(cmdline.Script):
 
     python -m crds.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
 
+    NOTE: In general,  when refactoring,  there are a number of CRDS and JWST calibration code data model
+    environment variables which control allowing or passing bad values.   As of now:
+
+    setenv CRDS_ALLOW_BAD_USEAFTER      1  # define bad or missing USEAFTER as 1900-01-01T00:00:00
+    setenv CRDS_ALLOW_SCHEMA_VIOLATIONS 1  # treat data model schema violations as warnings not errors
+    setenv PASS_INVALID_VALUES          1  # ask cal-code data model not to omit invalid values
     """
     
     def add_args(self):
@@ -426,6 +432,9 @@ class RefactorScript(cmdline.Script):
         
         if self.args.rmaps:   # clean up dead lines from file lists
             self.args.rmaps = [ self.resolve_context(mapping) for mapping in self.args.rmaps if mapping.strip() ]
+
+        if self.args.references:
+            self.args.references = [self.locate_file(reference) for reference in self.args.references]
 
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
