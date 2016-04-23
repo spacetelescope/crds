@@ -390,6 +390,7 @@ class RefactorScript(cmdline.Script):
     NOTE: In general,  when refactoring,  there are a number of CRDS and JWST calibration code data model
     environment variables which control allowing or passing bad values.   As of now:
 
+    setenv CRDS_ALLOW_BAD_PARKEY_VALUES 1  # leave bad parkey values as-is rather than failing
     setenv CRDS_ALLOW_BAD_USEAFTER      1  # define bad or missing USEAFTER as 1900-01-01T00:00:00
     setenv CRDS_ALLOW_SCHEMA_VIOLATIONS 1  # treat data model schema violations as warnings not errors
     setenv PASS_INVALID_VALUES          1  # ask cal-code data model not to omit invalid values
