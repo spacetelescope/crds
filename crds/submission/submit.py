@@ -80,7 +80,8 @@ def get_submission_info(observatory, username):
 def submission_state_paths(observatory, username, submission_key, state):
     """Return all the paths associated with the given `state` and parameters.
     If the submission key is None then all submissions for that user are
-    returned,  otherwise only the
+    returned,  otherwise only the submissions associated with that key are
+    returned.
     """
     subdir = get_submission_info(observatory, username).submission_dir
     if submission_key is None:
@@ -243,6 +244,11 @@ class Submission(object):
         """Issue a status message, intended to be overridden/augmented for web status."""
         log.info(*args)
         
+    def create_background_submission(self):
+        """Serialize this submission to the server submissions tree for background processing."""
+        self.save()
+        self.transition("submitted")
+
     def transition(self, to_state, **added_params):
         """Transition this submission to `to_state` by moving it's submission directory
         to the `to_state` directory and updating the .yaml manifest.
@@ -259,7 +265,8 @@ class Submission(object):
             self.push_status("Moving", srepr(from_path), "to", srepr(to_path))
             shutil.move(self.path(from_state), self.path(to_state))
         self.submission_state = to_state
-        self.save(self.path(to_state, "submission.yaml"), **added_params)
+        self.save(self.path(to_state, "submission-temp.yaml"), **added_params)
+        shutil.move(self.path(to_state, "submission-temp.yaml"), self.path(to_state, "submission.yaml"))
 
     def __repr__(self):
         """Return the string representation of a Submission object."""
@@ -304,16 +311,15 @@ class Submission(object):
         """Return the observatory locator module associted with this submission."""
         return utils.get_locator_module(self.observatory)
 
-    '''
-    Untested... 
-
     def destroy(self):
         """Wipe out this submission on the file system."""
+        log.info("Destroying:", repr(self.submission_key))
         for state in SUBMISSION_STATES:
             self.rmtree_no_fail(self.path(state))
 
     def delete_files(self):
         """Delete the submitted files but retain the other portions of the submission."""
+        log.info("Deleting file artifacts:",  repr(self.submission_key))
         for state in SUBMISSION_STATES:
             self.rmtree_no_fail(state, "uploaded_files")
             self.rmtree_no_fail(state, "renamed_files")
@@ -321,9 +327,9 @@ class Submission(object):
 
     def rmtree_no_fail(self, *subtree):
         """Remove the specified `subtree` of this submission directory, ignore if non-existent."""
+        log.info("Removing", self.path(*subtree))
         with log.verbose_warning_on_exception("Failed removing", repr(subtree)):
             shutil.rmtree(self.path(*subtree))
-    '''
 
     def ensure_unique_uploaded_names(self):
         """Make sure there are no duplicate names in the submitted file list."""
@@ -458,18 +464,16 @@ this command line interface must be members of the CRDS operators group
         # self.trial_refactor_rules()
         # if log.errors() and not self.args.force_submission:
         #     return log.errors()
-        
-        with self.fatal("While creating submission request"):
-            self.submission = self.create_submission()
-            self.submission.save()
-            self.submission.transition("submitted")
+
+        self.submission = self.create_submission()
+        self.submission.create_background_submission()
 
         log.info("Submitted request:", srepr(self.submission.submission_key))
         log.info("Monitor submission at:", self.submission.monitor_url)
 
         if self.args.monitor_processing:
-            self.monitor_processing()
-            log.info("Confirm/Cancel/Review at:", self.submission.confirm_url)
+            result = self.monitor_processing()
+            log.info("Confirm/Cancel/Review at:", result)
 
         log.standard_status()
 

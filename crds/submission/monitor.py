@@ -106,14 +106,14 @@ polls the server for new messages at some periodic rate in seconds:
         and possibly why it was cancelled.   Then stops monitoring /exits.
         """
         log.warning(self.format_remote("Processing cancelled:", message.data))
-        return True
+        return message.data["result"]
 
     def handle_fail(self, message):
         """Generic "fail" handler reports on remote process fatal error / failure
         and issues an error() message, then stops monitoring /exits.
         """
         log.error(self.format_remote("Processing failed:",  message.data))
-        return True
+        return message.data["result"]
     
     def handle_error(self, message):
         """Generic "error" handler issues an error message from remote process and
