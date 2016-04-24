@@ -52,10 +52,12 @@ only be cleared by a server admin.
                           help="Operate on all submissions for username.")
         self.add_argument("--any-user", action="store_true",
                           help="Operate on submissions for any/all users.")
-        self.add_argument("--client", action="store_true",
-                          help="Operate the client initiating states which start the submission.")
-        self.add_argument("--active", action="store_true",
+        self.add_argument("--client-states", action="store_true",
+                          help="Operate the client-side initiating states which start the submission.")
+        self.add_argument("--active-states", action="store_true",
                           help="Operate on server submission states where CRDS is processing. Server admin only.")
+        self.add_argument("--live-states", action="store_true",
+                          help="Operate on both --client-states and --active-states,  omit done states.")
         self.add_argument("--all-states", action="store_true",
                           help="Operate on all submission states.  WARNING: can delete completed states.  Server admin only.")
         self.add_argument("--abort", action="store_true",
@@ -77,6 +79,12 @@ only be cleared by a server admin.
 
         if not (self.args.submission_key or self.args.for_user or self.args.any_user):
             log.fatal_error("You must either specify --submission-key or --for-user or --any-user.")
+
+        if not (self.args.client_states or self.args.active_states or self.args.all_states):
+            log.fatal_error("You must either specify --client-states, --active-states, --live-states, and/or --all-states.")
+
+        if self.args.live_states:
+            self.args.client_states = self.args.active_states = True
 
         if self.args.any_user:
             self.args.username = "*"
@@ -100,10 +108,10 @@ only be cleared by a server admin.
         and existing submissions.
         """
         paths = []
-        if self.args.client:
+        if self.args.client_states:
             paths += submit.client_paths(
                 self.observatory, self.username, self.args.submission_key)
-        if self.args.active:
+        if self.args.active_states:
             paths += submit.active_paths(
                 self.observatory, self.username, self.args.submission_key)
         if self.args.all_states:
