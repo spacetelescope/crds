@@ -13,7 +13,7 @@ import time
 
 import numpy as np
 
-from crds import log, cmdline, timestamp
+from crds import log, cmdline
 from crds.client import api
 from crds.log import srepr
 from crds import exceptions
@@ -21,12 +21,16 @@ from crds import exceptions
 # ===================================================================
 
 class MonitorScript(cmdline.Script):
-    """Command line script file submission script."""
+    """Command line script to dump real time submission progress messages."""
 
-    description = """
+    description = """Command line script to dump real time submission progress messages.
+
 """
 
-    epilog = """
+    epilog = """Monitoring is done with respect to a submission id/key and currently
+polls the server for new messages at some periodic rate in seconds:
+
+% python -m crds.submission.monitor --poll-delay 3.0 --submission-key miri-2016-04-24T04:20:34.112430-fred
 """
 
     def __init__(self, *args, **keys):
@@ -51,7 +55,7 @@ class MonitorScript(cmdline.Script):
             time.sleep(self.args.poll_delay)
         return exit_flag
 
-    def _poll_status(self, since=None):
+    def _poll_status(self):
         """Use network API to pull status messages from server."""
         try:
             messages = api.jpoll_pull_messages(self.args.submission_key, since_id=self._last_id)
