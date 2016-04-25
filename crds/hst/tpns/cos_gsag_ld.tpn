@@ -17,6 +17,7 @@ COMMENT             H        C         R
 INSTRUMENT          H        C         R    COS
 REFERENCE_FILE_TYPE H        C         R    GSAG
 DETECTOR            C        C         R    FUV
+CENWAVE             H        C         R    "BETWEEN 1055 1097",N/A
 PEDIGREE            C        C         R    INFLIGHT,GROUND,MODEL,DUMMY
 CHANGE_LEVEL        C        C         R    TRIVIAL,MODERATE,SEVERE
 OBSERVATION_BEGIN_DATE  C    C         O    &SYBDATE
