@@ -13,6 +13,7 @@
 INSTRUME            H        C         R    COS
 FILETYPE            H        C         R    "TIME DEPENDENT SENSITIVITY TABLE"
 DETECTOR            H        C         R    FUV,NUV
+CENWAVE             H        C         R    "BETWEEN 1105 1624",N/A
 OBSTYPE             H        C         R    SPECTROSCOPIC
 VCALCOS             H        C         R    
 USEAFTER            H        C         R    &SYBDATE
