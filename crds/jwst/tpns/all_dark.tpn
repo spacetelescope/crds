@@ -8,6 +8,6 @@
 # NAME  KEYTYPE  DATATYPE   PRESENCE    VALUES
 #----------------------------------------------------------
 META.SUBARRAY.NAME          H   C   R   NOT_GENERIC
-META.EXPOSURE.NFRAMES       H   I   R                   
-META.EXPOSURE.GROUPGAP      H   I   R                   
+META.EXPOSURE.NFRAMES       H   I   R   1                
+META.EXPOSURE.GROUPGAP      H   I   R   0
 META.EXPOSURE.NGROUPS       H   I   R                  

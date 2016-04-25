@@ -263,14 +263,19 @@ def get_filetype(original_name, filepath):
 
 def get_data_model_header(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
-    from jwst_lib import models
-    with log.augment_exception("JWST Data Model (jwst_lib.models)"):
-        with models.open(filepath) as d_model:
-            flat_dict = d_model.to_flat_dict(include_arrays=False)
+    flat_dict = get_data_model_flat_dict(filepath, needed_keys)
     d_header = sanitize_data_model_dict(flat_dict)
     d_header = reduce_header(filepath, d_header, needed_keys)
     header = cross_strap_header(d_header)
     return header
+
+def get_data_model_flat_dict(filepath, needed_keys=()):
+    """Get the header from `filepath` using the jwst data model."""
+    from jwst_lib import models
+    with log.augment_exception("JWST Data Model (jwst_lib.models)"):
+        with models.open(filepath) as d_model:
+            flat_dict = d_model.to_flat_dict(include_arrays=False)
+    return flat_dict
 
 '''
 from jwst_lib import models
