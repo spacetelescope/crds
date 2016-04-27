@@ -14,6 +14,7 @@
 INSTRUME            H        C         R    COS
 FILETYPE            H        C         R    "GAIN SAG REFERENCE TABLE"
 DETECTOR            H        C         R    FUV
+CENWAVE             H        C         R    "BETWEEN 1055 1097",N/A
 VCALCOS             H        C         R
 USEAFTER            H        C         R    &SYBDATE
 PEDIGREE            H        C         R    &PEDIGREE

@@ -377,7 +377,7 @@ class ConfigInfo(utils.Struct):
     @property
     def bad_files_set(self):
         """Return the set of references and mappings which are considered scientifically invalid."""
-        return set(self.get("bad_files", "").split())
+        return set(self.bad_files_list)
     
     @property
     def effective_mode(self):
@@ -427,10 +427,6 @@ def get_config_info(observatory):
         info.status = "cache"
         info.connected = False
         log.verbose("Using CACHED CRDS reference assignment rules last updated on", repr(info.last_synced))
-    # XXX For backward compatibility with older servers which don't have ".mappings" in server info.
-    if not hasattr(info, "mappings"):
-        with log.verbose_warning_on_exception("Failed fetching list of all CRDS mappings from server"):
-            info.mappings = api.list_mappings(observatory, "*.*")
     return info
 
 def update_config_info(observatory):
@@ -449,11 +445,11 @@ def cache_server_info(info, observatory):
     """Write down the server `info` dictionary to help configure off-line use."""
     path = config.get_crds_cfgpath(observatory)
 
-    bad_files_lines = "\n".join(info.get("bad_files","").split()) + "\n"
-
     server_config_path = os.path.join(path, "server_config")
     cache_atomic_write(server_config_path, pprint.pformat(info), "SERVER INFO")
 
+    # This is just a reference copy for debuggers,  the master is still the info file.
+    bad_files_lines = "\n".join(info.bad_files_list)
     bad_files_path = os.path.join(path, "bad_files.txt")
     cache_atomic_write(bad_files_path, bad_files_lines, "BAD FILES LIST")
 
