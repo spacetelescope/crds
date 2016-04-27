@@ -18,4 +18,6 @@ end
 
 rm -rf dist MANIFEST
 rm -rf build
+rm install.log
+git checkout -- crds/git_version.py
 
