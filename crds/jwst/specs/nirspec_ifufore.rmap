@@ -7,11 +7,11 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_ifufore_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE',),),
     'reference_to_dataset' : {
-        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : 'f98ed4ca1ae7500542f55c4c7043af2a4f208cab',
+    'sha1sum' : 'afddd14cffebcd87b30a2300aded95eedf8f3660',
     'suffix' : 'ifufore',
     'text_descr' : 'IFU fore',
 }

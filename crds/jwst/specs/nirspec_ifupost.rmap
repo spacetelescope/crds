@@ -7,11 +7,11 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_ifupost_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE',),),
     'reference_to_dataset' : {
-        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : '06f03509868cec10786f2c4c0c9ed4508d506287',
+    'sha1sum' : 'c4264392e21f719c66b88bb16b6806c36faed09d',
     'suffix' : 'ifupost',
     'text_descr' : 'IFU post',
 }

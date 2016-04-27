@@ -7,11 +7,11 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_ifuslicer_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.EXP_TYPE',),),
+    'parkey' : (('META.EXPOSURE.TYPE',),),
     'reference_to_dataset' : {
-        'EXP_TYPE' : 'META.INSTRUMENT.EXP_TYPE',
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
     },
-    'sha1sum' : 'dd0e6ab049397ee903fa6d85847c738b2686ee7f',
+    'sha1sum' : '3cda291146217d8d2f4319c9d5e6c2b0b6943cd6',
     'suffix' : 'ifuslicer',
     'text_descr' : 'IFU slicer',
 }
