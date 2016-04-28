@@ -45,7 +45,7 @@ class Validator(object):
     def __init__(self, info):
         self.info = info
         self.name = info.name
-        if self.info.presence not in ["R", "P", "E", "O"]:
+        if self.info.presence not in ["R", "P", "E", "O", "W"]:
             raise ValueError("Bad TPN presence field " + repr(self.info.presence))
         if not hasattr(self.__class__, "_values"):
             self._values = self.condition_values([val for val in info.values if not val.upper().startswith("NOT_")])
@@ -141,7 +141,8 @@ class Validator(object):
         """
         try:
             value = header[self.name]
-        except KeyError:
+            assert value != "UNDEFINED", "Undefined keyword " + repr(self.name)
+        except (KeyError, AssertionError):
             return self.__handle_missing()
         return self.__handle_excluded(value)
 
@@ -151,6 +152,8 @@ class Validator(object):
         """
         if self.info.presence in ["R","P"]:
             raise MissingKeywordError("Missing required keyword " + repr(self.name))
+        elif self.info.presence in ["W"]:
+            log.warning("Missing suggested keyword " + repr(self.name))
         else:
             # sys.exc_clear()
             log.verbose("Optional parameter " + repr(self.name) + " is missing.")
@@ -167,7 +170,7 @@ class Validator(object):
     @property
     def optional(self):
         """Return True IFF this parameter is optional."""
-        return self.info.presence == "O"
+        return self.info.presence in ["O","W"]
     
     def get_required_copy(self):
         """Return a copy of this validator with self.presence overridden to R/required."""
@@ -360,7 +363,18 @@ class JwstdateValidator(KeywordValidator):
     """Check &JWSTDATE date fields."""
     def _check_value(self, filename, value):
         self.verbose(filename, value)
-        timestamp.Jwstdate.get_datetime(value)
+        try:
+            timestamp.Jwstdate.get_datetime(value)
+        except ValueError:
+            try:
+                timestamp.Anydate.get_datetime(value)
+            except ValueError:
+                try:
+                    timestamp.Jwstdate.get_datetime(value.replace(" ","T"))
+                except ValueError:
+                    timestamp.Jwstdate.get_datetime(value)                    
+            log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
+                        "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
 
 # ----------------------------------------------------------------------------
 
