@@ -65,8 +65,8 @@ DEFAULT_SELECTORS = ("Match", "UseAfter")   # Normal selector hierarchy in rmap
 
 # When loading headers,  make sure each keyword in a tuple is represented with
 # the same value enabling any form to be used.
-CROSS_STRAPPED_KEYWORDS = [
-    ]
+CROSS_STRAPPED_KEYWORDS = {
+    }
 
 
 def test():
