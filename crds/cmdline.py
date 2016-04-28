@@ -546,9 +546,11 @@ class UniqueErrorsMixin(object):
     def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
         if self.args.dump_unique_errors:
+            log.info("="*20, "unique error classes", "="*20)
             for key in sorted(self.ue_mixin.messages):
                 log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
             log.info("Unique error types:", len(self.ue_mixin.messages))
+            log.info("="*20, "="*len("unique error classes"), "="*20)
         if self.args.all_errors_file:
             self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
         if self.args.unique_errors_file:
