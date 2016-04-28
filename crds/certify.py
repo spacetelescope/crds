@@ -1141,6 +1141,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
             help="Comparison reference for tables certification.")
         self.add_argument("-s", "--sync-files", dest="sync_files", action="store_true",
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
+        self.add_argument("-l", "--allow-schema-violations", action="store_true",
+            help="Report jwst_lib.models schema violations as warnings rather than as errors.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
@@ -1156,6 +1158,9 @@ For more information on the checks being performed,  use --verbose or --verbosit
             check_references = "exist"
         else:
             check_references = None
+
+        if self.args.allow_schema_violations:
+            config.ALLOW_SCHEMA_VIOLATIONS.set(True)
 
         # String spellings of "none" are from command line,  None is the default which means "use operational context".
         assert (self.args.comparison_context in [None, "none", "NONE", "None"]) or config.is_mapping_spec(self.args.comparison_context), \
