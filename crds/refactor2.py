@@ -287,7 +287,7 @@ def insert_rmap_references(rmapping, new_filename, *args, **keys):
     """
     categorized = keys.pop("categorized")
     references = categorized[(rmapping.instrument, rmapping.filekind)]
-    rmap_insert_references(rmapping.basename, new_filename, references)
+    rmap_insert_references(rmapping.filename, new_filename, references)
 
 # ============================================================================
 
@@ -300,7 +300,7 @@ def diff_rmap(rmapping, new_filename, *args, **keys):
 
 def certify_rmap(rmapping, new_filename, source_context=None, *args, **keys):
     """Certify `new_filename` to verify refactored rmap is valid."""
-    script = certify.CertifyScript("crds.certify {0} --comparison-context {1}".format(new_filename, source_context), 
+    script = certify.CertifyScript("crds.certify {0} --comparison-context {1}".format(new_filename, rmapping.filename), 
                                    reset_log=False, print_status=False)
     script()
 
@@ -616,8 +616,15 @@ class RefactorScript(cmdline.Script):
         pmap = crds.get_cached_mapping(self.source_context)
         self.args.rmaps = []
         for (instrument, filekind) in categorized:
-            with log.error_on_exception("Error fetching rmap for", (instrument, filekind)):
-                self.args.rmaps.append(pmap.get_imap(instrument).get_rmap(filekind).basename)
+            try:
+                self.args.rmaps.append(pmap.get_imap(instrument).get_rmap(filekind).filename)
+            except crexc.CrdsError:
+                log.info("Existing rmap for", (instrument, filekind), "not found.  Trying empty spec.")
+                spec_file = os.path.join(
+                    os.path.dirname(self.obs_pkg.__file__), "specs", instrument + "_" + filekind + ".rmap")
+                rmapping = rmap.asmapping(spec_file)
+                log.info("Loaded spec file from", repr(spec_file))
+                self.args.rmaps.append(spec_file)
         self.rmap_apply(insert_rmap_references, categorized=categorized)
             
 if __name__ == "__main__":
