@@ -281,6 +281,16 @@ def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
 
 # ============================================================================
 
+def insert_rmap_references(rmapping, new_filename, *args, **keys):
+    """Insert the appropriate references from the `categorized` references 
+    dictionary into `rmapping` writing the result to `new_filename`.
+    """
+    categorized = keys.pop("categorized")
+    references = categorized[(rmapping.instrument, rmapping.filekind)]
+    rmap_insert_references(rmapping.basename, new_filename, references)
+
+# ============================================================================
+
 def diff_rmap(rmapping, new_filename, *args, **keys):
     """Difference `rmapping` against refactored rmap `new_filename`."""
     script = diff.DiffScript("crds.diff {0} {1} --brief --mapping-text-diffs "
@@ -439,8 +449,11 @@ class RefactorScript(cmdline.Script):
 
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
-                old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
-                rmap_insert_references(old_rmap, new_rmap, self.args.references)
+                if self.args.old_rmap:
+                    old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
+                    rmap_insert_references(old_rmap, new_rmap, self.args.references)
+                else:
+                    self.insert_references()  # figure it all out relative to --source-context
             elif self.args.command == "delete_reference":
                 old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
                 rmap_delete_references(old_rmap, new_rmap, self.args.references)
@@ -596,6 +609,17 @@ class RefactorScript(cmdline.Script):
         """Apply crds.certify to the refactored rmaps."""
         self.rmap_apply(certify_rmap)
 
+    def insert_references(self):
+        """Insert files specified by --references into the appropriate rmaps identified by --source-context."""
+        self._setup_source_context()
+        categorized = self.categorize_files(self.args.references)
+        pmap = crds.get_cached_mapping(self.source_context)
+        self.args.rmaps = []
+        for (instrument, filekind) in categorized:
+            with log.error_on_exception("Error fetching rmap for", (instrument, filekind)):
+                self.args.rmaps.append(pmap.get_imap(instrument).get_rmap(filekind).basename)
+        self.rmap_apply(insert_rmap_references, categorized=categorized)
+            
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
 

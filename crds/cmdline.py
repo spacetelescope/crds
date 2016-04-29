@@ -13,7 +13,7 @@ import pdb
 import cProfile, pstats
 import io
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 
 from argparse import RawTextHelpFormatter
 
@@ -443,6 +443,16 @@ class Script(object):
     def get_file_properties(self, filename):
         """Return (instrument, filekind) corresponding to `file`, and '' for none."""
         return utils.get_file_properties(self.observatory, filename)
+
+    def categorize_files(self, filepaths):
+        """Organize files in list `filepaths` into a dictionary of lists as follows:
+            { (instrument, filekind) : filepath, ... }
+        """
+        categorized = defaultdict(list)
+        for path in filepaths:
+            instrument, filekind = self.get_file_properties(path)
+            categorized[(instrument, filekind)].append(path)
+        return categorized
 
     def fatal_error(self, *args, **keys):
         """Issue an error message and terminate the program."""
