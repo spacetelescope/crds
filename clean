@@ -3,7 +3,7 @@
 cd `dirname $0`
 
 if ( "$*" == "" ) then
-    set dirs="crds"
+    set dirs=". crds"
 else
     set dirs="$*"
 endif 
