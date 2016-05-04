@@ -15,12 +15,60 @@ from crds import python23
 
 # ===========================================================================
 
-def env_to_bool(varname, default=False):
-    """Convert the specified environment variable `varname` into a Python bool
-    defaulting to `default` if it's not defined in os.environ.
+def _get_crds_ini_path():
+    """Return the path to the CRDS rc file defining CRDS parameter settings."""
+    default_rc = os.path.expanduser("~/.crds.ini")
+    return os.environ.get("CRDS_INI_FILE", default_rc)
+
+# Re-reading and re-parsing the rc file is probably too slow not to cache.
+# Implement brute-force caching to avoid circular dependency with crds.utils
+CRDS_INI_PARSER = None
+
+def _get_crds_ini_parser():
+    """Load and return the environment from the CRDS rc file."""
+    global CRDS_INI_PARSER
+    if CRDS_INI_PARSER is None:
+        parser = python23.configparser.SafeConfigParser()
+        with log.warn_on_exception("Failed reading CRDS rc file"):
+            ini_path = _get_crds_ini_path()
+            if os.path.exists(ini_path):
+                parser.read(ini_path)
+                CRDS_INI_PARSER = parser
+            else:
+                log.verbose("No CRDS .ini file found at", repr(ini_path))
+    else:
+        parser = CRDS_INI_PARSER
+    return parser
+
+# Not caching this enables doing env overrides on-the-fly in os.environ,  including
+# the basic machinery of ConfigItem.set() which is a non-permanent set.
+def get_crds_env_str(section, varname, default):
+    """Return the compsite env obtained by reading the .crds.ini file and overriding
+    from os.environ.
     """
-    env_str = os.environ.get(varname, default)
-    return env_str_to_bool(varname, env_str)
+    if section:
+        ini_parser = _get_crds_ini_parser()
+        try:
+            ini_val = ini_parser.get(section, varname)
+        except python23.configparser.NoSectionError:
+            ini_val = None
+        except python23.configparser.NoOptionError:
+            ini_val = None
+    else:
+        ini_val = None
+    if ini_val in ["None", "none", "NONE"]:
+        ini_val = None
+    result = os.environ.get(varname, ini_val)  # os.environ overrides ini file.
+    return result if result is not None else default
+
+# ===========================================================================
+
+def env_to_bool(varname, default=False, section=None):
+     """Convert the specified environment variable `varname` into a Python bool
+     defaulting to `default` if it's not defined in os.environ.
+     """
+     env_str = get_crds_env_str(section, varname, default)
+     return env_str_to_bool(varname, env_str)
 
 def env_str_to_bool(varname, val):
     """Convert the boolean environment value string `val` to a Python bool
@@ -35,12 +83,12 @@ def env_str_to_bool(varname, val):
                          " for boolean env var " + repr(varname))
     return rval
 
-def env_to_int(varname, default):
-    """Convert the specified environment variable `varname` into a Python int
-    defaulting to `default` if it's not defined in os.environ.
-    """
-    env_str = os.environ.get(varname, default)
-    return env_str_to_int(varname, env_str)
+def env_to_int(varname, default, section=None):
+     """Convert the specified environment variable `varname` into a Python int
+     defaulting to `default` if it's not defined in os.environ.
+     """
+     env_str = get_crds_env_str(section, varname, default)
+     return env_str_to_int(varname, env_str)
 
 def env_str_to_int(varname, val):
     """Convert environment variable decimal value `val` from `varname` to an int and return it."""
@@ -67,7 +115,7 @@ class ConfigItem(object):
     >>> CFG.get()
     Traceback (most recent call last):
     ...
-    AssertionError: Invalid value for 'CRDS_CFG_ITEM' of '2'is not one of ['999', '1000']
+    AssertionError: Invalid value for 'CRDS_CFG_ITEM' of '2' is not one of ['999', '1000']
     >>> os.environ["CRDS_CFG_ITEM"] = "1000"    # cleaup .set() can't do
 
     >>> CFG.set("999")
@@ -77,39 +125,50 @@ class ConfigItem(object):
     >>> os.environ["CRDS_CFG_ITEM"]
     '999'
     """
-    def __init__(self, env_var, default, comment=None, valid_values=None, lower=False):
+    def __init__(self, env_var, default, comment=None, valid_values=None, lower=False, ini_section=None,
+                 fallback_function=None):
         """Defines CRDS environment item named `env_var` which has the value `default` when not specified anywhere."""
         self.env_var = env_var  # for starters,  this IS an env var,  bu conceptually it is an identifier.
         self.default = default
         self.comment = comment
         self.valid_values = valid_values
         self.lower = lower
+        self.ini_section = ini_section
+        self.fallback_function = fallback_function
         self.get()
 
     def check_value(self, value):
         """Verify that `value` is valid for this config item."""
         if self.valid_values:
             assert value in self.valid_values, "Invalid value for " + repr(self.env_var) + " of " + repr(value)  + \
-                "is not one of " + repr(self.valid_values)
+                " is not one of " + repr(self.valid_values)
         return value
 
     def get(self):
         """Return the value of this control item,  or the default if it is not set."""
-        value = os.environ.get(self.env_var, self.default)
-        if self.lower:
+        value = get_crds_env_str(self.ini_section, self.env_var, self.default)
+        if value is None and self.fallback_function:
+            value = self.fallback_function()
+        if isinstance(value, str) and self.lower:
             value = value.lower()
         self.check_value(value)
+        if value is None and self.fallback_function:
+            self._set(value)
         return value
     
     def set(self, value):
         """Set the value of the control item,  for the sake of this runtime session only."""
         old = self.get()
+        self._set(value)
+        return old
+
+    def _set(self, value):
+        """Set the value of the control item,  for the sake of this runtime session only."""
         if self.lower and isinstance(value, python23.string_types):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
-        return old
-
+ 
     def reset(self):
         """Restore this variable to it's default value,  clearing any environment setting."""
         os.environ.pop(self.env_var, None)

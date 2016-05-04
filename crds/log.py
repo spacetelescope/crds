@@ -66,7 +66,7 @@ ValueError: A tad more parent info : some vague deeply nested exception.
 When the exception trap mode is set to False,  the exception context managers
 let the exceptions pass through unmodified:
 
->>> old_trap = set_exception_trap(False)
+>>> old_trap = log.set_exception_trap(False)
 
 >>> with log.error_on_exception("Something bad happened and we trapped it"):
 ...     raise ValueError("some value was bad.")
@@ -304,7 +304,7 @@ def exception_trap_logger(func):
             yield
         except Exception as exc:
             reraise = func(*args + (":", str(exc)), **keys)
-            if CRDS_EXCEPTION_TRAP == False:
+            if not CRDS_EXCEPTION_TRAP:
                 # In python-2, distinction between raise and "raise something".  raise doesn't
                 # wreck the traceback,  raising a new improved exception does.
                 raise  

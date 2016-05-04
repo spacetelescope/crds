@@ -281,6 +281,16 @@ def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
 
 # ============================================================================
 
+def insert_rmap_references(rmapping, new_filename, *args, **keys):
+    """Insert the appropriate references from the `categorized` references 
+    dictionary into `rmapping` writing the result to `new_filename`.
+    """
+    categorized = keys.pop("categorized")
+    references = categorized[(rmapping.instrument, rmapping.filekind)]
+    rmap_insert_references(rmapping.filename, new_filename, references)
+
+# ============================================================================
+
 def diff_rmap(rmapping, new_filename, *args, **keys):
     """Difference `rmapping` against refactored rmap `new_filename`."""
     script = diff.DiffScript("crds.diff {0} {1} --brief --mapping-text-diffs "
@@ -290,7 +300,7 @@ def diff_rmap(rmapping, new_filename, *args, **keys):
 
 def certify_rmap(rmapping, new_filename, source_context=None, *args, **keys):
     """Certify `new_filename` to verify refactored rmap is valid."""
-    script = certify.CertifyScript("crds.certify {0} --comparison-context {1}".format(new_filename, source_context), 
+    script = certify.CertifyScript("crds.certify {0} --comparison-context {1}".format(new_filename, rmapping.filename), 
                                    reset_log=False, print_status=False)
     script()
 
@@ -321,11 +331,11 @@ class RefactorScript(cmdline.Script):
 
     1. Insert reference files A B C D... into rmap X creating rmap Y.
 
-    python -m crds.refactor2 insert_reference --old-rmap X --new-rmap Y  --references A B C D...
+    % python -m crds.refactor2 insert_reference --old-rmap X --new-rmap Y  --references A B C D...
 
     2. Delete references A B C D ... from rmap X creating rmap Y.
 
-    python -m crds.refactor2 delete_reference --old-rmap Y --new-rmap Y  --references A B C D...
+    % python -m crds.refactor2 delete_reference --old-rmap Y --new-rmap Y  --references A B C D...
 
     The set_header, del_header, del_parameter, set_parkey, and replace commands operate on
     the set of rmaps found under a source context which correspond to the specified instruments and types.
@@ -333,26 +343,26 @@ class RefactorScript(cmdline.Script):
     3. Set header key K to value V in rmap X creating rmap Y.
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
-    python -m crds.refactor2 set_header --header-key K --header-value V
+    % python -m crds.refactor2 set_header --header-key K --header-value V
 
     4. Delete header key K (e.g. description) in all the rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
 
-    python -m crds.refactor2 del_header --header-key K \\
+    % python -m crds.refactor2 del_header --header-key K \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     5. Remove single parameter name N (e.g. META.SUBARRAY.NAME) in all the rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This incudes modifying both parkey and all corresponding selector matching patterns.
 
-    python -m crds.refactor2 del_parameter --parameter-name N \\
+    % python -m crds.refactor2 del_parameter --parameter-name N \\
            --source-context C --instruments X Y Z ... --types A B C ...
 
     6. Set complete parkey in all rmaps found under
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This removes all the existing references and re-inserts them under the new parkey approach.
 
-    python -m crds.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
+    % python -m crds.refactor2 set_parkey --parkey "(('META.INSTRUMENT.DETECTOR','META.SUBARRAY.NAME',))" \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ... \\
             --fixers FGS1:GUIDER1 FGS2:GUIDER2 ANY:GENERIC FULL:GENERIC
      
@@ -360,7 +370,7 @@ class RefactorScript(cmdline.Script):
     source context C (e.g. jwst-edit) for types A B C... of instruments X Y Z...
     This is a simple text substitution.
 
-    python -m crds.refactor2 replace_text --old-text P1  --new-text P2 \\
+    % python -m crds.refactor2 replace_text --old-text P1  --new-text P2 \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     8. Add an unconditional load-time parameter value substitution to the rmap header.  For this example,
@@ -368,7 +378,7 @@ class RefactorScript(cmdline.Script):
     that match tuples in the rmap are transparently altered at load-time, and SUBARRAY values of GENERIC
     are re-interpreted as N/A for the purposes of matching.
 
-    python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+    % python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
             --source-context jwst-edit --instruments X Y Z ... --types A B C ...
 
     IOW,  this command adds/updates something similar to the following to the specified rmaps:
@@ -380,12 +390,27 @@ class RefactorScript(cmdline.Script):
     9. All of the above commands which elaborate rmaps to refactor based on --source-context can also be
     driven by a direct specification of .rmap names using --rmaps:
     
-    python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
+    % python -m crds.refactor2 set_substitution --parameter-name META.SUBARRAY.NAME  --old-text GENERIC  --new-text N/A \\
             --rmaps jwst_miri_dark_0007.rmap
 
     10. Add the nested UseAfter selector to early JWST rmaps based on Match-only.
 
-    python -m crds.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
+    % python -m crds.refactor2 add_useafter --rmaps jwst_miri_dark_0007.rmap
+
+    11. Mass reference insertion for rehearsing large file deliveries based on --source-context
+
+    It's possible to insert a list of --references into rmaps determined by each reference instrument and type
+    and the --source-context.  This mode is active for insert_reference if --old-rmap is not supplied.  If
+    the --source-context does not already contain a corresponding rmap for some reference,  CRDS attempts 
+    to fetch an empty-rmap-spec from the appropriate installed specs directory to use as the baseline rmap.
+
+    This mode allows testing a heterogeneous group of reference types without having to individually specify
+    the baseline rmap for each type.  By falling back to the type declaration specs as baseline rmaps, it 
+    supports reference insertion into rmaps not yet officially added to the --source-context.
+
+    % python -m crds.refactor2 insert_reference --references ./*.asdf --verbose --certify --diff
+
+    ---------------------------------------------------------------------------------------------------------
 
     NOTE: In general,  when refactoring,  there are a number of CRDS and JWST calibration code data model
     environment variables which control allowing or passing bad values.   As of now:
@@ -439,8 +464,11 @@ class RefactorScript(cmdline.Script):
 
         with log.error_on_exception("Refactoring operation FAILED"):
             if self.args.command == "insert_reference":
-                old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
-                rmap_insert_references(old_rmap, new_rmap, self.args.references)
+                if self.args.old_rmap:
+                    old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
+                    rmap_insert_references(old_rmap, new_rmap, self.args.references)
+                else:
+                    self.insert_references()  # figure it all out relative to --source-context
             elif self.args.command == "delete_reference":
                 old_rmap, new_rmap = self.resolve_context(self.args.old_rmap), self.resolve_context(self.args.new_rmap)
                 rmap_delete_references(old_rmap, new_rmap, self.args.references)
@@ -596,6 +624,24 @@ class RefactorScript(cmdline.Script):
         """Apply crds.certify to the refactored rmaps."""
         self.rmap_apply(certify_rmap)
 
+    def insert_references(self):
+        """Insert files specified by --references into the appropriate rmaps identified by --source-context."""
+        self._setup_source_context()
+        categorized = self.categorize_files(self.args.references)
+        pmap = crds.get_cached_mapping(self.source_context)
+        self.args.rmaps = []
+        for (instrument, filekind) in categorized:
+            try:
+                self.args.rmaps.append(pmap.get_imap(instrument).get_rmap(filekind).filename)
+            except crexc.CrdsError:
+                log.info("Existing rmap for", (instrument, filekind), "not found.  Trying empty spec.")
+                spec_file = os.path.join(
+                    os.path.dirname(self.obs_pkg.__file__), "specs", instrument + "_" + filekind + ".rmap")
+                rmapping = rmap.asmapping(spec_file)
+                log.info("Loaded spec file from", repr(spec_file))
+                self.args.rmaps.append(spec_file)
+        self.rmap_apply(insert_rmap_references, categorized=categorized)
+            
 if __name__ == "__main__":
     sys.exit(RefactorScript()())
 

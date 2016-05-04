@@ -368,6 +368,15 @@ def cross_strap_header(header):
         dmkey = schema.fits_to_dm(key)
         if dmkey is not None and dmkey not in crossed:
             crossed[dmkey] = val
+    from crds.jwst import CROSS_STRAPPED_KEYWORDS
+    for key in CROSS_STRAPPED_KEYWORDS:
+        if key not in crossed or crossed[key] == "UNDEFINED":
+            for key2 in CROSS_STRAPPED_KEYWORDS[key]:
+                if key2 in crossed and crossed[key2] != "UNDEFINED":
+                    crossed[key] = crossed[key2]
+                    break
+            else:
+                crossed[key] = "UNDEFINED"
     return crossed
 
 # ----------------------------------------------------------------------------------------------
