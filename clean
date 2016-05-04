@@ -12,7 +12,7 @@ if (-e ../CRDS_server) then
     set dirs="$dirs ../CRDS_server/sources"
 endif
 
-foreach pat ('*.orig' '*.pyc' 'build' '__pycache__' '*~' '.*~' '#*#' '#.*#' '*.err')
+foreach pat ('*.orig' '*.pyc' 'build' '__pycache__' '*~' '.*~' '#*#' '#.*#')
     find ${dirs} -name "${pat}" | xargs rm -rf
 end
 
