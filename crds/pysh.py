@@ -311,7 +311,7 @@ def usage(description, min_args, max_args=sys.maxsize, help=""):
     one parameter, max_args should also be 1.
     """
     progname = os.path.split(sys.argv[0])[1]
-    if not (min_args <= len(sys.argv)-1 <= max_args):
+    if not (min_args <= len(sys.argv)-1 <= max_args) or "--help" in sys.argv:
         fail("usage: " + progname + " "  + description + help)
 
 # =========================================================================
