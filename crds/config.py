@@ -9,6 +9,7 @@ import os
 import os.path
 import re
 import glob
+import getpass 
 
 from crds import log
 from crds import python23
@@ -573,6 +574,16 @@ CRDS_DEFAULT_SERVERS = {
 def get_server_url(observatory):
     """Return either the value of CRDS_SERVER_URL or an appropriate default server for `observatory`."""
     return os.environ.get("CRDS_SERVER_URL", CRDS_DEFAULT_SERVERS.get(observatory, None))
+
+# ===========================================================================
+
+PASSWORD = StrConfigItem("CRDS_PASSWORD", None, ini_section="authentication",
+    fallback_function=getpass.getpass,
+    comment="User's password on CRDS server, defaulting to interactive echo-less entry.")
+
+USERNAME = StrConfigItem("CRDS_USERNAME", None, ini_section="authentication",
+    fallback_function=getpass.getuser,
+    comment="User's username on CRDS server, defaulting to current login.")
 
 # ===========================================================================
 
