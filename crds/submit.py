@@ -175,6 +175,7 @@ this command line interface must be members of the CRDS operators group
         
     def certify_files(self):
         """Run the CRDS server Certify Files page on `filepaths`."""
+        self.session.login()
         self.ingest_files()
         self.jpoll_open()
         self.session.repost(
@@ -191,7 +192,7 @@ this command line interface must be members of the CRDS operators group
         
     def submit_mappings(self):
         return self._submission("/submit/mapping/")
-        
+
     def _submission(self, relative_url):
         assert self.args.description is not None, "You must supply a --description for this function."
         self.session.login()
