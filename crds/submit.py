@@ -54,6 +54,7 @@ this command line interface must be members of the CRDS operators group
         self.instruments_filekinds = None
         self.instrument = None
         self.jpoll_key = None
+        self.base_url = None
 
     def create_submission(self):
         """Create a Submission object based on script / command-line parameters."""
@@ -100,12 +101,14 @@ this command line interface must be members of the CRDS operators group
         
     def finish_parameters(self):
         """Finish up parameter setup which requires parsed command line arguments."""
-        self.username = self.args.username or config.USERNAME.get()
+        self.username = self.args.username or config.get_username()
+        password = config.get_password()
+        self.base_url = config.get_server_url(self.observatory)
         self.submission_info = api.get_submission_info(self.observatory, self.username)
         self.instruments_filekinds = utils.get_instruments_filekinds(self.observatory, self.files)
         self.instrument = list(self.instruments_filekinds.keys())[0] if len(self.instruments_filekinds) == 1 else "none"
         self.session = web.CrdsDjangoConnection(
-            locked_instrument=self.instrument, username=self.username, observatory=self.observatory)
+            locked_instrument=self.instrument, username=self.username, password=password, base_url=self.base_url)
         if self.args.derive_from_context in ["edit", "ops"]:
             self.pmap_mode = "pmap_" + self.args.derive_from_context
             self.pmap_name = self.resolve_context(self.observatory + "-" + self.args.derive_from_context)
@@ -174,7 +177,7 @@ this command line interface must be members of the CRDS operators group
         """Run the CRDS server Certify Files page on `filepaths`."""
         self.ingest_files()
         self.jpoll_open()
-        self.repost(
+        self.session.repost(
             "/certify/", pmap_name=self.pmap_name, pmap_mode=self.pmap_mode,
             compare_old_reference=not self.args.dont_compare_old_reference)        
 
