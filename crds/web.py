@@ -85,3 +85,6 @@ class CrdsDjangoConnection(object):
             next = next,
             )
     
+    def logout(self):
+        """Login to the CRDS website and proceed to relative url `next`."""
+        self.get("/logout/")

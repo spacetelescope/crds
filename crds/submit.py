@@ -59,7 +59,7 @@ this command line interface must be members of the CRDS operators group
     def create_submission(self):
         """Create a Submission object based on script / command-line parameters."""
         return utils.Struct(
-            uploaded_files = { os.path.basename(filepath) : filepath for filepath in self.files },
+            uploaded_files = { os.path.basename(filepath) : filepath for filepath in self.files } if self.args.files else {},
             description = self.args.description,
             username = self.username,
             creator_name = self.args.creator,
@@ -96,6 +96,8 @@ this command line interface must be members of the CRDS operators group
                           help="Which form of submission to perform.  Defaults to batch.")
         self.add_argument("--wipe", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
+        self.add_argument("--logout", action="store_true", 
+                          help="")
 
     # -------------------------------------------------------------------------------------------------
         
@@ -105,7 +107,7 @@ this command line interface must be members of the CRDS operators group
         password = config.get_password()
         self.base_url = config.get_server_url(self.observatory)
         self.submission_info = api.get_submission_info(self.observatory, self.username)
-        self.instruments_filekinds = utils.get_instruments_filekinds(self.observatory, self.files)
+        self.instruments_filekinds = utils.get_instruments_filekinds(self.observatory, self.files) if self.args.files else {}
         self.instrument = list(self.instruments_filekinds.keys())[0] if len(self.instruments_filekinds) == 1 else "none"
         self.session = web.CrdsDjangoConnection(
             locked_instrument=self.instrument, username=self.username, password=password, base_url=self.base_url)
@@ -180,7 +182,8 @@ this command line interface must be members of the CRDS operators group
         self.jpoll_open()
         self.session.repost(
             "/certify/", pmap_name=self.pmap_name, pmap_mode=self.pmap_mode,
-            compare_old_reference=not self.args.dont_compare_old_reference)        
+            compare_old_reference=not self.args.dont_compare_old_reference)
+        self.session.logout()
 
     # -------------------------------------------------------------------------------------------------
         
@@ -220,6 +223,10 @@ this command line interface must be members of the CRDS operators group
         
         self.finish_parameters()
 
+        if self.args.logout:
+            self.session.logout()
+            return
+
         self.submission = self.create_submission()
 
         if self.args.wipe:
@@ -233,6 +240,7 @@ this command line interface must be members of the CRDS operators group
             self.submit_references()
         elif self.args.submission_kind == "mappings":
             self.submit_mappings()
+        
 
 # ===================================================================
 
