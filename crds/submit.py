@@ -202,7 +202,7 @@ this command line interface must be members of the CRDS operators group
         self.ingest_files()
         response = self.jpoll_open()
         response = self.session.repost(
-            "/batch_submit_references/", 
+            relative_url,
             pmap_mode = self.pmap_mode,
             pmap_name = self.pmap_name,
             instrument = self.instrument,
