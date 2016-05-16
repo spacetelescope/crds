@@ -533,6 +533,8 @@ class UniqueErrorsMixin(object):
             help="Write out data names (ids or filenames) for first instance of unique errors to specified file.")
         self.add_argument("--all-errors-file", 
             help="Write out all err'ing data names (ids or filenames) to specified file.")
+        self.add_argument("--unique-threshold", type=int, default=1,
+            help="Only print unique errors with this many or more instances.")
 
     def log_and_track_error(self, data, instrument, filekind, *params, **keys):
         """Issue an error message and record the first instance of each unique kind of error,  where "unique"
@@ -557,8 +559,12 @@ class UniqueErrorsMixin(object):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
         if self.args.dump_unique_errors:
             log.info("="*20, "unique error classes", "="*20)
+            if self.args.unique_threshold > 1:
+                log.info("Limiting error class reporting to cases with at least", 
+                         self.args.unique_threshold, "instances.")
             for key in sorted(self.ue_mixin.messages):
-                log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
+                if self.ue_mixin.count[key] >= self.args.unique_threshold:
+                    log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
             log.info("Unique error types:", len(self.ue_mixin.messages))
             log.info("="*20, "="*len("unique error classes"), "="*20)
         if self.args.all_errors_file:
