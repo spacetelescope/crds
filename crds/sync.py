@@ -257,7 +257,7 @@ class SyncScript(cmdline.ContextsScript):
             log.error("--readonly-cache and --verify-context-change are incompatible,  a readonly cache cannot change.")
         if self.args.files:
             self.sync_explicit_files()
-            verify_file_list = self.args.files
+            verify_file_list = self.files
         elif self.args.fetch_sqlite_db:
             self.fetch_sqlite_db()
         elif self.contexts:
@@ -408,9 +408,9 @@ class SyncScript(cmdline.ContextsScript):
     # ------------------------------------------------------------------------------------------
     
     def sync_explicit_files(self):
-        """Cache `self.args.files`."""
+        """Cache `self.files`."""
         log.info("Syncing explicitly listed files.")
-        self.dump_files(self.default_context, self.get_files(self.args.files))
+        self.dump_files(self.default_context, self.files)
 
     # ------------------------------------------------------------------------------------------
     
