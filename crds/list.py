@@ -142,7 +142,10 @@ class ListScript(cmdline.ContextsScript):
         # context specifiers can be symbolic and will be resolved.
         catted_files = self.args.cat + self.contexts
         if not self.args.contexts or (self.default_context not in self.args.contexts):
-            catted_files.remove(self.default_context)
+            try:
+                catted_files.remove(self.default_context)
+            except Exception:
+                pass
 
         # This could be expanded to include the closure of mappings or references
         for name in catted_files:
