@@ -1,10 +1,7 @@
-#! /usr/bin/env pysh
-#-*-python-*-
-
-"""This module is a command line script which lists the reference and/or
-mapping files associated with the specified contexts by consulting the CRDS
-server.   More generally it's for printing out information on CRDS files.
+"""This module is used to verify the availability of a list of CRDS files
+at the archive web server.
 """
+
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
@@ -15,7 +12,6 @@ import sys
 import requests
 
 from crds import cmdline, log, config, utils
-from crds.client import api
 
 class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
@@ -26,24 +22,28 @@ class CheckArchiveScript(cmdline.Script):
     """
     
     def add_args(self):
+        """Add additional custom parameter for CheckArchiveScript."""
         self.add_argument('--files', nargs='*', dest='files', default=[],
-            help='names of files to check for archive availability.')
+                          help='names of files to check for archive availability.')
         super(CheckArchiveScript, self).add_args()
 
     @property
     def files(self):
-        return self.args.files
+        """Return the filename basenames specified by --files parameters or @-file."""
+        return [ os.path.basename(x) for x in self.get_files(self.args.files) ]
 
     @property
     def mapping_url(self):
+        """Return the base archive URL associated with mappings."""
         return self.server_info["mapping_url"][self.observatory]
 
     @property
     def reference_url(self):
+        """Return the base archive URL associated with references."""
         return self.server_info["reference_url"][self.observatory]
 
     def main(self):
-        """List files."""
+        """Check files for availability from the archive."""
         self.require_server_connection()
         log.info("Mapping URL:", repr(self.mapping_url))
         log.info("Reference URL:", repr(self.reference_url))
@@ -55,12 +55,14 @@ class CheckArchiveScript(cmdline.Script):
         log.standard_status()
 
     def archive_url(self, filename):
+        """Return the URL used to fetch `filename` from the archive."""
         if config.is_mapping(filename):
             return os.path.join(self.mapping_url, filename)
         else:
             return os.path.join(self.reference_url, filename)
 
     def verify_archive_file(self, filename):
+        """Verify the likely presence of `filename` on the archive web server.  Issue an ERROR if absent."""
         url = self.archive_url(filename)
         response = requests.head(url)
         if response.status_code in [200,]:
