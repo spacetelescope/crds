@@ -386,13 +386,19 @@ class TimingStats(object):
         count, rate = self.status(name)
         self.msg(count, "at", rate)
         
+    def raw_status(self, name):
+        self.stop()
+        counts = self.counts[name]
+        rate = self.counts[name] / self.elapsed.total_seconds()
+        return counts, rate
+
     def status(self, name):
         """Return human readable (count, rate) for `name`."""
-        self.stop()
-        count = human_format_number(self.counts[name]) + " " + name
-        rate = human_format_number(self.counts[name] / self.elapsed.total_seconds()) + " " + name+"-per-second"
-        return count, rate
-        
+        counts, rate = self.raw_status(name)
+        count_str = human_format_number(counts) + " " + name
+        rate_str = human_format_number(rate) + " " + name + "-per-second"
+        return count_str, rate_str
+
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
