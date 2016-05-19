@@ -14,11 +14,6 @@ import re
 import zlib
 from crds import python23
 
-if sys.version_info < (3,0,0):
-    from urllib2 import urlopen
-else:
-    from urllib.request import urlopen
-
 from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
@@ -73,6 +68,11 @@ __all__ = [
 
            "push_remote_context",
            "get_remote_context",
+
+           "get_submission_info",
+
+           "jpoll_pull_messages",
+           "jpoll_abort",
            ]
 
 # ============================================================================
@@ -372,6 +372,30 @@ def get_remote_context(observatory, pipeline_name):
 
 # ==============================================================================
 
+def get_submission_info(observatory, username):
+    """Return configuration parameters needed for command line file submission
+    relative to the current server, observatory, and username.
+    """
+    return utils.Struct(S.get_submission_info(observatory, username))
+
+def jpoll_pull_messages(key, since_id=None):
+    """Return a list of jpoll json message objects from the channel associated
+    with `key` sent after datetime string `since` or since the last pull if 
+    since is not specified.
+    """
+    messages = []
+    for msg in S.jpoll_pull_messages(key, since_id):
+        decoded = utils.Struct(msg)
+        decoded.data = python23.unescape(decoded.data)
+        messages.append(decoded)
+    return messages
+
+def jpoll_abort(key):
+    """Request that the process writing to jpoll terminate on its next write."""
+    return S.jpoll_abort(key)
+
+# ==============================================================================
+
 HARD_DEFAULT_OBS = "jwst"
 
 def get_server_observatory():
@@ -521,7 +545,7 @@ class FileCacher(object):
             self.remove_file(localpath)
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
                                      " from context " + srepr(self.pipeline_context) + 
-                                     " at server " + srepr(get_crds_server()) + 
+                                     " at CRDS server " + srepr(get_crds_server()) + 
                                      " with mode " + srepr(config.get_download_mode()) +
                                      " : " + str(exc))
         except:  #  mainly for control-c,  catch it and throw it.
@@ -566,7 +590,7 @@ class FileCacher(object):
             if status == 2:
                 raise KeyboardInterrupt("Interrupted plugin.")
             else:
-                raise CrdsDownloadError("Plugin download fail status = {}".format(status))
+                raise CrdsDownloadError("Plugin download fail status = {} with command: {}".format(status, srepr(plugin_cmd)))
         
     def get_data_rpc(self, filename):
         """Yields successive manageable chunks for `file` fetched via jsonrpc."""
@@ -599,6 +623,9 @@ class FileCacher(object):
                 stats.increment("bytes", config.CRDS_DATA_CHUNK_SIZE)
                 data = infile.read(config.CRDS_DATA_CHUNK_SIZE)
                 status = stats.status("bytes")
+        except:
+            raise CrdsDownloadError("Failed downloading", srepr(filename), "from url", srepr(url), ":",
+                                    str(sys.exc_info()[1]))
         finally:
             try:
                 infile.close()
