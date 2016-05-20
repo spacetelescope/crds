@@ -13,7 +13,7 @@ import requests
 
 from crds import cmdline, log, config, utils
 from crds.client import api
-from crds.python23 import *
+from crds import python23
 
 class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
@@ -107,7 +107,7 @@ the archive and appropriate CRDS server.
         for filename in self.files:
             self.verify_archive_file(filename)
             stats.increment("files")
-        self.dump_files()
+        self.print_files()
         stats.report_stat("files")
         log.standard_status()
 
@@ -131,8 +131,8 @@ the archive and appropriate CRDS server.
 
     def check_length(self, filename, response):
         """Check the content-length reported by HEAD against the CRDS database's file size."""
-        archive_size = long(response.headers["content-length"])
-        crds_size = long(self.file_info[filename]["size"])
+        archive_size = python23.long(response.headers["content-length"])
+        crds_size = python23.long(self.file_info[filename]["size"])
         if archive_size != crds_size:
             log.error("File", repr(filename), "available but length bad.  crds size:", crds_size,
                       "archive size:", archive_size)
@@ -140,7 +140,7 @@ the archive and appropriate CRDS server.
         else:
             log.verbose("File", repr(filename), "lengths agree:", crds_size)
 
-    def dump_files(self):
+    def print_files(self):
         """Print out info on all missing or bad files."""
         for filename in self.missing_files:
             self.dump_file(filename, "bad_missing")
