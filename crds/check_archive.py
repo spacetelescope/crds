@@ -13,6 +13,7 @@ import requests
 
 from crds import cmdline, log, config, utils
 from crds.client import api
+from crds.python23 import *
 
 class CheckArchiveScript(cmdline.Script):
     """Command line script for for checking archive file availability."""
