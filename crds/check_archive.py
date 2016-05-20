@@ -20,6 +20,10 @@ class CheckArchiveScript(cmdline.Script):
         
     epilog = """    
     """
+
+    def __init__(self, *args, **keys):
+        super(CheckArchiveScript, self).__init__(*args, **keys)
+        self.missing_files = []
     
     def add_args(self):
         """Add additional custom parameter for CheckArchiveScript."""
@@ -69,6 +73,8 @@ class CheckArchiveScript(cmdline.Script):
             log.verbose("File", repr(filename), "is available from", repr(url))
         else:
             log.error("File", repr(filename), "failed HTTP HEAD with code =", response.status_code, "from", repr(url))
+            self.missing_files.append(filename)
+            print(filename)
         
 if __name__ == "__main__":
     sys.exit(CheckArchiveScript()())
