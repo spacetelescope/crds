@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import absolute_import
 # The "crds" __version__ defined here should also reflect the behavior of 
 # crds.client
-__version__ = "6.0.1"   #  jwst_build6,  also change ../setup.cfg
+__version__ = "7.0.0"   #  jwst_build7,  also change ../setup.cfg
 
 # ============================================================================
 
