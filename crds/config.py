@@ -400,9 +400,8 @@ CRDS_REF_SUBDIR_MODE = "None"  # does not make cache consistent with env,  test 
 
 def get_crds_ref_subdir_mode(observatory):
     """Return the mode value defining how reference files are located."""
-    if CRDS_REF_SUBDIR_MODE is not "None":
-        mode = CRDS_REF_SUBDIR_MODE
-    else:
+    global CRDS_REF_SUBDIR_MODE
+    if CRDS_REF_SUBDIR_MODE in ["None", None]:
         mode_path = os.path.join(get_crds_cfgpath(observatory),  CRDS_SUBDIR_TAG_FILE)
         try:
             with open(mode_path) as pfile:
@@ -418,6 +417,9 @@ def get_crds_ref_subdir_mode(observatory):
             with log.verbose_on_exception("Failed saving default subdir mode to", repr(mode)):
                 set_crds_ref_subdir_mode(mode, observatory)
         check_crds_ref_subdir_mode(mode)
+        CRDS_REF_SUBDIR_MODE = mode
+    else:
+        mode = CRDS_REF_SUBDIR_MODE
     return mode
 
 def set_crds_ref_subdir_mode(mode, observatory):
@@ -1034,7 +1036,7 @@ def clear_crds_state():
     for var in list(os.environ.keys()):
         if var.startswith("CRDS_"):
             del os.environ[var]
-    CRDS_REF_SUBDIR_MODE = None
+    CRDS_REF_SUBDIR_MODE = "None"
     _CRDS_CACHE_READONLY = False
 
 # -------------------------------------------------------------------------------------
