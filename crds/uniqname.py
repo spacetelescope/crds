@@ -22,7 +22,7 @@ enhanced CDBS-style names with modified timestamps valid after 2016-01-01.
 The CRDS uniqame is nominally run as follows:
 
     % python -m crds.uniqname --files s7g1700gl_dead.fits --brief --standard
-    CRDS  : INFO     Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
+    CRDS - INFO - Rewriting 's7g1700gl_dead.fits' --> 'zc52141pl_dead.fits'
 
 If -s or --standard is added then routinely used switches are added as a
 predefined bundle.   Initially these are --add-keywords and --verify-file.

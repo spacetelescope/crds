@@ -1,101 +1,101 @@
-CRDS  : INFO     All DADSOPS tables: ['CHECK_CONSTRAINTS', 'COLUMNS', 'COLUMN_DOMAIN_USAGE', 'COLUMN_PRIVILEGES', 'CONSTRAINT_COLUMN_USAGE', 'CONSTRAINT_TABLE_USAGE', 'DOMAINS', 'DOMAIN_CONSTRAINTS', 'KEY_COLUMN_USAGE', 'MSreplication_objects', 'MSreplication_subscriptions', 'MSsavedforeignkeycolumns', 'MSsavedforeignkeyextendedproperties', 'MSsavedforeignkeys', 'MSsnapshotdeliveryprogress', 'MSsubscription_agents', 'PARAMETERS', 'REFERENTIAL_CONSTRAINTS', 'ROUTINES', 'ROUTINE_COLUMNS', 'SCHEMATA', 'SEQUENCES', 'TABLES', 'TABLE_CONSTRAINTS', 'TABLE_PRIVILEGES', 'VIEWS', 'VIEW_COLUMN_USAGE', 'VIEW_TABLE_USAGE', 'acs_a_data', 'acs_chip', 'acs_mama', 'acs_ref_data', 'acs_science', 'all_columns', 'all_objects', 'all_parameters', 'all_sql_modules', 'all_views', 'allocation_units', 'archive_data_set_all', 'archive_data_set_log_del', 'archive_data_set_old_ver', 'archive_files', 'archive_files_log_del', 'archive_files_old_ver', 'assemblies', 'assembly_files', 'assembly_modules', 'assembly_references', 'assembly_types', 'assoc_member', 'assoc_orphan', 'assoc_status', 'asymmetric_keys', 'authorized_users', 'availability_databases_cluster', 'availability_group_listener_ip_addresses', 'availability_group_listeners', 'availability_groups', 'availability_groups_cluster', 'availability_read_only_routing_lists', 'availability_replicas', 'backup_devices', 'certificates', 'change_tracking_databases', 'change_tracking_tables', 'check_constraints', 'column_store_dictionaries', 'column_store_segments', 'column_type_usages', 'column_xml_schema_collection_usages', 'columns', 'computed_columns', 'configurations', 'conversation_endpoints', 'conversation_groups', 'conversation_priorities', 'cos_a_data', 'cos_b_data', 'cos_c_data', 'cos_cumulative_images', 'cos_d_data', 'cos_ref_data', 'cos_science', 'cos_tv_exposures', 'cos_tv_int_data', 'cos_tv_ref_data', 'cos_tv_science', 'cos_tv_segments', 'credentials', 'crypt_properties', 'cryptographic_providers', 'dadsops_rep_test', 'data_spaces', 'database_audit_specification_details', 'database_audit_specifications', 'database_files', 'database_filestream_options', 'database_mirroring', 'database_mirroring_endpoints', 'database_permissions', 'database_principals', 'database_recovery_status', 'database_role_members', 'databases', 'default_constraints', 'destination_data_spaces', 'dm_audit_actions', 'dm_audit_class_type_map', 'dm_broker_activated_tasks', 'dm_broker_connections', 'dm_broker_forwarded_messages', 'dm_broker_queue_monitors', 'dm_cdc_errors', 'dm_cdc_log_scan_sessions', 'dm_clr_appdomains', 'dm_clr_loaded_assemblies', 'dm_clr_properties', 'dm_clr_tasks', 'dm_cryptographic_provider_properties', 'dm_database_encryption_keys', 'dm_db_file_space_usage', 'dm_db_fts_index_physical_stats', 'dm_db_index_usage_stats', 'dm_db_log_space_usage', 'dm_db_mirroring_auto_page_repair', 'dm_db_mirroring_connections', 'dm_db_mirroring_past_actions', 'dm_db_missing_index_details', 'dm_db_missing_index_group_stats', 'dm_db_missing_index_groups', 'dm_db_partition_stats', 'dm_db_persisted_sku_features', 'dm_db_script_level', 'dm_db_session_space_usage', 'dm_db_task_space_usage', 'dm_db_uncontained_entities', 'dm_exec_background_job_queue', 'dm_exec_background_job_queue_stats', 'dm_exec_cached_plans', 'dm_exec_connections', 'dm_exec_procedure_stats', 'dm_exec_query_memory_grants', 'dm_exec_query_optimizer_info', 'dm_exec_query_resource_semaphores', 'dm_exec_query_stats', 'dm_exec_query_transformation_stats', 'dm_exec_requests', 'dm_exec_sessions', 'dm_exec_trigger_stats', 'dm_filestream_file_io_handles', 'dm_filestream_file_io_requests', 'dm_filestream_non_transacted_handles', 'dm_fts_active_catalogs', 'dm_fts_fdhosts', 'dm_fts_index_population', 'dm_fts_memory_buffers', 'dm_fts_memory_pools', 'dm_fts_outstanding_batches', 'dm_fts_population_ranges', 'dm_fts_semantic_similarity_population', 'dm_hadr_auto_page_repair', 'dm_hadr_availability_group_states', 'dm_hadr_availability_replica_cluster_nodes', 'dm_hadr_availability_replica_cluster_states', 'dm_hadr_availability_replica_states', 'dm_hadr_cluster', 'dm_hadr_cluster_members', 'dm_hadr_cluster_networks', 'dm_hadr_database_replica_cluster_states', 'dm_hadr_database_replica_states', 'dm_hadr_instance_node_map', 'dm_hadr_name_id_map', 'dm_io_backup_tapes', 'dm_io_cluster_shared_drives', 'dm_io_pending_io_requests', 'dm_logpool_hashentries', 'dm_logpool_stats', 'dm_os_buffer_descriptors', 'dm_os_child_instances', 'dm_os_cluster_nodes', 'dm_os_cluster_properties', 'dm_os_dispatcher_pools', 'dm_os_dispatchers', 'dm_os_hosts', 'dm_os_latch_stats', 'dm_os_loaded_modules', 'dm_os_memory_allocations', 'dm_os_memory_broker_clerks', 'dm_os_memory_brokers', 'dm_os_memory_cache_clock_hands', 'dm_os_memory_cache_counters', 'dm_os_memory_cache_entries', 'dm_os_memory_cache_hash_tables', 'dm_os_memory_clerks', 'dm_os_memory_node_access_stats', 'dm_os_memory_nodes', 'dm_os_memory_objects', 'dm_os_memory_pools', 'dm_os_nodes', 'dm_os_performance_counters', 'dm_os_process_memory', 'dm_os_ring_buffers', 'dm_os_schedulers', 'dm_os_server_diagnostics_log_configurations', 'dm_os_spinlock_stats', 'dm_os_stacks', 'dm_os_sublatches', 'dm_os_sys_info', 'dm_os_sys_memory', 'dm_os_tasks', 'dm_os_threads', 'dm_os_virtual_address_dump', 'dm_os_wait_stats', 'dm_os_waiting_tasks', 'dm_os_windows_info', 'dm_os_worker_local_storage', 'dm_os_workers', 'dm_qn_subscriptions', 'dm_repl_articles', 'dm_repl_schemas', 'dm_repl_tranhash', 'dm_repl_traninfo', 'dm_resource_governor_configuration', 'dm_resource_governor_resource_pool_affinity', 'dm_resource_governor_resource_pools', 'dm_resource_governor_workload_groups', 'dm_server_audit_status', 'dm_server_memory_dumps', 'dm_server_registry', 'dm_server_services', 'dm_tcp_listener_states', 'dm_tran_active_snapshot_database_transactions', 'dm_tran_active_transactions', 'dm_tran_commit_table', 'dm_tran_current_snapshot', 'dm_tran_current_transaction', 'dm_tran_database_transactions', 'dm_tran_locks', 'dm_tran_session_transactions', 'dm_tran_top_version_generators', 'dm_tran_transactions_snapshot', 'dm_tran_version_store', 'dm_xe_map_values', 'dm_xe_object_columns', 'dm_xe_objects', 'dm_xe_packages', 'dm_xe_session_event_actions', 'dm_xe_session_events', 'dm_xe_session_object_columns', 'dm_xe_session_targets', 'dm_xe_sessions', 'endpoint_webmethods', 'endpoints', 'event_notification_event_types', 'event_notifications', 'events', 'extended_procedures', 'extended_properties', 'fgs_data', 'filegroups', 'filetable_system_defined_objects', 'filetables', 'fixed_target', 'foc_data', 'foc_ref_data', 'foreign_key_columns', 'foreign_keys', 'fos_data', 'fos_ref_data', 'fulltext_catalogs', 'fulltext_document_types', 'fulltext_index_catalog_usages', 'fulltext_index_columns', 'fulltext_index_fragments', 'fulltext_indexes', 'fulltext_languages', 'fulltext_semantic_language_statistics_database', 'fulltext_semantic_languages', 'fulltext_stoplists', 'fulltext_stopwords', 'fulltext_system_stopwords', 'function_order_columns', 'fuse_authorized_users', 'fuse_exposures', 'fuse_member', 'fuse_science', 'hrs_data', 'hrs_ref_data', 'hsp_data', 'hsp_ref_data', 'hst_notification_track', 'http_endpoints', 'identity_columns', 'index_columns', 'indexes', 'ingest_long_ext', 'internal_tables', 'key_constraints', 'key_encryptions', 'linked_logins', 'login_token', 'master_files', 'master_key_passwords', 'message_type_xml_schema_collection_usages', 'messages', 'module_assembly_usages', 'moving_target_position', 'nicmos_a_data', 'nicmos_b_data', 'nicmos_c_data', 'nicmos_ref_data', 'nicmos_science', 'nicmos_times', 'numbered_procedure_parameters', 'numbered_procedures', 'objects', 'oms_data', 'oms_summary', 'openkeys', 'otfc_calibration_fields', 'otfr_keyword_repair', 'otfr_request_stats', 'otfr_special_processing', 'parameter_type_usages', 'parameter_xml_schema_collection_usages', 'parameters', 'partition_functions', 'partition_parameters', 'partition_range_values', 'partition_schemes', 'partitions', 'pdq_severity_mapping', 'pdq_summary', 'plan_guides', 'procedures', 'registered_search_properties', 'registered_search_property_lists', 'registered_users', 'remote_logins', 'remote_service_bindings', 'request_files', 'request_files_all', 'request_operator_actions', 'requests', 'requests_all', 'resource_governor_configuration', 'resource_governor_resource_pool_affinity', 'resource_governor_resource_pools', 'resource_governor_workload_groups', 'retrieval_extensions', 'routes', 'scan_parameters', 'schemas', 'sci_inst_db_join', 'science', 'securable_classes', 'selective_xml_index_namespaces', 'selective_xml_index_paths', 'sequences', 'server_assembly_modules', 'server_audit_specification_details', 'server_audit_specifications', 'server_audits', 'server_event_notifications', 'server_event_session_actions', 'server_event_session_events', 'server_event_session_fields', 'server_event_session_targets', 'server_event_sessions', 'server_events', 'server_file_audits', 'server_permissions', 'server_principal_credentials', 'server_principals', 'server_role_members', 'server_sql_modules', 'server_trigger_events', 'server_triggers', 'servers', 'service_broker_endpoints', 'service_contract_message_usages', 'service_contract_usages', 'service_contracts', 'service_message_types', 'service_queue_usages', 'service_queues', 'services', 'shp_data', 'sms_data', 'soap_endpoints', 'spatial_index_tessellations', 'spatial_indexes', 'spatial_reference_systems', 'sql_dependencies', 'sql_expression_dependencies', 'sql_logins', 'sql_modules', 'stats', 'stats_columns', 'stis_a_data', 'stis_b_data', 'stis_c_data', 'stis_cumulative_images', 'stis_grand_mama', 'stis_ref_data', 'stis_science', 'symmetric_keys', 'synonyms', 'syscacheobjects', 'syscharsets', 'syscolumns', 'syscomments', 'sysconfigures', 'sysconstraints', 'syscurconfigs', 'syscursorcolumns', 'syscursorrefs', 'syscursors', 'syscursortables', 'sysdatabases', 'sysdepends', 'sysdevices', 'sysfilegroups', 'sysfiles', 'sysforeignkeys', 'sysfulltextcatalogs', 'sysindexes', 'sysindexkeys', 'syslanguages', 'syslockinfo', 'syslogins', 'sysmembers', 'sysmessages', 'sysobjects', 'sysoledbusers', 'sysopentapes', 'sysperfinfo', 'syspermissions', 'sysprocesses', 'sysprotects', 'sysreferences', 'sysremotelogins', 'sysservers', 'system_columns', 'system_components_surface_area_configuration', 'system_internals_allocation_units', 'system_internals_partition_columns', 'system_internals_partitions', 'system_objects', 'system_parameters', 'system_sql_modules', 'system_views', 'systypes', 'sysusers', 'table_types', 'tables', 'target_keyword', 'target_synonym', 'tcp_endpoints', 'trace_categories', 'trace_columns', 'trace_event_bindings', 'trace_events', 'trace_subclass_values', 'trace_xe_action_map', 'trace_xe_event_map', 'traces', 'transmission_queue', 'trigger_event_types', 'trigger_events', 'triggers', 'type_assembly_usages', 'types', 'user_token', 'via_endpoints', 'views', 'wfc3_a_data', 'wfc3_chip', 'wfc3_ref_data', 'wfc3_science', 'wfc3_times', 'wfc3_tv_chip', 'wfc3_tv_int_data', 'wfc3_tv_ref_data', 'wfc3_tv_science', 'wfc3_tv_times', 'wfpc2_primary_data', 'wfpc2_ref_data', 'wfpc2_secondary_data', 'wfpc_data', 'wfpc_group_data', 'wfpc_ref_data', 'xml_indexes', 'xml_schema_attributes', 'xml_schema_collections', 'xml_schema_component_placements', 'xml_schema_components', 'xml_schema_elements', 'xml_schema_facets', 'xml_schema_model_groups', 'xml_schema_namespaces', 'xml_schema_types', 'xml_schema_wildcard_namespaces', 'xml_schema_wildcards']
-CRDS  : INFO     Parkeys for 'acs' = ['RPTCORR', 'aperture', 'atodcorr', 'biascorr', 'ccdamp', 'ccdchip', 'ccdgain', 'crcorr', 'darkcorr', 'detector', 'dqicorr', 'drizcorr', 'filter1', 'filter2', 'flashcur', 'flatcorr', 'flshcorr', 'fw1offst', 'fw2offst', 'fwsoffst', 'glincorr', 'ltv1', 'ltv2', 'naxis1', 'naxis2', 'obstype', 'pctecorr', 'photcorr', 'rptcorr', 'shadcorr', 'shutrpos', 'xcorner', 'ycorner']
-CRDS  : INFO     Rowkeys for 'acs' = ['binaxis1', 'binaxis2', 'ccdamp', 'ccdchip', 'ccdgain', 'ccdofsta', 'ccdofstb', 'ccdofstc', 'ccdofstd', 'column', 'crsplit', 'date', 'detchip', 'detector', 'direction', 'filter', 'filter1', 'filter2', 'level', 'meanexp', 'mjd', 'node', 'numimages', 'obsmode', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'wavelength']
-CRDS  : INFO     Scanning for 'acs' tables = ['acs_a_data', 'acs_chip', 'acs_mama', 'acs_ref_data', 'acs_science', 'assoc_member']
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'aperture')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'atodcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'biascorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'binaxis1')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'binaxis2')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdamp')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdchip')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdgain')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdofsta')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdofstb')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdofstc')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdofstd')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'column')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'crcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'crsplit')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'darkcorr')
-CRDS  : INFO     Turbo hog wild, SCORE for 'date' = acs_a_data.aca_date_obs
-CRDS  : INFO     Turbo hog wild, SCORE for 'date' = acs_mama.acm_generation_date
-CRDS  : INFO     Turbo hog wild, SCORE for 'date' = acs_science.acs_date_obs
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'detchip')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'detector')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'direction')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'dqicorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'drizcorr')
-CRDS  : INFO     Turbo hog wild, SCORE for 'filter' = acs_ref_data.acr_filter1
-CRDS  : INFO     Turbo hog wild, SCORE for 'filter' = acs_ref_data.acr_filter2
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'filter1')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'filter2')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'flashcur')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'flatcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'flshcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'fw1offst')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'fw2offst')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'fwsoffst')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'glincorr')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'level')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ltv1')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ltv2')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'meanexp')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'mjd')
-CRDS  : INFO     Turbo hog wild, SCORE for 'naxis1' = acs_chip.acc_binaxis1
-CRDS  : INFO     Turbo hog wild, SCORE for 'naxis2' = acs_chip.acc_binaxis2
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'node')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'numimages')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'obsmode')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'obstype')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'pctecorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'photcorr')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'ref_key')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'ref_key_value')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'rptcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'rptcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'shadcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'shutrpos')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'v2ref')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'v3ref')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'wavelength')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'xcorner')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ycorner')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'expstart')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = acs_a_data.aca_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = acs_mama.acm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = acs_ref_data.acr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = acs_science.acs_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'pctetab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'crrejtab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'darkfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'd2imfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'bpixtab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'atodtab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'biasfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'spottab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'mlintab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'dgeofile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'flshfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'npolfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'oscntab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'ccdtab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'shadfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'idctab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'imphttab')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'pfltfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'drkcfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'cfltfile')
-CRDS  : INFO     FITS_TO_DADS found for ('acs', 'mdriztab')
-CRDS  : INFO     12 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     80 infos
-CRDS  : WARNING  For 'acs' can't locate ['column', 'detchip', 'direction', 'level', 'mjd', 'node', 'numimages', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'wavelength']
-CRDS  : INFO     Columns for 'acs' are ['acs_a_data.aca_aborted',
+CRDS - INFO - All DADSOPS tables: ['CHECK_CONSTRAINTS', 'COLUMNS', 'COLUMN_DOMAIN_USAGE', 'COLUMN_PRIVILEGES', 'CONSTRAINT_COLUMN_USAGE', 'CONSTRAINT_TABLE_USAGE', 'DOMAINS', 'DOMAIN_CONSTRAINTS', 'KEY_COLUMN_USAGE', 'MSreplication_objects', 'MSreplication_subscriptions', 'MSsavedforeignkeycolumns', 'MSsavedforeignkeyextendedproperties', 'MSsavedforeignkeys', 'MSsnapshotdeliveryprogress', 'MSsubscription_agents', 'PARAMETERS', 'REFERENTIAL_CONSTRAINTS', 'ROUTINES', 'ROUTINE_COLUMNS', 'SCHEMATA', 'SEQUENCES', 'TABLES', 'TABLE_CONSTRAINTS', 'TABLE_PRIVILEGES', 'VIEWS', 'VIEW_COLUMN_USAGE', 'VIEW_TABLE_USAGE', 'acs_a_data', 'acs_chip', 'acs_mama', 'acs_ref_data', 'acs_science', 'all_columns', 'all_objects', 'all_parameters', 'all_sql_modules', 'all_views', 'allocation_units', 'archive_data_set_all', 'archive_data_set_log_del', 'archive_data_set_old_ver', 'archive_files', 'archive_files_log_del', 'archive_files_old_ver', 'assemblies', 'assembly_files', 'assembly_modules', 'assembly_references', 'assembly_types', 'assoc_member', 'assoc_orphan', 'assoc_status', 'asymmetric_keys', 'authorized_users', 'availability_databases_cluster', 'availability_group_listener_ip_addresses', 'availability_group_listeners', 'availability_groups', 'availability_groups_cluster', 'availability_read_only_routing_lists', 'availability_replicas', 'backup_devices', 'certificates', 'change_tracking_databases', 'change_tracking_tables', 'check_constraints', 'column_store_dictionaries', 'column_store_segments', 'column_type_usages', 'column_xml_schema_collection_usages', 'columns', 'computed_columns', 'configurations', 'conversation_endpoints', 'conversation_groups', 'conversation_priorities', 'cos_a_data', 'cos_b_data', 'cos_c_data', 'cos_cumulative_images', 'cos_d_data', 'cos_ref_data', 'cos_science', 'cos_tv_exposures', 'cos_tv_int_data', 'cos_tv_ref_data', 'cos_tv_science', 'cos_tv_segments', 'credentials', 'crypt_properties', 'cryptographic_providers', 'dadsops_rep_test', 'data_spaces', 'database_audit_specification_details', 'database_audit_specifications', 'database_files', 'database_filestream_options', 'database_mirroring', 'database_mirroring_endpoints', 'database_permissions', 'database_principals', 'database_recovery_status', 'database_role_members', 'databases', 'default_constraints', 'destination_data_spaces', 'dm_audit_actions', 'dm_audit_class_type_map', 'dm_broker_activated_tasks', 'dm_broker_connections', 'dm_broker_forwarded_messages', 'dm_broker_queue_monitors', 'dm_cdc_errors', 'dm_cdc_log_scan_sessions', 'dm_clr_appdomains', 'dm_clr_loaded_assemblies', 'dm_clr_properties', 'dm_clr_tasks', 'dm_cryptographic_provider_properties', 'dm_database_encryption_keys', 'dm_db_file_space_usage', 'dm_db_fts_index_physical_stats', 'dm_db_index_usage_stats', 'dm_db_log_space_usage', 'dm_db_mirroring_auto_page_repair', 'dm_db_mirroring_connections', 'dm_db_mirroring_past_actions', 'dm_db_missing_index_details', 'dm_db_missing_index_group_stats', 'dm_db_missing_index_groups', 'dm_db_partition_stats', 'dm_db_persisted_sku_features', 'dm_db_script_level', 'dm_db_session_space_usage', 'dm_db_task_space_usage', 'dm_db_uncontained_entities', 'dm_exec_background_job_queue', 'dm_exec_background_job_queue_stats', 'dm_exec_cached_plans', 'dm_exec_connections', 'dm_exec_procedure_stats', 'dm_exec_query_memory_grants', 'dm_exec_query_optimizer_info', 'dm_exec_query_resource_semaphores', 'dm_exec_query_stats', 'dm_exec_query_transformation_stats', 'dm_exec_requests', 'dm_exec_sessions', 'dm_exec_trigger_stats', 'dm_filestream_file_io_handles', 'dm_filestream_file_io_requests', 'dm_filestream_non_transacted_handles', 'dm_fts_active_catalogs', 'dm_fts_fdhosts', 'dm_fts_index_population', 'dm_fts_memory_buffers', 'dm_fts_memory_pools', 'dm_fts_outstanding_batches', 'dm_fts_population_ranges', 'dm_fts_semantic_similarity_population', 'dm_hadr_auto_page_repair', 'dm_hadr_availability_group_states', 'dm_hadr_availability_replica_cluster_nodes', 'dm_hadr_availability_replica_cluster_states', 'dm_hadr_availability_replica_states', 'dm_hadr_cluster', 'dm_hadr_cluster_members', 'dm_hadr_cluster_networks', 'dm_hadr_database_replica_cluster_states', 'dm_hadr_database_replica_states', 'dm_hadr_instance_node_map', 'dm_hadr_name_id_map', 'dm_io_backup_tapes', 'dm_io_cluster_shared_drives', 'dm_io_pending_io_requests', 'dm_logpool_hashentries', 'dm_logpool_stats', 'dm_os_buffer_descriptors', 'dm_os_child_instances', 'dm_os_cluster_nodes', 'dm_os_cluster_properties', 'dm_os_dispatcher_pools', 'dm_os_dispatchers', 'dm_os_hosts', 'dm_os_latch_stats', 'dm_os_loaded_modules', 'dm_os_memory_allocations', 'dm_os_memory_broker_clerks', 'dm_os_memory_brokers', 'dm_os_memory_cache_clock_hands', 'dm_os_memory_cache_counters', 'dm_os_memory_cache_entries', 'dm_os_memory_cache_hash_tables', 'dm_os_memory_clerks', 'dm_os_memory_node_access_stats', 'dm_os_memory_nodes', 'dm_os_memory_objects', 'dm_os_memory_pools', 'dm_os_nodes', 'dm_os_performance_counters', 'dm_os_process_memory', 'dm_os_ring_buffers', 'dm_os_schedulers', 'dm_os_server_diagnostics_log_configurations', 'dm_os_spinlock_stats', 'dm_os_stacks', 'dm_os_sublatches', 'dm_os_sys_info', 'dm_os_sys_memory', 'dm_os_tasks', 'dm_os_threads', 'dm_os_virtual_address_dump', 'dm_os_wait_stats', 'dm_os_waiting_tasks', 'dm_os_windows_info', 'dm_os_worker_local_storage', 'dm_os_workers', 'dm_qn_subscriptions', 'dm_repl_articles', 'dm_repl_schemas', 'dm_repl_tranhash', 'dm_repl_traninfo', 'dm_resource_governor_configuration', 'dm_resource_governor_resource_pool_affinity', 'dm_resource_governor_resource_pools', 'dm_resource_governor_workload_groups', 'dm_server_audit_status', 'dm_server_memory_dumps', 'dm_server_registry', 'dm_server_services', 'dm_tcp_listener_states', 'dm_tran_active_snapshot_database_transactions', 'dm_tran_active_transactions', 'dm_tran_commit_table', 'dm_tran_current_snapshot', 'dm_tran_current_transaction', 'dm_tran_database_transactions', 'dm_tran_locks', 'dm_tran_session_transactions', 'dm_tran_top_version_generators', 'dm_tran_transactions_snapshot', 'dm_tran_version_store', 'dm_xe_map_values', 'dm_xe_object_columns', 'dm_xe_objects', 'dm_xe_packages', 'dm_xe_session_event_actions', 'dm_xe_session_events', 'dm_xe_session_object_columns', 'dm_xe_session_targets', 'dm_xe_sessions', 'endpoint_webmethods', 'endpoints', 'event_notification_event_types', 'event_notifications', 'events', 'extended_procedures', 'extended_properties', 'fgs_data', 'filegroups', 'filetable_system_defined_objects', 'filetables', 'fixed_target', 'foc_data', 'foc_ref_data', 'foreign_key_columns', 'foreign_keys', 'fos_data', 'fos_ref_data', 'fulltext_catalogs', 'fulltext_document_types', 'fulltext_index_catalog_usages', 'fulltext_index_columns', 'fulltext_index_fragments', 'fulltext_indexes', 'fulltext_languages', 'fulltext_semantic_language_statistics_database', 'fulltext_semantic_languages', 'fulltext_stoplists', 'fulltext_stopwords', 'fulltext_system_stopwords', 'function_order_columns', 'fuse_authorized_users', 'fuse_exposures', 'fuse_member', 'fuse_science', 'hrs_data', 'hrs_ref_data', 'hsp_data', 'hsp_ref_data', 'hst_notification_track', 'http_endpoints', 'identity_columns', 'index_columns', 'indexes', 'ingest_long_ext', 'internal_tables', 'key_constraints', 'key_encryptions', 'linked_logins', 'login_token', 'master_files', 'master_key_passwords', 'message_type_xml_schema_collection_usages', 'messages', 'module_assembly_usages', 'moving_target_position', 'nicmos_a_data', 'nicmos_b_data', 'nicmos_c_data', 'nicmos_ref_data', 'nicmos_science', 'nicmos_times', 'numbered_procedure_parameters', 'numbered_procedures', 'objects', 'oms_data', 'oms_summary', 'openkeys', 'otfc_calibration_fields', 'otfr_keyword_repair', 'otfr_request_stats', 'otfr_special_processing', 'parameter_type_usages', 'parameter_xml_schema_collection_usages', 'parameters', 'partition_functions', 'partition_parameters', 'partition_range_values', 'partition_schemes', 'partitions', 'pdq_severity_mapping', 'pdq_summary', 'plan_guides', 'procedures', 'registered_search_properties', 'registered_search_property_lists', 'registered_users', 'remote_logins', 'remote_service_bindings', 'request_files', 'request_files_all', 'request_operator_actions', 'requests', 'requests_all', 'resource_governor_configuration', 'resource_governor_resource_pool_affinity', 'resource_governor_resource_pools', 'resource_governor_workload_groups', 'retrieval_extensions', 'routes', 'scan_parameters', 'schemas', 'sci_inst_db_join', 'science', 'securable_classes', 'selective_xml_index_namespaces', 'selective_xml_index_paths', 'sequences', 'server_assembly_modules', 'server_audit_specification_details', 'server_audit_specifications', 'server_audits', 'server_event_notifications', 'server_event_session_actions', 'server_event_session_events', 'server_event_session_fields', 'server_event_session_targets', 'server_event_sessions', 'server_events', 'server_file_audits', 'server_permissions', 'server_principal_credentials', 'server_principals', 'server_role_members', 'server_sql_modules', 'server_trigger_events', 'server_triggers', 'servers', 'service_broker_endpoints', 'service_contract_message_usages', 'service_contract_usages', 'service_contracts', 'service_message_types', 'service_queue_usages', 'service_queues', 'services', 'shp_data', 'sms_data', 'soap_endpoints', 'spatial_index_tessellations', 'spatial_indexes', 'spatial_reference_systems', 'sql_dependencies', 'sql_expression_dependencies', 'sql_logins', 'sql_modules', 'stats', 'stats_columns', 'stis_a_data', 'stis_b_data', 'stis_c_data', 'stis_cumulative_images', 'stis_grand_mama', 'stis_ref_data', 'stis_science', 'symmetric_keys', 'synonyms', 'syscacheobjects', 'syscharsets', 'syscolumns', 'syscomments', 'sysconfigures', 'sysconstraints', 'syscurconfigs', 'syscursorcolumns', 'syscursorrefs', 'syscursors', 'syscursortables', 'sysdatabases', 'sysdepends', 'sysdevices', 'sysfilegroups', 'sysfiles', 'sysforeignkeys', 'sysfulltextcatalogs', 'sysindexes', 'sysindexkeys', 'syslanguages', 'syslockinfo', 'syslogins', 'sysmembers', 'sysmessages', 'sysobjects', 'sysoledbusers', 'sysopentapes', 'sysperfinfo', 'syspermissions', 'sysprocesses', 'sysprotects', 'sysreferences', 'sysremotelogins', 'sysservers', 'system_columns', 'system_components_surface_area_configuration', 'system_internals_allocation_units', 'system_internals_partition_columns', 'system_internals_partitions', 'system_objects', 'system_parameters', 'system_sql_modules', 'system_views', 'systypes', 'sysusers', 'table_types', 'tables', 'target_keyword', 'target_synonym', 'tcp_endpoints', 'trace_categories', 'trace_columns', 'trace_event_bindings', 'trace_events', 'trace_subclass_values', 'trace_xe_action_map', 'trace_xe_event_map', 'traces', 'transmission_queue', 'trigger_event_types', 'trigger_events', 'triggers', 'type_assembly_usages', 'types', 'user_token', 'via_endpoints', 'views', 'wfc3_a_data', 'wfc3_chip', 'wfc3_ref_data', 'wfc3_science', 'wfc3_times', 'wfc3_tv_chip', 'wfc3_tv_int_data', 'wfc3_tv_ref_data', 'wfc3_tv_science', 'wfc3_tv_times', 'wfpc2_primary_data', 'wfpc2_ref_data', 'wfpc2_secondary_data', 'wfpc_data', 'wfpc_group_data', 'wfpc_ref_data', 'xml_indexes', 'xml_schema_attributes', 'xml_schema_collections', 'xml_schema_component_placements', 'xml_schema_components', 'xml_schema_elements', 'xml_schema_facets', 'xml_schema_model_groups', 'xml_schema_namespaces', 'xml_schema_types', 'xml_schema_wildcard_namespaces', 'xml_schema_wildcards']
+CRDS - INFO - Parkeys for 'acs' = ['RPTCORR', 'aperture', 'atodcorr', 'biascorr', 'ccdamp', 'ccdchip', 'ccdgain', 'crcorr', 'darkcorr', 'detector', 'dqicorr', 'drizcorr', 'filter1', 'filter2', 'flashcur', 'flatcorr', 'flshcorr', 'fw1offst', 'fw2offst', 'fwsoffst', 'glincorr', 'ltv1', 'ltv2', 'naxis1', 'naxis2', 'obstype', 'pctecorr', 'photcorr', 'rptcorr', 'shadcorr', 'shutrpos', 'xcorner', 'ycorner']
+CRDS - INFO - Rowkeys for 'acs' = ['binaxis1', 'binaxis2', 'ccdamp', 'ccdchip', 'ccdgain', 'ccdofsta', 'ccdofstb', 'ccdofstc', 'ccdofstd', 'column', 'crsplit', 'date', 'detchip', 'detector', 'direction', 'filter', 'filter1', 'filter2', 'level', 'meanexp', 'mjd', 'node', 'numimages', 'obsmode', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'wavelength']
+CRDS - INFO - Scanning for 'acs' tables = ['acs_a_data', 'acs_chip', 'acs_mama', 'acs_ref_data', 'acs_science', 'assoc_member']
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'aperture')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'atodcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'biascorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'binaxis1')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'binaxis2')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdamp')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdchip')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdgain')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdofsta')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdofstb')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdofstc')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdofstd')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'column')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'crcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'crsplit')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'darkcorr')
+CRDS - INFO - Turbo hog wild, SCORE for 'date' = acs_a_data.aca_date_obs
+CRDS - INFO - Turbo hog wild, SCORE for 'date' = acs_mama.acm_generation_date
+CRDS - INFO - Turbo hog wild, SCORE for 'date' = acs_science.acs_date_obs
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'detchip')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'detector')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'direction')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'dqicorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'drizcorr')
+CRDS - INFO - Turbo hog wild, SCORE for 'filter' = acs_ref_data.acr_filter1
+CRDS - INFO - Turbo hog wild, SCORE for 'filter' = acs_ref_data.acr_filter2
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'filter1')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'filter2')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'flashcur')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'flatcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'flshcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'fw1offst')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'fw2offst')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'fwsoffst')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'glincorr')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'level')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ltv1')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ltv2')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'meanexp')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'mjd')
+CRDS - INFO - Turbo hog wild, SCORE for 'naxis1' = acs_chip.acc_binaxis1
+CRDS - INFO - Turbo hog wild, SCORE for 'naxis2' = acs_chip.acc_binaxis2
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'node')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'numimages')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'obsmode')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'obstype')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'pctecorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'photcorr')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'ref_key')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'ref_key_value')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'rptcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'rptcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'shadcorr')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'shutrpos')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'v2ref')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'v3ref')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('acs', 'wavelength')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'xcorner')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ycorner')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'expstart')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = acs_a_data.aca_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = acs_mama.acm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = acs_ref_data.acr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = acs_science.acs_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'pctetab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'crrejtab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'darkfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'd2imfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'bpixtab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'atodtab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'biasfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'spottab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'mlintab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'dgeofile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'flshfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'npolfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'oscntab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'ccdtab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'shadfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'idctab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'imphttab')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'pfltfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'drkcfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'cfltfile')
+CRDS - INFO - FITS_TO_DADS found for ('acs', 'mdriztab')
+CRDS - INFO - 12 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 80 infos
+CRDS - WARNING - For 'acs' can't locate ['column', 'detchip', 'direction', 'level', 'mjd', 'node', 'numimages', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'wavelength']
+CRDS - INFO - Columns for 'acs' are ['acs_a_data.aca_aborted',
  'acs_a_data.aca_absteps1',
  'acs_a_data.aca_absteps2',
  'acs_a_data.aca_address',
@@ -650,110 +650,110 @@ CRDS  : INFO     Columns for 'acs' are ['acs_a_data.aca_aborted',
  'acs_science.acs_surflong',
  'acs_science.acs_targarea',
  'acs_science.acs_wrterr']
-CRDS  : INFO     Parkeys for 'cos' = ['badtcorr', 'brstcorr', 'deadcorr', 'detector', 'exptype', 'flatcorr', 'fluxcorr', 'life_adj', 'obsmode', 'obstype', 'tdscorr', 'walkcorr']
-CRDS  : INFO     Rowkeys for 'cos' = ['aperture', 'cenwave', 'date', 'fpoffset', 'opt_elem', 'segment']
-CRDS  : INFO     Scanning for 'cos' tables = ['cos_a_data', 'cos_b_data', 'cos_c_data', 'cos_cumulative_images', 'cos_d_data', 'cos_ref_data', 'cos_science', 'cos_tv_exposures', 'cos_tv_int_data', 'cos_tv_ref_data', 'cos_tv_science', 'cos_tv_segments', 'assoc_member']
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'aperture')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'badtcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'brstcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'cenwave')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'date')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'deadcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'detector')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'exptype')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'flatcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'fluxcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'fpoffset')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'life_adj')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'obsmode')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'obstype')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'opt_elem')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'segment')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'tdscorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'walkcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'expstart')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_a_data.csa_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_b_data.csb_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_c_data.csc_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_cumulative_images.csi_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_d_data.csd_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_ref_data.csr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_science.css_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_tv_exposures.ctx_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_tv_int_data.cti_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_tv_ref_data.ctr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_tv_science.cts_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = cos_tv_segments.ctg_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'phatab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'wcptab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'badttab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'gsagtab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'fluxtab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'bpixtab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'brftab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'xtractab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'lamptab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'geofile')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'brsttab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'spwcstab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'tdstab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'hvtab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'deadtab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'flatfile')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'disptab')
-CRDS  : INFO     FITS_TO_DADS found for ('cos', 'walktab')
-CRDS  : INFO     0 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     56 infos
-CRDS  : INFO     Collected 'cos' ok
-CRDS  : INFO     Parkeys for 'nicmos' = ['camera', 'filter', 'nread', 'obsmode', 'readout', 'samp_seq']
-CRDS  : INFO     Rowkeys for 'nicmos' = ['camera', 'detchip', 'filter', 'photmode', 'wavelength']
-CRDS  : INFO     Scanning for 'nicmos' tables = ['nicmos_a_data', 'nicmos_b_data', 'nicmos_c_data', 'nicmos_ref_data', 'nicmos_science', 'nicmos_times', 'assoc_member']
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'camera')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('nicmos', 'detchip')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'filter')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'nread')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'obsmode')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'photmode')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'readout')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'samp_seq')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('nicmos', 'wavelength')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'expstart')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = nicmos_a_data.nsa_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = nicmos_b_data.nsb_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = nicmos_c_data.nsc_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = nicmos_ref_data.nsr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = nicmos_science.nss_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'nlinfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'flatfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'illmfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'idctab')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'darkfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'saadfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'tempfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'phottab')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'maskfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'pmodfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'pedsbtab')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'rnlcortb')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'tdffile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'noisfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'saacntab')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'pmskfile')
-CRDS  : INFO     FITS_TO_DADS found for ('nicmos', 'zprattab')
-CRDS  : INFO     2 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     37 infos
-CRDS  : WARNING  For 'nicmos' can't locate ['detchip', 'wavelength']
-CRDS  : INFO     Columns for 'nicmos' are ['nicmos_a_data.nsa_ampscale',
+CRDS - INFO - Parkeys for 'cos' = ['badtcorr', 'brstcorr', 'deadcorr', 'detector', 'exptype', 'flatcorr', 'fluxcorr', 'life_adj', 'obsmode', 'obstype', 'tdscorr', 'walkcorr']
+CRDS - INFO - Rowkeys for 'cos' = ['aperture', 'cenwave', 'date', 'fpoffset', 'opt_elem', 'segment']
+CRDS - INFO - Scanning for 'cos' tables = ['cos_a_data', 'cos_b_data', 'cos_c_data', 'cos_cumulative_images', 'cos_d_data', 'cos_ref_data', 'cos_science', 'cos_tv_exposures', 'cos_tv_int_data', 'cos_tv_ref_data', 'cos_tv_science', 'cos_tv_segments', 'assoc_member']
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'aperture')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'badtcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'brstcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'cenwave')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'date')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'deadcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'detector')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'exptype')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'flatcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'fluxcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'fpoffset')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'life_adj')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'obsmode')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'obstype')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'opt_elem')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'segment')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'tdscorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'walkcorr')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'expstart')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_a_data.csa_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_b_data.csb_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_c_data.csc_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_cumulative_images.csi_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_d_data.csd_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_ref_data.csr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_science.css_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_tv_exposures.ctx_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_tv_int_data.cti_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_tv_ref_data.ctr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_tv_science.cts_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = cos_tv_segments.ctg_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'phatab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'wcptab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'badttab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'gsagtab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'fluxtab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'bpixtab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'brftab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'xtractab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'lamptab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'geofile')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'brsttab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'spwcstab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'tdstab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'hvtab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'deadtab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'flatfile')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'disptab')
+CRDS - INFO - FITS_TO_DADS found for ('cos', 'walktab')
+CRDS - INFO - 0 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 56 infos
+CRDS - INFO - Collected 'cos' ok
+CRDS - INFO - Parkeys for 'nicmos' = ['camera', 'filter', 'nread', 'obsmode', 'readout', 'samp_seq']
+CRDS - INFO - Rowkeys for 'nicmos' = ['camera', 'detchip', 'filter', 'photmode', 'wavelength']
+CRDS - INFO - Scanning for 'nicmos' tables = ['nicmos_a_data', 'nicmos_b_data', 'nicmos_c_data', 'nicmos_ref_data', 'nicmos_science', 'nicmos_times', 'assoc_member']
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'camera')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('nicmos', 'detchip')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'filter')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'nread')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'obsmode')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'photmode')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'readout')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'samp_seq')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('nicmos', 'wavelength')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'expstart')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = nicmos_a_data.nsa_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = nicmos_b_data.nsb_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = nicmos_c_data.nsc_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = nicmos_ref_data.nsr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = nicmos_science.nss_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'nlinfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'flatfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'illmfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'idctab')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'darkfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'saadfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'tempfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'phottab')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'maskfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'pmodfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'pedsbtab')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'rnlcortb')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'tdffile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'noisfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'saacntab')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'pmskfile')
+CRDS - INFO - FITS_TO_DADS found for ('nicmos', 'zprattab')
+CRDS - INFO - 2 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 37 infos
+CRDS - WARNING - For 'nicmos' can't locate ['detchip', 'wavelength']
+CRDS - INFO - Columns for 'nicmos' are ['nicmos_a_data.nsa_ampscale',
  'nicmos_a_data.nsa_backest1',
  'nicmos_a_data.nsa_backest2',
  'nicmos_a_data.nsa_backest3',
@@ -1519,94 +1519,94 @@ CRDS  : INFO     Columns for 'nicmos' are ['nicmos_a_data.nsa_ampscale',
  'nicmos_times.nst_routtime',
  'nicmos_times.nst_sampnum',
  'nicmos_times.nst_samptime']
-CRDS  : INFO     Parkeys for 'stis' = ['aperture', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'ccdoffst', 'cenwave', 'detector', 'obstype', 'opt_elem', 'photcorr']
-CRDS  : INFO     Rowkeys for 'stis' = ['a2center', 'aperture', 'axis', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'ccdoffst', 'cenwave', 'crsplit', 'detector', 'direction', 'extrheight', 'filter', 'halowave', 'lampset', 'length', 'meanexp', 'obsmode', 'opt_elem', 'pix1', 'pix2', 'psfwave', 'ref_temp', 'sclamp', 'sporder', 'value']
-CRDS  : INFO     Scanning for 'stis' tables = ['stis_a_data', 'stis_b_data', 'stis_c_data', 'stis_cumulative_images', 'stis_grand_mama', 'stis_ref_data', 'stis_science', 'assoc_member']
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'a2center')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'aperture')
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_dispaxis
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_binaxis1
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_binaxis2
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_c_data.ssc_sizaxis1
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_c_data.ssc_sizaxis2
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_ref_data.ssr_binaxis1
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_ref_data.ssr_binaxis2
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_science.sss_sizaxis1
-CRDS  : INFO     Turbo hog wild, SCORE for 'axis' = stis_science.sss_sizaxis2
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'binaxis1')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'binaxis2')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'ccdamp')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'ccdgain')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'ccdoffst')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'cenwave')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'crsplit')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'detector')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'direction')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'extrheight')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'filter')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'halowave')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'lampset')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'length')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'meanexp')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'obsmode')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'obstype')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'opt_elem')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'photcorr')
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix1' = stis_a_data.ssa_crpix1
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix2' = stis_a_data.ssa_crpix2
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'psfwave')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'ref_temp')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'sclamp')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'sporder')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'value')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'texpstrt')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_a_data.ssa_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_b_data.ssb_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_c_data.ssc_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_cumulative_images.ssi_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_grand_mama.ssg_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_ref_data.ssr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = stis_science.sss_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'lfltfile')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'mofftab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'halotab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'riptab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'lamptab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'tdstab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'cdstab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'pctab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'crrejtab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'pfltfile')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'inangtab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'wcptab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'teltab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'darkfile')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'biasfile')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'mlintab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'echsctab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'disptab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'idctab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'xtractab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'phottab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'sptrctab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'exstab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'sdctab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'bpixtab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'srwtab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'gactab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'ccdtab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'apdestab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'apertab')
-CRDS  : INFO     FITS_TO_DADS found for ('stis', 'tdctab')
-CRDS  : INFO     9 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     74 infos
-CRDS  : WARNING  For 'stis' can't locate ['a2center', 'direction', 'extrheight', 'halowave', 'length', 'psfwave', 'ref_temp', 'sporder', 'value']
-CRDS  : INFO     Columns for 'stis' are ['stis_a_data.ssa_acqtype',
+CRDS - INFO - Parkeys for 'stis' = ['aperture', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'ccdoffst', 'cenwave', 'detector', 'obstype', 'opt_elem', 'photcorr']
+CRDS - INFO - Rowkeys for 'stis' = ['a2center', 'aperture', 'axis', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'ccdoffst', 'cenwave', 'crsplit', 'detector', 'direction', 'extrheight', 'filter', 'halowave', 'lampset', 'length', 'meanexp', 'obsmode', 'opt_elem', 'pix1', 'pix2', 'psfwave', 'ref_temp', 'sclamp', 'sporder', 'value']
+CRDS - INFO - Scanning for 'stis' tables = ['stis_a_data', 'stis_b_data', 'stis_c_data', 'stis_cumulative_images', 'stis_grand_mama', 'stis_ref_data', 'stis_science', 'assoc_member']
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'a2center')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'aperture')
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_dispaxis
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_binaxis1
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_a_data.ssa_binaxis2
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_c_data.ssc_sizaxis1
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_c_data.ssc_sizaxis2
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_ref_data.ssr_binaxis1
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_ref_data.ssr_binaxis2
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_science.sss_sizaxis1
+CRDS - INFO - Turbo hog wild, SCORE for 'axis' = stis_science.sss_sizaxis2
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'binaxis1')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'binaxis2')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'ccdamp')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'ccdgain')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'ccdoffst')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'cenwave')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'crsplit')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'detector')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'direction')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'extrheight')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'filter')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'halowave')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'lampset')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'length')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'meanexp')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'obsmode')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'obstype')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'opt_elem')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'photcorr')
+CRDS - INFO - Turbo hog wild, SCORE for 'pix1' = stis_a_data.ssa_crpix1
+CRDS - INFO - Turbo hog wild, SCORE for 'pix2' = stis_a_data.ssa_crpix2
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'psfwave')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'ref_temp')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'sclamp')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'sporder')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('stis', 'value')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'texpstrt')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_a_data.ssa_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_b_data.ssb_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_c_data.ssc_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_cumulative_images.ssi_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_grand_mama.ssg_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_ref_data.ssr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = stis_science.sss_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'lfltfile')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'mofftab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'halotab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'riptab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'lamptab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'tdstab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'cdstab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'pctab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'crrejtab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'pfltfile')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'inangtab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'wcptab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'teltab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'darkfile')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'biasfile')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'mlintab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'echsctab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'disptab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'idctab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'xtractab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'phottab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'sptrctab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'exstab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'sdctab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'bpixtab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'srwtab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'gactab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'ccdtab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'apdestab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'apertab')
+CRDS - INFO - FITS_TO_DADS found for ('stis', 'tdctab')
+CRDS - INFO - 9 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 74 infos
+CRDS - WARNING - For 'stis' can't locate ['a2center', 'direction', 'extrheight', 'halowave', 'length', 'psfwave', 'ref_temp', 'sporder', 'value']
+CRDS - INFO - Columns for 'stis' are ['stis_a_data.ssa_acqtype',
  'stis_a_data.ssa_ampaoff',
  'stis_a_data.ssa_ampboff',
  'stis_a_data.ssa_ampcoff',
@@ -2394,98 +2394,98 @@ CRDS  : INFO     Columns for 'stis' are ['stis_a_data.ssa_acqtype',
  'stis_science.sss_subarray',
  'stis_science.sss_targarea',
  'stis_science.sss_tdateobs']
-CRDS  : INFO     Parkeys for 'wfc3' = ['aperture', 'atodcorr', 'biascorr', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'chinject', 'darkcorr', 'detector', 'dqicorr', 'drizcorr', 'filter', 'flashcur', 'flatcorr', 'flshcorr', 'photcorr', 'samp_seq', 'shadcorr', 'shutrpos', 'subarray', 'subtype']
-CRDS  : INFO     Rowkeys for 'wfc3' = ['badinpdq', 'binaxis1', 'binaxis2', 'binx', 'biny', 'ccdamp', 'ccdchip', 'ccdgain', 'ccdofsta', 'ccdofstb', 'ccdofstc', 'ccdofstd', 'crmask', 'crradius', 'crsigmas', 'crsplit', 'crthresh', 'datacol', 'filter', 'initgues', 'meanexp', 'numimages', 'nx', 'ny', 'obsmode', 'photflam1', 'photflam2', 'pix1', 'pix2', 'ref_key', 'ref_key_value', 'scalense', 'skysub', 'v2ref', 'v3ref', 'xsize', 'ysize']
-CRDS  : INFO     Scanning for 'wfc3' tables = ['wfc3_a_data', 'wfc3_chip', 'wfc3_ref_data', 'wfc3_science', 'wfc3_times', 'wfc3_tv_chip', 'wfc3_tv_int_data', 'wfc3_tv_ref_data', 'wfc3_tv_science', 'wfc3_tv_times', 'assoc_member']
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'aperture')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'atodcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'badinpdq')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'biascorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'binaxis1')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'binaxis2')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'binx')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'biny')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdamp')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdchip')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdgain')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdofsta')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdofstb')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdofstc')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdofstd')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'chinject')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crmask')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crradius')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crsigmas')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crsplit')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crthresh')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'darkcorr')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'datacol')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'detector')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'dqicorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'drizcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'filter')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'flashcur')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'flatcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'flshcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'initgues')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'meanexp')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'numimages')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'nx')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ny')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'obsmode')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'photcorr')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'photflam1')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'photflam2')
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix1' = wfc3_chip.w3c_crpix1
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix1' = wfc3_tv_chip.wtc_crpix1
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix2' = wfc3_chip.w3c_crpix2
-CRDS  : INFO     Turbo hog wild, SCORE for 'pix2' = wfc3_tv_chip.wtc_crpix2
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ref_key')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ref_key_value')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'samp_seq')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'scalense')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'shadcorr')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'shutrpos')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'skysub')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'subarray')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'subtype')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'v2ref')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'v3ref')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'xsize')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ysize')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'expstart')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_a_data.w3a_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_chip.w3c_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_ref_data.w3r_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_science.w3s_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_times.w3t_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_tv_chip.wtc_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_tv_int_data.wti_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_tv_ref_data.wtr_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_tv_science.wts_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfc3_tv_times.wtt_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'nlinfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'crrejtab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'idctab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'darkfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'atodtab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'ccdtab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'bpixtab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'oscntab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'biasfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'imphttab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'pfltfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'flshfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfc3', 'mdriztab')
-CRDS  : INFO     14 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     73 infos
-CRDS  : WARNING  For 'wfc3' can't locate ['binx', 'biny', 'datacol', 'numimages', 'nx', 'ny', 'photflam1', 'photflam2', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'xsize', 'ysize']
-CRDS  : INFO     Columns for 'wfc3' are ['wfc3_a_data.w3a_address',
+CRDS - INFO - Parkeys for 'wfc3' = ['aperture', 'atodcorr', 'biascorr', 'binaxis1', 'binaxis2', 'ccdamp', 'ccdgain', 'chinject', 'darkcorr', 'detector', 'dqicorr', 'drizcorr', 'filter', 'flashcur', 'flatcorr', 'flshcorr', 'photcorr', 'samp_seq', 'shadcorr', 'shutrpos', 'subarray', 'subtype']
+CRDS - INFO - Rowkeys for 'wfc3' = ['badinpdq', 'binaxis1', 'binaxis2', 'binx', 'biny', 'ccdamp', 'ccdchip', 'ccdgain', 'ccdofsta', 'ccdofstb', 'ccdofstc', 'ccdofstd', 'crmask', 'crradius', 'crsigmas', 'crsplit', 'crthresh', 'datacol', 'filter', 'initgues', 'meanexp', 'numimages', 'nx', 'ny', 'obsmode', 'photflam1', 'photflam2', 'pix1', 'pix2', 'ref_key', 'ref_key_value', 'scalense', 'skysub', 'v2ref', 'v3ref', 'xsize', 'ysize']
+CRDS - INFO - Scanning for 'wfc3' tables = ['wfc3_a_data', 'wfc3_chip', 'wfc3_ref_data', 'wfc3_science', 'wfc3_times', 'wfc3_tv_chip', 'wfc3_tv_int_data', 'wfc3_tv_ref_data', 'wfc3_tv_science', 'wfc3_tv_times', 'assoc_member']
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'aperture')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'atodcorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'badinpdq')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'biascorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'binaxis1')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'binaxis2')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'binx')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'biny')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdamp')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdchip')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdgain')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdofsta')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdofstb')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdofstc')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdofstd')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'chinject')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crmask')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crradius')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crsigmas')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crsplit')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crthresh')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'darkcorr')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'datacol')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'detector')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'dqicorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'drizcorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'filter')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'flashcur')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'flatcorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'flshcorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'initgues')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'meanexp')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'numimages')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'nx')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ny')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'obsmode')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'photcorr')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'photflam1')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'photflam2')
+CRDS - INFO - Turbo hog wild, SCORE for 'pix1' = wfc3_chip.w3c_crpix1
+CRDS - INFO - Turbo hog wild, SCORE for 'pix1' = wfc3_tv_chip.wtc_crpix1
+CRDS - INFO - Turbo hog wild, SCORE for 'pix2' = wfc3_chip.w3c_crpix2
+CRDS - INFO - Turbo hog wild, SCORE for 'pix2' = wfc3_tv_chip.wtc_crpix2
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ref_key')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ref_key_value')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'samp_seq')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'scalense')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'shadcorr')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'shutrpos')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'skysub')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'subarray')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'subtype')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'v2ref')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'v3ref')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'xsize')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfc3', 'ysize')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'expstart')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_a_data.w3a_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_chip.w3c_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_ref_data.w3r_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_science.w3s_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_times.w3t_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_tv_chip.wtc_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_tv_int_data.wti_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_tv_ref_data.wtr_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_tv_science.wts_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfc3_tv_times.wtt_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'nlinfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'crrejtab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'idctab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'darkfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'atodtab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'ccdtab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'bpixtab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'oscntab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'biasfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'imphttab')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'pfltfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'flshfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfc3', 'mdriztab')
+CRDS - INFO - 14 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 73 infos
+CRDS - WARNING - For 'wfc3' can't locate ['binx', 'biny', 'datacol', 'numimages', 'nx', 'ny', 'photflam1', 'photflam2', 'ref_key', 'ref_key_value', 'v2ref', 'v3ref', 'xsize', 'ysize']
+CRDS - INFO - Columns for 'wfc3' are ['wfc3_a_data.w3a_address',
  'wfc3_a_data.w3a_binpar',
  'wfc3_a_data.w3a_binser',
  'wfc3_a_data.w3a_ccdbin',
@@ -3286,52 +3286,52 @@ CRDS  : INFO     Columns for 'wfc3' are ['wfc3_a_data.w3a_address',
  'wfc3_tv_times.wtt_sampnum',
  'wfc3_tv_times.wtt_samptime',
  'wfc3_tv_times.wtt_tdftrans']
-CRDS  : INFO     Parkeys for 'wfpc2' = ['atodgain', 'filter1', 'filter2', 'filtnam1', 'filtnam2', 'imagetyp', 'lrfwave', 'mode', 'serials', 'shutter']
-CRDS  : INFO     Rowkeys for 'wfpc2' = ['detchip', 'detector', 'direction', 'filter', 'filter1', 'filter2', 'obsdate', 'theta']
-CRDS  : INFO     Scanning for 'wfpc2' tables = ['wfpc2_primary_data', 'wfpc2_ref_data', 'wfpc2_secondary_data', 'assoc_member']
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'atodgain')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'detchip')
-CRDS  : INFO     Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_1
-CRDS  : INFO     Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_2
-CRDS  : INFO     Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_3
-CRDS  : INFO     Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_4
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'direction')
-CRDS  : INFO     Turbo hog wild, SCORE for 'filter' = wfpc2_ref_data.w2r_filter1
-CRDS  : INFO     Turbo hog wild, SCORE for 'filter' = wfpc2_ref_data.w2r_filter2
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'filter1')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'filter2')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'filtnam1')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'filtnam2')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'imagetyp')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'lrfwave')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'mode')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'obsdate')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'serials')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'shutter')
-CRDS  : ERROR    FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'theta')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'expstart')
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfpc2_primary_data.wp2_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfpc2_ref_data.w2r_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = wfpc2_secondary_data.ws2_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
-CRDS  : INFO     Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'offtab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'flatfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'idctab')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'darkfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'biasfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'dgeofile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'wf4tfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'atodfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'maskfile')
-CRDS  : INFO     FITS_TO_DADS found for ('wfpc2', 'shadfile')
-CRDS  : INFO     4 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     37 infos
-CRDS  : WARNING  For 'wfpc2' can't locate ['detchip', 'direction', 'obsdate', 'theta']
-CRDS  : INFO     Columns for 'wfpc2' are ['wfpc2_primary_data.wp2_atodsat_1',
+CRDS - INFO - Parkeys for 'wfpc2' = ['atodgain', 'filter1', 'filter2', 'filtnam1', 'filtnam2', 'imagetyp', 'lrfwave', 'mode', 'serials', 'shutter']
+CRDS - INFO - Rowkeys for 'wfpc2' = ['detchip', 'detector', 'direction', 'filter', 'filter1', 'filter2', 'obsdate', 'theta']
+CRDS - INFO - Scanning for 'wfpc2' tables = ['wfpc2_primary_data', 'wfpc2_ref_data', 'wfpc2_secondary_data', 'assoc_member']
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'atodgain')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'detchip')
+CRDS - INFO - Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_1
+CRDS - INFO - Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_2
+CRDS - INFO - Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_3
+CRDS - INFO - Turbo hog wild, SCORE for 'detector' = wfpc2_primary_data.wp2_detector_4
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'direction')
+CRDS - INFO - Turbo hog wild, SCORE for 'filter' = wfpc2_ref_data.w2r_filter1
+CRDS - INFO - Turbo hog wild, SCORE for 'filter' = wfpc2_ref_data.w2r_filter2
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'filter1')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'filter2')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'filtnam1')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'filtnam2')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'imagetyp')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'lrfwave')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'mode')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'obsdate')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'serials')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'shutter')
+CRDS - ERROR - FITS_TO_DADS + 'turbo hog wild' both BUST for ('wfpc2', 'theta')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'expstart')
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfpc2_primary_data.wp2_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfpc2_ref_data.w2r_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = wfpc2_secondary_data.ws2_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'data_set' = assoc_member.asm_data_set_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_asn_id' = assoc_member.asm_asn_id
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_name' = assoc_member.asm_member_name
+CRDS - INFO - Turbo hog wild, SCORE for 'asm_member_type' = assoc_member.asm_member_type
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'offtab')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'flatfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'idctab')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'darkfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'biasfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'dgeofile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'wf4tfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'atodfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'maskfile')
+CRDS - INFO - FITS_TO_DADS found for ('wfpc2', 'shadfile')
+CRDS - INFO - 4 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 37 infos
+CRDS - WARNING - For 'wfpc2' can't locate ['detchip', 'direction', 'obsdate', 'theta']
+CRDS - INFO - Columns for 'wfpc2' are ['wfpc2_primary_data.wp2_atodsat_1',
  'wfpc2_primary_data.wp2_atodsat_2',
  'wfpc2_primary_data.wp2_atodsat_3',
  'wfpc2_primary_data.wp2_atodsat_4',

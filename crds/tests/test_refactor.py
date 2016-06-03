@@ -23,7 +23,7 @@ def dt_refactor_add_files():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS  : INFO     Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
+    CRDS - INFO - Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_insert.rmap").run()
@@ -35,7 +35,7 @@ def dt_refactor_add_files():
 
     >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "./hst_cos_deadtab_insert.rmap", "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits",
     ...                          expected=("replace",))
-    CRDS  : ERROR    Expected one of ('replace',) but got 'add' from change (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), "added terminal 's7g1700hl_dead.fits'")
+    CRDS - ERROR - Expected one of ('replace',) but got 'add' from change (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), "added terminal 's7g1700hl_dead.fits'")
     False
 
     >>> _ = os.system("rm ./*.rmap")
@@ -47,7 +47,7 @@ def dt_refactor_delete_files():
     >>> log.set_test_mode()
 
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete.rmap data/s7g1700gl_dead.fits")()  # doctest: +ELLIPSIS
-    CRDS  : INFO     Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
+    CRDS - INFO - Deleting 'data/s7g1700gl_dead.fits' from 'hst_cos_deadtab.rmap'
     0
 
     >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_delete.rmap").run()
@@ -58,8 +58,8 @@ def dt_refactor_delete_files():
     True
 
     >>> RefactorScript("refactor.py delete data/hst_cos_deadtab.rmap hst_cos_deadtab_delete2.rmap data/foobar.fits")()  # doctest: +ELLIPSIS
-    CRDS  : INFO     Deleting 'data/foobar.fits' from 'hst_cos_deadtab.rmap'
-    CRDS  : ERROR    Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
+    CRDS - INFO - Deleting 'data/foobar.fits' from 'hst_cos_deadtab.rmap'
+    CRDS - ERROR - Refactoring operation FAILED : Terminal 'foobar.fits' could not be found and deleted.
     1
 
     >>> os.path.exists("./hst_cos_deadtab_delete2.rmap")
@@ -124,13 +124,13 @@ def dt_refactor_bad_modify_count():
 
     >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "data/hst_cos_deadtab_9998.rmap", 
     ...                                   "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits", expected=("add",))
-    CRDS  : ERROR    Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700gl_dead.fits' with 's7g1700hl_dead.fits'")
-    CRDS  : ERROR    Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('NUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700ql_dead.fits' with 's7g1700hl_dead.fits'")
+    CRDS - ERROR - Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('FUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700gl_dead.fits' with 's7g1700hl_dead.fits'")
+    CRDS - ERROR - Expected one of ('add',) but got 'replace' from change (('data/hst_cos_deadtab.rmap', 'data/hst_cos_deadtab_9998.rmap'), ('NUV',), ('1996-10-01', '00:00:00'), "replaced 's7g1700ql_dead.fits' with 's7g1700hl_dead.fits'")
     False
 
     >>> refactor.rmap_check_modifications("data/hst_cos_deadtab.rmap", "data/hst_cos_deadtab_9998.rmap", 
     ...                                   "data/s7g1700gl_dead.fits", "data/s7g1700hl_dead.fits", expected=("replace",))
-    CRDS  : ERROR    Replacement COUNT DIFFERENCE replacing 'data/s7g1700gl_dead.fits' with 'data/s7g1700hl_dead.fits' in 'data/hst_cos_deadtab.rmap' 1 vs. 2
+    CRDS - ERROR - Replacement COUNT DIFFERENCE replacing 'data/s7g1700gl_dead.fits' with 'data/s7g1700hl_dead.fits' in 'data/hst_cos_deadtab.rmap' 1 vs. 2
     False
     """
     

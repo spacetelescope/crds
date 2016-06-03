@@ -70,7 +70,7 @@ def dt_bad_references_warning_cache_config():
     False
     
     >>> crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'])    # doctest: +ELLIPSIS
-    CRDS  : WARNING  Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically invalid.
+    CRDS - WARNING - Recommended reference 'l2d0959cj_pfl.fits' of type 'pfltfile' is designated scientifically invalid.
     <BLANKLINE>
     {'pfltfile': '.../l2d0959cj_pfl.fits'}
 
@@ -104,13 +104,13 @@ def dt_bad_references_bestrefs_script_error():
     By default,  in crds.bestrefs use of a bad reference is an error:
 
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits")()
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8btxxx_raw_bad.fits
-    CRDS  : ERROR    instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
-    CRDS  : INFO     1 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     3 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
+    CRDS - ERROR - instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
+    CRDS - INFO - 1 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 3 infos
     1
     
     >>> test_config.cleanup(old_state)
@@ -125,13 +125,13 @@ def dt_bad_references_bestrefs_script_warning():
     False
 
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --allow-bad-references")() # doctest: +ELLIPSIS
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8btxxx_raw_bad.fits
-    CRDS  : WARNING  For data/j8btxxx_raw_bad.fits ACS pfltfile File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     1 warnings
-    CRDS  : INFO     3 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
+    CRDS - WARNING - For data/j8btxxx_raw_bad.fits ACS pfltfile File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 1 warnings
+    CRDS - INFO - 3 infos
     0
     
     >>> test_config.cleanup(old_state)
@@ -146,13 +146,13 @@ def dt_bad_references_bestrefs_script_deprecated():
     >>> config.ALLOW_BAD_REFERENCES.reset()
     
     >>> BestrefsScript("crds.bestrefs --new-context hst_0282.pmap --files data/j8btxxx_raw_bad.fits --bad-files-are-errors")() # doctest: +ELLIPSIS
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8btxxx_raw_bad.fits
-    CRDS  : ERROR    instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
-    CRDS  : INFO     1 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     3 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8btxxx_raw_bad.fits
+    CRDS - ERROR - instrument='ACS' type='PFLTFILE' data='data/j8btxxx_raw_bad.fits' ::  File 'L2D0959CJ_PFL.FITS' is bad. Use is not recommended,  results may not be scientifically valid.
+    CRDS - INFO - 1 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 3 infos
     1
 
     >>> test_config.cleanup(old_state)
@@ -187,7 +187,7 @@ def dt_bad_rules_jwst_getreferences_warning():
     False
 
     >>> refs = crds.getreferences(JWST_HEADER, observatory='jwst', context='jwst_0017.pmap', reftypes=["flat"])   # doctest: +ELLIPSIS
-    CRDS  : WARNING  Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
+    CRDS - WARNING - Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']
     <BLANKLINE>
     
     >>> list(refs.keys()) == ['flat']

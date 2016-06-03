@@ -79,7 +79,7 @@ Most people install CRDS as part of STScI/SSB's (Science Software Branch) Ureka 
 Follow the instructions for installing Ureka and afterward you should be able to do the following::
 
     % python -m crds.list --version
-    CRDS  : INFO     crds version 1.9.0 revision 2789:2793M
+    CRDS - INFO - crds version 1.9.0 revision 2789:2793M
 
 and get similar output reflecting your installed CRDS version.
 

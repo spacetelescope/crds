@@ -197,7 +197,7 @@ JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' C
 ** crds.matches can list all references which satisfy any filter constraints relevant to their bestref lookup.
 
 % python -m crds.matches --contexts jwst-niriss-operational --files-from-contexts --filters META.INSTRUMENT.FILTER='F480M' --brief
-CRDS  : INFO     Symbolic context 'jwst-niriss-operational' resolves to 'jwst_niriss_0028.imap'
+CRDS - INFO - Symbolic context 'jwst-niriss-operational' resolves to 'jwst_niriss_0028.imap'
 jwst_niriss_dark_0005.fits :  META.INSTRUMENT.DETECTOR='NIS' META.SUBARRAY.NAME='FULL'
 jwst_niriss_gain_0001.fits :  META.INSTRUMENT.DETECTOR='NIS'
 jwst_niriss_ipc_0002.fits :  META.INSTRUMENT.DETECTOR='NIS'

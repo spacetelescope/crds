@@ -6,16 +6,16 @@ tracebacks.
 >>> log.set_test_mode()
 
 >>> log.warning("this is a test warning.")
-CRDS  : WARNING  this is a test warning.
+CRDS - WARNING - this is a test warning.
 
 >>> log.error("this is a test error.")
-CRDS  : ERROR    this is a test error.
+CRDS - ERROR - this is a test error.
 
 >>> log.error("this is another test error.")
-CRDS  : ERROR    this is another test error.
+CRDS - ERROR - this is another test error.
 
 >>> log.info("this is just informative.")
-CRDS  : INFO     this is just informative.
+CRDS - INFO - this is just informative.
 
 >>> log.errors()
 2
@@ -24,9 +24,9 @@ CRDS  : INFO     this is just informative.
 (2, 1, 1)
 
 >>> log.standard_status()
-CRDS  : INFO     2 errors
-CRDS  : INFO     1 warnings
-CRDS  : INFO     1 infos
+CRDS - INFO - 2 errors
+CRDS - INFO - 1 warnings
+CRDS - INFO - 1 infos
 
 By default verbose messages are not emitted:
 
@@ -37,7 +37,7 @@ Calling set_verbose() turns on default verbosity=50:
 >>> old_verbose = log.set_verbose()
 
 >>> log.verbose("this is a test verbose message.")
-CRDS  : DEBUG    this is a test verbose message.
+CRDS - DEBUG - this is a test verbose message.
 
 No output is expected since default verbosity=50:
 
@@ -48,14 +48,14 @@ Output should now occur since verbosity=60:
 >>> log.set_verbose(60)
 50
 >>> log.verbose("this is a test verbose 60 message.", verbosity=60)
-CRDS  : DEBUG    this is a test verbose 60 message.
+CRDS - DEBUG - this is a test verbose 60 message.
 
 A number of context managers are defined for succinctly mapping nested
 exceptions onto CRDS messages or adding information:
 
 >>> with log.error_on_exception("Something bad happened and we trapped it"):
 ...     raise ValueError("some value was bad.")
-CRDS  : ERROR    Something bad happened and we trapped it : some value was bad.
+CRDS - ERROR - Something bad happened and we trapped it : some value was bad.
 
 >>> with log.augment_exception("A tad more parent info"):
 ...     raise ValueError("some vague deeply nested exception.")
