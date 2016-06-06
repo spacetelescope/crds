@@ -8,7 +8,7 @@ if sys.version_info >= (3,0,0):
     from urllib.request import urlopen
     from html import unescape
     import configparser
-
+    import pickle
 else:
     long = long
     string_types = (basestring,)
@@ -18,6 +18,7 @@ else:
     unescape = _parser_mod.HTMLParser().unescape
 
     import ConfigParser as configparser
+    import cPickle as pickle
 
 __all__ = [
     "long",
@@ -26,6 +27,6 @@ __all__ = [
     "urlopen",
     "unescape",
     "configparser",
-
+    "pickle",
     ]
 

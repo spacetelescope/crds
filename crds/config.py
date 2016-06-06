@@ -176,6 +176,12 @@ class ConfigItem(object):
 class StrConfigItem(ConfigItem):
     """Config item for a string value,  currently no difference from base ConfigItem."""
 
+    def __str__(self):
+        return str(self.get())
+
+    def __eq__(self, other):
+        return str(self.get()) == other
+
 class BooleanConfigItem(ConfigItem):
     """Represents a boolean environment setting for CRDS.
 
