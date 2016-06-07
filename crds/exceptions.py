@@ -24,6 +24,18 @@ class OwningProcessAbortedError(ServiceError):
 
 # -------------------------------------------------------------------------------------------
 
+class CrdsWebError(CrdsError):
+    """The id='error_message' <div> of a CRDS_server responsae page was present and not empty.
+    Generic 'caught' web error with error message.
+    """
+
+class CrdsWebAuthenticationError(CrdsWebError):
+    """The id='error_login' <div> of a CRDS server login response was present and not empty.
+    Login to the website failed due to username or password.
+    """
+
+# -------------------------------------------------------------------------------------------
+
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
 

@@ -14,7 +14,7 @@ import glob
 import yaml
 import socket
 
-from crds import log, config, cmdline, utils, timestamp, web, pysh
+from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
 from crds.client import api
 from crds.log import srepr
 
@@ -127,18 +127,26 @@ this command line interface must be members of the CRDS operators group
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
         for name in self.files:
-            log.info("Copying", repr(name))
-            if destination.startswith(socket.gethostname()):
-                output = pysh.out_err("cp -v ${name} ${path}")
-            else:
-                output = pysh.out_err("scp -v ${name} ${destination}")
-            if output:
-                log.verbose(output)
+            self.copy_file(name, path, destination)
             stats.increment("bytes", os.stat(name).st_size)
             stats.increment("files", 1)
         utils.divider()
         stats.report()
         utils.divider(char="=", func=log.info)
+
+    def copy_file(self, name, path, destination):
+        try:
+            log.info("Copying", repr(name))
+            if destination.startswith(socket.gethostname()):
+                output = pysh.out_err("cp -v ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+            else:
+                bname = os.path.basename(name)
+                output = pysh.out_err("scp -v ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+            if output:
+                log.verbose(output)
+            return output
+        except Exception as exc:
+            log.fatal_error("File transfer failed for: " + repr(name), "-->", repr(destination))
 
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""

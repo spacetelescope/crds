@@ -5,7 +5,7 @@ web server file submission system.
 from lxml import html
 import requests
 
-from crds import config, log, utils
+from crds import config, log, utils, exceptions
 from crds.python23 import *
 
 class CrdsDjangoConnection(object):
@@ -30,12 +30,14 @@ class CrdsDjangoConnection(object):
     def dump_response(self, name, response):
         """Print out verbose output related to web `response` from activity `name`."""
         utils.divider(name=name)
-        log.verbose("headers:", response.headers)
+        log.verbose("headers:\n", response.headers)
         utils.divider()
-        log.verbose("text:", response.text, verbosity=60)
+        log.verbose("status_code:", response.status_code)
+        utils.divider()
+        log.verbose("text:\n", response.text, verbosity=60)
         utils.divider()
         try:
-            log.verbose("json:", response.json()) 
+            log.verbose("json:\n", response.json()) 
         except:
             pass
         utils.divider()
@@ -47,6 +49,7 @@ class CrdsDjangoConnection(object):
         log.verbose("GET:", url)
         response = self.session.get(url)
         self.dump_response("GET response:", response)
+        self.check_error(response)
         return response
 
     def post(self, relative_url, *post_dicts, **post_vars):
@@ -57,6 +60,7 @@ class CrdsDjangoConnection(object):
         log.verbose("POST:", vars)
         response = self.session.post(url, vars)
         self.dump_response("POST response: ", response)
+        self.check_error(response)
         return response
 
     def repost(self, relative_url, *post_dicts, **post_vars):
@@ -77,14 +81,34 @@ class CrdsDjangoConnection(object):
     
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
-        self.repost(
+        response = self.repost(
             "/login/", 
             username = self.username,
             password = self.password, 
             instrument = self.locked_instrument,
             next = next,
             )
-    
+        self.check_login(response)
+        
+    def check_error(self, response):
+        """Call fatal_error() if response contains an error_message <div>."""
+        self._check_error(response, '//div[@id="error_message"]', "CRDS server error:")
+
+    def check_login(self, reseponse):
+        """Call fatal_error() if response contains an error_login <div>."""
+        self._check_error(reseponse, '//div[@id="error_login"]', "Error logging into CRDS server:")
+
+    def _check_error(self, response, xpath_spec, error_prefix):
+        """Extract the `xpath_spec` text from `response`,  if present call fatal_error() with
+        `error_prefix` and the response `xpath_spec` text.
+        """
+        error_msg_parse = html.fromstring(response.text).xpath(xpath_spec)
+        error_message = error_msg_parse and error_msg_parse[0].text.strip()
+        if error_message:
+            if error_message.startswith("ERROR: "):
+                error_message = error_message[len("ERROR: "):]
+            log.fatal_error(error_prefix, error_message)
+
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
