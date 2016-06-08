@@ -47,14 +47,13 @@ this command line interface must be members of the CRDS operators group
         super(ReferenceSubmissionScript, self).__init__(*args, **keys)
 
         self.username = None
-        self.session = None
+        self.connection = None
         self.submission = None
         self.submission_info = None
         self.pmap_mode = None
         self.pmap_name = None
         self.instruments_filekinds = None
         self.instrument = None
-        self.jpoll_key = None
         self.base_url = None
 
     def create_submission(self):
@@ -110,7 +109,7 @@ this command line interface must be members of the CRDS operators group
         self.submission_info = api.get_submission_info(self.observatory, self.username)
         self.instruments_filekinds = utils.get_instruments_filekinds(self.observatory, self.files) if self.args.files else {}
         self.instrument = list(self.instruments_filekinds.keys())[0] if len(self.instruments_filekinds) == 1 else "none"
-        self.session = web.CrdsDjangoConnection(
+        self.connection = web.CrdsDjangoConnection(
             locked_instrument=self.instrument, username=self.username, password=password, base_url=self.base_url)
         if self.args.derive_from_context in ["edit", "ops"]:
             self.pmap_mode = "pmap_" + self.args.derive_from_context
@@ -178,21 +177,18 @@ this command line interface must be members of the CRDS operators group
         
     def jpoll_open(self):
         """Mimic opening a JPOLL status channel as do pages with real-time status."""
-        response = self.session.get("/jpoll/open_channel")
-        self.session.dump_response("jpoll_open", response)
+        response = self.connection.get("/jpoll/open_channel")
         return response.json()
 
     # -------------------------------------------------------------------------------------------------
         
     def certify_files(self):
         """Run the CRDS server Certify Files page on `filepaths`."""
-        self.session.login()
         self.ingest_files()
-        self.jpoll_open()
-        self.session.repost(
+        self.connection.repost(
             "/certify/", pmap_name=self.pmap_name, pmap_mode=self.pmap_mode,
             compare_old_reference=not self.args.dont_compare_old_reference)
-        self.session.logout()
+        self.connection.logout()
 
     # -------------------------------------------------------------------------------------------------
         
@@ -207,10 +203,8 @@ this command line interface must be members of the CRDS operators group
 
     def _submission(self, relative_url):
         assert self.args.description is not None, "You must supply a --description for this function."
-        self.session.login()
         self.ingest_files()
-        self.jpoll_key = self.jpoll_open()
-        response = self.session.repost(
+        response = self.connection.repost(
             "/batch_submit_references/", 
             pmap_mode = self.pmap_mode,
             pmap_name = self.pmap_name,
@@ -223,6 +217,12 @@ this command line interface must be members of the CRDS operators group
             )
         return response
 
+    @web.background
+    def monitor(self):
+        jpoll_key = self.jpoll_open()
+        submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(jpoll_key, 3))
+        return submission_monitor()
+
     # -------------------------------------------------------------------------------------------------
         
     def main(self):
@@ -233,14 +233,18 @@ this command line interface must be members of the CRDS operators group
         self.finish_parameters()
 
         if self.args.logout:
-            self.session.login()
-            self.session.logout()
+            self.connection.login()
+            self.connection.logout()
             return
 
         self.submission = self.create_submission()
 
         if self.args.wipe:
             self.wipe_files()
+
+        self.connection.login()
+
+        self.monitor()
 
         if self.args.submission_kind == "batch":
             self.batch_submit_references()
@@ -250,9 +254,6 @@ this command line interface must be members of the CRDS operators group
             self.submit_references()
         elif self.args.submission_kind == "mappings":
             self.submit_mappings()
-        
-        log_dump = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
-        log_dump()
 
 # ===================================================================
 

@@ -2,11 +2,41 @@
 web server file submission system.
 """
 
-from lxml import html
+import queue
+import threading
 import requests
+from lxml import html
 
 from crds import config, log, utils, exceptions
 from crds.python23 import *
+
+# ==================================================================================================
+
+def log_section(section_name, section_value, verbosity=50, log_function=log.verbose, 
+                divider_name=None):
+    """Issue log divider bar followed by a corresponding log message."""
+    utils.divider(name=divider_name)
+    log_function(section_name, section_value, verbosity=verbosity)
+
+def background(f):
+    """a threading decorator use @background above the function you want to run in the background.
+    The decorated function returns (thread, queue) where queue will contain the function result
+    and thead is already started but not joined.
+    """
+
+    def run_thread(*args, **keys):
+        q = queue.Queue()
+        def queue_put_f():
+            q.put(f(*args, **keys))
+        t = threading.Thread(target=queue_put_f)
+        t.start()
+        return t, q
+
+    run_thread.__name__ = f.__name__ + "[background]"
+
+    return run_thread
+
+# ==================================================================================================
 
 class CrdsDjangoConnection(object):
 
@@ -29,39 +59,60 @@ class CrdsDjangoConnection(object):
 
     def dump_response(self, name, response):
         """Print out verbose output related to web `response` from activity `name`."""
-        utils.divider(name=name)
-        log.verbose("headers:\n", response.headers)
-        utils.divider()
-        log.verbose("status_code:", response.status_code)
-        utils.divider()
-        log.verbose("text:\n", response.text, verbosity=60)
-        utils.divider()
+        log_section("headers:\n", response.headers, divider_name=name)
+        log_section("status_code:", response.status_code)
+        log_section("text:\n", response.text, verbosity=60)
         try:
-            log.verbose("json:\n", response.json()) 
-        except:
+            json_text = response.json()
+            log_section("json:\n", json_text)
+        except Exception:
             pass
         utils.divider()
 
     def get(self, relative_url):
         """HTTP(S) GET `relative_url` and return the requests response object."""
+        t, q = self.get_start(relative_url)
+        return self.get_complete(t, q)
+    
+    def get_start(self, relative_url):
         url = self.abs_url(relative_url)
-        utils.divider(name="GET")
-        log.verbose("GET:", url)
-        response = self.session.get(url)
+        log_section("GET:", url, divider_name="GET")
+        t, q = self._get(url)
+        return t, q
+
+    def get_complete(self, t, q):
+        t.join()
+        response = q.get()
         self.dump_response("GET response:", response)
         self.check_error(response)
         return response
+    
+    @background
+    def _get(self, url):
+        return self.session.get(url)
 
     def post(self, relative_url, *post_dicts, **post_vars):
         """HTTP(S) POST `relative_url` and return the requests response object."""
+        t, q = self.post_start(relative_url, *post_dicts, **post_vars)
+        return self.post_complete(t, q)
+    
+    def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
-        utils.divider(name="POST " + url)
-        log.verbose("POST:", vars)
-        response = self.session.post(url, vars)
+        log_section("POST:", vars, divider_name="POST: " + url)
+        t, q = self._post(url, vars)
+        return t, q
+
+    def post_complete(self, t, q):
+        t.join()
+        response = q.get()
         self.dump_response("POST response: ", response)
         self.check_error(response)
         return response
+
+    @background
+    def _post(self, url, vars):
+        return self.session.post(url, vars)
 
     def repost(self, relative_url, *post_dicts, **post_vars):
         """First GET form from ``relative_url`,  next POST form to same
@@ -69,15 +120,26 @@ class CrdsDjangoConnection(object):
 
         Maintain Django CSRF session token.
         """
-        response = self.get(relative_url)
+        t, q = self.repost_start(relative_url, *post_dicts, **post_vars)
+        return self.repost_complete(t, q)
 
+    def repost_start(self, relative_url, *post_dicts, **post_vars):
+        """Initiate a repost,  first getting the form synchronously and extracting
+        the csrf token,  then doing a post_start() of the form and returning
+        the resulting thread and queue.
+        """
+        response = self.get(relative_url)
         csrf_token = html.fromstring(response.text).xpath(
             '//input[@name="csrfmiddlewaretoken"]/@value'
             )[0]
         post_vars['csrfmiddlewaretoken'] = csrf_token
+        return self.post_start(relative_url, *post_dicts, **post_vars)
 
-        response = self.post(relative_url, *post_dicts, **post_vars)
-        return response
+    def repost_complete(self, thread, queue):
+        """Join the post `thread` and complete the post using the response
+        taken from `queue`.
+        """
+        return self.post_complete(thread, queue)
     
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
@@ -112,3 +174,4 @@ class CrdsDjangoConnection(object):
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
+
