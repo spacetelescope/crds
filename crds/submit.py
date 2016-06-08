@@ -15,6 +15,7 @@ import yaml
 import socket
 
 from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
+from crds.submission import monitor
 from crds.client import api
 from crds.log import srepr
 
@@ -97,7 +98,7 @@ this command line interface must be members of the CRDS operators group
         self.add_argument("--wipe", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
         self.add_argument("--logout", action="store_true", 
-                          help="")
+                          help="Log out of the server,  dropping any lock.")
 
     # -------------------------------------------------------------------------------------------------
         
@@ -179,7 +180,7 @@ this command line interface must be members of the CRDS operators group
         """Mimic opening a JPOLL status channel as do pages with real-time status."""
         response = self.session.get("/jpoll/open_channel")
         self.session.dump_response("jpoll_open", response)
-        return response
+        return response.json()
 
     # -------------------------------------------------------------------------------------------------
         
@@ -208,7 +209,7 @@ this command line interface must be members of the CRDS operators group
         assert self.args.description is not None, "You must supply a --description for this function."
         self.session.login()
         self.ingest_files()
-        response = self.jpoll_open()
+        self.jpoll_key = self.jpoll_open()
         response = self.session.repost(
             "/batch_submit_references/", 
             pmap_mode = self.pmap_mode,
@@ -232,6 +233,7 @@ this command line interface must be members of the CRDS operators group
         self.finish_parameters()
 
         if self.args.logout:
+            self.session.login()
             self.session.logout()
             return
 
@@ -249,6 +251,8 @@ this command line interface must be members of the CRDS operators group
         elif self.args.submission_kind == "mappings":
             self.submit_mappings()
         
+        log_dump = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
+        log_dump()
 
 # ===================================================================
 
