@@ -205,7 +205,7 @@ this command line interface must be members of the CRDS operators group
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         response = self.connection.repost(
-            "/batch_submit_references/", 
+            relative_url,
             pmap_mode = self.pmap_mode,
             pmap_name = self.pmap_name,
             instrument = self.instrument,
