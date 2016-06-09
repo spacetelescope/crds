@@ -342,7 +342,15 @@ verbose_warning_on_exception = exception_trap_logger(verbose_warning)
 warn_on_exception = exception_trap_logger(warning)
 error_on_exception = exception_trap_logger(error)
 fatal_error_on_exception = exception_trap_logger(fatal_error)
-augment_exception = exception_trap_logger(_reraise)
+
+# Either supress-with-error or augment the exception in the enclosed block.
+# Suppressing an exception results in less information to identify the problem
+# but can also reveal multiple problems in a single program run if executed 
+# inside a loop that an augmented exception would have exited.
+if bool(os.environ.get("CRDS_TRAP_AUGMENTED", False)):
+    augment_exception = error_on_exception
+else:
+    augment_exception = exception_trap_logger(_reraise)
 
 # ===========================================================================
 
