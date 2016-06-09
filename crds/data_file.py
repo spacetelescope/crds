@@ -82,9 +82,9 @@ def hijack_warnings(func):
             old_showwarning = warnings.showwarning
             warnings.showwarning = hijacked_showwarning
             warnings.simplefilter("always", AstropyUserWarning)
-            warnings.filterwarnings("always", r".*", UserWarning, r".*jwst_lib.*")
+            warnings.filterwarnings("always", r".*", UserWarning, r".*jwst.*")
             if not config.ALLOW_SCHEMA_VIOLATIONS:
-                warnings.filterwarnings("error", r".*is not valid in keyword.*", UserWarning, r".*jwst_lib.*")
+                warnings.filterwarnings("error", r".*is not valid in keyword.*", UserWarning, r".*jwst.*")
             # warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*crds.data_file.*")
             # warnings.filterwarnings("ignore", r".*unclosed file.*", UserWarning, r".*astropy.io.fits.convenience.*")
             try:
@@ -168,8 +168,8 @@ def setval(filepath, key, value):
 def _dm_setval(filepath, key, value):
     """Set metadata `key` in file `filepath` to `value` using jwst datamodel.
     """
-    from jwst_lib import models
-    with models.open(filepath) as d_model:
+    from jwst import datamodels
+    with datamodels.open(filepath) as d_model:
         d_model[key.lower()] = value
         d_model.save(filepath)
 
@@ -271,18 +271,18 @@ def get_data_model_header(filepath, needed_keys=()):
 
 def get_data_model_flat_dict(filepath, needed_keys=()):
     """Get the header from `filepath` using the jwst data model."""
-    from jwst_lib import models
-    with log.augment_exception("JWST Data Model (jwst_lib.models)"):
-        with models.open(filepath) as d_model:
+    from jwst import datamodels
+    with log.augment_exception("JWST Data Model (jwst.datamodels)"):
+        with datamodels.open(filepath) as d_model:
             flat_dict = d_model.to_flat_dict(include_arrays=False)
     return flat_dict
 
 '''
-from jwst_lib import models
+from jwst import datamodels
 def dm_leak(filepath):
     """Memory leak demo/test/debug function."""
-    # with log.augment_exception("JWST Data Model (jwst_lib.models)"):
-    d_model = models.open(filepath)
+    # with log.augment_exception("JWST Data Model (jwst.datamodels)"):
+    d_model = datamodels.open(filepath)
     flat_dict = d_model.to_flat_dict(include_arrays=False)
     d_model.close()
     del d_model

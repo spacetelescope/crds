@@ -49,7 +49,7 @@ __all__ = ["getreferences", "getrecommendations"]
 
 # ============================================================================
 
-# !!!!! interface to jwst_lib.stpipe.crds_client
+# !!!!! interface to jwst.stpipe.crds_client
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
                   observatory="jwst", fast=False):
     """
@@ -308,7 +308,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
 
 # ============================================================================
 
-# !!!!! interface to jwst_lib.stpipe.crds_client
+# !!!!! interface to jwst.stpipe.crds_client
 
 # Because get_processing_mode is a cached function,  it's results will not
 # change after the first call without some special action.

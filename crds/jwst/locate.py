@@ -18,7 +18,7 @@ from . import tpn
 # =======================================================================
 
 try:
-    from jwst_lib.models import DataModel
+    from jwst.datamodels import DataModel
     MODEL = DataModel()
 except Exception:
     MODEL = None
