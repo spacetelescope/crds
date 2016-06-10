@@ -36,19 +36,6 @@ class Struct(dict):
 
 # ===================================================================
 
-def divider(name="", char="-", n=75, func=log.verbose):
-    """Create a log divider line consisting of `char` repeated `n` times
-    possibly with `name` injected into the center of the divider.
-    Output it as a string to logging function `func`.
-    """
-    if name:
-        n2 = (n - len(name) - 2) // 2
-        func(char*n2, name, char*n2)
-    else:
-        func(char*n)
-
-# ===================================================================
-
 def combine_dicts(*post_dicts, **post_vars):
     """Combine positional parameters (dictionaries) and individual
     variables specified by keyword into a single parameter dict.

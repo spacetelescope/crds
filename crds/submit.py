@@ -130,9 +130,9 @@ this command line interface must be members of the CRDS operators group
             self.copy_file(name, path, destination)
             stats.increment("bytes", os.stat(name).st_size)
             stats.increment("files", 1)
-        utils.divider()
+        log.divider()
         stats.report()
-        utils.divider(char="=", func=log.info)
+        log.divider(char="=", func=log.info)
 
     def copy_file(self, name, path, destination):
         try:
@@ -151,7 +151,7 @@ this command line interface must be members of the CRDS operators group
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
         destination = self.submission_info.ingest_dir
-        utils.divider(name="wipe files", char="=", func=log.info)
+        log.divider(name="wipe files", char="=", func=log.info)
         log.info("Wiping files at", repr(destination))
         host, path = destination.split(":")
         if destination.startswith(socket.gethostname()):
@@ -168,9 +168,9 @@ this command line interface must be members of the CRDS operators group
             total_bytes += os.stat(name).st_size
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
-        utils.divider(name="ingest files", char="=", func=log.info)
+        log.divider(name="ingest files", char="=", func=log.info)
         log.info("Copying", len(self.files), "file(s) totalling", total_bytes, "bytes")
-        utils.divider()
+        log.divider()
         return stats
 
     # -------------------------------------------------------------------------------------------------

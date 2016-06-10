@@ -15,7 +15,7 @@ from crds.python23 import *
 def log_section(section_name, section_value, verbosity=50, log_function=log.verbose, 
                 divider_name=None):
     """Issue log divider bar followed by a corresponding log message."""
-    utils.divider(name=divider_name)
+    log.divider(name=divider_name, verbosity=verbosity)
     log_function(section_name, section_value, verbosity=verbosity)
 
 def background(f):
@@ -59,15 +59,15 @@ class CrdsDjangoConnection(object):
 
     def dump_response(self, name, response):
         """Print out verbose output related to web `response` from activity `name`."""
-        log_section("headers:\n", response.headers, divider_name=name)
-        log_section("status_code:", response.status_code)
-        log_section("text:\n", response.text, verbosity=60)
+        log_section("headers:\n", response.headers, divider_name=name, verbosity=70)
+        log_section("status_code:", response.status_code, verbosity=50)
+        log_section("text:\n", response.text, verbosity=75)
         try:
             json_text = response.json()
             log_section("json:\n", json_text)
         except Exception:
             pass
-        utils.divider()
+        log.divider()
 
     def get(self, relative_url):
         """HTTP(S) GET `relative_url` and return the requests response object."""
