@@ -15,7 +15,7 @@ import yaml
 import socket
 
 from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
-from crds.submission import monitor
+from crds import monitor
 from crds.client import api
 from crds.log import srepr
 
