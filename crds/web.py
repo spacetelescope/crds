@@ -4,6 +4,7 @@ web server file submission system.
 
 import queue
 import threading
+# from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
 import requests
 from lxml import html
 
@@ -16,7 +17,7 @@ def log_section(section_name, section_value, verbosity=50, log_function=log.verb
                 divider_name=None):
     """Issue log divider bar followed by a corresponding log message."""
     log.divider(name=divider_name, verbosity=verbosity)
-    log_function(section_name, section_value, verbosity=verbosity)
+    log_function(section_name, section_value, verbosity=verbosity+5)
 
 def background(f):
     """a threading decorator use @background above the function you want to run in the background.
@@ -71,48 +72,63 @@ class CrdsDjangoConnection(object):
 
     def get(self, relative_url):
         """HTTP(S) GET `relative_url` and return the requests response object."""
-        t, q = self.get_start(relative_url)
-        return self.get_complete(t, q)
+        args = self.get_start(relative_url)
+        return self.web_complete(args)
     
     def get_start(self, relative_url):
         url = self.abs_url(relative_url)
-        log_section("GET:", url, divider_name="GET")
-        t, q = self._get(url)
-        return t, q
+        log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
+        return self._get(url)
 
-    def get_complete(self, t, q):
-        t.join()
-        response = q.get()
-        self.dump_response("GET response:", response)
+    def web_complete(self, args):
+        if isinstance(args, tuple) and len(args) == 2:
+            args[0].join()
+            response = args[1].get()
+        else:
+            response = args
+        self.dump_response("Response: ", response)
         self.check_error(response)
         return response
-    
-    @background
+
+    post_complete = get_complete = repost_complete = web_complete
+
+    # @background
     def _get(self, url):
         return self.session.get(url)
 
     def post(self, relative_url, *post_dicts, **post_vars):
         """HTTP(S) POST `relative_url` and return the requests response object."""
-        t, q = self.post_start(relative_url, *post_dicts, **post_vars)
-        return self.post_complete(t, q)
+        args = self.post_start(relative_url, *post_dicts, **post_vars)
+        return self.web_complete(args)
     
     def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
-        t, q = self._post(url, vars)
-        return t, q
+        return self._post(url, vars)
 
-    def post_complete(self, t, q):
-        t.join()
-        response = q.get()
-        self.dump_response("POST response: ", response)
-        self.check_error(response)
+    # @background
+    def _post(self, url, vars):
+        return self.session.post(url, data=vars)
+    
+    '''
+    def upload_file(self, relative_url, *post_dicts, **post_vars):
+        file_var = post_vars.pop("file_var", "file")
+        file = post_vars.pop("file")
+        content_type = post_vars.pop("content_type", "utf-8")
+        fields = dict(post_vars)
+        fields[file_var] = (file, open(file, "rb"), "text/plain") 
+        encoder = MultipartEncoder(fields=fields)
+        headers={'Content-Type': encoder.content_type}
+        response = self.repost(relative_url, data=encoder, headers=headers)
+        # monitor = MultipartEncoderMonitor(encoder, self.monitor_upload)
+        # headers={'Content-Type': monitor.content_type}
         return response
 
-    @background
-    def _post(self, url, vars):
-        return self.session.post(url, vars)
+    def monitor_upload(self, encoder, length):
+        log.verbose("Upload monitor:", encoder, length)
+
+    '''
 
     def repost(self, relative_url, *post_dicts, **post_vars):
         """First GET form from ``relative_url`,  next POST form to same
@@ -120,8 +136,8 @@ class CrdsDjangoConnection(object):
 
         Maintain Django CSRF session token.
         """
-        t, q = self.repost_start(relative_url, *post_dicts, **post_vars)
-        return self.repost_complete(t, q)
+        args = self.repost_start(relative_url, *post_dicts, **post_vars)
+        return self.web_complete(args)
 
     def repost_start(self, relative_url, *post_dicts, **post_vars):
         """Initiate a repost,  first getting the form synchronously and extracting
@@ -129,18 +145,13 @@ class CrdsDjangoConnection(object):
         the resulting thread and queue.
         """
         response = self.get(relative_url)
-        csrf_token = html.fromstring(response.text).xpath(
+        csrf_values= html.fromstring(response.text).xpath(
             '//input[@name="csrfmiddlewaretoken"]/@value'
-            )[0]
-        post_vars['csrfmiddlewaretoken'] = csrf_token
+            )
+        if csrf_values:
+            post_vars['csrfmiddlewaretoken'] = csrf_values[0]
         return self.post_start(relative_url, *post_dicts, **post_vars)
 
-    def repost_complete(self, thread, queue):
-        """Join the post `thread` and complete the post using the response
-        taken from `queue`.
-        """
-        return self.post_complete(thread, queue)
-    
     def login(self, next="/"):
         """Login to the CRDS website and proceed to relative url `next`."""
         response = self.repost(
@@ -169,7 +180,7 @@ class CrdsDjangoConnection(object):
         if error_message:
             if error_message.startswith("ERROR: "):
                 error_message = error_message[len("ERROR: "):]
-            log.fatal_error(error_prefix, error_message)
+            log.error(error_prefix, error_message)
 
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""

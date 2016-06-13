@@ -26,9 +26,7 @@ class ReferenceSubmissionScript(cmdline.Script):
 
     description = """
 This script initiates a CRDS file submission from the command line rather than the
-web server.   Once submitted the submission will be processed on the CRDS server,
-optionally monitored on a web page, via this script, or as a separate command line
-program crds.monitor.
+web server.   Once submitted the submission will be processed on the CRDS server.
 """
 
     epilog = """
@@ -134,6 +132,11 @@ this command line interface must be members of the CRDS operators group
         stats.report()
         log.divider(char="=", func=log.info)
 
+    def upload_file(self, name, path, destination):
+        self.connection.upload_file('/upload/alt_new/', file=name)
+        # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
+        # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
+
     def copy_file(self, name, path, destination):
         try:
             log.info("Copying", repr(name))
@@ -204,6 +207,7 @@ this command line interface must be members of the CRDS operators group
     def _submission(self, relative_url):
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
+        log.info("Posting web request for", srepr(relative_url))
         response = self.connection.repost(
             relative_url,
             pmap_mode = self.pmap_mode,
@@ -244,7 +248,8 @@ this command line interface must be members of the CRDS operators group
 
         self.connection.login()
 
-        self.monitor()
+        # if self.args.monitor:
+        #    future = self.monitor()
 
         if self.args.submission_kind == "batch":
             self.batch_submit_references()
@@ -254,6 +259,9 @@ this command line interface must be members of the CRDS operators group
             self.submit_references()
         elif self.args.submission_kind == "mappings":
             self.submit_mappings()
+
+        # if self.args.monitor:
+        #    self.connection.web_complete(future)
 
 # ===================================================================
 

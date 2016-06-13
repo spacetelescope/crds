@@ -47,9 +47,9 @@ polls the server for new messages at some periodic rate in seconds:
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
+        log.divider("monitoring server", func=log.info)
         exit_flag = False
         while not exit_flag:
-            log.divider()
             for message in self._poll_status():
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
                 exit_flag = handler(message)
