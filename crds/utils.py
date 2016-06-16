@@ -410,6 +410,20 @@ class TimingStats(object):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
 
+def elapsed_time(func):
+    """Decorator to report on elapsed time for a function call."""
+    def elapsed_wrapper(*args, **keys):
+        stats = TimingStats()
+        stats.start()
+        result = func(*args, **keys)
+        stats.stop()
+        stats.msg("Timing for", repr(func.__name__))
+        stats.report()
+        return result
+    elapsed_wrapper.__name__ = func.__name__ + "[elapsed_time]"
+    elapsed_wrapper.__doc__ = func.__doc__
+    return elapsed_wrapper
+
 def human_format_number(number):
     """Reformat `number` by switching to engineering units and dropping to two fractional digits,
     10s of megs for G-scale files.
