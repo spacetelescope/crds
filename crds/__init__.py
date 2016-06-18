@@ -30,8 +30,8 @@ from . import config   # module
 from .exceptions import *
 
 from crds.client import get_default_context
-from .heavy_client import getreferences, getrecommendations
-from .rmap import get_cached_mapping, locate_mapping, locate_file
+from .heavy_client import getreferences, getrecommendations, get_symbolic_mapping
+from .rmap import get_cached_mapping, locate_mapping, locate_file, asmapping
 
 # ============================================================================
 

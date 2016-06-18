@@ -5,12 +5,13 @@ from __future__ import absolute_import
 import sys
 import os   # False pylint warning unused import,  verify before removing.
 import os.path
+import shutil
 import stat
 import re
 import hashlib
 import io
 import functools
-from collections import Counter
+from collections import Counter, defaultdict
 import datetime
 import ast
 import gc
@@ -32,6 +33,18 @@ class Struct(dict):
 
     def __setattr__(self, name, val):
         self[name] = val
+
+# ===================================================================
+
+def combine_dicts(*post_dicts, **post_vars):
+    """Combine positional parameters (dictionaries) and individual
+    variables specified by keyword into a single parameter dict.
+    """
+    vars = dict()
+    for pars in post_dicts:
+        vars.update(pars)
+    vars.update(post_vars)
+    return vars
 
 # ===================================================================
 
@@ -403,6 +416,20 @@ class TimingStats(object):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
 
+def elapsed_time(func):
+    """Decorator to report on elapsed time for a function call."""
+    def elapsed_wrapper(*args, **keys):
+        stats = TimingStats()
+        stats.start()
+        result = func(*args, **keys)
+        stats.stop()
+        stats.msg("Timing for", repr(func.__name__))
+        stats.report()
+        return result
+    elapsed_wrapper.__name__ = func.__name__ + "[elapsed_time]"
+    elapsed_wrapper.__doc__ = func.__doc__
+    return elapsed_wrapper
+
 def human_format_number(number):
     """Reformat `number` by switching to engineering units and dropping to two fractional digits,
     10s of megs for G-scale files.
@@ -520,6 +547,34 @@ def remove(rmpath, observatory):
 
 # ===================================================================
 
+def _no_message(*args):
+    """Do nothing message handler."""
+
+def copytree(src, dst, symlinks=False, fnc_directory=_no_message, 
+             fnc_file=_no_message, fnc_symlink=_no_message):
+    """Derived from shutil.copytree() example with added function hooks called
+    on a per-directory, per-file, and per-symlink basis with (src, dest)
+    parameters.  Removes exception trapping since partial copies are useless
+    for CRDS.  Cannot handle devices or sockets, only regular files and
+    directories.   File stats not preserved.
+    """
+    os.makedirs(dst)
+    for name in os.listdir(src):
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        if symlinks and os.path.islink(srcname):
+            linkto = os.readlink(srcname)
+            fnc_symlink("Linking", log.srepr(linkto), "to", log.srepr(dstname))
+            os.symlink(linkto, dstname)
+        elif os.path.isdir(srcname):
+            fnc_directory("Copying dir", log.srepr(srcname), "to", log.srepr(dstname))
+            copytree(srcname, dstname, symlinks)
+        else:
+            fnc_file("Coping", log.srepr(srcname), "to", log.srepr(dstname))
+            shutil.copy(srcname, dstname)
+
+# ===================================================================
+
 def checksum(pathname):
     """Return the CRDS hexdigest for file at `pathname`.""" 
     xsum = hashlib.sha1()
@@ -551,6 +606,16 @@ def get_file_properties(observatory, filename):
     """Return instrument,filekind fields associated with filename."""
     path = config.locate_file(filename, observatory)
     return get_locator_module(observatory).get_file_properties(path)        
+
+def get_instruments_filekinds(observatory, filepaths):
+    """Given a list of filepaths return the mapping of instruments and
+    filekinds covered by the files.
+    """
+    itmapping = defaultdict(set)
+    for filepath in filepaths:
+        instrument, filekind = get_file_properties(observatory, filepath)
+        itmapping[instrument] |= set([filekind])
+    return { instr : sorted([filekind for filekind in itmapping[instr]]) for instr in  itmapping}
 
 # ===================================================================
 

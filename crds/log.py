@@ -419,6 +419,19 @@ def srepr(obj):
 
 # ==============================================================================
 
+def divider(name="", char="-", n=75, func=verbose, **keys):
+    """Create a log divider line consisting of `char` repeated `n` times
+    possibly with `name` injected into the center of the divider.
+    Output it as a string to logging function `func`.
+    """
+    if name:
+        n2 = (n - len(name) - 2) // 2
+        func(char*n2, name, char*n2, **keys)
+    else:
+        func(char*n, **keys)
+
+# ===================================================================
+
 def test():
     from crds import log
     import doctest

@@ -9,6 +9,7 @@ import os
 import os.path
 import re
 import glob
+import getpass 
 
 from crds import log
 from crds import python23
@@ -125,8 +126,7 @@ class ConfigItem(object):
     >>> os.environ["CRDS_CFG_ITEM"]
     '999'
     """
-    def __init__(self, env_var, default, comment=None, valid_values=None, lower=False, ini_section=None,
-                 fallback_function=None):
+    def __init__(self, env_var, default, comment=None, valid_values=None, lower=False, ini_section=None):
         """Defines CRDS environment item named `env_var` which has the value `default` when not specified anywhere."""
         self.env_var = env_var  # for starters,  this IS an env var,  bu conceptually it is an identifier.
         self.default = default
@@ -134,7 +134,6 @@ class ConfigItem(object):
         self.valid_values = valid_values
         self.lower = lower
         self.ini_section = ini_section
-        self.fallback_function = fallback_function
         self.get()
 
     def check_value(self, value):
@@ -147,13 +146,7 @@ class ConfigItem(object):
     def get(self):
         """Return the value of this control item,  or the default if it is not set."""
         value = get_crds_env_str(self.ini_section, self.env_var, self.default)
-        if value is None and self.fallback_function:
-            value = self.fallback_function()
-        if isinstance(value, str) and self.lower:
-            value = value.lower()
-        self.check_value(value)
-        if value is None and self.fallback_function:
-            self._set(value)
+        value = self._set(value)
         return value
     
     def set(self, value):
@@ -168,6 +161,7 @@ class ConfigItem(object):
             value = value.lower()
         self.check_value(value)
         os.environ[self.env_var] = str(value)
+        return value
  
     def reset(self):
         """Restore this variable to it's default value,  clearing any environment setting."""
@@ -581,6 +575,42 @@ CRDS_DEFAULT_SERVERS = {
 def get_server_url(observatory):
     """Return either the value of CRDS_SERVER_URL or an appropriate default server for `observatory`."""
     return os.environ.get("CRDS_SERVER_URL", CRDS_DEFAULT_SERVERS.get(observatory, None))
+
+# ===========================================================================
+
+USERNAME = None
+
+def get_username(override=None):
+    """Initialize the USERNAME config item and return the value, setting it to
+    `override` is override is not None.  (nominally command line override).
+    Defer username initialization until requested to avoid unneeded dialogs.
+    """
+    global USERNAME
+    if USERNAME is None:
+        # get env_var or ini_file
+        USERNAME = StrConfigItem(
+            "CRDS_USERNAME", None, ini_section="authentication",
+            comment="User's username on CRDS server, defaulting to current login.")
+        # ultimately: override or env_var or ini_file or fallback function
+        USERNAME.set(override or USERNAME.get() or getpass.getuser())
+    return USERNAME.get()
+
+PASSWORD = None
+
+def get_password(override=None):
+    """Initialize the PASSWORD config item and return the value setting it to
+    `override` if override is not None.  (nominally command line override.)
+    Defer password initialization until requested to avoid unneeded dialogs.
+    """
+    global PASSWORD
+    if PASSWORD is None:
+        # get env_var or ini_file
+        PASSWORD = StrConfigItem(
+            "CRDS_PASSWORD", None, ini_section="authentication",
+            comment="User's password on CRDS server, defaulting to interactive echo-less entry.")
+        # ultimately: override or env_var or ini_file or fallback function
+        PASSWORD.set(override or PASSWORD.get() or getpass.getpass())
+    return PASSWORD.get()
 
 # ===========================================================================
 
@@ -1044,6 +1074,15 @@ def clear_crds_state():
             del os.environ[var]
     CRDS_REF_SUBDIR_MODE = "None"
     _CRDS_CACHE_READONLY = False
+
+# -------------------------------------------------------------------------------------
+# Identifier used  to connect to remote status channels to monitor submission status, etc.
+
+PROCESS_KEY_RE_STR = r"[a-zA-Z0-9:\.\-]{1,128}"   #  character "/" must be excluded
+PROCESS_KEY_RE = re.compile(PROCESS_KEY_RE_STR)
+
+USER_NAME_RE_STR = r"[a-z_]+"
+USER_NAME_RE = re.compile(USER_NAME_RE_STR)
 
 # -------------------------------------------------------------------------------------
 
