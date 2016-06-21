@@ -70,27 +70,31 @@ class CrdsDjangoConnection(object):
             pass
         log.divider()
 
+    def background_complete(self, args):
+        if isinstance(args, tuple) and len(args) == 2:
+            args[0].join()
+            return args[1].get()
+        else:
+            response = args
+        return response
+
+    def response_complete(self, args):
+        response = self.background_complete(args)
+        self.dump_response("Response: ", response)
+        self.check_error(response)
+        return response
+    
+    post_complete = get_complete = repost_complete = response_complete
+
     def get(self, relative_url):
         """HTTP(S) GET `relative_url` and return the requests response object."""
         args = self.get_start(relative_url)
-        return self.web_complete(args)
+        return self.get_complete(args)
     
     def get_start(self, relative_url):
         url = self.abs_url(relative_url)
         log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
         return self._get(url)
-
-    def web_complete(self, args):
-        if isinstance(args, tuple) and len(args) == 2:
-            args[0].join()
-            response = args[1].get()
-        else:
-            response = args
-        self.dump_response("Response: ", response)
-        self.check_error(response)
-        return response
-
-    post_complete = get_complete = repost_complete = web_complete
 
     # @background
     def _get(self, url):
@@ -99,37 +103,18 @@ class CrdsDjangoConnection(object):
     def post(self, relative_url, *post_dicts, **post_vars):
         """HTTP(S) POST `relative_url` and return the requests response object."""
         args = self.post_start(relative_url, *post_dicts, **post_vars)
-        return self.web_complete(args)
-    
+        return self.post_complete(args)
+
     def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
         return self._post(url, vars)
 
-    # @background
+    @background
     def _post(self, url, vars):
         return self.session.post(url, data=vars)
     
-    '''
-    def upload_file(self, relative_url, *post_dicts, **post_vars):
-        file_var = post_vars.pop("file_var", "file")
-        file = post_vars.pop("file")
-        content_type = post_vars.pop("content_type", "utf-8")
-        fields = dict(post_vars)
-        fields[file_var] = (file, open(file, "rb"), "text/plain") 
-        encoder = MultipartEncoder(fields=fields)
-        headers={'Content-Type': encoder.content_type}
-        response = self.repost(relative_url, data=encoder, headers=headers)
-        # monitor = MultipartEncoderMonitor(encoder, self.monitor_upload)
-        # headers={'Content-Type': monitor.content_type}
-        return response
-
-    def monitor_upload(self, encoder, length):
-        log.verbose("Upload monitor:", encoder, length)
-
-    '''
-
     def repost(self, relative_url, *post_dicts, **post_vars):
         """First GET form from ``relative_url`,  next POST form to same
         url using composition of variables from *post_dicts and **post_vars.
@@ -137,7 +122,7 @@ class CrdsDjangoConnection(object):
         Maintain Django CSRF session token.
         """
         args = self.repost_start(relative_url, *post_dicts, **post_vars)
-        return self.web_complete(args)
+        return self.response_complete(args)
 
     def repost_start(self, relative_url, *post_dicts, **post_vars):
         """Initiate a repost,  first getting the form synchronously and extracting
@@ -185,4 +170,23 @@ class CrdsDjangoConnection(object):
     def logout(self):
         """Login to the CRDS website and proceed to relative url `next`."""
         self.get("/logout/")
+
+    '''
+    def upload_file(self, relative_url, *post_dicts, **post_vars):
+        file_var = post_vars.pop("file_var", "file")
+        file = post_vars.pop("file")
+        content_type = post_vars.pop("content_type", "utf-8")
+        fields = dict(post_vars)
+        fields[file_var] = (file, open(file, "rb"), "text/plain") 
+        encoder = MultipartEncoder(fields=fields)
+        headers={'Content-Type': encoder.content_type}
+        response = self.repost(relative_url, data=encoder, headers=headers)
+        # monitor = MultipartEncoderMonitor(encoder, self.monitor_upload)
+        # headers={'Content-Type': monitor.content_type}
+        return response
+
+    def monitor_upload(self, encoder, length):
+        log.verbose("Upload monitor:", encoder, length)
+
+    '''
 

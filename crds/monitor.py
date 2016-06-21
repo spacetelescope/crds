@@ -54,12 +54,13 @@ polls the server for new messages at some periodic rate in seconds:
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
                 exit_flag = handler(message)
             time.sleep(self.args.poll_delay)
+        log.divider("monitoring server done", func=log.info)
         return exit_flag
 
     def _poll_status(self):
         """Use network API to pull status messages from server."""
         try:
-            messages = api.jpoll_pull_messages(self.args.submission_key, since_id=self._last_id)
+            messages = api.jpoll_pull_messages(self.args.submission_key, since_id=str(self._last_id))
             if messages:
                 self._last_id = np.max([int(msg.id) for msg in messages])
             return messages
