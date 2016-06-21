@@ -230,7 +230,7 @@ this command line interface must be members of the CRDS operators group
         """Threaded completion function for any submission,  returns web response."""
         return self.connection.repost_complete(args)
 
-    # @web.background
+    @web.background
     def monitor(self):
         """Run a background job to monitor the submission on the server and output log info."""
         submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
@@ -274,8 +274,6 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.monitor_processing:
             monitor_future = self.monitor()
-
-        if self.args.monitor_processing:
             self.monitor_complete(monitor_future)
 
         if self.args.wait_for_completion:
