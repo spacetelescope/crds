@@ -16,6 +16,26 @@ class CrdsError(Exception):
 class ServiceError(CrdsError):
     """The service call failed for some reason."""
     
+class StatusChannelNotFoundError(ServiceError):
+    """Requested status channel does not exist.  Typo or deleted."""
+
+class OwningProcessAbortedError(ServiceError):
+    """An abort request was recieved on the specified channel."""
+
+# -------------------------------------------------------------------------------------------
+
+class CrdsWebError(CrdsError):
+    """The id='error_message' <div> of a CRDS_server responsae page was present and not empty.
+    Generic 'caught' web error with error message.
+    """
+
+class CrdsWebAuthenticationError(CrdsWebError):
+    """The id='error_login' <div> of a CRDS server login response was present and not empty.
+    Login to the website failed due to username or password.
+    """
+
+# -------------------------------------------------------------------------------------------
+
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
 

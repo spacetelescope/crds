@@ -61,6 +61,12 @@ def pipeline_mapping(filename):
     assert filename.endswith(".pmap"), "A .pmap file is required but got: '%s'" % filename
     return filename
 
+def context_spec(spec):
+    """Ensure filename is a .pmap or abstract .pmap like "jwst-edit" or date based context spec."""
+    assert config.is_context_spec(spec), \
+        "Parameter should be a .pmap or abstract context specifier, not: " + repr(spec)
+    return spec
+
 def instrument_mapping(filename):
     """Ensure `filename` is a .imap file."""
     assert filename.endswith(".imap"), "A .imap file is required but got: '%s'" % filename
@@ -91,7 +97,16 @@ def nrange(string):
     rmin, rmax = [int(x) for x in string.split(":")]
     assert 0 <= rmin <= rmax, "Invalid range values"
     return rmin, rmax
-    
+
+def process_key(string):
+    """Check the format of a remote process identification  key."""
+    assert config.PROCESS_KEY_RE.match(string),  "Invalid format for process key: " + repr(string)
+    return string
+
+def user_name(string):
+    """Check the format of a server user name string."""
+    assert config.USER_NAME_RE.match(string), "Invalid user name " + repr(string)
+    return string
 
 # =============================================================================
 # =============================================================================

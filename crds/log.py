@@ -6,16 +6,16 @@ tracebacks.
 >>> log.set_test_mode()
 
 >>> log.warning("this is a test warning.")
-CRDS  : WARNING  this is a test warning.
+CRDS - WARNING - this is a test warning.
 
 >>> log.error("this is a test error.")
-CRDS  : ERROR    this is a test error.
+CRDS - ERROR - this is a test error.
 
 >>> log.error("this is another test error.")
-CRDS  : ERROR    this is another test error.
+CRDS - ERROR - this is another test error.
 
 >>> log.info("this is just informative.")
-CRDS  : INFO     this is just informative.
+CRDS - INFO - this is just informative.
 
 >>> log.errors()
 2
@@ -24,9 +24,9 @@ CRDS  : INFO     this is just informative.
 (2, 1, 1)
 
 >>> log.standard_status()
-CRDS  : INFO     2 errors
-CRDS  : INFO     1 warnings
-CRDS  : INFO     1 infos
+CRDS - INFO - 2 errors
+CRDS - INFO - 1 warnings
+CRDS - INFO - 1 infos
 
 By default verbose messages are not emitted:
 
@@ -37,7 +37,7 @@ Calling set_verbose() turns on default verbosity=50:
 >>> old_verbose = log.set_verbose()
 
 >>> log.verbose("this is a test verbose message.")
-CRDS  : DEBUG    this is a test verbose message.
+CRDS - DEBUG - this is a test verbose message.
 
 No output is expected since default verbosity=50:
 
@@ -48,14 +48,14 @@ Output should now occur since verbosity=60:
 >>> log.set_verbose(60)
 50
 >>> log.verbose("this is a test verbose 60 message.", verbosity=60)
-CRDS  : DEBUG    this is a test verbose 60 message.
+CRDS - DEBUG - this is a test verbose 60 message.
 
 A number of context managers are defined for succinctly mapping nested
 exceptions onto CRDS messages or adding information:
 
 >>> with log.error_on_exception("Something bad happened and we trapped it"):
 ...     raise ValueError("some value was bad.")
-CRDS  : ERROR    Something bad happened and we trapped it : some value was bad.
+CRDS - ERROR - Something bad happened and we trapped it : some value was bad.
 
 >>> with log.augment_exception("A tad more parent info"):
 ...     raise ValueError("some vague deeply nested exception.")
@@ -127,7 +127,7 @@ class CrdsLogger(object):
         # self.formatter = logging.Formatter(
         #    '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
         self.formatter = logging.Formatter(
-            '%(name)-6s: %(levelname)-8s{} %(message)s'.format(" [%(asctime)s] " if enable_time else ""))
+            '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
         for handler in self.handlers:
             handler.setFormatter(self.formatter)
         return self.formatter
@@ -342,7 +342,15 @@ verbose_warning_on_exception = exception_trap_logger(verbose_warning)
 warn_on_exception = exception_trap_logger(warning)
 error_on_exception = exception_trap_logger(error)
 fatal_error_on_exception = exception_trap_logger(fatal_error)
-augment_exception = exception_trap_logger(_reraise)
+
+# Either supress-with-error or augment the exception in the enclosed block.
+# Suppressing an exception results in less information to identify the problem
+# but can also reveal multiple problems in a single program run if executed 
+# inside a loop that an augmented exception would have exited.
+if bool(os.environ.get("CRDS_TRAP_AUGMENTED", False)):
+    augment_exception = error_on_exception
+else:
+    augment_exception = exception_trap_logger(_reraise)
 
 # ===========================================================================
 
@@ -410,6 +418,19 @@ def srepr(obj):
     return repr(str(obj))
 
 # ==============================================================================
+
+def divider(name="", char="-", n=75, func=verbose, **keys):
+    """Create a log divider line consisting of `char` repeated `n` times
+    possibly with `name` injected into the center of the divider.
+    Output it as a string to logging function `func`.
+    """
+    if name:
+        n2 = (n - len(name) - 2) // 2
+        func(char*n2, name, char*n2, **keys)
+    else:
+        func(char*n, **keys)
+
+# ===================================================================
 
 def test():
     from crds import log

@@ -49,7 +49,7 @@ __all__ = ["getreferences", "getrecommendations"]
 
 # ============================================================================
 
-# !!!!! interface to jwst_lib.stpipe.crds_client
+# !!!!! interface to jwst.stpipe.crds_client
 def getreferences(parameters, reftypes=None, context=None, ignore_cache=False,
                   observatory="jwst", fast=False):
     """
@@ -308,7 +308,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
 
 # ============================================================================
 
-# !!!!! interface to jwst_lib.stpipe.crds_client
+# !!!!! interface to jwst.stpipe.crds_client
 
 # Because get_processing_mode is a cached function,  it's results will not
 # change after the first call without some special action.
@@ -528,6 +528,35 @@ def list_mappings(observatory, glob_pattern):
     """
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
+
+def get_symbolic_mapping(mapping, observatory=None, cached=True):
+    """Return a loaded mapping object,  first translating any date based or
+    named contexts into a more primitive serial number only mapping name.
+
+    This is basically the symbolic form of rmap.asmapping().  Since the default
+    setting of 'cached' is True,  it performs much like crds.get_cached_mapping()
+    but also accepts abstract or date-based names.
+    
+    Typically the latest files submitted on the server but not yet operational:
+    
+    >> get_symbolic_mapping("jwst-edit")
+    PipelineMapping('jwst_0153.pmap')
+
+    What's running in the pipeline now:
+
+    >> get_symbolic_mapping("jwst-operational")
+    PipelineMapping('jwst_0126.pmap')
+
+    What was running for a particular instrument, type, and date:
+
+    >> get_symbolic_mapping("jwst-miri-flat-2015-01-01T00:20:05")
+    ReferenceMapping('jwst_miri_flat_0012.rmap')
+
+    WARNING:  this is a high level feature which *requires* a server connection
+    to interpret the symbolic name into a primitive name.
+    """
+    abs_mapping = api.get_context_by_date(mapping, observatory)
+    return crds.asmapping(abs_mapping, cached=cached)
 
 # ============================================================================
 

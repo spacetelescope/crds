@@ -24,7 +24,7 @@ def dt_get_derived_from_created():
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
     >>> p.get_derived_from()
-    CRDS  : INFO     Skipping derivation checks for root mapping 'hst.pmap' derived_from = 'created by hand 12-23-2011'
+    CRDS - INFO - Skipping derivation checks for root mapping 'hst.pmap' derived_from = 'created by hand 12-23-2011'
     >>> test_config.cleanup(old_state)
     """
 def dt_get_derived_from_phony():
@@ -32,7 +32,7 @@ def dt_get_derived_from_phony():
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_phony_derive.rmap")
     >>> r.get_derived_from()
-    CRDS  : WARNING  Parent mapping for 'hst_acs_darkfile_phony_derive.rmap' = 'phony.rmap' does not exist.
+    CRDS - WARNING - Parent mapping for 'hst_acs_darkfile_phony_derive.rmap' = 'phony.rmap' does not exist.
     >>> test_config.cleanup(old_state)
     """
 
@@ -190,7 +190,7 @@ def dt_rmap_warn_checksum():
     ...     }),
     ... })
     ... ''', ignore_checksum='warn')
-    CRDS  : WARNING  Checksum error : sha1sum mismatch in '(noname)'
+    CRDS - WARNING - Checksum error : sha1sum mismatch in '(noname)'
     >>> test_config.cleanup(old_state)
     """
 
@@ -286,10 +286,12 @@ def dt_rmap_get_valid_values_map():
                  'PR130L'],
      'FILTER2': ['CLEAR2L',
                  'CLEAR2S',
+                 'F220M',
                  'F220W',
                  'F250W',
                  'F330W',
                  'F344N',
+                 'F410W',
                  'F435W',
                  'F660N',
                  'F814W',
@@ -300,6 +302,7 @@ def dt_rmap_get_valid_values_map():
                  'FR462N',
                  'FR505N',
                  'FR551N',
+                 'FR555N',
                  'FR601N',
                  'FR647M',
                  'FR656N',
@@ -308,6 +311,7 @@ def dt_rmap_get_valid_values_map():
                  'FR853N',
                  'FR914M',
                  'FR931N',
+                 'G800L',
                  'POL0V',
                  'POL120V',
                  'POL60V',
@@ -377,7 +381,7 @@ def dt_validate_mapping_invalid1():
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid1.rmap")
     >>> r.validate_mapping()
-    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='CCDAMP' value='DDDD' is not in ('A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD', 'ABCD', 'N/A')
+    CRDS - ERROR - Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('HRC', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='CCDAMP' value='DDDD' is not in ('A', 'B', 'C', 'D', 'AC', 'AD', 'BC', 'BD', 'ABCD', 'N/A')
     >>> test_config.cleanup(old_state)
     """
 
@@ -386,7 +390,7 @@ def dt_validate_mapping_invalid2():
     >>> old_state = test_config.setup()
     >>> r = rmap.get_cached_mapping("data/hst_acs_darkfile_invalid2.rmap")
     >>> r.validate_mapping()
-    CRDS  : ERROR    Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('FOOBAR', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='DETECTOR' value='FOOBAR' is not in ('WFC', 'HRC', 'SBC')
+    CRDS - ERROR - Match('DETECTOR', 'CCDAMP', 'CCDGAIN') : ('FOOBAR', 'A|ABCD|AD|B|BC|C|DDDD', '1.0|2.0|4.0|8.0') :  parameter='DETECTOR' value='FOOBAR' is not in ('WFC', 'HRC', 'SBC')
     >>> test_config.cleanup(old_state)
     """
 
@@ -402,7 +406,7 @@ def dt_rmap_get_equivalent_mapping_missing():
     >>> old_state = test_config.setup()
     >>> p = rmap.get_cached_mapping("hst.pmap")
     >>> p.get_equivalent_mapping("hst_cos_twozxtab_0001.rmap")
-    CRDS  : WARNING  No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'
+    CRDS - WARNING - No equivalent filekind in 'hst_cos.imap' corresponding to 'hst_cos_twozxtab_0001.rmap'
     >>> test_config.cleanup(old_state)
     """
 

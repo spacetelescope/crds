@@ -1,7 +1,7 @@
-CRDS  : INFO     Computing bestrefs for db datasets for ['cos']
-CRDS  : INFO     Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
-CRDS  : INFO     Downloaded  18089 dataset ids for 'cos' since None
-CRDS  : INFO     Affected products = 13393
+CRDS - INFO - Computing bestrefs for db datasets for ['cos']
+CRDS - INFO - Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu'
+CRDS - INFO - Downloaded  18089 dataset ids for 'cos' since None
+CRDS - INFO - Affected products = 13393
 la7803fiq
 la7803fkq
 la7805adq
@@ -13109,13 +13109,13 @@ lce328b2q
 lce329z6q
 lce32aziq
 lce32bzlq
-lcCRDS  : INFO     STARTED 2014-06-18 12:28:31.79
-CRDS  : INFO     STOPPED 2014-06-18 19:10:36.48
-CRDS  : INFO     ELAPSED 6:42:04.68
-CRDS  : INFO     18089 datasets at 0.75  datasets-per-second
-CRDS  : INFO     0 errors
-CRDS  : INFO     0 warnings
-CRDS  : INFO     8 infos
+lcCRDS - INFO - STARTED 2014-06-18 12:28:31.79
+CRDS - INFO - STOPPED 2014-06-18 19:10:36.48
+CRDS - INFO - ELAPSED 6:42:04.68
+CRDS - INFO - 18089 datasets at 0.75  datasets-per-second
+CRDS - INFO - 0 errors
+CRDS - INFO - 0 warnings
+CRDS - INFO - 8 infos
 e32ca5q
 lce32daeq
 lce32eroq

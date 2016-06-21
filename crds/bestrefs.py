@@ -14,11 +14,6 @@ from collections import namedtuple, OrderedDict
 import json
 from crds import python23
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
 import crds
 from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
 from crds import table_effects
@@ -126,7 +121,7 @@ class HeaderGenerator(object):
                     pick.write(json.dumps({ dataset : header }) + "\n")
         elif outpath.endswith(".pkl"):
             with open(outpath, "wb+") as pick:
-                pickle.dump(only_hdrs, pick)
+                python23.pickle.dump(only_hdrs, pick)
         log.info("Done writing", repr(outpath))
             
     def update_headers(self, headers2, only_ids=None):
@@ -369,7 +364,7 @@ class PickleHeaderGenerator(HeaderGenerator):
                     headers = json.load(pick)
         elif path.endswith(".pkl"):
             with open(path, "rb") as pick:
-                headers = pickle.load(pick)
+                headers = python23.pickle.load(pick)
         else:
             raise ValueError("Valid serialization formats are .json and .pkl")
         return headers

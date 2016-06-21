@@ -99,14 +99,14 @@ def dt_bestrefs_3_files():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     5 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 5 infos
     0
     
     >>> test_config.cleanup(old_state)
@@ -119,31 +119,31 @@ def dt_bestrefs_compare_source_files():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")()
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'v9718263j_npl.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'v9718264j_npl.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'v9718260j_npl.fits' :: Would update.
-    CRDS  : INFO     instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS  : INFO     Affected products = 3
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'v9718263j_npl.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'v9718264j_npl.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'v9718260j_npl.fits' :: Would update.
+    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO - Affected products = 3
     data/j8bt05njq_raw.fits
     data/j8bt06o6q_raw.fits
     data/j8bt09jcq_raw.fits
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     19 infos
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 19 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -156,14 +156,14 @@ def dt_bestrefs_3_files_default_context_from_server():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context=hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     5 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 5 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -176,16 +176,16 @@ def dt_bestrefs_broken_dataset_file():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt05njq_raw_broke.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw_broke.fits
-    CRDS  : ERROR    instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
-    CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     1 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     6 infos
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw_broke.fits
+    CRDS - ERROR - instrument='ACS' type='BIASFILE' data='data/j8bt05njq_raw_broke.fits' ::  New: Bestref FAILED:   parameter='CCDAMP' value='FOOBAR' is not in ['A', 'ABCD', 'AC', 'AD', 'B', 'BC', 'BD', 'C', 'D']
+    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO - 1 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 6 infos
     1
 
     >>> test_config.cleanup(old_state)
@@ -198,7 +198,7 @@ def dt_bestrefs_broken_cache_and_server():
     >>> old_state = test_config.setup(cache="/nowhere", url="https://server-is-out-of-town")
     
     >> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits")()
-    CRDS  : ERROR    (FATAL) CRDS server connection and cache load FAILED.  Cannot continue.  See https://hst-crds.stsci.edu or https://jwst-crds.stsci.edu for more information on configuring CRDS.
+    CRDS - ERROR - (FATAL) CRDS server connection and cache load FAILED.  Cannot continue.  See https://hst-crds.stsci.edu or https://jwst-crds.stsci.edu for more information on configuring CRDS.
     Traceback (most recent call last):
     ...
     SystemExit: 1
@@ -213,13 +213,13 @@ def dt_bestrefs_catalog_dataset():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap  --datasets LB6M01030")() # doctest: +ELLIPSIS
-    CRDS  : INFO     Dumping dataset parameters from CRDS server at '...' for ['LB6M01030']
-    CRDS  : INFO     Dumped 1 of 1 datasets from CRDS server at '...'
-    CRDS  : INFO     Computing bestrefs for datasets ['LB6M01030']
-    CRDS  : INFO     No comparison context or source comparison requested.
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     4 infos
+    CRDS - INFO - Dumping dataset parameters from CRDS server at '...' for ['LB6M01030']
+    CRDS - INFO - Dumped 1 of 1 datasets from CRDS server at '...'
+    CRDS - INFO - Computing bestrefs for datasets ['LB6M01030']
+    CRDS - INFO - No comparison context or source comparison requested.
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 4 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -239,13 +239,13 @@ def dt_bestrefs_context_to_context():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context data/hst_0001.pmap  --old-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits")()
-    CRDS  : INFO     No file header updates requested;  dry run.
-    CRDS  : INFO     ===> Processing data/j8bt05njq_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt06o6q_raw.fits
-    CRDS  : INFO     ===> Processing data/j8bt09jcq_raw.fits
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     4 infos
+    CRDS - INFO - No file header updates requested;  dry run.
+    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 4 infos
     0
     
     >>> test_config.cleanup(old_state)

@@ -58,15 +58,15 @@ class ListScript(cmdline.ContextsScript):
     The contents of mappings or references (header only) can be printed to stdout like this:
 
     % python -m crds.list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
-    CRDS  : INFO     Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
-    CRDS  : INFO     Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
+    CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
+    CRDS - INFO - Symbolic context 'jwst-nirspec-linearity-edit' resolves to 'jwst_nirspec_linearity_0009.rmap'
     /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     /cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
 
     References need to be catted explicitly,  but the list can come from the above methods of listing references:
 
     % python -m crds.list --cat jwst_nirspec_dark_0036.fits
-    CRDS  : INFO     Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
+    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
     ########################################################################################################################
     File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
     ########################################################################################################################

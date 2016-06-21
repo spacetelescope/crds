@@ -1156,7 +1156,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
         self.add_argument("-s", "--sync-files", dest="sync_files", action="store_true",
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
         self.add_argument("-l", "--allow-schema-violations", action="store_true",
-            help="Report jwst_lib.models schema violations as warnings rather than as errors.")
+            help="Report jwst.datamodels schema violations as warnings rather than as errors.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
         

@@ -53,10 +53,10 @@ and the end of the current history as the stopping point.  Normally there's noth
 the last thing processed was the end of the history and nothing has changed on the server.
 
     % query_affected_datasets
-    CRDS  : INFO     No new results available.
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     1 infos
+    CRDS - INFO - No new results available.
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 1 infos
 
 Following a context change,  by default QAD will notice a difference between the last saved context 
 and the new last context in the history.  QAD is designed to be sub-classed but by default prints log 
@@ -64,38 +64,38 @@ information and recorded affected datasets output to STDERR.   It prints affecte
 Run periodically,  QAD will typically see at most a single context switch.
 
     % query_affected_datasets > ids
-    CRDS  : INFO     Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
+    CRDS - INFO - Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
     ####################################################################################################
     --------------------------------------------------------------------------------------------------------------
     CRDS hst ops datasets affected hst_0299.pmap --> hst_0300.pmap on 2014-11-25-15:50:09
     --------------------------------------------------------------------------------------------------------------
-    CRDS  : INFO     [2014-11-25 15:50:12,563]  Mapping differences from 'hst_0299.pmap' --> 'hst_0300.pmap' affect:
+    CRDS - INFO - [2014-11-25 15:50:12,563]  Mapping differences from 'hst_0299.pmap' --> 'hst_0300.pmap' affect:
      {'cos': ['hvtab']}
-    CRDS  : INFO     [2014-11-25 15:50:12,731]  Possibly affected --datasets-since dates determined by 'hst_0299.pmap' --> 'hst_0300.pmap' are:
+    CRDS - INFO - [2014-11-25 15:50:12,731]  Possibly affected --datasets-since dates determined by 'hst_0299.pmap' --> 'hst_0300.pmap' are:
      {'cos': '2009-05-11 00:00:00'}
-    CRDS  : INFO     [2014-11-25 15:50:12,731]  Computing bestrefs for db datasets for ['cos']
-    CRDS  : INFO     [2014-11-25 15:50:12,731]  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu' since '2009-05-11 00:00:00'
-    CRDS  : INFO     [2014-11-25 15:50:16,457]  Downloaded  19592 dataset ids for 'cos' since '2009-05-11 00:00:00'
-    CRDS  : INFO     [2014-11-25 15:51:16,293]  Updated exposure counts:
+    CRDS - INFO - [2014-11-25 15:50:12,731]  Computing bestrefs for db datasets for ['cos']
+    CRDS - INFO - [2014-11-25 15:50:12,731]  Dumping dataset parameters for 'cos' from CRDS server at 'https://hst-crds.stsci.edu' since '2009-05-11 00:00:00'
+    CRDS - INFO - [2014-11-25 15:50:16,457]  Downloaded  19592 dataset ids for 'cos' since '2009-05-11 00:00:00'
+    CRDS - INFO - [2014-11-25 15:51:16,293]  Updated exposure counts:
      {'COS': {'hvtab': 13696}}
-    CRDS  : INFO     [2014-11-25 15:51:16,309]  Affected products = 9494
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  Unique error types: 0
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  STARTED 2014-11-25 15:50:10.67
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  STOPPED 2014-11-25 15:51:16.31
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  ELAPSED 0:01:05.64
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  19.59 K datasets at 298.47  datasets-per-second
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  0 errors
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  0 warnings
-    CRDS  : INFO     [2014-11-25 15:51:16,319]  12 infos
+    CRDS - INFO - [2014-11-25 15:51:16,309]  Affected products = 9494
+    CRDS - INFO - [2014-11-25 15:51:16,319]  Unique error types: 0
+    CRDS - INFO - [2014-11-25 15:51:16,319]  STARTED 2014-11-25 15:50:10.67
+    CRDS - INFO - [2014-11-25 15:51:16,319]  STOPPED 2014-11-25 15:51:16.31
+    CRDS - INFO - [2014-11-25 15:51:16,319]  ELAPSED 0:01:05.64
+    CRDS - INFO - [2014-11-25 15:51:16,319]  19.59 K datasets at 298.47  datasets-per-second
+    CRDS - INFO - [2014-11-25 15:51:16,319]  0 errors
+    CRDS - INFO - [2014-11-25 15:51:16,319]  0 warnings
+    CRDS - INFO - [2014-11-25 15:51:16,319]  12 infos
     --------------------------------------------------------------------------------------------------------------
     OK: CRDS hst ops datasets affected hst_0299.pmap --> hst_0300.pmap on 2014-11-25-15:50:09 : 9494 affected
     --------------------------------------------------------------------------------------------------------------
     ####################################################################################################
-    CRDS  : INFO     Contributing context switches = 1
-    CRDS  : INFO     Total products affected = 9494
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     3 infos
+    CRDS - INFO - Contributing context switches = 1
+    CRDS - INFO - Total products affected = 9494
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 3 infos
     
     % cat ids 
     i9zf01010
@@ -111,30 +111,30 @@ For the sake of custom queries,  QAD supports --starting-context (-x) and --stop
 history starting and stopping points.  -x and -y can be specified as CONTEXTS, HISTORY INDICES, or DATES.
 
     % query_affected_datasets -x 92 -y 94 > ids
-    CRDS  : INFO     Fetching effects for (92, '2014-11-05 13:53:15', 'hst_0296.pmap', 'Delivery of new ACS bias, dark, and cte_corrected dark reference files.')
-    CRDS  : INFO     Fetching effects for (93, '2014-11-10 13:11:02', 'hst_0297.pmap', 'The WFC3 Team delivered 3 new dark reference files.')
+    CRDS - INFO - Fetching effects for (92, '2014-11-05 13:53:15', 'hst_0296.pmap', 'Delivery of new ACS bias, dark, and cte_corrected dark reference files.')
+    CRDS - INFO - Fetching effects for (93, '2014-11-10 13:11:02', 'hst_0297.pmap', 'The WFC3 Team delivered 3 new dark reference files.')
     ####################################################################################################
     --------------------------------------------------------------------------------------------------------------
     CRDS hst ops datasets affected hst_0295.pmap --> hst_0296.pmap on 2014-11-05-13:55:08
     --------------------------------------------------------------------------------------------------------------
-    CRDS  : INFO     [2014-11-05 13:55:12,922]  Mapping differences from 'hst_0295.pmap' --> 'hst_0296.pmap' affect:
+    CRDS - INFO - [2014-11-05 13:55:12,922]  Mapping differences from 'hst_0295.pmap' --> 'hst_0296.pmap' affect:
      {'acs': ['biasfile', 'drkcfile', 'darkfile']}
-    CRDS  : INFO     [2014-11-05 13:55:13,576]  Possibly affected --datasets-since dates determined by 'hst_0295.pmap' --> 'hst_0296.pmap' are:
+    CRDS - INFO - [2014-11-05 13:55:13,576]  Possibly affected --datasets-since dates determined by 'hst_0295.pmap' --> 'hst_0296.pmap' are:
      {'acs': '2014-08-26 09:55:53'}
-    CRDS  : INFO     [2014-11-05 13:55:13,576]  Computing bestrefs for db datasets for ['acs']
-    CRDS  : INFO     [2014-11-05 13:55:13,576]  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-08-26 09:55:53'
-    CRDS  : INFO     [2014-11-05 13:55:39,323]  Downloaded  1431 dataset ids for 'acs' since '2014-08-26 09:55:53'
-    CRDS  : INFO     [2014-11-05 13:55:52,999]  Updated exposure counts:
+    CRDS - INFO - [2014-11-05 13:55:13,576]  Computing bestrefs for db datasets for ['acs']
+    CRDS - INFO - [2014-11-05 13:55:13,576]  Dumping dataset parameters for 'acs' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-08-26 09:55:53'
+    CRDS - INFO - [2014-11-05 13:55:39,323]  Downloaded  1431 dataset ids for 'acs' since '2014-08-26 09:55:53'
+    CRDS - INFO - [2014-11-05 13:55:52,999]  Updated exposure counts:
      {'ACS': {'biasfile': 1374, 'darkfile': 1386, 'drkcfile': 1386}}
-    CRDS  : INFO     [2014-11-05 13:55:53,001]  Affected products = 670
-    CRDS  : INFO     [2014-11-05 13:55:53,001]  Unique error types: 0
-    CRDS  : INFO     [2014-11-05 13:55:53,001]  STARTED 2014-11-05 13:55:10.62
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  STOPPED 2014-11-05 13:55:53.00
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  ELAPSED 0:00:42.37
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  1.43 K datasets at 33.77  datasets-per-second
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  0 errors
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  0 warnings
-    CRDS  : INFO     [2014-11-05 13:55:53,002]  12 infos
+    CRDS - INFO - [2014-11-05 13:55:53,001]  Affected products = 670
+    CRDS - INFO - [2014-11-05 13:55:53,001]  Unique error types: 0
+    CRDS - INFO - [2014-11-05 13:55:53,001]  STARTED 2014-11-05 13:55:10.62
+    CRDS - INFO - [2014-11-05 13:55:53,002]  STOPPED 2014-11-05 13:55:53.00
+    CRDS - INFO - [2014-11-05 13:55:53,002]  ELAPSED 0:00:42.37
+    CRDS - INFO - [2014-11-05 13:55:53,002]  1.43 K datasets at 33.77  datasets-per-second
+    CRDS - INFO - [2014-11-05 13:55:53,002]  0 errors
+    CRDS - INFO - [2014-11-05 13:55:53,002]  0 warnings
+    CRDS - INFO - [2014-11-05 13:55:53,002]  12 infos
     --------------------------------------------------------------------------------------------------------------
     OK: CRDS hst ops datasets affected hst_0295.pmap --> hst_0296.pmap on 2014-11-05-13:55:08 : 670 affected
     --------------------------------------------------------------------------------------------------------------
@@ -142,33 +142,33 @@ history starting and stopping points.  -x and -y can be specified as CONTEXTS, H
     --------------------------------------------------------------------------------------------------------------
     CRDS hst ops datasets affected hst_0296.pmap --> hst_0297.pmap on 2014-11-10-13:15:07
     --------------------------------------------------------------------------------------------------------------
-    CRDS  : INFO     [2014-11-10 13:15:10,393]  Mapping differences from 'hst_0296.pmap' --> 'hst_0297.pmap' affect:
+    CRDS - INFO - [2014-11-10 13:15:10,393]  Mapping differences from 'hst_0296.pmap' --> 'hst_0297.pmap' affect:
      {'wfc3': ['darkfile']}
-    CRDS  : INFO     [2014-11-10 13:15:10,574]  Possibly affected --datasets-since dates determined by 'hst_0296.pmap' --> 'hst_0297.pmap' are:
+    CRDS - INFO - [2014-11-10 13:15:10,574]  Possibly affected --datasets-since dates determined by 'hst_0296.pmap' --> 'hst_0297.pmap' are:
      {'wfc3': '2014-10-27 00:30:40'}
-    CRDS  : INFO     [2014-11-10 13:15:10,574]  Computing bestrefs for db datasets for ['wfc3']
-    CRDS  : INFO     [2014-11-10 13:15:10,574]  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-10-27 00:30:40'
-    CRDS  : INFO     [2014-11-10 13:15:33,868]  Downloaded  714 dataset ids for 'wfc3' since '2014-10-27 00:30:40'
-    CRDS  : INFO     [2014-11-10 13:15:43,290]  Updated exposure counts:
+    CRDS - INFO - [2014-11-10 13:15:10,574]  Computing bestrefs for db datasets for ['wfc3']
+    CRDS - INFO - [2014-11-10 13:15:10,574]  Dumping dataset parameters for 'wfc3' from CRDS server at 'https://hst-crds.stsci.edu' since '2014-10-27 00:30:40'
+    CRDS - INFO - [2014-11-10 13:15:33,868]  Downloaded  714 dataset ids for 'wfc3' since '2014-10-27 00:30:40'
+    CRDS - INFO - [2014-11-10 13:15:43,290]  Updated exposure counts:
      {'WFC3': {'darkfile': 369}}
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  Affected products = 292
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  Unique error types: 0
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  STARTED 2014-11-10 13:15:08.58
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  STOPPED 2014-11-10 13:15:43.29
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  ELAPSED 0:00:34.70
-    CRDS  : INFO     [2014-11-10 13:15:43,291]  714 datasets at 20.57  datasets-per-second
-    CRDS  : INFO     [2014-11-10 13:15:43,292]  0 errors
-    CRDS  : INFO     [2014-11-10 13:15:43,292]  0 warnings
-    CRDS  : INFO     [2014-11-10 13:15:43,292]  12 infos
+    CRDS - INFO - [2014-11-10 13:15:43,291]  Affected products = 292
+    CRDS - INFO - [2014-11-10 13:15:43,291]  Unique error types: 0
+    CRDS - INFO - [2014-11-10 13:15:43,291]  STARTED 2014-11-10 13:15:08.58
+    CRDS - INFO - [2014-11-10 13:15:43,291]  STOPPED 2014-11-10 13:15:43.29
+    CRDS - INFO - [2014-11-10 13:15:43,291]  ELAPSED 0:00:34.70
+    CRDS - INFO - [2014-11-10 13:15:43,291]  714 datasets at 20.57  datasets-per-second
+    CRDS - INFO - [2014-11-10 13:15:43,292]  0 errors
+    CRDS - INFO - [2014-11-10 13:15:43,292]  0 warnings
+    CRDS - INFO - [2014-11-10 13:15:43,292]  12 infos
     --------------------------------------------------------------------------------------------------------------
     OK: CRDS hst ops datasets affected hst_0296.pmap --> hst_0297.pmap on 2014-11-10-13:15:07 : 292 affected
     --------------------------------------------------------------------------------------------------------------
     ####################################################################################################
-    CRDS  : INFO     Contributing context switches = 2
-    CRDS  : INFO     Total products affected = 962
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     4 infos
+    CRDS - INFO - Contributing context switches = 2
+    CRDS - INFO - Total products affected = 962
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 4 infos
 
 QAD is designed to be run perdiodically,  say every 30 minutes,  to check with the CRDS server for 
 context updates.  If multiple context switches occur during one polling interval,  by default QAD
@@ -197,14 +197,14 @@ and quit.
 The --quiet (-q) parameter suppresses the recorded log output from the affected datasets computations:
 
     % query_affected_datasets -x 94 -y 97 -q > ids
-    CRDS  : INFO     Fetching effects for (94, '2014-11-18 17:15:35', 'hst_0298.pmap', 'Delivery of new ACS DKC, DRK, and BIA files.')
-    CRDS  : INFO     Fetching effects for (95, '2014-11-20 16:12:34', 'hst_0299.pmap', 'Delivery of new WFC3 UVIS darks.')
-    CRDS  : INFO     Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
-    CRDS  : INFO     Contributing context switches = 3
-    CRDS  : INFO     Total products affected = 10356
-    CRDS  : INFO     0 errors
-    CRDS  : INFO     0 warnings
-    CRDS  : INFO     5 infos
+    CRDS - INFO - Fetching effects for (94, '2014-11-18 17:15:35', 'hst_0298.pmap', 'Delivery of new ACS DKC, DRK, and BIA files.')
+    CRDS - INFO - Fetching effects for (95, '2014-11-20 16:12:34', 'hst_0299.pmap', 'Delivery of new WFC3 UVIS darks.')
+    CRDS - INFO - Fetching effects for (96, '2014-11-25 15:48:40', 'hst_0300.pmap', 'Delivery of a new COS HVTAB for association LCIX02080.')
+    CRDS - INFO - Contributing context switches = 3
+    CRDS - INFO - Total products affected = 10356
+    CRDS - INFO - 0 errors
+    CRDS - INFO - 0 warnings
+    CRDS - INFO - 5 infos
     
 NOTE:  CRDS logging is used in both query_affected_datasets and the original server-side affected datasets computations.  The
 final errors count shown above only applies to the client-side computing in query_affected_datasets,  so server-side errors are

@@ -15,7 +15,7 @@ import sys
 import os.path
 import pprint
 
-# from jwst_lib import models   # deferred
+# from jwst import datamodels   # deferred
 
 from crds import rmap, log, utils, heavy_client
 from crds.certify import TpnInfo
@@ -69,8 +69,8 @@ def tpninfos_key_to_parkeys(tpn):
 
 def _load_schema(schema_name=None):
     """Return the core data model schema."""
-    from jwst_lib import models
-    model = models.DataModel(schema=schema_name)
+    from jwst import datamodels
+    model = datamodels.DataModel(schema=schema_name)
     return model.schema
 
 def _schema_to_flat(schema):
