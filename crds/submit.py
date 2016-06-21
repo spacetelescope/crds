@@ -13,6 +13,7 @@ import shutil
 import glob
 import yaml
 import socket
+import time
 
 from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
 from crds import monitor
@@ -88,8 +89,10 @@ this command line interface must be members of the CRDS operators group
         self.add_argument("--dont-compare-old-reference", action="store_true",
                           help="Unless specified, CRDS will check the current reference against any reference it replaces, as appropriate and possible.")
         self.add_argument("--username", type=str, default=None, help="CRDS username of file submitter.")
-        # self.add_argument("--monitor-processing", action="store_true", 
-        #                  help="Monitor CRDS processing for on-going status and final confirmation link.")
+        self.add_argument("--monitor-processing", action="store_true", 
+                          help="Monitor CRDS processing for on-going status and final confirmation link.")
+        self.add_argument("--wait-for-completion", action="store_true",
+                          help="Wait until the server reports that the submission is done before exiting.  Otherwise use e-mail.")
         self.add_argument("--submission-kind", type=str, choices=["batch","mapping","references", "certify", "none"], default="batch",
                           help="Which form of submission to perform.  Defaults to batch.")
         self.add_argument("--wipe", action="store_true", 
@@ -178,7 +181,7 @@ this command line interface must be members of the CRDS operators group
 
     # -------------------------------------------------------------------------------------------------
         
-    def jpoll_open(self):
+    def jpoll_open_channel(self):
         """Mimic opening a JPOLL status channel as do pages with real-time status."""
         response = self.connection.get("/jpoll/open_channel")
         return response.json()
@@ -208,7 +211,7 @@ this command line interface must be members of the CRDS operators group
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         log.info("Posting web request for", srepr(relative_url))
-        response = self.connection.repost(
+        completion_args = self.connection.repost_start(
             relative_url,
             pmap_mode = self.pmap_mode,
             pmap_name = self.pmap_name,
@@ -219,13 +222,23 @@ this command line interface must be members of the CRDS operators group
             auto_rename=not self.args.dont_auto_rename,
             compare_old_reference=not self.args.dont_compare_old_reference,
             )
-        return response
+        # give POST time to complete send, not response
+        time.sleep(5.0)
+        return completion_args
 
-    @web.background
+    def submission_complete(self, args):
+        """Threaded completion function for any submission,  returns web response."""
+        return self.connection.repost_complete(args)
+
+    # @web.background
     def monitor(self):
-        jpoll_key = self.jpoll_open()
-        submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(jpoll_key, 3))
+        """Run a background job to monitor the submission on the server and output log info."""
+        submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
         return submission_monitor()
+
+    def monitor_complete(self, monitor_future):
+        """Wait for the monitor job to complete and return the result."""
+        return self.connection.background_complete(monitor_future)
 
     # -------------------------------------------------------------------------------------------------
         
@@ -248,20 +261,28 @@ this command line interface must be members of the CRDS operators group
 
         self.connection.login()
 
-        # if self.args.monitor:
-        #    future = self.monitor()
+        self.jpoll_key = self.jpoll_open_channel()
 
         if self.args.submission_kind == "batch":
-            self.batch_submit_references()
+            submit_future = self.batch_submit_references()
         elif self.args.submission_kind == "certify":
-            self.certify_files()
+            submit_future = self.certify_files()
         elif self.args.submission_kind == "references":
-            self.submit_references()
+            submit_future = self.submit_references()
         elif self.args.submission_kind == "mappings":
-            self.submit_mappings()
+            submit_future = self.submit_mappings()
 
-        # if self.args.monitor:
-        #    self.connection.web_complete(future)
+        if self.args.monitor_processing:
+            monitor_future = self.monitor()
+
+        if self.args.monitor_processing:
+            self.monitor_complete(monitor_future)
+
+        if self.args.wait_for_completion:
+            self.submission_complete(submit_future)
+
+        log.standard_status()
+        return log.errors()
 
 # ===================================================================
 
