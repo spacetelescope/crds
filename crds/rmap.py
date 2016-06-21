@@ -371,15 +371,21 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
-        self.filename = filename
         self.header = LowerCaseDict(header)   # consistent lower case values
+        self._newargs = (filename, header, selector)
+        self.filename = filename
         self.selector = selector
         self.comment = keys.pop("comment", None)
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
+        self.mapping = self.header["mapping"]
+        self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
+
+    def __getnewargs__(self):
+        return self._newargs
 
     @property
     def basename(self):
@@ -401,7 +407,7 @@ class Mapping(object):
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
-        if attr in self.header:
+        if hasattr(self.__dict__, "header") and attr in self.__dict__["header"]:
             return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
@@ -1157,7 +1163,28 @@ class ReferenceMapping(Mapping):
         # For "rmap_relevance" and "rmap_omit" expressions,  the expressions are enclosed in ()
         # to ensure no case conversions occur in LowerCaseDict.  Since ALWAYS is not in (),  it
         # shows up here as the standard "always".
+
+        # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
+        self._rmap_relevance_expr = None
         
+        # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
+        self._rmap_omit_expr = None
+
+        # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
+        self._parkey_relevance_exprs = None
+
+        # header precondition method, e.g. crds.hst.acs.precondition_header
+        # this is optional code which pre-processes and mutates header inputs
+        # set to identity if not defined.
+        self._precondition_header = None
+        self._fallback_header = None
+        self._rmap_update_headers = None
+        
+        self._init_compiled()
+
+    def _init_compiled(self):
+        """Initialize object fields which contain compiled code objects, special handling for pickling."""
+
         # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
         self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))  # secured
         
@@ -1174,6 +1201,22 @@ class ReferenceMapping(Mapping):
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
+
+    def __getstate__(self):
+        """Support pickling protocol, return mapping state,  working around compiled code attributes."""
+        state = dict(self.__dict__)
+        del state["_rmap_relevance_expr"]
+        del state["_rmap_omit_expr"]
+        del state["_precondition_header"]
+        del state["_fallback_header"]
+        del state["_rmap_update_headers"]
+        del state["_parkey_relevance_exprs"]
+        return state
+    
+    def __setstate__(self, state):
+        """Restore pickled state,  special handling for compiled code attributes."""
+        self.__dict__ = dict(state)
+        self._init_compiled()
     
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
@@ -1607,8 +1650,33 @@ def get_cached_mapping(mapping, **keys):
 
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
-    keys["loader"] = get_cached_mapping
-    return _load_mapping(mapping, **keys)
+    assert isinstance(mapping, python23.string_types), "Unexpected type in get_cached_mapping()."
+    mapping = str(mapping)
+    pkl = config.locate_mapping_pickle(mapping)
+    in_crds_cache = (mapping == os.path.basename(mapping))
+
+    loaded = None
+
+    if config.CRDS_PICKLE_MAPPINGS and config.is_context(mapping):
+        if in_crds_cache and os.path.exists(pkl):
+            with log.verbose_warning_on_exception("Failed loading pickle for", repr(mapping), level=70):
+                with open(pkl, "rb") as handle:
+                    loaded = python23.pickle.load(handle)
+                log.verbose("Loaded mapping", repr(mapping), "from", repr(pkl))
+
+    if loaded is None:
+        keys["loader"] = get_cached_mapping
+        loaded = _load_mapping(mapping, **keys)
+
+    if config.CRDS_PICKLE_MAPPINGS and config.is_context(mapping):
+        if in_crds_cache and not os.path.exists(pkl):
+            with log.verbose_warning_on_exception("Failed pickling mapping", repr(mapping), level=70):
+                utils.ensure_dir_exists(pkl)
+                with open(pkl, "wb+") as handle:
+                    python23.pickle.dump(loaded, handle)
+                log.verbose("Pickled mapping", repr(mapping), "as", repr(pkl))
+
+    return loaded
 
 def fetch_mapping(mapping, **keys):
     """Load any `mapping`,  exploiting Mapping's already in the cache but not
