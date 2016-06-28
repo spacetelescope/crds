@@ -412,6 +412,22 @@ class TimingStats(object):
         rate_str = human_format_number(rate) + " " + name + "-per-second"
         return count_str, rate_str
 
+    def log_status(self, name, intro, total=None):
+        """Do log output about stat `name` using `intro` as the descriptive lead-in to
+        the stats.
+        """
+        stat, stat_per_sec = self.raw_status(name)
+        if total is not None:
+            self.msg(intro, "[", 
+                     human_format_number(stat), "/", 
+                     human_format_number(total), name, "]",
+                     "[", 
+                     human_format_number(stat_per_sec), name + "-per-second ]")
+        else:
+            self.msg(intro, 
+                     "[", human_format_number(stat), name, "]", 
+                     "[", hman_format_number(stats_per_sec), name + "-per-second ]")            
+
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
