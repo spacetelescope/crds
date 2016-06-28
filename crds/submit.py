@@ -127,9 +127,14 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
-        for name in self.files:
+        total_size = utils.total_size(self.files)
+        for i, name in enumerate(self.files):
+            file_size = utils.file_size(name)
+            log.info("Copying", repr(name), "[", i+1, "/", len(self.files), " files ]",
+                     "[", utils.human_format_number(file_size), 
+                     "/", utils.human_format_number(total_size), " bytes ]")
             self.copy_file(name, path, destination)
-            stats.increment("bytes", os.stat(name).st_size)
+            stats.increment("bytes", file_size)
             stats.increment("files", 1)
         log.divider()
         stats.report()
@@ -142,7 +147,6 @@ this command line interface must be members of the CRDS operators group
 
     def copy_file(self, name, path, destination):
         try:
-            log.info("Copying", repr(name))
             if destination.startswith(socket.gethostname()):
                 output = pysh.out_err("cp -v ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
             else:

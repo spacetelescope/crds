@@ -416,6 +416,20 @@ class TimingStats(object):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
 
+# ===================================================================
+
+def total_size(filepaths):
+    """Return the total size of all files in `filepaths` as an integer."""
+    return sum([os.stat(filename).st_size for filename in filepaths])
+
+# ===================================================================
+
+def file_size(filepath):
+    """Return the size of `filepath` as an integer."""
+    return os.stat(filepath).st_size
+
+# ===================================================================
+
 def elapsed_time(func):
     """Decorator to report on elapsed time for a function call."""
     def elapsed_wrapper(*args, **keys):
@@ -429,6 +443,8 @@ def elapsed_time(func):
     elapsed_wrapper.__name__ = func.__name__ + "[elapsed_time]"
     elapsed_wrapper.__doc__ = func.__doc__
     return elapsed_wrapper
+
+# ===================================================================
 
 def human_format_number(number):
     """Reformat `number` by switching to engineering units and dropping to two fractional digits,
