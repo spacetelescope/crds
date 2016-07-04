@@ -352,22 +352,35 @@ class PickleHeaderGenerator(HeaderGenerator):
     
     def load_headers(self, path):
         """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
-        
-        if path.endswith(".json"):
-            headers = {}
-            try:
-                with open(path, "r") as pick:
-                    for line in pick:
+        return load_bestrefs_headers(path)
+
+# ============================================================================
+
+def load_bestrefs_headers(path):
+    """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  
+    Supports .pkl and .json.
+    
+    For easier editing and syntax error precision,  .json files are stored as
+    one header per line.  
+    
+    Also used by server to load mock parameters.
+    """
+    if path.endswith(".json"):
+        headers = {}
+        try:
+            with open(path, "r") as pick:
+                for line in pick:
+                    if line.strip():
                         headers.update(json.loads(line))
-            except ValueError:
-                with open(path, "r") as pick:
-                    headers = json.load(pick)
-        elif path.endswith(".pkl"):
-            with open(path, "rb") as pick:
-                headers = python23.pickle.load(pick)
-        else:
-            raise ValueError("Valid serialization formats are .json and .pkl")
-        return headers
+        except ValueError:
+            with open(path, "r") as pick:
+                headers = json.load(pick)
+    elif path.endswith(".pkl"):
+        with open(path, "rb") as pick:
+            headers = python23.pickle.load(pick)
+    else:
+        raise ValueError("Valid serialization formats are .json and .pkl")
+    return headers
 
 # ============================================================================
 
