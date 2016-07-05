@@ -127,10 +127,17 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
-        for name in self.files:
-            self.copy_file(name, path, destination)
-            stats.increment("bytes", os.stat(name).st_size)
+        total_size = utils.total_size(self.files)
+        for i, filename in enumerate(self.files):
+            file_size = utils.file_size(filename)
+            log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
+                     "[", utils.human_format_number(file_size), 
+                     "/", utils.human_format_number(total_size), " bytes ]")
+            self.copy_file(filename, path, destination)
+            stats.increment("bytes", file_size)
             stats.increment("files", 1)
+            stats.log_status("files", "Copy complete", len(self.files))
+            stats.log_status("bytes", "Copy complete", total_size)
         log.divider()
         stats.report()
         log.divider(char="=", func=log.info)
@@ -142,12 +149,12 @@ this command line interface must be members of the CRDS operators group
 
     def copy_file(self, name, path, destination):
         try:
-            log.info("Copying", repr(name))
+            verbose = "-v" if log.get_verbose() >= 65 else ""
             if destination.startswith(socket.gethostname()):
-                output = pysh.out_err("cp -v ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+                output = pysh.out_err("cp ${verbose} ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
             else:
                 bname = os.path.basename(name)
-                output = pysh.out_err("scp -v ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+                output = pysh.out_err("scp ${verbose} ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
             if output:
                 log.verbose(output)
             return output
@@ -169,13 +176,11 @@ this command line interface must be members of the CRDS operators group
 
     def _start_stats(self):
         """Helper method to initialize stats keeping for ingest."""
-        total_bytes = 0
-        for name in self.files:
-            total_bytes += os.stat(name).st_size
+        total_bytes = utils.total_size(self.files)
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
         log.divider(name="ingest files", char="=", func=log.info)
-        log.info("Copying", len(self.files), "file(s) totalling", total_bytes, "bytes")
+        log.info("Copying", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
         log.divider()
         return stats
 

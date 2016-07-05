@@ -208,7 +208,7 @@ def ref_properties_from_header(filename):
     # For legacy files,  just use the root filename as the unique id
     path, parts, ext = _get_fields(filename)
     serial = os.path.basename(os.path.splitext(filename)[0])
-    header = data_file.get_header(filename, observatory="jwst")
+    header = data_file.get_free_header(filename, observatory="jwst")
     instrument = utils.header_to_instrument(header).lower()
     assert instrument in INSTRUMENTS, "Invalid instrument " + repr(instrument)
     filekind = utils.get_any_of(header, ["REFTYPE", "TYPE", "META.TYPE", "META.REFFILE.TYPE"], "UNDEFINED").lower()

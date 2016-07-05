@@ -60,6 +60,7 @@ __all__ = [
            "get_dataset_headers_by_instrument",
            "get_dataset_ids",
            "get_best_references_by_ids",
+           "get_aui_best_references",
            "get_best_references_by_header_map",
 
            "get_required_parkeys",
@@ -266,6 +267,19 @@ def get_best_references_by_header_map(context, header_map, reftypes=None):
     """
     try:
         bestrefs_map = S.get_best_references_by_header_map(context, header_map, reftypes)
+    except Exception as exc:
+        raise CrdsLookupError(str(exc))
+    return bestrefs_map
+
+
+def get_aui_best_references(date, dataset_ids):
+    """Get best references for date and reference types
+    where a header is a dictionary of matching parameters.
+      
+    Returns { dataset_id : { reftype: bestref, ... }, ... }
+    """
+    try:
+        bestrefs_map = S.get_aui_best_references(date, dataset_ids)
     except Exception as exc:
         raise CrdsLookupError(str(exc))
     return bestrefs_map

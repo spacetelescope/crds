@@ -33,6 +33,18 @@
             "LRFWAVE == '7836.0'" : 'between 7471 8161',
             },
          'OBSTYPE': {"DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": 'CORONAGRAPHIC|IMAGING'},
+         'NAXIS1': {
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            },
+         'NAXIS2': {
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            },
+         'LTV1': {
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            },
+         'LTV2': {
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            },
          'SHUTRPOS': {"SHUTRPOS=='ANY'": 'A|B'}},
  'cos': {'LIFE_ADJ': {"LIFE_ADJ=='-11'": '-1.0|1.0',
                       "LIFE_ADJ=='-11.0'": '-1.0|1.0'},
