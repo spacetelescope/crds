@@ -3,5 +3,8 @@ pipeline environment (particularly HST TEST) to do more atypical CRDS tasks and
 debug.  The CRDS environment script in particular (crds_env.sh) is brittle
 since it adapts the pipeline environment to one suitable for running SSB code
 and CRDS; it's dependent on pipeline changes over which CRDS has no control and
-may need updates whenever it is used.  The other functional scripts wrap the 
-installed crds scripts with parameter choices as last used.
+may need updates whenever it is used.  In particular,  crds_env.sh sources
+owl_login.sh which needs to be updated for each SSB release.
+
+The other functional scripts wrap the installed crds scripts with parameter
+choices as last used.
