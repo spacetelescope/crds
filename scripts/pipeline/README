@@ -1,0 +1,7 @@
+The scripts in this directory are installed manually by CRDS developers in the
+pipeline environment (particularly HST TEST) to do more atypical CRDS tasks and
+debug.  The CRDS environment script in particular (crds_env.sh) is brittle
+since it adapts the pipeline environment to one suitable for running SSB code
+and CRDS; it's dependent on pipeline changes over which CRDS has no control and
+may need updates whenever it is used.  The other functional scripts wrap the 
+installed crds scripts with parameter choices as last used.
