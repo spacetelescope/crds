@@ -1,6 +1,6 @@
-__version__ = 'af27872'
+__version__ = '1f51071'
 
 __full_version_info__ = '''
-branch: opus_2016.1-universal
-sha1: af27872
+branch: master
+sha1: 1f51071
 '''
