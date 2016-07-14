@@ -97,6 +97,8 @@ this command line interface must be members of the CRDS operators group
                           help="Which form of submission to perform.  Defaults to batch.")
         self.add_argument("--wipe", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
+        self.add_argument("--keep-existing-files", action="store_true", 
+                          help="Don't recopy files already in the server ingest directory that have the correct length.")
         self.add_argument("--logout", action="store_true", 
                           help="Log out of the server,  dropping any lock.")
 
@@ -128,7 +130,8 @@ this command line interface must be members of the CRDS operators group
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
         total_size = utils.total_size(self.files)
-        for i, filename in enumerate(self.files):
+        remaining_files = self.remove_existing_files(self.files) if self.args.keep_existing_files else self.files
+        for i, filename in enumerate(remaining_files):
             file_size = utils.file_size(filename)
             log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
                      "[", utils.human_format_number(file_size), 
@@ -141,13 +144,43 @@ this command line interface must be members of the CRDS operators group
         log.divider()
         stats.report()
         log.divider(char="=", func=log.info)
+    
+    #def upload_file(self, name, path, destination):
+    #    self.connection.upload_file('/upload/alt_new/', file=name)
+    #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
+    #    # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
 
-    def upload_file(self, name, path, destination):
-        self.connection.upload_file('/upload/alt_new/', file=name)
-        # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
-        # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
+    def remove_existing_files(self, files):
+        """Remove files which have already been copied and have the correct server side
+        length.  This can save *hours* of copy time for repeat submissions.
+        """
+        ingest_info = self.get_ingested_files()
+        for filename in files[:]:
+            local_size = utils.file_size(filename)
+            try:
+                existing_size = int(ingest_info[os.path.basename(filename)]["size"])
+            except:
+                log.info("File", repr(filename), "does not exist in ingest directory and will be copied to CRDS server.")
+                continue
+            if local_size == existing_size:
+                log.info("File", repr(filename), "has already been copied and has correct length on CRDS server", repr(existing_size))
+                files.remove(filename)
+            else:
+                log.info("File", repr(filename), "exists but has incorrect size and must be recopied.  Deleting old ingest.")
+                self.connection.get(ingest_info["delete_url"])
+        return files
+
+    def get_ingested_files(self):
+        """Return the server-side JSON info on the files already in the submitter's ingest directory."""
+        result = self.connection.get('/upload/list/').json()
+        log.verbose("JSON info on existing ingested files:\n", log.PP(result))
+        return { info["name"] : info for info in result }
 
     def copy_file(self, name, path, destination):
+        """Perform a cp-based or scp-based copy of file `name`,  either to `path` or
+        a host location based on `destination` and `name`,  depending on whether or not 
+        the submitter's submission directory is visible from the host running this script.
+        """
         try:
             verbose = "-v" if log.get_verbose() >= 65 else ""
             if destination.startswith(socket.gethostname()):
