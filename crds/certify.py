@@ -14,7 +14,7 @@ import copy
 import numpy as np
 
 import crds
-from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config
+from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config, pysh
 from crds import tables
 from crds import client
 from crds import mapping_parser
@@ -447,7 +447,7 @@ class Certifier(object):
                  compare_old_reference=False, dump_provenance=False,
                  provenance_keys=None,
                  dont_parse=False, script=None, observatory=None, comparison_reference=None,
-                 original_name=None, trap_exceptions=None):
+                 original_name=None, trap_exceptions=None, run_fitsverify=False):
         
         self.filename = filename
         self.context = context
@@ -460,8 +460,9 @@ class Certifier(object):
         self.comparison_reference = comparison_reference
         self.original_name = original_name
         self.trap_exceptions = trap_exceptions
+        self.run_fitsverify = run_fitsverify
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)
-    
+
         assert self.check_references in [False, None, "exist", "contents"], \
             "invalid check_references parameter " + repr(self.check_references)
 
@@ -864,6 +865,16 @@ def handle_nan(var):
 class FitsCertifier(ReferenceCertifier):
     """Certifier dedicated to FITS format references."""
 
+    def __init__(self, *args, **keys):
+        super(FitsCertifier, self).__init__(*args, **keys)
+        if self.run_fitsverify:
+            status, out = pysh.status_out_err("which fitsverify")
+            if status == 0:
+                log.verbose("fitsverify enabled and installled at", repr(out))
+            else:
+                log.warning("External fitsverify program (cfitsio) is enabled but not found on PATH.")
+                self.run_fitsverify = False
+
     def load(self):
         """Use pyfits to verify the FITS format of self.filename."""
         if not self.filename.endswith(".fits"):
@@ -888,6 +899,26 @@ class FitsCertifier(ReferenceCertifier):
                                 unseen.remove(key)
         unseen = super(FitsCertifier, self)._dump_provenance_core(unseen)
         return unseen
+
+    def certify(self):
+        """Run checks on FITS file."""
+        super(FitsCertifier, self).certify()
+        if self.run_fitsverify:
+            self.fitsverify()
+    
+    def fitsverify(self):
+        """Run optional external fitsverify program from cfitsio library, installed separately from CRDS."""
+        log.info("Running fitsverify.")
+        err, output = pysh.status_out_err("fitsverify {}".format(self.filename))
+        for line in output.splitlines():
+            if "Error:" in line:
+                log.error(">>", line)
+            elif "Warning:" in line:
+                log.warning(">>", line)
+            else:
+                log.info(">>", line)
+        if err:
+            log.error("Errors detected by fitsverify.")
 
 # ============================================================================
 
@@ -946,7 +977,8 @@ class MappingCertifier(Certifier):
                           compare_old_reference=self.compare_old_reference,
                           trap_exceptions=self.trap_exceptions,
                           script=self.script,
-                          observatory=self.observatory)
+                          observatory=self.observatory,
+                          run_fitsverify=self.run_fitsverify)
 
     def get_existing_reference_paths(self, mapping):
         """Return the paths of the references referred to by mapping.  Omit
@@ -991,7 +1023,8 @@ def banner(char='#'):
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, script=None, observatory=None,
-                  comparison_reference=None, original_name=None, ith=""):
+                  comparison_reference=None, original_name=None, ith="",
+                  run_fitsverify=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
@@ -1032,7 +1065,8 @@ def certify_file(filename, context=None, dump_provenance=False, check_references
                               dont_parse=dont_parse, script=script, observatory=observatory,
                               comparison_reference=comparison_reference,
                               original_name=original_name,
-                              trap_exceptions=trap_exceptions)
+                              trap_exceptions=trap_exceptions,
+                              run_fitsverify=run_fitsverify)
         with trap(filename, "Validation error"):
             certifier.certify()
 
@@ -1060,7 +1094,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
-                  comparison_reference=None):
+                  comparison_reference=None, run_fitsverify=True):
     """certify_files() core function with error trapping set."""
     
     for fnum, filename in enumerate(files):
@@ -1073,7 +1107,7 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         certify_file(filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             trap_exceptions=trap_exceptions, compare_old_reference=compare_old_reference, 
             dont_parse=dont_parse, script=script, observatory=observatory,
-            comparison_reference=comparison_reference, ith=ith)
+            comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
         
     tables.clear_cache()
     if not skip_banner:
@@ -1157,6 +1191,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
         self.add_argument("-l", "--allow-schema-violations", action="store_true",
             help="Report jwst.datamodels schema violations as warnings rather than as errors.")
+        self.add_argument("-f", "--run-fitsverify", action="store_true",
+            help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
         
@@ -1216,7 +1252,8 @@ For more information on the checks being performed,  use --verbose or --verbosit
                       check_references=check_references, 
                       dont_parse=self.args.dont_parse,
                       trap_exceptions = not self.args.debug_traps,
-                      script=self, observatory=self.observatory)
+                      script=self, observatory=self.observatory,
+                      run_fitsverify=self.args.run_fitsverify)
     
         self.dump_unique_errors()
         return log.errors()
