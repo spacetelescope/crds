@@ -163,7 +163,8 @@ this command line interface must be members of the CRDS operators group
                 log.info("File", repr(filename), "does not exist in ingest directory and will be copied to CRDS server.")
                 continue
             if local_size == existing_size:
-                log.info("File", repr(filename), "has already been copied and has correct length on CRDS server", repr(existing_size))
+                log.info("File", repr(filename), "has already been copied and has correct length on CRDS server", 
+                         utils.human_format_number(existing_size))
                 files.remove(filename)
             else:
                 log.info("File", repr(filename), "exists but has incorrect size and must be recopied.  Deleting old ingest.")
@@ -172,6 +173,7 @@ this command line interface must be members of the CRDS operators group
 
     def get_ingested_files(self):
         """Return the server-side JSON info on the files already in the submitter's ingest directory."""
+        log.info("Determining existing files.")
         result = self.connection.get('/upload/list/').json()
         log.verbose("JSON info on existing ingested files:\n", log.PP(result))
         return { info["name"] : info for info in result }
@@ -221,6 +223,7 @@ this command line interface must be members of the CRDS operators group
         
     def jpoll_open_channel(self):
         """Mimic opening a JPOLL status channel as do pages with real-time status."""
+        log.info("Preparing server logging.")
         response = self.connection.get("/jpoll/open_channel")
         return response.json()
 
@@ -271,7 +274,11 @@ this command line interface must be members of the CRDS operators group
     @web.background
     def monitor(self):
         """Run a background job to monitor the submission on the server and output log info."""
-        submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
+        extra_params = ""
+        if "--log-time" in sys.argv:
+            extra_params = "--log-time"
+        submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
+                self.jpoll_key, 3, extra_params))
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
@@ -279,25 +286,34 @@ this command line interface must be members of the CRDS operators group
         return self.connection.background_complete(monitor_future)
 
     # -------------------------------------------------------------------------------------------------
+
+    def login(self):
+        log.info("Logging in aquiring lock.")
+        self.connection.login()
+
+    def logout(self):
+        log.info("Logging out releasing lock.")
+        self.connection.login()
+        self.connection.logout()
         
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
+
+        log.divider("setting up", char="=", func=log.info)
 
         self.require_server_connection()
         
         self.finish_parameters()
 
         if self.args.logout:
-            self.connection.login()
-            self.connection.logout()
-            return
+            return self.logout()
 
         self.submission = self.create_submission()
 
+        self.login()
+
         if self.args.wipe:
             self.wipe_files()
-
-        self.connection.login()
 
         self.jpoll_key = self.jpoll_open_channel()
 
