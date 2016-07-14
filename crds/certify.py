@@ -1094,7 +1094,7 @@ def get_certifier_class(original_name, filepath):
 def certify_files(files, context=None, dump_provenance=False, check_references=False, 
                   trap_exceptions=True, compare_old_reference=False,
                   dont_parse=False, skip_banner=False, script=None, observatory=None,
-                  comparison_reference=None, run_fitsverify=True):
+                  comparison_reference=None, run_fitsverify=False):
     """certify_files() core function with error trapping set."""
     
     for fnum, filename in enumerate(files):
