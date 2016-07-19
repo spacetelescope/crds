@@ -37,6 +37,14 @@ def background(f):
 
     return run_thread
 
+def background_complete(args):
+    if isinstance(args, tuple) and len(args) == 2:
+        args[0].join()
+        return args[1].get()
+    else:
+        response = args
+    return response
+
 # ==================================================================================================
 
 class CrdsDjangoConnection(object):
@@ -70,16 +78,8 @@ class CrdsDjangoConnection(object):
             pass
         log.divider()
 
-    def background_complete(self, args):
-        if isinstance(args, tuple) and len(args) == 2:
-            args[0].join()
-            return args[1].get()
-        else:
-            response = args
-        return response
-
     def response_complete(self, args):
-        response = self.background_complete(args)
+        response = background_complete(args)
         self.dump_response("Response: ", response)
         self.check_error(response)
         return response
@@ -91,13 +91,10 @@ class CrdsDjangoConnection(object):
         args = self.get_start(relative_url)
         return self.get_complete(args)
     
+    @background
     def get_start(self, relative_url):
         url = self.abs_url(relative_url)
         log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
-        return self._get(url)
-
-    # @background
-    def _get(self, url):
         return self.session.get(url)
 
     def post(self, relative_url, *post_dicts, **post_vars):
@@ -105,14 +102,11 @@ class CrdsDjangoConnection(object):
         args = self.post_start(relative_url, *post_dicts, **post_vars)
         return self.post_complete(args)
 
+    @background
     def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
-        return self._post(url, vars)
-
-    @background
-    def _post(self, url, vars):
         return self.session.post(url, data=vars)
     
     def repost(self, relative_url, *post_dicts, **post_vars):

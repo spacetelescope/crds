@@ -283,7 +283,7 @@ this command line interface must be members of the CRDS operators group
 
     def monitor_complete(self, monitor_future):
         """Wait for the monitor job to complete and return the result."""
-        return self.connection.background_complete(monitor_future)
+        return web.background_complete(monitor_future)
 
     # -------------------------------------------------------------------------------------------------
 
