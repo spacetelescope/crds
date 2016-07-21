@@ -19,6 +19,26 @@ def log_section(section_name, section_value, verbosity=50, log_function=log.verb
     log.divider(name=divider_name, verbosity=verbosity)
     log_function(section_name, section_value, verbosity=verbosity+5)
 
+# ==================================================================================================
+
+class ThreadWithExceptions(threading.Thread):
+    def __init__(self, target, *args, **keys):
+        super(ThreadWithExceptions, self).__init__(*args, **keys)
+        self.target = target
+        self.exc = None
+        self.rexc = None
+        self.result = None
+
+    def run(self):
+        try:
+            self.result = self.target()
+            self.exc = None
+        except:
+            exc = sys.exc_value
+            self.result = None
+            self.rexc = repr(exc)
+            self.exc = str(exc)
+
 def background(f):
     """a threading decorator use @background above the function you want to run in the background.
     The decorated function returns (thread, queue) where queue will contain the function result
@@ -26,24 +46,26 @@ def background(f):
     """
 
     def run_thread(*args, **keys):
-        q = queue.Queue()
-        def queue_put_f():
-            q.put(f(*args, **keys))
-        t = threading.Thread(target=queue_put_f)
+        def target_func():
+            return f(*args, **keys)
+        t = ThreadWithExceptions(target=target_func, name=f.__name__)
+        t.daemon = True
         t.start()
-        return t, q
+        return t
 
     run_thread.__name__ = f.__name__ + "[background]"
 
     return run_thread
 
-def background_complete(args):
-    if isinstance(args, tuple) and len(args) == 2:
-        args[0].join()
-        return args[1].get()
+def background_complete(t):
+    if isinstance(t, threading.Thread):
+        t.join()
+        if t.exc is None:
+            return t.result
+        else:
+            raise exceptions.CrdsError("Threading exception in", repr(t.name), ":", repr(t.exc))
     else:
-        response = args
-    return response
+        return t
 
 # ==================================================================================================
 
@@ -116,7 +138,7 @@ class CrdsDjangoConnection(object):
         Maintain Django CSRF session token.
         """
         args = self.repost_start(relative_url, *post_dicts, **post_vars)
-        return self.response_complete(args)
+        return self.repost_complete(args)
 
     def repost_start(self, relative_url, *post_dicts, **post_vars):
         """Initiate a repost,  first getting the form synchronously and extracting
