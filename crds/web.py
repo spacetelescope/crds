@@ -2,13 +2,12 @@
 web server file submission system.
 """
 
-import queue
-import threading
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
 import requests
 from lxml import html
 
 from crds import config, log, utils, exceptions
+from crds import background
 from crds.python23 import *
 
 # ==================================================================================================
@@ -18,55 +17,6 @@ def log_section(section_name, section_value, verbosity=50, log_function=log.verb
     """Issue log divider bar followed by a corresponding log message."""
     log.divider(name=divider_name, verbosity=verbosity)
     log_function(section_name, section_value, verbosity=verbosity+5)
-
-# ==================================================================================================
-
-class ThreadWithExceptions(threading.Thread):
-    def __init__(self, target, *args, **keys):
-        super(ThreadWithExceptions, self).__init__(*args, **keys)
-        self.target = target
-        self.exc = None
-        self.rexc = None
-        self.result = None
-
-    def run(self):
-        try:
-            self.result = self.target()
-            self.exc = None
-        except:
-            exc = sys.exc_value
-            self.result = None
-            self.rexc = repr(exc)
-            self.exc = str(exc)
-
-def background(f):
-    """a threading decorator use @background above the function you want to run in the background.
-    The decorated function returns (thread, queue) where queue will contain the function result
-    and thead is already started but not joined.
-    """
-
-    def run_thread(*args, **keys):
-        def target_func():
-            return f(*args, **keys)
-        t = ThreadWithExceptions(target=target_func, name=f.__name__)
-        t.daemon = True
-        t.start()
-        return t
-
-    run_thread.__name__ = f.__name__ + "[background]"
-
-    return run_thread
-
-def background_complete(t):
-    if isinstance(t, threading.Thread):
-        while t.isAlive():
-            t.join(1.0)
-        if t.exc is None:
-            return t.result
-        else:
-            raise exceptions.RuntimeError("Threading exception in", repr(t.name), ":", repr(t.exc))
-    else:
-        return t
 
 # ==================================================================================================
 
@@ -102,7 +52,7 @@ class CrdsDjangoConnection(object):
         log.divider()
 
     def response_complete(self, args):
-        response = background_complete(args)
+        response = background.background_complete(args)
         self.dump_response("Response: ", response)
         self.check_error(response)
         return response
@@ -114,7 +64,7 @@ class CrdsDjangoConnection(object):
         args = self.get_start(relative_url)
         return self.get_complete(args)
     
-    @background
+    @background.background
     def get_start(self, relative_url):
         url = self.abs_url(relative_url)
         log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
@@ -125,7 +75,7 @@ class CrdsDjangoConnection(object):
         args = self.post_start(relative_url, *post_dicts, **post_vars)
         return self.post_complete(args)
 
-    @background
+    @background.background
     def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
