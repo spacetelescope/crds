@@ -59,11 +59,12 @@ def background(f):
 
 def background_complete(t):
     if isinstance(t, threading.Thread):
-        t.join()
+        while t.isAlive():
+            t.join(1.0)
         if t.exc is None:
             return t.result
         else:
-            raise exceptions.CrdsError("Threading exception in", repr(t.name), ":", repr(t.exc))
+            raise exceptions.RuntimeError("Threading exception in", repr(t.name), ":", repr(t.exc))
     else:
         return t
 
