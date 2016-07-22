@@ -2,13 +2,12 @@
 web server file submission system.
 """
 
-import queue
-import threading
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
 import requests
 from lxml import html
 
 from crds import config, log, utils, exceptions
+from crds import background
 from crds.python23 import *
 
 # ==================================================================================================
@@ -18,24 +17,6 @@ def log_section(section_name, section_value, verbosity=50, log_function=log.verb
     """Issue log divider bar followed by a corresponding log message."""
     log.divider(name=divider_name, verbosity=verbosity)
     log_function(section_name, section_value, verbosity=verbosity+5)
-
-def background(f):
-    """a threading decorator use @background above the function you want to run in the background.
-    The decorated function returns (thread, queue) where queue will contain the function result
-    and thead is already started but not joined.
-    """
-
-    def run_thread(*args, **keys):
-        q = queue.Queue()
-        def queue_put_f():
-            q.put(f(*args, **keys))
-        t = threading.Thread(target=queue_put_f)
-        t.start()
-        return t, q
-
-    run_thread.__name__ = f.__name__ + "[background]"
-
-    return run_thread
 
 # ==================================================================================================
 
@@ -70,16 +51,8 @@ class CrdsDjangoConnection(object):
             pass
         log.divider()
 
-    def background_complete(self, args):
-        if isinstance(args, tuple) and len(args) == 2:
-            args[0].join()
-            return args[1].get()
-        else:
-            response = args
-        return response
-
     def response_complete(self, args):
-        response = self.background_complete(args)
+        response = background.background_complete(args)
         self.dump_response("Response: ", response)
         self.check_error(response)
         return response
@@ -91,13 +64,10 @@ class CrdsDjangoConnection(object):
         args = self.get_start(relative_url)
         return self.get_complete(args)
     
+    @background.background
     def get_start(self, relative_url):
         url = self.abs_url(relative_url)
         log_section("GET:", url, divider_name="GET: " + url.split("&")[0])
-        return self._get(url)
-
-    # @background
-    def _get(self, url):
         return self.session.get(url)
 
     def post(self, relative_url, *post_dicts, **post_vars):
@@ -105,14 +75,11 @@ class CrdsDjangoConnection(object):
         args = self.post_start(relative_url, *post_dicts, **post_vars)
         return self.post_complete(args)
 
+    @background.background
     def post_start(self, relative_url, *post_dicts, **post_vars):
         url = self.abs_url(relative_url)
         vars = utils.combine_dicts(*post_dicts, **post_vars)
         log_section("POST:", vars, divider_name="POST: " + url)
-        return self._post(url, vars)
-
-    @background
-    def _post(self, url, vars):
         return self.session.post(url, data=vars)
     
     def repost(self, relative_url, *post_dicts, **post_vars):
@@ -122,7 +89,7 @@ class CrdsDjangoConnection(object):
         Maintain Django CSRF session token.
         """
         args = self.repost_start(relative_url, *post_dicts, **post_vars)
-        return self.response_complete(args)
+        return self.repost_complete(args)
 
     def repost_start(self, relative_url, *post_dicts, **post_vars):
         """Initiate a repost,  first getting the form synchronously and extracting

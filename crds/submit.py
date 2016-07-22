@@ -15,7 +15,8 @@ import yaml
 import socket
 import time
 
-from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
+from crds import log, config, cmdline, utils, timestamp, pysh, exceptions
+from crds import web, background
 from crds import monitor
 from crds.client import api
 from crds.log import srepr
@@ -271,7 +272,7 @@ this command line interface must be members of the CRDS operators group
         """Threaded completion function for any submission,  returns web response."""
         return self.connection.repost_complete(args)
 
-    @web.background
+    @background.background
     def monitor(self):
         """Run a background job to monitor the submission on the server and output log info."""
         extra_params = ""
@@ -283,7 +284,7 @@ this command line interface must be members of the CRDS operators group
 
     def monitor_complete(self, monitor_future):
         """Wait for the monitor job to complete and return the result."""
-        return self.connection.background_complete(monitor_future)
+        return background.background_complete(monitor_future)
 
     # -------------------------------------------------------------------------------------------------
 
@@ -328,10 +329,12 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.monitor_processing:
             monitor_future = self.monitor()
-            self.monitor_complete(monitor_future)
 
         if self.args.wait_for_completion:
             self.submission_complete(submit_future)
+
+        if self.args.monitor_processing:
+            self.monitor_complete(monitor_future)
 
         log.standard_status()
         return log.errors()
