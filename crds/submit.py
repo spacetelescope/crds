@@ -328,10 +328,12 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.monitor_processing:
             monitor_future = self.monitor()
-            self.monitor_complete(monitor_future)
 
         if self.args.wait_for_completion:
             self.submission_complete(submit_future)
+
+        if self.args.monitor_processing:
+            self.monitor_complete(monitor_future)
 
         log.standard_status()
         return log.errors()

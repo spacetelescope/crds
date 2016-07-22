@@ -2,13 +2,12 @@
 web server file submission system.
 """
 
-import queue
-import threading
 # from requests_toolbelt.multipart.encoder import MultipartEncoder, MultipartEncoderMonitor
 import requests
 from lxml import html
 
-from crds import config, log, utils, exceptions, background
+from crds import config, log, utils, exceptions
+from crds import background
 from crds.python23 import *
 
 # ==================================================================================================
@@ -90,7 +89,7 @@ class CrdsDjangoConnection(object):
         Maintain Django CSRF session token.
         """
         args = self.repost_start(relative_url, *post_dicts, **post_vars)
-        return self.response_complete(args)
+        return self.repost_complete(args)
 
     def repost_start(self, relative_url, *post_dicts, **post_vars):
         """Initiate a repost,  first getting the form synchronously and extracting
