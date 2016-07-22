@@ -15,7 +15,8 @@ import yaml
 import socket
 import time
 
-from crds import log, config, cmdline, utils, timestamp, web, pysh, exceptions
+from crds import log, config, cmdline, utils, timestamp, pysh, exceptions
+from crds import web, background
 from crds import monitor
 from crds.client import api
 from crds.log import srepr
@@ -97,6 +98,8 @@ this command line interface must be members of the CRDS operators group
                           help="Which form of submission to perform.  Defaults to batch.")
         self.add_argument("--wipe", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
+        self.add_argument("--keep-existing-files", action="store_true", 
+                          help="Don't recopy files already in the server ingest directory that have the correct length.")
         self.add_argument("--logout", action="store_true", 
                           help="Log out of the server,  dropping any lock.")
 
@@ -127,27 +130,67 @@ this command line interface must be members of the CRDS operators group
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
-        for name in self.files:
-            self.copy_file(name, path, destination)
-            stats.increment("bytes", os.stat(name).st_size)
+        total_size = utils.total_size(self.files)
+        remaining_files = self.remove_existing_files(self.files) if self.args.keep_existing_files else self.files
+        for i, filename in enumerate(remaining_files):
+            file_size = utils.file_size(filename)
+            log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
+                     "[", utils.human_format_number(file_size), 
+                     "/", utils.human_format_number(total_size), " bytes ]")
+            self.copy_file(filename, path, destination)
+            stats.increment("bytes", file_size)
             stats.increment("files", 1)
+            stats.log_status("files", "Copy complete", len(self.files))
+            stats.log_status("bytes", "Copy complete", total_size)
         log.divider()
         stats.report()
         log.divider(char="=", func=log.info)
+    
+    #def upload_file(self, name, path, destination):
+    #    self.connection.upload_file('/upload/alt_new/', file=name)
+    #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
+    #    # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
 
-    def upload_file(self, name, path, destination):
-        self.connection.upload_file('/upload/alt_new/', file=name)
-        # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
-        # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
+    def remove_existing_files(self, files):
+        """Remove files which have already been copied and have the correct server side
+        length.  This can save *hours* of copy time for repeat submissions.
+        """
+        ingest_info = self.get_ingested_files()
+        for filename in files[:]:
+            local_size = utils.file_size(filename)
+            try:
+                existing_size = int(ingest_info[os.path.basename(filename)]["size"])
+            except:
+                log.info("File", repr(filename), "does not exist in ingest directory and will be copied to CRDS server.")
+                continue
+            if local_size == existing_size:
+                log.info("File", repr(filename), "has already been copied and has correct length on CRDS server", 
+                         utils.human_format_number(existing_size))
+                files.remove(filename)
+            else:
+                log.info("File", repr(filename), "exists but has incorrect size and must be recopied.  Deleting old ingest.")
+                self.connection.get(ingest_info["delete_url"])
+        return files
+
+    def get_ingested_files(self):
+        """Return the server-side JSON info on the files already in the submitter's ingest directory."""
+        log.info("Determining existing files.")
+        result = self.connection.get('/upload/list/').json()
+        log.verbose("JSON info on existing ingested files:\n", log.PP(result))
+        return { info["name"] : info for info in result }
 
     def copy_file(self, name, path, destination):
+        """Perform a cp-based or scp-based copy of file `name`,  either to `path` or
+        a host location based on `destination` and `name`,  depending on whether or not 
+        the submitter's submission directory is visible from the host running this script.
+        """
         try:
-            log.info("Copying", repr(name))
+            verbose = "-v" if log.get_verbose() >= 65 else ""
             if destination.startswith(socket.gethostname()):
-                output = pysh.out_err("cp -v ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+                output = pysh.out_err("cp ${verbose} ${name} ${path}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
             else:
                 bname = os.path.basename(name)
-                output = pysh.out_err("scp -v ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 50)
+                output = pysh.out_err("scp ${verbose} ${name} ${destination}/${bname}", raise_on_error=True, trace_commands=log.get_verbose() >= 65)
             if output:
                 log.verbose(output)
             return output
@@ -169,13 +212,11 @@ this command line interface must be members of the CRDS operators group
 
     def _start_stats(self):
         """Helper method to initialize stats keeping for ingest."""
-        total_bytes = 0
-        for name in self.files:
-            total_bytes += os.stat(name).st_size
+        total_bytes = utils.total_size(self.files)
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
         log.divider(name="ingest files", char="=", func=log.info)
-        log.info("Copying", len(self.files), "file(s) totalling", total_bytes, "bytes")
+        log.info("Copying", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
         log.divider()
         return stats
 
@@ -183,6 +224,7 @@ this command line interface must be members of the CRDS operators group
         
     def jpoll_open_channel(self):
         """Mimic opening a JPOLL status channel as do pages with real-time status."""
+        log.info("Preparing server logging.")
         response = self.connection.get("/jpoll/open_channel")
         return response.json()
 
@@ -230,36 +272,49 @@ this command line interface must be members of the CRDS operators group
         """Threaded completion function for any submission,  returns web response."""
         return self.connection.repost_complete(args)
 
-    @web.background
+    @background.background
     def monitor(self):
         """Run a background job to monitor the submission on the server and output log info."""
-        submission_monitor = monitor.MonitorScript("crds.submission.monitor --submission-key {} --poll {}".format(self.jpoll_key, 3))
+        extra_params = ""
+        if "--log-time" in sys.argv:
+            extra_params = "--log-time"
+        submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
+                self.jpoll_key, 3, extra_params))
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
         """Wait for the monitor job to complete and return the result."""
-        return self.connection.background_complete(monitor_future)
+        return background.background_complete(monitor_future)
 
     # -------------------------------------------------------------------------------------------------
+
+    def login(self):
+        log.info("Logging in aquiring lock.")
+        self.connection.login()
+
+    def logout(self):
+        log.info("Logging out releasing lock.")
+        self.connection.login()
+        self.connection.logout()
         
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
+
+        log.divider("setting up", char="=", func=log.info)
 
         self.require_server_connection()
         
         self.finish_parameters()
 
         if self.args.logout:
-            self.connection.login()
-            self.connection.logout()
-            return
+            return self.logout()
 
         self.submission = self.create_submission()
 
+        self.login()
+
         if self.args.wipe:
             self.wipe_files()
-
-        self.connection.login()
 
         self.jpoll_key = self.jpoll_open_channel()
 
@@ -274,10 +329,12 @@ this command line interface must be members of the CRDS operators group
 
         if self.args.monitor_processing:
             monitor_future = self.monitor()
-            self.monitor_complete(monitor_future)
 
         if self.args.wait_for_completion:
             self.submission_complete(submit_future)
+
+        if self.args.monitor_processing:
+            self.monitor_complete(monitor_future)
 
         log.standard_status()
         return log.errors()

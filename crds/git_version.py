@@ -1,6 +1,6 @@
-__version__ = 'e03c945'
+__version__ = '1f51071'
 
 __full_version_info__ = '''
-branch: opus-2016.1-server-release
-sha1: e03c945
+branch: master
+sha1: 1f51071
 '''

@@ -14,10 +14,10 @@ from crds import python23, config, exceptions, log
 
 # =======================================================================
 
-def reformat_date(date):
+def reformat_date(date, sep=" "):
     """Reformat datestring `d` in any recognized format in CRDS standard form."""
     parsed = parse_date(date)
-    return format_date(parsed)
+    return format_date(parsed, sep=sep)
 
 def format_date(date, sep=" "):
     """Format a datestring `d` in CRDS standard form.

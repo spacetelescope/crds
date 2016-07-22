@@ -30,7 +30,7 @@ class MonitorScript(cmdline.Script):
     epilog = """Monitoring is done with respect to a submission id/key and currently
 polls the server for new messages at some periodic rate in seconds:
 
-% python -m crds.submission.monitor --poll-delay 3.0 --submission-key miri-2016-04-24T04:20:34.112430-fred
+% python -m crds.monitor --poll-delay 3.0 --key 81323850-9517-416c-ae88-e6481de10a71
 """
 
     def __init__(self, *args, **keys):
@@ -40,36 +40,36 @@ polls the server for new messages at some periodic rate in seconds:
     def add_args(self):
         """Add class-specifc command line parameters."""
         super(MonitorScript, self).add_args()
-        self.add_argument("--submission-key", type=cmdline.process_key,
+        self.add_argument("--key", type=cmdline.process_key,
                           help="Key used to connect to remote process status stream.")
         self.add_argument("--poll-delay", type=int, default=3.0,
                           help="Time in seconds between polling for messages.")
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
-        log.divider("monitoring server", func=log.info)
+        log.divider("monitoring server on " + repr(self.args.key), func=log.info, char="=")
         exit_flag = False
         while not exit_flag:
             for message in self._poll_status():
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
                 exit_flag = handler(message)
             time.sleep(self.args.poll_delay)
-        log.divider("monitoring server done", func=log.info)
+        log.divider("monitoring server done", func=log.info, char="=")
         return exit_flag
 
     def _poll_status(self):
         """Use network API to pull status messages from server."""
         try:
-            messages = api.jpoll_pull_messages(self.args.submission_key, since_id=str(self._last_id))
+            messages = api.jpoll_pull_messages(self.args.key, since_id=str(self._last_id))
             if messages:
                 self._last_id = np.max([int(msg.id) for msg in messages])
             return messages
         except exceptions.StatusChannelNotFoundError:
-            log.verbose("Channel", srepr(self.args.submission_key), 
+            log.verbose("Channel", srepr(self.args.key), 
                         "not found.  Waiting for processing to start.")
             return []
         except exceptions.ServiceError as exc:
-            log.verbose("Unhandled RPC exception for", srepr(self.args.submission_key), "is", str(exc))
+            log.verbose("Unhandled RPC exception for", srepr(self.args.key), "is", str(exc))
             raise
 
     def format_remote(self, *params):

@@ -412,9 +412,39 @@ class TimingStats(object):
         rate_str = human_format_number(rate) + " " + name + "-per-second"
         return count_str, rate_str
 
+    def log_status(self, name, intro, total=None):
+        """Do log output about stat `name` using `intro` as the descriptive lead-in to
+        the stats.
+        """
+        stat, stat_per_sec = self.raw_status(name)
+        if total is not None:
+            self.msg(intro, "[", 
+                     human_format_number(stat), "/", 
+                     human_format_number(total), name, "]",
+                     "[", 
+                     human_format_number(stat_per_sec), name + "-per-second ]")
+        else:
+            self.msg(intro, 
+                     "[", human_format_number(stat), name, "]", 
+                     "[", hman_format_number(stats_per_sec), name + "-per-second ]")            
+
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
         self.output(*args, eol="")
+
+# ===================================================================
+
+def total_size(filepaths):
+    """Return the total size of all files in `filepaths` as an integer."""
+    return sum([os.stat(filename).st_size for filename in filepaths])
+
+# ===================================================================
+
+def file_size(filepath):
+    """Return the size of `filepath` as an integer."""
+    return os.stat(filepath).st_size
+
+# ===================================================================
 
 def elapsed_time(func):
     """Decorator to report on elapsed time for a function call."""
@@ -429,6 +459,8 @@ def elapsed_time(func):
     elapsed_wrapper.__name__ = func.__name__ + "[elapsed_time]"
     elapsed_wrapper.__doc__ = func.__doc__
     return elapsed_wrapper
+
+# ===================================================================
 
 def human_format_number(number):
     """Reformat `number` by switching to engineering units and dropping to two fractional digits,

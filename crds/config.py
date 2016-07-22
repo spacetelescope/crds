@@ -11,7 +11,7 @@ import re
 import glob
 import getpass 
 
-from crds import log
+from crds import log, exceptions
 from crds import python23
 
 # ===========================================================================
@@ -33,6 +33,9 @@ def _get_crds_ini_parser():
         with log.warn_on_exception("Failed reading CRDS rc file"):
             ini_path = _get_crds_ini_path()
             if os.path.exists(ini_path):
+                mode = os.stat(ini_path).st_mode
+                if mode & 0o077:
+                    raise exceptions.CrdsWebAuthenticationError("You must 'chmod 0600 $HOME/.crds.ini' to make it secret.")
                 parser.read(ini_path)
                 CRDS_INI_PARSER = parser
             else:
