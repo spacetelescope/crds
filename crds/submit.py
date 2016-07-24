@@ -16,7 +16,8 @@ import socket
 import time
 
 from crds import log, config, cmdline, utils, timestamp, pysh, exceptions
-from crds import web, monitor, background
+from crds import web, background
+from crds import monitor
 from crds.client import api
 from crds.log import srepr
 
