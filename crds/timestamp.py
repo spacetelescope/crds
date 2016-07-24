@@ -137,7 +137,7 @@ def parse_alphabetical_date(date):
     ihour, iminute, isecond, imicrosecond = parse_time(time)
 
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
-                                imicrosecond)
+                             imicrosecond)
 
 def parse_time(time):
     """Parse a time string into (hour, minute, second, microsecond), 
@@ -256,7 +256,7 @@ def parse_numerical_date(dstr):
     imonth, iday, iyear, = int(month), int(day), int(year)
  
     return datetime.datetime(iyear, imonth, iday, ihour, iminute, isecond, 
-                                imicrosecond)
+                             imicrosecond)
 
 class DateParser(object):
     _format = re.compile("")
@@ -311,14 +311,14 @@ class Sybdate(DateParser):
     ValueError: Invalid month value 'Mxx'
     """
     _format = re.compile(
-                r"(?P<month>[A-Za-z]{1,10})\s+" + \
-                r"(?P<day>\d{1,2}),?\s+" + \
-                r"(?P<year>\d{1,4})" + \
-                r"(\s+(?P<hour>\d{1,2}):" + \
-                    r"(?P<minute>\d{1,2}):" + \
-                    r"(?P<second>\d{1,2})\s*" + \
-                    r"(?P<meridian>am|pm|AM|PM)?" + \
-                r")?")
+        r"(?P<month>[A-Za-z]{1,10})\s+" + \
+            r"(?P<day>\d{1,2}),?\s+" + \
+            r"(?P<year>\d{1,4})" + \
+            r"(\s+(?P<hour>\d{1,2}):" + \
+            r"(?P<minute>\d{1,2}):" + \
+            r"(?P<second>\d{1,2})\s*" + \
+            r"(?P<meridian>am|pm|AM|PM)?" + \
+            r")?")
 
     @classmethod
     def _get_date_dict(cls, match):
