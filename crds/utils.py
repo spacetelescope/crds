@@ -426,7 +426,7 @@ class TimingStats(object):
         else:
             self.msg(intro, 
                      "[", human_format_number(stat), name, "]", 
-                     "[", hman_format_number(stats_per_sec), name + "-per-second ]")            
+                     "[", human_format_number(stat_per_sec), name + "-per-second ]")            
 
     def msg(self, *args):
         """Format (*args, **keys) using log.format() and call output()."""
