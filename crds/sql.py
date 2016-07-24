@@ -14,7 +14,7 @@ import os
 import os.path
 import sqlite3
 
-from crds import log, cmdline, config
+from crds import log, cmdline, config, python23
 from crds.client import api
 
 # ===================================================================
@@ -42,7 +42,7 @@ id, name, blob, state, blacklisted, rejected, observatory, instrument, filekind,
 
 * Executing a SQL query can be done as follows:
 
-% python -m crds.sql "select name, state, pedigree from crds_catalog"
+% python -m crds.sql "select name, state, pedigree from crds_hst_catalog"
 ('h230851po_pfl.fits', 'operational', 'GROUND')
 ('h230851qo_pfl.fits', 'operational', 'GROUND')
 ('h230851so_pfl.fits', 'operational', 'GROUND')
@@ -152,7 +152,7 @@ def squash_unicode(row):
     """Convert unicode strings in row to ordinary strings."""
     row2 = []
     for field in row:
-        if isinstance(field, (str, unicode)):
+        if isinstance(field, python23.string_types):
             row2.append(str(field))
         else:
             row2.append(field)
