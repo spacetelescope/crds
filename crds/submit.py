@@ -9,13 +9,10 @@ from __future__ import absolute_import
 import sys
 import os
 import os.path
-import shutil
-import glob
-import yaml
 import socket
 import time
 
-from crds import log, config, cmdline, utils, timestamp, pysh, exceptions
+from crds import log, config, cmdline, utils, pysh
 from crds import web, background
 from crds import monitor
 from crds.client import api
@@ -55,6 +52,7 @@ this command line interface must be members of the CRDS operators group
         self.instruments_filekinds = None
         self.instrument = None
         self.base_url = None
+        self.jpoll_key = None
 
     def create_submission(self):
         """Create a Submission object based on script / command-line parameters."""
@@ -241,15 +239,19 @@ this command line interface must be members of the CRDS operators group
     # -------------------------------------------------------------------------------------------------
         
     def batch_submit_references(self):
+        """Do a web re-post to the batch submit references web page."""
         return self._submission("/batch_submit_references/")
         
     def submit_references(self):
+        """Do a web re-post to the submit references web page."""
         return self._submission("/submit/reference/")
         
     def submit_mappings(self):
+        """Do a web re-post to the submit mappings web page."""
         return self._submission("/submit/mapping/")
 
     def _submission(self, relative_url):
+        """Do a generic submission re-post to the specified relative_url."""
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         log.info("Posting web request for", srepr(relative_url))
@@ -279,7 +281,7 @@ this command line interface must be members of the CRDS operators group
         if "--log-time" in sys.argv:
             extra_params = "--log-time"
         submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
-                self.jpoll_key, 3, extra_params))
+            self.jpoll_key, 3, extra_params))
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
@@ -289,10 +291,12 @@ this command line interface must be members of the CRDS operators group
     # -------------------------------------------------------------------------------------------------
 
     def login(self):
+        """Log in to the CRDS server using server user credentials."""
         log.info("Logging in aquiring lock.")
         self.connection.login()
 
     def logout(self):
+        """Log out of the CRDS server,  releasing any lock held by this user."""
         log.info("Logging out releasing lock.")
         self.connection.login()
         self.connection.logout()
