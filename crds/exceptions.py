@@ -36,6 +36,11 @@ class CrdsWebAuthenticationError(CrdsWebError):
 
 # -------------------------------------------------------------------------------------------
 
+class CrdsBackgroundError(CrdsError):
+    """An exception occurred in a background task and was re-raised in the foreground."""
+
+# -------------------------------------------------------------------------------------------
+
 class CrdsDownloadError(CrdsError):
     """Error downloading data for a reference or mapping file."""
 
