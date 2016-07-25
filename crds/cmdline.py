@@ -149,6 +149,7 @@ class Script(object):
         self.reset_log = reset_log
         if self.reset_log:
             log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
+        self._exit_status = None
 
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
@@ -160,11 +161,32 @@ class Script(object):
         call tree of code which is run inside the profiler or debugger.
         """
         self.contexts = self.determine_contexts()
-        result = self.main()
+        self._exit_status = self.main()
         self.report_stats()  # here if not called already
         if self.print_status:
             log.standard_status()
-        return result
+        return self._exit_status
+
+    # @data_file.hijack_warnings
+    def __call__(self):
+        """Run the script's _main() according to command line parameters."""
+        try:
+            if self.args.debug_traps:
+                log.set_exception_trap(False)
+            if self.args.version:
+                _show_version()
+            elif self.args.profile:
+                self._profile()
+            elif self.args.pdb:
+                pdb.runctx("self._main()", globals(), locals())
+            else:
+                self._main()
+        except KeyboardInterrupt:
+            if self.args.pdb:
+                raise
+            else:
+                raise KeyboardInterrupt("Interrupted... quitting.")
+        return self._exit_status
 
     @property
     def locator(self):
@@ -380,26 +402,6 @@ class Script(object):
         else:
             return os.path.abspath(filename2)
     
-    # @data_file.hijack_warnings
-    def __call__(self):
-        """Run the script's main() according to command line parameters."""
-        try:
-            if self.args.debug_traps:
-                log.set_exception_trap(False)
-            if self.args.version:
-                _show_version()
-            elif self.args.profile:
-                self._profile()
-            elif self.args.pdb:
-                pdb.runctx("self._main()", globals(), locals())
-            else:
-                return self._main()
-        except KeyboardInterrupt:
-            if self.args.pdb:
-                raise
-            else:
-                raise KeyboardInterrupt("Interrupted... quitting.")
-    
     def _profile(self):
         """Run _main() under the Python profiler."""
         if self.args.profile == "console":
@@ -407,16 +409,14 @@ class Script(object):
         else:
             cProfile.runctx("self._main()", locals(), locals(), self.args.profile)
 
-    def _console_profile(self, function, sort_by="cumulative", top_n=100):
+    def _console_profile(self, function):
         """Run `function` under the profiler and print results to console."""
         prof = cProfile.Profile()
         prof.enable()
         function()
         prof.disable()
-        stats_str = io.BytesIO()
-        prof_stats = pstats.Stats(prof, stream=stats_str).sort_stats(sort_by)
-        prof_stats.print_stats(top_n)
-        print(stats_str.getvalue())
+        prof_stats = pstats.Stats(prof).sort_stats("cumulative")
+        prof_stats.print_stats(100)
 
     def report_stats(self):
         """Print out collected statistics."""
@@ -580,7 +580,7 @@ class UniqueErrorsMixin(object):
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
                     log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
-            log.info("Unique error types:", len(self.ue_mixin.messages))
+            log.info("All unique error types:", len(self.ue_mixin.messages))
             log.info("="*20, "="*len("unique error classes"), "="*20)
         if self.args.all_errors_file:
             self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
