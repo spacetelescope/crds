@@ -1,3 +1,4 @@
+
 Web Services
 ============
 
@@ -69,28 +70,28 @@ Context History
 CRDS makes the history of contexts which have been activated in the pipeline as
 the operational context via the get_context_history() web service::
 
-	>>> client.get_context_history("jwst")
-	[('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
-	 ('2012-09-27 00:00:00',
-	  'jwst_0000.pmap',
-	  'First rules and references from jwst_gentools stub development cloning.'),
-	 ('2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.'),
-	 ('2013-07-31 00:00:00', 'jwst_0002.pmap', 'Dark and Mask files.'),
-	 ('2013-09-04 00:00:00',
-	  'jwst_0003.pmap',
-	  'Absolute Calibration (photom) additions and replacements.'),
-	 ('2013-11-25 09:00:03', 'jwst_0005.pmap', 'set by system'),
-	 ('2014-03-19 10:51:19',
-	  'jwst_0012.pmap',
-	  'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\r\nNew linearity files for all instruments\r\nNew saturation files and rmaps for all instruments'),
-	
-		...
+    >>> client.get_context_history("jwst")
+    [('2012-09-06 00:00:00', 'jwst.pmap', 'Bootstrap mappings'),
+     ('2012-09-27 00:00:00',
+      'jwst_0000.pmap',
+      'First rules and references from jwst_gentools stub development cloning.'),
+     ('2013-04-13 00:00:00', 'jwst_0001.pmap', 'Linearity and dark files.'),
+     ('2013-07-31 00:00:00', 'jwst_0002.pmap', 'Dark and Mask files.'),
+     ('2013-09-04 00:00:00',
+      'jwst_0003.pmap',
+      'Absolute Calibration (photom) additions and replacements.'),
+     ('2013-11-25 09:00:03', 'jwst_0005.pmap', 'set by system'),
+     ('2014-03-19 10:51:19',
+      'jwst_0012.pmap',
+      'Updated for META.INSTRUMENT.TYPE switch to META.INSTRUMENT.NAME\r\nNew linearity files for all instruments\r\nNew saturation files and rmaps for all instruments'),
+    
+        ...
 
-	 ('2015-11-18 12:58:13',
-	  'jwst_0105.pmap',
-	  'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket #238.')
-	  ]
-	
+     ('2015-11-18 12:58:13',
+      'jwst_0105.pmap',
+      'Declared various EXP_TYPE as N/A for 15 WCS types for MIRI, NIRCAM, NIRSPEC. Replacement MIRI distortion references for ticket #238.')
+      ]
+    
 Each entry in the context history is a list/tuple of form:  (start_date, context, description).
 
 Adjacent entries are consecutive,  the start date of the one context is the end date of the previous context.
@@ -274,6 +275,138 @@ for all instruments are as follows::
 The required parkeys can be used to reduce a complete file header to only those keywords
 necessary to select references under the given context.
 
+Valid Dataset IDs
++++++++++++++++++
+
+**get_dataset_ids(context, instrument)**
+
+CRDS interacts with the archive to obtain matching parameters for to compute
+best references for particular datasets.  Each parameter set corresponds to a
+data set ID.  A list of the valid dataset IDs with respect to a particular CRDS
+context (or date) can be obtained as follows.
+
+To obtain current best references specify the context using a date::
+
+    >>> get_dataset_ids("2016-01-01T00:00:00", "miri") 
+    ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
+     'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
+     'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
+     'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
+     'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
+     'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
+     'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
+     'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
+     'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
+     'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
+
+Dataset ids are nominally of the form <product>:<exposure> (particularly for HST).  For
+JWST at this time all IDs are effectively of the form <exposure>:<exposure>.
+
+Matching Parameters By ID
++++++++++++++++++++++++++
+
+**get_dataset_headers_by_id(context_specifier, ids, datasets_since)**
+
+*context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
+
+*ids* is a list of archive dataset id strings
+
+*datasets_since* is an optional cut-off date for datasets.  If specified, only datasets acquired after that date are returned.
+
+CRDS fetches best reference matching parameters indirectly from the archive database.
+The *get_dataset_headers_by_id()* function can be used to return the parameters required
+to compute best references associated with the specified dataset ids::
+
+    >>> get_dataset_headers_by_id("2016-01-01", ['JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB2'], None)
+    {'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB2': {'META.EXPOSURE.READPATT': 'BRIGHT1',
+     'META.EXPOSURE.TYPE': 'NRC_IMAGE',
+     'META.INSTRUMENT.CHANNEL': 'SHORT',
+     'META.INSTRUMENT.DETECTOR': 'NRCB2',
+     'META.INSTRUMENT.FILTER': 'F150W2',
+     'META.INSTRUMENT.NAME': 'NIRCAM',
+     'META.INSTRUMENT.PUPIL': 'CLEAR',
+     'META.SUBARRAY.NAME': 'FULL'}}
+
+AUI Interface for Best References
++++++++++++++++++++++++++++++++++
+
+**get_aui_best_references(date, ids)**
+
+*date* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
+
+*ids* is a list of valid archive dataset ids
+
+The CRDS server can compute the best references for a list of data set ids
+using the *get_aui_best_references()* function.  The dataset ids must be
+compatible with those returned by *get_dataset_ids()* above.
+
+>>> get_aui_best_references("2016-01-01", ids)
+{'JW82500001003_02102_00001.NRCA1:JW82500001003_02102_00001.NRCA1': [True,
+  ['jwst_nircam_ipc_0001.fits',
+   'jwst_nircam_linearity_0020.fits',
+   'jwst_nircam_distortion_0001.asdf',
+   'jwst_nircam_drizpars_0001.fits',
+   'jwst_nircam_area_0001.fits',
+   'jwst_nircam_flat_0000.fits',
+   'jwst_nircam_saturation_0030.fits',
+   'jwst_nircam_photom_0031.fits',
+   'jwst_nircam_dark_0030.fits',
+   'jwst_nircam_gain_0000.fits',
+   'jwst_nircam_mask_0010.fits',
+   'jwst_nircam_readnoise_0000.fits',
+   'jwst_nircam_superbias_0001.fits']],
+ 'JW82500001003_02102_00001.NRCA3:JW82500001003_02102_00001.NRCA3': [True,
+  ['jwst_nircam_ipc_0003.fits',
+   'jwst_nircam_linearity_0022.fits',
+   'jwst_nircam_distortion_0003.asdf',
+   'jwst_nircam_drizpars_0001.fits',
+   'jwst_nircam_area_0001.fits',
+   'jwst_nircam_flat_0003.fits',
+   'jwst_nircam_saturation_0032.fits',
+   'jwst_nircam_photom_0033.fits',
+   'jwst_nircam_dark_0032.fits',
+   'jwst_nircam_gain_0002.fits',
+   'jwst_nircam_mask_0012.fits',
+   'jwst_nircam_readnoise_0002.fits',
+   'jwst_nircam_superbias_0003.fits']],
+...
+
+The value returned is a mapping from dataset ids to a pair of values.  The
+first value of the id result pair is a boolean with the sense "completed
+successfully".  The second value has a variable type depending on the boolean
+value.   If the ID was successful,  the second value of the pair is a list of
+file names.  If the ID was unsuccessful,  the second value of the pair is a
+string describing the error::
+    
+    >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5'])
+    {'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5': [False,
+      "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5'"]}
+
+Code utilizing this service will have better performance if multiple IDs are
+requested per call.
+
+Although it is possible for errors to occur on a per-type basis, for this
+interface specific types which result in lookup errors (e.g. flat) are dropped
+from the results.  The net effect is that the list of files returned includes
+only those types that could be successfully assigned with the given context
+(date) and parameter set. Types which are assigned the value N/A are also
+silently dropped.
+
+Under the hood the get_aui_best_references function is a language agnostic JSONRPC call
+which can be called from the UNIX command line by e.g. "curl" as follows::
+
+    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_aui_best_references", "params": ["2016-01-01", ["JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT"]], "id": 1}' https://jwst-crds.stsci.edu/json/
+    HTTP/1.1 200 OK
+    Date: Mon, 25 Jul 2016 20:03:13 GMT
+    Vary: Cookie
+    X-Frame-Options: SAMEORIGIN
+    Content-Type: application/json-rpc
+    Via: 1.1 jwst-crds.stsci.edu
+    Transfer-Encoding: chunked
+
+    {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT": [true, ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf", "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json", "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits", "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
+
+
 JSONRPC URL
 -----------
 The base URL used for making CRDS JSONRPC method calls is essentially */json/*.
@@ -298,13 +431,6 @@ An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl::
 
     % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["jwst"], "id": 1}' https://jwst-crds.stsci.edu/json/
-    HTTP/1.1 200 OK
-    Date: Fri, 12 Oct 2012 17:29:46 GMT
-    Server: Apache/2.2.3 (Red Hat) mod_python/3.3.1 Python/2.7.2
-    Vary: Cookie
-    Content-Type: application/json-rpc
-    Connection: close
-    Transfer-Encoding: chunked
     
 The *jsonrpc* attribute is used to specify the version of the JSONRPC standard
 being used,  currently 1.0 for CRDS.
