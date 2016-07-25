@@ -120,7 +120,7 @@ this command line interface must be members of the CRDS operators group
             self.pmap_mode = "pmap_text"
             self.pmap_name = self.args.derive_from_context
         assert config.is_context(self.pmap_name), "Invalid pmap_name " + repr(self.pmap_name)
-        assert not self.args.keep_existing_files and self.args.wipe_existing_files, \
+        assert not (self.args.keep_existing_files and self.args.wipe_existing_files), \
             "--keep-existing-files and --wipe-existing-files are mutually exclusive."
 
     # -------------------------------------------------------------------------------------------------
@@ -251,15 +251,16 @@ this command line interface must be members of the CRDS operators group
         return response.json()
 
     # -------------------------------------------------------------------------------------------------
-        
+
     def certify_files(self):
         """Run the CRDS server Certify Files page on `filepaths`."""
         self.ingest_files()
-        self.connection.repost(
+        t = self.connection.repost_start(
             "/certify/", pmap_name=self.pmap_name, pmap_mode=self.pmap_mode,
             compare_old_reference=not self.args.dont_compare_old_reference)
-        self.connection.logout()
-
+        time.sleep(10)
+        return t
+    
     # -------------------------------------------------------------------------------------------------
         
     def batch_submit_references(self):
@@ -291,7 +292,7 @@ this command line interface must be members of the CRDS operators group
             compare_old_reference=not self.args.dont_compare_old_reference,
             )
         # give POST time to complete send, not response
-        time.sleep(5.0)
+        time.sleep(10)
         return completion_args
 
     def submission_complete(self, args):
