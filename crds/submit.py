@@ -92,7 +92,7 @@ this command line interface must be members of the CRDS operators group
                           help="Monitor CRDS processing for on-going status and final confirmation link.")
         self.add_argument("--wait-for-completion", action="store_true",
                           help="Wait until the server reports that the submission is done before exiting.  Otherwise use e-mail.")
-        self.add_argument("--submission-kind", type=str, choices=["batch","mapping","references", "certify", "none"], default="batch",
+        self.add_argument("--submission-kind", type=str, choices=["batch","certify","none"], default="batch", # mapping, reference
                           help="Which form of submission to perform.  Defaults to batch.")
         self.add_argument("--wipe-existing-files", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
