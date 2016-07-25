@@ -270,7 +270,7 @@ def fits_to_parkeys(fits_header):
     for key, value in fits_header.items():
         key, value = str(key), str(value)
         if not key.lower().startswith("meta."):
-            pk = MODEL.find_fits_keyword(key.upper(), return_result=True)
+            pk = cached_dm_find_fits_keyword(key)
             if not pk:
                 pk = key
             else:
@@ -283,6 +283,12 @@ def fits_to_parkeys(fits_header):
         parkeys[pk] = value
     return parkeys
 
+@utils.cached
+def cached_dm_find_fits_keyword(key):
+    """Return the SSB JWST data model path for the specified non-path keyword,  nominally
+    a FITS or json or ASDF bare keyword.
+    """
+    return MODEL.find_fits_keyword(key.upper(), return_result=True)
 # ============================================================================
 
 def get_env_prefix(instrument):
