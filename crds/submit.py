@@ -9,13 +9,10 @@ from __future__ import absolute_import
 import sys
 import os
 import os.path
-import shutil
-import glob
-import yaml
 import socket
 import time
 
-from crds import log, config, cmdline, utils, timestamp, pysh, exceptions
+from crds import log, config, cmdline, utils, pysh
 from crds import web, background
 from crds import monitor
 from crds.client import api
@@ -55,6 +52,7 @@ this command line interface must be members of the CRDS operators group
         self.instruments_filekinds = None
         self.instrument = None
         self.base_url = None
+        self.jpoll_key = None
 
     def create_submission(self):
         """Create a Submission object based on script / command-line parameters."""
@@ -94,9 +92,9 @@ this command line interface must be members of the CRDS operators group
                           help="Monitor CRDS processing for on-going status and final confirmation link.")
         self.add_argument("--wait-for-completion", action="store_true",
                           help="Wait until the server reports that the submission is done before exiting.  Otherwise use e-mail.")
-        self.add_argument("--submission-kind", type=str, choices=["batch","mapping","references", "certify", "none"], default="batch",
+        self.add_argument("--submission-kind", type=str, choices=["batch","certify","none"], default="batch", # mapping, reference
                           help="Which form of submission to perform.  Defaults to batch.")
-        self.add_argument("--wipe", action="store_true", 
+        self.add_argument("--wipe-existing-files", action="store_true", 
                           help="Before performing action,  remove all files from the appropriate CRDS ingest directory.")
         self.add_argument("--keep-existing-files", action="store_true", 
                           help="Don't recopy files already in the server ingest directory that have the correct length.")
@@ -122,16 +120,25 @@ this command line interface must be members of the CRDS operators group
             self.pmap_mode = "pmap_text"
             self.pmap_name = self.args.derive_from_context
         assert config.is_context(self.pmap_name), "Invalid pmap_name " + repr(self.pmap_name)
+        assert not (self.args.keep_existing_files and self.args.wipe_existing_files), \
+            "--keep-existing-files and --wipe-existing-files are mutually exclusive."
 
     # -------------------------------------------------------------------------------------------------
-        
+
     def ingest_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
         stats = self._start_stats()
         destination = self.submission_info.ingest_dir
         host, path = destination.split(":")
         total_size = utils.total_size(self.files)
-        remaining_files = self.remove_existing_files(self.files) if self.args.keep_existing_files else self.files
+
+        ingest_info = self.get_ingested_files()
+
+        self.scan_for_nonsubmitted_ingests(ingest_info)
+
+        remaining_files = self.keep_existing_files(ingest_info, self.files) \
+            if self.args.keep_existing_files else self.files
+
         for i, filename in enumerate(remaining_files):
             file_size = utils.file_size(filename)
             log.info("Copy started", repr(filename), "[", i+1, "/", len(self.files), " files ]",
@@ -142,6 +149,7 @@ this command line interface must be members of the CRDS operators group
             stats.increment("files", 1)
             stats.log_status("files", "Copy complete", len(self.files))
             stats.log_status("bytes", "Copy complete", total_size)
+
         log.divider()
         stats.report()
         log.divider(char="=", func=log.info)
@@ -151,25 +159,39 @@ this command line interface must be members of the CRDS operators group
     #    # self.connection.repost('/upload/alt_new/', file=open(name,"rb"))
     #    # self.connection.repost('/upload/alt_new/', file = open(name, "rb"))
 
-    def remove_existing_files(self, files):
-        """Remove files which have already been copied and have the correct server side
+    def scan_for_nonsubmitted_ingests(self, ingest_info):
+        """Check for junk in the submitter's ingest directory,  left over files not
+        in the current submission and fail if found.
+        """
+        submitted_basenames = [ os.path.basename(filepath) for filepath in self.files ]
+        for ingested in ingest_info.keys():
+            if ingested not in submitted_basenames:
+                log.fatal_error(
+                    "Non-submitted file", log.srepr(ingested), 
+                    "is already in the CRDS server's ingest directory.  Delete it (--wipe-files?) or submit it.")
+
+    def keep_existing_files(self, ingest_info, files):
+        """Keep files which have already been copied and have the correct server side
         length.  This can save *hours* of copy time for repeat submissions.
         """
-        ingest_info = self.get_ingested_files()
         for filename in files[:]:
             local_size = utils.file_size(filename)
+            basename = os.path.basename(filename)
             try:
-                existing_size = int(ingest_info[os.path.basename(filename)]["size"])
+                existing_size = int(ingest_info[basename]["size"])
             except:
-                log.info("File", repr(filename), "does not exist in ingest directory and will be copied to CRDS server.")
+                log.info("File", repr(filename), 
+                         "does not exist in ingest directory and will be copied to CRDS server.")
                 continue
             if local_size == existing_size:
-                log.info("File", repr(filename), "has already been copied and has correct length on CRDS server", 
+                log.info("File", repr(filename), 
+                         "has already been copied and has correct length on CRDS server", 
                          utils.human_format_number(existing_size))
                 files.remove(filename)
             else:
-                log.info("File", repr(filename), "exists but has incorrect size and must be recopied.  Deleting old ingest.")
-                self.connection.get(ingest_info["delete_url"])
+                log.info("File", repr(filename), 
+                         "exists but has incorrect size and must be recopied.  Deleting old ingest.")
+                self.connection.get(ingest_info[basename]["delete_url"])
         return files
 
     def get_ingested_files(self):
@@ -229,27 +251,32 @@ this command line interface must be members of the CRDS operators group
         return response.json()
 
     # -------------------------------------------------------------------------------------------------
-        
+
     def certify_files(self):
         """Run the CRDS server Certify Files page on `filepaths`."""
         self.ingest_files()
-        self.connection.repost(
+        t = self.connection.repost_start(
             "/certify/", pmap_name=self.pmap_name, pmap_mode=self.pmap_mode,
             compare_old_reference=not self.args.dont_compare_old_reference)
-        self.connection.logout()
-
+        time.sleep(10)
+        return t
+    
     # -------------------------------------------------------------------------------------------------
         
     def batch_submit_references(self):
+        """Do a web re-post to the batch submit references web page."""
         return self._submission("/batch_submit_references/")
         
     def submit_references(self):
+        """Do a web re-post to the submit references web page."""
         return self._submission("/submit/reference/")
         
     def submit_mappings(self):
+        """Do a web re-post to the submit mappings web page."""
         return self._submission("/submit/mapping/")
 
     def _submission(self, relative_url):
+        """Do a generic submission re-post to the specified relative_url."""
         assert self.args.description is not None, "You must supply a --description for this function."
         self.ingest_files()
         log.info("Posting web request for", srepr(relative_url))
@@ -265,7 +292,7 @@ this command line interface must be members of the CRDS operators group
             compare_old_reference=not self.args.dont_compare_old_reference,
             )
         # give POST time to complete send, not response
-        time.sleep(5.0)
+        time.sleep(10)
         return completion_args
 
     def submission_complete(self, args):
@@ -279,7 +306,7 @@ this command line interface must be members of the CRDS operators group
         if "--log-time" in sys.argv:
             extra_params = "--log-time"
         submission_monitor = monitor.MonitorScript("crds.monitor --key {} --poll {} {}".format(
-                self.jpoll_key, 3, extra_params))
+            self.jpoll_key, 3, extra_params))
         return submission_monitor()
 
     def monitor_complete(self, monitor_future):
@@ -289,10 +316,12 @@ this command line interface must be members of the CRDS operators group
     # -------------------------------------------------------------------------------------------------
 
     def login(self):
+        """Log in to the CRDS server using server user credentials."""
         log.info("Logging in aquiring lock.")
         self.connection.login()
 
     def logout(self):
+        """Log out of the CRDS server,  releasing any lock held by this user."""
         log.info("Logging out releasing lock.")
         self.connection.login()
         self.connection.logout()
@@ -313,7 +342,7 @@ this command line interface must be members of the CRDS operators group
 
         self.login()
 
-        if self.args.wipe:
+        if self.args.wipe_existing_files:
             self.wipe_files()
 
         self.jpoll_key = self.jpoll_open_channel()

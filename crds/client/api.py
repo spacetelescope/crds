@@ -28,53 +28,53 @@ from crds.python23 import *
 # ==============================================================================
 
 __all__ = [
-           "get_default_context",
-           "get_context_by_date",
-           "get_server_info",
-           "get_cached_server_info",  # deprecated
-           "cache_references",
-           
-           "set_crds_server", 
-           "get_crds_server",
-         
-           "list_mappings",
-           "list_references",
-
-           "get_file_chunk",
-           "get_url",
-           "get_file_info",
-           "get_file_info_map",
-           "get_sqlite_db",
-           
-           "get_mapping_names",
-           "get_reference_names",
-           
-           "dump_references",
-           "dump_mappings",
-           "dump_files",
-
-           "get_best_references",
-           "cache_best_references",
-           
-           "get_dataset_headers_by_id",
-           "get_dataset_headers_by_instrument",
-           "get_dataset_ids",
-           "get_best_references_by_ids",
-           "get_aui_best_references",
-           "get_best_references_by_header_map",
-
-           "get_required_parkeys",
-           "get_affected_datasets",
-           "get_context_history",
-
-           "push_remote_context",
-           "get_remote_context",
-
-           "get_submission_info",
-
-           "jpoll_pull_messages",
-           "jpoll_abort",
-           ]
+    "get_default_context",
+    "get_context_by_date",
+    "get_server_info",
+    "get_cached_server_info",  # deprecated
+    "cache_references",
+    
+    "set_crds_server", 
+    "get_crds_server",
+    
+    "list_mappings",
+    "list_references",
+    
+    "get_file_chunk",
+    "get_url",
+    "get_file_info",
+    "get_file_info_map",
+    "get_sqlite_db",
+    
+    "get_mapping_names",
+    "get_reference_names",
+    
+    "dump_references",
+    "dump_mappings",
+    "dump_files",
+    
+    "get_best_references",
+    "cache_best_references",
+    
+    "get_dataset_headers_by_id",
+    "get_dataset_headers_by_instrument",
+    "get_dataset_ids",
+    "get_best_references_by_ids",
+    "get_aui_best_references",
+    "get_best_references_by_header_map",
+    
+    "get_required_parkeys",
+    "get_affected_datasets",
+    "get_context_history",
+    
+    "push_remote_context",
+    "get_remote_context",
+    
+    "get_submission_info",
+    
+    "jpoll_pull_messages",
+    "jpoll_abort",
+    ]
 
 # ============================================================================
 
@@ -187,6 +187,7 @@ def get_file_info_map(observatory, files=None, fields=None):
 
 @utils.cached
 def _get_file_info_map(observatory, files, fields):
+    """Memory cached version of get_file_info_map() service."""
     infos = S.get_file_info_map(observatory, files, fields)
     return infos
 
@@ -237,7 +238,7 @@ def get_best_references(pipeline_context, header, reftypes=None):
     # Due to limitations of jsonrpc,  exception handling is kludged in here.
     for filetype, refname in bestrefs.items():
         if "NOT FOUND" in refname:
-            if "NOT FOUND n/a" == refname:
+            if refname == "NOT FOUND n/a":
                 log.verbose("Reference type", srepr(filetype), "not applicable.", verbosity=80)
             else:
                 raise CrdsLookupError("Error determining best reference for " + 
@@ -489,7 +490,7 @@ class FileCacher(object):
             localpath = self.locate(name)
             if name.lower() in ["n/a", "undefined"]:
                 continue
-            if (not os.path.exists(localpath)):
+            if not os.path.exists(localpath):
                 downloads.append(name)
             elif self.ignore_cache:
                 utils.remove(localpath, observatory=self.observatory)
@@ -528,7 +529,7 @@ class FileCacher(object):
     def download_files(self, downloads, localpaths):
         """Serial file-by-file download."""
         self.info_map = get_file_info_map(
-                self.observatory, downloads, ["size", "rejected", "blacklisted", "state", "sha1sum", "instrument"])
+            self.observatory, downloads, ["size", "rejected", "blacklisted", "state", "sha1sum", "instrument"])
         if config.writable_cache_or_verbose("Readonly cache, skipping download of (first 5):", repr(downloads[:5]), verbosity=70):
             bytes_so_far = 0
             total_files = len(downloads)
@@ -562,10 +563,10 @@ class FileCacher(object):
         except Exception as exc:
             self.remove_file(localpath)
             raise CrdsDownloadError("Error fetching data for " + srepr(name) + 
-                                     " from context " + srepr(self.pipeline_context) + 
-                                     " at CRDS server " + srepr(get_crds_server()) + 
-                                     " with mode " + srepr(config.get_download_mode()) +
-                                     " : " + str(exc))
+                                    " from context " + srepr(self.pipeline_context) + 
+                                    " at CRDS server " + srepr(get_crds_server()) + 
+                                    " with mode " + srepr(config.get_download_mode()) +
+                                    " : " + str(exc))
         except:  #  mainly for control-c,  catch it and throw it.
             self.remove_file(localpath)
             raise
@@ -575,7 +576,7 @@ class FileCacher(object):
         log.verbose("Removing file", repr(localpath))
         try:
             os.remove(localpath)
-        except:
+        except Exception:
             log.verbose("Exception during file removal of", repr(localpath))
 
     def download_core(self, name, localpath):

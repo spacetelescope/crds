@@ -92,40 +92,11 @@ def get_hdulist(fits_reference):
     # If the reference is a string, presume its a file path
     result = fits_reference
     if isinstance(fits_reference, python23.string_types):
-            try:
-                result = fitsopen(fits_reference)
-            except Exception as e:
-                raise IOError("error opening file (%s): %s: %s" %
-                              (fits_reference, e.__class.__name__, e.args[0]))
-    return result
-
-
-def string_to_list(str, separator=','):
-    """Convert a string to a list using the separator.
-
-    This is basically a convenience function. If the input is already a
-    list, that will simply be returned.
-
-    Parameters
-    ----------
-    str : string
-        The string to convert to the list
-
-    Returns
-    -------
-    result : sequence
-        
-
-    Other Parameters
-    ----------------
-    separator : string
-        The separater in the string to use to separate elements.
-
-    """
-
-    result = str
-    if isinstance(result, python23.string_types):
-        result = result.split(',')
+        try:
+            result = fitsopen(fits_reference)
+        except Exception as exc:
+            raise IOError("error opening file (%s): %s: %s" %
+                          (fits_reference, exc.__class__.__name__, exc.args[0]))
     return result
 
 
@@ -381,7 +352,7 @@ class RowDiff(object):
         # specified.
         if self.fields and self.ignore_fields:
             raise RuntimeError('Both fields and ignore_fields' +
-                      ' cannot be specified.')
+                               ' cannot be specified.')
 
         # Get the FITS HDU's.
         with get_hdulist(a_fits) as self.a_hdulist, \
@@ -723,28 +694,28 @@ class RowDiff(object):
                      common_mode_diffs) = diff
 
                     result_mode = report_mode_diff(result_modes_vs_a)
-                    if (result_mode):
+                    if result_mode:
                         result += '\n    Table A changes:\n'
                         result += result_mode
                     else:
                         result += '\n    Table A has all modes.\n'
                         
                     result_mode = report_mode_diff(result_modes_vs_b)
-                    if (result_mode):
+                    if result_mode:
                         result += '\n    Table B changes:\n'
                         result += result_mode
                     else:
                         result += '\n    Table B has all modes.\n'
                         
                     result_mode = report_mode_diff(result_a_vs_b)
-                    if (result_mode):
+                    if result_mode:
                         result += '\n    Table A to B changes:\n'
                         result += result_mode
                     else:
                         result += '\n    Table A and B share all modes.\n'
                         
                     result_mode = report_mode_diff(common_mode_diffs)
-                    if (result_mode):
+                    if result_mode:
                         result += '\n    Common mode changes:\n'
                         result += '    If there were duplicate modes, the following may be nonsensical.\n'
                         result += result_mode

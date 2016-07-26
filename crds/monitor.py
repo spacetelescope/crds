@@ -93,14 +93,15 @@ polls the server for new messages at some periodic rate in seconds:
     def handle_done(self, message):
         """Generic "done" handler issue info() message and stops monitoring / exits."""
         status = message.data["status"]
+        result = message.data.get("result", None)
         if status == 0:
-            log.info(self.format_remote("COMPLETED:", message.data))
+            log.info(self.format_remote("COMPLETED:", result))
         elif status == 1:
-            log.error(self.format_remote("FAILED:", message.data))
+            log.error(self.format_remote("FAILED:", result))
         elif status == 2:
-            log.error(self.format_remote("CANCELLED:", message.data))
+            log.error(self.format_remote("CANCELLED:", result))
         else:
-            log.info(self.format_remote("DONE:", message))
+            log.info(self.format_remote("DONE:", result))
         return message.data["result"]
 
     def handle_cancel(self, message):

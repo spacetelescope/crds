@@ -190,7 +190,7 @@ class KeywordValidator(Validator):
                 self.verbose(filename, value, "is in", repr(self._values))
         else:
             raise ValueError("Value " + str(log.PP(value)) + " is not one of " +
-                            str(log.PP(self._values)))    
+                             str(log.PP(self._values)))    
         if self._not_match_value(value):
             raise ValueError("Value " + str(log.PP(value)) + " is disallowed.")
     
@@ -259,8 +259,8 @@ class NumericalValidator(KeywordValidator):
         if self.is_range:
             if value < self.min or value > self.max:
                 raise ValueError("Value for " + repr(self.name) + " of " +
-                    repr(value) + " is outside acceptable range " +
-                    self.info.values[0])
+                                 repr(value) + " is outside acceptable range " +
+                                 self.info.values[0])
             else:
                 self.verbose(filename, value, "is in range", self.info.values[0])
         else:   # First try a simple exact string match check
@@ -519,7 +519,7 @@ class Certifier(object):
                 vlist.append(valid)
             else:
                 log.verbose("Mapping", repr(valid.name), "to REQUIRED based on rmap parkeys from", 
-                         repr(self.get_corresponding_rmap().basename))
+                            repr(self.get_corresponding_rmap().basename))
                 vlist.append(valid.get_required_copy())
         return vlist
 
@@ -600,10 +600,11 @@ class ReferenceCertifier(Certifier):
 
     def dump_provenance(self):
         """Dump out provenance keywords for informational purposes."""
-        dump_keys = sorted(set(key.upper() for key in 
-            self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
-            self.all_simple_names +   # what's defined in .tpn's, maybe not matched
-            self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
+        dump_keys = sorted(
+            set(key.upper() for key in 
+                self.get_rmap_parkeys() + # what's matched,  maybe not .tpn
+                self.all_simple_names +   # what's defined in .tpn's, maybe not matched
+                self.provenance_keys))    # extra project-specific keywords like HISTORY, COMMENT, PEDIGREE
         unseen = self._dump_provenance_core(dump_keys)
         log.verbose("Potential provenance keywords:", repr(dump_keys), verbosity=80)
         warn_keys = self.provenance_keys
@@ -631,10 +632,11 @@ class ReferenceCertifier(Certifier):
 
     def interesting_value(self, value):
         """Return True IFF `value` isn't uninteresting."""
-        if str(value).strip().lower() in ["",
-                                     "*** end of mandatory fields ***",
-                                     "*** column names ***",
-                                     "*** column formats ***"]:
+        if str(value).strip().lower() in \
+                ["",
+                 "*** end of mandatory fields ***",
+                 "*** column names ***",
+                 "*** column formats ***"]:
             return False
         return True
 
@@ -738,7 +740,7 @@ class ReferenceCertifier(Certifier):
         new_reference_ex = new_table.basename + "[" + str(new_table.segment) + "]"
         old_reference_ex = old_table.basename + "[" + str(old_table.segment) + "]"
         log.verbose("Checking tables modes of '{}' against comparison reference '{}'".format(
-                new_reference_ex, old_reference_ex))
+            new_reference_ex, old_reference_ex))
         old_modes, old_all_cols = table_mode_dictionary("old reference", old_table, self.mode_columns)
         if not old_modes:
             log.info("No modes defined in comparison reference", repr(old_reference_ex), 
@@ -817,7 +819,7 @@ def find_governing_rmap(context, reference):
     assert instrument == g_instrument, "Comparison context inconsistent with reference file: " + repr(instrument) + " vs. " + repr(g_instrument)
     assert filekind == g_filekind, "Comparison context inconsistent with reference type: " + repr(filekind) + " vs. " + repr(g_filekind)
     log.verbose("Reference '{}' corresponds to rmap '{}' in context '{}'".format(
-                reference, governing_rmap.name, mapping.name))
+        reference, governing_rmap.name, mapping.name))
     return governing_rmap
 
 # ============================================================================
@@ -1021,10 +1023,10 @@ def banner(char='#'):
 
 @data_file.hijack_warnings
 def certify_file(filename, context=None, dump_provenance=False, check_references=False, 
-                  trap_exceptions=True, compare_old_reference=False,
-                  dont_parse=False, script=None, observatory=None,
-                  comparison_reference=None, original_name=None, ith="",
-                  run_fitsverify=False):
+                 trap_exceptions=True, compare_old_reference=False,
+                 dont_parse=False, script=None, observatory=None,
+                 comparison_reference=None, original_name=None, ith="",
+                 run_fitsverify=False):
     """Certify the list of `files` relative to .pmap `context`.   Files can be
     references or mappings.   This function primarily provides an interface for web code.
     
@@ -1104,7 +1106,8 @@ def certify_files(files, context=None, dump_provenance=False, check_references=F
         
         ith = ' (' + str(fnum+1) + '/' + str(len(files)) + ')'
         
-        certify_file(filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
+        certify_file(
+            filename, context=context, dump_provenance=dump_provenance, check_references=check_references, 
             trap_exceptions=trap_exceptions, compare_old_reference=compare_old_reference, 
             dont_parse=dont_parse, script=script, observatory=observatory,
             comparison_reference=comparison_reference, ith=ith, run_fitsverify=run_fitsverify)
@@ -1174,25 +1177,25 @@ For more information on the checks being performed,  use --verbose or --verbosit
     def add_args(self):
         self.add_argument("files", nargs="+")
         self.add_argument("-d", "--deep", dest="deep", action="store_true",
-            help="Certify reference files referred to by mappings have valid contents.")
+                          help="Certify reference files referred to by mappings have valid contents.")
         self.add_argument("-r", "--dont-recurse-mappings", dest="dont_recurse_mappings", action="store_true",
-            help="Do not load and validate mappings recursively,  checking only directly specified files.")
+                          help="Do not load and validate mappings recursively,  checking only directly specified files.")
         self.add_argument("-a", "--dont-parse", dest="dont_parse", action="store_true",
-            help="Skip slow mapping parse based checks,  including mapping duplicate entry checking.")
+                          help="Skip slow mapping parse based checks,  including mapping duplicate entry checking.")
         self.add_argument("-e", "--exist", dest="exist", action="store_true",
-            help="Certify reference files referred to by mappings exist.")
+                          help="Certify reference files referred to by mappings exist.")
         self.add_argument("-p", "--dump-provenance", dest="dump_provenance", action="store_true",
-            help="Dump provenance keywords.")
+                          help="Dump provenance keywords.")
         self.add_argument("-x", "--comparison-context", dest="comparison_context", type=str, default=None,
-            help="Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.")
+                          help="Pipeline context defining comparison files.  Defaults to operational context,  use 'none' to suppress.")
         self.add_argument("-y", "--comparison-reference", dest="comparison_reference", type=str, default=None,
-            help="Comparison reference for tables certification.")
+                          help="Comparison reference for tables certification.")
         self.add_argument("-s", "--sync-files", dest="sync_files", action="store_true",
-            help="Fetch any missing files needed for the requested difference from the CRDS server.")
+                          help="Fetch any missing files needed for the requested difference from the CRDS server.")
         self.add_argument("-l", "--allow-schema-violations", action="store_true",
-            help="Report jwst.datamodels schema violations as warnings rather than as errors.")
+                          help="Report jwst.datamodels schema violations as warnings rather than as errors.")
         self.add_argument("-f", "--run-fitsverify", action="store_true",
-            help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
+                          help="Run fitsverify for additional external checks on FITS files. cfitsio library must be installed separately.")
         
         cmdline.UniqueErrorsMixin.add_args(self)
         

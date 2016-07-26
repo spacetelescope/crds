@@ -310,10 +310,7 @@ def get_yaml_header(filepath, needed_keys=()):
 
 def get_asdf_header(filepath, needed_keys=()):
     """Return the flattened header associated with an ASDF file."""
-    try:
-        import asdf
-    except Exception:
-        import pyasdf as asdf
+    import asdf
     with asdf.AsdfFile.open(filepath) as handle:
         header = to_simple_types(handle.tree)
         if "history" in handle.tree:
@@ -399,8 +396,8 @@ def reduce_header(filepath, old_header, needed_keys=()):
         key = str(key).upper()
         value = str(value)
         if (not needed_keys) or key in needed_keys:
-            if (key in header and header[key] != value):
-                if not key in DUPLICATES_OK:
+            if key in header and header[key] != value:
+                if key not in DUPLICATES_OK:
                     log.verbose_warning("Duplicate key", repr(key), "in", repr(filepath),
                                         "using", repr(header[key]), "not", repr(value), verbosity=70)
                     continue
