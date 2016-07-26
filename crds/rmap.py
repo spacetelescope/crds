@@ -407,7 +407,7 @@ class Mapping(object):
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
-        if hasattr(self.__dict__, "header") and attr in self.__dict__["header"]:
+        if "header" in self.__dict__ and attr in self.header:
             return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
@@ -1650,33 +1650,8 @@ def get_cached_mapping(mapping, **keys):
 
     Return a PipelineContext, InstrumentContext, or ReferenceMapping.
     """
-    assert isinstance(mapping, python23.string_types), "Unexpected type in get_cached_mapping()."
-    mapping = str(mapping)
-    pkl = config.locate_mapping_pickle(mapping)
-    in_crds_cache = (mapping == os.path.basename(mapping))
-
-    loaded = None
-
-    if config.CRDS_PICKLE_MAPPINGS and config.is_context(mapping):
-        if in_crds_cache and os.path.exists(pkl):
-            with log.verbose_warning_on_exception("Failed loading pickle for", repr(mapping), level=70):
-                with open(pkl, "rb") as handle:
-                    loaded = python23.pickle.load(handle)
-                log.verbose("Loaded mapping", repr(mapping), "from", repr(pkl))
-
-    if loaded is None:
-        keys["loader"] = get_cached_mapping
-        loaded = _load_mapping(mapping, **keys)
-
-    if config.CRDS_PICKLE_MAPPINGS and config.is_context(mapping):
-        if in_crds_cache and not os.path.exists(pkl):
-            with log.verbose_warning_on_exception("Failed pickling mapping", repr(mapping), level=70):
-                utils.ensure_dir_exists(pkl)
-                with open(pkl, "wb+") as handle:
-                    python23.pickle.dump(loaded, handle)
-                log.verbose("Pickled mapping", repr(mapping), "as", repr(pkl))
-
-    return loaded
+    keys["loader"] = get_cached_mapping
+    return _load_mapping(mapping, **keys)
 
 def fetch_mapping(mapping, **keys):
     """Load any `mapping`,  exploiting Mapping's already in the cache but not
