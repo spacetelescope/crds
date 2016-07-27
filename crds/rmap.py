@@ -292,6 +292,42 @@ class FileSelectionsDict(dict):
     like N/A or OMIT to support recursive loading or processing.   Special
     values,  since they do not designate nested files, terminate any recursion
     """
+
+    def __init__(self, selector, **keys):
+        super(FileSelectionsDict, self).__init__()
+        self._selector = selector
+        self._loaded = {}
+        self._keys = keys
+
+    def __getitem__(self, name):
+        if key in self._selector:
+            try:
+                self._loaded[name]
+            except KeyError:
+                if self.is_special_value(self._selector[name]):
+                    self._loaded[name] = self._selector[name]
+                else:
+                    self._loaded[name] = _load(name, **self._keys)
+            return self._loaded[name]
+        else:
+            raise KeyError(name)
+
+    def __setitem__(self, name, value):
+        self._loaded[name] = value   # disregards self._selector??
+
+    def __delitem__(self, name):
+        del self._loaded[name]
+        del self._selector[name]
+
+    def keys(self):
+        return self._selector.keys()
+
+    def values(self):
+        return [self[name] for name in self.keys()]  # deferred load
+
+    def items(self):
+        return zip(self.keys(), self.values())
+
     na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
     omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
     special_values_set = na_values_set | omit_values_set
@@ -375,11 +411,39 @@ class Mapping(object):
         self.header = LowerCaseDict(header)   # consistent lower case values
         self.selector = selector
         self.comment = keys.pop("comment", None)
+        self.extra_keys = tuple(self.header.get("extra_keys", ()))
+        self._keys = keys
+
+    def validate_mapping(self):
+        """Validate `self` only implementing any checks to be performed by
+        crds.certify.   ContextMappings are mostly validated at load time.
+        Stick extra checks for context mappings here.
+        """
+        log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
+
+    def validate(self):
+        """Perform generic recursive Mapping checks, including definition of all
+        required header fields as defined by Mapping class/sub-class.  Since
+        this requires loading all sub-mappings, it is factored out to facilitate
+        demand based loading elsewhere.
+
+        Other methods of validation are performed when a Mapping is loaded,  including
+        sha1sum and acceptability of byte codes,  neither of which requires loading
+        sub-mappings.
+        """
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        self.extra_keys = tuple(self.header.get("extra_keys", ()))
+        assert self.observatory in crds.ALL_OBSERVATORIES, \
+            "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
+        if "instrument" in self.header:
+            assert self.instrument in self.obs_pkg.INSTRUMENTS, \
+                "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
+        with log.augment_exception("Mapping str() fails to reload"):
+            self.from_string(str(self), self.basename, **self._keys)
+        for key in self.selections:
+            self.selections[key].validate()
 
     @property
     def basename(self):
@@ -599,13 +663,6 @@ class Mapping(object):
         """
         header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
-
-    def validate_mapping(self):
-        """Validate `self` only implementing any checks to be performed by
-        crds.certify.   ContextMappings are mostly validated at load time.
-        Stick extra checks for context mappings here.
-        """
-        log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
 
     def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Compare `self` with `new_mapping` and return a list of difference
@@ -833,23 +890,23 @@ class PipelineContext(ContextMapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey",
-                      "name", "derived_from"]
+    required_attrs = ["observatory", "mapping", "parkey", "name", "derived_from"]
 
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
-        self.selections = FileSelectionsDict()
+        self.selections = FileSelectionsDict(selector)
+        self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
+
+    def validate(self):
+        """Implement validations which require loading of sub-mappings here."""
+        super(PipelineContext, self).validate()
         self._check_type("pipeline")
         for instrument, imapname in selector.items():
             instrument = instrument.lower()
-            if self.selections.is_special_value(imapname):
-                self.selections[instrument] = imapname
-            else:
-                self.selections[instrument] = ictx = _load(imapname, **keys)
-                self._check_nested("observatory", self.observatory, ictx)
-                self._check_nested("instrument", instrument, ictx)
-        self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
+            if self.selections.is_normal_value(imapname):
+                self._check_nested("observatory", self.observatory, self.selections[instrument])
+                self._check_nested("instrument", instrument, self.selections[instrument])        
 
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
@@ -971,7 +1028,7 @@ class InstrumentContext(ContextMapping):
         super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
-        self.selections = FileSelectionsDict()
+        self.selections = FileSelectionsDict(selector)
         self._check_type("instrument")
         for filekind, rmap_name in selector.items():
             filekind = filekind.lower()
@@ -1142,7 +1199,6 @@ class ReferenceMapping(Mapping):
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
-        self._check_type("reference")
 
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
@@ -1174,6 +1230,10 @@ class ReferenceMapping(Mapping):
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
+
+    def validate(self):
+        self._check_type("reference")
+        
     
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
@@ -1371,7 +1431,7 @@ class ReferenceMapping(Mapping):
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
+        super(ReferenceMapping, self).validate_mapping()
         if "reference_to_dataset" in self.header:
             parkeys = self.get_required_parkeys()
             for reference, dataset in self.reference_to_dataset.items():
