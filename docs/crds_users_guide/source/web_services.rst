@@ -213,6 +213,12 @@ Example JSON for *reftypes* might be::
 
     ["amplifier","mask"]
 
+Because **get_best_references** determines references for a list of types,  lookup
+errors are reported by setting the value of a reference type to 
+"NOT FOUND " + error_message.   A value of "NOT FOUND n/a" indicates that CRDS
+determined that a particular reference type does not apply to the given
+parameter set.
+
 Multiple Headers
 ++++++++++++++++
 
@@ -406,26 +412,29 @@ which can be called from the UNIX command line by e.g. "curl" as follows::
 
     {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT": [true, ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf", "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json", "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits", "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
 
+JSONRPC Protocol
+----------------
 
-JSONRPC URL
------------
+Sample URL's
+++++++++++++
 The base URL used for making CRDS JSONRPC method calls is essentially */json/*.
 All further information,  including the method name and the parameters,  are 
 POSTed using a JSON serialization scheme.   Example absolute server URLs are:
 
-JWST
-++++
+JWST URL
+........
 
   http://jwst-crds.stsci.edu/json/
   
-HST
-+++
+HST URL
+.......
 
   http://hst-crds.stsci.edu/json/
 
+Generic Request
++++++++++++++++
 
-JSONRPC Request
----------------
+JSONRPC requests are made by POST'ing a set of variables to the appropriate URL.
 
 An example CRDS service request can be demonstrated in a language agnostic way
 using the UNIX command line utility curl::
@@ -443,28 +452,22 @@ positionally to the CRDS method.
 The *id* can be used to associate calls with their responses in asynchronous
 environments.
 
-JSONRPC Response
-----------------
+Generic Response
+++++++++++++++++
 
 The response returned by the server for the above request is the following JSON::
 
     {"error": null, "jsonrpc": "1.0", "id": 1, "result": "jwst_0000.pmap"}
     
 Error Handling
---------------
-
-Because **get_best_references** determines references for a list of types,  lookup
-errors are reported by setting the value of a reference type to 
-"NOT FOUND " + error_message.   A value of "NOT FOUND n/a" indicates that CRDS
-determined that a particular reference type does not apply to the given
-parameter set.
+++++++++++++++
 
 Fatal errors are handled by setting the error attribute of the result object to
 an error object.   Inspect the result.error.message attribute to get descriptive
 text about the error.
 
-JSONRPC Demo Page
------------------
+Demo Page
++++++++++
 
 The CRDS servers support demoing the JSONRPC services and calling them interactively
 by visiting the URL *.../json/browse/*.  This facility is available in development
