@@ -295,32 +295,33 @@ class FileSelectionsDict(dict):
 
     def __init__(self, selector, **keys):
         super(FileSelectionsDict, self).__init__()
-        self._selector = selector
-        self._loaded = {}
+        # JWST and HST wound up with different case conventions in rmap texts.  normalize.
+        self._selector = { key.lower(): value for (key, value) in selector.items() }
         self._keys = keys
 
     def __getitem__(self, name):
-        if key in self._selector:
-            try:
-                self._loaded[name]
-            except KeyError:
+        name = name.lower()
+        if name in self._selector:
+            if name not in self:
                 if self.is_special_value(self._selector[name]):
-                    self._loaded[name] = self._selector[name]
+                    self[name] = self._selector[name]
                 else:
-                    self._loaded[name] = _load(name, **self._keys)
-            return self._loaded[name]
+                    self[name] = _load(self._selector[name], **self._keys)
+            return dict.__getitem__(self, name)
         else:
             raise KeyError(name)
 
     def __setitem__(self, name, value):
-        self._loaded[name] = value   # disregards self._selector??
+        name = name.lower()
+        dict.__setitem__(self, name, value)   # disregards self._selector??
 
     def __delitem__(self, name):
-        del self._loaded[name]
+        name = name.lower()
+        dict.__delitem__(self, name)
         del self._selector[name]
 
     def keys(self):
-        return self._selector.keys()
+        return [name.lower() for name in self._selector.keys()]
 
     def values(self):
         return [self[name] for name in self.keys()]  # deferred load
@@ -870,7 +871,7 @@ class Mapping(object):
 class ContextMapping(Mapping):
     """.pmap and .imap base class."""
     def set_item(self, key, value):
-        """Add or replace and element of this mapping's selector.   For re-writing only."""
+        """Add or replace an element of this mapping's selector.   For re-writing only."""
         key = str(key)
         if key.upper() in self.selector:
             key = key.upper()
@@ -895,16 +896,16 @@ class PipelineContext(ContextMapping):
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
-        self.selections = FileSelectionsDict(selector)
+        self.selections = FileSelectionsDict(selector, **keys)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def validate(self):
         """Implement validations which require loading of sub-mappings here."""
         super(PipelineContext, self).validate()
         self._check_type("pipeline")
-        for instrument, imapname in selector.items():
+        for instrument, imapname in self.selector.items():
             instrument = instrument.lower()
-            if self.selections.is_normal_value(imapname):
+            if not self.selections.is_special_value(imapname):
                 self._check_nested("observatory", self.observatory, self.selections[instrument])
                 self._check_nested("instrument", instrument, self.selections[instrument])        
 
@@ -1028,23 +1029,24 @@ class InstrumentContext(ContextMapping):
         super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
-        self.selections = FileSelectionsDict(selector)
+        self.selections = FileSelectionsDict(selector, **keys)
+        self._filekinds = [key.upper() for key in self.selections.keys()]
+
+    def validate(self):
+        """Validate an InstrumentContext applying checks which require recursive loading of rmaps."""
+        super(InstrumentContext, self).validate()
         self._check_type("instrument")
-        for filekind, rmap_name in selector.items():
-            filekind = filekind.lower()
-            if self.selections.is_special_value(rmap_name):
-                self.selections[filekind] = rmap_name
-            else:
-                self.selections[filekind] = refmap = _load(rmap_name, **keys)
+        for filekind, rmap_name in self.selector.items():
+            if not self.selections.is_special_value(rmap_name):
                 self._check_nested("observatory", self.observatory, refmap)
                 self._check_nested("instrument", self.instrument, refmap)
                 self._check_nested("filekind", filekind, refmap)
-        self._filekinds = [key.upper() for key in self.selections.keys()]
+        
 
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping."""
         filekind = str(filekind).lower()
-        if filekind not in self.selections:
+        if filekind not in self.selections.keys():
             raise crexc.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
         if FileSelectionsDict.is_na_value(self.selections[filekind]):
             raise crexc.IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
@@ -1232,8 +1234,11 @@ class ReferenceMapping(Mapping):
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
 
     def validate(self):
+        """Perform checks on reference mapping associated with recursive loading."""
+        super(ReferenceMapping, self).validate()
         self._check_type("reference")
-        
+        assert self.filekind in self.obs_pkg.FILEKINDS, \
+            "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
     
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
@@ -1653,6 +1658,7 @@ def _load(mapping, **keys):
     """Stand-off function to call load_mapping, fetch_mapping, or get_cached_mapping
     depending on the "loader" value of `keys`.
     """
+    log.verbose("Loading", repr(mapping), "using", repr(keys), verbosity=90)
     return keys["loader"](mapping, **keys)
 
 def get_cached_mapping(mapping, **keys):
