@@ -198,8 +198,7 @@ class Mapping(object):
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        assert self.mapping == self.type, \
-            "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
+        assert self.mapping == self.type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
             self.type.upper(), self.mapping.upper(), self.filename)
         with log.augment_exception("Mapping str() fails to reload"):
             self.from_string(str(self), self.basename, **self._keys)
@@ -207,16 +206,19 @@ class Mapping(object):
             self.mapping.validate()
 
     def check_observatory(self):
+        """Verify self.observatory is a supported observatory."""
         assert self.observatory in crds.ALL_OBSERVATORIES, \
             "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
 
     def check_instrument(self):
+        """Verify self.instrument is a supported instrument."""
         assert self.instrument in self.obs_pkg.INSTRUMENTS, \
             "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
 
     def check_filekind(self):
-        assert self.instrument in self.obs_pkg.FILEKINDS, \
-            "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
+        """Verify self.filekind is a supported filekind."""
+        assert self.filekind in self.obs_pkg.FILEKINDS, \
+            "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
 
     @property
     def basename(self):
