@@ -716,12 +716,31 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
 
     % .... sync cache #1 using crds.sync and server #1
     % .... sync cache #2 using crds.sync and server #2
+
     % python -m crds.diff --cache1=/Users/fred/crds_cache_test --cache2=/Users/fred/crds_cache_ops hst_0382.pmap hst_0422.pmap  -F -Q
     ...
+
+    --cache1 and --cache2 are required as a pair.
 
     This is a direct approach for recursively differencing a version of rules from the TEST pipeline with rules from the OPS pipeline.
     Not all differencing modes work for this feature,  it's intended only for comparing rules,  doesn't support direct sync'ing, etc.
     A key point is that different rules files in TEST and OPS can have the same name.
+
+    NOTE:  For cache-to-cache differences,  --sync-files is not supported.  Compared caches are assumed to pre-exist.
+
+Mutually Exclusive Modes
+
+    The following switches define diffencing modes which cannot be run together:
+
+    --print-new-files
+    --print-all-new-files
+    --print-affected-instruments
+    --print-affected-types
+    --print-affected-modes
+    --cache1 (or --cache2)
+    (default differencing with none of the above)
+
+    --sync-files and --cache1 / --cache2 are also mutally exclusive
 
     """
     def __init__(self, *args, **keys):
@@ -733,9 +752,11 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
         """Add diff-specific command line parameters."""
         self.add_argument("old_file",  help="Prior file of difference.""")
         self.add_argument("new_file",  help="New file of difference.""")
+
         self.add_argument("-P", "--primitive-diffs", dest="primitive_diffs",
             help="Fitsdiff replaced reference files when diffing mappings.", 
             action="store_true")
+
         self.add_argument("-T", "--mapping-text-diffs",  dest="mapping_text_diffs", action="store_true",
             help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.")
         self.add_argument("-U", "--recurse-added-deleted",  dest="recurse_added_deleted", action="store_true",
@@ -744,22 +765,33 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
             help="Issue warnings about new rules, deletions, or reversions.")
         self.add_argument("--check-references", dest="check_references", action="store_true",
             help="Issue warnings if references are added to or deleted from either mapping.")
-        self.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
-            help="Rather than printing diffs for mappings,  print the names of new or replacement files.  Excludes intermediaries.")
-        self.add_argument("-A", "--print-all-new-files", dest="print_all_new_files", action="store_true",
-            help="Print the names of every new or replacement file in diffs between old and new.  Includes intermediaries.")
         self.add_argument("-i", "--include-header-diffs", dest="include_header_diffs", action="store_true",
             help="Include mapping header differences in logical diffs: sha1sum, derived_from, etc.")
         self.add_argument("-B", "--hide-boring-diffs", dest="hide_boring_diffs", action="store_true",
             help="Remove boiler-plate header differences in logical diffs: sha1sum, derived_from, etc.")
-        self.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
+
+        group = self.get_exclusive_arg_group(required=False)
+        group.add_argument("-N", "--print-new-files", dest="print_new_files", action="store_true",
+            help="Rather than printing diffs for mappings,  print the names of new or replacement files.  Excludes intermediaries.")
+        group.add_argument("-A", "--print-all-new-files", dest="print_all_new_files", action="store_true",
+            help="Print the names of every new or replacement file in diffs between old and new.  Includes intermediaries.")
+        group.add_argument("--print-affected-instruments", dest="print_affected_instruments", action="store_true",
             help="Print out the names of instruments which appear in diffs,  rather than diffs.")
-        self.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
+        group.add_argument("--print-affected-types", dest="print_affected_types", action="store_true",
             help="Print out the names of instruments and types which appear in diffs,  rather than diffs.")
-        self.add_argument("--print-affected-modes", dest="print_affected_modes", action="store_true",
+        group.add_argument("--print-affected-modes", dest="print_affected_modes", action="store_true",
             help="Print out the names of instruments, types, and matching parameters,  rather than diffs.")
-        self.add_argument("--sync-files", dest="sync_files", action="store_true",
+        group.add_argument("--cache1",  dest="cache1", default=None,
+            help="CRDS_PATH for the first cache in a cache-to-cache difference.  Mappings only.""")
+
+        # Can't exclude both cache1 and cache2
+        # --sync-files exludes --cache1 and --cache2 but not all the others,  --cache1 and --cache2 required together
+        group2 = self.get_exclusive_arg_group(required=False)
+        group2.add_argument("--cache2",  dest="cache2", default=None,
+            help="CRDS_PATH for the second cache in a cache-to-cache difference.  Mappings only.""")
+        group2.add_argument("--sync-files", dest="sync_files", action="store_true",
             help="Fetch any missing files needed for the requested difference from the CRDS server.")
+
         self.add_argument("-L", "--lowest-mapping-only", dest="lowest_mapping_only", action="store_true",
             help="Only include the name of the leaf mapping being diffed,  not all anscestor mappings.")
         self.add_argument("-E", "--remove-paths", dest="remove_paths", action="store_true",
@@ -768,11 +800,7 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
             help="Simplify formatting of difference results (remove tuple notations)")
         self.add_argument("-F", "--brief", dest="brief", action="store_true",
             help="Switch alias for --lowest-mapping-only --remove-paths --hide-boring-diffs --include-headers")
-        self.add_argument("--cache1",  dest="cache1", default=None,
-            help="CRDS_PATH for the first cache in a cache-to-cache difference.  Mappings only.""")
-        self.add_argument("--cache2",  dest="cache2", default=None,
-            help="CRDS_PATH for the second cache in a cache-to-cache difference.  Mappings only.""")
-        
+
     # locate_file = cmdline.Script.locate_file_outside_cache
 
     def main(self):
@@ -786,6 +814,8 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
             self.args.hide_boring_diffs = True
             self.args.include_header_diffs = True
         if self.args.sync_files:
+            assert not (self.args.cache1 or self.args.cache2), \
+                "--sync-files is not compatible with cache-to-cache differences."
             if self.args.print_all_new_files:
                 serial_old = naming.newstyle_serial(self.old_file)
                 serial_new = naming.newstyle_serial(self.new_file) + 1
@@ -800,6 +830,9 @@ Differencing two sets of rules (from two different pre-synced caches, e.g. from 
             log.warning("--print-all-new-files requires a complete set of rules.  suggest --sync-files.")
             
         # self.args.files = [ self.old_file, self.new_file ]   # for defining self.observatory
+    
+        assert (self.args.cache1 and self.args.cache2) or (not self.args.cache1 and not self.args.cache2), \
+            "Cache-to-cache comparison requires both --cache1 and --cache2;  otherwise neither for single cache comparison."
 
         if self.args.print_new_files:
             status = self.print_new_files()

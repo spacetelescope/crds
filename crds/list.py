@@ -101,6 +101,9 @@ class ListScript(cmdline.ContextsScript):
             help="print the name of the operational context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
             help="print the name of the context reported as in use by the specified pipeline.")
+        self.add_argument("--required-parkeys", action="store_true",
+            help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
+
         super(ListScript, self).add_args()
         
     def main(self):
@@ -123,6 +126,8 @@ class ListScript(cmdline.ContextsScript):
             print(self.default_context)
         if self.args.remote_context:
             print(self.remote_context)
+        if self.args.required_parkeys:
+            self.list_required_parkeys()
 
     @property
     def remote_context(self):
@@ -259,6 +264,13 @@ class ListScript(cmdline.ContextsScript):
             _print_dict("Calibration Environment", cal_vars)
         _print_dict("Python Environment", pyinfo)
 
+    def list_required_parkeys(self):
+        """Print out the parkeys required for matching using the specified contexts."""
+        for name in self.contexts:
+            mapping = crds.get_symbolic_mapping(name)
+            log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
+            _print_dict("", mapping.get_required_parkeys())
+        
 def _get_python_info():
     """Collect and return information about the Python environment"""
     pyinfo = {
