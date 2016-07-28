@@ -584,19 +584,6 @@ def get_server_url(observatory):
 
 # ===========================================================================
 
-CRDS_PICKLE_MAPPINGS = BooleanConfigItem("CRDS_PICKLE_MAPPINGS", False,
-    "Use pickles as a secondary cache for mappings.")
-
-CRDS_PICKLE_PATH = StrConfigItem("CRDS_PICKLE_PATH", "",
-    "Location of CRDS mapping pickles.")
-
-def locate_mapping_pickle(mapping):
-    """Return the location where any pickle of `mapping` is stored."""
-    path = CRDS_PICKLE_PATH.get() or os.path.join(get_crds_cfgpath(mapping_to_observatory(mapping)), "pickles")
-    return os.path.join(path, mapping + ".pkl")
-
-# ===========================================================================
-
 USERNAME = None
 
 def get_username(override=None):
