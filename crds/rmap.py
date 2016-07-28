@@ -58,7 +58,6 @@ import sys
 import os.path
 import glob
 import json
-import ast
 
 from collections import namedtuple
 
@@ -71,6 +70,8 @@ from .config import mapping_exists, is_mapping
 
 from crds import exceptions as crexc
 from crds import python23
+from crds.custom_dict import TransformedDict, LazyFileTree
+from crds.mapping_verifier import MAPPING_VERIFIER
 
 # ===================================================================
 
@@ -80,172 +81,7 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 # ===================================================================
 
-class AstDumper(ast.NodeVisitor):
-    """Debug class for dumping out rmap ASTs."""
-    def visit(self, node):
-        print(ast.dump(node), "\n")
-        ast.NodeVisitor.visit(self, node)
-
-    def dump(self, node):
-        print(ast.dump(node), "\n")
-        self.generic_visit(node)
-
-    visit_Assign = dump
-    visit_Call = dump
-
-ILLEGAL_NODES = {
-    "visit_FunctionDef",
-    "visit_ClassDef", 
-    "visit_Return", 
-    "visit_Yield",
-    "visit_Delete", 
-    "visit_AugAssign", 
-    "visit_Print",
-    "visit_For", 
-    "visit_While", 
-    "visit_If", 
-    "visit_With", 
-    "visit_Raise", 
-    "visit_TryExcept", 
-    "visit_TryFinally",
-    "visit_Assert", 
-    "visit_Import", 
-    "visit_ImportFrom", 
-    "visit_Exec",
-    "visit_Global",
-    "visit_Pass",
-    "visit_Repr", 
-    "visit_Lambda",
-    "visit_Attribute",
-    "visit_Subscript",
-    "visit_Set",
-    "visit_ListComp",
-    "visit_SetComp",
-    "visit_DictComp",
-    "visit_GeneratorExp",
-    "visit_Repr",
-    "visit_AugLoad",
-    "visit_AugStore",
-    }
-
-LEGAL_NODES = {
-    'visit_Module',
-    'visit_Name',
-    'visit_Str',
-    'visit_Load',
-    'visit_Store',
-    'visit_Tuple',
-    'visit_List',
-    'visit_Dict',
-    'visit_Num',
-    'visit_Expr',
-    'visit_And',
-    'visit_Or',
-    'visit_In',
-    'visit_Eq',
-    'visit_NotIn',
-    'visit_NotEq',
-    'visit_Gt',
-    'visit_GtE',
-    'visit_Lt',
-    'visit_LtE',
-    'visit_Compare',
-    'visit_IfExp',
-    'visit_BoolOp',
-    'visit_BinOp',
-    'visit_UnaryOp',
-    'visit_Not',
-    'visit_NameConstant',
-    'visit_USub',
- }
-
-CUSTOMIZED_NODES = {
-    'visit_Call',
-    'visit_Assign',
-    'visit_Illegal',
-    'visit_Unknown',
-}
-
-ALL_CATEGORIZED_NODES = set.union(ILLEGAL_NODES, LEGAL_NODES, CUSTOMIZED_NODES)
-
-class MappingValidator(ast.NodeVisitor):
-    """MappingValidator visits the parse tree of a CRDS mapping file and
-    raises exceptions for invalid constructs.   MappingValidator is concerned
-    with limiting rmaps to safe code,  not deep semantic checks.
-    """
-    def __init__(self, *args, **keys):
-        super(MappingValidator, self).__init__(*args, **keys)
-        
-        # assert not set(self.LEGAL_NODES).intersection(self.ILLEGAL_NODES), "MappingValidator config error."       
-        for attr in LEGAL_NODES:
-            setattr(self, attr, self.generic_visit)
-        for attr in ILLEGAL_NODES:
-            setattr(self, attr, self.visit_Illegal)
-        
-    def compile_and_check(self, text, source="<ast>", mode="exec"):
-        """Parse `text` to verify that it's a legal mapping, and return a
-        compiled code object.
-        """
-        if sys.version_info >= (2, 7, 0):
-            self.visit(ast.parse(text))
-        return compile(text, source, mode)
-
-    def __getattribute__(self, attr):
-        if attr.startswith("visit_"):
-            if attr in ALL_CATEGORIZED_NODES:
-                rval = ast.NodeVisitor.__getattribute__(self, attr)
-            else:
-                rval = ast.NodeVisitor.__getattribute__(self, "visit_Unknown")
-        else:
-            rval = ast.NodeVisitor.__getattribute__(self, attr)
-        return rval
-
-    def assert_(self, node, flag, message):
-        """Raise an appropriate MappingFormatError exception based on `node`
-        and `message` if `flag` is False.
-        """
-        if not flag:
-            if hasattr(node, "lineno"):
-                raise crexc.MappingFormatError(message + " at line " + str(node.lineno))
-            else:
-                raise crexc.MappingFormatError(message)
-
-    def visit_Illegal(self, node):
-        """Handle explicitly forbidden node types."""
-        self.assert_(node, False, "Illegal statement or expression in mapping " + repr(node))
-
-    def visit_Unknown(self, node):
-        """Handle new / unforseen node types."""
-        self.assert_(node, False, "Unknown node type in mapping " + repr(node))
-    
-#     def generic_visit(self, node):
-#         # print "generic_visit", repr(node)
-#         return super(MappingValidator, self).generic_visit(node)
-
-    def visit_Assign(self, node):
-        """Screen assignments to limit to a subset of legal assignments."""
-        self.assert_(node, len(node.targets) == 1,
-                     "Invalid 'header' or 'selector' definition")
-        self.assert_(node, isinstance(node.targets[0], ast.Name),
-                     "Invalid 'header' or 'selector' definition")
-        self.assert_(node, node.targets[0].id in ["header","selector","comment"],
-                     "Only define 'header' or 'selector' or 'comment' sections")
-        self.assert_(node, isinstance(node.value, (ast.Call, ast.Dict, ast.Str)),
-                    "Section value must be a selector call or dictionary or string")
-        self.generic_visit(node)
-
-    def visit_Call(self, node):
-        """Screen calls to limit to a subset of legal calls."""
-        self.assert_(node, node.func.id in selectors.SELECTORS,
-            "Selector " + repr(node.func.id) + " is not one of supported Selectors: " +
-            repr(sorted(selectors.SELECTORS.keys())))
-        self.generic_visit(node)
-
-MAPPING_VALIDATOR = MappingValidator()
-
-# =============================================================================
-
-class LowerCaseDict(dict):
+class LowerCaseDict(TransformedDict):
     """Used to return Mapping header string values uniformly as lower case.
     
     >>> d = LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
@@ -257,78 +93,48 @@ class LowerCaseDict(dict):
     
     Values bracketed by () are returned unaltered in order to support header Python 
     expressions which are typically evaluated in the context of an incoming header 
-    (FITS) dictionary,  all upper case:
+    (FITS) keyword dictionary:
     
     >>> d["another"]
     '(ESCAPED)'
+
+    >>> from crds.python23 import pickle
+    assert pickle.loads(pickle.dumps(d)) == d
+
+    >>> d.get("this", "foo")
+    'THAT'
+
+    >>> d.get("foo", "XXX")
+    return 'xxx'
+
+    >>> d.get("foo", "(XXX)")
+    return '(XXX)'
+
+    >>> LowerCaseDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
+    LowerCaseDict({'this': 'that', 'ANOTHER': '(ESCAPED)'})
     """
-    def __getitem__(self, key):
-        val = super(LowerCaseDict, self).__getitem__(key)
-        # Return string values as lower case,  but exclude literal expressions surrounded by ()
-        # for case-sensitive HST rmap relevance expressions.
+    def transform_value(self, val):
+        """Returns `value` strings as lower case,  but excludes literal strings surrounded by ()
+        to support exceptional values which require exact case.   Non-string values are returned 
+        unaltered.
+        """
         if isinstance(val, python23.string_types) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
     
-    def get(self, key, default):
-        if key in self:
-            return self[key]
-        else:
-            return default
-    
     def __repr__(self):
         """
-        >> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
-        LowerCaseDict({'this': 'that', 'another': '(ESCAPED)'})
+        >> LowerCaseDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
+        LowerCaseDict({'this': 'that', 'ANOTHER': '(ESCAPED)'})
         """
-        return self.__class__.__name__ + "({})".format(repr({ key: self[key] for key in self }))
+        super(LowerCaseDict, self).__repr__()
 
-# ===================================================================
+# =============================================================================
 
-class FileSelectionsDict(dict):
-    """Manages selections for higher level mappings like .pmaps and .imaps.
-
-    Provides helper methods which exlude or highlight special selection values
-    like N/A or OMIT to support recursive loading or processing.   Special
-    values,  since they do not designate nested files, terminate any recursion
+class MappingSelectionsDict(LazyFileTree):
+    """MappingSelectionsDict is a LazyFileTree with customized special values specific to CRDS.
+    Mappings.
     """
-
-    def __init__(self, selector, **keys):
-        super(FileSelectionsDict, self).__init__()
-        # JWST and HST wound up with different case conventions in rmap texts.  normalize.
-        self._selector = { key.lower(): value for (key, value) in selector.items() }
-        self._keys = keys
-
-    def __getitem__(self, name):
-        name = name.lower()
-        if name in self._selector:
-            if name not in self:
-                if self.is_special_value(self._selector[name]):
-                    self[name] = self._selector[name]
-                else:
-                    self[name] = _load(self._selector[name], **self._keys)
-            return dict.__getitem__(self, name)
-        else:
-            raise KeyError(name)
-
-    def __setitem__(self, name, value):
-        name = name.lower()
-        dict.__setitem__(self, name, value)   # disregards self._selector??
-
-    def __delitem__(self, name):
-        name = name.lower()
-        dict.__delitem__(self, name)
-        del self._selector[name]
-
-    def keys(self):
-        return [name.lower() for name in self._selector.keys()]
-
-    def values(self):
-        return [self[name] for name in self.keys()]  # deferred load
-
-    def items(self):
-        return zip(self.keys(), self.values())
-
     na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
     omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
     special_values_set = na_values_set | omit_values_set
@@ -338,6 +144,10 @@ class FileSelectionsDict(dict):
         "TEMP_N/A" : "Temporarily Not Applicable",
         }
 
+    def __init__(self, selector, **keys):
+        super(MappingSelectionsDict, self).__init__(selector, **keys)
+        self.loader = _load # required en lieu of forward declaration
+
     @classmethod
     def is_na_value(cls, value):
         return isinstance(value, str) and value in cls.na_values_set
@@ -345,56 +155,6 @@ class FileSelectionsDict(dict):
     @classmethod
     def is_omit_value(cls, value):
         return isinstance(value, str) and value in cls.omit_values_set
-
-    @classmethod
-    def is_special_value(cls, value):
-        return isinstance(value, str) and value in cls.special_values_set
-        
-    def normal_keys(self):
-        """Each of these keys has a corresponding value which IS NOT special.
-        
-        >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).normal_keys()
-        ['that']
-        """
-        return sorted([key for key in self.keys() if self[key] not in self.special_values_set])
-
-    def special_keys(self):
-        """Each of these keys has a corresponding values which IS special.
-        
-        >>> FileSelectionsDict({"this" : "OMIT", "that":"something.imap"}).special_keys()
-        ['this']
-        """
-        return sorted([key for key in self.keys() if self[key] in self.special_values_set])
-
-    def normal_values(self):
-        """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
-        
-        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
-        ['something.imap']
-        """
-        return [ self[key] for key in self.normal_keys() ]
-
-    def special_values(self):
-        """These are values which must be trapped and reformatted in the Mapping classes.
-        
-        >>> FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
-        ['N/A']
-        """
-        return [ self[key] for key in self.special_keys() ]
-
-    def normal_items(self):
-        """
-        >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_items())
-        [('that', 'something.imap')]
-        """
-        return [ (key, self[key]) for key in self.normal_keys() ]
-
-    def special_items(self):
-        """
-        >>> list(FileSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_items())
-        [('this', 'N/A')]
-        """
-        return [ (key, self[key]) for key in self.special_keys() ]
 
 # ===================================================================
 
@@ -422,6 +182,7 @@ class Mapping(object):
         Stick extra checks for context mappings here.
         """
         log.verbose("Validating", repr(self.basename), "with parameters", repr(self.parkey))
+        self.validate()
 
     def validate(self):
         """Perform generic recursive Mapping checks, including definition of all
@@ -437,15 +198,25 @@ class Mapping(object):
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        assert self.observatory in crds.ALL_OBSERVATORIES, \
-            "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
-        if "instrument" in self.header:
-            assert self.instrument in self.obs_pkg.INSTRUMENTS, \
-                "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
+        assert self.mapping == self.type, \
+            "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
+            self.type.upper(), self.mapping.upper(), self.filename)
         with log.augment_exception("Mapping str() fails to reload"):
             self.from_string(str(self), self.basename, **self._keys)
-        for key in self.selections:
-            self.selections[key].validate()
+        for key, mapping in self.selections.normal_items():
+            self.mapping.validate()
+
+    def check_observatory(self):
+        assert self.observatory in crds.ALL_OBSERVATORIES, \
+            "Invalid observatory " + repr(self.obsevatory) + " in " + repr(self.filename)
+
+    def check_instrument(self):
+        assert self.instrument in self.obs_pkg.INSTRUMENTS, \
+            "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
+
+    def check_filekind(self):
+        assert self.instrument in self.obs_pkg.FILEKINDS, \
+            "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
 
     @property
     def basename(self):
@@ -519,7 +290,7 @@ class Mapping(object):
         """
         with log.augment_exception("Can't load file " + where, 
                                    exception_class=crexc.MappingError):
-            code = MAPPING_VALIDATOR.compile_and_check(text)
+            code = MAPPING_VERIFIER.compile_and_check(text)
             header, selector, comment = cls._interpret(code)
         return LowerCaseDict(header), selector, comment
 
@@ -756,12 +527,12 @@ class Mapping(object):
 
     def _is_normal_value(self, key):
         """Return True IFF the value of selection `key` is not special, i.e. N/A or OMIT."""
-        return not FileSelectionsDict.is_special_value(self.selections[key])
+        return not MappingSelectionsDict.is_special_value(self.selections[key])
     
     def _value_name(self, key):
         """Return either a special value,  or the filename of the loaded mapping."""
         value = self.selections[key]
-        return value if FileSelectionsDict.is_special_value(value) else value.filename
+        return value if MappingSelectionsDict.is_special_value(value) else value.filename
     
     def difference_header(self, other, path=(), pars=()):
         """Compare `self` with `other` and return a list of difference
@@ -832,17 +603,12 @@ class Mapping(object):
             log.warning("Parent mapping for", repr(self.basename), "=", repr(self.derived_from), "does not exist.")
             return None
 
-    def _check_type(self, expected_type):
-        """Verify that this mapping has `expected_type` as the value of header 'mapping'."""
-        assert self.mapping == expected_type, \
-            "Expected header mapping='{}' in '{}' but got mapping='{}'".format(
-            expected_type.upper(), self.filename, self.mapping.upper())
-
-    def _check_nested(self, key, upper, nested):
+    def _check_nested(self, key, self_val, nested):
         """Verify that `key` in `nested's` header matches `key` in `self's` header."""
-        assert  upper == getattr(nested, key), \
+        nested_val = getattr(nested, key)
+        assert  self_val == nested_val, \
             "selector['{}']='{}' in '{}' doesn't match header['{}']='{}' in nested file '{}'.".format(
-            upper, nested.filename, self.filename, key, getattr(nested, key), nested.filename)
+            key, self_val, self.filename, key, nested_val, nested.filename)
             
     def todict(self, recursive=10):
         """Return a 'pure data' dictionary representation of this mapping and it's children
@@ -883,7 +649,7 @@ class Mapping(object):
 class ContextMapping(Mapping):
     """.pmap and .imap base class."""
     def set_item(self, key, value):
-        """Add or replace an element of this mapping's selector.   For re-writing only."""
+        """Add or replace and element of this mapping's selector.   For re-writing only."""
         key = str(key)
         if key.upper() in self.selector:
             key = key.upper()
@@ -905,21 +671,21 @@ class PipelineContext(ContextMapping):
     # Last required attribute is "difference type".
     required_attrs = ["observatory", "mapping", "parkey", "name", "derived_from"]
 
+    type = "pipeline"
+
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
-        self.selections = FileSelectionsDict(selector, **keys)
+        self.selections = MappingSelectionsDict(selector)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def validate(self):
-        """Implement validations which require loading of sub-mappings here."""
+        """Implement PipelineContext validations which require loading sub-mappings here."""
         super(PipelineContext, self).validate()
-        self._check_type("pipeline")
-        for instrument, imapname in self.selector.items():
-            instrument = instrument.lower()
-            if not self.selections.is_special_value(imapname):
-                self._check_nested("observatory", self.observatory, self.selections[instrument])
-                self._check_nested("instrument", instrument, self.selections[instrument])        
+        self.check_observatory()
+        for instrument, imap in self.selections.normal_items():
+            self._check_nested("observatory", self.observatory, imap)
+            self._check_nested("instrument", instrument, imap)
 
     def get_best_references(self, header, include=None):
         """Return the best references for keyword map `header`.  If `include`
@@ -1041,28 +807,26 @@ class InstrumentContext(ContextMapping):
         super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
-        self.selections = FileSelectionsDict(selector, **keys)
+        self.selections = MappingSelectionsDict(selector)
         self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def validate(self):
-        """Validate an InstrumentContext applying checks which require recursive loading of rmaps."""
-        super(InstrumentContext, self).validate()
-        self._check_type("instrument")
-        for filekind, rmap_name in self.selector.items():
-            if not self.selections.is_special_value(rmap_name):
-                self._check_nested("observatory", self.observatory, refmap)
-                self._check_nested("instrument", self.instrument, refmap)
-                self._check_nested("filekind", filekind, refmap)
-        
+        """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
+        self.check_observatory()
+        self.check_instrument()
+        for filekind, refmap in self.selections.normal_items():
+            self._check_nested("observatory", self.observatory, refmap)
+            self._check_nested("instrument", self.instrument, refmap)
+            self._check_nested("filekind", filekind, refmap)
 
     def get_rmap(self, filekind):
         """Given `filekind`,  return the corresponding ReferenceMapping."""
         filekind = str(filekind).lower()
-        if filekind not in self.selections.keys():
+        if filekind not in self.selections:
             raise crexc.CrdsUnknownReftypeError("Unknown reference type", repr(filekind))
-        if FileSelectionsDict.is_na_value(self.selections[filekind]):
+        if MappingSelectionsDict.is_na_value(self.selections[filekind]):
             raise crexc.IrrelevantReferenceTypeError("Type", repr(filekind), "is N/A for", repr(self.instrument))
-        if  FileSelectionsDict.is_omit_value(self.selections[filekind]):
+        if  MappingSelectionsDict.is_omit_value(self.selections[filekind]):
             raise crexc.OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
@@ -1206,6 +970,9 @@ class ReferenceMapping(Mapping):
     reference filetype and instantiate an appropriate selector tree from the
     rmap header and data.
     """
+    
+    type = "reference"
+
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
 
     def __init__(self, *args, **keys):
@@ -1245,12 +1012,22 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
 
-    def validate(self):
-        """Perform checks on reference mapping associated with recursive loading."""
-        super(ReferenceMapping, self).validate()
-        self._check_type("reference")
-        assert self.filekind in self.obs_pkg.FILEKINDS, \
-            "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
+    def validate_mapping(self):
+        """Validate the contents of this rmap against the TPN for this
+        filekind / reftype.   Each field of each Match tuple must have a value
+        OK'ed by the TPN.  UseAfter dates must be correctly formatted.
+        """
+        super(ReferenceMapping, self).validate_mapping()
+        self.check_observatory()
+        self.check_instrument()
+        self.check_filekind()
+        if "reference_to_dataset" in self.header:
+            parkeys = self.get_required_parkeys()
+            for reference, dataset in self.reference_to_dataset.items():
+                assert dataset.upper() in parkeys, \
+                    "reference_to_dataset dataset keyword not in parkey keywords."
+        with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
+            self.selector.validate_selector(self.tpn_valid_values)
     
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
@@ -1258,7 +1035,7 @@ class ReferenceMapping(Mapping):
         """
         expr = utils.condition_source_code_keys(expr, self.get_required_parkeys())
         try:
-            return expr, MAPPING_VALIDATOR.compile_and_check(expr, source=self.basename, mode="eval")
+            return expr, MAPPING_VERIFIER.compile_and_check(expr, source=self.basename, mode="eval")
         except crexc.MappingFormatError as exc:
             raise crexc.MappingFormatError("Can't load file " + repr(self.basename) + " : " + str(exc))
 
@@ -1354,9 +1131,9 @@ class ReferenceMapping(Mapping):
                     raise crexc.IrrelevantReferenceTypeError("No match found and reference type is not required.")
         log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), 
                     "on attempt", attempt, verbosity=55)
-        if FileSelectionsDict.is_na_value(bestref):
+        if MappingSelectionsDict.is_na_value(bestref):
             raise crexc.IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")                
-        if FileSelectionsDict.is_omit_value(bestref):
+        if MappingSelectionsDict.is_omit_value(bestref):
             raise crexc.OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
         return bestref
 
@@ -1442,20 +1219,6 @@ class ReferenceMapping(Mapping):
                     values = tuple([utils.condition_value(val) for val in values])
                 valid_values[info.name] = values
         return valid_values
-
-    def validate_mapping(self):
-        """Validate the contents of this rmap against the TPN for this
-        filekind / reftype.   Each field of each Match tuple must have a value
-        OK'ed by the TPN.  UseAfter dates must be correctly formatted.
-        """
-        super(ReferenceMapping, self).validate_mapping()
-        if "reference_to_dataset" in self.header:
-            parkeys = self.get_required_parkeys()
-            for reference, dataset in self.reference_to_dataset.items():
-                assert dataset.upper() in parkeys, \
-                    "reference_to_dataset dataset keyword not in parkey keywords."
-        with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
-            self.selector.validate_selector(self.tpn_valid_values)
 
     def file_matches(self, filename):
         """Return a list of the match tuples which refer to `filename`."""
@@ -1674,7 +1437,6 @@ def _load(mapping, **keys):
     """Stand-off function to call load_mapping, fetch_mapping, or get_cached_mapping
     depending on the "loader" value of `keys`.
     """
-    log.verbose("Loading", repr(mapping), "using", repr(keys), verbosity=90)
     return keys["loader"](mapping, **keys)
 
 def get_cached_mapping(mapping, **keys):
@@ -1839,7 +1601,7 @@ def is_special_value(filename):
     >>> is_special_value("N/A")
     True
     """
-    return FileSelectionsDict.is_special_value(str(filename))
+    return MappingSelectionsDict.is_special_value(str(filename))
 
 # ===================================================================
 
