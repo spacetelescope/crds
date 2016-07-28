@@ -1069,7 +1069,7 @@ def set_crds_state(old_state):
     _CRDS_CACHE_READONLY = old_state.pop("_CRDS_CACHE_READONLY")
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
     for key, val in old_state.items():
-        os.environ[key] = val
+        os.environ[key] = str(val)
     if os.environ.get("CRDS_SERVER_URL", None):
         api.set_crds_server(os.environ["CRDS_SERVER_URL"])
 
