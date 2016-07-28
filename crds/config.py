@@ -257,6 +257,9 @@ ALLOW_BAD_RULES = BooleanConfigItem("CRDS_ALLOW_BAD_RULES", False,
 
 # Refactoring options
 
+PASS_INVALID_VALUES = BooleanConfigItem("PASS_INVALID_VALUES", False,
+    "When True,  return invalid values detected by JWST calibrartion code data model schema. These are still be errors.")
+
 ALLOW_SCHEMA_VIOLATIONS = BooleanConfigItem("CRDS_ALLOW_SCHEMA_VIOLATIONS", False,
     "When True, don't map JWST data model warnings onto CRDS errors.")
 
@@ -1054,6 +1057,7 @@ def get_crds_state():
     env = { key : val for key, val in os.environ.items() if key.startswith("CRDS_") }
     env["CRDS_REF_SUBDIR_MODE"] = CRDS_REF_SUBDIR_MODE
     env["_CRDS_CACHE_READONLY"] = get_cache_readonly()
+    env["PASS_INVALID_VALUES"] = PASS_INVALID_VALUES.get()
     return env
 
 def set_crds_state(old_state):
