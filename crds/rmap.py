@@ -414,6 +414,7 @@ class Mapping(object):
         self.comment = keys.pop("comment", None)
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
         self._keys = keys
+        self.path = keys.get("path", None)
 
     def validate_mapping(self):
         """Validate `self` only implementing any checks to be performed by
@@ -464,6 +465,12 @@ class Mapping(object):
         """Return the source text of the Mapping."""
         return self.format()
 
+    def list_tree(self):
+        """Recursively print out the repr's() of all loaded mappings from `self` down."""
+        print(repr(self))
+        for mapping in self.selections.values():
+            mapping.list_tree()
+
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if attr in self.header:
@@ -490,13 +497,13 @@ class Mapping(object):
     @classmethod
     def from_string(cls, text, basename="(noname)", *args, **keys):
         """Construct a mapping from string `text` nominally named `basename`."""
+        keys.pop("comment", None) #  discard comment if defined
         header, selector, comment = cls._parse_header_selector(text, basename)
-        keys.pop("comment", None)
         mapping = cls(basename, header, selector, comment=comment, **keys)
-        ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
         try:
             mapping._check_hash(text)
         except crexc.ChecksumError as exc:
+            ignore = keys.get("ignore_checksum", False) or config.get_ignore_checksum()
             if ignore == "warn":
                 log.warning("Checksum error", ":", str(exc))
             elif ignore:
@@ -707,6 +714,11 @@ class Mapping(object):
             else:  # values are the same,  no diff or nested diffs.
                 diff = None
                 nested_diffs = []
+            # Nullify intermediate diffs based solely on path names for cache-to-cache comparisons
+            # Cache-to-cache difference is tricky,  because recursion is required but higher level
+            # diffs by path-only are uninteresting.
+            if self.path and self.basename == new_mapping.basename:
+                diff = None
             if diff:
                 differences.append(diff)
             differences.extend(nested_diffs)
@@ -725,7 +737,7 @@ class Mapping(object):
             else: # replacement case already handled in first for-loop,  not needed in reverse.
                 pass 
         return sorted(differences)
-    
+
     def diff_files(self, added_deleted, path=(), pars=()):
         """Return the list of diff tuples for all nested changed files in a higher level addition
         or deletion.   added_deleted should be "added" or "deleted"
@@ -1651,6 +1663,10 @@ class ReferenceMapping(Mapping):
             log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
             return None
         return self
+
+    def list_tree(self):
+        """Print repr() of ReferenceMapping,  assumed to be terminal."""
+        print(repr(self))
 
 # ===================================================================
 
