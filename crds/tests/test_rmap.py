@@ -464,6 +464,38 @@ def dt_imap_match_omit():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_pickled_bestrefs():
+    """
+    >>> from crds.python23 import pickle
+    >>> from crds import data_file
+
+    >>> old_state = test_config.setup()
+
+    >>> p = rmap.get_cached_mapping("hst.pmap")
+
+    >>> s = pickle.dumps(p)
+    >>> q = pickle.loads(s)
+
+    >>> str(q) == str(p)
+    True
+
+    >>> p.difference(q)
+    []
+    >>> q.difference(p)
+    []
+
+    >>> p.validate_mapping()
+    >>> q.validate_mapping()
+
+    >>> header = data_file.get_header("data/j8bt06o6q_raw.fits")
+    >>> refs_p = p.get_best_references(header)
+    >>> refs_q = q.get_best_references(header)
+    >>> refs_p == refs_q
+    True
+
+    >>> test_config.cleanup(old_state)
+    """
+
 # ==================================================================================
 
 class TestRmap(CRDSTestCase):

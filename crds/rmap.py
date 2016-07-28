@@ -168,10 +168,13 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
-        self.filename = filename
         self.header = LowerCaseDict(header)   # consistent lower case values
+        self._newargs = (filename, header, selector)
+        self.filename = filename
         self.selector = selector
         self.comment = keys.pop("comment", None)
+        self.mapping = self.header["mapping"]
+        self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
         self._keys = keys
         self.path = keys.get("path", None)
@@ -220,6 +223,9 @@ class Mapping(object):
         assert self.filekind in self.obs_pkg.FILEKINDS, \
             "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
 
+    def __getnewargs__(self):
+        return self._newargs
+
     @property
     def basename(self):
         return os.path.basename(self.filename)
@@ -246,7 +252,7 @@ class Mapping(object):
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
-        if attr in self.header:
+        if "header" in self.__dict__ and attr in self.header:
             return self.header[attr]   # Note:  header is a class which mutates values,  see LowerCaseDict.
         else:
             raise AttributeError("Invalid or missing header key " + repr(attr))
@@ -996,7 +1002,28 @@ class ReferenceMapping(Mapping):
         # For "rmap_relevance" and "rmap_omit" expressions,  the expressions are enclosed in ()
         # to ensure no case conversions occur in LowerCaseDict.  Since ALWAYS is not in (),  it
         # shows up here as the standard "always".
+
+        # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
+        self._rmap_relevance_expr = None
         
+        # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
+        self._rmap_omit_expr = None
+
+        # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
+        self._parkey_relevance_exprs = None
+
+        # header precondition method, e.g. crds.hst.acs.precondition_header
+        # this is optional code which pre-processes and mutates header inputs
+        # set to identity if not defined.
+        self._precondition_header = None
+        self._fallback_header = None
+        self._rmap_update_headers = None
+        
+        self._init_compiled()
+
+    def _init_compiled(self):
+        """Initialize object fields which contain compiled code objects, special handling for pickling."""
+
         # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
         self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))  # secured
         
@@ -1030,6 +1057,22 @@ class ReferenceMapping(Mapping):
                     "reference_to_dataset dataset keyword not in parkey keywords."
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
+
+    def __getstate__(self):
+        """Support pickling protocol, return mapping state,  working around compiled code attributes."""
+        state = dict(self.__dict__)
+        del state["_rmap_relevance_expr"]
+        del state["_rmap_omit_expr"]
+        del state["_precondition_header"]
+        del state["_fallback_header"]
+        del state["_rmap_update_headers"]
+        del state["_parkey_relevance_exprs"]
+        return state
+    
+    def __setstate__(self, state):
+        """Restore pickled state,  special handling for compiled code attributes."""
+        self.__dict__ = dict(state)
+        self._init_compiled()
     
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
