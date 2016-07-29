@@ -388,7 +388,7 @@ def dt_diff_print_affected_modes():
 
 def dt_diff_print_all_new_files():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
     >>> DiffScript("crds.diff data/hst_0001.pmap data/hst_0008.pmap --print-all-new-files --sync-files --include-header-diffs --hide-boring")()
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
