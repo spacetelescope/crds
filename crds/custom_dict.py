@@ -19,7 +19,7 @@ class TransformedDict(dict):
     """
     
     def __init__(self, initializer=()):
-        super(TransformedDict, self).__init__(
+        super(TransformedDict, self).update(
             { self.transform_key(key): self.transform_value(val) 
               for (key, val) in dict(initializer).items() })
 
@@ -40,18 +40,23 @@ class TransformedDict(dict):
     def __delitem__(self, key):
         super(TransformedDict, self).__delitem__(self.transform_key(key))
 
+    def __contains__(self, key):
+        return super(TransformedDict, self).__contains__(self.transform_key(key))
+
     def get(self, key, default=None):
         """Returns either value associated with `key` or transformed `default` value."""
-        transformed_key = self.transform_key(key)
-        value = super(TransformedDict, self).get(transformed_key, default)
-        return value
+        tkey = self.transform_key(key)
+        if tkey in self:
+            return self.transformed_value(tkey)
+        else:
+            return default
     
     def __repr__(self):
         """
         >>> TransformedDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
         TransformedDict({'this': 'THAT', 'ANOTHER': '(ESCAPED)'})
         """
-        return self.__class__.__name__ + "({})".format(repr({ key: self[key] for key in self }))
+        return self.__class__.__name__ + "({})".format(self.items())
 
 # =============================================================================
 
@@ -105,13 +110,16 @@ class LazyFileDict(TransformedDict):
 
     def __setitem__(self, name, value):
         name = self.transform_key(name)
-        self._selector[name] = val.filename
-        super(LazyFileDict, self).__setitem__(name, val) # disregards self._selector value??
+        self._selector[name] = value.filename
+        super(LazyFileDict, self).__setitem__(name, value)
 
     def __delitem__(self, name):
         name = self.transform_key(name)
         del self._selector[name]
         super(LazyFileDict, self).__delitem__(name)
+
+    def __contains__(self, key):
+        return self.transform_key(key) in self.keys()
 
     def __iter__(self):
         return iter(self.keys())

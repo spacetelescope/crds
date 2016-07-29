@@ -81,8 +81,8 @@ Filemap  = namedtuple("Filemap","date,file,comment")
 
 # =============================================================================
 
-class LowerCaseDict(TransformedDict):
-    """Used to return Mapping header string *values* uniformly as lower case.
+class LowerCaseDict(dict):
+    """Used to return Mapping header string values uniformly as lower case.
     
     >>> d = LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
     
@@ -93,36 +93,32 @@ class LowerCaseDict(TransformedDict):
     
     Values bracketed by () are returned unaltered in order to support header Python 
     expressions which are typically evaluated in the context of an incoming header 
-    (FITS) keyword dictionary:
+    (FITS) dictionary,  all upper case:
     
     >>> d["another"]
     '(ESCAPED)'
-
-    LowerCaseDict's pickle and un-pickle:
-
-    >>> from crds.python23 import pickle
-    >>> assert pickle.loads(pickle.dumps(d)) == d
-
-    Dictionary .get(key, default) is supported with an un-transformed default value:
-
-    >>> d.get("this", "foo")
-    'that'
-
-    >>> d.get("foo", "XXX")
-    'XXX'
-
-    >>> d.get("foo", "(XXX)")
-    '(XXX)'
     """
-    def transform_value(self, val):
-        """Returns `value` strings as lower case,  but excludes literal strings surrounded by ()
-        to support exceptional values which require exact case.   Non-string values are returned 
-        unaltered.
-        """
+    def __getitem__(self, key):
+        val = super(LowerCaseDict, self).__getitem__(key)
+        # Return string values as lower case,  but exclude literal expressions surrounded by ()
+        # for case-sensitive HST rmap relevance expressions.
         if isinstance(val, python23.string_types) and not (val.startswith("(") and val.endswith(")")):
             val = val.lower()
         return val
     
+    def get(self, key, default):
+        if key in self:
+            return self[key]
+        else:
+            return default
+    
+    def __repr__(self):
+        """
+        >> LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
+        LowerCaseDict({'this': 'that', 'another': '(ESCAPED)'})
+        """
+        return self.__class__.__name__ + "({})".format(repr({ key: self[key] for key in self }))
+
 # =============================================================================
 
 class MappingSelectionsDict(LazyFileDict):
@@ -226,8 +222,6 @@ class Mapping(object):
             self.type.upper(), self.mapping.upper(), self.filename)
         with log.augment_exception("Mapping str() fails to reload"):
             self.from_string(str(self), self.basename, **self._keys)
-        for key, mapping in self.selections.normal_items():
-            self.mapping.validate()
 
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
@@ -236,12 +230,12 @@ class Mapping(object):
 
     def check_instrument(self):
         """Verify self.instrument is a supported instrument."""
-        assert self.instrument in self.obs_pkg.INSTRUMENTS, \
+        assert self.instrument in self.obs_package.INSTRUMENTS, \
             "Invalid instrument " + repr(self.instrument) + " in " + repr(self.filename)
 
     def check_filekind(self):
         """Verify self.filekind is a supported filekind."""
-        assert self.filekind in self.obs_pkg.FILEKINDS, \
+        assert self.filekind in self.obs_package.FILEKINDS, \
             "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
 
     def __getnewargs__(self):
@@ -691,6 +685,14 @@ class ContextMapping(Mapping):
         self.selector[key] = str(value)
         return replaced
 
+    def validate(self):
+        """Validate nested mappings, common properties for all context mappings."""
+        super(ContextMapping, self).validate()
+        self.check_observatory()
+        for key, mapping in self.selections.normal_items():
+            self._check_nested("observatory", self.observatory, mapping)
+            mapping.validate()
+
 # ===================================================================
 
 class PipelineContext(ContextMapping):
@@ -711,9 +713,7 @@ class PipelineContext(ContextMapping):
     def validate(self):
         """Implement PipelineContext validations which require loading sub-mappings here."""
         super(PipelineContext, self).validate()
-        self.check_observatory()
         for instrument, imap in self.selections.normal_items():
-            self._check_nested("observatory", self.observatory, imap)
             self._check_nested("instrument", instrument, imap)
 
     def get_best_references(self, header, include=None):
@@ -841,10 +841,9 @@ class InstrumentContext(ContextMapping):
 
     def validate(self):
         """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
-        self.check_observatory()
+        supert(InstrumentContext, self).validate()
         self.check_instrument()
         for filekind, refmap in self.selections.normal_items():
-            self._check_nested("observatory", self.observatory, refmap)
             self._check_nested("instrument", self.instrument, refmap)
             self._check_nested("filekind", filekind, refmap)
 
