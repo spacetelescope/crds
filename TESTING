@@ -23,7 +23,7 @@ rules, reference files, and datasets for testing CRDS.
 Now,  setting up CRDS to run the built-in unit tests can be accomplished as follows:
 
 % git checkout https://github.com/spacetelescope.git CRDS
-% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_testing_cache crds_testing_cache
+% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_testing_cache crds-testing-cache
 % cd CRDS
 % source envs/hst-crds-dev.csh
 % ./runtests
