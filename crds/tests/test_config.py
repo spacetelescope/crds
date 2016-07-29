@@ -19,11 +19,11 @@ from crds import log, utils, client, config
 HERE = os.path.abspath(os.path.dirname(__file__) or ".")
 
 CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
-CRDS_CACHE_TEST = os.environ.get("CRDS_CACHE_TEST", "no-test-cache-defined-see-TESTING")
+CRDS_TESTING_CACHE = os.environ.get("CRDS_TESTING_CACHE", "no-test-cache-defined-see-TESTING")
 CRDS_SHARED_GROUP_CACHE = "/grp/crds/cache"
 CRDS_FORWARDED_URL = "https://localhost:8001/"
 TEST_DATA = os.path.join(HERE, 'data')
-TEST_MAPPATH = os.path.join(CRDS_CACHE_TEST, "mappings")
+TEST_MAPPATH = os.path.join(CRDS_TESTING_CACHE, "mappings")
 TEST_TEMP_DIR = tempfile.mkdtemp(prefix='crds-test-')
 
 # ==============================================================================

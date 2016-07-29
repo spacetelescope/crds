@@ -22,8 +22,8 @@ rules, reference files, and datasets for testing CRDS.
 
 Now,  setting up CRDS to run the built-in unit tests can be accomplished as follows:
 
-% svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  CRDS
-% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_cache_test crds_cache_test
+% git checkout https://github.com/spacetelescope.git CRDS
+% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_testing_cache crds_testing_cache
 % cd CRDS
 % source envs/hst-crds-dev.csh
 % ./runtests
@@ -35,7 +35,7 @@ present in the subversion checkout and installable by adding
 
 The above configures CRDS to run the built-in unit tests using 3 file sources:
 
-- ^/branches/crds_cache_test
+- ^/branches/crds_testing_cache
 - ^/trunk/crds/test/data
 - /grp/crds/cache
 
@@ -45,7 +45,7 @@ both JWST and HST.
 
 CRDS/crds/test/data is normally omitted from source code distributions.
 
-^/branches/crds_cache_test is a modified version of
+^/branches/crds_testing_cache is a modified version of
 ^/branches/crds_cache_archive altered to support unit testing requirements.
 
 Unit tests requiring a server are run against https://hst-crds-dev.stsci.edu

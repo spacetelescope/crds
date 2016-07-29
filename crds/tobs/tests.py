@@ -15,7 +15,7 @@ import crds
 # =============================================================================
 
 class TobsTestCase(tests.CRDSTestCase):
-    cache = tests.CRDS_CACHE_TEST
+    cache = tests.CRDS_TESTING_CACHE
     clear_existing = False
     server_url = "https://tobs-serverless-mode.stsci.edu"
 

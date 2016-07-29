@@ -768,7 +768,7 @@ selector = Match({
         p.todict()
 
     def test_rmap_match_tjson(self):
-        os.environ["CRDS_PATH"] = tests.CRDS_CACHE_TEST
+        os.environ["CRDS_PATH"] = tests.CRDS_TESTING_CACHE
         p = rmap.get_cached_mapping("jwst.pmap")
         p.tojson()
 
