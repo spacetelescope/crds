@@ -4,7 +4,7 @@ CRDS mappings:
 TransformedDict --   generic MutableMapping with key and value transforms
     Derived from discussion at http://stackoverflow.com/questions/3387691/python-how-to-perfectly-override-a-dict
 
-LazyFileTree   --  Demand loaded network of files (aka CRDS context)
+LazyFileDict   --  Demand loaded network of files (aka CRDS context)
 
 """
 
@@ -60,7 +60,7 @@ class TransformedDict(collections.MutableMapping):
 
 # =============================================================================
 
-class LazyFileTree(collections.MutableMapping):
+class LazyFileDict(TransformedDict):
     """Instantiates a graph of inter-referencing files (like CRDS Mappings) on
      demand basis as particular paths are accessed.
 
@@ -77,11 +77,14 @@ class LazyFileTree(collections.MutableMapping):
 
     special_values_set = ()   # Override in sub-classes as needed
 
-    def __init__(self, selector, **keys):
-        super(LazyFileTree, self).__init__()
-        self._selector = selector
-        self._loaded = {}
-        self._keys = keys
+    loader = None   # must be set to callable that loads subtree file.
+
+    def __init__(self, selector, load_keys):
+        super(LazyFileDict, self).__init__()
+        self._selector = {self.transform_key(key): value for (key, value) in dict(selector).items()}
+        self._loaded = dict()
+        self._load_keys = load_keys
+        assert self.loader is not None, "Subclasses must define 'cls.loader'"
 
     @classmethod
     def is_special_value(cls, value):
@@ -92,6 +95,7 @@ class LazyFileTree(collections.MutableMapping):
         return isinstance(value, str) and value in cls.special_values_set
         
     def __getitem__(self, name):
+        name = self.transform_key(name)
         if name in self._selector:
             try:
                 self._loaded[name]
@@ -99,15 +103,17 @@ class LazyFileTree(collections.MutableMapping):
                 if self.is_special_value(self._selector[name]):
                     self._loaded[name] = self._selector[name]
                 else:
-                    self._loaded[name] = self._loader(name, **self._keys)
+                    self._loaded[name] = self.loader(self._selector[name], **self._load_keys)
             return self._loaded[name]
         else:
             raise KeyError(name)
 
     def __setitem__(self, name, value):
-        self._loaded[name] = value   # disregards self._selector??
+        name = self.transform_key(name)
+        self._loaded[name] = value   # disregards self._selector value??
 
     def __delitem__(self, name):
+        name = self.transform_key(name)
         del self._loaded[name]
         del self._selector[name]
 
@@ -126,9 +132,6 @@ class LazyFileTree(collections.MutableMapping):
     def normal_keys(self):
         """Each of these keys has a corresponding value which IS NOT special.
         
-        >>> LazyFileTree({"this" : "OMIT", "that":"something.imap"}).normal_keys()
-        ['that']
-
         NOTE:  Does not require full load.
         """
         return sorted([key for key in self.keys() if not self.is_special_value(self._selector[key])])
@@ -136,15 +139,12 @@ class LazyFileTree(collections.MutableMapping):
     def special_keys(self):
         """Each of these keys has a corresponding values which IS special.
         
-        >>> LazyFileTree({"this" : "OMIT", "that":"something.imap"}).special_keys()
-        ['this']
-
         NOTE:  Does not require full load.
         """
         return sorted([key for key in self.keys() if self.is_special_value(self._selector[key]) ]) 
 
     def values(self):
-        """Return all the values of this LazyFileTree,  implicitly loading them all.
+        """Return all the values of this LazyFileDict,  implicitly loading them all.
 
         NOTE:  REQUIRES FULL LOAD
         """
@@ -153,40 +153,30 @@ class LazyFileTree(collections.MutableMapping):
     def normal_values(self):
         """Normal values exclude the special values like N/A but can include exotic values like tuples or dicsts.
         
-        >>> LazyFileTree({"this" : "N/A", "that":"something.imap"}).normal_values()
-        ['something.imap']
-
         NOTE:  REQUIRES FULL LOAD
         """
         return [ self[key] for key in self.normal_keys() ]
 
     def special_values(self):
-        """These are values which must be trapped and reformatted in the Mapping classes.
-        
-        >>> LazyFileTree({"this" : "N/A", "that":"something.imap"}).special_values()
-        ['N/A']
-        """
+        """These are values which must be trapped and reformatted in the Mapping classes."""
         return [ self[key] for key in self.special_keys() ]
 
     def items(self):
-        """Return all the items of this LazyFileTree, implicitly loading all values.
+        """Return all the items of this LazyFileDict, implicitly loading all values.
 
         NOTE:  REQUIRES FULL LOAD
         """
         return self._items(self.keys())
 
     def normal_items(self):
-        """
-        >>> list(LazyFileTree({"this" : "N/A", "that":"something.imap"}).normal_items())
-        [('that', 'something.imap')]
+        """Return only those items that have recursively loaded values.
+
+        NOTE:  REQUIRES FULL LOAD
         """
         return self._items(self.normal_keys)
 
     def special_items(self):
-        """
-        >>> list(LazyFileTree({"this" : "N/A", "that":"something.imap"}).special_items())
-        [('this', 'N/A')]
-        """
+        """Return only those items that have exempt literal values with no recursive loading."""
         return self._items(self.special_keys())
     
     def _items(self, keys):

@@ -70,7 +70,7 @@ from .config import mapping_exists, is_mapping
 
 from crds import exceptions as crexc
 from crds import python23
-from crds.custom_dict import TransformedDict, LazyFileTree
+from crds.custom_dict import TransformedDict, LazyFileDict
 from crds.mapping_verifier import MAPPING_VERIFIER
 
 # ===================================================================
@@ -79,10 +79,10 @@ Filetype = namedtuple("Filetype","header_keyword,extension,rmap")
 Failure  = namedtuple("Failure","header_keyword,message")
 Filemap  = namedtuple("Filemap","date,file,comment")
 
-# ===================================================================
+# =============================================================================
 
 class LowerCaseDict(TransformedDict):
-    """Used to return Mapping header string values uniformly as lower case.
+    """Used to return Mapping header string *values* uniformly as lower case.
     
     >>> d = LowerCaseDict([("this","THAT"), ("another", "(ESCAPED)")])
     
@@ -98,8 +98,12 @@ class LowerCaseDict(TransformedDict):
     >>> d["another"]
     '(ESCAPED)'
 
+    LowerCaseDict's pickle and un-pickle:
+
     >>> from crds.python23 import pickle
     assert pickle.loads(pickle.dumps(d)) == d
+
+    Dictionary .get(key, default) is supported with transformed default value:
 
     >>> d.get("this", "foo")
     'THAT'
@@ -109,6 +113,8 @@ class LowerCaseDict(TransformedDict):
 
     >>> d.get("foo", "(XXX)")
     return '(XXX)'
+
+    Dictionary repr() is customized to show transformed values and subclass name:
 
     >>> LowerCaseDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
     LowerCaseDict({'this': 'that', 'ANOTHER': '(ESCAPED)'})
@@ -122,18 +128,30 @@ class LowerCaseDict(TransformedDict):
             val = val.lower()
         return val
     
-    def __repr__(self):
-        """
-        >> LowerCaseDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
-        LowerCaseDict({'this': 'that', 'ANOTHER': '(ESCAPED)'})
-        """
-        super(LowerCaseDict, self).__repr__()
-
 # =============================================================================
 
-class MappingSelectionsDict(LazyFileTree):
-    """MappingSelectionsDict is a LazyFileTree with customized special values specific to CRDS.
+class MappingSelectionsDict(LazyFileDict):
+    """MappingSelectionsDict is a LazyFileDict with customized special values specific to CRDS.
     Mappings.
+
+    >>> MappingSelectionsDict({"this" : "OMIT", "that":"something.imap"}).normal_keys()
+    ['that']
+
+    >>> MappingSelectionsDict({"this" : "OMIT", "that":"something.imap"}).special_keys()
+    ['this']
+
+    >>> MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
+    ['something.imap']
+        
+    >>> MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
+    ['N/A']
+
+    >>> list(MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_items())
+    [('that', 'something.imap')]
+
+    >>> list(MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_items())
+    [('this', 'N/A')]
+
     """
     na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
     omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
@@ -144,9 +162,13 @@ class MappingSelectionsDict(LazyFileTree):
         "TEMP_N/A" : "Temporarily Not Applicable",
         }
 
-    def __init__(self, selector, **keys):
-        super(MappingSelectionsDict, self).__init__(selector, **keys)
+    def __init__(self, selector, load_keys):
         self.loader = _load # required en lieu of forward declaration
+        super(MappingSelectionsDict, self).__init__(selector, load_keys)
+
+    def transform_key(self, key):
+        """Perform key lookups uniformly in lower case regardless of input."""
+        return key.lower()
 
     @classmethod
     def is_na_value(cls, value):
@@ -300,7 +322,7 @@ class Mapping(object):
                                    exception_class=crexc.MappingError):
             code = MAPPING_VERIFIER.compile_and_check(text)
             header, selector, comment = cls._interpret(code)
-        return LowerCaseDict(header), selector, comment
+        return header, selector, comment
 
     @classmethod
     def _interpret(cls, code):
@@ -684,7 +706,7 @@ class PipelineContext(ContextMapping):
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
-        self.selections = MappingSelectionsDict(selector)
+        self.selections = MappingSelectionsDict(selector, keys)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
 
     def validate(self):
@@ -815,7 +837,7 @@ class InstrumentContext(ContextMapping):
         super(InstrumentContext, self).__init__(filename, header, selector)
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
-        self.selections = MappingSelectionsDict(selector)
+        self.selections = MappingSelectionsDict(selector, keys)
         self._filekinds = [key.upper() for key in self.selections.keys()]
 
     def validate(self):
