@@ -21,7 +21,7 @@ HERE = os.path.dirname(__file__) or "."
 
 def dt_uses_finaall_mappings_using_reference():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
     hst.pmap
     hst_0001.pmap
@@ -41,7 +41,7 @@ def dt_uses_finaall_mappings_using_reference():
 
 def dt_uses_rmaps():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
@@ -73,7 +73,7 @@ def dt_uses_rmaps():
     
 def dt_uses_imap():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files hst_cos.imap")()
     hst.pmap
     hst_0001.pmap
@@ -88,7 +88,7 @@ def dt_uses_print_datasets():
     This test/function is quite slow since it surveys the catalog for recorded uses of the
     specified file.  Too slow for routine unit tests.
     
-    >>> old_state = test_config.setup(cache=tests.CRDS_CACHE_TEST)
+    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
 
     >> uses.UsesScript("crds.uses --files n3o1022ij_drk.fits --print-datasets --hst")()
     J8BA0HRPQ:J8BA0HRPQ
