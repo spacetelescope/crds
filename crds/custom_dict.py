@@ -12,15 +12,16 @@ import collections
 
 # =============================================================================
 
-class TransformedDict(collections.MutableMapping):
+class TransformedDict(dict):
 
     """A dictionary that applies an arbitrary key and value altering functions
     before accessing the keys and values.
     """
     
-    def __init__(self, *args, **keys):
-        self._store = dict()
-        self.update(dict(*args, **keys))  # use the free update to set keys
+    def __init__(self, initializer=()):
+        super(TransformedDict, self).__init__(
+            { self.transform_key(key): self.transform_value(val) 
+              for (key, val) in dict(initializer).items() })
 
     def transform_key(self, key):
         """Abstract pass-thru key transformation,  override needed."""
@@ -31,25 +32,19 @@ class TransformedDict(collections.MutableMapping):
         return value
 
     def __getitem__(self, key):
-        return self._store[self.transform_key(key)]
+        return super(TransformedDict, self).__getitem__(self.transform_key(key))
 
     def __setitem__(self, key, value):
-        self._store[self.transform_key(key)] = self.transform_value(value)
+        super(TransformedDict, self).__setitem__(self.transform_key(key), self.transform_value(value))
 
     def __delitem__(self, key):
-        del self._store[self.transform_key(key)]
-
-    def __iter__(self):
-        return iter(self._store)
-
-    def __len__(self):
-        return len(self._store)
+        super(TransformedDict, self).__delitem__(self.transform_key(key))
 
     def get(self, key, default=None):
         """Returns either value associated with `key` or transformed `default` value."""
         transformed_key = self.transform_key(key)
-        value = self._store.get(transformed_key, default)
-        return self.transform_value(value)
+        value = super(TransformedDict, self).get(transformed_key, default)
+        return value
     
     def __repr__(self):
         """
@@ -75,14 +70,13 @@ class LazyFileDict(TransformedDict):
     and kept as literals,  e.g. N/A 
     """
 
-    special_values_set = ()   # Override in sub-classes as needed
+    special_values_set = set()   # Override in sub-classes as needed
 
     loader = None   # must be set to callable that loads subtree file.
 
     def __init__(self, selector, load_keys):
         super(LazyFileDict, self).__init__()
         self._selector = {self.transform_key(key): value for (key, value) in dict(selector).items()}
-        self._loaded = dict()
         self._load_keys = load_keys
         assert self.loader is not None, "Subclasses must define 'cls.loader'"
 
@@ -98,24 +92,26 @@ class LazyFileDict(TransformedDict):
         name = self.transform_key(name)
         if name in self._selector:
             try:
-                self._loaded[name]
+                val = super(LazyFileDict, self).__getitem__(name)
             except KeyError:
                 if self.is_special_value(self._selector[name]):
-                    self._loaded[name] = self._selector[name]
+                    val = self._selector[name]
                 else:
-                    self._loaded[name] = self.loader(self._selector[name], **self._load_keys)
-            return self._loaded[name]
+                    val = self.loader(self._selector[name], **self._load_keys)
+                super(LazyFileDict, self).__setitem__(name, val)
+            return val
         else:
             raise KeyError(name)
 
     def __setitem__(self, name, value):
         name = self.transform_key(name)
-        self._loaded[name] = value   # disregards self._selector value??
+        self._selector[name] = val.filename
+        super(LazyFileDict, self).__setitem__(name, val) # disregards self._selector value??
 
     def __delitem__(self, name):
         name = self.transform_key(name)
-        del self._loaded[name]
         del self._selector[name]
+        super(LazyFileDict, self).__delitem__(name)
 
     def __iter__(self):
         return iter(self.keys())
@@ -173,7 +169,7 @@ class LazyFileDict(TransformedDict):
 
         NOTE:  REQUIRES FULL LOAD
         """
-        return self._items(self.normal_keys)
+        return self._items(self.normal_keys())
 
     def special_items(self):
         """Return only those items that have exempt literal values with no recursive loading."""

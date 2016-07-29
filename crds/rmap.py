@@ -101,23 +101,18 @@ class LowerCaseDict(TransformedDict):
     LowerCaseDict's pickle and un-pickle:
 
     >>> from crds.python23 import pickle
-    assert pickle.loads(pickle.dumps(d)) == d
+    >>> assert pickle.loads(pickle.dumps(d)) == d
 
-    Dictionary .get(key, default) is supported with transformed default value:
+    Dictionary .get(key, default) is supported with an un-transformed default value:
 
     >>> d.get("this", "foo")
-    'THAT'
+    'that'
 
     >>> d.get("foo", "XXX")
-    return 'xxx'
+    'XXX'
 
     >>> d.get("foo", "(XXX)")
-    return '(XXX)'
-
-    Dictionary repr() is customized to show transformed values and subclass name:
-
-    >>> LowerCaseDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
-    LowerCaseDict({'this': 'that', 'ANOTHER': '(ESCAPED)'})
+    '(XXX)'
     """
     def transform_value(self, val):
         """Returns `value` strings as lower case,  but excludes literal strings surrounded by ()
@@ -134,22 +129,24 @@ class MappingSelectionsDict(LazyFileDict):
     """MappingSelectionsDict is a LazyFileDict with customized special values specific to CRDS.
     Mappings.
 
-    >>> MappingSelectionsDict({"this" : "OMIT", "that":"something.imap"}).normal_keys()
+    >>> selections = MappingSelectionsDict({"this" : "N/A", "that":"hst_acs.imap"})
+
+    >>> selections.normal_keys()
     ['that']
 
-    >>> MappingSelectionsDict({"this" : "OMIT", "that":"something.imap"}).special_keys()
+    >>> selections.special_keys()
     ['this']
 
-    >>> MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_values()
-    ['something.imap']
+    >>> selections.normal_values()
+    [InstrumentContext('hst_acs.imap')]
         
-    >>> MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_values()
+    >>> selections.special_values()
     ['N/A']
 
-    >>> list(MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).normal_items())
-    [('that', 'something.imap')]
+    >>> list(selections.normal_items())
+    [('that', InstrumentContext('hst_acs.imap'))]
 
-    >>> list(MappingSelectionsDict({"this" : "N/A", "that":"something.imap"}).special_items())
+    >>> list(selections.special_items())
     [('this', 'N/A')]
 
     """
@@ -162,9 +159,11 @@ class MappingSelectionsDict(LazyFileDict):
         "TEMP_N/A" : "Temporarily Not Applicable",
         }
 
-    def __init__(self, selector, load_keys):
+    def __init__(self, selector, loader_keys={}):
         self.loader = _load # required en lieu of forward declaration
-        super(MappingSelectionsDict, self).__init__(selector, load_keys)
+        if "loader" not in loader_keys:
+            loader_keys["loader"] = load_mapping
+        super(MappingSelectionsDict, self).__init__(selector, loader_keys)
 
     def transform_key(self, key):
         """Perform key lookups uniformly in lower case regardless of input."""
@@ -322,7 +321,7 @@ class Mapping(object):
                                    exception_class=crexc.MappingError):
             code = MAPPING_VERIFIER.compile_and_check(text)
             header, selector, comment = cls._interpret(code)
-        return header, selector, comment
+        return LowerCaseDict(header), selector, comment
 
     @classmethod
     def _interpret(cls, code):
