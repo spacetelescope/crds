@@ -102,7 +102,8 @@ polls the server for new messages at some periodic rate in seconds:
             log.error(self.format_remote("CANCELLED:", result))
         else:
             log.info(self.format_remote("DONE:", result))
-        return message.data["result"]
+        self.result = result
+        return result
 
     def handle_cancel(self, message):
         """Generic "cancel" handler reports on commanded cancellation of remote process
