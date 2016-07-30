@@ -119,60 +119,6 @@ class LowerCaseDict(dict):
         """
         return self.__class__.__name__ + "({})".format(repr({ key: self[key] for key in self }))
 
-# =============================================================================
-
-class MappingSelectionsDict(LazyFileDict):
-    """MappingSelectionsDict is a LazyFileDict with customized special values specific to CRDS.
-    Mappings.
-
-    >>> selections = MappingSelectionsDict({"this" : "N/A", "that":"hst_acs.imap"})
-
-    >>> selections.normal_keys()
-    ['that']
-
-    >>> selections.special_keys()
-    ['this']
-
-    >>> selections.normal_values()
-    [InstrumentContext('hst_acs.imap')]
-        
-    >>> selections.special_values()
-    ['N/A']
-
-    >>> list(selections.normal_items())
-    [('that', InstrumentContext('hst_acs.imap'))]
-
-    >>> list(selections.special_items())
-    [('this', 'N/A')]
-
-    """
-    na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
-    omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
-    special_values_set = na_values_set | omit_values_set
-
-    test_descr = {
-        "N/A" : "Not Applicable",
-        "TEMP_N/A" : "Temporarily Not Applicable",
-        }
-
-    def __init__(self, selector, loader_keys={}):
-        self.loader = _load # required en lieu of forward declaration
-        if "loader" not in loader_keys:
-            loader_keys["loader"] = load_mapping
-        super(MappingSelectionsDict, self).__init__(selector, loader_keys)
-
-    def transform_key(self, key):
-        """Perform key lookups uniformly in lower case regardless of input."""
-        return key.lower()
-
-    @classmethod
-    def is_na_value(cls, value):
-        return isinstance(value, str) and value in cls.na_values_set
-    
-    @classmethod
-    def is_omit_value(cls, value):
-        return isinstance(value, str) and value in cls.omit_values_set
-
 # ===================================================================
 
 class Mapping(object):
@@ -841,7 +787,7 @@ class InstrumentContext(ContextMapping):
 
     def validate(self):
         """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
-        supert(InstrumentContext, self).validate()
+        super(InstrumentContext, self).validate()
         self.check_instrument()
         for filekind, refmap in self.selections.normal_items():
             self._check_nested("instrument", self.instrument, refmap)
@@ -1590,6 +1536,61 @@ def asmapping(filename_or_mapping, cached=False, **keys):
             raise ValueError("asmapping: cached must be in [True, 'cached', False, 'uncached','readonly']")
     else:
         raise TypeError("asmapping: parameter should be a string or mapping.")
+
+# =============================================================================
+
+class MappingSelectionsDict(LazyFileDict):
+    """MappingSelectionsDict is a LazyFileDict with customized special values specific to CRDS.
+    Mappings.
+
+    >>> selections = MappingSelectionsDict({"this" : "N/A", "that":"hst_acs.imap"})
+
+    >>> selections.normal_keys()
+    ['that']
+
+    >>> selections.special_keys()
+    ['this']
+
+    >>> selections.normal_values()
+    [InstrumentContext('hst_acs.imap')]
+        
+    >>> selections.special_values()
+    ['N/A']
+
+    >>> list(selections.normal_items())
+    [('that', InstrumentContext('hst_acs.imap'))]
+
+    >>> list(selections.special_items())
+    [('this', 'N/A')]
+
+    """
+    na_values_set = { "N/A", "TEMP_N/A", "n/a", "temp_n/a"}
+    omit_values_set = { "OMIT", "TEMP_OMIT", "omit", "temp_n/a"}
+    special_values_set = na_values_set | omit_values_set
+
+    test_descr = {
+        "N/A" : "Not Applicable",
+        "TEMP_N/A" : "Temporarily Not Applicable",
+        }
+
+    loader = _load
+
+    def __init__(self, selector, load_keys={}):
+        if "loader" not in load_keys:
+            load_keys["loader"] = load_mapping
+        super(MappingSelectionsDict, self).__init__(selector, load_keys)
+
+    def transform_key(self, key):
+        """Perform key lookups uniformly in lower case regardless of input."""
+        return key.lower()
+
+    @classmethod
+    def is_na_value(cls, value):
+        return isinstance(value, str) and value in cls.na_values_set
+    
+    @classmethod
+    def is_omit_value(cls, value):
+        return isinstance(value, str) and value in cls.omit_values_set
 
 # =============================================================================
 
