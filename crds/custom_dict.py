@@ -55,9 +55,9 @@ class TransformedDict(MutableMapping):
     def __repr__(self):
         """
         >>> TransformedDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
-        TransformedDict([('this', 'THAT'), ('ANOTHER', '(ESCAPED)')])
+        TransformedDict([('ANOTHER', '(ESCAPED)'), ('this', 'THAT')])
         """
-        return self.__class__.__name__ + "({})".format(list(self.items()))
+        return self.__class__.__name__ + "({})".format(sorted(list(self.items())))
 
 # =============================================================================
 

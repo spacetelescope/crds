@@ -135,12 +135,18 @@ class Mapping(object):
         self._newargs = (filename, header, selector)
         self.filename = filename
         self.selector = selector
+        for name in self.required_attrs:
+            if name not in self.header:
+                raise crexc.MissingHeaderKeyError(
+                    "Required header key " + repr(name) + " is missing.")
         self.comment = keys.pop("comment", None)
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
         self._keys = keys
         self.path = keys.get("path", None)
+        assert self.mapping == self.type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
+            self.type.upper(), self.mapping.upper(), self.filename)
 
     def validate_mapping(self):
         """Validate `self` only implementing any checks to be performed by
@@ -160,12 +166,6 @@ class Mapping(object):
         sha1sum and acceptability of byte codes,  neither of which requires loading
         sub-mappings.
         """
-        for name in self.required_attrs:
-            if name not in self.header:
-                raise crexc.MissingHeaderKeyError(
-                    "Required header key " + repr(name) + " is missing.")
-        assert self.mapping == self.type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
-            self.type.upper(), self.mapping.upper(), self.filename)
         # with log.augment_exception("Mapping str() fails to reload"):
         #    self.from_string(str(self), self.basename, **self._keys)
 
