@@ -38,8 +38,11 @@ class TransformedDict(MutableMapping):
     def __delitem__(self, key):
         del self._contents[self.transform_key(key)]
 
-    def _iter__(self, key):
-        return iter(self._conents)
+    def __iter__(self):
+        return iter(self._contents)
+
+    def __len__(self):
+        return len(self._contents)
 
     def get(self, key, default=None):
         """Returns either value associated with `key` or transformed `default` value."""
@@ -52,7 +55,7 @@ class TransformedDict(MutableMapping):
     def __repr__(self):
         """
         >>> TransformedDict([("this","THAT"), ("ANOTHER", "(ESCAPED)")])
-        TransformedDict([('ANOTHER', '(ESCAPED)'), ('this', 'THAT')])
+        TransformedDict([('this', 'THAT'), ('ANOTHER', '(ESCAPED)')])
         """
         return self.__class__.__name__ + "({})".format(list(self.items()))
 
