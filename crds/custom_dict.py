@@ -75,14 +75,12 @@ class LazyFileDict(TransformedDict):
 
     special_values_set = set()   # Override in sub-classes as needed
 
-    loader = None   # must be set to callable that loads subtree file.
-
     def __init__(self, selector, load_keys):
+        assert "loader" in load_keys
         self._xx_load_keys = load_keys
         self._xx_selector = {}
         super(LazyFileDict, self).__init__()
         self._xx_selector = {self.transform_key(key): value for (key, value) in dict(selector).items()}
-        assert self.loader is not None, "Subclasses must define 'loader'"
 
     def __getstate__(self):
         """Drop dictionary attributes which correspond to loaded/cached members."""
@@ -112,7 +110,7 @@ class LazyFileDict(TransformedDict):
                 if self.is_special_value(self._xx_selector[name]):
                     val = self._xx_selector[name]
                 else:
-                    val = self.__class__.loader(self._xx_selector[name], **self._xx_load_keys)
+                    val = self._xx_load_keys["loader"](self._xx_selector[name], **self._xx_load_keys)
                 super(LazyFileDict, self).__setitem__(name, val)
             return val
         else:

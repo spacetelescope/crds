@@ -166,8 +166,8 @@ class Mapping(object):
                     "Required header key " + repr(name) + " is missing.")
         assert self.mapping == self.type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
             self.type.upper(), self.mapping.upper(), self.filename)
-        with log.augment_exception("Mapping str() fails to reload"):
-            self.from_string(str(self), self.basename, **self._keys)
+        # with log.augment_exception("Mapping str() fails to reload"):
+        #    self.from_string(str(self), self.basename, **self._keys)
 
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
@@ -1572,8 +1572,6 @@ class MappingSelectionsDict(LazyFileDict):
         "N/A" : "Not Applicable",
         "TEMP_N/A" : "Temporarily Not Applicable",
         }
-
-    loader = _load
 
     def __init__(self, selector, load_keys={}):
         if "loader" not in load_keys:
