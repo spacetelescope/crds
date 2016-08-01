@@ -15,7 +15,7 @@ from crds.python23 import *
 def log_section(section_name, section_value, verbosity=50, log_function=log.verbose, 
                 divider_name=None):
     """Issue log divider bar followed by a corresponding log message."""
-    log.divider(name=divider_name, verbosity=verbosity)
+    log.divider(name=divider_name, verbosity=verbosity, func=log.verbose)
     log_function(section_name, section_value, verbosity=verbosity+5)
 
 # ==================================================================================================
@@ -49,7 +49,7 @@ class CrdsDjangoConnection(object):
             log_section("json:\n", json_text)
         except Exception:
             pass
-        log.divider()
+        log.divider(func=log.verbose)
 
     def response_complete(self, args):
         response = background.background_complete(args)
