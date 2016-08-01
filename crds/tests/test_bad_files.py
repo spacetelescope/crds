@@ -28,10 +28,10 @@ HST_HEADER = {
     }
 
 JWST_HEADER = {
-    "meta.instrument.name": "NIRISS",
+    "meta.instrument.name": "MIRI",
     "meta.observation.date": "2012-07-25T00:00:00",
-    "meta.instrument.detector" : "NIRISS",
-    "meta.instrument.filter" : "CLEAR",
+    "meta.instrument.detector" : "MIRIMAGE",
+    "meta.instrument.filter" : "F1000W",
     "meta.subarray.name" : "FULL",
     }
 
@@ -193,8 +193,8 @@ def dt_bad_rules_jwst_getreferences_warning():
     >>> list(refs.keys()) == ['flat']
     True
     
-    >>> os.path.basename(refs['flat']) == 'jwst_niriss_flat_0000.fits'
-    True
+    >>> os.path.basename(refs['flat'])
+    'jwst_miri_flat_0006.fits'
 
     >>> test_config.cleanup(old_state)
     """
@@ -206,24 +206,7 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.reset()
     
-    >>> hdr = {
-    ... 'META.INSTRUMENT.CHANNEL': 'SHORT',
-    ... 'META.INSTRUMENT.DETECTOR': 'NRCB1',
-    ... 'META.INSTRUMENT.FILTER': 'F182M',
-    ... 'META.INSTRUMENT.NAME': 'NIRCAM',
-    ... 'META.INSTRUMENT.PUPIL': 'FLAT',
-    ... 'META.INSTRUMENT.TYPE': 'NIRCAM',
-    ... 'META.OBSERVATION.DATE': '2013-04-03',
-    ... 'META.OBSERVATION.TIME': '16:52:19.612000',
-    ... 'META.SUBARRAY.FASTAXIS': '1',
-    ... 'META.SUBARRAY.NAME': 'FULL',
-    ... 'META.SUBARRAY.SLOWAXIS': '-2',
-    ... }
-    
-    Note that rules do crude inheritance of "badness" so a context containing any bad rmap
-    is bad for all rmaps.
-
-    >>> crds.getrecommendations(hdr, reftypes=["gain"], context="jwst_0017.pmap")    # doctest: +ELLIPSIS
+    >>> crds.getrecommendations(JWST_HEADER, reftypes=["gain"], context="jwst_0017.pmap")    # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
     CrdsBadRulesError: Final context 'jwst_0017.pmap' is marked as scientifically invalid based on: ['jwst_miri_flat_0003.rmap']

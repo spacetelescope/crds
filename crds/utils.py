@@ -925,7 +925,9 @@ def get_any_of(getter,  possible_keys,  default=None):
     'UNDEFINED'
     """
     for key in possible_keys:
-        val = getter.get(key, None)
+        val = getter.get(key.upper(), None)
+        if val is None:
+            val = getter.get(key.lower(), None)
         if val is not None and val not in ["undefined", "UNDEFINED"]:
             return val
     else:

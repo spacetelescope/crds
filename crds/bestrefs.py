@@ -763,21 +763,20 @@ and debug output.
             old_context = self.resolve_context(self.args.old_context)
         else:
             old_context = None
-        self.warn_bad_context("New-context", new_context)
-        self.warn_bad_context("Old-context", old_context)
         if self.server_info.effective_mode != "remote":
             if old_context is not None and not os.path.dirname(old_context):
                 self.dump_mappings([old_context])
             if not os.path.dirname(new_context):
                 self.dump_mappings([new_context])
         return new_context, old_context
-    
-    def warn_bad_context(self, name, context):
+
+    @utils.cached
+    def warn_bad_context(self, name, context, instrument):
         """Issue a warning if `context` of named `name` is a known bad file."""
+        # Get subset of bad files contained by this context.
         if context is None:
             return
-        # Get subset of bad files contained by this context.
-        bad_contained = heavy_client.get_bad_mappings_in_context(self.observatory, context)
+        bad_contained = heavy_client.get_bad_mappings_in_context(self.observatory, context, instrument)
         if bad_contained:
             if not config.ALLOW_BAD_RULES:
                 self.log_and_track_error("ALL", "ALL", "ALL", name, "=", repr(context), 
@@ -911,8 +910,10 @@ and debug output.
         """Core best references,  add to update tuples."""
         new_header = self.new_headers.get_lookup_parameters(dataset)
         instrument = utils.header_to_instrument(new_header)
+        self.warn_bad_context("New-context", self.new_context, instrument)
         new_bestrefs = self.get_bestrefs(instrument, dataset, self.new_context, new_header)
         if self.compare_prior:
+            self.warn_bad_context("Old-context", self.old_context, instrument)
             if self.args.old_context:
                 old_header = self.old_headers.get_lookup_parameters(dataset)
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)

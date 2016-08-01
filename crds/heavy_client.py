@@ -173,6 +173,10 @@ def _initial_recommendations(
 
     log.verbose("Final effective context is", repr(final_context))
 
+    if not fast:
+        instrument = utils.header_to_instrument(parameters)
+        warn_bad_context(observatory, final_context, instrument)        
+
     if mode == "local":
         log.verbose("Computing best references locally.")
         bestrefs = local_bestrefs(
@@ -194,9 +198,10 @@ def _initial_recommendations(
 
 # ============================================================================
 
-def warn_bad_context(observatory, context):
+@utils.cached
+def warn_bad_context(observatory, context, instrument=None):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
-    bad_contained = get_bad_mappings_in_context(observatory, context)
+    bad_contained = get_bad_mappings_in_context(observatory, context, instrument)
     if bad_contained:
         msg = log.format("Final context", repr(context), 
                          "is marked as scientifically invalid based on:", log.PP(bad_contained))
@@ -204,6 +209,8 @@ def warn_bad_context(observatory, context):
             log.warning(msg)
         else:
             raise CrdsBadRulesError(msg)
+
+# ============================================================================
 
 def warn_bad_references(observatory, bestrefs):
     """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
@@ -238,13 +245,18 @@ def mapping_names(context):
         contained_mappings = api.get_mapping_names(context)
     return set(contained_mappings)
 
-def get_bad_mappings_in_context(observatory, context):
+def get_bad_mappings_in_context(observatory, context, instrument=None):
     """Return the list of bad files (defined by the server) contained by `context`."""
+    if instrument is None:
+        check_context = context
+    else:
+        check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
     bad_mappings = get_config_info(observatory).bad_files_set
-    context_mappings = mapping_names(context)
+    context_mappings = mapping_names(check_context)
     return sorted(list(context_mappings & bad_mappings))
 
 # ============================================================================
+
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
     assert observatory in ["hst", "jwst", "tobs"]
@@ -322,8 +334,6 @@ def get_processing_mode(observatory, context=None):
         
     final_context = get_final_context(info, context)
     
-    warn_bad_context(observatory, final_context)
-
     return info.effective_mode, final_context
 
 def get_final_context(info, context):
