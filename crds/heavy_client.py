@@ -198,6 +198,7 @@ def _initial_recommendations(
 
 # ============================================================================
 
+# This is cached because it should only produce output *once* per program run.
 @utils.cached
 def warn_bad_context(observatory, context, instrument=None):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
@@ -209,6 +210,30 @@ def warn_bad_context(observatory, context, instrument=None):
             log.warning(msg)
         else:
             raise CrdsBadRulesError(msg)
+
+# This is cached because it can be called multiple times for a single dataset,
+# both withing warn_bad_mappings and elsewhere.
+@utils.cached
+def get_bad_mappings_in_context(observatory, context, instrument=None):
+    """Return the list of bad files (defined by the server) contained by `context`."""
+    if instrument is None:
+        check_context = context
+    else:
+        check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
+    bad_mappings = get_config_info(observatory).bad_files_set
+    context_mappings = mapping_names(check_context)
+    return sorted(list(context_mappings & bad_mappings))
+
+def mapping_names(context):
+    """Return the full set of mapping names associated with `context`,  compute locally if possible,
+    else consult server.
+    """
+    try:
+        mapping = crds.get_cached_mapping(context)
+        contained_mappings = mapping.mapping_names()
+    except IOError:
+        contained_mappings = api.get_mapping_names(context)
+    return set(contained_mappings)
 
 # ============================================================================
 
@@ -233,27 +258,6 @@ def warn_bad_reference(observatory, reftype, reference):
             log.warning(msg)
         else:
             raise CrdsBadReferenceError(msg)
-
-def mapping_names(context):
-    """Return the full set of mapping names associated with `context`,  compute locally if possible,
-    else consult server.
-    """
-    try:
-        mapping = crds.get_cached_mapping(context)
-        contained_mappings = mapping.mapping_names()
-    except IOError:
-        contained_mappings = api.get_mapping_names(context)
-    return set(contained_mappings)
-
-def get_bad_mappings_in_context(observatory, context, instrument=None):
-    """Return the list of bad files (defined by the server) contained by `context`."""
-    if instrument is None:
-        check_context = context
-    else:
-        check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
-    bad_mappings = get_config_info(observatory).bad_files_set
-    context_mappings = mapping_names(check_context)
-    return sorted(list(context_mappings & bad_mappings))
 
 # ============================================================================
 
