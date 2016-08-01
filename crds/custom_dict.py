@@ -21,6 +21,12 @@ class TransformedDict(MutableMapping):
         self._contents = dict()
         self.update(dict(initializer))
 
+    def __getstate__(self):
+        return dict(_contents = self._contents)
+    
+    def __setstate__(self, state):
+        self._contents = state["_contents"]
+
     def transform_key(self, key):
         """Abstract pass-thru key transformation,  override needed."""
         return key
@@ -89,12 +95,14 @@ class LazyFileDict(TransformedDict):
         """Drop dictionary attributes which correspond to loaded/cached members."""
         return dict(
             _xx_load_keys = self._xx_load_keys,
-            _xx_selector = self._xx_selector
+            _xx_selector = self._xx_selector,
+            _xx_superclass = super(LazyFileDict, self).__getstate__()
             )
 
     def __setstate__(self, state):
         """Drop dictionary attributes which correspond to loaded/cached members."""
         self.__init__(state["_xx_selector"], state["_xx_load_keys"])
+        super(LazyFileDict, self).__setstate__(state["_xx_superclass"])
 
     @classmethod
     def is_special_value(cls, value):

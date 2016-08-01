@@ -48,13 +48,9 @@ def run_and_profile(name, case):
     stats.print_stats(100)
     os.remove('profile.stats')
 
-
-run_and_profile("JWST getrecommendations()", 'heavy_client.getrecommendations(JWST_HEADER, observatory="jwst", ignore_cache=False)')
-
-run_and_profile("HST getrecommendations()", 'heavy_client.getrecommendations(HST_HEADER, observatory="hst", ignore_cache=False)')
-
-
-run_and_profile("HST bestrefs file", "bestrefs.BestrefsScript('crds.bestrefs --files data/j8bt09jcq_raw.fits --log-time --stats')()")
+if __name__ == "__main__":
+    run_and_profile("JWST getrecommendations()", 'heavy_client.getrecommendations(JWST_HEADER, observatory="jwst", ignore_cache=False)')
+    run_and_profile("HST getrecommendations()", 'heavy_client.getrecommendations(HST_HEADER, observatory="hst", ignore_cache=False)')
+    run_and_profile("HST bestrefs file", "bestrefs.BestrefsScript('crds.bestrefs --files data/j8bt09jcq_raw.fits --log-time --stats')()")
 
 # run_and_profile("JWST bestrefs file", "bestrefs.BestrefsScript('crds.bestrefs --files data/ --log-time --stats')()")
-
