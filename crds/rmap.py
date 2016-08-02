@@ -130,11 +130,15 @@ class Mapping(object):
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
-    def __init__(self, filename, header, selector, **keys):
+    def __init__(self, filename, header, selector, altkeys=None, **keys):
+        assert not (altkeys and keys), \
+            "altkeys should only be used for unpickling where keys cannot be defined."
+        self.keys = altkeys or keys   # for __getnewargs__
+        self._newargs = (filename, header, selector, self.keys)
         self.header = LowerCaseDict(header)   # consistent lower case values
-        self._newargs = (filename, header, selector)
         self.filename = filename
         self.selector = selector
+        
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
@@ -143,10 +147,12 @@ class Mapping(object):
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
-        self._keys = keys
         self.path = keys.get("path", None)
-        assert self.mapping == self.type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
-            self.type.upper(), self.mapping.upper(), self.filename)
+
+    def _check_type(self, expected_type):
+        """Verify that the 'mapping' element of the header matches 'expected_type'."""
+        assert self.mapping == expected_type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
+            expected_type, self.mapping.upper(), self.filename)
 
     def validate_mapping(self):
         """Validate `self` only implementing any checks to be performed by
@@ -166,8 +172,6 @@ class Mapping(object):
         sha1sum and acceptability of byte codes,  neither of which requires loading
         sub-mappings.
         """
-        # with log.augment_exception("Mapping str() fails to reload"):
-        #    self.from_string(str(self), self.basename, **self._keys)
 
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
@@ -621,6 +625,11 @@ class Mapping(object):
 
 class ContextMapping(Mapping):
     """.pmap and .imap base class."""
+    def __init__(self, filename, header, selector, altkeys=None, **keys):
+        super(ContextMapping, self).__init__(filename, header, selector, altkeys, **keys)
+        self.observatory = self.header["observatory"]
+        self.selections = MappingSelectionsDict(selector, self.keys)
+
     def set_item(self, key, value):
         """Add or replace and element of this mapping's selector.   For re-writing only."""
         key = str(key)
@@ -643,6 +652,10 @@ class ContextMapping(Mapping):
             self._check_nested("observatory", self.observatory, mapping)
             mapping.validate()
 
+    def specifies_references(self):
+        """Return True IFF this mapping specified reference filenames directly in it's selector."""
+        return False
+
 # ===================================================================
 
 class PipelineContext(ContextMapping):
@@ -652,13 +665,10 @@ class PipelineContext(ContextMapping):
     # Last required attribute is "difference type".
     required_attrs = ["observatory", "mapping", "parkey", "name", "derived_from"]
 
-    type = "pipeline"
-
-    def __init__(self, filename, header, selector, **keys):
-        super(PipelineContext, self).__init__(filename, header, selector, **keys)
-        self.observatory = self.header["observatory"]
-        self.selections = MappingSelectionsDict(selector, keys)
+    def __init__(self, filename, header, selector, altkeys=None, **keys):
+        super(PipelineContext, self).__init__(filename, header, selector, altkeys, **keys)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
+        self._check_type("pipeline")
 
     def validate(self):
         """Implement PipelineContext validations which require loading sub-mappings here."""
@@ -780,14 +790,12 @@ class InstrumentContext(ContextMapping):
     of an instrument.
     """
     required_attrs = PipelineContext.required_attrs + ["instrument"]
-    type = "instrument"
 
-    def __init__(self, filename, header, selector, **keys):
-        super(InstrumentContext, self).__init__(filename, header, selector)
-        self.observatory = self.header["observatory"]
+    def __init__(self, filename, header, selector, altkeys=None, **keys):
+        super(InstrumentContext, self).__init__(filename, header, selector, altkeys, **keys)
         self.instrument = self.header["instrument"]
-        self.selections = MappingSelectionsDict(selector, keys)
         self._filekinds = [key.upper() for key in self.selections.keys()]
+        self._check_type("instrument")
 
     def validate(self):
         """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
@@ -949,8 +957,6 @@ class ReferenceMapping(Mapping):
     rmap header and data.
     """
     
-    type = "reference"
-
     required_attrs = InstrumentContext.required_attrs + ["filekind"]
 
     def __init__(self, *args, **keys):
@@ -958,6 +964,7 @@ class ReferenceMapping(Mapping):
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
+        self._check_type("reference")
 
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
