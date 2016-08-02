@@ -91,6 +91,10 @@ class LazyFileDict(TransformedDict):
         super(LazyFileDict, self).__init__()
         self._xx_selector = {self.transform_key(key): value for (key, value) in dict(selector).items()}
 
+    def clear(self):
+        """Drop all loaded selections reverting to pre-demand-loaded state."""
+        super(LazyFileDict, self).__init__()
+
     def __getstate__(self):
         """Drop dictionary attributes which correspond to loaded/cached members."""
         return dict(
@@ -201,5 +205,9 @@ class LazyFileDict(TransformedDict):
     
     def _items(self, keys):
         """Constructs item list taken from self based on `keys`."""
-        return [(key, self[key]) for key in keys]
+        return [(key, self[key]) for key in sorted(keys)]
 
+    def __repr__(self):
+        """Override __repr__ to prevent forced load of all selector items just for __repr__."""
+        return self.__class__.__name__ + "(" + repr(sorted(self._xx_selector.items())) + \
+            ", " + repr(sorted(self._xx_load_keys.items())) + ")"
