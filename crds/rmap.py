@@ -613,6 +613,10 @@ class Mapping(object):
         """Return the full path (in cache or absolute) of `filename` as determined by the current environment."""
         return locate_file(filename, self.observatory)
 
+    def specifies_references(self):
+        """Return True IFF this mapping specified reference filenames directly in it's selector."""
+        return False
+
 # ===================================================================
 
 class ContextMapping(Mapping):
@@ -1442,6 +1446,10 @@ class ReferenceMapping(Mapping):
         """Print repr() of ReferenceMapping,  assumed to be terminal."""
         print(repr(self))
 
+    def specifies_references(self):
+        """Return True IFF this mapping specified reference filenames directly in it's selector."""
+        return True
+
 # ===================================================================
 
 def _load(mapping, **keys):
@@ -1666,6 +1674,18 @@ def is_special_value(filename):
     True
     """
     return MappingSelectionsDict.is_special_value(str(filename))
+
+# ============================================================================
+
+def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys):
+    """Do simple text replacement from `old_text` to `new_text` in `rmapping`.
+    """
+    log.info("Replacing", srepr(old_text), "with", srepr(new_text), "in", 
+             srepr(rmapping.basename), "to", srepr(new_filename))
+    original_rmap = str(rmapping)
+    new_rmap = original_rmap.replace(old_text, new_text)
+    new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
+    new_mapping.write(new_filename)
 
 # ===================================================================
 
