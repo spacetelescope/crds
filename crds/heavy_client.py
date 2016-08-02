@@ -173,10 +173,6 @@ def _initial_recommendations(
 
     log.verbose("Final effective context is", repr(final_context))
 
-    if not fast:
-        instrument = utils.header_to_instrument(parameters)
-        warn_bad_context(observatory, final_context, instrument)        
-
     if mode == "local":
         log.verbose("Computing best references locally.")
         bestrefs = local_bestrefs(
@@ -192,6 +188,8 @@ def _initial_recommendations(
         # the new vs. the old context.
         update_config_info(observatory)
         log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
+        instrument = utils.header_to_instrument(parameters)
+        warn_bad_context(observatory, final_context, instrument)        
         warn_bad_references(observatory, bestrefs)
     
     return final_context, bestrefs
