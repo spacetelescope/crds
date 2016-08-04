@@ -232,7 +232,7 @@ def mapping_names(context):
     else consult server.
     """
     try:
-        mapping = crds.get_cached_mapping(context)
+        mapping = get_pickled_mapping(context)
         contained_mappings = mapping.mapping_names()
     except IOError:
         contained_mappings = api.get_mapping_names(context)
@@ -476,7 +476,7 @@ def cache_atomic_write(replace_path, contents, fail_warning):
             log.verbose_warning("CACHE Failed writing", repr(replace_path), 
                                 ":", fail_warning, ":", repr(exc))
     else:
-        log.verbose("CACHE Skipped update of readonly", repr(replace_path))
+        log.verbose("CACHE Skipped update of readonly", repr(replace_path), ":", fail_warning)
 
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
@@ -513,7 +513,7 @@ def get_context_parkeys(context, instrument):
     Returns [ matching_parameter, ... ]
     """
     try:
-        parkeys = rmap.get_cached_mapping(context).get_required_parkeys()
+        parkeys = get_pickled_mapping(context).get_required_parkeys()
     except Exception:
         parkeys = api.get_required_parkeys(context)
     if isinstance(parkeys, (list,tuple)):
@@ -529,7 +529,7 @@ def list_mappings(observatory, glob_pattern):
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
 
-def get_symbolic_mapping(mapping, observatory=None, cached=True):
+def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=None, save_pickles=None):
     """Return a loaded mapping object,  first translating any date based or
     named contexts into a more primitive serial number only mapping name.
 
@@ -556,9 +556,56 @@ def get_symbolic_mapping(mapping, observatory=None, cached=True):
     to interpret the symbolic name into a primitive name.
     """
     abs_mapping = api.get_context_by_date(mapping, observatory)
-    return crds.asmapping(abs_mapping, cached=cached)
+    return get_pickled_mapping(abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles)
 
 # ============================================================================
+
+@utils.cached
+def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, observatory=None, cached=True):
+    """Load CRDS mapping from a context pickle if possible, nominally as a file
+    system optimization to prevent 100+ file reads.
+    """
+    if use_pickles is None:
+        use_pickles = config.USE_PICKLED_CONTEXTS
+    if save_pickles is None:
+        save_pickles = config.AUTO_PICKLE_CONTEXTS
+    if use_pickles:
+        try:
+            loaded = load_pickled_mapping(mapping)
+        except Exception:
+            loaded = rmap.asmapping(mapping, cached=cached)
+            if save_pickles:
+                save_pickled_mapping(mapping, loaded)
+    else:
+        loaded = rmap.asmapping(mapping, cached=cached)
+    return loaded
+
+def load_pickled_mapping(mapping):
+    """Load the pickle for `mapping` where `mapping` is canonically named and
+    located in the CRDS cache.
+
+    Although pickles for sub-mappings may exist, only the highest level pickle
+    in the hierarchy is read.  In general pickles for sub-mappings should not
+    exist because of storage waste.
+    """
+    pickle_file = config.locate_pickle(mapping + ".pkl")
+    pickled = open(pickle_file, "rb").read()
+    loaded = python23.pickle.loads(pickled)
+    log.verbose("Loaded pickled context", repr(mapping))
+    return loaded
+
+def save_pickled_mapping(mapping, loaded):
+    """Save live mapping `loaded` as a pickle under named based on `mapping` name."""
+    pickle_file = config.locate_pickle(mapping + ".pkl")
+    if not utils.is_writable(pickle_file):  # Don't even bother pickling
+        cache_atomic_write(pickle_file, None, "CONTEXT PICKLE")  # Issue warning from null contents
+        return
+    with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
+        pickled = python23.pickle.dumps(loaded)
+        cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
+        log.verbose("Saved pickled context for", repr(mapping), "to", repr(pickle_file))
+
+# =============================================================================
 
 import crds # for __version__,  circular dependency.
 

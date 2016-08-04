@@ -387,10 +387,29 @@ def get_crds_refpath(observatory):
     return _std_cache_path(observatory, "CRDS_REFPATH", "references")
 
 def locate_config(cfg, observatory):
-    """Return the absolute path where reference `ref` should be located."""
+    """Return the absolute path where reference `cfg` should be located."""
     if os.path.dirname(cfg):
         return cfg
     return os.path.join(get_crds_cfgpath(observatory), cfg)
+
+# -------------------------------------------------------------------------------------
+
+def get_crds_picklepath(observatory):
+    return _std_cache_path(observatory, "CRDS_PICKLEPATH", "pickles")
+
+def locate_pickle(mapping, observatory=None):
+    """Return the absolute path where reference `ref` should be located."""
+    if os.path.dirname(mapping):
+        return mapping
+    if observatory is None:
+        observatory = mapping_to_observatory(mapping)
+    return os.path.join(get_crds_picklepath(observatory), mapping)
+
+USE_PICKLED_CONTEXTS = BooleanConfigItem("CRDS_USE_PICKLED_CONTEXTS", True,
+    "When True,  CRDS contexts should be loaded from a pickled version if possible.")
+
+AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", True,
+    "When True, CRDS contexts should be automatically pickled and cached after loading.")
 
 # -------------------------------------------------------------------------------------
 
@@ -912,6 +931,12 @@ MAPPING_RE = re.compile(complete_re(MAPPING_RE_STR))
 def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
     return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
+
+def is_crds_mapping(mapping):
+    """Return True IFF `mapping` implicitly or explicitly exists in the CRDS cache.
+    Return False for ad hoc mappings outside the CRDS Cache.
+    """
+    return (is_mapping(mapping) and (locate_mapping(mapping) == locate_mapping(os.path.basename(mapping))))
 
 def is_valid_mapping_name(mapping):
     """Return True IFF `mapping` has a CRDS-style root name and a mapping extension."""
