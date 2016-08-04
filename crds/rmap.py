@@ -407,12 +407,6 @@ class Mapping(object):
         """Return the source text of the Mapping."""
         return self.format()
 
-    def list_tree(self):
-        """Recursively print out the repr's() of all loaded mappings from `self` down."""
-        print(repr(self))
-        for mapping in self.selections.values():
-            mapping.list_tree()
-
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
         if "header" in self.__dict__ and attr in self.header:
@@ -1642,10 +1636,6 @@ class ReferenceMapping(Mapping):
             log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
             return None
         return self
-
-    def list_tree(self):
-        """Print repr() of ReferenceMapping,  assumed to be terminal."""
-        print(repr(self))
 
 # ===================================================================
 
