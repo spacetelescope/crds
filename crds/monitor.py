@@ -47,14 +47,14 @@ polls the server for new messages at some periodic rate in seconds:
 
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
-        log.divider("monitoring server on " + repr(self.args.key), func=log.info, char="=")
+        log.divider("monitoring server on " + repr(self.args.key), char="=")
         exit_flag = False
         while not exit_flag:
             for message in self._poll_status():
                 handler = getattr(self, "handle_" + message.type, self.handle_unknown)
                 exit_flag = handler(message)
             time.sleep(self.args.poll_delay)
-        log.divider("monitoring server done", func=log.info, char="=")
+        log.divider("monitoring server done", char="=")
         return exit_flag
 
     def _poll_status(self):
@@ -102,7 +102,8 @@ polls the server for new messages at some periodic rate in seconds:
             log.error(self.format_remote("CANCELLED:", result))
         else:
             log.info(self.format_remote("DONE:", result))
-        return message.data["result"]
+        self.result = result
+        return result
 
     def handle_cancel(self, message):
         """Generic "cancel" handler reports on commanded cancellation of remote process
