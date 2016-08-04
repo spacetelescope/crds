@@ -620,8 +620,8 @@ and debug output.
         Returns { instrument: EXPTIME, ... }
         """
         datasets_since = {}
-        self.oldctx = rmap.get_cached_mapping(self.old_context)
-        self.newctx = rmap.get_cached_mapping(self.new_context)
+        self.oldctx = heavy_client.get_symbolic_mapping(self.old_context)
+        self.newctx = heavy_client.get_symbolic_mapping(self.new_context)
         for instrument in self.oldctx.selections:
             old_imap = self.oldctx.get_imap(instrument)
             new_imap = self.newctx.get_imap(instrument)

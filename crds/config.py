@@ -934,7 +934,17 @@ def is_mapping(mapping):
 
 def is_crds_mapping(mapping):
     """Return True IFF `mapping` implicitly or explicitly exists in the CRDS cache.
-    Return False for ad hoc mappings outside the CRDS Cache.
+
+    Return False for ad hoc mappings outside the CRDS Cache.   
+
+    Nominally this function is one determinant of whether or not a mapping is
+    picklable at the level of the overall CRDS runtime system.
+
+    >>> is_crds_mapping(locate_mapping("hst.pmap"))
+    True
+
+    >>> is_crds_mapping("tests/data/hst.pmap")
+    False
     """
     return (is_mapping(mapping) and (locate_mapping(mapping) == locate_mapping(os.path.basename(mapping))))
 
