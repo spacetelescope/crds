@@ -590,15 +590,14 @@ def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=Non
 def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, cached=True):
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
-
-    `mapping` must be a literal CRDS mapping name, not a date-based context
-    specification.
     """
+    assert config.is_mapping(mapping), \
+        "`mapping` must be a literal CRDS mapping name, not a date-based context specification."
     if use_pickles is None:
         use_pickles = config.USE_PICKLED_CONTEXTS
     if save_pickles is None:
         save_pickles = config.AUTO_PICKLE_CONTEXTS
-    if use_pickles and config.is_crds_mapping(mapping):
+    if use_pickles and config.is_simple_crds_mapping(mapping):
         try:
             loaded = load_pickled_mapping(mapping)
         except Exception:

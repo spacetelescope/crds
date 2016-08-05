@@ -932,7 +932,7 @@ def is_mapping(mapping):
     """Return True IFF `mapping` has an extension indicating a CRDS mapping file."""
     return isinstance(mapping, python23.string_types) and mapping.endswith((".pmap", ".imap", ".rmap"))
 
-def is_crds_mapping(mapping):
+def is_simple_crds_mapping(mapping):
     """Return True IFF `mapping` implicitly or explicitly exists in the CRDS cache.
 
     Return False for ad hoc mappings outside the CRDS Cache.   
@@ -940,13 +940,49 @@ def is_crds_mapping(mapping):
     Nominally this function is one determinant of whether or not a mapping is
     picklable at the level of the overall CRDS runtime system.
 
-    >>> is_crds_mapping(locate_mapping("hst.pmap"))
+    >>> is_simple_crds_mapping(locate_mapping("hst.pmap"))
     True
 
-    >>> is_crds_mapping("tests/data/hst.pmap")
+    is_simple_crds_mapping() is not a full guarantee that a mapping actually exists in
+    CRDS,  merely a guarantee that if it did it would be located implicitly in
+    the CRDS cache and has a basic name format which is not a date based context
+    specifier.
+    
+    >>> is_simple_crds_mapping("hst_foo.pmap")
+    True
+
+    >>> is_simple_crds_mapping(locate_mapping("hst.fits"))
+    False
+
+    >>> is_simple_crds_mapping("tests/data/hst.pmap")
+    False
+
+    >>> is_simple_crds_mapping("hst-2040-01-29T12:00:00")
+    False
+
+    >>> is_simple_crds_mapping("hst-acs-2040-01-29T12:00:00")
+    False
+
+    >>> is_simple_crds_mapping("hst-acs-darkfile-2040-01-29T12:00:00")
+    False
+    
+    >>> is_simple_crds_mapping("2040-01-29T12:00:00")
+    False
+    
+    >>> is_simple_crds_mapping("hst-edit")
+    False
+    
+    >>> is_simple_crds_mapping("hst-cos-deadtab-edit")
+    False
+    
+    >>> is_simple_crds_mapping("jwst-operational")
+    False
+    
+    >>> is_simple_crds_mapping("hst-foo")
     False
     """
-    return (is_mapping(mapping) and (locate_mapping(mapping) == locate_mapping(os.path.basename(mapping))))
+    basename = os.path.basename(mapping)
+    return is_valid_mapping_name(basename) and (locate_mapping(mapping) == locate_mapping(basename))
 
 def is_valid_mapping_name(mapping):
     """Return True IFF `mapping` has a CRDS-style root name and a mapping extension."""
@@ -1134,3 +1170,5 @@ def test():
     from . import config
     return doctest.testmod(config)
 
+if __name__ ==  "__main__":
+    print(test())
