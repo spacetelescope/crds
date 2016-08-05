@@ -419,10 +419,10 @@ def srepr(obj):
 
 # ==============================================================================
 
-def divider(name="", char="-", n=75, func=verbose, **keys):
+def divider(name="", char="-", n=75, func=info, **keys):
     """Create a log divider line consisting of `char` repeated `n` times
     possibly with `name` injected into the center of the divider.
-    Output it as a string to logging function `func`.
+    Output it as a string to logging function `func` defaulting to info().
     """
     if name:
         n2 = (n - len(name) - 2) // 2

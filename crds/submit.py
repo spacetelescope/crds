@@ -150,9 +150,9 @@ this command line interface must be members of the CRDS operators group
             stats.log_status("files", "Copy complete", len(self.files))
             stats.log_status("bytes", "Copy complete", total_size)
 
-        log.divider()
+        log.divider(func=log.verbose)
         stats.report()
-        log.divider(char="=", func=log.info)
+        log.divider(char="=")
     
     #def upload_file(self, name, path, destination):
     #    self.connection.upload_file('/upload/alt_new/', file=name)
@@ -222,7 +222,7 @@ this command line interface must be members of the CRDS operators group
     def wipe_files(self):
         """Copy self.files into the user's ingest directory on the CRDS server."""
         destination = self.submission_info.ingest_dir
-        log.divider(name="wipe files", char="=", func=log.info)
+        log.divider(name="wipe files", char="=")
         log.info("Wiping files at", repr(destination))
         host, path = destination.split(":")
         if destination.startswith(socket.gethostname()):
@@ -237,9 +237,9 @@ this command line interface must be members of the CRDS operators group
         total_bytes = utils.total_size(self.files)
         stats = utils.TimingStats(output=log.verbose)
         stats.start()
-        log.divider(name="ingest files", char="=", func=log.info)
+        log.divider(name="ingest files", char="=")
         log.info("Copying", len(self.files), "file(s) totalling", utils.human_format_number(total_bytes), "bytes")
-        log.divider()
+        log.divider(func=log.verbose)
         return stats
 
     # -------------------------------------------------------------------------------------------------
@@ -329,7 +329,7 @@ this command line interface must be members of the CRDS operators group
     def main(self):
         """Main control flow of submission directory and request manifest creation."""
 
-        log.divider("setting up", char="=", func=log.info)
+        log.divider("setting up", char="=")
 
         self.require_server_connection()
         
