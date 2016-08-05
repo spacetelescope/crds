@@ -365,6 +365,14 @@ class JwstdateValidator(KeywordValidator):
         self.verbose(filename, value)
         try:
             timestamp.Jwstdate.get_datetime(value)
+        except Exception:
+            raise ValueError(log.format(
+            "Invalid JWST date", repr(value), "for", repr(self.name),
+            "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
+            
+'''
+        try:
+            timestamp.Jwstdate.get_datetime(value)
         except ValueError:
             try:
                 timestamp.Anydate.get_datetime(value)
@@ -375,6 +383,7 @@ class JwstdateValidator(KeywordValidator):
                     timestamp.Jwstdate.get_datetime(value)                    
             log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
                         "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
+'''
 
 # ----------------------------------------------------------------------------
 
