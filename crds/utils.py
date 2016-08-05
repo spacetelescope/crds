@@ -608,7 +608,9 @@ def copytree(src, dst, symlinks=False, fnc_directory=_no_message,
 # ===================================================================
 
 def checksum(pathname):
-    """Return the CRDS hexdigest for file at `pathname`.""" 
+    """Return the CRDS hexdigest for file at `pathname`.   See also
+    copy_and_checksum() below which must match sha1sum results.
+    """
     xsum = hashlib.sha1()
     with open(pathname, "rb") as infile:
         size = 0
@@ -619,8 +621,30 @@ def checksum(pathname):
             xsum.update(block)
     return xsum.hexdigest()
 
+def copy_and_checksum(source, destination):
+    """Copy file from `source` path to `destination` path computing
+    sha1sum of source during the copy.   This is a *gross* server-side
+    optimization to prevent copying 10's of G's of data and then reading
+    it back just to compute sha1sum.   This is necessitated because it's
+    not possible to take ownership of files you can both read and delete
+    but it is possible to make a personally owned copy which replaces the
+    original.  See also checksum() which must have matching results.
+    """
+    xsum = hashlib.sha1()
+    with open(source, "rb") as source_file:
+        with open(destination, "wb+") as destination_file:
+            size = 0
+            insize = os.stat(source).st_size
+            while size < insize:
+                block = source_file.read(config.CRDS_CHECKSUM_BLOCK_SIZE)
+                destination_file.write(block)
+                size += len(block)
+                xsum.update(block)
+    return xsum.hexdigest()
+
 def str_checksum(data):
-    """Return the CRDS hexdigest for small strings.
+    """Return the CRDS hexdigest for small strings.   Likewise,  must
+    match checksum() and copy_and_checksum() above.
 
     >>> str_checksum("this is a test.")
     '7728f8eb7bf75ec3cc49364861eec852fc814870'
