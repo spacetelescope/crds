@@ -405,10 +405,10 @@ def locate_pickle(mapping, observatory=None):
         observatory = mapping_to_observatory(mapping)
     return os.path.join(get_crds_picklepath(observatory), mapping)
 
-USE_PICKLED_CONTEXTS = BooleanConfigItem("CRDS_USE_PICKLED_CONTEXTS", True,
+USE_PICKLED_CONTEXTS = BooleanConfigItem("CRDS_USE_PICKLED_CONTEXTS", False,
     "When True,  CRDS contexts should be loaded from a pickled version if possible.")
 
-AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", True,
+AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", False,
     "When True, CRDS contexts should be automatically pickled and cached after loading.")
 
 # -------------------------------------------------------------------------------------
