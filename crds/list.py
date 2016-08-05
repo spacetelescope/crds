@@ -288,7 +288,7 @@ def _print_dict(title, dictionary, selected = None):
         selected = dictionary.keys()
     print(title)
     if dictionary:
-        for key in selected:
+        for key in sorted(selected):
             try:
                 print("\t" + key + " = " + repr(dictionary[key]))
             except Exception:

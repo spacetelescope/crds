@@ -8,11 +8,13 @@ import os, os.path
 import shutil
 import tempfile
 import unittest
+import cProfile
+import pstats
 
 # ==============================================================================
 
 import crds
-from crds import log, utils, client, config
+from crds import log, utils, client, config, python23
 
 # ==============================================================================
 
@@ -102,4 +104,26 @@ def tstmod(module):
     import doctest
     # doctest.ELLIPSIS_MARKER = '-etc-'
     return doctest.testmod(module, optionflags=doctest.ELLIPSIS)
+
+# ==============================================================================
+
+def run_and_profile(name, case, globs={}, locs={}):
+    """Using `name` for a banner and divider,  execute code string `case` in the
+    global namespace,  both evaled printing result and under the profiler.
+    """
+    utils.clear_function_caches()
+    log.divider()
+    log.divider(name + " example")
+    log.divider()
+    print(eval(case, globs, locs))
+    utils.clear_function_caches()
+    log.divider()
+    log.divider(name + " profile")
+    log.divider()
+    cProfile.run(case, "profile.stats")
+    stats = pstats.Stats('profile.stats')
+    stats.strip_dirs()
+    stats.sort_stats('cumulative')
+    stats.print_stats(100)
+    os.remove('profile.stats')
 
