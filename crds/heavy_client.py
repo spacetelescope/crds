@@ -631,7 +631,6 @@ def save_pickled_mapping(mapping, loaded):
     with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
-        log.verbose("Saved pickled context for", repr(mapping), "to", repr(pickle_file))
 
 # =============================================================================
 
