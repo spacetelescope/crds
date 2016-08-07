@@ -32,10 +32,10 @@ import re
 import shutil
 import glob
 
+import crds
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
 from crds.log import srepr
-import crds
 
 # ============================================================================
 
@@ -319,7 +319,7 @@ class SyncScript(cmdline.ContextsScript):
         """
         for context in contexts:
             with log.error_on_exception("Failed pickling", repr(context)):
-                heavy_client.get_pickled_mapping(context, use_pickles=True, save_pickles=True)
+                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)
     
     # ------------------------------------------------------------------------------------------
 

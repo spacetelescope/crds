@@ -20,6 +20,7 @@ import datetime
 import time
 
 # import crds.pysh as pysh
+import crds
 from crds import (log, rmap, data_file, config, utils, timestamp)
 from crds.exceptions import CrdsError
 from crds.hst import siname
@@ -252,7 +253,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
 
             for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
 
-                pmap = rmap.get_cached_mapping(pmap_name)
+                pmap = crds.get_pickled_mapping(pmap_name)
 
                 r = certify.find_governing_rmap(pmap_name, ref)
 
