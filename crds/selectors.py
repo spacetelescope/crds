@@ -201,7 +201,16 @@ class Selector(object):
             self._raw_selections = merge_selections  # XXX not really,  nominally unused XXXX
             self._selections = merge_selections
         self._parkey_map = self.get_parkey_map()
-    
+
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
+        ochoices = other.raw_choices()
+        for i,choice  in enumerate(self.raw_choices()):
+            utils.trace_compare(choice, ochoices[i], show_equal)
+        ochoices = other.choices()
+        for i,choice  in enumerate(self.choices()):
+            utils.trace_compare(choice, ochoices[i], show_equal)
+
     def do_substitutions(self, parameters, selections, substitutions):
         """Replace parkey values in `selections` which are specified
         in mapping `substitutions` as {parkey : { old_value : new_value }}

@@ -17,6 +17,7 @@ import json
 import pprint
 import re
 
+import crds
 from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
 from crds import naming
 
@@ -56,7 +57,7 @@ def get_affected(old_pmap, new_pmap, *args, **keys):
     
     Returns { affected_instrument : { affected_type, ... } }
     """
-    observatory = keys.pop("observatory", rmap.get_cached_mapping(old_pmap).observatory)
+    observatory = keys.pop("observatory", crds.get_pickled_mapping(old_pmap).observatory)
     differ = MappingDifferencer(observatory, old_pmap, new_pmap, *args, **keys)
     return differ.get_affected()
 
@@ -653,7 +654,7 @@ def get_updated_files(context1, context2):
     extension1 = os.path.splitext(context1)[1]
     extension2 = os.path.splitext(context2)[1]
     assert extension1 == extension2, "Only compare mappings of same type/extension."
-    old_map = rmap.get_cached_mapping(context1)
+    old_map = crds.get_pickled_mapping(context1)
     old_files = set(old_map.mapping_names() + old_map.reference_names())
     all_mappings = rmap.list_mappings("*"+extension1, old_map.observatory)
     updated = set()
@@ -661,7 +662,7 @@ def get_updated_files(context1, context2):
     for new in all_mappings:
         new = os.path.basename(new)
         if context1 < new <= context2:
-            new_map = rmap.get_cached_mapping(new)
+            new_map = crds.get_pickled_mapping(new)
             updated |= set(new_map.mapping_names() + new_map.reference_names())
     return sorted(list(updated - old_files))
 
@@ -870,8 +871,8 @@ Mutually Exclusive Modes
         if not rmap.is_mapping(self.old_file) or not rmap.is_mapping(self.new_file):
             log.error("--print-new-files really only works for mapping differences.")
             return -1
-        old = rmap.get_cached_mapping(self.old_file)
-        new = rmap.get_cached_mapping(self.new_file)
+        old = crds.get_pickled_mapping(self.old_file)
+        new = crds.get_pickled_mapping(self.new_file)
         old_mappings = set(old.mapping_names())
         new_mappings = set(new.mapping_names())
         old_references = set(old.reference_names())

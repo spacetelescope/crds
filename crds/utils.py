@@ -48,6 +48,30 @@ def combine_dicts(*post_dicts, **post_vars):
 
 # ===================================================================
 
+def trace_compare(self, other, show_equal=False):
+    """Recursively compare object `self` to `other` printing differences
+    and optionally equal members.
+    """
+    log.divider(repr(self) + ":")
+    for key, value in self.__dict__.items():
+        try:
+            ovalue = other.__dict__[key]
+        except KeyError:
+            print(key, "not present in other")
+            continue
+        equal = (value == ovalue)
+        if show_equal or not equal:
+            print(key, equal, value, ovalue)
+        if hasattr(value, "_trace_compare"):
+            value._trace_compare(ovalue)
+    for key in other.__dict__:
+        try:
+            self.__dict__[key]
+        except KeyError:
+            print(key, "value not present in self")
+                
+# ===================================================================
+
 def flatten(sequence):
     """Given a sequence possibly containing nested lists or tuples,
     flatten the sequence to a single non-nested list of primitives.
@@ -569,9 +593,10 @@ def remove(rmpath, observatory):
             abs_config = os.path.abspath(config.get_crds_cfgpath(observatory))
             abs_references = os.path.abspath(config.get_crds_refpath(observatory))
             abs_mappings = os.path.abspath(config.get_crds_mappath(observatory))
-            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings)), \
+            abs_pickles = os.path.abspath(config.get_crds_picklepath(observatory))
+            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings, abs_pickles)), \
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
-            log.verbose("Removing: ", repr(rmpath))
+            log.verbose("CACHE removing:", repr(rmpath))
             if os.path.isfile(rmpath):
                 os.remove(rmpath)
             else:
@@ -608,7 +633,9 @@ def copytree(src, dst, symlinks=False, fnc_directory=_no_message,
 # ===================================================================
 
 def checksum(pathname):
-    """Return the CRDS hexdigest for file at `pathname`.""" 
+    """Return the CRDS hexdigest for file at `pathname`.   See also
+    copy_and_checksum() below which must match sha1sum results.
+    """
     xsum = hashlib.sha1()
     with open(pathname, "rb") as infile:
         size = 0
@@ -619,8 +646,30 @@ def checksum(pathname):
             xsum.update(block)
     return xsum.hexdigest()
 
+def copy_and_checksum(source, destination):
+    """Copy file from `source` path to `destination` path computing
+    sha1sum of source during the copy.   This is a *gross* server-side
+    optimization to prevent copying 10's of G's of data and then reading
+    it back just to compute sha1sum.   This is necessitated because it's
+    not possible to take ownership of files you can both read and delete
+    but it is possible to make a personally owned copy which replaces the
+    original.  See also checksum() which must have matching results.
+    """
+    xsum = hashlib.sha1()
+    with open(source, "rb") as source_file:
+        with open(destination, "wb+") as destination_file:
+            size = 0
+            insize = os.stat(source).st_size
+            while size < insize:
+                block = source_file.read(config.CRDS_CHECKSUM_BLOCK_SIZE)
+                destination_file.write(block)
+                size += len(block)
+                xsum.update(block)
+    return xsum.hexdigest()
+
 def str_checksum(data):
-    """Return the CRDS hexdigest for small strings.
+    """Return the CRDS hexdigest for small strings.   Likewise,  must
+    match checksum() and copy_and_checksum() above.
 
     >>> str_checksum("this is a test.")
     '7728f8eb7bf75ec3cc49364861eec852fc814870'

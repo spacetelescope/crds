@@ -125,29 +125,25 @@ class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
-    required_attrs = []
+    required_attrs = ["mapping", "parkey", "name", "derived_from"]
     
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
-    def __init__(self, filename, header, selector, altkeys=None, **keys):
-        assert not (altkeys and keys), \
-            "altkeys should only be used for unpickling where keys cannot be defined."
-        self.keys = altkeys or keys   # for __getnewargs__
-        self._newargs = (filename, header, selector, self.keys)
+    def __init__(self, filename, header, selector, **keys):
+        self._newargs = (filename, header, selector, keys)
         self.header = LowerCaseDict(header)   # consistent lower case values
+        self.comment = keys.pop("comment", None)
+        self.path = keys.get("path", None)
         self.filename = filename
         self.selector = selector
-        
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        self.comment = keys.pop("comment", None)
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
-        self.path = keys.get("path", None)
 
     def _check_type(self, expected_type):
         """Verify that the 'mapping' element of the header matches 'expected_type'."""
@@ -188,8 +184,17 @@ class Mapping(object):
         assert self.filekind in self.obs_package.FILEKINDS, \
             "Invalid filekind " + repr(self.filekind) + " in " + repr(self.filename)
 
-    def __getnewargs__(self):
+    def __getstate__(self):
         return self._newargs
+
+    def __setstate__(self, state):
+        # filename, header, selector, keys
+        self.__init__(*state[:3], **state[3])
+
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
+        for key in self.selections:
+            self.selections[key]._trace_compare(other.selections[key], show_equal)
 
     @property
     def basename(self):
@@ -208,12 +213,6 @@ class Mapping(object):
     def __str__(self):
         """Return the source text of the Mapping."""
         return self.format()
-
-    def list_tree(self):
-        """Recursively print out the repr's() of all loaded mappings from `self` down."""
-        print(repr(self))
-        for mapping in self.selections.values():
-            mapping.list_tree()
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
@@ -625,8 +624,8 @@ class Mapping(object):
 
 class ContextMapping(Mapping):
     """.pmap and .imap base class."""
-    def __init__(self, filename, header, selector, altkeys=None, **keys):
-        super(ContextMapping, self).__init__(filename, header, selector, altkeys, **keys)
+    def __init__(self, filename, header, selector, **keys):
+        super(ContextMapping, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
         self.selections = MappingSelectionsDict(selector, self.keys)
 
@@ -663,10 +662,10 @@ class PipelineContext(ContextMapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey", "name", "derived_from"]
+    required_attrs = ContextMapping.required_attrs + ["observatory"]
 
-    def __init__(self, filename, header, selector, altkeys=None, **keys):
-        super(PipelineContext, self).__init__(filename, header, selector, altkeys, **keys)
+    def __init__(self, filename, header, selector, **keys):
+        super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
         self._check_type("pipeline")
 
@@ -791,8 +790,8 @@ class InstrumentContext(ContextMapping):
     """
     required_attrs = PipelineContext.required_attrs + ["instrument"]
 
-    def __init__(self, filename, header, selector, altkeys=None, **keys):
-        super(InstrumentContext, self).__init__(filename, header, selector, altkeys, **keys)
+    def __init__(self, filename, header, selector, **keys):
+        super(InstrumentContext, self).__init__(filename, header, selector, **keys)
         self.instrument = self.header["instrument"]
         self._filekinds = [key.upper() for key in self.selections.keys()]
         self._check_type("instrument")
@@ -1035,22 +1034,6 @@ class ReferenceMapping(Mapping):
         with log.augment_exception("Invalid mapping:", self.instrument, self.filekind):
             self.selector.validate_selector(self.tpn_valid_values)
 
-    def __getstate__(self):
-        """Support pickling protocol, return mapping state,  working around compiled code attributes."""
-        state = dict(self.__dict__)
-        del state["_rmap_relevance_expr"]
-        del state["_rmap_omit_expr"]
-        del state["_precondition_header"]
-        del state["_fallback_header"]
-        del state["_rmap_update_headers"]
-        del state["_parkey_relevance_exprs"]
-        return state
-    
-    def __setstate__(self, state):
-        """Restore pickled state,  special handling for compiled code attributes."""
-        self.__dict__ = dict(state)
-        self._init_compiled()
-    
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
@@ -1449,9 +1432,8 @@ class ReferenceMapping(Mapping):
             return None
         return self
 
-    def list_tree(self):
-        """Print repr() of ReferenceMapping,  assumed to be terminal."""
-        print(repr(self))
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
 
     def specifies_references(self):
         """Return True IFF this mapping specified reference filenames directly in it's selector."""
