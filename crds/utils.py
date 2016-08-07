@@ -48,6 +48,30 @@ def combine_dicts(*post_dicts, **post_vars):
 
 # ===================================================================
 
+def trace_compare(self, other, show_equal=False):
+    """Recursively compare object `self` to `other` printing differences
+    and optionally equal members.
+    """
+    log.divider(repr(self) + ":")
+    for key, value in self.__dict__.items():
+        try:
+            ovalue = other.__dict__[key]
+        except KeyError:
+            print(key, "not present in other")
+            continue
+        equal = (value == ovalue)
+        if show_equal or not equal:
+            print(key, equal, value, ovalue)
+        if hasattr(value, "_trace_compare"):
+            value._trace_compare(ovalue)
+    for key in other.__dict__:
+        try:
+            self.__dict__[key]
+        except KeyError:
+            print(key, "value not present in self")
+                
+# ===================================================================
+
 def flatten(sequence):
     """Given a sequence possibly containing nested lists or tuples,
     flatten the sequence to a single non-nested list of primitives.
