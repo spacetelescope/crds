@@ -371,24 +371,31 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
+        self._newargs = (filename, header, selector, keys)
         self.header = LowerCaseDict(header)   # consistent lower case values
-        self._newargs = (filename, header, selector)
-        self.filename = filename
-        self.selector = selector
         self.comment = keys.pop("comment", None)
         self.path = keys.get("path", None)
-
+        self.filename = filename
+        self.selector = selector
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
 
-    def __getnewargs__(self):
+    def __getstate__(self):
         return self._newargs
+
+    def __setstate__(self, state):
+        # filename, header, selector, keys
+        self.__init__(*state[:3], **state[3])
+
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
+        for key in self.selections:
+            self.selections[key]._trace_compare(other.selections[key], show_equal)
 
     @property
     def basename(self):
@@ -1209,22 +1216,6 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
 
-    def __getstate__(self):
-        """Support pickling protocol, return mapping state,  working around compiled code attributes."""
-        state = dict(self.__dict__)
-        del state["_rmap_relevance_expr"]
-        del state["_rmap_omit_expr"]
-        del state["_precondition_header"]
-        del state["_fallback_header"]
-        del state["_rmap_update_headers"]
-        del state["_parkey_relevance_exprs"]
-        return state
-    
-    def __setstate__(self, state):
-        """Restore pickled state,  special handling for compiled code attributes."""
-        self.__dict__ = dict(state)
-        self._init_compiled()
-    
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
@@ -1636,6 +1627,9 @@ class ReferenceMapping(Mapping):
             log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
             return None
         return self
+
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
 
 # ===================================================================
 
