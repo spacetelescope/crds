@@ -365,7 +365,7 @@ class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
-    required_attrs = []
+    required_attrs = ["mapping", "parkey", "name", "derived_from"]
     
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
@@ -382,6 +382,7 @@ class Mapping(object):
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
+
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
@@ -406,12 +407,6 @@ class Mapping(object):
     def __str__(self):
         """Return the source text of the Mapping."""
         return self.format()
-
-    def list_tree(self):
-        """Recursively print out the repr's() of all loaded mappings from `self` down."""
-        print(repr(self))
-        for mapping in self.selections.values():
-            mapping.list_tree()
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
@@ -852,8 +847,7 @@ class PipelineContext(ContextMapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey",
-                      "name", "derived_from"]
+    required_attrs = ContextMapping.required_attrs + ["observatory"]
 
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
@@ -1642,10 +1636,6 @@ class ReferenceMapping(Mapping):
             log.warning("Invalid comparison context", repr(self.name), "for", repr(mapping))
             return None
         return self
-
-    def list_tree(self):
-        """Print repr() of ReferenceMapping,  assumed to be terminal."""
-        print(repr(self))
 
 # ===================================================================
 
