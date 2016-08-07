@@ -551,7 +551,6 @@ def list_mappings(observatory, glob_pattern):
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
 
-@utils.cached
 def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=None, save_pickles=None):
     """Return a loaded mapping object,  first translating any date based or
     named contexts into a more primitive serial number only mapping name.
@@ -587,6 +586,7 @@ def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=Non
 
 # ============================================================================
 
+@utils.cached
 def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, cached=True):
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
