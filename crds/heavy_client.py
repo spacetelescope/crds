@@ -551,7 +551,8 @@ def list_mappings(observatory, glob_pattern):
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
 
-def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=None, save_pickles=None):
+def get_symbolic_mapping(
+    mapping, observatory=None, cached=True, use_pickles=None, save_pickles=None, **keys):
     """Return a loaded mapping object,  first translating any date based or
     named contexts into a more primitive serial number only mapping name.
 
@@ -582,12 +583,13 @@ def get_symbolic_mapping(mapping, observatory=None, cached=True, use_pickles=Non
     else:
         info = get_config_info(observatory)
         abs_mapping = translate_date_based_context(info, mapping)
-    return get_pickled_mapping(abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles)
+    return get_pickled_mapping(
+        abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles, **keys)
 
 # ============================================================================
 
 @utils.cached
-def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, cached=True):
+def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, **keys):
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
     """
@@ -601,11 +603,11 @@ def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, cached=Tru
         try:
             loaded = load_pickled_mapping(mapping)
         except Exception:
-            loaded = rmap.asmapping(mapping, cached=cached)
+            loaded = rmap.asmapping(mapping, **keys)
             if save_pickles:
                 save_pickled_mapping(mapping, loaded)
     else:
-        loaded = rmap.asmapping(mapping, cached=cached)
+        loaded = rmap.asmapping(mapping, **keys)
     return loaded
 
 def load_pickled_mapping(mapping):
