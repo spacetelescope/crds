@@ -589,7 +589,7 @@ def get_symbolic_mapping(
 # ============================================================================
 
 @utils.cached
-def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, **keys):
+def get_pickled_mapping(mapping, cached=True, use_pickles=None, save_pickles=None, **keys):
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
     """
@@ -603,7 +603,7 @@ def get_pickled_mapping(mapping, use_pickles=None, save_pickles=None, **keys):
         try:
             loaded = load_pickled_mapping(mapping)
         except Exception:
-            loaded = rmap.asmapping(mapping, **keys)
+            loaded = rmap.asmapping(mapping, cached=cached, **keys)
             if save_pickles:
                 save_pickled_mapping(mapping, loaded)
     else:
