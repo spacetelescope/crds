@@ -22,7 +22,8 @@ from __future__ import absolute_import
 import sys
 import os.path
 
-from . import rmap, pysh, config, cmdline, utils, log
+import crds
+from . import pysh, config, cmdline, utils, log
 from crds.client import api
 
 def _clean_file_lines(files):
@@ -99,7 +100,7 @@ def datasets_using(references, context):
         if config.is_mapping(reference):
             log.error("Used file", repr(reference), "is a mapping file.  Must be a reference file.")
             continue
-        pmap = rmap.get_cached_mapping(context)
+        pmap = crds.get_pickled_mapping(context)
         instrument, filekind = utils.get_file_properties(pmap.observatory, reference)
         if instrument not in datasets:
             log.verbose("Dumping dataset info for", repr(instrument), "from", repr(api.get_crds_server()))

@@ -48,6 +48,30 @@ def combine_dicts(*post_dicts, **post_vars):
 
 # ===================================================================
 
+def trace_compare(self, other, show_equal=False):
+    """Recursively compare object `self` to `other` printing differences
+    and optionally equal members.
+    """
+    log.divider(repr(self) + ":")
+    for key, value in self.__dict__.items():
+        try:
+            ovalue = other.__dict__[key]
+        except KeyError:
+            print(key, "not present in other")
+            continue
+        equal = (value == ovalue)
+        if show_equal or not equal:
+            print(key, equal, value, ovalue)
+        if hasattr(value, "_trace_compare"):
+            value._trace_compare(ovalue)
+    for key in other.__dict__:
+        try:
+            self.__dict__[key]
+        except KeyError:
+            print(key, "value not present in self")
+                
+# ===================================================================
+
 def flatten(sequence):
     """Given a sequence possibly containing nested lists or tuples,
     flatten the sequence to a single non-nested list of primitives.
@@ -569,9 +593,10 @@ def remove(rmpath, observatory):
             abs_config = os.path.abspath(config.get_crds_cfgpath(observatory))
             abs_references = os.path.abspath(config.get_crds_refpath(observatory))
             abs_mappings = os.path.abspath(config.get_crds_mappath(observatory))
-            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings)), \
+            abs_pickles = os.path.abspath(config.get_crds_picklepath(observatory))
+            assert abs_path.startswith((abs_cache, abs_config, abs_references, abs_mappings, abs_pickles)), \
                 "remove() only works on files in CRDS cache. not: " + repr(rmpath)
-            log.verbose("Removing: ", repr(rmpath))
+            log.verbose("CACHE removing:", repr(rmpath))
             if os.path.isfile(rmpath):
                 os.remove(rmpath)
             else:

@@ -17,6 +17,7 @@ import pprint
 
 # from jwst import datamodels   # deferred
 
+import crds
 from crds import rmap, log, utils, heavy_client
 from crds.certify import TpnInfo
 
@@ -55,7 +56,7 @@ def tpninfos_key_to_parkeys(tpn):
         return []
     with log.verbose_warning_on_exception("Can't determine parkeys for", repr(tpn)):
         _mode, context  = heavy_client.get_processing_mode("jwst")
-        p = rmap.get_cached_mapping(context)
+        p = crds.get_pickled_mapping(context)
         instrument, suffix = tpn.split(".")[0].split("_")[:2]
         filekind = p.locate.suffix_to_filekind(instrument, suffix)
         keys = p.get_imap(instrument).get_rmap(filekind).get_required_parkeys()
