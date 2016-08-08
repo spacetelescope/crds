@@ -607,7 +607,7 @@ def get_pickled_mapping(mapping, cached=True, use_pickles=None, save_pickles=Non
             if save_pickles:
                 save_pickled_mapping(mapping, loaded)
     else:
-        loaded = rmap.asmapping(mapping, **keys)
+        loaded = rmap.asmapping(mapping, cached=cached, **keys)
     return loaded
 
 def load_pickled_mapping(mapping):
