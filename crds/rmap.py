@@ -365,19 +365,18 @@ class Mapping(object):
     """Mapping is the abstract baseclass for PipelineContext,
     InstrumentContext, and ReferenceMapping.
     """
-    required_attrs = []
+    required_attrs = ["mapping", "parkey", "name", "derived_from"]
     
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
+        self._newargs = (filename, header, selector, keys)
         self.header = LowerCaseDict(header)   # consistent lower case values
-        self._newargs = (filename, header, selector)
-        self.filename = filename
-        self.selector = selector
         self.comment = keys.pop("comment", None)
         self.path = keys.get("path", None)
-
+        self.filename = filename
+        self.selector = selector
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
@@ -386,8 +385,17 @@ class Mapping(object):
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
 
-    def __getnewargs__(self):
+    def __getstate__(self):
         return self._newargs
+
+    def __setstate__(self, state):
+        # filename, header, selector, keys
+        self.__init__(*state[:3], **state[3])
+
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
+        for key in self.selections:
+            self.selections[key]._trace_compare(other.selections[key], show_equal)
 
     @property
     def basename(self):
@@ -406,12 +414,6 @@ class Mapping(object):
     def __str__(self):
         """Return the source text of the Mapping."""
         return self.format()
-
-    def list_tree(self):
-        """Recursively print out the repr's() of all loaded mappings from `self` down."""
-        print(repr(self))
-        for mapping in self.selections.values():
-            mapping.list_tree()
 
     def __getattr__(self, attr):
         """Enable access to required header parameters as 'self.<parameter>'"""
@@ -852,8 +854,7 @@ class PipelineContext(ContextMapping):
     of a pipeline.
     """
     # Last required attribute is "difference type".
-    required_attrs = ["observatory", "mapping", "parkey",
-                      "name", "derived_from"]
+    required_attrs = ContextMapping.required_attrs + ["observatory"]
 
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
@@ -1215,22 +1216,6 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
 
-    def __getstate__(self):
-        """Support pickling protocol, return mapping state,  working around compiled code attributes."""
-        state = dict(self.__dict__)
-        del state["_rmap_relevance_expr"]
-        del state["_rmap_omit_expr"]
-        del state["_precondition_header"]
-        del state["_fallback_header"]
-        del state["_rmap_update_headers"]
-        del state["_parkey_relevance_exprs"]
-        return state
-    
-    def __setstate__(self, state):
-        """Restore pickled state,  special handling for compiled code attributes."""
-        self.__dict__ = dict(state)
-        self._init_compiled()
-    
     def get_expr(self, expr):  # secured
         """Return (expr, compiled_expr) for some rmap header expression, generally a predicate which is evaluated
         in the context of the matching header to fine tune behavior.   Screen the expr for dangerous code.
@@ -1643,9 +1628,8 @@ class ReferenceMapping(Mapping):
             return None
         return self
 
-    def list_tree(self):
-        """Print repr() of ReferenceMapping,  assumed to be terminal."""
-        print(repr(self))
+    def _trace_compare(self, other, show_equal=False):
+        utils.trace_compare(self, other, show_equal)
 
 # ===================================================================
 

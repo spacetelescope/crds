@@ -18,6 +18,7 @@ from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
+import crds
 from crds import utils, log, config
 from crds.client import proxy
 from crds.log import srepr
@@ -514,8 +515,7 @@ class FileCacher(object):
         elif "hst" in self.pipeline_context:
             observatory = "hst"
         else:
-            import crds.rmap
-            observatory = crds.rmap.get_cached_mapping(self.pipeline_context).observatory
+            observatory = crds.get_pickled_mapping(self.pipeline_context).observatory
         return observatory
 
     def locate(self, name):
@@ -807,8 +807,7 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     """Given a `dataset` and a `context`,  extract relevant header 
     information from the `dataset`.
     """
-    import crds.rmap
     dump_mappings(context, ignore_cache=ignore_cache)
-    ctx = crds.get_cached_mapping(context)
+    ctx = crds.get_pickled_mapping(context)
     return ctx.get_minimum_header(dataset)
 

@@ -32,10 +32,10 @@ import re
 import shutil
 import glob
 
+import crds
 import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
 from crds.log import srepr
-import crds
 
 # ============================================================================
 
@@ -238,9 +238,13 @@ class SyncScript(cmdline.ContextsScript):
         self.add_argument("--organize-delete-junk", action="store_true",
                           help="When --organize'ing, delete obstructing files or directories CRDS discovers.")
         self.add_argument("--verify-context-change", action="store_true",
-                          help="When specified,  it's an error if the context does not update to something new.")
+                          help="Make it an error if the context does not update to something new.")
         self.add_argument("--push-context", metavar="KEY", type=str,
-                          help="When specified, push the name of the final cached context to the server for the pipeline identified by KEY.")
+                          help="Push the name of the final cached context to the server for the pipeline identified by KEY.")
+        self.add_argument("--clear-pickles", action="store_true",
+                          help="Remove the pickles for the sync'ed contexts from the CRDS cache. Can precede --save-pickles.")
+        self.add_argument("--save-pickles", action="store_true",
+                          help="Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.")
 
     # ------------------------------------------------------------------------------------------
     
@@ -279,8 +283,15 @@ class SyncScript(cmdline.ContextsScript):
         else:
             log.error("Define --all, --contexts, --last, --range, --files, or --fetch-sqlite-db to sync.")
             sys.exit(-1)
+
         if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
+            
+        if self.args.clear_pickles or self.args.ignore_cache:
+            self.clear_pickles(self.contexts)
+        if self.args.save_pickles:
+            self.pickle_contexts(self.contexts)
+
         if self.args.verify_context_change:
             old_context = heavy_client.load_server_info(self.observatory).operational_context
         heavy_client.update_config_info(self.observatory)
@@ -288,11 +299,30 @@ class SyncScript(cmdline.ContextsScript):
             self.verify_context_change(old_context)
         if self.args.push_context:
             self.push_context()
+            
         self.report_stats()
         log.standard_status()
         return log.errors()
     # ------------------------------------------------------------------------------------------
+
+    def clear_pickles(self, contexts):
+        """Remove pickles specified by `contexts`."""
+        for context in contexts:
+            path = config.locate_pickle(context + ".pkl")
+            if os.path.exists(path):
+                utils.remove(path, self.observatory)
+
+    def pickle_contexts(self, contexts):
+        """Save pickled versions of `contexts` in the CRDS cache.
+
+        By default this will by-pass existing pickles if they successfully load.
+        """
+        for context in contexts:
+            with log.error_on_exception("Failed pickling", repr(context)):
+                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)
     
+    # ------------------------------------------------------------------------------------------
+
     @property
     def server_info(self):
         """Return the server_info dict from the CRDS server.  Do not call update_config_info() until sync complete."""
