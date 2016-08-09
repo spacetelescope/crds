@@ -305,26 +305,56 @@ To obtain current best references specify the context using a date::
      'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
      'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
 
-Dataset ids are nominally of the form <product>:<exposure> (particularly for HST).  For
-JWST at this time all IDs are effectively of the form <exposure>:<exposure>.
+Dataset IDs have a grammar like this for HST::
+
+    <product_id> : <exposure_id>
+
+Dataset IDs currently have a grammar like this for JWST::
+
+    <id>     :=  <whole>:<part>
+    <whole>  :=  <filesetname>:<detector>
+    <part>   :=  <filesetname>:<detector>
+
+As can be seen above, currently JWST IDs are redundant and <whole> and <part>
+are identical.  However, conceptually the IDs have that relationship and may be
+further elaborated and differentiated in later builds (post-jwst-build-7).  In 
+such a case,  several exposure level IDs (<parts>'s) might have an identical
+common root (<whole>).
+
+In both cases it's possible to specify either half of an ID returned by
+get_dataset_ids() to request matching parameters or best references using the
+services below.
+
+For HST requesting parameters using only the <product_id> returns the
+parameters associated with the full two part ID for every exposure of the
+product.  Requesting the parameters using only the <exposure_id> returns the
+references associated with processing that exposure.
+
+For JWST, conceptually the same behavior will be preserved, so while either
+half of an ID will currently return the same parameters, at a future date the
+<whole> part may return all references associated with all exposures of a
+single high level product, and the <part> component will only return the
+references associated with processing that particular exposure.
 
 Matching Parameters By ID
 +++++++++++++++++++++++++
 
 **get_dataset_headers_by_id(context_specifier, ids, datasets_since)**
 
+CRDS fetches best reference matching parameters indirectly from the archive database.
+The *get_dataset_headers_by_id()* function can be used to return the parameters required
+to compute best references associated with the specified dataset ids:
+
 *context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
 
-*ids* is a list of archive dataset id strings
+*ids* is a list of archive dataset id strings as shown above.
 
 *datasets_since* is an optional cut-off date for datasets.  If specified, only datasets acquired after that date are returned.
 
-CRDS fetches best reference matching parameters indirectly from the archive database.
-The *get_dataset_headers_by_id()* function can be used to return the parameters required
-to compute best references associated with the specified dataset ids::
+An example call using the CRDS Python client is::
 
-    >>> get_dataset_headers_by_id("2016-01-01", ['JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB2'], None)
-    {'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB2': {'META.EXPOSURE.READPATT': 'BRIGHT1',
+    >>> get_dataset_headers_by_id("2016-01-01", ['JW96090001004_03101_00001.NRCB2'], None)
+    {'JW96090001004_03101_00001.NRCB2': {'META.EXPOSURE.READPATT': 'BRIGHT1',
      'META.EXPOSURE.TYPE': 'NRC_IMAGE',
      'META.INSTRUMENT.CHANNEL': 'SHORT',
      'META.INSTRUMENT.DETECTOR': 'NRCB2',
@@ -338,55 +368,63 @@ AUI Interface for Best References
 
 **get_aui_best_references(date, ids)**
 
-*date* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
-
-*ids* is a list of valid archive dataset ids
-
 The CRDS server can compute the best references for a list of data set ids
 using the *get_aui_best_references()* function.  The dataset ids must be
 compatible with those returned by *get_dataset_ids()* above.
 
->>> get_aui_best_references("2016-01-01", ids)
-{'JW82500001003_02102_00001.NRCA1:JW82500001003_02102_00001.NRCA1': [True,
-  ['jwst_nircam_ipc_0001.fits',
-   'jwst_nircam_linearity_0020.fits',
-   'jwst_nircam_distortion_0001.asdf',
-   'jwst_nircam_drizpars_0001.fits',
-   'jwst_nircam_area_0001.fits',
-   'jwst_nircam_flat_0000.fits',
-   'jwst_nircam_saturation_0030.fits',
-   'jwst_nircam_photom_0031.fits',
-   'jwst_nircam_dark_0030.fits',
-   'jwst_nircam_gain_0000.fits',
-   'jwst_nircam_mask_0010.fits',
-   'jwst_nircam_readnoise_0000.fits',
-   'jwst_nircam_superbias_0001.fits']],
- 'JW82500001003_02102_00001.NRCA3:JW82500001003_02102_00001.NRCA3': [True,
-  ['jwst_nircam_ipc_0003.fits',
-   'jwst_nircam_linearity_0022.fits',
-   'jwst_nircam_distortion_0003.asdf',
-   'jwst_nircam_drizpars_0001.fits',
-   'jwst_nircam_area_0001.fits',
-   'jwst_nircam_flat_0003.fits',
-   'jwst_nircam_saturation_0032.fits',
-   'jwst_nircam_photom_0033.fits',
-   'jwst_nircam_dark_0032.fits',
-   'jwst_nircam_gain_0002.fits',
-   'jwst_nircam_mask_0012.fits',
-   'jwst_nircam_readnoise_0002.fits',
-   'jwst_nircam_superbias_0003.fits']],
-...
+*date* is a date-based CRDS context specifier, e.g.: jwst_0192.pmap,
+2015-05-25T00:00:27, jwst-operational
+
+*ids* is a list of valid archive dataset ids.  For this interface for JWST it's
+currently natural and supported to use either half (currently identical) of the
+dataset IDs as specified in get_dataset_ids() above.  Using a "half-ID" is shown
+below.
+
+An examople call using the CRDS Python client is::
+
+    >>> get_aui_best_references("2016-01-01", ['JW82500001003_02102_00001.NRCA1','JW82500001003_02102_00001.NRCA3'])
+    {'JW82500001003_02102_00001.NRCA1': [True,
+      ['jwst_nircam_ipc_0001.fits',
+       'jwst_nircam_linearity_0020.fits',
+       'jwst_nircam_distortion_0001.asdf',
+       'jwst_nircam_drizpars_0001.fits',
+       'jwst_nircam_area_0001.fits',
+       'jwst_nircam_flat_0000.fits',
+       'jwst_nircam_saturation_0030.fits',
+       'jwst_nircam_photom_0031.fits',
+       'jwst_nircam_dark_0030.fits',
+       'jwst_nircam_gain_0000.fits',
+       'jwst_nircam_mask_0010.fits',
+       'jwst_nircam_readnoise_0000.fits',
+       'jwst_nircam_superbias_0001.fits']],
+     'JW82500001003_02102_00001.NRCA3': [True,
+      ['jwst_nircam_ipc_0003.fits',
+       'jwst_nircam_linearity_0022.fits',
+       'jwst_nircam_distortion_0003.asdf',
+       'jwst_nircam_drizpars_0001.fits',
+       'jwst_nircam_area_0001.fits',
+       'jwst_nircam_flat_0003.fits',
+       'jwst_nircam_saturation_0032.fits',
+       'jwst_nircam_photom_0033.fits',
+       'jwst_nircam_dark_0032.fits',
+       'jwst_nircam_gain_0002.fits',
+       'jwst_nircam_mask_0012.fits',
+       'jwst_nircam_readnoise_0002.fits',
+       'jwst_nircam_superbias_0003.fits']],
+    ...
 
 The value returned is a mapping from dataset ids to a pair of values.  The
 first value of the id result pair is a boolean with the sense "completed
-successfully".  The second value has a variable type depending on the boolean
-value.   If the ID was successful,  the second value of the pair is a list of
-file names.  If the ID was unsuccessful,  the second value of the pair is a
-string describing the error::
+successfully".  
+
+The second value has a variable type depending on the boolean value.  If the ID
+was successful, the second value of the pair is a list of file names.  If the
+ID was unsuccessful, the second value of the pair is a string describing the
+error::
     
-    >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5'])
-    {'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5': [False,
-      "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB2:JW96090001004_03101_00001.NRCB5'"]}
+    >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB5'])
+    {'JW96090001004_03101_00001.NRCB5': [False,
+      "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB5'"]}
 
 Code utilizing this service will have better performance if multiple IDs are
 requested per call.
@@ -398,10 +436,10 @@ only those types that could be successfully assigned with the given context
 (date) and parameter set. Types which are assigned the value N/A are also
 silently dropped.
 
-Under the hood the get_aui_best_references function is a language agnostic JSONRPC call
+Under the hood the *get_aui_best_references()* function is a language agnostic JSONRPC call
 which can be called from the UNIX command line by e.g. "curl" as follows::
 
-    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_aui_best_references", "params": ["2016-01-01", ["JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT"]], "id": 1}' https://jwst-crds.stsci.edu/json/
+    % curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_aui_best_references", "params": ["2016-01-01", ["JW80500017001_02101_00001.MIRIFUSHORT"]], "id": 1}' https://jwst-crds.stsci.edu/json/
     HTTP/1.1 200 OK
     Date: Mon, 25 Jul 2016 20:03:13 GMT
     Vary: Cookie
@@ -410,7 +448,7 @@ which can be called from the UNIX command line by e.g. "curl" as follows::
     Via: 1.1 jwst-crds.stsci.edu
     Transfer-Encoding: chunked
 
-    {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT": [true, ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf", "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json", "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits", "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
+    {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"JW80500017001_02101_00001.MIRIFUSHORT": [true, ["jwst_miri_ipc_0005.fits", "jwst_miri_fringe_0018.fits", "jwst_miri_linearity_0010.fits", "jwst_miri_distortion_0010.asdf", "jwst_miri_specwcs_0003.asdf", "jwst_miri_drizpars_0001.fits", "jwst_miri_v2v3_0003.asdf", "jwst_miri_wavelengthrange_0001.asdf", "jwst_miri_regions_0003.asdf", "jwst_miri_wcsregions_0001.json", "jwst_miri_flat_0036.fits", "jwst_miri_saturation_0013.fits", "jwst_miri_photom_0011.fits", "jwst_miri_dark_0031.fits", "jwst_miri_gain_0004.fits", "jwst_miri_straymask_0006.fits", "jwst_miri_reset_0018.fits", "jwst_miri_lastframe_0018.fits", "jwst_miri_mask_0013.fits", "jwst_miri_readnoise_0005.fits"]]}}
 
 JSONRPC Protocol
 ----------------
