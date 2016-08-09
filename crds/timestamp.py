@@ -355,10 +355,10 @@ class Jwstdate(DateParser):
     _format = re.compile(
         r"^(?P<year>\d\d\d\d)\-" + \
             r"(?P<month>\d\d)\-" + \
-            r"(?P<day>\d\d)(T" + \
-            r"(?P<hour>\d\d):" + \
+            r"(?P<day>\d\d)" + \
+            r"T(?P<hour>\d\d):" + \
             r"(?P<minute>\d\d):" + \
-            r"(?P<second>\d\d))?$"
+            r"(?P<second>\d\d)$"
         )
 
     @classmethod
