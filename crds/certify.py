@@ -976,7 +976,7 @@ class MappingCertifier(Certifier):
                 log.info("No predecessor for", repr(mapping.name), "relative to context", repr(self.context))
             
         # Optionally check nested references,  only for rmaps.
-        if not self.check_references or not self.specifies_references():
+        if not self.check_references or not self.specifies_references:
             return
 
         references = self.get_existing_reference_paths(mapping)

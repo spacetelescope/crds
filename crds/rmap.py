@@ -126,6 +126,10 @@ class Mapping(object):
     InstrumentContext, and ReferenceMapping.
     """
     required_attrs = ["mapping", "parkey", "name", "derived_from"]
+
+    # Strictly speaking,  belongs to ContextMapping, need some default though
+    # If False,  only specifies nested Mappings by filename
+    specifies_references = False
     
     # no precursor file if derived_from contains any of these.
     null_derivation_substrings = ("generated", "cloning", "by hand")
@@ -618,10 +622,6 @@ class Mapping(object):
         """Return the full path (in cache or absolute) of `filename` as determined by the current environment."""
         return locate_file(filename, self.observatory)
 
-    def specifies_references(self):
-        """Return True IFF this mapping specified reference filenames directly in it's selector."""
-        return False
-
 # ===================================================================
 
 class ContextMapping(Mapping):
@@ -655,10 +655,6 @@ class ContextMapping(Mapping):
         for key, mapping in self.selections.normal_items():
             self._check_nested("observatory", self.observatory, mapping)
             mapping.validate()
-
-    def specifies_references(self):
-        """Return True IFF this mapping specified reference filenames directly in it's selector."""
-        return False
 
 # ===================================================================
 
@@ -959,6 +955,7 @@ class ReferenceMapping(Mapping):
     """
     
     required_attrs = Mapping.required_attrs + ["observatory","instrument","filekind"]
+    specifies_references = True
 
     def __init__(self, *args, **keys):
         super(ReferenceMapping, self).__init__(*args, **keys)
@@ -1436,10 +1433,6 @@ class ReferenceMapping(Mapping):
 
     def _trace_compare(self, other, show_equal=False):
         utils.trace_compare(self, other, show_equal)
-
-    def specifies_references(self):
-        """Return True IFF this mapping specified reference filenames directly in it's selector."""
-        return True
 
 # ===================================================================
 
