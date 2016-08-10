@@ -365,6 +365,14 @@ class JwstdateValidator(KeywordValidator):
         self.verbose(filename, value)
         try:
             timestamp.Jwstdate.get_datetime(value)
+        except Exception:
+            raise ValueError(log.format(
+            "Invalid JWST date", repr(value), "for", repr(self.name),
+            "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
+            
+'''
+        try:
+            timestamp.Jwstdate.get_datetime(value)
         except ValueError:
             try:
                 timestamp.Anydate.get_datetime(value)
@@ -375,6 +383,7 @@ class JwstdateValidator(KeywordValidator):
                     timestamp.Jwstdate.get_datetime(value)                    
             log.warning("Non-compliant date format", repr(value), "for", repr(self.name),
                         "should be", repr("YYYY-MM-DDTHH:MM:SS"),)
+'''
 
 # ----------------------------------------------------------------------------
 
@@ -525,7 +534,7 @@ class Certifier(object):
 
     def get_corresponding_rmap(self):
         """Return the rmap which corresponds to self.filename under self.context."""
-        pmap = rmap.get_cached_mapping(self.context, ignore_checksum="warn")
+        pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
         instrument, filekind = pmap.locate.get_file_properties(self.filename)
         return pmap.get_imap(instrument).get_rmap(filekind)
 
@@ -1009,7 +1018,7 @@ def find_old_mapping(comparison_context, new_mapping):
     trial mappings.
     """
     if comparison_context:
-        comparison_mapping = rmap.get_cached_mapping(comparison_context)
+        comparison_mapping = crds.get_pickled_mapping(comparison_context)
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
         return old_mapping
     else:
@@ -1279,7 +1288,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             more_files = {file_}
             if rmap.is_mapping(file_):
                 with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
-                    mapping = rmap.get_cached_mapping(file_, ignore_checksum="warn")
+                    mapping = crds.get_pickled_mapping(file_, ignore_checksum="warn")
                     more_files = {rmap.locate_mapping(name) for name in mapping.mapping_names()}
                     more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files

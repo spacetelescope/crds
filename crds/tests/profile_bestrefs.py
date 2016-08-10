@@ -25,6 +25,7 @@ JWST_HEADER = {
     "meta.instrument.filter" : "F380M",
     "meta.subarray.name" : "FULL",
     "meta.exposture.readpatt" : "FAST",
+    "meta.exposure.type" : "NIS_IMAGE",
     }
 
 if __name__ == "__main__":

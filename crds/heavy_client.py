@@ -31,7 +31,6 @@ from __future__ import division
 from __future__ import absolute_import
 import os
 import pprint
-import glob
 import ast
 import traceback
 import uuid
@@ -42,6 +41,7 @@ from crds.client import api
 from crds.log import srepr
 from crds.exceptions import CrdsError, CrdsBadRulesError, CrdsBadReferenceError, CrdsNetworkError
 from crds import python23
+# import crds  forward
 
 __all__ = ["getreferences", "getrecommendations"]
 
@@ -227,7 +227,7 @@ def mapping_names(context):
     else consult server.
     """
     try:
-        mapping = crds.get_cached_mapping(context)
+        mapping = crds.get_symbolic_mapping(context)
         contained_mappings = mapping.mapping_names()
     except IOError:
         contained_mappings = api.get_mapping_names(context)
@@ -310,7 +310,7 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         if ignore_cache:
             raise IOError("explicitly ignoring cache.")
         # Finally do the best refs computation using pmap methods from local code.
-        return rmap.get_best_references(context, parameters, reftypes)
+        return hv_best_references(context, parameters, reftypes)
     except IOError as exc:
         log.verbose("Caching mapping files for context", srepr(context))
         try:
@@ -318,7 +318,23 @@ def local_bestrefs(parameters, reftypes, context, ignore_cache=False):
         except CrdsError as exc:
             traceback.print_exc()
             raise CrdsNetworkError("Failed caching mapping files: " + str(exc))
-        return rmap.get_best_references(context, parameters, reftypes)
+        return hv_best_references(context, parameters, reftypes)
+
+# =============================================================================
+
+def hv_best_references(context_file, header, include=None, condition=True):
+    """Compute the best references for `header` for the given CRDS
+    `context_file`.   This is a local computation using local rmaps and
+    CPU resources.   If `include` is None,  return results for all
+    filekinds appropriate to `header`,  otherwise return only those
+    filekinds listed in `include`.
+    """
+    ctx = get_symbolic_mapping(context_file, cached=True)
+    minheader = ctx.minimize_header(header)
+    log.verbose("Bestrefs header:\n", log.PP(minheader))
+    if condition:
+        minheader = utils.condition_header(minheader)
+    return ctx.get_best_references(minheader, include=include)
 
 # ============================================================================
 
@@ -386,6 +402,11 @@ def translate_date_based_context(info, context):
 
 class ConfigInfo(utils.Struct):
     """Encapsulate CRDS cache config info."""
+    def __init__(self, *args, **keys):
+        self.status = None
+        self.connected = None
+        super(ConfigInfo, self).__init__(*args, **keys)
+
     @property
     def bad_files_set(self):
         """Return the set of references and mappings which are considered scientifically invalid."""
@@ -481,14 +502,15 @@ def cache_atomic_write(replace_path, contents, fail_warning):
             log.verbose("CACHE updating:", repr(replace_path))
             utils.ensure_dir_exists(replace_path)
             temp_path = os.path.join(os.path.dirname(replace_path), str(uuid.uuid4()))
-            with open(temp_path, "w+") as file_:
+            mode = "w+" if isinstance(contents, python23.string_types) else "wb+"
+            with open(temp_path, mode) as file_:
                 file_.write(contents)
             os.rename(temp_path, replace_path)
         except Exception as exc:
             log.verbose_warning("CACHE Failed writing", repr(replace_path), 
                                 ":", fail_warning, ":", repr(exc))
     else:
-        log.verbose("CACHE Skipped update of readonly", repr(replace_path))
+        log.verbose("CACHE Skipped update of readonly", repr(replace_path), ":", fail_warning)
 
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
@@ -525,7 +547,7 @@ def get_context_parkeys(context, instrument):
     Returns [ matching_parameter, ... ]
     """
     try:
-        parkeys = rmap.get_cached_mapping(context).get_required_parkeys()
+        parkeys = get_symbolic_mapping(context).get_required_parkeys()
     except Exception:
         parkeys = api.get_required_parkeys(context)
     if isinstance(parkeys, (list,tuple)):
@@ -541,11 +563,12 @@ def list_mappings(observatory, glob_pattern):
     info = get_config_info(observatory)
     return sorted([mapping for mapping in info.mappings if fnmatch.fnmatch(mapping, glob_pattern)])
 
-def get_symbolic_mapping(mapping, observatory=None, cached=True):
+def get_symbolic_mapping(
+    mapping, observatory=None, cached=True, use_pickles=None, save_pickles=None, **keys):
     """Return a loaded mapping object,  first translating any date based or
     named contexts into a more primitive serial number only mapping name.
 
-    This is basically the symbolic form of rmap.asmapping().  Since the default
+    This is basically the symbolic form of get_pickled_mapping().  Since the default
     setting of 'cached' is True,  it performs much like crds.get_cached_mapping()
     but also accepts abstract or date-based names.
     
@@ -564,13 +587,66 @@ def get_symbolic_mapping(mapping, observatory=None, cached=True):
     >> get_symbolic_mapping("jwst-miri-flat-2015-01-01T00:20:05")
     ReferenceMapping('jwst_miri_flat_0012.rmap')
 
-    WARNING:  this is a high level feature which *requires* a server connection
+    WARNING: this is a high level feature which *requires* a server connection
     to interpret the symbolic name into a primitive name.
     """
-    abs_mapping = api.get_context_by_date(mapping, observatory)
-    return crds.asmapping(abs_mapping, cached=cached)
+    if observatory is None:
+        abs_mapping = mapping
+    else:
+        info = get_config_info(observatory)
+        abs_mapping = translate_date_based_context(info, mapping)
+    return get_pickled_mapping(
+        abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles, **keys)
 
 # ============================================================================
+
+@utils.cached
+def get_pickled_mapping(mapping, cached=True, use_pickles=None, save_pickles=None, **keys):
+    """Load CRDS mapping from a context pickle if possible, nominally as a file
+    system optimization to prevent 100+ file reads.   
+    """
+    assert config.is_mapping(mapping), \
+        "`mapping` must be a literal CRDS mapping name, not a date-based context specification."
+    if use_pickles is None:
+        use_pickles = config.USE_PICKLED_CONTEXTS
+    if save_pickles is None:
+        save_pickles = config.AUTO_PICKLE_CONTEXTS
+    if use_pickles and config.is_simple_crds_mapping(mapping):
+        try:
+            loaded = load_pickled_mapping(mapping)
+        except Exception:
+            loaded = rmap.asmapping(mapping, cached=cached, **keys)
+            if save_pickles:
+                save_pickled_mapping(mapping, loaded)
+    else:
+        loaded = rmap.asmapping(mapping, cached=cached, **keys)
+    return loaded
+
+def load_pickled_mapping(mapping):
+    """Load the pickle for `mapping` where `mapping` is canonically named and
+    located in the CRDS cache.
+
+    Although pickles for sub-mappings may exist, only the highest level pickle
+    in the hierarchy is read.  In general pickles for sub-mappings should not
+    exist because of storage waste.
+    """
+    pickle_file = config.locate_pickle(mapping + ".pkl")
+    pickled = open(pickle_file, "rb").read()
+    loaded = python23.pickle.loads(pickled)
+    log.verbose("Loaded pickled context", repr(mapping))
+    return loaded
+
+def save_pickled_mapping(mapping, loaded):
+    """Save live mapping `loaded` as a pickle under named based on `mapping` name."""
+    pickle_file = config.locate_pickle(mapping + ".pkl")
+    if not utils.is_writable(pickle_file):  # Don't even bother pickling
+        log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle save.")
+        return
+    with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
+        pickled = python23.pickle.dumps(loaded)
+        cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
+
+# =============================================================================
 
 import crds # for __version__,  circular dependency.
 

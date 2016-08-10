@@ -74,7 +74,8 @@ def rmap_insert_references_by_matches(old_rmap, new_rmap, references_headers):
     new = old = rmap.load_mapping(old_rmap, ignore_checksum=True)
     for baseref, header in references_headers.items():
         with log.augment_exception("In reference", srepr(baseref)):
-            log.info("Inserting", srepr(baseref), "match case", srepr(header), "into", srepr(baseref))
+            log.info("Inserting", srepr(baseref), "into", srepr(old_rmap))
+            log.verbose("Inserting", srepr(baseref), "match case", srepr(header), "into", srepr(old_rmap))
             new = new.insert_header_reference(header, baseref)
     new.header["derived_from"] = old.basename
     log.verbose("Writing", srepr(new_rmap))
@@ -615,7 +616,7 @@ class RefactorScript(cmdline.Script):
         """Insert files specified by --references into the appropriate rmaps identified by --source-context."""
         self._setup_source_context()
         categorized = self.categorize_files(self.args.references)
-        pmap = crds.get_cached_mapping(self.source_context)
+        pmap = crds.get_pickled_mapping(self.source_context)
         self.args.rmaps = []
         for (instrument, filekind) in categorized:
             try:

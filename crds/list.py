@@ -227,7 +227,7 @@ class ListScript(cmdline.ContextsScript):
             with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
                                         "for", repr(self.args.datasets)):
                 pars = api.get_dataset_headers_by_id(context, self.args.datasets)
-                pmap = rmap.get_cached_mapping(context)
+                pmap = crds.get_pickled_mapping(context)
                 for (dataset_id, header) in pars.items():
                     if isinstance(header, python23.string_types):
                         log.error("No header for", repr(dataset_id), ":", repr(header)) # header is reason
@@ -288,7 +288,7 @@ def _print_dict(title, dictionary, selected = None):
         selected = dictionary.keys()
     print(title)
     if dictionary:
-        for key in selected:
+        for key in sorted(selected):
             try:
                 print("\t" + key + " = " + repr(dictionary[key]))
             except Exception:
