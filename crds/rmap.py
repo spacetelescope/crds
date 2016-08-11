@@ -147,7 +147,7 @@ class Mapping(object):
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
                     "Required header key " + repr(name) + " is missing.")
-        # Header aren't known good until checked above.
+        # Header aren't known good/present until checked above.
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
