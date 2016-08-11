@@ -136,6 +136,7 @@ class Mapping(object):
 
     def __init__(self, filename, header, selector, **keys):
         self._newargs = (filename, header, selector, keys)
+        self.keys = keys
         self.header = LowerCaseDict(header)   # consistent lower case values
         # Keys should already be as good as they get
         self.comment = keys.pop("comment", None)
