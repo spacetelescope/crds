@@ -311,6 +311,9 @@ def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
     """Apply the text replacements defined in list of colon separated 
     old:new `fixers` list to `rmapping` writing results to `new_filename`.
     """
+    keys = dict(keys)
+    del keys["old_text"]
+    del keys["new_text"]
     for fixer in fixers:
         old_text, new_text = fixer.split(":")
         replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
@@ -420,6 +423,8 @@ class RefactorScript(cmdline.Script):
     setenv CRDS_ALLOW_BAD_USEAFTER      1  # define bad or missing USEAFTER as 1900-01-01T00:00:00
     setenv CRDS_ALLOW_SCHEMA_VIOLATIONS 1  # treat data model schema violations as warnings not errors
     setenv PASS_INVALID_VALUES          1  # ask cal-code data model not to omit invalid values
+
+    See --best-effort for a short cut switch to turn all of the above on from the command line.
     """
     
     def add_args(self):
@@ -454,8 +459,16 @@ class RefactorScript(cmdline.Script):
                           help="After refactoring, crds.diff the refactored version against the original.")
         self.add_argument("--certify-rmaps", action="store_true",
                           help="After refactoring run crds.certify on refactored rmaps.")
+        self.add_argument("--best-effort", action="store_true",
+                          help="Shorthand for switching on error bypass env settings.  Generally pass bad values for manual correction later.")
 
     def main(self):
+
+        if self.args.best_effort:
+            os.environ["PASS_INVALID_VALUES"] = "1"           # JWST SSB cal code data model
+            os.environ["CRDS_ALLOW_BAD_USEAFTER"] = "1"       # Don't fail for bad USEAFTER values
+            os.environ["CRDS_ALLOW_SCHEMA_VIOLATIONS"] = "1"  # Don't fail for data model bad value errors
+            os.environ["CRDS_ALLOW_BAD_PARKEY_VALUES"] = "1"  # Don't fail for values which don't pass DM + .tpn checking
         
         if self.args.rmaps:   # clean up dead lines from file lists
             self.args.rmaps = [ self.resolve_context(mapping) for mapping in self.args.rmaps if mapping.strip() ]
