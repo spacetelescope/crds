@@ -21,7 +21,7 @@ HERE = os.path.dirname(__file__) or "./"
 # =======================================================================
 
 def test():
-    """Run the module doctests."""
+    """Run the module doctest_config."""
     import doctest
     from . import locate
     return doctest.testmod(locate)

@@ -12,7 +12,7 @@ from pprint import pprint as pp
 
 from crds import refactor, log, exceptions, diff
 from crds.refactor import RefactorScript
-from crds.tests import CRDSTestCase
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -138,7 +138,7 @@ def dt_refactor_bad_modify_count():
 
 # ==================================================================================
 
-class TestRefactor(CRDSTestCase):
+class TestRefactor(test_config.CRDSTestCase):
 
     '''
     example unit test code,  not for test_refactor
