@@ -135,14 +135,14 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
-        self._newargs = (filename, header, selector, keys)
-        self.keys = keys
+        self._state = (filename, header, selector, keys)
+        self.filename = filename
         self.header = LowerCaseDict(header)   # consistent lower case values
+        self.selector = selector
+        self.keys = keys
         # Keys should already be as good as they get
         self.comment = keys.pop("comment", None)
         self.path = keys.get("path", None)
-        self.filename = filename
-        self.selector = selector
         for name in self.required_attrs:
             if name not in self.header:
                 raise crexc.MissingHeaderKeyError(
@@ -152,10 +152,11 @@ class Mapping(object):
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
 
-    def _check_type(self, expected_type):
-        """Verify that the 'mapping' element of the header matches 'expected_type'."""
-        assert self.mapping == expected_type, "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
-            expected_type, self.mapping.upper(), self.filename)
+    def _check_type(self):
+        """Verify that the 'mapping' element of the header matches 'self.mapping_type'."""
+        assert self.mapping == self.mapping_type, \
+            "Expected header mapping='{}' but got mapping='{}' in '{}'".format(
+                self.mapping_type, self.mapping.upper(), self.filename)
 
     def validate_mapping(self):
         """Validate `self` only implementing any checks to be performed by
@@ -175,6 +176,7 @@ class Mapping(object):
         sha1sum and acceptability of byte codes,  neither of which requires loading
         sub-mappings.
         """
+        self._check_type()
 
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
@@ -663,10 +665,11 @@ class PipelineContext(ContextMapping):
     """A pipeline context describes the context mappings for each instrument
     of a pipeline.
     """
+    mapping_type = "pipeline"
+
     def __init__(self, filename, header, selector, **keys):
         super(PipelineContext, self).__init__(filename, header, selector, **keys)
         self.instrument_key = self.parkey[0].upper()   # e.g. INSTRUME
-        self._check_type("pipeline")
 
     def validate(self):
         """Implement PipelineContext validations which require loading sub-mappings here."""
@@ -787,13 +790,14 @@ class InstrumentContext(ContextMapping):
     """An instrument context describes the rmaps associated with each filetype
     of an instrument.
     """
+    mapping_type = "instrument"
+
     required_attrs = ContextMapping.required_attrs + ["instrument"]
 
     def __init__(self, filename, header, selector, **keys):
         super(InstrumentContext, self).__init__(filename, header, selector, **keys)
         self.instrument = self.header["instrument"]
         self._filekinds = [key.upper() for key in self.selections.keys()]
-        self._check_type("instrument")
 
     def validate(self):
         """Perform InstrumentContext semantic checks which require can loading sub-mappings."""
@@ -954,7 +958,7 @@ class ReferenceMapping(Mapping):
     reference filetype and instantiate an appropriate selector tree from the
     rmap header and data.
     """
-    
+    mapping_type = "reference"
     required_attrs = Mapping.required_attrs + ["observatory","instrument","filekind"]
     specifies_references = True
 
@@ -963,7 +967,6 @@ class ReferenceMapping(Mapping):
         self.observatory = self.header["observatory"]
         self.instrument = self.header["instrument"]
         self.filekind = self.header["filekind"]
-        self._check_type("reference")
 
         self._reffile_switch = self.header.get("reffile_switch", "NONE").upper()
         self._reffile_format = self.header.get("reffile_format", "IMAGE").upper()
@@ -1017,12 +1020,12 @@ class ReferenceMapping(Mapping):
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
 
-    def validate_mapping(self):
+    def validate(self):
         """Validate the contents of this rmap against the TPN for this
         filekind / reftype.   Each field of each Match tuple must have a value
         OK'ed by the TPN.  UseAfter dates must be correctly formatted.
         """
-        super(ReferenceMapping, self).validate_mapping()
+        super(ReferenceMapping, self).validate()
         self.check_observatory()
         self.check_instrument()
         self.check_filekind()
