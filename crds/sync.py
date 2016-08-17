@@ -245,7 +245,8 @@ class SyncScript(cmdline.ContextsScript):
                           help="Remove the pickles for the sync'ed contexts from the CRDS cache. Can precede --save-pickles.")
         self.add_argument("--save-pickles", action="store_true",
                           help="Save pre-compiled versions of the sync'ed contexts in the CRDS cache.  Keep pre-existing pickles.")
-
+        self.add_argument("--output-dir", type=str, default=None,
+                          help="Directory to output sync'ed files, for simple syncs.")
     # ------------------------------------------------------------------------------------------
     
     def main(self):
@@ -254,6 +255,11 @@ class SyncScript(cmdline.ContextsScript):
             self.args.readonly_cache = True
         if self.args.repair_files:
             self.args.check_files = True
+        if self.args.output_dir:
+            os.environ["CRDS_MAPPATH_SINGLE"] = self.args.output_dir
+            os.environ["CRDS_REFPATH_SINGLE"] = self.args.output_dir
+            os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
+            os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
         self.require_server_connection()
