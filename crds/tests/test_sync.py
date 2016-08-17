@@ -11,11 +11,11 @@ import os
 import crds
 from crds import log, config, rmap
 from crds.sync import SyncScript
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 # ==================================================================================
 
-class TestSync(CRDSTestCase):
+class TestSync(test_config.CRDSTestCase):
     
     script_class = SyncScript
 

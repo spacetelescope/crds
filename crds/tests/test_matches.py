@@ -11,7 +11,7 @@ import crds
 from crds import rmap, log, exceptions, config, tests
 from crds.matches import MatchesScript
 from crds.client import api
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 

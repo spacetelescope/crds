@@ -10,7 +10,7 @@ import os
 from crds import certify, utils, log, client
 from crds.certify import CertifyScript
 
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -296,7 +296,7 @@ def certify_jwst_missing_optional_parkey():
 
 # ==================================================================================
 
-class TestHSTTpnInfoClass(CRDSTestCase):
+class TestHSTTpnInfoClass(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
         super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
@@ -316,7 +316,7 @@ class TestHSTTpnInfoClass(CRDSTestCase):
 
 # ==================================================================================
 
-class TestCertify(CRDSTestCase):
+class TestCertify(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
         super(TestCertify, self).setUp(*args, **keys)
