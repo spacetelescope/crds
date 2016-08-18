@@ -13,7 +13,7 @@ from pprint import pprint as pp
 from crds import rmap, log, config, tests
 from crds.client import api
 from crds.exceptions import *
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -498,7 +498,7 @@ def dt_pickled_bestrefs():
 
 # ==================================================================================
 
-class TestRmap(CRDSTestCase):
+class TestRmap(test_config.CRDSTestCase):
 
     def test_rmap_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")
@@ -768,7 +768,7 @@ selector = Match({
         p.todict()
 
     def test_rmap_match_tjson(self):
-        os.environ["CRDS_PATH"] = tests.CRDS_TESTING_CACHE
+        os.environ["CRDS_PATH"] = test_config.CRDS_TESTING_CACHE
         p = rmap.get_cached_mapping("jwst.pmap")
         p.tojson()
 

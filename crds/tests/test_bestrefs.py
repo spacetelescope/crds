@@ -7,7 +7,7 @@ import json
 import shutil
 
 from crds.bestrefs import BestrefsScript
-from crds.tests import CRDSTestCase, test_config, CRDS_TESTING_CACHE
+from crds.tests import test_config
 
 """
 Bestrefs has a number of command line parameters which make it operate in different modes. 
@@ -251,11 +251,11 @@ def dt_bestrefs_context_to_context():
     >>> test_config.cleanup(old_state)
     """
 
-class TestBestrefs(CRDSTestCase):
+class TestBestrefs(test_config.CRDSTestCase):
     
     script_class = BestrefsScript
     server_url = "https://hst-crds-dev.stsci.edu"
-    cache = CRDS_TESTING_CACHE
+    cache = test_config.CRDS_TESTING_CACHE
 
     def test_bestrefs_affected_datasets(self):
         self.run_script("crds.bestrefs --affected-datasets --old-context hst_0314.pmap --new-context hst_0315.pmap --datasets-since 2015-01-01",

@@ -10,7 +10,7 @@ import os, os.path
 from pprint import pprint as pp
 
 from crds import rmap, log, exceptions, newcontext, diff, pysh, tests
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -21,7 +21,7 @@ def dt_fake_name():
     Fake names are only used by crds.newcontext when it is run from the command line.
 
     >>> old_state = test_config.setup()
-    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> newcontext.fake_name("data/hst.pmap")
     './hst_0003.pmap'
@@ -38,7 +38,7 @@ def dt_fake_name():
 def dt_new_context():
     """
     >>> old_state = test_config.setup()
-    >>> os.environ["CRDS_MAPPATH_SINGLE"] = tests.TEST_DATA
+    >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> newcontext.NewContextScript("newcontext.py hst.pmap data/hst_cos_deadtab_9999.rmap data/hst_acs_imphttab_9999.rmap")()
     CRDS - INFO - Replaced 'hst_acs_imphttab.rmap' with 'data/hst_acs_imphttab_9999.rmap' for 'imphttab' in 'data/hst_acs.imap' producing './hst_acs_10000.imap'
@@ -64,8 +64,7 @@ def dt_new_context():
     >>> test_config.cleanup(old_state)
     """
 
-class TestNewContext(CRDSTestCase):
-
+class TestNewContext(test_config.CRDSTestCase):
     '''
     def test_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")

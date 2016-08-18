@@ -99,14 +99,6 @@ def cleanup(old_state):
 
 # ==============================================================================
 
-def tstmod(module):
-    """Wrap tests.tstmod to configure standard options throughout CRDS tests."""
-    import doctest
-    # doctest.ELLIPSIS_MARKER = '-etc-'
-    return doctest.testmod(module, optionflags=doctest.ELLIPSIS)
-
-# ==============================================================================
-
 def run_and_profile(name, case, globs={}, locs={}):
     """Using `name` for a banner and divider,  execute code string `case` in the
     global namespace,  both evaled printing result and under the profiler.
