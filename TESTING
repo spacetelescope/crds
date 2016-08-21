@@ -22,31 +22,27 @@ rules, reference files, and datasets for testing CRDS.
 
 Now,  setting up CRDS to run the built-in unit tests can be accomplished as follows:
 
-% git checkout https://github.com/spacetelescope.git CRDS
-% svn co https://aeon.stsci.edu/ssb/svn/crds/branches/crds_testing_cache crds-testing-cache
+% git checkout https://github.com/spacetelescope/crds.git CRDS
+% git checkout https://github.com/spacetelescope/crds-cache-test.git crds-cache-test
 % cd CRDS
 % source envs/hst-crds-dev.csh
 % ./runtests
 
-Runtests is configured to install the ^/trunk/crds/tests/data directory
-(normally excluded from the source distribution to reduce size) but still
-present in the subversion checkout and installable by adding
---include-test-data to the ./install or setup.py install command.
-
 The above configures CRDS to run the built-in unit tests using 3 file sources:
 
-- ^/branches/crds_testing_cache
-- ^/trunk/crds/test/data
+- https://github.com/spacetelescope/crds-cache-test.git
+- https://github.com/spacetelescope/crds.git   crds/tests/data
 - /grp/crds/cache
 
 /grp/crds/cache is the shared CRDS readonly cache at the Institute (currently
 on the Central Store) which currently contains all rules and references for
-both JWST and HST.
+both JWST and HST and is updated as new references arrive.
 
 CRDS/crds/test/data is normally omitted from source code distributions.
 
-^/branches/crds_testing_cache is a modified version of
-^/branches/crds_cache_archive altered to support unit testing requirements.
+crds-cache-test is a modified version of crds-cache-archive altered to support
+unit testing requirements.   This has the unfortunate property of like-named files
+with different contents.
 
 Unit tests requiring a server are run against https://hst-crds-dev.stsci.edu
 using this setup.
