@@ -464,7 +464,7 @@ def dt_imap_match_omit():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_pickled_bestrefs():
+def dt_pickling():
     """
     >>> from crds.python23 import pickle
     >>> from crds import data_file

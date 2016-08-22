@@ -11,7 +11,7 @@ topdir = os.getcwd()
 # Unlike historical CRDS with builtin cache,  test cache is now a separate dedicated entity
 # which contains mutated but otherwise same named mutated files.
 # os.environ["CRDS_MAPPATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive", "mappings")
-os.environ["CRDS_TESTING_CACHE"] = os.path.join(os.getcwd(), "..", "crds-testing-cache")
+os.environ["CRDS_TESTING_CACHE"] = os.path.join(os.getcwd(), "..", "crds-cache-test")
 
 os.system("python -m crds.sync --all --stats --log-time")
 os.system("./install")
