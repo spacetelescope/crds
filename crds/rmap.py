@@ -371,7 +371,6 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
-        self._newargs = (filename, header, selector, keys)
         self.header = LowerCaseDict(header)   # consistent lower case values
         self.comment = keys.pop("comment", None)
         self.path = keys.get("path", None)
@@ -384,13 +383,6 @@ class Mapping(object):
         self.mapping = self.header["mapping"]
         self.parkey = self.header["parkey"]
         self.extra_keys = tuple(self.header.get("extra_keys", ()))
-
-    def __getstate__(self):
-        return self._newargs
-
-    def __setstate__(self, state):
-        # filename, header, selector, keys
-        self.__init__(*state[:3], **state[3])
 
     def _trace_compare(self, other, show_equal=False):
         utils.trace_compare(self, other, show_equal)
@@ -1191,27 +1183,41 @@ class ReferenceMapping(Mapping):
         # this is optional code which pre-processes and mutates header inputs
         # set to identity if not defined.
         self._precondition_header = None
+
+        # function to mutate to secondary lookup header if first lookup fails,  if defined.
         self._fallback_header = None
+
+        # rmap-update-time hook to generate reference header variations for more complex but otherwise static lookups
+        # this is a potential alternative to preconditioning and fallback which are *runtime* hooks and non-transparent
+        # to someone looking at the rmap.
         self._rmap_update_headers = None
         
+        # Actually compile lambdas for the hooks above.
+        self._init_compiled()
+
+    def __getstate__(self):
+        """Return rmap pickling state,  minus lambdas and anything else that doesn't pickle."""
+        state = dict(self.__dict__)
+        del state["_rmap_relevance_expr"]
+        del state["_rmap_omit_expr"]
+        del state["_parkey_relevance_exprs"]
+        del state["_precondition_header"]
+        del state["_fallback_header"]
+        del state["_rmap_update_headers"]
+        return state
+
+    def __setstate__(self, state):
+        """Recreate rmap object from `state`,  recompiling missing __getstate__ objects on the fly."""
+        self.__dict__ = dict(state)
         self._init_compiled()
 
     def _init_compiled(self):
-        """Initialize object fields which contain compiled code objects, special handling for pickling."""
-
-        # if _rmap_relevance_expr evaluates to True at match-time,  this is a relevant type for that header.
-        self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))  # secured
-        
-        # if _rmap_omit_expr evaluates to True at match-time,  this type should be omitted from bestrefs results.
-        self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))  #secured
-        
-        # for each parkey in parkey_relevance_exprs,  if the expr evaluates False,  it is mapped to N/A at match time.
-        parkey_relv_exprs = self.header.get("parkey_relevance", {}).items()
-        self._parkey_relevance_exprs = { name : self.get_expr(expr) for (name, expr) in  parkey_relv_exprs } # secured
-        
-        # header precondition method, e.g. crds.hst.acs.precondition_header
-        # this is optional code which pre-processes and mutates header inputs
-        # set to identity if not defined.
+        """Initialize object fields which contain compiled code objects, special handling for pickling."""        
+        self._rmap_relevance_expr = self.get_expr(self.header.get("rmap_relevance", "always").replace("always", "True"))
+        self._rmap_omit_expr = self.get_expr(self.header.get("rmap_omit", "False"))
+        self._parkey_relevance_exprs = { 
+            name : self.get_expr(expr) for (name, expr) in  self.header.get("parkey_relevance", {}).items()
+            }
         self._precondition_header = self.get_hook("precondition_header", (lambda self, header: header))
         self._fallback_header = self.get_hook("fallback_header", (lambda self, header: None))
         self._rmap_update_headers = self.get_hook("rmap_update_headers", None)
