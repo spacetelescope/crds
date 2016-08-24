@@ -362,29 +362,39 @@ def get_final_context(info, context):
     else:
         input_context = str(info.operational_context)
         log.verbose("Using reference selection rules", srepr(input_context), "defined by", info.status + ".")
-    final_context = translate_date_based_context(info, input_context)
+    final_context = translate_date_based_context(input_context, info.observatory)
     return final_context
 
-def translate_date_based_context(info, context):
+def translate_date_based_context(context, observatory=None):
     """Check to see if `input_context` is based upon date rather than a context filename.  If it's 
     just a filename,  return it.  If it's a date spec,  ask the server to interpret the date into 
     a context filename.   If it's a date spec and not `connected`,  raise an exception.
     """
     if config.is_mapping(context):
         return context
-    else:
-        if not info.connected:
-            if context == info.observatory + "-operational":
-                return info["operational_context"]
-            else:
-                raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
-        try:
-            translated = api.get_context_by_date(context, observatory=info.observatory)
-        except Exception as exc:
-            log.error("Failed to translate date based context", repr(context), ":", str(exc))
-            raise
-        log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=80)
-        return translated
+
+    if observatory is None:
+        for observatory in crds.ALL_OBSERVATORIES:
+            if context.startswith(observatory):
+                break
+        else:
+            raise CrdsError("Cannot determine observatory to translate mapping '{}'".format(context))
+
+    info = get_config_info(observatory)
+
+    if context == info.observatory + "-operational":
+        return info["operational_context"]
+
+    if not info.connected:
+        raise CrdsError("Specified CRDS context by date '{}' and CRDS server is not reachable.".format(context))
+    try:
+        translated = api.get_context_by_date(context, observatory=info.observatory)
+    except Exception as exc:
+        log.error("Failed to translate date based context", repr(context), ":", str(exc))
+        raise
+
+    log.verbose("Date based context spec", repr(context), "translates to", repr(translated) + ".", verbosity=80)
+    return translated
 
 # ============================================================================
 
@@ -578,14 +588,11 @@ def get_symbolic_mapping(
     WARNING: this is a high level feature which *requires* a server connection
     to interpret the symbolic name into a primitive name.
     """
-    if observatory is None:
-        abs_mapping = mapping
-    else:
-        info = get_config_info(observatory)
-        abs_mapping = translate_date_based_context(info, mapping)
+    abs_mapping = translate_date_based_context(mapping, observatory)
     return get_pickled_mapping(
         abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles, **keys)
 
+        
 # ============================================================================
 
 @utils.cached
