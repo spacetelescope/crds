@@ -75,6 +75,8 @@ __all__ = [
     
     "jpoll_pull_messages",
     "jpoll_abort",
+    
+    "get_system_versions",
     ]
 
 # ============================================================================
@@ -409,6 +411,15 @@ def jpoll_pull_messages(key, since_id=None):
 def jpoll_abort(key):
     """Request that the process writing to jpoll terminate on its next write."""
     return S.jpoll_abort(key)
+
+# ==============================================================================
+
+def get_system_versions(master_version, context=None):
+    """Return the versions Struct associated with cal s/w master_version as
+    defined by `context` which can be defined as "null", "none", or None to use
+    the default context, or with any other valid date based context specifier.
+    """
+    return utils.Struct(S.get_system_versions(master_version, str(context)))
 
 # ==============================================================================
 
