@@ -455,25 +455,30 @@ Interface for Calibration S/W Versions
 
 **get_system_versions(master_version, context)**
 
-The versions of calibration software components for a particular
-release will be recorded in CRDS as .json reference files with type
-CALVER looked up from a corresponding rmap using a master version
-string.
+The versions of calibration software components for a particular s/w release
+will nominally be recorded in CRDS as reference files with type CALVER looked
+up from a corresponding rmap using a master version string.  The function of
+this service is really independent of that representation,  but nominally
+one reference file will describe versions for components of one s/w release.
 
-This *get_system_versions()* service will return a JSON object
-corresponding to the contents of a s/w versions reference file.
+This *get_system_versions()* service will return a JSON object corresponding to
+the contents of the s/w versions reference file.  This interface should not
+however be construed as the definition of the file contents.
 
 *master_version* is a string naming the overall version number for a
-release and used to select a particular versions reference file within
-a CRDS context.
+calibration software release and used to select a particular versions reference
+file within a CRDS context.
 
-*context* is a CRDS context name which is used to interpret
-*master_version* to define the release CALVER versions reference file.
-Typically the string "jwst-operational" should be used here to select
-the current default CRDS context in use in the JWST pipeline.
+*context* is a CRDS context name which is used to interpret *master_version* to
+define the versions reference file corresponding to an overall s/w
+release. Typically the string "jwst-operational" should be used to select the
+current default CRDS context in use in the JWST pipeline.  It is anticipated
+that the definitions of software versions should be relatively stable and
+additive as new contexts are generated. This parameter provides a mechanism for
+selecting non-default versions of CRDS rules to determine s/w versions.
 
 An example call using the CRDS Python client shows the conceptual
-nature of the interface,  the real inputs and outputs::
+nature of the interface,  the functional inputs and outputs::
 
    >>> versions_obj = get_system_versions("0.6.0noop.dev307", "jwst-operational")
 
@@ -494,12 +499,16 @@ language agnostic view of the conceptual return value::
         "AmiAverageStep": "0.7.0.dev", 
         "AmiNormalizeStep": "0.7.0.dev", 
         "AssignWcsStep": null, 
-	...
-        }
+         ... 
+        },
+    ...
    }
 
-The following curl command line gives a working language agnostic version of calling
-the service using the required JSONRPC protocol::
+where ... indicates that the full contents of the object are not being
+displayed.
+
+The following curl command line shows the full expansion of the same service
+example wrapped in the JSONRPC protocol in a language agnostic way::
 
     curl -i -X POST -d '{"jsonrpc": "1.0", "method": "get_system_versions", "params": ["0.6.0noop.dev307","null"], "id": 1}' https://jwst-crds-dit.stsci.edu/json/
     HTTP/1.1 200 OK
@@ -512,7 +521,7 @@ the service using the required JSONRPC protocol::
 
     {"error": null, "jsonrpc": "1.0", "id": 1, "result": {"reftype": "CALVER", "author": "Warren J. Hack", "versions": {"TweakRegStep": "0.1.0", "SubtractImagesStep": null, "RSCD_Step": null, "CubeBuildStep": null, "Extract1dStep": null, "AmiAnalyzeStep": "0.7.0.dev", "Extract2dStep": null, "BackgroundStep": null, "SuperBiasStep": null, "DarkCurrentStep": null, "Combine1dStep": null, "SaturationStep": null, "LinearityStep": null, "DQInitStep": null, "ImprintStep": null, "OutlierDetectionStep": null, "AssignWcsStep": null, "KlipStep": null, "StackRefsStep": null, "TweakregCatalogStep": null, "SourceCatalogStep": null, "PersistenceStep": null, "StraylightStep": null, "IPCStep": null, "FlatFieldStep": null, "ResetStep": null, "RefPixStep": null, "ResampleStep": null, "AmiAverageStep": "0.7.0.dev", "FringeStep": null, "AlignRefsStep": null, "LastFrameStep": null, "JumpStep": null, "EmissionStep": null, "WfsCombineStep": null, "AmiNormalizeStep": "0.7.0.dev", "SkyMatchStep": "0.1.0", "PhotomStep": null, "RampFitStep": null, "HlspStep": null}, "instrument": "SYSTEM", "descrip": "JWST calibration processing step version reference file", "CAL_VER": "0.6.0noop.dev307", "history": "Created by cal_ver_steps version 0.7.0.dev"}}
   
-And this example shows the structure of a response string for a query with an error,
+This example shows the structure of a response string for a query with an error,
 "result" is set to null and "error" describes the problem in more detail,  most
 notably with the response.error.message string::
   
@@ -613,5 +622,6 @@ And the same query is here with JWST data model parkey names:
     Deferred(14, unfired)
     Got ->
     {"error": null, "jsonrpc": "1.0", "id": "jsonrpc", "result": {"linearity": "jwst_fgs_linearity_0000.fits", "amplifier": "jwst_fgs_amplifier_0000.fits", "mask": "jwst_fgs_mask_0000.fits"}}
+
 
 
