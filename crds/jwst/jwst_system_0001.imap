@@ -1,0 +1,12 @@
+header = {
+    'derived_from' : 'Made by hand 2016-08-25',
+    'instrument' : 'SYSTEM',
+    'mapping' : 'INSTRUMENT',
+    'name' : 'jwst_system_0001.imap',
+    'observatory' : 'JWST',
+    'parkey' : ('REFTYPE',),
+    'sha1sum' : '02b16ceb7115d03de3be9833cfe7bc11e8db3e86',
+}
+
+selector = {
+}
