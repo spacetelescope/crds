@@ -1,0 +1,18 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-08-25',
+    'file_ext' : '.json',
+    'filekind' : 'CALVER',
+    'filetype' : 'CALVER',
+    'instrument' : 'SYSTEM',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_system_calver_0000.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('CAL_VER',),),
+    'sha1sum' : '43107e2879e5a9fcbc28ca83bccf7a20bde4ab67',
+    'suffix' : 'calver',
+    'text_descr' : 'Calibration Software Component Versions',
+}
+
+selector = Match({
+})
