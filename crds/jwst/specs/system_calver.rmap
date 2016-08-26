@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_system_calver_0000.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('CAL_VER',),),
-    'sha1sum' : '43107e2879e5a9fcbc28ca83bccf7a20bde4ab67',
+    'parkey' : (('CAL_VER',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'f86296b13da8e7b6d5edefac1493391f837efab9',
     'suffix' : 'calver',
     'text_descr' : 'Calibration Software Component Versions',
 }

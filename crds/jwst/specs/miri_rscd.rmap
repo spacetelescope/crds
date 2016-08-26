@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_miri_rscd.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.INSTRUMENT.DETECTOR',),),
-    'sha1sum' : 'c153df7d3d93faee4b79fa9059bfc4b72e553fca',
+    'parkey' : (('META.INSTRUMENT.DETECTOR',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'ec43fcd3756a572d11405b7e683983c5d2fe51ff',
     'suffix' : 'rscd',
     'text_descr' : 'Reset Switch Charge Decay correction',
 }
