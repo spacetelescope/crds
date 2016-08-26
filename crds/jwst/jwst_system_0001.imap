@@ -5,8 +5,9 @@ header = {
     'name' : 'jwst_system_0001.imap',
     'observatory' : 'JWST',
     'parkey' : ('REFTYPE',),
-    'sha1sum' : '02b16ceb7115d03de3be9833cfe7bc11e8db3e86',
+    'sha1sum' : 'eec3d000e02725fc120371fc0f87676665f8423c',
 }
 
 selector = {
+    'CALVER' : 'jwst_system_calver_0001.rmap',
 }
