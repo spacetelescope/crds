@@ -660,7 +660,7 @@ class Mapping(object):
             # Nullify intermediate diffs based solely on path names for cache-to-cache comparisons
             # Cache-to-cache difference is tricky,  because recursion is required but higher level
             # diffs by path-only are uninteresting.
-            if self.path and self.basename == new_mapping.basename:
+            if self.basename == new_mapping.basename and not nested_diffs:
                 diff = None
             if diff:
                 differences.append(diff)
@@ -1136,8 +1136,11 @@ class InstrumentContext(ContextMapping):
     def difference(self, *args, **keys):
         """difference specialized to add .instrument to diff."""
         diffs = super(InstrumentContext, self).difference(*args, **keys)
-        for diff in diffs:
-            diff.instrument = self.instrument
+        if len(diffs) == 1 and os.path.basename(self.basename) == os.path.basename(other.basename):
+            diffs = []
+        else:
+           for diff in diffs:
+               diff.instrument = self.instrument
         return diffs
 
 # ===================================================================
