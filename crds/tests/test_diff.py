@@ -544,12 +544,7 @@ def dt_diff_recurse_added_deleted_na():
     (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('tracetab',), 'added N/A')
     (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('twozxtab',), 'added data/hst_cos_twozxtab_0262.rmap')
     (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('hst_cos.imap', 'data/hst_cos.imap'), ('xtractab',), 'replaced hst_cos_xtractab.rmap with OMIT')
-    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('acs',), 'replaced hst_acs.imap with data/hst_acs.imap')
     (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('cos',), 'replaced hst_cos.imap with data/hst_cos.imap')
-    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('nicmos',), 'replaced hst_nicmos.imap with data/hst_nicmos.imap')
-    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('stis',), 'replaced hst_stis.imap with data/hst_stis.imap')
-    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfc3',), 'replaced hst_wfc3.imap with data/hst_wfc3.imap')
-    (('/grp/crds/cache/mappings/hst/hst.pmap', 'data/hst.pmap'), ('wfpc2',), 'replaced hst_wfpc2.imap with data/hst_wfpc2.imap')
     1
     >>> test_config.cleanup(old_state)
     """
