@@ -1136,11 +1136,8 @@ class InstrumentContext(ContextMapping):
     def difference(self, *args, **keys):
         """difference specialized to add .instrument to diff."""
         diffs = super(InstrumentContext, self).difference(*args, **keys)
-        if len(diffs) == 1 and os.path.basename(self.basename) == os.path.basename(other.basename):
-            diffs = []
-        else:
-           for diff in diffs:
-               diff.instrument = self.instrument
+        for diff in diffs:
+            diff.instrument = self.instrument
         return diffs
 
 # ===================================================================
