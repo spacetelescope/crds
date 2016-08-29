@@ -312,8 +312,8 @@ def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
     old:new `fixers` list to `rmapping` writing results to `new_filename`.
     """
     keys = dict(keys)
-    del keys["old_text"]
-    del keys["new_text"]
+    keys.pop("old_text", None)
+    keys.pop("new_text", None)
     for fixer in fixers:
         old_text, new_text = fixer.split(":")
         replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
