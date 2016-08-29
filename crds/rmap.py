@@ -660,7 +660,7 @@ class Mapping(object):
             # Nullify intermediate diffs based solely on path names for cache-to-cache comparisons
             # Cache-to-cache difference is tricky,  because recursion is required but higher level
             # diffs by path-only are uninteresting.
-            if self.path and self.basename == new_mapping.basename:
+            if self.basename == new_mapping.basename and not nested_diffs:
                 diff = None
             if diff:
                 differences.append(diff)
