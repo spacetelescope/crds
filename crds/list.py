@@ -267,7 +267,7 @@ class ListScript(cmdline.ContextsScript):
     def list_required_parkeys(self):
         """Print out the parkeys required for matching using the specified contexts."""
         for name in self.contexts:
-            mapping = crds.get_symbolic_mapping(name)
+            mapping = crds.get_cached_mapping(name)
             log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
             _print_dict("", mapping.get_required_parkeys())
         
