@@ -260,7 +260,7 @@ class SyncScript(cmdline.ContextsScript):
             os.environ["CRDS_REFPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
-        if self.args.clear_pickles or self.args.ignore_cache:
+        if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
             self.clear_pickles(self.contexts)
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
