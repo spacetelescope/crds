@@ -87,6 +87,8 @@ class ListScript(cmdline.ContextsScript):
             help="prints the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
             help="prints the full paths of files for --cached-references and --cached-mappings.")
+        self.add_argument("--dataset-ids", nargs="+", dest="dataset_ids", default=None, metavar="INSTRUMENTS",
+            help="prints the dataset ids known to CRDS associated for the specified instruments.")
         self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
             help="prints matching parameters for the specified dataset ids.")
         self.add_argument("--config", action="store_true", dest="config",
@@ -112,6 +114,8 @@ class ListScript(cmdline.ContextsScript):
             self.list_references()
         if self.args.list_mappings:
             self.list_mappings()
+        if self.args.dataset_ids:
+            self.list_dataset_ids()
         if self.args.cached_references:
             self.list_cached_references()
         if self.args.cached_mappings:
@@ -236,7 +240,16 @@ class ListScript(cmdline.ContextsScript):
                     header2.pop("REFTYPE", None)
                     log.info("Dataset pars for", repr(dataset_id), "with respect to", repr(context) + ":\n",
                              log.PP(header2))
-                    
+
+    def list_dataset_ids(self):
+        """Print out the dataset ids associated with the instruments specified as command line params."""
+        for instrument in self.args.dataset_ids:
+            with log.error_on_exception("Failed reading dataset ids for", repr(instrument)):
+                for context in self.contexts:
+                    ids = api.get_dataset_ids(context, instrument)
+                    for dataset_id in ids:
+                        print(context, dataset_id)
+            
     def list_config(self):
         """Print out configuration info about the current environment and server."""
         info = config.get_crds_env_vars()

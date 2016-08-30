@@ -593,6 +593,7 @@ and debug output.
         elif self.args.all_instruments:
             instruments = list(self.obs_pkg.INSTRUMENTS)
             instruments.remove("all")
+            instruments.remove("system")
             self.instruments = instruments
         else:
             self.instruments = []
