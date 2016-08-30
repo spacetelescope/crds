@@ -684,13 +684,13 @@ class ContextsScript(Script):
                     self.dump_files(pmaps[-1], files)
             for context in self.contexts:
                 with log.warn_on_exception("Failed loading context", repr(context)):
-                    pmap = crds.get_pickled_mapping(context)
+                    pmap = crds.get_cached_mapping(context)
                     useable_contexts.append(context)
         else:
             for context in self.contexts:
                 with log.warn_on_exception("Failed listing mappings for", repr(context)):
                     try:
-                        pmap = crds.get_pickled_mapping(context)
+                        pmap = crds.get_cached_mapping(context)
                         files |= set(pmap.mapping_names())
                     except Exception:
                         files |= set(api.get_mapping_names(context))
