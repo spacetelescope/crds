@@ -90,7 +90,7 @@ def uses(files, observatory="hst"):
             mappings.extend(findall_mappings_using_reference(file_, observatory))
     return sorted(list(set(mappings)))
 
-def datasets_using(references, context):
+def datasets_using(references, context):    # XXXX rip out,  DADSOPS is stale.
     """Print out the DADSOPS dataset ids which historically used the specified reference files.
     Return [(reference, dataset_id), ...]
     """
@@ -100,7 +100,7 @@ def datasets_using(references, context):
         if config.is_mapping(reference):
             log.error("Used file", repr(reference), "is a mapping file.  Must be a reference file.")
             continue
-        pmap = crds.get_pickled_mapping(context)
+        pmap = crds.get_pickled_mapping(context)   # reviewed
         instrument, filekind = utils.get_file_properties(pmap.observatory, reference)
         if instrument not in datasets:
             log.verbose("Dumping dataset info for", repr(instrument), "from", repr(api.get_crds_server()))

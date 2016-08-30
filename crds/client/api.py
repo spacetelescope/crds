@@ -526,7 +526,7 @@ class FileCacher(object):
         elif "hst" in self.pipeline_context:
             observatory = "hst"
         else:
-            observatory = crds.get_pickled_mapping(self.pipeline_context).observatory
+            observatory = crds.get_pickled_mapping(self.pipeline_context).observatory  # reviewed
         return observatory
 
     def locate(self, name):
@@ -819,6 +819,6 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     information from the `dataset`.
     """
     dump_mappings(context, ignore_cache=ignore_cache)
-    ctx = crds.get_pickled_mapping(context)
+    ctx = crds.get_pickled_mapping(context)   # reviewed
     return ctx.get_minimum_header(dataset)
 

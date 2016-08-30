@@ -325,7 +325,7 @@ class SyncScript(cmdline.ContextsScript):
         """
         for context in contexts:
             with log.error_on_exception("Failed pickling", repr(context)):
-                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)
+                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)  # reviewed
     
     # ------------------------------------------------------------------------------------------
 

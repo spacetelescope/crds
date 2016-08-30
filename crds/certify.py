@@ -534,7 +534,7 @@ class Certifier(object):
 
     def get_corresponding_rmap(self):
         """Return the rmap which corresponds to self.filename under self.context."""
-        pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")
+        pmap = crds.get_pickled_mapping(self.context, ignore_checksum="warn")  # reviewed
         instrument, filekind = pmap.locate.get_file_properties(self.filename)
         return pmap.get_imap(instrument).get_rmap(filekind)
 
@@ -1018,7 +1018,7 @@ def find_old_mapping(comparison_context, new_mapping):
     trial mappings.
     """
     if comparison_context:
-        comparison_mapping = crds.get_pickled_mapping(comparison_context)
+        comparison_mapping = crds.get_pickled_mapping(comparison_context)  # reviewed
         old_mapping = comparison_mapping.get_equivalent_mapping(new_mapping)
         return old_mapping
     else:
@@ -1288,7 +1288,7 @@ For more information on the checks being performed,  use --verbose or --verbosit
             more_files = {file_}
             if rmap.is_mapping(file_):
                 with self.error_on_exception(file_, "Problem loading submappings of", repr(file_)):
-                    mapping = crds.get_pickled_mapping(file_, ignore_checksum="warn")
+                    mapping = crds.get_cached_mapping(file_, ignore_checksum="warn")
                     more_files = {rmap.locate_mapping(name) for name in mapping.mapping_names()}
                     more_files = (more_files - {rmap.locate_mapping(mapping.basename)}) | {file_}
             closure_files |= more_files

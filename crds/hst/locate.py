@@ -253,7 +253,7 @@ def check_naming_consistency(checked_instrument=None, exhaustive_mapping_check=F
 
             for pmap_name in reversed(sorted(rmap.list_mappings("*.pmap", observatory="hst"))):
 
-                pmap = crds.get_pickled_mapping(pmap_name)
+                pmap = crds.get_cached_mapping(pmap_name)
 
                 r = certify.find_governing_rmap(pmap_name, ref)
 

@@ -642,7 +642,7 @@ class RefactorScript(cmdline.Script):
         """Insert files specified by --references into the appropriate rmaps identified by --source-context."""
         self._setup_source_context()
         categorized = self.categorize_files(self.args.references)
-        pmap = crds.get_pickled_mapping(self.source_context)
+        pmap = crds.get_pickled_mapping(self.source_context)  # reviewed
         self.args.rmaps = []
         for (instrument, filekind) in categorized:
             try:

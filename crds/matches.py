@@ -65,7 +65,7 @@ def find_full_match_paths(context, reffile):
        ('CCDCHIP', 'N/A')),
       (('DATE-OBS', '2006-07-04'), ('TIME-OBS', '11:32:35')))]
     """
-    ctx = crds.get_pickled_mapping(context, cached=True)
+    ctx = crds.get_pickled_mapping(context, cached=True)  # reviewed
     return ctx.file_matches(reffile)
 
 def find_match_paths_as_dict(context, reffile):
@@ -282,7 +282,7 @@ jwst_niriss_throughput_0008.fits :  META.INSTRUMENT.FILTER='F480M'
                 if self.args.condition_values:
                     header = utils.condition_header(header)
                 if self.args.minimize_headers:
-                    header = crds.get_pickled_mapping(context).minimize_header(header)
+                    header = crds.get_cached_mapping(context).minimize_header(header)
                 if len(self.contexts) == 1:
                     print(dataset_id, ":", log.format_parameter_list(header))
                 else:
@@ -307,7 +307,7 @@ jwst_niriss_throughput_0008.fits :  META.INSTRUMENT.FILTER='F480M'
     def find_match_tuples(self, context, reffile):
         """Return the list of match representations for `reference` in `context`.   
         """
-        ctx = crds.get_pickled_mapping(context)
+        ctx = crds.get_cached_mapping(context)
         matches = ctx.file_matches(reffile)
         result = []
         for path in matches:
