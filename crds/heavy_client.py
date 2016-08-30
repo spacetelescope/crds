@@ -589,7 +589,7 @@ def get_symbolic_mapping(
     to interpret the symbolic name into a primitive name.
     """
     abs_mapping = translate_date_based_context(mapping, observatory)
-    return get_pickled_mapping(
+    return get_pickled_mapping(   # reviewed
         abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles, **keys)
 
         

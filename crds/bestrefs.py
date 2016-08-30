@@ -620,8 +620,8 @@ and debug output.
         Returns { instrument: EXPTIME, ... }
         """
         datasets_since = {}
-        self.oldctx = crds.get_pickled_mapping(self.old_context)
-        self.newctx = crds.get_pickled_mapping(self.new_context)
+        self.oldctx = crds.get_pickled_mapping(self.old_context)   # reviewed
+        self.newctx = crds.get_pickled_mapping(self.new_context)   # reviewed
         for instrument in self.oldctx.selections:
             old_imap = self.oldctx.get_imap(instrument)
             new_imap = self.newctx.get_imap(instrument)

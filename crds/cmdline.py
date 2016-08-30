@@ -712,7 +712,7 @@ class ContextsScript(Script):
         files = set()
         for context in self.contexts:
             try:
-                pmap = crds.get_pickled_mapping(context)
+                pmap = crds.get_cached_mapping(context)
                 files |= set(pmap.reference_names())
                 log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails
