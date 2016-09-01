@@ -14,26 +14,83 @@ from crds import cmdline, rmap, log, config, heavy_client, python23, data_file
 from crds.client import api
 
 class ListScript(cmdline.ContextsScript):
-    """Command line script for listing information about CRDS reference and mapping files."""
+    """Command line script for listing a variety of information about CRDS."""
 
-    description = """Command line script for listing information about CRDS reference and mapping files."""
+    description = """crds.list prints out a variety of information about CRDS configuration, the
+cache, reference and mapping files, default context names, and dataset headers
+and ids used for CRDS reprocessing recommendations.
+    """
         
-    epilog = """    
-    Contexts to list can be specified explicitly:
+    epilog = """
+    General categories of information driven by switches include:
+
+    0. Overall CRDS configuration
+    1. CRDS server file lists
+    2. CRDS cache file lists and paths
+    3. Cached file contents or headers
+    4. CRDS reprocessing dataset ids and parameters
+    5. Simple listing of default contexts
+
+    --------------------------------------------------------------------------
+    0. Configuration information governing the behavior of CRDS can be dumped:
+
+    % python -m crds.list --config
+    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+    CRDS Environment
+        CRDS_ALLOW_BAD_PARKEY_VALUES = 'false'
+        CRDS_ALLOW_BAD_REFERENCES = 'false'
+        CRDS_ALLOW_BAD_RULES = 'false'
+        CRDS_ALLOW_BAD_USEAFTER = 'false'
+        CRDS_ALLOW_SCHEMA_VIOLATIONS = 'false'
+        CRDS_DOWNLOAD_MODE = 'http'
+        CRDS_FITS_IGNORE_MISSING_END = 'false'
+        CRDS_FITS_VERIFY_CHECKSUM = 'false'
+        CRDS_IGNORE_MAPPING_CHECKSUM = 'false'
+        CRDS_MODE = 'auto'
+        CRDS_PATH = '/Users/homer/crds_cache_test'
+        CRDS_READONLY_CACHE = '0'
+        CRDS_SERVER_URL = 'https://hst-crds-test.stsci.edu'
+    CRDS Client Config
+        cache_subdir_mode = 'instrument'
+        crds = "<module 'crds' from '/Users/homer/work/workspace_crds/CRDS/crds/__init__.py'>"
+        effective_context = 'hst_0462.pmap'
+        readonly_cache = False
+        server_url = 'https://hst-crds-test.stsci.edu'
+        version = '7.0.4, master, 1f51071'
+    CRDS Actual Paths
+        config root = '/Users/homer/crds_cache_test/config/hst'
+        mapping root = '/Users/homer/crds_cache_test/mappings/hst'
+        reference root = '/Users/homer/crds_cache_test/references/hst'
+    CRDS Server Info
+        connected = True
+        effective_mode = 'local'
+        last_synced = '2016-09-01 12:16:28.686153'
+        mapping_url = {'hst': 'https://hst-crds-test.stsci.edu/unchecked_get/mappings/hst/'}
+        observatory = 'hst'
+        operational_context = 'hst_0462.pmap'
+        reference_url = {'hst': 'https://hst-crds-test.stsci.edu/unchecked_get/references/hst/'}
+        status = 'server'
+    Calibration Environment
+        none
+    Python Environment
+    Python Executable = '/Users/homer/anaconda/bin/python'
+    Python Version = '3.5.2.final.0'
+
+    --------------------------------------------------------------------------
+   1. Files known by the CRDS server to belong to specified contexts can be listed
+    even if the files are not installed in a local CRDS Cache.
+
+    Contexts to list can be specified in a variety of ways:
     
     % python -m crds.list  --contexts hst_0001.pmap hst_0002.pmap --references
     vb41935ij_bia.fits 
     vb41935kj_bia.fits 
     ...
     
-    Contexts to list can be specified as a range:
-    
     % python -m crds.list --range 1:2 --references
     vb41935lj_bia.fits 
     vb41935oj_bia.fits
     ...
-    
-    Contexts to list can be specified as --all contexts:
     
     % python -m crds.list --all --mappings
     hst.pmap 
@@ -44,18 +101,23 @@ class ListScript(cmdline.ContextsScript):
     hst_acs_0002.imap 
     hst_acs_atodtab.rmap 
     ...
+
+    --references, --mappings, or both can be listed.
     
-    The paths of locally cached mappings (files already synced to your computer) can be listed:
+    --------------------------------------------------------------------------
+    2. Locally cached files (files already synced to your computer) can be listed:
     
     % python -m crds.list --cached-mappings
-    
-    The paths of locally cached references (files already synced to your computer) can be listed:
-    
+    ...
+
     % python -m crds.list --cached-references
+    ...
 
-    In both cases adding --full-path causes the path of the file within the CRDS cache to be printed.
+    In both cases adding --full-path prints the path of the file within the CRDS cache.
+    These are ultimately simple directory listings which ignore context specifiers.
 
-    The contents of mappings or references (header only) can be printed to stdout like this:
+    --------------------------------------------------------------------------
+    3. The contents of cached mappings or references (header only) can be printed to stdout like this:
 
     % python -m crds.list --contexts jwst-fgs-linearity-edit jwst-nirspec-linearity-edit --cat --add-filename | grep parkey
     CRDS - INFO - Symbolic context 'jwst-fgs-linearity-edit' resolves to 'jwst_fgs_linearity_0008.rmap'
@@ -63,46 +125,149 @@ class ListScript(cmdline.ContextsScript):
     /cache/path/mappings/jwst/jwst_fgs_linearity_0008.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     /cache/path/mappings/jwst/jwst_nirspec_linearity_0009.rmap:     'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.SUBARRAY.NAME'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
 
-    References need to be catted explicitly,  but the list can come from the above methods of listing references:
+    this prints the contents of the specified rmaps.
+
+    References need to be catted explicitly by name,  but the list can come from the above methods of listing references:
 
     % python -m crds.list --cat jwst_nirspec_dark_0036.fits
     CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
-    ########################################################################################################################
+    ##########################################################################################
     File:  '/grp/crds/jwst/references/jwst/jwst_nirspec_dark_0036.fits'
-    ########################################################################################################################
+    ##########################################################################################
     {'A1_COL_C': '8.9600000e+002',
     'A1_CONF1': '2.1846000e+004',
     ...
     }
+
+   --------------------------------------------------------------------------
+   4. Information about the dataset IDs and their associated parameters used
+   for CRDS reprocessing can be printed:
+
+    % python -m crds.list --dataset-headers jcl403010 --first-id --minimize-header
+    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+    CRDS - INFO - Dataset pars for 'JCL403010:JCL403ECQ' with respect to 'hst_0462.pmap':
+    {'APERTURE': 'WFC1',
+     'ATODCORR': 'OMIT',
+     'BIASCORR': 'COMPLETE',
+     'CCDAMP': 'ABCD',
+     'CCDCHIP': '-999.0',
+     'CCDGAIN': '2.0',
+     'CRCORR': 'OMIT',
+     'DARKCORR': 'COMPLETE',
+     'DATE-OBS': '2016-02-20',
+     'DETECTOR': 'WFC',
+     'DQICORR': 'COMPLETE',
+     'DRIZCORR': 'COMPLETE',
+     'FILTER1': 'CLEAR1L',
+     'FILTER2': 'F814W',
+     'FLASHCUR': 'LOW',
+     'FLATCORR': 'COMPLETE',
+     'FLSHCORR': 'OMIT',
+     'FW1OFFST': '0.0',
+     'FW2OFFST': '0.0',
+     'FWSOFFST': '0.0',
+     'GLINCORR': 'UNDEFINED',
+     'INSTRUME': 'ACS',
+     'LTV1': '0.0',
+     'LTV2': '0.0',
+     'NAXIS1': '4144.0',
+     'NAXIS2': '4136.0',
+     'OBSTYPE': 'IMAGING',
+     'PCTECORR': 'UNDEFINED',
+     'PHOTCORR': 'COMPLETE',
+     'RPTCORR': 'UNDEFINED',
+     'SHADCORR': 'OMIT',
+     'SHUTRPOS': 'A',
+     'TIME-OBS': '17:32:29.666665',
+     'XCORNER': '0.0',
+     'YCORNER': '0.0',
+     'dataset_id': 'JCL403010:JCL403ECQ'}
+
+    Sometimes it's desirable to know the individual exposures CRDS associates with a product id:
+
+    % python -m crds.list --dataset-headers jcl403010 --id-expansions-only
+    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
+    JCL403010 JCL403010:JCL403ECQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EEQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EGQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EIQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EKQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EMQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EOQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EQQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403ESQ hst_0462.pmap
+    JCL403010 JCL403010:JCL403EUQ hst_0462.pmap
+
+    Headers available can possibly vary by CRDS context.   Generally the default context is sufficient. 
+    Often all exposures of an association have identical parameters but CRDS is designed so that this
+    does not have to be the case and may not be.
+
+    These dataset header services require setting CRDS_SERVER_URL to a valid CRDS server to
+    provide a source for the headers.
+
+   --------------------------------------------------------------------------
+    5. Information about the default context can be printed.  There are two variations and a subtle distinction:
+
+    % python m crds.list --operational-context
+    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0204.pmap'
+    jwst_0204.pmap 
+
+    lists the context which has been *commanded* as default on the CRDS server.
+
+    While:
+
+    % python -m crds.list --remote-context jwst-ops-pipeline
+    CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0204.pmap'
+    jwst_0101.pmap
+    
+    lists the context which is *in actual use* in the associated archive pipeline as reported by
+    a cache sync echo.
+
+    During the interval between commanding a new default on the CRDS server and syncing the pipeline
+    CRDS cache,  the commanded and actual pipeline contexts can differ.
     """
     
     def add_args(self):
+        """Add switches unique to crds.list."""
+
         self.add_argument('--references', action='store_true', dest="list_references",
             help='print names of reference files referred to by contexts')
         self.add_argument('--mappings', action='store_true', dest="list_mappings",
             help='print names of mapping files referred to by contexts')
+
         self.add_argument("--cached-references", action="store_true",
-            help="prints the paths of all references in the local cache.")
+            help="print the paths of all references in the local cache.")
         self.add_argument("--cached-mappings", action="store_true",
-            help="prints the paths of all mappings in the local cache.")
+            help="print the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
-            help="prints the full paths of files for --cached-references and --cached-mappings.")
+            help="print the full paths of files for --cached-references and --cached-mappings.")
+
         self.add_argument("--dataset-ids", nargs="+", dest="dataset_ids", default=None, metavar="INSTRUMENTS",
-            help="prints the dataset ids known to CRDS associated for the specified instruments.")
-        self.add_argument("--datasets", nargs="+", dest="datasets", default=None,
-            help="prints matching parameters for the specified dataset ids.")
+            help="print the dataset ids known to CRDS associated for the specified instruments.")
+        self.add_argument("--dataset-headers", nargs="+", dest="dataset_headers", default=None, metavar="IDS",
+            help="print matching parameters for the specified dataset ids.")
+        self.add_argument("--id-expansions-only", action="store_true", dest="id_expansions_only",
+            help="print out only the <product>:<exposure> expansion associated with the specified --dataset-headers ids.")
+        self.add_argument("--first-id-expansion-only", action="store_true", dest="first_id_expansion_only",
+            help="print out only the first exposure (header or expanded ID) associated with a particular product ID.")
+        self.add_argument("--minimize-headers", action="store_true", dest="minimize_headers",
+            help="print out only header parameters required by a particular CRDS context.")
+
         self.add_argument("--config", action="store_true", dest="config",
             help="print CRDS configuration information.")
+
         self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
             help="print the text of the specified mapping files.")
         self.add_argument("--keywords", nargs="+", 
             help="limited list of keywords to be catted from reference headers.")
         self.add_argument("--add-filenames", action="store_true",
             help="prefix each line of a cat'ed file with the filename.")
+
         self.add_argument("--operational-context", action="store_true", dest="operational_context",
             help="print the name of the operational context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
             help="print the name of the context reported as in use by the specified pipeline.")
+
         self.add_argument("--required-parkeys", action="store_true",
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
 
@@ -116,12 +281,12 @@ class ListScript(cmdline.ContextsScript):
             self.list_mappings()
         if self.args.dataset_ids:
             self.list_dataset_ids()
+        if self.args.dataset_headers:
+            self.list_dataset_headers()
         if self.args.cached_references:
             self.list_cached_references()
         if self.args.cached_mappings:
             self.list_cached_mappings()
-        if self.args.datasets is not None:
-            self.list_datasets()
         if self.args.config:
             self.list_config()
         if self.args.cat is not None:
@@ -225,21 +390,33 @@ class ListScript(cmdline.ContextsScript):
         """List the reference paths in the local cache."""
         _print_list(rmap.list_references("*", self.observatory, full_path=self.args.full_path))
         
-    def list_datasets(self):
-        """List dataset header info for self.args.datasets with respect to self.args.context"""
+    def list_dataset_headers(self):
+        """List dataset header info for self.args.dataset_headers with respect to self.args.context"""
         for context in self.contexts:
             with log.error_on_exception("Failed fetching dataset parameters with repect to", repr(context), 
-                                        "for", repr(self.args.datasets)):
-                pars = api.get_dataset_headers_by_id(context, self.args.datasets)
+                                        "for", repr(self.args.dataset_headers)):
+                pars = api.get_dataset_headers_by_id(context, self.args.dataset_headers)
                 pmap = crds.get_cached_mapping(context)
-                for (dataset_id, header) in pars.items():
-                    if isinstance(header, python23.string_types):
-                        log.error("No header for", repr(dataset_id), ":", repr(header)) # header is reason
-                        continue
-                    header2 = pmap.minimize_header(header)
-                    header2.pop("REFTYPE", None)
-                    log.info("Dataset pars for", repr(dataset_id), "with respect to", repr(context) + ":\n",
-                             log.PP(header2))
+                for requested_id in self.args.dataset_headers:
+                    for returned_id in sorted(pars.keys()):
+                        if requested_id.upper() in returned_id.upper():
+                            header = pars[returned_id]
+                            if isinstance(header, python23.string_types):
+                                log.error("No header for", repr(returned_id), ":", repr(header)) # header is reason
+                                continue
+                            if self.args.id_expansions_only:
+                                print(requested_id.upper(), returned_id.upper(), context)
+                            else:
+                                if self.args.minimize_headers:
+                                    header2 = pmap.minimize_header(header)
+                                else:
+                                    header2 = dict(header)
+                                header2.pop("REFTYPE", None)
+                                header2["dataset_id"] = returned_id
+                                log.info("Dataset pars for", repr(returned_id), "with respect to", repr(context) + ":\n",
+                                         log.PP(header2))
+                            if self.args.first_id_expansion_only:
+                                break
 
     def list_dataset_ids(self):
         """Print out the dataset ids associated with the instruments specified as command line params."""
@@ -249,7 +426,7 @@ class ListScript(cmdline.ContextsScript):
                     ids = api.get_dataset_ids(context, instrument)
                     for dataset_id in ids:
                         print(context, dataset_id)
-            
+
     def list_config(self):
         """Print out configuration info about the current environment and server."""
         info = config.get_crds_env_vars()
