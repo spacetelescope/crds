@@ -187,16 +187,16 @@ and ids used for CRDS reprocessing recommendations.
 
     % python -m crds.list --dataset-headers jcl403010 --id-expansions-only
     CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
-    JCL403010:JCL403ECQ hst_0462.pmap
-    JCL403010:JCL403EEQ hst_0462.pmap
-    JCL403010:JCL403EGQ hst_0462.pmap
-    JCL403010:JCL403EIQ hst_0462.pmap
-    JCL403010:JCL403EKQ hst_0462.pmap
-    JCL403010:JCL403EMQ hst_0462.pmap
-    JCL403010:JCL403EOQ hst_0462.pmap
-    JCL403010:JCL403EQQ hst_0462.pmap
-    JCL403010:JCL403ESQ hst_0462.pmap
-    JCL403010:JCL403EUQ hst_0462.pmap
+    JCL403010:JCL403ECQ
+    JCL403010:JCL403EEQ
+    JCL403010:JCL403EGQ
+    JCL403010:JCL403EIQ
+    JCL403010:JCL403EKQ
+    JCL403010:JCL403EMQ
+    JCL403010:JCL403EOQ
+    JCL403010:JCL403EQQ
+    JCL403010:JCL403ESQ
+    JCL403010:JCL403EUQ
 
     Headers available can possibly vary by CRDS context and will be dumped for
     every specified or implicit context.  Generally the default context is
