@@ -187,20 +187,21 @@ and ids used for CRDS reprocessing recommendations.
 
     % python -m crds.list --dataset-headers jcl403010 --id-expansions-only
     CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
-    JCL403010 JCL403010:JCL403ECQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EEQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EGQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EIQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EKQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EMQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EOQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EQQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403ESQ hst_0462.pmap
-    JCL403010 JCL403010:JCL403EUQ hst_0462.pmap
+    JCL403010:JCL403ECQ hst_0462.pmap
+    JCL403010:JCL403EEQ hst_0462.pmap
+    JCL403010:JCL403EGQ hst_0462.pmap
+    JCL403010:JCL403EIQ hst_0462.pmap
+    JCL403010:JCL403EKQ hst_0462.pmap
+    JCL403010:JCL403EMQ hst_0462.pmap
+    JCL403010:JCL403EOQ hst_0462.pmap
+    JCL403010:JCL403EQQ hst_0462.pmap
+    JCL403010:JCL403ESQ hst_0462.pmap
+    JCL403010:JCL403EUQ hst_0462.pmap
 
-    Headers available can possibly vary by CRDS context.   Generally the default context is sufficient. 
-    Often all exposures of an association have identical parameters but CRDS is designed so that this
-    does not have to be the case and may not be.
+    Headers available can possibly vary by CRDS context and will be dumped for
+    every specified or implicit context.  Generally the default context is
+    sufficient.  Often all exposures of an association have identical
+    parameters but CRDS is designed so that this does not have to be the case.
 
     These dataset header services require setting CRDS_SERVER_URL to a valid CRDS server to
     provide a source for the headers.
@@ -242,14 +243,14 @@ and ids used for CRDS reprocessing recommendations.
         self.add_argument("--full-path", action="store_true",
             help="print the full paths of files for --cached-references and --cached-mappings.")
 
-        self.add_argument("--dataset-ids", nargs="+", dest="dataset_ids", default=None, metavar="INSTRUMENTS",
+        self.add_argument("--dataset-ids-for-instruments", nargs="+", dest="dataset_ids", default=None, metavar="INSTRUMENTS",
             help="print the dataset ids known to CRDS associated for the specified instruments.")
         self.add_argument("--dataset-headers", nargs="+", dest="dataset_headers", default=None, metavar="IDS",
             help="print matching parameters for the specified dataset ids.")
         self.add_argument("--id-expansions-only", action="store_true", dest="id_expansions_only",
             help="print out only the <product>:<exposure> expansion associated with the specified --dataset-headers ids.")
         self.add_argument("--first-id-expansion-only", action="store_true", dest="first_id_expansion_only",
-            help="print out only the first exposure (header or expanded ID) associated with a particular product ID.")
+            help="print out only the first exposure ID (header or expanded) associated with a particular product ID.")
         self.add_argument("--minimize-headers", action="store_true", dest="minimize_headers",
             help="print out only header parameters required by a particular CRDS context.")
 
@@ -405,7 +406,7 @@ and ids used for CRDS reprocessing recommendations.
                                 log.error("No header for", repr(returned_id), ":", repr(header)) # header is reason
                                 continue
                             if self.args.id_expansions_only:
-                                print(requested_id.upper(), returned_id.upper(), context)
+                                print(returned_id, context if len(self.contexts) > 1 else "")
                             else:
                                 if self.args.minimize_headers:
                                     header2 = pmap.minimize_header(header)
