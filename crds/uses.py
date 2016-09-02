@@ -132,6 +132,8 @@ hst_acs_darkfile_0005.rmap
         super(UsesScript, self).add_args()
         self.add_argument("--files", nargs="+", 
             help="References for which to dump using mappings or datasets.")        
+        self.add_argument("-i", "--include-used", action="store_true", dest="include_used",
+            help="Include the used file in the output as the first column.")
 
     def main(self):
         """Process command line parameters in to a context and list of
@@ -141,10 +143,7 @@ hst_acs_darkfile_0005.rmap
         if not self.args.files:
             self.print_help()
             sys.exit(-1)
-        if self.args.print_datasets:
-            self.print_datasets_using_references()
-        else:
-            self.print_mappings_using_files()
+        self.print_mappings_using_files()
         return log.errors()
             
     def locate_file(self, file_):
