@@ -90,27 +90,6 @@ def uses(files, observatory="hst"):
             mappings.extend(findall_mappings_using_reference(file_, observatory))
     return sorted(list(set(mappings)))
 
-def datasets_using(references, context):    # XXXX rip out,  DADSOPS is stale.
-    """Print out the DADSOPS dataset ids which historically used the specified reference files.
-    Return [(reference, dataset_id), ...]
-    """
-    using = set()
-    datasets = {}
-    for reference in references:
-        if config.is_mapping(reference):
-            log.error("Used file", repr(reference), "is a mapping file.  Must be a reference file.")
-            continue
-        pmap = crds.get_pickled_mapping(context)   # reviewed
-        instrument, filekind = utils.get_file_properties(pmap.observatory, reference)
-        if instrument not in datasets:
-            log.verbose("Dumping dataset info for", repr(instrument), "from", repr(api.get_crds_server()))
-            datasets[instrument] = api.get_dataset_headers_by_instrument(context, instrument)
-            log.verbose("Dump dataset info for", repr(instrument), "complete.")
-        for (dataset_id, pars) in datasets[instrument].items():
-            if reference.upper() in pars[filekind.upper()]:  # handle things like iref$u451251ej_bpx.fits
-                using.add((reference, dataset_id))
-    return sorted(list(using))
-
 class UsesScript(cmdline.Script):
     """Command line script for printing rmaps using references,  or datasets using references."""
 
@@ -147,27 +126,12 @@ hst_acs_darkfile_0003.rmap
 ...
 hst_acs_darkfile_0005.rmap
 
-% python -m crds.uses --files n3o1022ij_drk.fits --print-datasets --hst
-J8BA0HRPQ
-J8BA0IRTQ
-J8BA0JRWQ
-J8BA0KT4Q
-J8BA0LIJQ
-
-% python -m crds.uses --files @dropped --hst --print-datasets --include-used
-vb41934lj_bia.fits JA7P21A2Q
-vb41934lj_bia.fits JA7P21A4Q
-vb41934lj_bia.fits JA7P21A6Q
 """
     def add_args(self):
         """Add command line parameters unique to this script."""
         super(UsesScript, self).add_args()
         self.add_argument("--files", nargs="+", 
             help="References for which to dump using mappings or datasets.")        
-        self.add_argument("-d", "--print-datasets", action="store_true", dest="print_datasets",
-            help="Print the ids of datasets last historically using a reference according to the archive database. (slow)")
-        self.add_argument("-i", "--include-used", action="store_true", dest="include_used",
-            help="Include the used file in the output as the first column.")
 
     def main(self):
         """Process command line parameters in to a context and list of
@@ -196,14 +160,6 @@ vb41934lj_bia.fits JA7P21A6Q
                 else:
                     print(use)
     
-    def print_datasets_using_references(self):
-        """Print out the datasets which refer to the specified references."""
-        for uses in datasets_using(self.files, self.default_context):
-            if self.args.include_used:
-                print(*uses)
-            else:
-                print(uses[1])
-        
 def test():
     """Run the module doctest."""
     import doctest
