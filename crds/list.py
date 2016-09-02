@@ -29,7 +29,8 @@ and ids used for CRDS reprocessing recommendations.
     2. CRDS cache file lists and paths
     3. Cached file contents or headers
     4. CRDS reprocessing dataset ids and parameters
-    5. Simple listing of default contexts
+    5. Listing global default and installed pipeline contexts
+    6. Resolving context specifiers into literal context names
 
     --------------------------------------------------------------------------
     0. Configuration information governing the behavior of CRDS can be dumped:
@@ -80,19 +81,28 @@ and ids used for CRDS reprocessing recommendations.
    1. Files known by the CRDS server to belong to specified contexts can be listed
     even if the files are not installed in a local CRDS Cache.
 
+    The --mappings command recursively evaluates and includes all the sub-mappings,
+    i.e. imaps and pmaps, of the specified contexts.
+
     Contexts to list can be specified in a variety of ways:
+
+    -- To list the references contained by several contexts
     
-    % python -m crds.list  --contexts hst_0001.pmap hst_0002.pmap --references
+    % python -m crds.list  --references --contexts hst_0001.pmap hst_0002.pmap ...
     vb41935ij_bia.fits 
     vb41935kj_bia.fits 
     ...
     
-    % python -m crds.list --range 1:2 --references
+    -- To list the references in a numerical range of contexts
+
+    % python -m crds.list --references --range 1:2 --references
     vb41935lj_bia.fits 
     vb41935oj_bia.fits
     ...
+
+    -- To list all mappings, even those not referenced by an imap or pmap
     
-    % python -m crds.list --all --mappings
+    % python -m crds.list --mappings --all
     hst.pmap 
     hst_0001.pmap 
     hst_0002.pmap 
@@ -114,7 +124,9 @@ and ids used for CRDS reprocessing recommendations.
     ...
 
     In both cases adding --full-path prints the path of the file within the CRDS cache.
-    These are ultimately simple directory listings which ignore context specifiers.
+
+    These are ultimately simple directory listings which ignore the context specifiers
+    and should simply be grep'ed for finer grained answers.
 
     --------------------------------------------------------------------------
     3. The contents of cached mappings or references (header only) can be printed to stdout like this:
@@ -127,7 +139,15 @@ and ids used for CRDS reprocessing recommendations.
 
     this prints the contents of the specified rmaps.
 
-    References need to be catted explicitly by name,  but the list can come from the above methods of listing references:
+    The -edit specifier above refers to mappings contained by the default starting point (.pmap) of future
+    server submissions.  It tracks on-going submission work that precedes the adoption of a new context
+    as the default in use by the pipeline.
+
+    crds.list --cat can be applied to references and prints out the reference metadata that CRDS views
+    abstractly as the file header.
+
+    References need to be catted explicitly by name,  but the list can come from the --references command
+    explained above:
 
     % python -m crds.list --cat jwst_nirspec_dark_0036.fits
     CRDS - INFO - Symbolic context 'jwst-operational' resolves to 'jwst_0167.pmap'
@@ -226,6 +246,38 @@ and ids used for CRDS reprocessing recommendations.
 
     During the interval between commanding a new default on the CRDS server and syncing the pipeline
     CRDS cache,  the commanded and actual pipeline contexts can differ.
+
+   --------------------------------------------------------------------------
+    6. Resolving context specifiers
+
+    Some CRDS tools, including crds.list and crds.sync, support multiple
+    mechanisms for specifying context.  The --resolve-contexts command
+    interprets those specifiers into a non-recursive list of literal mapping
+    names and prints them out.  --resolve-contexts differs from --mappings
+    because it does not implicitly include all sub-mappings of the specified
+    contexts.
+
+    % python -m crds.list --resolve-contexts --all
+    jwst.pmap
+    jwst_0000.pmap
+    jwst_0001.pmap
+    jwst_0002.pmap
+    jwst_0003.pmap
+    ...
+
+    % python -m crds.list --resolve-contexts --last 5
+    jwst_0205.pmap
+    jwst_0206.pmap
+    jwst_0207.pmap
+    jwst_0208.pmap
+    jwst_0209.pmap
+
+    % python -m crds.list --resolve-contexts  --contexts jwst-miri-dark-operational 
+    jwst_miri_dark_0012.rmap
+
+    % python -m crds.list --resolve-contexts --contexts jwst-niriss-superbias-2016-01-01T00:00:00
+    jwst_niriss_superbias_0005.rmap
+
     """
     
     def add_args(self):
@@ -268,6 +320,8 @@ and ids used for CRDS reprocessing recommendations.
             help="print the name of the operational context on the central CRDS server.")
         self.add_argument("--remote-context", type=str, metavar="PIPELINE", 
             help="print the name of the context reported as in use by the specified pipeline.")
+        self.add_argument("--resolve-contexts", action="store_true", dest="resolve_contexts",
+            help="print the literal names of the contexts defined by the command line context specifiers.")
 
         self.add_argument("--required-parkeys", action="store_true",
             help="print the names of the parkeys required to compute bestrefs for the specified mappings.")
@@ -276,6 +330,8 @@ and ids used for CRDS reprocessing recommendations.
         
     def main(self):
         """List files."""
+        if self.args.resolve_contexts:
+            self.list_resolved_contexts()
         if self.args.list_references:
             self.list_references()
         if self.args.list_mappings:
@@ -298,6 +354,13 @@ and ids used for CRDS reprocessing recommendations.
             print(self.remote_context)
         if self.args.required_parkeys:
             self.list_required_parkeys()
+
+    def list_resolved_contexts(self):
+        """Print out the literal interpretation of the contexts implied by the script's
+        context specifiers.
+        """
+        for context in self.contexts:
+            print(context)
 
     @property
     def remote_context(self):
