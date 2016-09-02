@@ -554,6 +554,8 @@ and debug output.
         self.datasets_since = self.args.datasets_since
 
         self.synced_references = set()
+
+        self.active_header = None   # new or old header last processed with bestrefs
     
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -651,11 +653,9 @@ and debug output.
         self.add_argument("-o", "--old-context", dest="old_context",
             help="Compare bestrefs recommendations from two contexts.", 
             metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
+
         self.add_argument("--fetch-old-headers", dest="fetch_old_headers", action="store_true",
             help="Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.")
-        
-        self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
-            help="Compare new bestrefs recommendations to recommendations from data source,  files or database.")
         
         self.add_argument("-f", "--files", nargs="+", metavar="FILES", default=None,
             help="Dataset files to compute best references for.")
@@ -669,6 +669,12 @@ and debug output.
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
             help="Instruments to compute best references for, all historical datasets in database.")
         
+        self.add_argument("-p", "--load-pickles", nargs="*", default=None,
+            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.")
+        
+        self.add_argument("-a", "--save-pickle", default=None,
+            help="Write out the combined dataset headers to the specified pickle file.  Can also store .json file.")
+        
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
             help="A list of reference types to process,  defaulting to all types.")
         
@@ -681,11 +687,8 @@ and debug output.
         self.add_argument("--datasets-since", default=None, type=reformat_date_or_auto,
             help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.")
         
-        self.add_argument("-p", "--load-pickles", nargs="*", default=None,
-            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.")
-        
-        self.add_argument("-a", "--save-pickle", default=None,
-            help="Write out the combined dataset headers to the specified pickle file.  Can also store .json file.")
+        self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
+            help="Compare new bestrefs recommendations to recommendations from data source,  files or database.")
         
         self.add_argument("--update-pickle", action="store_true",
             help="Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.")        
@@ -711,6 +714,9 @@ and debug output.
         self.add_argument("--print-update-counts", action="store_true",
             help="Prints dictionary of update counts by instrument and type,  status on updated files.")
     
+        self.add_argument("--print-error-headers", action="store_true",
+            help="For each tracked error,  print out the corresponding dataset header for offline analysis.")
+
         self.add_argument("-r", "--remote-bestrefs", action="store_true",
             help="Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'")
         
@@ -910,12 +916,12 @@ and debug output.
 
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
-        new_header = self.new_headers.get_lookup_parameters(dataset)
+        self.active_header = new_header = self.new_headers.get_lookup_parameters(dataset)
         instrument = utils.header_to_instrument(new_header)
         new_bestrefs = self.get_bestrefs(instrument, dataset, self.new_context, new_header)
         if self.compare_prior:
             if self.args.old_context:
-                old_header = self.old_headers.get_lookup_parameters(dataset)
+                self.active_header = old_header = self.old_headers.get_lookup_parameters(dataset)
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
@@ -1080,6 +1086,14 @@ and debug output.
                                      name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
             ref_ok = False
         return ref_ok, ref_org, ref
+
+    def log_and_track_error(self, dataset, *pars, **keys):
+        """Track and categorize the specified error,  printing out the dataset header
+        if requested on the command line.
+        """
+        super(BestrefsScript, self).log_and_track_error(dataset, *pars, **keys)
+        if self.args.print_error_headers:
+            log.info("Header for", repr(dataset) + ":\n", log.PP(self.active_header))
 
     def _add_synced_reference(self, ref):
         """Add reference `ref` to the set of synced references if it is not a special value."""
