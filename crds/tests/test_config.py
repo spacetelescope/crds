@@ -22,8 +22,8 @@ HERE = os.path.abspath(os.path.dirname(__file__) or ".")
 
 CRDS_DIR = os.path.abspath(os.path.dirname(crds.__file__))
 CRDS_TESTING_CACHE = os.environ.get("CRDS_TESTING_CACHE", "no-test-cache-defined-see-TESTING")
-# CRDS_SHARED_GROUP_CACHE = "/grp/crds/cache-missing"
-CRDS_SHARED_GROUP_CACHE = "/grp/crds/cache"
+# CRDS_SHARED_GROUP_CACHE = "/grp/crds/cache"
+CRDS_SHARED_GROUP_CACHE=config.get_crds_path()
 CRDS_FORWARDED_URL = "https://localhost:8001/"
 TEST_DATA = os.path.join(HERE, 'data')
 TEST_MAPPATH = os.path.join(CRDS_TESTING_CACHE, "mappings")
@@ -35,7 +35,7 @@ class CRDSTestCase(unittest.TestCase):
     
     clear_existing = False
     server_url = None
-    cache = CRDS_SHARED_GROUP_CACHE
+    cache = config.get_crds_path()
 
     def setUp(self, *args, **keys):
         super(CRDSTestCase, self).setUp(*args, **keys)

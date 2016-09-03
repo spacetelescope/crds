@@ -86,7 +86,7 @@ def dt_bad_references_fast_mode():
     >>> config.ALLOW_BAD_REFERENCES.reset()
     
     >>> crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'], fast=True) # doctest: +ELLIPSIS
-    {'pfltfile': '/grp/crds/cache/references/hst/l2d0959cj_pfl.fits'}
+    {'pfltfile': '.../references/hst/l2d0959cj_pfl.fits'}
 
     >>> test_config.cleanup(old_state)
     """

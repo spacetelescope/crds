@@ -282,8 +282,8 @@ CRDS_CHECKSUM_BLOCK_SIZE = 2**23
 
 # ===========================================================================
 
-# DEFAULT_CRDS_DIR = "/grp/crds/cache-missing"
-DEFAULT_CRDS_DIR = "/grp/crds/cache"
+DEFAULT_CRDS_DIR = "/grp/crds/cache-missing"
+# DEFAULT_CRDS_DIR = "/grp/crds/cache"
 
 def _clean_path(path):
     """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
