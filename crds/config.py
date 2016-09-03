@@ -282,6 +282,7 @@ CRDS_CHECKSUM_BLOCK_SIZE = 2**23
 
 # ===========================================================================
 
+# DEFAULT_CRDS_DIR = "/grp/crds/cache-missing"
 DEFAULT_CRDS_DIR = "/grp/crds/cache"
 
 def _clean_path(path):
@@ -319,8 +320,8 @@ def get_crds_path():
     >>> temp = dict(os.environ)
     >>> os.environ = {}
 
-    >>> get_crds_path()
-    '/grp/crds/cache'
+    >>> get_crds_path() == DEFAULT_CRDS_DIR
+    True
     
     >>> os.environ = {}
     >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere"
@@ -346,8 +347,8 @@ def get_crds_mappath(observatory):
     >>> temp = dict(os.environ)
     >>> os.environ = {}
     
-    >>> get_crds_mappath('jwst')
-    '/grp/crds/cache/mappings/jwst'
+    >>> get_crds_mappath('jwst') == DEFAULT_CRDS_DIR + "/mappings/jwst"
+    True
     
     >>> os.environ["CRDS_PATH"] = '/somewhere'
     >>> get_crds_mappath('jwst')
