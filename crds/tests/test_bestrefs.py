@@ -254,7 +254,7 @@ def dt_bestrefs_context_to_context():
 class TestBestrefs(test_config.CRDSTestCase):
     
     script_class = BestrefsScript
-    server_url = "https://hst-crds-dev.stsci.edu"
+    # server_url = "https://hst-crds-dev.stsci.edu"
     cache = test_config.CRDS_TESTING_CACHE
 
     def test_bestrefs_affected_datasets(self):
