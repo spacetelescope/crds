@@ -8,18 +8,23 @@ from crds import config, log
 os.chdir(os.path.dirname(sys.argv[0]) or ".")
 topdir = os.getcwd()
 
+CRDS_TEST_ROOT = os.environ.get("CRDS_TEST_ROOT", os.environ["HOME"])
+
 # Unlike historical CRDS with builtin cache,  test cache is now a separate dedicated entity
 # which contains mutated but otherwise same named mutated files.
 # os.environ["CRDS_MAPPATH"] = os.path.join(os.getcwd(), "..", "crds_cache_archive", "mappings")
-os.environ["CRDS_TESTING_CACHE"] = os.path.join(os.getcwd(), "..", "crds-cache-test")
+os.environ["CRDS_TESTING_CACHE"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-test")
+
+# The *defined* CRDS cache for testing 
+os.environ["CRDS_PATH"] = os.path.join(CRDS_TEST_ROOT, "crds-cache-default-test")
 
 # For testing,  even the default cache is controlled and overridden.  This is a test-only setting,
 # ordinarily the cache is controlled by CRDS_PATH, etc.   This controls where files are found if
 # the normal mechanisms for defining the cache are *not* used. It is not intended to replace them.
 os.environ["CRDS_DEFAULT_CACHE"] = os.environ["CRDS_PATH"]
 
-os.system("./install")
-os.system("./setup_test_cache")
+# os.system("./install")
+# os.system("./setup_test_cache")
 # os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
 os.system("nosetests")
 os.system("python -m crds.list --config --log-time")
