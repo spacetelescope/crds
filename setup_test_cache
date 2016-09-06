@@ -1,0 +1,19 @@
+#! /bin/tcsh -fx
+
+setenv CRDS_TEST_ROOT $1
+
+(cd $CRDS_TEST_ROOT; rm -rf crds-cache-test;  git clone https://github.com/spacetelescope/crds-cache-test.git;)
+(cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; wget https://hst-crds.stsci.edu/static/crds-cache-default-test.tar.bz2; tar jxf crds-cache-default-test.tar.bz2; rm crds-cache-default-test.tar.bz2)
+
+setenv CRDS_PATH $CRDS_TEST_ROOT/crds-cache-default-test
+setenv CRDS_TESTING_CACHE $CRDS_TEST_ROOT/crds-cache-test
+
+setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
+python -m crds.sync --files l2d0959cj_pfl.fits n7p1032ao_apt.fits q5417413o_pct.fits xaf1429el_wcp.fits y2r1559to_apt.fits y2r16006o_pct.fits y951738kl_hv.fits yas2005el_hv.fits --stats --log-time
+python -m crds.sync --contexts hst_cos.imap --fetch-references --log-time --stats
+
+setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
+python -m crds.sync --all --stats --log-time --check-sha1sum --repair-files --organize=flat
+python -m crds.sync --files jwst_niriss_flat_0000.fits --stats --log-time
+

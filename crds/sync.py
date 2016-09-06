@@ -543,9 +543,9 @@ class SyncScript(cmdline.ContextsScript):
                         shutil.move(refpath, desired_loc)
                 else:
                     if old_mode != new_mode:
-                        log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
+                        log.verbose_warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
                     else:
-                        log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
+                        log.verbose_warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
         if new_mode == "flat" and old_mode == "instrument":
             log.info("Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.")
             for instrument in self.locator.INSTRUMENTS:
