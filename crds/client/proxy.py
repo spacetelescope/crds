@@ -12,6 +12,7 @@ import json
 import time
 import os
 
+import crds
 from crds import python23
 
 from crds import log, config
@@ -35,7 +36,7 @@ def apply_with_retries(func, *pars, **keys):
 
 def message_id():
     """Return a nominal identifier for this program."""
-    return _program_name() + "-" + _PROCESS_ID + "-" + _request_id()
+    return _program_name() + "-" + crds.__version__ + "-" + _PROCESS_ID + "-" + _request_id()
 
 def _program_name():
     """Return the name of this program."""
@@ -48,6 +49,7 @@ except Exception:
         
 MSG_NO = 0
 def _request_id():
+    """Return an identifier unique to this particular JSONRPC request."""
     global MSG_NO
     MSG_NO += 1
     return "%08x" % MSG_NO
