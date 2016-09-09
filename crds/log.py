@@ -4,6 +4,7 @@ tracebacks.
 
 >>> from crds import log
 >>> log.set_test_mode()
+>>> log.reset()
 
 >>> log.warning("this is a test warning.")
 CRDS - WARNING - this is a test warning.
