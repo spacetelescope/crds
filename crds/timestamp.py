@@ -288,6 +288,37 @@ class Slashdate(DateParser):
                     day=int(match.group("day")),
                     year=int(match.group("year")))
         
+class Dashdate(DateParser):
+    """Originally Slashdate supported HST PEDIGREE dates, later extended to JWST PEDIGREE dates.
+
+    >>> Dashdate.get_datetime("2014-12-25")
+    datetime.datetime(2014, 12, 25, 0, 0)
+
+    >>> Dashdate.get_datetime(r"25 / 12 x 2014")
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid 'Ddate' format '25 / 12 x 2014'
+    """
+    _format = re.compile(r"(?P<year>\d\d\d\d)\-(?P<month>\d\d)\-(?P<day>\d\d)")
+    @classmethod
+    def _get_date_dict(cls, match):    
+        return dict(month=int(match.group("month")),
+                    day=int(match.group("day")),
+                    year=int(match.group("year")))
+
+def slashdate_or_dashdate(datestr):
+    """Return the datetime associated with `datestr` which may be either a Slashdate or Dashdate.
+    
+    e.g. 25/12/2015   (note day,month,year)    HST 
+
+    e.g. 2014-12-25   (note year,month,day)    JWST
+    """
+    try:
+        date = Slashdate.get_datetime(datestr)
+    except Exception:
+        date = Dashdate.get_datetime(datestr)
+    return date
+
 class Sybdate(DateParser):
     """
     >>> Sybdate.get_datetime("Mar 21 2001")

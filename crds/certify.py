@@ -315,7 +315,7 @@ class DoubleValidator(FloatValidator):
 class PedigreeValidator(KeywordValidator):
     """Validates &PREDIGREE fields."""
 
-    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY"]
+    _values = ["INFLIGHT", "GROUND", "MODEL", "DUMMY", "SIMULATION"]
     _not_values = []
 
     def _get_header_value(self, header):
@@ -336,9 +336,9 @@ class PedigreeValidator(KeywordValidator):
                 start = stop = None
         pedigree = pedigree.upper()
         if start is not None:
-            timestamp.Slashdate.get_datetime(start)
+            timestamp.slashdate_or_dashdate(start)
         if stop is not None:
-            timestamp.Slashdate.get_datetime(stop)
+            timestamp.slashdate_or_dashdate(stop)
         return pedigree
 
     def _match_value(self, value):
