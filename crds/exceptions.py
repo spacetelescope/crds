@@ -117,10 +117,16 @@ class MatchingError(CrdsLookupError):
 class UseAfterError(CrdsLookupError):
     """None of the dates in the selector precedes the processing date."""
 
+class VersionAfterError(CrdsLookupError):
+    """Look up using version failed."""
+
 # -------------------------------------------------------------------------------------------
 
 class InvalidUseAfterFormat(CrdsError):
     """CRDS was unable to parse the value from a USEAFTER keyword or equivalent."""
+
+class InvalidVersionFormat(CrdsError):
+    """CRDS was unable to parse the value from a CAL_VER keyword or equivalent."""
 
 # -------------------------------------------------------------------------------------------
 

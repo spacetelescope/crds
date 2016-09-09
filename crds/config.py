@@ -1168,6 +1168,13 @@ USER_NAME_RE = re.compile(USER_NAME_RE_STR)
 
 # -------------------------------------------------------------------------------------
 
+# approximate regex to validate semver.org version numbers.
+
+VERSION_RE_STR = r"\d{1,8}\.\d{1,8}\.\d{1,8}"
+VERSION_RE = re.compile(VERSION_RE_STR)
+
+# -------------------------------------------------------------------------------------
+
 def test():
     """Run doctests on crds.config module."""
     import doctest

@@ -86,7 +86,7 @@ with ClosestTime utilizing "time" and SelectVersion utilizing "sw_version".
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from crds import timestamp
+
 import re
 import fnmatch
 import sys
@@ -99,9 +99,10 @@ from pprint import pprint as pp
 # import numpy as np
 
 import crds
-from crds import log, utils
+from crds import log, utils, timestamp, config
 
-from crds.exceptions import ValidationError, CrdsLookupError, AmbiguousMatchError, MatchingError, UseAfterError
+from crds.exceptions import (ValidationError, CrdsLookupError, AmbiguousMatchError, 
+                             MatchingError, UseAfterError, VersionAfterError)
 from crds import python23
 
 # ==============================================================================
@@ -1974,14 +1975,16 @@ Restore debug configuration.
     >>> _jnk = log.set_exception_trap(old_debug)
 
     """
+    error_class = UseAfterError
+
     def get_selection(self, date):
-        log.verbose("Matching date", date, " ", verbosity=60)
+        log.verbose("Matching", date, " ", verbosity=60)
         yield self.bsearch(date, self._selections)
     
     def bsearch(self, date, selections):
         """Do a binary search over a sorted selections list."""
         if len(selections) == 0:
-            raise UseAfterError("No selection with time < " + repr(date))
+            raise self.error_class("No selection < " + repr(date))
         elif len(selections) > 1:
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
@@ -1996,7 +1999,7 @@ Restore debug configuration.
                 log.verbose("matched", repr(selections[0]), verbosity=60)
                 return selections[0]
             else:
-                raise UseAfterError("No selection with time < " + repr(date))
+                raise self.error_class("No selection < " + repr(date))
             
     def _validate_key(self, key, valid_values_map):
         """Validate a selector date/time field for this UseAfter."""
@@ -2069,6 +2072,123 @@ Restore debug configuration.
     
     def todict_parameters(self):
         return ("USEAFTER",)
+
+# ==============================================================================
+
+class VersionAfterSelector(UseAfterSelector):
+    """A VersionAfter selector chooses the greatest time which is less than
+    the "version" condition and returns the corresponding item.  Implicitly, like
+    USEAFTER,  there is a >= version relationship where the greatest matching version
+    wins.
+
+Enable debugging which causes trapped exceptions to raise rather than issue ERROR.
+
+    >>> from crds import log
+    >>> old_debug = log.set_exception_trap(False)
+
+Construct a test UseAfterSelector
+
+    >>> u = VersionAfterSelector(("CAL_VER",), {
+    ...        '0.0.2':'test_0.json',
+    ...        '0.50.1':'test_1.json',
+    ...        '5.2' : 'test_2.json',
+    ...        '50.1' : 'test_1.json',
+    ... })
+
+Exact match
+
+    >>> u.choose({'CAL_VER': '0.0.2'})   
+    'test_0.json'
+
+Just before, in between
+
+    >>> u.choose({'CAL_VER': '0.5.0'})   
+    'test_0.json'
+
+    >>> u.choose({'CAL_VER': '0.49.0'})   
+    'test_0.json'
+
+    >>> u.choose({'CAL_VER': '49.1'})   
+    'test_2.json'
+
+Later than all entries
+
+    >>> u.choose({'CAL_VER': '100.0.0'}) 
+    'test_1.json'
+
+Earlier than all entries
+
+    >>> u.choose({'CAL_VER':"0.0.1"})   
+    Traceback (most recent call last):
+    ...
+    VersionAfterError: No selection < '0.0.1'
+    
+VersionAfter versions should look like x, x.y, x.y.z
+
+    >>> u = VersionAfterSelector(("CAL_VER"), {
+    ...        '200':'test_0.json',
+    ...        '200.100':'test_1.json',
+    ...        '200.100.0':'test_2.json',
+    ... })
+    
+    >>> u.validate_selector({"CAL_VER":"foo"})
+    Traceback (most recent call last):
+    ...
+    ValidationError: VersionAfter Invalid version format for ('CAL_VER') value='foo'
+
+    >>> u = VersionAfterSelector(("CAL_VER"), {
+    ...        '200.foo':'test_0.json',
+    ... })
+    
+Empty VersionAfterSelectors always raise an exception on choose():
+    
+    >>> u = VersionAfterSelector(("CAL_VER",), { })
+    >>> u.choose({"CAL_VER":"1.0.0"})
+    Traceback (most recent call last):
+    ...
+    VersionAfterError: No selection < '1.0.0'
+
+Restore debug configuration.
+
+    >>> _jnk = log.set_exception_trap(old_debug)
+
+    """
+    error_class = VersionAfterError
+
+    def _validate_key(self, key, valid_values_map):
+        """Validate a selector version key for this VersionAfter."""
+        self._validate_version(key)
+        
+    def _validate_header(self, header):
+        """Validate the `header` parameters which apply only to this VersionAfter.
+        Return lookup version.
+        """
+        version = self._raw_version(header)
+        return self._validate_version(version)
+        
+    def _raw_version(self, header):
+        """Combine the values of self.parameters from `header` into a semver.org 3 part version tuple."""
+        return self._make_key(header, self._parameters)
+
+    def _validate_version(self, version):
+        assert re.match(config.VERSION_RE, version), "Invalid version string " + repr(version) + \
+            " should be " + repr(config.VERSION_RE_STR)
+        return version
+
+    def match_item(self, version):
+        """Return (key, value) tuple corresponding to version and selector paramters."""
+        return tuple(zip(self._parameters, key.split(".")))
+    
+    def get_parkey_map(self):
+        return { par:"*" for par in self._parameters}
+    
+    @classmethod
+    def _make_key(self, header, parkeys):
+        """Join reference file datetime parameters with spaces."""
+        return ".".join([header[par] for par in parkeys])
+    
+    def todict_parameters(self):
+        return ("VERSION",)
 
 # ==============================================================================
 
@@ -2597,6 +2717,10 @@ class UseAfterParameters(Parameters):
     """Parameters for UseAfterSelector"""
     selector = UseAfterSelector
     
+class VersionAfterParameters(Parameters):
+    """Parameters for VersionAfterSelector"""
+    selector = VersionAfterSelector
+    
 class SelectVersionParameters(Parameters):
     """Parameters for SelectVersionSelector"""
     selector = SelectVersionSelector
@@ -2617,6 +2741,7 @@ class BracketParameters(Parameters):
 SELECTORS = {
     "Match"  : MatchParameters,
     "UseAfter" : UseAfterParameters,
+    "VersionAfter" : VersionAfterParameters,
     "SelectVersion" : SelectVersionParameters,
     "ClosestTime" : ClosestTimeParameters,
     "GeometricallyNearest": GeometricallyNearestParameters,
