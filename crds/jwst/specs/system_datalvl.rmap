@@ -9,6 +9,9 @@ header = {
     'name' : 'jwst_system_datalvl_0000.rmap',
     'observatory' : 'JWST',
     'parkey' : (('META.CALIBRATION_SOFTWARE_VERSION',),),
+    'reference_to_dataset' : {
+          'CAL_VER' : 'META.CALIBRATION_SOFTWARE_VERSION',
+    },
     'sha1sum' : '708af223e6d27d28df2894b2ae09a3cf1ddd305b',
     'suffix' : 'datalvl',
     'text_descr' : 'Reference Type to Processing Data Level',

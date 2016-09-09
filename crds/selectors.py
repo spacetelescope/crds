@@ -522,7 +522,7 @@ class Selector(object):
             key, choice = selection.key, selection.choice
             with log.augment_exception(repr(key)):
                 log.verbose("Validating key", repr(key))
-                self._validate_key(key, valid_values_map)
+                self._validate_conditioned_key(key, valid_values_map)
             with log.augment_exception(repr(key)):
                 if isinstance(choice, Selector):
                     choice._validate_selector(valid_values_map)
@@ -626,10 +626,14 @@ class Selector(object):
             " parameter=" + repr(name) + " value=" + repr(value) + 
             " is not in " + repr(valid_list))
             
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         """Abstract method used to validate a selector key as part of validating rmaps."""
         raise NotImplementedError(
-            self.__class__.__name__ + " hasn't defined _validate_key.")
+            self.__class__.__name__ + " hasn't defined _validate_raw_key.")
+
+    def _validate_conditioned_key(self, key, valid_values_map):
+        """In general same as _validate_raw_key."""
+        return self._validate_raw_key(key, valid_values_map)
         
     def _validate_number(self, parname, value):
         """Convert `value` to a float and return it,  else ValidationError.
@@ -734,7 +738,7 @@ class Selector(object):
         """Execute the insertion,  popping off parkeys and classes on the way down."""
         key = self._make_key(header, parkey[0])
         log.verbose("Validating key", repr(key))
-        self._validate_key(key, valid_values_map)
+        self._validate_raw_key(key, valid_values_map)
         i = self._find_key(key)
         if len(classes) > 1:   # add or insert nested selector
             if i is None:
@@ -819,7 +823,7 @@ class Selector(object):
     @classmethod    
     def _make_key(self, header, parameters):
         """For rmap modification,  make a key for this Selector based on reference
-        file `header` and self's lookup `parameters`.
+        file `header` and self's lookup `parameters`.  This is a raw, not conditioned, key.
         """
         key = tuple([header[par] for par in parameters])
         if len(key) == 1:
@@ -1836,7 +1840,7 @@ Restore original debug behavior:
                 log.verbose_warning(self.short_name, "Parameter ",
                                     repr(name), " is unchecked.")
 
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         """Validate each field of a single Match `key` against the possible 
         values in `valid_values_map`.   Note that each `key` is 
         nominally a tuple with values for multiple parkeys.
@@ -1968,7 +1972,7 @@ Empty UseAfterSelectors always raise an exception on choose():
     >>> u.choose({"DATE-OBS":"2003-09-01", "TIME-OBS":"01:28:00"})
     Traceback (most recent call last):
     ...
-    UseAfterError: No selection with time < '2003-09-01 01:28:00'
+    UseAfterError: No selection <= '2003-09-01 01:28:00'
 
 Restore debug configuration.
 
@@ -1984,7 +1988,7 @@ Restore debug configuration.
     def bsearch(self, date, selections):
         """Do a binary search over a sorted selections list."""
         if len(selections) == 0:
-            raise self.error_class("No selection < " + repr(date))
+            raise self.error_class("No selection <= " + repr(date))
         elif len(selections) > 1:
             left = selections[:len(selections)//2]
             right = selections[len(selections)//2:]
@@ -1999,16 +2003,14 @@ Restore debug configuration.
                 log.verbose("matched", repr(selections[0]), verbosity=60)
                 return selections[0]
             else:
-                raise self.error_class("No selection < " + repr(date))
+                raise self.error_class("No selection <= " + repr(date))
             
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         """Validate a selector date/time field for this UseAfter."""
         self._validate_datetime(self._parameters, key)
         
     def _validate_header(self, header):
         """Validate the `header` parameters which apply only to this UseAfter.
-        Ignore `valid_values_map`.   
-        
         Return lookup date.
         """
         date = self._raw_date(header)
@@ -2092,7 +2094,7 @@ Construct a test UseAfterSelector
     ...        '0.0.2':'test_0.json',
     ...        '0.50.1':'test_1.json',
     ...        '5.2' : 'test_2.json',
-    ...        '50.1' : 'test_1.json',
+    ...        '50.1' : 'test_3.json',
     ... })
 
 Exact match
@@ -2105,40 +2107,48 @@ Just before, in between
     >>> u.choose({'CAL_VER': '0.5.0'})   
     'test_0.json'
 
-    >>> u.choose({'CAL_VER': '0.49.0'})   
+    >>> u.choose({'CAL_VER': '0.50.0'})   
     'test_0.json'
 
     >>> u.choose({'CAL_VER': '49.1'})   
     'test_2.json'
 
+    >>> u.choose({'CAL_VER': '50.0'})   
+    'test_2.json'
+
+Single digit > double digit,  should precede
+
+    >>> u.choose({'CAL_VER': '0.6.0'})   
+    'test_0.json'
+
 Later than all entries
 
     >>> u.choose({'CAL_VER': '100.0.0'}) 
-    'test_1.json'
+    'test_3.json'
 
 Earlier than all entries
 
     >>> u.choose({'CAL_VER':"0.0.1"})   
     Traceback (most recent call last):
     ...
-    VersionAfterError: No selection < '0.0.1'
+    VersionAfterError: No selection <= '0.0.1'
     
 VersionAfter versions should look like x, x.y, x.y.z
 
-    >>> u = VersionAfterSelector(("CAL_VER"), {
+    >>> u = VersionAfterSelector(("CAL_VER",), {
     ...        '200':'test_0.json',
     ...        '200.100':'test_1.json',
-    ...        '200.100.0':'test_2.json',
+    ...        '200.100.1':'test_2.json',
     ... })
     
-    >>> u.validate_selector({"CAL_VER":"foo"})
-    Traceback (most recent call last):
-    ...
-    ValidationError: VersionAfter Invalid version format for ('CAL_VER') value='foo'
+    >>> u.validate_selector({})
 
-    >>> u = VersionAfterSelector(("CAL_VER"), {
+    >>> u = VersionAfterSelector(("CAL_VER",), {
     ...        '200.foo':'test_0.json',
     ... })
+    Traceback (most recent call last):
+    ...
+    AssertionError: Invalid version string '200.foo'
     
 Empty VersionAfterSelectors always raise an exception on choose():
     
@@ -2146,7 +2156,7 @@ Empty VersionAfterSelectors always raise an exception on choose():
     >>> u.choose({"CAL_VER":"1.0.0"})
     Traceback (most recent call last):
     ...
-    VersionAfterError: No selection < '1.0.0'
+    VersionAfterError: No selection <= '1.0.0'
 
 Restore debug configuration.
 
@@ -2155,37 +2165,52 @@ Restore debug configuration.
     """
     error_class = VersionAfterError
 
-    def _validate_key(self, key, valid_values_map):
-        """Validate a selector version key for this VersionAfter."""
+    def _validate_raw_key(self, key, valid_values_map):
+        """Validate a selector version key for this VersionAfter,  the conditioned key."""
         self._validate_version(key)
         
-    def _validate_header(self, header):
-        """Validate the `header` parameters which apply only to this VersionAfter.
-        Return lookup version.
-        """
-        version = self._raw_version(header)
-        return self._validate_version(version)
+    def _validate_conditioned_key(self, key, valid_values_map):
+        """Validate a selector version key for this VersionAfter,  the conditioned key."""
+        for part in key:
+            assert isinstance(part, int), "Invalid version key " + repr(key)
         
-    def _raw_version(self, header):
-        """Combine the values of self.parameters from `header` into a semver.org 3 part version tuple."""
-        return self._make_key(header, self._parameters)
-
     def _validate_version(self, version):
-        assert re.match(config.VERSION_RE, version), "Invalid version string " + repr(version) + \
-            " should be " + repr(config.VERSION_RE_STR)
-        return version
+        assert isinstance(version, str) and re.match(config.VERSION_RE, version), \
+            "Invalid version string " + repr(version)
 
-    def match_item(self, version):
-        """Return (key, value) tuple corresponding to version and selector paramters."""
-        return tuple(zip(self._parameters, key.split(".")))
-    
-    def get_parkey_map(self):
-        return { par:"*" for par in self._parameters}
-    
+    def _validate_header(self, header):
+        """Validate the version parameters in header and return them as a tuple of ints."""
+        version = self._make_key(header, self._parameters)
+        self._validate_version(version)
+        return self.condition_key(version)
+        
     @classmethod
     def _make_key(self, header, parkeys):
-        """Join reference file datetime parameters with spaces."""
+        """Join reference file version parameters with periods."""
         return ".".join([header[par] for par in parkeys])
+    
+    def condition_key(self, version):
+        """Convert a period seperated string into a tuple of ints of length 3, zero filling."""
+        self._validate_version(version)
+        parts = tuple(int(x, base=10) for x in version.split("."))
+        if len(parts) < 3:
+            parts = parts + (3-len(parts))*(0,)
+        return parts
+
+    def match_item(self, key):
+        """Similar to UseAfter,  if parkey is e.g. "CAL_VER" just return (('CAL_VER', key),) with
+        no inspection of key.
+        
+        If however parkey is ("MAJOR","MINOR","X",) then key should be "x.y.z" and will be split on
+        "." and matched against the corresponding parameter.
+        """
+        if len(self._parameters) == 1:
+            return ((self._parameters[0], key.split(".")),)
+        else:
+            return tuple(zip(self._parameters, key.split(".")))
+    
+    def get_parkey_map(self):
+        return { par:"*" for par in self._parameters }
     
     def todict_parameters(self):
         return ("VERSION",)
@@ -2291,7 +2316,7 @@ Effective_wavelength doesn't have to be covered by valid_values_map:
         index = np.argmin(diff)
         yield self._selections[index]
     
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         parname = self._parameters[0]
         self._validate_number(parname, key)
         
@@ -2387,7 +2412,7 @@ class BracketSelector(Selector):
     def get_parkey_map(self):
         return {}
 
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         return self._validate_number(self._parameters[0], key)
 
     def _validate_value(self, name, value, valid_list, runtime=True):
@@ -2621,7 +2646,7 @@ class SelectVersionSelector(Selector):
             index += 1
         yield self._selections[index]
     
-    def _validate_key(self, key, valid_values_map):
+    def _validate_raw_key(self, key, valid_values_map):
         """Keys effectively validated at __init__ time."""
         pass
 
