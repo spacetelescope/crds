@@ -147,6 +147,17 @@ class OmitReferenceTypeError(LookupError):
 
 # -------------------------------------------------------------------------------------------
 
+class FileFormatError(CrdsError):
+    """Something was seriously wrong with a file's format."""
+
+class JsonFormatError(FileFormatError):
+    """What should be valid JSON didn't parse / load."""
+
+class YamlFormatError(FileFormatError):
+    """What should be valid YAML didn't parse / load."""
+
+# -------------------------------------------------------------------------------------------
+
 class UnsupportedUpdateModeError(CrdsError):
     """Database modes don't support updating best references recommendations on the server."""
 
