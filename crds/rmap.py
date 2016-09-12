@@ -1140,14 +1140,8 @@ class ReferenceMapping(Mapping):
                 else:
                     log.verbose("No match found but reference is not required:",  str(exc), verbosity=55)
                     raise crexc.IrrelevantReferenceTypeError("No match found and reference type is not required.")
-<<<<<<< HEAD
-        log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), 
-                    "on attempt", attempt, verbosity=55)
-        if MappingSelectionsDict.is_na_value(bestref):
-=======
         log.verbose("Found bestref", repr(self.instrument), repr(self.filekind), "=", repr(bestref), verbosity=55)
-        if FileSelectionsDict.is_na_value(bestref):
->>>>>>> 4e1926b7d620d370705d86a5c9990b8ca301aa9b
+        if MappingSelectionsDict.is_na_value(bestref):
             raise crexc.IrrelevantReferenceTypeError("Rules define this type as Not Applicable for these observation parameters.")                
         if MappingSelectionsDict.is_omit_value(bestref):
             raise crexc.OmitReferenceTypeError("Rules define this type to be Omitted for these observation parameters.")
