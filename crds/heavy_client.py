@@ -188,15 +188,19 @@ def _initial_recommendations(
         # the new vs. the old context.
         update_config_info(observatory)
         log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
+        instrument = utils.header_to_instrument(parameters)
+        warn_bad_context(observatory, final_context, instrument)        
         warn_bad_references(observatory, bestrefs)
     
     return final_context, bestrefs
 
 # ============================================================================
 
-def warn_bad_context(observatory, context):
+# This is cached because it should only produce output *once* per program run.
+@utils.cached
+def warn_bad_context(observatory, context, instrument=None):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
-    bad_contained = get_bad_mappings_in_context(observatory, context)
+    bad_contained = get_bad_mappings_in_context(observatory, context, instrument)
     if bad_contained:
         msg = log.format("Final context", repr(context), 
                          "is marked as scientifically invalid based on:", log.PP(bad_contained))
@@ -204,6 +208,32 @@ def warn_bad_context(observatory, context):
             log.warning(msg)
         else:
             raise CrdsBadRulesError(msg)
+
+# This is cached because it can be called multiple times for a single dataset,
+# both withing warn_bad_mappings and elsewhere.
+@utils.cached
+def get_bad_mappings_in_context(observatory, context, instrument=None):
+    """Return the list of bad files (defined by the server) contained by `context`."""
+    if instrument is None:
+        check_context = context
+    else:
+        check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
+    bad_mappings = get_config_info(observatory).bad_files_set
+    context_mappings = mapping_names(check_context)
+    return sorted(list(context_mappings & bad_mappings))
+
+def mapping_names(context):
+    """Return the full set of mapping names associated with `context`,  compute locally if possible,
+    else consult server.
+    """
+    try:
+        mapping = crds.get_symbolic_mapping(context)
+        contained_mappings = mapping.mapping_names()
+    except IOError:
+        contained_mappings = api.get_mapping_names(context)
+    return set(contained_mappings)
+
+# ============================================================================
 
 def warn_bad_references(observatory, bestrefs):
     """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
@@ -227,24 +257,8 @@ def warn_bad_reference(observatory, reftype, reference):
         else:
             raise CrdsBadReferenceError(msg)
 
-def mapping_names(context):
-    """Return the full set of mapping names associated with `context`,  compute locally if possible,
-    else consult server.
-    """
-    try:
-        mapping = get_symbolic_mapping(context)
-        contained_mappings = mapping.mapping_names()
-    except IOError:
-        contained_mappings = api.get_mapping_names(context)
-    return set(contained_mappings)
-
-def get_bad_mappings_in_context(observatory, context):
-    """Return the list of bad files (defined by the server) contained by `context`."""
-    bad_mappings = get_config_info(observatory).bad_files_set
-    context_mappings = mapping_names(context)
-    return sorted(list(context_mappings & bad_mappings))
-
 # ============================================================================
+
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
     assert observatory in ["hst", "jwst", "tobs"]
@@ -338,8 +352,6 @@ def get_processing_mode(observatory, context=None):
         
     final_context = get_final_context(info, context)
     
-    warn_bad_context(observatory, final_context)
-
     return info.effective_mode, final_context
 
 def get_final_context(info, context):

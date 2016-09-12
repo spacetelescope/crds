@@ -223,19 +223,6 @@ def get_refactoring_header(rmapping, refname, required_keywords):
     header.update(headers2[0])
     return header
 
-
-# ============================================================================
-
-def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys):
-    """Do simple text replacement from `old_text` to `new_text` in `rmapping`.
-    """
-    log.info("Replacing", srepr(old_text), "with", srepr(new_text), "in", 
-             srepr(rmapping.basename), "to", srepr(new_filename))
-    original_rmap = str(rmapping)
-    new_rmap = original_rmap.replace(old_text, new_text)
-    new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
-    new_mapping.write(new_filename)
-
 # ============================================================================
 
 def set_rmap_substitution(rmapping, new_filename, parameter_name, old_text, new_text, *args, **keys):
@@ -277,7 +264,7 @@ def fix_rmap_undefined_useafter(rmapping, new_filename, *args, **keys):
     """Change undefined USEAFTER dates to condig.FAKE_USEAFTER_VALUE"""
     rmapping = rmap.ReferenceMapping.from_file(new_filename)
     if "UNDEFINED UNDEFINED" in str(rmapping):
-        replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", 
+        rmap.replace_rmap_text(rmapping, new_filename, "UNDEFINED UNDEFINED", 
                           "1900-01-01 00:00:00", *args, **keys)
 
 # ============================================================================
@@ -316,7 +303,7 @@ def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
     keys.pop("new_text", None)
     for fixer in fixers:
         old_text, new_text = fixer.split(":")
-        replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
+        rmap.replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
         rmapping = rmap.load_mapping(new_filename)
 
 # ============================================================================
@@ -614,7 +601,7 @@ class RefactorScript(cmdline.Script):
         
     def replace_text(self):
         """Do simple text substitution in elaborated rmaps replacing `args.old_text` with `args.new_text`."""
-        self.rmap_apply(replace_rmap_text, old_text=self.args.old_text,  new_text=self.args.new_text)
+        self.rmap_apply(rmap.replace_rmap_text, old_text=self.args.old_text,  new_text=self.args.new_text)
 
     def set_substitution(self):
         """Do simple text substitution in elaborated rmaps replacing `args.old_text` with `args.new_text`."""
