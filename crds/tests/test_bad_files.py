@@ -86,7 +86,7 @@ def dt_bad_references_fast_mode():
     >>> config.ALLOW_BAD_REFERENCES.reset()
     
     >>> crds.getreferences(HST_HEADER, observatory='hst', context='hst_0282.pmap', reftypes=['pfltfile'], fast=True) # doctest: +ELLIPSIS
-    {'pfltfile': '/grp/crds/cache/references/hst/l2d0959cj_pfl.fits'}
+    {'pfltfile': '.../references/hst/l2d0959cj_pfl.fits'}
 
     >>> test_config.cleanup(old_state)
     """
@@ -165,7 +165,7 @@ def dt_bad_rules_jwst_getreferences_error():
     
     Do some setup to switch to a JWST serverless mode.
     
-    >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
+    >>> old_state = test_config.setup(cache=test_config.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.reset()
     >>> config.ALLOW_BAD_REFERENCES.reset()
     
@@ -182,7 +182,7 @@ def dt_bad_rules_jwst_getreferences_warning():
     """
     Similarly,  the use of bad rules can be permitted:
     
-    >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
+    >>> old_state = test_config.setup(cache=test_config.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.set("1")
     False
 
@@ -203,7 +203,7 @@ def dt_bad_rules_jwst_bestrefs_script_error():
     """
     Here try bad rules for a JWST dataset:
     
-    >>> old_state = test_config.setup(cache=tests.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
+    >>> old_state = test_config.setup(cache=test_config.CRDS_SHARED_GROUP_CACHE, url="https://jwst-serverless-mode.stsci.edu")    
     >>> config.ALLOW_BAD_RULES.reset()
     
     >>> crds.getrecommendations(JWST_HEADER, reftypes=["gain"], context="jwst_0017.pmap")    # doctest: +ELLIPSIS

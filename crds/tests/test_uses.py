@@ -11,7 +11,7 @@ import os, os.path
 from pprint import pprint as pp
 
 from crds import log, config, uses, tests
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -21,7 +21,7 @@ HERE = os.path.dirname(__file__) or "."
 
 def dt_uses_finaall_mappings_using_reference():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
     hst.pmap
     hst_0001.pmap
@@ -41,7 +41,7 @@ def dt_uses_finaall_mappings_using_reference():
 
 def dt_uses_rmaps():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
@@ -73,7 +73,7 @@ def dt_uses_rmaps():
     
 def dt_uses_imap():
     """
-    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
     >>> uses.UsesScript("crds.uses --files hst_cos.imap")()
     hst.pmap
     hst_0001.pmap
@@ -83,24 +83,7 @@ def dt_uses_imap():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_uses_print_datasets():
-    """
-    This test/function is quite slow since it surveys the catalog for recorded uses of the
-    specified file.  Too slow for routine unit tests.
-    
-    >>> old_state = test_config.setup(cache=tests.CRDS_TESTING_CACHE)
-
-    >> uses.UsesScript("crds.uses --files n3o1022ij_drk.fits --print-datasets --hst")()
-    J8BA0HRPQ:J8BA0HRPQ
-    J8BA0IRTQ:J8BA0IRTQ
-    J8BA0JRWQ:J8BA0JRWQ
-    J8BA0KT4Q:J8BA0KT4Q
-    J8BA0LIJQ:J8BA0LIJQ
-
-    >>> test_config.cleanup(old_state)
-    """
-
-class TestUses(CRDSTestCase):
+class TestUses(test_config.CRDSTestCase):
     '''
     def test_get_imap_except(self):
         r = rmap.get_cached_mapping("hst.pmap")

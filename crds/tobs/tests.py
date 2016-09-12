@@ -9,13 +9,13 @@ import os
 import unittest
 
 from crds import rmap, log
-from crds import tests
+from crds.tests import test_config
 import crds
 
 # =============================================================================
 
-class TobsTestCase(tests.CRDSTestCase):
-    cache = tests.CRDS_TESTING_CACHE
+class TobsTestCase(test_config.CRDSTestCase):
+    cache = test_config.CRDS_TESTING_CACHE
     clear_existing = False
     server_url = "https://tobs-serverless-mode.stsci.edu"
 

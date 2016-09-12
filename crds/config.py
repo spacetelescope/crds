@@ -282,7 +282,11 @@ CRDS_CHECKSUM_BLOCK_SIZE = 2**23
 
 # ===========================================================================
 
-DEFAULT_CRDS_DIR = "/grp/crds/cache"
+# To support testing, the default cache is configurable.  Ordinarily
+# the default cache is reserved for configuration free onsite use.
+# The correct approach (outside the realm of testing) for configuring
+# CRDS is to use CRDS_PATH and related settings.
+CRDS_DEFAULT_CACHE = os.environ.get("CRDS_DEFAULT_CACHE", "/grp/crds/cache")
 
 def _clean_path(path):
     """Fetch `name` from the environment,  or use `default`.  Trim trailing /'s from
@@ -311,7 +315,7 @@ def _std_cache_path(observatory, root_env, subdir):
     elif "CRDS_PATH" in os.environ:
         path = os.path.join(os.environ["CRDS_PATH"], subdir, observatory)
     else:
-        path = os.path.join(DEFAULT_CRDS_DIR, subdir, observatory)
+        path = os.path.join(CRDS_DEFAULT_CACHE, subdir, observatory)
     return _clean_path(path)
     
 def get_crds_path():
@@ -319,8 +323,8 @@ def get_crds_path():
     >>> temp = dict(os.environ)
     >>> os.environ = {}
 
-    >>> get_crds_path()
-    '/grp/crds/cache'
+    >>> get_crds_path() == CRDS_DEFAULT_CACHE
+    True
     
     >>> os.environ = {}
     >>> os.environ["CRDS_PATH_SINGLE"] = "/somewhere"
@@ -346,8 +350,8 @@ def get_crds_mappath(observatory):
     >>> temp = dict(os.environ)
     >>> os.environ = {}
     
-    >>> get_crds_mappath('jwst')
-    '/grp/crds/cache/mappings/jwst'
+    >>> get_crds_mappath('jwst') == CRDS_DEFAULT_CACHE + "/mappings/jwst"
+    True
     
     >>> os.environ["CRDS_PATH"] = '/somewhere'
     >>> get_crds_mappath('jwst')
@@ -1161,6 +1165,13 @@ PROCESS_KEY_RE = re.compile(PROCESS_KEY_RE_STR)
 
 USER_NAME_RE_STR = r"[a-z_]+"
 USER_NAME_RE = re.compile(USER_NAME_RE_STR)
+
+# -------------------------------------------------------------------------------------
+
+# approximate regex to validate semver.org version numbers.
+
+VERSION_RE_STR = complete_re(r"\d{1,8}(\.\d{1,8}(\.\d{1,8})?)?")
+VERSION_RE = re.compile(VERSION_RE_STR)
 
 # -------------------------------------------------------------------------------------
 

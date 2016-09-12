@@ -12,6 +12,7 @@ import json
 import time
 import os
 
+import crds
 from crds import python23
 
 from crds import log, config
@@ -33,10 +34,26 @@ def apply_with_retries(func, *pars, **keys):
     else:
         raise exc2
 
-def program_id():
+def message_id():
     """Return a nominal identifier for this program."""
+    return _program_name() + "-" + crds.__version__ + "-" + _PROCESS_ID + "-" + _request_id()
+
+def _program_name():
+    """Return the name of this program."""
     return os.path.basename(os.path.splitext(sys.argv[0])[0])
+
+try:
+    _PROCESS_ID = str(uuid.uuid4())
+except Exception:
+    _PROCESS_ID = "00000000-0000-0000-00000000000000000"
         
+MSG_NO = 0
+def _request_id():
+    """Return an identifier unique to this particular JSONRPC request."""
+    global MSG_NO
+    MSG_NO += 1
+    return "%08x" % MSG_NO
+
 class CheckingProxy(object):
     """CheckingProxy converts calls to undefined methods into JSON RPC service 
     calls.   If the JSON rpc returns an error,  CheckingProxy raises a 
@@ -70,7 +87,7 @@ class CheckingProxy(object):
         jsonrpc_params = {"jsonrpc": self.__version,
                           "method": self.__service_name,
                           'params': params,
-                          'id': program_id() + "-" + str(uuid.uuid1()) 
+                          'id': message_id()
                          }
         
         parameters = json.dumps(jsonrpc_params)

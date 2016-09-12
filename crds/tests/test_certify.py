@@ -10,7 +10,7 @@ import os
 from crds import certify, utils, log, client
 from crds.certify import CertifyScript
 
-from crds.tests import CRDSTestCase, test_config
+from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true
 
@@ -117,46 +117,46 @@ def certify_missing_keyword():
 
 def certify_recursive():
     """
-    >>> TestCertifyScript("crds.certify hst_cos.imap --exist --dont-parse")()
+    >>> TestCertifyScript("crds.certify hst_cos.imap --exist --dont-parse")() # doctest: +ELLIPSIS
     CRDS - INFO - No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos.imap' (1/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_badttab.rmap' (2/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_bpixtab.rmap' (3/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_bpixtab.rmap' (3/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_brftab.rmap' (4/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brftab.rmap' (4/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_brsttab.rmap' (5/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_brsttab.rmap' (5/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_deadtab.rmap' (6/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (6/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_disptab.rmap' (7/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_flatfile.rmap' (8/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_fluxtab.rmap' (9/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_geofile.rmap' (10/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_geofile.rmap' (10/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_gsagtab.rmap' (11/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_gsagtab.rmap' (11/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_hvtab.rmap' (12/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_hvtab.rmap' (12/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_lamptab.rmap' (13/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_lamptab.rmap' (13/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_phatab.rmap' (14/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_phatab.rmap' (14/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_spwcstab.rmap' (15/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_spwcstab.rmap' (15/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_tdstab.rmap' (16/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_tdstab.rmap' (16/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_walktab.rmap' (17/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_walktab.rmap' (17/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_wcptab.rmap' (18/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_xtractab.rmap' (19/19) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
@@ -168,9 +168,9 @@ def certify_table_comparison_context():
     """
     >>> old_state = test_config.setup()
 
-    >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")()
+    >>> TestCertifyScript("crds.certify y951738kl_hv.fits --comparison-context hst_0294.pmap")() # doctest: +ELLIPSIS
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
+    CRDS - INFO - Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
     CRDS - INFO - Table unique row parameters defined as ('DATE',)
     CRDS - INFO - Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
@@ -243,10 +243,10 @@ def certify_comparison_context_none_all_references():
 
 def certify_comparison_context_none_all_mappings():
     """
-    >>> TestCertifyScript("crds.certify hst_cos_deadtab.rmap --comparison-context None")()
+    >>> TestCertifyScript("crds.certify hst_cos_deadtab.rmap --comparison-context None")() # doctest: +ELLIPSIS
     CRDS - INFO - No comparison context specified or specified as 'none'.  No default context for all mappings or mixed types.
     CRDS - INFO - ########################################
-    CRDS - INFO - Certifying '/grp/crds/cache/mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None
+    CRDS - INFO - Certifying '.../mappings/hst/hst_cos_deadtab.rmap' (1/1) as 'MAPPING' relative to context None
     CRDS - INFO - ########################################
     CRDS - INFO - 0 errors
     CRDS - INFO - 0 warnings
@@ -296,7 +296,7 @@ def certify_jwst_missing_optional_parkey():
 
 # ==================================================================================
 
-class TestHSTTpnInfoClass(CRDSTestCase):
+class TestHSTTpnInfoClass(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
         super(TestHSTTpnInfoClass, self).setUp(*args, **keys)
@@ -316,7 +316,7 @@ class TestHSTTpnInfoClass(CRDSTestCase):
 
 # ==================================================================================
 
-class TestCertify(CRDSTestCase):
+class TestCertify(test_config.CRDSTestCase):
 
     def setUp(self, *args, **keys):
         super(TestCertify, self).setUp(*args, **keys)

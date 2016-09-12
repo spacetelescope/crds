@@ -260,6 +260,8 @@ class SyncScript(cmdline.ContextsScript):
             os.environ["CRDS_REFPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
+        if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
+            self.clear_pickles(self.contexts)
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
         self.require_server_connection()
@@ -293,8 +295,6 @@ class SyncScript(cmdline.ContextsScript):
         if self.args.check_files or self.args.check_sha1sum or self.args.repair_files:
             self.verify_files(verify_file_list)
             
-        if self.args.clear_pickles or self.args.ignore_cache:
-            self.clear_pickles(self.contexts)
         if self.args.save_pickles:
             self.pickle_contexts(self.contexts)
 
@@ -325,7 +325,7 @@ class SyncScript(cmdline.ContextsScript):
         """
         for context in contexts:
             with log.error_on_exception("Failed pickling", repr(context)):
-                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)
+                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)  # reviewed
     
     # ------------------------------------------------------------------------------------------
 
@@ -543,9 +543,9 @@ class SyncScript(cmdline.ContextsScript):
                         shutil.move(refpath, desired_loc)
                 else:
                     if old_mode != new_mode:
-                        log.warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
+                        log.verbose_warning("Keeping existing cached file", repr(desired_loc), "already in target mode", repr(new_mode))
                     else:
-                        log.warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
+                        log.verbose_warning("No change in subdirectory mode", repr(old_mode), "skipping reorganization of", repr(refpath))
         if new_mode == "flat" and old_mode == "instrument":
             log.info("Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.")
             for instrument in self.locator.INSTRUMENTS:

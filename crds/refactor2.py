@@ -299,8 +299,8 @@ def apply_rmap_fixers(rmapping, new_filename, fixers, *args, **keys):
     old:new `fixers` list to `rmapping` writing results to `new_filename`.
     """
     keys = dict(keys)
-    del keys["old_text"]
-    del keys["new_text"]
+    keys.pop("old_text", None)
+    keys.pop("new_text", None)
     for fixer in fixers:
         old_text, new_text = fixer.split(":")
         rmap.replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
@@ -629,7 +629,7 @@ class RefactorScript(cmdline.Script):
         """Insert files specified by --references into the appropriate rmaps identified by --source-context."""
         self._setup_source_context()
         categorized = self.categorize_files(self.args.references)
-        pmap = crds.get_pickled_mapping(self.source_context)
+        pmap = crds.get_pickled_mapping(self.source_context)  # reviewed
         self.args.rmaps = []
         for (instrument, filekind) in categorized:
             try:

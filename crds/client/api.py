@@ -75,6 +75,8 @@ __all__ = [
     
     "jpoll_pull_messages",
     "jpoll_abort",
+    
+    "get_system_versions",
     ]
 
 # ============================================================================
@@ -412,6 +414,15 @@ def jpoll_abort(key):
 
 # ==============================================================================
 
+def get_system_versions(master_version, context=None):
+    """Return the versions Struct associated with cal s/w master_version as
+    defined by `context` which can be defined as "null", "none", or None to use
+    the default context, or with any other valid date based context specifier.
+    """
+    return utils.Struct(S.get_system_versions(master_version, str(context)))
+
+# ==============================================================================
+
 HARD_DEFAULT_OBS = "jwst"
 
 def get_server_observatory():
@@ -515,7 +526,7 @@ class FileCacher(object):
         elif "hst" in self.pipeline_context:
             observatory = "hst"
         else:
-            observatory = crds.get_pickled_mapping(self.pipeline_context).observatory
+            observatory = crds.get_pickled_mapping(self.pipeline_context).observatory  # reviewed
         return observatory
 
     def locate(self, name):
@@ -808,6 +819,6 @@ def get_minimum_header(context, dataset, ignore_cache=False):
     information from the `dataset`.
     """
     dump_mappings(context, ignore_cache=ignore_cache)
-    ctx = crds.get_pickled_mapping(context)
+    ctx = crds.get_pickled_mapping(context)   # reviewed
     return ctx.get_minimum_header(dataset)
 
