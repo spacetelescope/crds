@@ -135,6 +135,7 @@ class Mapping(object):
     null_derivation_substrings = ("generated", "cloning", "by hand")
 
     def __init__(self, filename, header, selector, **keys):
+        self.filename = filename
         self.header = LowerCaseDict(header)   # consistent lower case values
         self.selector = selector
         self.keys = keys
