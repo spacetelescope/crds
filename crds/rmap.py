@@ -177,6 +177,11 @@ class Mapping(object):
         """
         self._check_type()
 
+    def force_load(self):
+        """Ensure that all submappings are loaded, i.e. make artificial demand."""
+        for selection in self.selections.normal_values():
+            selection.force_load()
+
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
         assert self.observatory in crds.ALL_OBSERVATORIES, \
@@ -649,7 +654,7 @@ class ContextMapping(Mapping):
         self.check_observatory()
         for key, mapping in self.selections.normal_items():
             self._check_nested("observatory", self.observatory, mapping)
-            mapping.validate()
+            # mapping.validate()
 
 # ===================================================================
 
@@ -1014,6 +1019,10 @@ class ReferenceMapping(Mapping):
         """Recreate rmap object from `state`,  recompiling missing __getstate__ objects on the fly."""
         self.__dict__ = dict(state)
         self._init_compiled()
+
+    def force_load(self):
+        """Nothing below ReferenceMapping is loaded."""
+        pass
 
     def _init_compiled(self):
         """Initialize object fields which contain compiled code objects, special handling for pickling."""        
