@@ -375,10 +375,11 @@ compatible with those returned by *get_dataset_ids()* above.
 *date* is a date-based CRDS context specifier, e.g.: jwst_0192.pmap,
 2015-05-25T00:00:27, jwst-operational
 
-*ids* is a list of valid archive dataset ids.  For this interface for JWST it's
-currently natural and supported to use either half (currently identical) of the
-dataset IDs as specified in get_dataset_ids() above.  Using a "half-ID" is shown
-below.
+*ids* is a list of valid archive dataset ids.  For JWST it's currently natural
+and supported to use either half (currently identical) of the dataset IDs as
+specified in get_dataset_ids() above.  Using a "half-ID" is shown below.
+Ultimately the first half will identify a group of exposures and the second
+half will identify a single exposure in the group.
 
 An examople call using the CRDS Python client is::
 
@@ -427,7 +428,7 @@ error::
       "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB5'"]}
 
 Code utilizing this service will have better performance if multiple IDs are
-requested per call.
+requested per call.   A maximum of 500 ids should be requested per call.
 
 Although it is possible for errors to occur on a per-type basis, for this
 interface specific types which result in lookup errors (e.g. flat) are dropped
