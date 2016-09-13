@@ -3,7 +3,7 @@
 setenv CRDS_TEST_ROOT $1
 
 (cd $CRDS_TEST_ROOT; rm -rf crds-cache-test;  git clone https://github.com/spacetelescope/crds-cache-test.git;)
-(cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; wget https://hst-crds.stsci.edu/static/crds-cache-default-test.tar.bz2; tar jxf crds-cache-default-test.tar.bz2; rm crds-cache-default-test.tar.bz2)
+(cd $CRDS_TEST_ROOT; rm -rf crds-cache-default-test; curl https://hst-crds.stsci.edu/static/crds-cache-default-test.tar.bz2 -o crds-cache-default-test.tar.bz2; tar jxf crds-cache-default-test.tar.bz2; rm crds-cache-default-test.tar.bz2)
 
 setenv CRDS_PATH $CRDS_TEST_ROOT/crds-cache-default-test
 setenv CRDS_TESTING_CACHE $CRDS_TEST_ROOT/crds-cache-test
