@@ -177,11 +177,6 @@ class Mapping(object):
         """
         self._check_type()
 
-    def force_load(self):
-        """Ensure that all submappings are loaded, i.e. make artificial demand."""
-        for selection in self.selections.normal_values():
-            selection.force_load()
-
     def check_observatory(self):
         """Verify self.observatory is a supported observatory."""
         assert self.observatory in crds.ALL_OBSERVATORIES, \
@@ -633,6 +628,13 @@ class ContextMapping(Mapping):
         super(ContextMapping, self).__init__(filename, header, selector, **keys)
         self.observatory = self.header["observatory"]
         self.selections = MappingSelectionsDict(selector, self.keys)
+        if config.FORCE_COMPLETE_LOAD:
+            self.force_load()
+
+    def force_load(self):
+        """Ensure that all submappings are loaded, i.e. make artificial demand."""
+        for selection in self.selections.normal_values():
+            selection.force_load()
 
     def set_item(self, key, value):
         """Add or replace and element of this mapping's selector.   For re-writing only."""
