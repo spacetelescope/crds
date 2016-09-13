@@ -537,6 +537,7 @@ def get_crds_actual_paths(observatory):
         "mapping root" : get_crds_mappath(observatory),
         "reference root" : get_crds_refpath(observatory),
         "config root" : get_crds_cfgpath(observatory),
+        "pickle root" : get_crds_picklepath(observatory),
         }
 
 # ============================================================================
