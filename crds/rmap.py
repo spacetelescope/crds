@@ -815,6 +815,12 @@ class InstrumentContext(ContextMapping):
             raise crexc.OmitReferenceTypeError("Type", repr(filekind), "is OMITTED for", repr(self.instrument))
         return self.selections[filekind]
 
+    def get_imap(self, instrument):
+        """Make sequences like get_cached_mapping(mapping).get_imap(instrument)... work where `mapping` is an 
+        instrument mapping.
+        """
+        return self
+
     def get_best_references(self, header, include=None):
         """Returns a map of best references { filekind : reffile_basename }
         appropriate for this `header`.   If `include` is None, include all
