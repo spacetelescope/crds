@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import os.path
 import collections
 import glob
+import json
 
 from crds import rmap, log, utils, data_file
 from crds import python23
@@ -76,26 +77,59 @@ class TypeSpec(dict):
 
 # =============================================================================
 
+def load_specs(spec_path):
+    """Load either the combined .json formatted type specs (preferred) or specs from 
+    individual type spec files (if necessary).
+    """
+    combined_specs_path = os.path.join(spec_path, "combined_specs.json")
+    if os.path.exists(combined_specs_path):
+        headers = load_json_specs(combined_specs_path)
+    else:
+        headers = load_raw_specs(spec_path)
+        with log.warn_on_exception("Failed to save type specs .json at", repr(combined_specs_path)):
+            save_json_specs(headers, combined_specs_path)
+    type_specs = { instr : 
+                   { filekind : TypeSpec(headers[instr][filekind]) 
+                     for filekind in headers[instr]
+                     }
+                   for instr in headers
+                   }
+    return type_specs
+    
+def load_raw_specs(spec_path):
+    """Return a dictionary of TypeSpecs loaded from directory `spec_path` of form:
+    
+    { instrument : { filetype : header_dict, ...}, ... }
+    """
+    with log.error_on_exception("Failed loading type specs from:", repr(spec_path)):
+        specs = collections.defaultdict(dict)
+        for spec in glob.glob(os.path.join(spec_path, "*.spec")) + glob.glob(os.path.join(spec_path, "*.rmap")):
+            instr, reftype = os.path.splitext(os.path.basename(spec))[0].split("_")
+            with log.error_on_exception("Failed loading", repr(spec)):
+                specs[instr][reftype] = dict(TypeSpec.from_file(spec))
+        return specs
+    return {}
+
+def save_json_specs(specs, combined_specs_path):
+    """Write out the specs dictionary returned by _load_specs() as .json in one combined file."""
+    specs_json = json.dumps(specs, indent=4, sort_keys=True)
+    with open(combined_specs_path, "w+") as specs_file:
+        specs_file.write(specs_json)
+        log.info("Saved combined type specs to", repr(combined_specs_path))
+
+def load_json_specs(combined_specs_path):
+    """Load specs from the .json combined spec file under `specs_path`."""
+    with open(combined_specs_path, "r") as combined_specs_file:
+        return json.load(combined_specs_file)
+
+# =============================================================================
+
 def from_package_file(pkg):
     """Given the __file__ from a package,  load specs from the package's specs subdirectory."""
     here = (os.path.dirname(pkg) or ".")
     specs_path = os.path.join(here, "specs") 
     unified_defs = load_specs(specs_path)
     return TypeParameters(unified_defs)
-
-def load_specs(spec_path):
-    """Return a dictionary of TypeSpecs loaded from directory `spec_path` of form:
-    
-    { instrument : { filetype : TypeSpec, ...}, ... }
-    """
-    with log.error_on_exception("Failed loading type specs."):
-        specs = collections.defaultdict(dict)
-        for spec in glob.glob(os.path.join(spec_path, "*.spec")) + glob.glob(os.path.join(spec_path, "*.rmap")):
-            instr, reftype = os.path.splitext(os.path.basename(spec))[0].split("_")
-            with log.error_on_exception("Failed loading", repr(spec)):
-                specs[instr][reftype] = TypeSpec.from_file(spec)
-        return specs
-    return {}
 
 class TypeParameters(object):
     """Inialized from a dictionary of TypeSpec's from load_specs(), compute observatory enumerations

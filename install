@@ -11,6 +11,11 @@ rm -f install.log
 
 st=0
 
+find . -name combined_specs.json | xargs rm
+python -m crds.hst
+python -m crds.jwst
+python -m crds.tobs
+
 if (test -e save_version) 
 then 
     ./save_version >crds/git_version.py;  
