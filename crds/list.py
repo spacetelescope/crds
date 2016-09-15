@@ -292,6 +292,8 @@ and ids used for CRDS reprocessing recommendations.
             help="print the paths of all references in the local cache.")
         self.add_argument("--cached-mappings", action="store_true",
             help="print the paths of all mappings in the local cache.")
+        self.add_argument("--cached-pickles", action="store_true",
+            help="print the paths of all mappings in the local cache.")
         self.add_argument("--full-path", action="store_true",
             help="print the full paths of files for --cached-references and --cached-mappings.")
 
@@ -344,6 +346,8 @@ and ids used for CRDS reprocessing recommendations.
             self.list_cached_references()
         if self.args.cached_mappings:
             self.list_cached_mappings()
+        if self.args.cached_pickles:
+            self.list_cached_pickles()
         if self.args.config:
             self.list_config()
         if self.args.cat is not None:
@@ -449,6 +453,10 @@ and ids used for CRDS reprocessing recommendations.
     def list_cached_mappings(self):
         """List the mapping paths in the local cache."""
         _print_list(rmap.list_mappings("*.*map", self.observatory, full_path=self.args.full_path))
+        
+    def list_cached_pickles(self):
+        """List the pickle paths in the local cache."""
+        _print_list(rmap.list_pickles("*.pkl", self.observatory, full_path=self.args.full_path))
         
     def list_cached_references(self):
         """List the reference paths in the local cache."""
