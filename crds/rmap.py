@@ -228,6 +228,7 @@ class Mapping(object):
         specified, recursively load all files relative to `path` and include path in the 
         name of the mapping.
         """
+        log.verbose("Loading mapping", repr(basename), verbosity=55)
         path = keys.get("path", None)
         if path:
             filename = os.path.join(path, os.path.basename(basename))
@@ -1627,6 +1628,14 @@ def list_mappings(glob_pattern, observatory, full_path=False):
     if full_path:
         mappings = [mapping for mapping in mappings if not os.path.isdir(mapping)]
     return sorted(set(mappings))
+
+def list_pickles(glob_pattern, observatory, full_path=False):
+    """Return the list of cached mappings for `observatory` which match `glob_pattern`."""
+    pattern = config.locate_pickle(glob_pattern, observatory)
+    pickles = _glob_list(pattern, full_path)
+    if full_path:
+        pickles = [pkl for pkl in pickles if not os.path.isdir(pkl)]
+    return sorted(set(pickles))
 
 def _glob_list(pattern, full_path=False):
     """Return the sorted glob of `pattern`, with/without path depending on `full_path`."""
