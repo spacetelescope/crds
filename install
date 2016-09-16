@@ -2,6 +2,8 @@
 
 cd `dirname $0`
 
+# The clean script removes temporary and junk files that should not be
+# committed to the source code repo.
 if (test -e clean)
 then
     ./clean
@@ -11,12 +13,44 @@ rm -f install.log
 
 st=0
 
+# CRDS type specifications are configured in code as individual files in the
+# project "specs" subdirectories.  This step creates combined versions of the
+# specs files for faster loading at runtime by first removing the existing
+# combined spec and then invoking the project package.  Importing the project
+# packages triggers loading type specs which will automatically rebuild the
+# (intentionally removed) combined .json file for faster loading in the future.
+# Once the combined .json spec has been generated, it is committed and
+# installed as code by setup.py and it will be loaded in preference to the
+# individual specs to reduce impact on the file system.  Unless type specifications
+# are being modified,  regenerating the comined_specs.json files should have
+# no effect.   When types are added or modified,  the combined_specs.json file
+# will also automatically be modified during ./install,  and the changes should be
+# both committed to GitHub and later installed normally as source code by setup.py.
+# (setup.py does not regenerate these combined spec files,  it is assumed that
+# type developers will execute this ./install script at least once after adding
+# or changing CRDS type specs,  after which the combined spec file is effectively
+# source code.
+
+find . -name combined_specs.json | xargs rm
+python -m crds.hst
+python -m crds.jwst
+python -m crds.tobs
+
+# The CRDS git_version file is updated with every ./install, but
+# is typically reverted by the ./clean script once the install 
+# has been completed.  For doing releases,  save_version should
+# be run manually and the results committed prior to tagging the
+# release on GitHub.
 if (test -e save_version) 
 then 
     ./save_version >crds/git_version.py;  
 fi
 python setup.py install $* --force  >> install.log
 st=$st$?
+
+# Optional CRDS test data is only installed by developers using ./install
+# to install CRDS from source code.  To support testing the 
+# setup_test_cache script should also be run to install other test files.
 python setup_data.py install --force >>install.log
 st=$st$?
 
