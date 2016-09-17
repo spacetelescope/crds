@@ -43,72 +43,95 @@ CRDS also contains a number of command line tools:
     * crds.list
         - Lists cache files and configuration,  prints rules files,  dumps database dataset parameter dictionaries.
 
-CRDS bestrefs for JWST:
-
-The crds.bestrefs functionality which assigns best references to datasets is fully integrated with the
-JWST calibration software and operates transparently as a consequence of running pipelines.
-
-Local Use:
-
-The CRDS defaults are set for onsite use at STScI.   These leverage a shared read-only cache of CRDS rules
-and references currently located at /grp/crds/cache.  HST users will need to set their iref$-style environment
-variables accordingly to use references maintained by CRDS in /grp/crds/cache,  see below.
-
-Remote Use:
-
-CRDS can be configured to operate at remote sites by defining a CRDS server and a local cache directory.  With
-this configuration CRDS will transparently download the best references and CRDS rules required to calibrate datasets
-on demand.  See below for configuration instructions.
-
-More information can be found on each tool using the command line -- --help switch,  e.g.::
-
-    % python -m crds.bestrefs --help
-
-or in the command line tools section of this document.
-
 Installation
 ============
 
-Installation via Ureka or Conda
--------------------------------
+CRDS is a pure Python software package typically installed in the context of
+other larger calibration software installations.  As such, if you already have
+HST or JWST calibration software you may also have CRDS.
 
-Most people install CRDS as part of STScI/SSB's (Science Software Branch) Ureka (or now Conda) which is found here:
+To check for CRDS try::
 
-    http://ssb.stsci.edu/ureka/
+   $ python -m crds.list --version
+   7.0.5, master, c95d1cc
 
-Follow the instructions for installing Ureka and afterward you should be able to do the following::
+If CRDS is not already installed,  it can be installed using in a variety of
+mechanisms including AstroConda contrib, PyPi, and GitHub source code.   
 
-    % python -m crds.list --version
-    CRDS - INFO - crds version 1.9.0 revision 2789:2793M
+Installation via AstroConda
+---------------------------
 
-and get similar output reflecting your installed CRDS version.
+One way to install CRDS directly is as an AstroConda contributed package.
+Doing this requires first setting up both Anaconda (or mini-Conda) and the
+AstroConda channel.  If HST or JWST pipeline calibration software is being
+installed via a Conda distribution list, there is a good chance CRDS will be
+installed as a dependency so explicit action may not be necessary.
+
+Install Continuum's Anaconda
+++++++++++++++++++++++++++++
+
+Installing Anaconda gives you a generic environment for numerical programming.  See:
+
+   https://www.continuum.io/downloads
+
+for Anaconda installation instructions.
+
+Set up AstroConda astronomy specific packages
++++++++++++++++++++++++++++++++++++++++++++++
+
+AstroConda is a collaborative effort producing astronomy related packages and making
+them available for installation via Conda.
+
+   http://astroconda.readthedocs.io/en/latest/installation.html
+
+Nominally,  setting up AstroConda is something like::
+
+   $ conda config --add channels http://ssb.stsci.edu/astroconda
+   $ conda create -n astroconda stsci
+   $ source activate astroconda
+
+Install CRDS AstroConda Contributed Package
++++++++++++++++++++++++++++++++++++++++++++
+
+Once AstroConda is installed, CRDS can be installed as an AstroConda
+contributed package::
+
+   $ conda install crds
+
+Typically however CRDS is automatically installed as a dependency of 
+HST or JWST calibration software distributions.
 
 Pip Installation
 ----------------
 
 It's possible to install and update CRDS using Python's pip system like this::
 
-   % pip install crds
+   $ pip install crds
 
-Because of the dependencies required by CRDS such as numpy and astropy,  installing via Ureka is preferred
-and will provide a system closer or identical to the one in pipeline use.
+Installing CRDS via Conda is preferred since the CRDS version tends to be more
+current and all other Python dependencies are more carefully controlled with
+a distribution list that specifies component versions.
 
 Installing from Source
 ----------------------
 
-Subversion Checkout
-++++++++++++++++++++++
+GitHub Checkout
++++++++++++++++
 
-Alternately, CRDS source code can be downloaded from the CRDS subversion repository like this::
+CRDS source code can be cloned from the GitHub source code repository as follows::
 
-  % svn co https://aeon.stsci.edu/ssb/svn/crds/trunk  crds
+  $ git clone https://github.com/spacetelescope/crds.git CRDS
+  $ cd CRDS
+
+  $ # optionally,  switch to release tag
+  $ git checkout <release tag,  e.g. 6.0.1>
 
 Run the Install Script
 ++++++++++++++++++++++
 Installing from source,  run the install script in the root source code directory::
 
-     % cd crds
-     % ./install
+    $ cd CRDS
+    $ ./install
     final status 000000
 
 Dependencies
@@ -139,19 +162,70 @@ OPTIONAL: For building documentation add:
    * stsci.sphinxext
 
 
+Best references Basics
+======================
+
+The primary function of CRDS is to assign the names of calibration reference files required
+to calibrate datasets to their metadata headers.
+
+CRDS bestrefs for HST
+---------------------
+
+CRDS provides the crds.bestrefs program for updating dataset headers for HST with the current
+best references.   Running bestrefs for HST is accomplished via::
+
+    % python -m crds.bestrefs --files dataset*.fits --update-bestrefs
+
+This command updates the files specified by dataset*.fits with the names of the latest best
+reference files.
+
+CRDS bestrefs for JWST
+----------------------
+
+The crds.bestrefs functionality that assigns best references to datasets is fully integrated with the
+JWST calibration software and operates transparently as a consequence of running pipelines::
+
+     % strun calwebb_sloper.cfg dataset.fits
+
+The above command will transparently update the reference files specified in the metadata of dataset.fits.
+
+Default Onsite Use:
+-------------------
+
+The CRDS default configuration permits CRDS to operate onsite with no explicit
+environment settings.
+
+By default, CRDS operates using /grp/crds/cache with no connection to any CRDS
+server.  
+
+Files and settings in /grp/crds/cache define the references that CRDS will
+assign to a given dataset.
+
+Offsite and Pipeline Use:
+-------------------------
+
+CRDS can be configured to operate from private/local CRDS caches.  See the
+instructions below for setting CRDS_PATH and CRDS_SERVER_URL.
+
+A private cache reduces the level of network i/o required for offsite use as
+well as eliminating constant dependence on CRDS web servers required to run a
+pipeline.  A private cache can also contain writable files suitable for
+experimentation.
+
+Onsite pipelines use private caches to reduce file system contention.
+
+Offsite pipelines use private caches to achieve more independence from STScI.
+
 Setting up your Environment
 ===========================
 
-CRDS is used in a number of different contexts and consequently is configurable.   The defaults for
-CRDS are tuned for onsite use at STScI using operational references,  requiring little or no configuration onsite.
-Subsequent instructions are provided for setting up more personalized or offsite environments.
+Configuring CRDS for pipeline or offsite personal use is accomplished by setting
+shell environment variables.
 
 Basic Environment
 -----------------
 
-CRDS supports HST and JWST projects using project-specific servers and an explicit cache of CRDS rules and reference
-files.   CRDS has two environment variables which define basic setup.   These variables control the server where CRDS
-obtains rules and references and where CRDS caches files to on your local system::
+Two environment variables which define basic CRDS setup using a private cache::
 
     % setenv CRDS_SERVER_URL  <some_crds_server>
     % setenv CRDS_PATH        <some_crds_reference_and_rules_cache_directory>
@@ -160,50 +234,52 @@ If you are currently working on only a single project,  it may be helpful to dec
 
     % setenv CRDS_OBSERVATORY   hst (or jwst)
 
-**NOTE:**  CRDS operates from and manages the CRDS cache.   Direct edits of the cache are not recommended in
-most cases,  with the possible exception of in-place edits of personal rules or reference files.   Changes to
-other files or directory structure,   including cache creation,  are not recommended.   Files in the cache
-are subject to automatic replacement or deletion by the CRDS framework and should be viewed as temporary
-working copies only.
+Once the private CRDS cache is synced,  these settings enable CRDS to operate without an
+always-on connection to the CRDS server or /grp/crds/cache.
 
-Setup for On-site Operartional Use (HST or JWST)
-------------------------------------------------
+In addition, having a local cache of files can reduce the transparent network
+I/O implied by accessing /grp/crds/cache via a VPN based connection to access
+gigabytes of data.
+
+Setup for On-site Operational Use (HST or JWST)
+-----------------------------------------------
 
 This section describes use of operational reference files onsite at STScI.  It's relevant to fully archived
-operational files,  not development and test.
+and operational files,  not development and test.
 
 File Cache Location (CRDS_PATH)
 +++++++++++++++++++++++++++++++
 
-For typical onsite use at STScI, CRDS users can share a file cache which contains all rules and references.  The
-location of the shared cache and default **CRDS_PATH** setting is essentially:
+The location of the CRDS cache is defined by the CRDS_PATH environment setting.
 
-    % setenv CRDS_PATH  /grp/crds/cache
+The defaut value of CRDS_PATH is /grp/crds/cache and requires direct access to that on site file system.
 
-A remote or pipeline user defines a non-default CRDS cache by setting, e.g.:
+A remote or pipeline user defines a non-default CRDS cache by setting, e.g.::
 
-	% setenv CRDS_PATH   $HOME/crds_cache
+    % setenv CRDS_PATH   $HOME/crds_cache
 
-Note that the CRDS cache is often used to store reference files and when fully populated for a
-particular mission can contain terabytes of files.
+Note that the CRDS cache is often used to store reference files and when fully
+populated for a particular mission can contain *terabytes* of files.  Hence,
+demand-based caching for particular datasets (using crds.bestrefs or strun) is
+probably preferred to sync'ing the entire cache using the crds.sync.
 
 Server Selection (CRDS_SERVER_URL)
 ++++++++++++++++++++++++++++++++++
 
-Since each project is supported by a different operational server, CRDS must determine which (if any)
-server to use.
+Since each project (and test systems) is supported by a different CRDS server
+a user must define the CRDS server they wish to use.
 
 For **HST**::
 
-% setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+    % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
 
 For **JWST**::
 
-% setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
+    % setenv CRDS_SERVER_URL https://jwst-crds.stsci.edu
 
-If CRDS cannot determine your project,  and you did not specify CRDS_SERVER_URL,  it will be defaulted to::
+If CRDS cannot determine your project, and you did not specify CRDS_SERVER_URL,  it will be defaulted to::
 
-% setenv CRDS_SERVER_URL https://crds-serverless-mode.stsci.edu
+   % setenv CRDS_SERVER_URL https://crds-serverless-mode.stsci.edu
 
 In serverless mode it is not possible for CRDS to download new files or configuration settings,
 so best reference recommendations may become stale.
@@ -211,18 +287,19 @@ so best reference recommendations may become stale.
 Onsite CRDS Testing
 +++++++++++++++++++
 
-For reference type development,  updates are generally made and tested in the test pipelines at STScI.  For
-coordinating with those tests,  **CRDS_PATH** and **CRDS_SERVER_URL** must be explicitly set to a test cache and server
-similar to this::
+For reference type development, updates are generally made and tested in the
+test pipelines at STScI.  For coordinating with those tests, **CRDS_PATH** and
+**CRDS_SERVER_URL** must be explicitly set to a test cache and server similar
+to this::
 
     % setenv CRDS_PATH  ${HOME}/crds_cache_test
     % setenv CRDS_SERVER_URL https://hst-crds-test.stsci.edu
 
 Alternative servers for JWST I&T testing are::
 
-	% setenv CRDS_SERVER_URL https://jwst-crds-b5it.stcsi.edu     # build-5
-	% setenv CRDS_SERVER_URL https://jwst-crds-b6it.stcsi.edu     # build-6
-	% setenv CRDS_SERVER_URL https://jwst-crds-b7it.stcsi.edu     # build-7
+    % setenv CRDS_SERVER_URL https://jwst-crds-b5it.stcsi.edu     # build-5
+    % setenv CRDS_SERVER_URL https://jwst-crds-b6it.stcsi.edu     # build-6
+    % setenv CRDS_SERVER_URL https://jwst-crds-dit.stcsi.edu      # build-7
 
 After syncing this will provide access to CRDS test files and rules in a local cache::
 
@@ -232,53 +309,52 @@ After syncing this will provide access to CRDS test files and rules in a local c
     # Fetch specifically listed test references
     % python -m crds.sync --files <test_references_only_the_test_server_has...>
 
-Testing reference type changes (new keywords,  new values or value restrictions, etc) may also require access to
-development versions of CRDS code.   In particular,  when adding parameters or changing legal parameter values,
-the certify tool is modified as "code" on the servers first.   Hence distributed versions of CRDS will not reflect
-ongoing type changes.   The test server Certify Files function should generally reflect the most up-to-date knowledge
-CRDS has about ongoing type changes.  To see how new reference files stack up with changing CRDS code,  try submitting
-the files to Certify Files on the test server or ask what the status is on crds_team@stsci.edu.
+Testing reference type changes (new keywords, new values or value restrictions,
+etc) may also require access to development versions of CRDS code.  In
+particular, when adding parameters or changing legal parameter values, the
+certify tool is modified as "code" on the servers first.  Hence distributed
+versions of CRDS will not reflect ongoing type changes.  The test server
+Certify Files function should generally reflect the most up-to-date knowledge
+CRDS has about ongoing type changes.  To see how new reference files stack up
+with changing CRDS code, try submitting the files to Certify Files on the test
+server or ask what the status is on crds_team@stsci.edu.
 
-**NOTE:** the test server is only visible on-site,  not on the internet.  Without VPN or port forwarding,  the test
-servers are not usable off site.
+**NOTE:** Without VPN or port forwarding, the test servers are not usable offsite.
 
 Setup for Offsite Use
 ---------------------
 
-CRDS has been designed to (optionally) automatically fetch and cache references you need to process your datasets.
-Rather than going to a website and downloading a tarball of recommended references,  the CRDS tools,  which know
-the references you need,  can go to the website for you and download the files you need to your cache.  Once you've
-cached a file,  unless you delete it,  you never have to download it again.
+CRDS has been designed to (optionally) automatically fetch and cache references
+you need to process your datasets to a personal CRDS cache.  You can create a
+small personal cache of rules and references supporting only the datasets you
+care about::
 
-For offsite users without VPN access who are running local calibrations,  you can create a small personal
-cache of rules and references supporting only the datasets you care about::
-
+    % setenv CRDS_SERVER_URL  https://hst-crds.stsci.edu   # or similar
     % setenv CRDS_PATH  ${HOME}/crds_cache
 
 For **HST**, to fetch the references required to process some FITS datasets::
 
     % python -m crds.bestrefs --files dataset*.fits --sync-references=1  --update-bestrefs
 
-For **JWST**,  CRDS is directly integrated with the calibration step code and will automatically download
-rules and references as needed.   Downloads will only be an issue when you set CRDS_PATH and don't already
-have the files you need in your cache.   By default CRDS modifies JWST datasets with new best references
-which serve as a processing history in the dataset header.
-
-Users of */grp/crds/cache* cannot update the readonly cache so they should not attempt to run crds.sync or
-fetch references with crds.bestrefs.  */grp/crds/cache* should always be complete within a few hours of archiving
-any new reference or rules delivery,  changing the operational context,  or marking files bad.
-
+For **JWST**, CRDS is directly integrated with the calibration step code and
+will automatically download rules and references as needed.
 
 Additional HST Settings
 +++++++++++++++++++++++
 
-HST calibration steps access reference files indirectly through environment variables.  There are two forms
-of CRDS cache reference file organization:  flat and with instrument subdirectories.   The original CRDS cache
-format was flat,  and the shared group cache at /grp/crds/cache remains flat.
+HST calibration software accesses reference files indirectly through
+environment variables.  There are two forms of CRDS cache reference file
+organization: flat and with instrument subdirectories.  The HST calibration
+software environment variable settings depend on the CRDS cache layout.
 
-**Flat CRDS cache** For calibration software to use references in a CRDS cache with a flat reference file
-organization, including the default shared group readonly cache at /grp/crds/cache,  set these environment
-variables::
+JWST calibration code refers to explict cache paths at runtime and does 
+not require these additional settings.
+
+Flat Cache Layout for /grp/crds/cache
+.....................................
+
+The flat cache layout places all references in a single directory.  The
+shared group cache at /grp/crds/cache has a flat organization::
 
   setenv iref ${CRDS_PATH}/references/hst/
   setenv jref ${CRDS_PATH}/references/hst/
@@ -286,10 +362,18 @@ variables::
   setenv lref ${CRDS_PATH}/references/hst/
   setenv nref ${CRDS_PATH}/references/hst/
   setenv uref ${CRDS_PATH}/references/hst/
-  setenv uref_linux $$uref
+  setenv uref_linux $uref
 
-**By-Instrument CRDS cache** For calibration software to use references in a CRDS cache with a by-instrument
-organization, the default for newly created caches in the future, set these environment variables::
+By-Instrument Cache Layout
+..........................
+
+The default cache setup for newly created caches for HST is organized by instrument.
+
+Unless you reorganize your cache using the crds.sync tool,  these are the settings
+that are most likely to be appropriate for a personal HST cache.
+
+For HST calibration software to use references in a CRDS cache with a by-instrument
+organization, set these environment variables::
 
   setenv iref ${CRDS_PATH}/references/hst/iref/
   setenv jref ${CRDS_PATH}/references/hst/jref/
@@ -299,31 +383,39 @@ organization, the default for newly created caches in the future, set these envi
   setenv uref ${CRDS_PATH}/references/hst/uref/
   setenv uref_linux $uref
 
-**Reorganizing CRDS References** The crds.sync tool can be used to reorganize the directory structure of a large
-existing CRDS cache as follows to switch from flat to by-instrument::
+Reorganizing CRDS References
+............................
+
+The crds.sync tool can be used to reorganize the directory structure of an
+existing CRDS cache.   These organizations determine whether or not 
+reference files are partitioned into instrument-specific sub-directories.
+
+To switch from flat to by-instrument::
 
   python -m crds.sync --organize=instrument
 
-  # or to switch from by-instrument to flat
+To switch from by-instrument to flat::
 
   python -m crds.sync --organize=flat
-
-Another simpler approach is to delete and recreate your existing cache, more feasible for small personal caches
-than for complete terabyte-scale caches.
 
 JWST Context
 ++++++++++++
 
-The CRDS context used to evaluate CRDS best references for JWST defaults to jwst-operational,  the changing
-symbolic context which is in use in the JWST pipeline.  During early development jwst-operational corresponds
-to the latest context which is sufficiently mature for broad use.  Use of jwst-operational is automatic.
+The CRDS context file defines a version of CRDS rules used to assign best references.
+
+The CRDS context used to evaluate CRDS best references for JWST defaults to jwst-operational.  This
+is an indirect name for the context in use or soon-to-be in use in the archive pipeline.
+
+During development jwst-operational corresponds to the latest context which is
+sufficiently mature for broad use.  Use of jwst-operational is automatic.
 
 The context used for JWST can be overridden to some specific historical or experimental context by setting
 the **CRDS_CONTEXT** environment variable::
 
     % setenv CRDS_CONTEXT jwst_0057.pmap
 
-**CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to crds.getreferences().
+**CRDS_CONTEXT** does not override command line switches or parameters passed explicitly to the
+crds.getreferences() API function.
 
 
 Advanced Environment

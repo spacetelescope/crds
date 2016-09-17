@@ -172,7 +172,7 @@ def certify_table_comparison_context():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying '.../references/hst/y951738kl_hv.fits' (1/1) as 'FITS' relative to context 'hst_0294.pmap'
     CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ('DATE',)
+    CRDS - INFO - Table unique row parameters defined as ['DATE']
     CRDS - INFO - Comparing reference 'y951738kl_hv.fits' against 'yas2005el_hv.fits'
     CRDS - WARNING - Table mode (('DATE', 56923.583400000003),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'yas2005el_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
@@ -204,7 +204,7 @@ def certify_table_comparison_reference():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None and comparison reference 'data/y9j16159l_hv.fits'
     CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ('DATE',)
+    CRDS - INFO - Table unique row parameters defined as ['DATE']
     CRDS - WARNING - Table mode (('DATE', 56923.583400000003),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS - WARNING - Table mode (('DATE', 56923.625),) from old reference 'y9j16159l_hv.fits[1]' is NOT IN new reference 'y951738kl_hv.fits[1]'
     CRDS - WARNING - Duplicate definitions in old reference 'y9j16159l_hv.fits[2]' for mode: (('DATE', 56924.041700000002),) :
@@ -232,7 +232,7 @@ def certify_comparison_context_none_all_references():
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/y951738kl_hv.fits' (1/1) as 'FITS' relative to context None
     CRDS - INFO - FITS file 'y951738kl_hv.fits' conforms to FITS standards.
-    CRDS - INFO - Table unique row parameters defined as ('DATE',)
+    CRDS - INFO - Table unique row parameters defined as ['DATE']
     CRDS - WARNING - No comparison reference for 'y951738kl_hv.fits' in context None. Skipping tables comparison.
     CRDS - INFO - ########################################
     CRDS - INFO - 0 errors
