@@ -113,7 +113,7 @@ def load_raw_specs(spec_path):
 
 def save_json_specs(specs, combined_specs_path):
     """Write out the specs dictionary returned by _load_specs() as .json in one combined file."""
-    specs_json = json.dumps(specs, indent=4, sort_keys=True)
+    specs_json = json.dumps(specs, indent=4, sort_keys=True, separators=(',', ':'))
     with open(combined_specs_path, "w+") as specs_file:
         specs_file.write(specs_json)
         log.info("Saved combined type specs to", repr(combined_specs_path))
