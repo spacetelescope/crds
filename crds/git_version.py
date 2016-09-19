@@ -1,6 +1,6 @@
-__version__ = '7a89bb3'
+__version__ = '7432326'
 
 __full_version_info__ = '''
-branch: incremental-load
-sha1: 7a89bb3
+branch: bump-version
+sha1: 7432326
 '''
