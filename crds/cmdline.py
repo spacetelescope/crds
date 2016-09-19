@@ -150,6 +150,7 @@ class Script(object):
         if self.reset_log:
             log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         self._exit_status = None
+        self.show_context_resolution = True
 
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
@@ -447,7 +448,8 @@ class Script(object):
                 final_context = self.server_info.operational_context
             else:
                 _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
-            log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
+            if self.show_context_resolution:
+                log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
             context = final_context
         return context
 
