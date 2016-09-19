@@ -417,6 +417,11 @@ AUTO_PICKLE_CONTEXTS = BooleanConfigItem("CRDS_AUTO_PICKLE_CONTEXTS", False,
 
 # -------------------------------------------------------------------------------------
 
+FORCE_COMPLETE_LOAD = BooleanConfigItem("CRDS_FORCE_COMPLETE_LOAD", False,
+    "When True, force CRDS contexts to load in their entirety rather than based on what is actually used.")
+
+# -------------------------------------------------------------------------------------
+
 def get_sqlite3_db_path(observatory):
     """Return the path to the downloadable CRDS catalog + history SQLite3 database file."""
     return locate_config("crds_db.sqlite3", observatory)

@@ -1,6 +1,6 @@
-__version__ = '1f51071'
+__version__ = '7a89bb3'
 
 __full_version_info__ = '''
-branch: master
-sha1: 1f51071
+branch: incremental-load
+sha1: 7a89bb3
 '''
