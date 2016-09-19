@@ -27,4 +27,4 @@ os.environ["CRDS_DEFAULT_CACHE"] = os.environ["CRDS_PATH"]
 # os.system("./setup_test_cache")
 # os.system("nosetests --with-coverage --cover-html --cover-html-dir={0}/coverage --cover-branches --cover-package=crds --cover-erase".format(topdir))
 os.system("nosetests")
-os.system("python -m crds.list --config --log-time")
+os.system("python -m crds.list --status --log-time")
