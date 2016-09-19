@@ -8,6 +8,7 @@ from __future__ import absolute_import
 
 import os.path
 import sys
+from collections import OrderedDict
 
 import crds
 from crds import cmdline, rmap, log, config, heavy_client, python23, data_file
@@ -279,6 +280,9 @@ and ids used for CRDS reprocessing recommendations.
     jwst_niriss_superbias_0005.rmap
 
     """
+    def __init__(self, *args, **keys):
+        super(ListScript, self).__init__(*args, **keys)
+        self.show_context_resolution = False
     
     def add_args(self):
         """Add switches unique to crds.list."""
@@ -310,6 +314,9 @@ and ids used for CRDS reprocessing recommendations.
 
         self.add_argument("--config", action="store_true", dest="config",
             help="print CRDS configuration information.")
+
+        self.add_argument("--status", action="store_true", dest="status",
+            help="print brief, basic, CRDS configuration information.")
 
         self.add_argument("--cat", nargs="*", dest="cat", metavar="FILES", default=None,
             help="print the text of the specified mapping files.")
@@ -350,6 +357,8 @@ and ids used for CRDS reprocessing recommendations.
             self.list_cached_pickles()
         if self.args.config:
             self.list_config()
+        if self.args.status:
+            self.list_status()
         if self.args.cat is not None:
             self.cat_files()
         if self.args.operational_context:
@@ -363,6 +372,7 @@ and ids used for CRDS reprocessing recommendations.
         """Print out the literal interpretation of the contexts implied by the script's
         context specifiers.
         """
+        self.show_context_resolution = True
         for context in self.contexts:
             print(context)
 
@@ -526,6 +536,27 @@ and ids used for CRDS reprocessing recommendations.
             _print_dict("Calibration Environment", cal_vars)
         _print_dict("Python Environment", pyinfo)
 
+    def list_status(self):
+        """Print out *basic* configuration info about the current environment and server."""
+        info = config.get_crds_env_vars()
+        real_paths = config.get_crds_actual_paths(self.observatory)
+        server = self.server_info
+        current_server_url = api.get_crds_server()
+        cache_subdir_mode = config.get_crds_ref_subdir_mode(self.observatory)
+        pyinfo = _get_python_info()
+        status = OrderedDict(
+            [("CRDS_PATH", info["CRDS_PATH"]),
+             ("CRDS_SERVER_URL", info["CRDS_SERVER_URL"]),
+             ("CRDS_MODE", info["CRDS_MODE"]),
+             ("Readonly Cache", self.readonly_cache),
+             ("Effective Context", heavy_client.get_processing_mode(self.observatory)[1]),
+             ("Last Synced", server.last_synced),
+             ("CRDS Version", heavy_client.version_info()),
+             ("Python Version", pyinfo["Python Version"]),
+             ("Python Executable", pyinfo["Python Executable"]),
+             ])
+        _print_dict(None, status)
+
     def list_required_parkeys(self):
         """Print out the parkeys required for matching using the specified contexts."""
         for name in self.contexts:
@@ -548,13 +579,14 @@ def _print_dict(title, dictionary, selected = None):
     """Print out dictionary `d` with a one line `title`."""
     if selected is None:
         selected = dictionary.keys()
-    print(title)
+    if title:
+        print(title)
     if dictionary:
         for key in sorted(selected):
             try:
-                print("\t" + key + " = " + repr(dictionary[key]))
+                print(("\t" if title else "") + key + " = " + repr(dictionary[key]))
             except Exception:
-                print("\t" + key + " = " + repr(getattr(dictionary, key)))
+                print(("\t" if title else "") + key + " = " + repr(getattr(dictionary, key)))
     else:
         print("\t" + "none")
 
