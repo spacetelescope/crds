@@ -650,6 +650,7 @@ def save_pickled_mapping(mapping, loaded):
         log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle save.")
         return
     with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
+        loaded.force_load()
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
 

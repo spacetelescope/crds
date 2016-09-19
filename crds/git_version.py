@@ -1,6 +1,6 @@
-__version__ = '653f191'
+__version__ = '7a89bb3'
 
 __full_version_info__ = '''
 branch: incremental-load
-sha1: 653f191
+sha1: 7a89bb3
 '''
