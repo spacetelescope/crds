@@ -545,8 +545,8 @@ and ids used for CRDS reprocessing recommendations.
         cache_subdir_mode = config.get_crds_ref_subdir_mode(self.observatory)
         pyinfo = _get_python_info()
         status = OrderedDict(
-            [("CRDS_PATH", info["CRDS_PATH"]),
-             ("CRDS_SERVER_URL", info["CRDS_SERVER_URL"]),
+            [("CRDS_PATH", info.get("CRDS_PATH", "undefined")),
+             ("CRDS_SERVER_URL", info.get("CRDS_SERVER_URL", "undefined")),
              ("CRDS_MODE", info["CRDS_MODE"]),
              ("Readonly Cache", self.readonly_cache),
              ("Effective Context", heavy_client.get_processing_mode(self.observatory)[1]),
