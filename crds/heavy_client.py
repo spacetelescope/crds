@@ -525,8 +525,9 @@ def cache_atomic_write(replace_path, contents, fail_warning):
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
     server_config = os.path.join(config.get_crds_cfgpath(observatory), "server_config")
-    with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue. "
-                         " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/ for more information on configuring CRDS."):
+    with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue.\n"
+                         " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/\n"
+                         " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
