@@ -34,49 +34,25 @@ and ids used for CRDS reprocessing recommendations.
     6. Resolving context specifiers into literal context names
 
     --------------------------------------------------------------------------
-    0. Configuration information governing the behavior of CRDS can be dumped:
+    0. Configuration information governing the behavior of CRDS for simple
+    configurations can be dumped:
+
+    % python -m crds.list --status
+    CRDS Version = '7.0.7, bump-version, 7432326'
+    CRDS_MODE = 'auto'
+    CRDS_PATH = '/Users/jmiller/crds_cache_ops'
+    CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
+    Effective Context = 'jwst_0204.pmap'
+    Last Synced = '2016-09-20 08:00:09.115330'
+    Python Executable = '/Users/jmiller/anaconda/bin/python'
+    Python Version = '3.5.2.final.0'
+    Readonly Cache = False
+
+    More comprehensive configuration informatio is also available for advanced
+    configurations:
 
     % python -m crds.list --config
-    CRDS - INFO - Symbolic context 'hst-operational' resolves to 'hst_0462.pmap'
-    CRDS Environment
-        CRDS_ALLOW_BAD_PARKEY_VALUES = 'false'
-        CRDS_ALLOW_BAD_REFERENCES = 'false'
-        CRDS_ALLOW_BAD_RULES = 'false'
-        CRDS_ALLOW_BAD_USEAFTER = 'false'
-        CRDS_ALLOW_SCHEMA_VIOLATIONS = 'false'
-        CRDS_DOWNLOAD_MODE = 'http'
-        CRDS_FITS_IGNORE_MISSING_END = 'false'
-        CRDS_FITS_VERIFY_CHECKSUM = 'false'
-        CRDS_IGNORE_MAPPING_CHECKSUM = 'false'
-        CRDS_MODE = 'auto'
-        CRDS_PATH = '/Users/homer/crds_cache_test'
-        CRDS_READONLY_CACHE = '0'
-        CRDS_SERVER_URL = 'https://hst-crds-test.stsci.edu'
-    CRDS Client Config
-        cache_subdir_mode = 'instrument'
-        crds = "<module 'crds' from '/Users/homer/work/workspace_crds/CRDS/crds/__init__.py'>"
-        effective_context = 'hst_0462.pmap'
-        readonly_cache = False
-        server_url = 'https://hst-crds-test.stsci.edu'
-        version = '7.0.4, master, 1f51071'
-    CRDS Actual Paths
-        config root = '/Users/homer/crds_cache_test/config/hst'
-        mapping root = '/Users/homer/crds_cache_test/mappings/hst'
-        reference root = '/Users/homer/crds_cache_test/references/hst'
-    CRDS Server Info
-        connected = True
-        effective_mode = 'local'
-        last_synced = '2016-09-01 12:16:28.686153'
-        mapping_url = {'hst': 'https://hst-crds-test.stsci.edu/unchecked_get/mappings/hst/'}
-        observatory = 'hst'
-        operational_context = 'hst_0462.pmap'
-        reference_url = {'hst': 'https://hst-crds-test.stsci.edu/unchecked_get/references/hst/'}
-        status = 'server'
-    Calibration Environment
-        none
-    Python Environment
-    Python Executable = '/Users/homer/anaconda/bin/python'
-    Python Version = '3.5.2.final.0'
+    ... lots of info ....
 
     --------------------------------------------------------------------------
    1. Files known by the CRDS server to belong to specified contexts can be listed
@@ -118,10 +94,10 @@ and ids used for CRDS reprocessing recommendations.
     --------------------------------------------------------------------------
     2. Locally cached files (files already synced to your computer) can be listed:
     
-    % python -m crds.list --cached-mappings
+    % python -m crds.list --cached-mappings --full-path
     ...
 
-    % python -m crds.list --cached-references
+    % python -m crds.list --cached-references --full-path
     ...
 
     In both cases adding --full-path prints the path of the file within the CRDS cache.
