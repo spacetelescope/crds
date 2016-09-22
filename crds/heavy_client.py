@@ -641,7 +641,7 @@ def load_pickled_mapping(mapping):
     pickle_file = config.locate_pickle(mapping + ".pkl")
     pickled = open(pickle_file, "rb").read()
     loaded = python23.pickle.loads(pickled)
-    log.verbose("Loaded pickled context", repr(mapping))
+    log.info("Loaded pickled context", repr(mapping))
     return loaded
 
 def save_pickled_mapping(mapping, loaded):
@@ -654,6 +654,7 @@ def save_pickled_mapping(mapping, loaded):
         loaded.force_load()
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
+        log.info("Saved pickled context", repr(mapping))
 
 # =============================================================================
 
