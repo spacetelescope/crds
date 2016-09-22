@@ -251,22 +251,30 @@ class SyncScript(cmdline.ContextsScript):
     
     def main(self):
         """Synchronize files."""
+
         if self.args.dry_run:
             self.args.readonly_cache = True
+
         if self.args.repair_files:
             self.args.check_files = True
+
         if self.args.output_dir:
             os.environ["CRDS_MAPPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_REFPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_CFGPATH_SINGLE"] = self.args.output_dir
             os.environ["CRDS_PICKLEPATH_SINGLE"] = self.args.output_dir
+
         if self.args.clear_pickles or self.args.ignore_cache or self.args.repair_files:
             self.clear_pickles(self.contexts)
+
         if self.args.organize:   # do this before syncing anything under the current mode.
             self.organize_references(self.args.organize)
+
         self.require_server_connection()
+
         if self.readonly_cache and self.args.verify_context_change:
             log.error("--readonly-cache and --verify-context-change are incompatible,  a readonly cache cannot change.")
+
         if self.args.files:
             self.sync_explicit_files()
             verify_file_list = self.files
@@ -300,9 +308,12 @@ class SyncScript(cmdline.ContextsScript):
 
         if self.args.verify_context_change:
             old_context = heavy_client.load_server_info(self.observatory).operational_context
+
         heavy_client.update_config_info(self.observatory)
+
         if self.args.verify_context_change:
             self.verify_context_change(old_context)
+
         if self.args.push_context:
             self.push_context()
             
@@ -325,7 +336,9 @@ class SyncScript(cmdline.ContextsScript):
         """
         for context in contexts:
             with log.error_on_exception("Failed pickling", repr(context)):
-                crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)  # reviewed
+                pickle_path = config.locate_pickle(context, self.observatory)
+                if not os.path.exists(context):
+                    crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)  # reviewed
     
     # ------------------------------------------------------------------------------------------
 
