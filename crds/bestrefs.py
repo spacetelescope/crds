@@ -400,84 +400,147 @@ class BestrefsScript(cmdline.Script, cmdline.UniqueErrorsMixin):
 
     description = """
 * Determines best references with respect to a context or contexts.   
+* Optionally updates the headers of file-based data with new recommendations.
 * Optionally compares new results to prior results.
 * Optionally prints source data names affected by the new context.
-* Optionally updates the headers of file-based data with new recommendations.
     """
     
     epilog = """
-Bestrefs has a number of command line parameters which make it operate in different modes. 
+................
+Processing Modes
+................
+
+crds.bestrefs can be run in 3 distinct processing modes with different inputs, outputs,
+and purposes.   Where possible the input, output, and comparison modes are written to
+be orthogonal features that can be combined in various ways.   The following however
+are the 3 main use cases for crds.bestrefs:
+
+  1. File (Pipeline) Mode
+
+  The --files switch can be used to specify a list of FITS dataset files to
+  process.  This is used in the HST pipeline in conjunction with
+  --update-headers to fill in dataset FITS headers with recommended best
+  references. 
+
+    % python -m crds.bestrefs --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits... --update-headers
+
+  The outcome of this command is updating the best references in the FITS
+  headers of the specified .fits files.
+
+  2. Reprocessing Mode
+
+  The --old-context and --new-context switches are used to specify a pair of CRDS
+  contexts to compare results from.  Reprocessing mode runs by fetching matching
+  parameters from the archive database using --instruments or --datasets.  This
+  mode is used to recommend reprocessing where the bestrefs differ between old
+  and new contexts.
+
+    % python -m crds.bestrefs --old-context hst_0001.pmap --new-context hst_0002.pmap --affected-datasets
+
+  The outcome of this command is to print the IDs of datasets affected by the
+  transition from context 0001 to 0002.
+
+  --affected-datasets is a "bundle switch" that captures standard options for
+  reprocessing including the option of printing out the affected datasets en lieu
+  of updating FITS headers.  As an optimization, this mode typically runs against
+  only those datasets implied by the differences in old and new contexts and restricted
+  to those datasets potentially affected by the USEAFTER dates of new references.
+
+3. Regression Mode
+
+  In regression mode, crds.bestrefs compares the bestrefs assigned by --new-context
+  with the bestrefs recorded in the parameter source.  This mode is typically
+  run against CRDS constructed .json or pickle save files known to be updated
+  with bestrefs.   This mode can be used to verify that different versions of CRDS
+  produce the same results relative to a set of saved parameters and best references.
+
+  a. Regression Capture
+
+  This sub-mode captures all parameter sets for an instrument updated with the
+  best refs assigned by --new-context.
+
+    %  python -m crds.bestrefs --new-context hst_0002.pmap --instrument acs --update- --save-pickle old-regression.json
+
+  b. Regression Test
+
+  This sub-mode plays back captured datasets comparing captured prior results
+  with the current result.
+
+    %  python -m crds.bestrefs --new-context hst_0002.pmap --compare-source-bestrefs --print-affected --load-pickles old-regression.json
+
+  Unlike reprocessing mode, this mode necessarily runs against all the datasets
+  specified by the data source,  in this case a .json parameters file.
+
+  This mode can also be used to cache database parameter sets to optimize performance
+  or eliminate the possibility of database parameter variation.
 
 ...........
 New Context
 ...........
 
-crds.bestrefs always computes best references with respect to a context which can be explicitly specified with the 
---new-context parameter.    If --new-context is not specified,  the default operational context is determined by 
-consulting the CRDS server or looking in the local cache.  
+crds.bestrefs always computes best references with respect to a context which
+can be explicitly specified with the --new-context parameter.  If --new-context
+is not specified, the default operational context is determined by consulting
+the CRDS server or looking in the local cache.
 
 ........................
 Lookup Parameter Sources
 ........................
 
-The two primary modes for bestrefs involve the source of reference file matching parameters.   Conceptually 
-lookup parameters are always associated with particular datasets and used to identify the references
-required to process those datasets.
+The following methods can be used to define parameter sets for which to compute
+best references::
 
-The options --files, --datasets, --instruments, and --all-instruments determine the source of lookup parameters:
+  --files can be used to specify a list of FITS files from which to load
+    parameters and optionall update headers.
 
-1. To find best references for a list of files do something like this:
+  --instruments can be used to specify a list of instruments.  Without
+    --diffs-only or --datasets-since this choice selects ALL datasets for the
+    specified instruments.
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
+  --all-instruments is shorthand for all --instruments supported by the project.
+    This parameter can be so memory intensive as to be infeasible.
 
-the first parameter, hst.pmap,  is the context with respect to which best references are determined.
+  --datasets is used to specify a list of dataset IDs as would be found under --instruments.
 
-2. To find best references for a list of catalog dataset ids do something like this:
-
-    % python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
-
-3. To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
-
-    % python -m crds.bestrefs --new-context hst.pmap --instruments acs
-
-4. To do mass scale testing for all supported instruments for all cataloged datasets do:
-
-    % python -m crds.bestrefs --new-context hst.pmap --all-instruments
-    
-    or to test for differences between two contexts
-
-    % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all-instruments
+  --load-pickles can be used to specify a list of .pkl or .json files that define parameter
+    sets.  These can most easily be created using --save-pickle.
 
 ................
 Comparison Modes
 ................
 
-The --old-context and --compare-source-bestrefs parameters define the best references comparison mode.  Each names
-the origin of a set of prior recommendations and implicitly requests a comparison to the recommendations from 
-the newly computed bestrefs determined by --new-context.
+The --old-context and --compare-source-bestrefs parameters define the best
+references comparison mode.  Each names the origin of a set of prior
+recommendations and implicitly requests a comparison to the recommendations
+from the newly computed bestrefs determined by --new-context.
 
     Context-to-Context
     ::::::::::::::::::
     
-    --old-context can be used to specify a second context for which bestrefs are dynamically computed; --old-context 
-    implies that a bestrefs comparison will be made with --new-context.   If --old-context is not specified,  it 
+    --old-context can be used to specify a second context for which bestrefs
+    are dynamically computed; --old-context implies that a bestrefs comparison
+    will be made with --new-context.  If --old-context is not specified, it
     defaults to None.
     
     Prior Source Recommendations
     ::::::::::::::::::::::::::::
     
-    --compare-source-bestrefs requests that the bestrefs from --new-context be compared to the bestrefs which are
-    recorded with the lookup parameter data,  either in the file headers of data files,  or in the catalog.   In both
-    cases the prior best references are recorded static values,  not dynamically computed bestrefs.
+    --compare-source-bestrefs requests that the bestrefs from --new-context be
+    compared to the bestrefs which are recorded with the lookup parameter data,
+    either in the file headers of data files, or in the catalog.  In both cases
+    the prior best references are recorded static values, not dynamically
+    computed bestrefs.
     
 ............
 Output Modes
 ............
 
-crds.bestrefs supports several output modes for bestrefs and comparison results to standard out.
+crds.bestrefs supports several output modes for bestrefs and comparison results
+to standard out.
 
-If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
-one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.
+If --print-affected is specified, crds.bestrefs will print out the name of any
+file for which at least one update for one reference type was recommended.
+This is essentially a list of files to be reprocessed with new references.
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --print-affected
@@ -489,17 +552,39 @@ one reference type was recommended.   This is essentially a list of files to be 
 Update Modes
 ............
 
-crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files:
+crds.bestrefs initially supports one mode for updating the best reference
+recommendations recorded in data files:
 
     % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \\
         --compare-source-bestrefs --update-bestrefs
+
+......................
+Pickle and .json saves
+......................
+
+crds.bestrefs can load parameters and past results from a sequence of .pkl or
+.json files using --load-pickles.  These are combined into a single parameter
+source in command line order, nominally in worst-to-best order where later
+files override earlier files.
+
+crds.bestrefs can save the parameters obtained from various sources into .pkl
+or .json formatted save files using --save-pickle.  The single combined result
+of multiple pickle or instrument parameter sources is saved.   The file extension
+defines the format used.
+
+The preferred  .json format defines a singleton { id: parameters} dictionary/array
+on each line as a series of isolated .json objects.   A less robust single object
+form is also supported { id1: parameters1, id2: parameters2, ...}.
+
+.json format is preferred over .pkl because it is more transparent and robust
+across different versions of Python or typos.
 
 .........
 Verbosity
 .........
 
-crds.bestrefs has --verbose and --verbosity=N parameters which can increase the amount of informational 
-and debug output.
+crds.bestrefs has --verbose and --verbosity=N parameters which can increase the
+amount of informational and debug output.
 
     """
     
@@ -645,35 +730,38 @@ and debug output.
     def add_args(self):
         """Add bestrefs script-specific command line parameters."""
         
+        self.add_argument("-f", "--files", nargs="+", metavar="FILES", default=None,
+            help="HST pipeline mode.    Dataset files to compute best references for and optionally update headers.")
+        
+        self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true", 
+            help="Update sources with new best reference recommendations.  Invalid for database based parameter sources.")
+                    
         self.add_argument("-n", "--new-context", dest="new_context", 
             help="Compute the updated best references using this context. "
                  "Uses current operational context by default.",
             default=None, type=cmdline.mapping_spec)
         
         self.add_argument("-o", "--old-context", dest="old_context",
-            help="Compare bestrefs recommendations from two contexts.", 
+            help="Compare bestrefs recommendations from two contexts.   Used for reprocessing recommendations.", 
             metavar="OLD_CONTEXT", default=None, type=cmdline.mapping_spec)
 
         self.add_argument("--fetch-old-headers", dest="fetch_old_headers", action="store_true",
-            help="Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.")
-        
-        self.add_argument("-f", "--files", nargs="+", metavar="FILES", default=None,
-            help="Dataset files to compute best references for.")
+            help="Fetch header parameters defined by --old-context.   Slower,  avoid unless new/old parameters differ.")
         
         self.add_argument("-d", "--datasets", nargs="+", metavar="IDs", default=None,
             help="Dataset ids to consult database for matching parameters and old results.")
         
         self.add_argument("--all-instruments", action="store_true", default=None,
-            help="Compute best references for cataloged datasets for all supported instruments in database.")
+            help="Compute best references for cataloged datasets for all supported instruments in database.  NOTE: Memory intensive.")
         
         self.add_argument("-i", "--instruments", nargs="+", metavar="INSTRUMENTS", default=None,
-            help="Instruments to compute best references for, all historical datasets in database.")
+            help="One or more instruments to compute best references for, all historical datasets in database.")
         
         self.add_argument("-p", "--load-pickles", nargs="*", default=None,
-            help="Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.")
+            help="Load dataset headers and prior bestrefs from pickle files,  consolidates overrides in command line order.  Can also load .json files.")
         
         self.add_argument("-a", "--save-pickle", default=None,
-            help="Write out the combined dataset headers to the specified pickle file.  Can also store .json file.")
+            help="Write out the combined dataset headers to the specified pickle file.  One combined file.   Can also store .json file.")
         
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
             help="A list of reference types to process,  defaulting to all types.")
@@ -682,23 +770,20 @@ and debug output.
             help="A list of reference types which should not be processed,  defaulting to nothing.")
         
         self.add_argument("--diffs-only", action="store_true", default=None,
-            help="For context-to-context comparison, choose only instruments and types from context differences.")
+            help="For context-to-context comparison, process only instruments and types from context differences.")
 
         self.add_argument("--datasets-since", default=None, type=reformat_date_or_auto,
-            help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.")
+            help="Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.  OFF by default.")
         
         self.add_argument("-c", "--compare-source-bestrefs", dest="compare_source_bestrefs", action="store_true",
-            help="Compare new bestrefs recommendations to recommendations from data source,  files or database.")
+            help="Compare bestrefs determined by --new-context to bestrefs recorded with parameter source.  Not always possible.")
         
         self.add_argument("--update-pickle", action="store_true",
-            help="Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.")        
+            help="Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests and supporting --compare-source-bestrefs.")
         
         self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
             help="If specified, process only the listed dataset ids.")
         
-        self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true", 
-            help="Update sources with new best reference recommendations.")
-                    
         self.add_argument("--print-affected", dest="print_affected", action="store_true",
             help="Print names of products for which the new context would assign new references for some exposure.")
     
@@ -745,10 +830,10 @@ and debug output.
             help="If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.")
         
         self.add_argument("--compare-cdbs", action="store_true",
-            help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
+            help="Regression mode.   Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         self.add_argument("--affected-datasets", action="store_true", 
-            help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
+            help="Reprocessing mode.   Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
         
         self.add_argument("-z", "--optimize-tables", action="store_true", 
             help="If set, apply row-based optimizations to screen out inconsequential table updates.")
