@@ -383,6 +383,7 @@ class Mapping(object):
     #    result out to `filename`.
     #    """
 
+    @utils.cached
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
@@ -775,7 +776,8 @@ class PipelineContext(ContextMapping):
                 return None
             else:
                 return imap.get_equivalent_mapping(mapping)
-            
+
+    @utils.cached
     def get_required_parkeys(self):
         """Return a dictionary of matching parameters for each instrument:
         
@@ -1176,6 +1178,7 @@ class ReferenceMapping(Mapping):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
         return [self.basename]
 
+    @utils.cached
     def get_required_parkeys(self, include_reffile_switch=True):
         """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
