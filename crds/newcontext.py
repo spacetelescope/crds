@@ -22,7 +22,7 @@ def get_update_map(old_pipeline, updated_rmaps):
     of new rmap names, `updated_rmaps`,  return the mapping:
         { imap_name : [ updates_for_that_imap, ... ], ... }
     """
-    pctx = crds.get_pickled_mapping(old_pipeline)
+    pctx = crds.get_pickled_mapping(old_pipeline)   # reviewed
     updates = {}
     for update in sorted(updated_rmaps):
         instrument, _filekind = utils.get_file_properties(pctx.observatory, update)

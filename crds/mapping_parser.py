@@ -35,7 +35,7 @@ selector_section = ws 'selector' ws '=' ws selector:s ws -> s
 
 selector = ( dict | parameters ):d -> d
 parameters = ws parameters_name:n ws '(' ws dict:d ws ')' -> eval(n, globals(), locals())(d)
-parameters_name = ('Match' | 'UseAfter' | 'SelectVersion' | 'Bracket' | 'GeometricallyNearest' | 'ClosestTime'):n -> n
+parameters_name = ('Match' | 'UseAfter' | 'VersionAfter' | 'SelectVersion' | 'Bracket' | 'GeometricallyNearest' | 'ClosestTime'):n -> n
 
 # NOTE:  dict is returned as an item-list to preserve duplicates (considered errors)
 dict = ws '{' items:m '}' ws -> m

@@ -9,6 +9,10 @@ if sys.version_info >= (3,0,0):
     from html import unescape
     import configparser
     import pickle
+
+    def unicode_to_str(input):
+        """Recursively convert .json inputs with unicode to simple Python strings."""
+        return input
 else:
     long = long
     string_types = (basestring,)
@@ -19,6 +23,18 @@ else:
 
     import ConfigParser as configparser
     import cPickle as pickle
+
+    def unicode_to_str(input):
+        """Recursively convert .json inputs with unicode to simple Python strings."""
+        if isinstance(input, dict):
+            return {unicode_to_str(key): unicode_to_str(value)
+                    for key, value in input.iteritems()}
+        elif isinstance(input, (list, tuple)):
+            return [unicode_to_str(element) for element in input]
+        elif isinstance(input, unicode):
+            return input.encode('utf-8')
+        else:
+            return input
 
 __all__ = [
     "long",

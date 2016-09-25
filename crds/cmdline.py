@@ -150,6 +150,7 @@ class Script(object):
         if self.reset_log:
             log.reset()  # reset the infos, warnings, and errors counters as if new commmand line run.
         self._exit_status = None
+        self.show_context_resolution = True
 
     def main(self):
         """Write a main method to perform the actions of the script using self.args."""
@@ -447,7 +448,8 @@ class Script(object):
                 final_context = self.server_info.operational_context
             else:
                 _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
-            log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
+            if self.show_context_resolution:
+                log.info("Symbolic context", repr(context), "resolves to", repr(final_context))
             context = final_context
         return context
 
@@ -684,13 +686,13 @@ class ContextsScript(Script):
                     self.dump_files(pmaps[-1], files)
             for context in self.contexts:
                 with log.warn_on_exception("Failed loading context", repr(context)):
-                    pmap = crds.get_pickled_mapping(context)
+                    pmap = crds.get_cached_mapping(context)
                     useable_contexts.append(context)
         else:
             for context in self.contexts:
                 with log.warn_on_exception("Failed listing mappings for", repr(context)):
                     try:
-                        pmap = crds.get_pickled_mapping(context)
+                        pmap = crds.get_cached_mapping(context)
                         files |= set(pmap.mapping_names())
                     except Exception:
                         files |= set(api.get_mapping_names(context))
@@ -712,7 +714,7 @@ class ContextsScript(Script):
         files = set()
         for context in self.contexts:
             try:
-                pmap = crds.get_pickled_mapping(context)
+                pmap = crds.get_cached_mapping(context)
                 files |= set(pmap.reference_names())
                 log.verbose("Determined references from cached mapping", repr(context))
             except Exception:  # only ask the server if loading context fails

@@ -188,15 +188,19 @@ def _initial_recommendations(
         # the new vs. the old context.
         update_config_info(observatory)
         log.verbose(name + "() results:\n", log.PP(bestrefs), verbosity=65)
+        instrument = utils.header_to_instrument(parameters)
+        warn_bad_context(observatory, final_context, instrument)        
         warn_bad_references(observatory, bestrefs)
     
     return final_context, bestrefs
 
 # ============================================================================
 
-def warn_bad_context(observatory, context):
+# This is cached because it should only produce output *once* per program run.
+@utils.cached
+def warn_bad_context(observatory, context, instrument=None):
     """Issue a warning if `context` is a known bad file, or contains bad files."""
-    bad_contained = get_bad_mappings_in_context(observatory, context)
+    bad_contained = get_bad_mappings_in_context(observatory, context, instrument)
     if bad_contained:
         msg = log.format("Final context", repr(context), 
                          "is marked as scientifically invalid based on:", log.PP(bad_contained))
@@ -204,6 +208,32 @@ def warn_bad_context(observatory, context):
             log.warning(msg)
         else:
             raise CrdsBadRulesError(msg)
+
+# This is cached because it can be called multiple times for a single dataset,
+# both withing warn_bad_mappings and elsewhere.
+@utils.cached
+def get_bad_mappings_in_context(observatory, context, instrument=None):
+    """Return the list of bad files (defined by the server) contained by `context`."""
+    if instrument is None:
+        check_context = context
+    else:
+        check_context = rmap.get_cached_mapping(context).get_imap(instrument).basename
+    bad_mappings = get_config_info(observatory).bad_files_set
+    context_mappings = mapping_names(check_context)
+    return sorted(list(context_mappings & bad_mappings))
+
+def mapping_names(context):
+    """Return the full set of mapping names associated with `context`,  compute locally if possible,
+    else consult server.
+    """
+    try:
+        mapping = crds.get_symbolic_mapping(context)
+        contained_mappings = mapping.mapping_names()
+    except IOError:
+        contained_mappings = api.get_mapping_names(context)
+    return set(contained_mappings)
+
+# ============================================================================
 
 def warn_bad_references(observatory, bestrefs):
     """Scan `bestrefs` mapping { filekind : bestref_path, ...} for bad references."""
@@ -227,24 +257,8 @@ def warn_bad_reference(observatory, reftype, reference):
         else:
             raise CrdsBadReferenceError(msg)
 
-def mapping_names(context):
-    """Return the full set of mapping names associated with `context`,  compute locally if possible,
-    else consult server.
-    """
-    try:
-        mapping = get_symbolic_mapping(context)
-        contained_mappings = mapping.mapping_names()
-    except IOError:
-        contained_mappings = api.get_mapping_names(context)
-    return set(contained_mappings)
-
-def get_bad_mappings_in_context(observatory, context):
-    """Return the list of bad files (defined by the server) contained by `context`."""
-    bad_mappings = get_config_info(observatory).bad_files_set
-    context_mappings = mapping_names(context)
-    return sorted(list(context_mappings & bad_mappings))
-
 # ============================================================================
+
 def check_observatory(observatory):
     """Make sure `observatory` is valid."""
     assert observatory in ["hst", "jwst", "tobs"]
@@ -338,8 +352,6 @@ def get_processing_mode(observatory, context=None):
         
     final_context = get_final_context(info, context)
     
-    warn_bad_context(observatory, final_context)
-
     return info.effective_mode, final_context
 
 def get_final_context(info, context):
@@ -513,8 +525,9 @@ def cache_atomic_write(replace_path, contents, fail_warning):
 def load_server_info(observatory):
     """Return last connected server status to help configure off-line use."""
     server_config = os.path.join(config.get_crds_cfgpath(observatory), "server_config")
-    with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue. "
-                         " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/ for more information on configuring CRDS."):
+    with log.fatal_error_on_exception("CRDS server connection and cache load FAILED.  Cannot continue.\n"
+                         " See https://hst-crds.stsci.edu/docs/cmdline_bestrefs/ or https://jwst-crds.stsci.edu/docs/cmdline_bestrefs/\n"
+                         " for more information on configuring CRDS,  particularly CRDS_PATH and CRDS_SERVER_URL."):
         with open(server_config) as file_:
             info = ConfigInfo(ast.literal_eval(file_.read()))
         info.status = "cache"
@@ -589,7 +602,7 @@ def get_symbolic_mapping(
     to interpret the symbolic name into a primitive name.
     """
     abs_mapping = translate_date_based_context(mapping, observatory)
-    return get_pickled_mapping(
+    return get_pickled_mapping(   # reviewed
         abs_mapping, cached=cached, use_pickles=use_pickles, save_pickles=save_pickles, **keys)
 
         
@@ -628,7 +641,7 @@ def load_pickled_mapping(mapping):
     pickle_file = config.locate_pickle(mapping + ".pkl")
     pickled = open(pickle_file, "rb").read()
     loaded = python23.pickle.loads(pickled)
-    log.verbose("Loaded pickled context", repr(mapping))
+    log.info("Loaded pickled context", repr(mapping))
     return loaded
 
 def save_pickled_mapping(mapping, loaded):
@@ -638,8 +651,10 @@ def save_pickled_mapping(mapping, loaded):
         log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle save.")
         return
     with log.verbose_warning_on_exception("Failed saving pickle for", repr(mapping), "to", repr(pickle_file)):
+        loaded.force_load()
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
+        log.info("Saved pickled context", repr(mapping))
 
 # =============================================================================
 

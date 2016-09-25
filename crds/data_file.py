@@ -61,7 +61,7 @@ import contextlib
 from astropy.io import fits as pyfits
 from astropy.utils.exceptions import AstropyUserWarning
 
-from crds import utils, log, config, python23, timestamp
+from crds import utils, log, config, python23, timestamp, exceptions
 
 # import asdf
 
@@ -292,7 +292,11 @@ def dm_leak(filepath):
 def get_json_header(filepath, needed_keys=()):
     """Return the flattened header associated with a JSON file."""
     with open(filepath) as pfile:
-        header = json.load(pfile)
+        try:
+            header = json.load(pfile)
+        except ValueError as exc:
+            raise exceptions.JsonFormatError(
+                "JSON wouldn't load from", repr(filepath), ":", str(exc))
         header = to_simple_types(header)
     header = reduce_header(filepath, header, needed_keys)
     header = cross_strap_header(header)
@@ -302,7 +306,11 @@ def get_yaml_header(filepath, needed_keys=()):
     """Return the flattened header associated with a YAML file."""
     import yaml
     with open(filepath) as pfile:
-        header = yaml.load(pfile)
+        try:
+            header = yaml.load(pfile)
+        except ValueError as exc:
+            raise exceptions.YamlFormatError(
+                "YAML wouldn't load from", repr(filepath), ":", str(exc))
         header = to_simple_types(header)
     header = reduce_header(filepath, header, needed_keys)
     header = cross_strap_header(header)

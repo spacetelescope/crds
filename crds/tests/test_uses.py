@@ -83,23 +83,6 @@ def dt_uses_imap():
     >>> test_config.cleanup(old_state)
     """
 
-def dt_uses_print_datasets():
-    """
-    This test/function is quite slow since it surveys the catalog for recorded uses of the
-    specified file.  Too slow for routine unit test_config.
-    
-    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
-
-    >> uses.UsesScript("crds.uses --files n3o1022ij_drk.fits --print-datasets --hst")()
-    J8BA0HRPQ:J8BA0HRPQ
-    J8BA0IRTQ:J8BA0IRTQ
-    J8BA0JRWQ:J8BA0JRWQ
-    J8BA0KT4Q:J8BA0KT4Q
-    J8BA0LIJQ:J8BA0LIJQ
-
-    >>> test_config.cleanup(old_state)
-    """
-
 class TestUses(test_config.CRDSTestCase):
     '''
     def test_get_imap_except(self):
