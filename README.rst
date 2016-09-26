@@ -13,10 +13,36 @@ web sites corresponding to each project (http://hst-crds.stsci.edu or
 https://jwst-crds.stsci.edu/) which record information about reference files
 and provide related services.
 
-Releases are `registered on PyPI <http://pypi.python.org/pypi/crds>`_,
-and development is occuring at the
-`project's github page <https://github.com/spacetelescope/crds>`_.
+CRDS development is occuring at:
+     `Project's github page <https://github.com/spacetelescope/crds>`_.
 
-For installation instructions, see the `online documentation HST https://hst-crds.stsci.edu/static/users_guide/index.html`_
-or  ``docs/install.rst`` in this source distribution.
+CRDS is also available for installation as part of AstroConda Contrib:
+     `AstroConda Contrib <https://github.com/astroconda/astroconda-contrib>`_.
+
+
+Installing
+----------
+
+For developers:
+
+    % git clone https://github.com/spacetelescope/crds.git CRDS
+ 
+    % cd CRDS
+ 
+    % ./install
+
+or if you have AstroConda Contrib set up:
+
+   % conda install crds
+
+or as a last resort (tends to be dated):
+
+   % pip install crds
+
+User's Guide
+------------
+
+More documentation about CRDS is available here:
+
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
 
