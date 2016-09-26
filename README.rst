@@ -23,11 +23,12 @@ CRDS is also available for installation as part of AstroConda Contrib:
 Installing
 ----------
 
-For installation instructions, see the `online documentation HST https://hst-crds.stsci.edu/static/users_guide/index.html`_
-or:
+For developers:
 
     % git clone https://github.com/spacetelescope/crds.git CRDS
+ 
     % cd CRDS
+ 
     % ./install
 
 or if you have AstroConda Contrib set up:
@@ -37,4 +38,11 @@ or if you have AstroConda Contrib set up:
 or as a last resort (tends to be dated):
 
    % pip install crds
+
+User's Guide
+------------
+
+More documentation about CRDS is available here:
+
+    https://jwst-crds.stsci.edu/static/users_guide/index.html
 
