@@ -919,7 +919,7 @@ def file_to_instrument(filename):
     A key aspect of this function versus get_file_properties() is that observatory is not known.
     """
     for (_obs, instr) in observatory_instrument_tuples():
-        if "{}_".format(instr) in filename.lower() or "_{}".format(instr) in filename.lower():
+        if "_" + instr + "_" in filename or filename.startswith(instr + "_"):
             return instr.upper()
     from crds import data_file
     header = data_file.get_unconditioned_header(filename, needed_keys=INSTRUMENT_KEYWORDS)
