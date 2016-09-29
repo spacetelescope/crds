@@ -13,6 +13,7 @@ from pprint import pprint as pp
 from crds import rmap, log, config, tests, heavy_client
 from crds.exceptions import *
 from crds.tests import test_config
+from crds.client import api
 
 from nose.tools import assert_raises, assert_true
 
@@ -70,6 +71,33 @@ def dt_getreferences_imap_omit():
     >>> test_config.cleanup(old_state)
     """
 
+def dt_cache_references_multiple_bad_files():
+    """
+
+    Define bestrefs with multiple errors which should all be reported
+    prior to raising an exception.
+
+    >>> old_state = test_config.setup()
+
+    >>> bestrefs = {
+    ...    "flat": "NOT FOUND something went wrong for flat.",
+    ...    "dark": "NOT FOUND something else went wrong for dark.",
+    ... }
+
+    To work effectively for JWST reference file coverage improvement,
+    CRDS needs to report ALL bad references in a given Step or
+    prefetch, not just raise an exception on the first bad reference
+    found.
+
+    >>> api.cache_references("jwst.pmap", bestrefs)
+    Traceback (most recent call last):
+    ...
+    CrdsLookupError: Error determining best reference for 'flat'  =   something went wrong for flat.
+
+    >>> test_config.cleanup(old_state)
+    
+    """
+
 # ==================================================================================
 
 # class TestHeavyClient(test_config.CRDSTestCase):
@@ -79,13 +107,6 @@ def dt_getreferences_imap_omit():
         r = rmap.get_cached_mapping("hst.pmap")
         with self.assertRaises(CrdsUnknownInstrumentError):
             r.get_imap("foo")
-
-    def test_rmap_get_filekind(self):
-        r = rmap.get_cached_mapping("hst.pmap")
-        self.assertEqual(set(r.get_filekinds("data/j8bt05njq_raw.fits")),
-                         {'PCTETAB', 'CRREJTAB', 'DARKFILE', 'D2IMFILE', 'BPIXTAB', 'ATODTAB', 'BIASFILE',
-                              'SPOTTAB', 'MLINTAB', 'DGEOFILE', 'FLSHFILE', 'NPOLFILE', 'OSCNTAB', 'CCDTAB',
-                              'SHADFILE', 'IDCTAB', 'IMPHTTAB', 'PFLTFILE', 'DRKCFILE', 'CFLTFILE', 'MDRIZTAB'})
     """
 
 # ==================================================================================
