@@ -392,11 +392,7 @@ class TestCertify(test_config.CRDSTestCase):
     def test_AsdfCertify_invalid(self):
         assert_raises(certify.InvalidFormatError, certify.certify_file,
             self.data("invalid.asdf"), observatory="jwst",context="jwst.pmap", trap_exceptions="test")                  
-        
-    def test_UnknownCertifier_valid(self):
-        certify.certify_file(
-            self.data("valid.text"), observatory="jwst",context="jwst.pmap", trap_exceptions=False)
-            
+
     def test_UnknownCertifier_missing(self):
         assert_raises(certify.InvalidFormatError, certify.certify_file, 
             self.data("non-existent-file.txt"), observatory="jwst", context="jwst.pmap", trap_exceptions="test")
