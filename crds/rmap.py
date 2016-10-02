@@ -54,7 +54,6 @@ True
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-import sys
 import os.path
 import glob
 import json
@@ -70,8 +69,9 @@ from .config import mapping_exists, is_mapping
 
 from crds import exceptions as crexc
 from crds import python23
-from crds.custom_dict import TransformedDict, LazyFileDict
+from crds.custom_dict import LazyFileDict
 from crds.mapping_verifier import MAPPING_VERIFIER
+from crds.log import srepr
 
 # ===================================================================
 
@@ -1702,7 +1702,7 @@ def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
              srepr(rmapping.basename), "to", srepr(new_filename))
     original_rmap = str(rmapping)
     new_rmap = original_rmap.replace(old_text, new_text)
-    new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
+    new_mapping = ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
     new_mapping.write(new_filename)
 
 # ===================================================================
