@@ -31,7 +31,10 @@ def load_all_mappings(observatory, pattern="*map"):
     onto the loaded Mapping object.
     """
     all_mappings = rmap.list_mappings(pattern, observatory)
-    loaded = { name : rmap.get_cached_mapping(name) for name in all_mappings }
+    loaded = {}
+    for name in all_mappings:
+        with log.error_on_exception("Failed loading", repr(name)):
+            loaded[name] = rmap.get_cached_mapping(name)
     return loaded
 
 @utils.cached
