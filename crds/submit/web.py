@@ -7,7 +7,7 @@ import requests
 from lxml import html
 
 from crds import config, log, utils, exceptions
-from crds import background
+from . import background
 from crds.python23 import *
 
 # ==================================================================================================
