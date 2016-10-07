@@ -34,16 +34,16 @@
             },
          'OBSTYPE': {"DETECTOR=='HRC' and FILTER1=='G800L' and OBSTYPE=='ANY'": 'CORONAGRAPHIC|IMAGING'},
          'NAXIS1': {
-            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'ANY',
             },
          'NAXIS2': {
-            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'ANY',
             },
          'LTV1': {
-            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'ANY',
             },
          'LTV2': {
-            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'N/A',
+            "DETECTOR=='WFC' and APERTURE=='ANY_FULL'": 'ANY',
             },
          'SHUTRPOS': {"SHUTRPOS=='ANY'": 'A|B'}},
  'cos': {'LIFE_ADJ': {"LIFE_ADJ=='-11'": '-1.0|1.0',
