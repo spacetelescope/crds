@@ -1972,6 +1972,36 @@
             "tpn":"nirspec_dark.tpn",
             "unique_rowkeys":null
         },
+        "dflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DFLAT",
+            "filetype":"DETECTOR FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_dflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_dflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"abce8ac7b143ba3cb95593f8df2c2dabf892c29b",
+            "suffix":"dflat",
+            "text_descr":"Detector Flat Field",
+            "tpn":"nirspec_dflat.tpn",
+            "unique_rowkeys":null
+        },
         "disperser":{
             "derived_from":"Hand made 2015-10-09 10:49:00",
             "extra_keys":null,
@@ -2047,6 +2077,38 @@
             "suffix":"extract1d",
             "text_descr":"1-D Spectral Extraction",
             "tpn":"nirspec_extract1d.tpn",
+            "unique_rowkeys":null
+        },
+        "fflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"FFLAT",
+            "filetype":"FORE-OPTICS FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_fflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_fflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"05851664e5bff29b527b7c4ff7daa922b558ef94",
+            "suffix":"fflat",
+            "text_descr":"Fore-optics Flat Field",
+            "tpn":"nirspec_fflat.tpn",
             "unique_rowkeys":null
         },
         "flat":{
@@ -2470,6 +2532,39 @@
             "suffix":"saturation",
             "text_descr":"Saturation",
             "tpn":"nirspec_saturation.tpn",
+            "unique_rowkeys":null
+        },
+        "sflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SFLAT",
+            "filetype":"SPECTROGRAPH FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_sflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_sflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.GRATING",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"9b7063c1ecfed8fcbbca507a1b24ab63067e2eaa",
+            "suffix":"sflat",
+            "text_descr":"Spectrograph Flat Field",
+            "tpn":"nirspec_sflat.tpn",
             "unique_rowkeys":null
         },
         "specwcs":{
