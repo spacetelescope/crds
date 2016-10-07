@@ -324,6 +324,7 @@ class Script(object):
         return info
 
     @property
+    @utils.cached
     def bad_files(self):
         """Return the current list of ALL known bad mappings and references, not context-specific."""
         return self.server_info.bad_files_set
