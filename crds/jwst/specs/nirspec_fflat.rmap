@@ -1,0 +1,17 @@
+header = {
+    'derived_from' : 'Hand created 2016-10-06',
+    'file_ext' : '.fits',
+    'filekind' : 'FFLAT',
+    'filetype' : 'FORE-OPTICS FLATFIELD',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'nirspec_fflat.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.INSTRUMENT.DETECTOR', 'META.INSTRUMENT.FILTER', 'META.EXPOSURE.TYPE'),),
+    'sha1sum' : '9ef65dd9fa556ad82bf675934fef411f2c094b8f',
+    'suffix' : 'fflat',
+    'text_descr' : 'Fore-optics Flat Field',
+}
+
+selector = Match({
+})
