@@ -2,7 +2,7 @@
 reference or mapping file.
 
 >>> from pprint import pprint as pp
->>> pp(findall_mappings_using_reference("v2e20129l_flat.fits"))
+>>> pp(_findall_mappings_using_reference("v2e20129l_flat.fits"))
 ['hst.pmap',
  'hst_0001.pmap',
  'hst_0002.pmap',
@@ -23,56 +23,72 @@ import sys
 import os.path
 
 import crds
-from . import pysh, config, cmdline, utils, log
-from crds.client import api
+from . import pysh, config, cmdline, utils, log, rmap
 
-def _clean_file_lines(files):
-    """Return simple filenames from paths in `files`, ignoring error messages."""
-    files = [os.path.basename(f.strip()) for f in files]
-    return  [f for f in files if config.FILE_RE.match(str(f))]
+@utils.cached
+def load_all_mappings(observatory, pattern="*map"):
+    """Return a dictionary mapping the names of all CRDS Mappings matching `pattern`
+    onto the loaded Mapping object.
+    """
+    all_mappings = rmap.list_mappings(pattern, observatory)
+    loaded = {}
+    for name in all_mappings:
+        with log.error_on_exception("Failed loading", repr(name)):
+            loaded[name] = rmap.get_cached_mapping(name)
+    return loaded
 
-def findall_rmaps_using_reference(filename, observatory="hst"):
+@utils.cached
+def mapping_type_names(observatory, ending):
+    """Return a mapping dictionary containing only mappings with names with `ending`."""
+    return { name : mapping.mapping_names() + mapping.reference_names()
+             for (name, mapping) in load_all_mappings(observatory).items()
+             if name.endswith(ending) }
+
+def uses_files(files, observatory, ending):
+    """Alternate approach to uses that works by loading all mappings instead of grepping
+    them on the file system.
+    """
+    referrers = set()
+    for filename in files:
+        config.check_filename(filename)
+        loaded = mapping_type_names(observatory, ending)
+        for_filename = set(name for name in loaded if filename in loaded[name])
+        referrers |= for_filename
+    return sorted(list(referrers))
+
+def _findall_rmaps_using_reference(filename, observatory="hst"):
     """Return the basename of all reference mappings which mention `filename`."""
-    config.check_filename(filename) # x
-    mapping_path = config.get_path("test.pmap", observatory)  # x
-    rmaps = pysh.lines("find ${mapping_path} -name '*.rmap' | xargs grep -l ${filename}", raise_on_error=False) # secure
-    return _clean_file_lines(rmaps)
+    return uses_files([filename], observatory, "rmap")
 
-def findall_imaps_using_rmap(filename, observatory="hst"):
+def _findall_imaps_using_rmap(filename, observatory="hst"):
     """Return the basenames of all instrument contexts which mention `filename`."""
-    mapping_path = config.get_path("test.pmap", observatory)
-    config.check_filename(filename)
-    imaps = pysh.lines("find ${mapping_path} -name '*.imap' | xargs grep -l ${filename}", raise_on_error=False)  # secure
-    return _clean_file_lines(imaps)
+    return uses_files([filename], observatory, "imap")
 
-def findall_pmaps_using_imap(filename, observatory="hst"):
+def _findall_pmaps_using_imap(filename, observatory="hst"):
     """Return the basenames of all pipeline contexts which mention `filename`."""
-    mapping_path = config.get_path("test.pmap", observatory)
-    config.check_filename(filename)
-    pmaps = pysh.lines("find ${mapping_path} -name '*.pmap' | xargs grep -l ${filename}", raise_on_error=False)  #secure
-    return _clean_file_lines(pmaps)
+    return uses_files([filename], observatory, "pmap")
 
-def findall_mappings_using_reference(reference, observatory="hst"):
+def _findall_mappings_using_reference(reference, observatory="hst"):
     """Return the basenames of all mapping files in the hierarchy which
     mentions reference `reference`.
     """
     mappings = []
-    for rmap in findall_rmaps_using_reference(reference, observatory):
+    for rmap in _findall_rmaps_using_reference(reference, observatory):
         mappings.append(rmap)
-        for imap in findall_imaps_using_rmap(rmap, observatory):
+        for imap in _findall_imaps_using_rmap(rmap, observatory):
             mappings.append(imap)
-            for pmap in findall_pmaps_using_imap(imap, observatory):
+            for pmap in _findall_pmaps_using_imap(imap, observatory):
                 mappings.append(pmap)
     return sorted(list(set(mappings)))
 
-def findall_mappings_using_rmap(rmap, observatory="hst"):
+def _findall_mappings_using_rmap(rmap, observatory="hst"):
     """Return the basenames of all mapping files in the hierarchy which
     mentions reference mapping `rmap`.
     """
     mappings = []
-    for imap in findall_imaps_using_rmap(rmap, observatory):
+    for imap in _findall_imaps_using_rmap(rmap, observatory):
         mappings.append(imap)
-        for pmap in findall_pmaps_using_imap(imap, observatory):
+        for pmap in _findall_pmaps_using_imap(imap, observatory):
             mappings.append(pmap)
     return sorted(list(set(mappings)))
 
@@ -81,13 +97,13 @@ def uses(files, observatory="hst"):
     mappings = []
     for file_ in files:
         if file_.endswith(".rmap"):
-            mappings.extend(findall_mappings_using_rmap(file_, observatory))
+            mappings.extend(_findall_mappings_using_rmap(file_, observatory))
         elif file_.endswith(".imap"):
-            mappings.extend(findall_pmaps_using_imap(file_, observatory))
+            mappings.extend(_findall_pmaps_using_imap(file_, observatory))
         elif file_.endswith(".pmap"):
             pass  # nothing refers to a .pmap
         else:
-            mappings.extend(findall_mappings_using_reference(file_, observatory))
+            mappings.extend(_findall_mappings_using_reference(file_, observatory))
     return sorted(list(set(mappings)))
 
 class UsesScript(cmdline.Script):
