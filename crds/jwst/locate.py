@@ -52,6 +52,14 @@ suffix_to_filekind = TYPES.suffix_to_filekind
 
 # =======================================================================
 
+def match_context_key(key):
+    """Set the case of a context key appropriately for this project, JWST
+    always uses upper case.
+    """
+    return key.upper()
+
+# =======================================================================
+
 def mapping_validator_key(mapping):
     """For now,  just use instrument based constraints."""
     return (mapping.instrument + "_all_ld.tpn", mapping.name)
