@@ -44,6 +44,15 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+def match_context_key(key):
+    """Set the case of a context key (instrument or type) appropriately
+    for this project, HST used upper case for instruments,  lower case
+    for type names.
+    """
+    return key.upper() if key.upper() in INSTRUMENTS else key.lower()
+ 
+# =======================================================================
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.

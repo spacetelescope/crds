@@ -639,18 +639,16 @@ class ContextMapping(Mapping):
             selection.force_load()
 
     def set_item(self, key, value):
-        """Add or replace and element of this mapping's selector.   For re-writing only."""
-        key = str(key)
-        if key.upper() in self.selector:
-            key = key.upper()
-            replaced = self.selector[key]
-        elif key.lower() in self.selector:
-            key = key.lower()
-            replaced = self.selector[key]
-        else:
-            replaced = None
-        self.selector[key] = str(value)
-        return replaced
+        """Add or replace and element of this mapping's selector.   For re-writing only.
+
+        Return the case-corrected value of `key` and the value that was replaced or None
+        as (corrected_key, replaced_value).
+        """
+        key, value = str(key), str(value)
+        key = self.locate.match_context_key(key)
+        replaced = self.selector.get(key, None)
+        self.selector[key] = value
+        return key, replaced
 
     def validate(self):
         """Validate nested mappings, common properties for all context mappings."""
