@@ -2096,7 +2096,6 @@
             "observatory":"JWST",
             "parkey":[
                 [
-                    "META.INSTRUMENT.DETECTOR",
                     "META.INSTRUMENT.FILTER",
                     "META.EXPOSURE.TYPE"
                 ],
@@ -2105,7 +2104,7 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"05851664e5bff29b527b7c4ff7daa922b558ef94",
+            "sha1sum":"ab1aab68d2e3daa34b9e0d3a092cc0a7b22ed2e6",
             "suffix":"fflat",
             "text_descr":"Fore-optics Flat Field",
             "tpn":"nirspec_fflat.tpn",
