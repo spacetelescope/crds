@@ -929,10 +929,10 @@ CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?
 CONTEXT_OBS_RE_STR = r"[a-z]{1,8}" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
 CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
-PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
 PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
 MAPPING_RE_STR = CRDS_NAME_RE_STR + r".map"
