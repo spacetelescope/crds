@@ -418,8 +418,7 @@ class Mapping(object):
         header = data_file.get_conditioned_header(dataset, original_name=original_name)
         return self.minimize_header(header)
 
-    def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False, 
-                   recurse_added_deleted=False, recurse_replacements=True):
+    def difference(self, new_mapping, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Compare `self` with `new_mapping` and return a list of difference
         tuples,  prefixing each tuple with context `path`.
         """
@@ -444,16 +443,9 @@ class Mapping(object):
                     parameter_names = pars + (self.diff_name, self.parkey, "DIFFERENCE",))
                 if self._is_normal_value(key) and new_mapping._is_normal_value(key):   # mapping replacements
                     # recursion needed if both selections are mappings.
-                    if recurse_replacements:
-                        nested_diffs = self.selections[key].difference( 
-                            new_mapping.selections[key],  
-                            path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
-                            include_header_diffs=include_header_diffs, 
-                            recurse_added_deleted=recurse_added_deleted,
-                            recurse_replacements=recurse_replacements,
-                        )
-                    else:
-                        nested_diffs = []
+                    nested_diffs = self.selections[key].difference( new_mapping.selections[key],  
+                        path = path + ((self.filename, new_mapping.filename,), ), pars = pars + (self.diff_name,), 
+                        include_header_diffs=include_header_diffs, recurse_added_deleted=recurse_added_deleted)
                 elif recurse_added_deleted:  # include added/deleted cases from normal mapping replacing special, vice versa
                     if self._is_normal_value(key):  # new_mapping is special
                         nested_diffs = self.selections[key].diff_files("deleted", 
@@ -1265,7 +1257,7 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
-    def difference(self, other, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False, recurse_replacements=True):
+    def difference(self, other, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Return the list of difference tuples between `self` and `other`, prefixing each tuple with context `path`.
         Elements of `path` are named by correspnding elements of `pars`.
         """

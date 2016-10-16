@@ -46,9 +46,7 @@ def mapping_diffs(old_file, new_file, *args, **keys):
     IFF include_header_diffs,  include differences in mapping headers.   Some are "boring", e.g. sha1sum or name.
     
     IFF recurse_added_deleted,  include difference tuples for all nested adds and deletes whenever a higher level
-        mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.
-
-    IFF recurse_replacements,  include difference tuples recursively for mapping replacements.
+        mapping is added or deleted.   Else, only include the higher level mapping,  not contained files.        
     """
     observatory = keys.pop("observatory", None)
     differ = MappingDifferencer(observatory, old_file, new_file, *args, **keys)
@@ -109,7 +107,6 @@ class Differencer(object):
     include_header_diffs  bool include header changes in logical diff output for mappings
     hide_boring_diffs     bool hide boring header changes in logical diff output (name, sha1sum, derived_from, etc.)
     recurse_added_deleted bool recursively include all files of added or deleted mapping as also added or deleted
-    recurse_replacements  bool recursively difference mappings when a mapping is replaced by another
     lowest_mapping_only   bool in each logical diff output,  only show the lowest level mapping,  not the full context traversal
     remove_paths          bool remove paths from mapping names in logical diffs
     """
@@ -117,7 +114,7 @@ class Differencer(object):
     def __init__(self, observatory, old_file, new_file, primitive_diffs=False, check_diffs=False, mapping_text_diffs=False,
                  include_header_diffs=False, hide_boring_diffs=False, recurse_added_deleted=False,
                  lowest_mapping_only=False, remove_paths=False, squash_tuples=False, check_references=False,
-                 cache1=None, cache2=None, recurse_replacements=True):
+                 cache1=None, cache2=None):
         self.observatory = observatory
         self.old_file = old_file
         self.new_file = new_file
@@ -135,7 +132,6 @@ class Differencer(object):
         self.cache2 = cache2
         self.mappings_cache1 = os.path.join(self.cache1, "mappings", self.observatory) if cache1 else None
         self.mappings_cache2 = os.path.join(self.cache2, "mappings", self.observatory) if cache2 else None
-        self.recurse_replacements = recurse_replacements
 
     def locate_file(self, filename):
         """Return the full path for `filename` implementing default CRDS file cache
@@ -192,8 +188,7 @@ class MappingDifferencer(Differencer):
                     if old and new:
                         from crds import diff
                         diff.difference(self.observatory, old, new, primitive_diffs=self.primitive_diffs, 
-                                        recurse_added_deleted=self.recurse_added_deleted,
-                                        recurse_replacements=self.recurse_replacements)
+                                        recurse_added_deleted=self.recurse_added_deleted)
         pairs = sorted(set(mapping_pairs(differences) +  [(self.old_file, self.new_file)]))
         for (old, new) in pairs:
             if self.mapping_text_diffs:
@@ -224,8 +219,7 @@ class MappingDifferencer(Differencer):
         old_map = rmap.fetch_mapping(self.locate_file(self.old_file), ignore_checksum=True, path=self.mappings_cache1)
         new_map = rmap.fetch_mapping(self.locate_file(self.new_file), ignore_checksum=True, path=self.mappings_cache2)
         differences = old_map.difference(new_map, include_header_diffs=self.include_header_diffs,
-                                         recurse_added_deleted=self.recurse_added_deleted,
-                                         recurse_replacements=self.recurse_replacements)
+                                         recurse_added_deleted=self.recurse_added_deleted)
         return differences
 
     def get_affected(self):
@@ -768,8 +762,6 @@ Mutually Exclusive Modes
             help="In addition to CRDS mapping logical differences,  run UNIX context diff for mappings.")
         self.add_argument("-U", "--recurse-added-deleted",  dest="recurse_added_deleted", action="store_true",
             help="When a mapping is added or deleted, include all nested files as also added or deleted.  Else only top mapping change listed.")
-        self.add_argument("-S", "--dont-recurse-replacements",  dest="dont_recurse_replacements", action="store_true",
-            help="When a mapping is replaced,  don't include diffs of all nested files in the results.")
         self.add_argument("-K", "--check-diffs", dest="check_diffs", action="store_true",
             help="Issue warnings about new rules, deletions, or reversions.")
         self.add_argument("--check-references", dest="check_references", action="store_true",
@@ -866,9 +858,7 @@ Mutually Exclusive Modes
                                 remove_paths=self.args.remove_paths,
                                 squash_tuples=self.args.squash_tuples,
                                 cache1=self.args.cache1,
-                                cache2=self.args.cache2,
-                                recurse_replacements=(not self.args.dont_recurse_replacements),
-            )
+                                cache2=self.args.cache2)
         if log.errors() or log.warnings():
             return 2
         else:
