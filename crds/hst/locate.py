@@ -49,8 +49,13 @@ def match_context_key(key):
     for this project, HST used upper case for instruments,  lower case
     for type names.
     """
-    return key.upper() if key.upper() in INSTRUMENTS else key.lower()
- 
+    if key.lower() in INSTRUMENTS:
+        return key.upper()
+    elif key.lower() in FILEKINDS:
+        return key.lower()
+    else:
+        return None
+
 # =======================================================================
 
 def reference_keys_to_dataset_keys(rmapping, header):
