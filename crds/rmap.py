@@ -1265,7 +1265,7 @@ class ReferenceMapping(Mapping):
                   ("filekind", self.filekind),),)
         return sorted(self.selector.file_matches(filename, sofar))
 
-    def difference(self, other, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False, recurse_replacements=True):
+    def difference(self, other, path=(), pars=(), include_header_diffs=False, recurse_added_deleted=False):
         """Return the list of difference tuples between `self` and `other`, prefixing each tuple with context `path`.
         Elements of `path` are named by correspnding elements of `pars`.
         """
