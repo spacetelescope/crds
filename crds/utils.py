@@ -866,8 +866,9 @@ def observatory_instrument_tuples():
 
 def file_to_observatory(filename):
     """Return the observatory corresponding to reference, mapping, or dataset `filename`."""
+    basename = os.path.basename(filename).lower()
     for obs in ALL_OBSERVATORIES:
-        if obs + "_" in filename.lower() or obs + "." in filename.lower():
+        if basename.startswith(obs + "_") or (("_" + obs + ".") in basename) or (basename == obs + ".pmap"):
             return obs
     else:
         return instrument_to_observatory(file_to_instrument(filename))
@@ -918,8 +919,9 @@ def file_to_instrument(filename):
     """Given reference or dataset `filename`,  return the associated instrument.
     A key aspect of this function versus get_file_properties() is that observatory is not known.
     """
+    basename = os.path.basename(filename).lower()
     for (_obs, instr) in observatory_instrument_tuples():
-        if "{}_".format(instr) in filename.lower() or "_{}".format(instr) in filename.lower():
+        if ("_" + instr + "_" in basename) or basename.startswith(instr + "_"):
             return instr.upper()
     from crds import data_file
     header = data_file.get_unconditioned_header(filename, needed_keys=INSTRUMENT_KEYWORDS)

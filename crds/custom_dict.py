@@ -52,10 +52,9 @@ class TransformedDict(MutableMapping):
 
     def get(self, key, default=None):
         """Returns either value associated with `key` or transformed `default` value."""
-        tkey = self.transform_key(key)
-        if tkey in self:
-            return self._contents[self.transformed_value(tkey)]
-        else:
+        try:
+            return self[key]
+        except KeyError:
             return default
     
     def __repr__(self):

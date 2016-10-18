@@ -54,7 +54,6 @@ True
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-import sys
 import os.path
 import glob
 import json
@@ -70,8 +69,9 @@ from .config import mapping_exists, is_mapping
 
 from crds import exceptions as crexc
 from crds import python23
-from crds.custom_dict import TransformedDict, LazyFileDict
+from crds.custom_dict import LazyFileDict
 from crds.mapping_verifier import MAPPING_VERIFIER
+from crds.log import srepr
 
 # ===================================================================
 
@@ -383,6 +383,7 @@ class Mapping(object):
     #    result out to `filename`.
     #    """
 
+    @utils.cached
     def get_required_parkeys(self):
         """Determine the set of parkeys required for this mapping and all the mappings selected by it."""
         parkeys = set(self.parkey)
@@ -638,18 +639,16 @@ class ContextMapping(Mapping):
             selection.force_load()
 
     def set_item(self, key, value):
-        """Add or replace and element of this mapping's selector.   For re-writing only."""
-        key = str(key)
-        if key.upper() in self.selector:
-            key = key.upper()
-            replaced = self.selector[key]
-        elif key.lower() in self.selector:
-            key = key.lower()
-            replaced = self.selector[key]
-        else:
-            replaced = None
-        self.selector[key] = str(value)
-        return replaced
+        """Add or replace and element of this mapping's selector.   For re-writing only.
+
+        Return the case-corrected value of `key` and the value that was replaced or None
+        as (corrected_key, replaced_value).
+        """
+        key, value = str(key), str(value)
+        key = self.locate.match_context_key(key)
+        replaced = self.selector.get(key, None)
+        self.selector[key] = value
+        return key, replaced
 
     def validate(self):
         """Validate nested mappings, common properties for all context mappings."""
@@ -775,7 +774,8 @@ class PipelineContext(ContextMapping):
                 return None
             else:
                 return imap.get_equivalent_mapping(mapping)
-            
+
+    @utils.cached
     def get_required_parkeys(self):
         """Return a dictionary of matching parameters for each instrument:
         
@@ -1176,6 +1176,7 @@ class ReferenceMapping(Mapping):
         """Return name of this ReferenceMapping as degenerate list of 1 item."""
         return [self.basename]
 
+    @utils.cached
     def get_required_parkeys(self, include_reffile_switch=True):
         """Return the list of parkey names needed to select from this rmap."""
         parkeys = []
@@ -1702,7 +1703,7 @@ def replace_rmap_text(rmapping, new_filename, old_text, new_text, *args, **keys)
              srepr(rmapping.basename), "to", srepr(new_filename))
     original_rmap = str(rmapping)
     new_rmap = original_rmap.replace(old_text, new_text)
-    new_mapping = rmap.ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
+    new_mapping = ReferenceMapping.from_string(new_rmap, ignore_checksum=True)
     new_mapping.write(new_filename)
 
 # ===================================================================

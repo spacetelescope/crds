@@ -748,15 +748,42 @@ def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=Tru
         r_paths, r_downloads, r_bytes = {}, 0, 0
     return dict(list(m_paths.items())+list(r_paths.items())), m_downloads + r_downloads, m_bytes + r_bytes
     
+# =====================================================================================================
+
+def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):
+    """Given the FITS `header` of a dataset and a `pipeline_context`, determine
+    the best set of reference files for processing the dataset,  cache them 
+    locally,  and return the mapping  { filekind : local_file_path }.
+    """
+    best_refs = get_best_references(pipeline_context, header, reftypes=reftypes)
+    local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
+    return local_paths
+
 def cache_references(pipeline_context, bestrefs, ignore_cache=False):
-    """Given a pipeline `pipeline_context` and `bestrefs` mapping,  obtain the
-    set of reference files and cache them on the local file system.
+    """Given a CRDS context `pipeline_context` and `bestrefs` dictionary, download missing
+    reference files and cache them on the local file system.
     
     bestrefs    { reference_keyword :  reference_basename } 
     
     Returns:   { reference_keyword :  reference_local_filepath ... }   
     """
+    wanted = _get_cache_filelist_and_report_errors(bestrefs)
+    
+    localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False, api=1).get_local_files(wanted)
+
+    refs = _squash_unicode_in_bestrefs(bestrefs, localrefs)
+
+    return refs
+    
+def _get_cache_filelist_and_report_errors(bestrefs):
+    """Compute the list of files to download based on the `bestrefs` dictionary,
+    skimming off and reporting errors, and raising an exception on the last error seen.
+
+    Return the list of files to download,  collapsing complex return types like tuples
+    and dictionaries into a list of simple filenames.
+    """
     wanted = []
+    last_error = None
     for filetype, refname in bestrefs.items():
         if isinstance(refname, tuple):
             wanted.extend(list(refname))
@@ -765,17 +792,26 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
         elif isinstance(refname, python23.string_types):
             if "NOT FOUND" in refname:
                 if "n/a" in refname.lower():
-                    log.verbose("Reference type", repr(filetype), 
+                    log.verbose("Reference type", repr(filetype),
                                 "NOT FOUND.  Skipping reference caching/download.")
                 else:
-                    raise CrdsLookupError("Error determining best reference for " + 
-                                          repr(str(filetype)) + " = " + 
-                                          str(refname)[len("NOT FOUND"):])
+                    last_error = CrdsLookupError("Error determining best reference for",
+                                                 repr(str(filetype)), " = ", str(refname)[len("NOT FOUND"):])
+                    log.error(str(last_error))
             else:
                 wanted.append(refname)
         else:
-            raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
-    localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False, api=1).get_local_files(wanted)
+            last_error = CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
+            log.error(str(last_error))
+    if last_error is not None:
+        raise last_error
+    return wanted
+
+def _squash_unicode_in_bestrefs(bestrefs, localrefs):
+    """Given bestrefs dictionariesy `bestrefs` and `localrefs`, make sure
+    there are no unicode strings anywhere in the keys or complex
+    values.
+    """
     refs = {}
     for filetype, refname in bestrefs.items():
         if isinstance(refname, tuple):
@@ -791,14 +827,6 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
             raise CrdsLookupError("Unhandled bestrefs return value type for " + repr(str(filetype)))
     return refs
 
-def cache_best_references(pipeline_context, header, ignore_cache=False, reftypes=None):
-    """Given the FITS `header` of a dataset and a `pipeline_context`, determine
-    the best set of reference files for processing the dataset,  cache them 
-    locally,  and return the mapping  { filekind : local_file_path }.
-    """
-    best_refs = get_best_references(pipeline_context, header, reftypes=reftypes)
-    local_paths = cache_references(pipeline_context, best_refs, ignore_cache)
-    return local_paths
 
 # =====================================================================================================
 
