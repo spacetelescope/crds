@@ -8,8 +8,8 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_nirspec_badshutter.rmap',
     'observatory' : 'JWST',
-    'parkey' : ((),('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'ec43fcd3756a572d11405b7e683983c5d2fe51ff',
+    'parkey' : ((), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'sha1sum' : 'f73154cebd23df653910ee7b8d2da3d80b300196',
     'suffix' : 'badshutter',
     'text_descr' : 'Flagging bad shutters step',
 }
