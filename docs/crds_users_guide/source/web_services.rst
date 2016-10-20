@@ -472,16 +472,15 @@ file within a CRDS context.
 
 *context* is a CRDS context name which is used to interpret *master_version* to
 define the versions reference file corresponding to an overall s/w
-release. Typically the string "jwst-operational" should be used to select the
-current default CRDS context in use in the JWST pipeline.  It is anticipated
+release. Typically the string "null" should be used to select the current CRDS
+versions translation context in use in the JWST pipeline.  It is anticipated
 that the definitions of software versions should be relatively stable and
-additive as new contexts are generated. This parameter provides a mechanism for
-selecting non-default versions of CRDS rules to determine s/w versions.
+additive as new contexts are generated.
 
 An example call using the CRDS Python client shows the conceptual
 nature of the interface,  the functional inputs and outputs::
 
-   >>> versions_obj = get_system_versions("0.6.0noop.dev307", "jwst-operational")
+   >>> versions_obj = get_system_versions("0.6.0noop.dev307", "null")
 
 Printing the Python client return object in JSON format gives a more
 language agnostic view of the conceptual return value::
@@ -507,6 +506,26 @@ language agnostic view of the conceptual return value::
 
 where ... indicates that the full contents of the object are not being
 displayed.
+
+The alternative abstract context identifier "jwst-versions" may be used en lieu
+of "null".  The translation of the "jwst-versions" identifier is maintained on
+the CRDS server as a more literal context name such as "jwst_0059.pmap".  The
+value associated with "jwst-versions" or "null" will nominally be updated on
+the CRDS server whenever a new master version is defined.
+
+The intended purpose of the "jwst-versions" tag is to name the most capable
+context for use in translating calibration master versions.  Unlike the
+abstract name "jwst-operational" that describes the default context used to
+define calibration references, it is anticipated that "jwst-versions" will
+never or rarely ever revert to older versions of CRDS rules.  This is because
+"version facts" should not in general change once they're defined, 0.6.0 should
+mean the same thing in every epoch, whereas it's valid for calibration
+reference assignments to change over time.
+
+Nevertheless, in the case of anomalous situations related to CAL_VER, alternate
+CRDS contexts may be explicitly named to specify different rules by which to
+translate master version names.  Alternately, the value associated with
+"jwst-versions" (or "null") can be redefined on the CRDS server.
 
 The following curl command line shows the full expansion of the same service
 example wrapped in the JSONRPC protocol in a language agnostic way::

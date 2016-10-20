@@ -506,7 +506,7 @@ and debug output.
     def __init__(self, *args, **keys):
         cmdline.Script.__init__(self, *args, **keys)
 
-        if self.args.compare_cdbs:
+        if self.args.regression:
             self.args.compare_source_bestrefs = True
             self.args.differences_are_errors = True
             self.args.stats = True
@@ -529,7 +529,6 @@ and debug output.
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
             
         self.updates = OrderedDict()  # map of reference updates
-        self.failed_updates = OrderedDict()  # map of datasets to failure pseudo-update-tuples
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         self.affected_instruments = None
@@ -552,8 +551,6 @@ and debug output.
             os.environ["CRDS_MODE"] = "remote"
             
         self.datasets_since = self.args.datasets_since
-
-        self.synced_references = set()
 
         self.active_header = None   # new or old header last processed with bestrefs
     
@@ -705,9 +702,6 @@ and debug output.
         self.add_argument("--print-affected-details", action="store_true",
             help="Include instrument and affected types in addition to compound names of affected exposures.")
         
-        self.add_argument("--skip-failure-effects", action="store_true",
-            help="If bestrefs fail, don't include those dataset ids in the list of affected products.")        
-    
         self.add_argument("--print-new-references", action="store_true",
             help="Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.")
     
@@ -744,7 +738,7 @@ and debug output.
         self.add_argument("--na-differences-matter", action="store_true",
             help="If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.")
         
-        self.add_argument("--compare-cdbs", action="store_true",
+        self.add_argument("-g", "--regression", action="store_true",
             help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
         
         self.add_argument("--affected-datasets", action="store_true", 
@@ -881,19 +875,11 @@ and debug output.
         return compare_prior, old_headers, old_fname
     
     def main(self):
-        """Compute bestrefs for datasets."""
-        
+        """Compute bestrefs for datasets."""        
         # Finish __init__() inside --pdb
         if self.complex_init():
             for dataset in self.new_headers:
-                if self.args.only_ids and dataset not in self.args.only_ids:
-                    log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
-                    continue
-                updates, failed_updates = self.process(dataset)
-                if updates:
-                    self.updates[dataset] = updates
-                if failed_updates:
-                    self.failed_updates[dataset] = failed_updates
+                self.process(dataset)
             self.post_processing()
         self.report_stats()
         log.verbose(self.get_stat("datasets"), "sources processed", verbosity=30)
@@ -905,13 +891,15 @@ and debug output.
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
         with log.error_on_exception("Failed processing", repr(dataset)):
             log.verbose("="*120)
-            if self.args.files:
+            if self.args.only_ids and dataset not in self.args.only_ids:
+                log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
+                return
+            elif self.args.files:
                 log.info("===> Processing", dataset)     # file mode
             else:
                 log.verbose("===> Processing", dataset, verbosity=25)   # database or regression modes
             self.increment_stat("datasets", 1)
-            return self._process(dataset)
-        return None, None
+            self._process(dataset)
 
     def _process(self, dataset):
         """Core best references,  add to update tuples."""
@@ -926,14 +914,15 @@ and debug output.
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
-            updates, failed_updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
+            updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
             if self.args.optimize_tables:
                 updates = self.optimize_tables(dataset, updates)
         else:
-            updates, failed_updates = self.screen_bestrefs(instrument, dataset, new_bestrefs), []
+            updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
         if self.args.update_pickle:  # XXXXX mutating input bestrefs to support updated pickles
             self.new_headers.update_headers( { dataset : new_bestrefs })
-        return updates, failed_updates
+        if updates:
+            self.updates[dataset] = updates
     
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
@@ -981,9 +970,9 @@ and debug output.
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
                 updates.append(UpdateTuple(instrument, filekind, None, new))
+            else: # ERROR's cannot update
+                pass
             
-                self._add_synced_reference(new)
-
         return updates
     
     def compare_bestrefs(self, instrument, dataset, newrefs, oldrefs):
@@ -997,7 +986,6 @@ and debug output.
         log.verbose("-"*120, verbosity=55)
 
         updates = []
-        failed_updates = []
         
         for filekind in sorted(self.process_filekinds or newrefs):
 
@@ -1008,16 +996,17 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind, 
-                                                        ("NOT FOUND NO MATCH",)) # omit UNDEFINED for useless update check.
-            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
-                                                       ("NOT FOUND NO MATCH","UNDEFINED"))
-            if not new_ok or not old_ok:
-                failed_updates.append(UpdateTuple(instrument, filekind, old_org, new_org))
+            # omit UNDEFINED for useless update check unless --undefined-differences-matter
+            old_ok, old_org, old = self.handle_na_and_not_found(
+                "Old:", oldrefs, dataset, instrument, filekind, ("NOT FOUND NO MATCH",))
+
+            # new will either be N/A or an ERROR (--undefined-differences-matter) if it was UNDEFINED or NO MATCH
+            new_ok, new_org, new = self.handle_na_and_not_found(
+                "New:", newrefs, dataset, instrument, filekind, ("NOT FOUND NO MATCH","UNDEFINED"))
+
+            if not new_ok:   # ERROR's in new cannot update
                 continue
             
-            self._add_synced_reference(new)
-
             if old == "UNDEFINED" and new == "N/A" and not self.args.undefined_differences_matter:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
                             "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
@@ -1025,7 +1014,7 @@ and debug output.
                 continue
 
             if new != old:
-                if self.args.differences_are_errors:
+                if self.args.differences_are_errors:  # regression mode vs. reprocessing
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
                     if (old != "N/A" and new != "N/A") or self.args.na_differences_matter:
                         self.log_and_track_error(dataset, instrument, filekind, 
@@ -1048,7 +1037,7 @@ and debug output.
                     log.verbose(self.format_prefix(dataset, instrument, filekind), 
                         "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)            
 
-        return updates, failed_updates
+        return updates
 
     def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind, na_conversions):
         """Fetch the bestref for `filekind` from `bestrefs`, and handle conversions to N/A
@@ -1063,9 +1052,11 @@ and debug output.
             ref is the fully normalized name of the reference, converted to N/A as needed.
             ref_ok is True IFF bestrefs did not fail altogether.
         """
+        # UNDEFINED corresponds to "no value in database" or "type not defined in CRDS"
         ref_org = cleanpath(bestrefs.get(filekind.upper(), "UNDEFINED")).strip()
         ref = ref_org.upper()
-        if ref == "N/A" or ref.startswith("NOT FOUND N/A"):
+        ref_ok = True
+        if ref.startswith("NOT FOUND N/A"):
             log.verbose(self.format_prefix(dataset, instrument, filekind),
                         "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
@@ -1073,13 +1064,13 @@ and debug output.
             log.verbose(self.format_prefix(dataset, instrument, filekind),
                         "Mapping", repr(ref), "to N/A.", verbosity=60)
             ref = "N/A"
-        ref_ok = True
-        if ref.startswith(na_conversions):   
-            ref = "N/A"
-            if self.args.na_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
+        elif ref.startswith(na_conversions):   
+            if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
                 self.log_and_track_error(dataset, instrument, filekind, 
-                                         name,  "No match found => 'N/A'.")
+                                         name,  "No match found:", repr(ref))
+                ref_ok = False
             else:
+                ref = "N/A"
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
                             name, "No match found => 'N/A'.")
         elif ref.startswith("NOT FOUND"):
@@ -1095,11 +1086,6 @@ and debug output.
         super(BestrefsScript, self).log_and_track_error(dataset, *pars, **keys)
         if self.args.print_error_headers:
             log.info("Header for", repr(dataset) + ":\n", log.PP(self.active_header))
-
-    def _add_synced_reference(self, ref):
-        """Add reference `ref` to the set of synced references if it is not a special value."""
-        if ref.upper() not in ["N/A", "UNDEFINED"]:
-            self.synced_references.add(ref.lower())
 
     def post_processing(self):
         """Given the computed update list, print out results,  update file headers, and fetch missing references."""
@@ -1119,11 +1105,8 @@ and debug output.
         if self.args.sync_references:
             self.sync_references()
 
-        if not self.args.skip_failure_effects:
-            self.updates.update(self.failed_updates)
-        
         if self.args.print_update_counts:
-            self.print_update_stats()   #  For affected datasets,  add back failed dataset updates
+            self.print_update_stats()   #  For affected datasets
         
         if self.args.print_affected:
             self.print_affected()
@@ -1199,7 +1182,8 @@ and debug output.
                 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
-        api.dump_references(self.new_context, sorted(self.synced_references), raise_exceptions=self.args.pdb)
+        synced_references = { tup.new for tup in self.updates if tup.new not in ["N/A"] }
+        api.dump_references(self.new_context, sorted(synced_references), raise_exceptions=self.args.pdb)
 
 # ===================================================================
 
