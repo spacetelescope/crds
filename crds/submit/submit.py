@@ -13,8 +13,7 @@ import socket
 import time
 
 from crds import log, config, cmdline, utils, pysh
-from crds import web, background
-from crds import monitor
+from . import web, background, monitor
 from crds.client import api
 from crds.log import srepr
 
@@ -371,7 +370,4 @@ this command line interface must be members of the CRDS operators group
 # ===================================================================
 
 # ===================================================================
-
-if __name__ == "__main__":
-    sys.exit(ReferenceSubmissionScript()())
 
