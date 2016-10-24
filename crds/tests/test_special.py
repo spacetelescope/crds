@@ -41,32 +41,27 @@ def dt_bestrefs_na_undefined_single_ctx_defaults():
 
     First a postitive result:  OK,  lowercase-original-result,  uppercase-final-result-for-update
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE")
     (True, 'x5v1944hl_flat.fits', 'X5V1944HL_FLAT.FITS')
     
     Second a formal N/A result:  OK,  bestrefs string,  final update value
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'NOT FOUND n/a', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB")
+    (True, 'N/A')
 
     An explicit response of UNDEFINED,  by default converted to N/A for update,  considered OK
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'UNDEFINED', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB")
+    (True, 'N/A')
     
     An implicit response of UNDEFINED, i.e. OMIT, also coverted to N/A for update
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'UNDEFINED', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB")
+    (True, 'N/A')
 
     An explicit error response from CRDS,  not OK
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "TRACETAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "TRACETAB")
     CRDS - ERROR - instrument='COS' type='TRACETAB' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
     (False, 'NOT FOUND some other error', 'NOT FOUND SOME OTHER ERROR')
     
@@ -91,26 +86,22 @@ def dt_bestrefs_na_undefined_single_ctx_undefined_matters():
 
     First a postitive result:  OK,  lowercase-original-result,  uppercase-final-result-for-update
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'x5v1944hl_flat.fits', 'X5V1944HL_FLAT.FITS')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE")
+    (True, 'X5V1944HL_FLAT.FITS')
     
     Second a formal N/A result:  OK,  bestrefs string,  final update value
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'NOT FOUND n/a', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB")
+    (True, 'N/A')
 
     An explicit response of UNDEFINED,  by default converted to N/A for update,  considered OK
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'UNDEFINED', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB")
+    (True, 'N/A')
     
     An implicit response of UNDEFINED, i.e. OMIT, also coverted to N/A for update
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB")
     (True, 'UNDEFINED', 'N/A')
 
     An explicit error response from CRDS,  not OK
@@ -118,7 +109,7 @@ def dt_bestrefs_na_undefined_single_ctx_undefined_matters():
     >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "TRACETAB",
     ... ("NOT FOUND NO MATCH","UNDEFINED"))
     CRDS - ERROR - instrument='COS' type='TRACETAB' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
-    (False, 'NOT FOUND some other error', 'NOT FOUND SOME OTHER ERROR')
+    (False, 'NOT FOUND SOME OTHER ERROR')
     
     >>> test_config.cleanup(old_state)
     
@@ -141,36 +132,31 @@ def dt_bestrefs_na_undefined_single_ctx_na_matters():
 
     First a postitive result:  OK,  lowercase-original-result,  uppercase-final-result-for-update
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'x5v1944hl_flat.fits', 'X5V1944HL_FLAT.FITS')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "FLATFILE")
+    (True, 'X5V1944HL_FLAT.FITS')
     
     Second a formal N/A result:  OK,  bestrefs string,  final update value
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
-    (True, 'NOT FOUND n/a', 'N/A')
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BADTTAB")
+    (True, 'N/A')
 
     An explicit response of UNDEFINED,  by default converted to N/A for update,  considered OK
     
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "BRFTAB")
     CRDS - ERROR - instrument='COS' type='BRFTAB' data='LA9K03C3Q:LA9K03C3Q' ::  New: No match found => 'N/A'.
-    (True, 'UNDEFINED', 'N/A')
+    (True, 'N/A')
     
     An implicit response of UNDEFINED, i.e. OMIT, also coverted to N/A for update
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "XTRACTAB")
     CRDS - ERROR - instrument='COS' type='XTRACTAB' data='LA9K03C3Q:LA9K03C3Q' ::  New: No match found => 'N/A'.
-    (True, 'UNDEFINED', 'N/A')
+    (True, 'N/A')
 
     An explicit error response from CRDS,  not OK
 
-    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "TRACETAB",
-    ... ("NOT FOUND NO MATCH","UNDEFINED"))
+    >>> script.handle_na_and_not_found("New:", BESTREFS, "LA9K03C3Q:LA9K03C3Q", "COS", "TRACETAB")
     CRDS - ERROR - instrument='COS' type='TRACETAB' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
-    (False, 'NOT FOUND some other error', 'NOT FOUND SOME OTHER ERROR')
+    (False, 'NOT FOUND SOME OTHER ERROR')
     
     >>> test_config.cleanup(old_state)
     
