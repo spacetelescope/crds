@@ -158,11 +158,6 @@ class YamlFormatError(FileFormatError):
 
 # -------------------------------------------------------------------------------------------
 
-class UnsupportedUpdateModeError(CrdsError):
-    """Database modes don't support updating best references recommendations on the server."""
-
-# -------------------------------------------------------------------------------------------
-
 class CertifyError(CrdsError):
     """Certify exception baseclass."""
     

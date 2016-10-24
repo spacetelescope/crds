@@ -15,10 +15,11 @@ import json
 from crds import python23
 
 import crds
-from crds import (log, rmap, data_file, utils, cmdline, heavy_client, diff, timestamp, matches, config)
+from crds import (log, config, utils, timestamp, cmdline)
+from crds import (heavy_client, data_file, diff, matches)
 from crds import table_effects
 from crds.client import api
-from crds.exceptions import CrdsError, UnsupportedUpdateModeError
+from crds.exceptions import CrdsError
 
 # ===================================================================
 
@@ -92,22 +93,13 @@ class HeaderGenerator(object):
         """Return the full header corresponding to `source`.   Source is a dataset id or filename."""
         return self.headers[source]
 
-    def clean_parameters(self, header):
-        """Remove extraneous non-bestrefs parameters from header."""
-        instrument = utils.header_to_instrument(header)
-        # cleaned = { key.upper() : header.get(key, "UNDEFINED")
-        #            for key in heavy_client.get_context_parkeys(self.context, instrument) }
-        cleaned = header  # XXXXX
-        cleaned["INSTRUME"] = instrument
-        return cleaned
-
     def get_lookup_parameters(self, source):
         """Return the parameters corresponding to `source` used to drive a best references lookup."""
-        return self.clean_parameters(self.header(source))
+        return add_instrument(self.header(source))
 
     def get_old_bestrefs(self, source):
         """Return the historical best references corresponding to `source`."""
-        return self.clean_parameters(self.header(source))
+        return add_instrument(self.header(source))
         # return self.header(source)
 
     def save_pickle(self, outpath, only_ids=None):
@@ -226,6 +218,7 @@ def update_file_bestrefs(context, dataset, updates):
     with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
 
         def set_key(keyword, value):
+            """Set a single keyword value with logging,  bound to outer-scope hdulist."""
             log.verbose("Setting", repr(dataset), keyword, "=", value)
             hdulist[0].header[keyword] = value
 
@@ -238,6 +231,8 @@ def update_file_bestrefs(context, dataset, updates):
                 new_ref = (prefix + new_ref).lower()
             set_key(update.filekind.upper(), new_ref)
 
+        # This is a workaround for a bug in astropy.io.fits handling of 
+        # FITS updates that are header-only and extend the header.
         for hdu in hdulist:
             hdu.data
 
@@ -280,7 +275,7 @@ class DatasetHeaderGenerator(HeaderGenerator):
                 return sorted(dataset_id for dataset_id in self.headers if parts[0] in dataset_id)[0]
             else:
                 return source
-        except:
+        except Exception:
             return source
 
 
@@ -295,7 +290,7 @@ class InstrumentHeaderGenerator(HeaderGenerator):
         self.save_pickles = save_pickles
         try:
             self.segment_size = server_info.max_headers_per_rpc
-        except:
+        except Exception:
             self.segment_size = 5000
 
     def determine_source_ids(self):
@@ -351,7 +346,7 @@ class PickleHeaderGenerator(HeaderGenerator):
         super(PickleHeaderGenerator, self).__init__(context, pickles, datasets_since)
         for pickle in pickles:
             log.info("Loading file", repr(pickle))
-            pick_headers = self.load_headers(pickle)
+            pick_headers = load_bestrefs_headers(pickle)
             if not self.headers:
                 log.info("Loaded", len(pick_headers), "datasets from file", repr(pickle),
                          "completely replacing existing headers.")
@@ -361,10 +356,6 @@ class PickleHeaderGenerator(HeaderGenerator):
                          "augmenting existing headers.")
                 self.update_headers(pick_headers, only_ids=only_ids)
         self.sources = only_ids or self.headers.keys()
-
-    def load_headers(self, path):
-        """Given `path` to a serialization file,  load  {dataset_id : header, ...}.  Supports .pkl and .json"""
-        return load_bestrefs_headers(path)
 
 # ============================================================================
 
@@ -520,6 +511,11 @@ and debug output.
 
     def __init__(self, *args, **keys):
         cmdline.Script.__init__(self, *args, **keys)
+
+        # Placeholders until complex init is done.
+        self.instruments = None
+        self.oldctx = None
+        self.newctx = None
 
         if self.args.regression:
             self.args.compare_source_bestrefs = True
@@ -757,7 +753,8 @@ and debug output.
                           help="Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats")
 
         self.add_argument("--affected-datasets", action="store_true",
-                          help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter --na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
+                          help="Abbreviation for --diffs-only --datasets-since=auto --undefined-differences-matter "
+                          "--na-differences-matter --print-update-counts --print-affected --dump-unique-errors --stats")
 
         self.add_argument("-z", "--optimize-tables", action="store_true",
                           help="If set, apply row-based optimizations to screen out inconsequential table updates.")
@@ -935,7 +932,7 @@ and debug output.
                 updates = self.optimize_tables(dataset, updates)
         else:
             updates = self.screen_bestrefs(instrument, dataset, new_bestrefs)
-        if self.args.update_pickle:  # XXXXX mutating input bestrefs to support updated pickles
+        if self.args.update_pickle:  # XX  mutating input bestrefs to support updated pickles
             self.new_headers.update_headers({dataset: new_bestrefs})
         if updates:
             self.updates[dataset] = updates
@@ -965,7 +962,7 @@ and debug output.
 
         Returns [UpdateTuple(), ...]
         """
-        # XXX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
+        # XX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
 
         log.verbose("-" * 120, verbosity=55)
 
@@ -980,7 +977,7 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
 
-            new_ok, _new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
+            new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
             if new_ok:
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
                             "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
@@ -995,7 +992,7 @@ and debug output.
 
         Returns [UpdateTuple(), ...]
         """
-        # XXX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
+        # XX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
 
         log.verbose("-" * 120, verbosity=55)
 
@@ -1010,9 +1007,9 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
 
-            old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind)
+            _old_ok, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind)
 
-            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
+            new_ok, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
 
             if not new_ok:   # ERROR's in new cannot update
                 continue
@@ -1065,7 +1062,7 @@ and debug output.
             self.log_and_track_error(
                 dataset, instrument, filekind, name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
             ref_ok = False
-        return ref_ok, ref_org, ref
+        return ref_ok, ref
 
     def log_and_track_error(self, dataset, *pars, **keys):
         """Track and categorize the specified error,  printing out the dataset header
@@ -1174,7 +1171,12 @@ and debug output.
         api.dump_references(self.new_context, sorted(synced_references), raise_exceptions=self.args.pdb)
 
 # ===================================================================
-
+def add_instrument(header):
+    """Add INSTRUME keyword."""
+    instrument = utils.header_to_instrument(header)
+    header["INSTRUME"] = instrument
+    header["META.INSTRUMENT.NAME"] = instrument
+    return header
 
 def cleanpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
