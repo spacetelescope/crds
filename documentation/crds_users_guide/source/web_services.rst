@@ -305,6 +305,20 @@ To obtain current best references specify the context using a date::
      'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
      'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
 
+Alternately the abstract default context can be specified as "<project>-operational", as in::
+
+    >>> get_dataset_ids("jwst-operational", "miri") 
+    ['JW80500017001_02101_00001.MIRIFUSHORT:JW80500017001_02101_00001.MIRIFUSHORT',
+     'J80500020001_02101_00001.MIRIFUSHORT:JW80500020001_02101_00001.MIRIFUSHORT',
+     'JW80500018001_02101_00001.MIRIFUSHORT:JW80500018001_02101_00001.MIRIFUSHORT',
+     'JW80500020001_02101_00001.MIRIFULONG:JW80500020001_02101_00001.MIRIFULONG',
+     'JW80500018001_02101_00002.MIRIFULONG:JW80500018001_02101_00002.MIRIFULONG',
+     'JW80500009001_02101_00001.MIRIMAGE:JW80500009001_02101_00001.MIRIMAGE',
+     'JW80500018001_02101_00001.MIRIFULONG:JW80500018001_02101_00001.MIRIFULONG',
+     'JW80500018001_02101_00002.MIRIFUSHORT:JW80500018001_02101_00002.MIRIFUSHORT',
+     'JW80500003001_02101_00001.MIRIMAGE:JW80500003001_02101_00001.MIRIMAGE',
+     'JW80500018001_02101_00003.MIRIFUSHORT:JW80500018001_02101_00003.MIRIFUSHORT']
+
 Dataset IDs have a grammar like this for HST::
 
     <product_id> : <exposure_id>
@@ -370,7 +384,10 @@ AUI Interface for Best References
 
 The CRDS server can compute the best references for a list of data set ids
 using the *get_aui_best_references()* function.  The dataset ids must be
-compatible with those returned by *get_dataset_ids()* above.
+compatible with those returned by *get_dataset_ids()* above.  Examples below
+are fully functional at this time but actual IDs and parameter sets may change
+during the course of development; use get_dataset_ids() documented above to
+obtain up-to-date example IDs.
 
 *date* is a date-based CRDS context specifier, e.g.: jwst_0192.pmap,
 2015-05-25T00:00:27, jwst-operational
@@ -428,7 +445,7 @@ error::
       "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB5'"]}
 
 Code utilizing this service will have better performance if multiple IDs are
-requested per call.   A maximum of 500 ids should be requested per call.
+requested per call.   A maximum of 200 ids should be requested per call.
 
 Although it is possible for errors to occur on a per-type basis, for this
 interface specific types which result in lookup errors (e.g. flat) are dropped
