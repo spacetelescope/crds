@@ -948,7 +948,6 @@ and debug output.
 
         Returns [UpdateTuple(), ...]
         """
-    
         # XXX  This is closely related to compare_bestrefs, maintain both!!   See also update_bestrefs()
     
         log.verbose("-"*120, verbosity=55)
@@ -964,8 +963,7 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
 
-            new_ok, _new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind, 
-                                                       ("NOT FOUND NO MATCH","UNDEFINED"))
+            new_ok, _new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
             if new_ok:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Bestref FOUND:", repr(new).lower(),  self.update_promise, verbosity=30)
@@ -979,15 +977,14 @@ and debug output.
         """Compare best references dicts `newrefs` and `oldrefs` for `instrument` and `dataset`.
         
         Returns [UpdateTuple(), ...]
-        """
-    
+        """    
         # XXX  This is closely related to screen_bestrefs,  maintain both!!    See also update_bestrefs()
     
         log.verbose("-"*120, verbosity=55)
 
         updates = []
         
-        for filekind in sorted(self.process_filekinds or newrefs):
+        for filekind in sorted(self.process_filekinds or (newrefs.keys() + oldrefs.keys())):
 
             filekind = filekind.lower()
             
@@ -996,23 +993,13 @@ and debug output.
                             "Skipping type.", verbosity=55)
                 continue
             
-            # omit UNDEFINED for useless update check unless --undefined-differences-matter
-            old_ok, old_org, old = self.handle_na_and_not_found(
-                "Old:", oldrefs, dataset, instrument, filekind, ("NOT FOUND NO MATCH",))
+            old_ok, old_org, old = self.handle_na_and_not_found("Old:", oldrefs, dataset, instrument, filekind)
 
-            # new will either be N/A or an ERROR (--undefined-differences-matter) if it was UNDEFINED or NO MATCH
-            new_ok, new_org, new = self.handle_na_and_not_found(
-                "New:", newrefs, dataset, instrument, filekind, ("NOT FOUND NO MATCH","UNDEFINED"))
+            new_ok, new_org, new = self.handle_na_and_not_found("New:", newrefs, dataset, instrument, filekind)
 
             if not new_ok:   # ERROR's in new cannot update
                 continue
             
-            if old == "UNDEFINED" and new == "N/A" and not self.args.undefined_differences_matter:
-                log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            "New best reference: 'UNDEFINED' --> 'N/A',  Special case,  useless reprocessing.", 
-                            self.no_update, verbosity=30)
-                continue
-
             if new != old:
                 if self.args.differences_are_errors:  # regression mode vs. reprocessing
                     #  By default, either CDBS or CRDS scoring a reference as N/A short circuits mismatch errors.
@@ -1026,26 +1013,14 @@ and debug output.
             else:
                 log.verbose(self.format_prefix(dataset, instrument, filekind), 
                             "Lookup MATCHES:", repr(old).lower(), self.no_update,  verbosity=30)
-        
-        # Check for missing references in `newrefs`.
-        for filekind in oldrefs:
-            if new_org == "UNDEFINED" and new_org != old_org and filekind in self.process_filekinds:
-                if self.args.differences_are_errors:
-                    self.log_and_track_error(dataset, instrument, filekind, 
-                        "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)
-                else:
-                    log.verbose(self.format_prefix(dataset, instrument, filekind), 
-                        "No new reference recommended. Old reference was", repr(old).lower(), self.no_update, verbosity=30)            
-
         return updates
 
-    def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind, na_conversions):
+    def handle_na_and_not_found(self, name, bestrefs, dataset, instrument, filekind):
         """Fetch the bestref for `filekind` from `bestrefs`, and handle conversions to N/A
         and CRDS NOT FOUND errors.
         
         `name` is a string identifier for this conversion, Old or New.
         `bestrefs` is a dictionary { filekind : bestref, }
-        na_conversions is a tuple of string prefixes which convert the raw bestref to N/A.
         
         Return (ref_ok, raw_ref, ref)  where:
             raw_ref is the original name of the reference,  stripped of any iref$ prefix.
@@ -1060,22 +1035,18 @@ and debug output.
             log.verbose(self.format_prefix(dataset, instrument, filekind),
                         "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
-        elif ref in ("NONE", "", "*"):
-            log.verbose(self.format_prefix(dataset, instrument, filekind),
-                        "Mapping", repr(ref), "to N/A.", verbosity=60)
-            ref = "N/A"
-        elif ref.startswith(na_conversions):   
+        elif ref in ("NOT FOUND NO MATCH", "UNDEFINED", "NONE", "", "*"):
             if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
-                self.log_and_track_error(dataset, instrument, filekind, 
-                                         name,  "No match found:", repr(ref))
+                self.log_and_track_error(
+                    dataset, instrument, filekind, name,  "No match found:", repr(ref))
                 ref_ok = False
             else:
                 ref = "N/A"
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            name, "No match found => 'N/A'.")
+                            name, "No match found:", repr(ref), " => 'N/A'.")
         elif ref.startswith("NOT FOUND"):
-            self.log_and_track_error(dataset, instrument, filekind, 
-                                     name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
+            self.log_and_track_error(
+                dataset, instrument, filekind, name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
             ref_ok = False
         return ref_ok, ref_org, ref
 

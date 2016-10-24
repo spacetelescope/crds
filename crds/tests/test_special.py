@@ -16,6 +16,14 @@ BESTREFS = {
         "TRACETAB" : "NOT FOUND some other error",
         }
 
+"""Special case tests verify behavior in various configurations:
+
+--regression
+--na-differences-matter
+--undefined-differences-matter
+
+"""
+
 def dt_bestrefs_na_undefined_single_ctx_defaults():
     """
     >>> old_state = test_config.setup()
