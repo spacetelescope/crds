@@ -325,7 +325,7 @@ class SyncScript(cmdline.ContextsScript):
     def clear_pickles(self, contexts):
         """Remove pickles specified by `contexts`."""
         for context in contexts:
-            path = config.locate_pickle(context + ".pkl")
+            path = config.locate_pickle(context)
             if os.path.exists(path):
                 utils.remove(path, self.observatory)
 
@@ -336,9 +336,7 @@ class SyncScript(cmdline.ContextsScript):
         """
         for context in contexts:
             with log.error_on_exception("Failed pickling", repr(context)):
-                pickle_path = config.locate_pickle(context, self.observatory)
-                if not os.path.exists(context):
-                    crds.get_pickled_mapping(context, use_pickles=True, save_pickles=True)  # reviewed
+                crds.get_pickled_mapping.uncached(context, use_pickles=True, save_pickles=True)  # reviewed
     
     # ------------------------------------------------------------------------------------------
 
