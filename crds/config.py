@@ -407,7 +407,7 @@ def locate_pickle(mapping, observatory=None):
         return mapping
     if observatory is None:
         observatory = mapping_to_observatory(mapping)
-    return os.path.join(get_crds_picklepath(observatory), mapping)
+    return os.path.join(get_crds_picklepath(observatory), mapping + ".pkl")
 
 USE_PICKLED_CONTEXTS = BooleanConfigItem("CRDS_USE_PICKLED_CONTEXTS", False,
     "When True,  CRDS contexts should be loaded from a pickled version if possible.")
