@@ -2466,6 +2466,39 @@
             "tpn":"nirspec_msa.tpn",
             "unique_rowkeys":null
         },
+        "msaoper":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-26",
+            "extra_keys":null,
+            "file_ext":".json",
+            "filekind":"MSAOPER",
+            "filetype":"MSAOPER",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_msaoper_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_msaoper.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"956ad2456fd55d6ca32dba2ac4ae462a18190389",
+            "suffix":"msaoper",
+            "text_descr":"msaoper reference file used in bad shutter flagging step",
+            "tpn":"nirspec_msaoper.tpn",
+            "unique_rowkeys":null
+        },
         "ote":{
             "derived_from":"Hand made 2015-10-09 14:27:00",
             "extra_keys":null,
