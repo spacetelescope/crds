@@ -442,7 +442,7 @@ and ids used for CRDS reprocessing recommendations.
         
     def list_cached_pickles(self):
         """List the pickle paths in the local cache."""
-        _print_list(rmap.list_pickles("*.pkl", self.observatory, full_path=self.args.full_path))
+        _print_list(rmap.list_pickles("*", self.observatory, full_path=self.args.full_path))
         
     def list_cached_references(self):
         """List the reference paths in the local cache."""
