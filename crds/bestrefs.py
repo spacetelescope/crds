@@ -998,7 +998,7 @@ and debug output.
 
         updates = []
 
-        filekinds = self.process_filekinds or sorted(list(newrefs.keys()) + list(oldrefs.keys()))
+        filekinds = self.process_filekinds or sorted(list(set(list(newrefs.keys()) + list(oldrefs.keys()))))
         for filekind in filekinds:
 
             filekind = filekind.lower()
