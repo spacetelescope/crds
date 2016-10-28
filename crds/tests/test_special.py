@@ -183,35 +183,44 @@ def dt_bestrefs_na_undefined_single_ctx_na_matters():
 
 kinds = ["DEFINED", "NA", "UNDEFINED", "OMITTED", "ERROR"]
 
+script_undefmatters_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
+script_undefmatters_namatters.complex_init()
+
+script_undefok_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
+script_undefok_namatters.complex_init()
+
+script_undefok_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap")
+script_undefok_naok.complex_init()
+
+script_undefmatters_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
+script_undefmatters_naok.complex_init()
+
 def generate_comparisons(undef_matters, na_matters):
     for kind1 in kinds:
         for kind2 in kinds:
             bestrefs1 = globals()["BESTREFS_" + kind1]
             bestrefs2 = globals()["BESTREFS_" + kind2]
+            undef = "undefmatters" if undef_matters else "undefok"
+            na = "namatters" if na_matters else "naok"
             print("""
 
 def dt_compare_bestrefs_%s_%s_%s_%s():
     '''
     >>> old_state = test_config.setup()
     
-    >>> script = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap %s %s")
-    >>> script.complex_init()
-    CRDS - INFO - Loading file 'data/bestrefs.special.json'
-    CRDS - INFO - Loaded 1 datasets from file 'data/bestrefs.special.json' completely replacing existing headers.
-    CRDS - INFO - No comparison context or source comparison requested.
-    True
-    >>> script.compare_bestrefs('%s', '%s', %s, %s)
+    >>> script_%s_%s.compare_bestrefs('%s', '%s', %s, %s)
 
     >>> test_config.cleanup(old_state)
-    ''' """ % ("undefmatters" if undef_matters else "undefok",
-       "namatters" if na_matters else "naok",
+    ''' """ % (
+
        kind1.lower(),
        kind2.lower(),
-       "--undefined-differences-matter" if undef_matters else "",
-       "--na-differences-matter" if na_matters else "",
-       "COS",
-       "LA9K03C3Q:LA9K03C3Q",
-       bestrefs1, bestrefs2))
+       undef,
+       na,
+       
+       undef, na,
+
+       "COS","LA9K03C3Q:LA9K03C3Q", bestrefs1, bestrefs2))
 
 def generate_all():
     for undef_matters in [False, True]:
