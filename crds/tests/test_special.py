@@ -244,6 +244,7 @@ def dt_compare_bestrefs_defined_defined_undefok_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -344,6 +345,7 @@ def dt_compare_bestrefs_undefined_defined_undefok_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='X5V1944HL_FLAT.FITS')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -384,6 +386,8 @@ def dt_compare_bestrefs_undefined_error_undefok_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -494,6 +498,7 @@ def dt_compare_bestrefs_defined_defined_undefok_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -594,6 +599,7 @@ def dt_compare_bestrefs_undefined_defined_undefok_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='X5V1944HL_FLAT.FITS')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -634,6 +640,8 @@ def dt_compare_bestrefs_undefined_error_undefok_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -744,6 +752,7 @@ def dt_compare_bestrefs_defined_defined_undefmatters_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -844,6 +853,8 @@ def dt_compare_bestrefs_undefined_defined_undefmatters_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='X5V1944HL_FLAT.FITS')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -854,6 +865,8 @@ def dt_compare_bestrefs_undefined_na_undefmatters_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='N/A')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -884,6 +897,9 @@ def dt_compare_bestrefs_undefined_error_undefmatters_naok():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -994,6 +1010,7 @@ def dt_compare_bestrefs_defined_defined_undefmatters_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -1094,6 +1111,8 @@ def dt_compare_bestrefs_undefined_defined_undefmatters_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='X5V1944HL_FLAT.FITS')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -1104,6 +1123,8 @@ def dt_compare_bestrefs_undefined_na_undefmatters_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    [UpdateTuple(instrument='COS', filekind='flatfile', old_reference='UNDEFINED', new_reference='N/A')]
 
     >>> test_config.cleanup(old_state)
     ''' 
@@ -1134,6 +1155,9 @@ def dt_compare_bestrefs_undefined_error_undefmatters_namatters():
     >>> old_state = test_config.setup()
     
     >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  Old: No match found: 'UNDEFINED'
+    CRDS - ERROR - instrument='COS' type='FLATFILE' data='LA9K03C3Q:LA9K03C3Q' ::  New: Bestref FAILED:  some other error
+    []
 
     >>> test_config.cleanup(old_state)
     ''' 
