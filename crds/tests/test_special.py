@@ -211,7 +211,7 @@ def dt_compare_bestrefs_%s_%s_%s_%s():
        "--na-differences-matter" if na_matters else "",
        "COS",
        "LA9K03C3Q:LA9K03C3Q",
-       bestrefs2, bestrefs1))
+       bestrefs1, bestrefs2))
 
 def generate_all():
     for undef_matters in [False, True]:

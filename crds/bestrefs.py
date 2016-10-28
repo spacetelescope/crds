@@ -927,7 +927,7 @@ and debug output.
                 old_bestrefs = self.get_bestrefs(instrument, dataset, self.old_context, old_header)
             else:
                 old_bestrefs = self.old_headers.get_old_bestrefs(dataset)
-            updates = self.compare_bestrefs(instrument, dataset, new_bestrefs, old_bestrefs)
+            updates = self.compare_bestrefs(instrument, dataset, old_bestrefs, new_bestrefs)
             if self.args.optimize_tables:
                 updates = self.optimize_tables(dataset, updates)
         else:
@@ -987,7 +987,7 @@ and debug output.
 
         return updates
 
-    def compare_bestrefs(self, instrument, dataset, newrefs, oldrefs):
+    def compare_bestrefs(self, instrument, dataset, oldrefs, newrefs):
         """Compare best references dicts `newrefs` and `oldrefs` for `instrument` and `dataset`.
 
         Returns [UpdateTuple(), ...]
