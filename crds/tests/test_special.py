@@ -21,18 +21,18 @@ BESTREFS_DEFINED = {
         }
 
 BESTREFS_NA = {
-        "BADTTAB" : "NOT FOUND n/a",
+        "FLATFILE" : "NOT FOUND n/a",
         }
 
 BESTREFS_UNDEFINED = {
-        "BRFTAB" : "UNDEFINED",
+        "FLATFILE" : "UNDEFINED",
         }
 
 BESTREFS_OMITTED= {
         }
 
 BESTREFS_ERROR = {
-    "TRACETAB" : "NOT FOUND some other error",
+    "FLATFILE" : "NOT FOUND some other error",
     }
 
 """Special case tests verify behavior in various configurations:
@@ -227,4 +227,6 @@ def main():
 
 if __name__ == "__main__":
     print(main())
+
+# ==================================================================================
 
