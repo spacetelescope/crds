@@ -192,14 +192,18 @@ def generate_comparisons(undef_matters, na_matters):
 
 def dt_compare_bestrefs_%s_%s_%s_%s():
     '''
+    >>> old_state = test_config.setup()
+    
     >>> script = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap %s %s")
     >>> script.complex_init()
     CRDS - INFO - Loading file 'data/bestrefs.special.json'
     CRDS - INFO - Loaded 1 datasets from file 'data/bestrefs.special.json' completely replacing existing headers.
     CRDS - INFO - No comparison context or source comparison requested.
     True
-    >>> script.compare_bestrefs(%s, %s, %s, %s)
-   ''' """ % ("undefmatters" if undef_matters else "undefok",
+    >>> script.compare_bestrefs('%s', '%s', %s, %s)
+
+    >>> test_config.cleanup(old_state)
+    ''' """ % ("undefmatters" if undef_matters else "undefok",
        "namatters" if na_matters else "naok",
        kind1.lower(),
        kind2.lower(),
