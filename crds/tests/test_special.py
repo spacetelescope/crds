@@ -183,16 +183,16 @@ def dt_bestrefs_na_undefined_single_ctx_na_matters():
 
 kinds = ["DEFINED", "NA", "UNDEFINED", "OMITTED", "ERROR"]
 
-script_undefmatters_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
+script_undefmatters_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
 script_undefmatters_namatters.complex_init()
 
-script_undefok_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
+script_undefok_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
 script_undefok_namatters.complex_init()
 
-script_undefok_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap")
+script_undefok_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap")
 script_undefok_naok.complex_init()
 
-script_undefmatters_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
+script_undefmatters_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
 script_undefmatters_naok.complex_init()
 
 def generate_comparisons(undef_matters, na_matters):
@@ -239,3 +239,1001 @@ if __name__ == "__main__":
 
 # ==================================================================================
 
+def dt_compare_bestrefs_defined_defined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_na_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_undefined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_omitted_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_error_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_defined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_na_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_undefined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_omitted_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_error_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_defined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_na_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_undefined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_omitted_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_error_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_defined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_na_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_undefined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_omitted_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_error_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_defined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_na_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_undefined_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_omitted_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_error_undefok_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_defined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_na_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_undefined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_omitted_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_error_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_defined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_na_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_undefined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_omitted_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_error_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_defined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_na_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_undefined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_omitted_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_error_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_defined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_na_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_undefined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_omitted_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_error_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_defined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_na_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_undefined_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_omitted_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_error_undefok_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefok_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_defined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_na_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_undefined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_omitted_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_error_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_defined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_na_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_undefined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_omitted_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_error_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_defined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_na_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_undefined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_omitted_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_error_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_defined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_na_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_undefined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_omitted_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_error_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_defined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_na_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_undefined_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_omitted_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_error_undefmatters_naok():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_naok.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_defined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_na_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_undefined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_omitted_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_defined_error_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'x5v1944hl_flat.fits'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_defined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_na_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_undefined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_omitted_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_na_error_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND n/a'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_defined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_na_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_undefined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_omitted_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_undefined_error_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'UNDEFINED'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_defined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_na_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_undefined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_omitted_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_omitted_error_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_defined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'x5v1944hl_flat.fits'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_na_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND n/a'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_undefined_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'UNDEFINED'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_omitted_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
+
+
+def dt_compare_bestrefs_error_error_undefmatters_namatters():
+    '''
+    >>> old_state = test_config.setup()
+    
+    >>> script_undefmatters_namatters.compare_bestrefs('COS', 'LA9K03C3Q:LA9K03C3Q', {'FLATFILE': 'NOT FOUND some other error'}, {'FLATFILE': 'NOT FOUND some other error'})
+
+    >>> test_config.cleanup(old_state)
+    ''' 
