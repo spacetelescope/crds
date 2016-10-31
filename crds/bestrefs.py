@@ -98,9 +98,20 @@ class HeaderGenerator(object):
         return add_instrument(self.header(source))
 
     def get_old_bestrefs(self, source):
-        """Return the historical best references corresponding to `source`."""
-        return add_instrument(self.header(source))
-        # return self.header(source)
+        """Return the historical best references corresponding to `source`.  Always define old bestrefs
+        in terms of filekind/typename rather than in terms of FITS keyword.
+        """
+        header = add_instrument(self.header(source))
+        instrument = utils.header_to_instrument(header)
+        pmap = crds.get_pickled_mapping(self.context)
+        result = {}
+        for filekind in pmap.get_imap(instrument).selections:
+            keyword = pmap.locate.filekind_to_keyword(filekind)
+            try:
+                result[filekind] = header[keyword]
+            except KeyError:
+                result[filekind] = header.get(filekind, "UNDEFINED")
+        return result
 
     def save_pickle(self, outpath, only_ids=None):
         """Write out headers to `outpath` file which can be a Python pickle or .json"""
