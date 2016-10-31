@@ -1050,7 +1050,7 @@ and debug output.
             log.verbose(self.format_prefix(dataset, instrument, filekind),
                         "Bestref is natural N/A.", verbosity=60)
             ref = "N/A"
-        elif ref in ("NOT FOUND NO MATCH", "UNDEFINED", "NONE", "", "*"):
+        elif ref in ("NOT FOUND NO MATCH FOUND.", "UNDEFINED", "NONE", "", "*"):
             if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
                 self.log_and_track_error(
                     dataset, instrument, filekind, name,  "No match found:", repr(ref))

@@ -183,16 +183,16 @@ def dt_bestrefs_na_undefined_single_ctx_na_matters():
 
 kinds = ["DEFINED", "NA", "UNDEFINED", "OMITTED", "ERROR"]
 
-script_undefmatters_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
+script_undefmatters_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter --na-differences-matter")
 script_undefmatters_namatters.complex_init()
 
-script_undefok_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
+script_undefok_namatters  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --na-differences-matter")
 script_undefok_namatters.complex_init()
 
-script_undefok_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap")
+script_undefok_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap")
 script_undefok_naok.complex_init()
 
-script_undefmatters_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles crds/tests/data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
+script_undefmatters_naok  = BestrefsScript(argv="crds.bestrefs --load-pickles data/bestrefs.special.json --new-context hst_0315.pmap --undefined-differences-matter")
 script_undefmatters_naok.complex_init()
 
 def generate_comparisons(undef_matters, na_matters):
