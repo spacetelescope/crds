@@ -214,7 +214,9 @@ def update_file_bestrefs(context, dataset, updates):
 
     version_info = heavy_client.version_info()
     instrument = updates[0].instrument
-    prefix = utils.instrument_to_locator(instrument).get_env_prefix(instrument)
+    locator = utils.instrument_to_locator(instrument)
+    prefix = locator.get_env_prefix(instrument) 
+
     with data_file.fits_open(dataset, mode="update", do_not_scale_image_data=True) as hdulist:
 
         def set_key(keyword, value):
@@ -229,7 +231,8 @@ def update_file_bestrefs(context, dataset, updates):
             new_ref = update.new_reference.upper()
             if new_ref != "N/A":
                 new_ref = (prefix + new_ref).lower()
-            set_key(update.filekind.upper(), new_ref)
+            keyword = locator.filekind_to_keyword(update.filekind)
+            set_key(keyword, new_ref)
 
         # This is a workaround for a bug in astropy.io.fits handling of 
         # FITS updates that are header-only and extend the header.

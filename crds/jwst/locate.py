@@ -303,6 +303,10 @@ def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return "crds://"
 
+def filekind_to_keyword(filekind):
+    """Return the FITS keyword at which a reference should be recorded."""
+    return "R_" + filekind[:6].upper()
+
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
     The aspect of this which is complicated is determining instrument and an instrument
