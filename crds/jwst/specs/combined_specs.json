@@ -1835,6 +1835,7 @@
             "observatory":"JWST",
             "parkey":[
                 [
+                    "META.SUBARRAY.NAME",
                     "META.EXPOSURE.TYPE"
                 ],
                 [
@@ -1842,7 +1843,16 @@
                     "META.OBSERVATION.TIME"
                 ]
             ],
-            "sha1sum":"eeadc2cc43a1e31f83b8a34b6555768abe5321f8",
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE",
+                "SUBARRAY":"META.SUBARRAY.NAME"
+            },
+            "sha1sum":"799efae38a9f9524a393a148e50c80fbb25e4601",
+            "substitutions":{
+                "META.SUBARRAY.NAME":{
+                    "GENERIC":"N/A"
+                }
+            },
             "suffix":"specwcs",
             "text_descr":"Spectral World Coordinate System",
             "tpn":"niriss_specwcs.tpn",
