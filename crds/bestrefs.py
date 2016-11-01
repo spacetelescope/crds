@@ -107,6 +107,7 @@ class HeaderGenerator(object):
         result = {}
         for filekind in pmap.get_imap(instrument).selections:
             keyword = pmap.locate.filekind_to_keyword(filekind)
+            filekind = filekind.upper()
             try:
                 result[filekind] = header[keyword]
             except KeyError:
@@ -1195,7 +1196,12 @@ def add_instrument(header):
 
 def cleanpath(name):
     """jref$n4e12510j_crr.fits  --> n4e12510j_crr.fits"""
-    return name.split("$")[-1].strip()
+    if "ref$" in name:
+        return name.split("$")[-1].strip()
+    elif name.startswith("crds://"):
+        return name[len("crds://"):]
+    else:
+        return name
 
 # ============================================================================
 

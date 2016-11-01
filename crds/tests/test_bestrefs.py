@@ -6,6 +6,7 @@ import os
 import json
 import shutil
 
+from crds import bestrefs
 from crds.bestrefs import BestrefsScript
 from crds.tests import test_config
 
@@ -249,6 +250,27 @@ def dt_bestrefs_context_to_context():
     0
     
     >>> test_config.cleanup(old_state)
+    """
+
+def dt_test_cleanpath():
+    """
+    Removes prefixes added to reference files prior to writing into FITS headers.
+
+    HST IRAF-style env path prefix
+
+    >>> bestrefs.cleanpath("jref$foo.fits")
+    'foo.fits'
+
+    JWST URI-style prefix
+
+    >>> bestrefs.cleanpath('crds://foo.fits')
+    'foo.fits'
+
+    >>> bestrefs.cleanpath('foo.fits')
+    'foo.fits'
+
+    >>> bestrefs.cleanpath('something/foo.fits')
+    'something/foo.fits'
     """
 
 class TestBestrefs(test_config.CRDSTestCase):
