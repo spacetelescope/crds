@@ -11,7 +11,7 @@ header = {
     'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
     'sha1sum' : 'df0d293b3f9c980d32971a118c407255a47acd50',
     'suffix' : 'specwcs',
-    'text_descr' : 'Spectral world coordinate system',
+    'text_descr' : 'Spectral World Coordinate System',
 }
 
 selector = Match({

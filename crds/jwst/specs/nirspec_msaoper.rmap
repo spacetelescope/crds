@@ -14,7 +14,7 @@ header = {
     },
     'sha1sum' : '956ad2456fd55d6ca32dba2ac4ae462a18190389',
     'suffix' : 'msaoper',
-    'text_descr' : 'msaoper reference file used in bad shutter flagging step',
+    'text_descr' : 'Micro-Shutter Assembly Operability, Bad Shutters',
 }
 
 selector = Match({
