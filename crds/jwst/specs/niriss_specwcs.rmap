@@ -8,11 +8,28 @@ header = {
     'mapping' : 'REFERENCE',
     'name' : 'jwst_niriss_specwcs.rmap',
     'observatory' : 'JWST',
-    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
-    'sha1sum' : 'eeadc2cc43a1e31f83b8a34b6555768abe5321f8',
+    'parkey' : (('META.SUBARRAY.NAME', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'SUBARRAY' : 'META.SUBARRAY.NAME',
+    },
+    'sha1sum' : 'a5000097c9b856f751b84f5caeb1bb9e44353dd2',
+    'substitutions' : {
+        'META.SUBARRAY.NAME' : {
+            'GENERIC' : 'N/A',
+        },
+    },
     'suffix' : 'specwcs',
     'text_descr' : 'Spectral World Coordinate System',
 }
 
 selector = Match({
+    ('ANY', 'NIS_AMI') : 'N/A',
+    ('ANY', 'NIS_DARK') : 'N/A',
+    ('ANY', 'NIS_FOCUS') : 'N/A',
+    ('ANY', 'NIS_IMAGE') : 'N/A',
+    ('ANY', 'NIS_LAMP') : 'N/A',
+    ('ANY', 'NIS_TACONFIRM') : 'N/A',
+    ('ANY', 'NIS_TACQ') : 'N/A',
+    ('ANY', 'NIS_WFSS') : 'N/A',
 })
