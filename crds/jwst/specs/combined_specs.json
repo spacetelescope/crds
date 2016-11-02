@@ -1847,7 +1847,7 @@
                 "EXP_TYPE":"META.EXPOSURE.TYPE",
                 "SUBARRAY":"META.SUBARRAY.NAME"
             },
-            "sha1sum":"799efae38a9f9524a393a148e50c80fbb25e4601",
+            "sha1sum":"260018a9310d25d6e34c6fe1d5b30611f48ff27a",
             "substitutions":{
                 "META.SUBARRAY.NAME":{
                     "GENERIC":"N/A"

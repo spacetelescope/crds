@@ -13,7 +13,7 @@ header = {
         'EXP_TYPE' : 'META.EXPOSURE.TYPE',
         'SUBARRAY' : 'META.SUBARRAY.NAME',
     },
-    'sha1sum' : '799efae38a9f9524a393a148e50c80fbb25e4601',
+    'sha1sum' : '260018a9310d25d6e34c6fe1d5b30611f48ff27a',
     'substitutions' : {
         'META.SUBARRAY.NAME' : {
             'GENERIC' : 'N/A',
@@ -24,4 +24,13 @@ header = {
 }
 
 selector = Match({
+    ('ANY', 'NIS_AMI') : 'N/A',
+    ('ANY', 'NIS_DARK') : 'N/A',
+    ('ANY', 'NIS_FOCUS') : 'N/A',
+    ('ANY', 'NIS_IMAGE') : 'N/A',
+    ('ANY', 'NIS_LAMP') : 'N/A',
+    ('ANY', 'NIS_SOSS') : 'N/A',
+    ('ANY', 'NIS_TACONFIRM') : 'N/A',
+    ('ANY', 'NIS_TACQ') : 'N/A',
+    ('ANY', 'NIS_WFSS') : 'N/A',
 })
