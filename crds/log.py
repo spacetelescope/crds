@@ -246,6 +246,10 @@ add_stream_handler = THE_LOGGER.add_stream_handler
 remove_stream_handler = THE_LOGGER.remove_stream_handler
 format = THE_LOGGER.format
 
+def increment_errors(N=1):
+    """Increment the error count by N without issuing a log message."""
+    THE_LOGGER.errors += N
+
 def errors():
     """Return the global count of errors."""
     return THE_LOGGER.errors

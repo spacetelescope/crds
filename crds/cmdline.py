@@ -539,6 +539,7 @@ class UniqueErrorsMixin(object):
         self.ue_mixin.count = Counter()
         self.ue_mixin.unique_data_names = set()
         self.ue_mixin.all_data_names = set()
+        self.ue_mixin.announce_suppressed = Counter()
         
         # Exception trap context manager for use in "with" blocks trapping exceptions.
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)  # can be overridden
@@ -552,20 +553,32 @@ class UniqueErrorsMixin(object):
         self.add_argument("--all-errors-file", 
             help="Write out all err'ing data names (ids or filenames) to specified file.")
         self.add_argument("--unique-threshold", type=int, default=1,
-            help="Only print unique errors with this many or more instances.")
+            help="Only print unique error classes with this many or more instances.")
+        self.add_argument("--max-errors-per-class", type=int, default=500, metavar="N",
+            help="Only print the first N defailed errors of any particular class.")
 
     def log_and_track_error(self, data, instrument, filekind, *params, **keys):
         """Issue an error message and record the first instance of each unique kind of error,  where "unique"
         is defined as (instrument, filekind, msg_text) and omits data id.
         """
+        # Always count messages
         msg = self.format_prefix(data, instrument, filekind, *params, **keys)
-        log.error(msg)
-        key = log.format(instrument, filekind, *params, **keys)
+        key = log.format(instrument, filekind.upper(), *params, **keys)
         if key not in self.ue_mixin.messages:
             self.ue_mixin.messages[key] = msg
             self.ue_mixin.unique_data_names.add(data)
         self.ue_mixin.count[key] += 1
         self.ue_mixin.all_data_names.add(data)
+        # Past a certain max,  supress the error log messages.
+        if self.ue_mixin.count[key] < self.args.max_errors_per_class:
+            log.error(msg)
+        else:
+            log.increment_errors()
+            # Before suppressing,  announce the suppression
+            if not self.ue_mixin.announce_suppressed[key]:
+                self.ue_mixin.announce_suppressed[key] += 1 # flag
+                log.info("Max error count %d exceeded for:" % self.args.max_errors_per_class,
+                         key.strip(), "suppressing remaining error messages.")
         return None # for log.exception_trap_logger  --> don't reraise
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
@@ -582,7 +595,7 @@ class UniqueErrorsMixin(object):
                          self.args.unique_threshold, "instances.")
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
-                    log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
+                    log.info("%06d" % self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
             log.info("All unique error types:", len(self.ue_mixin.messages))
             log.info("="*20, "="*len("unique error classes"), "="*20)
         if self.args.all_errors_file:
