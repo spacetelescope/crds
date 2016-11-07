@@ -1,6 +1,6 @@
-__version__ = '36829fc'
+__version__ = 'ce5625c'
 
 __full_version_info__ = '''
-branch: master
-sha1: 36829fc
+branch: bump-version
+sha1: ce5625c
 '''

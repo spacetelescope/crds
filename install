@@ -32,6 +32,9 @@ st=0
 # source code.
 
 find . -name combined_specs.json | xargs rm
+
+find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.rmap' | xargs python -m crds.checksum
+
 python -m crds.hst
 python -m crds.jwst
 python -m crds.tobs

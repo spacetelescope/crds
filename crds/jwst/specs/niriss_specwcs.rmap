@@ -1,0 +1,35 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-11-01',
+    'file_ext' : '.asdf',
+    'filekind' : 'SPECWCS',
+    'filetype' : 'SPECWCS',
+    'instrument' : 'NIRISS',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_niriss_specwcs.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.SUBARRAY.NAME', 'META.EXPOSURE.TYPE'), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+        'SUBARRAY' : 'META.SUBARRAY.NAME',
+    },
+    'sha1sum' : 'a5000097c9b856f751b84f5caeb1bb9e44353dd2',
+    'substitutions' : {
+        'META.SUBARRAY.NAME' : {
+            'GENERIC' : 'N/A',
+        },
+    },
+    'suffix' : 'specwcs',
+    'text_descr' : 'Spectral World Coordinate System',
+}
+
+selector = Match({
+    ('ANY', 'NIS_AMI') : 'N/A',
+    ('ANY', 'NIS_DARK') : 'N/A',
+    ('ANY', 'NIS_FOCUS') : 'N/A',
+    ('ANY', 'NIS_IMAGE') : 'N/A',
+    ('ANY', 'NIS_LAMP') : 'N/A',
+    ('ANY', 'NIS_TACONFIRM') : 'N/A',
+    ('ANY', 'NIS_TACQ') : 'N/A',
+    ('ANY', 'NIS_WFSS') : 'N/A',
+})

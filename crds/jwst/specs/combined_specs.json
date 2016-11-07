@@ -1819,19 +1819,42 @@
             "unique_rowkeys":null
         },
         "specwcs":{
-            "derived_from":"Handmade spec",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-11-01",
             "extra_keys":null,
-            "file_ext":".json",
+            "file_ext":".asdf",
             "filekind":"SPECWCS",
             "filetype":"SPECWCS",
             "instrument":"NIRISS",
             "ld_tpn":"niriss_specwcs_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_niriss_specwcs_0000.rmap",
+            "name":"jwst_niriss_specwcs.rmap",
             "observatory":"JWST",
-            "parkey":[],
+            "parkey":[
+                [
+                    "META.SUBARRAY.NAME",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE",
+                "SUBARRAY":"META.SUBARRAY.NAME"
+            },
+            "sha1sum":"a5000097c9b856f751b84f5caeb1bb9e44353dd2",
+            "substitutions":{
+                "META.SUBARRAY.NAME":{
+                    "GENERIC":"N/A"
+                }
+            },
             "suffix":"specwcs",
-            "text_descr":"Spectroscopic World Coordinate System",
+            "text_descr":"Spectral World Coordinate System",
             "tpn":"niriss_specwcs.tpn",
             "unique_rowkeys":null
         },
@@ -2493,9 +2516,9 @@
             "reference_to_dataset":{
                 "EXP_TYPE":"META.EXPOSURE.TYPE"
             },
-            "sha1sum":"956ad2456fd55d6ca32dba2ac4ae462a18190389",
+            "sha1sum":"3c38d3c9cd0c431490ae3deffb978b3b6ed1d7d2",
             "suffix":"msaoper",
-            "text_descr":"msaoper reference file used in bad shutter flagging step",
+            "text_descr":"Micro-Shutter Assembly Operability, Bad Shutters",
             "tpn":"nirspec_msaoper.tpn",
             "unique_rowkeys":null
         },

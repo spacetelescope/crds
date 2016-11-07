@@ -433,8 +433,19 @@ def sanitize_data_model_dict(flat_dict):
     """Given data model keyword dict `d`,  sanitize the keys and values to
     strings, upper case the keys,  and add fake keys for FITS keywords.
     """
+    flat_dict = dict(flat_dict)
+
+    # Reformat history paths so they sort correctly by using 0-filled sequence number.
+    for key, val in sorted(flat_dict.items()):
+        skey, sval = str(key).upper(), str(val)
+        if skey.startswith("HISTORY") and skey.endswith("DESCRIPTION"):
+            parts = skey.split(".")
+            newkey = parts[0] + "%04d" % int(parts[1]) + parts[2]
+            flat_dict[newkey] = flat_dict.pop(key)
+        
     cleaned = {}
     history = []
+
     for key, val in sorted(flat_dict.items()):
         skey, sval = str(key).upper(), str(val)
         fits_magx = "EXTRA_FITS.PRIMARY.HEADER."

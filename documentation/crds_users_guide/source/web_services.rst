@@ -361,7 +361,7 @@ to compute best references associated with the specified dataset ids:
 
 *context_specifier* is a date-based CRDS context specifier,  e.g.:  jwst_0192.pmap, 2015-05-25T00:00:27, jwst-operational
 
-*ids* is a list of archive dataset id strings as shown above.
+*ids* is a list of archive dataset id strings as shown above.   A maximum of 200 IDs should be requested per call.
 
 *datasets_since* is an optional cut-off date for datasets.  If specified, only datasets acquired after that date are returned.
 
@@ -396,7 +396,8 @@ obtain up-to-date example IDs.
 and supported to use either half (currently identical) of the dataset IDs as
 specified in get_dataset_ids() above.  Using a "half-ID" is shown below.
 Ultimately the first half will identify a group of exposures and the second
-half will identify a single exposure in the group.
+half will identify a single exposure in the group.  A maximum of 200 ids should
+be requested per call.
 
 An examople call using the CRDS Python client is::
 
@@ -443,9 +444,6 @@ error::
     >>> get_aui_best_references("2016-01-01", ['JW96090001004_03101_00001.NRCB5'])
     {'JW96090001004_03101_00001.NRCB5': [False,
       "NOT FOUND dataset ID does not exist 'JW96090001004_03101_00001.NRCB5'"]}
-
-Code utilizing this service will have better performance if multiple IDs are
-requested per call.   A maximum of 200 ids should be requested per call.
 
 Although it is possible for errors to occur on a per-type basis, for this
 interface specific types which result in lookup errors (e.g. flat) are dropped
