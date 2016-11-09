@@ -142,9 +142,9 @@ class Script(object):
         if self.args.readonly_cache:
             config.set_cache_readonly(True)
         log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
-        # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
         log.set_log_time(config.get_log_time() or self.args.log_time)
-        log.verbose("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
+        output_cmd = log.info if self.args.dump_cmdline else log.verbose
+        output_cmd("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
         self.print_status = print_status
         self.reset_log = reset_log
         if self.reset_log:
@@ -281,6 +281,8 @@ class Script(object):
             help="Set log verbosity to True,  nominal debug level.", action="store_true")
         self.add_argument("--verbosity", 
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
+        self.add_argument("--dump-cmdline", action="store_true",
+            help="Dump the command line parameters used to start the script to the log.")
         self.add_argument("-R", "--readonly-cache", action="store_true",
             help="Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.")
         self.add_argument('-I', '--ignore-cache', action='store_true', dest="ignore_cache",
@@ -734,3 +736,4 @@ class ContextsScript(Script):
             except Exception:  # only ask the server if loading context fails
                 files |= set(api.get_reference_names(context))
         return sorted(files)
+

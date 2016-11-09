@@ -1068,12 +1068,12 @@ and debug output.
         elif ref in ("NOT FOUND NO MATCH FOUND.", "UNDEFINED", "NONE", "", "*"):
             if self.args.undefined_differences_matter:  # track these when N/A is being scrutinized, regardless of diff.
                 self.log_and_track_error(
-                    dataset, instrument, filekind, name,  "No match found:", repr(ref))
+                    dataset, instrument, filekind, name,  "No match found:", repr(ref_org))
                 ref_ok = False
             else:
-                ref = "N/A"
                 log.verbose(self.format_prefix(dataset, instrument, filekind),
-                            name, "No match found:", repr(ref), " => 'N/A'.")
+                            name, "No match found:", repr(ref_org), " => 'N/A'.")
+                ref = "N/A"
         elif ref.startswith("NOT FOUND"):
             self.log_and_track_error(
                 dataset, instrument, filekind, name, "Bestref FAILED:", ref_org[len("NOT FOUND"):])
