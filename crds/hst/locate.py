@@ -66,7 +66,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = reformatted[0]
+        header["DATE_OBS"] = reformatted[0]
         header["TIME-OBS"] = reformatted[1]
+        header["TIME_OBS"] = reformatted[1]
     return header
 
 # =======================================================================
