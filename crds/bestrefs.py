@@ -531,6 +531,7 @@ and debug output.
         self.updates = OrderedDict()  # map of reference updates
         self.failed_updates = OrderedDict()  # map of datasets to failure pseudo-update-tuples
         self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
+
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         self.affected_instruments = None
         
@@ -940,6 +941,9 @@ and debug output.
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
                                     "with respect to", repr(context)):
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
+            if not types:
+                types = self.locator.header_to_reftypes(header)
+                log.verbose("Defined default type set for dataset as with header_to_reftypes:", repr(types))
             bestrefs = crds.getrecommendations(
                 header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
         return { key.upper() : value for (key, value) in bestrefs.items() }

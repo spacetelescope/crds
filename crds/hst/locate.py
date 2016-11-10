@@ -44,6 +44,12 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+def header_to_reftypes(header):
+    """Based on `header` return the default list of appropriate reference type names."""
+    return []  # translates to everything.
+
+# =======================================================================
+
 def match_context_key(key):
     """Set the case of a context key (instrument or type) appropriately
     for this project, HST used upper case for instruments,  lower case
