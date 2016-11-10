@@ -202,6 +202,12 @@ from crds.tobs.tpn import get_tpninfos, reference_name_to_tpn_text, reference_na
 
 # =======================================================================
 
+def header_to_reftypes(header):
+    """Based on `header` return the default list of appropriate reference type names."""
+    return [] # translates to all types.
+
+# =======================================================================
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.

@@ -52,6 +52,10 @@ suffix_to_filekind = TYPES.suffix_to_filekind
 
 # =======================================================================
 
+from crds.jwst.pipeline import header_to_reftypes
+
+# =======================================================================
+
 def match_context_key(key):
     """Set the case of a context key appropriately for this project, JWST
     always uses upper case.

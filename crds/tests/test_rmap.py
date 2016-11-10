@@ -242,6 +242,7 @@ def dt_rmap_get_valid_values_map():
                   'WFC2-2K',
                   'WFC2-FIX',
                   'WFC2-MRAMP',
+                  'WFC2-MRAMPQ',
                   'WFC2-ORAMP',
                   'WFC2-ORAMPQ',
                   'WFC2-POL0UV',

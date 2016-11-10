@@ -555,7 +555,8 @@ and debug output.
         cmdline.UniqueErrorsMixin.__init__(self, *args, **keys)
 
         self.updates = OrderedDict()  # map of reference updates
-        self.process_filekinds = [typ.lower() for typ in self.args.types]    # list of filekind str's
+        self.process_filekinds = [typ.lower() for typ in self.args.types ]    # list of filekind str's
+
         self.skip_filekinds = [typ.lower() for typ in self.args.skip_types]
         self.affected_instruments = None
 
@@ -954,10 +955,12 @@ and debug output.
 
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
-        with log.augment_exception("Failed computing bestrefs for data", repr(dataset),
-                                   "with respect to", repr(context)):
-            types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[
-                instrument.lower()]
+        with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
+                                    "with respect to", repr(context)):
+            types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
+            if not types:
+                types = self.locator.header_to_reftypes(header)
+                log.verbose("Defined default type set for dataset as with header_to_reftypes:", repr(types))
             bestrefs = crds.getrecommendations(
                 header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
         return {key.upper(): value for (key, value) in bestrefs.items()}
