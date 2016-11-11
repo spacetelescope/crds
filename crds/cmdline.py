@@ -558,6 +558,8 @@ class UniqueErrorsMixin(object):
             help="Only print unique error classes with this many or more instances.")
         self.add_argument("--max-errors-per-class", type=int, default=500, metavar="N",
             help="Only print the first N defailed errors of any particular class.")
+        self.add_argument("--unique-delimiter", type=str, default=None,
+            help="Use the given delimiter (e.g. semicolon) in tracked error messages to make them amenable to spreadsheets.")
 
     def log_and_track_error(self, data, instrument, filekind, *params, **keys):
         """Issue an error message and record the first instance of each unique kind of error,  where "unique"
@@ -585,8 +587,13 @@ class UniqueErrorsMixin(object):
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""
-        return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
-                          *params, end="", **keys)
+        delim = self.args.unique_delimiter  # for spreadsheets
+        if delim:
+            return log.format(delim, instrument.upper(), delim, filekind.upper(), delim, data, delim,
+                              *params, end="", **keys)
+        else:
+            return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
+                              *params, end="", **keys)
 
     def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
