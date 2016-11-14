@@ -367,6 +367,9 @@ def get_pipeline_reftypes():
 def header_to_reftypes(header):
     with log.augment_exception("Can't find EXP_TYPE for:\n", log.PP(header)):
         exp_type = header.get("META.EXPOSURE.TYPE", header.get("EXP_TYPE"))
+    return exptype_to_reftypes(exp_type)
+
+def exptype_to_reftypes(exp_type):
     level_2a_types = get_level_reftypes(CFGMAP["level2a"], exp_type)
     level_2b_types = get_level_reftypes(CFGMAP["level2b"], exp_type)
     return level_2a_types + level_2b_types
