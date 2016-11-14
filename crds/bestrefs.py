@@ -705,6 +705,9 @@ and debug output.
         self.add_argument("-k", "--skip-types", nargs="+",  metavar="SKIPPED_REFERENCE_TYPES",  default=(),
                           help="A list of reference types which should not be processed,  defaulting to nothing.")
 
+        self.add_argument("--all-types", action="store_true",
+                          help="Evaluate every reference file type regardless of dataset exposure type.")
+
         self.add_argument("--diffs-only", action="store_true", default=None,
                           help="For context-to-context comparison, choose only instruments and types from context differences.")
 
@@ -958,7 +961,7 @@ and debug output.
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
                                     "with respect to", repr(context)):
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
-            if not types:
+            if not types and not self.args.all_types:
                 types = self.locator.header_to_reftypes(header)
                 log.verbose("Defined default type set for dataset as with header_to_reftypes:", repr(types))
             bestrefs = crds.getrecommendations(
