@@ -1,6 +1,6 @@
-__version__ = 'c2a72cd'
+__version__ = '515bf26'
 
 __full_version_info__ = '''
-branch: jwst-build-7-rc3
-sha1: c2a72cd
+branch: bump-version
+sha1: 515bf26
 '''
