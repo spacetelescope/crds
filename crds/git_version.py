@@ -1,6 +1,6 @@
-__version__ = 'ce5625c'
+__version__ = 'c2a72cd'
 
 __full_version_info__ = '''
-branch: bump-version
-sha1: ce5625c
+branch: jwst-build-7-rc3
+sha1: c2a72cd
 '''
