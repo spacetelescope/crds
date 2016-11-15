@@ -50,6 +50,13 @@ def get_schema_tpns(schema_name=None):
     return all_tpns
 
 @utils.cached
+def get_flat_schema(schema_name=None):
+    """Flatten the specified data model schema, defaulting to the core schema,
+    useful for retrieving FITS keywords or valid value lists.
+    """
+    return _schema_to_flat(_load_schema(schema_name))
+
+@utils.cached
 def tpninfos_key_to_parkeys(tpn):
     """Given a key for a TpnInfo's list, return the associated required parkeys."""
     if "all_" or "_all." in tpn:

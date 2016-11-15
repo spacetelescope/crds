@@ -44,6 +44,12 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+def header_to_reftypes(header):
+    """Based on `header` return the default list of appropriate reference type names."""
+    return []  # translates to everything.
+
+# =======================================================================
+
 def match_context_key(key):
     """Set the case of a context key (instrument or type) appropriately
     for this project, HST used upper case for instruments,  lower case
@@ -481,6 +487,10 @@ def generate_timestamp(now=None):
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return siname.add_IRAF_prefix(instrument.upper())
+
+def filekind_to_keyword(filekind):
+    """Return the FITS keyword at which a reference should be recorded."""
+    return filekind.upper()
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.

@@ -6,6 +6,7 @@ import os
 import json
 import shutil
 
+from crds import bestrefs
 from crds.bestrefs import BestrefsScript
 from crds.tests import test_config
 
@@ -119,31 +120,31 @@ def dt_bestrefs_compare_source_files():
     >>> old_state = test_config.setup()
     
     >>> BestrefsScript(argv="bestrefs.py --new-context hst.pmap --files data/j8bt05njq_raw.fits data/j8bt06o6q_raw.fits data/j8bt09jcq_raw.fits --print-affected --compare-source-bestrefs")()
-    CRDS - INFO - No file header updates requested;  dry run.
-    CRDS - INFO - ===> Processing data/j8bt05njq_raw.fits
-    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'undefined' --> 'v9718263j_npl.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - ===> Processing data/j8bt06o6q_raw.fits
-    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'undefined' --> 'v9718264j_npl.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - ===> Processing data/j8bt09jcq_raw.fits
-    CRDS - INFO - instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'w3m1716tj_imp.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'undefined' --> 'v9718260j_npl.fits' :: Would update.
-    CRDS - INFO - instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
-    CRDS - INFO - Affected products = 3
+    CRDS - INFO -  No file header updates requested;  dry run.
+    CRDS - INFO -  ===> Processing data/j8bt05njq_raw.fits
+    CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='CRREJTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'n/a' --> 'v9718263j_npl.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt05njq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  ===> Processing data/j8bt06o6q_raw.fits
+    CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='CRREJTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n4e12510j_crr.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'n/a' --> 'v9718264j_npl.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt06o6q_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  ===> Processing data/j8bt09jcq_raw.fits
+    CRDS - INFO -  instrument='ACS' type='ATODTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734ij_a2d.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='IMPHTTAB' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'w3m1716tj_imp.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='NPOLFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'n/a' --> 'v9718260j_npl.fits' :: Would update.
+    CRDS - INFO -  instrument='ACS' type='SHADFILE' data='data/j8bt09jcq_raw.fits' ::  New best reference: 'kcb1734pj_shd.fits' --> 'n/a' :: Would update.
+    CRDS - INFO -  Affected products = 3
     data/j8bt05njq_raw.fits
     data/j8bt06o6q_raw.fits
     data/j8bt09jcq_raw.fits
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 0 warnings
-    CRDS - INFO - 19 infos
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  0 warnings
+    CRDS - INFO -  19 infos
     0
 
     >>> test_config.cleanup(old_state)
@@ -249,6 +250,27 @@ def dt_bestrefs_context_to_context():
     0
     
     >>> test_config.cleanup(old_state)
+    """
+
+def dt_test_cleanpath():
+    """
+    Removes prefixes added to reference files prior to writing into FITS headers.
+
+    HST IRAF-style env path prefix
+
+    >>> bestrefs.cleanpath("jref$foo.fits")
+    'foo.fits'
+
+    JWST URI-style prefix
+
+    >>> bestrefs.cleanpath('crds://foo.fits')
+    'foo.fits'
+
+    >>> bestrefs.cleanpath('foo.fits')
+    'foo.fits'
+
+    >>> bestrefs.cleanpath('something/foo.fits')
+    'something/foo.fits'
     """
 
 class TestBestrefs(test_config.CRDSTestCase):

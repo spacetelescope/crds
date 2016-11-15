@@ -243,6 +243,10 @@ FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", Fals
 FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", False,
     "When True, verify that FITS header CHECKSUM and DATASUM values are correct.  Otherwise fail.")
 
+ADD_LOG_MSG_COUNTER = BooleanConfigItem(
+    "CRDS_ADD_LOG_MSG_COUNTER", False, "When True, add a running counter.")
+log.set_add_log_msg_count(ADD_LOG_MSG_COUNTER)
+
 # ===========================================================================
 
 # Runtime bad file options for end users
@@ -829,6 +833,10 @@ def check_path(path):
     path = os.path.abspath(path)
     assert FILE_PATH_RE.match(path), "Invalid file path " + repr(path)
     return path
+
+# -------------------------------------------------------------------------------------
+
+
 
 # -------------------------------------------------------------------------------------
 
