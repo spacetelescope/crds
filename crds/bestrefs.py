@@ -959,7 +959,7 @@ and debug output.
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
-                                    "with respect to", repr(context)):
+                                   "with respect to", repr(context)):
             types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
             if not types and not self.args.all_types:
                 types = self.locator.header_to_reftypes(header)
