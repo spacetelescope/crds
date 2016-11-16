@@ -3,27 +3,13 @@ things like "reference types used by a pipeline."
 """
 import fnmatch
 import re
+from collections import OrderedDict
 
 import yaml
 
 from crds import log
 
 # from jwst.stpipe import cmdline
-
-PIPELINES = [
-    "calwebb_dark.cfg",
-    "calwebb_sloper.cfg",
-
-    "calwebb_spec2.cfg",
-    "calniriss_soss2.cfg",
-    "calwebb_image2.cfg",
-]
-
-def print_types():
-    from jwst.stpipe import cmdline
-    for pipeline in PIPELINES:
-        print(pipeline, "::", " ".join(cmdline.reference_types_from_config(pipeline)))
-
 
 '''
 DARK, (LED, LAMP, FLAT)  all level2a only
@@ -32,182 +18,171 @@ DARK has special calwebb_dark
 All otheres go through both level2a and level2b
 '''
 
-
-CFGMAP_YAML = """
-level2a:
-        calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
-        calwebb_sloper.cfg: ["*"]
-
-level2b:
-        calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_MRS, NRS_FIXEDSLIT, NRS_MSASPEC, NRS_IFU]
-
-        calniriss_soss2.cfg: [NIS_SOSS]
-
-        calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORN, NRC_FOCUS, 
-                             MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
-                             NIS_IMAGE, NIS_AMI, 
-                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM]
-
-        skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*WSS*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
+HEADER_YAML = """
+author: CRDS
+descrip: "Reference used to determine pipeline configuration from dataset parameters."
+history: "First version generated from calcode .cfg files and EXP_TYPE/LEVEL mapping."
+instrument: SYSTEM
+pedigree: DUMMY
+reftype: CALCFG
+telescope: JWST
+useafter: 1900-01-01T00:00:00
 """
 
-PIPELINE_TO_REFTYPES = {
-    'calniriss_soss2.cfg': [
-        'area',
-        'camera',
-        'collimator',
-        'disperser',
-        'distortion',
-        'filteroffset',
-        'fore',
-        'fpa',
-        'fringe',
-        'ifufore',
-        'ifupost',
-        'ifuslicer',
-        'msa',
-        'ote',
-        'photom',
-        'regions',
-        'specwcs',
-        'straymask',
-        'v2v3',
-        'wavelengthrange',
-        ],
-    'calwebb_dark.cfg': [
-        'ipc',
-        'linearity',
-        'mask',
-        'refpix',
-        'rscd',
-        'saturation',
-        'superbias',
-        ],
-    'calwebb_image2.cfg': [
-        'area',
-        'camera',
-        'collimator',
-        'disperser',
-        'distortion',
-        'filteroffset',
-        'fore',
-        'fpa',
-        'ifufore',
-        'ifupost',
-        'ifuslicer',
-        'msa',
-        'ote',
-        'photom',
-        'regions',
-        'specwcs',
-        'v2v3',
-        'wavelengthrange',
-        ],
-    'calwebb_sloper.cfg': [
-        'dark',
-        'gain',
-        'ipc',
-        'linearity',
-        'mask',
-        'readnoise',
-        'refpix',
-        'rscd',
-        'saturation',
-        'superbias',
-        ],
-    'calwebb_spec2.cfg': [
-        'area',
-        'camera',
-        'collimator',
-        'disperser',
-        'distortion',
-        'filteroffset',
-        'fore',
-        'fpa',
-        'fringe',
-        'ifufore',
-        'ifupost',
-        'ifuslicer',
-        'msa',
-        'ote',
-        'photom',
-        'regions',
-        'specwcs',
-        'straymask',
-        'v2v3',
-        'wavelengthrange',
-        ],
- 'skip_2b.cfg': []}
+# Input manually
+# Order is important since the first pattern matching an exp_type in any given level wins.
+PIPELINE_CFGS_YAML = """
+pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calniriss_soss2.cfg,
+  calwebb_image2.cfg]
+"""
 
-CFGMAP = {
-    'level2a': {
-        'calwebb_dark.cfg': [
-            'FGS_DARK',
-            'MIR_DARK',
-            'NRC_DARK',
-            'NIS_DARK',
-            'NRS_DARK'
-            ],
-        'calwebb_sloper.cfg': [
-            '*',
-            ]
-        },
-    'level2b': {
-        'calniriss_soss2.cfg': [
-            'NIS_SOSS',
-            ],
-        'calwebb_image2.cfg': [
-            'NRC_IMAGE',
-            'NRC_TACQ',
-            'NRC_CORN',
-            'NRC_FOCUS',
-            'MIR_IMAGE',
-            'MIR_TACQ',
-            'MIR_LYOT',
-            'MIR_4QPM',
-            'MIR_CORONCAL',
-            'NIS_IMAGE',
-            'NIS_AMI',
-            'NRS_IMAGE',
-            'NRS_FOCUS',
-            'NRS_MIMF',
-            'NRS_BOTA',
-            'NRS_TACQ',
-            'NRS_TASLIT',
-            'NRS_TACONFIRM'
-            ],
-        'calwebb_spec2.cfg': [
-            'MIR_LRS-FIXEDSLIT',
-            'MIR_LRS-SLITLESS',
-            'MIR_MRS',
-            'NRS_FIXEDSLIT',
-            'NRS_MSASPEC',
-            'NRS_IFU',
-            ],
-        'skip_2b.cfg': [
-            '*DARK*',
-            '*FLAT*',
-            '*LED*',
-            '*WSS*',
-            '*LAMP*',
-            'NIS_FOCUS',
-            'NIS_WFSS',
-            'NRS_AUTOWAVE',
-            ]
-        }
-    }
+# Input manually
+LEVEL_PIPELINE_EXPTYPE_YAML = """
+level_pipeline_exptypes:
+    level2a:
+        - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
 
-def get_pipeline_reftypes():
-    """Return a global mapping from JWST cal code top level pipeline .cfg files
-    to the reftypes required to process each sub-Step as a Python dict.
-    """
+        - calwebb_sloper.cfg: ["*"]
+
+    level2b:
+        - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_MRS, NRS_FIXEDSLIT, 
+                             NRS_MSASPEC, NRS_IFU, NRS_BRIGHTOBJ, NRS_AUTOWAVE]
+
+        - calniriss_soss2.cfg: [NIS_SOSS]
+
+        - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
+                             MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
+                             NIS_IMAGE, NIS_AMI, 
+                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
+                             FGS_IMAGE, FGS_FOCUS]
+
+        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
+"""
+
+STEPS_TO_REFTYPE_EXCEPTIONS_YAML = """
+steps_to_reftypes_exceptions:
+    flatfield:
+        - case1:
+            exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
+            reftypes: []
+        - case2:
+            exp_types: ["NRS_*"]
+            reftypes: [dflat, fflat, sflat]
+        - case3:
+            exp_types: ["*"]
+            reftypes: [flat]
+"""
+
+# --------------------------------------------------------------------------------------
+
+def generate_calcfg_yaml():
+    pipeline_cfgs = yaml.load(PIPELINE_CFGS_YAML)["pipeline_cfgs"]
+    pipeline_cfgs_to_steps, all_steps_to_reftypes = generate_pipeline_info(pipeline_cfgs)
+    calcfg = HEADER_YAML + PIPELINE_CFGS_YAML + LEVEL_PIPELINE_EXPTYPE_YAML + "\n"
+    calcfg += yaml.dump({"pipeline_cfgs_to_steps" : pipeline_cfgs_to_steps}) + "\n"
+    calcfg += yaml.dump({"steps_to_reftypes" : all_steps_to_reftypes})
+    calcfg += STEPS_TO_REFTYPE_EXCEPTIONS_YAML
+    return calcfg
+    
+def generate_pipeline_info(pipeline_cfgs):
     from jwst.stpipe import cmdline
-    pipeline_to_reftypes = {}
-    for pipeline in PIPELINES:
-        pipeline_to_reftypes[pipeline] = cmdline.reference_types_from_config(pipeline)
-    pipeline_to_reftypes["skip_2b.cfg"] = []
-    # print(yaml.dump(pipeline_to_reftypes))
-    return pipeline_to_reftypes
+    pipeline_cfgs_to_steps = {}
+    all_steps_to_reftypes = {}
+    pipeline_cfgs_to_steps["skip_2b.cfg"] = []
+    for pipeline_cfg in pipeline_cfgs:
+        steps_to_reftypes = cmdline.steps_to_reftypes_from_config(pipeline_cfg)
+        pipeline_cfgs_to_steps[pipeline_cfg] = sorted(list(steps_to_reftypes.keys()))
+        all_steps_to_reftypes.update(steps_to_reftypes)
+    return pipeline_cfgs_to_steps, all_steps_to_reftypes
+
+# --------------------------------------------------------------------------------------
+CALCFG_REFERENCE_YAML = '''
+author: CRDS
+descrip: "Reference used to determine pipeline configuration from dataset parameters."
+history: "First version generated from calcode .cfg files and EXP_TYPE/LEVEL mapping."
+instrument: SYSTEM
+pedigree: DUMMY
+reftype: CALCFG
+telescope: JWST
+useafter: 1900-01-01T00:00:00
+
+pipeline_cfgs: [calwebb_dark.cfg, calwebb_sloper.cfg, calwebb_spec2.cfg, calniriss_soss2.cfg,
+  calwebb_image2.cfg]
+
+level_pipeline_exptypes:
+    level2a:
+        - calwebb_dark.cfg: [FGS_DARK, MIR_DARK, NRC_DARK, NIS_DARK, NRS_DARK]
+
+        - calwebb_sloper.cfg: ["*"]
+
+    level2b:
+        - calwebb_spec2.cfg: [MIR_LRS-FIXEDSLIT, MIR_LRS-SLITLESS, MIR_MRS, NRS_FIXEDSLIT, 
+                             NRS_MSASPEC, NRS_IFU, NRS_BRIGHTOBJ, NRS_AUTOWAVE]
+
+        - calniriss_soss2.cfg: [NIS_SOSS]
+
+        - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
+                             MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
+                             NIS_IMAGE, NIS_AMI, 
+                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
+                             FGS_IMAGE, FGS_FOCUS]
+
+        - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
+
+pipeline_cfgs_to_steps:
+  calniriss_soss2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
+    flat_field, fringe, imprint_subtract, photom, srctype, straylight]
+  calwebb_dark.cfg: [dq_init, ipc, lastframe, linearity, refpix, rscd, saturation,
+    superbias]
+  calwebb_image2.cfg: [assign_wcs, flat_field, photom]
+  calwebb_sloper.cfg: [dark_current, dq_init, ipc, jump, lastframe, linearity, persistence,
+    ramp_fit, refpix, rscd, saturation, superbias]
+  calwebb_spec2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
+    flat_field, fringe, imprint_subtract, photom, srctype, straylight]
+  skip_2b.cfg: []
+
+steps_to_reftypes:
+  assign_wcs: [camera, collimator, disperser, distortion, filteroffset, fore, fpa,
+    ifufore, ifupost, ifuslicer, msa, ote, regions, specwcs, v2v3, wavelengthrange]
+  bkg_subtract: []
+  cube_build: []
+  dark_current: [dark]
+  dq_init: [mask]
+  extract_1d: [extract1d]
+  extract_2d: []
+  flat_field: []
+  fringe: [fringe]
+  imprint_subtract: []
+  ipc: [ipc]
+  jump: [gain, readnoise]
+  lastframe: []
+  linearity: [linearity]
+  persistence: []
+  photom: [area, photom]
+  ramp_fit: [gain, readnoise]
+  refpix: [refpix]
+  rscd: [rscd]
+  saturation: [saturation]
+  srctype: []
+  straylight: [straymask]
+  superbias: [superbias]
+
+steps_to_reftypes_exceptions:
+    flatfield:
+        - case1:
+            exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
+            reftypes: []
+        - case2:
+            exp_types: ["NRS_*"]
+            reftypes: [dflat, fflat, sflat]
+        - case3:
+            exp_types: ["*"]
+            reftypes: [flat]
+'''
+
+CALCFG = None
+
+# --------------------------------------------------------------------------------------
 
 def header_to_reftypes(header):
     """Given a dataset `header`,  extract the EXP_TYPE or META.EXPOSURE.TYPE keyword
@@ -225,36 +200,61 @@ def exptype_to_reftypes(exp_type):
 
     Return [reftypes... ]
     """
-    level_2a_types = get_level_reftypes(CFGMAP["level2a"], exp_type)
-    level_2b_types = get_level_reftypes(CFGMAP["level2b"], exp_type)
+    global CALCFG
+    if CALCFG is None:
+        CALCFG = yaml.load(CALCFG_REFERENCE_YAML)
+    level_2a_pipeline = get_level_pipeline("level2a", exp_type)
+    level_2b_pipeline = get_level_pipeline("level2b", exp_type)
+    level_2a_types = get_pipeline_types(level_2a_pipeline, exp_type)
+    level_2b_types = get_pipeline_types(level_2b_pipeline, exp_type)
     return level_2a_types + level_2b_types
 
-def get_level_reftypes(pipelines, exp_type):
-    """Given a dictionary `pipelines` mapping cal code .cfg files to EXP_TYPE
-    glob patterns,  determine the pipeline .
+def get_level_pipeline(level, exp_type):
+    """Interpret the level_pipeline_exptypes data structure relative to
+    processing `level` and `exp_type` to determine a pipeline .cfg file.
 
-    Return [reftypes... to process exp_type]
+    Return pipeline .cfg
     """
-    pipeline_cfg = get_level_pipeline(pipelines, exp_type)
-    return PIPELINE_TO_REFTYPES[pipeline_cfg]
-
-def get_level_pipeline(pipelines, exp_type):
-    """Given a dictionary `pipelines` mapping cal code .cfg files to EXP_TYPE
-    glob patterns,  determine the pipeline name for which some pattern matches.
-
-    Return pipeline .cfg name
-    """
-    for pipeline in pipelines:
-        for exp_type_expr in pipelines[pipeline]:
-            if glob_match(exp_type_expr, exp_type):
-                return pipeline
+    pipeline_exptypes = CALCFG["level_pipeline_exptypes"][level]
+    for mapping in pipeline_exptypes:
+        for pipeline, exptypes in mapping.items():
+            for exptype_pattern in exptypes:
+                if glob_match(exptype_pattern, exp_type):
+                    return pipeline
     raise RuntimeError("Unhandled EXP_TYPE " + repr(exp_type))
+
+def get_pipeline_types(pipeline, exp_type):
+    """Based on a pipeline .cfg filename and an EXP_TYPE,  look up
+    the Steps corresponding to the .cfg and extrapolate those to the
+    reftypes used by those Steps.   If there are exceptions to the
+    reftypes assigned for a particular Step that depend on EXP_TYPE,
+    return the revised types for that Step instead.
+    
+    Return [reftypes ...]
+    """
+    steps = CALCFG["pipeline_cfgs_to_steps"][pipeline]
+    exceptions = CALCFG["steps_to_reftypes_exceptions"]
+    reftypes = []
+    for step in steps:
+        if step in exceptions:
+            for case in cases:
+                item = case.values()[0]
+                reftypes = item["reftypes"]
+                exptypes = item["exp_types"]
+                for exptype_pattern in exptypes:
+                    if glob_match(exptype_pattern, exp_type):
+                        reftypes.extend(reftypes)
+            raise RuntimeError("Unhandled EXP_TYPE for exceptional Step '{}'".format(step))
+        else:
+            reftypes.extend(CALCFG["steps_to_reftypes"][step])
+    return reftypes
 
 def glob_match(expr, value):
     """Convert the given glob `expr` to a regex and match it to `value`."""
     re_str = fnmatch.translate(expr)
     return re.match(re_str, value)
 
-if __name__ == "__main__":
-    print_types()
+# --------------------------------------------------------------------------------------
 
+if __name__ == "__main__":
+    print(generate_calcfg_yaml())
