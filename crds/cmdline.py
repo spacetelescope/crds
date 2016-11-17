@@ -142,9 +142,9 @@ class Script(object):
         if self.args.readonly_cache:
             config.set_cache_readonly(True)
         log.set_verbose(log.get_verbose() or self.args.verbosity or self.args.verbose)
-        # log.verbose("Script parameters:", os.path.basename(argv[0]), *argv[1:])
         log.set_log_time(config.get_log_time() or self.args.log_time)
-        log.verbose("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
+        output_cmd = log.info if self.args.dump_cmdline else log.verbose
+        output_cmd("Command:", [os.path.basename(argv[0])] + argv[1:], verbosity=30)
         self.print_status = print_status
         self.reset_log = reset_log
         if self.reset_log:
@@ -281,6 +281,8 @@ class Script(object):
             help="Set log verbosity to True,  nominal debug level.", action="store_true")
         self.add_argument("--verbosity", 
             help="Set log verbosity to a specific level: 0..100.", type=int, default=0)
+        self.add_argument("--dump-cmdline", action="store_true",
+            help="Dump the command line parameters used to start the script to the log.")
         self.add_argument("-R", "--readonly-cache", action="store_true",
             help="Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.")
         self.add_argument('-I', '--ignore-cache', action='store_true', dest="ignore_cache",
@@ -324,6 +326,7 @@ class Script(object):
         return info
 
     @property
+    @utils.cached
     def bad_files(self):
         """Return the current list of ALL known bad mappings and references, not context-specific."""
         return self.server_info.bad_files_set
@@ -538,6 +541,7 @@ class UniqueErrorsMixin(object):
         self.ue_mixin.count = Counter()
         self.ue_mixin.unique_data_names = set()
         self.ue_mixin.all_data_names = set()
+        self.ue_mixin.announce_suppressed = Counter()
         
         # Exception trap context manager for use in "with" blocks trapping exceptions.
         self.error_on_exception = log.exception_trap_logger(self.log_and_track_error)  # can be overridden
@@ -551,26 +555,45 @@ class UniqueErrorsMixin(object):
         self.add_argument("--all-errors-file", 
             help="Write out all err'ing data names (ids or filenames) to specified file.")
         self.add_argument("--unique-threshold", type=int, default=1,
-            help="Only print unique errors with this many or more instances.")
+            help="Only print unique error classes with this many or more instances.")
+        self.add_argument("--max-errors-per-class", type=int, default=500, metavar="N",
+            help="Only print the first N defailed errors of any particular class.")
+        self.add_argument("--unique-delimiter", type=str, default=None,
+            help="Use the given delimiter (e.g. semicolon) in tracked error messages to make them amenable to spreadsheets.")
 
     def log_and_track_error(self, data, instrument, filekind, *params, **keys):
         """Issue an error message and record the first instance of each unique kind of error,  where "unique"
         is defined as (instrument, filekind, msg_text) and omits data id.
         """
+        # Always count messages
         msg = self.format_prefix(data, instrument, filekind, *params, **keys)
-        log.error(msg)
-        key = log.format(instrument, filekind, *params, **keys)
+        key = log.format(instrument, filekind.upper(), *params, **keys)
         if key not in self.ue_mixin.messages:
             self.ue_mixin.messages[key] = msg
             self.ue_mixin.unique_data_names.add(data)
         self.ue_mixin.count[key] += 1
         self.ue_mixin.all_data_names.add(data)
+        # Past a certain max,  supress the error log messages.
+        if self.ue_mixin.count[key] < self.args.max_errors_per_class:
+            log.error(msg)
+        else:
+            log.increment_errors()
+            # Before suppressing,  announce the suppression
+            if not self.ue_mixin.announce_suppressed[key]:
+                self.ue_mixin.announce_suppressed[key] += 1 # flag
+                log.info("Max error count %d exceeded for:" % self.args.max_errors_per_class,
+                         key.strip(), "suppressing remaining error messages.")
         return None # for log.exception_trap_logger  --> don't reraise
 
     def format_prefix(self, data, instrument, filekind, *params, **keys):
         """Create a standard (instrument,filekind,data) prefix for log messages."""
-        return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
-                          *params, end="", **keys)
+        delim = self.args.unique_delimiter  # for spreadsheets
+        if delim:
+            return log.format(delim, instrument.upper(), delim, filekind.upper(), delim, data, delim,
+                              *params, end="", **keys)
+        else:
+            return log.format("instrument="+repr(instrument.upper()), "type="+repr(filekind.upper()), "data="+repr(data), ":: ",
+                              *params, end="", **keys)
 
     def dump_unique_errors(self):
         """Print out the first instance of errors recorded by log_and_track_error().  Write out error list files."""
@@ -581,7 +604,7 @@ class UniqueErrorsMixin(object):
                          self.args.unique_threshold, "instances.")
             for key in sorted(self.ue_mixin.messages):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
-                    log.info(self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
+                    log.info("%06d" % self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
             log.info("All unique error types:", len(self.ue_mixin.messages))
             log.info("="*20, "="*len("unique error classes"), "="*20)
         if self.args.all_errors_file:
@@ -720,3 +743,4 @@ class ContextsScript(Script):
             except Exception:  # only ask the server if loading context fails
                 files |= set(api.get_reference_names(context))
         return sorted(files)
+

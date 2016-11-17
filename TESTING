@@ -1,48 +1,36 @@
-As of version 1.7.0 (opus_2015.2-client-2) the CRDS source distribution
-has been restructured to remove the "fallback cache" and to omit the
-test data directory.
+As of version 7.0.7 CRDS test data has been restructured to support testing on
+Travis CI and sites with no access to /grp/crds/cache.
 
-The ^/trunk/crds/cache directory and package has been moved to
-^/branches/crds_cache_archive and contains only dirty rules.
+Setting up CRDS to run the built-in unit tests can be accomplished as follows:
 
-The builtin cache has been moved to ^/branches/crds_cache_test for testing
-purposes and should be set up as an independent subversion checkout one level
-above this directory named "crds_cache_test".  Formally crds.cache was used as
-a pristing file archive of operational rules.  Now transferred to
-^/branches/crds_cache_test, the rules are no longer guaranteed to be prisitine
-and may be modified to support the demands of testing.  The function of version
-controlling CRDS rules is now relegated to ^/branches/crds_cache_archive which
-contains only pristine production rules transcribed from the HST + JWST
-archives.
+    % git checkout https://github.com/spacetelescope/crds.git CRDS
+    % cd CRDS
+    % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
+    % setup_test_cache $HOME   # You need at least 1G of space for this
+    % ./runtests
 
-Additionally, the auxilliary "crds/test/data" test data directory required to
-run unit tests has been excluded from the source package distribution and is
-only installable using a subversion checkout.  This directory contains crontrived
-rules, reference files, and datasets for testing CRDS.
+If you wish to relocate your CRDS test caches somewhere other than $HOME
+do:
 
-Now,  setting up CRDS to run the built-in unit tests can be accomplished as follows:
+    % setup_test_cache <somewhere else>
+    % setenv CRDS_TEST_ROOT <somewhere else>
+    % ./runtests
 
-% git checkout https://github.com/spacetelescope/crds.git CRDS
-% git checkout https://github.com/spacetelescope/crds-cache-test.git crds-cache-test
-% cd CRDS
-% source envs/hst-crds-dev.csh
-% ./runtests
+The above configures CRDS to run the built-in unit tests using several file
+sources:
 
-The above configures CRDS to run the built-in unit tests using 3 file sources:
+- $CRDS_TEST_ROOT/crds-cache-test           
+  Dirty test cache with corrupted/hacked files, used by tests only.
+  Has the dangerous property of like-named files with different contents.
 
-- https://github.com/spacetelescope/crds-cache-test.git
-- https://github.com/spacetelescope/crds.git   crds/tests/data
-- /grp/crds/cache
+- $CRDS_TEST_ROOT/crds-cache-default-test    
+  Used when CRDS_PATH not set,  replaces /grp/crds/cache with minimal reference files for testing
+  /grp/crds/cache is a complete HST + JWST readonly cache on the Central Store,  too large to distribute
 
-/grp/crds/cache is the shared CRDS readonly cache at the Institute (currently
-on the Central Store) which currently contains all rules and references for
-both JWST and HST and is updated as new references arrive.
+- $HOME/crds_cache_ops
+  For CRDS_PATH set by hst-crds-ops.csh,  used whenever tests don't clear CRDS_PATH
 
-CRDS/crds/test/data is normally omitted from source code distributions.
+- CRDS/crds/tests/data
+  Ad hoc test data files used with explicit paths
+  CRDS/crds/test/data is normally omitted from source code distributions.
 
-crds-cache-test is a modified version of crds-cache-archive altered to support
-unit testing requirements.   This has the unfortunate property of like-named files
-with different contents.
-
-Unit tests requiring a server are run against https://hst-crds-dev.stsci.edu
-using this setup.

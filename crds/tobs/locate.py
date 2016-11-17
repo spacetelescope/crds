@@ -202,6 +202,12 @@ from crds.tobs.tpn import get_tpninfos, reference_name_to_tpn_text, reference_na
 
 # =======================================================================
 
+def header_to_reftypes(header):
+    """Based on `header` return the default list of appropriate reference type names."""
+    return [] # translates to all types.
+
+# =======================================================================
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.
@@ -224,6 +230,10 @@ def condition_matching_header(rmapping, header):
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return "crds://"
+
+def filekind_to_keyword(filekind):
+    """Return the FITS keyword at which a reference should be recorded."""
+    return filekind.upper()
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.

@@ -242,6 +242,7 @@ def dt_rmap_get_valid_values_map():
                   'WFC2-2K',
                   'WFC2-FIX',
                   'WFC2-MRAMP',
+                  'WFC2-MRAMPQ',
                   'WFC2-ORAMP',
                   'WFC2-ORAMPQ',
                   'WFC2-POL0UV',
@@ -571,7 +572,6 @@ selector = Match({
 ''')
 
     def test_rmap_get_best_references_include(self):
-        old_state = test_config.setup()
         r = rmap.get_cached_mapping("data/hst_acs_darkfile_comment.rmap")
         header = {
             'CCDAMP': 'ABCD',
@@ -582,7 +582,7 @@ selector = Match({
             'TIME-OBS': '18:09:15.773332'}
         with self.assertRaises(CrdsUnknownReftypeError):
             r.get_best_references(header, include=["flatfile"])
-
+            
     def test_rmap_get_parkey_map(self):
         i = rmap.get_cached_mapping("hst_acs.imap")
         i.get_parkey_map() == {'APERTURE': ['*',

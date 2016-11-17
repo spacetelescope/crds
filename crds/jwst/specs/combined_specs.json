@@ -739,6 +739,36 @@
             "tpn":"miri_mask.tpn",
             "unique_rowkeys":null
         },
+        "pathloss":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-20",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PATHLOSS",
+            "filetype":"PATHLOSS",
+            "instrument":"MIRI",
+            "ld_tpn":"miri_pathloss_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_miri_pathloss.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"237111ef3bdba8734aa03f7ebd6a6e04b8b04523",
+            "suffix":"pathloss",
+            "text_descr":"Path loss correction",
+            "tpn":"miri_pathloss.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"jwst_miri_photom_0002.rmap",
             "extra_keys":null,
@@ -1672,6 +1702,36 @@
             "tpn":"niriss_mask.tpn",
             "unique_rowkeys":null
         },
+        "pathloss":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-20",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PATHLOSS",
+            "filetype":"PATHLOSS",
+            "instrument":"NIRISS",
+            "ld_tpn":"niriss_pathloss_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_niriss_pathloss.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"69994ee55fa75fdd1b551647c87490e2d719b466",
+            "suffix":"pathloss",
+            "text_descr":"Path loss correction",
+            "tpn":"niriss_pathloss.tpn",
+            "unique_rowkeys":null
+        },
         "photom":{
             "derived_from":"jwst_niriss_photom_0002.rmap",
             "extra_keys":null,
@@ -1759,19 +1819,42 @@
             "unique_rowkeys":null
         },
         "specwcs":{
-            "derived_from":"Handmade spec",
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-11-01",
             "extra_keys":null,
-            "file_ext":".json",
+            "file_ext":".asdf",
             "filekind":"SPECWCS",
             "filetype":"SPECWCS",
             "instrument":"NIRISS",
             "ld_tpn":"niriss_specwcs_ld.tpn",
             "mapping":"REFERENCE",
-            "name":"jwst_niriss_specwcs_0000.rmap",
+            "name":"jwst_niriss_specwcs.rmap",
             "observatory":"JWST",
-            "parkey":[],
+            "parkey":[
+                [
+                    "META.SUBARRAY.NAME",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE",
+                "SUBARRAY":"META.SUBARRAY.NAME"
+            },
+            "sha1sum":"a5000097c9b856f751b84f5caeb1bb9e44353dd2",
+            "substitutions":{
+                "META.SUBARRAY.NAME":{
+                    "GENERIC":"N/A"
+                }
+            },
             "suffix":"specwcs",
-            "text_descr":"Spectroscopic World Coordinate System",
+            "text_descr":"Spectral World Coordinate System",
             "tpn":"niriss_specwcs.tpn",
             "unique_rowkeys":null
         },
@@ -1898,6 +1981,34 @@
             "tpn":"nirspec_area.tpn",
             "unique_rowkeys":null
         },
+        "badshutter":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-20",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"BADSHUTTER",
+            "filetype":"BADSHUTTER",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_badshutter_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_badshutter.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"f73154cebd23df653910ee7b8d2da3d80b300196",
+            "suffix":"badshutter",
+            "text_descr":"Flagging bad shutters step",
+            "tpn":"nirspec_badshutter.tpn",
+            "unique_rowkeys":null
+        },
         "camera":{
             "derived_from":"Hand made 2015-09-02 16:35:00",
             "extra_keys":null,
@@ -1970,6 +2081,36 @@
             "suffix":"dark",
             "text_descr":"Dark Frame",
             "tpn":"nirspec_dark.tpn",
+            "unique_rowkeys":null
+        },
+        "dflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"DFLAT",
+            "filetype":"DETECTOR FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_dflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_dflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"abce8ac7b143ba3cb95593f8df2c2dabf892c29b",
+            "suffix":"dflat",
+            "text_descr":"Detector Flat Field",
+            "tpn":"nirspec_dflat.tpn",
             "unique_rowkeys":null
         },
         "disperser":{
@@ -2047,6 +2188,37 @@
             "suffix":"extract1d",
             "text_descr":"1-D Spectral Extraction",
             "tpn":"nirspec_extract1d.tpn",
+            "unique_rowkeys":null
+        },
+        "fflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"FFLAT",
+            "filetype":"FORE-OPTICS FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_fflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_fflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.FILTER",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"ab1aab68d2e3daa34b9e0d3a092cc0a7b22ed2e6",
+            "suffix":"fflat",
+            "text_descr":"Fore-optics Flat Field",
+            "tpn":"nirspec_fflat.tpn",
             "unique_rowkeys":null
         },
         "flat":{
@@ -2317,6 +2489,39 @@
             "tpn":"nirspec_msa.tpn",
             "unique_rowkeys":null
         },
+        "msaoper":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-26",
+            "extra_keys":null,
+            "file_ext":".json",
+            "filekind":"MSAOPER",
+            "filetype":"MSAOPER",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_msaoper_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_msaoper.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "reference_to_dataset":{
+                "EXP_TYPE":"META.EXPOSURE.TYPE"
+            },
+            "sha1sum":"3c38d3c9cd0c431490ae3deffb978b3b6ed1d7d2",
+            "suffix":"msaoper",
+            "text_descr":"Micro-Shutter Assembly Operability, Bad Shutters",
+            "tpn":"nirspec_msaoper.tpn",
+            "unique_rowkeys":null
+        },
         "ote":{
             "derived_from":"Hand made 2015-10-09 14:27:00",
             "extra_keys":null,
@@ -2340,6 +2545,36 @@
             "suffix":"ote",
             "text_descr":"Transform through the Optical Telescope Element",
             "tpn":"nirspec_ote.tpn",
+            "unique_rowkeys":null
+        },
+        "pathloss":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand made 2016-10-20",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"PATHLOSS",
+            "filetype":"PATHLOSS",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_pathloss_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"jwst_nirspec_pathloss.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"903d4d5fc543ff1bc9166b816e78684b5f4d32ce",
+            "suffix":"pathloss",
+            "text_descr":"Path loss correction",
+            "tpn":"nirspec_pathloss.tpn",
             "unique_rowkeys":null
         },
         "photom":{
@@ -2470,6 +2705,39 @@
             "suffix":"saturation",
             "text_descr":"Saturation",
             "tpn":"nirspec_saturation.tpn",
+            "unique_rowkeys":null
+        },
+        "sflat":{
+            "classes":[
+                "Match",
+                "UseAfter"
+            ],
+            "derived_from":"Hand created 2016-10-06",
+            "extra_keys":null,
+            "file_ext":".fits",
+            "filekind":"SFLAT",
+            "filetype":"SPECTROGRAPH FLATFIELD",
+            "instrument":"NIRSPEC",
+            "ld_tpn":"nirspec_sflat_ld.tpn",
+            "mapping":"REFERENCE",
+            "name":"nirspec_sflat.rmap",
+            "observatory":"JWST",
+            "parkey":[
+                [
+                    "META.INSTRUMENT.DETECTOR",
+                    "META.INSTRUMENT.FILTER",
+                    "META.INSTRUMENT.GRATING",
+                    "META.EXPOSURE.TYPE"
+                ],
+                [
+                    "META.OBSERVATION.DATE",
+                    "META.OBSERVATION.TIME"
+                ]
+            ],
+            "sha1sum":"9b7063c1ecfed8fcbbca507a1b24ab63067e2eaa",
+            "suffix":"sflat",
+            "text_descr":"Spectrograph Flat Field",
+            "tpn":"nirspec_sflat.tpn",
             "unique_rowkeys":null
         },
         "specwcs":{

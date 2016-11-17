@@ -21,7 +21,7 @@ HERE = os.path.dirname(__file__) or "."
 
 def dt_uses_finaall_mappings_using_reference():
     """
-    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup()
     >>> uses.UsesScript("crds.uses --files v2e20129l_flat.fits")()
     hst.pmap
     hst_0001.pmap
@@ -41,7 +41,7 @@ def dt_uses_finaall_mappings_using_reference():
 
 def dt_uses_rmaps():
     """
-    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup()
     >>> uses.UsesScript("crds.uses --files hst_cos_flatfile.rmap hst_acs_darkfile.rmap --include-used")()
     hst_cos_flatfile.rmap hst.pmap
     hst_cos_flatfile.rmap hst_0001.pmap
@@ -62,18 +62,15 @@ def dt_uses_rmaps():
     hst_acs_darkfile.rmap hst_0012.pmap
     hst_acs_darkfile.rmap hst_0013.pmap
     hst_acs_darkfile.rmap hst_0014.pmap
-    hst_acs_darkfile.rmap hst_0015.pmap
     hst_acs_darkfile.rmap hst_acs.imap
     hst_acs_darkfile.rmap hst_acs_0001.imap
-    hst_acs_darkfile.rmap hst_acs_0002.imap
     0
-
     >>> test_config.cleanup(old_state)
     """
     
 def dt_uses_imap():
     """
-    >>> old_state = test_config.setup(cache=test_config.CRDS_TESTING_CACHE)
+    >>> old_state = test_config.setup()
     >>> uses.UsesScript("crds.uses --files hst_cos.imap")()
     hst.pmap
     hst_0001.pmap

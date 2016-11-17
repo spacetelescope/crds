@@ -608,7 +608,7 @@ def get_symbolic_mapping(
         
 # ============================================================================
 
-@utils.cached
+@utils.cached   # check callers for .uncached before removing.
 def get_pickled_mapping(mapping, cached=True, use_pickles=None, save_pickles=None, **keys):
     """Load CRDS mapping from a context pickle if possible, nominally as a file
     system optimization to prevent 100+ file reads.   
@@ -638,7 +638,7 @@ def load_pickled_mapping(mapping):
     in the hierarchy is read.  In general pickles for sub-mappings should not
     exist because of storage waste.
     """
-    pickle_file = config.locate_pickle(mapping + ".pkl")
+    pickle_file = config.locate_pickle(mapping)
     pickled = open(pickle_file, "rb").read()
     loaded = python23.pickle.loads(pickled)
     log.info("Loaded pickled context", repr(mapping))
@@ -646,7 +646,7 @@ def load_pickled_mapping(mapping):
 
 def save_pickled_mapping(mapping, loaded):
     """Save live mapping `loaded` as a pickle under named based on `mapping` name."""
-    pickle_file = config.locate_pickle(mapping + ".pkl")
+    pickle_file = config.locate_pickle(mapping)
     if not utils.is_writable(pickle_file):  # Don't even bother pickling
         log.verbose("Pickle file", repr(pickle_file), "is not writable,  skipping pickle save.")
         return
@@ -654,7 +654,7 @@ def save_pickled_mapping(mapping, loaded):
         loaded.force_load()
         pickled = python23.pickle.dumps(loaded)
         cache_atomic_write(pickle_file, pickled, "CONTEXT PICKLE")
-        log.info("Saved pickled context", repr(mapping))
+        log.info("Saved pickled context", repr(pickle_file))
 
 # =============================================================================
 

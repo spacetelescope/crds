@@ -243,6 +243,10 @@ FITS_IGNORE_MISSING_END = BooleanConfigItem("CRDS_FITS_IGNORE_MISSING_END", Fals
 FITS_VERIFY_CHECKSUM = BooleanConfigItem("CRDS_FITS_VERIFY_CHECKSUM", False,
     "When True, verify that FITS header CHECKSUM and DATASUM values are correct.  Otherwise fail.")
 
+ADD_LOG_MSG_COUNTER = BooleanConfigItem(
+    "CRDS_ADD_LOG_MSG_COUNTER", False, "When True, add a running counter.")
+log.set_add_log_msg_count(ADD_LOG_MSG_COUNTER)
+
 # ===========================================================================
 
 # Runtime bad file options for end users
@@ -407,7 +411,7 @@ def locate_pickle(mapping, observatory=None):
         return mapping
     if observatory is None:
         observatory = mapping_to_observatory(mapping)
-    return os.path.join(get_crds_picklepath(observatory), mapping)
+    return os.path.join(get_crds_picklepath(observatory), mapping + ".pkl")
 
 USE_PICKLED_CONTEXTS = BooleanConfigItem("CRDS_USE_PICKLED_CONTEXTS", False,
     "When True,  CRDS contexts should be loaded from a pickled version if possible.")
@@ -832,6 +836,10 @@ def check_path(path):
 
 # -------------------------------------------------------------------------------------
 
+
+
+# -------------------------------------------------------------------------------------
+
 def is_reference(reference):
     """Return True IFF file name `reference` is plausible as a reference file name.
     is_reference() does not *guarantee* that `reference` is a reference file name,
@@ -929,10 +937,10 @@ CONTEXT_OBS_INSTR_KIND_RE_STR = r"[a-z]{1,8}(\-[a-z0-9]{1,32}(\-[a-z0-9]{1,32})?
 CONTEXT_OBS_RE_STR = r"[a-z]{1,8}" 
 
 # e.g.   2040-02-22T12:01:30.4567,  hst-2040-02-22T12:01:30.4567, hst-acs-2040-02-22T12:01:30.4567, ...
-CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_INSTR_KIND_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
 CONTEXT_RE = re.compile(complete_re(CONTEXT_RE_STR))
 
-PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational))"
+PIPELINE_CONTEXT_RE_STR = r"(?P<context>" + CONTEXT_OBS_RE_STR + r"\-)?((?P<date>" + CONTEXT_DATETIME_RE_STR + r"|edit|operational|versions))"
 PIPELINE_CONTEXT_RE = re.compile(complete_re(PIPELINE_CONTEXT_RE_STR))
 
 MAPPING_RE_STR = CRDS_NAME_RE_STR + r".map"

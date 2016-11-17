@@ -116,6 +116,7 @@ class CrdsLogger(object):
         self.errors = 0
         self.warnings = 0
         self.infos = 0
+        self.debugs = 0
         self.eol_pending = False
         try:
             self.verbose_level =  int(os.environ.get(
@@ -123,16 +124,22 @@ class CrdsLogger(object):
         except Exception:
             self.verbose_level = DEFAULT_VERBOSITY_LEVEL
             
-    def set_formatter(self, enable_time=False):
+    def set_formatter(self, enable_time=False, enable_msg_count=True):
         """Set the formatter attribute of `self` to a logging.Formatter and return it."""
         # self.formatter = logging.Formatter(
         #    '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
         self.formatter = logging.Formatter(
-            '{}%(name)s - %(levelname)s - %(message)s'.format("%(asctime)s - " if enable_time else ""))
+            '{}%(name)s - %(levelname)s - %(message)s'.format(
+                "%(asctime)s - " if enable_time else "",
+                ))
         for handler in self.handlers:
             handler.setFormatter(self.formatter)
         return self.formatter
         
+    @property
+    def msg_count(self):
+        return "(%07d) -" % (self.infos + self.errors + self.warnings + self.debugs) if ADD_LOG_MSG_COUNT else ""
+
     def format(self, *args, **keys):
         end = keys.get("end", "\n")
         sep = keys.get("sep", " ")
@@ -147,18 +154,19 @@ class CrdsLogger(object):
 
     def info(self, *args, **keys):
         self.infos += 1
-        self.logger.info(self.eformat(*args, **keys))
+        self.logger.info(self.eformat(self.msg_count, *args, **keys))
 
     def error(self, *args, **keys):
         self.errors += 1
-        self.logger.error(self.eformat(*args, **keys))
+        self.logger.error(self.eformat(self.msg_count, *args, **keys))
 
     def warn(self, *args, **keys):
         self.warnings += 1
-        self.logger.warning(self.eformat(*args, **keys))
+        self.logger.warning(self.eformat(self.msg_count, *args, **keys))
         
     def debug(self, *args, **keys):
-        self.logger.debug(self.eformat(*args, **keys))
+        self.debugs += 1
+        self.logger.debug(self.eformat(self.msg_count, *args, **keys))
 
     def verbose(self, *args, **keys):
         verbosity = keys.get("verbosity", DEFAULT_VERBOSITY_LEVEL)
@@ -186,7 +194,7 @@ class CrdsLogger(object):
         return self.errors, self.warnings, self.infos
     
     def reset(self):
-        self.errors = self.warnings = self.infos = 0
+        self.errors = self.warnings = self.infos = self.debugs = 0
         
     def set_verbose(self, level=True):
         assert 0 <= level <= 100,  "verbosity level must be in range 0..100"
@@ -245,6 +253,10 @@ remove_console_handler = THE_LOGGER.remove_console_handler
 add_stream_handler = THE_LOGGER.add_stream_handler
 remove_stream_handler = THE_LOGGER.remove_stream_handler
 format = THE_LOGGER.format
+
+def increment_errors(N=1):
+    """Increment the error count by N without issuing a log message."""
+    THE_LOGGER.errors += N
 
 def errors():
     """Return the global count of errors."""
@@ -352,6 +364,19 @@ if bool(os.environ.get("CRDS_TRAP_AUGMENTED", False)):
     augment_exception = error_on_exception
 else:
     augment_exception = exception_trap_logger(_reraise)
+
+# ===========================================================================
+
+ADD_LOG_MSG_COUNT = False
+
+def set_add_log_msg_count(flag):
+    global ADD_LOG_MSG_COUNT
+    old_flag = ADD_LOG_MSG_COUNT
+    ADD_LOG_MSG_COUNT = flag
+    return old_flag
+
+def get_add_log_msg_count():
+    return ADD_LOG_MSG_COUNT
 
 # ===========================================================================
 

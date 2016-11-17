@@ -20,12 +20,22 @@ from crds import (rmap, utils, log, cmdline, refactor, config)
 def get_update_map(old_pipeline, updated_rmaps):
     """Given the name of a pipeline context, `old_pipeline`, and a list
     of new rmap names, `updated_rmaps`,  return the mapping:
+
         { imap_name : [ updates_for_that_imap, ... ], ... }
+
+    Updated rmaps can be rmap names or strings of the form:
+
+        <instrument>_<filekind>_"n/a"
+
+    e.g.  miri_dflat_n/a
     """
     pctx = crds.get_pickled_mapping(old_pipeline)   # reviewed
     updates = {}
     for update in sorted(updated_rmaps):
-        instrument, _filekind = utils.get_file_properties(pctx.observatory, update)
+        if update.endswith(("_n/a","_N/A")):
+            instrument, _filekind, na = update.split("_")
+        else:  # should be an rmap name
+            instrument, _filekind = utils.get_file_properties(pctx.observatory, update)
         imap_name = pctx.get_imap(instrument).filename
         if imap_name not in updates:
             updates[imap_name] = []
@@ -57,25 +67,33 @@ def hack_in_new_maps(old, new, updated_maps):
     """
     copy_mapping(old, new)  
     for mapping in sorted(updated_maps):
-        key, replaced = insert_mapping(new, mapping)
+        key, replaced, replacement = insert_mapping(new, mapping)
         if replaced:
-            log.info("Replaced", repr(replaced), "with", repr(mapping), "for", repr(key), "in", repr(old), "producing", repr(new))
+            log.info("Replaced", repr(replaced), "with", repr(replacement), "for", repr(key), "in", repr(old), "producing", repr(new))
         else:
-            log.info("Added", repr(mapping), "for", repr(key), "in", repr(old), "producing", repr(new))
+            log.info("Added", repr(replacement), "for", repr(key), "in", repr(old), "producing", repr(new))
 
 def insert_mapping(context, mapping):
     """Replace the filename in file `context` with the same generic name
     as `mapping` with `mapping`.  Re-write `context` in place.
+    
+    If mapping is of the form <instrument>_<type>_"n/a",  then it specifies
+    that <type> of <instrument> should be set to "N/A".
     """
-    #    'ACS' : 'hst_acs.imap',
+    # 'ACS' : 'hst_acs.imap',
     where = rmap.locate_mapping(context)
     # readonly caching is ok because this call is always made on a newly named
     # copy of the original rmap;  the only thing mutated is the uncached new mapping.
     loaded = rmap.asmapping(context, cache="readonly")
-    key = loaded.get_item_key(mapping)
-    replaced = loaded.set_item(key, mapping)
+    if mapping.endswith(("_n/a", "_N/A")):
+        instrument, key, special = mapping.split("_")
+        replacement = special.upper()
+    else:
+        key = loaded.get_item_key(mapping)
+        replacement = mapping
+    key, replaced = loaded.set_item(key, replacement)
     loaded.write(where)
-    return key, replaced
+    return key, replaced, replacement
 
 def copy_mapping(old_map, new_map):
     """Make a copy of mapping `old_map` named `new_map`."""

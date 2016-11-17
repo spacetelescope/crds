@@ -1,0 +1,21 @@
+header = {
+    'classes' : ('Match', 'UseAfter'),
+    'derived_from' : 'Hand made 2016-10-26',
+    'file_ext' : '.json',
+    'filekind' : 'MSAOPER',
+    'filetype' : 'MSAOPER',
+    'instrument' : 'NIRSPEC',
+    'mapping' : 'REFERENCE',
+    'name' : 'jwst_nirspec_msaoper.rmap',
+    'observatory' : 'JWST',
+    'parkey' : (('META.EXPOSURE.TYPE',), ('META.OBSERVATION.DATE', 'META.OBSERVATION.TIME')),
+    'reference_to_dataset' : {
+        'EXP_TYPE' : 'META.EXPOSURE.TYPE',
+    },
+    'sha1sum' : '3c38d3c9cd0c431490ae3deffb978b3b6ed1d7d2',
+    'suffix' : 'msaoper',
+    'text_descr' : 'Micro-Shutter Assembly Operability, Bad Shutters',
+}
+
+selector = Match({
+})

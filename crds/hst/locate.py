@@ -44,6 +44,26 @@ from crds.hst.tpn import get_tpninfos, reference_name_to_tpn_text, reference_nam
 
 # =======================================================================
 
+def header_to_reftypes(header):
+    """Based on `header` return the default list of appropriate reference type names."""
+    return []  # translates to everything.
+
+# =======================================================================
+
+def match_context_key(key):
+    """Set the case of a context key (instrument or type) appropriately
+    for this project, HST used upper case for instruments,  lower case
+    for type names.
+    """
+    if key.lower() in INSTRUMENTS:
+        return key.upper()
+    elif key.lower() in FILEKINDS:
+        return key.lower()
+    else:
+        return None
+
+# =======================================================================
+
 def reference_keys_to_dataset_keys(rmapping, header):
     """Given a header dictionary for a reference file,  map the header back to
     keys relevant to datasets.
@@ -52,7 +72,9 @@ def reference_keys_to_dataset_keys(rmapping, header):
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = reformatted[0]
+        header["DATE_OBS"] = reformatted[0]
         header["TIME-OBS"] = reformatted[1]
+        header["TIME_OBS"] = reformatted[1]
     return header
 
 # =======================================================================
@@ -465,6 +487,10 @@ def generate_timestamp(now=None):
 def get_env_prefix(instrument):
     """Return the environment variable prefix (IRAF prefix) for `instrument`."""
     return siname.add_IRAF_prefix(instrument.upper())
+
+def filekind_to_keyword(filekind):
+    """Return the FITS keyword at which a reference should be recorded."""
+    return filekind.upper()
 
 def locate_file(refname, mode=None):
     """Given a valid reffilename in CDBS or CRDS format,  return a cache path for the file.
