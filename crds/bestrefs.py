@@ -700,7 +700,7 @@ and debug output.
                           help="Write out the combined dataset headers to the specified pickle file.  Can also store .json file.")
 
         self.add_argument("-t", "--types", nargs="+",  metavar="REFERENCE_TYPES",  default=(),
-                          help="A list of reference types to process,  defaulting to all types.")
+                          help="Explicitly define the list of reference types to process, --skip-types also still applies.")
 
         self.add_argument("-k", "--skip-types", nargs="+",  metavar="SKIPPED_REFERENCE_TYPES",  default=(),
                           help="A list of reference types which should not be processed,  defaulting to nothing.")
@@ -958,15 +958,40 @@ and debug output.
 
     def get_bestrefs(self, instrument, dataset, context, header):
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
+        with log.augment_exception("Failed determining reference types for", repr(dataset),
+                                   "with respect to", (instrument, context, header)):
+            types = self.determine_reftypes(instrument, dataset, context, header)
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
                                    "with respect to", repr(context)):
-            types = self.process_filekinds if not self.affected_instruments else self.affected_instruments[instrument.lower()]
-            if not types and not self.args.all_types:
-                types = self.locator.header_to_reftypes(header)
-                log.verbose("Defined default type set for dataset as with header_to_reftypes:", repr(types))
             bestrefs = crds.getrecommendations(
                 header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
         return {key.upper(): value for (key, value) in bestrefs.items()}
+
+    def determine_reftypes(self, instrument, dataset, context, header):
+        """Based on instrument, context, header as well as command line parameters determine the list
+        of reftypes that should be processed.
+        
+        Incorporate knowledge from:
+
+        1. --diffs-only   (context-to-context differences determine affected types)
+        2. --types        explicit command line specification
+        3. Applicable types from project specific locate.header_to_reftypes()
+        4. --all-types    override 1-3 above,  check all
+        5. --skip-types   explicit command line removal, reduce 1-4 above
+        """
+        if self.affected_instruments:
+            types = self.affected_instruments[instrument.lower()]
+        else:
+            types = self.process_filekinds   # from --types ...
+        if not types:
+            types = self.locator.header_to_reftypes(header)
+        if self.args.all_types or not types:  # --all-types trumps --types, --diffs-only
+            pmap = crds.get_pickled_mapping(context)
+            types = sorted(list(pmap.get_imap(instrument).selections.keys()))
+        if types and self.args.skip_types:
+            types = sorted(list(set(types) - set(self.args.skip_types)))
+        log.verbose("For", repr(dataset), "processing reference types:", repr(types))
+        return types
 
     @property
     def update_promise(self):
@@ -989,7 +1014,7 @@ and debug output.
 
         updates = []
 
-        for filekind in sorted(self.process_filekinds or newrefs):
+        for filekind in sorted(newrefs):
 
             filekind = filekind.lower()
 
@@ -1019,7 +1044,7 @@ and debug output.
 
         updates = []
 
-        filekinds = self.process_filekinds or sorted(list(set(list(newrefs.keys()) + list(oldrefs.keys()))))
+        filekinds = sorted(list(set(list(newrefs.keys()) + list(oldrefs.keys()))))
         for filekind in filekinds:
 
             filekind = filekind.lower()

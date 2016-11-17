@@ -273,6 +273,32 @@ def dt_test_cleanpath():
     'something/foo.fits'
     """
 
+def dt_test_hst_tobs_header_to_reftypes():
+    """
+    >>> from crds.hst.locate import header_to_reftypes
+    >>> header_to_reftypes({})
+    []
+    >>> from crds.tobs.locate import header_to_reftypes
+    >>> header_to_reftypes({})
+    []
+    """
+
+def dt_test_jwst_header_to_reftypes():
+    """
+    >>> from crds.jwst.locate import header_to_reftypes
+
+    >>> header_to_reftypes({"EXP_TYPE":"MIR_DARK"})
+    ['ipc', 'linearity', 'mask', 'refpix', 'rscd', 'saturation', 'superbias']
+
+    >>> header_to_reftypes({"EXP_TYPE":"NIRCAM_IMAGE"})
+    Traceback (most recent call last):
+    ...
+    RuntimeError: Unhandled EXP_TYPE 'NIRCAM_IMAGE'
+
+    >>> header_to_reftypes({"EXP_TYPE":"MIR_IMAGE"})
+    ['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'fore', 'fpa', 'gain', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
+    """
+
 class TestBestrefs(test_config.CRDSTestCase):
     
     script_class = BestrefsScript
