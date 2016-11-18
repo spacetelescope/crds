@@ -462,7 +462,7 @@ class Script(object):
         for path in filepaths:
             instrument, filekind = self.get_file_properties(path)
             categorized[(instrument, filekind)].append(path)
-        return categorized
+        return dict(categorized)
 
     def fatal_error(self, *args, **keys):
         """Issue an error message and terminate the program."""
