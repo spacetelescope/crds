@@ -56,21 +56,11 @@ def mapping_spec(spec):
     assert config.is_mapping_spec(spec), "A .rmap, .imap, or .pmap file or date base specification is required but got: '%s'" % spec
     return spec
 
-def pipeline_mapping(filename):
-    """Ensure `filename` is a .pmap file."""
-    assert filename.endswith(".pmap"), "A .pmap file is required but got: '%s'" % filename
-    return filename
-
 def context_spec(spec):
     """Ensure filename is a .pmap or abstract .pmap like "jwst-edit" or date based context spec."""
     assert config.is_context_spec(spec), \
         "Parameter should be a .pmap or abstract context specifier, not: " + repr(spec)
     return spec
-
-def instrument_mapping(filename):
-    """Ensure `filename` is a .imap file."""
-    assert filename.endswith(".imap"), "A .imap file is required but got: '%s'" % filename
-    return filename
 
 def reference_mapping(filename):
     """Ensure `filename` is a .rmap file."""
@@ -87,7 +77,7 @@ def reference_mapping(filename):
 def observatory(obs):
     """Verify that `obs` is the name of an observatory and return it."""
     obs = obs.lower()
-    assert obs in ["hst", "jwst", "tobs"], "Unknown observatory " + repr(obs)
+    assert obs in crds.ALL_OBSERVATORIES, "Unknown observatory " + repr(obs)
     return obs
 
 def nrange(string):
@@ -447,7 +437,7 @@ class Script(object):
         if isinstance(context, str) and context.lower() == "none":
             return None
         if config.is_date_based_mapping_spec(context):
-            if re.match(config.OBSERVATORY_RE_STR + r"-operational$", context):
+            if re.match(config.complete_re(config.OBSERVATORY_RE_STR + r"-operational"), context):
                 final_context = self.server_info.operational_context
             else:
                 _mode, final_context = heavy_client.get_processing_mode(self.observatory, context)
@@ -472,7 +462,7 @@ class Script(object):
         for path in filepaths:
             instrument, filekind = self.get_file_properties(path)
             categorized[(instrument, filekind)].append(path)
-        return categorized
+        return dict(categorized)
 
     def fatal_error(self, *args, **keys):
         """Issue an error message and terminate the program."""

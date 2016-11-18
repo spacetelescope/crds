@@ -9,6 +9,14 @@ then
     ./clean
 fi
 
+if [ "$1" = "--skip-types" ]; then
+    shift;
+    dont_skip_types=0
+else
+    dont_skip_types=1
+fi
+
+
 rm -f install.log
 
 st=0
@@ -31,13 +39,15 @@ st=0
 # or changing CRDS type specs,  after which the combined spec file is effectively
 # source code.
 
-find . -name combined_specs.json | xargs rm
+if [ $dont_skip_types = 1 ]; then
+    find . -name combined_specs.json | xargs rm
 
-find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.rmap' | xargs python -m crds.checksum
-
-python -m crds.hst
-python -m crds.jwst
-python -m crds.tobs
+    find crds/hst/specs crds/jwst/specs crds/tobs/specs -name '*.rmap' | xargs python -m crds.checksum
+    
+    python -m crds.hst
+    python -m crds.jwst
+    python -m crds.tobs
+fi
 
 # The CRDS git_version file is updated with every ./install, but
 # is typically reverted by the ./clean script once the install 
