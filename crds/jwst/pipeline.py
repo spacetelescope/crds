@@ -3,9 +3,8 @@ things like "reference types used by a pipeline."
 """
 import fnmatch
 import re
-from collections import OrderedDict
 
-import yaml
+# import yaml
 
 from crds import log
 
@@ -76,6 +75,8 @@ steps_to_reftypes_exceptions:
 # --------------------------------------------------------------------------------------
 
 def generate_calcfg_yaml():
+    """Generate the SYSTEM CALCFG reference YAML."""
+    import yaml
     pipeline_cfgs = yaml.load(PIPELINE_CFGS_YAML)["pipeline_cfgs"]
     pipeline_cfgs_to_steps, all_steps_to_reftypes = generate_pipeline_info(pipeline_cfgs)
     calcfg = HEADER_YAML + PIPELINE_CFGS_YAML + LEVEL_PIPELINE_EXPTYPE_YAML + "\n"
@@ -202,12 +203,15 @@ def exptype_to_reftypes(exp_type):
     """
     global CALCFG
     if CALCFG is None:
+        import yaml
         CALCFG = yaml.load(CALCFG_REFERENCE_YAML)
     level_2a_pipeline = get_level_pipeline("level2a", exp_type)
     level_2b_pipeline = get_level_pipeline("level2b", exp_type)
     level_2a_types = get_pipeline_types(level_2a_pipeline, exp_type)
     level_2b_types = get_pipeline_types(level_2b_pipeline, exp_type)
-    return level_2a_types + level_2b_types
+    combined = sorted(list(level_2a_types + level_2b_types))
+    log.verbose("Combined reftypes for", repr(exp_type), "are:", repr(combined), level=60)
+    return combined
 
 def get_level_pipeline(level, exp_type):
     """Interpret the level_pipeline_exptypes data structure relative to
@@ -220,6 +224,8 @@ def get_level_pipeline(level, exp_type):
         for pipeline, exptypes in mapping.items():
             for exptype_pattern in exptypes:
                 if glob_match(exptype_pattern, exp_type):
+                    log.verbose("Pipeline .cfg for", repr(level), "and", 
+                                repr(exp_type), "is:", repr(pipeline))
                     return pipeline
     raise RuntimeError("Unhandled EXP_TYPE " + repr(exp_type))
 
@@ -247,6 +253,8 @@ def get_pipeline_types(pipeline, exp_type):
             raise RuntimeError("Unhandled EXP_TYPE for exceptional Step '{}'".format(step))
         else:
             reftypes.extend(CALCFG["steps_to_reftypes"][step])
+    log.verbose("Reftypes for pipeline", repr(pipeline), "and", repr(exp_type), 
+                "are:", repr(reftypes))
     return reftypes
 
 def glob_match(expr, value):
