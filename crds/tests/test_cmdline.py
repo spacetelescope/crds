@@ -2,6 +2,7 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+import sys
 import os
 import doctest
 
@@ -158,7 +159,7 @@ def dt_print_help():
     """
     >>> old_state = test_config.setup()
 
-    >> Script().print_help()
+    >> Script("cmdline.Script").print_help()
 
     >>> test_config.cleanup(old_state)
     """
@@ -166,14 +167,14 @@ def dt_print_help():
 def dt_require_server_connnection():
     """
     >>> old_state = test_config.setup()
-    >>> Script().require_server_connection()
+    >>> Script("cmdline.Script").require_server_connection()
     >>> test_config.cleanup(old_state)
     """
 
 def dt_no_files_in_class():
     """
     >>> old_state = test_config.setup()
-    >>> Script().files
+    >>> Script("cmdline.Script").files
     Traceback (most recent call last):
     ...
     NotImplementedError: Class must implement list of `self.args.files` raw file paths.
@@ -184,7 +185,7 @@ def dt_get_files():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
     >>> s.get_files(["data/file_list1"])
     ['data/file_list1']
 
@@ -211,7 +212,7 @@ def dt_get_file_properties():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
 
     >>> s.get_file_properties("hst_acs_biasfile_0005.rmap") 
     ('acs', 'biasfile')
@@ -230,7 +231,7 @@ def dt_categorize_files():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
     >>> cats = s.categorize_files(["hst.pmap", "data/hst_acs_9999.imap", "data/acs_new_idc.fits"])
     >>> sorted(cats.items())
     [(('', ''), ['hst.pmap']), (('acs', ''), ['data/hst_acs_9999.imap']), (('acs', 'idctab'), ['data/acs_new_idc.fits'])]
@@ -242,42 +243,8 @@ def dt_dump_files():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
     >>> s.dump_files(files=["hst.pmap","hst_acs_biasfile_0250.rmap"])
-
-    >>> test_config.cleanup(old_state)
-    """
-
-def dt_dump_mappings():
-    """
-    >>> old_state = test_config.setup()
-
-    >>> os.environ.pop("CRDS_SERVER_URL", None)
-    >>> utils.clear_function_caches()
-    >>> s = Script("cmdline.Script --ignore-cache")
-    >>> s.dump_mappings(["hst_acs.imap"])
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_spottab.rmap      666 bytes  (1 / 22 files) (0 / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_shadfile.rmap      785 bytes  (2 / 22 files) (666 / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_pfltfile.rmap   69.2 K bytes  (3 / 22 files) (1.5 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_pctetab.rmap      640 bytes  (4 / 22 files) (70.7 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_oscntab.rmap      846 bytes  (5 / 22 files) (71.3 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_npolfile.rmap    3.1 K bytes  (6 / 22 files) (72.1 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_mlintab.rmap      641 bytes  (7 / 22 files) (75.2 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_mdriztab.rmap      793 bytes  (8 / 22 files) (75.9 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_imphttab.rmap      793 bytes  (9 / 22 files) (76.7 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_idctab.rmap    1.7 K bytes  (10 / 22 files) (77.4 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_flshfile.rmap    3.1 K bytes  (11 / 22 files) (79.2 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_drkcfile.rmap  100.6 K bytes  (12 / 22 files) (82.3 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_dgeofile.rmap    3.2 K bytes  (13 / 22 files) (183.0 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_darkfile.rmap  178.6 K bytes  (14 / 22 files) (186.2 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_d2imfile.rmap      625 bytes  (15 / 22 files) (364.8 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_crrejtab.rmap      920 bytes  (16 / 22 files) (365.4 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_cfltfile.rmap    1.2 K bytes  (17 / 22 files) (366.3 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_ccdtab.rmap    1.4 K bytes  (18 / 22 files) (367.5 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_bpixtab.rmap    1.5 K bytes  (19 / 22 files) (369.0 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_biasfile.rmap  126.1 K bytes  (20 / 22 files) (370.5 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs_atodtab.rmap      888 bytes  (21 / 22 files) (496.6 K / 498.6 K bytes)
-    CRDS - INFO -  Fetching  /Users/jmiller/crds_cache_ops/mappings/hst/hst_acs.imap    1.2 K bytes  (22 / 22 files) (497.5 K / 498.6 K bytes)
 
     >>> test_config.cleanup(old_state)
     """
@@ -286,7 +253,7 @@ def dt_sync_files():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
 
     >>> test_config.cleanup(old_state)
     """
@@ -295,7 +262,7 @@ def dt_are_all_mappings():
     """
     >>> old_state = test_config.setup()
 
-    >>> s = Script()
+    >>> s = Script("cmdline.Script")
 
     >>> test_config.cleanup(old_state)
     """
@@ -317,7 +284,7 @@ class TestCmdline(test_config.CRDSTestCase):
         os.remove("profile.stats")
 
     def test_file_outside_cache_pathless(self):
-        s = Script()
+        s = Script("cmdline.Script")
         path = s.locate_file_outside_cache("hst_0001.pmap")
         assert path.endswith('crds/tests/hst_0001.pmap'), path
 
@@ -336,6 +303,10 @@ class TestCmdline(test_config.CRDSTestCase):
         s = Script("cmdline.Script --hst")
         context = s.resolve_context("hst-operational")
         assert context.startswith("hst_") and context.endswith(".pmap"), context
+
+    def test_dump_mappings(self):
+        s = Script("cmdline.Script --ignore-cache")
+        s.dump_mappings(["hst_acs.imap"])
 
 class TestContextsScript(test_config.CRDSTestCase):    
     script_class = ContextsScript
@@ -369,7 +340,7 @@ class TestContextsScript(test_config.CRDSTestCase):
         s.contexts = contexts = s.determine_contexts()
         assert len(contexts) == 1, log.format(len(contexts), contexts)
         assert contexts[0] == "hst.pmap", log.format(len(contexts), contexts)
-        mappings = s.get_context_mappings()
+        mappings = sorted(list(set(s.get_context_mappings())))
         assert len(mappings) == 116, log.format(len(mappings), mappings)
         
 def main():
@@ -387,8 +358,9 @@ def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestContextsScript)
     unittest.TextTestRunner().run(suite)
 
-    from crds.tests import tstmod, test_cmdline
-    return tstmod(test_cmdline)
+    if sys.version_info >= (3,0,0):
+        from crds.tests import tstmod, test_cmdline
+        return tstmod(test_cmdline)
 
 if __name__ == "__main__":
     print(main())
