@@ -1175,10 +1175,10 @@ def clear_crds_state():
 # Identifier used  to connect to remote status channels to monitor submission status, etc.
 
 PROCESS_KEY_RE_STR = r"[a-zA-Z0-9:\.\-]{1,128}"   #  character "/" must be excluded
-PROCESS_KEY_RE = re.compile(PROCESS_KEY_RE_STR)
+PROCESS_KEY_RE = re.compile(complete_re(PROCESS_KEY_RE_STR))
 
 USER_NAME_RE_STR = r"[a-z_]+"
-USER_NAME_RE = re.compile(USER_NAME_RE_STR)
+USER_NAME_RE = re.compile(complete_re(USER_NAME_RE_STR))
 
 # -------------------------------------------------------------------------------------
 

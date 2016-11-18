@@ -8,13 +8,19 @@ __rationale__ = "jwst-build-7-rc4"
 
 # ============================================================================
 
+import os
+
 from . import exceptions
 
 __all__ = [ 
            "get_default_context", 
            "getreferences", 
            "getrecommendations",
-           "get_cached_mapping",           
+           "get_cached_mapping",
+           "get_pickled_mapping",
+           "get_symbolic_mapping",
+           "locate_mapping",
+           "locate_file",
            ] + exceptions.__all__
 
 # List of all the observatory package names
@@ -27,12 +33,17 @@ INSTRUMENT_KEYWORDS = ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAM
 # ============================================================================
 
 from . import config   # module
-
 from .exceptions import *
 
 from crds.client import get_default_context
 from .heavy_client import getreferences, getrecommendations, get_symbolic_mapping, get_pickled_mapping
 from .rmap import get_cached_mapping, locate_mapping, locate_file, asmapping
+
+# ============================================================================
+
+URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
+from crds.client import api
+api.set_crds_server(URL)
 
 # ============================================================================
 

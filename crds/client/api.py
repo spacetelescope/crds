@@ -85,13 +85,6 @@ __all__ = [
 
 URL_SUFFIX = "/json/"
 
-JWST_OPS_SERVER = 'https://jwst-crds.stsci.edu'
-HST_OPS_SERVER = 'https://hst-crds.stsci.edu'
-JWST_TEST_SERVER = 'https://jwst-crds-test.stsci.edu'
-HST_TEST_SERVER = 'https://hst-crds-test.stsci.edu'
-
-URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
-
 S = None    # Proxy server
 
 def set_crds_server(url):
@@ -113,8 +106,6 @@ def get_crds_server():
     if not url.startswith("https://") and "localhost" not in url:
         log.warning("CRDS_SERVER_URL does not start with https://  ::", url)
     return url
-
-set_crds_server(URL)
 
 # =============================================================================
 
