@@ -465,12 +465,11 @@ def file_progress(activity, name, path, bytes, bytes_so_far, total_bytes, nth_fi
 
 class FileCacher(object):
     """FileCacher gets remote files with simple names into a local cache."""
-    def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True, api=1):
+    def __init__(self, pipeline_context, ignore_cache=False, raise_exceptions=True):
         self.pipeline_context = pipeline_context
         self.observatory = self.observatory_from_context()
         self.ignore_cache = ignore_cache
         self.raise_exceptions = raise_exceptions
-        self.api = api
         self.info_map = {}
     
     def get_local_files(self, names):
@@ -505,10 +504,7 @@ class FileCacher(object):
         else:
             log.verbose("Skipping download for cached files", sorted(names), verbosity=60)
             n_bytes = 0
-        if self.api == 1:
-            return localpaths
-        else:
-            return localpaths, len(downloads), n_bytes
+        return localpaths, len(downloads), n_bytes
 
     def observatory_from_context(self):
         """Determine the observatory from `pipeline_context`,  based on name if possible."""
@@ -585,9 +581,6 @@ class FileCacher(object):
         """Download and verify file `name` under context `pipeline_context` to `localpath`."""
         if config.get_download_plugin():
             self.plugin_download(name, localpath)
-        elif config.get_download_mode() == "rpc":
-            generator = self.get_data_rpc(name)
-            self.generator_download(generator, localpath)
         else:
             generator = self.get_data_http(name)
             self.generator_download(generator, localpath)
@@ -613,19 +606,6 @@ class FileCacher(object):
             else:
                 raise CrdsDownloadError("Plugin download fail status = {} with command: {}".format(status, srepr(plugin_cmd)))
         
-    def get_data_rpc(self, filename):
-        """Yields successive manageable chunks for `file` fetched via jsonrpc."""
-        chunk = 0
-        chunks = 1
-        stats = utils.TimingStats()
-        while chunk < chunks:
-            chunks, data = get_file_chunk(self.pipeline_context, filename, chunk)
-            stats.increment("bytes", len(data))
-            status = stats.status("bytes")
-            log.verbose("Transferred RPC", repr(filename), chunk, " of ", chunks, "at", status[1], verbosity=20)
-            chunk += 1
-            yield data
-    
     def get_data_http(self, filename):
         """Yield the data returned from `filename` of `pipeline_context` in manageable chunks."""
         url = self.get_url(filename)
@@ -681,31 +661,35 @@ class FileCacher(object):
 
 # ==============================================================================
 
-def dump_mappings(pipeline_context, ignore_cache=False, mappings=None, raise_exceptions=True, api=1):
+def dump_mappings3(pipeline_context, ignore_cache=False, mappings=None, raise_exceptions=True):
     """Given a `pipeline_context`, determine the closure of CRDS mappings for it and 
     cache them on the local file system.
     
     If mappings is not None,  sync exactly that list of mapping names,  not their closures.
     
-    Returns:   { mapping_basename :   mapping_local_filepath ... }   (api=1)
-               { mapping_basename :   mapping_local_filepath ... }, downloads, bytes   (api=2)
+    Returns:   { mapping_basename :   mapping_local_filepath ... }, downloads, bytes
     """
     assert isinstance(ignore_cache, bool)
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
     mappings = list(reversed(sorted(set(mappings))))
-    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(mappings)
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(mappings)
   
+def dump_mappings(*args, **keys):
+    """See dump_mappings3.
 
-def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True, api=1):
+    Returns { mapping_basename :   mapping_local_filepath ... }
+    """
+    return dump_mappings3(*args, **keys)[0]
+
+def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True):
     """Given a pipeline `pipeline_context` and list of `baserefs` reference 
     file basenames,  obtain the set of reference files and cache them on the
     local file system.
     
     If `basrefs` is None,  sync the closure of references referred to by `pipeline_context`.
     
-    Returns:   { ref_basename :   reference_local_filepath ... }   (api=1)
-               { ref_basename :  reference_local_path }, downloads, bytes  (api=2)
+    Returns:  { ref_basename :  reference_local_path }, downloads, bytes
     """
     if baserefs is None:
         baserefs = get_reference_names(pipeline_context)
@@ -715,8 +699,14 @@ def dump_references(pipeline_context, baserefs=None, ignore_cache=False, raise_e
             log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
     baserefs = sorted(set(baserefs))
-    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(baserefs)
-    
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(baserefs)
+
+def dump_references(*args, **keys):
+    """See dump_references3.
+
+    Returns { ref_basename :  reference_local_path }
+    """
+    return dump_references3(*args, **keys)[0]    
 
 def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=True):
     """Unified interface to dump any file in `files`, mapping or reference.
@@ -728,13 +718,13 @@ def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=Tru
     mappings = [ os.path.basename(name) for name in files if config.is_mapping(name) ]
     references = [ os.path.basename(name) for name in files if not config.is_mapping(name) ]
     if mappings:
-        m_paths, m_downloads, m_bytes = dump_mappings(
-            pipeline_context, mappings=mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=2)
+        m_paths, m_downloads, m_bytes = dump_mappings3(
+            pipeline_context, mappings=mappings, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
     else:
         m_paths, m_downloads, m_bytes = {}, 0, 0
     if references:
-        r_paths, r_downloads, r_bytes = dump_references(
-            pipeline_context, baserefs=references, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions, api=2)
+        r_paths, r_downloads, r_bytes = dump_references3(
+            pipeline_context, baserefs=references, ignore_cache=ignore_cache, raise_exceptions=raise_exceptions)
     else:
         r_paths, r_downloads, r_bytes = {}, 0, 0
     return dict(list(m_paths.items())+list(r_paths.items())), m_downloads + r_downloads, m_bytes + r_bytes
@@ -760,7 +750,7 @@ def cache_references(pipeline_context, bestrefs, ignore_cache=False):
     """
     wanted = _get_cache_filelist_and_report_errors(bestrefs)
     
-    localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False, api=1).get_local_files(wanted)
+    localrefs = FileCacher(pipeline_context, ignore_cache, raise_exceptions=False).get_local_files(wanted)[0]
 
     refs = _squash_unicode_in_bestrefs(bestrefs, localrefs)
 

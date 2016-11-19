@@ -277,7 +277,7 @@ ALLOW_BAD_USEAFTER = BooleanConfigItem("CRDS_ALLOW_BAD_USEAFTER", False,
 
 CRDS_DATA_CHUNK_SIZE = 2**23   
 #   IntConfigItem("CRDS_DATA_CHUNK_SIZE", 2**23,
-#   "File download transfer block size, 8M.  HTTP, but maybe not RPC.")   
+#   "File download transfer block size, 8M.  HTTP mode only.")   
 
 CRDS_CHECKSUM_BLOCK_SIZE = 2**23
 
@@ -555,22 +555,20 @@ def get_crds_actual_paths(observatory):
 
 CRDS_DOWNLOAD_MODE = StrConfigItem("CRDS_DOWNLOAD_MODE", "http",
     "Selects the mode used by the CRDS client for downloading rules and references.",
-    ["http", "rpc", "plugin"], lower=True)
+    ["http", "plugin"], lower=True)
 
 def get_download_mode():
     """Return the mode used to download references and mappings,  either normal
-    "http" file transfer or json "rpc" based.   In theory HTTP optimizes better 
-    with direct support for static files from Apache,  but RPC is more flexible
-    and works through firewalls.   The key distinction is that HTTP mode can
-    work with a server which is not the same as the CRDS server (perhaps an
-    archive server).   Once/if a public archive server is available with normal 
-    URLs,  that wopuld be the preferred means to get references and mappings.
+    "http" file transfer or "plugin" based.   "rpc" mode has been removed.
+
+    Returns "http" or "plugin"
     """
     return CRDS_DOWNLOAD_MODE.get()
 
 def get_download_plugin():
     """Fetch a command template from the environment to use a as a substitute for CRDS
-    built-in downloaders.
+    built-in downloaders.   This can be used to apply "wget" or "curl", etc, to perform
+    downloads as sub-processes rather than as a direct Python http implementation.
     """
     if "CRDS_DOWNLOAD_MODE" in os.environ and os.environ["CRDS_DOWNLOAD_MODE"].lower() != "plugin":
         return None
@@ -595,10 +593,10 @@ def get_client_retry_delay_seconds():
     """Return the integer number of seconds CRDS should wait between retrying failed network transactions."""
     return env_to_int("CRDS_CLIENT_RETRY_DELAY_SECONDS", 0)
 
-def enable_retries():
+def enable_retries(retry_count=20, delay_seconds=10):
     """Set reasonable defaults for CRDS retries"""
-    os.environ["CRDS_CLIENT_RETRY_COUNT"] = 20
-    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = 10
+    os.environ["CRDS_CLIENT_RETRY_COUNT"] = retry_count
+    os.environ["CRDS_CLIENT_RETRY_DELAY_SECONDS"] = delay_seconds
     
 def disable_retries():
     """Set the defaults for only one try for each network transaction."""
@@ -609,6 +607,7 @@ def disable_retries():
 CRDS_DEFAULT_SERVERS = {
     "hst" : "https://hst-crds.stsci.edu",
     "jwst" : "https://jwst-crds.stsci.edu",
+    # None : "https://crds-serverless-mode.stsci.edu"
 }
 
 def get_server_url(observatory):

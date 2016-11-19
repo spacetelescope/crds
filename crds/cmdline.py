@@ -487,8 +487,8 @@ class Script(object):
             log.verbose("Not connected to server. Skipping dump_mappings", mappings, verbosity=55)
             return
         for mapping in mappings:
-            _localpaths, downloads, nbytes = api.dump_mappings(
-                mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb, api=2)
+            _localpaths, downloads, nbytes = api.dump_mappings3(
+                mapping, ignore_cache=ignore_cache, raise_exceptions=self.args.pdb)
             self.increment_stat("total-files", downloads)
             self.increment_stat("total-bytes", nbytes)
             
