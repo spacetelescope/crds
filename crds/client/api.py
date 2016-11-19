@@ -673,9 +673,13 @@ def dump_mappings3(pipeline_context, ignore_cache=False, mappings=None, raise_ex
     if mappings is None:
         mappings = get_mapping_names(pipeline_context)
     mappings = list(reversed(sorted(set(mappings))))
-    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(mappings)
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(mappings)
   
 def dump_mappings(*args, **keys):
+    """See dump_mappings3.
+
+    Returns { mapping_basename :   mapping_local_filepath ... }
+    """
     return dump_mappings3(*args, **keys)[0]
 
 def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_exceptions=True):
@@ -685,8 +689,7 @@ def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_
     
     If `basrefs` is None,  sync the closure of references referred to by `pipeline_context`.
     
-    Returns:   { ref_basename :   reference_local_filepath ... }   (api=1)
-               { ref_basename :  reference_local_path }, downloads, bytes  (api=2)
+    Returns:  { ref_basename :  reference_local_path }, downloads, bytes
     """
     if baserefs is None:
         baserefs = get_reference_names(pipeline_context)
@@ -696,9 +699,13 @@ def dump_references3(pipeline_context, baserefs=None, ignore_cache=False, raise_
             log.verbose("Skipping " + srepr(refname))
             baserefs.remove(refname)
     baserefs = sorted(set(baserefs))
-    return FileCacher(pipeline_context, ignore_cache, raise_exceptions, api).get_local_files(baserefs)
+    return FileCacher(pipeline_context, ignore_cache, raise_exceptions).get_local_files(baserefs)
 
 def dump_references(*args, **keys):
+    """See dump_references3.
+
+    Returns { ref_basename :  reference_local_path }
+    """
     return dump_references3(*args, **keys)[0]    
 
 def dump_files(pipeline_context, files, ignore_cache=False, raise_exceptions=True):
