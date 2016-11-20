@@ -41,7 +41,6 @@ __all__ = [
     "list_mappings",
     "list_references",
     
-    "get_file_chunk",
     "get_url",
     "get_file_info",
     "get_file_info_map",
@@ -148,19 +147,6 @@ def get_reference_url(pipeline_context, reference):
     """
     return S.get_reference_url(pipeline_context, reference)
     
-def get_file_chunk(pipeline_context, filename, chunk):
-    """Return the ith `chunk` of data from `filename` as well as the
-    total number of chunks.   It is assumed that every file has
-    at least one chunk.
-    
-    Returns (chunks, size, sha1sum, chunk_str)
-    where chunks, size, and sha1sum are invariant totals.
-    
-    Note that `chunks` is determined by the server since it's a loading issue.
-    """
-    chunks, data = S.get_file_chunk(pipeline_context, filename, chunk)
-    return chunks, base64.b64decode(data)
-
 def get_url(pipeline_context, filename):
     """Return the URL for a CRDS reference or mapping file."""
     return S.get_url(pipeline_context, filename)
