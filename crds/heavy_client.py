@@ -330,6 +330,8 @@ def hv_best_references(context_file, header, include=None, condition=True):
     filekinds listed in `include`.
     """
     ctx = get_symbolic_mapping(context_file, cached=True)
+    if include is None:
+        include = ctx.locate.header_to_reftypes(header)
     minheader = ctx.minimize_header(header)
     log.verbose("Bestrefs header:\n", log.PP(minheader))
     if condition:
