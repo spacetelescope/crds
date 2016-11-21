@@ -51,7 +51,7 @@ level_pipeline_exptypes:
 
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
-                             NIS_IMAGE, NIS_AMI, 
+                             NIS_IMAGE, NIS_AMI, NIS_TACQ,
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
@@ -98,6 +98,7 @@ def generate_pipeline_info(pipeline_cfgs):
 
 # --------------------------------------------------------------------------------------
 CALCFG_REFERENCE_YAML = '''
+
 author: CRDS
 descrip: "Reference used to determine pipeline configuration from dataset parameters."
 history: "First version generated from calcode .cfg files and EXP_TYPE/LEVEL mapping."
@@ -124,7 +125,7 @@ level_pipeline_exptypes:
 
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
-                             NIS_IMAGE, NIS_AMI, 
+                             NIS_IMAGE, NIS_AMI, NIS_TACQ,
                              NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
