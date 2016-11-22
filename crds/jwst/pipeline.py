@@ -215,7 +215,6 @@ def exptype_to_reftypes(exp_type):
     level_2a_types = get_pipeline_types(level_2a_pipeline, exp_type)
     level_2b_types = get_pipeline_types(level_2b_pipeline, exp_type)
     combined = sorted(list(level_2a_types + level_2b_types))
-    log.verbose("Combined reftypes for", srepr(exp_type), "are:", srepr(combined), level=60)
     return combined
 
 def get_level_pipeline(level, exp_type):
