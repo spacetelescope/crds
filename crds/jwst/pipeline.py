@@ -7,6 +7,7 @@ import re
 # import yaml
 
 from crds import log
+from crds.log import srepr
 
 # from jwst.stpipe import cmdline
 
@@ -214,7 +215,7 @@ def exptype_to_reftypes(exp_type):
     level_2a_types = get_pipeline_types(level_2a_pipeline, exp_type)
     level_2b_types = get_pipeline_types(level_2b_pipeline, exp_type)
     combined = sorted(list(level_2a_types + level_2b_types))
-    log.verbose("Combined reftypes for", repr(exp_type), "are:", repr(combined), level=60)
+    log.verbose("Combined reftypes for", srepr(exp_type), "are:", srepr(combined), level=60)
     return combined
 
 def get_level_pipeline(level, exp_type):
@@ -228,10 +229,10 @@ def get_level_pipeline(level, exp_type):
         for pipeline, exptypes in mapping.items():
             for exptype_pattern in exptypes:
                 if glob_match(exptype_pattern, exp_type):
-                    log.verbose("Pipeline .cfg for", repr(level), "and", 
-                                repr(exp_type), "is:", repr(pipeline))
+                    log.verbose("Pipeline .cfg for", srepr(level), "and", 
+                                srepr(exp_type), "is:", srepr(pipeline))
                     return pipeline
-    raise RuntimeError("Unhandled EXP_TYPE " + repr(exp_type))
+    raise RuntimeError("Unhandled EXP_TYPE " + srepr(exp_type))
 
 def get_pipeline_types(pipeline, exp_type):
     """Based on a pipeline .cfg filename and an EXP_TYPE,  look up
@@ -257,8 +258,8 @@ def get_pipeline_types(pipeline, exp_type):
             raise RuntimeError("Unhandled EXP_TYPE for exceptional Step '{}'".format(step))
         else:
             reftypes.extend(CALCFG["steps_to_reftypes"][step])
-    log.verbose("Reftypes for pipeline", repr(pipeline), "and", repr(exp_type), 
-                "are:", repr(reftypes))
+    log.verbose("Reftypes for pipeline", srepr(pipeline), "and", srepr(exp_type), 
+                "are:", srepr(reftypes))
     return reftypes
 
 def glob_match(expr, value):
