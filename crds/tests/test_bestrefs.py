@@ -290,10 +290,12 @@ def dt_test_jwst_header_to_reftypes():
     >>> header_to_reftypes({"EXP_TYPE":"MIR_DARK"})
     ['ipc', 'linearity', 'mask', 'refpix', 'rscd', 'saturation', 'superbias']
 
-    >>> header_to_reftypes({"EXP_TYPE":"NIRCAM_IMAGE"})
-    Traceback (most recent call last):
-    ...
-    RuntimeError: Unhandled EXP_TYPE 'NIRCAM_IMAGE'
+    >>> header_to_reftypes({"EXP_TYPE":"NIR_IMAGE"})
+    []
+
+    # Traceback (most recent call last):
+    # ...
+    # RuntimeError: Unhandled EXP_TYPE 'NIR_IMAGE'
 
     >>> header_to_reftypes({"EXP_TYPE":"MIR_IMAGE"})
     ['area', 'camera', 'collimator', 'dark', 'disperser', 'distortion', 'filteroffset', 'fore', 'fpa', 'gain', 'gain', 'ifufore', 'ifupost', 'ifuslicer', 'ipc', 'linearity', 'mask', 'msa', 'ote', 'photom', 'readnoise', 'readnoise', 'refpix', 'regions', 'rscd', 'saturation', 'specwcs', 'superbias', 'v2v3', 'wavelengthrange']
