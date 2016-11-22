@@ -191,9 +191,12 @@ def header_to_reftypes(header):
 
     Return a list of reftype names.
     """
-    with log.augment_exception("Can't find EXP_TYPE for:\n", log.PP(header)):
-        exp_type = header.get("META.EXPOSURE.TYPE", header.get("EXP_TYPE"))
-    return exptype_to_reftypes(exp_type)
+    with log.verbose_warning_on_exception("Failed determining required reftypes from header", log.PP(header)):
+        exp_type = header.get("META.EXPOSURE.TYPE")
+        if not exp_type:
+            exp_type = header["EXP_TYPE"]
+        return exptype_to_reftypes(exp_type)
+    return []
 
 def exptype_to_reftypes(exp_type):
     """For a given EXP_TYPE string, return a list of reftypes needed to process that

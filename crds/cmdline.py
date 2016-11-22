@@ -529,6 +529,7 @@ class UniqueErrorsMixin(object):
         self.ue_mixin = Struct()
         self.ue_mixin.messages = {}
         self.ue_mixin.count = Counter()
+        self.ue_mixin.tracked_errors = 0
         self.ue_mixin.unique_data_names = set()
         self.ue_mixin.all_data_names = set()
         self.ue_mixin.announce_suppressed = Counter()
@@ -556,6 +557,7 @@ class UniqueErrorsMixin(object):
         is defined as (instrument, filekind, msg_text) and omits data id.
         """
         # Always count messages
+        self.ue_mixin.tracked_errors += 1
         msg = self.format_prefix(data, instrument, filekind, *params, **keys)
         key = log.format(instrument, filekind.upper(), *params, **keys)
         if key not in self.ue_mixin.messages:
@@ -596,7 +598,9 @@ class UniqueErrorsMixin(object):
                 if self.ue_mixin.count[key] >= self.args.unique_threshold:
                     log.info("%06d" % self.ue_mixin.count[key], "total errors like::", self.ue_mixin.messages[key])
             log.info("All unique error types:", len(self.ue_mixin.messages))
+            log.info("Untracked errors:", log.errors() - self.ue_mixin.tracked_errors)            
             log.info("="*20, "="*len("unique error classes"), "="*20)
+
         if self.args.all_errors_file:
             self.dump_error_data(self.args.all_errors_file, self.ue_mixin.all_data_names)
         if self.args.unique_errors_file:
