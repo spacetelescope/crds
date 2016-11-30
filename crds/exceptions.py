@@ -183,6 +183,14 @@ class NameComparisonError(CrdsError):
 
 # -------------------------------------------------------------------------------------------
 
+class CrdsPipelineCfgDeterminationError(CrdsError):
+    """Problem determining cal code pipeline .cfg for a dataset."""
+
+class CrdsPipelineTypeDeterminationError(CrdsError):
+    """The process of inferring reference types from cal code pipeline .cfg files failed."""
+
+# -------------------------------------------------------------------------------------------
+
 _exception_names = [ name for name in dir() if name.endswith("Error") ]
 
 __all__ = _exception_names
