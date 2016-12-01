@@ -199,6 +199,7 @@ def header_to_reftypes(header):
         return exptype_to_reftypes(exp_type)
     return []
 
+@utils.cached
 def exptype_to_reftypes(exp_type):
     """For a given EXP_TYPE string, return a list of reftypes needed to process that
     EXP_TYPE through the data levels appropriate for that EXP_TYPE.

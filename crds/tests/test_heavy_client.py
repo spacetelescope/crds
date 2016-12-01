@@ -24,8 +24,9 @@ def dt_getreferences_rmap_na():
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
-    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS", "META.INSTRUMENT.FILTER":"BOGUS2"},
-    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS",
+    ...                             "META.INSTRUMENT.FILTER":"BOGUS2", "META.EXPOSURE.TYPE":"NIS_IMAGE"},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False, reftypes=["flat"])
     {'flat': 'NOT FOUND n/a'}
 
     >>> test_config.cleanup(old_state)
@@ -38,8 +39,8 @@ def dt_getreferences_rmap_omit():
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
-    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS", "META.INSTRUMENT.FILTER":"BOGUS1"},
-    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS", "META.INSTRUMENT.FILTER":"BOGUS1", "META.EXPOSURE.TYPE":"NIS_IMAGE"},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False, reftypes=["flat"])
     {}
 
     >>> test_config.cleanup(old_state)
@@ -52,8 +53,8 @@ def dt_getreferences_imap_na():
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
-    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"FGS",},
-    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"FGS", "META.EXPOSURE.TYPE":"FGS_IMAGE"},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False, reftypes=["flat"])
     {'flat': 'NOT FOUND n/a'}
 
     >>> test_config.cleanup(old_state)
@@ -64,8 +65,8 @@ def dt_getreferences_imap_omit():
     >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
-    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"MIRI",},
-    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False)
+    >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"MIRI", "META.EXPOSURE.TYPE":"MIR_IMAGE"},
+    ...    observatory="jwst", context="jwst_na_omit.pmap", ignore_cache=False, reftypes=["flat"])
     {}
 
     >>> test_config.cleanup(old_state)
