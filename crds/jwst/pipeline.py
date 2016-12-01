@@ -6,8 +6,9 @@ import re
 
 # import yaml
 
-from crds import log
+from crds import config, log, utils
 from crds.log import srepr
+from crds import exceptions
 
 # from jwst.stpipe import cmdline
 
@@ -53,7 +54,7 @@ level_pipeline_exptypes:
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
                              NIS_IMAGE, NIS_AMI, NIS_TACQ,
-                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
+                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
         - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
@@ -64,10 +65,10 @@ steps_to_reftypes_exceptions:
     flatfield:
         - case1:
             exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
-            reftypes: []
+            reftypes: [dflat, fflat, sflat]
         - case2:
             exp_types: ["NRS_*"]
-            reftypes: [dflat, fflat, sflat]
+            reftypes: []
         - case3:
             exp_types: ["*"]
             reftypes: [flat]
@@ -127,7 +128,7 @@ level_pipeline_exptypes:
         - calwebb_image2.cfg: [NRC_IMAGE, NRC_TACQ, NRC_CORON, NRC_FOCUS, 
                              MIR_IMAGE, MIR_TACQ, MIR_LYOT, MIR_4QPM, MIR_CORONCAL,
                              NIS_IMAGE, NIS_AMI, NIS_TACQ,
-                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM,
+                             NRS_IMAGE, NRS_FOCUS, NRS_MIMF, NRS_BOTA, NRS_TACQ, NRS_TASLIT, NRS_TACONFIRM, NRS_CONFIRM,
                              FGS_IMAGE, FGS_FOCUS]
 
         - skip_2b.cfg: ["*DARK*", "*FLAT*", "*LED*", "*LAMP*", NIS_FOCUS, NIS_WFSS, NRS_AUTOWAVE]
@@ -171,19 +172,17 @@ steps_to_reftypes:
   superbias: [superbias]
 
 steps_to_reftypes_exceptions:
-    flatfield:
+    flat_field:
         - case1:
             exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
-            reftypes: []
+            reftypes: [dflat, fflat, sflat]
         - case2:
             exp_types: ["NRS_*"]
-            reftypes: [dflat, fflat, sflat]
+            reftypes: []
         - case3:
             exp_types: ["*"]
             reftypes: [flat]
 '''
-
-CALCFG = None
 
 # --------------------------------------------------------------------------------------
 
@@ -193,36 +192,42 @@ def header_to_reftypes(header):
 
     Return a list of reftype names.
     """
-    with log.verbose_warning_on_exception("Failed determining required reftypes from header", log.PP(header)):
+    with log.warn_on_exception("Failed determining required reftypes from header", log.PP(header)):
         exp_type = header.get("META.EXPOSURE.TYPE")
         if not exp_type:
             exp_type = header["EXP_TYPE"]
         return exptype_to_reftypes(exp_type)
     return []
 
+@utils.cached
 def exptype_to_reftypes(exp_type):
     """For a given EXP_TYPE string, return a list of reftypes needed to process that
     EXP_TYPE through the data levels appropriate for that EXP_TYPE.
 
     Return [reftypes... ]
     """
-    global CALCFG
-    if CALCFG is None:
-        import yaml
-        CALCFG = yaml.load(CALCFG_REFERENCE_YAML)
     level_2a_pipeline = get_level_pipeline("level2a", exp_type)
     level_2b_pipeline = get_level_pipeline("level2b", exp_type)
     level_2a_types = get_pipeline_types(level_2a_pipeline, exp_type)
     level_2b_types = get_pipeline_types(level_2b_pipeline, exp_type)
-    combined = sorted(list(level_2a_types + level_2b_types))
+    combined = sorted(list(set(level_2a_types + level_2b_types)))
     return combined
 
+@utils.cached
+def load_calcfg_reference():
+    """Load the CALCFG reference info into a Python data structure and
+    return it.  Set global CALCFG.
+    """
+    import yaml
+    return yaml.load(CALCFG_REFERENCE_YAML)
+    
 def get_level_pipeline(level, exp_type):
     """Interpret the level_pipeline_exptypes data structure relative to
     processing `level` and `exp_type` to determine a pipeline .cfg file.
 
     Return pipeline .cfg
     """
+    CALCFG = load_calcfg_reference()
     pipeline_exptypes = CALCFG["level_pipeline_exptypes"][level]
     for mapping in pipeline_exptypes:
         for pipeline, exptypes in mapping.items():
@@ -231,7 +236,7 @@ def get_level_pipeline(level, exp_type):
                     log.verbose("Pipeline .cfg for", srepr(level), "and", 
                                 srepr(exp_type), "is:", srepr(pipeline))
                     return pipeline
-    raise RuntimeError("Unhandled EXP_TYPE " + srepr(exp_type))
+    raise exceptions.CrdsPipelineCfgDeterminationError("Unhandled EXP_TYPE", srepr(exp_type))
 
 def get_pipeline_types(pipeline, exp_type):
     """Based on a pipeline .cfg filename and an EXP_TYPE,  look up
@@ -242,21 +247,31 @@ def get_pipeline_types(pipeline, exp_type):
     
     Return [reftypes ...]
     """
+    CALCFG = load_calcfg_reference()
     steps = CALCFG["pipeline_cfgs_to_steps"][pipeline]
     exceptions = CALCFG["steps_to_reftypes_exceptions"]
     reftypes = []
     for step in steps:
-        if step in exceptions:
-            for case in cases:
-                item = case.values()[0]
-                reftypes = item["reftypes"]
-                exptypes = item["exp_types"]
+        if step not in exceptions:
+            reftypes.extend(CALCFG["steps_to_reftypes"][step])
+        else:
+            for case in exceptions[step]:
+                item = list(case.values())[0]
+                more_reftypes = item["reftypes"][:]
+                exptypes = item["exp_types"][:]
+                found = False
                 for exptype_pattern in exptypes:
                     if glob_match(exptype_pattern, exp_type):
-                        reftypes.extend(reftypes)
-            raise RuntimeError("Unhandled EXP_TYPE for exceptional Step '{}'".format(step))
-        else:
-            reftypes.extend(CALCFG["steps_to_reftypes"][step])
+                        log.verbose("Adding exceptional types", more_reftypes, 
+                                    "for step", srepr(step), "case", srepr(exptype_pattern), 
+                                    "based on exp_type", srepr(exp_type))
+                        found = True
+                        reftypes.extend(more_reftypes)
+                        break
+                if found:
+                    break
+            else:
+                raise exceptions.CrdsPipelineTypeDeterminationError("Unhandled EXP_TYPE for exceptional Step", srepr(step))
     log.verbose("Reftypes for pipeline", srepr(pipeline), "and", srepr(exp_type), 
                 "are:", srepr(reftypes))
     return reftypes

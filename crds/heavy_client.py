@@ -160,10 +160,13 @@ def _initial_recommendations(
         log.verbose(name + "() reftypes:", reftypes)
         log.verbose(name + "() context:", repr(context))
         log.verbose(name + "() ignore_cache:", ignore_cache)
-        for var in os.environ:
-            if var.upper().startswith("CRDS"):
-                log.verbose(var, "=", repr(os.environ[var]))
-    
+
+        # for var in os.environ:
+        #    if var.upper().startswith("CRDS"):
+        #        log.verbose(var, "=", repr(os.environ[var]))
+        log.verbose("CRDS_PATH =", os.environ.get("CRDS_PATH", "UNDEFINED"))
+        log.verbose("CRDS_SERVER_URL =", os.environ.get("CRDS_SERVER_URL", "UNDEFINED"))
+
         check_observatory(observatory)
         check_parameters(parameters)
         check_reftypes(reftypes)
