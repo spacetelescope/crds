@@ -1,6 +1,6 @@
-__version__ = '0fb322b'
+__version__ = '344d45d'
 
 __full_version_info__ = '''
 branch: jwst-build-7-rc5
-sha1: 0fb322b
+sha1: 344d45d
 '''
