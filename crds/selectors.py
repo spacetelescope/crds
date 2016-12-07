@@ -257,9 +257,10 @@ class Selector(object):
         for parkey in substitutions:
             try:
                 which = parameters.index(parkey)
-            except ValueError as exc:
+            except Exception:
                 continue
-            for match in selections:
+            matches = sorted(list(selections.keys()))
+            for match in matches:
                 old_parvalue = match[which]
                 if old_parvalue in substitutions[parkey]:
                     replacement = substitutions[parkey][old_parvalue]
