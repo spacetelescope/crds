@@ -257,6 +257,8 @@ def reference_keys_to_dataset_keys(rmapping, header):
                 rval = header[rkey]
                 if dval in [None, "N/A", "UNDEFINED"] and rval not in [None, "UNDEFINED"]:
                     header[dkey] = rval
+    if "USEAFTER" not in header and "META.REFFILE.USEAFTER" in header:
+        header["USEAFTER"] = header["META.REFFILE.USEAFTER"]
     if "USEAFTER" in header:  # and "DATE-OBS" not in header:
         reformatted = timestamp.reformat_useafter(rmapping, header).split()
         header["DATE-OBS"] = header["META.OBSERVATION.DATE"] = reformatted[0]
