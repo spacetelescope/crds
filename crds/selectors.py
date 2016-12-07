@@ -253,27 +253,29 @@ class Selector(object):
           'jwst_miri_flat_0038.fits')]
 
         """
-        selections = copy.deepcopy(selections)
-        for parkey in substitutions:
-            try:
-                which = parameters.index(parkey)
-            except Exception:
-                continue
-            matches = sorted(list(selections.keys()))
-            for match in matches:
-                old_parvalue = match[which]
-                if old_parvalue in substitutions[parkey]:
-                    replacement = substitutions[parkey][old_parvalue]
-                    if isinstance(replacement, list):
-                        replacement = tuple(replacement)
-                    new_match = list(match)
-                    new_match[which] = replacement
-                    new_match = tuple(new_match)
-                    log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
-                                (parkey, old_parvalue, replacement), "transforms",
-                                repr(match), "-->", repr(new_match), verbosity=70)
-                    selections[new_match] = selections.pop(match)
-        return selections
+        selections2 = copy.deepcopy(selections)
+        matches = sorted(list(selections.keys()))
+        for match in matches:
+            if not isinstance(match, python23.string_types):
+                new_match = list(match)
+                for parkey in substitutions:
+                    try:
+                        which = parameters.index(parkey)
+                    except Exception:
+                        continue
+                    old_parvalue = match[which]
+                    if old_parvalue in substitutions[parkey]:
+                        replacement = substitutions[parkey][old_parvalue]
+                        if isinstance(replacement, list):
+                            replacement = tuple(replacement)
+                        old_match = new_match[:]
+                        new_match[which] = replacement
+                        log.verbose("In", repr(self._rmap_header["name"]), "applying substitution", 
+                                    (parkey, old_parvalue, replacement), "transforms",
+                                    repr(old_match), "-->", repr(new_match), verbosity=70)
+                new_match = tuple(new_match)
+                selections2[new_match] = selections2.pop(match)
+        return selections2
 
     def todict(self):
         """Return a 'pure data' dictionary representation of this selector and it's children
