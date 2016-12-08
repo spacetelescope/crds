@@ -824,7 +824,7 @@ amount of informational and debug output.
         self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
                           help="If specified, process only the listed dataset ids.")
 
-        self.add_argument("--drop-ids", nargs="*", default=None, dest="drop_ids", metavar="IDS",
+        self.add_argument("--drop-ids", nargs="*", default=[], dest="drop_ids", metavar="IDS",
                           help="If specified, skip these dataset ids.")
 
         self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true",
