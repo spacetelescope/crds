@@ -175,7 +175,7 @@ steps_to_reftypes:
   superbias: [superbias]
 
 steps_to_reftypes_exceptions:
-    flatfield:
+    flat_field:
         - case1:
             exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
             reftypes: [dflat, fflat, sflat]
