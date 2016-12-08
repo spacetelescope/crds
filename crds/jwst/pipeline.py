@@ -62,7 +62,7 @@ level_pipeline_exptypes:
 
 STEPS_TO_REFTYPE_EXCEPTIONS_YAML = """
 steps_to_reftypes_exceptions:
-    flatfield:
+    flat_field:
         - case1:
             exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
             reftypes: [dflat, fflat, sflat]
@@ -100,7 +100,6 @@ def generate_pipeline_info(pipeline_cfgs):
 
 # --------------------------------------------------------------------------------------
 CALCFG_REFERENCE_YAML = '''
-
 author: CRDS
 descrip: "Reference used to determine pipeline configuration from dataset parameters."
 history: "First version generated from calcode .cfg files and EXP_TYPE/LEVEL mapping."
@@ -135,14 +134,16 @@ level_pipeline_exptypes:
 
 pipeline_cfgs_to_steps:
   calniriss_soss2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
-    flat_field, fringe, imprint_subtract, photom, srctype, straylight]
+    flat_field, fringe, imprint_subtract, pathloss, photom, resample_spec, srctype,
+    straylight]
   calwebb_dark.cfg: [dq_init, ipc, lastframe, linearity, refpix, rscd, saturation,
     superbias]
   calwebb_image2.cfg: [assign_wcs, flat_field, photom]
   calwebb_sloper.cfg: [dark_current, dq_init, ipc, jump, lastframe, linearity, persistence,
     ramp_fit, refpix, rscd, saturation, superbias]
   calwebb_spec2.cfg: [assign_wcs, bkg_subtract, cube_build, extract_1d, extract_2d,
-    flat_field, fringe, imprint_subtract, photom, srctype, straylight]
+    flat_field, fringe, imprint_subtract, pathloss, photom, resample_spec, srctype,
+    straylight]
   skip_2b.cfg: []
 
 steps_to_reftypes:
@@ -161,10 +162,12 @@ steps_to_reftypes:
   jump: [gain, readnoise]
   lastframe: []
   linearity: [linearity]
+  pathloss: [pathloss]
   persistence: []
   photom: [area, photom]
   ramp_fit: [gain, readnoise]
   refpix: [refpix]
+  resample_spec: [drizpars]
   rscd: [rscd]
   saturation: [saturation]
   srctype: []
@@ -172,7 +175,7 @@ steps_to_reftypes:
   superbias: [superbias]
 
 steps_to_reftypes_exceptions:
-    flat_field:
+    flatfield:
         - case1:
             exp_types: [NRS_FIXEDSLIT, NRS_IFU, NRS_MSASPEC]
             reftypes: [dflat, fflat, sflat]
@@ -182,6 +185,8 @@ steps_to_reftypes_exceptions:
         - case3:
             exp_types: ["*"]
             reftypes: [flat]
+
+
 '''
 
 # --------------------------------------------------------------------------------------
