@@ -665,6 +665,7 @@ amount of informational and debug output.
         self.datasets_since = self.args.datasets_since
 
         self.active_header = None   # new or old header last processed with bestrefs
+        self.drop_ids = []
 
     def complex_init(self):
         """Complex init tasks run inside any --pdb environment,  also unfortunately --profile."""
@@ -724,7 +725,22 @@ amount of informational and debug output.
 
         if self.args.files and not self.args.update_bestrefs:
             log.info("No file header updates requested;  dry run.")
+
+        self.drop_ids = [self.normalize_id(dataset) for dataset in self.args.drop_ids]
+        
         return True
+
+    def normalize_id(self, dataset):
+        """Convert a given `dataset` ID to uppercase.  For the sake of simplicity convert
+        simple IDs into unassociated exposure IDs in <exposure>:<exposure> form.  This is a
+        convenience for JWST where currently the <product> term is always identical to 
+        <exposure>.  Where they're different as-in associated exposures for HST,  you must
+        specify the drop ID fully to avoid misinterpretation as an unassociated exposure.
+        """
+        dataset = dataset.upper()
+        if ":" not in dataset:
+            dataset = dataset + ":" + dataset
+        return dataset
 
     def auto_datasets_since(self):
         """Support --datasets-since="auto" and compute min EXPTIME for all references determined by diffs.
@@ -807,6 +823,9 @@ amount of informational and debug output.
 
         self.add_argument("--only-ids", nargs="*", default=None, dest="only_ids", metavar="IDS",
                           help="If specified, process only the listed dataset ids.")
+
+        self.add_argument("--drop-ids", nargs="*", default=[], dest="drop_ids", metavar="IDS",
+                          help="If specified, skip these dataset ids.")
 
         self.add_argument("-u", "--update-bestrefs",  dest="update_bestrefs", action="store_true",
                           help="Update sources with new best reference recommendations.")
@@ -1008,7 +1027,10 @@ amount of informational and debug output.
         """Process best references for `dataset`,  printing dataset output,  collecting stats, trapping exceptions."""
         with log.error_on_exception("Failed processing", repr(dataset)):
             log.verbose("=" * 120)
-            if self.args.only_ids and dataset not in self.args.only_ids:
+            if dataset in self.drop_ids:
+                log.verbose("Skipping drop-list dataset", repr(dataset))
+                return
+            elif self.args.only_ids and dataset not in self.args.only_ids:
                 log.verbose("Skipping", repr(dataset), "not in --only-ids", verbosity=80)
                 return
             elif self.args.files:
