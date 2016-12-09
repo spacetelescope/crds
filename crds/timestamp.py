@@ -376,9 +376,7 @@ class Jwstdate(DateParser):
     datetime.datetime(2001, 3, 21, 0, 0)
 
     >>> Jwstdate.get_datetime("2001-03-21")
-    Traceback (most recent call last):
-    ...
-    ValueError: Invalid 'Jwstdate' format '2001-03-21'
+    datetime.datetime(2001, 3, 21, 0, 0)
 
     >>> Jwstdate.get_datetime("2001-03-21 12:00:00")
     Traceback (most recent call last):
