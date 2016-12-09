@@ -1046,6 +1046,8 @@ amount of informational and debug output.
         with log.augment_exception("Failed determining reference types for", repr(dataset),
                                    "with respect to", (instrument, context, header)):
             types = self.determine_reftypes(instrument, dataset, context, header)
+            if types is None:
+                return {}
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
                                    "with respect to", repr(context)):
             bestrefs = crds.getrecommendations(
@@ -1064,20 +1066,27 @@ amount of informational and debug output.
         4. --all-types    override 1-3 above,  check all
         5. --skip-types   explicit command line removal, reduce 1-4 above
         """
+        try:
+            applicable_types = set(self.locator.header_to_reftypes(header))
+        except Exception:
+            applicable_types = set()
         if self.affected_instruments:
-            types = self.affected_instruments[instrument.lower()]
+            types = set(self.affected_instruments[instrument.lower()])
+            if applicable_types:
+                types &= applicable_types
+            if not types:
+                return None
         else:
-            types = self.process_filekinds   # from --types ...
-        if not types:
-            types = self.locator.header_to_reftypes(header)
+            types = set(self.process_filekinds)   # from --types ...
         if self.args.all_types or not types:  # --all-types trumps --types, --diffs-only
             pmap = crds.get_pickled_mapping(context)
-            types = sorted(list(pmap.get_imap(instrument).selections.keys()))
+            types = pmap.get_imap(instrument).selections.keys()
         if types and self.args.skip_types:
-            types = sorted(list(set(types) - set(self.args.skip_types)))
+            types = set(types) - set(self.args.skip_types)
+        types = sorted(list(types))
         log.verbose("For", repr(dataset), "processing reference types:", repr(types))
         return types
-
+    
     @property
     def update_promise(self):
         """Return a string identifying that and update would or will occurr, depending on --update-bestrefs."""
