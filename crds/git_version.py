@@ -1,6 +1,6 @@
-__version__ = 'd5cbb91'
+__version__ = '86fcf2e'
 
 __full_version_info__ = '''
-branch: jwst-build-7-rc6
-sha1: d5cbb91
+branch: bump-version
+sha1: 86fcf2e
 '''
