@@ -1067,13 +1067,13 @@ amount of informational and debug output.
         """Compute the bestrefs for `dataset` with respect to loaded mapping/context `ctx`."""
         with log.augment_exception("Failed determining reference types for", repr(dataset),
                                    "with respect to", (instrument, context, header)):
-            types = self.determine_reftypes(instrument, dataset, context, header)
-            if types is None:
+            reftypes = self.determine_reftypes(instrument, dataset, context, header)
+            if reftypes is None:
                 return {}
         with log.augment_exception("Failed computing bestrefs for data", repr(dataset), 
                                    "with respect to", repr(context)):
             bestrefs = crds.getrecommendations(
-                header, reftypes=types, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
+                header, reftypes=reftypes, context=context, observatory=self.observatory, fast=log.get_verbose() < 50)
         return {key.upper(): value for (key, value) in bestrefs.items()}
 
     def determine_reftypes(self, instrument, dataset, context, header):
@@ -1088,18 +1088,19 @@ amount of informational and debug output.
         4. --all-types    override 1-3 above,  check all
         5. --skip-types   explicit command line removal, reduce 1-4 above
         """
-        try:
+        applicable_types = set()
+        with log.verbose_warning_on_exception("Failed determining reftypes for", repr(dataset)):
             applicable_types = set(self.locator.header_to_reftypes(header))
-        except Exception:
-            applicable_types = set()
         if self.affected_instruments:
             types = set(self.affected_instruments[instrument.lower()])
             if applicable_types:
                 types &= applicable_types
             if not types:
                 return None
+        elif self.args.types:
+            types = set(self.process_filekinds)
         else:
-            types = set(self.process_filekinds)   # from --types ...
+            types = applicable_types
         if self.args.all_types or not types:  # --all-types trumps --types, --diffs-only
             pmap = crds.get_pickled_mapping(context)
             types = pmap.get_imap(instrument).selections.keys()
