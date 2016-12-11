@@ -1158,8 +1158,10 @@ def set_crds_state(old_state):
     CRDS_REF_SUBDIR_MODE = old_state["CRDS_REF_SUBDIR_MODE"]
     for key, val in old_state.items():
         os.environ[key] = str(val)
-    if os.environ.get("CRDS_SERVER_URL", None):
+    if os.environ.get("CRDS_SERVER_URL"):
         api.set_crds_server(os.environ["CRDS_SERVER_URL"])
+    if os.environ.get("CRDS_CWD"):
+        os.chdir(os.environ["CRDS_CWD"])
 
 def clear_crds_state():
     """Wipe out the existing configuration variable state of CRDS.

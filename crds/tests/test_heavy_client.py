@@ -21,7 +21,7 @@ from nose.tools import assert_raises, assert_true
 
 def dt_getreferences_rmap_na():
     """
-    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS",
@@ -36,7 +36,7 @@ def dt_getreferences_rmap_na():
 
 def dt_getreferences_rmap_omit():
     """
-    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"NIRISS", "META.INSTRUMENT.DETECTOR":"NIS", "META.INSTRUMENT.FILTER":"BOGUS1", "META.EXPOSURE.TYPE":"NIS_IMAGE"},
@@ -50,7 +50,7 @@ def dt_getreferences_rmap_omit():
 
 def dt_getreferences_imap_na():
     """
-    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"FGS", "META.EXPOSURE.TYPE":"FGS_IMAGE"},
@@ -62,7 +62,7 @@ def dt_getreferences_imap_na():
 
 def dt_getreferences_imap_omit():
     """
-    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds-dev.stsci.edu")
+    >>> old_state = test_config.setup(cache=None, url="https://jwst-crds.stsci.edu")
     >>> os.environ["CRDS_MAPPATH_SINGLE"] = test_config.TEST_DATA
 
     >>> heavy_client.getreferences({"META.INSTRUMENT.NAME":"MIRI", "META.EXPOSURE.TYPE":"MIR_IMAGE"},

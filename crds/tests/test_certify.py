@@ -28,29 +28,27 @@ class TestCertifyScript(CertifyScript):
 def certify_truncated_file():
     """
     >>> TestCertifyScript("crds.certify data/truncated.fits --comparison-context hst.pmap")()
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - INFO - ########################################
-    CRDS - INFO - Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - INFO - FITS file 'truncated.fits' conforms to FITS standards.
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - WARNING - AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
-    CRDS - INFO - ########################################
-    CRDS - INFO - 0 errors
-    CRDS - INFO - 16 warnings
-    CRDS - INFO - 4 infos
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  Certifying 'data/truncated.fits' (1/1) as 'FITS' relative to context 'hst.pmap'
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - INFO -  FITS file 'truncated.fits' conforms to FITS standards.
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - WARNING -  AstropyUserWarning : astropy.io.fits.file : File may have been truncated: actual file length (7000) is smaller than the expected size (8640)
+    CRDS - INFO -  ########################################
+    CRDS - INFO -  0 errors
+    CRDS - INFO -  14 warnings
+    CRDS - INFO -  4 infos
     0
     """
 
@@ -81,6 +79,8 @@ def certify_dump_provenance_fits():
 
 def certify_dump_provenance_generic():
     """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
+    
     >>> TestCertifyScript("crds.certify data/valid.json --dump-provenance --comparison-context jwst.pmap")()
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/valid.json' (1/1) as 'JSON' relative to context 'jwst.pmap'
@@ -99,6 +99,9 @@ def certify_dump_provenance_generic():
     CRDS - INFO - 0 warnings
     CRDS - INFO - 13 infos
     0
+
+    >>> test_config.cleanup(old_state)
+
     """
 
 def certify_missing_keyword():
@@ -269,6 +272,7 @@ def certify_jwst_valid():
 
 def certify_jwst_invalid():
     """
+    >>> old_state = test_config.setup(url="https://jwst-serverless-mode.stsci.edu")
     >>> TestCertifyScript("crds.certify data/niriss_ref_photom_bad.fits --comparison-context None")()
     CRDS - INFO - ########################################
     CRDS - INFO - Certifying 'data/niriss_ref_photom_bad.fits' (1/1) as 'FITS' relative to context None
@@ -279,6 +283,7 @@ def certify_jwst_invalid():
     CRDS - INFO - 0 warnings
     CRDS - INFO - 4 infos
     1
+    >>> test_config.cleanup(old_state)
     """
 
 def certify_jwst_missing_optional_parkey():

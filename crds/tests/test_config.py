@@ -46,15 +46,11 @@ class CRDSTestCase(unittest.TestCase):
         self.hst_mappath =  TEST_MAPPATH
         self.old_state = setup(cache=self.cache, url=self.server_url, 
                                clear_existing=self.clear_existing)
-        self.old_dir = os.getcwd()
-        os.chdir(HERE)
-
     def tearDown(self, *args, **keys):
         super(CRDSTestCase, self).tearDown(*args, **keys)
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
         cleanup(self.old_state)
-        os.chdir(self.old_dir)
 
     def run_script(self, cmd, expected_errs=0):
         """Run SyncScript using command line `cmd` and check for `expected_errs` as return status."""
@@ -76,25 +72,27 @@ class CRDSTestCase(unittest.TestCase):
 
 # ==============================================================================
 
-def setup(cache=CRDS_SHARED_GROUP_CACHE, url=None, clear_existing=True):
+def setup(cache=CRDS_SHARED_GROUP_CACHE, url=None, clear_existing=True, observatory=None):
     """Reset the CRDS configuration state to support testing given the supplied parameters."""
     log.set_test_mode()
     old_state = config.get_crds_state()
+    old_state["CRDS_CWD"] = os.getcwd()
     if clear_existing:
         config.clear_crds_state()
+    new_state = dict(old_state)
+    new_state["CRDS_CWD"] = HERE
     if url is not None:
-        os.environ["CRDS_SERVER_URL"] = url
-        client.set_crds_server(url)
-    old_state["OLD_CWD"] = os.getcwd()
-    os.chdir(HERE)
+        new_state["CRDS_SERVER_URL"] = url
     if cache is not None:
-        os.environ["CRDS_PATH"] = cache
+        new_state["CRDS_PATH"] = cache
+    if observatory is not None:
+        new_state["CRDS_OBSERVATORY"] = observatory
+    config.set_crds_state(new_state)
     utils.clear_function_caches()
     return old_state
 
 def cleanup(old_state):
     """Strictly speaking test cleanup is more than restoring CRDS state."""
-    os.chdir(old_state.pop("OLD_CWD"))
     config.set_crds_state(old_state)
     utils.clear_function_caches()
 
