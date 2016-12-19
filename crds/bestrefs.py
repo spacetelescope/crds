@@ -1331,7 +1331,11 @@ amount of informational and debug output.
 
     def sync_references(self):
         """Locally cache the new references referred to by updates."""
-        synced_references = {tup.new for tup in self.updates if tup.new not in ["N/A"]}
+        synced_references = {
+            tup.new_reference.lower()
+            for dataset in self.updates
+            for tup in self.updates[dataset] if tup.new_reference not in ["N/A"]
+        }
         api.dump_references(self.new_context, sorted(synced_references), raise_exceptions=self.args.pdb)
 
 # ===================================================================
