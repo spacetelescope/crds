@@ -17,7 +17,7 @@ from crds import python23
 import crds
 from crds import (log, config, utils, timestamp, cmdline)
 from crds import (heavy_client, data_file, diff, matches)
-from crds import table_effects
+from crds.bestrefs import table_effects
 from crds.client import api
 from crds.exceptions import CrdsError
 
