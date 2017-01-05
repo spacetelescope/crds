@@ -30,5 +30,5 @@ script:
     - ./install
     - ./runtests --cover
 
-after_success:
-    coveralls
+# after_success:
+#     coveralls
