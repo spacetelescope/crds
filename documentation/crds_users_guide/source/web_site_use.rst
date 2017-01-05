@@ -60,12 +60,18 @@ Differencing contexts
 .....................
 
 Click the *diff* checkbox for any two contexts in the history and then click the diff button
-at the top of the diff column.   This will display a difference page with an accorion panel
-for each file which differed between the two contexts:
-    
-.. figure:: images/web_context_difference.png
+at the top of the diff column:
+
+.. figure:: images/web_context_diff_1.png
    :scale: 50 %
-   :alt: CRDS context differences
+   :alt: CRDS context diff request
+
+This will display a difference page with an accorion panel for each file which
+differed between the two contexts:
+    
+.. figure:: images/web_context_diff_2.png
+   :scale: 50 %
+   :alt: CRDS context diff request
 
 Each file accordion opens into two accordions which display different views of the differences,
 logical or textual.  The logical differences display a table of matching parameters and files
@@ -134,15 +140,13 @@ Best reference recommendations are displayed on the left side of the page.
 Explore Best References
 .......................
 
-Explore Best References supports entering best references parameters directly
-rather than extracting them from a dataset or catalog.   Explore best references
-is essentially a sand box which lets someone evaluate what CRDS will do given
-particular parameter values.  The explorer currently lists all parameters 
-which might be relevant to any mode of an instrument and has no knowledge of 
-default values.  
+Explore best references is a sand box that enables evaluating what CRDS will do
+given hand picked parameter values.  Explore Best References supports entering
+best references parameters directly via menus or write-in text boxes rather
+than extracting them from a dataset or catalog.
 
 The first phase of exploration is to choose a pipeline context and instrument
-which will be used to define parameter choices:   
+which will be used to define menu driven parameter choices:   
 
 .. figure:: images/web_explore_bestrefs.png
    :scale: 50 %
@@ -155,6 +159,10 @@ to best references selection.
    :scale: 50 %
    :alt: user input based best references
 
+The parameter menus are driven by CRDS rules and do not capture every possible
+parameter value.  Text box inputs augment and override the menu inputs to
+support entering parameter values not listed in the menus.
+
 The entered parameters are evaluated with respect to the given pipeline context
 and best references are determined.   The results are similar or identical to
 the *Dataset Best References* results.
@@ -162,27 +170,23 @@ the *Dataset Best References* results.
 Browse Database
 ...............
 
-The *Browse Database* feature enables examining the metadata and computable
-properties of CRDS reference and mapping files.
+The *Browse Database* feature enables examining the metadata and properties of
+CRDS reference and mapping files.
 
 .. figure:: images/web_browse_database.png
    :scale: 50 %
    :alt: database browse filter page
 
-The first phase is to enter a number of filters to narrow the number or variety 
-of files which are displayed.   Leaving any filter at the default value of *
-renders that constraint irrelevant and all possible files are displayed with
-respect to that constraint.   The result of the first phase is a table of files
-which matched the filters showing their basic properties.
+The first phase selects and filters files for top level display, one file per
+table row.  Leave filter settings as \* to skip that constraint.
 
 .. figure:: images/web_browse_database_files.png
    :scale: 50 %
    :alt: database browse filter page
 
-The second phase is initiated by clicking on the filename link of any file
-displayed in the table from the first phase.   Clicking on a filename link switches
-to a detailed view of that file only:
-
+All file details for a single file can be displayed by clicking the filename
+link in the tabular display.
+         
 .. figure:: images/web_browse_database_details.png
    :scale: 50 %
    :alt: database browse details page
@@ -200,16 +204,12 @@ click on them.  All file types have these generic panes:
 
 Reference files have these additional panes:
 
-- Certify Results - shows the results of crds.certify run on this reference now.
-
 - Lookup Patterns - lists the parameters sets which lead to this reference.
 
 Recent Activity
 ...............
 
-The *Recent Activity* view shows a table of the actions on CRDS files which
-are tracked.  Only actions which change the states of files in some way are 
-tracked:
+The *Recent Activity* view shows a table of the tracked actions on CRDS files:
 
 .. figure:: images/web_recent_activity.png
    :scale: 50 %
@@ -223,24 +223,23 @@ value of \*.   The result of the activity search is a table of matching actions:
    :scale: 50 %
    :alt: database browse details page
    
-The details vary by the type of action,  in this case showing the original name
-of a file prior to submission to CRDS and the assignment of its official name.
+The default filter of \*.pmap previews contexts that have been submitted but
+not yet selected for operational use in the pipeline.
 
 Private Functions
 -----------------
 
-The following functions are restricted to users with accounts on the CRDS website
-and support the submission of new reference and mapping files and maintenance
-of the overall site.   Private functions are only visible to users who have 
-successfully logged in.
+The following functions are restricted to authenicated users:
 
+- file submissions
+- context selection
+  
 Login and Instrument Locking
 ............................
 
-Typical batch file submissions automatically generate instrument and pipeline context
-files,  as well as .rmaps.   To preclude the possibility of multiple users submitting
-files from the same instrument at the same time,  and possibly creating conflicting
-rules,  users lock instruments when they log in.
+File submissions require locking an instrument to prevent multiple submitters
+from accidentally submitting the same files and/or simultaneously modifying the
+same .rmap:
 
 .. figure:: images/web_login.png
    :scale: 50 %
@@ -254,17 +253,18 @@ lock are displayed below the login (now logout) button:
    :alt: logged in page with count down timer
 
 The time displayed is the relative time remaining on the lock reservation,  nominally
-around 4 hours with the current server configuration.
+around 4 hours.
 
 When the user performs an action on the website,  their lock timer is reset to its maximum value.
-As time passes without action,  the lock timer counts down.  When the lock timer reaches zero, 
-the lock is automatically released and any on-going file submission is cancelled.   Files which 
-have been uploaded for a cancelled submission are left in the upload area.
 
-Other users who attempt to login while an instrument is locked will be denied.
+Other users who attempt to login for the same instrument while it is locked
+will be denied.
 
 When a file submission is being performed,  it must be *confirmed* within the timeout period
 or the file submission will be cancelled.
+
+When a lock timer expires, any on-going submission is automatically cancelled
+and the lock is dropped to enable another submitter to cut-in.
 
 Care should be taken with the locking mechanism and file submissions.  **DO NOT**:
 
@@ -304,9 +304,9 @@ The CRDS procedure for marking files bad requires three steps:
 2. Make the clean context operational using Set Context.
 3. Mark the prospective bad files actually bad using Mark Bad Files.
 
-Following this procedure maintains the invariant that the operational context
-contains no known bad files.   The designation as bad files does not take
-effect until any local CRDS cache is synchronized with the server.
+This procedure maintains the invariant that the operational pipeline context
+contains no known bad files.  The designation as bad files does not take effect
+until the pipeline CRDS cache is synchronized with the server.
 
 Creating a clean context can be done in arbitrary ways,  but the two most
 common ways will likely be:
@@ -322,18 +322,16 @@ Marking a rules file (mapping) as bad implicitly marks all the files
 which refer to it as bad.  Hence,  marking a .rmap as bad will make
 any .imap which refers to it bad as well,  and will also taint all .pmaps
 which refer to the bad .imaps.   Whenever a rules file is marked bad,
-a warning is issued when the containing context is used.
+it becomes an error to use the containing context.
 
-Marking a reference file as bad is a more precise technique which invalidates
-only that reference in every context that includes it.  Warnings are issued
-related to the bad reference only when the reference is actually recommended by
-CRDS.
+Marking a reference file as bad only invalidates that reference in every
+context that includes it.  An error is issued for a bad reference only when
+it is actually recommended by CRDS,  it is not an error to use the containing
+context.
 
-By default, recommendation of bad files is an error.  The default
-behaviour can be overrideden, allowing use of bad rules or references with a
-warning, by setting environment variables: *CRDS_ALLOW_BAD_RULES* and/or
-*CRDS_ALLOW_BAD_REFERENCES* or by using command line switches for
-crds.bestrefs: *--allow-bad-rules* and *--allow-bad-references*.
+By default, recommendation of bad references or use of bad rules  is an error.
+The default behaviour can be overridden by setting environment variables:
+*CRDS_ALLOW_BAD_RULES* and/or *CRDS_ALLOW_BAD_REFERENCES*.
 
 Delete References
 .................
@@ -392,33 +390,37 @@ carried over by Add References,  only the reference files themselves.
 Set Context
 ...........
 
-*Set Context* enables setting the operational and edit contexts.  
+*Set Context* enables setting the operational, edit, and versions contexts.  
 
 .. figure:: images/web_set_context.png
    :scale: 50 %
    :alt: set context inputs
 
-CRDS enables contexts to be pre-positioned before their adoption as the default
-for processing by the pipeline.  Only by using Set Context will an available 
-context become the default for processing.
+CRDS enables contexts to be distributed before their adoption as the pipeline default.
+Set Context is used to select the default pipeline (operational) context.
    
-Setting the operational context makes the specified context the default for
-processing coordinated by this server.  Setting the operational context creates
-a new entry at the top of the Context History.
+Setting the operational context changes state on the CRDS server which must be
+subsequently sync'ed to remote pipelines and users.
 
-Setting the edit context makes the specified context the default starting point
-for future contexts created during file submission.
+Setting the *operational* context creates a new entry at the top of the Context
+History.
+
+Setting the *edit* context sets the default starting point for future file
+submissions.
+
+Setting the *versions* context defines the context used to locate the SYSTEM
+CALVER reference file used to define calibration software component versions.
 
 Batch Submit References
 .......................
 
 *Batch Submit References* is intended to handle the majority of CRDS reference
-submissions with a high degree of automation.   This page accepts a number of
-reference files and metadata which is applied to all of them.   The specified
-reference files are checked on the server using crds.certify and if they pass
-are submitted to CRDS.   All of the submitted references must be of the same
-reference type,  i.e. controlled by the same .rmap file.   Tabular reference 
-files are checked with respect to the derivation context by crds.certify.
+submissions, both checking and ingesting files and automatically generating the
+corresponding CRDS rules updates.  It accepts a number of reference files and
+metadata which applies to all of them.
+
+The specified reference files are checked on the server using crds.certify and
+if they pass are submitted to CRDS.  
 
 .. figure:: images/web_batch_submit_references.png
    :scale: 50 %
@@ -428,12 +430,10 @@ Upload Files
 ++++++++++++
 
 The first task involved with *Batch Submit References* is transferring the
-submitted files to the server.  For CRDS build-2,  there are two approaches for
-getting files on the server,  web based and shell based.   Both approaches
-involve transferring files to an ingest directory in the CRDS filestore.  Each
-CRDS user will have their own ingest directory.   Initially the only user is
-"test".   This section applies equally to all of the file submission pages that
-have an *Upload Files* accordion.   
+submitted files to the server.  There are two approaches for getting files on
+the server, web based and shell based.  Each CRDS user has their own ingest
+directory.  This section applies equally to all of the file submission pages
+that have an *Upload Files* accordion.
 
 Web Approach
 !!!!!!!!!!!!
@@ -449,9 +449,9 @@ Uploading files is accomplished by:
 
 * Opening the accordion panel by clicking on it.
 
-* Add files to the upload list by clicking on the *Add Files...* button.  Alternately for modern browsers (Chrome) drag-and-drop files from your desktop to the upload accordion.
+* Add files to the upload list by clicking on the *Add Files...* button.
 
-* Click *Start Upload* to initiate the file transfer.   You should see a progress bar(s) showing the status of the upload(s).   When the upload successfully completes the buttons will change to *delete*.
+* Click *Start Upload* to initiate the file transfer.   When the upload successfully completes the buttons will change to *delete*.
 
 * Click *Delete* for any file added by mistake or for failed uploads.
 
@@ -460,44 +460,27 @@ Uploading files is accomplished by:
 * Close the accordion panel by clicking on it.
 
 **IMPORTANT**  Just adding files to the file list does not upload them.   You
-must click *Start upload* to initiate the file transfer.   In the screenshot above,
-the file with the *delete* button next to it is already on the server in the
-ingest directory.   The files with *start* and *cancel* buttons next to them have
-only been declared as candidates for upload.   To finish uploading all 3 files,  
-check *select all* and click *Start upload*.
+must click *Start upload* to initiate the file transfer.
 
 Shell Approach
 !!!!!!!!!!!!!!
 
 In the shell approach a user must login to UNIX (in some fashion) and transfer
-files into their CRDS ingest directory manually.   The nominal approach
-for doing this is to use the cp or scp commands.   For instance,  from my home,
-having already set up ssh and scp access, I might say::
+files into their CRDS ingest directory manually.   For instance::
 
-  % scp /this_delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/test/server_files/ingest/mcmaster
+  % scp /this_delivery/*.fits   dmsinsvm.stsci.edu:/ifs/crds/hst/ops/server_files/ingest/<username>
 
 to copy references into my ingest directory *as-if* I had uploaded them through
 the uploads panel.
 
-Abstractly this is::
+The submitted reference files should now be your ingest directory on the server
+and the CRDS server will behave as if they had been uploaded through web
+interface.  Refreshing the file submission web page should make manually copied
+files show up in the *Upload Files* accordion.
 
-  % scp <submitted reference files...>   <host>:/ifs/crds/hst/<pipeline>/server_files/ingest<crds_username>
-  
-where pipeline is 'test' or 'ops'.
-
-The submitted reference files should now be in the ingest directory for *HST* test server
-user *mcmaster*.   Once the files are in the ingest directory,  the CRDS web server
-will behave as if they had been uploaded through web interface.  Refreshing the
-file submission web page should make manually copied files show up in the
-*Upload Files* accordion.
-
-The purpose of using cp or scp is to improve the efficiency and reliability of
-the file transfers should those become an issue.  Telecommuters working offsite by VPN
-would face a situation where submitted files are downloaded to their home computer via
-VPN and then uploaded to the CRDS server via their browser. 
-
-Files transferred to the ingest directory via shell should
-still be removeable using the *Upload Files* delete buttons.
+Using cp or scp improves the efficiency and reliability of file transfers
+should that become an issue.  Telecommuters working offsite by VPN can use this
+technique to avoid inefficient transfers.
 
 Derive From Context 
 +++++++++++++++++++
@@ -674,10 +657,10 @@ context as the point of comparison::
 sha1sum if you wish to load the context into Python to do interactive tests 
 with the .rmap::
 
-% python -m crds.checksum ./jwst_miri_dark_0004.rmap
-% python
->>> import crds
->>> r = crds.get_cached_mapping("./jwst_miri_dark_0004.rmap")
+    % python -m crds.checksum ./jwst_miri_dark_0004.rmap
+    % python
+    >>> import crds
+    >>> r = crds.get_cached_mapping("./jwst_miri_dark_0004.rmap")
 
 The internal checksum can also be used to verify upload integrity when you
 finally submit the file to CRDS, an out-of-date checksum or corrupted file will
