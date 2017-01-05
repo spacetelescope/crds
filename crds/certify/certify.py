@@ -17,10 +17,11 @@ import crds
 from crds import rmap, log, timestamp, utils, data_file, diff, cmdline, config, pysh
 from crds import tables
 from crds import client
-from crds import mapping_parser
 from crds import selectors
 from crds.exceptions import (MissingKeywordError, IllegalKeywordError, InvalidFormatError, TypeSetupError,
                              ValidationError)
+
+from . import mapping_parser
 
 NOT_FITS = -1
 VALID_FITS = 1
