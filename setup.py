@@ -7,6 +7,8 @@ from distutils.core import setup
 setup_pars = {
     "packages" : [
         'crds',
+        'crds.bestrefs',
+        'crds.certify',
         'crds.client',
         'crds.hst',
         'crds.jwst',
@@ -16,6 +18,8 @@ setup_pars = {
         ],
     "package_dir" : {
         'crds' : 'crds',
+        'crds.bestrefs' : 'crds/bestrefs',
+        'crds.certify' : 'crds/certify',
         'crds.client' : 'crds/client',
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
@@ -52,7 +56,9 @@ setup_pars = {
 import crds   #  local subdirectory...  ew...
 
 setup(name="crds",
-      provides=["crds","crds.hst","crds.jwst","crds.client","crds.tobs","crds.tests"],
+      provides=["crds","crds.hst","crds.jwst",
+                "crds.bestrefs", "crds.certify",
+                "crds.client","crds.tobs","crds.tests"],
       version=crds.__version__,
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
