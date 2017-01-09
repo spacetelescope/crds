@@ -1,16 +1,27 @@
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-# The "crds" __version__ defined here should also reflect the behavior of 
-# crds.client
+
+# ============================================================================
+
+import os
+import os.path
+
+# ============================================================================
+
+__path__.append(os.path.join(os.path.dirname(__file__), "core"))
+
+# ============================================================================
+
 __version__ = "7.1.0"  
 __rationale__ = "JWST Build 7.1 Development"
 
 # ============================================================================
 
-import os
-
 from . import exceptions
+from .exceptions import *
+
+# ============================================================================
 
 __all__ = [ 
            "get_default_context", 
@@ -27,16 +38,17 @@ __all__ = [
 ALL_OBSERVATORIES = ["hst", "jwst", "tobs"]
 
 # keywords used to identify instrument from headers
-INSTRUMENT_KEYWORDS = ["INSTRUME", "META.INSTRUMENT.NAME",  "META_INSTRUMENT_NAME", "INSTRUMENT", 
+INSTRUMENT_KEYWORDS = ["INSTRUME", "META.INSTRUMENT.NAME",
+                       "META_INSTRUMENT_NAME", "INSTRUMENT", 
                        "META.INSTRUMENT.TYPE", "META_INSTRUMENT_TYPE"]
 
 # ============================================================================
 
 from . import config   # module
-from .exceptions import *
 
 from crds.client import get_default_context
-from .heavy_client import getreferences, getrecommendations, get_symbolic_mapping, get_pickled_mapping
+from .heavy_client import getreferences, getrecommendations
+from .heavy_client import get_symbolic_mapping, get_pickled_mapping
 from .rmap import get_cached_mapping, locate_mapping, locate_file, asmapping
 
 # ============================================================================
