@@ -33,9 +33,9 @@ import shutil
 import glob
 
 import crds
-import crds.client.api as api
 from crds import (rmap, log, data_file, cmdline, utils, config, heavy_client)
 from crds.log import srepr
+from crds.client import api
 
 # ============================================================================
 
