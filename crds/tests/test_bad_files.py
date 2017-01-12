@@ -5,10 +5,11 @@ from __future__ import absolute_import
 import os
 
 import crds
-from crds import utils, log, client, config
+from crds.core import log, utils, config
+from crds import client
 from crds.bestrefs import BestrefsScript
+
 from crds.tests import test_config
-from crds import tests
 
 # Contrived headers which will select bad files.
 

@@ -15,7 +15,6 @@ import time
 import os
 
 import crds
-
 from crds.core import python23, exceptions, log, config
 
 # ============================================================================

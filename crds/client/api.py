@@ -26,7 +26,7 @@ from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
 from crds.core import python23
 from crds.core.python23 import *
 
-from crds.client import proxy
+from . import proxy
 
 # ==============================================================================
 

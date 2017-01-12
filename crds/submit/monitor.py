@@ -13,10 +13,9 @@ import time
 
 import numpy as np
 
-from crds import log, cmdline
+from crds import exceptions, log, cmdline
 from crds.client import api
 from crds.log import srepr
-from crds import exceptions
 
 # ===================================================================
 

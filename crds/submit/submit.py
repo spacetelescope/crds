@@ -12,7 +12,7 @@ import os.path
 import socket
 import time
 
-from crds import log, config, cmdline, utils, pysh
+from crds import log, config, utils, pysh, cmdline
 from . import web, background, monitor
 from crds.client import api
 from crds.log import srepr

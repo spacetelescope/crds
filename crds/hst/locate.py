@@ -20,8 +20,9 @@ import datetime
 import time
 
 import crds
-from crds import (log, rmap, data_file, config, utils, timestamp)
-from crds.exceptions import CrdsError
+from crds.core import log, rmap, config, utils, timestamp
+from crds import data_file
+from crds.core.exceptions import CrdsError
 from crds.hst import siname
 
 # =======================================================================

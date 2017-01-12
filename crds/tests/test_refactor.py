@@ -10,7 +10,9 @@ from __future__ import print_function
 import os
 from pprint import pprint as pp
 
-from crds import refactor, log, exceptions, diff
+import crds
+from crds.core import log, exceptions
+from crds import data_file, diff, refactor
 from crds.refactor import RefactorScript
 from crds.tests import test_config
 
@@ -22,11 +24,11 @@ def dt_refactor_add_files():
     """
     >>> log.set_test_mode()
 
-    >>> RefactorScript("refactor.py insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
+    >>> RefactorScript("crds.refactor insert data/hst_cos_deadtab.rmap hst_cos_deadtab_insert.rmap data/s7g1700hl_dead.fits")()  # doctest: +ELLIPSIS
     CRDS - INFO - Inserting s7g1700hl_dead.fits into 'hst_cos_deadtab.rmap'
     0
 
-    >>> diff.DiffScript("diff.py data/hst_cos_deadtab.rmap ./hst_cos_deadtab_insert.rmap").run()
+    >>> diff.DiffScript("crds.diff data/hst_cos_deadtab.rmap ./hst_cos_deadtab_insert.rmap").run()
     (('data/hst_cos_deadtab.rmap', './hst_cos_deadtab_insert.rmap'), ('FUV',), ('1997-10-01', '01:01:01'), 'added terminal s7g1700hl_dead.fits')
     1
     
