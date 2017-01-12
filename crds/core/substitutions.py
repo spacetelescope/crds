@@ -29,7 +29,7 @@ from __future__ import absolute_import
 import os.path
 
 import crds
-from crds import log, utils
+from crds.core import log, utils
 
 # ============================================================================
 

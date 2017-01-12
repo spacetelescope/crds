@@ -12,19 +12,21 @@ import os.path
 import base64
 import re
 import zlib
-from crds import python23
 
 from .proxy import CheckingProxy
 
 # heavy versions of core CRDS modules defined in one place, client minimally
 # dependent on core for configuration, logging, and  file path management.
 import crds
-from crds import utils, log, config
-from crds.client import proxy
-from crds.log import srepr
+from crds.core import utils, log, config
+from crds.core.log import srepr
 
-from crds.exceptions import ServiceError, CrdsLookupError, CrdsNetworkError, CrdsDownloadError
-from crds.python23 import *
+from crds.core.exceptions import ServiceError, CrdsLookupError
+from crds.core.exceptions import CrdsNetworkError, CrdsDownloadError
+from crds.core import python23
+from crds.core.python23 import *
+
+from crds.client import proxy
 
 # ==============================================================================
 

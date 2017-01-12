@@ -18,9 +18,10 @@ from collections import Counter, defaultdict
 from argparse import RawTextHelpFormatter
 
 import crds
-from crds import rmap, log, data_file, heavy_client, config, utils, exceptions
+from crds.core import python23, rmap, log, heavy_client
+from crds.core import config, utils, exceptions
 from crds.client import api
-from crds import python23
+from crds import data_file
 
 # =============================================================================
 

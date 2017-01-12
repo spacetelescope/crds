@@ -54,24 +54,29 @@ True
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+
+# ===================================================================
+
 import os.path
 import glob
 import json
 
 from collections import namedtuple
 
+# ===================================================================
+
 import crds
-from . import (log, utils, selectors, data_file, config, substitutions)
+from crds.core import (python23, log, utils, config, selectors, substitutions)
 
 # XXX For backward compatability until refactored away.
 from .config import locate_file, locate_mapping, locate_reference
 from .config import mapping_exists, is_mapping
 
-from crds import exceptions as crexc
-from crds import python23
-from crds.custom_dict import LazyFileDict
-from crds.mapping_verifier import MAPPING_VERIFIER
-from crds.log import srepr
+from crds.core import exceptions as crexc
+from crds.core import python23
+from crds.core.custom_dict import LazyFileDict
+from crds.core.mapping_verifier import MAPPING_VERIFIER
+from crds.core.log import srepr
 
 # ===================================================================
 
@@ -1728,7 +1733,7 @@ def get_best_references(context_file, header, include=None, condition=True):
 def test():
     """Run module doctests."""
     import doctest
-    from crds import rmap
+    from crds.core import rmap
     return doctest.testmod(rmap)
 
 if __name__ == "__main__":

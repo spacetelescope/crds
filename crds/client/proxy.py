@@ -6,6 +6,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+# ============================================================================
+
 import sys
 import uuid
 import json
@@ -13,11 +15,10 @@ import time
 import os
 
 import crds
-from crds import python23
 
-from crds import log, config
+from crds.core import python23, exceptions, log, config
 
-from crds import exceptions
+# ============================================================================
 
 def apply_with_retries(func, *pars, **keys):
     """Apply function func() as f(*pargs, **keys) and return the result. Retry on any exception as defined in config.py"""
