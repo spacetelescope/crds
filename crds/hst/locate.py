@@ -19,7 +19,6 @@ import glob
 import datetime
 import time
 
-# import crds.pysh as pysh
 import crds
 from crds import (log, rmap, data_file, config, utils, timestamp)
 from crds.exceptions import CrdsError
