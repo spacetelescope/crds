@@ -32,6 +32,25 @@ from crds.client import get_default_context
 
 # ============================================================================
 
+'''This code section supports moving modules from the root crds namespace into 
+sub-packages while still supporting the original CRDS package external interface.
+This allows the code to be partitioned without changing external imports.  This
+is made more difficult by the inapplicability of namespace packages because this
+__init__ is not empty.
+
+The strategy employed here is to implement core packages normally in crds.core,
+then alias them into the top level crds namespace using importlib.import_module()
+and sys.modules to make it appear as if each core package has already been imported
+and belongs to the top level namespace.
+'''
+def alias_subpackage_module(subpkg, modules):
+    """Alias each module from `modules` of `subpkg` to appear in this
+    namespace.
+    """
+    for module in modules:
+        globals()[module] = importlib.import_module(subpkg + "." + module)
+        sys.modules["crds." + module] = sys.modules[subpkg + "." + module]
+
 CORE_MODULES = [
     "pysh",
     "python23",
@@ -51,10 +70,8 @@ CORE_MODULES = [
     "cmdline",
 ]
 
-
-for core_module in CORE_MODULES:
-    globals()[core_module] = importlib.import_module("crds.core" + "." + core_module)
-    sys.modules["crds." + core_module] = sys.modules["crds.core." + core_module]
+# e.g. make crds.core.rmap importable same as crds.rmap
+alias_subpackage_module("crds.core", CORE_MODULES)
 
 # ============================================================================
 
