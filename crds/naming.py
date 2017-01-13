@@ -14,7 +14,7 @@ import re
 import crds
 from crds import log, utils, config
 from crds.client import api
-from crds.exceptions import NameComparisonError
+from crds.core.exceptions import NameComparisonError
 
 # =============================================================================================================
 

@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import sys
 import os.path
 
-from crds import cmdline, log, utils, config, timestamp
+from crds.core import log, utils, config, timestamp, cmdline
 from crds.client import api
 
 class QueryAffectedDatasetsScript(cmdline.Script):

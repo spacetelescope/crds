@@ -7,6 +7,7 @@ from __future__ import absolute_import
 import os
 import os.path
 import sys
+import importlib
 
 # ============================================================================
 
@@ -32,40 +33,31 @@ from crds.client import get_default_context
 # ============================================================================
 
 CORE_MODULES = [
-    "cmdline",
-    "config",
-    "constants",
-    "custom_dict",
-    "exceptions",
-    "heavy_client",
-    "log",
-    "mapping_verifier",
     "pysh",
     "python23",
-    "reftypes",
-    "rmap",
-    "selectors",
-    "substitutions",
-    "timestamp",
+    "exceptions",
+    "log",
+    "config",
+    "constants",
     "utils",
+    "timestamp",
+    "custom_dict",
+    "selectors",
+    "mapping_verifier",
+    "reftypes",
+    "substitutions",
+    "rmap",
+    "heavy_client",
+    "cmdline",
 ]
 
-__import__("crds.core", None, None, CORE_MODULES)
 
 for core_module in CORE_MODULES:
+    globals()[core_module] = importlib.import_module("crds.core" + "." + core_module)
     sys.modules["crds." + core_module] = sys.modules["crds.core." + core_module]
 
 # ============================================================================
 
 URL = os.environ.get("CRDS_SERVER_URL", "https://crds-serverless-mode.stsci.edu")
 api.set_crds_server(URL)
-
-# ============================================================================
-
-def handle_version():
-    """Handles --version printing for scripts."""
-    import sys, crds
-    if '--version' in sys.argv :
-        print(crds.__version__)
-        sys.exit(0)
 

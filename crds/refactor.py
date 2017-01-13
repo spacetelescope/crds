@@ -7,6 +7,7 @@ from __future__ import absolute_import
 import os.path
 import sys
 
+import crds
 from crds import rmap, log, cmdline
 from crds import diff
 
