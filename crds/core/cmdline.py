@@ -21,7 +21,7 @@ import crds
 from crds.core import python23, rmap, log, heavy_client
 from crds.core import config, utils, exceptions
 from crds.client import api
-from crds import data_file
+# from crds import data_file
 
 # =============================================================================
 
@@ -36,6 +36,7 @@ def _show_version():
 
 def dataset(filename):
     """Ensure `filename` names a dataset."""
+    from crds import data_file
     if data_file.is_dataset(filename):
         return filename
     else:
@@ -449,6 +450,7 @@ class Script(object):
 
     def get_conjugates(self, file_list):
         """Given a list of references,  return any GEIS data files associated with them."""
+        from crds import data_file
         return [ data_file.get_conjugate(ref) for ref in file_list if data_file.get_conjugate(ref) is not None]
     
     def get_file_properties(self, filename):

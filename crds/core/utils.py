@@ -16,7 +16,7 @@ import datetime
 import ast
 import gc
 
-# from crds.core import data_file,  import deferred until required
+# from crds import data_file,  import deferred until required
 
 from crds.core import log, config, pysh
 from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
@@ -924,7 +924,7 @@ def file_to_instrument(filename):
     for (_obs, instr) in observatory_instrument_tuples():
         if ("_" + instr + "_" in basename) or basename.startswith(instr + "_"):
             return instr.upper()
-    from crds.core import data_file
+    from crds import data_file
     header = data_file.get_unconditioned_header(filename, needed_keys=INSTRUMENT_KEYWORDS)
     return header_to_instrument(header)
     
