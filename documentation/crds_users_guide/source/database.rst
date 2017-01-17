@@ -74,7 +74,7 @@ You can download a SQLite-3 snapshot of the CRDS catalog like this::
     
     % setenv CRDS_SERVER_URL https://hst-crds.stsci.edu
     % setenv CRDS_PATH /home/jmiller/crds_cache
-    % python -m crds.sync --fetch-sqlite-db 
+    % crds sync --fetch-sqlite-db 
     CRDS - INFO - SQLite database file downloaded to: /home/jmiller/crds_cache/config/hst/crds_db.sqlite3
     
 will snapshot the current CRDS catalog on the CRDS server and download it to your local CRDS cache as a 

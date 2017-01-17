@@ -5,6 +5,30 @@ Using the command line tools requires a local installation of the CRDS library.
 Some of the command line tools also interact with the CRDS server in order to
 implement their functionality.
 
+crds Convenience Wrapper
+------------------------
+
+DEPRECATED original command line syntax, e.g. for the list command::
+
+  % python -m crds.list --config
+
+NEW command line syntax, e.g.::
+
+  % crds list --config
+
+Internally the 'crds' wrapper launches a command similar to the original
+'-m' syntax.   However, aside from easier typing,  the 'crds' wrapper
+hides internal structural details of the CRDS package.
+
+For a list of available commands do::
+
+  % crds --help
+
+for detail on a single command do, e.g.::
+
+  % crds list --help
+
+
 Specifying File Paths
 ---------------------
 
@@ -12,12 +36,12 @@ The command line tools operate on CRDS reference and mapping files in various
 ways.  To specify a file in your local CRDS file cache,  as defined by CRDS_PATH,
 use no path on the file::
 
-  % python -m crds.diff hst.pmap  hst_0001.pmap  # assumes paths in CRDS cache
+  % crds diff hst.pmap  hst_0001.pmap  # assumes paths in CRDS cache
 
 To specify a particular file which is not located in your cache,  give at least
 a relative path to the file, ./ will do::
   
-  % python -m crds.diff /some/path/hst.pmap ./hst_0002.pmap   # uses given paths
+  % crds diff /some/path/hst.pmap ./hst_0002.pmap   # uses given paths
   
 
 crds.bestrefs
@@ -26,105 +50,105 @@ crds.bestrefs
 crds.bestrefs computes the best references with respect to a particular context or contexts
 for a set of FITS files, dataset ids,  or instruments::
 
-	usage: /Users/jmiller/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
-	       [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
-	       [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
-	       [-i INSTRUMENTS [INSTRUMENTS ...]]
-	       [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
-	       [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
-	       [--diffs-only] [--datasets-since DATASETS_SINCE]
-	       [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
-	       [--update-pickle] [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
-	       [--print-affected-details] [--print-new-references]
-	       [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
-	       [--differences-are-errors] [--allow-bad-rules] [--allow-bad-references]
-	       [-e] [--undefined-differences-matter] [--na-differences-matter]
-	       [--compare-cdbs] [--affected-datasets] [-z] [--dump-unique-errors]
-	       [--unique-errors-file UNIQUE_ERRORS_FILE]
-	       [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
-	       [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
-	       [--debug-traps]
-	
-	* Determines best references with respect to a context or contexts.   
-	* Optionally compares new results to prior results.
-	* Optionally prints source data names affected by the new context.
-	* Optionally updates the headers of file-based data with new recommendations.
-	    
-	
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  -n NEW_CONTEXT, --new-context NEW_CONTEXT
-	                        Compute the updated best references using this context. Uses current operational context by default.
-	  -o OLD_CONTEXT, --old-context OLD_CONTEXT
-	                        Compare bestrefs recommendations from two contexts.
-	  --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
-	  -c, --compare-source-bestrefs
-	                        Compare new bestrefs recommendations to recommendations from data source,  files or database.
-	  -f FILES [FILES ...], --files FILES [FILES ...]
-	                        Dataset files to compute best references for.
-	  -d IDs [IDs ...], --datasets IDs [IDs ...]
-	                        Dataset ids to consult database for matching parameters and old results.
-	  --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
-	  -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
-	                        Instruments to compute best references for, all historical datasets in database.
-	  -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
-	                        A list of reference types to process,  defaulting to all types.
-	  -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
-	                        A list of reference types which should not be processed,  defaulting to nothing.
-	  --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
-	  --datasets-since DATASETS_SINCE
-	                        Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
-	  -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
-	                        Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
-	  -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
-	                        Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
-	  --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
-	  --only-ids [IDS [IDS ...]]
-	                        If specified, process only the listed dataset ids.
-	  -u, --update-bestrefs
-	                        Update sources with new best reference recommendations.
-	  --print-affected      Print names of products for which the new context would assign new references for some exposure.
-	  --print-affected-details
-	                        Include instrument and affected types in addition to compound names of affected exposures.
-	  --print-new-references
-	                        Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
-	  --print-update-counts
-	                        Prints dictionary of update counts by instrument and type,  status on updated files.
-	  -r, --remote-bestrefs
-	                        Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
-	  -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
-	                        Fetch the required context mappings to the local cache.  Defaults TRUE.
-	  -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
-	                        Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
-	  --differences-are-errors
-	                        Treat recommendation differences between new context and original source as errors.
-	  --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
-	  --allow-bad-references
-	                        Only warn if a reference which is marked bad is recommended, otherwise error.
-	  -e, --bad-files-are-errors
-	                        DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
-	  --undefined-differences-matter
-	                        If not set, a transition from UNDEFINED to anything else is not considered a difference error.
-	  --na-differences-matter
-	                        If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
-	  --compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
-	  --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats
-	  -z, --optimize-tables
-	                        If set, apply row-based optimizations to screen out inconsequential table updates.
-	  --dump-unique-errors  Record and dump the first instance of each kind of error.
-	  --unique-errors-file UNIQUE_ERRORS_FILE
-	                        Write out data names (ids or filenames) for first instance of unique errors to specified file.
-	  --all-errors-file ALL_ERRORS_FILE
-	                        Write out all err'ing data names (ids or filenames) to specified file.
-	  -v, --verbose         Set log verbosity to True,  nominal debug level.
-	  --verbosity VERBOSITY
-	                        Set log verbosity to a specific level: 0..100.
-	  -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
-	  -I, --ignore-cache    Download required files even if they're already in the cache.
-	  -V, --version         Print the software version and exit.
-	  -J, --jwst            Force observatory to JWST for determining header conventions.
-	  -H, --hst             Force observatory to HST for determining header conventions.
-	  --log-time            Add date/time to log messages.
+    usage: /Users/jmiller/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
+           [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
+           [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
+           [-i INSTRUMENTS [INSTRUMENTS ...]]
+           [-t REFERENCE_TYPES [REFERENCE_TYPES ...]]
+           [-k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]]
+           [--diffs-only] [--datasets-since DATASETS_SINCE]
+           [-p [LOAD_PICKLES [LOAD_PICKLES ...]]] [-a SAVE_PICKLE]
+           [--update-pickle] [--only-ids [IDS [IDS ...]]] [-u] [--print-affected]
+           [--print-affected-details] [--print-new-references]
+           [--print-update-counts] [-r] [-m SYNC_MAPPINGS] [-s SYNC_REFERENCES]
+           [--differences-are-errors] [--allow-bad-rules] [--allow-bad-references]
+           [-e] [--undefined-differences-matter] [--na-differences-matter]
+           [--compare-cdbs] [--affected-datasets] [-z] [--dump-unique-errors]
+           [--unique-errors-file UNIQUE_ERRORS_FILE]
+           [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
+           [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
+           [--debug-traps]
+    
+    * Determines best references with respect to a context or contexts.   
+    * Optionally compares new results to prior results.
+    * Optionally prints source data names affected by the new context.
+    * Optionally updates the headers of file-based data with new recommendations.
+        
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -n NEW_CONTEXT, --new-context NEW_CONTEXT
+                            Compute the updated best references using this context. Uses current operational context by default.
+      -o OLD_CONTEXT, --old-context OLD_CONTEXT
+                            Compare bestrefs recommendations from two contexts.
+      --fetch-old-headers   Fetch old headers in accord with old parameter lists.   Slower,  avoid unless required.
+      -c, --compare-source-bestrefs
+                            Compare new bestrefs recommendations to recommendations from data source,  files or database.
+      -f FILES [FILES ...], --files FILES [FILES ...]
+                            Dataset files to compute best references for.
+      -d IDs [IDs ...], --datasets IDs [IDs ...]
+                            Dataset ids to consult database for matching parameters and old results.
+      --all-instruments     Compute best references for cataloged datasets for all supported instruments in database.
+      -i INSTRUMENTS [INSTRUMENTS ...], --instruments INSTRUMENTS [INSTRUMENTS ...]
+                            Instruments to compute best references for, all historical datasets in database.
+      -t REFERENCE_TYPES [REFERENCE_TYPES ...], --types REFERENCE_TYPES [REFERENCE_TYPES ...]
+                            A list of reference types to process,  defaulting to all types.
+      -k SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...], --skip-types SKIPPED_REFERENCE_TYPES [SKIPPED_REFERENCE_TYPES ...]
+                            A list of reference types which should not be processed,  defaulting to nothing.
+      --diffs-only          For context-to-context comparison, choose only instruments and types from context differences.
+      --datasets-since DATASETS_SINCE
+                            Cut-off date for datasets, none earlier than this.  Use 'auto' to exploit reference USEAFTER.
+      -p [LOAD_PICKLES [LOAD_PICKLES ...]], --load-pickles [LOAD_PICKLES [LOAD_PICKLES ...]]
+                            Load dataset headers and prior bestrefs from pickle files,  in worst-to-best update order.  Can also load .json files.
+      -a SAVE_PICKLE, --save-pickle SAVE_PICKLE
+                            Write out the combined dataset headers to the specified pickle file.  Can also store .json file.
+      --update-pickle       Replace source bestrefs with CRDS bestrefs in output pickle.  For setting up regression tests.
+      --only-ids [IDS [IDS ...]]
+                            If specified, process only the listed dataset ids.
+      -u, --update-bestrefs
+                            Update sources with new best reference recommendations.
+      --print-affected      Print names of products for which the new context would assign new references for some exposure.
+      --print-affected-details
+                            Include instrument and affected types in addition to compound names of affected exposures.
+      --print-new-references
+                            Prints one line per reference file change.  If no comparison requested,  prints all bestrefs.
+      --print-update-counts
+                            Prints dictionary of update counts by instrument and type,  status on updated files.
+      -r, --remote-bestrefs
+                            Compute best references on CRDS server,  convenience for env var CRDS_MODE='remote'
+      -m SYNC_MAPPINGS, --sync-mappings SYNC_MAPPINGS
+                            Fetch the required context mappings to the local cache.  Defaults TRUE.
+      -s SYNC_REFERENCES, --sync-references SYNC_REFERENCES
+                            Fetch the refefences recommended by new context to the local cache. Defaults FALSE.
+      --differences-are-errors
+                            Treat recommendation differences between new context and original source as errors.
+      --allow-bad-rules     Only warn if a context which is marked 'bad' is used, otherwise error.
+      --allow-bad-references
+                            Only warn if a reference which is marked bad is recommended, otherwise error.
+      -e, --bad-files-are-errors
+                            DEPRECATED / default;  Recommendations of known bad/invalid files are errors, not warnings.  Use --allow-bad-... to override.
+      --undefined-differences-matter
+                            If not set, a transition from UNDEFINED to anything else is not considered a difference error.
+      --na-differences-matter
+                            If not set,  either CDBS or CRDS recommending N/A is OK to mismatch.
+      --compare-cdbs        Abbreviation for --compare-source-bestrefs --differences-are-errors --dump-unique-errors --stats
+      --affected-datasets   Abbreviation for --diffs-only --datasets-since=auto --optimize-tables --print-update-counts --print-affected --dump-unique-errors --stats
+      -z, --optimize-tables
+                            If set, apply row-based optimizations to screen out inconsequential table updates.
+      --dump-unique-errors  Record and dump the first instance of each kind of error.
+      --unique-errors-file UNIQUE_ERRORS_FILE
+                            Write out data names (ids or filenames) for first instance of unique errors to specified file.
+      --all-errors-file ALL_ERRORS_FILE
+                            Write out all err'ing data names (ids or filenames) to specified file.
+      -v, --verbose         Set log verbosity to True,  nominal debug level.
+      --verbosity VERBOSITY
+                            Set log verbosity to a specific level: 0..100.
+      -R, --readonly-cache  Don't modify the CRDS cache.  Not compatible with options which implicitly modify the cache.
+      -I, --ignore-cache    Download required files even if they're already in the cache.
+      -V, --version         Print the software version and exit.
+      -J, --jwst            Force observatory to JWST for determining header conventions.
+      -H, --hst             Force observatory to HST for determining header conventions.
+      --log-time            Add date/time to log messages.
 
 .............................
 File Oriented Best References
@@ -133,7 +157,7 @@ File Oriented Best References
 The most common end-user use case for crds.bestrefs is to assign best references to the header keywords of
 dataset FITS files.   This can be done as follows::
 
-    % python -m crds.bestrefs --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits ...
+    % crds bestrefs --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits ...
 
 which will use the CRDS rules currently operational in the pipeline and download any required CRDS rules and reference files 
 to your CRDS cache automatically.   No download should occur for previously cached files or the default group readonly reference 
@@ -141,7 +165,7 @@ cache.
 
 A specific historical set of CRDS rules can be used by specifying --new-context::
 
-    % python -m crds.bestrefs --new-context hst_0294.pmap --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits ...
+    % crds bestrefs --new-context hst_0294.pmap --update-bestrefs --sync-references=1 --files j8bt05njq_raw.fits ...
 
 ...........
 New Context
@@ -163,25 +187,25 @@ The options --files, --datasets, --instruments, and --all-instruments determine 
 
 1. To find best references for a list of files do something like this:
 
-    % python -m crds.bestrefs --new-context hst.pmap --file j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
+    % crds bestrefs --new-context hst.pmap --file j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits
 
 the first parameter, hst.pmap,  is the context with respect to which best references are determined.
 
 2. To find best references for a list of catalog dataset ids do something like this:
 
-    % python -m crds.bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
+    % crds bestrefs --new-context hst.pmap --datasets j8bt05njq j8bt06o6q j8bt09jcq
 
 3. To do mass scale testing for all cataloged datasets for a particular instrument(s) do:
 
-    % python -m crds.bestrefs --new-context hst.pmap --instruments acs
+    % crds bestrefs --new-context hst.pmap --instruments acs
 
 4. To do mass scale testing for all supported instruments for all cataloged datasets do:
 
-    % python -m crds.bestrefs --new-context hst.pmap --all-instruments
+    % crds bestrefs --new-context hst.pmap --all-instruments
     
     or to test for differences between two contexts
 
-    % python -m crds.bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all-instruments
+    % crds bestrefs --new-context hst_0002.pmap --old-context hst_0001.pmap --all-instruments
 
 ................
 Comparison Modes
@@ -214,7 +238,7 @@ crds.bestrefs supports several output modes for bestrefs and comparison results 
 If --print-affected is specified,  crds.bestrefs will print out the name of any file for which at least one update for
 one reference type was recommended.   This is essentially a list of files to be reprocessed with new references.::
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
         --compare-source-bestrefs --print-affected
     j8bt05njq_raw.fits
     j8bt06o6q_raw.fits
@@ -226,7 +250,7 @@ Update Modes
 
 crds.bestrefs initially supports one mode for updating the best reference recommendations recorded in data files::
 
-    % python -m crds.bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
+    % crds bestrefs --new-context hst.pmap --files j8bt05njq_raw.fits j8bt06o6q_raw.fits j8bt09jcq_raw.fits \
         --compare-source-bestrefs --update-bestrefs
 
 .........
@@ -319,7 +343,7 @@ optional arguments::
 
     Downloading an explicit list of files can be done by like this::
     
-    % python -m crds.sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
+    % crds sync  --files hst_0001.pmap hst_acs_darkfile_0037.fits
 
     this will download only those two files.
     
@@ -329,19 +353,19 @@ optional arguments::
     
     Synced contexts can be explicitly listed::
     
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap
       
     this will recursively download all the mappings referred to by .pmaps 0001 and 0002.
     
     Synced contexts can be specified as a numerical range::
     
-        % python -m crds.sync --range 1:3
+        % crds sync --range 1:3
     
     this will also recursively download all the mappings referred to by .pmaps 0001, 002, 0003.
     
     Synced contexts can be specified as --all contexts::
     
-        % python -m crds.sync --all
+        % crds sync --all
     
     this will recursively download all CRDS mappings for all time.
 
@@ -350,7 +374,7 @@ optional arguments::
     Because complete reference downloads can be enormous,  you must explicitly specify when
     you wish to fetch the references which are enumerated in particular CRDS rules::
           
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap  --fetch-references
     
     will download all the references mentioned by contexts 0001 and 0002.   
 
@@ -364,11 +388,11 @@ optional arguments::
           
     CRDS rules from **unspecified** contexts can be removed like this::
     
-        % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
+        % crds sync  --contexts hst_0004.pmap hst_0005.pmap --purge-mappings
     
     while this would remove references which are *not* in contexts 4 or 5::
     
-        % python -m crds.sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
+        % crds sync  --contexts hst_0004.pmap hst_0005.pmap --purge-references
         
     Again, both of these commands remove cached files which are not specified or implied.
 
@@ -376,7 +400,7 @@ optional arguments::
 
     References required by particular dataset files can be cached like this::
             
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-files  <dataset_files...> e.g. acs_J8D219010.fits
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-files  <dataset_files...> e.g. acs_J8D219010.fits
     
     This will fetch all the references required to support the listed datasets for contexts 0001 and 0002.
     
@@ -386,7 +410,7 @@ optional arguments::
 
     References for particular dataset ids can be cached like this::
             
-        % python -m crds.sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-ids  <ids...>  e.g. J6M915030
+        % crds sync  --contexts hst_0001.pmap hst_0002.pmap --dataset-ids  <ids...>  e.g. J6M915030
     
     This will fetch all the references required to support the listed dataset ids for contexts 0001 and 0002.
           
@@ -394,7 +418,7 @@ optional arguments::
 
     Large Institutional caches can be checked and/or repaired like this::
     
-        % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
+        % crds sync --contexts hst_0001.pmap --fetch-references --check-sha1sum --repair-files
     
     will download all the files in hst_0001.pmap not already present.
     
@@ -413,11 +437,11 @@ optional arguments::
     after making temporary modifications to cached files to return to the archived version::
     
        % rm -rf $CRDS_PATH
-       % python -m crds.sync  -- ...  # repeat whatever syncs you did to cache files of interest
+       % crds sync  -- ...  # repeat whatever syncs you did to cache files of interest
     
     A more complicated but also more precise approach can operate only on files already in the CRDS cache::
         
-       % python -m crds.sync --repair-files --check-sha1sum --files `python -m crds.list --all --cached-mappings --cached-references`
+       % crds sync --repair-files --check-sha1sum --files `crds list --all --cached-mappings --cached-references`
        
     This approach works by using the crds.list command to dump the file names of all files in the CRDS cache
     and then using the crds.sync command to check exactly those files.
@@ -432,7 +456,7 @@ optional arguments::
 
     crds.sync can be used to remove the files from specific contexts which have been marked as "bad".
           
-      % python -m crds.sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
+      % crds sync --contexts hst_0001.pmap --fetch-references --check-files --purge-rejected --purge-blacklisted
     
     would first sync the cache downloading all the files in hst_0001.pmap.  Both mappings and references would then
     be checked for correct length.   Files reported as rejected or blacklisted by the server would be removed.
@@ -446,11 +470,11 @@ optional arguments::
     Newly created caches will default to the *instrument* organization.  To migrate a legacy cache with a flat single
     directory layout to the new structure,  sync with --organize=instrument::  
     
-       % python -m crds.sync --organize=instrument --verbose
+       % crds sync --organize=instrument --verbose
        
     To migrate to the flat structure,  use --organize=flat::
         
-       % python -m crds.sync --organize=flat --verbose
+       % crds sync --organize=flat --verbose
        
     While reorganizing, if CRDS makes note of "junk files" in your cache which are
     obstructing the process of reorganizing, you can allow CRDS to delete the junk
@@ -469,14 +493,14 @@ the file it replaces looking for new or missing table rows.
 
 * crds.certify --help yields::
 
-	usage: /Users/jmiller/work/workspace_crds/CRDS/crds/certify.py	
-	   [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
-	   [-y COMPARISON_REFERENCE] [-s] [--dump-unique-errors]
-	   [--unique-errors-file UNIQUE_ERRORS_FILE]
-	   [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
-	   [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
-	   [--debug-traps]
-	   files [files ...]
+    usage: /Users/jmiller/work/workspace_crds/CRDS/crds/certify.py  
+       [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
+       [-y COMPARISON_REFERENCE] [-s] [--dump-unique-errors]
+       [--unique-errors-file UNIQUE_ERRORS_FILE]
+       [--all-errors-file ALL_ERRORS_FILE] [-v] [--verbosity VERBOSITY] [-R]
+       [-I] [-V] [-J] [-H] [--stats] [--profile PROFILE] [--log-time] [--pdb]
+       [--debug-traps]
+       files [files ...]
 
 * Checks a CRDS reference or mapping file::
 
@@ -509,26 +533,26 @@ the file it replaces looking for new or missing table rows.
          
 * crds.certify is normally invoked as, e.g.::
 
-    % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits
+    % crds certify --comparison-context=hst_0027.pmap   some_reference.fits
     
-    % python -m crds.certify hst.pmap
+    % crds certify hst.pmap
     
 * To run crds.certify on a reference(s) to verify basic file format and parameter constraints::
 
-  % python -m crds.certify --comparison-context=hst_0027.pmap   some_reference.fits...
+  % crds certify --comparison-context=hst_0027.pmap   some_reference.fits...
 
   If some_reference.fits is a table,  a comparison table will be found in the comparison context, if appropriate.
 
 * For recursively checking CRDS rules do this::
 
-  % python -m crds.certify hst_0311.pmap --comparison-context=hst_0312.pmap
+  % crds certify hst_0311.pmap --comparison-context=hst_0312.pmap
 
   If a comparison context is defined, checked mappings will be compared against their peers (if they exist) in
   the comparison context.  Many classes of mapping differences will result in warnings.
 
 * For reference table checks,  a comparison reference can also be specified directly rather than inferred from context::
 
-  % python -m crds.certify some_reference.fits --comparison-reference=old_reference_version.fits
+  % crds certify some_reference.fits --comparison-reference=old_reference_version.fits
 
 * For more information on the checks being performed,  use --verbose or --verbosity=N where N > 50.
     
@@ -594,7 +618,7 @@ the full match path to each bottom level change.   crds.diff --help yields::
         
     For example:
         
-        % python -m crds.diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
+        % crds diff hst_0001.pmap  hst_0005.pmap  --mapping-text-diffs --primitive-diffs
         
     Will recursively produce logical, textual, and FITS diffs for all changes between the two contexts.
         
@@ -606,9 +630,9 @@ For standard CRDS filenames,  crds.diff can guess the observatory.   For
 non-standard names,  the observatory needs to be specified.  crds.diff can be
 invoked like::
 
-  % python -m crds.diff   jwst_nircam_dark_0010.fits  jwst_nircam_dark_0011.fits
+  % crds diff   jwst_nircam_dark_0010.fits  jwst_nircam_dark_0011.fits
 
-  % python -m crds.diff  jwst_0001.pmap   jwst_0002.pmap
+  % crds diff  jwst_0001.pmap   jwst_0002.pmap
   (('hst.pmap', 'hst_0004.pmap'), ('hst_acs.imap', 'hst_acs_0004.imap'), ('hst_acs_darkfile.rmap', 'hst_acs_darkfile_0003.rmap'), ('WFC', 'A|ABCD|AD|B|BC|C|D', '0.5|1.0|1.4|2.0'), '2011-03-16 23:34:35', "replaced 'v441434ej_drk.fits' with 'hst_acs_darkfile_0003.fits'")
 
 
@@ -662,9 +686,9 @@ rows are equivalent or not.
 
 Examples:
 
-    % python -m crds.rowdiff s9m1329lu_off.fits s9518396u_off.fits 
+    % crds rowdiff s9m1329lu_off.fits s9518396u_off.fits 
 
-    % python -m rowdiff s9m1329lu_off.fits s9518396u_off.fits --mode-fields=detchip,obsdate
+    % crds rowdiff s9m1329lu_off.fits s9518396u_off.fits --mode-fields=detchip,obsdate
 
 
 crds.uses
@@ -674,7 +698,7 @@ crds.uses searches the files in the local cache for mappings which refer to the
 specified files.  Since the **local cache** is used only mappings present in the 
 local cache will be included in the results given.  crds.uses is invoked as::
 
-   % python -m crds.uses <observatory=hst|jwst> <mapping or reference>...
+   % crds uses <observatory=hst|jwst> <mapping or reference>...
 
 e.g.::
 
@@ -702,7 +726,7 @@ e.g.::
     
     crds.uses can be invoked like this:
     
-    % python -m crds.uses --files n3o1022ij_drk.fits --hst
+    % crds uses --files n3o1022ij_drk.fits --hst
     hst.pmap
     hst_0001.pmap
     hst_0002.pmap
@@ -722,14 +746,14 @@ e.g.::
     ...
     hst_acs_darkfile_0005.rmap
     
-    % python -m crds.uses --files n3o1022ij_drk.fits --print-datasets --hst
+    % crds uses --files n3o1022ij_drk.fits --print-datasets --hst
     J8BA0HRPQ
     J8BA0IRTQ
     J8BA0JRWQ
     J8BA0KT4Q
     J8BA0LIJQ
     
-    % python -m crds.uses --files @dropped --hst --print-datasets --include-used
+    % crds uses --files @dropped --hst --print-datasets --include-used
     vb41934lj_bia.fits JA7P21A2Q
     vb41934lj_bia.fits JA7P21A4Q
     vb41934lj_bia.fits JA7P21A6Q
@@ -777,30 +801,30 @@ reference files::
 
 crds.matches can dump reference file match cases with respect to particular contexts::
     
-    % python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+    % crds matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
     lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
     
-    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+    % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
     lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
     
-    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+    % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
     
 crds.matches can dump database matching parameters for specified datasets with respect to specified contexts::
     
-    % python -m crds.matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
+    % crds matches --datasets JBANJOF3Q --minimize-headers --contexts hst_0048.pmap hst_0044.pmap
     JBANJOF3Q : hst_0044.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NUMCOLS='UNDEFINED' NUMROWS='UNDEFINED' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
     JBANJOF3Q : hst_0048.pmap : APERTURE='WFC1-2K' ATODCORR='NONE' BIASCORR='NONE' CCDAMP='B' CCDCHIP='1.0' CCDGAIN='2.0' CRCORR='NONE' DARKCORR='NONE' DATE-OBS='2010-01-31' DETECTOR='WFC' DQICORR='NONE' DRIZCORR='NONE' FILTER1='F502N' FILTER2='F660N' FLASHCUR='OFF' FLATCORR='NONE' FLSHCORR='NONE' FW1OFFST='0.0' FW2OFFST='0.0' FWSOFFST='0.0' GLINCORR='NONE' INSTRUME='ACS' LTV1='-2048.0' LTV2='-1.0' NAXIS1='2070.0' NAXIS2='2046.0' OBSTYPE='INTERNAL' PCTECORR='NONE' PHOTCORR='NONE' REFTYPE='UNDEFINED' SHADCORR='NONE' SHUTRPOS='B' TIME-OBS='01:07:14.960000' XCORNER='1.0' YCORNER='2072.0'
     
 crds.matches can be invoked in various ways with different output formatting::
     
-    % python -m crds.matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
+    % crds matches  --contexts hst_0001.pmap --files lc41311jj_pfl.fits
     lc41311jj_pfl.fits : ACS PFLTFILE DETECTOR='WFC' CCDAMP='A|ABCD|AC|AD|B|BC|BD|C|D' FILTER1='F625W' FILTER2='POL0V' DATE-OBS='1997-01-01' TIME-OBS='00:00:00'
     
-    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
+    % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --omit-parameter-names --brief-paths
     lc41311jj_pfl.fits :  'WFC' 'A|ABCD|AC|AD|B|BC|BD|C|D' 'F625W' 'POL0V' '1997-01-01' '00:00:00'
     
-    % python -m crds.matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
+    % crds matches --contexts hst.pmap --files lc41311jj_pfl.fits --tuple-format
     lc41311jj_pfl.fits : (('OBSERVATORY', 'HST'), ('INSTRUMENT', 'ACS'), ('FILEKIND', 'PFLTFILE'), ('DETECTOR', 'WFC'), ('CCDAMP', 'A|ABCD|AC|AD|B|BC|BD|C|D'), ('FILTER1', 'F625W'), ('FILTER2', 'POL0V'), ('DATE-OBS', '1997-01-01'), ('TIME-OBS', '00:00:00'))
 
 
