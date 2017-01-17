@@ -75,6 +75,21 @@ alias_subpackage_module("crds.core", CORE_MODULES)
 
 # ============================================================================
 
+# e.g. python -m crds.newcontext now called as python -m crds.refactoring.newcontext
+
+REFACTORING_MODULES = [
+    "newcontext",
+    "refactor",
+    "refactor2",
+]
+
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
+alias_subpackage_module("crds.refactoring", REFACTORING_MODULES)
+
+# ============================================================================
+
+# e.g. python -m crds.uniqname now called as -m crds.refactoring.uniqname
+
 MISC_MODULES = [
     "datalvl",               # external interface with pipelines
     "query_affected",        # external interface with pipelines
@@ -83,8 +98,6 @@ MISC_MODULES = [
     "check_archive",         # misc utility
     "sql",                   # prototype convenience wrapper
 ]
-
-import crds.misc
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
 alias_subpackage_module("crds.misc", MISC_MODULES)

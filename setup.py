@@ -14,6 +14,7 @@ setup_pars = {
         'crds.submit',
 
         'crds.misc',
+        'crds.refactoring',
 
         'crds.hst',
         'crds.jwst',
@@ -30,6 +31,7 @@ setup_pars = {
         'crds.submit' : 'crds/submit',
 
         'crds.misc' : 'crds/misc', 
+        'crds.misc' : 'crds/refactoring', 
 
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
@@ -66,10 +68,13 @@ setup_pars = {
 import crds   #  local subdirectory...  ew...
 
 setup(name="crds",
-      provides=["crds", "crds.client",
+      provides=["crds", "crds.client", "crds.core",
+                
                 "crds.hst","crds.jwst", "crds.tobs",
                 
                 "crds.bestrefs", "crds.certify",
+
+                "crds.misc", "crds.refactoring",
                 
                 "crds.tests"
       ],

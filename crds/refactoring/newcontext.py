@@ -11,7 +11,8 @@ import re
 import glob
 
 import crds
-from crds import (rmap, utils, log, cmdline, refactor, config)
+from crds.core import (rmap, utils, log, cmdline, config)
+from . import refactor
 
 # =============================================================================
 

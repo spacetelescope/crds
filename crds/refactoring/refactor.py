@@ -8,7 +8,7 @@ import os.path
 import sys
 
 import crds
-from crds import rmap, log, cmdline
+from crds.core import rmap, log, cmdline
 from crds import diff
 
 # ============================================================================
