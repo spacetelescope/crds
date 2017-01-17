@@ -9,7 +9,7 @@ from __future__ import print_function
 import os
 
 import crds
-from crds import log, config, rmap
+from crds.core import config, rmap
 from crds.sync import SyncScript
 from crds.tests import test_config
 

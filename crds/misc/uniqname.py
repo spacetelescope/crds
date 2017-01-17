@@ -8,7 +8,9 @@ import os.path
 import sys
 import datetime
 
-from crds import cmdline, config, log, naming, data_file, CrdsError
+from crds.core import cmdline, config, log, naming
+from crds.core.exceptions import CrdsError
+from crds import data_file
 
 class UniqnameScript(cmdline.Script):
 
@@ -162,7 +164,7 @@ def uniqname(old_path):
     """
     add_checksums = "--add-checksum" if checksum_exists(old_path) else ""
     new_name = UniqnameScript("crds.misc.uniqname --files {0} --standard --remove-original --fits-errors {1}".format(
-            old_path, add_checksums))()
+        old_path, add_checksums))()
     return new_name
 
 if __name__ == "__main__":

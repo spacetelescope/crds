@@ -14,8 +14,8 @@ from __future__ import division
 from __future__ import absolute_import
 
 from crds.core import rmap, log
-from crds import tables
 from crds.core.python23 import *
+from crds import tables
 from crds.client import api
 
 def is_reprocessing_required(dataset,  dataset_parameters, old_context, new_context, update):

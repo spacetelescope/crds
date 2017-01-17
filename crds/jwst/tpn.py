@@ -9,11 +9,10 @@ and crds.rmap,  for more information.
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-import sys
-import os.path
-import pprint
 
-from crds import rmap, log, utils, data_file
+import os.path
+
+from crds.core import rmap, log, utils
 from crds.certify import TpnInfo
 from . import schema
 

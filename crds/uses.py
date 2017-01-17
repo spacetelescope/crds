@@ -23,7 +23,7 @@ import sys
 import os.path
 
 import crds
-from . import pysh, config, cmdline, utils, log, rmap
+from crds.core import config, cmdline, utils, log, rmap
 
 @utils.cached
 def load_all_mappings(observatory, pattern="*map"):
@@ -147,9 +147,9 @@ hst_acs_darkfile_0005.rmap
         """Add command line parameters unique to this script."""
         super(UsesScript, self).add_args()
         self.add_argument("--files", nargs="+", 
-            help="References for which to dump using mappings or datasets.")        
+                          help="References for which to dump using mappings or datasets.")        
         self.add_argument("-i", "--include-used", action="store_true", dest="include_used",
-            help="Include the used file in the output as the first column.")
+                          help="Include the used file in the output as the first column.")
 
     def main(self):
         """Process command line parameters in to a context and list of

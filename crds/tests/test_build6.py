@@ -7,9 +7,9 @@ import doctest
 """
 """
 
-from crds import log
+from crds.core import log
 from crds.client import api
-from crds.query_affected import QueryAffectedDatasetsScript
+from crds.misc.query_affected import QueryAffectedDatasetsScript
 
 from crds.tests import test_config
 

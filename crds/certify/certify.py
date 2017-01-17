@@ -14,12 +14,14 @@ import copy
 import numpy as np
 
 import crds
+
 from crds.core import rmap, log, pysh, utils, config, timestamp
 from crds.core import cmdline, selectors
+from crds.core.exceptions import MissingKeywordError, IllegalKeywordError
+from crds.core.exceptions import InvalidFormatError, TypeSetupError, ValidationError
+
 from crds import data_file, diff, tables
 from crds.client import api
-from crds.exceptions import MissingKeywordError, IllegalKeywordError
-from crds.exceptions import InvalidFormatError, TypeSetupError, ValidationError
 
 from . import mapping_parser
 
@@ -368,8 +370,8 @@ class JwstdateValidator(KeywordValidator):
             timestamp.Jwstdate.get_datetime(value)
         except Exception:
             raise ValueError(log.format(
-            "Invalid JWST date", repr(value), "for", repr(self.name),
-            "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
+                "Invalid JWST date", repr(value), "for", repr(self.name),
+                "format should be", repr("YYYY-MM-DDTHH:MM:SS")))
             
 '''
         try:

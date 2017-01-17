@@ -9,7 +9,10 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds import rmap, log, exceptions, newcontext, diff, pysh, tests
+from crds.core import rmap, log, exceptions, pysh,
+from crds.refactoring import newcontext
+from crds import diff
+from crds import tests
 from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true

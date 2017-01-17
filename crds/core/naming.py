@@ -10,9 +10,9 @@ import os
 import re
 
 import crds
-from crds import python23, config, log, utils
-from crds.client import api
+from crds.core  import python23, config, log, utils
 from crds.core.exceptions import NameComparisonError
+from crds.client import api
 
 # =============================================================================================================
 

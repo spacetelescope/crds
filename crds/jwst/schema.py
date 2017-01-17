@@ -18,7 +18,7 @@ import pprint
 # from jwst import datamodels   # deferred
 
 import crds
-from crds import log, utils, rmap, heavy_client
+from crds.core import log, utils, rmap, heavy_client
 from crds.certify import TpnInfo
 
 # ====================================================================================

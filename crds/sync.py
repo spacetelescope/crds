@@ -35,7 +35,7 @@ import glob
 import crds
 from crds.core import log, config, utils, rmap, heavy_client, cmdline
 from crds import data_file
-from crds.log import srepr
+from crds.core.log import srepr
 from crds.client import api
 
 # ============================================================================

@@ -1,6 +1,7 @@
 """This module is used to profile getrecommendations() and bestreds.BestrefsScript()."""
 
-from crds import heavy_client, bestrefs, utils, log
+from crds.core import utils, log, heavy_client
+from crds import bestrefs
 from crds.tests.test_config import run_and_profile
 
 HST_HEADER = {

@@ -18,7 +18,7 @@ from collections import defaultdict
 from pprint import pprint as pp
 
 import crds
-from crds import python23, log, utils, config, cmdline
+from crds.core import python23, log, utils, config, cmdline
 from crds.client import api
 
 # ===================================================================

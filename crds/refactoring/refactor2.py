@@ -8,9 +8,9 @@ import os.path
 import sys
 
 from crds.core import (config, log, utils, rmap, cmdline)
+from crds.core import exceptions as crexc
+from crds.core.log import srepr
 from crds import (data_file, diff, sync, certify, matches)
-from crds import exceptions as crexc
-from crds.log import srepr
 import crds
 
 # ============================================================================

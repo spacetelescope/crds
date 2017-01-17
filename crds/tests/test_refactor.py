@@ -12,8 +12,9 @@ from pprint import pprint as pp
 
 import crds
 from crds.core import log, exceptions
-from crds import data_file, diff, refactor
-from crds.refactor import RefactorScript
+from crds import data_file, diff
+from crds.refactoring import refactor
+from crds.refactoring.refactor import RefactorScript
 from crds.tests import test_config
 
 from nose.tools import assert_raises, assert_true

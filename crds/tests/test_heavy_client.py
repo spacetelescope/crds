@@ -10,8 +10,9 @@ import os
 import json
 from pprint import pprint as pp
 
-from crds import rmap, log, config, tests, heavy_client
-from crds.exceptions import *
+from crds.core import rmap, log, config, heavy_client
+from crds.core.exceptions import *
+from crds import tests
 from crds.tests import test_config
 from crds.client import api
 

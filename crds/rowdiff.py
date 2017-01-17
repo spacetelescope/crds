@@ -17,9 +17,7 @@ from astropy.io.fits import TableDataDiff
 from astropy.io.fits.hdu.hdulist import fitsopen
 from astropy.io.fits.hdu.table import _TableLikeHDU
 
-from crds import rmap, cmdline
-from crds import python23
-
+from crds.core  import python23, rmap, cmdline
 
 #==========================================================================
 # Utilities

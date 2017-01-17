@@ -14,7 +14,7 @@ import os
 import os.path
 import sqlite3
 
-from crds import log, cmdline, config, python23
+from crds.core import log, cmdline, config, python23
 from crds.client import api
 
 # ===================================================================
