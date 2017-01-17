@@ -64,14 +64,24 @@ REMAPPED_MODULES = {
     "refactor" : "crds.refactoring.refactor",
     "refactor2" : "crds.refactoring.refactor2",
     "newcontext" : "crds.refactoring.newcontext",
+    "checksum" : "crds.refactoring.checksum",
 }
 
 basecmd = "python -m"
 remapped = REMAPPED_MODULES.get(sys.argv[1])
+
+def quote_strings(args):
+    result = ""
+    for arg in args:
+        if " " in arg:
+            arg = "'" + arg + "'"
+        result += arg + " "
+    return result.rstrip()
+
 if remapped:
-    command = " ".join([basecmd, remapped, " ".join(sys.argv[2:])])
+    command = " ".join([basecmd, remapped, quote_strings(sys.argv[2:])])
 else:
-    command = " ".join([basecmd, "crds." + " ".join(sys.argv[1:])])
+    command = " ".join([basecmd, "crds." + quote_strings(sys.argv[1:])])
 
 # print("command:", command)
 
