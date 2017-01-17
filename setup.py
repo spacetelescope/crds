@@ -31,7 +31,7 @@ setup_pars = {
         'crds.submit' : 'crds/submit',
 
         'crds.misc' : 'crds/misc', 
-        'crds.misc' : 'crds/refactoring', 
+        'crds.refactoring' : 'crds/refactoring', 
 
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
