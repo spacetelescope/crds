@@ -50,7 +50,7 @@ crds.bestrefs
 crds.bestrefs computes the best references with respect to a particular context or contexts
 for a set of FITS files, dataset ids,  or instruments::
 
-    usage: /Users/jmiller/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
+    usage: /Users/homer/virtenv/ssbdev/lib/python2.7/site-packages/crds/bestrefs.py
            [-h] [-n NEW_CONTEXT] [-o OLD_CONTEXT] [--fetch-old-headers] [-c]
            [-f FILES [FILES ...]] [-d IDs [IDs ...]] [--all-instruments]
            [-i INSTRUMENTS [INSTRUMENTS ...]]
@@ -277,7 +277,7 @@ crds.sync
 
 The CRDS sync tool is used to download CRDS rules and references from the CRDS server::
     
-   usage: /Users/jmiller/jmiller_ureka/lib/python2.7/site-packages/crds/sync.py
+   usage: /Users/homer/homer_ureka/lib/python2.7/site-packages/crds/sync.py
          [-h] [--contexts [CONTEXT [CONTEXT ...]]] [--range MIN:MAX] [--all]
          [--last-n-contexts N] [--files [FILES [FILES ...]]]
          [--dataset-files [DATASET [DATASET ...]]]
@@ -493,7 +493,7 @@ the file it replaces looking for new or missing table rows.
 
 * crds.certify --help yields::
 
-    usage: /Users/jmiller/work/workspace_crds/CRDS/crds/certify.py  
+    usage: /Users/homer/work/workspace_crds/CRDS/crds/certify.py  
        [-h] [-d] [-r] [-a] [-e] [-p] [-x COMPARISON_CONTEXT]
        [-y COMPARISON_REFERENCE] [-s] [--dump-unique-errors]
        [--unique-errors-file UNIQUE_ERRORS_FILE]
