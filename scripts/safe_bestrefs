@@ -40,7 +40,5 @@ export CRDS_CLIENT_RETRY_COUNT=1
 # Seconds to wait between retries
 export CRDS_CLIENT_RETRY_DELAY_SECONDS=0
 
-python -m crds.bestrefs --readonly-cache --update-bestrefs  $*
-
-
+crds bestrefs --readonly-cache --update-bestrefs  $*
 

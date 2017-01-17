@@ -6,13 +6,11 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-from crds import python23
-
 import os
 import re
 
 import crds
-from crds import log, utils, config
+from crds import python23, config, log, utils
 from crds.client import api
 from crds.core.exceptions import NameComparisonError
 

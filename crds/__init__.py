@@ -68,6 +68,8 @@ CORE_MODULES = [
     "rmap",
     "heavy_client",
     "cmdline",
+    "naming",
+    "git_version",
 ]
 
 # e.g. make crds.rmap importable same as crds.core.rmap reorganized code
@@ -78,6 +80,7 @@ alias_subpackage_module("crds.core", CORE_MODULES)
 # e.g. python -m crds.newcontext now called as python -m crds.refactoring.newcontext
 
 REFACTORING_MODULES = [
+    "checksum",
     "newcontext",
     "refactor",
     "refactor2",
