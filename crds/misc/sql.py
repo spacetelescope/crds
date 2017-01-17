@@ -22,7 +22,7 @@ from crds.client import api
 class CrdsSqlQueryScript(cmdline.Script):
     """Command line script for querying a downloaded copy of the CRDS catalog using sqlite3."""
 
-    description = """crds.sql is a thin wrapper around sqlite3 operating on a downloaded copy of
+    description = """crds.misc.sql is a thin wrapper around sqlite3 operating on a downloaded copy of
     the crds catalog or context history.   It is capable of doing basic select queries.    Fully general
     queries can be run under the external sqlite3 program operating on the dowloaded CRDS catalog
     sqlite3 database file.
@@ -31,18 +31,18 @@ class CrdsSqlQueryScript(cmdline.Script):
     epilog = """
 * Dumping the table names supported can be done as follows:
 
-% python -m crds.sql --list-tables
+% python -m crds.misc.sql --list-tables
 crds_hst_catalog
 crds_hst_context_history
 
 * Dumping the columns of a table can be done as follows:
 
-% python -m crds.sql --list-columns
+% python -m crds.misc.sql --list-columns
 id, name, blob, state, blacklisted, rejected, observatory, instrument, filekind, type, derived_from, sha1sum, delivery_date, activation_date, useafter_date, change_level, pedigree, reference_file_type, size, uploaded_as, creator_name, deliverer_user, deliverer_email, description, catalog_link, replaced_by_filename, comment, aperture
 
 * Executing a SQL query can be done as follows:
 
-% python -m crds.sql "select name, state, pedigree from crds_hst_catalog"
+% python -m crds.misc.sql "select name, state, pedigree from crds_hst_catalog"
 ('h230851po_pfl.fits', 'operational', 'GROUND')
 ('h230851qo_pfl.fits', 'operational', 'GROUND')
 ('h230851so_pfl.fits', 'operational', 'GROUND')

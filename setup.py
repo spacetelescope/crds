@@ -11,10 +11,14 @@ setup_pars = {
         'crds.certify',
         'crds.client',
         'crds.core',
+        'crds.submit',
+
+        'crds.misc',
+
         'crds.hst',
         'crds.jwst',
-        'crds.submit',
         'crds.tobs',
+
         'crds.tests',
         ],
     "package_dir" : {
@@ -23,10 +27,14 @@ setup_pars = {
         'crds.certify' : 'crds/certify',
         'crds.client' : 'crds/client',
         'crds.core' : 'crds/core',
+        'crds.submit' : 'crds/submit',
+
+        'crds.misc' : 'crds/misc', 
+
         'crds.hst' : 'crds/hst',
         'crds.jwst' : 'crds/jwst',
-        'crds.submit' : 'crds/submit',
         'crds.tobs' : 'crds/tobs',
+
         'crds.tests' : 'crds/tests',
         },
     "package_data" : {
@@ -58,9 +66,13 @@ setup_pars = {
 import crds   #  local subdirectory...  ew...
 
 setup(name="crds",
-      provides=["crds","crds.hst","crds.jwst",
+      provides=["crds", "crds.client",
+                "crds.hst","crds.jwst", "crds.tobs",
+                
                 "crds.bestrefs", "crds.certify",
-                "crds.client","crds.tobs","crds.tests"],
+                
+                "crds.tests"
+      ],
       version=crds.__version__,
       description="Calibration Reference Data System,  HST/JWST reference file management",
       long_description=open('README.rst').read(),
@@ -79,4 +91,5 @@ setup(name="crds",
           'Topic :: Scientific/Engineering :: Astronomy',
       ],
       **setup_pars
-      )
+)
+

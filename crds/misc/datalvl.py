@@ -79,6 +79,6 @@ def invert_cal_levels(cal_levels):
 
 def test():
     import doctest
-    from crds import datalvl
+    from crds.misc import datalvl
     doctest.testmod(datalvl)
 

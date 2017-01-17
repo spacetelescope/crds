@@ -70,8 +70,24 @@ CORE_MODULES = [
     "cmdline",
 ]
 
-# e.g. make crds.core.rmap importable same as crds.rmap
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
 alias_subpackage_module("crds.core", CORE_MODULES)
+
+# ============================================================================
+
+MISC_MODULES = [
+    "datalvl",               # external interface with pipelines
+    "query_affected",        # external interface with pipelines
+    "uniqname",              # external interface with submitters
+
+    "check_archive",         # misc utility
+    "sql",                   # prototype convenience wrapper
+]
+
+import crds.misc
+
+# e.g. make crds.rmap importable same as crds.core.rmap reorganized code
+alias_subpackage_module("crds.misc", MISC_MODULES)
 
 # ============================================================================
 
