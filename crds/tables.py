@@ -57,7 +57,8 @@ import os.path
 
 from astropy import table
 
-from crds import utils, log, data_file
+from crds.core import utils, log
+from crds import data_file
 
 _HERE = os.path.dirname(__file__) or "."
 

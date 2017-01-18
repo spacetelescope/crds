@@ -18,8 +18,9 @@ import gc
 
 # from crds import data_file,  import deferred until required
 
-from crds import log, config, pysh, ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
-from crds.python23 import *
+from crds.core import log, config, pysh
+from crds.core.constants import ALL_OBSERVATORIES, INSTRUMENT_KEYWORDS
+from crds.core.python23 import *
 
 # ===================================================================
 
@@ -1027,7 +1028,7 @@ reference_to_locator = file_to_locator
 def test():
     """Run doctests."""
     import doctest
-    from crds import utils
+    from crds.core import utils
     return doctest.testmod(utils)
 
 if __name__ == "__main__":

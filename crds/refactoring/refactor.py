@@ -7,7 +7,10 @@ from __future__ import absolute_import
 import os.path
 import sys
 
-from crds import (rmap, log, diff, cmdline)
+import crds
+from crds.core import rmap, log, cmdline
+from crds import diff
+
 # ============================================================================
     
 class NoUseAfterError(ValueError):

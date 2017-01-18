@@ -11,7 +11,7 @@ from __future__ import absolute_import
 
 import sys
 
-from crds import rmap, log
+from crds.core import rmap, log
 
 def update_checksum(file_):
     """Rewrite the checksum of a single mapping, in place."""
@@ -27,6 +27,5 @@ def update_checksums(files):
         
 if __name__ == "__main__":
     import crds
-    crds.handle_version()
     update_checksums(sys.argv[1:])
     log.standard_status()

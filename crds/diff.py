@@ -7,8 +7,6 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-from crds import python23
-
 import os
 import sys
 from collections import defaultdict
@@ -18,8 +16,9 @@ import pprint
 import re
 
 import crds
-from crds import rmap, log, pysh, cmdline, utils, rowdiff, config, sync
-from crds import naming
+from crds.core import python23, config, log, pysh, utils, rmap
+from crds.core import cmdline, naming
+from crds import rowdiff, sync
 
 from astropy.io.fits import FITSDiff
 

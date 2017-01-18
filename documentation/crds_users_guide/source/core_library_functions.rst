@@ -221,6 +221,6 @@ Adding Checksums
 Once you've finished your masterpiece ReferenceMapping,  it can be sealed with
 a checksum like this::
 
-   % python -m crds.checksum /where/it/really/is/hst_acs_my_masterpiece.rmap
+   % crds checksum /where/it/really/is/hst_acs_my_masterpiece.rmap
 
 

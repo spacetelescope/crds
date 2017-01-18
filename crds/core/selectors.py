@@ -99,11 +99,13 @@ from pprint import pprint as pp
 # import numpy as np
 
 import crds
-from crds import log, utils, timestamp, config
+from crds.core import log, utils, timestamp, config
 
-from crds.exceptions import (ValidationError, CrdsLookupError, AmbiguousMatchError, 
-                             MatchingError, UseAfterError, VersionAfterError)
-from crds import python23
+from crds.core.exceptions import (ValidationError, CrdsLookupError,
+                                  AmbiguousMatchError, 
+                                  MatchingError, UseAfterError,
+                                  VersionAfterError)
+from crds.core import python23
 
 # ==============================================================================
 
@@ -1877,7 +1879,7 @@ class UseAfterSelector(Selector):
 
 Enable debugging which causes trapped exceptions to raise rather than issue ERROR.
 
-    >>> from crds import log
+    >>> from crds.core import log
     >>> old_debug = log.set_exception_trap(False)
 
 Construct a test UseAfterSelector
@@ -2088,7 +2090,7 @@ class VersionAfterSelector(UseAfterSelector):
 
 Enable debugging which causes trapped exceptions to raise rather than issue ERROR.
 
-    >>> from crds import log
+    >>> from crds.core import log
     >>> old_debug = log.set_exception_trap(False)
 
 Construct a test UseAfterSelector
@@ -2781,7 +2783,7 @@ SELECTORS = {
 def test():
     """Run module doctest."""
     import doctest
-    from crds import selectors
+    from crds.core import selectors
     return doctest.testmod(selectors, optionflags=doctest.IGNORE_EXCEPTION_DETAIL)
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ from __future__ import absolute_import
 
 import os.path
 
-from crds import reftypes
+from crds.core import reftypes
 
 TYPES = reftypes.from_package_file(__file__)
 

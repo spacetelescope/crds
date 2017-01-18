@@ -1,6 +1,6 @@
 import crds
-from crds.python23 import pickle
-from crds import log
+from crds.core.python23 import pickle
+from crds.core import log
 
 def main():
     p = crds.get_cached_mapping("hst.pmap")

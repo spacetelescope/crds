@@ -6,8 +6,9 @@ import sys
 import os
 import doctest
 
-from crds import log, tests, cmdline, utils
-from crds.cmdline import Script, ContextsScript, UniqueErrorsMixin
+from crds.core import log, cmdline, utils
+from crds.core.cmdline import Script, ContextsScript, UniqueErrorsMixin
+from crds import tests
 from crds.tests import test_config
 from crds.list import ListScript
 
@@ -335,7 +336,7 @@ class TestContextsScript(test_config.CRDSTestCase):
         assert len(contexts) >= 108, log.format(len(contexts), contexts)
         assert contexts[0] == "hst_0379.pmap", log.format(len(contexts), contexts)
 
-    def test_determine_contexts_after(self):
+    def test_determine_contexts_direct(self):
         s = ContextsScript("cmdline.ContextsScript --contexts hst.pmap")
         s.contexts = contexts = s.determine_contexts()
         assert len(contexts) == 1, log.format(len(contexts), contexts)

@@ -6,9 +6,9 @@ web server file submission system.
 import requests
 from lxml import html
 
-from crds import config, log, utils, exceptions
+from crds.core import config, log, utils, exceptions
+from crds.core.python23 import *
 from . import background
-from crds.python23 import *
 
 # ==================================================================================================
 

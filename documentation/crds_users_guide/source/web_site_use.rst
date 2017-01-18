@@ -651,13 +651,13 @@ files or JWST data model schema.
 3. Run crds.certify on the resulting mapping, using the current operational
 context as the point of comparison::
 
-% python -m crds.certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-operational
+% crds certify ./jwst_miri_dark_0004.rmap  --comparison-context jwst-operational
 
 4. During iteration, run crds.checksum on the mapping to update the internal
 sha1sum if you wish to load the context into Python to do interactive tests 
 with the .rmap::
 
-    % python -m crds.checksum ./jwst_miri_dark_0004.rmap
+    % crds checksum ./jwst_miri_dark_0004.rmap
     % python
     >>> import crds
     >>> r = crds.get_cached_mapping("./jwst_miri_dark_0004.rmap")

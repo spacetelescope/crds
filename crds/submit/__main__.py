@@ -2,7 +2,7 @@
 
 import sys
 
-from .  import submit
+from . import submit
 
 def main():
     sys.exit(submit.ReferenceSubmissionScript()())

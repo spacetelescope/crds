@@ -8,7 +8,8 @@ import os, os.path
 from pprint import pprint as pp
 
 import crds
-from crds import rmap, log, exceptions, config, tests
+from crds.core import rmap, log, exceptions, config
+from crds import tests
 from crds.matches import MatchesScript
 from crds.client import api
 from crds.tests import test_config

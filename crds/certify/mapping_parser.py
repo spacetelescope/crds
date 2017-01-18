@@ -14,7 +14,7 @@ import sys
 import os.path
 from collections import namedtuple
 
-from crds import rmap, selectors, log, exceptions
+from crds.core import rmap, selectors, log, exceptions
 
 # NOTE:  #-comments are treated as white space and currently dropped when an rmap is rewritten
 # as a new version.

@@ -12,10 +12,10 @@ from __future__ import absolute_import
 import json
 
 import crds
-from crds import (log, utils, python23)
-from crds import (heavy_client, data_file, matches)
+from crds.core import log, utils, python23, heavy_client
+from crds.core.exceptions import CrdsError
+from crds import data_file, matches
 from crds.client import api
-from crds.exceptions import CrdsError
 
 # ===================================================================
 
