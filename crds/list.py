@@ -537,8 +537,7 @@ and ids used for CRDS reprocessing recommendations.
         """Print out the parkeys required for matching using the specified contexts."""
         for name in self.contexts:
             mapping = crds.get_cached_mapping(name)
-            log.divider(name="Parkeys required for " + repr(mapping.basename), func=log.write)
-            _print_dict("", mapping.get_required_parkeys())
+            print(name + ":",  mapping.get_required_parkeys())
         
 def _get_python_info():
     """Collect and return information about the Python environment"""
