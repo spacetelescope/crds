@@ -11,7 +11,7 @@ import sys
 
 import requests
 
-from crds import python23, log, config, utils, cmdline
+from crds.core import python23, log, config, utils, cmdline
 from crds.client import api
 
 class CheckArchiveScript(cmdline.Script):

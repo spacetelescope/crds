@@ -9,7 +9,7 @@ from __future__ import print_function
 import os, os.path
 from pprint import pprint as pp
 
-from crds.core import rmap, log, exceptions, pysh,
+from crds.core import rmap, log, exceptions, pysh
 from crds.refactoring import newcontext
 from crds import diff
 from crds import tests
